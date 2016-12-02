@@ -1,94 +1,248 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
- board
-Date: Sat, 3 Dec 2016 00:37:34 +0800
-Message-ID: <CAGb2v64be0yUxn19A1qhR8J6xhZwLoZnWNmfXESsbu_Bv=8czg@mail.gmail.com>
-References: <20161121162421.800-1-icenowy@aosc.xyz>
- <20161121162421.800-2-icenowy@aosc.xyz>
- <5373671480239408@web31m.yandex.ru>
- <cdfd3c65-d473-badb-ea6a-035f7ab79217@arm.com>
- <20161201093619.gs6lmoxtlptp2jr6@lukather> <11498641480688550@web2g.yandex.ru>
- <efb30303-b9bb-7a7c-4478-af485991dd86@redhat.com>
- <11535601480689127@web2g.yandex.ru>
- <324c8820-aeea-3fad-0e02-1bdb8f675677@arm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 -next 2/2] ARM: dts: sunxi: add support
+ for Orange Pi Zero board
+Date: Sat, 3 Dec 2016 00:41:38 +0800
+Message-ID: <CAGb2v661hBsd7tBcYByeRKEZh+8YMB3ewbnkrT3rUvzP2f90yQ@mail.gmail.com>
+References: <20161202150513.34691-1-icenowy@aosc.xyz> <20161202150513.34691-2-icenowy@aosc.xyz>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <324c8820-aeea-3fad-0e02-1bdb8f675677@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBWWIQ3BAKGQEJ7YZ7SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161202150513.34691-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBEZWMgMywgMjAxNiBhdCAxMjoxMCBBTSwgQW5kcmUgUHJ6eXdhcmEgPGFuZHJlLnBy
-enl3YXJhQGFybS5jb20+IHdyb3RlOgo+IEhpLAo+Cj4gT24gMDIvMTIvMTYgMTQ6MzIsIEljZW5v
-d3kgWmhlbmcgd3JvdGU6Cj4+Cj4+Cj4+IDAyLjEyLjIwMTYsIDIyOjMwLCAiSGFucyBkZSBHb2Vk
-ZSIgPGhkZWdvZWRlQHJlZGhhdC5jb20+Ogo+Pj4gSGksCj4+Pgo+Pj4gT24gMDItMTItMTYgMTU6
-MjIsIEljZW5vd3kgWmhlbmcgd3JvdGU6Cj4+Pj4gIDAxLjEyLjIwMTYsIDE3OjM2LCAiTWF4aW1l
-IFJpcGFyZCIgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPjoKPj4+Pj4gIE9uIE1v
-biwgTm92IDI4LCAyMDE2IGF0IDEyOjI5OjA3QU0gKzAwMDAsIEFuZHLDqSBQcnp5d2FyYSB3cm90
-ZToKPj4+Pj4+ICAgPiBTb21ldGhpbmcgbW9yZSBpbnRlcmVzdGluZyBoYXBwZW5lZC4KPj4+Pj4+
-ICAgPgo+Pj4+Pj4gICA+IFh1bmxvbmcgbWFkZSBhIGFkZC1vbiBib2FyZCBmb3IgT3JhbmdlIFBp
-IFplcm8sIHdoaWNoIGV4cG9zZXMgdGhlCj4+Pj4+PiAgID4gdHdvIFVTQiBDb250cm9sbGVycyBl
-eHBvcnRlZCBhdCBleHBhbnNpb24gYnVzIGFzIFVTQiBUeXBlLUEKPj4+Pj4+ICAgPiBjb25uZWN0
-b3JzLgo+Pj4+Pj4gICA+Cj4+Pj4+PiAgID4gQWxzbyBpdCBleHBvc2VzIGEgYW5hbG9nIEEvViBq
-YWNrIGFuZCBhIG1pY3JvcGhvbmUuCj4+Pj4+PiAgID4KPj4+Pj4+ICAgPiBTaG91bGQgSSBlbmFi
-bGUge2Usb31oY2l7Mi4zfSBpbiB0aGUgZGV2aWNlIHRyZWU/Cj4+Pj4+Pgo+Pj4+Pj4gICBBY3R1
-YWxseSB3ZSBzaG91bGQgZG8gdGhpcyByZWdhcmRsZXNzIG9mIHRoaXMgZXh0ZW5zaW9uIGJvYXJk
-LiBUaGUgVVNCCj4+Pj4+PiAgIHBpbnMgYXJlIG5vdCBtdWx0aXBsZXhlZCBhbmQgYXJlIGV4cG9z
-ZWQgb24gdXNlciBhY2Nlc3NpYmxlIHBpbnMgKGp1c3QKPj4+Pj4+ICAgbm90IHNvbGRlcmVkLCBi
-dXQgdGhhdCdzIGEgZGV0YWlsKSwgc28gSSB0aGluayB0aGV5IHF1YWxpZnkgZm9yIERUCj4+Pj4+
-PiAgIGVuYWJsZW1lbnQuIEFuZCBldmVuIGlmIGEgdXNlciBjYW4ndCB1c2UgdGhlbSwgaXQgZG9l
-c24ndCBodXJ0IHRvIGhhdmUKPj4+Pj4+ICAgdGhlbSAoc2luY2UgdGhleSBhcmUgbm90IG11bHRp
-cGxleGVkKS4KPj4+Pj4KPj4+Pj4gIE15IG1haW4gY29uY2VybiBhYm91dCB0aGlzIGlzIHRoYXQg
-d2UnbGwgbGVhdmUgcmVndWxhdG9ycyBlbmFibGVkIGJ5Cj4+Pj4+ICBkZWZhdWx0LCBmb3IgYSBt
-aW5vcml0eSBvZiB1c2Vycy4gQW5kIHRoYXQgbWlub3JpdHkgd2lsbCBwcmV2ZW50IHRvIGRvCj4+
-Pj4+ICBhIHByb3BlciBwb3dlciBtYW5hZ2VtZW50IHdoZW4gdGhlIHRpbWVzIGNvbWUgc2luY2Ug
-d2UnbGwgaGF2ZSB0byBrZWVwCj4+Pj4+ICB0aGF0IGJlaGF2aW91ciBmb3JldmVyLgo+Pj4+Cj4+
-Pj4gIEkgdGhpbmsgdGhlc2UgdXNlcnMgY2FuIGFkZCBhICdmZHQgc2V0IC94eHgveHh4IHN0YXR1
-cyAiZGlzYWJsZWQiICcgLgo+Pj4KPj4+IEkgZG9uJ3QgdGhpbmsgdGhhdCB3aWxsIGJlIG5lY2Vz
-c2FyeSBJJ20gcHJldHR5IHN1cmUgdGhlc2UgZXh0cmEgdXNiCj4+PiBwb3J0cyBkbyBub3QgaGF2
-ZSBhIHJlZ3VsYXRvciBmb3IgdGhlIFZidXMsIHRoZXkganVzdCBob29rIGRpcmVjdGx5Cj4+PiB0
-byB0aGUgNVYgcmFpbCwgY2FuIHNvbWVvbmUgd2l0aCBhIHNjaGVtYXRpYyBjaGVjayA/Cj4+Cj4+
-IFdlIHNlZW1zIHRvIGhhdmUgc3RpbGwgbm8gc2NoZW1hdGljcyBmb3IgdGhlIGFkZC1vbiBib2Fy
-ZC4KPgo+IEZyb20gbG9va2luZyBhdCB0aGUgcGljdHVyZSBvZiB0aGF0IGV4cGFuc2lvbiBib2Fy
-ZCBvbiB0aGUgQWxpZXhwcmVzcwo+IHBhZ2UgYW5kIGNoYXNpbmcgdGhlIHRyYWNrcywgdGhlcmUg
-aXMgY2xlYXJseSBubyB2b2x0YWdlIHJlZ3VsYXRvciBvbgo+IHRoZXJlLCBpdCdzIGp1c3QgcGFz
-c2l2ZSBjb21wb25lbnRzLiBUaGUgNVYgcGluIGZyb20gdGhlIGhlYWRlcnMgaXMKPiByb3V0ZWQg
-Zm9ydGggYW5kIGJhY2sgYmV0d2VlbiB0aGUgdHdvIGxheWVycyB2aWEgc29tZSB2aWFzIGRpcmVj
-dGx5IHRvCj4gdGhlIDVWIHBpbnMgb2YgdGhlIFVTQiBzb2NrZXRzLgo+Cj4+IEJ1dCBzb21ldGhp
-bmcgaXMgc3VyZSBpcyB0aGF0IHRoZXJlJ3Mgbm8gYW55IHJlZ3VsYXRvci1yZWxhdGVkIHBpbnMK
-Pj4gb24gdGhlIGFkZC1vbiBwaW5vdXQuIFRoZXJlJ3Mgb25seSBVU0IgRE0gYW5kIERQIHBpbnMu
-Cj4+Cj4+IFNvIHRoZSBWYnVzIG11c3QgYmUgZGlyZWN0bHkgY29ubmVjdGVkIHRvICs1Vi4KPgo+
-IFNvIHllcywgaXQgaXMuCj4KPiBCdXQgSSB0aGluayB0aGUgcXVlc3Rpb24gaXMgbW9vdCBhbnl3
-YXlzLCBzaW5jZSB3ZSBkb24ndCBwcm92aWRlIERUCj4gc3VwcG9ydCBmb3IgdGhhdCBhZGQtb24g
-Ym9hcmQgYXQgdGhhdCBwb2ludCBhbnl3YXlzLgo+IE9uZSBjb3VsZCBpbWFnaW5lIGFub3RoZXIg
-Ym9hcmQsIHRob3VnaCwgd2hpY2ggaGFzIHJlZ3VsYXRvcnMgc3dpdGNoZWQKPiBieSBHUElPcywg
-YnV0IHRoYXQgd291bGQgYmUgdGhlaXIgcHJvYmxlbSBhbmQgdGhleSB3b3VsZCBoYXZlIHJlZ3Vs
-YXRvcnMKPiBzcGVjaWZpZWQgaW4gdGhlaXIgc3BlY2lmaWMgRFQgc25pcHBldCwgdGhlbi4KPgo+
-IFNvIHRvIHN1bW1hcml6ZToKPiAtIEZvciB0aGF0IHNwZWNpZmljIE9yYW5nZSBQaSBaZXJvIGJv
-YXJkIHdoaWNoIHdlIGRpc2N1c3MgdGhlIERUIGZvcgo+IHRoZXJlIGlzIG5vIHJlZ3VsYXRvciBz
-dXBwb3J0IGZvciB0aGUgYWRkaXRpb25hbCBVU0IgcG9ydHMuIFRodXMgbm90aGluZwo+IHdlIGNv
-dWxkIHR1cm4gb2ZmIHRvIHNhdmUgcG93ZXIuCj4gLSBBIHVzZXIgY291bGQganVzdCB0YWtlIHRo
-ZXNlIFVTQiBicmFja2V0cyB3aXRoIHBpbiBoZWFkZXJzIHRoYXQgYXJlIHNvCj4gY29tbW9uIGlu
-IFBDcyB0byBjb25uZWN0IGFkZGl0aW9uYWwgVVNCIHBvcnRzIHRvIHRoZSBiYWNrIG9mIHRoZSBi
-b3guCj4gT25lIGp1c3QgbmVlZHMgdG8gcmUtc29ydCB0aGUgcGlucywgd2hpY2ggaXMgYSBtYXR0
-ZXIgb2YgYSBtaW51dGUuCj4gLSBBcyBsb25nIGFzIHdlIGRvbid0IHByb3ZpZGUgYW55IGVhc3kg
-d2F5IG9mIGhhbmRsaW5nIERUIGNoYW5nZXMsIHdlCj4gc2hvdWxkIGVuYWJsZSB0aGUgVVNCIHBv
-cnRzIGZvciB0aGUgc2FrZSBvZiB0aGUgdXNlcnMgb2YgZWl0aGVyIHRob3NlCj4gYnJhY2tldHMg
-b3IgdGhlIGV4cGFuc2lvbiBib2FyZC4gQW55IG1vcmUgc29waGlzdGljYXRlZCBVU0IgZXhwYW5z
-aW9uCj4gYm9hcmQgd2l0aCByZWd1bGF0b3JzIHdvdWxkIG5lZWQgdG8gYW1lbmQgdGhlIERUIGFu
-eXdheS4KPgo+IERvZXMgdGhhdCBtYWtlIHNlbnNlPwoKU291bmRzIGdvb2QgdG8gbWUuCgpDaGVu
-WXUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Hi,
+
+On Fri, Dec 2, 2016 at 11:05 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> Orange Pi Zero is a board that came with the new Allwinner H2+ SoC and a
+> SDIO Wi-Fi chip by Allwinner (XR819).
+>
+> Add a device tree file for it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+> Changes since v2:
+> - Merged SDIO Wi-Fi patch into it.
+> - SDIO Wi-Fi: add a ethernet1 alias to it, as it has no internal NVRAM.
+> - SDIO Wi-Fi: changed pinctrl binding to generic pinconf
+> - removed all gpio pinctrl nodes
+> - changed h2plus to h2-plus
+> Changes since v1:
+> - Convert to generic pinconf bindings.
+> - SDIO Wi-Fi: add patch.
+>
+> Some notes:
+> - The uart1 and uart2 is available on the unsoldered gpio header.
+> - The onboard USB connector has its Vbus directly connected to DCIN-5V (the
+>   power jack)
+>
+>  arch/arm/boot/dts/Makefile                        |   1 +
+>  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 159 ++++++++++++++++++++++
+>  2 files changed, 160 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 6447abc..59f6e86 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -844,6 +844,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>         sun8i-a33-sinlinx-sina33.dtb \
+>         sun8i-a83t-allwinner-h8homlet-v2.dtb \
+>         sun8i-a83t-cubietruck-plus.dtb \
+> +       sun8i-h2-plus-orangepi-zero.dtb \
+>         sun8i-h3-bananapi-m2-plus.dtb \
+>         sun8i-h3-nanopi-neo.dtb \
+>         sun8i-h3-orangepi-2.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> new file mode 100644
+> index 0000000..d18807f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> @@ -0,0 +1,159 @@
+> +/*
+> + * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> + *
+> + * Based on sun8i-h3-orangepi-one.dts, which is:
+> + *   Copyright (C) 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-h3.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +       model = "Xunlong Orange Pi Zero";
+> +       compatible = "xunlong,orangepi-zero", "allwinner,sun8i-h2-plus";
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +               /* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
+> +               ethernet1 = &xr819;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               pwr_led {
+> +                       label = "orangepi:green:pwr";
+> +                       gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+> +                       default-state = "on";
+> +               };
+> +
+> +               status_led {
+> +                       label = "orangepi:red:status";
+> +                       gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
+> +               };
+> +       };
+> +
+> +       reg_vcc_wifi: reg_vcc_wifi {
+> +               compatible = "regulator-fixed";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               regulator-name = "vcc-wifi";
+> +               enable-active-high;
+> +               gpio = <&pio 0 20 GPIO_ACTIVE_HIGH>;
+> +       };
+> +
+> +       wifi_pwrseq: wifi_pwrseq {
+> +               compatible = "mmc-pwrseq-simple";
+> +               reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
+> +       };
+> +};
+> +
+> +&ehci1 {
+> +       status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc0_pins_a>;
+> +       vmmc-supply = <&reg_vcc3v3>;
+> +       bus-width = <4>;
+> +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+> +       cd-inverted;
+> +       status = "okay";
+> +};
+> +
+> +&mmc1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc1_pins_a>;
+> +       vmmc-supply = <&reg_vcc_wifi>;
+> +       mmc-pwrseq = <&wifi_pwrseq>;
+> +       bus-width = <4>;
+> +       non-removable;
+> +       status = "okay";
+> +
+> +       /*
+> +        * Explicitly define the sdio device, so that we can add an ethernet
+> +        * alias for it (which e.g. makes u-boot set a mac-address).
+> +        */
+> +       xr819: sdio_wifi@1 {
+> +               reg = <1>;
+> +       };
+> +};
+> +
+> +&mmc1_pins_a {
+> +       bias-pull-up;
+
+This is already set in h3.dtsi
+
+> +};
+> +
+> +&ohci1 {
+> +       status = "okay";
+> +};
+> +
+> +&uart0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart0_pins_a>;
+> +       status = "okay";
+> +};
+> +
+> +&uart1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart1_pins>;
+> +       status = "disabled";
+> +};
+> +
+> +&uart2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart2_pins>;
+> +       status = "disabled";
+> +};
+> +
+> +&usbphy {
+> +       /* USB VBUS is always on */
+
+I think this comment could use a little work.
+
+AFAIK this board doesn't have an actual USB port.
+It's just the D+/D- pins on the pin header, along
+with the board-wide 5V, also on the pin header.
+
+ChenYu
+
+> +       status = "okay";
+> +};
+> --
+> 2.10.2
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
