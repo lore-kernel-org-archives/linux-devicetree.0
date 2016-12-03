@@ -1,100 +1,210 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 5/7] IIO: add bindings for stm32 timer trigger driver
-Date: Sat, 3 Dec 2016 09:35:58 +0000
-Message-ID: <7f9e10e7-6793-64f2-9e62-bebd9f60ce72@kernel.org>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-6-git-send-email-benjamin.gaignard@st.com>
- <20161202135904.GN2683@dell>
- <CA+M3ks7GhvApJwZVFK7KAbbvbAhp40sdOVvhkyZWBHZXpLfZDQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] mux controller abstraction and iio/i2c muxes
+Date: Sat, 3 Dec 2016 10:11:22 +0000
+Message-ID: <0f817830-e071-d780-ab4c-d67d3bdb827f@kernel.org>
+References: <1479734235-18837-1-git-send-email-peda@axentia.se>
+ <b132143c-259b-6ed2-58c5-b223cc2e72df@metafoo.de>
+ <3870654b-8cf5-30cb-74cd-c5fb1559adba@axentia.se>
+ <d287dc3b-3605-d85d-1aa6-40f3bdcdc72c@kernel.org>
+ <f649f482-5c1c-dd07-161a-556a9c2b31ff@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+M3ks7GhvApJwZVFK7KAbbvbAhp40sdOVvhkyZWBHZXpLfZDQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, Thierry Reding <thierry.reding@gmail.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <f649f482-5c1c-dd07-161a-556a9c2b31ff@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMTIvMTYgMTQ6MjMsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOgo+IDIwMTYtMTItMDIg
-MTQ6NTkgR01UKzAxOjAwIExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+Ogo+PiBPbiBG
-cmksIDAyIERlYyAyMDE2LCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToKPj4KPj4+IERlZmluZSBi
-aW5kaW5ncyBmb3Igc3RtMzIgdGltZXIgdHJpZ2dlcgo+Pj4KPj4+IHZlcnNpb24gMzoKPj4+IC0g
-Y2hhbmdlIGZpbGUgbmFtZQo+Pj4gLSBhZGQgY3Jvc3MgcmVmZXJlbmNlIHdpdGggbWZkIGJpbmRp
-bmdzCj4+Pgo+Pj4gdmVyc2lvbiAyOgo+Pj4gLSBvbmx5IGtlZXAgb25lIGNvbXBhdGlibGUKPj4+
-IC0gYWRkIERUIHBhcmFtZXRlcnMgdG8gc2V0IGxpc3RzIG9mIHRoZSB0cmlnZ2VyczoKPj4+ICAg
-b25lIGxpc3QgZGVzY3JpYmUgdGhlIHRyaWdnZXJzIGNyZWF0ZWQgYnkgdGhlIGRldmljZQo+Pj4g
-ICBhbm90aGVyIG9uZSBnaXZlIHRoZSB0cmlnZ2VycyBhY2NlcHRlZCBieSB0aGUgZGV2aWNlCj4+
-Pgo+Pj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJk
-QHN0LmNvbT4KPj4+IC0tLQo+Pj4gIC4uLi9iaW5kaW5ncy9paW8vdGltZXIvc3RtMzItdGltZXIt
-dHJpZ2dlci50eHQgICAgIHwgMzkgKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gIDEgZmlsZSBj
-aGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspCj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vdGltZXIvc3RtMzItdGltZXItdHJpZ2dlci50
-eHQKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lpby90aW1lci9zdG0zMi10aW1lci10cmlnZ2VyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9paW8vdGltZXIvc3RtMzItdGltZXItdHJpZ2dlci50eHQKPj4+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwLi44NTg4MTZkCj4+PiAtLS0gL2Rldi9u
-dWxsCj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL3RpbWVy
-L3N0bTMyLXRpbWVyLXRyaWdnZXIudHh0Cj4+PiBAQCAtMCwwICsxLDM5IEBACj4+PiArdGltZXIg
-dHJpZ2dlciBiaW5kaW5ncyBmb3IgU1RNMzIKPj4+ICsKPj4+ICtNdXN0IGJlIGEgc3ViLW5vZGUg
-b2YgU1RNMzIgZ2VuZXJhbCBwdXJwb3NlIHRpbWVyIGRyaXZlcgo+Pj4gK1BhcmVudCBub2RlIHBy
-b3BlcnRpZXMgYXJlIGRlc2NyaWJlIGluIC4uL21mZC9zdG0zMi1nZW5lcmFsLXB1cnBvc2UtdGlt
-ZXIudHh0Cj4+PiArCj4+PiArUmVxdWlyZWQgcGFyYW1ldGVyczoKPj4+ICstIGNvbXBhdGlibGU6
-ICAgICAgICAgICAgICAgIG11c3QgYmUgInN0LHN0bTMyLWlpby10aW1lciIKPj4+ICstIGludGVy
-cnVwdHM6ICAgICAgICAgICAgICAgIEludGVycnVwdCBmb3IgdGhpcyBkZXZpY2UKPj4+ICsgICAg
-ICAgICAgICAgICAgICAgICBTZWUgLi4vaW50ZXJydXB0LWNvbnRyb2xsZXIvc3Qsc3RtMzItZXh0
-aS50eHQKPj4+ICsKPj4+ICtPcHRpb25hbCBwYXJhbWV0ZXJzOgo+Pj4gKy0gc3QsaW5wdXQtdHJp
-Z2dlcnMtbmFtZXM6ICAgTGlzdCBvZiB0aGUgcG9zc2libGUgaW5wdXQgdHJpZ2dlcnMgZm9yCj4+
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aGUgZGV2aWNlCj4+PiArLSBzdCxvdXRw
-dXQtdHJpZ2dlcnMtbmFtZXM6ICBMaXN0IG9mIHRoZSBwb3NzaWJsZSBvdXRwdXQgdHJpZ2dlcnMg
-Zm9yCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aGUgZGV2aWNlCj4+PiArCj4+
-PiArUG9zc2libGUgdHJpZ2dlcnMgYXJlIGRlZmluZWQgaW4gaW5jbHVkZS9kdC1iaW5kaW5ncy9p
-aW8vdGltZXIvc3Qsc3RtMzItdGltZXItdHJpZ2dlci5oCj4+PiArCj4+PiArRXhhbXBsZToKPj4+
-ICsgICAgIGdwdGltZXIxOiBncHRpbWVyMUA0MDAxMDAwMCB7Cj4+PiArICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAic3Qsc3RtMzItZ3B0aW1lciI7Cj4+PiArICAgICAgICAgICAgIHJlZyA9IDww
-eDQwMDEwMDAwIDB4NDAwPjsKPj4+ICsgICAgICAgICAgICAgY2xvY2tzID0gPCZyY2MgMCAxNjA+
-Owo+Pj4gKyAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJjbGtfaW50IjsKPj4+ICsKPj4+ICsg
-ICAgICAgICAgICAgdGltZXIxQDAgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAic3Qsc3RtMzItdGltZXItdHJpZ2dlciI7Cj4+PiArICAgICAgICAgICAgICAgICAgICAg
-aW50ZXJydXB0cyA9IDwyNz47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgc3QsaW5wdXQtdHJp
-Z2dlcnMtbmFtZXMgPSBUSU01X1RSR08sCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBUSU0yX1RSR08sCj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBUSU00X1RSR08sCj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBUSU0zX1RSR087Cj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgc3Qsb3V0cHV0LXRyaWdnZXJzLW5hbWVzID0gVElNMV9UUkdPLAo+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFRJTTFfQ0gxLAo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFRJTTFf
-Q0gyLAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IFRJTTFfQ0gzLAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFRJTTFfQ0g0Owo+Pgo+PiBJIHNlZSB3aHkgeW91J3ZlIGRvbmUgaXQgbGlrZSB0aGlz
-IG5vdyAuLi4gYmVjYXVzZSBpdCBtYWtlcyB0aGluZ3MKPj4gZWFzaWVyIGZvciB5b3UgaW4gdGhl
-IGRyaXZlciwgc2luY2UgdGhlIElJTyBzdWJzeXN0ZW0gbWF0Y2hlcyBvbiBuYW1lcwo+PiBzdWNo
-IGFzIHRoZXNlLgo+Pgo+PiBCVVQsIHRoaXMgaXMgYSBMaW51eC1pbXBsZW1lbnRhdGlvbi1pc20u
-ICBKdXN0IHVzZSBwYWlycyBvZiBpbnRlZ2Vycwo+PiBhbmQgY3JlYXRlIHRoZSBMaW51eC1pc20g
-c3RyaW5ncyBpbiB0aGUgZHJpdmVyLgo+IAo+IFRoZSBnb2FsIGlzIG5vdCB0byBtYWtlIHRoaW5n
-cyBlYXNpZXIgaW4gZHJpdmVyIGJ1dCB0byBiZSBhYmxlIHRvIHNoYXJlCj4gdGhlIHRyaWdnZXJz
-IG5hbWVzIHdpdGggb3RoZXIgZHJpdmVycyBsaWtlIERBQyBvciBBREMuCj4gSWYgZWFjaCBkcml2
-ZXIgaGF2ZSB0byBjcmVhdGUgaXQgb3duIHRyaWdnZXJzIG5hbWVzIGl0IHdpbGwgbW9yZSBkaWZm
-aWN1bHQKPiB0byBrZWVwIHRoZW0gY29oZXJlbnQgdGhhbiBpdCB0aGV5IHNoYXJlIHRoZSBzYW1l
-IGRlZmluaXRpb25zCkRvIGl0IGJ5IGRvY3VtZW50YXRpb24uICBUaGlzIHdpbGwgYmUgZWZmZWN0
-aXZlbHkgQUJJIGdvaW5nIGZvcndhcmQKc28gZml4ZWQgb25jZSBpdCBpcyBkZWZpbmVkLiBTaG91
-bGQgYmUgZmFpcmx5IGVhc3kgdG8gdGVsbCBkdXJpbmcgdGVzdGluZwppZiBzb21lb25lIGhhcyBt
-ZXNzZWQgaXQgdXAgOykKCkpvbmF0aGFuCj4gCj4+Cj4+PiArICAgICAgICAgICAgIH07Cj4+PiAr
-ICAgICB9Owo+Pgo+PiAtLQo+PiBMZWUgSm9uZXMKPj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmlj
-cyBMYW5kaW5nIFRlYW0gTGVhZAo+PiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2Fy
-ZSBmb3IgQVJNIFNvQ3MKPj4gRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxv
-Zwo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVu
-c3Vic2NyaWJlIGxpbnV4LWlpbyIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jk
-b21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2Vy
-Lmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IAoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 29/11/16 16:02, Peter Rosin wrote:
+> On 2016-11-27 13:00, Jonathan Cameron wrote:
+>> On 23/11/16 11:47, Peter Rosin wrote:
+>>> On 2016-11-22 21:58, Lars-Peter Clausen wrote:
+>>>> On 11/21/2016 02:17 PM, Peter Rosin wrote:
+>>>> [...]
+>>>>> I have a piece of hardware that is using the same 3 GPIO pins
+>>>>> to control four 8-way muxes. Three of them control ADC lines
+>>>>> to an ADS1015 chip with an iio driver, and the last one
+>>>>> controls the SDA line of an i2c bus. We have some deployed
+>>>>> code to handle this, but you do not want to see it or ever
+>>>>> hear about it. I'm not sure why I even mention it. Anyway,
+>>>>> the situation has nagged me to no end for quite some time.
+>>>>>
+>>>>> So, after first getting more intimate with the i2c muxing code
+>>>>> and later discovering the drivers/iio/inkern.c file and
+>>>>> writing a couple of drivers making use of it, I came up with
+>>>>> what I think is an acceptable solution; add a generic mux
+>>>>> controller driver (and subsystem) that is shared between all
+>>>>> instances, and combine that with an iio mux driver and a new
+>>>>> generic i2c mux driver. The new i2c mux I called "simple"
+>>>>> since it is only hooking the i2c muxing and the new mux
+>>>>> controller (much like the alsa simple card driver does for ASoC).
+>>>>
+>>>> While abstracting this properly is all nice and good and the way it should
+>>>> be done, but it also adds a lot of complexity and the devicetree adds a lot
+>>>> of restrictions on what can actually be represented.
+>>>
+>>> This is a characterization without any specifics. But is the
+>>> characterization true? You have two complaints, complexity
+>>> and restrictions with bindings.
+>>>
+>>>> There is a certain point where the fabric on a PCB becomes so complex that
+>>>> it deserves to be a device on its own (like the audio fabric drivers).
+>>>> Especially when the hardware is built with a certain application in mind and
+>>>> the driver is supposed to impose policy which reflects this application. The
+>>>> latter can often not properly be described with the primitives the
+>>>> devicetree can offer.
+>>>>
+>>>> And I think your setup is very borderline what can be done in a declarative
+>>>> way only and it adds a lot of complexity over a more imperative solution in
+>>>> form of a driver. I think it is worth investigating about having a driver
+>>>> that is specific to your fabric and handles the interdependencies of the
+>>>> discrete components.
+>>>
+>>> So, there are three "new" concepts:
+>>>
+>>> 1. Sticking a mux in front of an AD-converter. That's not all that
+>>> novel, nor complex. Quite the opposite, I'd say. In fact, I find it
+>>> a bit amazing that there is no in-kernel support for it.
+>> As ever first person who needs it and has the skills to write it gets to do it ;)
+>> Congratulations Peter ;)
+>>>
+>>> 2. Reusing the same GPIO-pins to drive different muxes. There are
+>>> obviously chips that work this way (as Jonathan pointed out) and
+>>> these will at some point get used in Linux devices. I guess they
+>>> already are used, but that people handle them in userspace. Or
+>>> something? If this is complex, which I question, it will still need
+>>> support at some point. At least that's what I believe.
+>>>
+>>> 3. Using the same GPIO pins to mux things handled by different
+>>> subsystems. Right, this is a bit crazy, and I'd rather not have this
+>>> requirement, but this HW is what it is so I'll need to handle it in
+>>> some way. It is also what stops me from falling back to a userspace
+>>> solution, which is probably connected to why #1 and #2 is not supported
+>>> by the kernel; everybody probably does muxing in userspace. Which is
+>>> not necessarily a good idea, nor how it's supposed to be done...
+>>>
+>>> So, the only thing that's out of the ordinary (as I see it), is #3.
+>>> The question that then needs an answer is how the in-kernel solution
+>>> for #1 and #2 would look if we do not consider #3.
+>>>
+>>> And I claim that the desired solution to #1 and #2 is pretty close
+>>> to my proposal.
+>>>
+>>> A. You do not want mux-controller drivers in every subsystem that
+>>> needs them.
+>> Agreed.
+>>>
+>>> B. You do not want every mux-consumer to know the specifics of how to
+>>> operate every kind of mux; there are muxes that are not controlled
+>>> with GPIO pins...
+>>>
+>>> C. When you implement muxing in a subsystem, there will in some cases
+>>> be a need to handle parallel muxing, where there is a need to share
+>>> mux-controllers.
+>>>
+>>> It just feels right to separate out the mux-controller and refer to
+>>> it from where a mux is needed. It solves #1 and #2. And, of course,
+>>> as a bonus #3 is also solved. But my bias is obvious.
+>>>
+>>> And that leads us to the restrictions with the bindings. And the same
+>>> thing happens; the solution for #2 also solves #3.
+>>>
+>>> So how do you refer to a mux-controller from where it's needed? My
+>>> first proposal used a dt phandle, for the second round I put them in
+>>> the parent node. It would be super if it was possible for the mux-
+>>> consumer to create the mux-controller device from the same dt
+>>> node that is already bound to the mux-consumer. The problem is that
+>>> the mux-consumer should not hard-code which mux-controller device it
+>>> should create. The best I can think of is some kind of 'mux-compatible'
+>>> attribute, that works like the standard 'compatible' attribute. That
+>>> would simplify the bindings for the normal case (#1) where the mux-
+>>> controller isn't shared (#2 and #3). Maybe it's possible to fix this
+>>> issue somehow? I simply don't know?
+>> As Lars stated, it's marginal.  The question is not at what point do we
+>> 'have to' bother with a fabric driver, but rather at what point does it
+>> make a our lives easier.
+>>
+>> Take you nastiest mux case described earlier.
+>> The ideal would be to represent the ADC and 3 muxes as (approximately) a
+>> single ADC to userspace that just happens to have somewhere near 23 inputs.
+>>
+>> To do that in device tree we need to describe
+>>
+>> 1 The adc
+>> 2 The three muxes
+>> 3 The software representation to pull all of these back into a single device.
+>>
+>> That last part to my mind trips the balance to the point where a fabric driver
+>> would make sense.  It's not complex.  Just a few lines of code tying all the
+>> elements together without ending up with a fairly fiendish setup to describe in
+>> device tree.
+>>
+>> Also just wait until we have muxes stacked on muxes, with cross overs occuring.
+>> Some of the ASoC parts can actually have effective loops if you try all the mux
+>> combinations.
+>>
+>> So question is do we have a 'simple case description' in device tree or force
+>> fabric drivers everywhere?  I think I'm in favour of the simple case - which handles
+>> one of your two uses nicely.  The second one to do the the recombining of channels after
+>> the muxes, ends up looking to me like it needs a fabric driver.
+>>
+>> Note we are only talking about bindings vs code based description here. I agree
+>> entirely with the concept of a generic mux subsystem.
+> 
+> Ok, take the simple case - an adc with a mux in front of it.
+> 
+> We do not want to build a whole new iio-mux subsystem like the one under
+> i2c, so from iio we want to refer to the actual mux controller driver
+> which lives under the mux subsystem. Getting this far is what solves my
+> "second need" [2] from the v2 thread.
+> 
+> Agreed, doing this w/o a fabric driver spills the guts and it might be
+> cleaner to build a fabric driver that takes a reference to the dpot and
+> the mux controller and just knows the rest. In the end this fabric driver
+> requires two things to actually make a difference; some way to instantiate
+> drivers without the help of device-tree and some way make those drivers
+> only provide in-kernel access (and preferably it should hide the dpot from
+> userspace too, while at it).
+> 
+> But doing all that in a fabric driver is not going to change the fact that
+> the iio-mux driver is useful on its own. I bet someone else is going to
+> reuse it somewhere down the line. Which means that a fabric driver would
+> perhaps be nice for my "second need", but not critical, it works pretty
+> well to just piggyback on the general solution .
+Absolutely. No denying the usefulness of having a nice little mux subsystem
+with the resulting iio-mux driver.
+> 
+> Over to my "first need" [1] from the v2 thread.
+> 
+> The above iio-mux driver handles the three muxed adc lines beautifully,
+> just refer all three iio-muxes to the same mux controller. Agreed, with
+> a fabric driver I could get one device with 25 channels instead of three
+> devices with 8 channels each plus one unmuxed line directly from the adc
+> device. However, that doesn't bother me at all, I may even think it is
+> preferable because otherwise I'd have to come up with some way to
+> identify which channel is which in that big 25-channel jungle. Another
+> drawback with having a fabric driver here is that it would need to be an
+> i2c-mux driver, because one of the key points of doing a fabric driver
+> for my first need was to hide the shared mux, right? Instead, I have the
+> new i2c-mux-simple driver that builds an i2c-mux using any mux controller
+> from the mux subsystem (something that may prove useful to others in the
+> future), which in my case is the same mux controller that also muxes the
+> three adc lines.
+> 
+> In short, doing fabric drivers buys me almost nothing besides having a
+> slightly more distinct device tree. All the components used to describe
+> this are either already accepted drivers or usable by others (at least
+> the way I see it).
+Fair enough.  Perhaps it's not worthwhile in this case, but lets keep
+the concept in mind as we move forward and see if anyone else has
+more complex hardware than you do ;)
+(there is always something out there!)
+> 
+> Cheers,
+> Peter
+> 
+> [1] three adc lines and an i2c bus muxed with the same gpio pins
+> [2] mcp4561 dpot -> dpot-dac -> envelope-detector-adc -> iio-mux
+> 
