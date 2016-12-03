@@ -1,111 +1,48 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH 39/39] mtd: nand: denali_dt: add compatible strings for
- UniPhier SoC variants
-Date: Sat, 3 Dec 2016 16:08:53 -0600
-Message-ID: <CADhT+wfh+_oQ6TDJJ9b-nnSYP+N5eYTL1jwZ6OuchAF-3iuYxA@mail.gmail.com>
-References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com>
- <1480183585-592-40-git-send-email-yamada.masahiro@socionext.com>
- <20161201160511.ahlibszokg547wxk@rob-hp-laptop> <CAK7LNASJLbizHEh8mUUVDvTKiRMCSvyYtdrQzwN5tHmCV8iYOA@mail.gmail.com>
- <CAL_Jsq+H-JcAtDV3NCfptCWrmTgkQkmZFTj=Do8HhX4b=At9RA@mail.gmail.com>
- <CAK7LNAQHnH=On=+7fzenu_v6rB71y9hYuAZi5oinZFu-tfAdjw@mail.gmail.com> <f98b49b9-91fc-c3d0-1ace-fa862581e53b@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2 1/3] ARM: dts: vf610-zii-dev-rev-b: Remove leftover PWM pingroup
+Date: Sat,  3 Dec 2016 14:30:17 -0800
+Message-ID: <1480804219-12596-1-git-send-email-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f98b49b9-91fc-c3d0-1ace-fa862581e53b@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>, Dinh Nguyen <dinguyen@altera.com>, Alan Tull <atull@opensource.altera.com>, Chin Liang See <clsee@altera.com>, Dinh Nguyen <dinguyen@kernel.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, cphealy@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Remove pwm0grp since it is:
 
-On Fri, Dec 2, 2016 at 8:49 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> On 12/03/2016 03:41 AM, Masahiro Yamada wrote:
->> Hi Rob,
->
-> Hi!
->
->> 2016-12-03 1:26 GMT+09:00 Rob Herring <robh@kernel.org>:
->>
->>>>
->>>>
->>>> (Plan A)
->>>>   "denali,socfpga-nand"           (for Altera SOCFPGA variant)
->>>>   "denali,uniphier-nand-v1"       (for old Socionext UniPhier family variant)
->>>>   "denali,uniphier-nand-v2"       (for new Socionext UniPhier family variant)
->>>>
->>>> (Plan B)
->>>>   "altera,denali-nand"            (for Altera SOCFPGA variant)
->>>>   "socionext,denali-nand-v5a"     (for old Socionext UniPhier family variant)
->>>>   "socionext,denali-nand-v5b"     (for new Socionext UniPhier family variant)
->>
->>> Let the Altera folks worry about their stuff. At least for soft IP in
->>> FPGA, it's a bit of a special case. The old string can remain as bad
->>> as it is.
->>
->>
->> Hmm, I am not sure if this IP would fit in FPGA
->> (to use it along with NIOS-II?)
->>
->> (even if it happened, nothing of this IP would be customizable on users' side.
->> When buying the IP, SoC vendors submit a list of desired features.
->> Denali (now Cadence) generates the RTL according to the configuration sheet.
->> The function is fixed at this point. So, generic compatible would be
->> useless anyway.)
->>
->>
->> If we are talking about SOCFPGA,
->> SOCFPGA is not only FPGA. Rather "SOC" + "FPGA".
->> It consists of two parts:
->> [1] SOC part  (Cortex-A9 + various hard-wired peripherals such UART,
->> USB, SD, NAND, ...)
->> [2] FPGA part (User design logic)
->>
->> The Denali NAND controller is included in [1].
->> So, as far as we talk about the Denali on SOCFPGA,
->> it is as hard-wired as Intel, Socionext's ones.
->
-> That's correct, the Denali NAND IP in altera socfpga is a hardware
-> block. You can make it available to the fabric too, but by default
-> it's used by the ARM part of the chip, so for this discussion, you
-> can forget that the FPGA part exists altogether.
->
-> I would be in favor of plan B, since it seems to be the more often
-> taken approach. A nice example is ci-hdrc:
->
-> $ git grep compatible drivers/usb/chipidea/
->
->>> I simply would do "socionext,uniphier-v5b-nand" (and v5a).
->>> The fact that it is denali is part of the documentation.
->>>
->>
->> Let me think about this.
->>
->> Socionext bought two version of Denali IP,
->> and we are now re-using the newer one (v5b) for several SoCs.
->> Socionext has some more product lines other than Uniphier SoC family,
->> perhaps wider re-use might happen in the future.
->>
->> At first, I included "uniphier" in compatible, but I am still wondering
->> if such a specific string is good or not.
->>
->> Also, comments from Altera engineers are appreciated.
+	a) Not referenced anywhere in the DTS file (unlike Tower board it
+	is based on, this board does not use/expose FTM0)
 
-Sorry, it's taken me a while to add comments. My altera email is very spotty now
-that the Intel merge is completed. Please use dinguyen@kernel.org for any future
-communications.
+	b) Configures PTB2 and PTB3 in a way that contradicts
+	pinctrl-mdio-mux
 
-Yes, everything that is said so far for the NAND controller on the
-SoCFPGA is correct. I added the binding for the controller a while
-back, but unfortunately, we never added the NAND interface to the
-devkit, so we did not do much in terms of enabling it.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
 
-I think the only SoCFPGA board I know that has the NAND interface active is
-the TRCom board, but I have never seen that board.
+No changes since v1
 
-I don't have any strong opinions on this matter, just as long as the
-original binding
-"denali,denali-nand-dt" is kept, and I think Rob was ok with keeping
-that binding.
+ arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-Dinh
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+index fa19cfd..2210811 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+@@ -677,15 +677,6 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_pwm0: pwm0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB0__FTM0_CH0	0x1582
+-			VF610_PAD_PTB1__FTM0_CH1	0x1582
+-			VF610_PAD_PTB2__FTM0_CH2	0x1582
+-			VF610_PAD_PTB3__FTM0_CH3	0x1582
+-		>;
+-	};
+-
+ 	pinctrl_qspi0: qspi0grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
+-- 
+2.5.5
