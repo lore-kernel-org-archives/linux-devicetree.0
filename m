@@ -1,170 +1,95 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv4 11/15] clk: ti: clockdomain: add clock provider support
- to clockdomains
-Date: Fri, 2 Dec 2016 16:18:52 -0800
-Message-ID: <20161203001852.GI4705@atomide.com>
-References: <1476805568-19264-1-git-send-email-t-kristo@ti.com>
- <1476805568-19264-12-git-send-email-t-kristo@ti.com>
- <20161028005047.GQ26139@codeaurora.org>
- <cd32a554-ba0a-33cd-c15c-121524ce679b@ti.com>
- <20161028125112.xfyrx7l7m64z6cu6@atomide.com>
- <20161028233617.GP16026@codeaurora.org>
- <20161028235448.57squdf6cu2wxxvm@atomide.com>
- <148071802182.32158.11479184984645880313@resonance>
- <20161202231240.GH4705@atomide.com>
- <148072274164.32158.6012452044533845688@resonance>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 39/39] mtd: nand: denali_dt: add compatible strings for
+ UniPhier SoC variants
+Date: Sat, 3 Dec 2016 11:41:13 +0900
+Message-ID: <CAK7LNAQHnH=On=+7fzenu_v6rB71y9hYuAZi5oinZFu-tfAdjw@mail.gmail.com>
+References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com>
+ <1480183585-592-40-git-send-email-yamada.masahiro@socionext.com>
+ <20161201160511.ahlibszokg547wxk@rob-hp-laptop>
+ <CAK7LNASJLbizHEh8mUUVDvTKiRMCSvyYtdrQzwN5tHmCV8iYOA@mail.gmail.com>
+ <CAL_Jsq+H-JcAtDV3NCfptCWrmTgkQkmZFTj=Do8HhX4b=At9RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <148072274164.32158.6012452044533845688@resonance>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+H-JcAtDV3NCfptCWrmTgkQkmZFTj=Do8HhX4b=At9RA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-* Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [161202 15:52]:
-> Quoting Tony Lindgren (2016-12-02 15:12:40)
-> > * Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [161202 14:34]:
-> > > Quoting Tony Lindgren (2016-10-28 16:54:48)
-> > > > * Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> [161028 16:37]:
-> > > > > On 10/28, Tony Lindgren wrote:
-> > > > > > * Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [161028 00:43]:
-> > > > > > > On 28/10/16 03:50, Stephen Boyd wrote:
-> > > > > > > > I suppose a PRCM is
-> > > > > > > > like an MFD that has clocks and resets under it? On other
-> > > > > > > > platforms we've combined that all into one node and just had
-> > > > > > > > #clock-cells and #reset-cells in that node. Is there any reason
-> > > > > > > > we can't do that here?
-> > > > > > > 
-> > > > > > > For OMAPs, there are typically multiple instances of the PRCM around; OMAP4
-> > > > > > > for example has:
-> > > > > > > 
-> > > > > > > cm1 @ 0x4a004000 (clocks + clockdomains)
-> > > > > > > cm2 @ 0x4a008000 (clocks + clockdomains)
-> > > > > > > prm @ 0x4a306000 (few clocks + resets + power state handling)
-> > > > > > > scrm @ 0x4a30a000 (few external clocks + plenty of misc stuff)
-> > > > > > > 
-> > > > > > > These instances are also under different power/voltage domains which means
-> > > > > > > their PM behavior is different.
-> > > > > > > 
-> > > > > > > The idea behind having a clockdomain as a provider was mostly to have the
-> > > > > > > topology visible : prcm-instance -> clockdomain -> clocks
-> > > > > > 
-> > > > > > Yeah that's needed to get the interconnect hierarchy right for
-> > > > > > genpd :)
-> > > > > > 
-> > > > > > > ... but basically I think it would be possible to drop the clockdomain
-> > > > > > > representation and just mark the prcm-instance as a clock provider. Tony,
-> > > > > > > any thoughts on that?
-> > > > > > 
-> > > > > > No let's not drop the clockdomains as those will be needed when we
-> > > > > > move things into proper hierarchy within the interconnect instances.
-> > > > > > This will then help with getting things right with genpd.
-> > > > > > 
-> > > > > > In the long run we just want to specify clockdomain and the offset of
-> > > > > > the clock instance within the clockdomain in the dts files.
-> > > > > > 
-> > > > > 
-> > > > > Sorry, I have very little idea how OMAP hardware works. Do you
-> > > > > mean that you will have different nodes for each clockdomain so
-> > > > > that genpd can map 1:1 to the node in dts? But in hardware
-> > > > > there's a prcm that allows us to control many clock domains
-> > > > > through register read/writes? How is the interconnect involved?
-> > > > 
-> > > > There are multiple clockdomains, at least one for each interconnect
-> > > > instance. Once a clockdomain is idle, the related interconnect can
-> > > > idle too. So yeah genpd pretty much maps 1:1 with the clockdomains.
-> > > > 
-> > > > There's more info in for example omap4 TRM section "3.4.1 Device
-> > > > Power-Management Layout" that shows the voltage/power/clock domains.
-> > > > The interconnect instances are mostly named there too looking at
-> > > > the L4/L3 naming.
-> > > 
-> > > I'm confused on two points:
-> > > 
-> > > 1) why are the clkdm's acting as clock providers? I've always hated the
-> > > name "clock domain" since those bits are for managing module state, not
-> > > clock state. The PRM, CM1 and CM2 provide the clocks, not the
-> > > clockdomains.
-> > 
-> > The clock domains have multiple clock inputs that are routed to multiple
-> > child clocks. So it is a clock :)
-> > 
-> > See for example omap4430 TRM "3.6.4 CD_WKUP Clock Domain" on page
-> > 393 in my revision here.
-> > 
-> > On that page "Figure 3-48" shows CD_WKUP with the four input clocks.
-> > And then "Table 3-84. CD_WKUP Control and Status Parameters" shows
-> > the CD_WKUP clock domain specific registers. These registers show
-> > the status, I think they are all read-only registers. Then CD_WKUP
-> > has multiple child clocks with configurable registers.
-> > 
-> > From hardware register point of view, each clock domain has:
-> > 
-> > - Read-only clockdomain status registers in the beginning of
-> >   the address space
-> > 
-> > - Multiple similar clock instances register instances each
-> >   mapping to a specific interconnect target module
-> > 
-> > These are documented in "3.11.16.1 WKUP_CM Register Summary".
-> 
-> Oh, this is because you are treating the MODULEMODE bits like gate
-> clocks. I never really figured out if this was the best way to model
-> those bits since they do more than control a line toggling at a rate.
-> For instance this bit will affect the master/slave IDLE protocol between
-> the module and the PRCM.
+Hi Rob,
 
-Yes seems like there is some negotiation going on there with the
-target module. But from practical point of view the CLKCTRL
-register is the gate for a module functional clock.
+2016-12-03 1:26 GMT+09:00 Rob Herring <robh@kernel.org>:
 
-> > From hardware point of view, we ideally want to map interconnect
-> > target modules to the clock instance offset from the clock domain
-> > for that interconnect segment. For example gptimer1 clocks would
-> > be just:
-> > 
-> > clocks = <&cd_wkup 0x40>;
-> > 
-> > > 2) why aren't the clock domains modeled as genpds with their associated
-> > > devices attached to them? Note that it is possible to "nest" genpd
-> > > objects. This would also allow for the "Clockdomain Dependency"
-> > > relationships to be properly modeled (see section 3.1.1.1.7 Clock Domain
-> > > Dependency in the OMAP4 TRM).
-> > 
-> > Clock domains only route clocks to child clocks. Power domains
-> > are different registers. The power domains map roughly to
-> > interconnect instances, there we have registers to disable the
-> > whole interconnect when idle.
-> 
-> I'm not talking about power islands at all, but the genpd object in
-> Linux. For instance, if we treat each clock domain like a clock
-> provider, how could the functional dependency between clkdm_A and
-> clkdm_B be asserted?
+>>
+>>
+>> (Plan A)
+>>   "denali,socfpga-nand"           (for Altera SOCFPGA variant)
+>>   "denali,uniphier-nand-v1"       (for old Socionext UniPhier family variant)
+>>   "denali,uniphier-nand-v2"       (for new Socionext UniPhier family variant)
+>>
+>> (Plan B)
+>>   "altera,denali-nand"            (for Altera SOCFPGA variant)
+>>   "socionext,denali-nand-v5a"     (for old Socionext UniPhier family variant)
+>>   "socionext,denali-nand-v5b"     (for new Socionext UniPhier family variant)
 
-To me it seems that some output of a clockdomain is just a input
-of another clockdomain? So it's just the usual parent child
-relationship once we treat a clockdomain just as a clock. Tero
-probably has some input here.
+> Let the Altera folks worry about their stuff. At least for soft IP in
+> FPGA, it's a bit of a special case. The old string can remain as bad
+> as it is.
 
-> There is certainly no API for that in the clock framework, but for genpd
-> your runtime_pm_get() callback for clkdm_A could call runtime_pm_get
-> against clkdm_B, which would satisfy the requirement. See section
-> 3.1.1.1.7 Clock Domain Dependency in the OMAP4 TRM, version AB.
 
-To me it seems the API is just clk_get() :) Do you have some
-specific example we can use to check? My guess is that the
-TRM "Clock Domain Dependency" is just the usual parent child
-relationship between clocks that are the clockdomains..
+Hmm, I am not sure if this IP would fit in FPGA
+(to use it along with NIOS-II?)
 
-If there is something more magical there certainly that should
-be considered though.
+(even if it happened, nothing of this IP would be customizable on users' side.
+When buying the IP, SoC vendors submit a list of desired features.
+Denali (now Cadence) generates the RTL according to the configuration sheet.
+The function is fixed at this point. So, generic compatible would be
+useless anyway.)
 
-Regards,
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we are talking about SOCFPGA,
+SOCFPGA is not only FPGA. Rather "SOC" + "FPGA".
+It consists of two parts:
+[1] SOC part  (Cortex-A9 + various hard-wired peripherals such UART,
+USB, SD, NAND, ...)
+[2] FPGA part (User design logic)
+
+The Denali NAND controller is included in [1].
+So, as far as we talk about the Denali on SOCFPGA,
+it is as hard-wired as Intel, Socionext's ones.
+
+
+> I simply would do "socionext,uniphier-v5b-nand" (and v5a).
+> The fact that it is denali is part of the documentation.
+>
+
+Let me think about this.
+
+Socionext bought two version of Denali IP,
+and we are now re-using the newer one (v5b) for several SoCs.
+Socionext has some more product lines other than Uniphier SoC family,
+perhaps wider re-use might happen in the future.
+
+At first, I included "uniphier" in compatible, but I am still wondering
+if such a specific string is good or not.
+
+Also, comments from Altera engineers are appreciated.
+
+
+-- 
+Best Regards
+Masahiro Yamada
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
