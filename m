@@ -1,65 +1,101 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
-Date: Sat, 3 Dec 2016 23:10:35 +0200
-Message-ID: <20b0652b-f5b9-ad57-ac01-3517a6c74534@mentor.com>
-References: <2778019.JJI4Lz6scm@avalon> <2404891.arL9itCrmb@avalon>
- <CAOMZO5CJTu7jzCb-iVLe2wt8VjyzWq-oYaC2Jw34V8SgaqrGkw@mail.gmail.com>
- <43555864.BsLMpzJGof@avalon>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
+Date: Sat, 3 Dec 2016 22:14:17 +0100
+Message-ID: <20161203211417.hmab72565ubxywni@piout.net>
+References: <1480781636-15653-1-git-send-email-akinobu.mita@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <43555864.BsLMpzJGof@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-cGfAhawkTDLHbOjZJNBcug@public.gmane.org>, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBNHLRTBAKGQE5GEMHDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1480781636-15653-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi,
 
-On 12/03/2016 07:16 PM, Laurent Pinchart wrote:
-> Hi Fabio,
->
-> On Friday 25 Nov 2016 13:29:37 Fabio Estevam wrote:
->> On Fri, Nov 25, 2016 at 1:22 PM, Laurent Pinchart wrote:
->>>> I got the clock name from I.MX6Q TRM, I also checked the name again
->>>> with Rockchip IC design team now, hope to get some new information soon.
->>>
->>> Thank you. While at it, could you ask them which version of the DW HDMI IP
->>> used in the SoC ?
->>
->> DW HDMI IP used in Rockchip is:
->> dwhdmi-rockchip ff980000.hdmi: Detected HDMI controller 0x20:0xa:0xa0:0xc1
->>
->> as shown at
->> https://storage.kernelci.org/mainline/v4.9-rc6-157-g16ae16c6e561/arm-multi_
->> v7_defconfig/lab-collabora/boot-rk3288-rock2-square_rootfs:nfs.html
->>
->> DW HDMI IP used  on mx6q is:
->> dwhdmi-imx 120000.hdmi: Detected HDMI controller 0x13:0xa:0xa0:0xc1
->
-> Would you be able to print the value of the CONFIG[0-3]_ID registers as well ?
-> I'm also interested in the same information for RK3288, as well as for IMX6DL.
->
+On 04/12/2016 at 01:13:56 +0900, Akinobu Mita wrote :
+> diff --git a/drivers/rtc/rtc-r7301.c b/drivers/rtc/rtc-r7301.c
+> new file mode 100644
+> index 0000000..0929f10
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-r7301.c
+> @@ -0,0 +1,455 @@
+> +/*
+> + * EPSON TOYOCOM RTC-7301SF/DG Driver
+> + *
+> + * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * Based on rtc-rp5c01.c
+> + *
+> + * Datasheet: http://www5.epsondevice.com/en/products/parallel/rtc7301sf.html
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/regmap.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define DRV_NAME "rtc-r7301"
+> +
+> +enum {
+> +	RTC7301_1_SEC		= 0x0,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_SEC		= 0x1,	/* Bank 0 and Band 1 */
+> +	RTC7301_AE		= BIT(3),
+> +	RTC7301_1_MIN		= 0x2,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_MIN		= 0x3,	/* Bank 0 and Band 1 */
+> +	RTC7301_1_HOUR		= 0x4,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_HOUR		= 0x5,	/* Bank 0 and Band 1 */
+> +	RTC7301_DAY_OF_WEEK	= 0x6,	/* Bank 0 and Band 1 */
+> +	RTC7301_1_DAY		= 0x7,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_DAY		= 0x8,	/* Bank 0 and Band 1 */
+> +	RTC7301_1_MONTH		= 0x9,	/* Bank 0 */
+> +	RTC7301_10_MONTH	= 0xa,	/* Bank 0 */
+> +	RTC7301_1_YEAR		= 0xb,	/* Bank 0 */
+> +	RTC7301_10_YEAR		= 0xc,	/* Bank 0 */
+> +	RTC7301_100_YEAR	= 0xd,	/* Bank 0 */
+> +	RTC7301_1000_YEAR	= 0xe,	/* Bank 0 */
+> +	RTC7301_ALARM_CONTROL	= 0xe,	/* Bank 1 */
+> +	RTC7301_ALARM_CONTROL_AIE	= BIT(0),
+> +	RTC7301_ALARM_CONTROL_AF	= BIT(1),
+> +	RTC7301_TIMER_CONTROL	= 0xe,	/* Bank 2 */
+> +	RTC7301_TIMER_CONTROL_TIE	= BIT(0),
+> +	RTC7301_TIMER_CONTROL_TF	= BIT(1),
+> +	RTC7301_CONTROL		= 0xf,	/* All banks */
+> +	RTC7301_CONTROL_BUSY		= BIT(0),
+> +	RTC7301_CONTROL_STOP		= BIT(1),
+> +	RTC7301_CONTROL_BANK_SEL_0	= BIT(2),
+> +	RTC7301_CONTROL_BANK_SEL_1	= BIT(3),
+> +};
+> +
 
-              i.MX6Q    i.MX6DL
-DESIGN_ID     0x13      0x13
-REVISION_ID   0x0a      0x1a    <--- the only difference
-PRODUCT_ID0   0xa0      0xa0
-PRODUCT_ID1   0xc1      0xc1
-CONFIG0_ID    0x8f      0x8f
-CONFIG1_ID    0x01      0x01
-CONFIG2_ID    0xf2      0xf2    <--- HDMI 3D TX PHY
-CONFIG3_ID    0x02      0x02
+Well, I'm still not convinced this enum is useful, please change those
+to #defines.
 
-I'm not sure, if i.MX6D and MX6S have the same DW HDMI IP as on i.MX6Q
-and i.MXDL respectively, and I don't have i.MX6DP or i.MX6QP powered board
-on hand to dump the registers.
+Else, this seems good to me.
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
