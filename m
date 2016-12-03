@@ -1,210 +1,1640 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 0/7] mux controller abstraction and iio/i2c muxes
-Date: Sat, 3 Dec 2016 10:11:22 +0000
-Message-ID: <0f817830-e071-d780-ab4c-d67d3bdb827f@kernel.org>
-References: <1479734235-18837-1-git-send-email-peda@axentia.se>
- <b132143c-259b-6ed2-58c5-b223cc2e72df@metafoo.de>
- <3870654b-8cf5-30cb-74cd-c5fb1559adba@axentia.se>
- <d287dc3b-3605-d85d-1aa6-40f3bdcdc72c@kernel.org>
- <f649f482-5c1c-dd07-161a-556a9c2b31ff@axentia.se>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] iio: imu: add support to lsm6dsx driver
+Date: Sat, 3 Dec 2016 11:25:52 +0000
+Message-ID: <da517c57-ee07-c776-cfa0-e0a6afa64e64@kernel.org>
+References: <20161130200559.29910-1-lorenzo.bianconi@st.com>
+ <20161130200559.29910-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <f649f482-5c1c-dd07-161a-556a9c2b31ff@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130200559.29910-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/11/16 16:02, Peter Rosin wrote:
-> On 2016-11-27 13:00, Jonathan Cameron wrote:
->> On 23/11/16 11:47, Peter Rosin wrote:
->>> On 2016-11-22 21:58, Lars-Peter Clausen wrote:
->>>> On 11/21/2016 02:17 PM, Peter Rosin wrote:
->>>> [...]
->>>>> I have a piece of hardware that is using the same 3 GPIO pins
->>>>> to control four 8-way muxes. Three of them control ADC lines
->>>>> to an ADS1015 chip with an iio driver, and the last one
->>>>> controls the SDA line of an i2c bus. We have some deployed
->>>>> code to handle this, but you do not want to see it or ever
->>>>> hear about it. I'm not sure why I even mention it. Anyway,
->>>>> the situation has nagged me to no end for quite some time.
->>>>>
->>>>> So, after first getting more intimate with the i2c muxing code
->>>>> and later discovering the drivers/iio/inkern.c file and
->>>>> writing a couple of drivers making use of it, I came up with
->>>>> what I think is an acceptable solution; add a generic mux
->>>>> controller driver (and subsystem) that is shared between all
->>>>> instances, and combine that with an iio mux driver and a new
->>>>> generic i2c mux driver. The new i2c mux I called "simple"
->>>>> since it is only hooking the i2c muxing and the new mux
->>>>> controller (much like the alsa simple card driver does for ASoC).
->>>>
->>>> While abstracting this properly is all nice and good and the way it should
->>>> be done, but it also adds a lot of complexity and the devicetree adds a lot
->>>> of restrictions on what can actually be represented.
->>>
->>> This is a characterization without any specifics. But is the
->>> characterization true? You have two complaints, complexity
->>> and restrictions with bindings.
->>>
->>>> There is a certain point where the fabric on a PCB becomes so complex that
->>>> it deserves to be a device on its own (like the audio fabric drivers).
->>>> Especially when the hardware is built with a certain application in mind and
->>>> the driver is supposed to impose policy which reflects this application. The
->>>> latter can often not properly be described with the primitives the
->>>> devicetree can offer.
->>>>
->>>> And I think your setup is very borderline what can be done in a declarative
->>>> way only and it adds a lot of complexity over a more imperative solution in
->>>> form of a driver. I think it is worth investigating about having a driver
->>>> that is specific to your fabric and handles the interdependencies of the
->>>> discrete components.
->>>
->>> So, there are three "new" concepts:
->>>
->>> 1. Sticking a mux in front of an AD-converter. That's not all that
->>> novel, nor complex. Quite the opposite, I'd say. In fact, I find it
->>> a bit amazing that there is no in-kernel support for it.
->> As ever first person who needs it and has the skills to write it gets to do it ;)
->> Congratulations Peter ;)
->>>
->>> 2. Reusing the same GPIO-pins to drive different muxes. There are
->>> obviously chips that work this way (as Jonathan pointed out) and
->>> these will at some point get used in Linux devices. I guess they
->>> already are used, but that people handle them in userspace. Or
->>> something? If this is complex, which I question, it will still need
->>> support at some point. At least that's what I believe.
->>>
->>> 3. Using the same GPIO pins to mux things handled by different
->>> subsystems. Right, this is a bit crazy, and I'd rather not have this
->>> requirement, but this HW is what it is so I'll need to handle it in
->>> some way. It is also what stops me from falling back to a userspace
->>> solution, which is probably connected to why #1 and #2 is not supported
->>> by the kernel; everybody probably does muxing in userspace. Which is
->>> not necessarily a good idea, nor how it's supposed to be done...
->>>
->>> So, the only thing that's out of the ordinary (as I see it), is #3.
->>> The question that then needs an answer is how the in-kernel solution
->>> for #1 and #2 would look if we do not consider #3.
->>>
->>> And I claim that the desired solution to #1 and #2 is pretty close
->>> to my proposal.
->>>
->>> A. You do not want mux-controller drivers in every subsystem that
->>> needs them.
->> Agreed.
->>>
->>> B. You do not want every mux-consumer to know the specifics of how to
->>> operate every kind of mux; there are muxes that are not controlled
->>> with GPIO pins...
->>>
->>> C. When you implement muxing in a subsystem, there will in some cases
->>> be a need to handle parallel muxing, where there is a need to share
->>> mux-controllers.
->>>
->>> It just feels right to separate out the mux-controller and refer to
->>> it from where a mux is needed. It solves #1 and #2. And, of course,
->>> as a bonus #3 is also solved. But my bias is obvious.
->>>
->>> And that leads us to the restrictions with the bindings. And the same
->>> thing happens; the solution for #2 also solves #3.
->>>
->>> So how do you refer to a mux-controller from where it's needed? My
->>> first proposal used a dt phandle, for the second round I put them in
->>> the parent node. It would be super if it was possible for the mux-
->>> consumer to create the mux-controller device from the same dt
->>> node that is already bound to the mux-consumer. The problem is that
->>> the mux-consumer should not hard-code which mux-controller device it
->>> should create. The best I can think of is some kind of 'mux-compatible'
->>> attribute, that works like the standard 'compatible' attribute. That
->>> would simplify the bindings for the normal case (#1) where the mux-
->>> controller isn't shared (#2 and #3). Maybe it's possible to fix this
->>> issue somehow? I simply don't know?
->> As Lars stated, it's marginal.  The question is not at what point do we
->> 'have to' bother with a fabric driver, but rather at what point does it
->> make a our lives easier.
->>
->> Take you nastiest mux case described earlier.
->> The ideal would be to represent the ADC and 3 muxes as (approximately) a
->> single ADC to userspace that just happens to have somewhere near 23 inputs.
->>
->> To do that in device tree we need to describe
->>
->> 1 The adc
->> 2 The three muxes
->> 3 The software representation to pull all of these back into a single device.
->>
->> That last part to my mind trips the balance to the point where a fabric driver
->> would make sense.  It's not complex.  Just a few lines of code tying all the
->> elements together without ending up with a fairly fiendish setup to describe in
->> device tree.
->>
->> Also just wait until we have muxes stacked on muxes, with cross overs occuring.
->> Some of the ASoC parts can actually have effective loops if you try all the mux
->> combinations.
->>
->> So question is do we have a 'simple case description' in device tree or force
->> fabric drivers everywhere?  I think I'm in favour of the simple case - which handles
->> one of your two uses nicely.  The second one to do the the recombining of channels after
->> the muxes, ends up looking to me like it needs a fabric driver.
->>
->> Note we are only talking about bindings vs code based description here. I agree
->> entirely with the concept of a generic mux subsystem.
+On 30/11/16 20:05, Lorenzo Bianconi wrote:
+> Add support to STM LSM6DS3-LSM6DSM 6-axis (acc + gyro) Mems sensor
 > 
-> Ok, take the simple case - an adc with a mux in front of it.
+> http://www.st.com/resource/en/datasheet/lsm6ds3.pdf
+> http://www.st.com/resource/en/datasheet/lsm6dsm.pdf
 > 
-> We do not want to build a whole new iio-mux subsystem like the one under
-> i2c, so from iio we want to refer to the actual mux controller driver
-> which lives under the mux subsystem. Getting this far is what solves my
-> "second need" [2] from the v2 thread.
+> - continuous mode support
+> - i2c support
+> - spi support
+> - sw fifo mode support
+> - supported devices: lsm6ds3, lsm6dsm
 > 
-> Agreed, doing this w/o a fabric driver spills the guts and it might be
-> cleaner to build a fabric driver that takes a reference to the dpot and
-> the mux controller and just knows the rest. In the end this fabric driver
-> requires two things to actually make a difference; some way to instantiate
-> drivers without the help of device-tree and some way make those drivers
-> only provide in-kernel access (and preferably it should hide the dpot from
-> userspace too, while at it).
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Hi Lorenzo,
+
+I'm actually pretty happy with this.  Most of the comments inline
+are requests for more documentation.  There are some non obvious corners
+so please make reviewers and anyone reading this in the future's life
+easier by explaining them.
+
+We are also just at the start of the new cycle, so have plenty of time.
+I'd like this one to sit on the list for a few weeks after we are happy
+with it to see if anyone else would like to comment on it. It's a bit
+complex for me to feel totally confortable on taking it based only on
+my own review!
+
+Jonathan
+> ---
+>  drivers/iio/imu/Kconfig                      |   1 +
+>  drivers/iio/imu/Makefile                     |   2 +
+>  drivers/iio/imu/st_lsm6dsx/Kconfig           |  23 +
+>  drivers/iio/imu/st_lsm6dsx/Makefile          |   6 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      | 107 ++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 696 +++++++++++++++++++++++++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  | 111 +++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c | 401 +++++++++++++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  | 129 +++++
+>  9 files changed, 1476 insertions(+)
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/Kconfig
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/Makefile
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
 > 
-> But doing all that in a fabric driver is not going to change the fact that
-> the iio-mux driver is useful on its own. I bet someone else is going to
-> reuse it somewhere down the line. Which means that a fabric driver would
-> perhaps be nice for my "second need", but not critical, it works pretty
-> well to just piggyback on the general solution .
-Absolutely. No denying the usefulness of having a nice little mux subsystem
-with the resulting iio-mux driver.
-> 
-> Over to my "first need" [1] from the v2 thread.
-> 
-> The above iio-mux driver handles the three muxed adc lines beautifully,
-> just refer all three iio-muxes to the same mux controller. Agreed, with
-> a fabric driver I could get one device with 25 channels instead of three
-> devices with 8 channels each plus one unmuxed line directly from the adc
-> device. However, that doesn't bother me at all, I may even think it is
-> preferable because otherwise I'd have to come up with some way to
-> identify which channel is which in that big 25-channel jungle. Another
-> drawback with having a fabric driver here is that it would need to be an
-> i2c-mux driver, because one of the key points of doing a fabric driver
-> for my first need was to hide the shared mux, right? Instead, I have the
-> new i2c-mux-simple driver that builds an i2c-mux using any mux controller
-> from the mux subsystem (something that may prove useful to others in the
-> future), which in my case is the same mux controller that also muxes the
-> three adc lines.
-> 
-> In short, doing fabric drivers buys me almost nothing besides having a
-> slightly more distinct device tree. All the components used to describe
-> this are either already accepted drivers or usable by others (at least
-> the way I see it).
-Fair enough.  Perhaps it's not worthwhile in this case, but lets keep
-the concept in mind as we move forward and see if anyone else has
-more complex hardware than you do ;)
-(there is always something out there!)
-> 
-> Cheers,
-> Peter
-> 
-> [1] three adc lines and an i2c bus muxed with the same gpio pins
-> [2] mcp4561 dpot -> dpot-dac -> envelope-detector-adc -> iio-mux
+> diff --git a/drivers/iio/imu/Kconfig b/drivers/iio/imu/Kconfig
+> index 1f1ad41..156630a 100644
+> --- a/drivers/iio/imu/Kconfig
+> +++ b/drivers/iio/imu/Kconfig
+> @@ -39,6 +39,7 @@ config KMX61
+>  	  be called kmx61.
+>  
+>  source "drivers/iio/imu/inv_mpu6050/Kconfig"
+> +source "drivers/iio/imu/st_lsm6dsx/Kconfig"
+>  
+>  endmenu
+>  
+> diff --git a/drivers/iio/imu/Makefile b/drivers/iio/imu/Makefile
+> index c71bcd3..8b563c3 100644
+> --- a/drivers/iio/imu/Makefile
+> +++ b/drivers/iio/imu/Makefile
+> @@ -17,3 +17,5 @@ obj-y += bmi160/
+>  obj-y += inv_mpu6050/
+>  
+>  obj-$(CONFIG_KMX61) += kmx61.o
+> +
+> +obj-y += st_lsm6dsx/
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> new file mode 100644
+> index 0000000..9a0781b
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -0,0 +1,23 @@
+> +
+> +config IIO_ST_LSM6DSX
+> +	tristate "ST_LSM6DSx driver for STM 6-axis imu Mems sensors"
+> +	depends on (I2C || SPI)
+> +	select IIO_BUFFER
+> +	select IIO_KFIFO_BUF
+> +	select IIO_ST_LSM6DSX_I2C if (I2C)
+> +	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
+> +	help
+> +	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+> +	  sensor. Supported devices: lsm6ds3, lsm6dsm
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called st_lsm6dsx.
+> +
+> +config IIO_ST_LSM6DSX_I2C
+> +	tristate
+> +	depends on IIO_ST_LSM6DSX
+> +
+> +config IIO_ST_LSM6DSX_SPI
+> +	tristate
+> +	depends on IIO_ST_LSM6DSX
+> +
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
+> new file mode 100644
+> index 0000000..812d655
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
+> @@ -0,0 +1,6 @@
+> +st_lsm6dsx-y := st_lsm6dsx_core.o \
+> +		st_lsm6dsx_ring.o
+> +
+> +obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
+> +obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
+> +obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> new file mode 100644
+> index 0000000..a43beab
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -0,0 +1,107 @@
+> +/*
+> + * STMicroelectronics st_lsm6dsx sensor driver
+> + *
+> + * Copyright 2016 STMicroelectronics Inc.
+> + *
+> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * Licensed under the GPL-2.
+> + */
+> +
+> +#ifndef ST_LSM6DSX_H
+> +#define ST_LSM6DSX_H
+> +
+> +#include <linux/device.h>
+> +
+> +#define ST_LSM6DS3_DEV_NAME	"lsm6ds3"
+> +#define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
+> +
+> +#define ST_LSM6DSX_CHAN_SIZE		2
+> +#define ST_LSM6DSX_SAMPLE_SIZE		6
+> +#define ST_LSM6DSX_SAMPLE_DEPTH		(ST_LSM6DSX_SAMPLE_SIZE / \
+> +					 ST_LSM6DSX_CHAN_SIZE)
+> +
+> +#if defined(CONFIG_SPI_MASTER)
+> +#define ST_LSM6DSX_RX_MAX_LENGTH	256
+> +#define ST_LSM6DSX_TX_MAX_LENGTH	8
+> +
+> +struct st_lsm6dsx_transfer_buffer {
+> +	u8 rx_buf[ST_LSM6DSX_RX_MAX_LENGTH];
+> +	u8 tx_buf[ST_LSM6DSX_TX_MAX_LENGTH] ____cacheline_aligned;
+> +};
+> +#endif /* CONFIG_SPI_MASTER */
+> +
+> +struct st_lsm6dsx_transfer_function {
+> +	int (*read)(struct device *dev, u8 addr, int len, u8 *data);
+> +	int (*write)(struct device *dev, u8 addr, int len, u8 *data);
+> +};
+> +
+> +struct st_lsm6dsx_reg {
+> +	u8 addr;
+> +	u8 mask;
+> +};
+> +
+> +struct st_lsm6dsx_settings {
+> +	u8 wai;
+> +	u16 max_fifo_size;
+> +};
+> +
+> +enum st_lsm6dsx_sensor_id {
+> +	ST_LSM6DSX_ID_ACC,
+> +	ST_LSM6DSX_ID_GYRO,
+> +	ST_LSM6DSX_ID_MAX,
+> +};
+> +
+> +enum st_lsm6dsx_fifo_mode {
+> +	ST_LSM6DSX_FIFO_BYPASS = 0x0,
+> +	ST_LSM6DSX_FIFO_CONT = 0x6,
+> +};
+> +
+> +struct st_lsm6dsx_sensor {
+> +	enum st_lsm6dsx_sensor_id id;
+> +	struct st_lsm6dsx_hw *hw;
+> +
+> +	u32 gain;
+> +	u16 odr;
+> +
+> +	u16 watermark;
+Please document this structure.  I've no immediate idea of what sip is.
+> +	u8 sip;
+> +	u8 decimator;
+> +	u8 decimator_mask;
+> +
+> +	s64 delta_ts;
+> +	s64 ts;
+> +};
+> +
+Document this one as well please.  Kernel doc ideally.
+> +struct st_lsm6dsx_hw {
+> +	const char *name;
+> +	struct device *dev;
+> +	int irq;
+> +	struct mutex lock;
+> +
+> +	enum st_lsm6dsx_fifo_mode fifo_mode;
+> +	u8 enable_mask;
+> +	u8 sip;
+> +
+> +	struct iio_dev *iio_devs[ST_LSM6DSX_ID_MAX];
+> +
+> +	const struct st_lsm6dsx_settings *settings;
+> +
+> +	const struct st_lsm6dsx_transfer_function *tf;
+> +#if defined(CONFIG_SPI_MASTER)
+> +	struct st_lsm6dsx_transfer_buffer tb;
+> +#endif /* CONFIG_SPI_MASTER */
+> +};
+> +
+> +int st_lsm6dsx_probe(struct st_lsm6dsx_hw *hw);
+> +int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor);
+> +int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor);
+> +int st_lsm6dsx_allocate_rings(struct st_lsm6dsx_hw *hw);
+> +int st_lsm6dsx_write_with_mask(struct st_lsm6dsx_hw *hw, u8 addr, u8 mask,
+> +			       u8 val);
+> +int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
+> +				u16 watermark);
+> +
+> +#endif /* ST_LSM6DSX_H */
+> +
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> new file mode 100644
+> index 0000000..ae4cf30
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -0,0 +1,696 @@
+> +/*
+> + * STMicroelectronics st_lsm6dsx sensor driver
+Perhaps a little more detail on the device in here?
+> + *
+> + * Copyright 2016 STMicroelectronics Inc.
+> + *
+> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * Licensed under the GPL-2.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <asm/unaligned.h>
+> +
+> +#include "st_lsm6dsx.h"
+> +
+> +#define ST_LSM6DSX_REG_ACC_DEC_MASK		0x07
+> +#define ST_LSM6DSX_REG_GYRO_DEC_MASK		0x38
+> +#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+> +#define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	0x08
+> +#define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+> +#define ST_LSM6DSX_REG_RESET_ADDR		0x12
+> +#define ST_LSM6DSX_REG_RESET_MASK		0x01
+> +#define ST_LSM6DSX_REG_BDU_ADDR			0x12
+> +#define ST_LSM6DSX_REG_BDU_MASK			0x40
+> +#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+> +#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	0x20
+> +#define ST_LSM6DSX_REG_ROUNDING_ADDR		0x16
+> +#define ST_LSM6DSX_REG_ROUNDING_MASK		0x04
+> +#define ST_LSM6DSX_REG_LIR_ADDR			0x58
+> +#define ST_LSM6DSX_REG_LIR_MASK			0x01
+> +
+> +#define ST_LSM6DSX_REG_ACC_ODR_ADDR		0x10
+> +#define ST_LSM6DSX_REG_ACC_ODR_MASK		0xf0
+> +#define ST_LSM6DSX_REG_ACC_FS_ADDR		0x10
+> +#define ST_LSM6DSX_REG_ACC_FS_MASK		0x0c
+> +#define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
+> +#define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
+> +#define ST_LSM6DSX_REG_ACC_OUT_Z_L_ADDR		0x2c
+> +
+> +#define ST_LSM6DSX_REG_GYRO_ODR_ADDR		0x11
+> +#define ST_LSM6DSX_REG_GYRO_ODR_MASK		0xf0
+> +#define ST_LSM6DSX_REG_GYRO_FS_ADDR		0x11
+> +#define ST_LSM6DSX_REG_GYRO_FS_MASK		0x0c
+> +#define ST_LSM6DSX_REG_GYRO_OUT_X_L_ADDR	0x22
+> +#define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
+> +#define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
+> +
+> +#define ST_LSM6DS3_WHOAMI			0x69
+> +#define ST_LSM6DSM_WHOAMI			0x6a
+> +
+> +#define ST_LSM6DS3_MAX_FIFO_SIZE		8192
+> +#define ST_LSM6DSM_MAX_FIFO_SIZE		4096
+> +
+> +#define ST_LSM6DSX_ACC_FS_2G_GAIN		IIO_G_TO_M_S_2(61)
+> +#define ST_LSM6DSX_ACC_FS_4G_GAIN		IIO_G_TO_M_S_2(122)
+> +#define ST_LSM6DSX_ACC_FS_8G_GAIN		IIO_G_TO_M_S_2(244)
+> +#define ST_LSM6DSX_ACC_FS_16G_GAIN		IIO_G_TO_M_S_2(488)
+> +
+> +#define ST_LSM6DSX_GYRO_FS_245_GAIN		IIO_DEGREE_TO_RAD(4375)
+> +#define ST_LSM6DSX_GYRO_FS_500_GAIN		IIO_DEGREE_TO_RAD(8750)
+> +#define ST_LSM6DSX_GYRO_FS_1000_GAIN		IIO_DEGREE_TO_RAD(17500)
+> +#define ST_LSM6DSX_GYRO_FS_2000_GAIN		IIO_DEGREE_TO_RAD(70000)
+> +
+> +struct st_lsm6dsx_odr {
+> +	u16 hz;
+> +	u8 val;
+> +};
+> +
+> +#define ST_LSM6DSX_ODR_LIST_SIZE	6
+> +struct st_lsm6dsx_odr_table_entry {
+> +	struct st_lsm6dsx_reg reg;
+> +	struct st_lsm6dsx_odr odr_avl[ST_LSM6DSX_ODR_LIST_SIZE];
+> +};
+> +
+> +static const struct st_lsm6dsx_odr_table_entry st_lsm6dsx_odr_table[] = {
+> +	[ST_LSM6DSX_ID_ACC] = {
+> +		.reg = {
+> +			.addr = ST_LSM6DSX_REG_ACC_ODR_ADDR,
+> +			.mask = ST_LSM6DSX_REG_ACC_ODR_MASK,
+> +		},
+> +		.odr_avl[0] = {  13, 0x01 },
+> +		.odr_avl[1] = {  26, 0x02 },
+> +		.odr_avl[2] = {  52, 0x03 },
+> +		.odr_avl[3] = { 104, 0x04 },
+> +		.odr_avl[4] = { 208, 0x05 },
+> +		.odr_avl[5] = { 416, 0x06 },
+> +	},
+> +	[ST_LSM6DSX_ID_GYRO] = {
+> +		.reg = {
+> +			.addr = ST_LSM6DSX_REG_GYRO_ODR_ADDR,
+> +			.mask = ST_LSM6DSX_REG_GYRO_ODR_MASK,
+> +		},
+> +		.odr_avl[0] = {  13, 0x01 },
+> +		.odr_avl[1] = {  26, 0x02 },
+> +		.odr_avl[2] = {  52, 0x03 },
+> +		.odr_avl[3] = { 104, 0x04 },
+> +		.odr_avl[4] = { 208, 0x05 },
+> +		.odr_avl[5] = { 416, 0x06 },
+> +	}
+> +};
+> +
+> +struct st_lsm6dsx_fs {
+> +	u32 gain;
+> +	u8 val;
+> +};
+> +
+> +#define ST_LSM6DSX_FS_LIST_SIZE		4
+> +struct st_lsm6dsx_fs_table_entry {
+> +	struct st_lsm6dsx_reg reg;
+> +	struct st_lsm6dsx_fs fs_avl[ST_LSM6DSX_FS_LIST_SIZE];
+> +};
+> +
+> +static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
+> +	[ST_LSM6DSX_ID_ACC] = {
+> +		.reg = {
+> +			.addr = ST_LSM6DSX_REG_ACC_FS_ADDR,
+> +			.mask = ST_LSM6DSX_REG_ACC_FS_MASK,
+> +		},
+> +		.fs_avl[0] = {  ST_LSM6DSX_ACC_FS_2G_GAIN, 0x0 },
+> +		.fs_avl[1] = {  ST_LSM6DSX_ACC_FS_4G_GAIN, 0x2 },
+> +		.fs_avl[2] = {  ST_LSM6DSX_ACC_FS_8G_GAIN, 0x3 },
+> +		.fs_avl[3] = { ST_LSM6DSX_ACC_FS_16G_GAIN, 0x1 },
+> +	},
+> +	[ST_LSM6DSX_ID_GYRO] = {
+> +		.reg = {
+> +			.addr = ST_LSM6DSX_REG_GYRO_FS_ADDR,
+> +			.mask = ST_LSM6DSX_REG_GYRO_FS_MASK,
+> +		},
+> +		.fs_avl[0] = {  ST_LSM6DSX_GYRO_FS_245_GAIN, 0x0 },
+> +		.fs_avl[1] = {  ST_LSM6DSX_GYRO_FS_500_GAIN, 0x1 },
+> +		.fs_avl[2] = { ST_LSM6DSX_GYRO_FS_1000_GAIN, 0x2 },
+> +		.fs_avl[3] = { ST_LSM6DSX_GYRO_FS_2000_GAIN, 0x3 },
+> +	}
+> +};
+> +
+> +static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+> +	{
+> +		.wai = ST_LSM6DS3_WHOAMI,
+> +		.max_fifo_size = ST_LSM6DS3_MAX_FIFO_SIZE,
+> +	},
+> +	{
+> +		.wai = ST_LSM6DSM_WHOAMI,
+> +		.max_fifo_size = ST_LSM6DSM_MAX_FIFO_SIZE,
+> +	},
+> +};
+> +
+> +static const struct iio_chan_spec st_lsm6dsx_acc_channels[] = {
+> +	{
+> +		.type = IIO_ACCEL,
+> +		.address = ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_X,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_ACCEL,
+> +		.address = ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Y,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.scan_index = 1,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_ACCEL,
+> +		.address = ST_LSM6DSX_REG_ACC_OUT_Z_L_ADDR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Z,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.scan_index = 2,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+> +static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
+> +	{
+> +		.type = IIO_ANGL_VEL,
+> +		.address = ST_LSM6DSX_REG_GYRO_OUT_X_L_ADDR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_X,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_ANGL_VEL,
+> +		.address = ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Y,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.scan_index = 1,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_ANGL_VEL,
+> +		.address = ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Z,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.scan_index = 2,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+> +int st_lsm6dsx_write_with_mask(struct st_lsm6dsx_hw *hw, u8 addr, u8 mask,
+> +			       u8 val)
+> +{
+> +	u8 data;
+> +	int err;
+> +
+> +	mutex_lock(&hw->lock);
+> +
+> +	err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
+> +	if (err < 0) {
+> +		dev_err(hw->dev, "failed to read %02x register\n", addr);
+> +		goto out;
+> +	}
+> +
+> +	data = (data & ~mask) | ((val << __ffs(mask)) & mask);
+> +
+> +	err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
+> +	if (err < 0)
+> +		dev_err(hw->dev, "failed to write %02x register\n", addr);
+> +
+> +out:
+> +	mutex_unlock(&hw->lock);
+> +
+> +	return err;
+> +}
+> +
+> +static int st_lsm6dsx_check_whoami(struct st_lsm6dsx_hw *hw)
+> +{
+> +	int err, i;
+> +	u8 data;
+> +
+> +	err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_WHOAMI_ADDR, sizeof(data),
+> +			   &data);
+> +	if (err < 0) {
+> +		dev_err(hw->dev, "failed to read whoami register\n");
+> +		return err;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(st_lsm6dsx_sensor_settings); i++) {
+> +		if (data == st_lsm6dsx_sensor_settings[i].wai) {
+> +			hw->settings = &st_lsm6dsx_sensor_settings[i];
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (i == ARRAY_SIZE(st_lsm6dsx_sensor_settings)) {
+> +		dev_err(hw->dev, "unsupported whoami [%02x]\n", data);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int st_lsm6dsx_set_fs(struct st_lsm6dsx_sensor *sensor, u32 gain)
+full_scale?  Better to let the naming make it obvious rather than making
+reviewers think about it ;)  Same for other abreviations - particularly
+in function names.
+> +{
+> +	enum st_lsm6dsx_sensor_id id = sensor->id;
+> +	int i, err;
+> +	u8 val;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_FS_LIST_SIZE; i++)
+> +		if (st_lsm6dsx_fs_table[id].fs_avl[i].gain == gain)
+> +			break;
+> +
+> +	if (i == ST_LSM6DSX_FS_LIST_SIZE)
+> +		return -EINVAL;
+> +
+> +	val = st_lsm6dsx_fs_table[id].fs_avl[i].val;
+> +	err = st_lsm6dsx_write_with_mask(sensor->hw,
+> +					 st_lsm6dsx_fs_table[id].reg.addr,
+> +					 st_lsm6dsx_fs_table[id].reg.mask,
+> +					 val);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	sensor->gain = gain;
+> +
+> +	return 0;
+> +}
+> +
+> +static int st_lsm6dsx_set_odr(struct st_lsm6dsx_sensor *sensor, u16 odr)
+> +{
+> +	enum st_lsm6dsx_sensor_id id = sensor->id;
+> +	int i, err, val;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
+> +		if (st_lsm6dsx_odr_table[id].odr_avl[i].hz == odr)
+> +			break;
+> +
+> +	if (i == ST_LSM6DSX_ODR_LIST_SIZE)
+> +		return -EINVAL;
+> +
+> +	val = st_lsm6dsx_odr_table[id].odr_avl[i].val;
+> +	err = st_lsm6dsx_write_with_mask(sensor->hw,
+> +					 st_lsm6dsx_odr_table[id].reg.addr,
+> +					 st_lsm6dsx_odr_table[id].reg.mask,
+> +					 val);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	sensor->odr = odr;
+> +
+> +	return 0;
+> +}
+> +
+> +int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor)
+> +{
+> +	int err;
+> +
+> +	err = st_lsm6dsx_set_odr(sensor, sensor->odr);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	sensor->hw->enable_mask |= BIT(sensor->id);
+> +
+> +	return 0;
+> +}
+> +
+> +int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor)
+> +{
+> +	enum st_lsm6dsx_sensor_id id = sensor->id;
+> +	int err;
+> +
+> +	err = st_lsm6dsx_write_with_mask(sensor->hw,
+> +					 st_lsm6dsx_odr_table[id].reg.addr,
+> +					 st_lsm6dsx_odr_table[id].reg.mask, 0);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	sensor->hw->enable_mask &= ~BIT(id);
+> +
+> +	return 0;
+> +}
+> +
+> +static int st_lsm6dsx_read_oneshot(struct st_lsm6dsx_sensor *sensor,
+> +				   u8 addr, int *val)
+> +{
+> +	int err, delay;
+> +	u8 data[2];
+> +
+> +	err = st_lsm6dsx_sensor_enable(sensor);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	delay = 1000000 / sensor->odr;
+> +	usleep_range(delay, 2 * delay);
+> +
+> +	err = sensor->hw->tf->read(sensor->hw->dev, addr, sizeof(data), data);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	st_lsm6dsx_sensor_disable(sensor);
+> +
+> +	*val = (s16)get_unaligned_le16(data);
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int st_lsm6dsx_read_raw(struct iio_dev *iio_dev,
+> +			       struct iio_chan_spec const *ch,
+> +			       int *val, int *val2, long mask)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+> +	int ret;
+> +
+> +	ret = iio_device_claim_direct_mode(iio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = st_lsm6dsx_read_oneshot(sensor, ch->address, val);
+> +		break;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*val = sensor->odr;
+> +		ret = IIO_VAL_INT;
+> +		break;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 0;
+> +		*val2 = sensor->gain;
+> +		ret = IIO_VAL_INT_PLUS_MICRO;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	iio_device_release_direct_mode(iio_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int val, int val2, long mask)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+> +	int err;
+> +
+> +	err = iio_device_claim_direct_mode(iio_dev);
+> +	if (err)
+> +		return err;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		err = st_lsm6dsx_set_fs(sensor, val2);
+> +		break;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		err = st_lsm6dsx_set_odr(sensor, val);
+> +		break;
+> +	default:
+> +		err = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	iio_device_release_direct_mode(iio_dev);
+> +
+> +	return err;
+> +}
+> +
+> +static int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+> +	struct st_lsm6dsx_hw *hw = sensor->hw;
+> +	int err, max_fifo_len;
+> +
+> +	max_fifo_len = hw->settings->max_fifo_size / ST_LSM6DSX_SAMPLE_SIZE;
+> +	if (val < 1 || val > max_fifo_len)
+> +		return -EINVAL;
+> +
+> +	err = st_lsm6dsx_update_watermark(sensor, val);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	sensor->watermark = val;
+> +
+> +	return 0;
+> +}
+> +
+You could port these over to the new available infrastructure
+(see new callbacks in iio_info) but fine if you'd prefer not to for
+now as that is very new.
+> +static ssize_t
+> +st_lsm6dsx_sysfs_sampling_frequency_avl(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(dev_get_drvdata(dev));
+> +	enum st_lsm6dsx_sensor_id id = sensor->id;
+> +	int i, len = 0;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
+> +		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
+> +				 st_lsm6dsx_odr_table[id].odr_avl[i].hz);
+> +	buf[len - 1] = '\n';
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t st_lsm6dsx_sysfs_scale_avail(struct device *dev,
+> +					    struct device_attribute *attr,
+> +					    char *buf)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(dev_get_drvdata(dev));
+> +	enum st_lsm6dsx_sensor_id id = sensor->id;
+> +	int i, len = 0;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_FS_LIST_SIZE; i++)
+> +		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%06u ",
+> +				 st_lsm6dsx_fs_table[id].fs_avl[i].gain);
+> +	buf[len - 1] = '\n';
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(st_lsm6dsx_sysfs_sampling_frequency_avl);
+> +static IIO_DEVICE_ATTR(in_accel_scale_available, 0444,
+> +		       st_lsm6dsx_sysfs_scale_avail, NULL, 0);
+> +static IIO_DEVICE_ATTR(in_anglvel_scale_available, 0444,
+> +		       st_lsm6dsx_sysfs_scale_avail, NULL, 0);
+> +
+> +static struct attribute *st_lsm6dsx_acc_attributes[] = {
+> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> +	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group st_lsm6dsx_acc_attribute_group = {
+> +	.attrs = st_lsm6dsx_acc_attributes,
+> +};
+> +
+> +static const struct iio_info st_lsm6dsx_acc_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.attrs = &st_lsm6dsx_acc_attribute_group,
+> +	.read_raw = st_lsm6dsx_read_raw,
+> +	.write_raw = st_lsm6dsx_write_raw,
+> +	.hwfifo_set_watermark = st_lsm6dsx_set_watermark,
+> +};
+> +
+> +static struct attribute *st_lsm6dsx_gyro_attributes[] = {
+> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> +	&iio_dev_attr_in_anglvel_scale_available.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group st_lsm6dsx_gyro_attribute_group = {
+> +	.attrs = st_lsm6dsx_gyro_attributes,
+> +};
+> +
+> +static const struct iio_info st_lsm6dsx_gyro_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.attrs = &st_lsm6dsx_gyro_attribute_group,
+> +	.read_raw = st_lsm6dsx_read_raw,
+> +	.write_raw = st_lsm6dsx_write_raw,
+> +	.hwfifo_set_watermark = st_lsm6dsx_set_watermark,
+> +};
+> +
+> +static const unsigned long st_lsm6dsx_available_scan_masks[] = {0x7, 0x0};
+> +
+> +static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+> +{
+> +	int err;
+> +	u8 data;
+> +
+> +	data = ST_LSM6DSX_REG_RESET_MASK;
+> +	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_RESET_ADDR, sizeof(data),
+> +			    &data);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	msleep(200);
+> +
+> +	/* latch interrupts */
+> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_LIR_ADDR,
+> +					 ST_LSM6DSX_REG_LIR_MASK, 1);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	/* enable BDU */
+Expand BDU rather than using the acronym.
+> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_BDU_ADDR,
+> +					 ST_LSM6DSX_REG_BDU_MASK, 1);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_ROUNDING_ADDR,
+> +					 ST_LSM6DSX_REG_ROUNDING_MASK, 1);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	/* enable FIFO watermak interrupt */
+> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT1_ADDR,
+> +					 ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	/* redirect INT2 on INT1 */
+> +	return st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT2_ON_INT1_ADDR,
+> +					  ST_LSM6DSX_REG_INT2_ON_INT1_MASK, 1);
+> +}
+> +
+> +static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
+> +					       enum st_lsm6dsx_sensor_id id)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor;
+> +	struct iio_dev *iio_dev;
+> +
+> +	iio_dev = devm_iio_device_alloc(hw->dev, sizeof(*sensor));
+> +	if (!iio_dev)
+> +		return NULL;
+> +
+> +	iio_dev->modes = INDIO_DIRECT_MODE;
+> +	iio_dev->dev.parent = hw->dev;
+> +	iio_dev->available_scan_masks = st_lsm6dsx_available_scan_masks;
+> +
+> +	sensor = iio_priv(iio_dev);
+> +	sensor->id = id;
+> +	sensor->hw = hw;
+> +	sensor->odr = st_lsm6dsx_odr_table[id].odr_avl[0].hz;
+> +	sensor->gain = st_lsm6dsx_fs_table[id].fs_avl[0].gain;
+> +	sensor->watermark = 1;
+> +
+> +	switch (id) {
+> +	case ST_LSM6DSX_ID_ACC:
+> +		iio_dev->channels = st_lsm6dsx_acc_channels;
+> +		iio_dev->num_channels = ARRAY_SIZE(st_lsm6dsx_acc_channels);
+> +		iio_dev->name = "lsm6dsx_accel";
+> +		iio_dev->info = &st_lsm6dsx_acc_info;
+> +
+> +		sensor->decimator_mask = ST_LSM6DSX_REG_ACC_DEC_MASK;
+> +		break;
+> +	case ST_LSM6DSX_ID_GYRO:
+> +		iio_dev->channels = st_lsm6dsx_gyro_channels;
+> +		iio_dev->num_channels = ARRAY_SIZE(st_lsm6dsx_gyro_channels);
+> +		iio_dev->name = "lsm6dsx_gyro";
+> +		iio_dev->info = &st_lsm6dsx_gyro_info;
+> +
+> +		sensor->decimator_mask = ST_LSM6DSX_REG_GYRO_DEC_MASK;
+> +		break;
+> +	default:
+> +		return NULL;
+> +	}
+> +
+> +	return iio_dev;
+> +}
+> +
+> +int st_lsm6dsx_probe(struct st_lsm6dsx_hw *hw)
+> +{
+> +	int i, err;
+> +
+> +	mutex_init(&hw->lock);
+> +
+> +	err = st_lsm6dsx_check_whoami(hw);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		hw->iio_devs[i] = st_lsm6dsx_alloc_iiodev(hw, i);
+> +		if (!hw->iio_devs[i])
+> +			return -ENOMEM;
+> +	}
+> +
+> +	err = st_lsm6dsx_init_device(hw);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (hw->irq > 0) {
+> +		err = st_lsm6dsx_allocate_rings(hw);
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		err = devm_iio_device_register(hw->dev, hw->iio_devs[i]);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(st_lsm6dsx_probe);
+> +
+> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_AUTHOR("Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> new file mode 100644
+> index 0000000..c80e624
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> @@ -0,0 +1,111 @@
+> +/*
+> + * STMicroelectronics st_lsm6dsx i2c driver
+> + *
+> + * Copyright 2016 STMicroelectronics Inc.
+> + *
+> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * Licensed under the GPL-2.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +
+> +#include "st_lsm6dsx.h"
+> +
+> +static int st_lsm6dsx_i2c_read(struct device *dev, u8 addr, int len, u8 *data)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct i2c_msg msg[2];
+> +
+> +	msg[0].addr = client->addr;
+> +	msg[0].flags = client->flags;
+> +	msg[0].len = 1;
+> +	msg[0].buf = &addr;
+> +
+> +	msg[1].addr = client->addr;
+> +	msg[1].flags = client->flags | I2C_M_RD;
+> +	msg[1].len = len;
+> +	msg[1].buf = data;
+> +
+> +	return i2c_transfer(client->adapter, msg, 2);
+> +}
+> +
+> +static int st_lsm6dsx_i2c_write(struct device *dev, u8 addr, int len, u8 *data)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct i2c_msg msg;
+> +	u8 send[len + 1];
+> +
+> +	send[0] = addr;
+> +	memcpy(&send[1], data, len * sizeof(u8));
+> +
+> +	msg.addr = client->addr;
+> +	msg.flags = client->flags;
+> +	msg.len = len + 1;
+> +	msg.buf = send;
+> +
+> +	return i2c_transfer(client->adapter, &msg, 1);
+Could (I think) do this with the smbus_write_block_data command as long as
+we never use more than 32 bytes.  However, probably not worth it as the
+reads break those rules anyway so we'll need a fully fledged i2c controller
+whatever.
+> +}
+> +
+> +static const struct st_lsm6dsx_transfer_function st_lsm6dsx_transfer_fn = {
+> +	.read = st_lsm6dsx_i2c_read,
+> +	.write = st_lsm6dsx_i2c_write,
+> +};
+> +
+> +static int st_lsm6dsx_i2c_probe(struct i2c_client *client,
+> +				const struct i2c_device_id *id)
+> +{
+> +	struct st_lsm6dsx_hw *hw;
+> +
+> +	hw = devm_kzalloc(&client->dev, sizeof(*hw), GFP_KERNEL);
+> +	if (!hw)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(client, hw);
+> +	hw->name = client->name;
+> +	hw->dev = &client->dev;
+> +	hw->irq = client->irq;
+> +	hw->tf = &st_lsm6dsx_transfer_fn;
+> +
+> +	return st_lsm6dsx_probe(hw);
+> +}
+> +
+> +static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
+> +	{
+> +		.compatible = "st,lsm6ds3",
+> +		.data = ST_LSM6DS3_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm6dsm",
+> +		.data = ST_LSM6DSM_DEV_NAME,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+> +
+> +static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
+> +	{ ST_LSM6DS3_DEV_NAME },
+> +	{ ST_LSM6DSM_DEV_NAME },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+> +
+> +static struct i2c_driver st_lsm6dsx_driver = {
+> +	.driver = {
+> +		.name = "st_lsm6dsx_i2c",
+> +		.of_match_table = of_match_ptr(st_lsm6dsx_i2c_of_match),
+> +	},
+> +	.probe = st_lsm6dsx_i2c_probe,
+> +	.id_table = st_lsm6dsx_i2c_id_table,
+> +};
+> +module_i2c_driver(st_lsm6dsx_driver);
+> +
+> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_AUTHOR("Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i2c driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c
+> new file mode 100644
+> index 0000000..9a8c503
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c
+> @@ -0,0 +1,401 @@
+> +/*
+> + * STMicroelectronics st_lsm6dsx sensor driver
+Whilst it's part of the driver, a quick description of what this bit does
+would be good.
+> + *
+> + * Copyright 2016 STMicroelectronics Inc.
+> + *
+> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * Licensed under the GPL-2.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/iio/kfifo_buf.h>
+> +#include <asm/unaligned.h>
+> +
+> +#include "st_lsm6dsx.h"
+> +
+> +#define ST_LSM6DSX_REG_FIFO_THL_ADDR		0x06
+> +#define ST_LSM6DSX_REG_FIFO_THH_ADDR		0x07
+> +#define ST_LSM6DSX_FIFO_TH_MASK			0x0fff
+> +#define ST_LSM6DSX_REG_FIFO_DEC_GXL_ADDR	0x08
+> +#define ST_LSM6DSX_REG_FIFO_MODE_ADDR		0x0a
+> +#define ST_LSM6DSX_FIFO_MODE_MASK		0x07
+> +#define ST_LSM6DSX_FIFO_ODR_MASK		0x78
+> +#define ST_LSM6DSX_REG_FIFO_DIFFL_ADDR		0x3a
+> +#define ST_LSM6DSX_FIFO_DIFF_MASK		0x0f
+> +#define ST_LSM6DSX_FIFO_EMPTY_MASK		0x10
+> +#define ST_LSM6DSX_REG_FIFO_OUTL_ADDR		0x3e
+> +
+> +struct st_lsm6dsx_dec_entry {
+> +	u8 decimator;
+> +	u8 val;
+> +};
+> +
+> +static const struct st_lsm6dsx_dec_entry st_lsm6dsx_dec_table[] = {
+> +	{  0, 0x0 },
+> +	{  1, 0x1 },
+> +	{  2, 0x2 },
+> +	{  3, 0x3 },
+> +	{  4, 0x4 },
+> +	{  8, 0x5 },
+> +	{ 16, 0x6 },
+> +	{ 32, 0x7 },
+> +};
+> +
+> +static int st_lsm6dsx_get_decimator_val(u8 val)
+> +{
+> +	int i, max_size = ARRAY_SIZE(st_lsm6dsx_dec_table);
+> +
+> +	for (i = 0; i < max_size; i++)
+> +		if (st_lsm6dsx_dec_table[i].decimator == val)
+> +			break;
+> +
+> +	return i == max_size ? 0 : st_lsm6dsx_dec_table[i].val;
+> +}
+> +
+> +static void st_lsm6dsx_get_max_min_odr(struct st_lsm6dsx_hw *hw,
+> +				       u16 *max_odr, u16 *min_odr)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor;
+> +	int i;
+> +
+> +	*max_odr = 0, *min_odr = ~0;
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		sensor = iio_priv(hw->iio_devs[i]);
+> +
+> +		if (!(hw->enable_mask & BIT(sensor->id)))
+> +			continue;
+> +
+> +		*max_odr = max_t(u16, *max_odr, sensor->odr);
+> +		*min_odr = min_t(u16, *min_odr, sensor->odr);
+> +	}
+> +}
+> +
+> +static int st_lsm6dsx_update_decimators(struct st_lsm6dsx_hw *hw)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor;
+> +	u16 max_odr, min_odr, sip = 0;
+> +	int err, i;
+> +	u8 data;
+> +
+> +	st_lsm6dsx_get_max_min_odr(hw, &max_odr, &min_odr);
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		sensor = iio_priv(hw->iio_devs[i]);
+> +
+> +		/* update fifo decimators and sample in pattern */
+> +		if (hw->enable_mask & BIT(sensor->id)) {
+> +			sensor->sip = sensor->odr / min_odr;
+> +			sensor->decimator = max_odr / sensor->odr;
+> +			data = st_lsm6dsx_get_decimator_val(sensor->decimator);
+> +		} else {
+> +			sensor->sip = 0;
+> +			sensor->decimator = 0;
+> +			data = 0;
+> +		}
+> +
+> +		err = st_lsm6dsx_write_with_mask(hw,
+> +					ST_LSM6DSX_REG_FIFO_DEC_GXL_ADDR,
+> +					sensor->decimator_mask, data);
+> +		if (err < 0)
+> +			return err;
+> +
+> +		sip += sensor->sip;
+> +	}
+> +	hw->sip = sip;
+> +
+> +	return 0;
+> +}
+> +
+> +static int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
+> +				    enum st_lsm6dsx_fifo_mode fifo_mode)
+> +{
+> +	u8 data;
+> +	int err;
+> +
+> +	switch (fifo_mode) {
+> +	case ST_LSM6DSX_FIFO_BYPASS:
+> +		data = fifo_mode;
+> +		break;
+> +	case ST_LSM6DSX_FIFO_CONT:
+use a define for that magic number.
+> +		data = fifo_mode | 0x40;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_FIFO_MODE_ADDR,
+> +			    sizeof(data), &data);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	hw->fifo_mode = fifo_mode;
+> +
+> +	return 0;
+> +}
+> +
+> +int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor, u16 watermark)
+> +{
+> +	u16 fifo_watermark = ~0, cur_watermark, sip = 0;
+> +	struct st_lsm6dsx_hw *hw = sensor->hw;
+> +	struct st_lsm6dsx_sensor *cur_sensor;
+> +	int i, err;
+> +	u8 data;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		cur_sensor = iio_priv(hw->iio_devs[i]);
+> +
+> +		if (!(hw->enable_mask & BIT(cur_sensor->id)))
+> +			continue;
+> +
+> +		cur_watermark = (cur_sensor == sensor) ? watermark
+> +						       : cur_sensor->watermark;
+> +
+> +		fifo_watermark = min_t(u16, fifo_watermark, cur_watermark);
+> +		sip += cur_sensor->sip;
+> +	}
+> +
+> +	if (!sip)
+> +		return 0;
+> +
+> +	fifo_watermark = max_t(u16, fifo_watermark, sip);
+> +	fifo_watermark = (fifo_watermark / sip) * sip;
+> +	fifo_watermark = fifo_watermark * ST_LSM6DSX_SAMPLE_DEPTH;
+> +
+> +	mutex_lock(&hw->lock);
+> +
+> +	err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_FIFO_THH_ADDR,
+> +			   sizeof(data), &data);
+> +	if (err < 0)
+> +		goto out;
+> +
+> +	fifo_watermark = ((data & ~ST_LSM6DSX_FIFO_TH_MASK) << 8) |
+> +			  (fifo_watermark & ST_LSM6DSX_FIFO_TH_MASK);
+> +
+> +	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_FIFO_THL_ADDR,
+> +			    sizeof(fifo_watermark), (u8 *)&fifo_watermark);
+> +out:
+> +	mutex_unlock(&hw->lock);
+> +
+> +	return err < 0 ? err : 0;
+> +}
+> +
+I'd like a bit of documentation on this.  Wasn't immediately obvious to
+me what it returns which lead me to confusion around the return in the
+ring_handler_thread.
+
+> +static int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+> +{
+> +	u16 fifo_len, pattern_len = hw->sip * ST_LSM6DSX_SAMPLE_SIZE;
+> +	int err, acc_sip, gyro_sip, read_len, offset, samples;
+> +	struct st_lsm6dsx_sensor *acc_sensor, *gyro_sensor;
+> +	s64 acc_ts, acc_delta_ts, gyro_ts, gyro_delta_ts;
+> +	u8 iio_buf[ALIGN(ST_LSM6DSX_SAMPLE_SIZE, sizeof(s64)) + sizeof(s64)];
+> +	u8 fifo_status[2], buf[pattern_len];
+> +
+> +	err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_FIFO_DIFFL_ADDR,
+> +			   sizeof(fifo_status), fifo_status);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (fifo_status[1] & ST_LSM6DSX_FIFO_EMPTY_MASK)
+> +		return 0;
+> +
+> +	fifo_status[1] &= ST_LSM6DSX_FIFO_DIFF_MASK;
+> +	fifo_len = (u16)get_unaligned_le16(fifo_status) * ST_LSM6DSX_CHAN_SIZE;
+> +	samples = fifo_len / ST_LSM6DSX_SAMPLE_SIZE;
+> +	fifo_len = (fifo_len / pattern_len) * pattern_len;
+> +	/*
+> +	 * leave one complete pattern in FIFO to guarantee
+> +	 * proper alignment
+That needs more info! I have no idea what you mean by a pattern for starters.
+> +	 */
+> +	fifo_len -= pattern_len;
+> +
+> +	/* compute delta timestamp */
+I want some more info in here on why we deal with delta timestamps.
+> +	acc_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
+> +	acc_ts = acc_sensor->ts - acc_sensor->delta_ts;
+> +	acc_delta_ts = div_s64(acc_sensor->delta_ts * acc_sensor->decimator,
+> +			       samples);
+> +
+> +	gyro_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
+> +	gyro_ts = gyro_sensor->ts - gyro_sensor->delta_ts;
+> +	gyro_delta_ts = div_s64(gyro_sensor->delta_ts * gyro_sensor->decimator,
+> +				samples);
+> +
+> +	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
+> +		err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
+> +				   sizeof(buf), buf);
+> +		if (err < 0)
+> +			return err;
+> +
+> +		gyro_sip = gyro_sensor->sip;
+> +		acc_sip = acc_sensor->sip;
+> +		offset = 0;
+> +
+Could you add a brief description here of the data layout as it would make
+it easier to verify this code makes sense.
+> +		while (acc_sip > 0 || gyro_sip > 0) {
+> +			if (gyro_sip-- > 0) {
+> +				memcpy(iio_buf, &buf[offset],
+> +				       ST_LSM6DSX_SAMPLE_SIZE);
+> +				iio_push_to_buffers_with_timestamp(
+> +					hw->iio_devs[ST_LSM6DSX_ID_GYRO],
+> +					iio_buf, gyro_ts);
+> +				offset += ST_LSM6DSX_SAMPLE_SIZE;
+> +				gyro_ts += gyro_delta_ts;
+> +			}
+> +
+> +			if (acc_sip-- > 0) {
+> +				memcpy(iio_buf, &buf[offset],
+> +				       ST_LSM6DSX_SAMPLE_SIZE);
+> +				iio_push_to_buffers_with_timestamp(
+> +					hw->iio_devs[ST_LSM6DSX_ID_ACC],
+> +					iio_buf, acc_ts);
+> +				offset += ST_LSM6DSX_SAMPLE_SIZE;
+> +				acc_ts += acc_delta_ts;
+> +			}
+> +		}
+> +	}
+> +
+> +	return read_len;
+> +}
+> +
+> +static int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw)
+> +{
+> +	int err;
+> +
+> +	disable_irq(hw->irq);
+Comment on why this is needed rather than simply locking to prevent
+concurrent access.
+> +
+> +	st_lsm6dsx_read_fifo(hw);
+> +	err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_BYPASS);
+> +
+> +	enable_irq(hw->irq);
+> +
+> +	return err;
+> +}
+> +
+> +static int st_lsm6dsx_update_fifo(struct iio_dev *iio_dev, bool enable)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+> +	struct st_lsm6dsx_hw *hw = sensor->hw;
+> +	int err;
+> +
+> +	if (hw->fifo_mode != ST_LSM6DSX_FIFO_BYPASS) {
+> +		err = st_lsm6dsx_flush_fifo(hw);
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +
+> +	err = enable ? st_lsm6dsx_sensor_enable(sensor)
+> +		     : st_lsm6dsx_sensor_disable(sensor);
+I'd just do this with an if statement as it's marginally confusing to read.
+Trinary operators have a lot to answer for in readability!
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = st_lsm6dsx_update_decimators(hw);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = st_lsm6dsx_update_watermark(sensor, sensor->watermark);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (hw->enable_mask) {
+> +		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
+> +		if (err < 0)
+> +			return err;
+> +
+Comment here on why we should be grabbing a timestmap whilst enabling the
+buffer.
+> +		sensor->ts = iio_get_time_ns(iio_dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t st_lsm6dsx_ring_handler_irq(int irq, void *private)
+> +{
+> +	struct st_lsm6dsx_hw *hw = (struct st_lsm6dsx_hw *)private;
+> +	struct st_lsm6dsx_sensor *sensor;
+> +	int i;
+> +
+> +	if (!hw->sip)
+> +		return IRQ_NONE;
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		sensor = iio_priv(hw->iio_devs[i]);
+> +
+> +		if (sensor->sip > 0) {
+> +			s64 timestamp;
+> +
+> +			timestamp = iio_get_time_ns(hw->iio_devs[i]);
+> +			sensor->delta_ts = timestamp - sensor->ts;
+> +			sensor->ts = timestamp;
+> +		}
+> +	}
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static irqreturn_t st_lsm6dsx_ring_handler_thread(int irq, void *private)
+> +{
+> +	struct st_lsm6dsx_hw *hw = (struct st_lsm6dsx_hw *)private;
+> +	int count;
+> +
+> +	count = st_lsm6dsx_read_fifo(hw);
+> +
+> +	return !count ? IRQ_NONE : IRQ_HANDLED;
+
+> +}
+> +
+> +static int st_lsm6dsx_buffer_preenable(struct iio_dev *iio_dev)
+> +{
+> +	return st_lsm6dsx_update_fifo(iio_dev, true);
+> +}
+> +
+> +static int st_lsm6dsx_buffer_postdisable(struct iio_dev *iio_dev)
+> +{
+> +	return st_lsm6dsx_update_fifo(iio_dev, false);
+> +}
+> +
+> +static const struct iio_buffer_setup_ops st_lsm6dsx_buffer_ops = {
+> +	.preenable = st_lsm6dsx_buffer_preenable,
+> +	.postdisable = st_lsm6dsx_buffer_postdisable,
+> +};
+> +
+> +int st_lsm6dsx_allocate_rings(struct st_lsm6dsx_hw *hw)
+> +{
+> +	struct iio_buffer *buffer;
+> +	unsigned long irq_type;
+> +	int i, err;
+> +
+> +	irq_type = irqd_get_trigger_type(irq_get_irq_data(hw->irq));
+> +
+> +	switch (irq_type) {
+> +	case IRQF_TRIGGER_HIGH:
+> +	case IRQF_TRIGGER_RISING:
+> +		break;
+> +	default:
+> +		dev_info(hw->dev,
+> +			 "mode %lx unsupported, using IRQF_TRIGGER_HIGH\n",
+> +			 irq_type);
+I'd argue that if the type is 'miss specified' we should be dumping out.
+Obviously good to have a default for if it isn't specified at all though.
+Is it easy to make this distinction?
+> +		irq_type = IRQF_TRIGGER_HIGH;
+> +		break;
+> +	}
+> +
+> +	err = devm_request_threaded_irq(hw->dev, hw->irq,
+> +					st_lsm6dsx_ring_handler_irq,
+> +					st_lsm6dsx_ring_handler_thread,
+> +					irq_type | IRQF_ONESHOT,
+> +					hw->name, hw);
+> +	if (err) {
+> +		dev_err(hw->dev, "failed to request trigger irq %d\n",
+> +			hw->irq);
+> +		return err;
+> +	}
+> +
+> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+> +		buffer = devm_iio_kfifo_allocate(hw->dev);
+Kfifo isn't a ring ;)  Probably want to rename this appropriately to reflect
+this.  The ring naming in various IIO drivers predates the presence of kfifo
+in the kernel when we had a hideous hand rolled ring buffer.
+> +		if (!buffer)
+> +			return -ENOMEM;
+> +
+> +		iio_device_attach_buffer(hw->iio_devs[i], buffer);
+> +		hw->iio_devs[i]->modes |= INDIO_BUFFER_SOFTWARE;
+> +		hw->iio_devs[i]->setup_ops = &st_lsm6dsx_buffer_ops;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> new file mode 100644
+> index 0000000..262eae6
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> @@ -0,0 +1,129 @@
+> +/*
+> + * STMicroelectronics st_lsm6dsx spi driver
+> + *
+> + * Copyright 2016 STMicroelectronics Inc.
+> + *
+> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * Licensed under the GPL-2.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +
+> +#include "st_lsm6dsx.h"
+> +
+> +#define SENSORS_SPI_READ	0x80
+> +
+> +static int st_lsm6dsx_spi_read(struct device *dev, u8 addr, int len,
+> +			       u8 *data)
+> +{
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct st_lsm6dsx_hw *hw = spi_get_drvdata(spi);
+> +	int err;
+> +
+> +	struct spi_transfer xfers[] = {
+> +		{
+> +			.tx_buf = hw->tb.tx_buf,
+> +			.bits_per_word = 8,
+> +			.len = 1,
+> +		},
+> +		{
+> +			.rx_buf = hw->tb.rx_buf,
+> +			.bits_per_word = 8,
+> +			.len = len,
+> +		}
+> +	};
+> +
+> +	hw->tb.tx_buf[0] = addr | SENSORS_SPI_READ;
+> +
+> +	err = spi_sync_transfer(spi, xfers,  ARRAY_SIZE(xfers));
+> +	if (err < 0)
+> +		return err;
+> +
+> +	memcpy(data, hw->tb.rx_buf, len * sizeof(u8));
+> +
+> +	return len;
+> +}
+> +
+> +static int st_lsm6dsx_spi_write(struct device *dev, u8 addr, int len,
+> +				u8 *data)
+> +{
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct st_lsm6dsx_hw *hw = spi_get_drvdata(spi);
+> +
+> +	struct spi_transfer xfers = {
+> +		.tx_buf = hw->tb.tx_buf,
+> +		.bits_per_word = 8,
+> +		.len = len + 1,
+> +	};
+> +
+> +	if (len >= ST_LSM6DSX_TX_MAX_LENGTH)
+> +		return -ENOMEM;
+> +
+> +	hw->tb.tx_buf[0] = addr;
+> +	memcpy(&hw->tb.tx_buf[1], data, len);
+> +
+> +	return spi_sync_transfer(spi, &xfers, 1);
+Why not spi_write?  Would be a little simpler.. Maybe not worth it, just to
+keep things similar between the write and read.
+> +}
+> +
+> +static const struct st_lsm6dsx_transfer_function st_lsm6dsx_transfer_fn = {
+> +	.read = st_lsm6dsx_spi_read,
+> +	.write = st_lsm6dsx_spi_write,
+> +};
+> +
+> +static int st_lsm6dsx_spi_probe(struct spi_device *spi)
+> +{
+> +	struct st_lsm6dsx_hw *hw;
+> +
+> +	hw = devm_kzalloc(&spi->dev, sizeof(*hw), GFP_KERNEL);
+> +	if (!hw)
+> +		return -ENOMEM;
+> +
+> +	spi_set_drvdata(spi, hw);
+> +	hw->name = spi->modalias;
+> +	hw->dev = &spi->dev;
+> +	hw->irq = spi->irq;
+> +	hw->tf = &st_lsm6dsx_transfer_fn;
+> +
+> +	return st_lsm6dsx_probe(hw);
+> +}
+> +
+> +static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
+> +	{
+> +		.compatible = "st,lsm6ds3",
+> +		.data = ST_LSM6DS3_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm6dsm",
+> +		.data = ST_LSM6DSM_DEV_NAME,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+> +
+> +static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
+> +	{ ST_LSM6DS3_DEV_NAME },
+> +	{ ST_LSM6DSM_DEV_NAME },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
+> +
+> +static struct spi_driver st_lsm6dsx_driver = {
+> +	.driver = {
+> +		.name = "st_lsm6dsx_spi",
+> +		.of_match_table = of_match_ptr(st_lsm6dsx_spi_of_match),
+> +	},
+> +	.probe = st_lsm6dsx_spi_probe,
+> +	.id_table = st_lsm6dsx_spi_id_table,
+> +};
+> +module_spi_driver(st_lsm6dsx_driver);
+> +
+> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_AUTHOR("Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx spi driver");
+> +MODULE_LICENSE("GPL v2");
 > 
