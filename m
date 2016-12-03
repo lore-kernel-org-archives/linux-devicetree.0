@@ -1,54 +1,58 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2 3/3] ARM: dts: vf610-zii-dev-rev-b: Remove 'fixed-link' from DSA ports
-Date: Sat,  3 Dec 2016 14:30:19 -0800
-Message-ID: <1480804219-12596-3-git-send-email-andrew.smirnov@gmail.com>
-References: <1480804219-12596-1-git-send-email-andrew.smirnov@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [RFC PATCH 2/2] Documentation: devictree: Add macb mdio bindings
+Date: Sat, 3 Dec 2016 14:40:38 -0800
+Message-ID: <bfbc84ce-4975-3213-3b46-8c394c717ea9@gmail.com>
+References: <1480326567-6132-1-git-send-email-harinik@xilinx.com>
+ <20161203213553.f3agwvaseufglnq6@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480804219-12596-1-git-send-email-andrew.smirnov@gmail.com>
+In-Reply-To: <20161203213553.f3agwvaseufglnq6@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, cphealy@gmail.com
+To: Rob Herring <robh@kernel.org>, Harini Katakam <harini.katakam@xilinx.com>
+Cc: nicolas.ferre@atmel.com, davem@davemloft.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, michals@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Remove 'fixed-link' nodes from DSA ports since they are not needed (they
-are not limiting link's speed and the ports will be configured to their
-maximux speed as a default)
+Le 12/03/16 à 13:35, Rob Herring a écrit :
+> On Mon, Nov 28, 2016 at 03:19:27PM +0530, Harini Katakam wrote:
+>> Add documentations for macb mdio driver.
+> 
+> Bindings document h/w, not drivers.
+> 
+>>
+>> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>> ---
+>>  .../devicetree/bindings/net/macb-mdio.txt          | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/macb-mdio.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/macb-mdio.txt b/Documentation/devicetree/bindings/net/macb-mdio.txt
+>> new file mode 100644
+>> index 0000000..014cedf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/macb-mdio.txt
+>> @@ -0,0 +1,31 @@
+>> +* Cadence MACB MDIO controller
+>> +
+>> +Required properties:
+>> +- compatible: Should be "cdns,macb-mdio"
+> 
+> Only one version ever? This needs more specific compatible strings.
+> 
+>> +- reg: Address and length of the register set of MAC to be used
+>> +- clock-names: Tuple listing input clock names.
+>> +	Required elements: 'pclk', 'hclk'
+>> +	Optional elements: 'tx_clk'
+>> +- clocks: Phandles to input clocks.
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
+You are also missing mandatory properties:
 
-Changes since v1:
-	- Patch was not present in v1
+#address-cells = <1> and #size-cells = <0>
 
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 8 --------
- 1 file changed, 8 deletions(-)
+Where is patch 1? Can you make sure you have the same recipient list for
+both patches in this series so we can review both the binding and driver?
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index c0fc3f2..646c90c 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -97,10 +97,6 @@
- 						phy-mode = "rgmii-txid";
- 						link = <&switch1port6
- 							&switch2port9>;
--						fixed-link {
--							speed = <1000>;
--							full-duplex;
--						};
- 					};
- 
- 					port@6 {
-@@ -165,10 +161,6 @@
- 						label = "dsa";
- 						phy-mode = "rgmii-txid";
- 						link = <&switch0port5>;
--						fixed-link {
--							speed = <1000>;
--							full-duplex;
--						};
- 					};
- 				};
- 				mdio {
+Thanks!
 -- 
-2.5.5
+Florian
