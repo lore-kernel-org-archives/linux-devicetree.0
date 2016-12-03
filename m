@@ -1,81 +1,111 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] Documentation: devictree: Add macb mdio bindings
-Date: Sat, 3 Dec 2016 15:35:53 -0600
-Message-ID: <20161203213553.f3agwvaseufglnq6@rob-hp-laptop>
-References: <1480326567-6132-1-git-send-email-harinik@xilinx.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCH 39/39] mtd: nand: denali_dt: add compatible strings for
+ UniPhier SoC variants
+Date: Sat, 3 Dec 2016 16:08:53 -0600
+Message-ID: <CADhT+wfh+_oQ6TDJJ9b-nnSYP+N5eYTL1jwZ6OuchAF-3iuYxA@mail.gmail.com>
+References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com>
+ <1480183585-592-40-git-send-email-yamada.masahiro@socionext.com>
+ <20161201160511.ahlibszokg547wxk@rob-hp-laptop> <CAK7LNASJLbizHEh8mUUVDvTKiRMCSvyYtdrQzwN5tHmCV8iYOA@mail.gmail.com>
+ <CAL_Jsq+H-JcAtDV3NCfptCWrmTgkQkmZFTj=Do8HhX4b=At9RA@mail.gmail.com>
+ <CAK7LNAQHnH=On=+7fzenu_v6rB71y9hYuAZi5oinZFu-tfAdjw@mail.gmail.com> <f98b49b9-91fc-c3d0-1ace-fa862581e53b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480326567-6132-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f98b49b9-91fc-c3d0-1ace-fa862581e53b@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>, Dinh Nguyen <dinguyen@altera.com>, Alan Tull <atull@opensource.altera.com>, Chin Liang See <clsee@altera.com>, Dinh Nguyen <dinguyen@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 03:19:27PM +0530, Harini Katakam wrote:
-> Add documentations for macb mdio driver.
+Hi,
 
-Bindings document h/w, not drivers.
+On Fri, Dec 2, 2016 at 8:49 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 12/03/2016 03:41 AM, Masahiro Yamada wrote:
+>> Hi Rob,
+>
+> Hi!
+>
+>> 2016-12-03 1:26 GMT+09:00 Rob Herring <robh@kernel.org>:
+>>
+>>>>
+>>>>
+>>>> (Plan A)
+>>>>   "denali,socfpga-nand"           (for Altera SOCFPGA variant)
+>>>>   "denali,uniphier-nand-v1"       (for old Socionext UniPhier family variant)
+>>>>   "denali,uniphier-nand-v2"       (for new Socionext UniPhier family variant)
+>>>>
+>>>> (Plan B)
+>>>>   "altera,denali-nand"            (for Altera SOCFPGA variant)
+>>>>   "socionext,denali-nand-v5a"     (for old Socionext UniPhier family variant)
+>>>>   "socionext,denali-nand-v5b"     (for new Socionext UniPhier family variant)
+>>
+>>> Let the Altera folks worry about their stuff. At least for soft IP in
+>>> FPGA, it's a bit of a special case. The old string can remain as bad
+>>> as it is.
+>>
+>>
+>> Hmm, I am not sure if this IP would fit in FPGA
+>> (to use it along with NIOS-II?)
+>>
+>> (even if it happened, nothing of this IP would be customizable on users' side.
+>> When buying the IP, SoC vendors submit a list of desired features.
+>> Denali (now Cadence) generates the RTL according to the configuration sheet.
+>> The function is fixed at this point. So, generic compatible would be
+>> useless anyway.)
+>>
+>>
+>> If we are talking about SOCFPGA,
+>> SOCFPGA is not only FPGA. Rather "SOC" + "FPGA".
+>> It consists of two parts:
+>> [1] SOC part  (Cortex-A9 + various hard-wired peripherals such UART,
+>> USB, SD, NAND, ...)
+>> [2] FPGA part (User design logic)
+>>
+>> The Denali NAND controller is included in [1].
+>> So, as far as we talk about the Denali on SOCFPGA,
+>> it is as hard-wired as Intel, Socionext's ones.
+>
+> That's correct, the Denali NAND IP in altera socfpga is a hardware
+> block. You can make it available to the fabric too, but by default
+> it's used by the ARM part of the chip, so for this discussion, you
+> can forget that the FPGA part exists altogether.
+>
+> I would be in favor of plan B, since it seems to be the more often
+> taken approach. A nice example is ci-hdrc:
+>
+> $ git grep compatible drivers/usb/chipidea/
+>
+>>> I simply would do "socionext,uniphier-v5b-nand" (and v5a).
+>>> The fact that it is denali is part of the documentation.
+>>>
+>>
+>> Let me think about this.
+>>
+>> Socionext bought two version of Denali IP,
+>> and we are now re-using the newer one (v5b) for several SoCs.
+>> Socionext has some more product lines other than Uniphier SoC family,
+>> perhaps wider re-use might happen in the future.
+>>
+>> At first, I included "uniphier" in compatible, but I am still wondering
+>> if such a specific string is good or not.
+>>
+>> Also, comments from Altera engineers are appreciated.
 
-> 
-> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/macb-mdio.txt          | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/macb-mdio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/macb-mdio.txt b/Documentation/devicetree/bindings/net/macb-mdio.txt
-> new file mode 100644
-> index 0000000..014cedf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/macb-mdio.txt
-> @@ -0,0 +1,31 @@
-> +* Cadence MACB MDIO controller
-> +
-> +Required properties:
-> +- compatible: Should be "cdns,macb-mdio"
+Sorry, it's taken me a while to add comments. My altera email is very spotty now
+that the Intel merge is completed. Please use dinguyen@kernel.org for any future
+communications.
 
-Only one version ever? This needs more specific compatible strings.
+Yes, everything that is said so far for the NAND controller on the
+SoCFPGA is correct. I added the binding for the controller a while
+back, but unfortunately, we never added the NAND interface to the
+devkit, so we did not do much in terms of enabling it.
 
-> +- reg: Address and length of the register set of MAC to be used
-> +- clock-names: Tuple listing input clock names.
-> +	Required elements: 'pclk', 'hclk'
-> +	Optional elements: 'tx_clk'
-> +- clocks: Phandles to input clocks.
-> +
-> +Examples:
-> +
-> +	mdio {
-> +		compatible = "cdns,macb-mdio";
-> +		reg = <0x0 0xff0b0000 0x0 0x1000>;
-> +		clocks = <&clk125>, <&clk125>, <&clk125>;
-> +		clock-names = "pclk", "hclk", "tx_clk";
-> +		ethernet_phyC: ethernet-phy@C {
+I think the only SoCFPGA board I know that has the NAND interface active is
+the TRCom board, but I have never seen that board.
 
-lowercase hex for unit addresses please
+I don't have any strong opinions on this matter, just as long as the
+original binding
+"denali,denali-nand-dt" is kept, and I think Rob was ok with keeping
+that binding.
 
-> +			reg = <0xC>;
-> +		};
-> +		ethernet_phy7: ethernet-phy@7 {
-> +			reg = <0x7>;
-> +		};
-> +		ethernet_phy3: ethernet-phy@3 {
-> +			reg = <0x3>;
-> +		};
-> +		ethernet_phy8: ethernet-phy@8 {
-> +			reg = <0x8>;
-> +		};
-> +	};
-> +
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dinh
