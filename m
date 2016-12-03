@@ -1,31 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add MYIR Tech hardware vendor prefix
-Date: Sat, 3 Dec 2016 15:32:23 -0600
-Message-ID: <20161203213223.mvhsdqu5uzujt4hi@rob-hp-laptop>
-References: <20161128075651.11620-1-vz@mleia.com>
+Subject: Re: [PATCH 1/3][v2] dt-bindings: Add compatible for LS2088A QDS and
+ RDB boards
+Date: Sat, 3 Dec 2016 15:33:20 -0600
+Message-ID: <20161203213320.suh5letdmdhwshrn@rob-hp-laptop>
+References: <1480325824-14649-1-git-send-email-abhimanyu.saini@nxp.com>
+ <1480325824-14649-2-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161128075651.11620-1-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1480325824-14649-2-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 09:56:51AM +0200, Vladimir Zapolskiy wrote:
-> MYIR Tech Limited offers a range of ARM powered development boards and SoMs,
-> for details reference a list on http://elinux.org/Development_Platforms#ARM
-> or company's website http://myirtech.com
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+On Mon, Nov 28, 2016 at 03:07:02PM +0530, Abhimanyu Saini wrote:
+> Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/arm/fsl.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
