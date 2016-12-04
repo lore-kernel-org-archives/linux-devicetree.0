@@ -1,51 +1,87 @@
-From: jorik@kippendief.biz
-Subject: [PATCH] dts: sun8i-h3: correct UART3 pin definitions
-Date: Sun,  4 Dec 2016 13:29:48 +0100
-Message-ID: <20161204122948.11921-1-jorik@kippendief.biz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.com, wens@csie.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Jorik Jonker <jorik@kippendief.biz>
+From: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: usb:xhci: support disable usb2 LPM Remote Wakeup
+Date: Sun,  4 Dec 2016 19:42:01 +0700
+Message-ID: <1480855321-5047-1-git-send-email-tqnguyen@apm.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Vu Nguyen <vnguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jorik Jonker <jorik@kippendief.biz>
+From: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
 
-In a previous commit, I made a copy/paste error in the pinmux
-definitions of UART3: PG{13,14} instead of PA{13,14}. This commit takes
-care of that. I have tested this commit on Orange Pi PC and Orange Pi
-Plus, and it works for these boards.
+As per USB 2.0 link power management addendum ECN, table 1-2, page 4,
+device or host initiated via resume signaling; device-initiated resumes
+can be optionally enabled/disabled by software. This patch adds support
+to control enabling the USB2 RWE feature via DT/ACPI attribute.
 
-Fixes: e3d11d3c45c5 ("dts: sun8i-h3: add pinmux definitions for
-UART2-3")
-
-Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
+Signed-off-by: Vu Nguyen <vnguyen-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+ drivers/usb/host/xhci-plat.c                       | 3 +++
+ drivers/usb/host/xhci.c                            | 5 ++++-
+ drivers/usb/host/xhci.h                            | 1 +
+ 4 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 75a8654..f4ba088 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -410,7 +410,7 @@
- 			};
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 966885c..9b4cd14 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -25,6 +25,7 @@ Required properties:
  
- 			uart3_pins: uart3 {
--				allwinner,pins = "PG13", "PG14";
-+				allwinner,pins = "PA13", "PA14";
- 				allwinner,function = "uart3";
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ Optional properties:
+   - clocks: reference to a clock
++  - usb2-rwe-disable: disable USB2 LPM Remote Wakeup capable
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+ 
+ Example:
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index ed56bf9..15c540d 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -220,6 +220,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		goto disable_clk;
+ 	}
+ 
++	if (device_property_read_bool(&pdev->dev, "usb2-rwe-disable"))
++		xhci->quirks |= XHCI_RWE_DISABLE;
++
+ 	if (device_property_read_bool(&pdev->dev, "usb3-lpm-capable"))
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
+ 
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 1a4ca02..f804868 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4183,7 +4183,10 @@ int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 		}
+ 
+ 		pm_val &= ~PORT_HIRD_MASK;
+-		pm_val |= PORT_HIRD(hird) | PORT_RWE | PORT_L1DS(udev->slot_id);
++		if ((xhci->quirks & XHCI_RWE_DISABLE) && (xhci->hci_version <= 0x100))
++			pm_val |= PORT_HIRD(hird) | PORT_L1DS(udev->slot_id);
++		else
++			pm_val |= PORT_HIRD(hird) | PORT_RWE | PORT_L1DS(udev->slot_id);
+ 		writel(pm_val, pm_addr);
+ 		pm_val = readl(pm_addr);
+ 		pm_val |= PORT_HLE;
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index f945380..2b9bc33 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1656,6 +1656,7 @@ struct xhci_hcd {
+ #define XHCI_SSIC_PORT_UNUSED	(1 << 22)
+ #define XHCI_NO_64BIT_SUPPORT	(1 << 23)
+ #define XHCI_MISSING_CAS	(1 << 24)
++#define XHCI_RWE_DISABLE	(1 << 25)
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+ 	/* There are two roothubs to keep track of bus suspend info for */
 -- 
-2.9.3
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
