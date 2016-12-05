@@ -1,58 +1,112 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: zx: add pcu_domain node for zx296718
-Date: Mon, 5 Dec 2016 16:54:13 +0800
-Message-ID: <20161205085411.GB2749@dragon>
-References: <1480925871-20855-1-git-send-email-baoyou.xie@linaro.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v3 -next 1/2] ARM: sunxi: add support for
+ H2+ SoC
+Date: Mon, 05 Dec 2016 14:44:02 +0800
+Message-ID: <20161205115958.xp80pInw@smtp3h.mail.yandex.net>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1480925871-20855-1-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, xie.baoyou@zte.com.cn, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, chen.chaokai@zte.com.cn, viresh.kumar@linaro.org, wang.qiang01@zte.com.cn, jun.nie@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBJGZSTBAKGQEBOJT6SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>
+Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2016 at 04:17:51PM +0800, Baoyou Xie wrote:
-> This patch adds the pcu_domain node, so it can be used
-> by zte-soc's power domain driver.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 
-I'm fine with the patch itself, but I need to wait the driver and
-bindings being accepted to apply it.
+2016=E5=B9=B412=E6=9C=885=E6=97=A5 =E4=B8=8A=E5=8D=8810:27=E4=BA=8E Alexey =
+Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 03/12/16 02:05, Icenowy Zheng wrote:=20
+> > Allwinner H2+ is a quad-core Cortex-A7 SoC.=20
+> >=20
+> > It is very like H3, that they share the same SoC ID (0x1680), and H3=20
+> > memory maps as well as drivers works well on the SoC.=20
+>
+>
+> What git tree is this made against of? Thanks.=20
 
-Shawn
+linux-next. See the title ;-)
 
-> ---
->  arch/arm64/boot/dts/zte/zx296718.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> index b44d1d1..1aa0587 100644
-> --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
-> +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> @@ -302,6 +302,11 @@
->  			reg = <0x116000 0x1000>;
->  		};
->  
-> +		pcu_domain: pcu@117000 {
-> +			compatible = "zte,zx296718-pcu";
-> +			reg = <0x00117000 0x1000>;
-> +		};
-> +
->  		uart0: uart@11f000 {
->  			compatible = "arm,pl011", "arm,primecell";
->  			arm,primecell-periphid = <0x001feffe>;
-> -- 
-> 2.7.4
-> 
+>
+>
+> >=20
+> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> > ---=20
+> > Changes since v2:=20
+> > - Changed compatible from allwinner,sun8i-h2plus to allwinner,sun8i-h2-=
+plus.=20
+> >=C2=A0 Documentation/arm/sunxi/README=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 +=
++++=20
+> >=C2=A0 Documentation/devicetree/bindings/arm/sunxi.txt | 1 +=20
+> >=C2=A0 arch/arm/mach-sunxi/sunxi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 1 +=20
+> >=C2=A0 3 files changed, 6 insertions(+)=20
+> >=20
+> > diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/R=
+EADME=20
+> > index cd02433..1fe4d99c 100644=20
+> > --- a/Documentation/arm/sunxi/README=20
+> > +++ b/Documentation/arm/sunxi/README=20
+> > @@ -63,6 +63,10 @@ SunXi family=20
+> >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + User Manual=20
+> >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 http:=
+//dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf=20
+> >=C2=A0=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Allwinner H2+ (sun8i)=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + No document available now=
+, but is known to be working properly with=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 H3 drivers and =
+memory map.=20
+> > +=20
+> >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Allwinner H3 (sun8i)=20
+> >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 + Datasheet=20
+> >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 http:=
+//dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf=20
+> > diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Document=
+ation/devicetree/bindings/arm/sunxi.txt=20
+> > index 4d6467c..59b143f 100644=20
+> > --- a/Documentation/devicetree/bindings/arm/sunxi.txt=20
+> > +++ b/Documentation/devicetree/bindings/arm/sunxi.txt=20
+> > @@ -13,6 +13,7 @@ using one of the following compatible strings:=20
+> >=C2=A0=C2=A0=C2=A0 allwinner,sun8i-a33=20
+> >=C2=A0=C2=A0=C2=A0 allwinner,sun8i-a83t=20
+> >=C2=A0=C2=A0=C2=A0 allwinner,sun8i-h3=20
+> > +=C2=A0 allwinner,sun8i-h2-plus=20
+> >=C2=A0=C2=A0=C2=A0 allwinner,sun9i-a80=20
+> >=C2=A0=C2=A0=C2=A0 allwinner,sun50i-a64=20
+> >=C2=A0=C2=A0=C2=A0 nextthing,gr8=20
+> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c=
+=20
+> > index 2e2bde2..320d2af 100644=20
+> > --- a/arch/arm/mach-sunxi/sunxi.c=20
+> > +++ b/arch/arm/mach-sunxi/sunxi.c=20
+> > @@ -63,6 +63,7 @@ static const char * const sun8i_board_dt_compat[] =3D=
+ {=20
+> >=C2=A0 "allwinner,sun8i-a23",=20
+> >=C2=A0 "allwinner,sun8i-a33",=20
+> >=C2=A0 "allwinner,sun8i-a83t",=20
+> > + "allwinner,sun8i-h2-plus",=20
+> >=C2=A0 "allwinner,sun8i-h3",=20
+> >=C2=A0 NULL,=20
+> >=C2=A0 };=20
+> >=20
+>
+>
+> --=20
+> Alexey=20
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
