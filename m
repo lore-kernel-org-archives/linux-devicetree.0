@@ -1,87 +1,56 @@
-From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: imx6: Support Savageboard quad
-Date: Mon,  5 Dec 2016 10:07:29 +0900
-Message-ID: <20161205010729.7047-4-woogyom.kim@gmail.com>
-References: <20161205010729.7047-1-woogyom.kim@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161205010729.7047-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH] ARM: dts: imx7d: fix LCDIF clock assignment
+Date: Sun, 04 Dec 2016 17:26:58 -0800
+Message-ID: <7e4829f484f6c4425fc9d01bea1a094f@agner.ch>
+References: <20161123004204.10851-1-stefan@agner.ch>
+ <CAOMZO5AqKupmmKb4biGfmy4v3ZwS-BFjPY=MLd8Rc0ZXL+vQvg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5AqKupmmKb4biGfmy4v3ZwS-BFjPY=MLd8Rc0ZXL+vQvg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, Peter Chen <peter.chen@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Liu Ying <Ying.Liu@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use common board file and support SATA interface additionally.
+Hi Shawn
 
-Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-savageboard.dts | 54 +++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-savageboard.dts
+On 2016-11-23 15:02, Fabio Estevam wrote:
+> On Tue, Nov 22, 2016 at 10:42 PM, Stefan Agner <stefan@agner.ch> wrote:
+>> The eLCDIF IP of the i.MX 7 SoC knows multiple clocks and lists them
+>> separately:
+>>
+>> Clock      Clock Root              Description
+>> apb_clk    MAIN_AXI_CLK_ROOT       AXI clock
+>> pix_clk    LCDIF_PIXEL_CLK_ROOT    Pixel clock
+>> ipg_clk_s  MAIN_AXI_CLK_ROOT       Peripheral access clock
+>>
+>> All of them are switched by a single gate, which is part of the
+>> IMX7D_LCDIF_PIXEL_ROOT_CLK clock. Hence using that clock also for
+>> the AXI bus clock (clock-name "axi") makes sure the gate gets
+>> enabled when accessing registers.
+>>
+>> There seem to be no separate AXI display clock, and the clock is
+>> optional. Hence remove the dummy clock.
+>>
+>> This fixes kernel freezes when starting the X-Server (which
+>> disables/re-enables the display controller).
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> 
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 
-diff --git a/arch/arm/boot/dts/imx6q-savageboard.dts b/arch/arm/boot/dts/imx6q-savageboard.dts
-new file mode 100644
-index 0000000..8d74002
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-savageboard.dts
-@@ -0,0 +1,54 @@
-+/*
-+ * Copyright (C) 2016 Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-savageboard.dtsi"
-+
-+/ {
-+	model = "Poslab SavageBoard Quad";
-+	compatible = "poslab,imx6q-savageboard", "fsl,imx6q";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
--- 
-2.9.3
+Since this fixes a kernel freeze, is there a chance to get this still in
+4.9?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
