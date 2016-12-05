@@ -1,63 +1,46 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of/irq: improve error report on irq discovery process failure
-Date: Mon, 5 Dec 2016 08:28:02 -0600
-Message-ID: <CAL_JsqKg4+SANVuhfjFQRrC4Ax7OhAjwuBpo0Xes9UFevFAdWg@mail.gmail.com>
-References: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
+Date: Mon, 5 Dec 2016 08:32:12 -0600
+Message-ID: <CAL_Jsq+OKbSvu0bG8KNtw4tsLH46B2Vnb9ZampPafCum4xSZWA@mail.gmail.com>
+References: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+ <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Frank Rowand <frowand.list@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 5, 2016 at 7:59 AM, Guilherme G. Piccoli
-<gpiccoli@linux.vnet.ibm.com> wrote:
-> On PowerPC machines some PCI slots might not have level triggered
-> interrupts capability (also know as level signaled interrupts),
-> leading of_irq_parse_pci() to complain by presenting error messages
-> on the kernel log - in this case, the properties "interrupt-map" and
-> "interrupt-map-mask" are not present on device's node in the device
-> tree.
->
-> This patch introduces a different message for this specific case,
-> and also reduces its level from error to warning. Besides, we warn
-> (once) that possibly some PCI slots on the system have no level
-> triggered interrupts available.
-> We changed some error return codes too on function of_irq_parse_raw()
-> in order other failure's cases can be presented in a more precise way.
->
-> Before this patch, when an adapter was plugged in a slot without level
-> interrupts capabilitiy on PowerPC, we saw a generic error message
-> like this:
->
->     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-22
->
-> Now, with this applied, we see the following specific message:
->
->     [16.154] pci 0014:60:00.1: of_irq_parse_pci: no interrupt-map found,
->     INTx interrupts not available
->
-> Finally, we standardize the error path in of_irq_parse_raw() by always
-> taking the fail path instead of returning directly from the loop.
->
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
-> ---
->
-> v2:
->   * Changed function return code to always return negative values;
-
-Are you sure this is safe? This is tricky because of differing values
-of NO_IRQ (0 or -1).
-
->   * Improved/simplified warning outputs;
->   * Changed some return codes and some error paths in of_irq_parse_raw()
-> in order to be more precise/consistent;
-
-This too could have some side effects on callers.
-
-Not saying don't do these changes, just need some assurances this has
-been considered.
-
-Rob
+T24gVHVlLCBOb3YgMjksIDIwMTYgYXQgNTo1NyBBTSwgQmFydG9zeiBHb2xhc3pld3NraQo8Ymdv
+bGFzemV3c2tpQGJheWxpYnJlLmNvbT4gd3JvdGU6Cj4gQWRkIHRoZSBkdW1iLXZnYS1kYWMgbm9k
+ZSB0byB0aGUgYm9hcmQgRFQgdG9nZXRoZXIgd2l0aCBjb3JyZXNwb25kaW5nCj4gcG9ydHMgYW5k
+IHZnYSBjb25uZWN0b3IuIFRoaXMgYWxsb3dzIHRvIHJldHJpZXZlIHRoZSBlZGlkIGluZm8gZnJv
+bQo+IHRoZSBkaXNwbGF5IGF1dG9tYXRpY2FsbHkuCj4KPiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6
+IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+IC0tLQo+ICBhcmNoL2Fy
+bS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cyB8IDU4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSAgICAgfCAxNyAr
+KysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCspCj4KPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgYi9hcmNoL2FybS9ib290
+L2R0cy9kYTg1MC1sY2RrLmR0cwo+IGluZGV4IDcxMWI5YWQuLmQ4NjRmMTEgMTAwNjQ0Cj4gLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMKPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9kYTg1MC1sY2RrLmR0cwo+IEBAIC01MCw2ICs1MCw1MyBAQAo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIHN5c3RlbS1jbG9jay1mcmVxdWVuY3kgPSA8MjQ1NzYwMDA+Owo+ICAgICAgICAg
+ICAgICAgICB9Owo+ICAgICAgICAgfTsKPiArCj4gKyAgICAgICB2Z2FfYnJpZGdlIHsKCnMvXy8t
+LwoKPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOwo+ICsgICAg
+ICAgICAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsgICAgICAgICAgICAgICBw
+aW5jdHJsLTAgPSA8JmxjZF9waW5zPjsKCkFyZSB0aGVzZSBwaW5zIGZyb20gdGhlIExDRCBjb250
+cm9sbGVyPyBUaGV5IHNob3VsZCBiZSBwYXJ0IG9mIHRoZSBMQ0QKY29udHJvbGxlciBub2RlLgoK
+Um9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
