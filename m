@@ -1,55 +1,74 @@
-From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 1/2] Add OV5647 device tree documentation
-Date: Mon,  5 Dec 2016 17:36:33 +0000
-Message-ID: <bb5a2ae3078a977eb52aec0ffa3a0a0de558e6ad.1480958609.git.roliveir@synopsys.com>
-References: <cover.1480958609.git.roliveir@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1480958609.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <cover.1480958609.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-References: <cover.1480958609.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 1/6] net: ethernet: ti: netcp: add support of cpts
+Date: Mon, 5 Dec 2016 12:25:57 -0600
+Message-ID: <7a484f9c-a47d-3ccd-9611-d00b86feabdd@ti.com>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-2-grygorii.strashko@ti.com>
+ <20161205144918.oj4jpj65aha3x5gf@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161205144918.oj4jpj65aha3x5gf@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Richard Cochran <richardcochran@gmail.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree documentation.
 
-Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-new file mode 100644
-index 0000000..4c91b3b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-@@ -0,0 +1,19 @@
-+Omnivision OV5647 raw image sensor
-+---------------------------------
-+
-+OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-+and CCI (I2C compatible) control bus.
-+
-+Required properties:
-+
-+- compatible	: "ovti,ov5647";
-+- reg		: I2C slave address of the sensor;
-+
-+The common video interfaces bindings (see video-interfaces.txt) should be
-+used to specify link to the image data receiver. The OV5647 device
-+node should contain one 'port' child node with an 'endpoint' subnode.
-+
-+Following properties are valid for the endpoint node:
-+
-+- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-+  video-interfaces.txt.  The sensor supports only two data lanes.
+On 12/05/2016 08:49 AM, Rob Herring wrote:
+> On Mon, Nov 28, 2016 at 05:04:23PM -0600, Grygorii Strashko wrote:
+>> From: WingMan Kwok <w-kwok2@ti.com>
+>>
+>> This patch adds support of the cpts device found in the
+>> gbe and 10gbe ethernet switches on the keystone 2 SoCs
+>> (66AK2E/L/Hx, 66AK2Gx).
+>>
+>> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>  .../devicetree/bindings/net/keystone-netcp.txt     |   9 +
+>>  drivers/net/ethernet/ti/Kconfig                    |   7 +-
+>>  drivers/net/ethernet/ti/netcp.h                    |   2 +-
+>>  drivers/net/ethernet/ti/netcp_core.c               |  18 +-
+>>  drivers/net/ethernet/ti/netcp_ethss.c              | 437 ++++++++++++++++++++-
+>>  5 files changed, 459 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+>> index 04ba1dc..c37b54e 100644
+>> --- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
+>> +++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
+>> @@ -113,6 +113,15 @@ Optional properties:
+>>  				will only initialize these ports and attach PHY
+>>  				driver to them if needed.
+>>  
+>> + Properties related to cpts configurations.
+>> +	- cpts_clock_mult/cpts_clock_shift:
+> 
+> Needs vendor prefix. Don't use '_'.
+
+This module is used as part of OMAP and Keystone SoCs, so names for
+this props is ABI already :(
+
+> 
+>> +		used for converting time counter cycles to ns as in
+>> +
+>> +		ns = (cycles * clock_mult) >> _shift
+>> +
+>> +		Defaults: clock_mult, clock_shift = calculated from
+>> +		CPTS refclk
+> 
+> What does this mean?
+> 
+
+I'll add more description here.
+
+>> +
+>>  NetCP interface properties: Interface specification for NetCP sub-modules.
+>>  Required properties:
+>>  - rx-channel:	the navigator packet dma channel name for rx.
+
 -- 
-2.10.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+-grygorii
