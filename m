@@ -1,14 +1,17 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/5] spi: Add basic support for Armada 3700 SPI
- Controller
-Date: Mon, 5 Dec 2016 12:05:40 +0000
-Message-ID: <20161205120540.mvihgafelszitzhq@sirena.org.uk>
-References: <20161201102719.4291-1-romain.perier@free-electrons.com>
- <20161201102719.4291-2-romain.perier@free-electrons.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v3 3/7] PWM: add pwm-stm32 DT bindings
+Date: Mon, 5 Dec 2016 13:12:25 +0100
+Message-ID: <CA+M3ks5j2e-EQEf74YSduboNnCiWC7+e_PD5aAz5XdFA1tGztQ@mail.gmail.com>
+References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
+ <1480673842-20804-4-git-send-email-benjamin.gaignard@st.com>
+ <20161205065350.GA18069@ulmo.ba.sec>
+ <CA+M3ks4-JQNGYtdiXNj1J701x0njKD0_bf4yN1mLSjEcT2Z=6A@mail.gmail.com>
+ <20161205112347.GF19891@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2122375953554878701=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161201102719.4291-2-romain.perier@free-electrons.com>
+In-Reply-To: <20161205112347.GF19891@ulmo.ba.sec>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,112 +21,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-spi@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, xigu@marvell.com, dingwei@marvell.com, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Lee Jones <lee.jones@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Jonathan Cameron <jic23@kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============2122375953554878701==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="j5bleiip5j6gh5xe"
-Content-Disposition: inline
-
-
---j5bleiip5j6gh5xe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Dec 01, 2016 at 11:27:15AM +0100, Romain Perier wrote:
-
-> +config SPI_ARMADA_3700
-> +	tristate "Marvell Armada 3700 SPI Controller"
-> +	depends on ARCH_MVEBU && OF
-
-Why does this not have a COMPILE_TEST dependency?
-
-> +	/* Reset SPI unit */
-> +	val = spireg_read(a3700_spi, A3700_SPI_IF_CFG_REG);
-> +	val |= A3700_SPI_SRST;
-> +	spireg_write(a3700_spi, A3700_SPI_IF_CFG_REG, val);
-> +
-> +	for (i = 0; i < A3700_SPI_TIMEOUT; i++)
-> +		udelay(1);
-
-Why not just do a single udelay()?
-
-> +static irqreturn_t a3700_spi_interrupt(int irq, void *dev_id)
-> +{
-> +	struct spi_master *master = dev_id;
-> +	struct a3700_spi *a3700_spi;
-> +	u32 cause;
-> +
-> +	a3700_spi = spi_master_get_devdata(master);
-> +
-> +	/* Get interrupt causes */
-> +	cause = spireg_read(a3700_spi, A3700_SPI_INT_STAT_REG);
-> +
-> +	/* mask and acknowledge the SPI interrupts */
-> +	spireg_write(a3700_spi, A3700_SPI_INT_MASK_REG, 0);
-> +	spireg_write(a3700_spi, A3700_SPI_INT_STAT_REG, cause);
-> +
-> +	/* Wake up the transfer */
-> +	if (a3700_spi->wait_mask & cause)
-> +		complete(&a3700_spi->done);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-This reports that we handled an interrupt even if we did not in fact
-handle an interrupt.  It's also a bit dodgy that it doesn't check what
-the interrupt was but that's less serious.
-
-> +	master->bus_num = (pdev->id != -1) ? pdev->id : 0;
-
-At most this should be just setting the bus number to pdev->id like
-other drivers do.
-
-> +	ret = clk_prepare_enable(spi->clk);
-> +	if (ret) {
-> +		dev_err(dev, "could not prepare clk: %d\n", ret);
-> +		goto error;
-> +	}
-
-I'd expect the hardware prepare/unprepare to be managing the enable and
-disable of the clock in order to save a little power.
-
-> +	dev_info(dev, "Marvell Armada 3700 SPI Controller at 0x%08lx, irq %d\n",
-> +		 (unsigned long)res->start, spi->irq);
-
-This is just adding noise to the boot, remove it.  It's not telling us
-anything we read from the hardware or anything.
-
---j5bleiip5j6gh5xe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhFWBMACgkQJNaLcl1U
-h9AUHgf/Qy+NSqFcO8jSBzNf1kG5hAHuZZ8VFLjes4BVTw6giMSbLmAQXvIwVjXN
-3lgV9PPNyTL06L9Zi09aMp0IPcGhv7G0C3r2e9pSsCg5ZoU1mpKKzrr9E2wCrO/p
-NjpYuFLKbBDXVQQcc+kQSF+ravjPObMpqqLvRw4CRfSoBJexs602lBhx5Bp6L40o
-ztY9bJICZyhwPPqE9DlO2vqOS8VkfCQDi3hLqgldvodTAudkdKfofUYW3LPmq0W9
-8OfV1uX+mnLOxhHcFaTwI3gPxiRYzVB0TQdtQKpDCLbpAnrh1nIBgBXIcpC1XO+7
-Q4rU2Ku5/5zTUeNvoJfvdGQOv7iwyA==
-=2hjl
------END PGP SIGNATURE-----
-
---j5bleiip5j6gh5xe--
-
-
---===============2122375953554878701==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2122375953554878701==--
+MjAxNi0xMi0wNSAxMjoyMyBHTVQrMDE6MDAgVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5n
+QGdtYWlsLmNvbT46Cj4gT24gTW9uLCBEZWMgMDUsIDIwMTYgYXQgMTI6MDg6MzJQTSArMDEwMCwg
+QmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6Cj4+IDIwMTYtMTItMDUgNzo1MyBHTVQrMDE6MDAgVGhp
+ZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT46Cj4+ID4gT24gRnJpLCBEZWMg
+MDIsIDIwMTYgYXQgMTE6MTc6MThBTSArMDEwMCwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6Cj4+
+ID4+IERlZmluZSBiaW5kaW5ncyBmb3IgcHdtLXN0bTMyCj4+ID4+Cj4+ID4+IHZlcnNpb24gMjoK
+Pj4gPj4gLSB1c2UgcGFyYW1ldGVycyBpbnN0ZWFkIG9mIGNvbXBhdGlibGUgb2YgaGFuZGxlIHRo
+ZSBoYXJkd2FyZSBjb25maWd1cmF0aW9uCj4+ID4+Cj4+ID4+IFNpZ25lZC1vZmYtYnk6IEJlbmph
+bWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+Cj4+ID4+IC0tLQo+PiA+PiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS1zdG0zMi50eHQgICAgICAgICAgfCAzOCAr
+KysrKysrKysrKysrKysrKysrKysrCj4+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9u
+cygrKQo+PiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wd20vcHdtLXN0bTMyLnR4dAo+PiA+Pgo+PiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tc3RtMzIudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tc3RtMzIudHh0Cj4+ID4+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4+ID4+IGluZGV4IDAwMDAwMDAuLjU3NWI5ZmIKPj4gPj4gLS0tIC9kZXYv
+bnVsbAo+PiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3
+bS1zdG0zMi50eHQKPj4gPj4gQEAgLTAsMCArMSwzOCBAQAo+PiA+PiArU1RNaWNyb2VsZWN0cm9u
+aWNzIFBXTSBkcml2ZXIgYmluZGluZ3MgZm9yIFNUTTMyCj4+ID4KPj4gPiBUZWNobmljYWxseSB0
+aGlzIGJpbmRpbmdzIGRlc2NyaWJlIGRldmljZXMsIHNvICJkcml2ZXIgYmluZGluZyIgaXMgYQo+
+PiA+IHNvbWV3aGF0IG9kZCB3b3JkaW5nLiBQZXJoYXBzOgo+PiA+Cj4+ID4gICAgICAgICBTVE1p
+Y3JvZWxlY3Ryb25pY3MgU1RNMzIgR2VuZXJhbCBQdXJwb3NlIFRpbWVyIFBXTSBiaW5kaW5ncwo+
+PiA+Cj4+ID4gPwo+PiAgZG9uZQo+Pgo+PiA+Cj4+ID4+ICsKPj4gPj4gK011c3QgYmUgYSBzdWIt
+bm9kZSBvZiBTVE0zMiBnZW5lcmFsIHB1cnBvc2UgdGltZXIgZHJpdmVyCj4+ID4+ICtQYXJlbnQg
+bm9kZSBwcm9wZXJ0aWVzIGFyZSBkZXNjcmliZSBpbiAuLi9tZmQvc3RtMzItZ2VuZXJhbC1wdXJw
+b3NlLXRpbWVyLnR4dAo+PiA+Cj4+ID4gQWdhaW4sICJkcml2ZXIgcGFyZW50IG5vZGUiIGlzIG9k
+ZC4gUGVyaGFwczoKPj4gPgo+PiA+ICAgICAgICAgTXVzdCBiZSBhIHN1Yi1ub2RlIG9mIGFuIFNU
+TTMyIEdlbmVyYWwgUHVycG9zZSBUaW1lciBkZXZpY2UgdHJlZQo+PiA+ICAgICAgICAgbm9kZS4g
+U2VlIC4uL21mZC9zdG0zMi1nZW5lcmFsLXB1cnBvc2UtdGltZXIudHh0IGZvciBkZXRhaWxzIGFi
+b3V0Cj4+ID4gICAgICAgICB0aGUgcGFyZW50IG5vZGUuCj4+ID4KPj4gPiA/Cj4+Cj4+IGRvbmUK
+Pj4KPj4gPgo+PiA+PiArUmVxdWlyZWQgcGFyYW1ldGVyczoKPj4gPj4gKy0gY29tcGF0aWJsZTog
+ICAgICAgICAgICAgICAgTXVzdCBiZSAic3Qsc3RtMzItcHdtIgo+PiA+PiArLSBwaW5jdHJsLW5h
+bWVzOiAgICAgU2V0IHRvICJkZWZhdWx0Ii4KPj4gPj4gKy0gcGluY3RybC0wOiAgICAgICAgICAg
+ICAgICAgTGlzdCBvZiBwaGFuZGxlcyBwb2ludGluZyB0byBwaW4gY29uZmlndXJhdGlvbiBub2Rl
+cwo+PiA+PiArICAgICAgICAgICAgICAgICAgICAgZm9yIFBXTSBtb2R1bGUuCj4+ID4+ICsgICAg
+ICAgICAgICAgICAgICAgICBGb3IgUGluY3RybCBwcm9wZXJ0aWVzLCBwbGVhc2UgcmVmZXIgdG8g
+WzFdLgo+PiA+Cj4+ID4gWW91ciBpbmRlbnRhdGlvbiBhbmQgY2FwaXRhbGl6YXRpb24gYXJlIGlu
+Y29uc2lzdGVudC4gQWxzbywgcGxlYXNlIHJlZmVyCj4+ID4gdG8gdGhlIHBpbmN0cmwgYmluZGlu
+Z3MgYnkgcmVsYXRpdmUgcGF0aCBhbmQgaW5saW5lLCByYXRoZXIgdGhhbiBhcyBhCj4+ID4gZm9v
+dG5vdGUgcmVmZXJlbmNlLgo+Pgo+PiBPSwo+Pgo+PiA+Cj4+ID4+ICsKPj4gPj4gK09wdGlvbmFs
+IHBhcmFtZXRlcnM6Cj4+ID4+ICstIHN0LGJyZWFraW5wdXQ6ICAgICBTZXQgaWYgdGhlIGhhcmR3
+YXJlIGhhdmUgYnJlYWsgaW5wdXQgY2FwYWJpbGl0aWVzCj4+ID4+ICstIHN0LGJyZWFraW5wdXQt
+cG9sYXJpdHk6IFNldCBicmVhayBpbnB1dCBwb2xhcml0eS4gRGVmYXVsdCBpcyAwCj4+ID4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgVGhlIHZhbHVlIGRlZmluZSB0aGUgYWN0aXZlIHBvbGFyaXR5
+Ogo+PiA+PiArICAgICAgICAgICAgICAgICAgICAgICAtIDAgKGFjdGl2ZSBMT1cpCj4+ID4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIC0gMSAoYWN0aXZlIEhJR0gpCj4+ID4KPj4gPiBDb3VsZCB3
+ZSBmb2xkIHRoZXNlIGludG8gYSBzaW5nbGUgcHJvcGVydHk/IElmIHN0LGJyZWFraW5wdXQtcG9s
+YXJpdHkgaXMKPj4gPiBub3QgcHJlc2VudCBpdCBjb3VsZCBzaW1wbHkgbWVhbiB0aGF0IHRoZXJl
+IGlzIG5vIGJyZWFrIGlucHV0LCBhbmQgaWYgaXQKPj4gPiBpcyBwcmVzZW50IHlvdSBkb24ndCBo
+YXZlIHRvIHJlbHkgb24gYSBkZWZhdWx0Lgo+Pgo+PiBJIG5lZWQgdG8ga25vdyBpZiBJIGhhdmUg
+dG8gYWN0aXZhdGUgYnJlYWtpbnB1dCBmZWF0dXJlIGFuZCBvbiB3aGljaCBsZXZlbAo+PiBJIHdp
+bGwgcmV3cml0ZSBpdCBsaWtlIHRoYXQ6Cj4+IE9wdGlvbmFsIHBhcmFtZXRlcnM6Cj4+IC0gc3Qs
+YnJlYWtpbnB1dC1wb2xhcml0eS1oaWdoOiBTZXQgaWYgYnJlYWsgaW5wdXQgcG9sYXJpdHkgaXMg
+YWN0aXZlCj4+IG9uIGhpZ2ggbGV2ZWwuCj4+IC0gc3QsYnJlYWtpbnB1dC1wb2xhcml0eS1oaWdo
+OiBTZXQgaWYgYnJlYWsgaW5wdXQgcG9sYXJpdHkgaXMgYWN0aXZlCj4+IG9uIGxvdyBsZXZlbC4K
+Pgo+IEhvdyBpcyB0aGF0IGRpZmZlcmVudCBmcm9tIGEgc2luZ2xlIHByb3BlcnR5Ogo+Cj4gICAg
+ICAgICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAgICAgICAgLSBzdCxicmVha2lucHV0LXBvbGFy
+aXR5OiBJZiBwcmVzZW50LCBhIGJyZWFrIGlucHV0IGlzIGF2YWlsYWJsZQo+ICAgICAgICAgICAg
+IGZvciB0aGUgY2hhbm5lbC4gSW4gdGhhdCBjYXNlIHRoZSBwcm9wZXJ0eSB2YWx1ZSBkZW5vdGVz
+IHRoZQo+ICAgICAgICAgICAgIHBvbGFyaXR5IG9mIHRoZSBicmVhayBpbnB1dDoKPiAgICAgICAg
+ICAgICAtIDA6IGFjdGl2ZSBsb3cKPiAgICAgICAgICAgICAtIDE6IGFjdGl2ZSBoaWdoCj4KPiA/
+CgpGb3IgYnJlYWsgaW5wdXQgZmVhdHVyZSBJIG5lZWQgdHdvIGluZm9ybWF0aW9uOiBkbyBJIGhh
+dmUgdG8gYWN0aXZlIGl0CmFuZCBpZiBhY3RpdmF0ZWQKb24gd2hpY2ggbGV2ZWwuCkkgaGF2ZSB0
+d28gc29sdXRpb25zOgotIG9uZSBwYXJhbWV0ZXIgd2l0aCBhIHZhbHVlICgwIG9yIDEpIC0+IHN0
+LGJyZWFraW5wdXQtcG9sYXJpdHkKLSB0d28gcGFyYW1ldGVycyB3aXRob3V0IHZhbHVlIC0+IHN0
+LGJyZWFraW5wdXQtYWN0aXZlLWhpZ2ggYW5kCnN0LGJyZWFraW5wdXQtYWN0aXZlLWxvdwoKQnkg
+ZGVmYXVsdCBicmVhayBpbnB1dCBmZWF0dXJlIGlzIGRpc2FibGVkCgo+Cj4+ID4gVGhlIHB3bS0g
+cHJlZml4IGlzIHJhdGhlciByZWR1bmRhbnQgc2luY2UgdGhlIG5vZGUgaXMgYWxyZWFkeSBuYW1l
+ZCBwd20uCj4+ID4gV2h5IG5vdCBzaW1wbHkgc3QsY2hhbm5lbHM/IE9yIHNpbXBseSBjaGFubmVs
+cywgc2luY2UgaXQncyBub3QgcmVhbGx5Cj4+ID4gYW55dGhpbmcgc3BlY2lmaWMgdG8gdGhpcyBo
+YXJkd2FyZS4KPj4gPgo+PiA+IENvbWUgdG8gdGhpbmsgb2YgaXQsIG1pZ2h0IGJlIHdvcnRoIGhh
+dmluZyBhIGRpc2N1c3Npb24gd2l0aCBvdXIgRFQKPj4gPiBndXJ1cyBhYm91dCB3aGF0IHRoZWly
+IHN0YW5jZSBpcyBvbiB1c2luZyB0aGUgIyBhcyBwcmVmaXggZm9yIG51bWJlcnMKPj4gPiAoc3Vj
+aCBhcyBpbiAjYWRkcmVzcy1jZWxscyBvciAjc2l6ZS1jZWxscykuIFRoaXMgY291bGQgYmUgI2No
+YW5uZWxzIHRvCj4+ID4gbWFyayBpdCBtb3JlIGV4cGxpY2l0bHkgYXMgcmVwcmVzZW50aW5nIGEg
+Y291bnQuCj4+ID4KPj4gPj4gKy0gc3QsMzJiaXRzLWNvdW50ZXI6IFNldCBpZiB0aGUgaGFyZHdh
+cmUgaGF2ZSBhIDMyIGJpdHMgY291bnRlcgo+PiA+PiArLSBzdCxjb21wbGVtZW50YXJ5OiAgU2V0
+IGlmIHRoZSBoYXJkd2FyZSBoYXZlIGNvbXBsZW1lbnRhcnkgb3V0cHV0IGNoYW5uZWxzCj4+ID4K
+Pj4gPiAiaGFyZHdhcmUgaGFzIiBhbmQgYWxzbyBtYXliZSBtZW50aW9uIGV4cGxpY2l0bHkgdGhh
+dCB0aGlzIGlzIGEgYm9vbGVhbgo+PiA+IHByb3BlcnR5LiBPdGhlcndpc2UgcGVvcGxlIG1pZ2h0
+IGJlIGxlZnQgd29uZGVyaW5nIHdoYXQgaXQgc2hvdWxkIGJlIHNldAo+PiA+IHRvLiBPciBtYXli
+ZSB3b3JkIHRoaXMgZGlmZmVyZW50bHkgdG8gaW1wbHkgdGhhdCBpdCdzIGJvb2xlYW46Cj4+ID4K
+Pj4gPiAgICAgICAgIC0gc3QsMzJiaXRzLWNvdW50ZXI6IGlmIHByZXNlbnQsIHRoZSBoYXJkd2Fy
+ZSBoYXMgYSAzMiBiaXQgY291bnRlcgo+PiA+ICAgICAgICAgLSBzdCxjb21wbGVtZW50YXJ5OiBp
+ZiBwcmVzZW50LCB0aGUgaGFyZHdhcmUgaGFzIGEgY29tcGxlbWVudGFyeQo+PiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBvdXRwdXQgY2hhbm5lbAo+Pgo+PiBJIGZvdW5kIGEgd2F5IHRv
+IGRldGVjdCwgYXQgcHJvYmUgdGltZSwgdGhlIG51bWJlciBvZiBjaGFubmVscywgY291bnRlciBz
+aXplLAo+PiBicmVhayBpbnB1dCBjYXBhYmlsaXR5IGFuZCBjb21wbGVtZW50YXJ5IGNoYW5uZWxz
+IHNvIEkgd2lsbCByZW1vdmUKPj4gInN0LGJyZWFraW5wdXQiLCAic3QsMzJiaXRzLWNvdW50ZXIi
+LCAic3QsY29tcGxlbWVudGFyeSIgYW5kICJzdCxwd20tbnVtLWNoYW4iCj4+IHBhcmFtZXRlcnMK
+Pgo+IE9oIGhleSwgdGhhdCdzIHZlcnkgbmVhdC4gSSBzdXBwb3NlIGluIHRoYXQgY2FzZSBteSBj
+b21tZW50IGFib3ZlIGFib3V0Cj4gdGhlIGJyZWFrIGlucHV0IHBvbGFyaXR5IGlzIHNvbWV3aGF0
+IG9ic29sZXRlZC4gU3RpbGwgSSB0aGluayB5b3Ugd29uJ3QKPiBuZWVkIHR3byBwcm9wZXJ0aWVz
+LiBJbnN0ZWFkIHlvdSBjYW4gZm9sbG93IHdoYXQgb3RoZXIgc2ltaWxhcgo+IHByb3BlcnRpZXMg
+aGF2ZSBkb25lOiBjaG9vc2UgYSBkZWZhdWx0IChvZnRlbiBsb3ctYWN0aXZlKSBhbmQgaGF2ZSBh
+Cj4gc2luZ2xlIG9wdGlvbmFsIHByb3BlcnR5IHRvIG92ZXJyaWRlIHRoZSBkZWZhdWx0IChvZnRl
+biBoaWdoLWFjdGl2ZSkuCj4KPiBJbiB5b3VyIGNhc2U6Cj4KPiAgICAgICAgIC0gc3QsYnJlYWtp
+bnB1dC1hY3RpdmUtaGlnaDogU29tZSBjaGFubmVscyBoYXZlIGEgYnJlYWsgaW5wdXQsCj4gICAg
+ICAgICAgICAgd2hvc2UgcG9sYXJpdHkgd2lsbCBiZSBhY3RpdmUgbG93IGJ5IGRlZmF1bHQuIElm
+IHRoaXMKPiAgICAgICAgICAgICBwcm9wZXJ0eSBpcyBwcmVzZW50LCB0aGUgY2hhbm5lbCB3aWxs
+IGJlIGNvbmZpZ3VyZWQgd2l0aCBhbgo+ICAgICAgICAgICAgIGFjdGl2ZSBoaWdoIHBvbGFyaXR5
+IGZvciB0aGUgYnJlYWsgaW5wdXQuCj4KPiBUaGllcnJ5CgoKCi0tIApCZW5qYW1pbiBHYWlnbmFy
+ZAoKR3JhcGhpYyBTdHVkeSBHcm91cAoKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdh
+cmUgZm9yIEFSTSBTb0NzCgpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9n
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
