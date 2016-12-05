@@ -1,57 +1,89 @@
-From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: imx6: Support Poslab Savageboard dual & quad
-Date: Mon,  5 Dec 2016 10:07:26 +0900
-Message-ID: <20161205010729.7047-1-woogyom.kim@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Milo Kim <woogyom.kim@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: imx6: Support Savageboard dual
+Date: Mon,  5 Dec 2016 10:07:28 +0900
+Message-ID: <20161205010729.7047-3-woogyom.kim@gmail.com>
+References: <20161205010729.7047-1-woogyom.kim@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161205010729.7047-1-woogyom.kim@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Milo Kim <woogyom.kim@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Poslab Savageboard is i.MX6 SoC base, but BSP code from the vendor is 
-not mainline u-boot and kernel. Personal reason of using this board is 
-testing etnaviv user-space driver, so I re-write device tree files based on
-mainline kernel for the first step.
+Common savageboard DT file is used for board support.
 
-This patchset includes common DT file, dual and quad board files.
-
-Supported components are
-  - Display: HDMI and LVDS panel
-  - eMMC and SD card
-  - Ethernet
-  - Pinmux configuration
-  - SATA: only for Savageboard quad
-  - UART1 for debug console
-  - USB host
-
-Missing features are
-  - Audio (WM8903)
-  - USB OTG
-  - PMIC WM8326: default settings are used so no issue to bring-up the system
-  - MIPI DSI, CSI
-
-Patches are tested on the Savageboard quad but the dual version should work 
-because the only difference between dual and quad is SATA support.
-
-More information in http://www.savageboard.org
-
-Milo Kim (3):
-  ARM: dts: imx6: Add Savageboard common file
-  ARM: dts: imx6: Support Savageboard dual
-  ARM: dts: imx6: Support Savageboard quad
-
- arch/arm/boot/dts/imx6dl-savageboard.dts   |  50 ++++++
- arch/arm/boot/dts/imx6q-savageboard.dts    |  54 ++++++
- arch/arm/boot/dts/imx6qdl-savageboard.dtsi | 271 +++++++++++++++++++++++++++++
- 3 files changed, 375 insertions(+)
+Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+---
+ arch/arm/boot/dts/imx6dl-savageboard.dts | 50 ++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
  create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
- create mode 100644 arch/arm/boot/dts/imx6q-savageboard.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-savageboard.dtsi
 
+diff --git a/arch/arm/boot/dts/imx6dl-savageboard.dts b/arch/arm/boot/dts/imx6dl-savageboard.dts
+new file mode 100644
+index 0000000..2cac30d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-savageboard.dts
+@@ -0,0 +1,50 @@
++/*
++ * Copyright (C) 2016 Milo Kim <woogyom.kim@gmail.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6dl.dtsi"
++#include "imx6qdl-savageboard.dtsi"
++
++/ {
++	model = "Poslab SavageBoard Dual";
++	compatible = "poslab,imx6dl-savageboard", "fsl,imx6dl";
++};
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
