@@ -1,98 +1,88 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: zx: add pcu_domain node for zx296718
-Date: Mon, 5 Dec 2016 11:16:41 +0800
-Message-ID: <20161205031639.GB2667@dragon>
-References: <1480766354-25168-1-git-send-email-baoyou.xie@linaro.org>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] mtd: spi-nor: Bindings for Rockchip serial flash
+ controller
+Date: Mon, 5 Dec 2016 04:24:55 +0100
+Message-ID: <40cb2739-f58d-2e35-5b87-6b46e93e422e@gmail.com>
+References: <1480906577-38455-1-git-send-email-shawn.lin@rock-chips.com>
+ <1480906577-38455-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480766354-25168-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480906577-38455-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 03, 2016 at 07:59:14PM +0800, Baoyou Xie wrote:
-> This patch adds the pcu_domain node, so it can be used
-> by zte-soc's power domain driver.
+On 12/05/2016 03:56 AM, Shawn Lin wrote:
+> Add binding document for the Rockchip serial flash controller.
 > 
-> Furthermore, it adds the document of the node.
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/zte.txt | 11 +++++++++++
-
-DT bindings doc should be a separate patch, and goes together with
-driver changes using the bindings through subsystem maintainers, rather
-than dts patches.
-
->  arch/arm64/boot/dts/zte/zx296718.dtsi         |  7 +++++++
->  2 files changed, 18 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/zte.txt b/Documentation/devicetree/bindings/arm/zte.txt
-> index 83369785..19a7e1b 100644
-> --- a/Documentation/devicetree/bindings/arm/zte.txt
-> +++ b/Documentation/devicetree/bindings/arm/zte.txt
-> @@ -27,6 +27,9 @@ System management required properties:
->        - compatible = "zte,zx296718-aon-sysctrl"
->        - compatible = "zte,zx296718-sysctrl"
->  
-> +Low power management required properties:
-> +      - compatible = "zte,zx296718-pcu"
+> Changes in v3:
+> - rename sfc-no-dma to sfc-no-DMA
+> 
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/mtd/rockchip-sfc.txt       | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+> new file mode 100644
+> index 0000000..c6b4f58
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+> @@ -0,0 +1,31 @@
+> +Rockchip Serial Flash Controller
 > +
->  Example:
->  aon_sysctrl: aon-sysctrl@116000 {
->  	compatible = "zte,zx296718-aon-sysctrl", "syscon";
-> @@ -37,3 +40,11 @@ sysctrl: sysctrl@1463000 {
->  	compatible = "zte,zx296718-sysctrl", "syscon";
->  	reg = <0x1463000 0x1000>;
->  };
+> +Required properties:
+> +- compatible : Should be
+> +		"rockchip,rk1108-sfc", "rockchip,sfc" for ROCKCHIP RK1108.
+> +- address-cells : Should be 1.
+> +- size-cells : Should be 0.
+> +- clocks: Must contain two entries for each entry in clock-names.
+> +- clock-names: Shall be "sfc" for the transfer-clock, and "hsfc" for
+> +		the peripheral clock.
+> +- interrupts : Should contain the interrupt for the device.
+> +- reg: Physical base address of the controller and length of memory mapped.
 > +
-> +pcu_domain: pcu@0x00117000 {
-> +        compatible = "zte,zx296718-pcu";
-> +        reg = <0x00117000 0x1000>;
-> +        #power-domain-cells = <1>;
-> +        status = "ok";
+> +Optional properties:
+
+Uhhh, I apologize for the miscommunication.
+
+> +- rockchip,sfc-no-DMA: Indicate the controller doesn't support dma transfer.
+I didn't mean this   ^^^ DMA, that should be lowercase. I meant   ^^^
+this one. The property should be lowercase, the description
+should be uppercase.
+
+> +
+> +Example:
+> +nor_flash: sfc@301c0000 {
+> +	compatible = "rockchip,rk1108-sfc", "rockchip,sfc";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
+> +	clock-names = "sfc", "hsfc";
+> +	interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> +	reg = <0x301c0000 0x1000>;
+> +	spi-nor@0 {
+> +		compatible = "jedec,spi-nor";
+> +		spi-max-frequency = <12000000>;
+> +		reg = <0>;
+> +	};
 > +};
-> +
-
-I think we should have a separate bindings doc for PCU power domain
-block in Documentation/devicetree/bindings/soc/zte.
-
-> diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> index b44d1d1..39e70c7 100644
-> --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
-> +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> @@ -351,5 +351,12 @@
->  			reg = <0x01480000 0x1000>;
->  			#clock-cells = <1>;
->  		};
-> +
-> +		pcu_domain: pcu@0x00117000 {
-
-Please drop the 0x and leading zeros in unit-address after node name.
-That said, the node name should be written like below:
-
-	pcu@117000 {
-
-Also, please sort the node with unit-address in order of the address.
-That means that pcu node should be put after aon-sysctrl@116000.
-
-> +			compatible = "zte,zx296718-pcu";
-> +			reg = <0x00117000 0x1000>;
-> +			#power-domain-cells = <1>;
-> +			status = "ok";
-
-The property 'status' is generally used to enable devices that have
-board-level pin-out or configuration in board dts.  It's not really
-necessary for pcu here.
-
-Shawn
-
-> +		};
->  	};
->  };
-> -- 
-> 2.7.4
 > 
+
+
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
