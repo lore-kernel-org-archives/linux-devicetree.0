@@ -1,72 +1,97 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2] v4l: async: make v4l2 coexist with devicetree nodes in
- a dt overlay
-Date: Mon, 5 Dec 2016 10:13:38 -0300
-Message-ID: <0b71cde6-143c-0fa3-30c3-22caf94e14ec@osg.samsung.com>
-References: <1480932596-4108-1-git-send-email-javi.merino@kernel.org>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [PATCH v6 1/2] mtd: arasan: Add device tree binding documentation
+Date: Mon, 5 Dec 2016 13:24:10 +0000
+Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B76423EE23@XAP-PVEXMBX02.xlnx.xilinx.com>
+References: <1480911066-26157-1-git-send-email-punnaia@xilinx.com>
+ <74842d92-840d-a7c2-fb1b-ddab1ac2cf42@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480932596-4108-1-git-send-email-javi.merino@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javi Merino <javi.merino@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <74842d92-840d-a7c2-fb1b-ddab1ac2cf42@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "richard@nod.at" <richard@nod.at>, "cyrille.pitchen@atmel.com" <cyrille.pitchen@atmel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michals@xilinx.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>, "kpc528@gmail.com" <kpc528@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Javi,
-
-On 12/05/2016 07:09 AM, Javi Merino wrote:
-> In asds configured with V4L2_ASYNC_MATCH_OF, the v4l2 subdev can be
-> part of a devicetree overlay, for example:
-> 
-> &media_bridge {
-> 	...
-> 	my_port: port@0 {
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
-> 		reg = <0>;
-> 		ep: endpoint@0 {
-> 			remote-endpoint = <&camera0>;
-> 		};
-> 	};
-> };
-> 
-> / {
-> 	fragment@0 {
-> 		target = <&i2c0>;
-> 		__overlay__ {
-> 			my_cam {
-> 				compatible = "foo,bar";
-> 				port {
-> 					camera0: endpoint {
-> 						remote-endpoint = <&my_port>;
-> 						...
-> 					};
-> 				};
-> 			};
-> 		};
-> 	};
-> };
-> 
-> Each time the overlay is applied, its of_node pointer will be
-> different.  We are not interested in matching the pointer, what we
-> want to match is that the path is the one we are expecting.  Change to
-> use of_node_cmp() so that we continue matching after the overlay has
-> been removed and reapplied.
-> 
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Signed-off-by: Javi Merino <javi.merino@kernel.org>
-> ---
-
-I already reviewed v1 but you didn't carry the tag. So again:
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+SGkgTWFyZWssDQoNCiBUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyZWsgVmFzdXQgW21haWx0bzptYXJlay52YXN1dEBnbWFp
+bC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgRGVjZW1iZXIgMDUsIDIwMTYgOTo1NiBBTQ0KPiBUbzog
+UHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaSA8cHVubmFpYUB4aWxpbnguY29tPjsNCj4gZHdtdzJA
+aW5mcmFkZWFkLm9yZzsgY29tcHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tOw0KPiBib3Jpcy5icmV6
+aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tOyByaWNoYXJkQG5vZC5hdDsNCj4gY3lyaWxsZS5waXRj
+aGVuQGF0bWVsLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbQ0K
+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtbXRkQGxpc3RzLmluZnJh
+ZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBNaWNoYWwgU2ltZWsgPG1p
+Y2hhbHNAeGlsaW54LmNvbT47DQo+IGthbGx1cmlwdW5uYWlhaGNob3VkYXJ5QGdtYWlsLmNvbTsg
+a3BjNTI4QGdtYWlsLmNvbTsgUHVubmFpYWgNCj4gQ2hvdWRhcnkgS2FsbHVyaSA8cHVubmFpYUB4
+aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDEvMl0gbXRkOiBhcmFzYW46IEFk
+ZCBkZXZpY2UgdHJlZSBiaW5kaW5nDQo+IGRvY3VtZW50YXRpb24NCj4gDQo+IE9uIDEyLzA1LzIw
+MTYgMDU6MTEgQU0sIFB1bm5haWFoIENob3VkYXJ5IEthbGx1cmkgd3JvdGU6DQo+ID4gVGhpcyBw
+YXRjaCBhZGRzIHRoZSBkdHMgYmluZGluZyBkb2N1bWVudCBmb3IgYXJhc2FuIG5hbmQgZmxhc2gN
+Cj4gPiBjb250cm9sbGVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUHVubmFpYWggQ2hvdWRh
+cnkgS2FsbHVyaSA8cHVubmFpYUB4aWxpbnguY29tPg0KPiA+IEFja2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPg0KPiA+IC0tLQ0KPiA+IGNoYW5nZXMgaW4gdjY6DQo+ID4gLSBS
+ZW1vdmVkIG51bS1jcyBwcm9wZXJ0eQ0KPiA+IC0gU2VwYXJhdGVkIG5hbmRjaGlwIGZyb20gbmFu
+ZCBjb250cm9sbGVyDQo+ID4gY2hhbmdlcyBpbiB2NToNCj4gPiAtIE5vbmUNCj4gPiBDaGFuZ2Vz
+IGluIHY0Og0KPiA+IC0gQWRkZWQgbnVtLWNzIHByb3BlcnR5DQo+ID4gLSBBZGRlZCBjbG9jayBz
+dXBwb3J0DQo+ID4gQ2hhbmdlcyBpbiB2MzoNCj4gPiAtIE5vbmUNCj4gPiBDaGFuZ2VzIGluIHYy
+Og0KPiA+IC0gTm9uZQ0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
+YXJhc2FuX25mYy50eHQgICAgICAgICB8IDM4DQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXJhc2FuX25mYy50
+eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbXRkL2FyYXNhbl9uZmMudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL210ZC9hcmFzYW5fbmZjLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5k
+ZXggMDAwMDAwMC4uZGNiZTdhZA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2FyYXNhbl9uZmMudHh0DQo+ID4gQEAgLTAs
+MCArMSwzOCBAQA0KPiA+ICtBcmFzYW4gTmFuZCBGbGFzaCBDb250cm9sbGVyIHdpdGggT05GSSAz
+LjEgc3VwcG9ydA0KPiANCj4gQXJhc2FuIE5BTkQgRmxhc2ggLi4uDQo+IA0KPiA+ICtSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSAiYXJhc2FuLG5mYy12
+M3AxMCINCj4gDQo+IFRoaXMgdjNwMTAgbG9va3MgbGlrZSB2ZXJzaW9uIDMgcGF0Y2hsZXZlbCAx
+MCwgYnV0IHNob3VsZG4ndCB3ZSBoYXZlDQo+IHNvbWUgZmFsbGJhY2sgb3B0aW9uIHdoaWNoIGRv
+ZXNuJ3QgZW5jb2RlIElQIHZlcnNpb24gaW4gdGhlIGNvbXBhdA0KPiBzdHJpbmcgPw0KPiANCg0K
+VGhpcyBpcyBhIHRoaXJkLXBhcnR5IElQIGFuZCB2M3AxMCBpcyB0aGUgdmVyc2lvbiB0aGF0IHdl
+IGFyZSB1c2luZyBpbiBvdXIgU09DLg0KQWxzbyB0aGlzIElQIGRvZXNu4oCZdCBoYXZlIHRoZSBJ
+UCB2ZXJzaW9uIGluZm9ybWF0aW9uIGluIHRoZSByZWdpc3RlciBzcGFjZSB0bw0KcmVhZCBkeW5h
+bWljYWxseSBhbmQgaGF2aW5nIGdlbmVyaWMgY29tcGF0aWJsZSBuYW1lLiBTbywgYW55IG5ldyB2
+ZXJzaW9ucw0KY2FuIGJlIGFkZGVkIHRocm91Z2ggIG9mX21hdGNoX3RhYmxlIHdpdGggY29uZmln
+IGRhdGEgaW5zaWRlIHRoZSBkcml2ZXIuDQoNCj4gQWxzbywgc2hvdWxkbid0IHF1aXJrcyBiZSBo
+YW5kbGVkIGJ5IERUIHByb3BzIGluc3RlYWQgb2YgZWZmZWN0aXZlbHkNCj4gZW5jb2RpbmcgdGhl
+bSBpbnRvIHRoZSBjb21wYXRpYmxlIHN0cmluZyA/DQo+DQpJIGZlZWwgdGhlIGFib3ZlIG1lbnRp
+b25lZCBtZXRob2Qgd2lsbCBiZSBtb3JlIGFwcHJvcHJpYXRlIHJhdGhlciB0aGFuIGRlZmluaW5n
+DQp0aGUgcXVpcmtzIHRocm91Z2ggRFQgcHJvcGVydGllcy4NCg0KSSB3aWxsIGZpeCBhbGwgb3Ro
+ZXIgY29tbWVudHMNCg0KUmVnYXJkcywNClB1bm5haWFoDQo+ID4gKy0gcmVnOiBNZW1vcnkgbWFw
+IGZvciBtb2R1bGUgYWNjZXNzDQo+ID4gKy0gaW50ZXJydXB0LXBhcmVudDogSW50ZXJydXB0IGNv
+bnRyb2xsZXIgdGhlIGludGVycnVwdCBpcyByb3V0ZWQgdGhyb3VnaA0KPiA+ICstIGludGVycnVw
+dHM6IFNob3VsZCBjb250YWluIHRoZSBpbnRlcnJ1cHQgZm9yIHRoZSBkZXZpY2UNCj4gPiArLSBj
+bG9jay1uYW1lOiBMaXN0IG9mIGlucHV0IGNsb2NrcyAtICJjbGtfc3lzIiwgImNsa19mbGFzaCIN
+Cj4gPiArCSAgICAgIChTZWUgY2xvY2sgYmluZGluZ3MgZm9yIGRldGFpbHMpDQo+ID4gKy0gY2xv
+Y2tzOiBDbG9jayBwaGFuZGxlcyAoc2VlIGNsb2NrIGJpbmRpbmdzIGZvciBkZXRhaWxzKQ0KPiA+
+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSBhcmFzYW4saGFzLW1kbWE6IEVu
+YWJsZXMgRG1hIHN1cHBvcnQNCj4gDQo+ICdFbmFibGVzIERNQSBzdXBwb3J0JyAsIHdpdGggRE1B
+IGluIGNhcHMuDQo+IA0KPiA+ICtmb3IgbmFuZCBwYXJ0aXRpb24gaW5mb3JtYXRpb24gcGxlYXNl
+IHJlZmVyIHRoZSBiZWxvdyBmaWxlDQo+IA0KPiBGb3IgTkFORCAuLi4NCj4gDQo+ID4gK0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dA0KPiA+ICsNCj4g
+PiArRXhhbXBsZToNCj4gPiArCW5hbmQwOiBuYW5kQGZmMTAwMDAwIHsNCj4gPiArCQljb21wYXRp
+YmxlID0gImFyYXNhbixuZmMtdjNwMTAiDQo+ID4gKwkJcmVnID0gPDB4MCAweGZmMTAwMDAwIDB4
+MTAwMD47DQo+ID4gKwkJY2xvY2stbmFtZSA9ICJjbGtfc3lzIiwgImNsa19mbGFzaCINCj4gPiAr
+CQljbG9ja3MgPSA8Jm1pc2NfY2xrICZtaXNjX2Nsaz47DQo+ID4gKwkJaW50ZXJydXB0LXBhcmVu
+dCA9IDwmZ2ljPjsNCj4gPiArCQlpbnRlcnJ1cHRzID0gPDAgMTQgND47DQo+ID4gKwkJYXJhc2Fu
+LGhhcy1tZG1hOw0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNzaXplLWNl
+bGxzID0gPDA+DQo+ID4gKw0KPiA+ICsJCW5hbmRAMCB7DQo+ID4gKwkJCXJlZyA9IDwwPg0KPiA+
+ICsJCQlwYXJ0aXRpb25AMCB7DQo+ID4gKwkJCQlsYWJlbCA9ICJmaWxlc3lzdGVtIjsNCj4gPiAr
+CQkJCXJlZyA9IDwweDAgMHgwIDB4MTAwMDAwMD47DQo+ID4gKwkJCX07DQo+ID4gKwkJCSguLi4p
+DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+ID4NCj4gDQo+IA0KPiAtLQ0KPiBCZXN0IHJlZ2FyZHMs
+DQo+IE1hcmVrIFZhc3V0DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
