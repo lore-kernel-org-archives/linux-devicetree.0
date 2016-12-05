@@ -1,284 +1,222 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
-Date: Mon, 5 Dec 2016 13:27:36 +0100
-Message-ID: <d7aaa1d5-f11a-e361-b2fe-f0cf86d92008@xs4all.nl>
-References: <20161122155244.802-1-khilman@baylibre.com>
- <m2zikgh5f0.fsf@baylibre.com>
- <20161201075730.GP16630@valkosipuli.retiisi.org.uk>
- <2453889.B9pO7dWgEo@avalon>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v3 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
+Date: Mon, 5 Dec 2016 14:49:50 +0200
+Message-ID: <a2159347-1cd7-18b1-626a-fe6a272ba85c@ti.com>
+References: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+ <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2453889.B9pO7dWgEo@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>
+Content-Type: multipart/mixed; boundary="===============1801780279=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2016 10:16 AM, Laurent Pinchart wrote:
-> Hello,
-> 
-> On Thursday 01 Dec 2016 09:57:31 Sakari Ailus wrote:
->> On Wed, Nov 30, 2016 at 04:14:11PM -0800, Kevin Hilman wrote:
->>> Sakari Ailus <sakari.ailus@iki.fi> writes:
->>>> On Wed, Nov 23, 2016 at 03:25:32PM -0800, Kevin Hilman wrote:
->>>>> Sakari Ailus <sakari.ailus@iki.fi> writes:
->>>>>> On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
->>>>>>> Allow getting of subdevs from DT ports and endpoints.
->>>>>>>
->>>>>>> The _get_pdata() function was larely inspired by (i.e. stolen from)
->>>>>>> am437x-vpfe.c
->>>>>>>
->>>>>>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->>>>>>> ---
->>>>>>>
->>>>>>>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++-
->>>>>>>  include/media/davinci/vpif_types.h     
->>>>>>>        |   9 +-
->>>>>>>  2 files changed, 133 insertions(+), 6 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/media/platform/davinci/vpif_capture.c
->>>>>>> b/drivers/media/platform/davinci/vpif_capture.c index
->>>>>>> 94ee6cf03f02..47a4699157e7 100644
->>>>>>> --- a/drivers/media/platform/davinci/vpif_capture.c
->>>>>>> +++ b/drivers/media/platform/davinci/vpif_capture.c
->>>>>>> @@ -26,6 +26,8 @@
->>>>>>>  #include <linux/slab.h>
->>>>>>>
->>>>>>>  #include <media/v4l2-ioctl.h>
->>>>>>> +#include <media/v4l2-of.h>
->>>>>>> +#include <media/i2c/tvp514x.h>
->>>>>>
->>>>>> Do you need this header?
->>>>>
->>>>> Yes, based on discussion with Hans, since there is no DT binding for
->>>>> selecting the input pins of the TVP514x, I have to select it in the
->>>>> driver, so I need the defines from this header.  More on this below...
-> 
-> That's really ugly :-( The problem should be fixed properly instead of adding 
-> one more offender.
+--===============1801780279==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="FbFgPcE5tlNkpUFh3OIxQRPX4OX3aawLa"
 
-Do you have time for that, Laurent? I don't. Until that time we just need to
-make do with this workaround.
+--FbFgPcE5tlNkpUFh3OIxQRPX4OX3aawLa
+Content-Type: multipart/mixed; boundary="nEbiqIH3gMStN5MtoUsKlUCqQ6u3VFhcu";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Message-ID: <a2159347-1cd7-18b1-626a-fe6a272ba85c@ti.com>
+Subject: Re: [PATCH v3 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
+References: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+ <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
+In-Reply-To: <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
 
-> 
->>>>>>>  #include "vpif.h"
->>>>>>>  #include "vpif_capture.h"
->>>>>>> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
->>>>>>>
->>>>>>>  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
->>>>>>>
->>>>>>> +	if (!chan_cfg)
->>>>>>> +		return -1;
->>>>>>> +	if (input_index >= chan_cfg->input_count)
->>>>>>> +		return -1;
->>>>>>>  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
->>>>>>>  	if (subdev_name == NULL)
->>>>>>>  		return -1;
->>>>>>> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
->>>>>>>  	/* loop through the sub device list to get the sub device info
->>>>>>>  	*/
->>>>>>>  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
->>>>>>>  		subdev_info = &vpif_cfg->subdev_info[i];
->>>>>>> -		if (!strcmp(subdev_info->name, subdev_name))
->>>>>>> +		if (subdev_info && !strcmp(subdev_info->name,
->>>>>>> subdev_name))
->>>>>>>  			return i;
->>>>>>>  	}
->>>>>>>  	return -1;
->>>>>>> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct
->>>>>>> v4l2_async_notifier *notifier,> >> >> 
->>>>>>>  {
->>>>>>>  	int i;
->>>>>>>
->>>>>>> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
->>>>>>> +		struct v4l2_async_subdev *_asd = vpif_obj.config
->>>>>>> ->asd[i];
->>>>>>> +		const struct device_node *node = _asd->match.of.node;
->>>>>>> +
->>>>>>> +		if (node == subdev->of_node) {
->>>>>>> +			vpif_obj.sd[i] = subdev;
->>>>>>> +			vpif_obj.config->chan_config
->>>>>>> ->inputs[i].subdev_name =
->>>>>>> +				(char *)subdev->of_node->full_name;
-> 
-> Can subdev_name be made const instead of blindly casting the full_name pointer 
-> ? If not this is probably unsafe, and if yes it should be done :-)
-> 
->>>>>>> +			vpif_dbg(2, debug,
->>>>>>> +				 "%s: setting input %d subdev_name =
->>>>>>> %s\n",
->>>>>>> +				 __func__, i, subdev->of_node
->>>>>>> ->full_name);
->>>>>>> +			return 0;
->>>>>>> +		}
->>>>>>> +	}
->>>>>>> +
->>>>>>>  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
->>>>>>>  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
->>>>>>>  			    subdev->name)) {
->>>>>>> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct
->>>>>>> v4l2_async_notifier *notifier)
->>>>>>>  	return vpif_probe_complete();
->>>>>>>  }
->>>>>>>
->>>>>>> +static struct vpif_capture_config *
->>>>>>> +vpif_capture_get_pdata(struct platform_device *pdev)
->>>>>>> +{
->>>>>>> +	struct device_node *endpoint = NULL;
->>>>>>> +	struct v4l2_of_endpoint bus_cfg;
->>>>>>> +	struct vpif_capture_config *pdata;
->>>>>>> +	struct vpif_subdev_info *sdinfo;
->>>>>>> +	struct vpif_capture_chan_config *chan;
->>>>>>> +	unsigned int i;
->>>>>>> +
->>>>>>> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
->>>>>>> +
->>>>>>> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
->>>>>>> +		return pdev->dev.platform_data;
->>>>>>> +
->>>>>>> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->>>>>>> +	if (!pdata)
->>>>>>> +		return NULL;
->>>>>>> +	pdata->subdev_info =
->>>>>>> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
->>>>>>> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
->>>>>>> +
->>>>>>> +	if (!pdata->subdev_info)
->>>>>>> +		return NULL;
->>>>>>> +	dev_dbg(&pdev->dev, "%s\n", __func__);
->>>>>>> +
->>>>>>> +	for (i = 0; ; i++) {
->>>>>>> +		struct device_node *rem;
->>>>>>> +		unsigned int flags;
->>>>>>> +		int err;
->>>>>>> +
->>>>>>> +		endpoint = of_graph_get_next_endpoint(pdev
->>>>>>> ->dev.of_node,
->>>>>>> +						      endpoint);
->>>>>>> +		if (!endpoint)
->>>>>>> +			break;
->>>>>>> +
->>>>>>> +		sdinfo = &pdata->subdev_info[i];
->>>>>>
->>>>>> subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
->>>>>
->>>>> Right, I need to make the loop only go for a max of
->>>>> VPIF_CAPTURE_MAX_CHANNELS iterations.
->>>>>
->>>>>>> +		chan = &pdata->chan_config[i];
->>>>>>> +		chan->inputs = devm_kzalloc(&pdev->dev,
->>>>>>> +					    sizeof(*chan->inputs) *
->>>>>>> +					    VPIF_DISPLAY_MAX_CHANNELS,
->>>>>>> +					    GFP_KERNEL);
->>>>>>> +
->>>>>>> +		chan->input_count++;
->>>>>>> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
->>>>>>
->>>>>> I wonder what's the purpose of using index i on this array as well.
->>>>>
->>>>> The number of endpoints in DT is the number of input channels
->>>>> configured (up to a max of VPIF_CAPTURE_MAX_CHANNELS.)
->>>>>
->>>>>> If you use that to access a corresponding entry in a different array,
->>>>>> I'd just create a struct that contains the port configuration and the
->>>>>> async sub-device. The omap3isp driver does that, for instance; see
->>>>>> isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if
->>>>>> you're interested. Up to you.
->>>>>
->>>>> OK, I'll have a look at that driver. The goal here with this series is
->>>>> just to get this working with DT, but also not break the existing
->>>>> legacy platform_device support, so I'm trying not to mess with the
->>>>> driver-interal data structures too much.
->>>>
->>>> Ack.
->>>>
->>>>>>> +		chan->inputs[i].input.std = V4L2_STD_ALL;
->>>>>>> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
->>>>>>> +
->>>>>>> +		/* FIXME: need a new property? ch0:composite ch1:
->>>>>>> s-video */
->>>>>>> +		if (i == 0)
->>>>>>
->>>>>> Can you assume that the first endopoint has got a particular kind of
->>>>>> input? What if it's not connected?
->>>>>
->>>>> On all the boards I know of (there aren't many using this SoC), it's a
->>>>> safe assumption.
->>>>>
->>>>>> If this is a different physical port (not in the meaning another) in
->>>>>> the device, I'd use the reg property for this. Please see
->>>>>> Documentation/devicetree/bindings/media/video-interfaces.txt .
->>>>>
->>>>> My understanding (which is admittedly somewhat fuzzy) of the TVP514x is
->>>>> that it's not physically a different port.  Instead, it's just telling
->>>>> the TVP514x which pin(s) will be active inputs (and what kind of signal
->>>>> will be present.)
->>>>>
->>>>> I'm open to a better way to describe this input select from DT, but
->>>>> based on what I heard from Hans, there isn't currently a good way to do
->>>>> that except for in the driver:
->>>>> (c.f. https://marc.info/?l=linux-arm-kernel&m=147887871615788)
->>>>>
->>>>> Based on further discussion in that thread, it sounds like there may be
->>>>> a way forward coming soon, and I'll be glad to switch to that when it
->>>>> arrives.
-> 
-> I'm afraid I have to disappoint Hans here, I don't have code for that yet.
-> 
->>>> I'm not sure that properly supporting connectors will provide any help
->>>> here.
->>>>
->>>> Looking at the s_routing() API, it's the calling driver that has to be
->>>> aware of sub-device specific function parameters. As such it's not a
->>>> very good idea to require that a driver is aware of the value range of
->>>> another driver's parameter. I wonder if a simple enumeration interface
->>>> would help here --- if I understand correctly, the purpose is just to
->>>> provide a way to choose the input using VIDIOC_S_INPUT.
->>>>
->>>> I guess that's somehow ok as long as you have no other combinations of
->>>> these devices but this is hardly future-proof. (And certainly not a
->>>> problem created by this patch.)
->>>
->>> Yeah, this is far from future proof.
->>>
->>>> It'd be still nice to fix that as presumably we don't have the option of
->>>> reworking how we expect the device tree to look like.
->>>
->>> Agreed.
->>>
->>> I'm just hoping someone can shed som light on "how we expect the device
->>> tree to look".  ;)
->>
->> :-)
->>
->> For the tvp514x, do you need more than a single endpoint on the receiver
->> side? Does the input that's selected affect the bus parameters?
->>
->> If it doesn't, you could create a custom endpoint property for the possible
->> input values. The s_routing() really should be fixed though, but that could
->> be postponed I guess. There are quite a few drivers using it.
-> 
-> There's two ways to look at s_routing() in my opinion, as the calling driver 
-> should really not hardcode any knowledge specific to a particular subdev. We 
-> can either have the calling driver discover the possible routing options at 
-> runtime through the subdev API, or modify the s_routing() API.
-> 
+--nEbiqIH3gMStN5MtoUsKlUCqQ6u3VFhcu
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Some historical perspective: s_routing was added well before the device tree
-was ever used for ARM. And at that time the vast majority of drivers were PCI
-or USB drivers, very few platform drivers existed (and those typically used
-sensors, not video receivers).
+On 29/11/16 13:57, Bartosz Golaszewski wrote:
+> Add the dumb-vga-dac node to the board DT together with corresponding
+> ports and vga connector. This allows to retrieve the edid info from
+> the display automatically.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/boot/dts/da850-lcdk.dts | 58 ++++++++++++++++++++++++++++++++=
+++++++++
+>  arch/arm/boot/dts/da850.dtsi     | 17 ++++++++++++
+>  2 files changed, 75 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850=
+-lcdk.dts
+> index 711b9ad..d864f11 100644
+> --- a/arch/arm/boot/dts/da850-lcdk.dts
+> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> @@ -50,6 +50,53 @@
+>  			system-clock-frequency =3D <24576000>;
+>  		};
+>  	};
+> +
+> +	vga_bridge {
+> +		compatible =3D "dumb-vga-dac";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&lcd_pins>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			port@0 {
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +				reg =3D <0>;
+> +
+> +				vga_bridge_in: endpoint@0 {
+> +					reg =3D <0>;
+> +					remote-endpoint =3D <&display_out_vga>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +				reg =3D <1>;
+> +
+> +				vga_bridge_out: endpoint@0 {
+> +					reg =3D <0>;
+> +					remote-endpoint =3D <&vga_con_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vga {
+> +		compatible =3D "vga-connector";
+> +
+> +		ddc-i2c-bus =3D <&i2c0>;
+> +
+> +		port {
+> +			vga_con_in: endpoint {
+> +				remote-endpoint =3D <&vga_bridge_out>;
+> +			};
+> +		};
+> +	};
+>  };
+> =20
+>  &pmx_core {
+> @@ -235,3 +282,14 @@
+>  &memctrl {
+>  	status =3D "okay";
+>  };
+> +
+> +&display {
+> +	status =3D "okay";
+> +};
+> +
+> +&display_out {
+> +	display_out_vga: endpoint@0 {
+> +		reg =3D <0>;
+> +		remote-endpoint =3D <&vga_bridge_in>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dts=
+i
+> index 4070619..5f4ba2e 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -454,6 +454,23 @@
+>  			reg =3D <0x213000 0x1000>;
+>  			interrupts =3D <52>;
+>  			status =3D "disabled";
+> +
+> +			ports {
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +
+> +				display_in: port@0 {
+> +					#address-cells =3D <1>;
+> +					#size-cells =3D <0>;
+> +					reg =3D <0>;
+> +				};
+> +
+> +				display_out: port@1 {
+> +					#address-cells =3D <1>;
+> +					#size-cells =3D <0>;
+> +					reg =3D <1>;
+> +				};
+> +			};
+>  		};
 
-Before s_routing existed the situation was even worse.
+It's a bit difficult to follow this as there's been so many patches
+going around. But I take the above is the LCDC node in the base da850
+dtsi file? In that case, what is the display_in supposed to present?
+It's the first node in the "display chain", so it has no input.
 
-Basically what s_routing does is a poor-man's device tree entry, telling the
-subdev how to route video or audio from connector to the output of the chip.
-Typically the card tables in PCI or USB drivers contain the correct arguments
-for s_routing. Of course, today we'd do that with the DT, but that was not an
-option years ago.
+Also, don't touch da850.dtsi here, just add the "ports" node in the
+da850-lcdk.dts file.
 
-Regards,
+If the da850.dtsi has not been merged yet, I'd change the name of the
+lcdc node to something else than "display". It's rather vague. If it's
+named "lcdc", reading da850-lcdk.dts becomes much easier, as you'll
+refer to "lcdc".
 
-	Hans
+ Tomi
+
+
+--nEbiqIH3gMStN5MtoUsKlUCqQ6u3VFhcu--
+
+--FbFgPcE5tlNkpUFh3OIxQRPX4OX3aawLa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYRWJuAAoJEPo9qoy8lh71oT0P/0nHE9MDtKL7FQqS/6JnQU2o
+h4XL3g2g8enOtRPfCMylDC3XcDKiffmc0EDboAJwqRBj2ixQCPwlOTGyOi7ExMDZ
+DRKd0JrCpE7wvIbFFe+kBJM+KlDM5vBMy7hkyBrK1Hi54/xqpLA0EmNH/JLQWoJ+
+PaCFbpqsBxbtzfOQEIOoprEZ0mCFXPG2itrhScYYSp94cVJqnZDJkjdWnx0pA3Vp
+Xv4DRceuYyTl6y5LOHmUpsTbHEV1l15VadrEKCcdq40mOJH65weFnzpV2iFt4nmF
+/Sqt6aorQ96fSAzGii6Yxj5WnxVbn7VDfzPrTHAkjYoMwhY4Y4UTydH/Whf7J9Bo
+Kw/1/VB8mnQYLubVazzE8BBDqxvmdzLneDLb3zJotxHtEpJp5cNGZXB2xhB02sQI
+dvvzkPQu1RuzQCpczRLYDxG/yYbGp2+xwLqY7FJVXI/0a3dhRak79GrGKEQwl8e2
+bf0PInNRM0McyAqPuZApyrhZyM1DZ5TV52AXtFCrPIwhLEOvyo6vpfhTS23ZypH/
+NUzsvmbNpkPuZ58Eob/PV50pPE7TSdJeVU8MmqzPBpk4XhYeKIdsqCGireh4u9t8
+wgLqxTZBC+k9oZLn+c9sZ/kfxlkydV5KEmLJXQSSCwViRaKPXze2unhEmH/zlCQr
+A8N8kt3HJpk8IRzfNXuQ
+=sqIF
+-----END PGP SIGNATURE-----
+
+--FbFgPcE5tlNkpUFh3OIxQRPX4OX3aawLa--
+
+--===============1801780279==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1801780279==--
