@@ -1,69 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 11/14] ASoC: add simple-graph-card document
-Date: Mon, 5 Dec 2016 16:58:02 -0600
-Message-ID: <20161205225802.ye4tcjwpjmarbfxh@rob-hp-laptop>
-References: <87k2bowckx.wl%kuninori.morimoto.gx@renesas.com>
- <874m2swcbx.wl%kuninori.morimoto.gx@renesas.com>
- <20161202135048.tzvrv7pzv2dubcy3@rob-hp-laptop>
- <87lgvvw92p.wl%kuninori.morimoto.gx@renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Add DT bindings documentation for Synopsys UDC driver
+Date: Mon, 5 Dec 2016 17:04:20 -0600
+Message-ID: <20161205230420.ubo2cskoohfnwlfs@rob-hp-laptop>
+References: <1480485910-7797-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1480485910-7797-2-git-send-email-raviteja.garimella@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87lgvvw92p.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Brown <broonie@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Laurent <laurent.pinchart@ideasonboard.com>, Guennadi <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux-DT <devicetree@vger.kernel.org>, Linux-Kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <1480485910-7797-2-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 04, 2016 at 11:48:49PM +0000, Kuninori Morimoto wrote:
+On Wed, Nov 30, 2016 at 11:35:09AM +0530, Raviteja Garimella wrote:
+> This patch adds documentation for Synopsis Designware Cores AHB
+> Subsystem Device Controller (UDC).
 > 
-> Hi Rob, Mark
+> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/snps,dw-ahb-udc.txt    | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
 > 
-> > > +++ b/Documentation/devicetree/bindings/sound/simple-graph-card.txt
-> > > @@ -0,0 +1,67 @@
-> > > +Simple-Graph-Card:
-> > 
-> > There's nothing simple about this. graph-audio-card or audio-card-graph.
-> 
-> I have no objection about naming, but this is one of simple-xxx-card series.
-> And, this is very simple from ALSA SoC point of view...
-> 
-> > > +rcar_sound {
-> > > +	...
-> > > +	port {
-> > > +		compatible = "asoc-simple-graph-card";
-> > 
-> > Do you have an example where you'd have multiple ports? If not, this 
-> > should go up a level.
-> 
-> ALSA SoC needs 3 type of driver, CPU/Codec/Card. But HW is SoC <-> Codec.
-> Thus, "CPU" side DT needs to call "Card" portion, and ALSA SoC needs to
-> select Card type (graph-audio-card, graph-scu-card, etc, etc....).
-> Above it for it.
-> 
-> 	SoC {
-> 		compatible = "cpu_driver_compatible_name";
-> 		...
-> 		port {
-> 			compatible = "card_driver_compatible_name";
-> 			...
-> 		};
-> 	};
-> 
-> Here, SoC driver "cpu_driver_compatible_name" will handle CPU and its
-> each port settings. And it will probes "card_driver_compatible_name".
-> "card_driver_compatible_name" will connect CPU <-> Codec via ALSA SoC.
+> diff --git a/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+> new file mode 100644
+> index 0000000..64e1fbf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+> @@ -0,0 +1,29 @@
+> +Synopsys USB Device controller.
+> +
+> +The device node is used for Synopsys Designware Cores AHB
+> +Subsystem Device Controller (UDC).
+> +
+> +Required properties:
+> + - compatible: should be "snps,dw-ahbudc"
 
-Don't design bindings around what ASoC wants and don't explain it in 
-terms of how ALSA works. Design bindings in a way that reflects the h/w.
+Needs an SoC specific compatible string.
 
-This explanation seems completely wrong to me. It seems like you are 
-abusing OF graph to just create 2 instances of a simple-card which would 
-be working around some ASoC limitation.
+> + - reg: Offset and length of UDC register set
+> + - interrupts: description of interrupt line
+> + - phys: phandle to phy node.
+> + - phy-names: name of phy node. Must be usb2drd.
 
-I'd expect the top level node to be the card node that knows how to find 
-all the components. The graph should reflect the data flow. For example, 
-the data goes to audio DSP to I2S host to codec to amp. 
+A name is pointless when there's only 1 phy. Is this a device or dual 
+role device(DRD)?
 
-Rob
+> + - extcon: phandle to the extcon device
+
+I don't think extcon should be required. If this is UDC only, I'm not 
+sure why you'd need it.
+
+> +
+> +Example:
+> +
+> +	usbdrd_phy: phy@6501c000 {
+> +		#phy-cells = <0>;
+> +		compatible = "brcm,ns2-drd-phy";
+> +		reg = <0x66000000 0x1000>,
+> +	}
+> +
+> +	udc_dwc: usb@664e0000 {
+> +		compatible = "snps,dw-ahb-udc";
+
+Doesn't match above.
+
+> +		reg = <0x664e0000 0x2000>;
+> +		interrupts = <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>;
+> +		phys = <&usbdrd_phy>;
+> +		phy-names = "usb2drd";
+> +		extcon = <&usbdrd_phy>";
+
+You are already describing the phy connection, you shouldn't need both.
+
+> +	};
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
