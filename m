@@ -1,106 +1,455 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC] New Device Tree property - "bonding"
-Date: Mon, 5 Dec 2016 09:57:32 -0600
-Message-ID: <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
-References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
- <CAL_Jsq+-6v1z-MYHC8Lvvao+=SFhVn2XwBc3O6fSN_zNcrJ3kA@mail.gmail.com> <2054258.NRXTrTF0Rj@avalon>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 7/7] ARM: dts: stm32: add stm32 general purpose timer
+ driver in DT
+Date: Mon, 5 Dec 2016 17:09:04 +0100
+Message-ID: <e15186cb-a93e-c2e7-13bb-6704be5e8949@st.com>
+References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
+ <1480673842-20804-8-git-send-email-benjamin.gaignard@st.com>
+ <20161202132251.GL2683@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2054258.NRXTrTF0Rj@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161202132251.GL2683@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 5, 2016 at 8:40 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Rob,
+Hi,
+
+On 12/02/2016 02:22 PM, Lee Jones wrote:
+> On Fri, 02 Dec 2016, Benjamin Gaignard wrote:
 >
-> On Monday 05 Dec 2016 08:18:34 Rob Herring wrote:
->> On Fri, Nov 25, 2016 at 10:55 AM, Ramesh Shanmugasundaram wrote:
->> > Hello DT maintainers,
->> >
->> > In one of the Renesas SoCs we have a device called DRIF (Digital Radio
->> > Interface) controller. A DRIF channel contains 4 external pins - SCK,
->> > SYNC, Data pins D0 & D1.
->> >
->> > Internally a DRIF channel is made up of two SPI slave devices (also called
->> > sub-channels here) that share common CLK & SYNC signals but have their
->> > own resource set. The DRIF channel can have either one of the sub-channel
->> > active at a time or both. When both sub-channels are active, they need to
->> > be managed together as one device as they share same CLK & SYNC. We plan
->> > to tie these two sub-channels together with a new property called
->> > "renesas,bonding".
+>> Add general purpose timers and it sub-nodes into DT for stm32f4.
+>> Define and enable pwm1 and pwm3 for stm32f469 discovery board
 >>
->> Is there no need to describe the master device? No GPIOs, regulators
->> or other sideband controls needed? If that's never needed (which seems
->> doubtful), then I would do something different here probably with the
->> master device as a child of one DRIF and then phandles to master from
->> the other DRIFs. Otherwise, this looks fine to me.
+>> version 3:
+>> - use "st,stm32-timer-trigger" in DT
+>>
+>> version 2:
+>> - use parameters to describe hardware capabilities
+>> - do not use references for pwm and iio timer subnodes
+>>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>> ---
+>>  arch/arm/boot/dts/stm32f429.dtsi      | 333 +++++++++++++++++++++++++++++++++-
+>>  arch/arm/boot/dts/stm32f469-disco.dts |  28 +++
+>>  2 files changed, 360 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+>> index bca491d..8c50d03 100644
+>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>> @@ -48,7 +48,7 @@
+>>  #include "skeleton.dtsi"
+>>  #include "armv7-m.dtsi"
+>>  #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+>> -
+>> +#include <dt-bindings/iio/timer/st,stm32-timer-triggers.h>
+>>  / {
+>>  	clocks {
+>>  		clk_hse: clk-hse {
+>> @@ -355,6 +355,21 @@
+>>  					slew-rate = <2>;
+>>  				};
+>>  			};
+>> +
+>> +			pwm1_pins: pwm@1 {
+>> +				pins {
+>> +					pinmux = <STM32F429_PA8_FUNC_TIM1_CH1>,
+>> +						 <STM32F429_PB13_FUNC_TIM1_CH1N>,
+>> +						 <STM32F429_PB12_FUNC_TIM1_BKIN>;
+>> +				};
+>> +			};
+>> +
+>> +			pwm3_pins: pwm@3 {
+>> +				pins {
+>> +					pinmux = <STM32F429_PB4_FUNC_TIM3_CH1>,
+>> +						 <STM32F429_PB5_FUNC_TIM3_CH2>;
+>> +				};
+>> +			};
+>>  		};
+>>
+>>  		rcc: rcc@40023810 {
+>> @@ -426,6 +441,322 @@
+>>  			interrupts = <80>;
+>>  			clocks = <&rcc 0 38>;
+>>  		};
+>> +
+>> +		gptimer1: gptimer1@40010000 {
 >
-> Here's a bit of background.
+> timer@xxxxxxx
 >
-> The DRIF is an SPI receiver. It has three input pins, a clock line, a data
-> line and a sync signal. The device is designed to be connected to a variety of
-> data sources, usually plain SPI (1 data line), IIS (1 data line) but also
-> radio tuners that output I/Q data (http://www.ni.com/tutorial/4805/en/) over
-> two data lines.
+> Node names should be generic and not numbered.
 >
-> In the case of IQ each data sample is split in two I and Q values (typically
-> 16 to 20 bits each in this case), and the values are transmitted serially over
-> one data line each. The synchronization and clock signals are common to both
-> data lines. The DRIF is optimized for this use case as the DRIF instances in
-> the SoC (each of them having independent clocks, interrupts and control
-> registers) are grouped by two, and the two instances in a group handle a
-> single data line each but share the same clock and sync input.
+> I suggest that this isn't actually a timer either.  Is contains a
+> timer (and a PWM), but in it's completeness it is not a timer per
+> say.
 >
-> On the software side we need to group the I and Q values, which are DMA'ed to
-> memory by the two DRIF instances, and make them available to userspace. The
-> V4L2 API used here in SDR (Software Defined Radio) mode supports such use
-> cases and exposes a single device node to userspace that allows control of the
-> two DRIF instances as a single device. To be able to implement this we need
-> kernel code to be aware of DRIF groups and, while binding to the DRIF
-> instances separately, expose only one V4L2 device to userspace for each group.
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40010000 0x400>;
+>> +			clocks = <&rcc 0 160>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm1@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <4>;
+>> +				st,breakinput;
+>> +				st,complementary;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer1@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <27>;
+>> +				st,input-triggers-names = TIM5_TRGO,
+>> +							  TIM2_TRGO,
+>> +							  TIM4_TRGO,
+>> +							  TIM3_TRGO;
 >
-> There's no master or slave instance from a hardware point of view, but the two
-> instances are not interchangeable as they carry separate information. They
-> must thus be identified at the driver level.
+> I'm still dubious with matching by strings.
+>
+> I'll take a look at the C code to see what the alternatives could be.
+>
+>> +				st,output-triggers-names = TIM1_TRGO,
+>> +							   TIM1_CH1,
+>> +							   TIM1_CH2,
+>> +							   TIM1_CH3,
+>> +							   TIM1_CH4;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer2: gptimer2@40000000 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40000000 0x400>;
+>> +			clocks = <&rcc 0 128>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm2@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <4>;
+>> +				st,32bits-counter;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer2@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <28>;
+>> +				st,input-triggers-names = TIM1_TRGO,
+>> +							  TIM8_TRGO,
+>> +							  TIM3_TRGO,
+>> +							  TIM4_TRGO;
+>> +				st,output-triggers-names = TIM2_TRGO,
+>> +							   TIM2_CH1,
+>> +							   TIM2_CH2,
+>> +							   TIM2_CH3,
+>> +							   TIM2_CH4;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer3: gptimer3@40000400 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40000400 0x400>;
+>> +			clocks = <&rcc 0 129>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm3@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <4>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer3@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <29>;
+>> +				st,input-triggers-names = TIM1_TRGO,
+>> +							  TIM8_TRGO,
+>> +							  TIM5_TRGO,
+>> +							  TIM4_TRGO;
+>> +				st,output-triggers-names = TIM3_TRGO,
+>> +							   TIM3_CH1,
+>> +							   TIM3_CH2,
+>> +							   TIM3_CH3,
+>> +							   TIM3_CH4;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer4: gptimer4@40000800 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40000800 0x400>;
+>> +			clocks = <&rcc 0 130>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm4@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <4>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer4@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <30>;
+>> +				st,input-triggers-names = TIM1_TRGO,
+>> +							  TIM2_TRGO,
+>> +							  TIM3_TRGO,
+>> +							  TIM8_TRGO;
+>> +				st,output-triggers-names = TIM4_TRGO,
+>> +							   TIM4_CH1,
+>> +							   TIM4_CH2,
+>> +							   TIM4_CH3,
+>> +							   TIM4_CH4;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer5: gptimer5@40000C00 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40000C00 0x400>;
+>> +			clocks = <&rcc 0 131>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm5@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <4>;
+>> +				st,32bits-counter;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer5@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <50>;
+>> +				st,input-triggers-names = TIM2_TRGO,
+>> +							  TIM3_TRGO,
+>> +							  TIM4_TRGO,
+>> +							  TIM8_TRGO;
+>> +				st,output-triggers-names = TIM5_TRGO,
+>> +							   TIM5_CH1,
+>> +							   TIM5_CH2,
+>> +							   TIM5_CH3,
+>> +							   TIM5_CH4;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer6: gptimer6@40001000 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40001000 0x400>;
+>> +			clocks = <&rcc 0 132>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			timer6@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <54>;
+>> +				st,output-triggers-names = TIM6_TRGO;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer7: gptimer7@40001400 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40001400 0x400>;
+>> +			clocks = <&rcc 0 133>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			timer7@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <55>;
+>> +				st,output-triggers-names = TIM7_TRGO;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer8: gptimer8@40010400 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40010400 0x400>;
+>> +			clocks = <&rcc 0 161>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm8@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <4>;
+>> +				st,complementary;
+>> +				st,breakinput;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer8@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <46>;
+>> +				st,input-triggers-names = TIM1_TRGO,
+>> +							  TIM2_TRGO,
+>> +							  TIM4_TRGO,
+>> +							  TIM5_TRGO;
+>> +				st,output-triggers-names = TIM8_TRGO,
+>> +							   TIM8_CH1,
+>> +							   TIM8_CH2,
+>> +							   TIM8_CH3,
+>> +							   TIM8_CH4;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer9: gptimer9@40014000 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40014000 0x400>;
+>> +			clocks = <&rcc 0 176>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm9@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <2>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer9@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <24>;
+>> +				st,input-triggers-names = TIM2_TRGO,
+>> +							  TIM3_TRGO;
+>> +				st,output-triggers-names = TIM9_TRGO,
+>> +							   TIM9_CH1,
+>> +							   TIM9_CH2;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer10: gptimer10@40014400 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40014400 0x400>;
+>> +			clocks = <&rcc 0 177>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm10@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <1>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer11: gptimer11@40014800 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40014800 0x400>;
+>> +			clocks = <&rcc 0 178>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm11@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <1>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer12: gptimer12@40001800 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40001800 0x400>;
+>> +			clocks = <&rcc 0 134>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm12@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <2>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			timer12@0 {
+>> +				compatible = "st,stm32-timer-trigger";
+>> +				interrupts = <43>;
+>> +				st,input-triggers-names = TIM4_TRGO,
+>> +							  TIM5_TRGO;
+>> +				st,output-triggers-names = TIM12_TRGO,
+>> +							   TIM12_CH1,
+>> +							   TIM12_CH2;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer13: gptimer13@40001C00 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40001C00 0x400>;
+>> +			clocks = <&rcc 0 135>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm13@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <1>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gptimer14: gptimer14@40002000 {
+>> +			compatible = "st,stm32-gptimer";
+>> +			reg = <0x40002000 0x400>;
+>> +			clocks = <&rcc 0 136>;
+>> +			clock-names = "clk_int";
+>> +			status = "disabled";
+>> +
+>> +			pwm14@0 {
+>> +				compatible = "st,stm32-pwm";
+>> +				st,pwm-num-chan = <1>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>>  	};
+>>  };
+>>
+>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+>> index 8a163d7..df4ca7e 100644
+>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+>> @@ -81,3 +81,31 @@
+>>  &usart3 {
+>>  	status = "okay";
+>>  };
+>> +
+>> +&gptimer1 {
+>> +	status = "okay";
+>> +
+>> +	pwm1@0 {
+>> +		pinctrl-0	= <&pwm1_pins>;
+>> +		pinctrl-names	= "default";
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	timer1@0 {
+>> +		status = "okay";
+>> +	};
+>> +};
+>
+> This is a much *better* format than before.
+>
+> I still don't like the '&' syntax though.
 
-By master, I meant the external master device that generates the IQ
-data, not which of the internal DRIF blocks is a master of the other.
-So back to my question, does the external master device need to be
-described? I worry the answer now for a simple case is no, but then
-later people are going to have cases needing to describe more. We need
-to answer this question first before we can decide what this binding
-should look like.
+Please keep "&" format to match with existing nodes.
 
-> Back to the DT bindings, the need to expose relationships between (mostly)
-> independent devices is quite common nowadays. It has been solved in some cases
-> by creating a separate DT node that does not correspond to any physical
-> hardware and whose sole purpose is to contain phandles to devices that need to
-> be grouped. Drivers then bind to the compatible string of that "virtual" DT
-> node. The proposed bonding property is a different approach to solve a similar
-> problem. Would it be worth it addressing the problem at a more general level
-> and try to design a common solution ?
-
-We already have somewhat standard ways of grouping, but they are per
-type of device (display, sound card, etc.). I'm not sure we gain much
-standardizing across these devices and to some extent that ship has
-sailed. Even within display subsystems, I don't think there is one
-style that fits all. Sometimes a parent subsystem node with children
-makes sense for the h/w. Sometimes that doesn't make sense and we have
-the virtual node with a "ports" property (like sun8i did). I've never
-been too happy with that style largely just because it feels like
-we're letting DRM define the binding. However, it's generally extra
-data that an OS could just ignore. There have also been many display
-bindings that started out with a virtual node and we got rid of it. So
-it's not something I like to encourage and we need to be clear when it
-is okay or not.
-
-To state the problem more generally (at least when using OF graph), I
-think the problem is simply how do we define and group multiple entry
-points to an OF graph. Maybe these should be graph nodes themselves
-rather than phandles to the nodes with the entry points of the graph.
-
-Rob
+>
+>> +&gptimer3 {
+>> +	status = "okay";
+>> +
+>> +	pwm3@0 {
+>> +		pinctrl-0	= <&pwm3_pins>;
+>> +		pinctrl-names	= "default";
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	timer3@0 {
+>> +		status = "okay";
+>> +	};
+>> +};
+>
