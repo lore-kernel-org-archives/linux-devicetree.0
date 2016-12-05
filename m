@@ -1,87 +1,82 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v3 -next 1/2] ARM: sunxi: add support for H2+ SoC
-Date: Mon, 5 Dec 2016 13:27:17 +1100
-Message-ID: <4a4fe484-27c0-73cb-ffb6-13192182d748@ozlabs.ru>
-References: <20161202150513.34691-1-icenowy@aosc.xyz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161202150513.34691-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Andre Przywara <andre.przywara@arm.com>, Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+From: Jun Nie <jun.nie@linaro.org>
+Subject: [PATCH v7 5/5] mmc: dw: Add fifo watermark alignment property
+Date: Mon,  5 Dec 2016 10:29:36 +0800
+Message-ID: <1480904976-7081-6-git-send-email-jun.nie@linaro.org>
+References: <1480904976-7081-1-git-send-email-jun.nie@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1480904976-7081-1-git-send-email-jun.nie@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawn.guo@linaro.org, xie.baoyou@zte.com.cn, devicetree@vger.kernel.org
+Cc: ulf.hansson@linaro.org, jh80.chung@samsung.com, jason.liu@linaro.org, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc@vger.kernel.org, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/16 02:05, Icenowy Zheng wrote:
-> Allwinner H2+ is a quad-core Cortex-A7 SoC.
-> 
-> It is very like H3, that they share the same SoC ID (0x1680), and H3
-> memory maps as well as drivers works well on the SoC.
+Data done irq is expected if data length is less than
+watermark in PIO mode. But fifo watermark is requested
+to be aligned with data length in some SoC so that TX/RX
+irq can be generated with data done irq. Add the
+watermark alignment to mark this requirement and force
+fifo watermark setting accordingly.
 
+Signed-off-by: Jun Nie <jun.nie@linaro.org>
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
+ drivers/mmc/host/dw_mmc.c  | 11 +++++++++--
+ include/linux/mmc/dw_mmc.h |  3 +++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-What git tree is this made against of? Thanks.
-
-
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> ---
-> Changes since v2:
-> - Changed compatible from allwinner,sun8i-h2plus to allwinner,sun8i-h2-plus.
->  Documentation/arm/sunxi/README                  | 4 ++++
->  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
->  arch/arm/mach-sunxi/sunxi.c                     | 1 +
->  3 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-> index cd02433..1fe4d99c 100644
-> --- a/Documentation/arm/sunxi/README
-> +++ b/Documentation/arm/sunxi/README
-> @@ -63,6 +63,10 @@ SunXi family
->          + User Manual
->            http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf
->  
-> +      - Allwinner H2+ (sun8i)
-> +        + No document available now, but is known to be working properly with
-> +          H3 drivers and memory map.
-> +
->        - Allwinner H3 (sun8i)
->          + Datasheet
->            http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-> index 4d6467c..59b143f 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-> @@ -13,6 +13,7 @@ using one of the following compatible strings:
->    allwinner,sun8i-a33
->    allwinner,sun8i-a83t
->    allwinner,sun8i-h3
-> +  allwinner,sun8i-h2-plus
->    allwinner,sun9i-a80
->    allwinner,sun50i-a64
->    nextthing,gr8
-> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> index 2e2bde2..320d2af 100644
-> --- a/arch/arm/mach-sunxi/sunxi.c
-> +++ b/arch/arm/mach-sunxi/sunxi.c
-> @@ -63,6 +63,7 @@ static const char * const sun8i_board_dt_compat[] = {
->  	"allwinner,sun8i-a23",
->  	"allwinner,sun8i-a33",
->  	"allwinner,sun8i-a83t",
-> +	"allwinner,sun8i-h2-plus",
->  	"allwinner,sun8i-h3",
->  	NULL,
->  };
-> 
-
-
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index b600170..e890a45 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -1113,11 +1113,15 @@ static void dw_mci_submit_data(struct dw_mci *host, struct mmc_data *data)
+ 		mci_writel(host, CTRL, temp);
+ 
+ 		/*
+-		 * Use the initial fifoth_val for PIO mode.
++		 * Use the initial fifoth_val for PIO mode. If wm_algined
++		 * is set, we set watermark same as data size.
+ 		 * If next issued data may be transfered by DMA mode,
+ 		 * prev_blksz should be invalidated.
+ 		 */
+-		mci_writel(host, FIFOTH, host->fifoth_val);
++		if (host->wm_aligned)
++			dw_mci_adjust_fifoth(host, data);
++		else
++			mci_writel(host, FIFOTH, host->fifoth_val);
+ 		host->prev_blksz = 0;
+ 	} else {
+ 		/*
+@@ -2979,6 +2983,9 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+ 
+ 	of_property_read_u32(np, "data-addr", &host->data_addr_override);
+ 
++	if (of_get_property(np, "fifo-watermark-aligned", NULL))
++		host->wm_aligned = true;
++
+ 	if (!of_property_read_u32(np, "clock-frequency", &clock_frequency))
+ 		pdata->bus_hz = clock_frequency;
+ 
+diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+index 1c09cca..cc7da85 100644
+--- a/include/linux/mmc/dw_mmc.h
++++ b/include/linux/mmc/dw_mmc.h
+@@ -114,6 +114,8 @@ struct dw_mci_dma_slave {
+  * @slot: Slots sharing this MMC controller.
+  * @fifo_depth: depth of FIFO.
+  * @data_addr_override: override fifo reg offset with this value.
++ * @wm_aligned: force fifo watermark equal with data length in PIO mode.
++ *	Set as true if alignment is needed.
+  * @data_shift: log2 of FIFO item size.
+  * @part_buf_start: Start index in part_buf.
+  * @part_buf_count: Bytes of partial data in part_buf.
+@@ -162,6 +164,7 @@ struct dw_mci {
+ 	void __iomem		*regs;
+ 	void __iomem		*fifo_reg;
+ 	u32			data_addr_override;
++	bool			wm_aligned;
+ 
+ 	struct scatterlist	*sg;
+ 	struct sg_mapping_iter	sg_miter;
 -- 
-Alexey
+1.9.1
+
