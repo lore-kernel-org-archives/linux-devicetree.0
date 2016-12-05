@@ -1,75 +1,101 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 2/2] crypto: mediatek - add DT bindings documentation
-Date: Mon, 5 Dec 2016 11:18:06 +0100
-Message-ID: <4b0df417-825f-65c6-4c02-85fe1c20ce50@gmail.com>
-References: <1480921284-45827-1-git-send-email-ryder.lee@mediatek.com>
- <1480921284-45827-3-git-send-email-ryder.lee@mediatek.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 06/11] ARM: dts: imx: Add imx6sll EVK board dts support
+Date: Mon, 5 Dec 2016 08:25:40 -0200
+Message-ID: <CAOMZO5C5-tq-OWTYcmzJt=_57wOyXzNMUes1mctwwyoegwzJyQ@mail.gmail.com>
+References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
+ <1480660774-25055-7-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480921284-45827-3-git-send-email-ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1480660774-25055-7-git-send-email-ping.bai@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bai Ping <ping.bai@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Dec 2, 2016 at 4:39 AM, Bai Ping <ping.bai@nxp.com> wrote:
+> Add basic dts support for imx6sll EVK baoard.
+
+s/baord/board
+
+> +       battery: max8903@0 {
+> +               compatible = "fsl,max8903-charger";
+> +               pinctrl-names = "default";
+> +               dok_input = <&gpio4 13 1>;
+> +               uok_input = <&gpio4 13 1>;
+> +               chg_input = <&gpio4 15 1>;
+> +               flt_input = <&gpio4 14 1>;
+> +               fsl,dcm_always_high;
+> +               fsl,dc_valid;
+> +               fsl,adc_disable;
+
+These properties do not exist in mainline, please remove them.
 
 
-On 05/12/16 08:01, Ryder Lee wrote:
-> Add DT bindings documentation for the crypto driver
->
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  .../devicetree/bindings/crypto/mediatek-crypto.txt | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
->
-> diff --git a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
-> new file mode 100644
-> index 0000000..8b1db08
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
-> @@ -0,0 +1,32 @@
-> +MediaTek cryptographic accelerators
+> +               status = "okay";
+> +       };
 > +
-> +Required properties:
-> +- compatible: Should be "mediatek,mt7623-crypto"
+> +       pxp_v4l2_out {
+> +               compatible = "fsl,imx6sl-pxp-v4l2";
+> +               status = "okay";
+> +       };
 
-Do you know how big the difference is between the crypto engine for 
-mt7623/mt2701/mt8521p in comparison, let's say mt8173 or mt6797?
-Do this SoCs have a crypot engine? If so and they are quite similar, we 
-might think of adding a mtk-crypto binding and add soc specific bindings.
+We don't have pxp support in mainline kernel, please remove it.
 
-Regards,
-Matthias
+> +
+> +       regulators {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
 
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain the five crypto engines interrupts in numeric
-> +	order. These are global system and four descriptor rings.
-> +- clocks: the clock used by the core
-> +- clock-names: the names of the clock listed in the clocks property. These are
-> +	"ethif", "cryp"
-> +- power-domains: Must contain a reference to the PM domain.
+
+Please remove it and place the regulator nodes directly as below:
+
+
 > +
-> +
-> +Optional properties:
-> +- interrupt-parent: Should be the phandle for the interrupt controller
-> +  that services interrupts for this device
-> +
-> +
-> +Example:
-> +	crypto: crypto@1b240000 {
-> +		compatible = "mediatek,mt7623-crypto";
-> +		reg = <0 0x1b240000 0 0x20000>;
-> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 97 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-> +			 <&ethsys CLK_ETHSYS_CRYPTO>;
-> +		clock-names = "ethif","cryp";
-> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-> +	};
->
+> +               reg_usb_otg1_vbus: regulator@0 {
+> +                       compatible = "regulator-fixed";
+> +                       reg = <0>;
+> +                       regulator-name = "usb_otg1_vbus";
+> +                       regulator-min-microvolt = <5000000>;
+> +                       regulator-max-microvolt = <5000000>;
+> +                       gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
+> +                       enable-active-high;
+> +               };
+
+    reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
+          compatible = "regulator-fixed";
+          regulator-name = "usb_otg1_vbus";
+          regulator-min-microvolt = <5000000>;
+          regulator-max-microvolt = <5000000>;
+          gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
+          enable-active-high;
+    };
+
+> +&cpu0 {
+> +       arm-supply = <&sw1a_reg>;
+> +       soc-supply = <&sw1c_reg>;
+> +};
+
+This is only for LDO bypass mode, right? We don't support LDO-bypass
+in mainline.
+
+> +&gpc {
+> +       fsl,ldo-bypass = <1>;
+
+We don't support ldo-bypass in mainline, please remove it.
+
+> +&pxp {
+> +       status = "okay";
+> +};
+
+We don't support PXP in mainline, please remove it.
