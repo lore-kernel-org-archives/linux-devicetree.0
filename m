@@ -1,69 +1,72 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] i2c: rk3x: keep i2c irq ON in suspend
-Date: Mon, 05 Dec 2016 11:54:00 +0100
-Message-ID: <1737869.ycGphUXI8X@phil>
-References: <1480924979-13450-1-git-send-email-david.wu@rock-chips.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
+ board
+Date: Mon, 05 Dec 2016 19:01:46 +0800
+Message-ID: <17819681480935706@web24g.yandex.ru>
+References: <20161205120021.0GBGtAl4@smtp3m.mail.yandex.net>
+ <20161205094023.mtymfvpmca4x3ohh@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480924979-13450-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161205094023.mtymfvpmca4x3ohh@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, =?utf-8?B?QW5kcsOpIFByenl3YXJh?= <andre.przywara@arm.com>, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "\"linux-arm-kernel@lists.infradead.org\"" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-Am Montag, 5. Dezember 2016, 16:02:59 CET schrieb David Wu:
-> During suspend there may still be some i2c access happening.
-> And if we don't keep i2c irq ON, there may be i2c access timeout if
-> i2c is in irq mode of operation.
-
-can you describe the issue you're trying to fix a bit more please?
-
-I.e. I'd think the i2c-core does suspend i2c-client devices first, so that
-these should be able to finish up their ongoing transfers and not start any
-new ones instead?
-
-Your irq can still happen slightly after the system started going to actually
-sleep, so to me it looks like you just widened the window where irqs can be
-handled. Especially as your irq could also just simply stem from the start
-state, so you cannot even be sure if your transaction actually is finished.
-
-So to me it looks like the i2c-connected device driver should be fixed instead?
-
-In the past I solved this for example in the zforce_ts driver [0] to
-prevent i2c transfers from happening during suspend.
-
-
-Heiko
-
-[0] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/input/touchscreen/zforce_ts.c
-
-
-> 
-> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  drivers/i2c/busses/i2c-rk3x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index df22066..67af32a 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -1261,7 +1261,7 @@ static int rk3x_i2c_probe(struct platform_device
-> *pdev) }
-> 
->  	ret = devm_request_irq(&pdev->dev, irq, rk3x_i2c_irq,
-> -			       0, dev_name(&pdev->dev), i2c);
-> +			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "cannot request IRQ\n");
->  		return ret;
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgowNS4xMi4yMDE2LCAxNzo0MCwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gTW9uLCBEZWMgMDUsIDIwMTYgYXQgMDQ6NTk6NDRQTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAyMDE25bm0MTLmnIg15pelIDE2OjUy5LqOIE1h
+eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemBk++8mgo+
+PiDCoD4KPj4gwqA+IE9uIEZyaSwgRGVjIDAyLCAyMDE2IGF0IDEwOjIyOjMwUE0gKzA4MDAsIElj
+ZW5vd3kgWmhlbmcgd3JvdGU6Cj4+IMKgPiA+Cj4+IMKgPiA+Cj4+IMKgPiA+IDAxLjEyLjIwMTYs
+IDE3OjM2LCAiTWF4aW1lIFJpcGFyZCIgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29t
+PjoKPj4gwqA+ID4gPiBPbiBNb24sIE5vdiAyOCwgMjAxNiBhdCAxMjoyOTowN0FNICswMDAwLCBB
+bmRyw6kgUHJ6eXdhcmEgd3JvdGU6Cj4+IMKgPiA+ID4+IMKgPiBTb21ldGhpbmcgbW9yZSBpbnRl
+cmVzdGluZyBoYXBwZW5lZC4KPj4gwqA+ID4gPj4gwqA+Cj4+IMKgPiA+ID4+IMKgPiBYdW5sb25n
+IG1hZGUgYSBhZGQtb24gYm9hcmQgZm9yIE9yYW5nZSBQaSBaZXJvLCB3aGljaCBleHBvc2VzIHRo
+ZQo+PiDCoD4gPiA+PiDCoD4gdHdvIFVTQiBDb250cm9sbGVycyBleHBvcnRlZCBhdCBleHBhbnNp
+b24gYnVzIGFzIFVTQiBUeXBlLUEKPj4gwqA+ID4gPj4gwqA+IGNvbm5lY3RvcnMuCj4+IMKgPiA+
+ID4+IMKgPgo+PiDCoD4gPiA+PiDCoD4gQWxzbyBpdCBleHBvc2VzIGEgYW5hbG9nIEEvViBqYWNr
+IGFuZCBhIG1pY3JvcGhvbmUuCj4+IMKgPiA+ID4+IMKgPgo+PiDCoD4gPiA+PiDCoD4gU2hvdWxk
+IEkgZW5hYmxlIHtlLG99aGNpezIuM30gaW4gdGhlIGRldmljZSB0cmVlPwo+PiDCoD4gPiA+Pgo+
+PiDCoD4gPiA+PiDCoEFjdHVhbGx5IHdlIHNob3VsZCBkbyB0aGlzIHJlZ2FyZGxlc3Mgb2YgdGhp
+cyBleHRlbnNpb24gYm9hcmQuIFRoZSBVU0IKPj4gwqA+ID4gPj4gwqBwaW5zIGFyZSBub3QgbXVs
+dGlwbGV4ZWQgYW5kIGFyZSBleHBvc2VkIG9uIHVzZXIgYWNjZXNzaWJsZSBwaW5zIChqdXN0Cj4+
+IMKgPiA+ID4+IMKgbm90IHNvbGRlcmVkLCBidXQgdGhhdCdzIGEgZGV0YWlsKSwgc28gSSB0aGlu
+ayB0aGV5IHF1YWxpZnkgZm9yIERUCj4+IMKgPiA+ID4+IMKgZW5hYmxlbWVudC4gQW5kIGV2ZW4g
+aWYgYSB1c2VyIGNhbid0IHVzZSB0aGVtLCBpdCBkb2Vzbid0IGh1cnQgdG8gaGF2ZQo+PiDCoD4g
+PiA+PiDCoHRoZW0gKHNpbmNlIHRoZXkgYXJlIG5vdCBtdWx0aXBsZXhlZCkuCj4+IMKgPiA+ID4K
+Pj4gwqA+ID4gPiBNeSBtYWluIGNvbmNlcm4gYWJvdXQgdGhpcyBpcyB0aGF0IHdlJ2xsIGxlYXZl
+IHJlZ3VsYXRvcnMgZW5hYmxlZCBieQo+PiDCoD4gPiA+IGRlZmF1bHQsIGZvciBhIG1pbm9yaXR5
+IG9mIHVzZXJzLiBBbmQgdGhhdCBtaW5vcml0eSB3aWxsIHByZXZlbnQgdG8gZG8KPj4gwqA+ID4g
+PiBhIHByb3BlciBwb3dlciBtYW5hZ2VtZW50IHdoZW4gdGhlIHRpbWVzIGNvbWUgc2luY2Ugd2Un
+bGwgaGF2ZSB0byBrZWVwCj4+IMKgPiA+ID4gdGhhdCBiZWhhdmlvdXIgZm9yZXZlci4KPj4gwqA+
+ID4KPj4gwqA+ID4gSSB0aGluayB0aGVzZSB1c2VycyBjYW4gYWRkIGEgJ2ZkdCBzZXQgL3h4eC94
+eHggc3RhdHVzICJkaXNhYmxlZCIgJyAuCj4+IMKgPgo+PiDCoD4gWW91IGNhbid0IGFzayB0aGF0
+IGZyb20gdGhlIG1ham9yaXR5IG9mIHVzZXJzLiBUaGVzZSB1c2VycyB3aWxsIHRha2UKPj4gwqA+
+IGRlYmlhbiBvciBmZWRvcmEsIGluc3RhbGwgaXQsIGFuZCBleHBlY3QgZXZlcnl0aGluZyB0byB3
+b3JrCj4+IMKgPiBwcm9wZXJseS4gSSB3b3VsZCBtYWtlIHRoZSBvcHBvc2l0ZSBhcmd1bWVudCBh
+Y3R1YWxseS4gSWYgc29tZW9uZSBpcwo+PiDCoD4ga25vd2xlZGdlYWJsZSBlbm91Z2ggdG8gc29s
+ZGVyIHRoZSBVU0IgcGlucyBhIGNvbm5lY3RvciwgdGhlbiAocyloZSdsbAo+PiDCoD4gYmUgYWJs
+ZSB0byBtYWtlIHRoYXQgdS1ib290IGNhbGwuCj4+Cj4+IMKgTm93IChzKWhlIGRvIG5vdCBuZWVk
+IHNvbGRlcmluZy4KPj4KPj4gwqAoUyloZSBuZWVkcyBvbmx5IHBheWluZyAkMS45OSBtb3JlIHRv
+IFh1bmxvbmcgdG8gZ2V0IHRoZSBleHBhbnNpb24KPj4gwqBib2FyZCwgYW5kIGluc2VydCBpdCBv
+biB0aGUgT1BpIFplcm8uCj4KPiBXaGljaCBpcyBnb2luZyB0byByZXF1aXJlIGFuIG92ZXJsYXkg
+YW55d2F5LCBzbyB3ZSBjb3VsZCBoYXZlIHRoZSBVU0IKPiBiaXRzIGluIHRoZXJlIHRvby4KCklm
+IHNvLCBJIHRoaW5rIHRoZSBbUEFUQ0ggLW5leHQgdjMgMi8yXSBpcyByZWFkeSB0byBiZSBtZXJn
+ZWQgOy0pCgo+Cj4gTWF4aW1lCj4KPiAtLQo+IE1heGltZSBSaXBhcmQsIEZyZWUgRWxlY3Ryb25z
+Cj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwo+IGh0dHA6Ly9mcmVlLWVs
+ZWN0cm9ucy5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
