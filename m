@@ -1,144 +1,342 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v12 0/4] dtc: Dynamic DT support
-Date: Mon,  5 Dec 2016 19:05:21 +0200
-Message-ID: <1480957528-8367-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v12 1/7] dtc: Document the dynamic plugin internals
+Date: Mon,  5 Dec 2016 19:05:22 +0200
+Message-ID: <1480957528-8367-2-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1480957528-8367-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480957528-8367-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds Dynamic DT support in the DTC compiler
-as used in a number of boards like the beaglebone/rpi/chip and others.
+Provides the document explaining the internal mechanics of
+plugins and options.
 
-The first patch documents the internals of overlay generation, while
-the second one adds dynamic object/overlay support proper.
-
-The third patch adds a test method that can is used by the subsequent
-patch which adds a few overlay tests verifying operation.
-
-The following 3 patches add support for the syntactic sugar version
-of &foo { }; in a similar manner.
-
-This patchset is against DTC mainline and is also available for a pull
-request from https://github.com/pantoniou/dtc/tree/overlays
-
-Regards
-
--- Pantelis
-
-Changes since v11:
-* Syntax and grammatical fixes to the documentation.
-* Renamed options and internal variables controlling generation of symbols
-and fixups.
-* Rename version flags to specify that they refer to DTS version.
-* Made sure that no symbols/fixup nodes are only generated if they contain
-entries.
-
-Changes since v10:
-* Split out the syntactic sugar version of &foo { }; into a different
-patches to make things clearer.
-* Reworked a bit the arguments passed to fixup node generation method
-making things simpler and utilize common methodology.
-* Avoid string parsing the full path using the node walking instead for
-local fixup generation.
-* Added an option to suppress generation of fixup nodes on base trees.
-* Added automatic generation of symbols and fixups when compiling a
-plugin.
-* Minor rework according to maintainer requests.
-
-Changes since v9:
-* Reversed -M switch to by default use new DTBO magic value.
-* Removed global versionflags in the parser by using inherited
-attributes.
-* build_node instead of malloc at add_orphan_node().
-* Do not use escape for path copy
-* Do not generate /plugin/ when generating a dts file even when
-the plugin flag is set..
-
-Changes since v8:
-* Removed extra member of boot_info in each node; passing boot_info
-parameter to the check methods instead.
-* Reworked yacc syntax that supports both old and new plugin syntax
-* Added handling for new magic number (enabled by 'M' switch).
-* Dropped dtbo/asmo formats.
-* Added overlay testsuite.
-* Addressed last version maintainer comments.
-
-Changes since v7:
-* Dropped xasprintf & backward compatibility patch
-* Rebased against dgibson's overlay branch
-* Minor doc wording fixes.
-
-Changes since v6:
-* Introduced xasprintf
-* Added append_to_property and used it
-* Changed some die()'s to assert
-* Reordered node generation to respect sort
-* Addressed remaining maintainer changes from v6
-
-Changes since v5:
-* Rebase to latest dtc version.
-* Addressed all the maintainer requested changes from v5
-* Added new magic value for dynamic objects and new format
-
-Changes since v4:
-* Rebase to latest dtc version.
-* Completely redesigned the generation of resolution data.
-Now instead of being generated as part of blob generation
-they are created in the live tree.
-* Consequently the patchset is much smaller.
-* Added -A auto-label alias generation option.
-* Addressed maintainer comments.
-* Added syntactic sugar for overlays in the form of .dtsi
-* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
-the previous form (although still works for backward compatibility)
-
-Changes since v3:
-* Rebase to latest dtc version.
-
-Changes since v2:
-* Split single patch to a patchset.
-* Updated to dtc mainline.
-* Changed __local_fixups__ format
-* Clean up for better legibility.
-
-
-Pantelis Antoniou (7):
-  dtc: Document the dynamic plugin internals
-  dtc: Plugin and fixup support
-  tests: Add check_path test
-  tests: Add overlay tests
-  overlay: Documentation for the overlay sugar syntax
-  overlay: Add syntactic sugar version of overlays
-  tests: Add a test for overlays syntactic sugar
-
- Documentation/dt-object-internal.txt | 324 +++++++++++++++++++++++++++++++++++
- Documentation/manual.txt             |  29 +++-
- checks.c                             |   8 +-
- dtc-lexer.l                          |   5 +
- dtc-parser.y                         |  49 +++++-
- dtc.c                                |  54 +++++-
- dtc.h                                |  22 ++-
- fdtdump.c                            |   2 +-
- flattree.c                           |  18 +-
- fstree.c                             |   2 +-
- libfdt/fdt.c                         |   2 +-
- libfdt/fdt.h                         |   3 +-
- livetree.c                           | 291 ++++++++++++++++++++++++++++++-
- tests/.gitignore                     |   1 +
- tests/Makefile.tests                 |   3 +-
- tests/check_path.c                   |  82 +++++++++
- tests/mangle-layout.c                |   7 +-
- tests/overlay_base_fixups.dts        |  22 +++
- tests/overlay_overlay_dtc.dts        |   4 +-
- tests/overlay_overlay_simple.dts     |  12 ++
- tests/run_tests.sh                   |  55 ++++++
- 21 files changed, 962 insertions(+), 33 deletions(-)
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/dt-object-internal.txt | 308 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 308 insertions(+)
  create mode 100644 Documentation/dt-object-internal.txt
- create mode 100644 tests/check_path.c
- create mode 100644 tests/overlay_base_fixups.dts
- create mode 100644 tests/overlay_overlay_simple.dts
 
+diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt-object-internal.txt
+new file mode 100644
+index 0000000..7d76296
+--- /dev/null
++++ b/Documentation/dt-object-internal.txt
+@@ -0,0 +1,308 @@
++Device Tree Dynamic Object format internals
++-------------------------------------------
++
++The Device Tree for most platforms is a static representation of
++the hardware capabilities. This is insufficient for platforms
++that need to dynamically insert Device Tree fragments into the
++live tree.
++
++This document explains the the Device Tree object format and
++modifications made to the Device Tree compiler, which make it possible.
++
++1. Simplified Problem Definition
++--------------------------------
++
++Assume we have a platform which boots using following simplified Device Tree.
++
++---- foo.dts -----------------------------------------------------------------
++	/* FOO platform */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++		};
++	};
++---- foo.dts -----------------------------------------------------------------
++
++We have a number of peripherals that after probing (using some undefined method)
++should result in different Device Tree configuration.
++
++We cannot boot with this static tree because due to the configuration of the
++foo platform there exist multiple conficting peripherals DT fragments.
++
++So for the bar peripheral we would have this:
++
++---- foo+bar.dts -------------------------------------------------------------
++	/* FOO platform + bar peripheral */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			};
++		};
++	};
++---- foo+bar.dts -------------------------------------------------------------
++
++While for the baz peripheral we would have this:
++
++---- foo+baz.dts -------------------------------------------------------------
++	/* FOO platform + baz peripheral */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++			/* baz resources */
++			baz_res: res_baz { ... };
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++
++			/* baz peripheral */
++			baz {
++				compatible = "corp,baz";
++				/* reference to another point in the tree */
++				ref-to-res = <&baz_res>;
++				... /* various properties and child nodes */
++			};
++		};
++	};
++---- foo+baz.dts -------------------------------------------------------------
++
++We note that the baz case is more complicated, since the baz peripheral needs to
++reference another node in the DT tree.
++
++2. Device Tree Object Format Requirements
++-----------------------------------------
++
++Since the Device Tree is used for booting a number of very different hardware
++platforms it is imperative that we tread very carefully.
++
++2.a) No changes to the Device Tree binary format for the base tree. We cannot
++modify the tree format at all and all the information we require should be
++encoded using Device Tree itself. We can add nodes that can be safely ignored
++by both bootloaders and the kernel. The plugin dtbs are optionally tagged
++with a different magic number in the header but otherwise they're simple
++blobs.
++
++2.b) Changes to the DTS source format should be absolutely minimal, and should
++only be needed for the DT fragment definitions, and not the base boot DT.
++
++2.c) An explicit option should be used to instruct DTC to generate the required
++information needed for object resolution. Platforms that don't use the
++dynamic object format can safely ignore it.
++
++2.d) Finally, DT syntax changes should be kept to a minimum. It should be
++possible to express everything using the existing DT syntax.
++
++3. Implementation
++-----------------
++
++The basic unit of addressing in Device Tree is the phandle. Turns out it's
++relatively simple to extend the way phandles are generated and referenced
++so that it's possible to dynamically convert symbolic references (labels)
++to phandle values. This is a valid assumption as long as the author uses
++reference syntax and does not assign phandle values manually (which might
++be a problem with decompiled source files).
++
++We can roughly divide the operation into two steps.
++
++3.a) Compilation of the base board DTS file using the '-@' option
++generates a valid DT blob with an added __symbols__ node at the root node,
++containing a list of all nodes that are marked with a label.
++
++Using the foo.dts file above the following node will be generated;
++
++$ dtc -@ -O dtb -o foo.dtb -b 0 foo.dts
++$ fdtdump foo.dtb
++...
++/ {
++	...
++	res {
++		...
++		phandle = <0x00000001>;
++		...
++	};
++	ocp {
++		...
++		phandle = <0x00000002>;
++		...
++	};
++	__symbols__ {
++		res="/res";
++		ocp="/ocp";
++	};
++};
++
++Notice that all the nodes that had a label have been recorded, and that
++phandles have been generated for them.
++
++This blob can be used to boot the board normally, the __symbols__ node will
++be safely ignored both by the bootloader and the kernel (the only loss will
++be a few bytes of memory and disk space).
++
++We generate a __symbols__ node to record nodes that had labels in the base
++tree (or subsequent loaded overlays) so that they can be matched up with
++references made to them in Device Tree objects.
++
++3.b) The Device Tree fragments must be compiled with the same option but they
++must also have a tag (/plugin/) that allows undefined references to nodes
++that are not present at compilation time to be recorded so that the runtime
++loader can fix them.
++
++So the bar peripheral's DTS format would be of the form:
++
++/dts-v1/ /plugin/;	/* allow undefined references and record them */
++/ {
++	....	/* various properties for loader use; i.e. part id etc. */
++	fragment@0 {
++		target = <&ocp>;
++		__overlay__ {
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		};
++	};
++};
++
++Note that there's a target property that specifies the location where the
++contents of the overlay node will be placed, and it references the node
++in the foo.dts file.
++
++$ dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
++$ fdtdump bar.dtbo
++...
++/ {
++	... /* properties */
++	fragment@0 {
++		target = <0xffffffff>;
++		__overlay__ {
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		};
++	};
++	__fixups__ {
++	    ocp = "/fragment@0:target:0";
++	};
++};
++
++No __symbols__ node has been generated (no label in bar.dts).
++Note that the target's ocp label is undefined, so the phandle
++value is filled with the illegal value '0xffffffff', while a __fixups__
++node has been generated, which marks the location in the tree where
++the label lookup should store the runtime phandle value of the ocp node.
++
++The format of the __fixups__ node entry is
++
++  <label> = "<local-full-path>:<property-name>:<offset>" 
++	    [, "<local-full-path>:<property-name>:<offset>"...];
++
++  <label> 		Is the label we're referring
++  <local-full-path>	Is the full path of the node the reference is
++  <property-name>	Is the name of the property containing the
++			reference
++  <offset>		The offset (in bytes) of where the property's
++			phandle value is located.
++
++Doing the same with the baz peripheral's DTS format is a little bit more
++involved, since baz contains references to local labels which require
++local fixups.
++
++/dts-v1/ /plugin/;	/* allow undefined label references and record them */
++/ {
++	....	/* various properties for loader use; i.e. part id etc. */
++	fragment@0 {
++		target = <&res>;
++		__overlay__ {
++			/* baz resources */
++			baz_res: res_baz { ... };
++		};
++	};
++	fragment@1 {
++		target = <&ocp>;
++		__overlay__ {
++			/* baz peripheral */
++			baz {
++				compatible = "corp,baz";
++				/* reference to another point in the tree */
++				ref-to-res = <&baz_res>;
++				... /* various properties and child nodes */
++			}
++		};
++	};
++};
++
++Note that &bar_res reference.
++
++$ dtc -@ -O dtb -o baz.dtbo -b 0 baz.dts
++$ fdtdump baz.dtbo
++...
++/ {
++	... /* properties */
++	fragment@0 {
++		target = <0xffffffff>;
++		__overlay__ {
++			res_baz {
++				....
++				phandle = <0x00000001>;
++			};
++		};
++	};
++	fragment@1 {
++		target = <0xffffffff>;
++		__overlay__ {
++			baz {
++				compatible = "corp,baz";
++				... /* various properties and child nodes */
++				ref-to-res = <0x00000001>;
++			}
++		};
++	};
++	__fixups__ {
++		res = "/fragment@0:target:0";
++		ocp = "/fragment@1:target:0";
++	};
++	__local_fixups__ {
++		fragment@1 {
++			__overlay__ {
++				baz {
++					ref-to-res = <0>;
++				};
++			};
++		};
++	};
++};
++
++This is similar to the bar case, but the reference of a local label by the
++baz node generates a __local_fixups__ entry that records the place that the
++local reference is being made. No matter how phandles are allocated from dtc
++the run time loader must apply an offset to each phandle in every dynamic
++DT object loaded. The __local_fixups__ node records the offset relative to the
++start of every local reference within that property so that the loader can apply
++the offset.
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
