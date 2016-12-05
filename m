@@ -1,351 +1,120 @@
-From: Dongpo Li <lidongpo@hisilicon.com>
-Subject: [PATCH v2 3/4] net: hix5hd2_gmac: add reset control and clock signals
-Date: Mon, 5 Dec 2016 21:28:00 +0800
-Message-ID: <1480944481-118803-4-git-send-email-lidongpo@hisilicon.com>
-References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] spi: armada-3700: Add support for the FIFO mode
+Date: Mon, 5 Dec 2016 13:37:28 +0000
+Message-ID: <20161205133728.sza2pt4tfkywu35k@sirena.org.uk>
+References: <20161201102719.4291-1-romain.perier@free-electrons.com>
+ <20161201102719.4291-3-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, zhangfei.gao@linaro.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net, arnd@arndb.de, andrew@lunn.ch
-Cc: xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dongpo Li <lidongpo@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="obzqvbfammgcqot2"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161201102719.4291-3-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add three reset control signals, "mac_core_rst", "mac_ifc_rst" and
-"phy_rst".
-The following diagram explained how the reset signals work.
 
-                        SoC
-|-----------------------------------------------------
-|                               ------                |
-|                               | cpu |               |
-|                               ------                |
-|                                  |                  |
-|                              ------------ AMBA bus  |
-|                         GMAC     |                  |
-|                            ----------------------   |
-| ------------- mac_core_rst | --------------      |  |
-| |clock and   |-------------->|   mac core  |     |  |
-| |reset       |             | --------------      |  |
-| |generator   |----         |       |             |  |
-| -------------     |        | ----------------    |  |
-|          |        ---------->| mac interface |   |  |
-|          |     mac_ifc_rst | ----------------    |  |
-|          |                 |       |             |  |
-|          |                 | ------------------  |  |
-|          |phy_rst          | | RGMII interface | |  |
-|          |                 | ------------------  |  |
-|          |                 ----------------------   |
-|----------|------------------------------------------|
-           |                          |
-           |                      ----------
-           |--------------------- |PHY chip |
-                                  ----------
+--obzqvbfammgcqot2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The "mac_core_rst" represents "mac core reset signal", it resets
-the mac core including packet processing unit, descriptor processing unit,
-tx engine, rx engine, control unit.
-The "mac_ifc_rst" represents "mac interface reset signal", it resets
-the mac interface. The mac interface unit connects mac core and
-data interface like MII/RMII/RGMII. After we set a new value of
-interface mode, we must reset mac interface to reload the new mode value.
-The "mac_core_rst" and "mac_ifc_rst" are both optional to be
-backward compatible with the hix5hd2 SoC.
-The "phy_rst" represents "phy reset signal", it does a hardware reset
-on the PHY chip. This reset signal is optional if the PHY can work well
-without the hardware reset.
+On Thu, Dec 01, 2016 at 11:27:16AM +0100, Romain Perier wrote:
 
-Add one more clock signal, the existing is MAC core clock,
-and the new one is MAC interface clock.
-The MAC interface clock is optional to be backward compatible with
-the hix5hd2 SoC.
+> Changes in v3:
+>  - Don't enable the fifo mode based on the compatible string, we introduce
+>    a module parameter "pio_mode". By default this option is set to zero, =
+so
+>    the fifo mode is enabled. Pass pio_mode=3D1 to the driver enables the =
+PIO
+>    mode.
 
-Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
----
- .../bindings/net/hisilicon-hix5hd2-gmac.txt        |  20 ++-
- drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 139 +++++++++++++++++++--
- 2 files changed, 144 insertions(+), 15 deletions(-)
+Why?  If the hardware supports a more efficient mode of operation it
+doesn't seem sensible not to use it.
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
-index 75920f0..063c02d 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
-@@ -17,6 +17,16 @@ Required properties:
- - phy-handle: see ethernet.txt [1].
- - mac-address: see ethernet.txt [1].
- - clocks: clock phandle and specifier pair.
-+- clock-names: contain the clock name "mac_core"(required) and "mac_ifc"(optional).
-+- resets: should contain the phandle to the MAC core reset signal(optional),
-+	the MAC interface reset signal(optional)
-+	and the PHY reset signal(optional).
-+- reset-names: contain the reset signal name "mac_core"(optional),
-+	"mac_ifc"(optional) and "phy"(optional).
-+- hisilicon,phy-reset-delays-us: triplet of delays if PHY reset signal given.
-+	The 1st cell is reset pre-delay in micro seconds.
-+	The 2nd cell is reset pulse in micro seconds.
-+	The 3rd cell is reset post-delay in micro seconds.
- 
- - PHY subnode: inherits from phy binding [2]
- 
-@@ -25,15 +35,19 @@ Required properties:
- 
- Example:
- 	gmac0: ethernet@f9840000 {
--		compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
-+		compatible = "hisilicon,hi3798cv200-gemac", "hisilicon,hisi-gemac-v2";
- 		reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
- 		interrupts = <0 71 4>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		phy-mode = "mii";
-+		phy-mode = "rgmii";
- 		phy-handle = <&phy2>;
- 		mac-address = [00 00 00 00 00 00];
--		clocks = <&clock HIX5HD2_MAC0_CLK>;
-+		clocks = <&crg HISTB_ETH0_MAC_CLK>, <&crg HISTB_ETH0_MACIF_CLK>;
-+		clock-names = "mac_core", "mac_ifc";
-+		resets = <&crg 0xcc 8>, <&crg 0xcc 10>, <&crg 0xcc 12>;
-+		reset-names = "mac_core", "mac_ifc", "phy";
-+		hisilicon,phy-reset-delays-us = <10000 10000 30000>;
- 
- 		phy2: ethernet-phy@2 {
- 			reg = <2>;
-diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-index 18af55b..ee7e9ce 100644
---- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-+++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-@@ -14,6 +14,7 @@
- #include <linux/of_device.h>
- #include <linux/of_net.h>
- #include <linux/of_mdio.h>
-+#include <linux/reset.h>
- #include <linux/clk.h>
- #include <linux/circ_buf.h>
- 
-@@ -197,6 +198,15 @@
- #define GEMAC_V2			(GEMAC_V1 | HW_CAP_TSO)
- #define HAS_CAP_TSO(hw_cap)		((hw_cap) & HW_CAP_TSO)
- 
-+#define PHY_RESET_DELAYS_PROPERTY	"hisilicon,phy-reset-delays-us"
-+
-+enum phy_reset_delays {
-+	PRE_DELAY,
-+	PULSE,
-+	POST_DELAY,
-+	DELAYS_NUM,
-+};
-+
- struct hix5hd2_desc {
- 	__le32 buff_addr;
- 	__le32 cmd;
-@@ -255,12 +265,26 @@ struct hix5hd2_priv {
- 	unsigned int speed;
- 	unsigned int duplex;
- 
--	struct clk *clk;
-+	struct clk *mac_core_clk;
-+	struct clk *mac_ifc_clk;
-+	struct reset_control *mac_core_rst;
-+	struct reset_control *mac_ifc_rst;
-+	struct reset_control *phy_rst;
-+	u32 phy_reset_delays[DELAYS_NUM];
- 	struct mii_bus *bus;
- 	struct napi_struct napi;
- 	struct work_struct tx_timeout_task;
- };
- 
-+static inline void hix5hd2_mac_interface_reset(struct hix5hd2_priv *priv)
-+{
-+	if (!priv->mac_ifc_rst)
-+		return;
-+
-+	reset_control_assert(priv->mac_ifc_rst);
-+	reset_control_deassert(priv->mac_ifc_rst);
-+}
-+
- static void hix5hd2_config_port(struct net_device *dev, u32 speed, u32 duplex)
- {
- 	struct hix5hd2_priv *priv = netdev_priv(dev);
-@@ -293,6 +317,7 @@ static void hix5hd2_config_port(struct net_device *dev, u32 speed, u32 duplex)
- 	if (duplex)
- 		val |= GMAC_FULL_DUPLEX;
- 	writel_relaxed(val, priv->ctrl_base);
-+	hix5hd2_mac_interface_reset(priv);
- 
- 	writel_relaxed(BIT_MODE_CHANGE_EN, priv->base + MODE_CHANGE_EN);
- 	if (speed == SPEED_1000)
-@@ -807,16 +832,26 @@ static int hix5hd2_net_open(struct net_device *dev)
- 	struct phy_device *phy;
- 	int ret;
- 
--	ret = clk_prepare_enable(priv->clk);
-+	ret = clk_prepare_enable(priv->mac_core_clk);
-+	if (ret < 0) {
-+		netdev_err(dev, "failed to enable mac core clk %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(priv->mac_ifc_clk);
- 	if (ret < 0) {
--		netdev_err(dev, "failed to enable clk %d\n", ret);
-+		clk_disable_unprepare(priv->mac_core_clk);
-+		netdev_err(dev, "failed to enable mac ifc clk %d\n", ret);
- 		return ret;
- 	}
- 
- 	phy = of_phy_connect(dev, priv->phy_node,
- 			     &hix5hd2_adjust_link, 0, priv->phy_mode);
--	if (!phy)
-+	if (!phy) {
-+		clk_disable_unprepare(priv->mac_ifc_clk);
-+		clk_disable_unprepare(priv->mac_core_clk);
- 		return -ENODEV;
-+	}
- 
- 	phy_start(phy);
- 	hix5hd2_hw_init(priv);
-@@ -847,7 +882,8 @@ static int hix5hd2_net_close(struct net_device *dev)
- 		phy_disconnect(dev->phydev);
- 	}
- 
--	clk_disable_unprepare(priv->clk);
-+	clk_disable_unprepare(priv->mac_ifc_clk);
-+	clk_disable_unprepare(priv->mac_core_clk);
- 
- 	return 0;
- }
-@@ -1015,6 +1051,48 @@ static void hix5hd2_destroy_sg_desc_queue(struct hix5hd2_priv *priv)
- 	}
- }
- 
-+static inline void hix5hd2_mac_core_reset(struct hix5hd2_priv *priv)
-+{
-+	if (!priv->mac_core_rst)
-+		return;
-+
-+	reset_control_assert(priv->mac_core_rst);
-+	reset_control_deassert(priv->mac_core_rst);
-+}
-+
-+static void hix5hd2_sleep_us(u32 time_us)
-+{
-+	u32 time_ms;
-+
-+	if (!time_us)
-+		return;
-+
-+	time_ms = DIV_ROUND_UP(time_us, 1000);
-+	if (time_ms < 20)
-+		usleep_range(time_us, time_us + 500);
-+	else
-+		msleep(time_ms);
-+}
-+
-+static void hix5hd2_phy_reset(struct hix5hd2_priv *priv)
-+{
-+	/* To make sure PHY hardware reset success,
-+	 * we must keep PHY in deassert state first and
-+	 * then complete the hardware reset operation
-+	 */
-+	reset_control_deassert(priv->phy_rst);
-+	hix5hd2_sleep_us(priv->phy_reset_delays[PRE_DELAY]);
-+
-+	reset_control_assert(priv->phy_rst);
-+	/* delay some time to ensure reset ok,
-+	 * this depends on PHY hardware feature
-+	 */
-+	hix5hd2_sleep_us(priv->phy_reset_delays[PULSE]);
-+	reset_control_deassert(priv->phy_rst);
-+	/* delay some time to ensure later MDIO access */
-+	hix5hd2_sleep_us(priv->phy_reset_delays[POST_DELAY]);
-+}
-+
- static const struct of_device_id hix5hd2_of_match[];
- 
- static int hix5hd2_dev_probe(struct platform_device *pdev)
-@@ -1060,23 +1138,55 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 		goto out_free_netdev;
- 	}
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		netdev_err(ndev, "failed to get clk\n");
-+	priv->mac_core_clk = devm_clk_get(&pdev->dev, "mac_core");
-+	if (IS_ERR(priv->mac_core_clk)) {
-+		netdev_err(ndev, "failed to get mac core clk\n");
- 		ret = -ENODEV;
- 		goto out_free_netdev;
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
-+	ret = clk_prepare_enable(priv->mac_core_clk);
- 	if (ret < 0) {
--		netdev_err(ndev, "failed to enable clk %d\n", ret);
-+		netdev_err(ndev, "failed to enable mac core clk %d\n", ret);
- 		goto out_free_netdev;
- 	}
- 
-+	priv->mac_ifc_clk = devm_clk_get(&pdev->dev, "mac_ifc");
-+	if (IS_ERR(priv->mac_ifc_clk))
-+		priv->mac_ifc_clk = NULL;
-+
-+	ret = clk_prepare_enable(priv->mac_ifc_clk);
-+	if (ret < 0) {
-+		netdev_err(ndev, "failed to enable mac ifc clk %d\n", ret);
-+		goto out_disable_mac_core_clk;
-+	}
-+
-+	priv->mac_core_rst = devm_reset_control_get(dev, "mac_core");
-+	if (IS_ERR(priv->mac_core_rst))
-+		priv->mac_core_rst = NULL;
-+	hix5hd2_mac_core_reset(priv);
-+
-+	priv->mac_ifc_rst = devm_reset_control_get(dev, "mac_ifc");
-+	if (IS_ERR(priv->mac_ifc_rst))
-+		priv->mac_ifc_rst = NULL;
-+
-+	priv->phy_rst = devm_reset_control_get(dev, "phy");
-+	if (IS_ERR(priv->phy_rst)) {
-+		priv->phy_rst = NULL;
-+	} else {
-+		ret = of_property_read_u32_array(node,
-+						 PHY_RESET_DELAYS_PROPERTY,
-+						 priv->phy_reset_delays,
-+						 DELAYS_NUM);
-+		if (ret)
-+			goto out_disable_clk;
-+		hix5hd2_phy_reset(priv);
-+	}
-+
- 	bus = mdiobus_alloc();
- 	if (bus == NULL) {
- 		ret = -ENOMEM;
--		goto out_free_netdev;
-+		goto out_disable_clk;
- 	}
- 
- 	bus->priv = priv;
-@@ -1159,7 +1269,8 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 		goto out_destroy_queue;
- 	}
- 
--	clk_disable_unprepare(priv->clk);
-+	clk_disable_unprepare(priv->mac_ifc_clk);
-+	clk_disable_unprepare(priv->mac_core_clk);
- 
- 	return ret;
- 
-@@ -1174,6 +1285,10 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 	mdiobus_unregister(bus);
- err_free_mdio:
- 	mdiobus_free(bus);
-+out_disable_clk:
-+	clk_disable_unprepare(priv->mac_ifc_clk);
-+out_disable_mac_core_clk:
-+	clk_disable_unprepare(priv->mac_core_clk);
- out_free_netdev:
- 	free_netdev(ndev);
- 
--- 
-2.8.2
+> -	int i;
+> +	int i, ret =3D 0;
+
+Coding style - don't combine initialized and non-initalized variables on
+one line.
+
+>  static int a3700_spi_transfer_one(struct spi_master *master,
+>  				  struct spi_device *spi,
+>  				  struct spi_transfer *xfer)
+>  {
+>  	struct a3700_spi *a3700_spi =3D spi_master_get_devdata(master);
+> -	int ret =3D 0;
+> +	int ret;
+> =20
+>  	a3700_spi_transfer_setup(spi, xfer);
+> =20
+> @@ -505,6 +737,151 @@ static int a3700_spi_transfer_one(struct spi_master=
+ *master,
+>  	return ret;
+>  }
+
+This appears to be a random unrelated change, should probably be part of
+the initial driver commit.
+
+> +static int a3700_spi_fifo_transfer_one(struct spi_master *master,
+> +				       struct spi_device *spi,
+> +				       struct spi_transfer *xfer)
+> +{
+> +	struct a3700_spi *a3700_spi =3D spi_master_get_devdata(master);
+> +	int ret =3D 0, timeout =3D A3700_SPI_TIMEOUT;
+> +	unsigned int nbits =3D 0;
+> +	u32 val;
+> +
+> +	a3700_spi_transfer_setup(spi, xfer);
+> +
+> +	a3700_spi->tx_buf  =3D xfer->tx_buf;
+> +	a3700_spi->rx_buf  =3D xfer->rx_buf;
+> +	a3700_spi->buf_len =3D xfer->len;
+> +
+> +	/* SPI transfer headers */
+> +	a3700_spi_header_set(a3700_spi);
+> +
+> +	if (xfer->tx_buf)
+> +		nbits =3D xfer->tx_nbits;
+> +	else if (xfer->rx_buf)
+> +		nbits =3D xfer->rx_nbits;
+> +
+> +	a3700_spi_pin_mode_set(a3700_spi, nbits);
+> +
+> +	if (xfer->rx_buf) {
+> +		/* Set read data length */
+> +		spireg_write(a3700_spi, A3700_SPI_IF_DIN_CNT_REG,
+> +			     a3700_spi->buf_len);
+> +		/* Start READ transfer */
+> +		val =3D spireg_read(a3700_spi, A3700_SPI_IF_CFG_REG);
+> +		val &=3D ~A3700_SPI_RW_EN;
+> +		val |=3D A3700_SPI_XFER_START;
+> +		spireg_write(a3700_spi, A3700_SPI_IF_CFG_REG, val);
+> +	} else if (xfer->tx_buf) {
+> +		/* Start Write transfer */
+
+So this only supports single duplex transfers but there doesn't seem to
+be anything that enforces this.
+
+--obzqvbfammgcqot2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhFbZQACgkQJNaLcl1U
+h9DcYQf+JaNE9P02XaPMFWRuBoPXFQWGUxBXOoNGTb34vWTVDyqP+ZDSB+o+OKwG
+qcVgToPrWM16sk8xxJ1k1sVKU7qQ8h/vsxPEJ/QQF57JJCU3ny38aBNa8vWWkt00
+RFYWXDaYdxpKJyZQBNKb9YCEGEgrrjJkdtpXppnSgi+1HVeIgtktTCY8vtsHNPCX
+THqlRdO479WVU+UgyaQ8DMK2onD769lcbdCETE4YC2Spyi4xWmKjokPd/nITKUNj
+4Fyzq0fLoT5Jnzf1ON//i6cTRoxt0ytqx01qeNYkvfSzHeEZ9QG6Nm6PENNYYJba
+hfm3jfOFGsAL/q1vCObUf/RUCyewCw==
+=ElTh
+-----END PGP SIGNATURE-----
+
+--obzqvbfammgcqot2--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
