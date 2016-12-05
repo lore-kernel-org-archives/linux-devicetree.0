@@ -1,50 +1,98 @@
-From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] Documentation: devictree: Add macb mdio bindings
-Date: Mon, 5 Dec 2016 08:33:37 +0530
-Message-ID: <CAFcVEC+bhLViUxrjn5aZd_fz79SGnhCVOZxL=_3mVA8GxVRCKg@mail.gmail.com>
-References: <1480326567-6132-1-git-send-email-harinik@xilinx.com>
- <20161203213553.f3agwvaseufglnq6@rob-hp-laptop> <bfbc84ce-4975-3213-3b46-8c394c717ea9@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: zx: add pcu_domain node for zx296718
+Date: Mon, 5 Dec 2016 11:16:41 +0800
+Message-ID: <20161205031639.GB2667@dragon>
+References: <1480766354-25168-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bfbc84ce-4975-3213-3b46-8c394c717ea9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480766354-25168-1-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: jun.nie@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On Sat, Dec 03, 2016 at 07:59:14PM +0800, Baoyou Xie wrote:
+> This patch adds the pcu_domain node, so it can be used
+> by zte-soc's power domain driver.
+> 
+> Furthermore, it adds the document of the node.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/zte.txt | 11 +++++++++++
 
-On Sun, Dec 4, 2016 at 4:10 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
-> Le 12/03/16 =C3=A0 13:35, Rob Herring a =C3=A9crit :
->> On Mon, Nov 28, 2016 at 03:19:27PM +0530, Harini Katakam wrote:
->>> +- reg: Address and length of the register set of MAC to be used
->>> +- clock-names: Tuple listing input clock names.
->>> +    Required elements: 'pclk', 'hclk'
->>> +    Optional elements: 'tx_clk'
->>> +- clocks: Phandles to input clocks.
->
-> You are also missing mandatory properties:
->
-> #address-cells =3D <1> and #size-cells =3D <0>
->
-> Where is patch 1? Can you make sure you have the same recipient list for
-> both patches in this series so we can review both the binding and driver?
->
+DT bindings doc should be a separate patch, and goes together with
+driver changes using the bindings through subsystem maintainers, rather
+than dts patches.
 
-Thanks for review, I'll update.
+>  arch/arm64/boot/dts/zte/zx296718.dtsi         |  7 +++++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/zte.txt b/Documentation/devicetree/bindings/arm/zte.txt
+> index 83369785..19a7e1b 100644
+> --- a/Documentation/devicetree/bindings/arm/zte.txt
+> +++ b/Documentation/devicetree/bindings/arm/zte.txt
+> @@ -27,6 +27,9 @@ System management required properties:
+>        - compatible = "zte,zx296718-aon-sysctrl"
+>        - compatible = "zte,zx296718-sysctrl"
+>  
+> +Low power management required properties:
+> +      - compatible = "zte,zx296718-pcu"
+> +
+>  Example:
+>  aon_sysctrl: aon-sysctrl@116000 {
+>  	compatible = "zte,zx296718-aon-sysctrl", "syscon";
+> @@ -37,3 +40,11 @@ sysctrl: sysctrl@1463000 {
+>  	compatible = "zte,zx296718-sysctrl", "syscon";
+>  	reg = <0x1463000 0x1000>;
+>  };
+> +
+> +pcu_domain: pcu@0x00117000 {
+> +        compatible = "zte,zx296718-pcu";
+> +        reg = <0x00117000 0x1000>;
+> +        #power-domain-cells = <1>;
+> +        status = "ok";
+> +};
+> +
 
-I did send the cover letter, patch 1 and 2 to the same recipient list.
-I can see them on the mailing list. The first patch is called:
-[RFC PATCH 1/2] net: macb: Add MDIO driver for accessing multiple PHY devic=
-es
-I hope you can find it.
+I think we should have a separate bindings doc for PCU power domain
+block in Documentation/devicetree/bindings/soc/zte.
 
-Regards,
-Harini
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
+> index b44d1d1..39e70c7 100644
+> --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
+> +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
+> @@ -351,5 +351,12 @@
+>  			reg = <0x01480000 0x1000>;
+>  			#clock-cells = <1>;
+>  		};
+> +
+> +		pcu_domain: pcu@0x00117000 {
+
+Please drop the 0x and leading zeros in unit-address after node name.
+That said, the node name should be written like below:
+
+	pcu@117000 {
+
+Also, please sort the node with unit-address in order of the address.
+That means that pcu node should be put after aon-sysctrl@116000.
+
+> +			compatible = "zte,zx296718-pcu";
+> +			reg = <0x00117000 0x1000>;
+> +			#power-domain-cells = <1>;
+> +			status = "ok";
+
+The property 'status' is generally used to enable devices that have
+board-level pin-out or configuration in board dts.  It's not really
+necessary for pcu here.
+
+Shawn
+
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.4
+> 
