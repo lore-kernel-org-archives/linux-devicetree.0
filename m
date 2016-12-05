@@ -1,135 +1,55 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 3/7] PWM: add pwm-stm32 DT bindings
-Date: Mon, 5 Dec 2016 07:53:50 +0100
-Message-ID: <20161205065350.GA18069@ulmo.ba.sec>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-4-git-send-email-benjamin.gaignard@st.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v1 0/2] Add MediaTek crypto acclelrator driver
+Date: Mon, 5 Dec 2016 15:01:22 +0800
+Message-ID: <1480921284-45827-1-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480673842-20804-4-git-send-email-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adds support for the MediaTek hardware accelerator on 
+mt7623 SoC.
 
-On Fri, Dec 02, 2016 at 11:17:18AM +0100, Benjamin Gaignard wrote:
-> Define bindings for pwm-stm32
->=20
-> version 2:
-> - use parameters instead of compatible of handle the hardware configurati=
-on
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-stm32.txt          | 38 ++++++++++++++++=
-++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Docume=
-ntation/devicetree/bindings/pwm/pwm-stm32.txt
-> new file mode 100644
-> index 0000000..575b9fb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> @@ -0,0 +1,38 @@
-> +STMicroelectronics PWM driver bindings for STM32
+This driver currently implement: 
+- SHA1 and SHA2 family(HMAC) hash alogrithms.
+- AES block cipher in CBC/ECB mode with 128/196/256 bits keys.
 
-Technically this bindings describe devices, so "driver binding" is a
-somewhat odd wording. Perhaps:
+Changes since v1:
+- remove EXPORT_SYMBOL
+- remove unused PRNG setting
+- sort headers in alphabetical order
+- add a definition for IRQ unmber
+- replace ambiguous definition
+- add more annotation and function comment
+- add COMPILE_TEST in Kconfig
 
-	STMicroelectronics STM32 General Purpose Timer PWM bindings
 
-?
+Ryder Lee (2):
+  Add crypto driver support for some MediaTek chips
+  crypto: mediatek - add DT bindings documentation
 
-> +
-> +Must be a sub-node of STM32 general purpose timer driver
-> +Parent node properties are describe in ../mfd/stm32-general-purpose-time=
-r.txt
+ .../devicetree/bindings/crypto/mediatek-crypto.txt |   32 +
+ drivers/crypto/Kconfig                             |   17 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/mediatek/Makefile                   |    2 +
+ drivers/crypto/mediatek/mtk-aes.c                  |  763 +++++++++++
+ drivers/crypto/mediatek/mtk-platform.c             |  580 ++++++++
+ drivers/crypto/mediatek/mtk-platform.h             |  235 ++++
+ drivers/crypto/mediatek/mtk-regs.h                 |  194 +++
+ drivers/crypto/mediatek/mtk-sha.c                  | 1423 ++++++++++++++++++++
+ 9 files changed, 3247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+ create mode 100644 drivers/crypto/mediatek/Makefile
+ create mode 100644 drivers/crypto/mediatek/mtk-aes.c
+ create mode 100644 drivers/crypto/mediatek/mtk-platform.c
+ create mode 100644 drivers/crypto/mediatek/mtk-platform.h
+ create mode 100644 drivers/crypto/mediatek/mtk-regs.h
+ create mode 100644 drivers/crypto/mediatek/mtk-sha.c
 
-Again, "driver parent node" is odd. Perhaps:
-
-	Must be a sub-node of an STM32 General Purpose Timer device tree
-	node. See ../mfd/stm32-general-purpose-timer.txt for details about
-	the parent node.
-
-?
-
-> +Required parameters:
-> +- compatible:		Must be "st,stm32-pwm"
-> +- pinctrl-names: 	Set to "default".
-> +- pinctrl-0: 		List of phandles pointing to pin configuration nodes
-> +			for PWM module.
-> +			For Pinctrl properties, please refer to [1].
-
-Your indentation and capitalization are inconsistent. Also, please refer
-to the pinctrl bindings by relative path and inline, rather than as a
-footnote reference.
-
-> +
-> +Optional parameters:
-> +- st,breakinput:	Set if the hardware have break input capabilities
-> +- st,breakinput-polarity: Set break input polarity. Default is 0
-> +			 The value define the active polarity:
-> +			  - 0 (active LOW)
-> +			  - 1 (active HIGH)
-
-Could we fold these into a single property? If st,breakinput-polarity is
-not present it could simply mean that there is no break input, and if it
-is present you don't have to rely on a default.
-
-> +- st,pwm-num-chan:	Number of available PWM channels.  Default is 0.
-
-The pwm- prefix is rather redundant since the node is already named pwm.
-Why not simply st,channels? Or simply channels, since it's not really
-anything specific to this hardware.
-
-Come to think of it, might be worth having a discussion with our DT
-gurus about what their stance is on using the # as prefix for numbers
-(such as in #address-cells or #size-cells). This could be #channels to
-mark it more explicitly as representing a count.
-
-> +- st,32bits-counter:	Set if the hardware have a 32 bits counter
-> +- st,complementary:	Set if the hardware have complementary output channe=
-ls
-
-"hardware has" and also maybe mention explicitly that this is a boolean
-property. Otherwise people might be left wondering what it should be set
-to. Or maybe word this differently to imply that it's boolean:
-
-	- st,32bits-counter: if present, the hardware has a 32 bit counter
-	- st,complementary: if present, the hardware has a complementary
-	                    output channel
-
-Thierry
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYRQ77AAoJEN0jrNd/PrOhOBgP/28PHXhXGflOwIPIw+NEH8Gc
-kk0pZoSr1PXL4IjdXS6Kb//qZPjZ/eMTKhpEmqsB3fQQDVaFrPaEMukdiZgc3utQ
-SJSR6uIlhDSdFeUojY6EwQ8GmGy90G1V/fDoRmshgmXSEyssxY9o75EpbADax/T6
-6HEljxgJOlQ1g6xdIeGkr3CCm4Y2EWF1u7gOJ9wj/YOPSFbzZcbdEqVrP7m448vN
-iRdG0cFgJXfGXGrj58g1Wg/oZN8lVQ8qu60ryyE5zg8iZi9QG5SyQGLpOIDnvauT
-Gr+8q2VO138SKS1CMRt/ikveB+LC1ewh/UDDx32+ey1oqVlWAGzaGw6b+tdiqEnD
-LvCRRtYRdENtvyELdzMCHRVZ2d0kDmpNKdKk07WCPVebbRS88RTZi5ETLHlOIH1h
-n0EtU/D4L7YiRCuUiszTRtaP8euQ1JSYOd/W0r8XOObfUazK3NZLyhQZBZ1BPOgn
-N/uX/B7wUa/pOaGfzZhkNQnq9+qozB8STLsuwUmzrKFIbnEP6k5mWr4LQNGYx7gd
-IOdwf0CU+UaHTYrEDD2NOuzBFEaJD7+UWXjN7K+oS9hhB/F/B+oRjs/GH/iaD12F
-JYMiMgpSK3wzqJzizk2Hy1hPILD5lKYVo4vg7nFlolLWq+MYCcCRf1Hg7ujjnL0v
-ypLoafI4gGOAvqXIypwc
-=gtLz
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+-- 
+1.9.1
