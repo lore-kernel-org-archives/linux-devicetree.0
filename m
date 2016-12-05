@@ -1,78 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 4/9] dt-bindings: iio: iio-mux: document iio-mux
- bindings
-Date: Mon, 5 Dec 2016 17:26:24 -0600
-Message-ID: <20161205232624.5wjvmchd6jxd24ir@rob-hp-laptop>
-References: <1480493823-21462-1-git-send-email-peda@axentia.se>
- <1480493823-21462-5-git-send-email-peda@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] dt-bindings: spi: Add documentation for the
+ Armada 3700 SPI Controller
+Date: Mon, 5 Dec 2016 17:27:22 -0600
+Message-ID: <20161205232722.abd6fh355gkssbtn@rob-hp-laptop>
+References: <20161130094351.2748-1-romain.perier@free-electrons.com>
+ <20161130094351.2748-4-romain.perier@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1480493823-21462-5-git-send-email-peda@axentia.se>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <20161130094351.2748-4-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2016 at 09:16:58AM +0100, Peter Rosin wrote:
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+On Wed, Nov 30, 2016 at 10:43:49AM +0100, Romain Perier wrote:
+> This adds the devicetree bindings documentation for the SPI controller
+> present in the Marvell Armada 3700 SoCs.
+> 
+> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../bindings/iio/multiplexer/iio-mux.txt           | 40 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 ++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+>  .../devicetree/bindings/spi/spi-armada-3700.txt    | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-armada-3700.txt
 
-I'm still not convinced about this binding, but don't really have more 
-comments ATM. Sending 6 versions in 2 weeks or so doesn't really help 
-either.
-
-> diff --git a/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> new file mode 100644
-> index 000000000000..8080cf790d82
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> @@ -0,0 +1,40 @@
-> +IIO multiplexer bindings
-> +
-> +If a multiplexer is used to select which hardware signal is fed to
-> +e.g. an ADC channel, these bindings describe that situation.
-> +
-> +Required properties:
-> +- compatible : "iio-mux"
-
-This is a Linuxism. perhaps "adc-mux".
-
-> +- io-channels : Channel node of the parent channel that has multiplexed
-> +		input.
-> +- io-channel-names : Should be "parent".
-> +- #address-cells = <1>;
-> +- #size-cells = <0>;
-> +- mux-controls : Mux controller node to use for operating the mux
-> +- channels : List of strings, labeling the mux controller states.
-> +
-> +The multiplexer state as described in ../misc/mux-controller.txt
-> +
-> +For each non-empty string in the channels property, an iio channel will
-> +be created. The number of this iio channel is the same as the index into
-> +the list of strings in the channels property, and also matches the mux
-> +controller state.
-> +
-> +Example:
-> +	mux: mux-controller {
-> +		compatible = "mux-gpio";
-> +		#mux-control-cells = <0>;
-> +
-> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	adc-mux {
-> +		compatible = "iio-mux";
-> +		io-channels = <&adc 0>;
-> +		io-channel-names = "parent";
-> +
-> +		mux-controls = <&mux>;
-> +
-> +		channels = "sync", "in", system-regulator";
-> +	};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
