@@ -1,167 +1,59 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] eeprom: Add IDT 89HPESx driver bindings file
-Date: Mon, 5 Dec 2016 11:27:07 -0600
-Message-ID: <CAL_JsqLbMGXSRLtTiD2d3Bsu4qc4bE029gieRN8x+QxPs=VbcA@mail.gmail.com>
-References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-3-git-send-email-fancer.lancer@gmail.com>
- <20161205144621.yxwr7spmsvyilan5@rob-hp-laptop> <20161205152502.GA17538@mobilestation>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 0/2] Add support for Omnivision OV5647
+Date: Mon,  5 Dec 2016 17:36:32 +0000
+Message-ID: <cover.1480958609.git.roliveir@synopsys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161205152502.GA17538@mobilestation>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 5, 2016 at 9:25 AM, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Dec 05, 2016 at 08:46:21AM -0600, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Tue, Nov 29, 2016 at 01:38:21AM +0300, Serge Semin wrote:
->> > See cover-letter for changelog
->> >
->> > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> > ---
->> >  .../devicetree/bindings/misc/idt_89hpesx.txt       | 41 ++++++++++++++++++++++
->>
->> There's not a better location for this? I can't tell because you don't
->> describe what the device is.
->>
->
-> The device is PCIe-switch EEPROM driver with additional debug-interface to
-> access the switch CSRs. EEPROM is accesses via a separate i2c-slave
-> interface of the switch.
->
-> There might be another place to put the binding file in. There is a special
-> location for EEPROM drivers bindings - Documentation/devicetree/bindings/eeprom/ .
-> But as far as I understood from the files put in there, it's intended for
-> pure EEPROM drivers only. On the other hand the directory I've chosen:
-> Documentation/devicetree/bindings/misc/
-> mostly intended for some unusual devices. My device isn't usual, since it
-> has CSRs debug-interface as well. Additionally I've found
-> eeprom-93xx46.txt binding file there, which describes EEPROM bindings.
->
-> Anyway if you find the file should be placed in
-> Documentation/devicetree/bindings/eeprom/ instead, I'll move it, it's not
-> that a big problem.
->
->> >  1 file changed, 41 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/misc/idt_89hpesx.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/misc/idt_89hpesx.txt b/Documentation/devicetree/bindings/misc/idt_89hpesx.txt
->> > index 0000000..469cc93
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/misc/idt_89hpesx.txt
->> > @@ -0,0 +1,41 @@
->> > +EEPROM / CSR SMBus-slave interface of IDT 89HPESx devices
->> > +
->> > +Required properties:
->> > +  - compatible : should be "<manufacturer>,<type>"
->> > +            Basically there is only one manufacturer: idt, but some
->> > +            compatible devices may be produced in future. Following devices
->> > +            are supported: 89hpes8nt2, 89hpes12nt3, 89hpes24nt6ag2,
->> > +            89hpes32nt8ag2, 89hpes32nt8bg2, 89hpes12nt12g2, 89hpes16nt16g2,
->> > +            89hpes24nt24g2, 89hpes32nt24ag2, 89hpes32nt24bg2;
->> > +            89hpes12n3, 89hpes12n3a, 89hpes24n3, 89hpes24n3a;
->> > +            89hpes32h8, 89hpes32h8g2, 89hpes48h12, 89hpes48h12g2,
->> > +            89hpes48h12ag2, 89hpes16h16, 89hpes22h16, 89hpes22h16g2,
->> > +            89hpes34h16, 89hpes34h16g2, 89hpes64h16, 89hpes64h16g2,
->> > +            89hpes64h16ag2;
->> > +            89hpes12t3g2, 89hpes24t3g2, 89hpes16t4, 89hpes4t4g2,
->> > +            89hpes10t4g2, 89hpes16t4g2, 89hpes16t4ag2, 89hpes5t5,
->> > +            89hpes6t5, 89hpes8t5, 89hpes8t5a, 89hpes24t6, 89hpes6t6g2,
->> > +            89hpes24t6g2, 89hpes16t7, 89hpes32t8, 89hpes32t8g2,
->> > +            89hpes48t12, 89hpes48t12g2.
->> > +            Current implementation of the driver doesn't have any device-
->>
->> Driver capabilties are irrelevant to bindings.
->>
->
-> Why? I've told in the comment, that the devices actually differ by the CSRs
-> map. Even though it's not reflected in the code at the moment, the CSRs
-> read/write restrictions can be added by some concerned programmer in
-> future. But If I left something like "compatible : idt,89hpesx" device
-> only, it will be problematic to add that functionality.
+Hello,
 
-Bindings describe the h/w, not what the Linux, FreeBSD, etc. driver
-does. You don't want to be changing the binding doc when the driver
-changes.
+This patch adds support for the Omnivision OV5647 sensor.
 
-> Howbeit If you think it's not necessary and "compatible = idt,89hpesx" is
-> ok, it's perfectly fine for me to make it this way. The property will be
-> even simpler, than current approach.
+At the moment it only supports 640x480 in Raw 8.
 
-NO! That's not at all what I'm suggesting. Specific compatible strings
-are the right way to go for the reasons you give. You just don't need
-to state why here (because it is true for all bindings).
+This is the fifth version of the OV5647 camera driver patchset.
 
->> > +            specific functionalities. But since each of them differs
->> > +            by registers mapping, CSRs read/write restrictions can be
->> > +            added in future.
->> > +  - reg :   I2C address of the IDT 89HPES device.
->> > +
->> > +Optional properties:
->> > +  - read-only :     Parameterless property disables writes to the EEPROM
->> > +  - idt,eesize : Size of EEPROM device connected to IDT 89HPES i2c-master bus
->> > +            (default value is 4096 bytes if option isn't specified)
->> > +  - idt,eeaddr : Custom address of EEPROM device
->> > +            (If not specified IDT 89HPESx device will try to communicate
->> > +             with EEPROM sited by default address - 0x50)
->>
->> Don't we already have standard EEPROM properties that could be used
->> here?
->>
->
-> If we do, just tell me which one. There are standard options:
+v5:
+ - Refactor code 
+ - Change comments
+ - Add missing error handling in some functions
 
-You can grep thru bindings as easily as I can. I can't do that for
-everyone's binding.
+v4: 
+ - Add correct license
+ - Revert debugging info to generic infrastructure
+ - Turn defines into enums
+ - Correct code style issues
+ - Remove unused defines
+ - Make sure all errors where being handled
+ - Rename some functions to make code more readable
+ - Add some debugging info
 
-> "compatible, reg, pagesize, read-only". There isn't any connected with
-> EEPROM actual size.
-> Why so? Because standard EEPROM-drivers determine the device size from the
-> compatible-string name. Such approach won't work in this case, because
-> PCIe-switch and it EEPROM are actually two different devices. Look at the
-> chain of the usual platform board design:
-> Host <--- i2c ----> i2c-slave iface |PCIe-switch| i2c-master iface <--- i2c ---> EEPROM
->
-> As you cas see the Host reaches EEPROM through the set of PCIe-switch
-> i2c-interfaces. In order to properly get data from it my driver needs actual
-> EEPROM size and it address in the i2c-master bus of the PCIe-switch, in
-> addition to the standard reg-field, which is address of PCIe-switch i2c-slave
-> interface and read-only parameter if EEPROM-device has got WP pin asserted.
+v3: 
+ - No changes. Re-submitted due to lack of responses
 
-Ah, this needs to be much different than I thought. You need to model
-(i.e. use the same binding) the EEPROM node just like it was directly
-attached to the host. So this means you need the 2nd i2c bus modeled
-which means you need the PCIe switch modeled. A rough outline of the
-nodes would look like this:
+v2: 
+ - Corrections in DT documentation
 
-host-i2c: i2c {
-  compatible ="host-i2c"
-};
+Ramiro Oliveira (2):
+  Add OV5647 device tree documentation
+  Add support for OV5647 sensor
 
-pcie {
-    pcie-switch {
-        i2c-bus = <&host-i2c>;
-        i2c-bus {
-            eeprom@50 {
-            };
-        };
-    };
-};
+ .../devicetree/bindings/media/i2c/ov5647.txt       |  19 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  12 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/ov5647.c                         | 866 +++++++++++++++++++++
+ 5 files changed, 905 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+ create mode 100644 drivers/media/i2c/ov5647.c
 
-So this models the PCIe switch as a PCIe device, it has a phandle back
-to it's controller since it's not a child of the i2c controller. Then
-the devices on switches i2c bus are modeled as children of the switch.
+-- 
+2.10.2
 
-Alternatively, it could be described all as children of host-i2c node.
-It's common for i2c devices to have downstream i2c buses. I2C muxes
-are one example and there are bindings defined for all this. There's
-also chips like mpu-6050 that have slave buses.
 
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
