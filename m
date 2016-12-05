@@ -1,187 +1,83 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 4/7] PWM: add pwm driver for stm32 plaftorm
-Date: Mon, 5 Dec 2016 12:30:58 +0100
-Message-ID: <20161205113058.GG19891@ulmo.ba.sec>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-5-git-send-email-benjamin.gaignard@st.com>
- <20161205072357.GB18069@ulmo.ba.sec>
- <CA+M3ks7_utdw1c0A0m+RzuPTfvFAv5d8HoQvQDzXwHR8M6RKJA@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6: Add Savageboard common file
+Date: Mon, 5 Dec 2016 09:36:50 -0200
+Message-ID: <CAOMZO5BzLc7Xr9G0hLP1O4aYx+7J5gy0VHdQ3Kz0GFq=WdQ1gw@mail.gmail.com>
+References: <20161205010729.7047-1-woogyom.kim@gmail.com> <20161205010729.7047-2-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1117614213318740623=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+M3ks7_utdw1c0A0m+RzuPTfvFAv5d8HoQvQDzXwHR8M6RKJA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Lee Jones <lee.jones@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Jonathan Cameron <jic23@kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161205010729.7047-2-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Dec 4, 2016 at 11:07 PM, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
---===============1117614213318740623==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eMnpOGXCMazMAbfp"
-Content-Disposition: inline
+> +       regulators {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               reg_3p3v: regulator@0 {
+> +                       compatible = "regulator-fixed";
+> +                       reg = <0>;
+> +                       regulator-name = "3P3V";
+> +                       regulator-min-microvolt = <3300000>;
+> +                       regulator-max-microvolt = <3300000>;
+> +                       regulator-always-on;
+> +               };
 
+Please remove the regulators container and put the regulator node
+directly as follows:
 
---eMnpOGXCMazMAbfp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+reg_3p3v: regulator-3p3v {
+   compatible = "regulator-fixed";
+   regulator-name = "3P3V";
+   regulator-min-microvolt = <3300000>;
+   regulator-max-microvolt = <3300000>;
+   regulator-always-on;
+}
 
-On Mon, Dec 05, 2016 at 12:02:45PM +0100, Benjamin Gaignard wrote:
-> 2016-12-05 8:23 GMT+01:00 Thierry Reding <thierry.reding@gmail.com>:
-> > On Fri, Dec 02, 2016 at 11:17:19AM +0100, Benjamin Gaignard wrote:
-> >> This driver add support for pwm driver on stm32 platform.
-> >
-> > "adds". Also please use PWM in prose because it's an abbreviation.
-> >
-> >> The SoC have multiple instances of the hardware IP and each
-> >> of them could have small differences: number of channels,
-> >> complementary output, counter register size...
-> >> Use DT parameters to handle those differentes configuration
-> >
-> > "different configurations"
->=20
-> ok
->=20
-> >
-> >>
-> >> version 2:
-> >> - only keep one comptatible
-> >> - use DT paramaters to discover hardware block configuration
-> >
-> > "parameters"
->=20
-> ok
->=20
-> >
-> >>
-> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >> ---
-> >>  drivers/pwm/Kconfig     |   8 ++
-> >>  drivers/pwm/Makefile    |   1 +
-> >>  drivers/pwm/pwm-stm32.c | 285 +++++++++++++++++++++++++++++++++++++++=
-+++++++++
-> >>  3 files changed, 294 insertions(+)
-> >>  create mode 100644 drivers/pwm/pwm-stm32.c
-> >>
-> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> >> index bf01288..a89fdba 100644
-> >> --- a/drivers/pwm/Kconfig
-> >> +++ b/drivers/pwm/Kconfig
-> >> @@ -388,6 +388,14 @@ config PWM_STI
-> >>         To compile this driver as a module, choose M here: the module
-> >>         will be called pwm-sti.
-> >>
-> >> +config PWM_STM32
-> >> +     bool "STMicroelectronics STM32 PWM"
-> >> +     depends on ARCH_STM32
-> >> +     depends on OF
-> >> +     select MFD_STM32_GP_TIMER
-> >
-> > Should that be a "depends on"?
->=20
-> I think select is fine because the wanted feature is PWM not the mfd part
+> +       };
+> +};
+> +
+> +&clks {
+> +       assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+> +                         <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+> +       assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+> +                                <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+> +};
+> +
+> +&fec {
+> +       phy-mode = "rgmii";
+> +       phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
 
-I think in that case you may want to hide the MFD Kconfig option. See
-Documentation/kbuild/kconfig-language.txt (notes about select) for the
-details.
+I think you meant
+phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
 
-[...]
-> >> +};
-> >> +
-> >> +#define to_stm32_pwm_dev(x) container_of(chip, struct stm32_pwm_dev, =
-chip)
-> >
-> > Please turn this into a static inline.
->=20
-> with putting struct pwm_chip as first filed I will just cast the structure
+> +&iomuxc {
+> +       savageboard {
+> +               pinctrl_emmc: emmcgrp {
+> +                       fsl,pins = <
+> +                               MX6QDL_PAD_SD4_CMD__SD4_CMD             0x17059
+> +                               MX6QDL_PAD_SD4_CLK__SD4_CLK             0x10059
+> +                               MX6QDL_PAD_SD4_DAT0__SD4_DATA0          0x17059
+> +                               MX6QDL_PAD_SD4_DAT1__SD4_DATA1          0x17059
+> +                               MX6QDL_PAD_SD4_DAT2__SD4_DATA2          0x17059
+> +                               MX6QDL_PAD_SD4_DAT3__SD4_DATA3          0x17059
+> +                               MX6QDL_PAD_SD4_DAT4__SD4_DATA4          0x17059
+> +                               MX6QDL_PAD_SD4_DAT5__SD4_DATA5          0x17059
+> +                               MX6QDL_PAD_SD4_DAT6__SD4_DATA6          0x17059
+> +                               MX6QDL_PAD_SD4_DAT7__SD4_DATA7          0x17059
+> +                       >;
+> +               };
 
-Don't do that, please. container_of() is still preferred because it is
-correct and won't break even if you (or somebody else) changes the order
-in the future. The fact that it might be optimized away is a detail, or
-a micro-optimization. Force-casting is a bad idea because it won't catch
-errors if for some reason the field doesn't remain in the first position
-forever.
+You can remove the savegeboard level. Please check
+arch/arm/boot/dts/imx6q-tbs2910.dts.
 
-> >> +static void stm32_pwm_disable(struct pwm_chip *chip, struct pwm_devic=
-e *pwm)
-> >> +{
-> >> +     u32 mask;
-> >> +     struct stm32_pwm_dev *dev =3D to_stm32_pwm_dev(chip);
-> >> +
-> >> +     /* Disable channel */
-> >> +     mask =3D TIM_CCER_CC1E << (pwm->hwpwm * 4);
-> >> +     if (dev->caps & CAP_COMPLEMENTARY)
-> >> +             mask |=3D TIM_CCER_CC1NE << (pwm->hwpwm * 4);
-> >> +
-> >> +     regmap_update_bits(dev->regmap, TIM_CCER, mask, 0);
-> >> +
-> >> +     /* When all channels are disabled, we can disable the controller=
- */
-> >> +     if (!__active_channels(dev))
-> >> +             regmap_update_bits(dev->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-> >> +
-> >> +     clk_disable(dev->clk);
-> >> +}
-> >
-> > All of the above can be folded into the ->apply() hook for atomic PWM
-> > support.
-> >
-> > Also, in the above you use clk_enable() in the ->enable() callback and
-> > clk_disable() in ->disable(). If you need the clock to access registers
-> > you'll have to enabled it in the others as well because there are no
-> > guarantees that configuration will only happen between ->enable() and
-> > ->disable(). Atomic PWM simplifies this a bit, but you still need to be
-> > careful about when to enable the clock in your ->apply() hook.
->=20
-> I have used regmap functions enable/disable clk for me when accessing to
-> the registers.
-> I only have to take care of clk enable/disable when PWM state change.
-
-Okay, that's fine then.
-
-Thierry
-
---eMnpOGXCMazMAbfp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYRU/xAAoJEN0jrNd/PrOhQ7gP/2H7UMJDOuzZrL6tqJuU6ehw
-eeDhPWXMt1fTjsCf1gu2j/pz+Fh+CSmZ9Mgihm9GMNy9IHDPcSSPOgHsJ/HsVEnv
-MQnJXrngiZ8e05+tuPuyg5g5VvDMUqtfj9Wiit/Lxsh0/QxnuAUOAJpAjiKsNswF
-uBH7lOWeohq8hNe+EOG+0SNaHJSXoOra8UIk5R4KzBiMEhqIVEWlyTo7Ikeh+0ed
-UL99+epSSO4sO6vJt2ku/az9jJ0rpGrTNYeaylNKT/0FSpkoCgls9fXsE32RSKTT
-IJxgbSHxOKI0cy6u0GtHXV5dq+3lFwJw33mIBUfm4aoN04giak/j7qBFi/k1XWb9
-H3h2npyFaDvzNnJdEmf7LDDrKOsstN/MqqThrICF40XTQnBNmIjLZb9eGBYxSNky
-7BSAJ0GaCSmeLEPqleL+T7vsem2e/u8+sFfsGOuhj/zEF8UfTq1pVg4h1PVbac3s
-/rUaX+Ap9ThmXiP94NjBi+EyUgfnREgb6N3WZeAEoZqz4TKKynHT3N0/fu89dywQ
-aMpW61FHUaJbISXr+Ufn9MtjHTPWs5Nqu2m4ozimgIAdtl2tThmFbFFI5SOkL8Yz
-W/E7k4dPR+0BUfpONDaGqpa/Q/g7KZTdMclyELtCIC5G8cpaloNQgrhlT4Qldo9L
-/25TK7UBw2TSyDMCqebR
-=llJ+
------END PGP SIGNATURE-----
-
---eMnpOGXCMazMAbfp--
-
-
---===============1117614213318740623==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1117614213318740623==--
+iomux usually go as the last node of the dts file.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
