@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v12 6/7] overlay: Add syntactic sugar version of overlays
-Date: Mon,  5 Dec 2016 19:05:27 +0200
-Message-ID: <1480957528-8367-7-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v12 7/7] tests: Add a test for overlays syntactic sugar
+Date: Mon,  5 Dec 2016 19:05:28 +0200
+Message-ID: <1480957528-8367-8-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1480957528-8367-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1480957528-8367-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
@@ -10,102 +10,30 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For simple overlays that use a single target there exists a
-simpler syntax version.
-
-&foo { }; generates an overlay with a single target at foo.
+Add a single test makeing sure the &foo { }; syntax works.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- dtc-parser.y | 20 +++++++++++++++++---
- dtc.h        |  1 +
- livetree.c   | 22 ++++++++++++++++++++++
- 3 files changed, 40 insertions(+), 3 deletions(-)
+ tests/run_tests.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/dtc-parser.y b/dtc-parser.y
-index aaacb97..9f8f7ee 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -184,10 +184,19 @@ devicetree:
- 		{
- 			struct node *target = get_node_by_ref($1, $2);
- 
--			if (target)
-+			if (target) {
- 				merge_nodes(target, $3);
--			else
--				ERROR(&@2, "Label or path %s not found", $2);
-+			} else {
-+				/*
-+				 * We rely on the rule being always:
-+				 *   versioninfo plugindecl memreserves devicetree
-+				 * so $-1 is what we want (plugindecl)
-+				 */
-+				if ($<flags>-1 & DTSVF_PLUGIN)
-+					add_orphan_node($1, $3, $2);
-+				else
-+					ERROR(&@2, "Label or path %s not found", $2);
-+			}
- 			$$ = $1;
- 		}
- 	| devicetree DT_DEL_NODE DT_REF ';'
-@@ -202,6 +211,11 @@ devicetree:
- 
- 			$$ = $1;
- 		}
-+	| /* empty */
-+		{
-+			/* build empty node */
-+			$$ = name_node(build_node(NULL, NULL), "");
-+		}
- 	;
- 
- nodedef:
-diff --git a/dtc.h b/dtc.h
-index 6aa82eb..b0c6772 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -199,6 +199,7 @@ struct node *build_node_delete(void);
- struct node *name_node(struct node *node, char *name);
- struct node *chain_node(struct node *first, struct node *list);
- struct node *merge_nodes(struct node *old_node, struct node *new_node);
-+void add_orphan_node(struct node *old_node, struct node *new_node, char *ref);
- 
- void add_property(struct node *node, struct property *prop);
- void delete_property_by_name(struct node *node, char *name);
-diff --git a/livetree.c b/livetree.c
-index 54a16ba..443429f 100644
---- a/livetree.c
-+++ b/livetree.c
-@@ -216,6 +216,28 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
- 	return old_node;
- }
- 
-+void add_orphan_node(struct node *dt, struct node *new_node, char *ref)
-+{
-+	static unsigned int next_orphan_fragment = 0;
-+	struct node *node;
-+	struct property *p;
-+	struct data d = empty_data;
-+	char *name;
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index ee30383..04ed9c8 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -227,6 +227,12 @@ overlay_tests () {
+         run_test check_path overlay_overlay_with_aliases.dtb exists "/__symbols__"
+         run_test check_path overlay_overlay_with_aliases.dtb exists "/__fixups__"
+         run_test check_path overlay_overlay_with_aliases.dtb exists "/__local_fixups__"
 +
-+	d = data_add_marker(d, REF_PHANDLE, ref);
-+	d = data_append_integer(d, 0xffffffff, 32);
++        # test simplified plugin syntax
++        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_simple.dtb overlay_overlay_simple.dts
 +
-+	p = build_property("target", d);
-+
-+	xasprintf(&name, "fragment@%u",
-+			next_orphan_fragment++);
-+	name_node(new_node, "__overlay__");
-+	node = build_node(p, new_node);
-+	name_node(node, name);
-+
-+	add_child(dt, node);
-+}
-+
- struct node *chain_node(struct node *first, struct node *list)
- {
- 	assert(first->next_sibling == NULL);
++        # verify non-generation of local fixups
++        run_test check_path overlay_overlay_simple.dtb not-exists "/__local_fixups__"
+     fi
+ 
+     # Bad fixup tests
 -- 
 2.1.4
 
