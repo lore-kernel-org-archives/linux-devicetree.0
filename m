@@ -1,75 +1,52 @@
-From: Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: i2c-hid: Add regulator support
-Date: Mon, 5 Dec 2016 10:08:13 +0100
-Message-ID: <20161205090813.GL1280@mail.corp.redhat.com>
-References: <1480717140-14558-1-git-send-email-briannorris@chromium.org>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v2 0/6] net: stmmac: make DMA programmable burst length more configurable
+Date: Mon, 5 Dec 2016 10:10:32 +0100
+Message-ID: <1480929039-20257-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480717140-14558-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: Niklas Cassel <niklass@axis.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Dec 02 2016 or thereabouts, Brian Norris wrote:
-> From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Document a "vdd-supply" and an initialization delay. Can be used for
-> powering on/off a HID.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> v2:
->  * add compatible property for wacom, per Rob's request
->  * name the regulator property specifically (VDD)
-> 
-> v3:
->  * remove wacom property, per Benjamin's request
->  * add delay property
-> 
-> v4: no change
-> ---
->  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> index 488edcb264c4..1ea290167652 100644
-> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> @@ -17,6 +17,11 @@ Required properties:
->  - interrupt-parent: the phandle for the interrupt controller
->  - interrupts: interrupt line
->  
-> +Optional properties:
-> +- vdd-supply: phandle of the regulator that provides the supply voltage.
-> +- init-delay-ms: time required by the device after power-on before it is ready
-> +  for communication.
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-Nitpick: maybe we should say that the power-on applies to the vdd-supply
-parameter, not the SET_POWER HID command. I am just worried people will
-misuse this parameter.
+Make DMA programmable burst length more configurable in the stmmac driver.
 
-Otherwise, Acked-by: Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+This is done by adding support for independent pbl for tx/rx through DT.
+More fine grained tuning of pbl is possible thanks to a DT property saying
+that we should NOT multiply pbl values by x8/x4 in hardware.
 
-> +
->  Example:
->  
->  	i2c-hid-dev@2c {
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
+All new DT properties are optional, and created in a way that it will not
+affect any existing DT configurations.
+
+Changes since V1:
+Created cover-letter.
+Rebased patch set against next-20161205, since conflicting patches to
+stmmac_platform.c has been merged since V1.
+
+
+Niklas Cassel (6):
+  net: stmmac: return error if no DMA configuration is found
+  net: stmmac: simplify the common DMA init API
+  net: stmmac: stmmac_platform: fix parsing of DT binding
+  net: stmmac: dwmac1000: fix define DMA_BUS_MODE_RPBL_MASK
+  net: stmmac: add support for independent DMA pbl for tx/rx
+  net: smmac: allow configuring lower pbl values
+
+ Documentation/devicetree/bindings/net/stmmac.txt   |  8 +++++-
+ Documentation/networking/stmmac.txt                | 24 ++++++++++++-----
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  4 +--
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |  2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac1000_dma.c    | 26 ++++++++++---------
+ drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c |  7 ++---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   | 25 ++++++++++--------
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 17 ++++++------
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   |  2 ++
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 30 ++++++++++++----------
+ include/linux/stmmac.h                             |  3 +++
+ 11 files changed, 89 insertions(+), 59 deletions(-)
+
+-- 
+2.1.4
