@@ -1,31 +1,36 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 0/3] pwm: lpc32xx: switch driver to one phandle argument for PWM consumers
-Date: Mon,  5 Dec 2016 03:42:36 +0200
-Message-ID: <20161205014237.1689-1-vz@mleia.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Milo Kim <woogyom.kim@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: sun8i: Specify memblock for Nano Pi M1
+Date: Mon,  5 Dec 2016 11:00:31 +0900
+Message-ID: <20161205020032.26586-1-woogyom.kim@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <woogyom.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The change adds private of_xlate() function to process one argument given
-along with a PWM phandle. LPC32xx SoCs have two independent single channel
-PWM controllers, the argument is used as a description of PWM output
-frequency, see previous discussion here:
+The board has DDR3 512MB. This patch helps scanning the memory and
+adding memblock through the DT.
 
-  http://www.spinics.net/lists/arm-kernel/msg534068.html
+Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+---
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-The changes on actual board dts files are not needed at the moment, because
-all LPC32xx boards in upstream don't describe any PWM consumers.
-
-Vladimir Zapolskiy (3):
-  dt: pwm: lpc32xx: add description of clocks and #pwm-cells properties
-  pwm: lpc32xx: switch driver to one phandle argument for PWM consumers
-  pwm: lpc32xx: remove handling of PWM channels
-
- .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |  7 +++++
- drivers/pwm/pwm-lpc32xx.c                          | 36 +++++++++++++++-------
- 2 files changed, 32 insertions(+), 11 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
+index ec63d10..be3668f 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
+@@ -45,6 +45,11 @@
+ / {
+ 	model = "FriendlyArm NanoPi M1";
+ 	compatible = "friendlyarm,nanopi-m1", "allwinner,sun8i-h3";
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x40000000 0x20000000>;
++	};
+ };
+ 
+ &ehci1 {
 -- 
-2.10.2
+2.9.3
