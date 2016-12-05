@@ -1,161 +1,148 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: RE: [PATCH v6 1/2] mtd: arasan: Add device tree binding documentation
-Date: Mon, 5 Dec 2016 13:56:51 +0000
-Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B76423EE53@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1480911066-26157-1-git-send-email-punnaia@xilinx.com>
- <74842d92-840d-a7c2-fb1b-ddab1ac2cf42@gmail.com>
- <20161205093630.650451d7@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20161205093630.650451d7@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "richard@nod.at" <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>, "kpc528@gmail.com" <kpc528@gmail.com>, Michal Simek <michals@xilinx.com>, "cyrille.pitchen@atmel.com" <cyrille.pitchen@atmel.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+From: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
+Subject: [PATCH v2] of/irq: improve error report on irq discovery process
+ failure
+Date: Mon,  5 Dec 2016 11:59:16 -0200
+Message-ID: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: mark.rutland@arm.com, gpiccoli@linux.vnet.ibm.com, marc.zyngier@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On PowerPC machines some PCI slots might not have level triggered
+interrupts capability (also know as level signaled interrupts),
+leading of_irq_parse_pci() to complain by presenting error messages
+on the kernel log - in this case, the properties "interrupt-map" and
+"interrupt-map-mask" are not present on device's node in the device
+tree.
 
+This patch introduces a different message for this specific case,
+and also reduces its level from error to warning. Besides, we warn
+(once) that possibly some PCI slots on the system have no level
+triggered interrupts available.
+We changed some error return codes too on function of_irq_parse_raw()
+in order other failure's cases can be presented in a more precise way.
 
-> -----Original Message-----
-> From: Boris Brezillon [mailto:boris.brezillon@free-electrons.com]
-> Sent: Monday, December 05, 2016 2:07 PM
-> To: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Punnaiah Choudary Kalluri <punnaia@xilinx.com>;
-> dwmw2@infradead.org; computersforpeace@gmail.com; richard@nod.at;
-> cyrille.pitchen@atmel.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux-kernel@vger.kernel.org; linux-mtd@lists.infradead.org;
-> devicetree@vger.kernel.org; Michal Simek <michals@xilinx.com>;
-> kalluripunnaiahchoudary@gmail.com; kpc528@gmail.com; Punnaiah
-> Choudary Kalluri <punnaia@xilinx.com>
-> Subject: Re: [PATCH v6 1/2] mtd: arasan: Add device tree binding
-> documentation
-> 
-> On Mon, 5 Dec 2016 05:25:54 +0100
-> Marek Vasut <marek.vasut@gmail.com> wrote:
-> 
-> > On 12/05/2016 05:11 AM, Punnaiah Choudary Kalluri wrote:
-> > > This patch adds the dts binding document for arasan nand flash
-> > > controller.
-> > >
-> > > Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > changes in v6:
-> > > - Removed num-cs property
-> > > - Separated nandchip from nand controller changes in v5:
-> > > - None
-> > > Changes in v4:
-> > > - Added num-cs property
-> > > - Added clock support
-> > > Changes in v3:
-> > > - None
-> > > Changes in v2:
-> > > - None
-> > > ---
-> > >  .../devicetree/bindings/mtd/arasan_nfc.txt         | 38
-> ++++++++++++++++++++++
-> > >  1 file changed, 38 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > > b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > > new file mode 100644
-> > > index 0000000..dcbe7ad
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > > @@ -0,0 +1,38 @@
-> > > +Arasan Nand Flash Controller with ONFI 3.1 support
-> >
-> > Arasan NAND Flash ...
-> >
-> > > +Required properties:
-> > > +- compatible: Should be "arasan,nfc-v3p10"
-> >
-> > This v3p10 looks like version 3 patchlevel 10, but shouldn't we have
-> > some fallback option which doesn't encode IP version in the compat
-> > string ?
-> 
-> Not necessarily. Usually you define a generic compatible when you have
-> other reliable means to detect the IP version (a version register for
-> example).
-> If you can't detect that at runtime, then providing only specific compatible
-> strings is a good solution to avoid breaking the DT ABI.
+Before this patch, when an adapter was plugged in a slot without level
+interrupts capabilitiy on PowerPC, we saw a generic error message
+like this:
 
-Yes. I am also thinking the same. Arasan controller doesn't have the register
-to indicate the IP version number.
+    [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-22
 
-> 
-> >
-> > Also, shouldn't quirks be handled by DT props instead of effectively
-> > encoding them into the compatible string ?
-> 
-> Well, from my experience, it's better to hide as much as possible behind the
-> compatible. This way, if new quirks are needed for a specific revision, you can
-> update the driver without having to change the DT.
-> 
+Now, with this applied, we see the following specific message:
 
-Agree.
+    [16.154] pci 0014:60:00.1: of_irq_parse_pci: no interrupt-map found,
+    INTx interrupts not available
 
-Regards,
-Punnaiah
+Finally, we standardize the error path in of_irq_parse_raw() by always
+taking the fail path instead of returning directly from the loop.
 
-> >
-> > > +- reg: Memory map for module access
-> > > +- interrupt-parent: Interrupt controller the interrupt is routed
-> > > +through
-> > > +- interrupts: Should contain the interrupt for the device
-> > > +- clock-name: List of input clocks - "clk_sys", "clk_flash"
-> > > +	      (See clock bindings for details)
-> > > +- clocks: Clock phandles (see clock bindings for details)
-> > > +
-> > > +Optional properties:
-> > > +- arasan,has-mdma: Enables Dma support
-> >
-> > 'Enables DMA support' , with DMA in caps.
-> >
-> > > +for nand partition information please refer the below file
-> >
-> > For NAND ...
-> >
-> > > +Documentation/devicetree/bindings/mtd/partition.txt
-> > > +
-> > > +Example:
-> > > +	nand0: nand@ff100000 {
-> > > +		compatible = "arasan,nfc-v3p10"
-> > > +		reg = <0x0 0xff100000 0x1000>;
-> > > +		clock-name = "clk_sys", "clk_flash"
-> > > +		clocks = <&misc_clk &misc_clk>;
-> > > +		interrupt-parent = <&gic>;
-> > > +		interrupts = <0 14 4>;
-> > > +		arasan,has-mdma;
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>
-> > > +
-> > > +		nand@0 {
-> > > +			reg = <0>
-> > > +			partition@0 {
-> > > +				label = "filesystem";
-> > > +				reg = <0x0 0x0 0x1000000>;
-> > > +			};
-> > > +			(...)
-> > > +		};
-> > > +	};
-> > >
-> >
-> >
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
+---
 
+v2:
+  * Changed function return code to always return negative values;
+  * Improved/simplified warning outputs;
+  * Changed some return codes and some error paths in of_irq_parse_raw()
+in order to be more precise/consistent;
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+ drivers/of/irq.c        | 19 ++++++++++++-------
+ drivers/of/of_pci_irq.c | 10 +++++++++-
+ 2 files changed, 21 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 393fea8..9deee86 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -104,7 +104,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 	const __be32 *match_array = initial_match_array;
+ 	const __be32 *tmp, *imap, *imask, dummy_imask[] = { [0 ... MAX_PHANDLE_ARGS] = ~0 };
+ 	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
+-	int imaplen, match, i;
++	int imaplen, match, i, rc = -EINVAL;
+ 
+ #ifdef DEBUG
+ 	of_print_phandle_args("of_irq_parse_raw: ", out_irq);
+@@ -134,7 +134,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 	pr_debug("of_irq_parse_raw: ipar=%s, size=%d\n", of_node_full_name(ipar), intsize);
+ 
+ 	if (out_irq->args_count != intsize)
+-		return -EINVAL;
++		goto fail;
+ 
+ 	/* Look for this #address-cells. We have to implement the old linux
+ 	 * trick of looking for the parent here as some device-trees rely on it
+@@ -153,8 +153,10 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 	pr_debug(" -> addrsize=%d\n", addrsize);
+ 
+ 	/* Range check so that the temporary buffer doesn't overflow */
+-	if (WARN_ON(addrsize + intsize > MAX_PHANDLE_ARGS))
++	if (WARN_ON(addrsize + intsize > MAX_PHANDLE_ARGS)) {
++		rc = -EFAULT;
+ 		goto fail;
++	}
+ 
+ 	/* Precalculate the match array - this simplifies match loop */
+ 	for (i = 0; i < addrsize; i++)
+@@ -240,10 +242,11 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 			    newintsize, newaddrsize);
+ 
+ 			/* Check for malformed properties */
+-			if (WARN_ON(newaddrsize + newintsize > MAX_PHANDLE_ARGS))
+-				goto fail;
+-			if (imaplen < (newaddrsize + newintsize))
++			if (WARN_ON(newaddrsize + newintsize > MAX_PHANDLE_ARGS)
++			    || (imaplen < (newaddrsize + newintsize))) {
++				rc = -EFAULT;
+ 				goto fail;
++			}
+ 
+ 			imap += newaddrsize + newintsize;
+ 			imaplen -= newaddrsize + newintsize;
+@@ -271,11 +274,13 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 		ipar = newpar;
+ 		newpar = NULL;
+ 	}
++	rc = -ENOENT; /* No interrupt-map found */
++
+  fail:
+ 	of_node_put(ipar);
+ 	of_node_put(newpar);
+ 
+-	return -EINVAL;
++	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_irq_parse_raw);
+ 
+diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+index 2306313..c175d9c 100644
+--- a/drivers/of/of_pci_irq.c
++++ b/drivers/of/of_pci_irq.c
+@@ -93,7 +93,15 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+ 		goto err;
+ 	return 0;
+ err:
+-	dev_err(&pdev->dev, "of_irq_parse_pci() failed with rc=%d\n", rc);
++	if (rc == -ENOENT) {
++		dev_warn(&pdev->dev,
++			"%s: no interrupt-map found, INTx interrupts not available\n",
++			__func__);
++		pr_warn_once("%s: possibly some PCI slots don't have level triggered interrupts capability\n",
++			__func__);
++	} else {
++		dev_err(&pdev->dev, "%s: failed with rc=%d\n", __func__, rc);
++	}
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_irq_parse_pci);
+-- 
+2.1.0
