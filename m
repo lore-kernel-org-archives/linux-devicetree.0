@@ -1,53 +1,98 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 00/13] net: ethernet: ti: cpts: update and fixes
-Date: Mon, 5 Dec 2016 12:31:56 -0600
-Message-ID: <4965aab5-f61e-4f61-89c8-b69ec423243c@ti.com>
-References: <20161202203023.25526-1-grygorii.strashko@ti.com>
- <20161203092211.GA2762@netboy>
+From: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] of/irq: improve error report on irq discovery process
+ failure
+Date: Mon, 5 Dec 2016 17:01:20 -0200
+Message-ID: <5845B980.2030609@linux.vnet.ibm.com>
+References: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
+ <CAL_JsqKg4+SANVuhfjFQRrC4Ax7OhAjwuBpo0Xes9UFevFAdWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161203092211.GA2762@netboy>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKg4+SANVuhfjFQRrC4Ax7OhAjwuBpo0Xes9UFevFAdWg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Frank Rowand <frowand.list@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/03/2016 03:22 AM, Richard Cochran wrote:
-> On Fri, Dec 02, 2016 at 02:30:10PM -0600, Grygorii Strashko wrote:
->> It is preparation series intended to clean up and optimize TI CPTS driver to
->> facilitate further integration with other TI's SoCs like Keystone 2.
+On 12/05/2016 12:28 PM, Rob Herring wrote:
+> On Mon, Dec 5, 2016 at 7:59 AM, Guilherme G. Piccoli
+> <gpiccoli@linux.vnet.ibm.com> wrote:
+>> On PowerPC machines some PCI slots might not have level triggered
+>> interrupts capability (also know as level signaled interrupts),
+>> leading of_irq_parse_pci() to complain by presenting error messages
+>> on the kernel log - in this case, the properties "interrupt-map" and
+>> "interrupt-map-mask" are not present on device's node in the device
+>> tree.
 >>
->> Changes in v3:
->> - patches reordered: fixes and small updates moved first
->> - added comments in code about cpts->cc_mult
->> - conversation range (maxsec) limited to 10sec
->
-> On net-next:
->
-> $ git am ~/grygorii.strashko
-> Applying: net: ethernet: ti: cpts: switch to readl/writel_relaxed()
-> Applying: net: ethernet: ti: allow cpts to be built separately
-> error: patch failed: drivers/net/ethernet/ti/cpsw.c:1963
-> error: drivers/net/ethernet/ti/cpsw.c: patch does not apply
-> Patch failed at 0002 net: ethernet: ti: allow cpts to be built separately
+>> This patch introduces a different message for this specific case,
+>> and also reduces its level from error to warning. Besides, we warn
+>> (once) that possibly some PCI slots on the system have no level
+>> triggered interrupts available.
+>> We changed some error return codes too on function of_irq_parse_raw()
+>> in order other failure's cases can be presented in a more precise way.
+>>
+>> Before this patch, when an adapter was plugged in a slot without level
+>> interrupts capabilitiy on PowerPC, we saw a generic error message
+>> like this:
+>>
+>>     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-22
+>>
+>> Now, with this applied, we see the following specific message:
+>>
+>>     [16.154] pci 0014:60:00.1: of_irq_parse_pci: no interrupt-map found,
+>>     INTx interrupts not available
+>>
+>> Finally, we standardize the error path in of_irq_parse_raw() by always
+>> taking the fail path instead of returning directly from the loop.
+>>
+>> Signed-off-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
+>> ---
+>>
+>> v2:
+>>   * Changed function return code to always return negative values;
+> 
+> Are you sure this is safe? This is tricky because of differing values
+> of NO_IRQ (0 or -1).
 
-Sorry for that, also there build error due to patch reordering :(
+Thanks Rob, but this is purely bad wording from myself. I'm sorry - I
+meant to say that I changed only my positive return code (that was
+suggested to be removed in the prior revision) to negative return code!
 
->
-> Also, you have the order of the SOB tags wrong.  The author's SOB goes
-> first.
-
-Will fix and resend, sorry again.
+So, I changed only code I added myself in v1 =)
 
 
--- 
-regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>   * Improved/simplified warning outputs;
+>>   * Changed some return codes and some error paths in of_irq_parse_raw()
+>> in order to be more precise/consistent;
+> 
+> This too could have some side effects on callers.
+> 
+> Not saying don't do these changes, just need some assurances this has
+> been considered.
+
+Thanks for your attention. I performed a quick investigation before
+changing this, all the places that use the return values are just
+getting "true/false" information from that, meaning they just are
+comparing to 0 basically. So change -EINVAL to -ENOENT wouldn't hurt any
+user of these return values, it'll only become more informative IMHO.
+
+Now, regarding the only error path that was changed: for some reason,
+this was the only place in which we didn't goto fail label in case of
+failure - it was added by a legacy commit from Ben, dated from 2006:
+006b64de60 ("[POWERPC] Make OF irq map code detect more error cases").
+Then it was carried by Grant Likely's commit 7dc2e1134a ("of/irq: merge
+irq mapping code"), 6-year old commit.
+I wasn't able to imagine a scenario in which changing this would break
+something; I believe the change improve consistency, but I'd remove it
+if you or somebody else thinks it worth be removed.
+
+Cheers,
+
+Guilherme
+
+
+> 
+> Rob
+> 
