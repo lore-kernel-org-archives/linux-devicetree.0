@@ -1,83 +1,129 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6: Add Savageboard common file
-Date: Mon, 5 Dec 2016 09:36:50 -0200
-Message-ID: <CAOMZO5BzLc7Xr9G0hLP1O4aYx+7J5gy0VHdQ3Kz0GFq=WdQ1gw@mail.gmail.com>
-References: <20161205010729.7047-1-woogyom.kim@gmail.com> <20161205010729.7047-2-woogyom.kim@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/5] spi: Add basic support for Armada 3700 SPI
+ Controller
+Date: Mon, 5 Dec 2016 12:05:40 +0000
+Message-ID: <20161205120540.mvihgafelszitzhq@sirena.org.uk>
+References: <20161201102719.4291-1-romain.perier@free-electrons.com>
+ <20161201102719.4291-2-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161205010729.7047-2-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2122375953554878701=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161201102719.4291-2-romain.perier@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Romain Perier <romain.perier@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-spi@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, xigu@marvell.com, dingwei@marvell.com, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 4, 2016 at 11:07 PM, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> +       regulators {
-> +               compatible = "simple-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
+--===============2122375953554878701==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j5bleiip5j6gh5xe"
+Content-Disposition: inline
+
+
+--j5bleiip5j6gh5xe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Dec 01, 2016 at 11:27:15AM +0100, Romain Perier wrote:
+
+> +config SPI_ARMADA_3700
+> +	tristate "Marvell Armada 3700 SPI Controller"
+> +	depends on ARCH_MVEBU && OF
+
+Why does this not have a COMPILE_TEST dependency?
+
+> +	/* Reset SPI unit */
+> +	val = spireg_read(a3700_spi, A3700_SPI_IF_CFG_REG);
+> +	val |= A3700_SPI_SRST;
+> +	spireg_write(a3700_spi, A3700_SPI_IF_CFG_REG, val);
 > +
-> +               reg_3p3v: regulator@0 {
-> +                       compatible = "regulator-fixed";
-> +                       reg = <0>;
-> +                       regulator-name = "3P3V";
-> +                       regulator-min-microvolt = <3300000>;
-> +                       regulator-max-microvolt = <3300000>;
-> +                       regulator-always-on;
-> +               };
+> +	for (i = 0; i < A3700_SPI_TIMEOUT; i++)
+> +		udelay(1);
 
-Please remove the regulators container and put the regulator node
-directly as follows:
+Why not just do a single udelay()?
 
-reg_3p3v: regulator-3p3v {
-   compatible = "regulator-fixed";
-   regulator-name = "3P3V";
-   regulator-min-microvolt = <3300000>;
-   regulator-max-microvolt = <3300000>;
-   regulator-always-on;
-}
-
-> +       };
-> +};
+> +static irqreturn_t a3700_spi_interrupt(int irq, void *dev_id)
+> +{
+> +	struct spi_master *master = dev_id;
+> +	struct a3700_spi *a3700_spi;
+> +	u32 cause;
 > +
-> +&clks {
-> +       assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-> +                         <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
-> +       assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
-> +                                <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-> +};
+> +	a3700_spi = spi_master_get_devdata(master);
 > +
-> +&fec {
-> +       phy-mode = "rgmii";
-> +       phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
+> +	/* Get interrupt causes */
+> +	cause = spireg_read(a3700_spi, A3700_SPI_INT_STAT_REG);
+> +
+> +	/* mask and acknowledge the SPI interrupts */
+> +	spireg_write(a3700_spi, A3700_SPI_INT_MASK_REG, 0);
+> +	spireg_write(a3700_spi, A3700_SPI_INT_STAT_REG, cause);
+> +
+> +	/* Wake up the transfer */
+> +	if (a3700_spi->wait_mask & cause)
+> +		complete(&a3700_spi->done);
+> +
+> +	return IRQ_HANDLED;
+> +}
 
-I think you meant
-phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+This reports that we handled an interrupt even if we did not in fact
+handle an interrupt.  It's also a bit dodgy that it doesn't check what
+the interrupt was but that's less serious.
 
-> +&iomuxc {
-> +       savageboard {
-> +               pinctrl_emmc: emmcgrp {
-> +                       fsl,pins = <
-> +                               MX6QDL_PAD_SD4_CMD__SD4_CMD             0x17059
-> +                               MX6QDL_PAD_SD4_CLK__SD4_CLK             0x10059
-> +                               MX6QDL_PAD_SD4_DAT0__SD4_DATA0          0x17059
-> +                               MX6QDL_PAD_SD4_DAT1__SD4_DATA1          0x17059
-> +                               MX6QDL_PAD_SD4_DAT2__SD4_DATA2          0x17059
-> +                               MX6QDL_PAD_SD4_DAT3__SD4_DATA3          0x17059
-> +                               MX6QDL_PAD_SD4_DAT4__SD4_DATA4          0x17059
-> +                               MX6QDL_PAD_SD4_DAT5__SD4_DATA5          0x17059
-> +                               MX6QDL_PAD_SD4_DAT6__SD4_DATA6          0x17059
-> +                               MX6QDL_PAD_SD4_DAT7__SD4_DATA7          0x17059
-> +                       >;
-> +               };
+> +	master->bus_num = (pdev->id != -1) ? pdev->id : 0;
 
-You can remove the savegeboard level. Please check
-arch/arm/boot/dts/imx6q-tbs2910.dts.
+At most this should be just setting the bus number to pdev->id like
+other drivers do.
 
-iomux usually go as the last node of the dts file.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	ret = clk_prepare_enable(spi->clk);
+> +	if (ret) {
+> +		dev_err(dev, "could not prepare clk: %d\n", ret);
+> +		goto error;
+> +	}
+
+I'd expect the hardware prepare/unprepare to be managing the enable and
+disable of the clock in order to save a little power.
+
+> +	dev_info(dev, "Marvell Armada 3700 SPI Controller at 0x%08lx, irq %d\n",
+> +		 (unsigned long)res->start, spi->irq);
+
+This is just adding noise to the boot, remove it.  It's not telling us
+anything we read from the hardware or anything.
+
+--j5bleiip5j6gh5xe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhFWBMACgkQJNaLcl1U
+h9AUHgf/Qy+NSqFcO8jSBzNf1kG5hAHuZZ8VFLjes4BVTw6giMSbLmAQXvIwVjXN
+3lgV9PPNyTL06L9Zi09aMp0IPcGhv7G0C3r2e9pSsCg5ZoU1mpKKzrr9E2wCrO/p
+NjpYuFLKbBDXVQQcc+kQSF+ravjPObMpqqLvRw4CRfSoBJexs602lBhx5Bp6L40o
+ztY9bJICZyhwPPqE9DlO2vqOS8VkfCQDi3hLqgldvodTAudkdKfofUYW3LPmq0W9
+8OfV1uX+mnLOxhHcFaTwI3gPxiRYzVB0TQdtQKpDCLbpAnrh1nIBgBXIcpC1XO+7
+Q4rU2Ku5/5zTUeNvoJfvdGQOv7iwyA==
+=2hjl
+-----END PGP SIGNATURE-----
+
+--j5bleiip5j6gh5xe--
+
+
+--===============2122375953554878701==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2122375953554878701==--
