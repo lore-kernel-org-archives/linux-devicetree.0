@@ -1,148 +1,239 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] eeprom: Add IDT 89HPESx driver bindings file
-Date: Mon, 5 Dec 2016 18:25:02 +0300
-Message-ID: <20161205152502.GA17538@mobilestation>
-References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-3-git-send-email-fancer.lancer@gmail.com>
- <20161205144621.yxwr7spmsvyilan5@rob-hp-laptop>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv4 11/15] clk: ti: clockdomain: add clock provider support
+ to clockdomains
+Date: Mon, 5 Dec 2016 07:25:34 -0800
+Message-ID: <20161205152534.GJ4705@atomide.com>
+References: <20161028005047.GQ26139@codeaurora.org>
+ <cd32a554-ba0a-33cd-c15c-121524ce679b@ti.com>
+ <20161028125112.xfyrx7l7m64z6cu6@atomide.com>
+ <20161028233617.GP16026@codeaurora.org>
+ <20161028235448.57squdf6cu2wxxvm@atomide.com>
+ <148071802182.32158.11479184984645880313@resonance>
+ <20161202231240.GH4705@atomide.com>
+ <148072274164.32158.6012452044533845688@resonance>
+ <20161203001852.GI4705@atomide.com>
+ <ed253013-1f12-9fd8-d007-400a6c6fd427@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161205144621.yxwr7spmsvyilan5@rob-hp-laptop>
+In-Reply-To: <ed253013-1f12-9fd8-d007-400a6c6fd427-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2016 at 08:46:21AM -0600, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Nov 29, 2016 at 01:38:21AM +0300, Serge Semin wrote:
-> > See cover-letter for changelog
+* Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [161205 02:09]:
+> On 03/12/16 02:18, Tony Lindgren wrote:
+> > * Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [161202 15:52]:
+> > > Quoting Tony Lindgren (2016-12-02 15:12:40)
+> > > > * Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [161202 14:34]:
+> > > > > Quoting Tony Lindgren (2016-10-28 16:54:48)
+> > > > > > * Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> [161028 16:37]:
+> > > > > > > On 10/28, Tony Lindgren wrote:
+> > > > > > > > * Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [161028 00:43]:
+> > > > > > > > > On 28/10/16 03:50, Stephen Boyd wrote:
+> > > > > > > > > > I suppose a PRCM is
+> > > > > > > > > > like an MFD that has clocks and resets under it? On other
+> > > > > > > > > > platforms we've combined that all into one node and just had
+> > > > > > > > > > #clock-cells and #reset-cells in that node. Is there any reason
+> > > > > > > > > > we can't do that here?
+> > > > > > > > > 
+> > > > > > > > > For OMAPs, there are typically multiple instances of the PRCM around; OMAP4
+> > > > > > > > > for example has:
+> > > > > > > > > 
+> > > > > > > > > cm1 @ 0x4a004000 (clocks + clockdomains)
+> > > > > > > > > cm2 @ 0x4a008000 (clocks + clockdomains)
+> > > > > > > > > prm @ 0x4a306000 (few clocks + resets + power state handling)
+> > > > > > > > > scrm @ 0x4a30a000 (few external clocks + plenty of misc stuff)
+> > > > > > > > > 
+> > > > > > > > > These instances are also under different power/voltage domains which means
+> > > > > > > > > their PM behavior is different.
+> > > > > > > > > 
+> > > > > > > > > The idea behind having a clockdomain as a provider was mostly to have the
+> > > > > > > > > topology visible : prcm-instance -> clockdomain -> clocks
+> > > > > > > > 
+> > > > > > > > Yeah that's needed to get the interconnect hierarchy right for
+> > > > > > > > genpd :)
+> > > > > > > > 
+> > > > > > > > > ... but basically I think it would be possible to drop the clockdomain
+> > > > > > > > > representation and just mark the prcm-instance as a clock provider. Tony,
+> > > > > > > > > any thoughts on that?
+> > > > > > > > 
+> > > > > > > > No let's not drop the clockdomains as those will be needed when we
+> > > > > > > > move things into proper hierarchy within the interconnect instances.
+> > > > > > > > This will then help with getting things right with genpd.
+> > > > > > > > 
+> > > > > > > > In the long run we just want to specify clockdomain and the offset of
+> > > > > > > > the clock instance within the clockdomain in the dts files.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > Sorry, I have very little idea how OMAP hardware works. Do you
+> > > > > > > mean that you will have different nodes for each clockdomain so
+> > > > > > > that genpd can map 1:1 to the node in dts? But in hardware
+> > > > > > > there's a prcm that allows us to control many clock domains
+> > > > > > > through register read/writes? How is the interconnect involved?
+> > > > > > 
+> > > > > > There are multiple clockdomains, at least one for each interconnect
+> > > > > > instance. Once a clockdomain is idle, the related interconnect can
+> > > > > > idle too. So yeah genpd pretty much maps 1:1 with the clockdomains.
+> > > > > > 
+> > > > > > There's more info in for example omap4 TRM section "3.4.1 Device
+> > > > > > Power-Management Layout" that shows the voltage/power/clock domains.
+> > > > > > The interconnect instances are mostly named there too looking at
+> > > > > > the L4/L3 naming.
+> > > > > 
+> > > > > I'm confused on two points:
+> > > > > 
+> > > > > 1) why are the clkdm's acting as clock providers? I've always hated the
+> > > > > name "clock domain" since those bits are for managing module state, not
+> > > > > clock state. The PRM, CM1 and CM2 provide the clocks, not the
+> > > > > clockdomains.
+> > > > 
+> > > > The clock domains have multiple clock inputs that are routed to multiple
+> > > > child clocks. So it is a clock :)
+> > > > 
+> > > > See for example omap4430 TRM "3.6.4 CD_WKUP Clock Domain" on page
+> > > > 393 in my revision here.
+> > > > 
+> > > > On that page "Figure 3-48" shows CD_WKUP with the four input clocks.
+> > > > And then "Table 3-84. CD_WKUP Control and Status Parameters" shows
+> > > > the CD_WKUP clock domain specific registers. These registers show
+> > > > the status, I think they are all read-only registers. Then CD_WKUP
+> > > > has multiple child clocks with configurable registers.
+> > > > 
+> > > > From hardware register point of view, each clock domain has:
+> > > > 
+> > > > - Read-only clockdomain status registers in the beginning of
+> > > >   the address space
+> > > > 
+> > > > - Multiple similar clock instances register instances each
+> > > >   mapping to a specific interconnect target module
+> > > > 
+> > > > These are documented in "3.11.16.1 WKUP_CM Register Summary".
+> > > 
+> > > Oh, this is because you are treating the MODULEMODE bits like gate
+> > > clocks. I never really figured out if this was the best way to model
+> > > those bits since they do more than control a line toggling at a rate.
+> > > For instance this bit will affect the master/slave IDLE protocol between
+> > > the module and the PRCM.
 > > 
-> > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Yes seems like there is some negotiation going on there with the
+> > target module. But from practical point of view the CLKCTRL
+> > register is the gate for a module functional clock.
+> 
+> There's some confusion on this, clockdomain is effectively a collection of
+> clocks, and can be used to force control that collection if needed. Chapter
+> "3.1.1.1.3 Clock Domain" in some OMAP4 TRM shows the relationship neatly.
+
+Yeah that's my understanding too.
+
+> > > > From hardware point of view, we ideally want to map interconnect
+> > > > target modules to the clock instance offset from the clock domain
+> > > > for that interconnect segment. For example gptimer1 clocks would
+> > > > be just:
+> > > > 
+> > > > clocks = <&cd_wkup 0x40>;
+> > > > 
+> > > > > 2) why aren't the clock domains modeled as genpds with their associated
+> > > > > devices attached to them? Note that it is possible to "nest" genpd
+> > > > > objects. This would also allow for the "Clockdomain Dependency"
+> > > > > relationships to be properly modeled (see section 3.1.1.1.7 Clock Domain
+> > > > > Dependency in the OMAP4 TRM).
+> > > > 
+> > > > Clock domains only route clocks to child clocks. Power domains
+> > > > are different registers. The power domains map roughly to
+> > > > interconnect instances, there we have registers to disable the
+> > > > whole interconnect when idle.
+> > > 
+> > > I'm not talking about power islands at all, but the genpd object in
+> > > Linux. For instance, if we treat each clock domain like a clock
+> > > provider, how could the functional dependency between clkdm_A and
+> > > clkdm_B be asserted?
 > > 
-> > ---
-> >  .../devicetree/bindings/misc/idt_89hpesx.txt       | 41 ++++++++++++++++++++++
+> > To me it seems that some output of a clockdomain is just a input
+> > of another clockdomain? So it's just the usual parent child
+> > relationship once we treat a clockdomain just as a clock. Tero
+> > probably has some input here.
 > 
-> There's not a better location for this? I can't tell because you don't 
-> describe what the device is.
+> A clockdomain should be modelled as a genpd, that I agree. However, it
+> doesn't prevent it from being a clock provider also, or does it?
 > 
-
-The device is PCIe-switch EEPROM driver with additional debug-interface to
-access the switch CSRs. EEPROM is accesses via a separate i2c-slave
-interface of the switch.
-
-There might be another place to put the binding file in. There is a special
-location for EEPROM drivers bindings - Documentation/devicetree/bindings/eeprom/ .
-But as far as I understood from the files put in there, it's intended for
-pure EEPROM drivers only. On the other hand the directory I've chosen:
-Documentation/devicetree/bindings/misc/
-mostly intended for some unusual devices. My device isn't usual, since it
-has CSRs debug-interface as well. Additionally I've found
-eeprom-93xx46.txt binding file there, which describes EEPROM bindings.
-
-Anyway if you find the file should be placed in 
-Documentation/devicetree/bindings/eeprom/ instead, I'll move it, it's not
-that a big problem.
-
-> >  1 file changed, 41 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/idt_89hpesx.txt
+> > > There is certainly no API for that in the clock framework, but for genpd
+> > > your runtime_pm_get() callback for clkdm_A could call runtime_pm_get
+> > > against clkdm_B, which would satisfy the requirement. See section
+> > > 3.1.1.1.7 Clock Domain Dependency in the OMAP4 TRM, version AB.
+> 
+> For static dependencies the apis genpd_add/remove_subdomain could probably
+> be used.
+> 
+> > To me it seems the API is just clk_get() :) Do you have some
+> > specific example we can use to check? My guess is that the
+> > TRM "Clock Domain Dependency" is just the usual parent child
+> > relationship between clocks that are the clockdomains..
 > > 
-> > diff --git a/Documentation/devicetree/bindings/misc/idt_89hpesx.txt b/Documentation/devicetree/bindings/misc/idt_89hpesx.txt
-> > index 0000000..469cc93
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/idt_89hpesx.txt
-> > @@ -0,0 +1,41 @@
-> > +EEPROM / CSR SMBus-slave interface of IDT 89HPESx devices
-> > +
-> > +Required properties:
-> > +  - compatible : should be "<manufacturer>,<type>"
-> > +		 Basically there is only one manufacturer: idt, but some
-> > +		 compatible devices may be produced in future. Following devices
-> > +		 are supported: 89hpes8nt2, 89hpes12nt3, 89hpes24nt6ag2,
-> > +		 89hpes32nt8ag2, 89hpes32nt8bg2, 89hpes12nt12g2, 89hpes16nt16g2,
-> > +		 89hpes24nt24g2, 89hpes32nt24ag2, 89hpes32nt24bg2;
-> > +		 89hpes12n3, 89hpes12n3a, 89hpes24n3, 89hpes24n3a;
-> > +		 89hpes32h8, 89hpes32h8g2, 89hpes48h12, 89hpes48h12g2,
-> > +		 89hpes48h12ag2, 89hpes16h16, 89hpes22h16, 89hpes22h16g2,
-> > +		 89hpes34h16, 89hpes34h16g2, 89hpes64h16, 89hpes64h16g2,
-> > +		 89hpes64h16ag2;
-> > +		 89hpes12t3g2, 89hpes24t3g2, 89hpes16t4, 89hpes4t4g2,
-> > +		 89hpes10t4g2, 89hpes16t4g2, 89hpes16t4ag2, 89hpes5t5,
-> > +		 89hpes6t5, 89hpes8t5, 89hpes8t5a, 89hpes24t6, 89hpes6t6g2,
-> > +		 89hpes24t6g2, 89hpes16t7, 89hpes32t8, 89hpes32t8g2,
-> > +		 89hpes48t12, 89hpes48t12g2.
-> > +		 Current implementation of the driver doesn't have any device-
+> > If there is something more magical there certainly that should
+> > be considered though.
 > 
-> Driver capabilties are irrelevant to bindings.
-> 
+> The hwmods could be transformed to individual genpds also I guess. On DT
+> level though, we would still need a clock pointer to the main clock and a
+> genpd pointer in addition to that.
 
-Why? I've told in the comment, that the devices actually differ by the CSRs
-map. Even though it's not reflected in the code at the moment, the CSRs
-read/write restrictions can be added by some concerned programmer in
-future. But If I left something like "compatible : idt,89hpesx" device
-only, it will be problematic to add that functionality.
+Hmm a genpd pointer to where exactly? AFAIK each interconnect
+instance should be a genpd provider, and the individual interconnect
+target modules should be consumers for that genpd.
 
-Howbeit If you think it's not necessary and "compatible = idt,89hpesx" is
-ok, it's perfectly fine for me to make it this way. The property will be
-even simpler, than current approach.
+> Tony, any thoughts on that? Would this break up the plans for the
+> interconnect completely?
 
-> > +		 specific functionalities. But since each of them differs
-> > +		 by registers mapping, CSRs read/write restrictions can be
-> > +		 added in future.
-> > +  - reg :	 I2C address of the IDT 89HPES device.
-> > +
-> > +Optional properties:
-> > +  - read-only :	 Parameterless property disables writes to the EEPROM
-> > +  - idt,eesize : Size of EEPROM device connected to IDT 89HPES i2c-master bus
-> > +		 (default value is 4096 bytes if option isn't specified)
-> > +  - idt,eeaddr : Custom address of EEPROM device
-> > +		 (If not specified IDT 89HPESx device will try to communicate
-> > +		  with EEPROM sited by default address - 0x50)
-> 
-> Don't we already have standard EEPROM properties that could be used 
-> here?
-> 
+Does using genpd for clockdomains cause issues for using genpd for
+interconnect instances and the target modules?
 
-If we do, just tell me which one. There are standard options:
-"compatible, reg, pagesize, read-only". There isn't any connected with
-EEPROM actual size.
-Why so? Because standard EEPROM-drivers determine the device size from the
-compatible-string name. Such approach won't work in this case, because
-PCIe-switch and it EEPROM are actually two different devices. Look at the
-chain of the usual platform board design:
-Host <--- i2c ----> i2c-slave iface |PCIe-switch| i2c-master iface <--- i2c ---> EEPROM
+The thing I'd be worried about there is that the clockdomains and
+their child clocks are just devices sitting on the interconnect,
+so we could easily end up with genpd modeling something that does
+not represent the hardware.
 
-As you cas see the Host reaches EEPROM through the set of PCIe-switch
-i2c-interfaces. In order to properly get data from it my driver needs actual
-EEPROM size and it address in the i2c-master bus of the PCIe-switch, in
-addition to the standard reg-field, which is address of PCIe-switch i2c-slave
-interface and read-only parameter if EEPROM-device has got WP pin asserted.
+For example, on 4430 we have:
 
-> > +
-> > +Example:
-> > +	idt_pcie_sw@60 {
-> 
-> Don't use '_'.
-> 
+l4_cfg interconnect
+       ...
+       segment@0
+		...
+		target_module@4000
+			cm1: cm1@0
+			     ...
+		...
+		target_module@8000
+			cm2: cm2@0
+		...
 
-Ok, I won't.
 
-> > +		compatible = "idt,89hpes12nt3";
-> > +		reg = <0x60>;
-> > +		read-only;
-> > +		idt,eesize = <65536>;
-> > +		idt,eeaddr = <0x50>;
-> > +	};
-> > -- 
-> > 2.6.6
-> > 
+l4_wkup interonnect
+	...
+	segment@0
+		...
+		target_module@6000
+			prm: prm@0
+		...
+		target_module@a000
+			scrm: scrm@0
+		...
 
-Waiting for the respond.
-Thanks
--Sergey
+So what do you guys have in mind for using genpd in the above
+example for the clockdomains?
 
+To me it seems that the interconnect instances like l4_cfg and
+l4_wkup above should be genpd providers. I don't at least yet
+follow what we need to do with the clockdomains with genpd :)
+
+Wouldn't just doing clk_get() from one clockdomain clock to
+another clockdomain clock (or it's output) be enough to
+represent the clockdomain dependencies?
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
