@@ -1,57 +1,106 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: dts: sun8i: reuse the uart1 node
- of iNet D978 rev2 board
-Date: Mon, 05 Dec 2016 17:03:35 +0800
-Message-ID: <20161205184745.lfW8ji5w@smtp1m.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC] New Device Tree property - "bonding"
+Date: Mon, 5 Dec 2016 09:57:32 -0600
+Message-ID: <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
+References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
+ <CAL_Jsq+-6v1z-MYHC8Lvvao+=SFhVn2XwBc3O6fSN_zNcrJ3kA@mail.gmail.com> <2054258.NRXTrTF0Rj@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBKEYS3BAKGQEJI5N23I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2054258.NRXTrTF0Rj@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-2016=E5=B9=B412=E6=9C=885=E6=97=A5 16:50=E4=BA=8E Maxime Ripard <maxime.rip=
-ard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+On Mon, Dec 5, 2016 at 8:40 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Rob,
 >
-> On Fri, Dec 02, 2016 at 11:19:13PM +0800, Icenowy Zheng wrote:=20
-> > As a uart1 node is added into sun8i-reference-design-tablet.dtsi, simpl=
-y=20
-> > use it in iNet D978 rev2 device tree.=20
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> On Monday 05 Dec 2016 08:18:34 Rob Herring wrote:
+>> On Fri, Nov 25, 2016 at 10:55 AM, Ramesh Shanmugasundaram wrote:
+>> > Hello DT maintainers,
+>> >
+>> > In one of the Renesas SoCs we have a device called DRIF (Digital Radio
+>> > Interface) controller. A DRIF channel contains 4 external pins - SCK,
+>> > SYNC, Data pins D0 & D1.
+>> >
+>> > Internally a DRIF channel is made up of two SPI slave devices (also called
+>> > sub-channels here) that share common CLK & SYNC signals but have their
+>> > own resource set. The DRIF channel can have either one of the sub-channel
+>> > active at a time or both. When both sub-channels are active, they need to
+>> > be managed together as one device as they share same CLK & SYNC. We plan
+>> > to tie these two sub-channels together with a new property called
+>> > "renesas,bonding".
+>>
+>> Is there no need to describe the master device? No GPIOs, regulators
+>> or other sideband controls needed? If that's never needed (which seems
+>> doubtful), then I would do something different here probably with the
+>> master device as a child of one DRIF and then phandles to master from
+>> the other DRIFs. Otherwise, this looks fine to me.
 >
-> I'd like to see more consolidation before that change is needed. If we=20
-> find more boards using that, it will make sense, but for a single=20
-> board it's not worth it.=20
-
-At least 2~3 Q8 A33 tablets in #linux-sunxi are found to have rtl8703as, wh=
-ich contains UART bluetooth. (including mine)
-
-In fact, what I want to do is to get the node ready-to-be-okay in Q8 dts, s=
-o it can be enabled by either u-boot command or (theortically) Hans de Goed=
-e's q8-hardwaremgr, just like what is done at touchscreen node.
-
+> Here's a bit of background.
 >
-> Maxime=20
+> The DRIF is an SPI receiver. It has three input pins, a clock line, a data
+> line and a sync signal. The device is designed to be connected to a variety of
+> data sources, usually plain SPI (1 data line), IIS (1 data line) but also
+> radio tuners that output I/Q data (http://www.ni.com/tutorial/4805/en/) over
+> two data lines.
 >
-> --=20
-> Maxime Ripard, Free Electrons=20
-> Embedded Linux and Kernel engineering=20
-> http://free-electrons.com=20
+> In the case of IQ each data sample is split in two I and Q values (typically
+> 16 to 20 bits each in this case), and the values are transmitted serially over
+> one data line each. The synchronization and clock signals are common to both
+> data lines. The DRIF is optimized for this use case as the DRIF instances in
+> the SoC (each of them having independent clocks, interrupts and control
+> registers) are grouped by two, and the two instances in a group handle a
+> single data line each but share the same clock and sync input.
+>
+> On the software side we need to group the I and Q values, which are DMA'ed to
+> memory by the two DRIF instances, and make them available to userspace. The
+> V4L2 API used here in SDR (Software Defined Radio) mode supports such use
+> cases and exposes a single device node to userspace that allows control of the
+> two DRIF instances as a single device. To be able to implement this we need
+> kernel code to be aware of DRIF groups and, while binding to the DRIF
+> instances separately, expose only one V4L2 device to userspace for each group.
+>
+> There's no master or slave instance from a hardware point of view, but the two
+> instances are not interchangeable as they carry separate information. They
+> must thus be identified at the driver level.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+By master, I meant the external master device that generates the IQ
+data, not which of the internal DRIF blocks is a master of the other.
+So back to my question, does the external master device need to be
+described? I worry the answer now for a simple case is no, but then
+later people are going to have cases needing to describe more. We need
+to answer this question first before we can decide what this binding
+should look like.
+
+> Back to the DT bindings, the need to expose relationships between (mostly)
+> independent devices is quite common nowadays. It has been solved in some cases
+> by creating a separate DT node that does not correspond to any physical
+> hardware and whose sole purpose is to contain phandles to devices that need to
+> be grouped. Drivers then bind to the compatible string of that "virtual" DT
+> node. The proposed bonding property is a different approach to solve a similar
+> problem. Would it be worth it addressing the problem at a more general level
+> and try to design a common solution ?
+
+We already have somewhat standard ways of grouping, but they are per
+type of device (display, sound card, etc.). I'm not sure we gain much
+standardizing across these devices and to some extent that ship has
+sailed. Even within display subsystems, I don't think there is one
+style that fits all. Sometimes a parent subsystem node with children
+makes sense for the h/w. Sometimes that doesn't make sense and we have
+the virtual node with a "ports" property (like sun8i did). I've never
+been too happy with that style largely just because it feels like
+we're letting DRM define the binding. However, it's generally extra
+data that an OS could just ignore. There have also been many display
+bindings that started out with a virtual node and we got rid of it. So
+it's not something I like to encourage and we need to be clear when it
+is okay or not.
+
+To state the problem more generally (at least when using OF graph), I
+think the problem is simply how do we define and group multiple entry
+points to an OF graph. Maybe these should be graph nodes themselves
+rather than phandles to the nodes with the entry points of the graph.
+
+Rob
