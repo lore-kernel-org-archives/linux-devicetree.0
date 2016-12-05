@@ -1,59 +1,63 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V7 00/10] PM / OPP: Multiple regulator support
-Date: Mon, 5 Dec 2016 19:51:50 +0530
-Message-ID: <CAKohpokXXhcrhzqs+iW+1kTYjyF47bHF0TupMxP=4cSqXOThtA@mail.gmail.com>
-References: <cover.1480564564.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] of/irq: improve error report on irq discovery process failure
+Date: Mon, 5 Dec 2016 08:28:02 -0600
+Message-ID: <CAL_JsqKg4+SANVuhfjFQRrC4Ax7OhAjwuBpo0Xes9UFevFAdWg@mail.gmail.com>
+References: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1480564564.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>
-Cc: Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh@kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Frank Rowand <frowand.list@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2016 at 16:28, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> Hi,
+On Mon, Dec 5, 2016 at 7:59 AM, Guilherme G. Piccoli
+<gpiccoli@linux.vnet.ibm.com> wrote:
+> On PowerPC machines some PCI slots might not have level triggered
+> interrupts capability (also know as level signaled interrupts),
+> leading of_irq_parse_pci() to complain by presenting error messages
+> on the kernel log - in this case, the properties "interrupt-map" and
+> "interrupt-map-mask" are not present on device's node in the device
+> tree.
 >
-> Some platforms (like TI) have complex DVFS configuration for CPU
-> devices, where multiple regulators are required to be configured to
-> change DVFS state of the device. This was explained well by Nishanth
-> earlier [1].
+> This patch introduces a different message for this specific case,
+> and also reduces its level from error to warning. Besides, we warn
+> (once) that possibly some PCI slots on the system have no level
+> triggered interrupts available.
+> We changed some error return codes too on function of_irq_parse_raw()
+> in order other failure's cases can be presented in a more precise way.
 >
-> One of the major complaints around multiple regulators case was that the
-> DT isn't responsible in any way to represent the order in which multiple
-> supplies need to be programmed, before or after a frequency change. It
-> was considered in this patch and such information is left for the
-> platform specific OPP driver now, which can register its own
-> opp_set_rate() callback with the OPP core and the OPP core will then
-> call it during DVFS.
+> Before this patch, when an adapter was plugged in a slot without level
+> interrupts capabilitiy on PowerPC, we saw a generic error message
+> like this:
 >
-> The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
-> and code to pass values for multiple regulators and verified that they
-> are all properly read by the kernel (using debugfs interface).
+>     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-22
 >
-> Dave Gerlach has already tested [2] it on the real TI platforms and it
-> works well for him.
+> Now, with this applied, we see the following specific message:
 >
-> This is rebased over: linux-next branch in the PM tree.
+>     [16.154] pci 0014:60:00.1: of_irq_parse_pci: no interrupt-map found,
+>     INTx interrupts not available
 >
-> V6->V7:
-> - Added RBY from Stephen for the 8th patch as well.
-> - Rebased over pm/bleeding-edge as the dependency patch is already
->   applied there.
-> - s/dev_pm_opp_set_regulator()/dev_pm_opp_set_regulators() in a comment.
-> - Removed the local 'names' array in cpufreq-dt and used "&name"
->   instead.
-> - Only the 6th patch doesn't have a Reviewed-by Tag now..
+> Finally, we standardize the error path in of_irq_parse_raw() by always
+> taking the fail path instead of returning directly from the loop.
+>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
+> ---
+>
+> v2:
+>   * Changed function return code to always return negative values;
 
-Hi Rafael,
+Are you sure this is safe? This is tricky because of differing values
+of NO_IRQ (0 or -1).
 
-V6 of this series received some minor comments [1] and I have
-resolved them all here. Now that the merge window is so close,
-I think we should be merge it now so that it gets a chance to live
-in linux-next for few days.
+>   * Improved/simplified warning outputs;
+>   * Changed some return codes and some error paths in of_irq_parse_raw()
+> in order to be more precise/consistent;
 
---
-viresh
+This too could have some side effects on callers.
 
-[1] https://marc.info/?l=linux-pm&m=148054543630253&w=2
+Not saying don't do these changes, just need some assurances this has
+been considered.
+
+Rob
