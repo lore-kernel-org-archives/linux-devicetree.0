@@ -1,118 +1,124 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] PWM: add pwm-stm32 DT bindings
-Date: Mon, 5 Dec 2016 08:35:35 +0000
-Message-ID: <20161205083535.GB14004@dell>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-4-git-send-email-benjamin.gaignard@st.com>
- <20161205065350.GA18069@ulmo.ba.sec>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: arasan: Add device tree binding
+ documentation
+Date: Mon, 5 Dec 2016 09:36:30 +0100
+Message-ID: <20161205093630.650451d7@bbrezillon>
+References: <1480911066-26157-1-git-send-email-punnaia@xilinx.com>
+        <74842d92-840d-a7c2-fb1b-ddab1ac2cf42@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161205065350.GA18069-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74842d92-840d-a7c2-fb1b-ddab1ac2cf42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 05 Dec 2016, Thierry Reding wrote:
+On Mon, 5 Dec 2016 05:25:54 +0100
+Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> On Fri, Dec 02, 2016 at 11:17:18AM +0100, Benjamin Gaignard wrote:
-> > Define bindings for pwm-stm32
+> On 12/05/2016 05:11 AM, Punnaiah Choudary Kalluri wrote:
+> > This patch adds the dts binding document for arasan nand flash
+> > controller.
 > > 
-> > version 2:
-> > - use parameters instead of compatible of handle the hardware configuration
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+> > Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > > ---
-> >  .../devicetree/bindings/pwm/pwm-stm32.txt          | 38 ++++++++++++++++++++++
+> > changes in v6:
+> > - Removed num-cs property
+> > - Separated nandchip from nand controller
+> > changes in v5:
+> > - None
+> > Changes in v4:
+> > - Added num-cs property
+> > - Added clock support
+> > Changes in v3:
+> > - None
+> > Changes in v2:
+> > - None
+> > ---
+> >  .../devicetree/bindings/mtd/arasan_nfc.txt         | 38 ++++++++++++++++++++++
 > >  1 file changed, 38 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/arasan_nfc.txt
 > > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> > diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
 > > new file mode 100644
-> > index 0000000..575b9fb
+> > index 0000000..dcbe7ad
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
 > > @@ -0,0 +1,38 @@
-> > +STMicroelectronics PWM driver bindings for STM32
+> > +Arasan Nand Flash Controller with ONFI 3.1 support  
 > 
-> Technically this bindings describe devices, so "driver binding" is a
-> somewhat odd wording. Perhaps:
+> Arasan NAND Flash ...
 > 
-> 	STMicroelectronics STM32 General Purpose Timer PWM bindings
+> > +Required properties:
+> > +- compatible: Should be "arasan,nfc-v3p10"  
 > 
-> ?
+> This v3p10 looks like version 3 patchlevel 10, but shouldn't we have
+> some fallback option which doesn't encode IP version in the compat
+> string ?
+
+Not necessarily. Usually you define a generic compatible when you have
+other reliable means to detect the IP version (a version register for
+example).
+If you can't detect that at runtime, then providing only specific
+compatible strings is a good solution to avoid breaking the DT ABI.
+
 > 
+> Also, shouldn't quirks be handled by DT props instead of effectively
+> encoding them into the compatible string ?
+
+Well, from my experience, it's better to hide as much as possible
+behind the compatible. This way, if new quirks are needed for a
+specific revision, you can update the driver without having to change
+the DT.
+
+> 
+> > +- reg: Memory map for module access
+> > +- interrupt-parent: Interrupt controller the interrupt is routed through
+> > +- interrupts: Should contain the interrupt for the device
+> > +- clock-name: List of input clocks - "clk_sys", "clk_flash"
+> > +	      (See clock bindings for details)
+> > +- clocks: Clock phandles (see clock bindings for details)
 > > +
-> > +Must be a sub-node of STM32 general purpose timer driver
-> > +Parent node properties are describe in ../mfd/stm32-general-purpose-timer.txt
+> > +Optional properties:
+> > +- arasan,has-mdma: Enables Dma support  
 > 
-> Again, "driver parent node" is odd. Perhaps:
+> 'Enables DMA support' , with DMA in caps.
 > 
-> 	Must be a sub-node of an STM32 General Purpose Timer device tree
-> 	node. See ../mfd/stm32-general-purpose-timer.txt for details about
-> 	the parent node.
+> > +for nand partition information please refer the below file  
 > 
-> ?
+> For NAND ...
 > 
-> > +Required parameters:
-> > +- compatible:		Must be "st,stm32-pwm"
-> > +- pinctrl-names: 	Set to "default".
-> > +- pinctrl-0: 		List of phandles pointing to pin configuration nodes
-> > +			for PWM module.
-> > +			For Pinctrl properties, please refer to [1].
-> 
-> Your indentation and capitalization are inconsistent. Also, please refer
-> to the pinctrl bindings by relative path and inline, rather than as a
-> footnote reference.
-> 
+> > +Documentation/devicetree/bindings/mtd/partition.txt
 > > +
-> > +Optional parameters:
-> > +- st,breakinput:	Set if the hardware have break input capabilities
-> > +- st,breakinput-polarity: Set break input polarity. Default is 0
-> > +			 The value define the active polarity:
-> > +			  - 0 (active LOW)
-> > +			  - 1 (active HIGH)
+> > +Example:
+> > +	nand0: nand@ff100000 {
+> > +		compatible = "arasan,nfc-v3p10"
+> > +		reg = <0x0 0xff100000 0x1000>;
+> > +		clock-name = "clk_sys", "clk_flash"
+> > +		clocks = <&misc_clk &misc_clk>;
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <0 14 4>;
+> > +		arasan,has-mdma;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>
+> > +
+> > +		nand@0 {
+> > +			reg = <0>
+> > +			partition@0 {
+> > +				label = "filesystem";
+> > +				reg = <0x0 0x0 0x1000000>;
+> > +			};
+> > +			(...)
+> > +		};
+> > +	};
+> >   
 > 
-> Could we fold these into a single property? If st,breakinput-polarity is
-> not present it could simply mean that there is no break input, and if it
-> is present you don't have to rely on a default.
 > 
-> > +- st,pwm-num-chan:	Number of available PWM channels.  Default is 0.
-> 
-> The pwm- prefix is rather redundant since the node is already named pwm.
-> Why not simply st,channels? Or simply channels, since it's not really
-> anything specific to this hardware.
-> 
-> Come to think of it, might be worth having a discussion with our DT
-> gurus about what their stance is on using the # as prefix for numbers
-> (such as in #address-cells or #size-cells). This could be #channels to
-> mark it more explicitly as representing a count.
 
-Unfortunately that ship has sailed.
-
-st,pwm-num-chan already exists (with your blessing).  It's usually
-suggested to reuse exiting properties when writing new bindings.
-
-> > +- st,32bits-counter:	Set if the hardware have a 32 bits counter
-> > +- st,complementary:	Set if the hardware have complementary output channels
-> 
-> "hardware has" and also maybe mention explicitly that this is a boolean
-> property. Otherwise people might be left wondering what it should be set
-> to. Or maybe word this differently to imply that it's boolean:
-> 
-> 	- st,32bits-counter: if present, the hardware has a 32 bit counter
-> 	- st,complementary: if present, the hardware has a complementary
-> 	                    output channel
-> 
-> Thierry
-
-
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
