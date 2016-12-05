@@ -1,37 +1,55 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt: pwm: bcm2835: fix typo in clocks property name
-Date: Mon,  5 Dec 2016 02:10:25 +0200
-Message-ID: <20161205001025.13909-1-vz@mleia.com>
+From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: imx6: Support Poslab Savageboard dual & quad
+Date: Mon,  5 Dec 2016 10:07:26 +0900
+Message-ID: <20161205010729.7047-1-woogyom.kim@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to the examples of BCM2835 PWM device nodes there is a typo in
-'clocks' property name, which is a common property name on clock consumer
-side to store a phandle to an input clock.
+Poslab Savageboard is i.MX6 SoC base, but BSP code from the vendor is 
+not mainline u-boot and kernel. Personal reason of using this board is 
+testing etnaviv user-space driver, so I re-write device tree files based on
+mainline kernel for the first step.
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patchset includes common DT file, dual and quad board files.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-index fb6fb31..cf573e8 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-@@ -3,7 +3,7 @@ BCM2835 PWM controller (Raspberry Pi controller)
- Required properties:
- - compatible: should be "brcm,bcm2835-pwm"
- - reg: physical base address and length of the controller's registers
--- clock: This clock defines the base clock frequency of the PWM hardware
-+- clocks: This clock defines the base clock frequency of the PWM hardware
-   system, the period and the duty_cycle of the PWM signal is a multiple of
-   the base period.
- - #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
+Supported components are
+  - Display: HDMI and LVDS panel
+  - eMMC and SD card
+  - Ethernet
+  - Pinmux configuration
+  - SATA: only for Savageboard quad
+  - UART1 for debug console
+  - USB host
+
+Missing features are
+  - Audio (WM8903)
+  - USB OTG
+  - PMIC WM8326: default settings are used so no issue to bring-up the system
+  - MIPI DSI, CSI
+
+Patches are tested on the Savageboard quad but the dual version should work 
+because the only difference between dual and quad is SATA support.
+
+More information in http://www.savageboard.org
+
+Milo Kim (3):
+  ARM: dts: imx6: Add Savageboard common file
+  ARM: dts: imx6: Support Savageboard dual
+  ARM: dts: imx6: Support Savageboard quad
+
+ arch/arm/boot/dts/imx6dl-savageboard.dts   |  50 ++++++
+ arch/arm/boot/dts/imx6q-savageboard.dts    |  54 ++++++
+ arch/arm/boot/dts/imx6qdl-savageboard.dtsi | 271 +++++++++++++++++++++++++++++
+ 3 files changed, 375 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-savageboard.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-savageboard.dtsi
+
 -- 
-2.10.2
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
