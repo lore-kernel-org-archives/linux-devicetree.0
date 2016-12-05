@@ -1,57 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 13/14] ASoC: add simple-graph-scu-card document
-Date: Mon, 5 Dec 2016 16:40:38 -0600
-Message-ID: <20161205224038.obcrqcvsruaajexy@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 11/14] ASoC: add simple-graph-card document
+Date: Mon, 5 Dec 2016 16:58:02 -0600
+Message-ID: <20161205225802.ye4tcjwpjmarbfxh@rob-hp-laptop>
 References: <87k2bowckx.wl%kuninori.morimoto.gx@renesas.com>
- <871sxwwcas.wl%kuninori.morimoto.gx@renesas.com>
+ <874m2swcbx.wl%kuninori.morimoto.gx@renesas.com>
+ <20161202135048.tzvrv7pzv2dubcy3@rob-hp-laptop>
+ <87lgvvw92p.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <871sxwwcas.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87lgvvw92p.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Laurent <laurent.pinchart@ideasonboard.com>, Guennadi <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux-DT <devicetree@vger.kernel.org>, Linux-Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 02:48:37AM +0000, Kuninori Morimoto wrote:
+On Sun, Dec 04, 2016 at 11:48:49PM +0000, Kuninori Morimoto wrote:
 > 
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Hi Rob, Mark
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../bindings/sound/simple-graph-scu-card.txt       | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/simple-graph-scu-card.txt
+> > > +++ b/Documentation/devicetree/bindings/sound/simple-graph-card.txt
+> > > @@ -0,0 +1,67 @@
+> > > +Simple-Graph-Card:
+> > 
+> > There's nothing simple about this. graph-audio-card or audio-card-graph.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/simple-graph-scu-card.txt b/Documentation/devicetree/bindings/sound/simple-graph-scu-card.txt
-> new file mode 100644
-> index 0000000..b0e46ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/simple-graph-scu-card.txt
-> @@ -0,0 +1,69 @@
-> +Simple-Graph-SCU-Card:
-> +
-> +Simple-Graph-SCU-Card specifies audio DAI connections of SoC <-> codec.
-> +It is based on common bindings for device graphs.
-> +see ${LINUX}/Documentation/devicetree/bindings/graph.txt
-> +
-> +Basically, Simple-Graph-SCU-Card property is same as Simple-Card / Simple-Graph-Card.
-> +see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
-> +    ${LINUX}/Documentation/devicetree/bindings/sound/simple-graph-card.txt
-> +
-> +Main difference between Simple-Graph-Card and Simple-Graph-SCU-Card is that
-> +Simple-Graph-SCU-Card can use multi CPU.
+> I have no objection about naming, but this is one of simple-xxx-card series.
+> And, this is very simple from ALSA SoC point of view...
+> 
+> > > +rcar_sound {
+> > > +	...
+> > > +	port {
+> > > +		compatible = "asoc-simple-graph-card";
+> > 
+> > Do you have an example where you'd have multiple ports? If not, this 
+> > should go up a level.
+> 
+> ALSA SoC needs 3 type of driver, CPU/Codec/Card. But HW is SoC <-> Codec.
+> Thus, "CPU" side DT needs to call "Card" portion, and ALSA SoC needs to
+> select Card type (graph-audio-card, graph-scu-card, etc, etc....).
+> Above it for it.
+> 
+> 	SoC {
+> 		compatible = "cpu_driver_compatible_name";
+> 		...
+> 		port {
+> 			compatible = "card_driver_compatible_name";
+> 			...
+> 		};
+> 	};
+> 
+> Here, SoC driver "cpu_driver_compatible_name" will handle CPU and its
+> each port settings. And it will probes "card_driver_compatible_name".
+> "card_driver_compatible_name" will connect CPU <-> Codec via ALSA SoC.
 
-So it can have more that 1 port? At least for the bindings, I think you 
-should combine these 2 bindings. Whether the driver should be combined 
-is separate question. I imagine you have 2 compatible strings because 
-you have 2 drivers, but that isn't really a reason to have 2.
+Don't design bindings around what ASoC wants and don't explain it in 
+terms of how ALSA works. Design bindings in a way that reflects the h/w.
 
-I still have no idea what SCU is.
+This explanation seems completely wrong to me. It seems like you are 
+abusing OF graph to just create 2 instances of a simple-card which would 
+be working around some ASoC limitation.
+
+I'd expect the top level node to be the card node that knows how to find 
+all the components. The graph should reflect the data flow. For example, 
+the data goes to audio DSP to I2S host to codec to amp. 
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
