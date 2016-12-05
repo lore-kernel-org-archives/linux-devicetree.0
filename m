@@ -1,124 +1,47 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] mtd: arasan: Add device tree binding
- documentation
-Date: Mon, 5 Dec 2016 09:36:30 +0100
-Message-ID: <20161205093630.650451d7@bbrezillon>
-References: <1480911066-26157-1-git-send-email-punnaia@xilinx.com>
-        <74842d92-840d-a7c2-fb1b-ddab1ac2cf42@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: dts: sun8i: reuse the uart1 node
+ of iNet D978 rev2 board
+Date: Mon, 5 Dec 2016 09:50:50 +0100
+Message-ID: <20161205085050.afgwdtbcxmpjaiwo@lukather>
+References: <20161202151913.38892-1-icenowy@aosc.xyz>
+ <20161202151913.38892-2-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74842d92-840d-a7c2-fb1b-ddab1ac2cf42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="y2i5ojcu4k2cfx6b"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB26USTBAKGQE6F4RREQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161202151913.38892-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 5 Dec 2016 05:25:54 +0100
-Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> On 12/05/2016 05:11 AM, Punnaiah Choudary Kalluri wrote:
-> > This patch adds the dts binding document for arasan nand flash
-> > controller.
-> > 
-> > Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> > changes in v6:
-> > - Removed num-cs property
-> > - Separated nandchip from nand controller
-> > changes in v5:
-> > - None
-> > Changes in v4:
-> > - Added num-cs property
-> > - Added clock support
-> > Changes in v3:
-> > - None
-> > Changes in v2:
-> > - None
-> > ---
-> >  .../devicetree/bindings/mtd/arasan_nfc.txt         | 38 ++++++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > new file mode 100644
-> > index 0000000..dcbe7ad
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> > @@ -0,0 +1,38 @@
-> > +Arasan Nand Flash Controller with ONFI 3.1 support  
-> 
-> Arasan NAND Flash ...
-> 
-> > +Required properties:
-> > +- compatible: Should be "arasan,nfc-v3p10"  
-> 
-> This v3p10 looks like version 3 patchlevel 10, but shouldn't we have
-> some fallback option which doesn't encode IP version in the compat
-> string ?
+--y2i5ojcu4k2cfx6b
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Not necessarily. Usually you define a generic compatible when you have
-other reliable means to detect the IP version (a version register for
-example).
-If you can't detect that at runtime, then providing only specific
-compatible strings is a good solution to avoid breaking the DT ABI.
+On Fri, Dec 02, 2016 at 11:19:13PM +0800, Icenowy Zheng wrote:
+> As a uart1 node is added into sun8i-reference-design-tablet.dtsi, simply
+> use it in iNet D978 rev2 device tree.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-> 
-> Also, shouldn't quirks be handled by DT props instead of effectively
-> encoding them into the compatible string ?
+I'd like to see more consolidation before that change is needed. If we
+find more boards using that, it will make sense, but for a single
+board it's not worth it.
 
-Well, from my experience, it's better to hide as much as possible
-behind the compatible. This way, if new quirks are needed for a
-specific revision, you can update the driver without having to change
-the DT.
+Maxime
 
-> 
-> > +- reg: Memory map for module access
-> > +- interrupt-parent: Interrupt controller the interrupt is routed through
-> > +- interrupts: Should contain the interrupt for the device
-> > +- clock-name: List of input clocks - "clk_sys", "clk_flash"
-> > +	      (See clock bindings for details)
-> > +- clocks: Clock phandles (see clock bindings for details)
-> > +
-> > +Optional properties:
-> > +- arasan,has-mdma: Enables Dma support  
-> 
-> 'Enables DMA support' , with DMA in caps.
-> 
-> > +for nand partition information please refer the below file  
-> 
-> For NAND ...
-> 
-> > +Documentation/devicetree/bindings/mtd/partition.txt
-> > +
-> > +Example:
-> > +	nand0: nand@ff100000 {
-> > +		compatible = "arasan,nfc-v3p10"
-> > +		reg = <0x0 0xff100000 0x1000>;
-> > +		clock-name = "clk_sys", "clk_flash"
-> > +		clocks = <&misc_clk &misc_clk>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 14 4>;
-> > +		arasan,has-mdma;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>
-> > +
-> > +		nand@0 {
-> > +			reg = <0>
-> > +			partition@0 {
-> > +				label = "filesystem";
-> > +				reg = <0x0 0x0 0x1000000>;
-> > +			};
-> > +			(...)
-> > +		};
-> > +	};
-> >   
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--y2i5ojcu4k2cfx6b--
