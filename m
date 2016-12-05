@@ -1,36 +1,78 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 1/2] arm64: dts: NS2: reserve memory for Nitro firmware
-Date: Mon,  5 Dec 2016 18:12:21 -0500
-Message-ID: <1480979542-26871-2-git-send-email-jon.mason@broadcom.com>
-References: <1480979542-26871-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480979542-26871-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 4/9] dt-bindings: iio: iio-mux: document iio-mux
+ bindings
+Date: Mon, 5 Dec 2016 17:26:24 -0600
+Message-ID: <20161205232624.5wjvmchd6jxd24ir@rob-hp-laptop>
+References: <1480493823-21462-1-git-send-email-peda@axentia.se>
+ <1480493823-21462-5-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480493823-21462-5-git-send-email-peda@axentia.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Nitro firmware is loaded into memory by the bootloader at a specific
-location.  Set this memory range aside to prevent the kernel from using
-it.
+On Wed, Nov 30, 2016 at 09:16:58AM +0100, Peter Rosin wrote:
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  .../bindings/iio/multiplexer/iio-mux.txt           | 40 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 ++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/ns2.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+I'm still not convinced about this binding, but don't really have more 
+comments ATM. Sending 6 versions in 2 weeks or so doesn't really help 
+either.
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index 96ed47b..9f9e203 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -30,6 +30,8 @@
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
-+/memreserve/ 0x81000000 0x00200000;
-+
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/bcm-ns2.h>
- 
--- 
-2.7.4
+> diff --git a/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+> new file mode 100644
+> index 000000000000..8080cf790d82
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+> @@ -0,0 +1,40 @@
+> +IIO multiplexer bindings
+> +
+> +If a multiplexer is used to select which hardware signal is fed to
+> +e.g. an ADC channel, these bindings describe that situation.
+> +
+> +Required properties:
+> +- compatible : "iio-mux"
+
+This is a Linuxism. perhaps "adc-mux".
+
+> +- io-channels : Channel node of the parent channel that has multiplexed
+> +		input.
+> +- io-channel-names : Should be "parent".
+> +- #address-cells = <1>;
+> +- #size-cells = <0>;
+> +- mux-controls : Mux controller node to use for operating the mux
+> +- channels : List of strings, labeling the mux controller states.
+> +
+> +The multiplexer state as described in ../misc/mux-controller.txt
+> +
+> +For each non-empty string in the channels property, an iio channel will
+> +be created. The number of this iio channel is the same as the index into
+> +the list of strings in the channels property, and also matches the mux
+> +controller state.
+> +
+> +Example:
+> +	mux: mux-controller {
+> +		compatible = "mux-gpio";
+> +		#mux-control-cells = <0>;
+> +
+> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
+> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	adc-mux {
+> +		compatible = "iio-mux";
+> +		io-channels = <&adc 0>;
+> +		io-channel-names = "parent";
+> +
+> +		mux-controls = <&mux>;
+> +
+> +		channels = "sync", "in", system-regulator";
+> +	};
