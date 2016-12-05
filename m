@@ -1,59 +1,155 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 -next 2/2] ARM: dts: sunxi: add support
- for Orange Pi Zero board
-Date: Mon, 5 Dec 2016 10:12:15 +0100
-Message-ID: <20161205091215.b3wqjodr7ddu6rnx@lukather>
-References: <20161203162455.OlDm27ch@smtp3m.mail.yandex.net>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v2 6/6] net: smmac: allow configuring lower pbl values
+Date: Mon, 5 Dec 2016 10:12:31 +0100
+Message-ID: <1480929155-20462-2-git-send-email-niklass@axis.com>
+References: <1480929155-20462-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kg6zvz4sr4fxus6i"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5O6STBAKGQEAPMJPKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161203162455.OlDm27ch-jDEamKawf7I0PDqKvflMoHmW9unr2Ajn@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1480929155-20462-1-git-send-email-niklass@axis.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, "David S. Miller" <davem@davemloft.net>, Phil Reid <preid@electromag.com.au>, Niklas Cassel <niklass@axis.com>, Eric Engestrom <eric@engestrom.ch>, Pavel Machek <pavel@ucw.cz>, Joachim Eastwood <manabian@gmail.com>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Vincent Palatin <vpalatin@chromium.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Niklas Cassel <niklas.cassel@axis.com>
 
---kg6zvz4sr4fxus6i
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+The driver currently always sets the PBLx8/PBLx4 bit, which means that
+the pbl values configured via the pbl/txpbl/rxpbl DT properties are
+always multiplied by 8/4 in the hardware.
 
-Hi Icenowy,
+In order to allow the DT to configure lower pbl values, while at the
+same time not changing behavior of any existing device trees using the
+pbl/txpbl/rxpbl settings, add a property to disable the multiplication
+of the pbl by 8/4 in the hardware.
 
-On Sat, Dec 03, 2016 at 09:24:19PM +0800, Icenowy Zheng wrote:
-> <p dir="ltr"><br>
-> 2016&#24180;12&#26376;3&#26085; &#19979;&#21320;5:43&#20110; Jernej Skrabec &lt;jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org&gt;&#20889;&#36947;&#65306;<br>
-> &gt;<br>
-> &gt; Hi,<br>
-> &gt;<br>
-> &gt; Dne petek, 02. december 2016 17.42.04 UTC+1 je oseba Chen-Yu Tsai napisala:<br>
-> &gt;&gt;<br>
-> &gt;&gt; Hi, <br>
-> &gt;&gt;<br>
-> &gt;&gt; On Fri, Dec 2, 2016 at 11:05 PM, Icenowy Zheng &lt;ice...-ymACFijhrKM@public.gmane.org&gt; wrote: <br>
-> &gt;&gt; &gt; Orange Pi Zero is a board that came with the new Allwinner H2+ SoC and a <br>
-> &gt;&gt; &gt; SDIO Wi-Fi chip by Allwinner (XR819). <br>
-> &gt;&gt; &gt; <br>
-> &gt;&gt; &gt; Add a device tree file for it. <br>
-> &gt;&gt; &gt; <br>
-> &gt;&gt; &gt; Signed-off-by: Icenowy Zheng &lt;ice...-ymACFijhrKM@public.gmane.org&gt; <br>
+Suggested-by: Rabin Vincent <rabinv@axis.com>
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt      | 2 ++
+ Documentation/networking/stmmac.txt                   | 5 ++++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c   | 3 ++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c      | 3 ++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c      | 2 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 1 +
+ include/linux/stmmac.h                                | 1 +
+ 7 files changed, 14 insertions(+), 3 deletions(-)
 
-Please make sure to disable the HTML replies, this is what your mail
-looks like on a !HTML MUA :)
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index a3dc1453dffb..1fb3c309c558 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -39,6 +39,8 @@ Optional properties:
+ 			If set, DMA tx will use this value rather than snps,pbl.
+ - snps,rxpbl		Rx Programmable Burst Length. Only for GMAC and newer.
+ 			If set, DMA rx will use this value rather than snps,pbl.
++- snps,no-pbl-x8	Don't multiply the pbl/txpbl/rxpbl values by 8.
++			For core rev < 3.50, don't multiply the values by 4.
+ - snps,aal		Address-Aligned Beats
+ - snps,fixed-burst	Program the DMA to use the fixed burst mode
+ - snps,mixed-burst	Program the DMA to use the mixed burst mode
+diff --git a/Documentation/networking/stmmac.txt b/Documentation/networking/stmmac.txt
+index 6add57374f70..2bb07078f535 100644
+--- a/Documentation/networking/stmmac.txt
++++ b/Documentation/networking/stmmac.txt
+@@ -152,8 +152,9 @@ Where:
+  o dma_cfg: internal DMA parameters
+    o pbl: the Programmable Burst Length is maximum number of beats to
+        be transferred in one DMA transaction.
+-       GMAC also enables the 4xPBL by default.
++       GMAC also enables the 4xPBL by default. (8xPBL for GMAC 3.50 and newer)
+    o txpbl/rxpbl: GMAC and newer supports independent DMA pbl for tx/rx.
++   o pblx8: Enable 8xPBL (4xPBL for core rev < 3.50). Enabled by default.
+    o fixed_burst/mixed_burst/aal
+  o clk_csr: fixed CSR Clock range selection.
+  o has_gmac: uses the GMAC core.
+@@ -208,6 +209,7 @@ struct stmmac_dma_cfg {
+ 	int pbl;
+ 	int txpbl;
+ 	int rxpbl;
++	bool pblx8;
+ 	int fixed_burst;
+ 	int mixed_burst;
+ 	bool aal;
+@@ -219,6 +221,7 @@ Where:
+ 	 If set, DMA tx will use this value rather than pbl.
+  o rxpbl: Receive Programmable Burst Length. Only for GMAC and newer.
+ 	 If set, DMA rx will use this value rather than pbl.
++ o pblx8: Enable 8xPBL (4xPBL for core rev < 3.50). Enabled by default.
+  o fixed_burst: program the DMA to use the fixed burst mode
+  o mixed_burst: program the DMA to use the mixed burst mode
+  o aal: Address-Aligned Beats
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+index 1dd34fb4c1a9..1d313af647b4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+@@ -96,7 +96,8 @@ static void dwmac1000_dma_init(void __iomem *ioaddr,
+ 	 * Note: before stmmac core 3.50 this mode bit was 4xPBL, and
+ 	 * post 3.5 mode bit acts as 8*PBL.
+ 	 */
+-	value |= DMA_BUS_MODE_MAXPBL;
++	if (dma_cfg->pblx8)
++		value |= DMA_BUS_MODE_MAXPBL;
+ 	value |= DMA_BUS_MODE_USP;
+ 	value &= ~(DMA_BUS_MODE_PBL_MASK | DMA_BUS_MODE_RPBL_MASK);
+ 	value |= (txpbl << DMA_BUS_MODE_PBL_SHIFT);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+index 0bf47825bfeb..0f7110d19a4a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+@@ -82,7 +82,8 @@ static void dwmac4_dma_init_channel(void __iomem *ioaddr,
+ 	 * on each channel
+ 	 */
+ 	value = readl(ioaddr + DMA_CHAN_CONTROL(channel));
+-	value = value | DMA_BUS_MODE_PBL;
++	if (dma_cfg->pblx8)
++		value = value | DMA_BUS_MODE_PBL;
+ 	writel(value, ioaddr + DMA_CHAN_CONTROL(channel));
+ 
+ 	value = readl(ioaddr + DMA_CHAN_TX_CONTROL(channel));
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index 56c8a2342c14..a2831773431a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -81,6 +81,7 @@ static void stmmac_default_data(struct plat_stmmacenet_data *plat)
+ 	plat->mdio_bus_data->phy_mask = 0;
+ 
+ 	plat->dma_cfg->pbl = 32;
++	plat->dma_cfg->pblx8 = true;
+ 	/* TODO: AXI */
+ 
+ 	/* Set default value for multicast hash bins */
+@@ -115,6 +116,7 @@ static int quark_default_data(struct plat_stmmacenet_data *plat,
+ 	plat->mdio_bus_data->phy_mask = 0;
+ 
+ 	plat->dma_cfg->pbl = 16;
++	plat->dma_cfg->pblx8 = true;
+ 	plat->dma_cfg->fixed_burst = 1;
+ 	/* AXI (TODO) */
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 55cac48897f6..5f1d0ade643f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -312,6 +312,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+ 	of_property_read_u32(np, "snps,pbl", &dma_cfg->pbl);
+ 	of_property_read_u32(np, "snps,txpbl", &dma_cfg->txpbl);
+ 	of_property_read_u32(np, "snps,rxpbl", &dma_cfg->rxpbl);
++	dma_cfg->pblx8 = !of_property_read_bool(np, "snps,no-pbl-x8");
+ 
+ 	dma_cfg->aal = of_property_read_bool(np, "snps,aal");
+ 	dma_cfg->fixed_burst = of_property_read_bool(np, "snps,fixed-burst");
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index e6d7a5940819..266dab9ad782 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -90,6 +90,7 @@ struct stmmac_dma_cfg {
+ 	int pbl;
+ 	int txpbl;
+ 	int rxpbl;
++	bool pblx8;
+ 	int fixed_burst;
+ 	int mixed_burst;
+ 	bool aal;
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---kg6zvz4sr4fxus6i--
+2.1.4
