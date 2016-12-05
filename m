@@ -1,85 +1,42 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Mon, 5 Dec 2016 17:40:28 -0600
-Message-ID: <20161205234028.niukdkygbdni5gvm@rob-hp-laptop>
-References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
- <3900806.3NUubBDb0Q@wuerfel>
- <e15e76e2-b32d-a4d0-eb8b-850626a3946a@linaro.org>
- <5982682.vMJxVociDa@wuerfel>
- <1480687813.2460.19.camel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
+ regulator support
+Date: Mon, 5 Dec 2016 17:42:48 -0600
+Message-ID: <20161205234248.tqnpruk442n4lgs5@rob-hp-laptop>
+References: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1480687813.2460.19.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1480555288-142791-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 03:10:13PM +0100, Philipp Zabel wrote:
-> Am Freitag, den 02.12.2016, 13:32 +0100 schrieb Arnd Bergmann:
-> > On Friday, December 2, 2016 8:21:33 AM CET zhangfei wrote:
-> > > Hi, Arnd
-> > > 
-> > > On 2016年12月01日 20:05, Arnd Bergmann wrote:
-> > > > On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
-> > > >> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
-> > > >> +                                  0x20 0x10            /* 1: i2c1 */
-> > > >> +                                  0x20 0x20            /* 2: i2c2 */
-> > > >> +                                  0x20 0x8000000>;     /* 3: i2c6 */
-> > > >> +       };
-> > > >> +
-> > > >> +Specifying reset lines connected to IP modules
-> > > >> +==============================================
-> > > >> +example:
-> > > >> +
-> > > >> +        i2c0: i2c@..... {
-> > > >> +                ...
-> > > >> +               resets = <&iomcu_rst 0>;
-> > > >> +                ...
-> > > >> +        };
-> > > > I don't really like this approach, since now the information is
-> > > > in two places. Why not put the data into the reset specifier
-> > > > directly when it is used?
+On Wed, Nov 30, 2016 at 05:21:27PM -0800, Brian Norris wrote:
+> From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> From my point of view, with the binding above, all reset controller
-> register/bit layout information is in a single place and can be easily
-> compared to a list in the reference manual, whereas with your suggestion
-> the description of the reset controller register layout is spread
-> throughout one or even several dtsi files.
-
-Which can be solved by tools.
-
-> Also, since no two reset controllers are exactly the same, we get a
-> proliferation of different slightly phandle argument meanings.
-
-phandle args are supposed to be specific to the phandle it points to. 
-Otherwise, we'd never need more than 1 cell and everything could be a 
-lookup table.
-
+> Add a compatible string and regulator property for Wacom W9103
+> digitizer. Its VDD supply may need to be enabled before using it.
 > 
-> > > Any example, still not understand.
-> > > They are consumer and provider.
-> > 
-> > I mean in the i2c node, have
-> > 
-> > 	i2c0: i2c@..... {
-> > 		...
-> > 		resets = <&iomcu_rst 0x20 0x8>;
-> > 		...
-> > 	}
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> v1 was a few months back. I finally got around to rewriting it based on
+> DT binding feedback.
 > 
-> There already are a few drivers that use this, and I fear people having
-> to change their bindings because new flags are needed that have not been
-> previously thought of.
+> v2:
+>  * add compatible property for wacom
+>  * name the regulator property specifically (VDD)
 > 
+>  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-Drivers that use what?
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
