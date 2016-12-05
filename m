@@ -1,120 +1,50 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] spi: armada-3700: Add support for the FIFO mode
-Date: Mon, 5 Dec 2016 13:37:28 +0000
-Message-ID: <20161205133728.sza2pt4tfkywu35k@sirena.org.uk>
-References: <20161201102719.4291-1-romain.perier@free-electrons.com>
- <20161201102719.4291-3-romain.perier@free-electrons.com>
+From: Dongpo Li <lidongpo@hisilicon.com>
+Subject: [PATCH v2 4/4] ARM: dts: hix5hd2: add gmac generic compatible and clock names
+Date: Mon, 5 Dec 2016 21:28:01 +0800
+Message-ID: <1480944481-118803-5-git-send-email-lidongpo@hisilicon.com>
+References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="obzqvbfammgcqot2"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161201102719.4291-3-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
+Sender: netdev-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, zhangfei.gao@linaro.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net, arnd@arndb.de, andrew@lunn.ch
+Cc: xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dongpo Li <lidongpo@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+Add gmac generic compatible and clock names.
 
---obzqvbfammgcqot2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
+---
+ arch/arm/boot/dts/hisi-x5hd2.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On Thu, Dec 01, 2016 at 11:27:16AM +0100, Romain Perier wrote:
-
-> Changes in v3:
->  - Don't enable the fifo mode based on the compatible string, we introduce
->    a module parameter "pio_mode". By default this option is set to zero, =
-so
->    the fifo mode is enabled. Pass pio_mode=3D1 to the driver enables the =
-PIO
->    mode.
-
-Why?  If the hardware supports a more efficient mode of operation it
-doesn't seem sensible not to use it.
-
-> -	int i;
-> +	int i, ret =3D 0;
-
-Coding style - don't combine initialized and non-initalized variables on
-one line.
-
->  static int a3700_spi_transfer_one(struct spi_master *master,
->  				  struct spi_device *spi,
->  				  struct spi_transfer *xfer)
->  {
->  	struct a3700_spi *a3700_spi =3D spi_master_get_devdata(master);
-> -	int ret =3D 0;
-> +	int ret;
-> =20
->  	a3700_spi_transfer_setup(spi, xfer);
-> =20
-> @@ -505,6 +737,151 @@ static int a3700_spi_transfer_one(struct spi_master=
- *master,
->  	return ret;
->  }
-
-This appears to be a random unrelated change, should probably be part of
-the initial driver commit.
-
-> +static int a3700_spi_fifo_transfer_one(struct spi_master *master,
-> +				       struct spi_device *spi,
-> +				       struct spi_transfer *xfer)
-> +{
-> +	struct a3700_spi *a3700_spi =3D spi_master_get_devdata(master);
-> +	int ret =3D 0, timeout =3D A3700_SPI_TIMEOUT;
-> +	unsigned int nbits =3D 0;
-> +	u32 val;
-> +
-> +	a3700_spi_transfer_setup(spi, xfer);
-> +
-> +	a3700_spi->tx_buf  =3D xfer->tx_buf;
-> +	a3700_spi->rx_buf  =3D xfer->rx_buf;
-> +	a3700_spi->buf_len =3D xfer->len;
-> +
-> +	/* SPI transfer headers */
-> +	a3700_spi_header_set(a3700_spi);
-> +
-> +	if (xfer->tx_buf)
-> +		nbits =3D xfer->tx_nbits;
-> +	else if (xfer->rx_buf)
-> +		nbits =3D xfer->rx_nbits;
-> +
-> +	a3700_spi_pin_mode_set(a3700_spi, nbits);
-> +
-> +	if (xfer->rx_buf) {
-> +		/* Set read data length */
-> +		spireg_write(a3700_spi, A3700_SPI_IF_DIN_CNT_REG,
-> +			     a3700_spi->buf_len);
-> +		/* Start READ transfer */
-> +		val =3D spireg_read(a3700_spi, A3700_SPI_IF_CFG_REG);
-> +		val &=3D ~A3700_SPI_RW_EN;
-> +		val |=3D A3700_SPI_XFER_START;
-> +		spireg_write(a3700_spi, A3700_SPI_IF_CFG_REG, val);
-> +	} else if (xfer->tx_buf) {
-> +		/* Start Write transfer */
-
-So this only supports single duplex transfers but there doesn't seem to
-be anything that enforces this.
-
---obzqvbfammgcqot2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhFbZQACgkQJNaLcl1U
-h9DcYQf+JaNE9P02XaPMFWRuBoPXFQWGUxBXOoNGTb34vWTVDyqP+ZDSB+o+OKwG
-qcVgToPrWM16sk8xxJ1k1sVKU7qQ8h/vsxPEJ/QQF57JJCU3ny38aBNa8vWWkt00
-RFYWXDaYdxpKJyZQBNKb9YCEGEgrrjJkdtpXppnSgi+1HVeIgtktTCY8vtsHNPCX
-THqlRdO479WVU+UgyaQ8DMK2onD769lcbdCETE4YC2Spyi4xWmKjokPd/nITKUNj
-4Fyzq0fLoT5Jnzf1ON//i6cTRoxt0ytqx01qeNYkvfSzHeEZ9QG6Nm6PENNYYJba
-hfm3jfOFGsAL/q1vCObUf/RUCyewCw==
-=ElTh
------END PGP SIGNATURE-----
-
---obzqvbfammgcqot2--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
+index fdcc23d..0da76c5 100644
+--- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
++++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
+@@ -436,18 +436,20 @@
+ 		};
+ 
+ 		gmac0: ethernet@1840000 {
+-			compatible = "hisilicon,hix5hd2-gmac";
++			compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
+ 			reg = <0x1840000 0x1000>,<0x184300c 0x4>;
+ 			interrupts = <0 71 4>;
+ 			clocks = <&clock HIX5HD2_MAC0_CLK>;
++			clock-names = "mac_core";
+ 			status = "disabled";
+ 		};
+ 
+ 		gmac1: ethernet@1841000 {
+-			compatible = "hisilicon,hix5hd2-gmac";
++			compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
+ 			reg = <0x1841000 0x1000>,<0x1843010 0x4>;
+ 			interrupts = <0 72 4>;
+ 			clocks = <&clock HIX5HD2_MAC1_CLK>;
++			clock-names = "mac_core";
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.8.2
