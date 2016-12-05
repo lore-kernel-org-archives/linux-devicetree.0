@@ -1,174 +1,284 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 3/7] PWM: add pwm-stm32 DT bindings
-Date: Mon, 5 Dec 2016 13:21:24 +0100
-Message-ID: <20161205122124.GA20856@ulmo.ba.sec>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-4-git-send-email-benjamin.gaignard@st.com>
- <20161205065350.GA18069@ulmo.ba.sec>
- <CA+M3ks4-JQNGYtdiXNj1J701x0njKD0_bf4yN1mLSjEcT2Z=6A@mail.gmail.com>
- <20161205112347.GF19891@ulmo.ba.sec>
- <CA+M3ks5j2e-EQEf74YSduboNnCiWC7+e_PD5aAz5XdFA1tGztQ@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
+Date: Mon, 5 Dec 2016 13:27:36 +0100
+Message-ID: <d7aaa1d5-f11a-e361-b2fe-f0cf86d92008@xs4all.nl>
+References: <20161122155244.802-1-khilman@baylibre.com>
+ <m2zikgh5f0.fsf@baylibre.com>
+ <20161201075730.GP16630@valkosipuli.retiisi.org.uk>
+ <2453889.B9pO7dWgEo@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+M3ks5j2e-EQEf74YSduboNnCiWC7+e_PD5aAz5XdFA1tGztQ@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, alexandre.torgue@st.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pwm@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2453889.B9pO7dWgEo@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
+On 12/01/2016 10:16 AM, Laurent Pinchart wrote:
+> Hello,
+> 
+> On Thursday 01 Dec 2016 09:57:31 Sakari Ailus wrote:
+>> On Wed, Nov 30, 2016 at 04:14:11PM -0800, Kevin Hilman wrote:
+>>> Sakari Ailus <sakari.ailus@iki.fi> writes:
+>>>> On Wed, Nov 23, 2016 at 03:25:32PM -0800, Kevin Hilman wrote:
+>>>>> Sakari Ailus <sakari.ailus@iki.fi> writes:
+>>>>>> On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
+>>>>>>> Allow getting of subdevs from DT ports and endpoints.
+>>>>>>>
+>>>>>>> The _get_pdata() function was larely inspired by (i.e. stolen from)
+>>>>>>> am437x-vpfe.c
+>>>>>>>
+>>>>>>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++-
+>>>>>>>  include/media/davinci/vpif_types.h     
+>>>>>>>        |   9 +-
+>>>>>>>  2 files changed, 133 insertions(+), 6 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/media/platform/davinci/vpif_capture.c
+>>>>>>> b/drivers/media/platform/davinci/vpif_capture.c index
+>>>>>>> 94ee6cf03f02..47a4699157e7 100644
+>>>>>>> --- a/drivers/media/platform/davinci/vpif_capture.c
+>>>>>>> +++ b/drivers/media/platform/davinci/vpif_capture.c
+>>>>>>> @@ -26,6 +26,8 @@
+>>>>>>>  #include <linux/slab.h>
+>>>>>>>
+>>>>>>>  #include <media/v4l2-ioctl.h>
+>>>>>>> +#include <media/v4l2-of.h>
+>>>>>>> +#include <media/i2c/tvp514x.h>
+>>>>>>
+>>>>>> Do you need this header?
+>>>>>
+>>>>> Yes, based on discussion with Hans, since there is no DT binding for
+>>>>> selecting the input pins of the TVP514x, I have to select it in the
+>>>>> driver, so I need the defines from this header.  More on this below...
+> 
+> That's really ugly :-( The problem should be fixed properly instead of adding 
+> one more offender.
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you have time for that, Laurent? I don't. Until that time we just need to
+make do with this workaround.
 
-On Mon, Dec 05, 2016 at 01:12:25PM +0100, Benjamin Gaignard wrote:
-> 2016-12-05 12:23 GMT+01:00 Thierry Reding <thierry.reding@gmail.com>:
-> > On Mon, Dec 05, 2016 at 12:08:32PM +0100, Benjamin Gaignard wrote:
-> >> 2016-12-05 7:53 GMT+01:00 Thierry Reding <thierry.reding@gmail.com>:
-> >> > On Fri, Dec 02, 2016 at 11:17:18AM +0100, Benjamin Gaignard wrote:
-> >> >> Define bindings for pwm-stm32
-> >> >>
-> >> >> version 2:
-> >> >> - use parameters instead of compatible of handle the hardware confi=
-guration
-> >> >>
-> >> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >> >> ---
-> >> >>  .../devicetree/bindings/pwm/pwm-stm32.txt          | 38 ++++++++++=
-++++++++++++
-> >> >>  1 file changed, 38 insertions(+)
-> >> >>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32=
-=2Etxt
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/=
-Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> >> >> new file mode 100644
-> >> >> index 0000000..575b9fb
-> >> >> --- /dev/null
-> >> >> +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> >> >> @@ -0,0 +1,38 @@
-> >> >> +STMicroelectronics PWM driver bindings for STM32
-> >> >
-> >> > Technically this bindings describe devices, so "driver binding" is a
-> >> > somewhat odd wording. Perhaps:
-> >> >
-> >> >         STMicroelectronics STM32 General Purpose Timer PWM bindings
-> >> >
-> >> > ?
-> >>  done
-> >>
-> >> >
-> >> >> +
-> >> >> +Must be a sub-node of STM32 general purpose timer driver
-> >> >> +Parent node properties are describe in ../mfd/stm32-general-purpos=
-e-timer.txt
-> >> >
-> >> > Again, "driver parent node" is odd. Perhaps:
-> >> >
-> >> >         Must be a sub-node of an STM32 General Purpose Timer device =
-tree
-> >> >         node. See ../mfd/stm32-general-purpose-timer.txt for details=
- about
-> >> >         the parent node.
-> >> >
-> >> > ?
-> >>
-> >> done
-> >>
-> >> >
-> >> >> +Required parameters:
-> >> >> +- compatible:                Must be "st,stm32-pwm"
-> >> >> +- pinctrl-names:     Set to "default".
-> >> >> +- pinctrl-0:                 List of phandles pointing to pin conf=
-iguration nodes
-> >> >> +                     for PWM module.
-> >> >> +                     For Pinctrl properties, please refer to [1].
-> >> >
-> >> > Your indentation and capitalization are inconsistent. Also, please r=
-efer
-> >> > to the pinctrl bindings by relative path and inline, rather than as a
-> >> > footnote reference.
-> >>
-> >> OK
-> >>
-> >> >
-> >> >> +
-> >> >> +Optional parameters:
-> >> >> +- st,breakinput:     Set if the hardware have break input capabili=
-ties
-> >> >> +- st,breakinput-polarity: Set break input polarity. Default is 0
-> >> >> +                      The value define the active polarity:
-> >> >> +                       - 0 (active LOW)
-> >> >> +                       - 1 (active HIGH)
-> >> >
-> >> > Could we fold these into a single property? If st,breakinput-polarit=
-y is
-> >> > not present it could simply mean that there is no break input, and i=
-f it
-> >> > is present you don't have to rely on a default.
-> >>
-> >> I need to know if I have to activate breakinput feature and on which l=
-evel
-> >> I will rewrite it like that:
-> >> Optional parameters:
-> >> - st,breakinput-polarity-high: Set if break input polarity is active
-> >> on high level.
-> >> - st,breakinput-polarity-high: Set if break input polarity is active
-> >> on low level.
-> >
-> > How is that different from a single property:
-> >
-> >         Optional properties:
-> >         - st,breakinput-polarity: If present, a break input is available
-> >             for the channel. In that case the property value denotes the
-> >             polarity of the break input:
-> >             - 0: active low
-> >             - 1: active high
-> >
-> > ?
->=20
-> For break input feature I need two information: do I have to active it
-> and if activated
-> on which level.
-> I have two solutions:
-> - one parameter with a value (0 or 1) -> st,breakinput-polarity
-> - two parameters without value -> st,breakinput-active-high and
-> st,breakinput-active-low
->=20
-> By default break input feature is disabled
+> 
+>>>>>>>  #include "vpif.h"
+>>>>>>>  #include "vpif_capture.h"
+>>>>>>> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
+>>>>>>>
+>>>>>>>  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
+>>>>>>>
+>>>>>>> +	if (!chan_cfg)
+>>>>>>> +		return -1;
+>>>>>>> +	if (input_index >= chan_cfg->input_count)
+>>>>>>> +		return -1;
+>>>>>>>  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
+>>>>>>>  	if (subdev_name == NULL)
+>>>>>>>  		return -1;
+>>>>>>> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
+>>>>>>>  	/* loop through the sub device list to get the sub device info
+>>>>>>>  	*/
+>>>>>>>  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
+>>>>>>>  		subdev_info = &vpif_cfg->subdev_info[i];
+>>>>>>> -		if (!strcmp(subdev_info->name, subdev_name))
+>>>>>>> +		if (subdev_info && !strcmp(subdev_info->name,
+>>>>>>> subdev_name))
+>>>>>>>  			return i;
+>>>>>>>  	}
+>>>>>>>  	return -1;
+>>>>>>> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct
+>>>>>>> v4l2_async_notifier *notifier,> >> >> 
+>>>>>>>  {
+>>>>>>>  	int i;
+>>>>>>>
+>>>>>>> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
+>>>>>>> +		struct v4l2_async_subdev *_asd = vpif_obj.config
+>>>>>>> ->asd[i];
+>>>>>>> +		const struct device_node *node = _asd->match.of.node;
+>>>>>>> +
+>>>>>>> +		if (node == subdev->of_node) {
+>>>>>>> +			vpif_obj.sd[i] = subdev;
+>>>>>>> +			vpif_obj.config->chan_config
+>>>>>>> ->inputs[i].subdev_name =
+>>>>>>> +				(char *)subdev->of_node->full_name;
+> 
+> Can subdev_name be made const instead of blindly casting the full_name pointer 
+> ? If not this is probably unsafe, and if yes it should be done :-)
+> 
+>>>>>>> +			vpif_dbg(2, debug,
+>>>>>>> +				 "%s: setting input %d subdev_name =
+>>>>>>> %s\n",
+>>>>>>> +				 __func__, i, subdev->of_node
+>>>>>>> ->full_name);
+>>>>>>> +			return 0;
+>>>>>>> +		}
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>>  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
+>>>>>>>  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
+>>>>>>>  			    subdev->name)) {
+>>>>>>> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct
+>>>>>>> v4l2_async_notifier *notifier)
+>>>>>>>  	return vpif_probe_complete();
+>>>>>>>  }
+>>>>>>>
+>>>>>>> +static struct vpif_capture_config *
+>>>>>>> +vpif_capture_get_pdata(struct platform_device *pdev)
+>>>>>>> +{
+>>>>>>> +	struct device_node *endpoint = NULL;
+>>>>>>> +	struct v4l2_of_endpoint bus_cfg;
+>>>>>>> +	struct vpif_capture_config *pdata;
+>>>>>>> +	struct vpif_subdev_info *sdinfo;
+>>>>>>> +	struct vpif_capture_chan_config *chan;
+>>>>>>> +	unsigned int i;
+>>>>>>> +
+>>>>>>> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
+>>>>>>> +
+>>>>>>> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
+>>>>>>> +		return pdev->dev.platform_data;
+>>>>>>> +
+>>>>>>> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>>>>>>> +	if (!pdata)
+>>>>>>> +		return NULL;
+>>>>>>> +	pdata->subdev_info =
+>>>>>>> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
+>>>>>>> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
+>>>>>>> +
+>>>>>>> +	if (!pdata->subdev_info)
+>>>>>>> +		return NULL;
+>>>>>>> +	dev_dbg(&pdev->dev, "%s\n", __func__);
+>>>>>>> +
+>>>>>>> +	for (i = 0; ; i++) {
+>>>>>>> +		struct device_node *rem;
+>>>>>>> +		unsigned int flags;
+>>>>>>> +		int err;
+>>>>>>> +
+>>>>>>> +		endpoint = of_graph_get_next_endpoint(pdev
+>>>>>>> ->dev.of_node,
+>>>>>>> +						      endpoint);
+>>>>>>> +		if (!endpoint)
+>>>>>>> +			break;
+>>>>>>> +
+>>>>>>> +		sdinfo = &pdata->subdev_info[i];
+>>>>>>
+>>>>>> subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
+>>>>>
+>>>>> Right, I need to make the loop only go for a max of
+>>>>> VPIF_CAPTURE_MAX_CHANNELS iterations.
+>>>>>
+>>>>>>> +		chan = &pdata->chan_config[i];
+>>>>>>> +		chan->inputs = devm_kzalloc(&pdev->dev,
+>>>>>>> +					    sizeof(*chan->inputs) *
+>>>>>>> +					    VPIF_DISPLAY_MAX_CHANNELS,
+>>>>>>> +					    GFP_KERNEL);
+>>>>>>> +
+>>>>>>> +		chan->input_count++;
+>>>>>>> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
+>>>>>>
+>>>>>> I wonder what's the purpose of using index i on this array as well.
+>>>>>
+>>>>> The number of endpoints in DT is the number of input channels
+>>>>> configured (up to a max of VPIF_CAPTURE_MAX_CHANNELS.)
+>>>>>
+>>>>>> If you use that to access a corresponding entry in a different array,
+>>>>>> I'd just create a struct that contains the port configuration and the
+>>>>>> async sub-device. The omap3isp driver does that, for instance; see
+>>>>>> isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if
+>>>>>> you're interested. Up to you.
+>>>>>
+>>>>> OK, I'll have a look at that driver. The goal here with this series is
+>>>>> just to get this working with DT, but also not break the existing
+>>>>> legacy platform_device support, so I'm trying not to mess with the
+>>>>> driver-interal data structures too much.
+>>>>
+>>>> Ack.
+>>>>
+>>>>>>> +		chan->inputs[i].input.std = V4L2_STD_ALL;
+>>>>>>> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
+>>>>>>> +
+>>>>>>> +		/* FIXME: need a new property? ch0:composite ch1:
+>>>>>>> s-video */
+>>>>>>> +		if (i == 0)
+>>>>>>
+>>>>>> Can you assume that the first endopoint has got a particular kind of
+>>>>>> input? What if it's not connected?
+>>>>>
+>>>>> On all the boards I know of (there aren't many using this SoC), it's a
+>>>>> safe assumption.
+>>>>>
+>>>>>> If this is a different physical port (not in the meaning another) in
+>>>>>> the device, I'd use the reg property for this. Please see
+>>>>>> Documentation/devicetree/bindings/media/video-interfaces.txt .
+>>>>>
+>>>>> My understanding (which is admittedly somewhat fuzzy) of the TVP514x is
+>>>>> that it's not physically a different port.  Instead, it's just telling
+>>>>> the TVP514x which pin(s) will be active inputs (and what kind of signal
+>>>>> will be present.)
+>>>>>
+>>>>> I'm open to a better way to describe this input select from DT, but
+>>>>> based on what I heard from Hans, there isn't currently a good way to do
+>>>>> that except for in the driver:
+>>>>> (c.f. https://marc.info/?l=linux-arm-kernel&m=147887871615788)
+>>>>>
+>>>>> Based on further discussion in that thread, it sounds like there may be
+>>>>> a way forward coming soon, and I'll be glad to switch to that when it
+>>>>> arrives.
+> 
+> I'm afraid I have to disappoint Hans here, I don't have code for that yet.
+> 
+>>>> I'm not sure that properly supporting connectors will provide any help
+>>>> here.
+>>>>
+>>>> Looking at the s_routing() API, it's the calling driver that has to be
+>>>> aware of sub-device specific function parameters. As such it's not a
+>>>> very good idea to require that a driver is aware of the value range of
+>>>> another driver's parameter. I wonder if a simple enumeration interface
+>>>> would help here --- if I understand correctly, the purpose is just to
+>>>> provide a way to choose the input using VIDIOC_S_INPUT.
+>>>>
+>>>> I guess that's somehow ok as long as you have no other combinations of
+>>>> these devices but this is hardly future-proof. (And certainly not a
+>>>> problem created by this patch.)
+>>>
+>>> Yeah, this is far from future proof.
+>>>
+>>>> It'd be still nice to fix that as presumably we don't have the option of
+>>>> reworking how we expect the device tree to look like.
+>>>
+>>> Agreed.
+>>>
+>>> I'm just hoping someone can shed som light on "how we expect the device
+>>> tree to look".  ;)
+>>
+>> :-)
+>>
+>> For the tvp514x, do you need more than a single endpoint on the receiver
+>> side? Does the input that's selected affect the bus parameters?
+>>
+>> If it doesn't, you could create a custom endpoint property for the possible
+>> input values. The s_routing() really should be fixed though, but that could
+>> be postponed I guess. There are quite a few drivers using it.
+> 
+> There's two ways to look at s_routing() in my opinion, as the calling driver 
+> should really not hardcode any knowledge specific to a particular subdev. We 
+> can either have the calling driver discover the possible routing options at 
+> runtime through the subdev API, or modify the s_routing() API.
+> 
 
-Right, what I was suggesting is that you use the first solution because
-it's the typical way to use for tristate options. It's also much easier
-to test for in practice because for the second solution you have to
-parse two properties before you know whether it is active or not.
+Some historical perspective: s_routing was added well before the device tree
+was ever used for ARM. And at that time the vast majority of drivers were PCI
+or USB drivers, very few platform drivers existed (and those typically used
+sensors, not video receivers).
 
-The second is typically the solution for required properties where only
-one of the properties is used to override the default.
+Before s_routing existed the situation was even worse.
 
-Thierry
+Basically what s_routing does is a poor-man's device tree entry, telling the
+subdev how to route video or audio from connector to the output of the chip.
+Typically the card tables in PCI or USB drivers contain the correct arguments
+for s_routing. Of course, today we'd do that with the DT, but that was not an
+option years ago.
 
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards,
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYRVvCAAoJEN0jrNd/PrOhujwP/1w8e4ZwTw+PKUVyCuMAieJ/
-N7SeawE7FJdQlSSwp88c0WUvU3YqFp1YmUSl5d31g7GFcexV604PAqIqVbLAXSwY
-ciCNoq9HEERpi6oIeJLet0h3PNSh5unLD/klVDSSVVAT5lMoUz8IuLtRnkjp8W/f
-92Dem5Bb/61ewdpmjS9LeYyf6xHQV15yKHkuwRbNsnRWDrHa2LG4gjcwUVW9kQgr
-5DTwAnszymhpj0AkXe6Zq58Oni2s7cZJ9xFHjwSaFeXzx8EsS24ZuqZpm7OgkcaX
-4K/isEnx6+3YU7NenLolWsCMn69yhaaOOilK8a36P3nAJZWtSdls+798NDCVgghE
-gfKXzQC9Lf4kJSthvJfgcULSOWrzJ4fUsXLmm7o7Z7/vMKSoU2FGadPuSW4Seezl
-S7fAbn1k7o72Li+E3SdfT9s2jVvJn42Nmts//d+8sHFLH0CNS61Cuga52SPf0evd
-+uwx0jIOqycsaJkCtTMiAfmeTJpRGf+2ilb1JFGnF4tVX2XExR0ET4mC9dMH/vte
-bKE6DRrN8b1IZoN7VAWH6PCtux8meW0Fy7UnxA/NRmsYp+W2wwhaAEwUq0xi92wF
-uhtjJM0fG/YEoUkqi2bhwlGxkOxljdQIE+TeG9PNfOG/uT1OaobEk0kT93d5joMT
-CIJh3qnl/AsPpPr6+YXj
-=iCYg
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+	Hans
