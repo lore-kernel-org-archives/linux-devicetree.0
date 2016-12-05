@@ -1,61 +1,49 @@
 From: Jun Nie <jun.nie@linaro.org>
-Subject: [PATCH v7 0/5] Add intial support to DW MMC host on ZTE SoC
-Date: Mon,  5 Dec 2016 10:29:31 +0800
-Message-ID: <1480904976-7081-1-git-send-email-jun.nie@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawn.guo@linaro.org, xie.baoyou@zte.com.cn, devicetree@vger.kernel.org
-Cc: ulf.hansson@linaro.org, jh80.chung@samsung.com, jason.liu@linaro.org, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc@vger.kernel.org, Jun Nie <jun.nie@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: zx: support cpu-freq for zx296718
+Date: Mon, 5 Dec 2016 10:35:28 +0800
+Message-ID: <CABymUCPezri5__SOmgx4M_B3W0nDFGw7ZTTSu7TP3LXvXgEJLQ@mail.gmail.com>
+References: <1480657956-8140-1-git-send-email-baoyou.xie@linaro.org>
+ <CA+DQWkzGOzn1TRa9041Jjksj-=509XWXS_U1uaaJXNydB8Apow@mail.gmail.com>
+ <20161202060000.GE7682@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161202060000.GE7682@vireshk-i7>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, "xie.baoyou" <xie.baoyou@zte.com.cn>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, Baoyou Xie <baoyou.xie@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add intial support to DW MMC host on ZTE SoC. It include platform
-specific wrapper driver and workarounds for fifo quirk.
+2016-12-02 14:00 GMT+08:00 Viresh Kumar <viresh.kumar@linaro.org>:
+> On 02-12-16, 13:58, Baoyou Xie wrote:
+>> + Viresh, the author of the bindings.
+>>
+>> On 2 December 2016 at 13:52, Baoyou Xie <baoyou.xie@linaro.org> wrote:
+>>
+>> > This patch adds the CPU clock phandle in CPU's node
+>> > and uses operating-points-v2 to register operating points.
+>> >
+>> > So it can be used by cpufreq-dt driver.
+>> >
+>> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+>> > ---
+>> >  arch/arm64/boot/dts/zte/zx296718.dtsi | 39 ++++++++++++++++++++++++++++++
+>> > +++++
+>> >  1 file changed, 39 insertions(+)
 
-Patches are prepared based on latest dw mmc runtime change:
-   https://github.com/jh80chung/dw-mmc.git for-ulf
+Reviewed-by: Jun Nie <jun.nie@linaro.org>
 
-Changes vs version 6:
-  - Resolve confilict when rebase to latest dw-mmc.git for-ulf branch.
-  - Add Shawn Lin's review tag.
-
-Changes vs version 5:
-  - Add clock delay lock status check to save CPU cycle in timing tuning CMD.
-
-Changes vs version 4:
-  - Fix missing empty dts compatible element in the end of compatible array.
-
-Changes vs version 3:
-  - Fix brace error in document.
-
-Changes vs version 2:
-  - Change dt property fifo-addr to data-addr and fifo-watermark-quirk to
-    fifo-watermark-aligned.
-  - Polish ZX MMC driver on minor coding style issues.
-
-Changes vs version 1:
-  - Change fifo-addr-override to fifo-addr and remove its workaround tag in comments.
-  - Remove ZX DW MMC driver reset cap in driver, which can be added in dt nodes.
-
-Jun Nie (5):
-  mmc: dt-bindings: add ZTE ZX296718 MMC bindings
-  mmc: zx: Initial support for ZX mmc controller
-  Documentation: synopsys-dw-mshc: add binding for fifo quirks
-  mmc: dw: Add fifo address property
-  mmc: dw: Add fifo watermark alignment property
-
- .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  13 ++
- .../devicetree/bindings/mmc/zx-dw-mshc.txt         |  34 +++
- drivers/mmc/host/Kconfig                           |   9 +
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/dw_mmc-zx.c                       | 242 +++++++++++++++++++++
- drivers/mmc/host/dw_mmc-zx.h                       |  31 +++
- drivers/mmc/host/dw_mmc.c                          |  17 +-
- include/linux/mmc/dw_mmc.h                         |   5 +
- 8 files changed, 349 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
- create mode 100644 drivers/mmc/host/dw_mmc-zx.c
- create mode 100644 drivers/mmc/host/dw_mmc-zx.h
-
--- 
-1.9.1
-
+>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>
+> --
+> viresh
