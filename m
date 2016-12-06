@@ -1,87 +1,78 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v2 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
-Date: Tue, 6 Dec 2016 13:41:56 +0530
-Message-ID: <CAFp+6iG1yib=NLicQ_8SWB6iMurzqhmpMmp=b8K2=w_2=pLx+w@mail.gmail.com>
-References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
- <1479816163-5260-3-git-send-email-vivek.gautam@codeaurora.org>
- <20161128231424.GN6095@codeaurora.org> <CAFp+6iGdDnTvod7g8FOMWvUv22rrDCC0LL1BWYfiAggiQd+QvA@mail.gmail.com>
- <563a7a72-1209-2457-6f11-a890d17c3dd0@codeaurora.org>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] DT: leds: Improve examples by adding some context
+Date: Tue,  6 Dec 2016 09:32:03 +0100
+Message-ID: <20161206083203.1726-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <563a7a72-1209-2457-6f11-a890d17c3dd0@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 3, 2016 at 12:17 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 12/01/2016 12:42 AM, Vivek Gautam wrote:
->> On Tue, Nov 29, 2016 at 4:44 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->>> On 11/22, Vivek Gautam wrote:
->>>> +     }
->>>> +
->>>> +     /*
->>>> +      * we need to read only one byte here, since the required
->>>> +      * parameter value fits in one nibble
->>>> +      */
->>>> +     val = (u8 *)nvmem_cell_read(cell, &len);
->>> Shouldn't need the cast here. Also it would be nice if
->>> nvmem_cell_read() didn't require a second argument if we don't
->>> care for it. We should update the API to allow NULL there.
->> Will remove the u8 pointer cast.
->>
->> Correct, it makes sense to allow the length pointer to be passed as NULL.
->> We don't care about this length. Will update the nvmem API, to allow this.
->>
->> Also, we should add a check for 'cell' as well. This pointer can be
->> NULL, and the first thing that  nvmem_cell_read does is - deference
->> the pointer 'cell'
->
-> It would be pretty stupid to read a cell and pass NULL as the first
-> argument. I imagine things would blow up there like we want and we would
-> see a nice big stacktrace.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-Right, reading a 'NULL' cell doesn't make a sense at all.
+During my work on some new LED trigger I tried adding example similar to
+the existing ones which received following comment from Rob:
+> It's not really clear in the example this is an LED node as it is
+> incomplete.
 
->>>> +     } else {
->>>> +             reset_val |= CLK_REF_SEL;
->>>> +     }
->>>> +
->>>> +     writel_relaxed(reset_val, qphy->base + QUSB2PHY_PLL_TEST);
->>>> +
->>>> +     /* Make sure that above write is completed to get PLL source clock */
->>>> +     wmb();
->>>> +
->>>> +     /* Required to get PHY PLL lock successfully */
->>>> +     usleep_range(100, 110);
->>>> +
->>>> +     if (!(readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS) &
->>>> +                                     PLL_LOCKED)) {
->>>> +             dev_err(&phy->dev, "QUSB PHY PLL LOCK fails:%x\n",
->>>> +                     readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS));
->>> Would be pretty funny if this was locked now when the error
->>> printk runs. Are there other bits in there that are helpful?
->> This is the only bit that's there to check the PLL locking status.
->> Should we rather poll ?
->>
->
-> I'm just saying that the printk may have the "correct" status but the
-> check would have failed earlier making the printk confusing. Perhaps
-> just save the register value from the first read and print it instead of
-> reading it again? Polling would probably be a better design anyway?
-> Hopefully the status bit isn't toggling back and forth during those
-> 100-100us though, which may be the case here and that would explain why
-> it's not a polling design.
+Keeping that in mind I suggest adding context for the existing example
+entries in hope to make documentation more clear.
 
-Okay, will save the register value.
-Will also stick to just checking the status after the delay, like we have in
-downstream kernel.
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+Should this patch go through linux-leds tree?
 
+Richard, Jacek: would you take it?
+---
+ Documentation/devicetree/bindings/leds/common.txt | 28 +++++++++++++++--------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-Regards
-Vivek
-
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 696be57..24b6560 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -61,16 +61,24 @@ property can be omitted.
+ 
+ Examples:
+ 
+-system-status {
+-	label = "Status";
+-	linux,default-trigger = "heartbeat";
+-	...
++gpio-leds {
++	compatible = "gpio-leds";
++
++	system-status {
++		label = "Status";
++		linux,default-trigger = "heartbeat";
++		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+-camera-flash {
+-	label = "Flash";
+-	led-sources = <0>, <1>;
+-	led-max-microamp = <50000>;
+-	flash-max-microamp = <320000>;
+-	flash-max-timeout-us = <500000>;
++max77693-led {
++	compatible = "maxim,max77693-led";
++
++	camera-flash {
++		label = "Flash";
++		led-sources = <0>, <1>;
++		led-max-microamp = <50000>;
++		flash-max-microamp = <320000>;
++		flash-max-timeout-us = <500000>;
++	};
+ };
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
