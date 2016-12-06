@@ -1,73 +1,87 @@
-From: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH] i2c: rk3x: keep i2c irq ON in suspend
-Date: Tue, 6 Dec 2016 16:12:02 +0800
-Message-ID: <1d570232-af87-467e-e6f4-5b514d583a02@rock-chips.com>
-References: <1480924979-13450-1-git-send-email-david.wu@rock-chips.com>
- <1737869.ycGphUXI8X@phil>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v2 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+Date: Tue, 6 Dec 2016 13:41:56 +0530
+Message-ID: <CAFp+6iG1yib=NLicQ_8SWB6iMurzqhmpMmp=b8K2=w_2=pLx+w@mail.gmail.com>
+References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1479816163-5260-3-git-send-email-vivek.gautam@codeaurora.org>
+ <20161128231424.GN6095@codeaurora.org> <CAFp+6iGdDnTvod7g8FOMWvUv22rrDCC0LL1BWYfiAggiQd+QvA@mail.gmail.com>
+ <563a7a72-1209-2457-6f11-a890d17c3dd0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1737869.ycGphUXI8X@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <563a7a72-1209-2457-6f11-a890d17c3dd0@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgrlnKggMjAxNi8xMi81IDE4OjU0LCBIZWlrbyBTdHVlYm5lciDlhpnpgZM6Cj4g
-SGkgRGF2aWQsCj4KPiBBbSBNb250YWcsIDUuIERlemVtYmVyIDIwMTYsIDE2OjAyOjU5IENFVCBz
-Y2hyaWViIERhdmlkIFd1Ogo+PiBEdXJpbmcgc3VzcGVuZCB0aGVyZSBtYXkgc3RpbGwgYmUgc29t
-ZSBpMmMgYWNjZXNzIGhhcHBlbmluZy4KPj4gQW5kIGlmIHdlIGRvbid0IGtlZXAgaTJjIGlycSBP
-TiwgdGhlcmUgbWF5IGJlIGkyYyBhY2Nlc3MgdGltZW91dCBpZgo+PiBpMmMgaXMgaW4gaXJxIG1v
-ZGUgb2Ygb3BlcmF0aW9uLgo+Cj4gY2FuIHlvdSBkZXNjcmliZSB0aGUgaXNzdWUgeW91J3JlIHRy
-eWluZyB0byBmaXggYSBiaXQgbW9yZSBwbGVhc2U/CgpTb21ldGltZXMgd2UgY291bGQgc2VlIHRo
-ZSBpMmMgdGltZW91dCBlcnJvcnMgZHVyaW5nIHN1c3BlbmQvcmVzdW1lLCAKd2hpY2ggbWFrZXMg
-dGhlIGR1cmF0aW9uIG9mIHN1c3BlbmQvcmVzdW1lIHRvbyBsb25nZXIuCgpbICA0ODQuMTcxNTQx
-XSBDUFU0OiBCb290ZWQgc2Vjb25kYXJ5IHByb2Nlc3NvciBbNDEwZmQwODJdClsgIDQ4NS4xNzI3
-NzddIHJrM3gtaTJjIGZmM2MwMDAwLmkyYzogdGltZW91dCwgaXBkOiAweDEwLCBzdGF0ZTogMQpb
-ICA0ODYuMTcyNzYwXSByazN4LWkyYyBmZjNjMDAwMC5pMmM6IHRpbWVvdXQsIGlwZDogMHgxMCwg
-c3RhdGU6IDEKWyAgNDg3LjE3Mjc1OV0gcmszeC1pMmMgZmYzYzAwMDAuaTJjOiB0aW1lb3V0LCBp
-cGQ6IDB4MTAsIHN0YXRlOiAxClsgIDQ4Ny4xNzI4NDBdIGNwdSBjcHU0OiBfc2V0X29wcF92b2x0
-YWdlOiBmYWlsZWQgdG8gc2V0IHZvbHRhZ2UgKDgwMDAwMCAKODAwMDAwIDgwMDAwMCBtVik6IC0x
-MTAKWyAgNDg3LjE3Mjg3NF0gY3B1IGNwdTQ6IGZhaWxlZCB0byBzZXQgdm9sdCA4MDAwMDAKCj4K
-PiBJLmUuIEknZCB0aGluayB0aGUgaTJjLWNvcmUgZG9lcyBzdXNwZW5kIGkyYy1jbGllbnQgZGV2
-aWNlcyBmaXJzdCwgc28gdGhhdAo+IHRoZXNlIHNob3VsZCBiZSBhYmxlIHRvIGZpbmlzaCB1cCB0
-aGVpciBvbmdvaW5nIHRyYW5zZmVycyBhbmQgbm90IHN0YXJ0IGFueQo+IG5ldyBvbmVzIGluc3Rl
-YWQ/Cj4KPiBZb3VyIGlycSBjYW4gc3RpbGwgaGFwcGVuIHNsaWdodGx5IGFmdGVyIHRoZSBzeXN0
-ZW0gc3RhcnRlZCBnb2luZyB0byBhY3R1YWxseQo+IHNsZWVwLCBzbyB0byBtZSBpdCBsb29rcyBs
-aWtlIHlvdSBqdXN0IHdpZGVuZWQgdGhlIHdpbmRvdyB3aGVyZSBpcnFzIGNhbiBiZQo+IGhhbmRs
-ZWQuIEVzcGVjaWFsbHkgYXMgeW91ciBpcnEgY291bGQgYWxzbyBqdXN0IHNpbXBseSBzdGVtIGZy
-b20gdGhlIHN0YXJ0Cj4gc3RhdGUsIHNvIHlvdSBjYW5ub3QgZXZlbiBiZSBzdXJlIGlmIHlvdXIg
-dHJhbnNhY3Rpb24gYWN0dWFsbHkgaXMgZmluaXNoZWQuCgpPa2F5LCB5b3UgYXJlIHJpZ2h0LiBJ
-IHdhbnQgdG8gZ2l2ZSBpdCBhIGRvdWJsZSBpbnN1cmFuY2UgYXQgZmlyc3QsIGJ1dCAKaXQgbWF5
-IGhpZGUgdGhlIHVuaGFwcGVuZCBpc3N1ZS4KCj4KPiBTbyB0byBtZSBpdCBsb29rcyBsaWtlIHRo
-ZSBpMmMtY29ubmVjdGVkIGRldmljZSBkcml2ZXIgc2hvdWxkIGJlIGZpeGVkIGluc3RlYWQ/CgpJ
-IHRlbGwgdGhlbSB0byBmaXggaXQgaW4gcms4MDggZHJpdmVyLgoKPgo+IEluIHRoZSBwYXN0IEkg
-c29sdmVkIHRoaXMgZm9yIGV4YW1wbGUgaW4gdGhlIHpmb3JjZV90cyBkcml2ZXIgWzBdIHRvCj4g
-cHJldmVudCBpMmMgdHJhbnNmZXJzIGZyb20gaGFwcGVuaW5nIGR1cmluZyBzdXNwZW5kLgo+Cj4K
-PiBIZWlrbwo+Cj4gWzBdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwv
-Z2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vemZv
-cmNlX3RzLmMKPgo+Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFd1IDxkYXZpZC53dUByb2Nr
-LWNoaXBzLmNvbT4KPj4gLS0tCj4+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXJrM3guYyB8IDIg
-Ky0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+Pgo+
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1yazN4LmMgYi9kcml2ZXJzL2ky
-Yy9idXNzZXMvaTJjLXJrM3guYwo+PiBpbmRleCBkZjIyMDY2Li42N2FmMzJhIDEwMDY0NAo+PiAt
-LS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLXJrM3guYwo+PiArKysgYi9kcml2ZXJzL2kyYy9i
-dXNzZXMvaTJjLXJrM3guYwo+PiBAQCAtMTI2MSw3ICsxMjYxLDcgQEAgc3RhdGljIGludCByazN4
-X2kyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlCj4+ICpwZGV2KSB9Cj4+Cj4+ICAJcmV0
-ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBpcnEsIHJrM3hfaTJjX2lycSwKPj4gLQkJ
-CSAgICAgICAwLCBkZXZfbmFtZSgmcGRldi0+ZGV2KSwgaTJjKTsKPj4gKwkJCSAgICAgICBJUlFG
-X05PX1NVU1BFTkQsIGRldl9uYW1lKCZwZGV2LT5kZXYpLCBpMmMpOwo+PiAgCWlmIChyZXQgPCAw
-KSB7Cj4+ICAJCWRldl9lcnIoJnBkZXYtPmRldiwgImNhbm5vdCByZXF1ZXN0IElSUVxuIik7Cj4+
-ICAJCXJldHVybiByZXQ7Cj4KPgo+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2Nr
-Y2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+On Sat, Dec 3, 2016 at 12:17 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 12/01/2016 12:42 AM, Vivek Gautam wrote:
+>> On Tue, Nov 29, 2016 at 4:44 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>> On 11/22, Vivek Gautam wrote:
+>>>> +     }
+>>>> +
+>>>> +     /*
+>>>> +      * we need to read only one byte here, since the required
+>>>> +      * parameter value fits in one nibble
+>>>> +      */
+>>>> +     val = (u8 *)nvmem_cell_read(cell, &len);
+>>> Shouldn't need the cast here. Also it would be nice if
+>>> nvmem_cell_read() didn't require a second argument if we don't
+>>> care for it. We should update the API to allow NULL there.
+>> Will remove the u8 pointer cast.
+>>
+>> Correct, it makes sense to allow the length pointer to be passed as NULL.
+>> We don't care about this length. Will update the nvmem API, to allow this.
+>>
+>> Also, we should add a check for 'cell' as well. This pointer can be
+>> NULL, and the first thing that  nvmem_cell_read does is - deference
+>> the pointer 'cell'
+>
+> It would be pretty stupid to read a cell and pass NULL as the first
+> argument. I imagine things would blow up there like we want and we would
+> see a nice big stacktrace.
+
+Right, reading a 'NULL' cell doesn't make a sense at all.
+
+>>>> +     } else {
+>>>> +             reset_val |= CLK_REF_SEL;
+>>>> +     }
+>>>> +
+>>>> +     writel_relaxed(reset_val, qphy->base + QUSB2PHY_PLL_TEST);
+>>>> +
+>>>> +     /* Make sure that above write is completed to get PLL source clock */
+>>>> +     wmb();
+>>>> +
+>>>> +     /* Required to get PHY PLL lock successfully */
+>>>> +     usleep_range(100, 110);
+>>>> +
+>>>> +     if (!(readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS) &
+>>>> +                                     PLL_LOCKED)) {
+>>>> +             dev_err(&phy->dev, "QUSB PHY PLL LOCK fails:%x\n",
+>>>> +                     readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS));
+>>> Would be pretty funny if this was locked now when the error
+>>> printk runs. Are there other bits in there that are helpful?
+>> This is the only bit that's there to check the PLL locking status.
+>> Should we rather poll ?
+>>
+>
+> I'm just saying that the printk may have the "correct" status but the
+> check would have failed earlier making the printk confusing. Perhaps
+> just save the register value from the first read and print it instead of
+> reading it again? Polling would probably be a better design anyway?
+> Hopefully the status bit isn't toggling back and forth during those
+> 100-100us though, which may be the case here and that would explain why
+> it's not a polling design.
+
+Okay, will save the register value.
+Will also stick to just checking the status after the delay, like we have in
+downstream kernel.
+
+
+Regards
+Vivek
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
