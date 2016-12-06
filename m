@@ -1,156 +1,122 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [RFC] New Device Tree property - "bonding"
-Date: Tue, 6 Dec 2016 15:41:06 +0000
-Message-ID: <SG2PR06MB1038A0DADECF2EB7795A487AC3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
- <2054258.NRXTrTF0Rj@avalon>
- <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
- <10679912.HCjz6JNtZJ@avalon>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] mtd: spi-nor: add rockchip serial flash controller
+ driver
+Date: Tue, 6 Dec 2016 16:44:51 +0100
+Message-ID: <8fae0968-5e3d-2454-c79c-599bc55ac0e5@atmel.com>
+References: <1480906577-38455-1-git-send-email-shawn.lin@rock-chips.com>
+ <1480906577-38455-3-git-send-email-shawn.lin@rock-chips.com>
+ <852b11c2-daf3-75dc-a5c6-576109a974a9@gmail.com>
+ <8cac8489-3fd1-bfc3-9a25-a3fbda74e03e@rock-chips.com>
+ <cdc8647b-77c5-5d74-931c-46bcebafae65@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10679912.HCjz6JNtZJ@avalon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org" <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cdc8647b-77c5-5d74-931c-46bcebafae65-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Laurent,
-
-Thanks for the response.
-
-> On Monday 05 Dec 2016 09:57:32 Rob Herring wrote:
-> > On Mon, Dec 5, 2016 at 8:40 AM, Laurent Pinchart wrote:
-> > > On Monday 05 Dec 2016 08:18:34 Rob Herring wrote:
-> > >> On Fri, Nov 25, 2016 at 10:55 AM, Ramesh Shanmugasundaram wrote:
-> > >>> Hello DT maintainers,
-> > >>>
-> > >>> In one of the Renesas SoCs we have a device called DRIF (Digital
-> > >>> Radio
-> > >>> Interface) controller. A DRIF channel contains 4 external pins -
-> > >>> SCK, SYNC, Data pins D0 & D1.
-> > >>>
-> > >>> Internally a DRIF channel is made up of two SPI slave devices
-> > >>> (also called sub-channels here) that share common CLK & SYNC
-> > >>> signals but have their own resource set. The DRIF channel can have
-> > >>> either one of the sub-channel active at a time or both. When both
-> > >>> sub-channels are active, they need to be managed together as one
-> > >>> device as they share same CLK & SYNC. We plan to tie these two
-> > >>> sub-channels together with a new property called "renesas,bonding".
-> > >>
-> > >> Is there no need to describe the master device? No GPIOs,
-> > >> regulators or other sideband controls needed? If that's never
-> > >> needed (which seems doubtful), then I would do something different
-> > >> here probably with the master device as a child of one DRIF and
-> > >> then phandles to master from the other DRIFs. Otherwise, this looks
-> fine to me.
-> > >
-> > > Here's a bit of background.
-> > >
-> > > The DRIF is an SPI receiver. It has three input pins, a clock line,
-> > > a data line and a sync signal. The device is designed to be
-> > > connected to a variety of data sources, usually plain SPI (1 data
-> > > line), IIS (1 data
-> > > line) but also radio tuners that output I/Q data
-> > > (http://www.ni.com/tutorial/4805/en/) over two data lines.
-> > >
-> > > In the case of IQ each data sample is split in two I and Q values
-> > > (typically 16 to 20 bits each in this case), and the values are
-> > > transmitted serially over one data line each. The synchronization
-> > > and clock signals are common to both data lines. The DRIF is
-> > > optimized for this use case as the DRIF instances in the SoC (each
-> > > of them having independent clocks, interrupts and control registers)
-> > > are grouped by two, and the two instances in a group handle a single
-> > > data line each but share the same clock and sync input.
-> > >
-> > > On the software side we need to group the I and Q values, which are
-> > > DMA'ed to memory by the two DRIF instances, and make them available
-> > > to userspace. The V4L2 API used here in SDR (Software Defined Radio)
-> > > mode supports such use cases and exposes a single device node to
-> > > userspace that allows control of the two DRIF instances as a single
-> > > device. To be able to implement this we need kernel code to be aware
-> > > of DRIF groups and, while binding to the DRIF instances separately,
-> > > expose only one V4L2 device to userspace for each group.
-> > >
-> > > There's no master or slave instance from a hardware point of view,
-> > > but the two instances are not interchangeable as they carry separate
-> information.
-> > > They must thus be identified at the driver level.
-> >
-> > By master, I meant the external master device that generates the IQ
-> > data, not which of the internal DRIF blocks is a master of the other.
-> > So back to my question, does the external master device need to be
-> > described? I worry the answer now for a simple case is no, but then
-> > later people are going to have cases needing to describe more. We need
-> > to answer this question first before we can decide what this binding
-> > should look like.
->
-> Oh yes the external device certainly needs to be described. As it is
-> controlled through a separate, general-purpose I2C or SPI controller, it
-> should be a child node of that controller. The DRIF handles the data
-> interface only, not the control interface of the external device.
-
-Yes, as Laurent mentioned, the external master will be described separately=
-. The data interface with the master is described through port nodes. E.g.
-
-        port {
-                drif0_ep: endpoint {
-                     remote-endpoint =3D <&tuner_ep>;
-                };
-        };
-
-Do we agree on this model please?
-
->
-> > > Back to the DT bindings, the need to expose relationships between
-> > > (mostly) independent devices is quite common nowadays. It has been
-> > > solved in some cases by creating a separate DT node that does not
-> > > correspond to any physical hardware and whose sole purpose is to
-> > > contain phandles to devices that need to be grouped. Drivers then
-> > > bind to the compatible string of that "virtual" DT node. The
-> > > proposed bonding property is a different approach to solve a similar
-> > > problem. Would it be worth it addressing the problem at a more
-> > > general level and try to design a common solution ?
-> >
-> > We already have somewhat standard ways of grouping, but they are per
-> > type of device (display, sound card, etc.). I'm not sure we gain much
-> > standardizing across these devices and to some extent that ship has
-> > sailed. Even within display subsystems, I don't think there is one
-> > style that fits all. Sometimes a parent subsystem node with children
-> > makes sense for the h/w. Sometimes that doesn't make sense and we have
-> > the virtual node with a "ports" property (like sun8i did). I've never
-> > been too happy with that style largely just because it feels like
-> > we're letting DRM define the binding. However, it's generally extra
-> > data that an OS could just ignore. There have also been many display
-> > bindings that started out with a virtual node and we got rid of it. So
-> > it's not something I like to encourage and we need to be clear when it
-> > is okay or not.
-> >
-> > To state the problem more generally (at least when using OF graph), I
-> > think the problem is simply how do we define and group multiple entry
-> > points to an OF graph. Maybe these should be graph nodes themselves
-> > rather than phandles to the nodes with the entry points of the graph.
->
-> CC'ing Maxime Ripard for the sun8i side.
-
-Can we use this "bonding" property as another way of grouping similar devic=
-es? Should I make it generic instead of "renesas,bonding"?
-
-Thanks,
-Ramesh
-
-
-[https://www2.renesas.eu/media/email/unicef.gif]
-
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgYWxsLAoKTGUgMDYvMTIvMjAxNiDDoCAwNDowOCwgTWFyZWsgVmFzdXQgYSDDqWNyaXQgOgo+
+IE9uIDEyLzA2LzIwMTYgMDM6NTYgQU0sIFNoYXduIExpbiB3cm90ZToKPiAKPiBbLi4uXQo+IAo+
+Pj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgcm9ja2NoaXBfc2ZjX3NldHVwX3RyYW5zZmVyKHN0cnVj
+dCBzcGlfbm9yICpub3IsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvZmZfdCBm
+cm9tX3RvLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplX3QgbGVuLCB1OCBv
+cF90eXBlKQo+Pj4+ICt7Cj4+Pj4gKyAgICBzdHJ1Y3Qgcm9ja2NoaXBfc2ZjX2NoaXBfcHJpdiAq
+cHJpdiA9IG5vci0+cHJpdjsKPj4+PiArICAgIHN0cnVjdCByb2NrY2hpcF9zZmMgKnNmYyA9IHBy
+aXYtPnNmYzsKPj4+PiArICAgIHUzMiByZWc7Cj4+Pj4gKyAgICB1OCBpZl90eXBlID0gMDsKPj4+
+PiArCj4+Pj4gKyAgICBpZl90eXBlID0gZ2V0X2lmX3R5cGUoc2ZjLCBub3ItPmZsYXNoX3JlYWQp
+Owo+Pj4+ICsgICAgd3JpdGVsX3JlbGF4ZWQoKGlmX3R5cGUgPDwgU0ZDX0NUUkxfREFUQV9CSVRT
+X1NISUZUKSB8Cj4+Pj4gKyAgICAgICAgICAgICAgIChpZl90eXBlIDw8IFNGQ19DVFJMX0FERFJf
+QklUU19TSElGVCkgfAo+Pj4+ICsgICAgICAgICAgICAgICAoaWZfdHlwZSA8PCBTRkNfQ1RSTF9D
+TURfQklUU19TSElGVCkgfAo+Pj4KPj4+IEhtLCBsb29raW5nIGF0IHRoaXMsIGRvZXMgdGhlIGNv
+bnRyb2xsZXIgb25seSBzdXBwb3J0IG4tbi1uIG1vZGUgKDEtMS0xLAo+Pj4gMi0yLTIsIDQtNC00
+KSA/IE9yIHdoeSBkb24ndCB5b3UgYWxsb3cgMS0xLW4vMS1uLW4vMi1uLW4gPwo+Pgo+PiBObywg
+aXQgYWxzbyBjb3VsZCBzdXBwb3J0IDEtMS1uLCBldGMuCj4+IEJ5IGxvb2tpbmcgYXQgdGhlIGNh
+ZGVuY2UtcXVhZHNwaS5jLCAgaXQgb25seSBhbGxvd3MKPj4gQ1FTUElfSU5TVF9UWVBFX1NJTkdM
+RSBmb3IgZl9wZGF0YS0+YWRkcl93aWR0aCBhbmQgZl9wZGF0YS0+aW5zdF93aWR0aCwKPj4gc28g
+ZmluYWxseSBpdCBvbmx5IHN1cHBvcnRzIDEtMS0xLCAxLTEtMiwgMS0xLTQ/Cj4+Cj4+PiBJIHdv
+dWxkIGxpa2UgdG8gaGVhciBzb21lIGlucHV0IGZyb20gQ3lyaWxsZSBvbiB0aGlzIG9uZS4KPiAK
+PiBUaGUgQ1FTUEkgZHJpdmVyIGluZGVlZCBkb2VzIG9ubHkgMS0xLXggcmVhZCB0aHVzIGZhci4K
+PiBJIGFtIG5vdCBzdXJlIHdoZXRoZXIgc3VwcG9ydCBmb3IgdGhlIG90aGVyIG1vZGVzIGluIHRo
+ZSBTUEkgTk9SCj4gc3Vic3lzdGVtIGxhbmRlZCBhbHJlYWR5LCB3aGljaCBpcyB3aHkgSSdkIGxp
+a2UgdG8gaGVhciBmcm9tCj4gQ3lyaWxsZSBoZXJlLgo+IAo+IFsuLi5dCj4gCgpObywgdGhlIHN1
+cHBvcnQgb2YgU1BJIHByb3RvY29scyBvdGhlciB0aGFuIDEtMS16IGhhcyBub3QgYmVlbiBtZXJn
+ZWQgeWV0CmludG8gdGhlIHNwaS1ub3Igc3Vic3lzdGVtLiBJJ3ZlIHNlbnQgaXQgYXMgcGFydCBv
+ZiB0aGUgU0ZEUCBzZXJpZXMsIHNpbmNlCnRoZW4gSSd2ZSBiZWVuIHdhaXRpbmcgZm9yIG1vcmUg
+cmV2aWV3cyBhbmQgYXBwcm92YWxzIGJlZm9yZSBtZXJnaW5nIGl0CmJlY2F1c2UgSSBkb24ndCB3
+YW50IHRvIGZvcmNlIGFueXRoaW5nIGFuZCB3YWl0IHRvIGF2b2lkIHJlZ3Jlc3Npb24uCgpSZWNl
+bnRseSBJIHdhcyB0aGlua2luZyBhYm91dCBzcGxpdHRpbmcgdGhlIHNlcmllcyBpbnRvIHNtYWxs
+ZXIgYW5kIGFsbW9zdAppbmRlcGVuZGVudCB0b3BpY3MuIEZvciBpbnN0YW5jZSB0aGUgTWFjcm9u
+aXggcGF0Y2ggdG8gaW1wcm92ZSB0aGUKbWFuYWdlbWVudCBvZiB0aGUgUXVhZCBFbmFibGUgYml0
+IGlzIGEgc3RhbmQgYWxvbmUgcGF0Y2guCgpUaGVuIHRoZSBwYXRjaCBhYm91dCBpbXByb3Zpbmcg
+c3VwcG9ydCBvZiA+IDEyOE1iaXQgbWVtb3J5IGJ5IHVzaW5nIHRoZQpkZWRpY2F0ZWQgNC1ieXRl
+IGluc3RydWN0aW9uIHNldCBvbmx5IGRlcGVuZHMgb24gdGhlIHBhdGNoIHJlbmFtaW5nIHNvbWUK
+U1BJTk9SX09QXyogbWFjcm9zIHRvIHVuaWZ5IHRoZSB1c2Ugb2YgdGhlICJfNEIiIHN1ZmZpeC4g
+VGhvc2UgdHdvIHBhdGNoZXMKc29sdmUgdGhlIGlzc3VlIG9mIGJvb3Rsb2FkZXJzIHdoaWNoIGZh
+aWwgdG8gcmVhZCBmcm9tIFNQSSBmbGFzaCB3aGVuIHRoZQptZW1vcnkgaGFzIGVudGVyZWQgaXRz
+IHN0YXRlZnVsbCA0LWJ5dGUgYWRkcmVzcyBtb2RlLgoKTmV4dCwgdGhlcmUgYXJlIDMgcGF0Y2hl
+cyB0byBhZGQgc3VwcG9ydCB0byBTUEkgcHJvdG9jb2xzIDEteS16LiBJIGd1ZXNzCnRoZXkgYXJl
+IHRoZSBwYXRjaGVzIHlvdXIgYXJlIHRhbGtpbmcgYWJvdXQuIFRob3NlIHBhdGNoZXMgcHJlcGFy
+ZXMgdGhlCm1vdmUgdG8gdGhlIFNGRFAgc3VwcG9ydCBidXQgYWN0dWFsbHkgdGhleSBjYW4gYmUg
+YWxzbyBiZSB1c2VkIGFzIGlzIGp1c3QKdG8gdXNlIFNQSSAxLXkteiBwcm90b2NvbCB3aXRob3V0
+IHRhbGtpbmcgYWJvdXQgU0ZEUC4KCkZpbmFsbHksIHRoZSBsYXN0IHBhdGNoZXMgaW50cm9kdWNl
+IHRoZSBTRkRQIHN1cHBvcnQuIEFzIEkgc2FpZCwgdGhlcmUgYXJlCm5vdCBtYW5kYXRvcnkgZm9y
+IHlvdXIgdXNlIGNhc2UgaWYgeW91IG9ubHkgd2FudCB0byB0ZXN0IFNQSSBwcm90b2NvbHMgc3Vj
+aAphcyAxLTQtNC4KCkluIHlvdXIgY2FzZSwgeW91IG1pZ2h0IGJlIGludGVyZXN0ZWQgaW4gcmV2
+aWV3aW5nL3Rlc3Rpbmc6CgpbdjQsIDQvOF0gbXRkOiBzcGktbm9yOiBhZGQgc3VwcG9ydCBvZiBT
+UEkgcHJvdG9jb2xzIGxpa2UgU1BJIDEtMi0yIGFuZApTUEktMS00LTQKaHR0cDovL3BhdGNod29y
+ay5vemxhYnMub3JnL3BhdGNoLzY5NzI2OC8KVGhpcyBpcyB0aGUgbWFpbiBwYXRjaC4KClt2NCwg
+NS84XSBtdGQ6IHNwaS1ub3I6IHJlbW92ZSB1bnVzZWQgc2V0X3F1YWRfbW9kZSgpIGZ1bmN0aW9u
+Cmh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC82OTcyNjkvCk9ubHkgc21hbGwgY2xl
+YW51cCwgcGxlYXNlIHJlYWQgdGhlIGNvbW1pdCBtZXNzYWdlIGZvciBtb3JlIGV4cGxpbmF0aW9u
+CgpbdjQsIDYvOF0gbXRkOiBtMjVwODA6IGFkZCBzdXBwb3J0IG9mIGR1YWwgYW5kIHF1YWQgc3Bp
+IHByb3RvY29scyB0byBhbGwKY29tbWFuZHMKaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3Bh
+dGNoLzY5NzI3MC8KVGhpcyBvbmUgaXMgbm90IG5lZWQgd2hlbiB0ZXN0aW5nIHdpdGggdGhpcyBy
+b2NrY2hpcCBzZXJpYWwgZmxhc2gKY29udHJvbGxlciBkcml2ZXIgYXMgaXQgZGlyZWN0bHkgY2Fs
+bHMgc3BpX25vcl9zY2FuKCkgZnJvbQpyb2NrY2hpcF9zZmNfcmVnaXN0ZXIuCgpQbGVhc2Ugbm90
+ZSB0aGVyZSBtaWdodCBiZSBhIHNtYWxsIGRlcGVuZGVuY2UgdG8gdGhlIFNQSU5PUl9PUF8qIG1h
+Y3JvCnJlbmFtaW5nIHBhdGNoOgpbdjQsIDIvOF0gbXRkOiBzcGktbm9yOiByZW5hbWUgU1BJTk9S
+X09QXyogbWFjcm9zIG9mIHRoZSA0LWJ5dGUgYWRkcmVzcyBvcApjb2RlcwpodHRwOi8vcGF0Y2h3
+b3JrLm96bGFicy5vcmcvcGF0Y2gvNjk3MjY2LwpJbmRlZWQgdGhpcyBwYXRjaCBpbnRyb2R1Y2Vz
+IGluIHNwaS1ub3IuaCB0aGUgU1BJTk9SX09QX1JFQURfMV8yXzIgYW5kClNQSU5PUl9PUF9SRUFE
+XzFfNF80IG1hY3JvcyBhbmQgdGhlaXIgYXNzb2NpYXRlZCBvcCBjb2Rlcy4KCkFib3V0IHRoZSBz
+dXBwb3J0IG9mIFNQSSAyLTItMiBhbmQgU1BJIDQtNC00LCBJIGFsc28gaGF2ZSBwYXRjaGVzIHRv
+IGFkZApzdXBwb3J0IHRvIHRob3NlIHR3byBwcm90b2NvbHMgaG93ZXZlciBJIGRlY2lkZWQgbm90
+IHRvIHN1Ym1pdCB0aGVtIGZvciBub3cKZm9yIG1hbnkgcmVhc29ucy4gRmlyc3QsIHRoZSBzZXJp
+ZXMgaXMgYWxyZWFkeSBsb25nIGFuZCBoYXJkIGVub3VnaCB0bwpyZXZpZXcuIFNlY29uZGx5LCBp
+biBtb3N0IGNhc2VzIHRoZSBwZXJmb3JtYW5jZSBpbmNyZWFzZSBiZXR3ZWVuIFNQSSAxLTQtNAph
+bmQgU1BJIDQtNC00IGlzbid0IHdvcnRoIGl0IHdoZW4geW91IHJlYWQgNTEyIGJ5dGUgcGFnZXMg
+b3IgNjRLQiBzZWN0b3JzLgoKSSB0aGluayBpdCB3YXMgYSBtaXN0YWtlIHRvIHNlbmQgYWxsIHRo
+b3NlIHBhdGNoZXMgaW4gYSBzaW5nbGUgYmlnIHNlcmllcwpzaW5jZSBhY3R1YWxseSBtb3N0IG9m
+IHRoZW0gaGF2ZSBub3RoaW5nIHRvIGRvIHdpdGggU0ZEUC4gVGhleSBqdXN0IHByZXBhcmUKdGhl
+IHRyYW5zaXRpb24uIEkgdW5kZXJzdGFuZCBiaWcgc2VyaWVzIG1pZ2h0IHNjYXJlIHBlb3BsZSBh
+bmQgZGlzY291cmFnZQp0aGVtIGZyb20gcmV2aWV3aW5nIG9yIHRlc3RpbmcuCgpIb3dldmVyLCBp
+ZiB5b3UgYXJlIGludGVyZXN0ZWQgaW4gc29tZSBvZiB0aG9zZSBmZWF0dXJlcywgSSB0aGluayBJ
+IHNob3VsZApzZW5kIHRoZSBwYXRjaGVzIHN0ZXAgYnkgc3RlcC4KCkJlc3QgcmVnYXJkcywKCkN5
+cmlsbGUKCj4+Pj4gKyNpZmRlZiBDT05GSUdfUE0KPj4+PiAraW50IHJvY2tjaGlwX3NmY19ydW50
+aW1lX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQo+Pj4+ICt7Cj4+Pj4gKyAgICBzdHJ1Y3Qg
+cm9ja2NoaXBfc2ZjICpzZmMgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4+PiArCj4+Pj4gKyAg
+ICBjbGtfZGlzYWJsZV91bnByZXBhcmUoc2ZjLT5oY2xrKTsKPj4+PiArICAgIHJldHVybiAwOwo+
+Pj4+ICt9Cj4+Pgo+Pj4gV2FzIHRoZSBzdXNwZW5kIGV2ZXIgcmVhbGx5IHRlc3RlZCB3aXRoIHRo
+aXMgYmxvY2sgPyBJcyBkaXNhYmxpbmcgY2xvY2sKPj4+IHJlYWxseSBlbm91Z2ggPwo+Pgo+PiBJ
+dCB3YXMgdGVzdGVkIGFuZCB3ZSBjb3VsZCBkbyBtb3JlLCBmb3IgaW5zdGFuY2UgcG93ZXIgb2Zm
+IHRoZSBnZW5wZCwKPj4gYnV0IGRpc2FibGluZyBjbGNvayBzaG91bGQgYmUgZW5vdWdoLgo+IAo+
+IFdoYXQgYWJvdXQgcHV0dGluZyB0aGUgY29udHJvbGxlciBpbnRvIHNvbWUgcmVzZXQgc3RhdGUg
+LCBpcyB0aGF0IHBvc3NpYmxlPwo+IAo+Pj4+ICtpbnQgcm9ja2NoaXBfc2ZjX3J1bnRpbWVfcmVz
+dW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPj4+PiArewo+Pj4+ICsgICAgc3RydWN0IHJvY2tjaGlw
+X3NmYyAqc2ZjID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+Pj4gKwo+Pj4+ICsgICAgY2xrX3By
+ZXBhcmVfZW5hYmxlKHNmYy0+aGNsayk7Cj4+Pj4gKyAgICByZXR1cm4gMDsKPj4+PiArfQo+Pj4+
+ICsjZW5kaWYgLyogQ09ORklHX1BNICovCj4+Pgo+Pj4gWy4uLl0KPj4+Cj4+Cj4+Cj4gCj4gCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9j
+a2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
