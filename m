@@ -1,56 +1,74 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dts: sun8i-h3: correct UART3 pin definitions
-Date: Tue, 6 Dec 2016 15:05:38 +0100
-Message-ID: <20161206140538.ag7nofyca2n5ror2@lukather>
-References: <20161204122948.11921-1-jorik@kippendief.biz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/3] crypto: brcm: DT documentation for Broadcom SPU
+ driver
+Date: Tue, 6 Dec 2016 14:06:07 +0000
+Message-ID: <20161206140607.GB24177@leverpostej>
+References: <1480536453-24781-1-git-send-email-rob.rice@broadcom.com>
+ <1480536453-24781-2-git-send-email-rob.rice@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ysyxpa6aemby74wd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQULTPBAKGQEU52GJYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161204122948.11921-1-jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1480536453-24781-2-git-send-email-rob.rice@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Rice <rob.rice@broadcom.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Steve Lin <steven.lin1@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-
---ysyxpa6aemby74wd
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi Jorik,
-
-On Sun, Dec 04, 2016 at 01:29:48PM +0100, jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org wrote:
-> From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+On Wed, Nov 30, 2016 at 03:07:31PM -0500, Rob Rice wrote:
+> Device tree documentation for Broadcom Secure Processing Unit
+> (SPU) crypto driver.
 > 
-> In a previous commit, I made a copy/paste error in the pinmux
-> definitions of UART3: PG{13,14} instead of PA{13,14}. This commit takes
-> care of that. I have tested this commit on Orange Pi PC and Orange Pi
-> Plus, and it works for these boards.
+> Signed-off-by: Steve Lin <steven.lin1@broadcom.com>
+> Signed-off-by: Rob Rice <rob.rice@broadcom.com>
+> ---
+>  .../devicetree/bindings/crypto/brcm,spu-crypto.txt | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
 > 
-> Fixes: e3d11d3c45c5 ("dts: sun8i-h3: add pinmux definitions for
-> UART2-3")
-> 
-> Signed-off-by: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt b/Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
+> new file mode 100644
+> index 0000000..e5fe942
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
+> @@ -0,0 +1,25 @@
+> +The Broadcom Secure Processing Unit (SPU) driver supports symmetric
+> +cryptographic offload for Broadcom SoCs with SPU hardware. A SoC may have
+> +multiple SPU hardware blocks.
 
-Thanks!
+Bindings shound describe *hardware*, not *drivers*. Please drop mention
+of the driver, and just decribe the hardware.
 
-This looks like a late fix for the current release which comes to an
-end. Can you resend it with arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org as a recipient, so that the
-ARM SoC maintainers can apply it directly?
+> +Required properties:
+> +- compatible : Should be "brcm,spum-crypto" for devices with SPU-M hardware
+> +  (e.g., Northstar2) or "brcm,spum-nsp-crypto" for the Northstar Plus variant
+> +  of the SPU-M hardware.
+> +
+> +- reg: Should contain SPU registers location and length.
+> +- mboxes: A list of mailbox channels to be used by the kernel driver. Mailbox
+> +channels correspond to DMA rings on the device.
+> +
+> +Example:
+> +	spu-crypto@612d0000 {
+> +		compatible = "brcm,spum-crypto";
+> +		reg = <0 0x612d0000 0 0x900>,    /* SPU 0 control regs */
+> +			<0 0x612f0000 0 0x900>,  /* SPU 1 control regs */
+> +			<0 0x61310000 0 0x900>,  /* SPU 2 control regs */
+> +			<0 0x61330000 0 0x900>;  /* SPU 3 control regs */
 
-Maxime
+The above didn't mention there were several register sets, and the
+comment beside each makes them sound like they're separate SPU
+instances, so I don't think it makes sense to group them as one node.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---ysyxpa6aemby74wd--
+What's going on here?
+
+> +		mboxes = <&pdc0 0>,
+> +			<&pdc1 0>,
+> +			<&pdc2 0>,
+> +			<&pdc3 0>;
+
+Does each mbox correspond to one of the SPUs above? Or is there a shared
+pool?
+
+Thanks,
+Mark.
