@@ -1,71 +1,32 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v3 4/4] pinctrl: aspeed: Fix kerneldoc return descriptions
-Date: Tue,  6 Dec 2016 14:11:52 +1100
-Message-ID: <20161206031152.3004-5-andrew@aj.id.au>
-References: <20161206031152.3004-1-andrew@aj.id.au>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161206031152.3004-1-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V7 00/10] PM / OPP: Multiple regulator support
+Date: Tue, 6 Dec 2016 08:45:02 +0530
+Message-ID: <20161206031502.GA31465@vireshk-i7>
+References: <cover.1480564564.git.viresh.kumar@linaro.org>
+ <CAKohpokXXhcrhzqs+iW+1kTYjyF47bHF0TupMxP=4cSqXOThtA@mail.gmail.com>
+ <CAJZ5v0gykH+UwMvgU3SCVgxg9Ufe23zQ1o9bEvnjtafVqjLa8Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gykH+UwMvgU3SCVgxg9Ufe23zQ1o9bEvnjtafVqjLa8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Lists linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+On 06-12-16, 02:34, Rafael J. Wysocki wrote:
+> I've queued them up, but I'd feel more comfortable with an ACK or
+> Reviewed-by on patch [6/10] too.
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-index 782c5c97f853..76f62bd45f02 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-@@ -97,7 +97,7 @@ static inline void aspeed_sig_desc_print_val(
-  * @enabled: True to query the enabled state, false to query disabled state
-  * @regmap: The IP block's regmap instance
-  *
-- * @return 1 if the descriptor's bitfield is configured to the state
-+ * Return: 1 if the descriptor's bitfield is configured to the state
-  * selected by @enabled, 0 if not, and less than zero if an unrecoverable
-  * failure occurred
-  *
-@@ -134,7 +134,7 @@ static int aspeed_sig_desc_eval(const struct aspeed_sig_desc *desc,
-  * @enabled: True to query the enabled state, false to query disabled state
-  * @maps: The list of regmap instances
-  *
-- * @return 1 if the expression composed by @enabled evaluates true, 0 if not,
-+ * Return: 1 if the expression composed by @enabled evaluates true, 0 if not,
-  * and less than zero if an unrecoverable failure occurred.
-  *
-  * A mux function is enabled or disabled if the function's signal expression
-@@ -175,7 +175,7 @@ static int aspeed_sig_expr_eval(const struct aspeed_sig_expr *expr,
-  *          expression, false to disable the function's signal
-  * @maps: The list of regmap instances for pinmux register access.
-  *
-- * @return 0 if the expression is configured as requested and a negative error
-+ * Return: 0 if the expression is configured as requested and a negative error
-  * code otherwise
-  */
- static int aspeed_sig_expr_set(const struct aspeed_sig_expr *expr,
-@@ -256,7 +256,7 @@ static int aspeed_sig_expr_disable(const struct aspeed_sig_expr *expr,
-  * @exprs: The list of signal expressions (from a priority level on a pin)
-  * @maps: The list of regmap instances for pinmux register access.
-  *
-- * @return 0 if all expressions are disabled, otherwise a negative error code
-+ * Return: 0 if all expressions are disabled, otherwise a negative error code
-  */
- static int aspeed_disable_sig(const struct aspeed_sig_expr **exprs,
- 			       struct regmap * const *maps)
-@@ -281,8 +281,8 @@ static int aspeed_disable_sig(const struct aspeed_sig_expr **exprs,
-  * @exprs: List of signal expressions (haystack)
-  * @name: The name of the requested function (needle)
-  *
-- * @return A pointer to the signal expression whose function tag matches the
-- *         provided name, otherwise NULL.
-+ * Return: A pointer to the signal expression whose function tag matches the
-+ * provided name, otherwise NULL.
-  *
-  */
- static const struct aspeed_sig_expr *aspeed_find_expr_by_name(
+Sure. I would still encourage Stephen to do it. Seems he is very busy now a days
+:)
+
+Thanks.
+
 -- 
-2.9.3
-
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
