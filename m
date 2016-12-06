@@ -1,131 +1,131 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [RFC] New Device Tree property - "bonding"
-Date: Tue, 6 Dec 2016 17:45:24 +0000
-Message-ID: <SG2PR06MB1038FDD0F2C70D6CB0AED298C3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
- <2054258.NRXTrTF0Rj@avalon>
- <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
- <10679912.HCjz6JNtZJ@avalon>
- <SG2PR06MB1038A0DADECF2EB7795A487AC3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <CAL_JsqKJcEmNUzOm-3j3FODkN1faXMAMmURRxfRpHfiGs_a+qA@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 09/13] net: ethernet: ti: cpts: rework
+ initialization/deinitialization
+Date: Tue, 6 Dec 2016 11:49:14 -0600
+Message-ID: <c0d6d670-cf44-c113-3443-3b5209e68ee2@ti.com>
+References: <20161205200525.16664-1-grygorii.strashko@ti.com>
+ <20161205200525.16664-10-grygorii.strashko@ti.com>
+ <20161206134037.GA15946@localhost.localdomain>
+ <4e7888b6-9f1c-ca31-e83e-15109bf1df3f@ti.com>
+ <20161206171802.GA19646@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKJcEmNUzOm-3j3FODkN1faXMAMmURRxfRpHfiGs_a+qA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20161206171802.GA19646-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org" <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+ID4+IE9uIE1vbmRheSAwNSBEZWMgMjAxNiAwOTo1NzozMiBSb2IgSGVycmlu
-ZyB3cm90ZToNCj4gPj4gPiBPbiBNb24sIERlYyA1LCAyMDE2IGF0IDg6NDAgQU0sIExhdXJlbnQg
-UGluY2hhcnQgd3JvdGU6DQo+ID4+ID4gPiBPbiBNb25kYXkgMDUgRGVjIDIwMTYgMDg6MTg6MzQg
-Um9iIEhlcnJpbmcgd3JvdGU6DQo+ID4+ID4gPj4gT24gRnJpLCBOb3YgMjUsIDIwMTYgYXQgMTA6
-NTUgQU0sIFJhbWVzaCBTaGFubXVnYXN1bmRhcmFtIHdyb3RlOg0KPiA+PiA+ID4+PiBIZWxsbyBE
-VCBtYWludGFpbmVycywNCj4gPj4gPiA+Pj4NCj4gPj4gPiA+Pj4gSW4gb25lIG9mIHRoZSBSZW5l
-c2FzIFNvQ3Mgd2UgaGF2ZSBhIGRldmljZSBjYWxsZWQgRFJJRg0KPiA+PiA+ID4+PiAoRGlnaXRh
-bCBSYWRpbw0KPiA+PiA+ID4+PiBJbnRlcmZhY2UpIGNvbnRyb2xsZXIuIEEgRFJJRiBjaGFubmVs
-IGNvbnRhaW5zIDQgZXh0ZXJuYWwgcGlucw0KPiA+PiA+ID4+PiAtIFNDSywgU1lOQywgRGF0YSBw
-aW5zIEQwICYgRDEuDQo+ID4+ID4gPj4+DQo+ID4+ID4gPj4+IEludGVybmFsbHkgYSBEUklGIGNo
-YW5uZWwgaXMgbWFkZSB1cCBvZiB0d28gU1BJIHNsYXZlIGRldmljZXMNCj4gPj4gPiA+Pj4gKGFs
-c28gY2FsbGVkIHN1Yi1jaGFubmVscyBoZXJlKSB0aGF0IHNoYXJlIGNvbW1vbiBDTEsgJiBTWU5D
-DQo+ID4+ID4gPj4+IHNpZ25hbHMgYnV0IGhhdmUgdGhlaXIgb3duIHJlc291cmNlIHNldC4gVGhl
-IERSSUYgY2hhbm5lbCBjYW4NCj4gPj4gPiA+Pj4gaGF2ZSBlaXRoZXIgb25lIG9mIHRoZSBzdWIt
-Y2hhbm5lbCBhY3RpdmUgYXQgYSB0aW1lIG9yIGJvdGguDQo+ID4+ID4gPj4+IFdoZW4gYm90aCBz
-dWItY2hhbm5lbHMgYXJlIGFjdGl2ZSwgdGhleSBuZWVkIHRvIGJlIG1hbmFnZWQNCj4gPj4gPiA+
-Pj4gdG9nZXRoZXIgYXMgb25lIGRldmljZSBhcyB0aGV5IHNoYXJlIHNhbWUgQ0xLICYgU1lOQy4g
-V2UgcGxhbg0KPiA+PiA+ID4+PiB0byB0aWUgdGhlc2UgdHdvIHN1Yi1jaGFubmVscyB0b2dldGhl
-ciB3aXRoIGEgbmV3IHByb3BlcnR5IGNhbGxlZA0KPiAicmVuZXNhcyxib25kaW5nIi4NCj4gPj4g
-PiA+Pg0KPiA+PiA+ID4+IElzIHRoZXJlIG5vIG5lZWQgdG8gZGVzY3JpYmUgdGhlIG1hc3RlciBk
-ZXZpY2U/IE5vIEdQSU9zLA0KPiA+PiA+ID4+IHJlZ3VsYXRvcnMgb3Igb3RoZXIgc2lkZWJhbmQg
-Y29udHJvbHMgbmVlZGVkPyBJZiB0aGF0J3MgbmV2ZXINCj4gPj4gPiA+PiBuZWVkZWQgKHdoaWNo
-IHNlZW1zIGRvdWJ0ZnVsKSwgdGhlbiBJIHdvdWxkIGRvIHNvbWV0aGluZw0KPiA+PiA+ID4+IGRp
-ZmZlcmVudCBoZXJlIHByb2JhYmx5IHdpdGggdGhlIG1hc3RlciBkZXZpY2UgYXMgYSBjaGlsZCBv
-ZiBvbmUNCj4gPj4gPiA+PiBEUklGIGFuZCB0aGVuIHBoYW5kbGVzIHRvIG1hc3RlciBmcm9tIHRo
-ZSBvdGhlciBEUklGcy4NCj4gPj4gPiA+PiBPdGhlcndpc2UsIHRoaXMgbG9va3MNCj4gPj4gZmlu
-ZSB0byBtZS4NCj4gPj4gPiA+DQo+ID4+ID4gPiBIZXJlJ3MgYSBiaXQgb2YgYmFja2dyb3VuZC4N
-Cj4gPj4gPiA+DQo+ID4+ID4gPiBUaGUgRFJJRiBpcyBhbiBTUEkgcmVjZWl2ZXIuIEl0IGhhcyB0
-aHJlZSBpbnB1dCBwaW5zLCBhIGNsb2NrDQo+ID4+ID4gPiBsaW5lLCBhIGRhdGEgbGluZSBhbmQg
-YSBzeW5jIHNpZ25hbC4gVGhlIGRldmljZSBpcyBkZXNpZ25lZCB0byBiZQ0KPiA+PiA+ID4gY29u
-bmVjdGVkIHRvIGEgdmFyaWV0eSBvZiBkYXRhIHNvdXJjZXMsIHVzdWFsbHkgcGxhaW4gU1BJICgx
-IGRhdGENCj4gPj4gPiA+IGxpbmUpLCBJSVMgKDEgZGF0YQ0KPiA+PiA+ID4gbGluZSkgYnV0IGFs
-c28gcmFkaW8gdHVuZXJzIHRoYXQgb3V0cHV0IEkvUSBkYXRhDQo+ID4+ID4gPiAoaHR0cDovL3d3
-dy5uaS5jb20vdHV0b3JpYWwvNDgwNS9lbi8pIG92ZXIgdHdvIGRhdGEgbGluZXMuDQo+ID4+ID4g
-Pg0KPiA+PiA+ID4gSW4gdGhlIGNhc2Ugb2YgSVEgZWFjaCBkYXRhIHNhbXBsZSBpcyBzcGxpdCBp
-biB0d28gSSBhbmQgUSB2YWx1ZXMNCj4gPj4gPiA+ICh0eXBpY2FsbHkgMTYgdG8gMjAgYml0cyBl
-YWNoIGluIHRoaXMgY2FzZSksIGFuZCB0aGUgdmFsdWVzIGFyZQ0KPiA+PiA+ID4gdHJhbnNtaXR0
-ZWQgc2VyaWFsbHkgb3ZlciBvbmUgZGF0YSBsaW5lIGVhY2guIFRoZSBzeW5jaHJvbml6YXRpb24N
-Cj4gPj4gPiA+IGFuZCBjbG9jayBzaWduYWxzIGFyZSBjb21tb24gdG8gYm90aCBkYXRhIGxpbmVz
-LiBUaGUgRFJJRiBpcw0KPiA+PiA+ID4gb3B0aW1pemVkIGZvciB0aGlzIHVzZSBjYXNlIGFzIHRo
-ZSBEUklGIGluc3RhbmNlcyBpbiB0aGUgU29DDQo+ID4+ID4gPiAoZWFjaCBvZiB0aGVtIGhhdmlu
-ZyBpbmRlcGVuZGVudCBjbG9ja3MsIGludGVycnVwdHMgYW5kIGNvbnRyb2wNCj4gPj4gPiA+IHJl
-Z2lzdGVycykgYXJlIGdyb3VwZWQgYnkgdHdvLCBhbmQgdGhlIHR3byBpbnN0YW5jZXMgaW4gYSBn
-cm91cA0KPiA+PiA+ID4gaGFuZGxlIGEgc2luZ2xlIGRhdGEgbGluZSBlYWNoIGJ1dCBzaGFyZSB0
-aGUgc2FtZSBjbG9jayBhbmQgc3luYw0KPiBpbnB1dC4NCj4gPj4gPiA+DQo+ID4+ID4gPiBPbiB0
-aGUgc29mdHdhcmUgc2lkZSB3ZSBuZWVkIHRvIGdyb3VwIHRoZSBJIGFuZCBRIHZhbHVlcywgd2hp
-Y2gNCj4gPj4gPiA+IGFyZSBETUEnZWQgdG8gbWVtb3J5IGJ5IHRoZSB0d28gRFJJRiBpbnN0YW5j
-ZXMsIGFuZCBtYWtlIHRoZW0NCj4gPj4gPiA+IGF2YWlsYWJsZSB0byB1c2Vyc3BhY2UuIFRoZSBW
-NEwyIEFQSSB1c2VkIGhlcmUgaW4gU0RSIChTb2Z0d2FyZQ0KPiA+PiA+ID4gRGVmaW5lZCBSYWRp
-bykgbW9kZSBzdXBwb3J0cyBzdWNoIHVzZSBjYXNlcyBhbmQgZXhwb3NlcyBhIHNpbmdsZQ0KPiA+
-PiA+ID4gZGV2aWNlIG5vZGUgdG8gdXNlcnNwYWNlIHRoYXQgYWxsb3dzIGNvbnRyb2wgb2YgdGhl
-IHR3byBEUklGDQo+ID4+ID4gPiBpbnN0YW5jZXMgYXMgYSBzaW5nbGUgZGV2aWNlLiBUbyBiZSBh
-YmxlIHRvIGltcGxlbWVudCB0aGlzIHdlDQo+ID4+ID4gPiBuZWVkIGtlcm5lbCBjb2RlIHRvIGJl
-IGF3YXJlIG9mIERSSUYgZ3JvdXBzIGFuZCwgd2hpbGUgYmluZGluZyB0bw0KPiA+PiA+ID4gdGhl
-IERSSUYgaW5zdGFuY2VzIHNlcGFyYXRlbHksIGV4cG9zZSBvbmx5IG9uZSBWNEwyIGRldmljZSB0
-bw0KPiB1c2Vyc3BhY2UgZm9yIGVhY2ggZ3JvdXAuDQo+ID4+ID4gPg0KPiA+PiA+ID4gVGhlcmUn
-cyBubyBtYXN0ZXIgb3Igc2xhdmUgaW5zdGFuY2UgZnJvbSBhIGhhcmR3YXJlIHBvaW50IG9mDQo+
-ID4+ID4gPiB2aWV3LCBidXQgdGhlIHR3byBpbnN0YW5jZXMgYXJlIG5vdCBpbnRlcmNoYW5nZWFi
-bGUgYXMgdGhleSBjYXJyeQ0KPiA+PiA+ID4gc2VwYXJhdGUNCj4gPj4gaW5mb3JtYXRpb24uDQo+
-ID4+ID4gPiBUaGV5IG11c3QgdGh1cyBiZSBpZGVudGlmaWVkIGF0IHRoZSBkcml2ZXIgbGV2ZWwu
-DQo+ID4+ID4NCj4gPj4gPiBCeSBtYXN0ZXIsIEkgbWVhbnQgdGhlIGV4dGVybmFsIG1hc3RlciBk
-ZXZpY2UgdGhhdCBnZW5lcmF0ZXMgdGhlIElRDQo+ID4+ID4gZGF0YSwgbm90IHdoaWNoIG9mIHRo
-ZSBpbnRlcm5hbCBEUklGIGJsb2NrcyBpcyBhIG1hc3RlciBvZiB0aGUgb3RoZXIuDQo+ID4+ID4g
-U28gYmFjayB0byBteSBxdWVzdGlvbiwgZG9lcyB0aGUgZXh0ZXJuYWwgbWFzdGVyIGRldmljZSBu
-ZWVkIHRvIGJlDQo+ID4+ID4gZGVzY3JpYmVkPyBJIHdvcnJ5IHRoZSBhbnN3ZXIgbm93IGZvciBh
-IHNpbXBsZSBjYXNlIGlzIG5vLCBidXQgdGhlbg0KPiA+PiA+IGxhdGVyIHBlb3BsZSBhcmUgZ29p
-bmcgdG8gaGF2ZSBjYXNlcyBuZWVkaW5nIHRvIGRlc2NyaWJlIG1vcmUuIFdlDQo+ID4+ID4gbmVl
-ZCB0byBhbnN3ZXIgdGhpcyBxdWVzdGlvbiBmaXJzdCBiZWZvcmUgd2UgY2FuIGRlY2lkZSB3aGF0
-IHRoaXMNCj4gPj4gPiBiaW5kaW5nIHNob3VsZCBsb29rIGxpa2UuDQo+ID4+DQo+ID4+IE9oIHll
-cyB0aGUgZXh0ZXJuYWwgZGV2aWNlIGNlcnRhaW5seSBuZWVkcyB0byBiZSBkZXNjcmliZWQuIEFz
-IGl0IGlzDQo+ID4+IGNvbnRyb2xsZWQgdGhyb3VnaCBhIHNlcGFyYXRlLCBnZW5lcmFsLXB1cnBv
-c2UgSTJDIG9yIFNQSSBjb250cm9sbGVyLA0KPiA+PiBpdCBzaG91bGQgYmUgYSBjaGlsZCBub2Rl
-IG9mIHRoYXQgY29udHJvbGxlci4gVGhlIERSSUYgaGFuZGxlcyB0aGUNCj4gPj4gZGF0YSBpbnRl
-cmZhY2Ugb25seSwgbm90IHRoZSBjb250cm9sIGludGVyZmFjZSBvZiB0aGUgZXh0ZXJuYWwgZGV2
-aWNlLg0KPiA+DQo+ID4gWWVzLCBhcyBMYXVyZW50IG1lbnRpb25lZCwgdGhlIGV4dGVybmFsIG1h
-c3RlciB3aWxsIGJlIGRlc2NyaWJlZA0KPiBzZXBhcmF0ZWx5LiBUaGUgZGF0YSBpbnRlcmZhY2Ug
-d2l0aCB0aGUgbWFzdGVyIGlzIGRlc2NyaWJlZCB0aHJvdWdoIHBvcnQNCj4gbm9kZXMuIEUuZy4N
-Cj4gPg0KPiA+ICAgICAgICAgcG9ydCB7DQo+ID4gICAgICAgICAgICAgICAgIGRyaWYwX2VwOiBl
-bmRwb2ludCB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ0
-dW5lcl9lcD47DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4gICAgICAgICB9Ow0KPiA+DQo+
-ID4gRG8gd2UgYWdyZWUgb24gdGhpcyBtb2RlbCBwbGVhc2U/DQo+DQo+IFdlbGwsIHRoYXQncyBu
-b3QgY29tcGxldGUgYXMgeW91IHNob3VsZCBoYXZlIGJvdGggRFJJRjAgYW5kIERSSUYxIGhhdmlu
-Zw0KPiBjb25uZWN0aW9ucyB0byB0aGUgdHVuZXIuIFRoZW4geW91IGNhbiB3YWxrIHRoZSBncmFw
-aCBhbmQgZmluZCBldmVyeXRoaW5nLA0KPiBhbmQgeW91IHRoZW4gZG9uJ3QgbmVlZCB0aGUgYm9u
-ZGluZyBwcm9wZXJ0eS4NCg0KQXNzdW1pbmcgdGhlIHRoaXJkIHBhcnR5IHR1bmVyIGV4cG9zZXMg
-aXQncyB0d28gZGF0YSBsaW5lcyBhcyB0d28gZW5kcG9pbnRzLCBpdCBzZWVtcyBwb3NzaWJsZSB3
-aXRoIG9mX2dyYXBoLmggYXBpcyB0byB3YWxrIHRocm91Z2ggdHVuZXIgZW5kIHBvaW50cyBhbmQg
-Z2V0IHRoZSBwaGFuZGxlIG9mIHRoZSBvdGhlciBEUklGIGRldmljZS4gSG93ZXZlciwgdGhlcmUg
-YXJlIGNvdXBsZSBvZiBwb2ludHMgY29taW5nIHRvIG1pbmQuDQoNCi0gVGhlIGN0cmwgcGlucyBz
-aGFyZWQgYmV0d2VlbiB0d28gRFJJRnMgbmVlZHMgdG8gYmUgZW5hYmxlZCBpbiBvbmUgb2YgdGhl
-IERSSUYgZGV2aWNlLiBEbyB3ZSBjaG9vc2UgdGhpcyBkZXZpY2UgYXJiaXRyYXJpbHk/IERvIHdl
-IGV4cG9zZSB0aGUgQ1RSTCBzaWduYWwgcHJvcGVydGllcyAobXNiL2xzYiBmaXJzdCwgcG9sYXJp
-dHkgZXRjKSBvbiBib3RoIERSSUYgZGV2aWNlcz8gU2hvdWxkIHdlIHRoaW5rIGFib3V0IHNjYWxh
-YmlsaXR5Pw0KDQotIEl0IG1hbmRhdGVzIHRoZSB0aGlyZCBwYXJ0eSB0dW5lciBkZXZpY2UgdG8g
-ZXhwb3NlIGl0J3MgdHdvIGRhdGEgbGluZXMgYXMgdHdvIGVuZHBvaW50cy4gSXQgYXNzdW1lcyB0
-aGF0IGEgc2luZ2xlIHRoaXJkIHBhcnR5IG1hc3RlciBkZXZpY2UgY29udHJvbHMgYm90aCB0aGUg
-ZGF0YSBsaW5lcyBjb21pbmcgdG8gZWFjaCBEUklGIGRldmljZS4NCg0KVGhlIGJvbmRpbmcgcHJv
-cGVydHkgbG9va3MgYSBiaXQgY2xlYW5lciBvbiB0aGVzZSBhc3BlY3RzIGJlY2F1c2UgaXQgZGVz
-Y3JpYmVzIG9ubHkgdGhlIERSSUYgZGV2aWNlLg0KDQpUaGFua3MsDQpSYW1lc2gNCg0KDQoNCg0K
-DQpbaHR0cHM6Ly93d3cyLnJlbmVzYXMuZXUvbWVkaWEvZW1haWwvdW5pY2VmLmdpZl0NCg0KVGhp
-cyBDaHJpc3RtYXMsIGluc3RlYWQgb2Ygc2VuZGluZyBvdXQgY2FyZHMsIFJlbmVzYXMgRWxlY3Ry
-b25pY3MgRXVyb3BlIGhhdmUgZGVjaWRlZCB0byBzdXBwb3J0IFVuaWNlZiB3aXRoIGEgZG9uYXRp
-b24uIEZvciBmdXJ0aGVyIGRldGFpbHMgY2xpY2sgaGVyZTxodHRwczovL3d3dy51bmljZWYub3Jn
-Lz4gdG8gZmluZCBvdXQgYWJvdXQgdGhlIHZhbHVhYmxlIHdvcmsgdGhleSBkbywgaGVscGluZyBj
-aGlsZHJlbiBhbGwgb3ZlciB0aGUgd29ybGQuDQpXZSB3b3VsZCBsaWtlIHRvIHRha2UgdGhpcyBv
-cHBvcnR1bml0eSB0byB3aXNoIHlvdSBhIE1lcnJ5IENocmlzdG1hcyBhbmQgYSBwcm9zcGVyb3Vz
-IE5ldyBZZWFyLg0K
+Hi Richard,
+
+On 12/06/2016 11:18 AM, Richard Cochran wrote:
+> On Tue, Dec 06, 2016 at 10:45:55AM -0600, Grygorii Strashko wrote:
+>> On 12/06/2016 07:40 AM, Richard Cochran wrote:
+>>> [ BTW, resetting the timecounter here makes no sense either.  Why
+>>>   reset the clock just because the interface goes down?  ]
+>>>
+>>
+>> Huh. This is how it works now (even before my changes) - this is just refactoring!
+>> (really new thing is the only cpts_calc_mult_shift()).
+> 
+> The cpts_register() used to be called from probe(), but this changed
+> without any review in f280e89ad.  That wasn't your fault, but still...
+>  
+>> Also there are additional questions such as:
+>> - is there guarantee that cpsw port will be connected to the same network after ifup?
+> 
+> The network is not relevant.  PTP time is a global standard, just like
+> with NTP.  We don't reset the NTP clock with ifup/down, do we?
+
+But we do reset whole cpsw :( and that's required to support PM use cases as
+suspend/resume.
+
+There are also PM requirement to shutdown cpsw in case all interfaces are down.
+
+More over, there are requirement to minimize cpsw power consumption in case all links are
+disconnected (and cpts is special case here).
+
+So, at least resetting of the timecounter still required.
+
+
+
+> 
+>> - should there be possibility to reset cc.mult if it's value will be kept from the previous run?
+> 
+> cc.mult will change naturally according to the operation of the user
+> space PTP stack.  There is no need to reset it that I can see.
+>  
+>>> Secondly, you have made the initialization order of these fields hard
+>>> to follow.  With the whole series applied:
+>>>
+>>> probe()
+>>> 	cpts_create()
+>>> 		cpts_of_parse()
+>>> 		{
+>>> 			/* Set cc_mult but not cc.mult! */
+>>> 			set cc_mult
+>>> 			set cc.shift
+>>> 		}
+>>> 		cpts_calc_mult_shift()
+>>> 		{
+>>> 			/* Set them both. */
+>>> 			cpts->cc_mult = mult;
+>>> 			cpts->cc.mult = mult; 
+>>
+>> ^^ this assignment of cpts->cc.mult not required.
+> 
+> You wrote the code, not me.
+
+Sry, I meant, thank for catching this.
+
+>  
+>>> 			cpts->cc.shift = shift;
+>> 			
+>>
+>> only in case there were not set in DT before
+>> (I have a requirement to support both - DT and cpts_calc_mult_shift and
+>>  that introduces a bit of complexity)
+>>
+>> Also, I've tried not to add more fields in struct cpts.
+>>
+>>> 		}
+>>> /* later on */
+>>> cpts_register()
+>>> 	cpts->cc.mult = cpts->cc_mult;
+>>>
+>>> There is no need for such complexity.  Simply set cc.mult in
+>>> cpts_create() _once_, immediately after the call to
+>>> cpts_calc_mult_shift().
+>>>
+>>> You can remove the assignment from cpts_calc_mult_shift() and
+>>> cpts_register().
+>>
+>> Just to clarify: do you propose to get rid of cpts->cc_mult at all?
+> 
+> No.  Read what I said before:
+> 
+>    There is no need for such complexity.  Simply set cc.mult in
+>    cpts_create() _once_, immediately after the call to
+>    cpts_calc_mult_shift().
+> 
+>> Honestly, i'd not prefer to change functional behavior of ptp clock as part of
+>> this series.
+> 
+> Fair enough.  The bogus clock reset existed before your series.
+> 
+> But please don't obfuscate simple initialization routines.  The way
+> you set cc.mult and cc_mult is illogical and convoluted.
+> 
+
+Ok. I'll try to optimize it following your directions.
+
+Thanks.
+
+-- 
+regards,
+-grygorii
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
