@@ -1,73 +1,63 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dts: sun8i-h3: correct UART3 pin definitions
-Date: Tue, 6 Dec 2016 15:31:43 +0100
-Message-ID: <20161206143143.yq3tqkcimrg45n6m@lukather>
-References: <20161206142710.6450-1-jorik@kippendief.biz>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [RESEND/PATCH v6 3/3] clk: qcom: Add A53 clock driver
+Date: Tue, 6 Dec 2016 16:47:55 +0200
+Message-ID: <8674bc87-4768-ec93-7bf2-18a07df1cb9a@linaro.org>
+References: <20161019132816.31073-4-georgi.djakov@linaro.org>
+ <20161028015438.GG16026@codeaurora.org> <20161102205910.GQ25787@tuxbot>
+ <20161102225520.GW16026@codeaurora.org> <20161103182834.GR25787@tuxbot>
+ <549f87fe-7be9-14b4-8e34-86f7f8dad94e@linaro.org>
+ <20161114203426.GN5177@codeaurora.org> <20161205212644.GB30492@tuxbot>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lfyrffyl3unhdooc"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161206142710.6450-1-jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161205212644.GB30492@tuxbot>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/05/2016 11:26 PM, Bjorn Andersson wrote:
+> On Mon 14 Nov 14:21 PST 2016, Stephen Boyd wrote:
+>
+>> On 11/11, Georgi Djakov wrote:
+>>> On 11/03/2016 08:28 PM, Bjorn Andersson wrote:
+> [..]
+>>>> I'm in favour of us inventing a kicker API and it's found outside out
+>>>> use cases as well (e.g. virtio/rpmsg).
+>>>>
+>>
+>> I'd rather we did this kicker API as well. That way we don't need
+>> to make a syscon and a simple-mfd to get software to work
+>> properly. Don't other silicon vendors need a kicker API as well?
+>> How are they kicking remote processors in other places? GPIOs?
+>>
+>
+> In remoteproc I have two of these:
+> 1) da8xx_remoteproc ioremaps a register and writes a bit in it (looks
+>    similar to the downstream Qualcomm way)
+>
+> 2) omap_remoteproc acquires a mbox channel, in which it writes a
+>    virtqueue id to kick the remote.
+>
+> So one of the two cases could have used such mechanism.
+>
 
---lfyrffyl3unhdooc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I also see the potential users of such API mostly in the 
+remoteproc/rpmgs subsystems.
 
-Hi Arnd, Olof,
+> We could write up a Qualcomm specific "kicker" and probe the mailing
+> list regarding the interest in making that generic (i.e. changing the
+> names in the API and DT binding).
 
-On Tue, Dec 06, 2016 at 03:27:10PM +0100, jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org wrote:
-> From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
->=20
-> In a previous commit, I made a copy/paste error in the pinmux
-> definitions of UART3: PG{13,14} instead of PA{13,14}. This commit takes
-> care of that. I have tested this commit on Orange Pi PC and Orange Pi
-> Plus, and it works for these boards.
->=20
-> Fixes: e3d11d3c45c5 ("dts: sun8i-h3: add pinmux definitions for
-> UART2-3")
->=20
-> Signed-off-by: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+Yes, i am planing to do this.
 
-Could you please queue that patch for 4.9, with
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> The sucky part is that I believe we have most of our kickers in place
+> already so rpm, smd, smp2p, smsm etc would all need to support both
+> mechanisms.
 
-Thanks!
-Maxime
+Agree.. we have to keep compatibility with existing dtbs.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---lfyrffyl3unhdooc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYRsvLAAoJEBx+YmzsjxAg+IoP/2LHAnTAZUtxVXo3UkrxGvom
-dlNm4qX+l+avEGbzcm8f7tVQsbKCq1ANV/cr8LwuKL6U/ycP7WAXrBWxAounUfke
-DXONRZ8fhyHiS1XBS0JZ59p89uS4HU5+3pFAN/0nx80A0yLkneDWJ6RdY/aGoND6
-bNZODdz44W88JJ9uXVq9hLHotQnmHLo9wsw2yCDZ4OD+Ozwy1vaBKMYGMgTBsWVd
-pvrYPYqiW3M1MDTdVOGLpP48jjN5sngWRBQ0mgugIjRjqCzhp9t62SOIue4ubadW
-9mHSV7tGv+0rykuRy58+LErIVV6MZf2gkcIpAOWughRGlCrIB4Dmzt60k6b5E8La
-ZUYKr5QgTcnR6Dblmp/QHvORjE5dozq0WrUq+RcK4Z0y17ouhUJgoMJ/MHqhIO2c
-s8qyDWKkI8k30jaxSG13T5hIRgMpIJvRDDQaFvbIriX4OzkBc4guCCBUaXSXc9nH
-YIKgtuE7pY/7laCcHdoBsdi6i4A2ienWKhyom844CdEtUTRjywZ065pdmaKHuFVE
-giOciy6mxAt7RUrVEDLRr+FjzmfTUnlPnJYyXClgv9aaAQ+An9O/BaPcRS+WSYbY
-+j1dh9mPwxVtA20rFNy+tfjeaSKgM8iX4NcPQpmBjrzMxW3rf0k+HZPOCGIOW066
-ajVP+LLs3xvt/JtK7S7v
-=nujw
------END PGP SIGNATURE-----
-
---lfyrffyl3unhdooc--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Georgi
