@@ -1,220 +1,57 @@
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH 1/3] iio: adc: add device tree bindings for Qualcomm
- PM8xxx ADCs
-Date: Tue, 6 Dec 2016 15:00:53 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1612061455400.29508@pmeerw.net>
-References: <1481032253-27019-1-git-send-email-linus.walleij@linaro.org>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v4 1/7] MFD: add bindings for STM32 General Purpose Timer driver
+Date: Tue, 6 Dec 2016 15:02:18 +0100
+Message-ID: <CA+M3ks7nUzbhUeKzi5VzJb0YhC2EWZU5k4gNCEKjHbpGrEWZtg@mail.gmail.com>
+References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
+ <1481027929-13704-2-git-send-email-benjamin.gaignard@st.com> <20161206130048.GH25385@dell.home>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1481032253-27019-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, "Ivan T . Ivanov" <iivanov.xz@gmail.com>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20161206130048.GH25385@dell.home>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, alexandre.torgue@st.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
+[snip]
+>
+> I'm not going to push too hard, but I still thing "advanced-control"
+> would suit better, since this is not *just* a timer.  In fact, the
+> parent device (the MFD) doesn't have any timer functionality.  That's
+> what "timer@0" does.
+>
+> The IP is called "Advanced Control" in the datasheet, no?
 
-> This adds the device tree bindings for the Qualcomm PM8xxx
-> ADCs. This is based on the existing DT bindings for the
-> SPMI ADC so there are hopefully no controversial features.
+In datasheet only timers 1 and 8 are called "advanced-control" timers
+Timers 2 to 5 and 9 to 14 are called "general purpose" timers.
+Timers 6 and 7 are named "basic" timers.
 
-nitpicking below
- 
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: Ivan T. Ivanov <iivanov.xz@gmail.com>
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 160 +++++++++++++++++++++
->  1 file changed, 160 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> new file mode 100644
-> index 000000000000..6e51e3e74b88
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> @@ -0,0 +1,160 @@
-> +Qualcomm's PM8xxx voltage XOADC
-> +
-> +The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Chrystal
+I have ask around in ST and it seems that "general purpose" name was the
+best to describe all the timers, so I would like to keep using it.
 
-crystal
-
-> +oscillator ADC) encompass PM8018, PM8038, PM8058, PM8917 and PM8921.
-
-encompassing
-
-> +
-> +Required properties:
-> +
-> +- compatible: should be one of:
-> +  "qcom,pm8018-adc"
-> +  "qcom,pm8038-adc"
-> +  "qcom,pm8058-adc"
-> +  "qcom,pm8917-adc"
-> +  "qcom,pm8921-adc"
-> +
-> +- reg: should contain the ADC base address in the PMIC, typically
-> +  0x197.
-> +
-> +The following required properties are standard for IO channels, see
-> +iio-bindings.txt for more details:
-> +
-> +- #address-cells: should be set to <1>
-> +
-> +- #size-cells: should be set to <0>
-> +
-> +- #io-channel-cells: should be set to <1>
-> +
-> +- interrupts: should refer to the parent PMIC interrupt controller
-> +  and reference the proper ADC interrupt.
-> +
-> +Required subnodes:
-> +
-> +The ADC channels are configured as subnodes of the ADC. Since some of
-> +them are used for calibrating the ADC, these nodes are compulsory:
-> +
-> +ref_625mv {
-> +	reg = <0x0c>;
-> +};
-> +
-> +ref_1250mv {
-> +	reg = <0x0d>;
-> +};
-> +
-> +ref_muxoff {
-> +	reg = <0x0f>;
-> +};
-> +
-> +These three nodes are used for absolute and ratiometric calibration
-> +and only need to have these reg values: they are by hardware defined
-
-they are by hardware definition 1:1 ratio converters that sample ...
-
-> +to be 1:1 ratio converters that sample 625, 1250 and 0 V and create
-
-milliV
-or 0.625, 1.250 V
-
-> +an interpolation calibration for all other ADCs.
-> +
-> +Optional subnodes: any channels other than channel 0x0c, 0x0d and
-> +0x0f are optional.
-> +
-> +Required channel node properties:
-> +
-> +- reg: should contain the hardware channel number in the range
-> +  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-> +
-> +Optional channel node properties:
-> +
-> +- qcom,decimation:
-> +  Value type: <u32>
-> +  Definition: This parameter is used to decrease ADC sampling rate.
-> +          Quicker measurements can be made by reducing decimation ratio.
-> +          Valid values are 512, 1024, 2048, 4096.
-> +          If property is not found, default value of 512 will be used.
-> +
-> +- qcom,ratiometric:
-> +  Value type: <empty>
-> +  Definition: Channel calibration type. If this property is specified
-> +          VADC will use the VDD reference (1.8V) and GND for channel
-> +          calibration. If property is not found, channel will be
-> +          calibrated with 0.625V and 1.25V reference channels, also
-> +          known as absolute calibration.
-> +
-> +- qcom,ratiometric-ref:
-> +  Value type: <u32>
-> +  Definition: The reference voltage pair when using ratiometric
-> +          calibration:
-> +	  0 = XO_IN/XOADC_GND
-> +	  1 = PMIC_IN/XOADC_GND
-> +	  2 = PMIC_IN/BMS_CSP
-> +	  3 (invalid)
-> +	  4 = XOADC_GND/XOADC_GND
-> +	  5 = XOADC_VREF/XOADC_GND
-> +
-> +Example:
-> +
-> +xoadc: xoadc@197 {
-> +	compatible = "qcom,pm8058-adc";
-> +	reg = <0x197>;
-> +	interrupt-parent = <&pm8058>;
-> +	interrupts = <76 1>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	#io-channel-cells = <1>;
-> +
-> +	vcoin {
-> +		reg = <0x00>;
-> +	};
-> +	vbat {
-> +		reg = <0x01>;
-> +	};
-> +	dcin {
-> +		reg = <0x02>;
-> +	};
-> +	ichg {
-> +		reg = <0x03>;
-> +	};
-> +	vph_pwr {
-> +		reg = <0x04>;
-> +	};
-> +	mpp5 {
-> +		reg = <0x05>;
-> +	};
-> +	mpp6 {
-> +		reg = <0x06>;
-> +	};
-> +	mpp7 {
-> +		reg = <0x07>;
-> +	};
-> +	mpp8 {
-> +		reg = <0x08>;
-> +	};
-> +	mpp9 {
-> +		reg = <0x09>;
-> +	};
-> +	usb_vbus {
-> +		reg = <0x0a>;
-> +	};
-> +	die_temp {
-> +		reg = <0x0b>;
-> +	};
-> +	ref_625mv {
-> +		reg = <0x0c>;
-> +	};
-> +	ref_1250mv {
-> +		reg = <0x0d>;
-> +	};
-> +	ref_325mv {
-> +		reg = <0x0e>;
-> +	};
-> +	ref_muxoff {
-> +		reg = <0x0f>;
-> +	};
-> +};
-> +
-> +
-> +/* IIO client node */
-> +iio-hwmon {
-> +	compatible = "iio-hwmon";
-> +	io-channels = <&xoadc 0x01>, /* Battery */
-> +		    <&xoadc 0x02>, /* DC in (charger) */
-> +		    <&xoadc 0x04>, /* VPH the main system voltage */
-> +		    <&xoadc 0x0b>, /* Die temperature */
-> +		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
-> +		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
-> +		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-> +};
-> 
-
--- 
-
-Peter Meerwald-Stadler
-+43-664-2444418 (mobile)
+>
+>> +             #address-cells =3D <1>;
+>> +             #size-cells =3D <0>;
+>> +             compatible =3D "st,stm32-gptimer";
+>> +             reg =3D <0x40010000 0x400>;
+>> +             clocks =3D <&rcc 0 160>;
+>> +             clock-names =3D "clk_int";
+>> +
+>> +             pwm@0 {
+>> +                     compatible =3D "st,stm32-pwm";
+>> +                     pinctrl-0       =3D <&pwm1_pins>;
+>> +                     pinctrl-names   =3D "default";
+>> +             };
+>> +
+>> +             timer@0 {
+>> +                     compatible =3D "st,stm32-timer-trigger";
+>> +                     reg =3D <0>;
+>> +             };
+>> +     };
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
