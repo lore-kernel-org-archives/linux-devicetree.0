@@ -1,95 +1,131 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 09/13] net: ethernet: ti: cpts: rework
- initialization/deinitialization
-Date: Tue, 6 Dec 2016 14:40:37 +0100
-Message-ID: <20161206134037.GA15946@localhost.localdomain>
-References: <20161205200525.16664-1-grygorii.strashko@ti.com>
- <20161205200525.16664-10-grygorii.strashko@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
+Date: Tue, 06 Dec 2016 15:42:04 +0200
+Message-ID: <4410572.7ltIsoL1pV@avalon>
+References: <1481030026-7329-1-git-send-email-bgolaszewski@baylibre.com> <1481030026-7329-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161205200525.16664-10-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1481030026-7329-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2016 at 02:05:21PM -0600, Grygorii Strashko wrote:
-> @@ -372,34 +354,27 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
->  }
->  EXPORT_SYMBOL_GPL(cpts_tx_timestamp);
->  
-> -int cpts_register(struct device *dev, struct cpts *cpts,
-> -		  u32 mult, u32 shift)
-> +int cpts_register(struct cpts *cpts)
->  {
->  	int err, i;
->  
-> -	cpts->info = cpts_info;
-> -	spin_lock_init(&cpts->lock);
-> -
-> -	cpts->cc.read = cpts_systim_read;
-> -	cpts->cc.mask = CLOCKSOURCE_MASK(32);
-> -	cpts->cc_mult = mult;
-> -	cpts->cc.mult = mult;
-> -	cpts->cc.shift = shift;
-> -
->  	INIT_LIST_HEAD(&cpts->events);
->  	INIT_LIST_HEAD(&cpts->pool);
->  	for (i = 0; i < CPTS_MAX_EVENTS; i++)
->  		list_add(&cpts->pool_data[i].list, &cpts->pool);
->  
-> -	cpts_clk_init(dev, cpts);
-> +	clk_enable(cpts->refclk);
+Hi Bartosz,
+
+Thank you for the patch.
+
+On Tuesday 06 Dec 2016 14:13:45 Bartosz Golaszewski wrote:
+> Add the dumb-vga-dac node to the board DT together with corresponding
+> ports and vga connector. This allows to retrieve the edid info from
+> the display automatically.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/da850-lcdk.dts | 69 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/da850-lcdk.dts
+> b/arch/arm/boot/dts/da850-lcdk.dts index afcb482..ca437c1 100644
+> --- a/arch/arm/boot/dts/da850-lcdk.dts
+> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> @@ -51,6 +51,51 @@
+>  			system-clock-frequency = <24576000>;
+>  		};
+>  	};
 > +
->  	cpts_write32(cpts, CPTS_EN, control);
->  	cpts_write32(cpts, TS_PEND_EN, int_enable);
->  
-> +	/* reinitialize cc.mult to original value as it can be modified
-> +	 * by cpts_ptp_adjfreq().
-> +	 */
-> +	cpts->cc.mult = cpts->cc_mult;
+> +	vga-bridge {
+> +		compatible = "dumb-vga-dac";
 
-This still isn't quite right.  First of all, you shouldn't clobber the
-learned cc.mult value in cpts_register().  Presumably, if PTP had been
-run on this port before, then the learned frequency is approximately
-correct, and it should be left alone.
+Please don't. The board uses a THS8135, which has a few control signals. 
+They're not used on this board so you can certainly rely on the dumb-vga-dac 
+driver, but you should not use that compatible string. You should instead add 
+DT bindings for ti,ths8135 and add that compatible string to the dumb-vga-dac 
+driver.
 
-[ BTW, resetting the timecounter here makes no sense either.  Why
-  reset the clock just because the interface goes down?  ]
+The rest looks good to me.
 
-Secondly, you have made the initialization order of these fields hard
-to follow.  With the whole series applied:
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0>;
+> +
+> +				vga_bridge_in: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&display_out_vga>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <1>;
+> +
+> +				vga_bridge_out: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&vga_con_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vga {
+> +		compatible = "vga-connector";
+> +
+> +		ddc-i2c-bus = <&i2c0>;
+> +
+> +		port {
+> +			vga_con_in: endpoint {
+> +				remote-endpoint = <&vga_bridge_out>;
+> +			};
+> +		};
+> +	};
+>  };
+> 
+>  &pmx_core {
+> @@ -236,3 +281,27 @@
+>  &memctrl {
+>  	status = "okay";
+>  };
+> +
+> +&display {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&lcd_pins>;
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		display_out: port@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +	};
+> +};
+> +
+> +&display_out {
+> +	display_out_vga: endpoint@0 {
+> +		reg = <0>;
+> +		remote-endpoint = <&vga_bridge_in>;
+> +	};
+> +};
 
-probe()
-	cpts_create()
-		cpts_of_parse()
-		{
-			/* Set cc_mult but not cc.mult! */
-			set cc_mult
-			set cc.shift
-		}
-		cpts_calc_mult_shift()
-		{
-			/* Set them both. */
-			cpts->cc_mult = mult;
-			cpts->cc.mult = mult;
-			cpts->cc.shift = shift;
-		}
-/* later on */
-cpts_register()
-	cpts->cc.mult = cpts->cc_mult;
+-- 
+Regards,
 
-There is no need for such complexity.  Simply set cc.mult in
-cpts_create() _once_, immediately after the call to
-cpts_calc_mult_shift().
+Laurent Pinchart
 
-You can remove the assignment from cpts_calc_mult_shift() and
-cpts_register().
-
-Thanks,
-Richard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
