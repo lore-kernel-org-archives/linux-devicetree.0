@@ -1,41 +1,41 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v4 2/6] arm: dts: aspeed-g4: Add gpio controller to devicetree
-Date: Tue,  6 Dec 2016 14:53:44 +1100
-Message-ID: <20161206035348.29948-3-andrew@aj.id.au>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH v4 3/6] arm: dts: aspeed-g5: Add SoC Display Controller node
+Date: Tue,  6 Dec 2016 14:53:45 +1100
+Message-ID: <20161206035348.29948-4-andrew@aj.id.au>
 References: <20161206035348.29948-1-andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161206035348.29948-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161206035348.29948-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 ---
- arch/arm/boot/dts/aspeed-g4.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/aspeed-g5.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index b00dfc7a3bf7..20b75667286f 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -822,6 +822,16 @@
- 				reg = <0x1e720000 0x8000>;	// 32K
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index dd94d9361fda..c7ff3ea4bf37 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -71,6 +71,12 @@
+ 				reg = <0x1e6e202c 0x4>;
  			};
  
-+			gpio: gpio@1e780000 {
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				compatible = "aspeed,ast2400-gpio";
-+				reg = <0x1e780000 0x1000>;
-+				interrupts = <20>;
-+				gpio-ranges = <&pinctrl 0 0 220>;
-+				interrupt-controller;
++			gfx: display@1e6e6000 {
++				compatible = "aspeed,ast2500-gfx", "syscon";
++				reg = <0x1e6e6000 0x1000>;
++				reg-io-width = <4>;
 +			};
 +
- 			timer: timer@1e782000 {
- 				compatible = "aspeed,ast2400-timer";
- 				reg = <0x1e782000 0x90>;
+ 			sram@1e720000 {
+ 				compatible = "mmio-sram";
+ 				reg = <0x1e720000 0x9000>;	// 36K
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
