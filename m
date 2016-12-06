@@ -1,13 +1,13 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v3 2/2] reset: hisilicon: add reset-hi3660
-Date: Tue,  6 Dec 2016 09:51:32 +0800
-Message-ID: <1480989092-31847-3-git-send-email-zhangfei.gao@linaro.org>
-References: <1480989092-31847-1-git-send-email-zhangfei.gao@linaro.org>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v3 -next 1/2] ARM: sunxi: add support for H2+ SoC
+Date: Tue, 6 Dec 2016 13:01:56 +1100
+Message-ID: <4c0bd9ab-05c7-bf53-e55a-fc4c108a456f@ozlabs.ru>
+References: <20161202150513.34691-1-icenowy@aosc.xyz>
+ <20161205091955.zkffyktw5trfocnx@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3167341528611257346=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1480989092-31847-1-git-send-email-zhangfei.gao@linaro.org>
+In-Reply-To: <20161205091955.zkffyktw5trfocnx@lukather>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,185 +17,96 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, haojian.zhuang@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-sunxi@googlegroups.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add hi3660 reset driver
-Example of dts usage:
-	iomcu_rst: iomcu_rst_controller {
-		compatible = "hisilicon,hi3660-reset";
-		hisi,rst-syscon = <&iomcu>;
-		#reset-cells = <2>;
-	};
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============3167341528611257346==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk"
 
-	i2c0: i2c@..... {
-                ...
-		resets = <&iomcu_rst 0x20 3>; /* offset: 0x20; bit: 3 */
-                ...
-        };
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk
+Content-Type: multipart/mixed; boundary="qua7W6ePsLbpA4HrODH14lE2DM4oLwo5g";
+ protected-headers="v1"
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>,
+ Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+ Russell King <linux@armlinux.org.uk>, Andre Przywara
+ <andre.przywara@arm.com>, Hans de Goede <hdegoede@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>, Vishnu Patekar <vishnupatekar0510@gmail.com>,
+ linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-sunxi@googlegroups.com
+Message-ID: <4c0bd9ab-05c7-bf53-e55a-fc4c108a456f@ozlabs.ru>
+Subject: Re: [PATCH v3 -next 1/2] ARM: sunxi: add support for H2+ SoC
+References: <20161202150513.34691-1-icenowy@aosc.xyz>
+ <20161205091955.zkffyktw5trfocnx@lukather>
+In-Reply-To: <20161205091955.zkffyktw5trfocnx@lukather>
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/reset/hisilicon/Kconfig        |   7 ++
- drivers/reset/hisilicon/Makefile       |   1 +
- drivers/reset/hisilicon/reset-hi3660.c | 126 +++++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
- create mode 100644 drivers/reset/hisilicon/reset-hi3660.c
+--qua7W6ePsLbpA4HrODH14lE2DM4oLwo5g
+Content-Type: text/plain; charset=koi8-r
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
-index 1ff8b0c..10134dc 100644
---- a/drivers/reset/hisilicon/Kconfig
-+++ b/drivers/reset/hisilicon/Kconfig
-@@ -1,3 +1,10 @@
-+config COMMON_RESET_HI3660
-+	tristate "Hi3660 Reset Driver"
-+	depends on ARCH_HISI || COMPILE_TEST
-+	default ARCH_HISI
-+	help
-+	  Build the Hisilicon Hi3660 reset driver.
-+
- config COMMON_RESET_HI6220
- 	tristate "Hi6220 Reset Driver"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
-index c932f86..ab8a7bf 100644
---- a/drivers/reset/hisilicon/Makefile
-+++ b/drivers/reset/hisilicon/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
-+obj-$(CONFIG_COMMON_RESET_HI3660) += reset-hi3660.o
-diff --git a/drivers/reset/hisilicon/reset-hi3660.c b/drivers/reset/hisilicon/reset-hi3660.c
-new file mode 100644
-index 0000000..17d8bb12
---- /dev/null
-+++ b/drivers/reset/hisilicon/reset-hi3660.c
-@@ -0,0 +1,126 @@
-+/*
-+ * Copyright (c) 2016-2017 Linaro Ltd.
-+ * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+
-+struct hi3660_reset_controller {
-+	struct reset_controller_dev rst;
-+	struct regmap *map;
-+};
-+
-+#define to_hi3660_reset_controller(_rst) \
-+	container_of(_rst, struct hi3660_reset_controller, rst)
-+
-+static int hi3660_reset_program_hw(struct reset_controller_dev *rcdev,
-+				   unsigned long idx, bool assert)
-+{
-+	struct hi3660_reset_controller *rc = to_hi3660_reset_controller(rcdev);
-+	unsigned int offset = idx >> 8;
-+	unsigned int mask = BIT(idx & 0x1f);
-+
-+	if (assert)
-+		return regmap_write(rc->map, offset, mask);
-+	else
-+		return regmap_write(rc->map, offset + 4, mask);
-+}
-+
-+static int hi3660_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long idx)
-+{
-+	return hi3660_reset_program_hw(rcdev, idx, true);
-+}
-+
-+static int hi3660_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long idx)
-+{
-+	return hi3660_reset_program_hw(rcdev, idx, false);
-+}
-+
-+static int hi3660_reset_dev(struct reset_controller_dev *rcdev,
-+			    unsigned long idx)
-+{
-+	int err;
-+
-+	err = hi3660_reset_assert(rcdev, idx);
-+	if (err)
-+		return err;
-+
-+	return hi3660_reset_deassert(rcdev, idx);
-+}
-+
-+static struct reset_control_ops hi3660_reset_ops = {
-+	.reset    = hi3660_reset_dev,
-+	.assert   = hi3660_reset_assert,
-+	.deassert = hi3660_reset_deassert,
-+};
-+
-+static int hi3660_reset_xlate(struct reset_controller_dev *rcdev,
-+			      const struct of_phandle_args *reset_spec)
-+{
-+	unsigned int offset, bit;
-+
-+	offset = reset_spec->args[0];
-+	bit = reset_spec->args[1];
-+
-+	return (offset << 8) | bit;
-+}
-+
-+static int hi3660_reset_probe(struct platform_device *pdev)
-+{
-+	struct hi3660_reset_controller *rc;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+
-+	rc = devm_kzalloc(dev, sizeof(*rc), GFP_KERNEL);
-+	if (!rc)
-+		return -ENOMEM;
-+
-+	rc->map = syscon_regmap_lookup_by_phandle(np, "hisi,rst-syscon");
-+	if (IS_ERR(rc->map)) {
-+		dev_err(dev, "failed to get hi3660,rst-syscon\n");
-+		return PTR_ERR(rc->map);
-+	}
-+
-+	rc->rst.ops = &hi3660_reset_ops,
-+	rc->rst.of_node = np;
-+	rc->rst.of_reset_n_cells = 2;
-+	rc->rst.of_xlate = hi3660_reset_xlate;
-+
-+	return reset_controller_register(&rc->rst);
-+}
-+
-+static const struct of_device_id hi3660_reset_match[] = {
-+	{ .compatible = "hisilicon,hi3660-reset", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hi3660_reset_match);
-+
-+static struct platform_driver hi3660_reset_driver = {
-+	.probe = hi3660_reset_probe,
-+	.driver = {
-+		.name = "hi3660-reset",
-+		.of_match_table = hi3660_reset_match,
-+	},
-+};
-+
-+static int __init hi3660_reset_init(void)
-+{
-+	return platform_driver_register(&hi3660_reset_driver);
-+}
-+arch_initcall(hi3660_reset_init);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:hi3660-reset");
-+MODULE_DESCRIPTION("HiSilicon Hi3660 Reset Driver");
--- 
-2.7.4
+On 05/12/16 20:19, Maxime Ripard wrote:
+> On Fri, Dec 02, 2016 at 11:05:12PM +0800, Icenowy Zheng wrote:
+>> Allwinner H2+ is a quad-core Cortex-A7 SoC.
+>>
+>> It is very like H3, that they share the same SoC ID (0x1680), and H3
+>> memory maps as well as drivers works well on the SoC.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+>=20
+> Fixed the alphabetical order in the bindings doc, and applied.
+
+Where is that resulting tree, with these ones and EMAC? Thanks.
+
+
+
+--=20
+Alexey
+
+
+--qua7W6ePsLbpA4HrODH14lE2DM4oLwo5g--
+
+--4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIrBAEBCAAVBQJYRhwUDhxhaWtAb3psYWJzLnJ1AAoJEIYTPdgrwSC59twP/A6L
+Ae8IA01UctHTWR5gtDwBknzsaTFnTDJU/SXyCl5MX3HtM1hvnS7wGAheYXdYV2YX
+4pnDZHGRfg0z31lfr6Abao8aVmkf3RK9NeVpqtNYlcdsGt+BpJZOO0DEy5jsn8/W
+/E2GLIHC2kQfIonjcxfm5mou+6q8G8YFsAmaIt6j+VvCoyFi0sulHlqwt+EUwpY6
+VekfwVpP6//EfxTzYt4Fwdr70TdBPFxKiHrP70jWqJjwEhzE8j+GeZn9hkCp2mRv
+5+naz2gMWsD0lZtlo6rF1Hbl4igngPR7AEO0/Qk1BMqru5qBRWSQCBid4VabGTHu
+AsFwDsnCvSx0YEbK59p5bJGWG0Tqx3pFWlACNRHtNjQO0CEF6rt3UoPnwD15HxdH
+iYEkVCxV9s41FZ7aSlIUiquA8mk57cQvtRZscYA5zZYRIBB6GhOP76agn5Uk4tkE
+cb8fyiYWQxaxGy7mPIbhNdm0iDdR7iEb8DDdy3+XuyWkuXzv+GAABOTwPOk/013N
+nIo5mWTzhA98SHsfteUgP+eWfdSWsR7iKKLl46+mzRSohxuwET2Dgx6pjf3H4Dun
+/XxvdF2JqQpNLkYbiyZW61g8t9SGQ107heMJbb0TfucfwewOfZj4x1xTPItwbqX8
+IUHuTL+OMrHC3lWtWa4Vrr1PebjFnh5ci4hsM61u
+=JkOV
+-----END PGP SIGNATURE-----
+
+--4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk--
+
+
+--===============3167341528611257346==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3167341528611257346==--
