@@ -1,78 +1,198 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Document the hi3660 reset bindings
-Date: Tue, 06 Dec 2016 14:42:33 +0100
-Message-ID: <1481031753.3202.57.camel@pengutronix.de>
-References: <1480989092-31847-1-git-send-email-zhangfei.gao@linaro.org>
-         <1480989092-31847-2-git-send-email-zhangfei.gao@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3] iio: adc: add device tree bindings for Qualcomm PM8xxx ADCs
+Date: Tue,  6 Dec 2016 14:50:53 +0100
+Message-ID: <1481032253-27019-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480989092-31847-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T . Ivanov" <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 06.12.2016, 09:51 +0800 schrieb Zhangfei Gao:
-> Add DT bindings documentation for hi3660 SoC reset controller.
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/reset/hisilicon,hi3660-reset.txt      | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> new file mode 100644
-> index 0000000..178e478
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> @@ -0,0 +1,36 @@
-> +Hisilicon System Reset Controller
-> +======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +The reset controller registers are part of the system-ctl block on
-> +hi3660 SoC.
-> +
-> +Required properties:
-> +- compatible: should be
-> +		 "hisilicon,hi3660-reset"
-> +- #reset-cells: 2, see below
-> +- hisi,rst-syscon: phandle of the reset's syscon.
-> +
-> +Example:
-> +	iomcu: iomcu@ffd7e000 {
-> +		compatible = "hisilicon,hi3660-iomcu", "syscon";
-> +		reg = <0x0 0xffd7e000 0x0 0x1000>;
-> +	};
-> +
-> +	iomcu_rst: iomcu_rst_controller {
-> +		compatible = "hisilicon,hi3660-reset";
-> +		hisi,rst-syscon = <&iomcu>;
-> +		#reset-cells = <2>;
-> +	};
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +example:
-> +
-> +        i2c0: i2c@..... {
-> +                ...
-> +		resets = <&iomcu_rst 0x20 3>; /* offset: 0x20; bit: 3 */
+This adds the device tree bindings for the Qualcomm PM8xxx
+ADCs. This is based on the existing DT bindings for the
+SPMI ADC so there are hopefully no controversial features.
 
-Should this mention somewhere what register the offset is supposed to
-point to? This is the address offset to the set register, with the
-corresponding clear register being placed at offset + 4.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ivan T. Ivanov <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 160 +++++++++++++++++++++
+ 1 file changed, 160 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
 
-> +                ...
-> +        };
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+new file mode 100644
+index 000000000000..6e51e3e74b88
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+@@ -0,0 +1,160 @@
++Qualcomm's PM8xxx voltage XOADC
++
++The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Chrystal
++oscillator ADC) encompass PM8018, PM8038, PM8058, PM8917 and PM8921.
++
++Required properties:
++
++- compatible: should be one of:
++  "qcom,pm8018-adc"
++  "qcom,pm8038-adc"
++  "qcom,pm8058-adc"
++  "qcom,pm8917-adc"
++  "qcom,pm8921-adc"
++
++- reg: should contain the ADC base address in the PMIC, typically
++  0x197.
++
++The following required properties are standard for IO channels, see
++iio-bindings.txt for more details:
++
++- #address-cells: should be set to <1>
++
++- #size-cells: should be set to <0>
++
++- #io-channel-cells: should be set to <1>
++
++- interrupts: should refer to the parent PMIC interrupt controller
++  and reference the proper ADC interrupt.
++
++Required subnodes:
++
++The ADC channels are configured as subnodes of the ADC. Since some of
++them are used for calibrating the ADC, these nodes are compulsory:
++
++ref_625mv {
++	reg = <0x0c>;
++};
++
++ref_1250mv {
++	reg = <0x0d>;
++};
++
++ref_muxoff {
++	reg = <0x0f>;
++};
++
++These three nodes are used for absolute and ratiometric calibration
++and only need to have these reg values: they are by hardware defined
++to be 1:1 ratio converters that sample 625, 1250 and 0 V and create
++an interpolation calibration for all other ADCs.
++
++Optional subnodes: any channels other than channel 0x0c, 0x0d and
++0x0f are optional.
++
++Required channel node properties:
++
++- reg: should contain the hardware channel number in the range
++  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
++
++Optional channel node properties:
++
++- qcom,decimation:
++  Value type: <u32>
++  Definition: This parameter is used to decrease ADC sampling rate.
++          Quicker measurements can be made by reducing decimation ratio.
++          Valid values are 512, 1024, 2048, 4096.
++          If property is not found, default value of 512 will be used.
++
++- qcom,ratiometric:
++  Value type: <empty>
++  Definition: Channel calibration type. If this property is specified
++          VADC will use the VDD reference (1.8V) and GND for channel
++          calibration. If property is not found, channel will be
++          calibrated with 0.625V and 1.25V reference channels, also
++          known as absolute calibration.
++
++- qcom,ratiometric-ref:
++  Value type: <u32>
++  Definition: The reference voltage pair when using ratiometric
++          calibration:
++	  0 = XO_IN/XOADC_GND
++	  1 = PMIC_IN/XOADC_GND
++	  2 = PMIC_IN/BMS_CSP
++	  3 (invalid)
++	  4 = XOADC_GND/XOADC_GND
++	  5 = XOADC_VREF/XOADC_GND
++
++Example:
++
++xoadc: xoadc@197 {
++	compatible = "qcom,pm8058-adc";
++	reg = <0x197>;
++	interrupt-parent = <&pm8058>;
++	interrupts = <76 1>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	#io-channel-cells = <1>;
++
++	vcoin {
++		reg = <0x00>;
++	};
++	vbat {
++		reg = <0x01>;
++	};
++	dcin {
++		reg = <0x02>;
++	};
++	ichg {
++		reg = <0x03>;
++	};
++	vph_pwr {
++		reg = <0x04>;
++	};
++	mpp5 {
++		reg = <0x05>;
++	};
++	mpp6 {
++		reg = <0x06>;
++	};
++	mpp7 {
++		reg = <0x07>;
++	};
++	mpp8 {
++		reg = <0x08>;
++	};
++	mpp9 {
++		reg = <0x09>;
++	};
++	usb_vbus {
++		reg = <0x0a>;
++	};
++	die_temp {
++		reg = <0x0b>;
++	};
++	ref_625mv {
++		reg = <0x0c>;
++	};
++	ref_1250mv {
++		reg = <0x0d>;
++	};
++	ref_325mv {
++		reg = <0x0e>;
++	};
++	ref_muxoff {
++		reg = <0x0f>;
++	};
++};
++
++
++/* IIO client node */
++iio-hwmon {
++	compatible = "iio-hwmon";
++	io-channels = <&xoadc 0x01>, /* Battery */
++		    <&xoadc 0x02>, /* DC in (charger) */
++		    <&xoadc 0x04>, /* VPH the main system voltage */
++		    <&xoadc 0x0b>, /* Die temperature */
++		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
++		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
++		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
++};
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
