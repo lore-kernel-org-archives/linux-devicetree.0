@@ -1,35 +1,77 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
-Date: Tue, 6 Dec 2016 19:08:57 +0100
-Message-ID: <20161206180857.GA20680@localhost.localdomain>
-References: <20161128230428.6872-1-grygorii.strashko@ti.com>
- <20161128230428.6872-5-grygorii.strashko@ti.com>
- <20161130100519.GD28680@localhost.localdomain>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] arm64: dts: exynos5433: Add PPMU dt node
+Date: Tue, 6 Dec 2016 21:07:56 +0200
+Message-ID: <20161206190756.GA12683@kozik-lap>
+References: <1480663087-4590-1-git-send-email-cw00.choi@samsung.com>
+ <1480663087-4590-4-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161130100519.GD28680-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+In-Reply-To: <1480663087-4590-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2016 at 11:05:19AM +0100, Richard Cochran wrote:
-> Can you adjust the frequency of the keystone devices in hardware?  If
-> so, then please implement it, and just disable PPS for the CPSW.
+On Fri, Dec 02, 2016 at 04:18:05PM +0900, Chanwoo Choi wrote:
+> This patch adds PPMU (Platform Performance Monitoring Unit) Device-tree node
+> to measure the utilization of each IP in Exynos SoC.
 > 
-> The only reason I used the timecounter for frequency adjustment was
-> because the am335x HW is broken.  But this shouldn't hold back other
-> newer HW without the same silicon flaws.
+> - PPMU_D{0|1}_CPU are used to measure the utilization of MIF (Memory Interface)
+>   block with VDD_MIF power source.
+> - PPMU_D{0|1}_GENERAL are used to measure the utilization of INT(Internal)
+>   block with VDD_INT power source.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index 64226d5ae471..8c4ee84d5232 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -599,6 +599,30 @@
+>  			clock-names = "fin_pll", "mct";
+>  		};
+>  
+> +		ppmu_d0_cpu: ppmu@10480000 {
+> +			compatible = "samsung,exynos-ppmu-v2";
+> +			reg = <0x10480000 0x2000>;
+> +			status = "disabled";
 
-I am talking here about the ADPLLLJ units.  Are they usable on the
-keystone?
+Why these are disabled? They have some external dependencies?
 
-If so, please implement the frequency adjustment with them.
+Best regards,
+Krzysztof
 
-Thanks,
-Richard
+> +		};
+> +
+> +		ppmu_d0_general: ppmu@10490000 {
+> +			compatible = "samsung,exynos-ppmu-v2";
+> +			reg = <0x10490000 0x2000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		ppmu_d1_cpu: ppmu@104b0000 {
+> +			compatible = "samsung,exynos-ppmu-v2";
+> +			reg = <0x104b0000 0x2000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		ppmu_d1_general: ppmu@104c0000 {
+> +			compatible = "samsung,exynos-ppmu-v2";
+> +			reg = <0x104c0000 0x2000>;
+> +			status = "disabled";
+> +		};
+> +
+>  		pinctrl_alive: pinctrl@10580000 {
+>  			compatible = "samsung,exynos5433-pinctrl";
+>  			reg = <0x10580000 0x1a20>, <0x11090000 0x100>;
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
