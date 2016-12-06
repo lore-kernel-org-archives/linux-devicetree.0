@@ -1,130 +1,78 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
-Date: Tue, 06 Dec 2016 15:42:04 +0200
-Message-ID: <4410572.7ltIsoL1pV@avalon>
-References: <1481030026-7329-1-git-send-email-bgolaszewski@baylibre.com> <1481030026-7329-2-git-send-email-bgolaszewski@baylibre.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Document the hi3660 reset bindings
+Date: Tue, 06 Dec 2016 14:42:33 +0100
+Message-ID: <1481031753.3202.57.camel@pengutronix.de>
+References: <1480989092-31847-1-git-send-email-zhangfei.gao@linaro.org>
+         <1480989092-31847-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481030026-7329-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1480989092-31847-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz,
-
-Thank you for the patch.
-
-On Tuesday 06 Dec 2016 14:13:45 Bartosz Golaszewski wrote:
-> Add the dumb-vga-dac node to the board DT together with corresponding
-> ports and vga connector. This allows to retrieve the edid info from
-> the display automatically.
+Am Dienstag, den 06.12.2016, 09:51 +0800 schrieb Zhangfei Gao:
+> Add DT bindings documentation for hi3660 SoC reset controller.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/da850-lcdk.dts | 69 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
+>  .../bindings/reset/hisilicon,hi3660-reset.txt      | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
 > 
-> diff --git a/arch/arm/boot/dts/da850-lcdk.dts
-> b/arch/arm/boot/dts/da850-lcdk.dts index afcb482..ca437c1 100644
-> --- a/arch/arm/boot/dts/da850-lcdk.dts
-> +++ b/arch/arm/boot/dts/da850-lcdk.dts
-> @@ -51,6 +51,51 @@
->  			system-clock-frequency = <24576000>;
->  		};
->  	};
+> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> new file mode 100644
+> index 0000000..178e478
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+> @@ -0,0 +1,36 @@
+> +Hisilicon System Reset Controller
+> +======================================
 > +
-> +	vga-bridge {
-> +		compatible = "dumb-vga-dac";
-
-Please don't. The board uses a THS8135, which has a few control signals. 
-They're not used on this board so you can certainly rely on the dumb-vga-dac 
-driver, but you should not use that compatible string. You should instead add 
-DT bindings for ti,ths8135 and add that compatible string to the dumb-vga-dac 
-driver.
-
-The rest looks good to me.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
 > +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+> +The reset controller registers are part of the system-ctl block on
+> +hi3660 SoC.
 > +
-> +			port@0 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = <0>;
+> +Required properties:
+> +- compatible: should be
+> +		 "hisilicon,hi3660-reset"
+> +- #reset-cells: 2, see below
+> +- hisi,rst-syscon: phandle of the reset's syscon.
 > +
-> +				vga_bridge_in: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&display_out_vga>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = <1>;
-> +
-> +				vga_bridge_out: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&vga_con_in>;
-> +				};
-> +			};
-> +		};
+> +Example:
+> +	iomcu: iomcu@ffd7e000 {
+> +		compatible = "hisilicon,hi3660-iomcu", "syscon";
+> +		reg = <0x0 0xffd7e000 0x0 0x1000>;
 > +	};
 > +
-> +	vga {
-> +		compatible = "vga-connector";
-> +
-> +		ddc-i2c-bus = <&i2c0>;
-> +
-> +		port {
-> +			vga_con_in: endpoint {
-> +				remote-endpoint = <&vga_bridge_out>;
-> +			};
-> +		};
+> +	iomcu_rst: iomcu_rst_controller {
+> +		compatible = "hisilicon,hi3660-reset";
+> +		hisi,rst-syscon = <&iomcu>;
+> +		#reset-cells = <2>;
 > +	};
->  };
-> 
->  &pmx_core {
-> @@ -236,3 +281,27 @@
->  &memctrl {
->  	status = "okay";
->  };
 > +
-> +&display {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&lcd_pins>;
+> +Specifying reset lines connected to IP modules
+> +==============================================
+> +example:
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		display_out: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +	};
-> +};
-> +
-> +&display_out {
-> +	display_out_vga: endpoint@0 {
-> +		reg = <0>;
-> +		remote-endpoint = <&vga_bridge_in>;
-> +	};
-> +};
+> +        i2c0: i2c@..... {
+> +                ...
+> +		resets = <&iomcu_rst 0x20 3>; /* offset: 0x20; bit: 3 */
 
--- 
-Regards,
+Should this mention somewhere what register the offset is supposed to
+point to? This is the address offset to the set register, with the
+corresponding clear register being placed at offset + 4.
 
-Laurent Pinchart
+> +                ...
+> +        };
+
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
