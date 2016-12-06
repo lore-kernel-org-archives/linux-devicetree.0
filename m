@@ -1,7 +1,7 @@
 From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: imx6: Support Savageboard quad
-Date: Tue,  6 Dec 2016 16:08:29 +0900
-Message-ID: <20161206070829.24098-4-woogyom.kim@gmail.com>
+Subject: [PATCH v2 2/3] ARM: dts: imx6: Support Savageboard dual
+Date: Tue,  6 Dec 2016 16:08:28 +0900
+Message-ID: <20161206070829.24098-3-woogyom.kim@gmail.com>
 References: <20161206070829.24098-1-woogyom.kim@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161206070829.24098-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,20 +10,20 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use common board file and support SATA interface additionally.
+Common savageboard DT file is used for board support.
 
 Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6q-savageboard.dts | 54 +++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-savageboard.dts
+ arch/arm/boot/dts/imx6dl-savageboard.dts | 50 ++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
 
-diff --git a/arch/arm/boot/dts/imx6q-savageboard.dts b/arch/arm/boot/dts/imx6q-savageboard.dts
+diff --git a/arch/arm/boot/dts/imx6dl-savageboard.dts b/arch/arm/boot/dts/imx6dl-savageboard.dts
 new file mode 100644
-index 0000000..8d74002
+index 0000000..2cac30d
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-savageboard.dts
-@@ -0,0 +1,54 @@
++++ b/arch/arm/boot/dts/imx6dl-savageboard.dts
+@@ -0,0 +1,50 @@
 +/*
 + * Copyright (C) 2016 Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
@@ -67,16 +67,12 @@ index 0000000..8d74002
 +
 +/dts-v1/;
 +
-+#include "imx6q.dtsi"
++#include "imx6dl.dtsi"
 +#include "imx6qdl-savageboard.dtsi"
 +
 +/ {
-+	model = "Poslab SavageBoard Quad";
-+	compatible = "poslab,imx6q-savageboard", "fsl,imx6q";
-+};
-+
-+&sata {
-+	status = "okay";
++	model = "Poslab SavageBoard Dual";
++	compatible = "poslab,imx6dl-savageboard", "fsl,imx6dl";
 +};
 -- 
 2.9.3
