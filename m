@@ -1,107 +1,89 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] ARM: dts: stm32: add stm32 general purpose timer
- driver in DT
-Date: Tue, 6 Dec 2016 10:56:13 +0100
-Message-ID: <8f881cf7-ba63-315f-b852-71869ad480f3@st.com>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-8-git-send-email-benjamin.gaignard@st.com>
- <20161202132251.GL2683@dell> <e15186cb-a93e-c2e7-13bb-6704be5e8949@st.com>
- <20161206094835.GB25385@dell.home>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 6 Dec 2016 10:05:17 +0000
+Message-ID: <20161206100517.q2v73kj256kyhmlg@sirena.org.uk>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <3929994.7YhJtsl9c3@avalon> <20161205211151.GA30492@tuxbot>
+ <1849418.teKsJeE0xP@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161206094835.GB25385-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1226658924=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1849418.teKsJeE0xP@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
 
-On 12/06/2016 10:48 AM, Lee Jones wrote:
-> On Mon, 05 Dec 2016, Alexandre Torgue wrote:
->> On 12/02/2016 02:22 PM, Lee Jones wrote:
->>> On Fri, 02 Dec 2016, Benjamin Gaignard wrote:
->>>
->>>> Add general purpose timers and it sub-nodes into DT for stm32f4.
->>>> Define and enable pwm1 and pwm3 for stm32f469 discovery board
->>>>
->>>> version 3:
->>>> - use "st,stm32-timer-trigger" in DT
->>>>
->>>> version 2:
->>>> - use parameters to describe hardware capabilities
->>>> - do not use references for pwm and iio timer subnodes
->>>>
->>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/stm32f429.dtsi      | 333 +++++++++++++++++++++++++++++++++-
->>>>  arch/arm/boot/dts/stm32f469-disco.dts |  28 +++
->>>>  2 files changed, 360 insertions(+), 1 deletion(-)
->
-> [...]
->
-> If you're only commenting on a little piece of the patch, it's always
-> a good idea to trim the rest.
->
->>>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
->>>> index 8a163d7..df4ca7e 100644
->>>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
->>>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
->>>> @@ -81,3 +81,31 @@
->>>>  &usart3 {
->>>>  	status = "okay";
->>>>  };
->>>> +
->>>> +&gptimer1 {
->>>> +	status = "okay";
->>>> +
->>>> +	pwm1@0 {
->>>> +		pinctrl-0	= <&pwm1_pins>;
->>>> +		pinctrl-names	= "default";
->>>> +		status = "okay";
->>>> +	};
->>>> +
->>>> +	timer1@0 {
->>>> +		status = "okay";
->>>> +	};
->>>> +};
->>>
->>> This is a much *better* format than before.
->>>
->>> I still don't like the '&' syntax though.
->>
->> Please keep "&" format to match with existing nodes.
->
-> Right.  I wasn't suggesting that he differs from the current format in
-> *this* set.  I am suggesting that we change the format in a subsequent
-> set though.
+--===============1226658924==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ymtzczvnu5o364vi"
+Content-Disposition: inline
 
-Why change? Looking at Linux ARM kernel patchwork, new DT board file 
-contains this format. Did you already discuss with Arnd or Olof about it 
-?
 
-regards
-Alex
+--ymtzczvnu5o364vi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->>>> +&gptimer3 {
->>>> +	status = "okay";
->>>> +
->>>> +	pwm3@0 {
->>>> +		pinctrl-0	= <&pwm3_pins>;
->>>> +		pinctrl-names	= "default";
->>>> +		status = "okay";
->>>> +	};
->>>> +
->>>> +	timer3@0 {
->>>> +		status = "okay";
->>>> +	};
->>>> +};
->>>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Dec 05, 2016 at 11:16:22PM +0200, Laurent Pinchart wrote:
+> On Monday 05 Dec 2016 13:11:51 Bjorn Andersson wrote:
+
+> > Further more, a DT binding for a particular block should describe that
+> > block; so if we have three different 1.8V pins then the DT binding
+> > should reflect this - even if our current platform have them wired to
+> > the same regulator.
+
+> This has been discussed previously, and Rob agreed that if the datasheet=
+=20
+> recommends to power all supplies from the same regulator we can take that=
+ as a=20
+> good hint that a single supply should be enough. In the very unlikely eve=
+nt=20
+> that a board would require control of more regulators we can always exten=
+d the=20
+> DT bindings later without breaking backward compatibility.
+
+No, don't do this - introducing special snowflake bindings just makes
+things more complex at the system level and tells everyone else that
+they too can have special snowflake bindings.  Someone should be able to
+connect up the regulators based purely on a schematic.  Just describe
+the hardware, it's just one extra line in the DT per regulator.
+
+--ymtzczvnu5o364vi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhGjVwACgkQJNaLcl1U
+h9Deuwf9EMNBFSbkQpzBHz80U/ptNcKxmD1CVN1JVpIH/Z16EA+Byjvvz/Vz8jwe
+HzHJEUZuf4//nlLy8M9XJdY0kUELdRncYGssm+7ZjJOJRw/zMtbuQ5u4d/GpvZTQ
+7eOGiiXVSaPD+Fc93OJUuXD18jwazmaa1WWsOMIX895nH573XWhl2LfWBlHayxrw
+zCGn5i8bIMtmELfTqNI/V4D6TFnyz0OyB+Xkq7TzfMIEaEXOSuElxtVSpkx9cokD
+uemMRakYeenw5MV3Ln2ZMwbAgePZDzvuQ8B+3iBuG9ivnJjJ9LfX7aPV5KkeSP8w
+JEvu5aN6ZRLHDrsm2k5niCbuPF7R3Q==
+=0sZb
+-----END PGP SIGNATURE-----
+
+--ymtzczvnu5o364vi--
+
+--===============1226658924==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1226658924==--
