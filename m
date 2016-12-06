@@ -1,43 +1,246 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 4/7] drm/vc4: Add support for the VEC (Video
- Encoder) IP
-Date: Mon, 5 Dec 2016 17:50:13 -0800
-Message-ID: <c1b904db-be3d-1e83-37bc-1f750ecfe224@gmail.com>
-References: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
- <1480686493-4813-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v3 -next 2/2] ARM: dts: sunxi: add support for Orange Pi
+ Zero board
+Date: Tue, 6 Dec 2016 12:51:50 +1100
+Message-ID: <81258afe-38ae-cc9a-2ac3-30132a595a89@ozlabs.ru>
+References: <20161202150513.34691-1-icenowy@aosc.xyz>
+ <20161202150513.34691-2-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480686493-4813-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161202150513.34691-2-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Andre Przywara <andre.przywara@arm.com>, Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2016 05:48 AM, Boris Brezillon wrote:
-> The VEC IP is a TV DAC, providing support for PAL and NTSC standards.
+On 03/12/16 02:05, Icenowy Zheng wrote:
+> Orange Pi Zero is a board that came with the new Allwinner H2+ SoC and a
+> SDIO Wi-Fi chip by Allwinner (XR819).
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Add a device tree file for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > ---
-
-> diff --git a/drivers/gpu/drm/vc4/vc4_vec.c b/drivers/gpu/drm/vc4/vc4_vec.c
+> Changes since v2:
+> - Merged SDIO Wi-Fi patch into it.
+> - SDIO Wi-Fi: add a ethernet1 alias to it, as it has no internal NVRAM.
+> - SDIO Wi-Fi: changed pinctrl binding to generic pinconf
+> - removed all gpio pinctrl nodes
+> - changed h2plus to h2-plus
+> Changes since v1:
+> - Convert to generic pinconf bindings.
+> - SDIO Wi-Fi: add patch.
+> 
+> Some notes:
+> - The uart1 and uart2 is available on the unsoldered gpio header.
+> - The onboard USB connector has its Vbus directly connected to DCIN-5V (the
+>   power jack)
+> 
+>  arch/arm/boot/dts/Makefile                        |   1 +
+>  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 159 ++++++++++++++++++++++
+>  2 files changed, 160 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 6447abc..59f6e86 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -844,6 +844,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-a33-sinlinx-sina33.dtb \
+>  	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+>  	sun8i-a83t-cubietruck-plus.dtb \
+> +	sun8i-h2-plus-orangepi-zero.dtb \
+>  	sun8i-h3-bananapi-m2-plus.dtb \
+>  	sun8i-h3-nanopi-neo.dtb \
+>  	sun8i-h3-orangepi-2.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
 > new file mode 100644
-> index 000000000000..2d4256fcc6f2
+> index 0000000..d18807f
 > --- /dev/null
-> +++ b/drivers/gpu/drm/vc4/vc4_vec.c
-> @@ -0,0 +1,657 @@
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> @@ -0,0 +1,159 @@
 > +/*
-> + * Copyright (C) 2016 Broadcom Limited
+> + * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+> + *
+> + * Based on sun8i-h3-orangepi-one.dts, which is:
+> + *   Copyright (C) 2016 Hans de Goede <hdegoede@redhat.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-h3.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +	model = "Xunlong Orange Pi Zero";
+> +	compatible = "xunlong,orangepi-zero", "allwinner,sun8i-h2-plus";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
 
-The standard copyright template post acquisition is just Broadcom, not
-Broadcom Limited, nor Broadcom corporation. Can you audit your entire
-submission and fix this up accordingly?
 
-Thanks!
+It is not defined there as for:
+
+cef87e9 (tag: next-20161205) 20 hours ago Stephen Rothwell Add linux-next
+specific files for 20161205
+
+
+
+
+
+> +		ethernet1 = &xr819;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		pwr_led {
+> +			label = "orangepi:green:pwr";
+> +			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +
+> +		status_led {
+> +			label = "orangepi:red:status";
+> +			gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	reg_vcc_wifi: reg_vcc_wifi {
+> +		compatible = "regulator-fixed";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-name = "vcc-wifi";
+> +		enable-active-high;
+> +		gpio = <&pio 0 20 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	wifi_pwrseq: wifi_pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+> +&ehci1 {
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins_a>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&mmc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc1_pins_a>;
+> +	vmmc-supply = <&reg_vcc_wifi>;
+> +	mmc-pwrseq = <&wifi_pwrseq>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	status = "okay";
+> +
+> +	/*
+> +	 * Explicitly define the sdio device, so that we can add an ethernet
+> +	 * alias for it (which e.g. makes u-boot set a mac-address).
+> +	 */
+> +	xr819: sdio_wifi@1 {
+> +		reg = <1>;
+> +	};
+> +};
+> +
+> +&mmc1_pins_a {
+> +	bias-pull-up;
+> +};
+> +
+> +&ohci1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart1_pins>;
+> +	status = "disabled";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins>;
+> +	status = "disabled";
+> +};
+> +
+> +&usbphy {
+> +	/* USB VBUS is always on */
+> +	status = "okay";
+> +};
+> 
+
+
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alexey
