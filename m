@@ -1,80 +1,58 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v4 1/4] [media] davinci: vpif_capture: don't lock over
- s_stream
-Date: Tue, 06 Dec 2016 08:49:38 -0800
-Message-ID: <m237i1gfz1.fsf@baylibre.com>
-References: <20161129235712.29846-1-khilman@baylibre.com>
- <20161129235712.29846-2-khilman@baylibre.com>
- <4747860.QGGHSuFRpz@avalon>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/5] ARM: BCM5301X: Fix LAN LED labels for Luxul XWR-3100
+Date: Tue,  6 Dec 2016 18:17:10 +0100
+Message-ID: <20161206171714.22738-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4747860.QGGHSuFRpz@avalon> (Laurent Pinchart's message of "Wed,
- 30 Nov 2016 10:32:33 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@iki.fi>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-> Hi Kevin,
->
-> Thank you for the patch.
->
-> On Tuesday 29 Nov 2016 15:57:09 Kevin Hilman wrote:
->> Video capture subdevs may be over I2C and may sleep during xfer, so we
->> cannot do IRQ-disabled locking when calling the subdev.
->> 
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> ---
->>  drivers/media/platform/davinci/vpif_capture.c | 3 +++
->>  1 file changed, 3 insertions(+)
->> 
->> diff --git a/drivers/media/platform/davinci/vpif_capture.c
->> b/drivers/media/platform/davinci/vpif_capture.c index
->> 5104cc0ee40e..9f8f41c0f251 100644
->> --- a/drivers/media/platform/davinci/vpif_capture.c
->> +++ b/drivers/media/platform/davinci/vpif_capture.c
->> @@ -193,7 +193,10 @@ static int vpif_start_streaming(struct vb2_queue *vq,
->> unsigned int count) }
->>  	}
->> 
->> +	spin_unlock_irqrestore(&common->irqlock, flags);
->>  	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
->> +	spin_lock_irqsave(&common->irqlock, flags);
->
-> I always get anxious when I see a spinlock being released randomly with an 
-> operation in the middle of a protected section. Looking at the code it looks 
-> like the spinlock is abused here. irqlock should only protect the dma_queue 
-> and should thus only be taken around the following code:
->
-> spin_lock_irqsave(&common->irqlock, flags);
-> /* Get the next frame from the buffer queue */
-> common->cur_frm = common->next_frm = list_entry(common->dma_queue.next,
->                             struct vpif_cap_buffer, list);
-> /* Remove buffer from the buffer queue */
-> list_del(&common->cur_frm->list);
-> spin_unlock_irqrestore(&common->irqlock, flags);
+They were named incorrectly most likely due to copy & paste mistake.
 
-Yes, that looks correct.  Will update.
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> The code that is currently protected by the lock in the start and stop 
-> streaming functions should be protected by a mutex instead.
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+index 2f4a651..93cc91d 100644
+--- a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
++++ b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+@@ -31,13 +31,13 @@
+ 		};
+ 
+ 		lan3	{
+-			label = "bcm53xx:green:lan1";
++			label = "bcm53xx:green:lan3";
+ 			gpios = <&chipcommon 1 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "default-off";
+ 		};
+ 
+ 		lan4	{
+-			label = "bcm53xx:green:lan0";
++			label = "bcm53xx:green:lan4";
+ 			gpios = <&chipcommon 2 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "default-off";
+ 		};
+@@ -49,7 +49,7 @@
+ 		};
+ 
+ 		lan1	{
+-			label = "bcm53xx:green:lan3";
++			label = "bcm53xx:green:lan1";
+ 			gpios = <&chipcommon 4 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "default-off";
+ 		};
+-- 
+2.10.1
 
-I tried taking the mutex here, but lockdep pointed out a deadlock.  I
-may not be fully understanding the V4L2 internals here, but it seems
-that the ioctl is already taking a mutex, so taking it again in
-start/stop streaming is a deadlock.  Unless you think the locking should
-be nested here, it seems to me that the mutex isn't needed.
-
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
