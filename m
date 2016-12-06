@@ -1,55 +1,137 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] dt: bindings: zx: Add header for PM domains specifiers
-Date: Tue,  6 Dec 2016 08:21:51 +0800
-Message-ID: <1480983711-29955-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/9] doc: DT: venus: binding document for Qualcomm
+ video driver
+Date: Mon, 5 Dec 2016 18:22:13 -0600
+Message-ID: <20161206002213.fymmpqxdg66jh2ft@rob-hp-laptop>
+References: <1480583001-32236-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1480583001-32236-3-git-send-email-stanimir.varbanov@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480583001-32236-3-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds header with values used for ZTE 2967
-SoC's power domain driver.
+On Thu, Dec 01, 2016 at 11:03:14AM +0200, Stanimir Varbanov wrote:
+> Add binding document for Venus video encoder/decoder driver
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+> Rob, I have removed vmem clocks, interrupts and reg properties
+> for vmem thing. Probably I will come with a separate platform
+> driver fro that and pass the video memory DT node as phandle.
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- include/dt-bindings/arm/zte_pm_domains.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 include/dt-bindings/arm/zte_pm_domains.h
+Looks good, a couple of minor things below.
 
-diff --git a/include/dt-bindings/arm/zte_pm_domains.h b/include/dt-bindings/arm/zte_pm_domains.h
-new file mode 100644
-index 0000000..1485e8d
---- /dev/null
-+++ b/include/dt-bindings/arm/zte_pm_domains.h
-@@ -0,0 +1,23 @@
-+/*
-+ * Copyright (C) 2015 Linaro Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+#ifndef _DT_BINDINGS_ARM_ZTE_PM_DOMAINS_H
-+#define _DT_BINDINGS_ARM_ZTE_PM_DOMAINS_H
-+
-+#define DM_ZX296718_SAPPU	0
-+#define DM_ZX296718_VDE		1  /*g1v6*/
-+#define DM_ZX296718_VCE		2  /*h1v6*/
-+#define DM_ZX296718_HDE		3  /*g2v2*/
-+#define DM_ZX296718_VIU		4
-+#define DM_ZX296718_USB20	5
-+#define DM_ZX296718_USB21	6
-+#define DM_ZX296718_USB30	7
-+#define DM_ZX296718_HSIC	8
-+#define DM_ZX296718_GMAC	9
-+#define DM_ZX296718_TS		10
-+#define DM_ZX296718_VOU		11
-+
-+#endif /* _DT_BINDINGS_ARM_ZTE_PM_DOMAINS_H */
--- 
-2.7.4
+> 
+>  .../devicetree/bindings/media/qcom,venus.txt       | 82 ++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+> new file mode 100644
+> index 000000000000..a64b4ea1ebba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+> @@ -0,0 +1,82 @@
+> +* Qualcomm Venus video encode/decode accelerator
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Value should contain one of:
+> +		- "qcom,msm8916-venus"
+> +		- "qcom,msm8996-venus"
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Register ranges as listed in the reg-names property.
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain following entries:
+> +		- "base"	Venus register base
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-names is kind of pointless with only one.
+
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Should contain interrupts as listed in the interrupt-names
+> +		    property.
+> +- interrupt-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain following entries:
+> +		- "venus"	Venus interrupt line
+
+ditto
+
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A List of phandle and clock specifier pairs as listed
+> +		    in clock-names property.
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries:
+> +		- "core"	Core video accelerator clock
+> +		- "iface"	Video accelerator AHB clock
+> +		- "bus"		Video accelerator AXI clock
+> +- clock-names:
+> +	Usage: required for msm8996
+
+It's not clear if this is in addition to the above list. I'd guess not 
+and you should make it clear the above applies to the 8916 only.
+
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries:
+> +		- "subcore0"		Subcore0 video accelerator clock
+> +		- "subcore1"		Subcore1 video accelerator clock
+> +		- "mmssnoc_axi"		Multimedia subsystem NOC AXI clock
+> +		- "mmss_mmagic_iface"	Multimedia subsystem MMAGIC AHB clock
+> +		- "mmss_mmagic_mbus"	Multimedia subsystem MMAGIC MAXI clock
+> +		- "mmagic_video_bus"	MMAGIC video AXI clock
+> +		- "video_mbus"		Video MAXI clock
+> +- power-domains:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A phandle and power domain specifier pairs to the
+> +		    power domain which is responsible for collapsing
+> +		    and restoring power to the peripheral.
+> +- rproc:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A phandle to remote processor responsible for
+> +		    firmware loading and processor booting.
+> +
+> +- iommus:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of phandle and IOMMU specifier pairs.
+> +
+> +* An Example
+> +	video-codec@1d00000 {
+> +		compatible = "qcom,msm8916-venus";
+> +		reg = <0x01d00000 0xff000>;
+> +		reg-names = "base";
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "venus";
+> +		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
+> +			 <&gcc GCC_VENUS0_AHB_CLK>,
+> +			 <&gcc GCC_VENUS0_AXI_CLK>;
+> +		clock-names = "core", "iface", "bus";
+> +		power-domains = <&gcc VENUS_GDSC>;
+> +		rproc = <&venus_rproc>;
+> +		iommus = <&apps_iommu 5>;
+> +	};
+> -- 
+> 2.7.4
+> 
