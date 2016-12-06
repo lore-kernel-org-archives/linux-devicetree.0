@@ -1,304 +1,131 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
-Date: Tue, 06 Dec 2016 09:40:06 -0800
-Message-ID: <m2mvg9ez2h.fsf@baylibre.com>
-References: <20161122155244.802-1-khilman@baylibre.com>
-        <m2zikgh5f0.fsf@baylibre.com>
-        <20161201075730.GP16630@valkosipuli.retiisi.org.uk>
-        <2453889.B9pO7dWgEo@avalon>
-        <d7aaa1d5-f11a-e361-b2fe-f0cf86d92008@xs4all.nl>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [RFC] New Device Tree property - "bonding"
+Date: Tue, 6 Dec 2016 17:45:24 +0000
+Message-ID: <SG2PR06MB1038FDD0F2C70D6CB0AED298C3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
+ <2054258.NRXTrTF0Rj@avalon>
+ <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
+ <10679912.HCjz6JNtZJ@avalon>
+ <SG2PR06MB1038A0DADECF2EB7795A487AC3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <CAL_JsqKJcEmNUzOm-3j3FODkN1faXMAMmURRxfRpHfiGs_a+qA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d7aaa1d5-f11a-e361-b2fe-f0cf86d92008-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> (Hans Verkuil's
-        message of "Mon, 5 Dec 2016 13:27:36 +0100")
+In-Reply-To: <CAL_JsqKJcEmNUzOm-3j3FODkN1faXMAMmURRxfRpHfiGs_a+qA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org" <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> writes:
-
-> On 12/01/2016 10:16 AM, Laurent Pinchart wrote:
->> Hello,
->> 
->> On Thursday 01 Dec 2016 09:57:31 Sakari Ailus wrote:
->>> On Wed, Nov 30, 2016 at 04:14:11PM -0800, Kevin Hilman wrote:
->>>> Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
->>>>> On Wed, Nov 23, 2016 at 03:25:32PM -0800, Kevin Hilman wrote:
->>>>>> Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
->>>>>>> On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
->>>>>>>> Allow getting of subdevs from DT ports and endpoints.
->>>>>>>>
->>>>>>>> The _get_pdata() function was larely inspired by (i.e. stolen from)
->>>>>>>> am437x-vpfe.c
->>>>>>>>
->>>>>>>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>>>>>> ---
->>>>>>>>
->>>>>>>>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++-
->>>>>>>>  include/media/davinci/vpif_types.h     
->>>>>>>>        |   9 +-
->>>>>>>>  2 files changed, 133 insertions(+), 6 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/media/platform/davinci/vpif_capture.c
->>>>>>>> b/drivers/media/platform/davinci/vpif_capture.c index
->>>>>>>> 94ee6cf03f02..47a4699157e7 100644
->>>>>>>> --- a/drivers/media/platform/davinci/vpif_capture.c
->>>>>>>> +++ b/drivers/media/platform/davinci/vpif_capture.c
->>>>>>>> @@ -26,6 +26,8 @@
->>>>>>>>  #include <linux/slab.h>
->>>>>>>>
->>>>>>>>  #include <media/v4l2-ioctl.h>
->>>>>>>> +#include <media/v4l2-of.h>
->>>>>>>> +#include <media/i2c/tvp514x.h>
->>>>>>>
->>>>>>> Do you need this header?
->>>>>>
->>>>>> Yes, based on discussion with Hans, since there is no DT binding for
->>>>>> selecting the input pins of the TVP514x, I have to select it in the
->>>>>> driver, so I need the defines from this header.  More on this below...
->> 
->> That's really ugly :-( The problem should be fixed properly instead of adding 
->> one more offender.
->
-> Do you have time for that, Laurent? I don't. Until that time we just need to
-> make do with this workaround.
->
->> 
->>>>>>>>  #include "vpif.h"
->>>>>>>>  #include "vpif_capture.h"
->>>>>>>> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
->>>>>>>>
->>>>>>>>  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
->>>>>>>>
->>>>>>>> +	if (!chan_cfg)
->>>>>>>> +		return -1;
->>>>>>>> +	if (input_index >= chan_cfg->input_count)
->>>>>>>> +		return -1;
->>>>>>>>  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
->>>>>>>>  	if (subdev_name == NULL)
->>>>>>>>  		return -1;
->>>>>>>> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
->>>>>>>>  	/* loop through the sub device list to get the sub device info
->>>>>>>>  	*/
->>>>>>>>  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
->>>>>>>>  		subdev_info = &vpif_cfg->subdev_info[i];
->>>>>>>> -		if (!strcmp(subdev_info->name, subdev_name))
->>>>>>>> +		if (subdev_info && !strcmp(subdev_info->name,
->>>>>>>> subdev_name))
->>>>>>>>  			return i;
->>>>>>>>  	}
->>>>>>>>  	return -1;
->>>>>>>> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct
->>>>>>>> v4l2_async_notifier *notifier,> >> >> 
->>>>>>>>  {
->>>>>>>>  	int i;
->>>>>>>>
->>>>>>>> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
->>>>>>>> +		struct v4l2_async_subdev *_asd = vpif_obj.config
->>>>>>>> ->asd[i];
->>>>>>>> +		const struct device_node *node = _asd->match.of.node;
->>>>>>>> +
->>>>>>>> +		if (node == subdev->of_node) {
->>>>>>>> +			vpif_obj.sd[i] = subdev;
->>>>>>>> +			vpif_obj.config->chan_config
->>>>>>>> ->inputs[i].subdev_name =
->>>>>>>> +				(char *)subdev->of_node->full_name;
->> 
->> Can subdev_name be made const instead of blindly casting the full_name pointer 
->> ? If not this is probably unsafe, and if yes it should be done :-)
->> 
->>>>>>>> +			vpif_dbg(2, debug,
->>>>>>>> +				 "%s: setting input %d subdev_name =
->>>>>>>> %s\n",
->>>>>>>> +				 __func__, i, subdev->of_node
->>>>>>>> ->full_name);
->>>>>>>> +			return 0;
->>>>>>>> +		}
->>>>>>>> +	}
->>>>>>>> +
->>>>>>>>  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
->>>>>>>>  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
->>>>>>>>  			    subdev->name)) {
->>>>>>>> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct
->>>>>>>> v4l2_async_notifier *notifier)
->>>>>>>>  	return vpif_probe_complete();
->>>>>>>>  }
->>>>>>>>
->>>>>>>> +static struct vpif_capture_config *
->>>>>>>> +vpif_capture_get_pdata(struct platform_device *pdev)
->>>>>>>> +{
->>>>>>>> +	struct device_node *endpoint = NULL;
->>>>>>>> +	struct v4l2_of_endpoint bus_cfg;
->>>>>>>> +	struct vpif_capture_config *pdata;
->>>>>>>> +	struct vpif_subdev_info *sdinfo;
->>>>>>>> +	struct vpif_capture_chan_config *chan;
->>>>>>>> +	unsigned int i;
->>>>>>>> +
->>>>>>>> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
->>>>>>>> +
->>>>>>>> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
->>>>>>>> +		return pdev->dev.platform_data;
->>>>>>>> +
->>>>>>>> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->>>>>>>> +	if (!pdata)
->>>>>>>> +		return NULL;
->>>>>>>> +	pdata->subdev_info =
->>>>>>>> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
->>>>>>>> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
->>>>>>>> +
->>>>>>>> +	if (!pdata->subdev_info)
->>>>>>>> +		return NULL;
->>>>>>>> +	dev_dbg(&pdev->dev, "%s\n", __func__);
->>>>>>>> +
->>>>>>>> +	for (i = 0; ; i++) {
->>>>>>>> +		struct device_node *rem;
->>>>>>>> +		unsigned int flags;
->>>>>>>> +		int err;
->>>>>>>> +
->>>>>>>> +		endpoint = of_graph_get_next_endpoint(pdev
->>>>>>>> ->dev.of_node,
->>>>>>>> +						      endpoint);
->>>>>>>> +		if (!endpoint)
->>>>>>>> +			break;
->>>>>>>> +
->>>>>>>> +		sdinfo = &pdata->subdev_info[i];
->>>>>>>
->>>>>>> subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
->>>>>>
->>>>>> Right, I need to make the loop only go for a max of
->>>>>> VPIF_CAPTURE_MAX_CHANNELS iterations.
->>>>>>
->>>>>>>> +		chan = &pdata->chan_config[i];
->>>>>>>> +		chan->inputs = devm_kzalloc(&pdev->dev,
->>>>>>>> +					    sizeof(*chan->inputs) *
->>>>>>>> +					    VPIF_DISPLAY_MAX_CHANNELS,
->>>>>>>> +					    GFP_KERNEL);
->>>>>>>> +
->>>>>>>> +		chan->input_count++;
->>>>>>>> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
->>>>>>>
->>>>>>> I wonder what's the purpose of using index i on this array as well.
->>>>>>
->>>>>> The number of endpoints in DT is the number of input channels
->>>>>> configured (up to a max of VPIF_CAPTURE_MAX_CHANNELS.)
->>>>>>
->>>>>>> If you use that to access a corresponding entry in a different array,
->>>>>>> I'd just create a struct that contains the port configuration and the
->>>>>>> async sub-device. The omap3isp driver does that, for instance; see
->>>>>>> isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if
->>>>>>> you're interested. Up to you.
->>>>>>
->>>>>> OK, I'll have a look at that driver. The goal here with this series is
->>>>>> just to get this working with DT, but also not break the existing
->>>>>> legacy platform_device support, so I'm trying not to mess with the
->>>>>> driver-interal data structures too much.
->>>>>
->>>>> Ack.
->>>>>
->>>>>>>> +		chan->inputs[i].input.std = V4L2_STD_ALL;
->>>>>>>> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
->>>>>>>> +
->>>>>>>> +		/* FIXME: need a new property? ch0:composite ch1:
->>>>>>>> s-video */
->>>>>>>> +		if (i == 0)
->>>>>>>
->>>>>>> Can you assume that the first endopoint has got a particular kind of
->>>>>>> input? What if it's not connected?
->>>>>>
->>>>>> On all the boards I know of (there aren't many using this SoC), it's a
->>>>>> safe assumption.
->>>>>>
->>>>>>> If this is a different physical port (not in the meaning another) in
->>>>>>> the device, I'd use the reg property for this. Please see
->>>>>>> Documentation/devicetree/bindings/media/video-interfaces.txt .
->>>>>>
->>>>>> My understanding (which is admittedly somewhat fuzzy) of the TVP514x is
->>>>>> that it's not physically a different port.  Instead, it's just telling
->>>>>> the TVP514x which pin(s) will be active inputs (and what kind of signal
->>>>>> will be present.)
->>>>>>
->>>>>> I'm open to a better way to describe this input select from DT, but
->>>>>> based on what I heard from Hans, there isn't currently a good way to do
->>>>>> that except for in the driver:
->>>>>> (c.f. https://marc.info/?l=linux-arm-kernel&m=147887871615788)
->>>>>>
->>>>>> Based on further discussion in that thread, it sounds like there may be
->>>>>> a way forward coming soon, and I'll be glad to switch to that when it
->>>>>> arrives.
->> 
->> I'm afraid I have to disappoint Hans here, I don't have code for that yet.
->> 
->>>>> I'm not sure that properly supporting connectors will provide any help
->>>>> here.
->>>>>
->>>>> Looking at the s_routing() API, it's the calling driver that has to be
->>>>> aware of sub-device specific function parameters. As such it's not a
->>>>> very good idea to require that a driver is aware of the value range of
->>>>> another driver's parameter. I wonder if a simple enumeration interface
->>>>> would help here --- if I understand correctly, the purpose is just to
->>>>> provide a way to choose the input using VIDIOC_S_INPUT.
->>>>>
->>>>> I guess that's somehow ok as long as you have no other combinations of
->>>>> these devices but this is hardly future-proof. (And certainly not a
->>>>> problem created by this patch.)
->>>>
->>>> Yeah, this is far from future proof.
->>>>
->>>>> It'd be still nice to fix that as presumably we don't have the option of
->>>>> reworking how we expect the device tree to look like.
->>>>
->>>> Agreed.
->>>>
->>>> I'm just hoping someone can shed som light on "how we expect the device
->>>> tree to look".  ;)
->>>
->>> :-)
->>>
->>> For the tvp514x, do you need more than a single endpoint on the receiver
->>> side? Does the input that's selected affect the bus parameters?
->>>
->>> If it doesn't, you could create a custom endpoint property for the possible
->>> input values. The s_routing() really should be fixed though, but that could
->>> be postponed I guess. There are quite a few drivers using it.
->> 
->> There's two ways to look at s_routing() in my opinion, as the calling driver 
->> should really not hardcode any knowledge specific to a particular subdev. We 
->> can either have the calling driver discover the possible routing options at 
->> runtime through the subdev API, or modify the s_routing() API.
->> 
->
-> Some historical perspective: s_routing was added well before the device tree
-> was ever used for ARM. And at that time the vast majority of drivers were PCI
-> or USB drivers, very few platform drivers existed (and those typically used
-> sensors, not video receivers).
->
-> Before s_routing existed the situation was even worse.
->
-> Basically what s_routing does is a poor-man's device tree entry, telling the
-> subdev how to route video or audio from connector to the output of the chip.
-> Typically the card tables in PCI or USB drivers contain the correct arguments
-> for s_routing. Of course, today we'd do that with the DT, but that was not an
-> option years ago.
-
-So I'm still confused on the path forward here.
-
-I do not have the time (or the V4L2 knowledge/experience) to rework the
-V4L2 internals to make this work, but I'm happy to test if someone else
-is working on it.
-
-In the meantime, what do we do with this series?  I have a couple minor
-things to fixup based on review comments, but other than that, the
-s_routing decision is blocking this from getting an update for use on DT
-platforms.
-
-The alternative is to go the OMAP route for legacy drivers like this and
-just use pdata quirks for passing the legacy pdata (which has the input
-and output routes hard-coded in platform_data). 
-
-Kevin
-
+SGkgUm9iLA0KDQo+ID4+IE9uIE1vbmRheSAwNSBEZWMgMjAxNiAwOTo1NzozMiBSb2IgSGVycmlu
+ZyB3cm90ZToNCj4gPj4gPiBPbiBNb24sIERlYyA1LCAyMDE2IGF0IDg6NDAgQU0sIExhdXJlbnQg
+UGluY2hhcnQgd3JvdGU6DQo+ID4+ID4gPiBPbiBNb25kYXkgMDUgRGVjIDIwMTYgMDg6MTg6MzQg
+Um9iIEhlcnJpbmcgd3JvdGU6DQo+ID4+ID4gPj4gT24gRnJpLCBOb3YgMjUsIDIwMTYgYXQgMTA6
+NTUgQU0sIFJhbWVzaCBTaGFubXVnYXN1bmRhcmFtIHdyb3RlOg0KPiA+PiA+ID4+PiBIZWxsbyBE
+VCBtYWludGFpbmVycywNCj4gPj4gPiA+Pj4NCj4gPj4gPiA+Pj4gSW4gb25lIG9mIHRoZSBSZW5l
+c2FzIFNvQ3Mgd2UgaGF2ZSBhIGRldmljZSBjYWxsZWQgRFJJRg0KPiA+PiA+ID4+PiAoRGlnaXRh
+bCBSYWRpbw0KPiA+PiA+ID4+PiBJbnRlcmZhY2UpIGNvbnRyb2xsZXIuIEEgRFJJRiBjaGFubmVs
+IGNvbnRhaW5zIDQgZXh0ZXJuYWwgcGlucw0KPiA+PiA+ID4+PiAtIFNDSywgU1lOQywgRGF0YSBw
+aW5zIEQwICYgRDEuDQo+ID4+ID4gPj4+DQo+ID4+ID4gPj4+IEludGVybmFsbHkgYSBEUklGIGNo
+YW5uZWwgaXMgbWFkZSB1cCBvZiB0d28gU1BJIHNsYXZlIGRldmljZXMNCj4gPj4gPiA+Pj4gKGFs
+c28gY2FsbGVkIHN1Yi1jaGFubmVscyBoZXJlKSB0aGF0IHNoYXJlIGNvbW1vbiBDTEsgJiBTWU5D
+DQo+ID4+ID4gPj4+IHNpZ25hbHMgYnV0IGhhdmUgdGhlaXIgb3duIHJlc291cmNlIHNldC4gVGhl
+IERSSUYgY2hhbm5lbCBjYW4NCj4gPj4gPiA+Pj4gaGF2ZSBlaXRoZXIgb25lIG9mIHRoZSBzdWIt
+Y2hhbm5lbCBhY3RpdmUgYXQgYSB0aW1lIG9yIGJvdGguDQo+ID4+ID4gPj4+IFdoZW4gYm90aCBz
+dWItY2hhbm5lbHMgYXJlIGFjdGl2ZSwgdGhleSBuZWVkIHRvIGJlIG1hbmFnZWQNCj4gPj4gPiA+
+Pj4gdG9nZXRoZXIgYXMgb25lIGRldmljZSBhcyB0aGV5IHNoYXJlIHNhbWUgQ0xLICYgU1lOQy4g
+V2UgcGxhbg0KPiA+PiA+ID4+PiB0byB0aWUgdGhlc2UgdHdvIHN1Yi1jaGFubmVscyB0b2dldGhl
+ciB3aXRoIGEgbmV3IHByb3BlcnR5IGNhbGxlZA0KPiAicmVuZXNhcyxib25kaW5nIi4NCj4gPj4g
+PiA+Pg0KPiA+PiA+ID4+IElzIHRoZXJlIG5vIG5lZWQgdG8gZGVzY3JpYmUgdGhlIG1hc3RlciBk
+ZXZpY2U/IE5vIEdQSU9zLA0KPiA+PiA+ID4+IHJlZ3VsYXRvcnMgb3Igb3RoZXIgc2lkZWJhbmQg
+Y29udHJvbHMgbmVlZGVkPyBJZiB0aGF0J3MgbmV2ZXINCj4gPj4gPiA+PiBuZWVkZWQgKHdoaWNo
+IHNlZW1zIGRvdWJ0ZnVsKSwgdGhlbiBJIHdvdWxkIGRvIHNvbWV0aGluZw0KPiA+PiA+ID4+IGRp
+ZmZlcmVudCBoZXJlIHByb2JhYmx5IHdpdGggdGhlIG1hc3RlciBkZXZpY2UgYXMgYSBjaGlsZCBv
+ZiBvbmUNCj4gPj4gPiA+PiBEUklGIGFuZCB0aGVuIHBoYW5kbGVzIHRvIG1hc3RlciBmcm9tIHRo
+ZSBvdGhlciBEUklGcy4NCj4gPj4gPiA+PiBPdGhlcndpc2UsIHRoaXMgbG9va3MNCj4gPj4gZmlu
+ZSB0byBtZS4NCj4gPj4gPiA+DQo+ID4+ID4gPiBIZXJlJ3MgYSBiaXQgb2YgYmFja2dyb3VuZC4N
+Cj4gPj4gPiA+DQo+ID4+ID4gPiBUaGUgRFJJRiBpcyBhbiBTUEkgcmVjZWl2ZXIuIEl0IGhhcyB0
+aHJlZSBpbnB1dCBwaW5zLCBhIGNsb2NrDQo+ID4+ID4gPiBsaW5lLCBhIGRhdGEgbGluZSBhbmQg
+YSBzeW5jIHNpZ25hbC4gVGhlIGRldmljZSBpcyBkZXNpZ25lZCB0byBiZQ0KPiA+PiA+ID4gY29u
+bmVjdGVkIHRvIGEgdmFyaWV0eSBvZiBkYXRhIHNvdXJjZXMsIHVzdWFsbHkgcGxhaW4gU1BJICgx
+IGRhdGENCj4gPj4gPiA+IGxpbmUpLCBJSVMgKDEgZGF0YQ0KPiA+PiA+ID4gbGluZSkgYnV0IGFs
+c28gcmFkaW8gdHVuZXJzIHRoYXQgb3V0cHV0IEkvUSBkYXRhDQo+ID4+ID4gPiAoaHR0cDovL3d3
+dy5uaS5jb20vdHV0b3JpYWwvNDgwNS9lbi8pIG92ZXIgdHdvIGRhdGEgbGluZXMuDQo+ID4+ID4g
+Pg0KPiA+PiA+ID4gSW4gdGhlIGNhc2Ugb2YgSVEgZWFjaCBkYXRhIHNhbXBsZSBpcyBzcGxpdCBp
+biB0d28gSSBhbmQgUSB2YWx1ZXMNCj4gPj4gPiA+ICh0eXBpY2FsbHkgMTYgdG8gMjAgYml0cyBl
+YWNoIGluIHRoaXMgY2FzZSksIGFuZCB0aGUgdmFsdWVzIGFyZQ0KPiA+PiA+ID4gdHJhbnNtaXR0
+ZWQgc2VyaWFsbHkgb3ZlciBvbmUgZGF0YSBsaW5lIGVhY2guIFRoZSBzeW5jaHJvbml6YXRpb24N
+Cj4gPj4gPiA+IGFuZCBjbG9jayBzaWduYWxzIGFyZSBjb21tb24gdG8gYm90aCBkYXRhIGxpbmVz
+LiBUaGUgRFJJRiBpcw0KPiA+PiA+ID4gb3B0aW1pemVkIGZvciB0aGlzIHVzZSBjYXNlIGFzIHRo
+ZSBEUklGIGluc3RhbmNlcyBpbiB0aGUgU29DDQo+ID4+ID4gPiAoZWFjaCBvZiB0aGVtIGhhdmlu
+ZyBpbmRlcGVuZGVudCBjbG9ja3MsIGludGVycnVwdHMgYW5kIGNvbnRyb2wNCj4gPj4gPiA+IHJl
+Z2lzdGVycykgYXJlIGdyb3VwZWQgYnkgdHdvLCBhbmQgdGhlIHR3byBpbnN0YW5jZXMgaW4gYSBn
+cm91cA0KPiA+PiA+ID4gaGFuZGxlIGEgc2luZ2xlIGRhdGEgbGluZSBlYWNoIGJ1dCBzaGFyZSB0
+aGUgc2FtZSBjbG9jayBhbmQgc3luYw0KPiBpbnB1dC4NCj4gPj4gPiA+DQo+ID4+ID4gPiBPbiB0
+aGUgc29mdHdhcmUgc2lkZSB3ZSBuZWVkIHRvIGdyb3VwIHRoZSBJIGFuZCBRIHZhbHVlcywgd2hp
+Y2gNCj4gPj4gPiA+IGFyZSBETUEnZWQgdG8gbWVtb3J5IGJ5IHRoZSB0d28gRFJJRiBpbnN0YW5j
+ZXMsIGFuZCBtYWtlIHRoZW0NCj4gPj4gPiA+IGF2YWlsYWJsZSB0byB1c2Vyc3BhY2UuIFRoZSBW
+NEwyIEFQSSB1c2VkIGhlcmUgaW4gU0RSIChTb2Z0d2FyZQ0KPiA+PiA+ID4gRGVmaW5lZCBSYWRp
+bykgbW9kZSBzdXBwb3J0cyBzdWNoIHVzZSBjYXNlcyBhbmQgZXhwb3NlcyBhIHNpbmdsZQ0KPiA+
+PiA+ID4gZGV2aWNlIG5vZGUgdG8gdXNlcnNwYWNlIHRoYXQgYWxsb3dzIGNvbnRyb2wgb2YgdGhl
+IHR3byBEUklGDQo+ID4+ID4gPiBpbnN0YW5jZXMgYXMgYSBzaW5nbGUgZGV2aWNlLiBUbyBiZSBh
+YmxlIHRvIGltcGxlbWVudCB0aGlzIHdlDQo+ID4+ID4gPiBuZWVkIGtlcm5lbCBjb2RlIHRvIGJl
+IGF3YXJlIG9mIERSSUYgZ3JvdXBzIGFuZCwgd2hpbGUgYmluZGluZyB0bw0KPiA+PiA+ID4gdGhl
+IERSSUYgaW5zdGFuY2VzIHNlcGFyYXRlbHksIGV4cG9zZSBvbmx5IG9uZSBWNEwyIGRldmljZSB0
+bw0KPiB1c2Vyc3BhY2UgZm9yIGVhY2ggZ3JvdXAuDQo+ID4+ID4gPg0KPiA+PiA+ID4gVGhlcmUn
+cyBubyBtYXN0ZXIgb3Igc2xhdmUgaW5zdGFuY2UgZnJvbSBhIGhhcmR3YXJlIHBvaW50IG9mDQo+
+ID4+ID4gPiB2aWV3LCBidXQgdGhlIHR3byBpbnN0YW5jZXMgYXJlIG5vdCBpbnRlcmNoYW5nZWFi
+bGUgYXMgdGhleSBjYXJyeQ0KPiA+PiA+ID4gc2VwYXJhdGUNCj4gPj4gaW5mb3JtYXRpb24uDQo+
+ID4+ID4gPiBUaGV5IG11c3QgdGh1cyBiZSBpZGVudGlmaWVkIGF0IHRoZSBkcml2ZXIgbGV2ZWwu
+DQo+ID4+ID4NCj4gPj4gPiBCeSBtYXN0ZXIsIEkgbWVhbnQgdGhlIGV4dGVybmFsIG1hc3RlciBk
+ZXZpY2UgdGhhdCBnZW5lcmF0ZXMgdGhlIElRDQo+ID4+ID4gZGF0YSwgbm90IHdoaWNoIG9mIHRo
+ZSBpbnRlcm5hbCBEUklGIGJsb2NrcyBpcyBhIG1hc3RlciBvZiB0aGUgb3RoZXIuDQo+ID4+ID4g
+U28gYmFjayB0byBteSBxdWVzdGlvbiwgZG9lcyB0aGUgZXh0ZXJuYWwgbWFzdGVyIGRldmljZSBu
+ZWVkIHRvIGJlDQo+ID4+ID4gZGVzY3JpYmVkPyBJIHdvcnJ5IHRoZSBhbnN3ZXIgbm93IGZvciBh
+IHNpbXBsZSBjYXNlIGlzIG5vLCBidXQgdGhlbg0KPiA+PiA+IGxhdGVyIHBlb3BsZSBhcmUgZ29p
+bmcgdG8gaGF2ZSBjYXNlcyBuZWVkaW5nIHRvIGRlc2NyaWJlIG1vcmUuIFdlDQo+ID4+ID4gbmVl
+ZCB0byBhbnN3ZXIgdGhpcyBxdWVzdGlvbiBmaXJzdCBiZWZvcmUgd2UgY2FuIGRlY2lkZSB3aGF0
+IHRoaXMNCj4gPj4gPiBiaW5kaW5nIHNob3VsZCBsb29rIGxpa2UuDQo+ID4+DQo+ID4+IE9oIHll
+cyB0aGUgZXh0ZXJuYWwgZGV2aWNlIGNlcnRhaW5seSBuZWVkcyB0byBiZSBkZXNjcmliZWQuIEFz
+IGl0IGlzDQo+ID4+IGNvbnRyb2xsZWQgdGhyb3VnaCBhIHNlcGFyYXRlLCBnZW5lcmFsLXB1cnBv
+c2UgSTJDIG9yIFNQSSBjb250cm9sbGVyLA0KPiA+PiBpdCBzaG91bGQgYmUgYSBjaGlsZCBub2Rl
+IG9mIHRoYXQgY29udHJvbGxlci4gVGhlIERSSUYgaGFuZGxlcyB0aGUNCj4gPj4gZGF0YSBpbnRl
+cmZhY2Ugb25seSwgbm90IHRoZSBjb250cm9sIGludGVyZmFjZSBvZiB0aGUgZXh0ZXJuYWwgZGV2
+aWNlLg0KPiA+DQo+ID4gWWVzLCBhcyBMYXVyZW50IG1lbnRpb25lZCwgdGhlIGV4dGVybmFsIG1h
+c3RlciB3aWxsIGJlIGRlc2NyaWJlZA0KPiBzZXBhcmF0ZWx5LiBUaGUgZGF0YSBpbnRlcmZhY2Ug
+d2l0aCB0aGUgbWFzdGVyIGlzIGRlc2NyaWJlZCB0aHJvdWdoIHBvcnQNCj4gbm9kZXMuIEUuZy4N
+Cj4gPg0KPiA+ICAgICAgICAgcG9ydCB7DQo+ID4gICAgICAgICAgICAgICAgIGRyaWYwX2VwOiBl
+bmRwb2ludCB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ0
+dW5lcl9lcD47DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4gICAgICAgICB9Ow0KPiA+DQo+
+ID4gRG8gd2UgYWdyZWUgb24gdGhpcyBtb2RlbCBwbGVhc2U/DQo+DQo+IFdlbGwsIHRoYXQncyBu
+b3QgY29tcGxldGUgYXMgeW91IHNob3VsZCBoYXZlIGJvdGggRFJJRjAgYW5kIERSSUYxIGhhdmlu
+Zw0KPiBjb25uZWN0aW9ucyB0byB0aGUgdHVuZXIuIFRoZW4geW91IGNhbiB3YWxrIHRoZSBncmFw
+aCBhbmQgZmluZCBldmVyeXRoaW5nLA0KPiBhbmQgeW91IHRoZW4gZG9uJ3QgbmVlZCB0aGUgYm9u
+ZGluZyBwcm9wZXJ0eS4NCg0KQXNzdW1pbmcgdGhlIHRoaXJkIHBhcnR5IHR1bmVyIGV4cG9zZXMg
+aXQncyB0d28gZGF0YSBsaW5lcyBhcyB0d28gZW5kcG9pbnRzLCBpdCBzZWVtcyBwb3NzaWJsZSB3
+aXRoIG9mX2dyYXBoLmggYXBpcyB0byB3YWxrIHRocm91Z2ggdHVuZXIgZW5kIHBvaW50cyBhbmQg
+Z2V0IHRoZSBwaGFuZGxlIG9mIHRoZSBvdGhlciBEUklGIGRldmljZS4gSG93ZXZlciwgdGhlcmUg
+YXJlIGNvdXBsZSBvZiBwb2ludHMgY29taW5nIHRvIG1pbmQuDQoNCi0gVGhlIGN0cmwgcGlucyBz
+aGFyZWQgYmV0d2VlbiB0d28gRFJJRnMgbmVlZHMgdG8gYmUgZW5hYmxlZCBpbiBvbmUgb2YgdGhl
+IERSSUYgZGV2aWNlLiBEbyB3ZSBjaG9vc2UgdGhpcyBkZXZpY2UgYXJiaXRyYXJpbHk/IERvIHdl
+IGV4cG9zZSB0aGUgQ1RSTCBzaWduYWwgcHJvcGVydGllcyAobXNiL2xzYiBmaXJzdCwgcG9sYXJp
+dHkgZXRjKSBvbiBib3RoIERSSUYgZGV2aWNlcz8gU2hvdWxkIHdlIHRoaW5rIGFib3V0IHNjYWxh
+YmlsaXR5Pw0KDQotIEl0IG1hbmRhdGVzIHRoZSB0aGlyZCBwYXJ0eSB0dW5lciBkZXZpY2UgdG8g
+ZXhwb3NlIGl0J3MgdHdvIGRhdGEgbGluZXMgYXMgdHdvIGVuZHBvaW50cy4gSXQgYXNzdW1lcyB0
+aGF0IGEgc2luZ2xlIHRoaXJkIHBhcnR5IG1hc3RlciBkZXZpY2UgY29udHJvbHMgYm90aCB0aGUg
+ZGF0YSBsaW5lcyBjb21pbmcgdG8gZWFjaCBEUklGIGRldmljZS4NCg0KVGhlIGJvbmRpbmcgcHJv
+cGVydHkgbG9va3MgYSBiaXQgY2xlYW5lciBvbiB0aGVzZSBhc3BlY3RzIGJlY2F1c2UgaXQgZGVz
+Y3JpYmVzIG9ubHkgdGhlIERSSUYgZGV2aWNlLg0KDQpUaGFua3MsDQpSYW1lc2gNCg0KDQoNCg0K
+DQpbaHR0cHM6Ly93d3cyLnJlbmVzYXMuZXUvbWVkaWEvZW1haWwvdW5pY2VmLmdpZl0NCg0KVGhp
+cyBDaHJpc3RtYXMsIGluc3RlYWQgb2Ygc2VuZGluZyBvdXQgY2FyZHMsIFJlbmVzYXMgRWxlY3Ry
+b25pY3MgRXVyb3BlIGhhdmUgZGVjaWRlZCB0byBzdXBwb3J0IFVuaWNlZiB3aXRoIGEgZG9uYXRp
+b24uIEZvciBmdXJ0aGVyIGRldGFpbHMgY2xpY2sgaGVyZTxodHRwczovL3d3dy51bmljZWYub3Jn
+Lz4gdG8gZmluZCBvdXQgYWJvdXQgdGhlIHZhbHVhYmxlIHdvcmsgdGhleSBkbywgaGVscGluZyBj
+aGlsZHJlbiBhbGwgb3ZlciB0aGUgd29ybGQuDQpXZSB3b3VsZCBsaWtlIHRvIHRha2UgdGhpcyBv
+cHBvcnR1bml0eSB0byB3aXNoIHlvdSBhIE1lcnJ5IENocmlzdG1hcyBhbmQgYSBwcm9zcGVyb3Vz
+IE5ldyBZZWFyLg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
