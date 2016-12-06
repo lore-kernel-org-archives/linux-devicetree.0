@@ -1,11 +1,11 @@
 From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH pci/next v3 1/3] PCI: rcar-gen2: Use gen2 fallback compatibility last
-Date: Tue,  6 Dec 2016 16:51:29 +0100
-Message-ID: <1481039491-30364-2-git-send-email-horms+renesas@verge.net.au>
+Subject: [PATCH pci/next v3 2/3] PCI: rcar: Use gen2 fallback compatibility last
+Date: Tue,  6 Dec 2016 16:51:30 +0100
+Message-ID: <1481039491-30364-3-git-send-email-horms+renesas@verge.net.au>
 References: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-pci-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
@@ -23,24 +23,27 @@ v3
 v2
 * New patch
 ---
- drivers/pci/host/pci-rcar-gen2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/host/pcie-rcar.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
-index 1eeefa4df64c..85348590848b 100644
---- a/drivers/pci/host/pci-rcar-gen2.c
-+++ b/drivers/pci/host/pci-rcar-gen2.c
-@@ -430,10 +430,10 @@ static int rcar_pci_probe(struct platform_device *pdev)
- }
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 62700d1896f4..85971bc276c6 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -1071,12 +1071,12 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
  
- static struct of_device_id rcar_pci_of_match[] = {
--	{ .compatible = "renesas,pci-rcar-gen2", },
- 	{ .compatible = "renesas,pci-r8a7790", },
- 	{ .compatible = "renesas,pci-r8a7791", },
- 	{ .compatible = "renesas,pci-r8a7794", },
-+	{ .compatible = "renesas,pci-rcar-gen2", },
- 	{ },
+ static const struct of_device_id rcar_pcie_of_match[] = {
+ 	{ .compatible = "renesas,pcie-r8a7779", .data = rcar_pcie_hw_init_h1 },
+-	{ .compatible = "renesas,pcie-rcar-gen2",
+-	  .data = rcar_pcie_hw_init_gen2 },
+ 	{ .compatible = "renesas,pcie-r8a7790",
+ 	  .data = rcar_pcie_hw_init_gen2 },
+ 	{ .compatible = "renesas,pcie-r8a7791",
+ 	  .data = rcar_pcie_hw_init_gen2 },
++	{ .compatible = "renesas,pcie-rcar-gen2",
++	  .data = rcar_pcie_hw_init_gen2 },
+ 	{ .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
+ 	{},
  };
- 
 -- 
 2.7.0.rc3.207.g0ac5344
