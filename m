@@ -1,151 +1,80 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 09/13] net: ethernet: ti: cpts: rework
- initialization/deinitialization
-Date: Tue, 6 Dec 2016 10:45:55 -0600
-Message-ID: <4e7888b6-9f1c-ca31-e83e-15109bf1df3f@ti.com>
-References: <20161205200525.16664-1-grygorii.strashko@ti.com>
- <20161205200525.16664-10-grygorii.strashko@ti.com>
- <20161206134037.GA15946@localhost.localdomain>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4 1/4] [media] davinci: vpif_capture: don't lock over
+ s_stream
+Date: Tue, 06 Dec 2016 08:49:38 -0800
+Message-ID: <m237i1gfz1.fsf@baylibre.com>
+References: <20161129235712.29846-1-khilman@baylibre.com>
+ <20161129235712.29846-2-khilman@baylibre.com>
+ <4747860.QGGHSuFRpz@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161206134037.GA15946-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4747860.QGGHSuFRpz@avalon> (Laurent Pinchart's message of "Wed,
+ 30 Nov 2016 10:32:33 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@iki.fi>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
 
+> Hi Kevin,
+>
+> Thank you for the patch.
+>
+> On Tuesday 29 Nov 2016 15:57:09 Kevin Hilman wrote:
+>> Video capture subdevs may be over I2C and may sleep during xfer, so we
+>> cannot do IRQ-disabled locking when calling the subdev.
+>> 
+>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>> ---
+>>  drivers/media/platform/davinci/vpif_capture.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>> 
+>> diff --git a/drivers/media/platform/davinci/vpif_capture.c
+>> b/drivers/media/platform/davinci/vpif_capture.c index
+>> 5104cc0ee40e..9f8f41c0f251 100644
+>> --- a/drivers/media/platform/davinci/vpif_capture.c
+>> +++ b/drivers/media/platform/davinci/vpif_capture.c
+>> @@ -193,7 +193,10 @@ static int vpif_start_streaming(struct vb2_queue *vq,
+>> unsigned int count) }
+>>  	}
+>> 
+>> +	spin_unlock_irqrestore(&common->irqlock, flags);
+>>  	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
+>> +	spin_lock_irqsave(&common->irqlock, flags);
+>
+> I always get anxious when I see a spinlock being released randomly with an 
+> operation in the middle of a protected section. Looking at the code it looks 
+> like the spinlock is abused here. irqlock should only protect the dma_queue 
+> and should thus only be taken around the following code:
+>
+> spin_lock_irqsave(&common->irqlock, flags);
+> /* Get the next frame from the buffer queue */
+> common->cur_frm = common->next_frm = list_entry(common->dma_queue.next,
+>                             struct vpif_cap_buffer, list);
+> /* Remove buffer from the buffer queue */
+> list_del(&common->cur_frm->list);
+> spin_unlock_irqrestore(&common->irqlock, flags);
 
-On 12/06/2016 07:40 AM, Richard Cochran wrote:
-> On Mon, Dec 05, 2016 at 02:05:21PM -0600, Grygorii Strashko wrote:
->> @@ -372,34 +354,27 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
->>  }
->>  EXPORT_SYMBOL_GPL(cpts_tx_timestamp);
->>  
->> -int cpts_register(struct device *dev, struct cpts *cpts,
->> -		  u32 mult, u32 shift)
->> +int cpts_register(struct cpts *cpts)
->>  {
->>  	int err, i;
->>  
->> -	cpts->info = cpts_info;
->> -	spin_lock_init(&cpts->lock);
->> -
->> -	cpts->cc.read = cpts_systim_read;
->> -	cpts->cc.mask = CLOCKSOURCE_MASK(32);
->> -	cpts->cc_mult = mult;
->> -	cpts->cc.mult = mult;
->> -	cpts->cc.shift = shift;
->> -
->>  	INIT_LIST_HEAD(&cpts->events);
->>  	INIT_LIST_HEAD(&cpts->pool);
->>  	for (i = 0; i < CPTS_MAX_EVENTS; i++)
->>  		list_add(&cpts->pool_data[i].list, &cpts->pool);
->>  
->> -	cpts_clk_init(dev, cpts);
->> +	clk_enable(cpts->refclk);
->> +
->>  	cpts_write32(cpts, CPTS_EN, control);
->>  	cpts_write32(cpts, TS_PEND_EN, int_enable);
->>  
->> +	/* reinitialize cc.mult to original value as it can be modified
->> +	 * by cpts_ptp_adjfreq().
->> +	 */
->> +	cpts->cc.mult = cpts->cc_mult;
-> 
-> This still isn't quite right.  First of all, you shouldn't clobber the
-> learned cc.mult value in cpts_register().  Presumably, if PTP had been
-> run on this port before, then the learned frequency is approximately
-> correct, and it should be left alone.
-> 
-> [ BTW, resetting the timecounter here makes no sense either.  Why
->   reset the clock just because the interface goes down?  ]
-> 
+Yes, that looks correct.  Will update.
 
-Huh. This is how it works now (even before my changes) - this is just refactoring!
-(really new thing is the only cpts_calc_mult_shift()).
+> The code that is currently protected by the lock in the start and stop 
+> streaming functions should be protected by a mutex instead.
 
-Also, this is how cpts is supported now as part of cpsw (and keystone):
-configure cpsw (cpts)
-- ifup
-   cpsw (*soft_reset*, full reconfiguration of cpsw)
-  (start cpts) - cpts/ptp active
+I tried taking the mutex here, but lockdep pointed out a deadlock.  I
+may not be fully understanding the V4L2 internals here, but it seems
+that the ioctl is already taking a mutex, so taking it again in
+start/stop streaming is a deadlock.  Unless you think the locking should
+be nested here, it seems to me that the mutex isn't needed.
 
-- ifdown
-   if last netdev - shutdown/poweroff cpsw (cpts)
-
-in other words, cpts/ptp is expected to work once and until at least one cpsw netdev is active.
-
-Also there are additional questions such as:
-- is there guarantee that cpsw port will be connected to the same network after ifup?
-- should there be possibility to reset cc.mult if it's value will be kept from the previous run?
-
-> Secondly, you have made the initialization order of these fields hard
-> to follow.  With the whole series applied:
-> 
-> probe()
-> 	cpts_create()
-> 		cpts_of_parse()
-> 		{
-> 			/* Set cc_mult but not cc.mult! */
-> 			set cc_mult
-> 			set cc.shift
-> 		}
-> 		cpts_calc_mult_shift()
-> 		{
-> 			/* Set them both. */
-> 			cpts->cc_mult = mult;
-> 			cpts->cc.mult = mult; 
-
-^^ this assignment of cpts->cc.mult not required.
-
-> 			cpts->cc.shift = shift;
-			
-
-only in case there were not set in DT before
-(I have a requirement to support both - DT and cpts_calc_mult_shift and
- that introduces a bit of complexity)
-
-Also, I've tried not to add more fields in struct cpts.
-
-> 		}
-> /* later on */
-> cpts_register()
-> 	cpts->cc.mult = cpts->cc_mult;
-> 
-> There is no need for such complexity.  Simply set cc.mult in
-> cpts_create() _once_, immediately after the call to
-> cpts_calc_mult_shift().
-> 
-> You can remove the assignment from cpts_calc_mult_shift() and
-> cpts_register().
-
-Just to clarify: do you propose to get rid of cpts->cc_mult at all?
-
-static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
-{
-...
-	if (ppb < 0) {
-		neg_adj = 1;
-		ppb = -ppb;
-	}
-	mult = cpts->cc_mult;
-		^^^^^^^^^^^^^^
-	adj = mult;
-	adj *= ppb;
-	diff = div_u64(adj, 1000000000ULL);
-...
-	cpts->cc.mult = neg_adj ? mult - diff : mult + diff;
-
-Honestly, i'd not prefer to change functional behavior of ptp clock as part of
-this series.
-
--- 
-regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
