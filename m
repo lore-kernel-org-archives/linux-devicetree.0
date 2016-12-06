@@ -1,157 +1,39 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v4 6/7] IIO: add STM32 timer trigger driver
-Date: Tue, 6 Dec 2016 16:19:56 +0100
-Message-ID: <CA+M3ks6fxCucmaY0OgpMb_opA=YLrowijJ0YQ+imeprhWg6N_w@mail.gmail.com>
-References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
- <1481027929-13704-7-git-send-email-benjamin.gaignard@st.com> <20161206131635.GJ25385@dell.home>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/4] net: hix5hd2_gmac: add tx sg feature and
+ reset/clock control signals
+Date: Tue, 06 Dec 2016 10:21:54 -0500 (EST)
+Message-ID: <20161206.102154.1118935347030938372.davem@davemloft.net>
+References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161206131635.GJ25385@dell.home>
+In-Reply-To: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, alexandre.torgue@st.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: lidongpo@hisilicon.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, zhangfei.gao@linaro.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, arnd@arndb.de, andrew@lunn.ch, xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[snip]
->> +
->> +static const char * const triggers0[] =3D {
->> +     TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,
->> +};
->> +
->> +static const char * const triggers1[] =3D {
->> +     TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,
->> +};
->> +
->> +static const char * const triggers2[] =3D {
->> +     TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,
->> +};
->> +
->> +static const char * const triggers3[] =3D {
->> +     TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,
->> +};
->> +
->> +static const char * const triggers4[] =3D {
->> +     TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,
->> +};
->> +
->> +static const char * const triggers5[] =3D {
->> +     TIM6_TRGO, NULL,
->> +};
->> +
->> +static const char * const triggers6[] =3D {
->> +     TIM7_TRGO, NULL,
->> +};
->> +
->> +static const char * const triggers7[] =3D {
->> +     TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,
->> +};
->> +
->> +static const char * const triggers8[] =3D {
->> +     TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,
->> +};
->> +
->> +static const char * const triggers9[] =3D {
->> +     TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,
->> +};
->> +
->> +static const void *triggers_table[] =3D {
->> +     triggers0,
->> +     triggers1,
->> +     triggers2,
->> +     triggers3,
->> +     triggers4,
->> +     triggers5,
->> +     triggers6,
->> +     triggers7,
->> +     triggers8,
->> +     triggers9,
->> +};
->
-> What about:
->
-> static const char * const triggers[][] =3D {
->         { TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL },
->         { TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL },
->         { TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL },
->         { TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL },
->         { TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL },
->         { TIM6_TRGO, NULL },
->         { TIM7_TRGO, NULL },
->         { TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL },
->         { TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL },
->         { TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL }
-> };
+From: Dongpo Li <lidongpo@hisilicon.com>
+Date: Mon, 5 Dec 2016 21:27:57 +0800
 
-I can't because the second dimension of the array isn't fix.
-I could have between 2 and 6 elements per row... to create a dual dimension
-array I would have to add NULL entries like that:
+> The "hix5hd2" is SoC name, add the generic ethernet driver compatible string.
+> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
+> the SG/TXCSUM/TSO/UFO features.
+> This patch set only adds the SG(scatter-gather) driver for transmitting,
+> the drivers of other features will be submitted later.
+> 
+> Add the MAC reset control signals and clock signals.
+> We make these signals optional to be backward compatible with
+> the hix5hd2 SoC.
+> 
+> Changes in v2:
+> - Make the compatible string changes be a separate patch and
+> the most specific string come first than the generic string
+> as advised by Rob.
+> - Make the MAC reset control signals and clock signals optional
+> to be backward compatible with the hix5hd2 SoC.
+> - Change the compatible string and give the clock a specific name
+> in hix5hd2 dts file.
 
-#define MAX_TRIGGERS 6
-
-static const void *triggers_table[][MAX_TRIGGERS] =3D {
-{ TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,},
-{ TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,},
-{ TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,},
-{ TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,},
-{ TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,},
-{ TIM6_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
-{ TIM7_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
-{ TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,},
-{ TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,     NULL,     NULL,},
-{ TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,  NULL,     NULL,},
-};
-
->> +static const char * const valids0[] =3D {
->> +     TIM5_TRGO, TIM2_TRGO, TIM4_TRGO, TIM3_TRGO, NULL,
->> +};
->> +
->> +static const char * const valids1[] =3D {
->> +     TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO, NULL,
->> +};
->> +
->> +static const char * const valids2[] =3D {
->> +     TIM1_TRGO, TIM8_TRGO, TIM5_TRGO, TIM4_TRGO, NULL,
->> +};
->> +
->> +static const char * const valids3[] =3D {
->> +     TIM1_TRGO, TIM2_TRGO, TIM3_TRGO, TIM8_TRGO, NULL,
->> +};
->> +
->> +static const char *const valids4[] =3D {
->> +     TIM2_TRGO, TIM3_TRGO, TIM4_TRGO, TIM8_TRGO, NULL,
->> +};
->> +
->> +static const char * const valids7[] =3D {
->> +     TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO, NULL,
->> +};
->> +
->> +static const char * const valids8[] =3D {
->> +     TIM2_TRGO, TIM3_TRGO, NULL,
->> +};
->> +
->> +static const char * const valids9[] =3D {
->> +     TIM4_TRGO, TIM5_TRGO, NULL,
->> +};
->> +
->> +static const void *valids_table[] =3D {
->> +     valids0,
->> +     valids1,
->> +     valids2,
->> +     valids3,
->> +     valids4,
->> +     NULL,
->> +     NULL,
->> +     valids7,
->> +     valids8,
->> +     valids9,
->> +};
->
-> Same here.
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Series applied to net-next, thanks.
