@@ -1,119 +1,95 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Tue, 06 Dec 2016 14:40:24 +0100
-Message-ID: <1481031624.3202.54.camel@pengutronix.de>
-References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
-         <5982682.vMJxVociDa@wuerfel> <1480687813.2460.19.camel@pengutronix.de>
-         <3449091.bg2i6Oq5SM@wuerfel>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 09/13] net: ethernet: ti: cpts: rework
+ initialization/deinitialization
+Date: Tue, 6 Dec 2016 14:40:37 +0100
+Message-ID: <20161206134037.GA15946@localhost.localdomain>
+References: <20161205200525.16664-1-grygorii.strashko@ti.com>
+ <20161205200525.16664-10-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3449091.bg2i6Oq5SM@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <20161205200525.16664-10-grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 02.12.2016, 23:11 +0100 schrieb Arnd Bergmann:
-> On Friday, December 2, 2016 3:10:13 PM CET Philipp Zabel wrote:
-> > Am Freitag, den 02.12.2016, 13:32 +0100 schrieb Arnd Bergmann:
-> > > On Friday, December 2, 2016 8:21:33 AM CET zhangfei wrote:
-> > > > On 2016年12月01日 20:05, Arnd Bergmann wrote:
-> > > > > On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
-> > > > >> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
-> > > > >> +                                  0x20 0x10            /* 1: i2c1 */
-> > > > >> +                                  0x20 0x20            /* 2: i2c2 */
-> > > > >> +                                  0x20 0x8000000>;     /* 3: i2c6 */
-> > > > >> +       };
-> > > > >> +
-> > > > >> +Specifying reset lines connected to IP modules
-> > > > >> +==============================================
-> > > > >> +example:
-> > > > >> +
-> > > > >> +        i2c0: i2c@..... {
-> > > > >> +                ...
-> > > > >> +               resets = <&iomcu_rst 0>;
-> > > > >> +                ...
-> > > > >> +        };
-> > > > > I don't really like this approach, since now the information is
-> > > > > in two places. Why not put the data into the reset specifier
-> > > > > directly when it is used?
-> > 
-> > From my point of view, with the binding above, all reset controller
-> > register/bit layout information is in a single place and can be easily
-> > compared to a list in the reference manual, whereas with your suggestion
-> > the description of the reset controller register layout is spread
-> > throughout one or even several dtsi files.
-> > Also, since no two reset controllers are exactly the same, we get a
-> > proliferation of different slightly phandle argument meanings.
-> 
-> There is no reason for this to be any different from other subsystems
-> that all do it the same way: interrupts, gpios, dma, clk, ... all
-> define #foo-cells to be used for addressing uniform things,
-> and the data is only in the reference, so that the node that
-> describes the controller needs no knowledge of what it's being
-> used for.
+On Mon, Dec 05, 2016 at 02:05:21PM -0600, Grygorii Strashko wrote:
+> @@ -372,34 +354,27 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+>  }
+>  EXPORT_SYMBOL_GPL(cpts_tx_timestamp);
+>  
+> -int cpts_register(struct device *dev, struct cpts *cpts,
+> -		  u32 mult, u32 shift)
+> +int cpts_register(struct cpts *cpts)
+>  {
+>  	int err, i;
+>  
+> -	cpts->info = cpts_info;
+> -	spin_lock_init(&cpts->lock);
+> -
+> -	cpts->cc.read = cpts_systim_read;
+> -	cpts->cc.mask = CLOCKSOURCE_MASK(32);
+> -	cpts->cc_mult = mult;
+> -	cpts->cc.mult = mult;
+> -	cpts->cc.shift = shift;
+> -
+>  	INIT_LIST_HEAD(&cpts->events);
+>  	INIT_LIST_HEAD(&cpts->pool);
+>  	for (i = 0; i < CPTS_MAX_EVENTS; i++)
+>  		list_add(&cpts->pool_data[i].list, &cpts->pool);
+>  
+> -	cpts_clk_init(dev, cpts);
+> +	clk_enable(cpts->refclk);
+> +
+>  	cpts_write32(cpts, CPTS_EN, control);
+>  	cpts_write32(cpts, TS_PEND_EN, int_enable);
+>  
+> +	/* reinitialize cc.mult to original value as it can be modified
+> +	 * by cpts_ptp_adjfreq().
+> +	 */
+> +	cpts->cc.mult = cpts->cc_mult;
 
-For most of those bindings the knowledge about which register and bit
-position(s) correspond to the handles resides in the driver.
+This still isn't quite right.  First of all, you shouldn't clobber the
+learned cc.mult value in cpts_register().  Presumably, if PTP had been
+run on this port before, then the learned frequency is approximately
+correct, and it should be left alone.
 
-> One exception is the case (often on clk bindings) where the register
-> layout is anything but uniform 
+[ BTW, resetting the timecounter here makes no sense either.  Why
+  reset the clock just because the interface goes down?  ]
 
-The register layout is very non-uniform for many reset controllers. Some
-share the same register space with some of those clock controllers.
+Secondly, you have made the initialization order of these fields hard
+to follow.  With the whole series applied:
 
-> and every input line has a completely different behavior.
+probe()
+	cpts_create()
+		cpts_of_parse()
+		{
+			/* Set cc_mult but not cc.mult! */
+			set cc_mult
+			set cc.shift
+		}
+		cpts_calc_mult_shift()
+		{
+			/* Set them both. */
+			cpts->cc_mult = mult;
+			cpts->cc.mult = mult;
+			cpts->cc.shift = shift;
+		}
+/* later on */
+cpts_register()
+	cpts->cc.mult = cpts->cc_mult;
 
-I can't argue that the behavior is non-uniform for the sane reset
-controllers though, most of them have just a single bit, for most
-of them all reset lines behave the same.
+There is no need for such complexity.  Simply set cc.mult in
+cpts_create() _once_, immediately after the call to
+cpts_calc_mult_shift().
 
->  For that case, we define our own numbering
-> system in the driver and hardcode those tables there.
->
-> This reset driver does not seem to belong into that category though.
+You can remove the assignment from cpts_calc_mult_shift() and
+cpts_register().
 
-Yes. From what has been shown so far, it seems that in this case, while
-the resets are distributed sparsely, the relative layout (set/clear
-registers right next to each other) is uniform.
-
-> Even if it did, we putting information about the controller into
-> its own node is redundant as the driver already identifies the
-> register layout by the compatible string.
-
-Indeed I would prefer the driver to carry the register layout tables
-instead of putting this information into the device tree at all.
-
-> > > > Any example, still not understand.
-> > > > They are consumer and provider.
-> > > 
-> > > I mean in the i2c node, have
-> > > 
-> > > 	i2c0: i2c@..... {
-> > > 		...
-> > > 		resets = <&iomcu_rst 0x20 0x8>;
-> > > 		...
-> > > 	}
-> > 
-> > There already are a few drivers that use this, and I fear people having
-> > to change their bindings because new flags are needed that have not been
-> > previously thought of.
-> 
-> It rarely happens on other subsystems, and the binding can
-> always specify different behavior depending on #reset-cells.
-
-I recognize I am biased here. So feel free to ignore this point.
-
-What I'd like to make sure is that we have thought about and are happy
-to spread (partial) information about the reset controller register
-layout throughout the device tree like this.
-
-regards
-Philipp
-
+Thanks,
+Richard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
