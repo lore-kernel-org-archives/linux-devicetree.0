@@ -1,81 +1,44 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: BCM5301X: Specify all RAM by including extra
- block
-Date: Tue, 6 Dec 2016 17:26:59 -0500
-Message-ID: <20161206222657.GA3888@broadcom.com>
-References: <20161206171714.22738-1-zajec5@gmail.com>
- <20161206171714.22738-4-zajec5@gmail.com>
- <20161206200621.GB2768@broadcom.com>
- <CACna6rwdKHtgp+g58B3HrDnkYZoGGZUdSqVFAGXZbf8tNTBZPg@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
+Date: Tue, 6 Dec 2016 14:43:49 -0600
+Message-ID: <e67cfba3-7e57-cc1d-6654-00c0a5378382@ti.com>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-5-grygorii.strashko@ti.com>
+ <20161130100519.GD28680@localhost.localdomain>
+ <20161206180857.GA20680@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rwdKHtgp+g58B3HrDnkYZoGGZUdSqVFAGXZbf8tNTBZPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161206180857.GA20680@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 06, 2016 at 09:57:31PM +0100, Rafał Miłecki wrote:
-> On 6 December 2016 at 21:06, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> > On Tue, Dec 06, 2016 at 06:17:13PM +0100, Rafał Miłecki wrote:
-> >> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> >>
-> >> So far we were specifying only the first block which is always limited
-> >> up to 128 MiB. There are many devices with 256 MiB and few with 512 MiB.
-> >
-> > Assuming that NS is like NSP (and I'm pretty sure it is), there are 2
-> > ways to access the first 128M of RAM, a proxy starting at address 0
-> > and the real address.  I think you are splitting RAM by accessing it
-> > both ways, when you really should just be accessing it at the real
-> > address.
-> 
-> I need some more help, please.
-> 
-> This patch (quite well tested) confirms that 0x88000000 can be used to
-> access RAM at offset 128 MiB. If this is a real address and whole
-> space is contiguous, it means the base real address should be
-> 0x80000000. So using 0x0 and 0x80000000 should allow accessing
-> beginning of the RAM. I took a device that was working just fine with:
-> reg = <0x00000000 0x08000000>;
-> and I replaced it with:
-> reg = <0x80000000 0x08000000>;
-> but it broke things, kernel didn't boot with the last message being:
-> [    0.000000] Memory policy: Data cache writealloc
-> 
-> I can see that bcm958525er.dts, bcm958525xmc.dts, bcm958623hr.dts,
-> bcm958625k.dts bcm988312hr.dts are using 0x60000000 as base address.
-> It seems to be different from Northstar but I tried following entry
-> anyway:
-> reg = <0x60000000 0x08000000>;
-> and I got kernel hang just like in the previous try.
-> 
-> Did I miss something? Or does Northstar seem to be actually different than NSP?
 
-Per the BCM5301X Preliminary Programmer's Register Reference guide
-(page 394), under the second titled "System Address Mapping".
-There is a table listing the System Address Mapping.  The parts that
-are of interest in this converstation are (and forgive my
-approxmiation, but I cannot cut'n'paste from it):
 
-Address Range                Size            Description
----------------------------------------------------
-0x0000_0000-0x07FF_FFFF    128 MB       DDR2/3 SDRAM Memory Region*
-0x8000_0000-0xBFFF_FFFF    1 G          DDR2/3 SDRAM Large Region
+On 12/06/2016 12:08 PM, Richard Cochran wrote:
+> On Wed, Nov 30, 2016 at 11:05:19AM +0100, Richard Cochran wrote:
+>> Can you adjust the frequency of the keystone devices in hardware?  If
+>> so, then please implement it, and just disable PPS for the CPSW.
+>>
+>> The only reason I used the timecounter for frequency adjustment was
+>> because the am335x HW is broken.  But this shouldn't hold back other
+>> newer HW without the same silicon flaws.
+>
+> I am talking here about the ADPLLLJ units.  Are they usable on the
+> keystone?
+>
+> If so, please implement the frequency adjustment with them.
+>
 
-* The DDR2/3 SDRAM Memory Region (128MB) is a subset of the DDR2/3
-SDRAM Large Region (1GB).  Additionally, 0x0000_0000-0x07FF_FFFF is
-aliased to 0x8000_0000-0x87FF_FFFF
+No, I think it's not impossible (at least as I know now).
+i'll drop this patch for now.
 
-However, since you say it isn't working for you, then there must be
-some other missing peice.  I'll retract my comment for now, and
-hopefully we can double back and get it working in the future.
+By the way, I've tested am335 (BBB)+ HW_TS_PUSH + PWM.
+Seems works.
 
-Thanks,
-Jon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+-grygorii
