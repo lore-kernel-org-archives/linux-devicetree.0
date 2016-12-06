@@ -1,33 +1,55 @@
 From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH pci/next v3 0/3] PCI: rcar, rcar-gen2: Bindings cleanups
-Date: Tue,  6 Dec 2016 16:51:28 +0100
-Message-ID: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
+Subject: [PATCH pci/next v3 3/3] PCI: rcar: Add gen3 fallback compatibility string for pcie-rcar
+Date: Tue,  6 Dec 2016 16:51:31 +0100
+Message-ID: <1481039491-30364-4-git-send-email-horms+renesas@verge.net.au>
+References: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add fallback compatibility string for the  R-Car Gen 3 family.  This is in
+keeping with the both the existing fallback compatibility string for the
+R-Car Gen 2 family and the fallback scheme being adopted wherever
+appropriate for drivers for Renesas SoCs.
 
-this short series makes some bindings cleanups to the Renesas PCI drivers.
-
-Changes v2->v3:
-* Reworded changelogs to indicate that re-ordering struct of_device_id
-  entries does not effect run-time behaviour
-* Corrected compile error due to typo in symbol name
-Changes v1->v2:
-* re-order struct of_device_id entries
-
-Simon Horman (3):
-  PCI: rcar-gen2: Use gen2 fallback compatibility last
-  PCI: rcar: Use gen2 fallback compatibility last
-  PCI: rcar: Add gen3 fallback compatibility string for pcie-rcar
-
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v3
+* s/rcar_pcie_hw_init_hw_init/rcar_pcie_hw_init/
+v2
+* Move fallback binding to below SoC specific bindings it covers
+  in implementation
+---
  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
- drivers/pci/host/pci-rcar-gen2.c                   | 2 +-
- drivers/pci/host/pcie-rcar.c                       | 5 +++--
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/pci/host/pcie-rcar.c                       | 1 +
+ 2 files changed, 2 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+index 6cf99690eef9..eee518db90b9 100644
+--- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
++++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+@@ -7,6 +7,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
+ 	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
+ 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
+ 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
++	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+ 
+ 	    When compatible with the generic version, nodes must list the
+ 	    SoC-specific version corresponding to the platform first
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 85971bc276c6..aca85be101f8 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -1078,6 +1078,7 @@ static const struct of_device_id rcar_pcie_of_match[] = {
+ 	{ .compatible = "renesas,pcie-rcar-gen2",
+ 	  .data = rcar_pcie_hw_init_gen2 },
+ 	{ .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
++	{ .compatible = "renesas,pcie-rcar-gen3", .data = rcar_pcie_hw_init },
+ 	{},
+ };
+ 
 -- 
 2.7.0.rc3.207.g0ac5344
