@@ -1,69 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 11/14] ASoC: add simple-graph-card document
-Date: Tue, 6 Dec 2016 09:03:21 -0600
-Message-ID: <CAL_JsqLyYE_nmGfPEF_H9NxKK1HX1BbwWkUmw-PSWo6TANr5ZQ@mail.gmail.com>
-References: <87k2bowckx.wl%kuninori.morimoto.gx@renesas.com>
- <874m2swcbx.wl%kuninori.morimoto.gx@renesas.com> <20161202135048.tzvrv7pzv2dubcy3@rob-hp-laptop>
- <87lgvvw92p.wl%kuninori.morimoto.gx@renesas.com> <20161205225802.ye4tcjwpjmarbfxh@rob-hp-laptop>
- <87h96hc1us.wl%kuninori.morimoto.gx@renesas.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
+Date: Tue, 6 Dec 2016 20:33:45 +0530
+Message-ID: <e6d7870b-e9fd-242f-0e74-5bae2d2b27f1@ti.com>
+References: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+ <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
+ <a2159347-1cd7-18b1-626a-fe6a272ba85c@ti.com>
+ <CAMpxmJUDyZmokJsf=RdP1DwzA_4Xc+Oh3SuSg_OenQOO5mqLvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87h96hc1us.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMpxmJUDyZmokJsf=RdP1DwzA_4Xc+Oh3SuSg_OenQOO5mqLvw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 5, 2016 at 6:57 PM, Kuninori Morimoto
-<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi Rob
->
->> I'd expect the top level node to be the card node that knows how to find
->> all the components. The graph should reflect the data flow. For example,
->> the data goes to audio DSP to I2S host to codec to amp.
->
-> Do you mean, is this OK for OF graph ?
+On Tuesday 06 December 2016 06:32 PM, Bartosz Golaszewski wrote:
+> 2016-12-05 13:49 GMT+01:00 Tomi Valkeinen <tomi.valkeinen@ti.com>:
+>> On 29/11/16 13:57, Bartosz Golaszewski wrote:
+>>> Add the dumb-vga-dac node to the board DT together with corresponding
+>>> ports and vga connector. This allows to retrieve the edid info from
+>>> the display automatically.
+>>>
+>>
+>> It's a bit difficult to follow this as there's been so many patches
+>> going around. But I take the above is the LCDC node in the base da850
+>> dtsi file? In that case, what is the display_in supposed to present?
+>> It's the first node in the "display chain", so it has no input.
+>>
+>> Also, don't touch da850.dtsi here, just add the "ports" node in the
+>> da850-lcdk.dts file.
+>>
+>> If the da850.dtsi has not been merged yet, I'd change the name of the
+>> lcdc node to something else than "display". It's rather vague. If it's
+>> named "lcdc", reading da850-lcdk.dts becomes much easier, as you'll
+>> refer to "lcdc".
+>>
+> 
+> The node is already in Sekhar's branch.
 
-Yes, something like this.
+The node name should be 'display' as thats the ePAPR 1.1 generic name
+recommendation. The label is also set to 'display' though and that can
+be changed to lcdc.
 
-> in driver point of view, "I2S" is sound card here.
+A pre-patch to fix that before we modify the node further is welcome.
 
-Well, that seems odd to me because I2S should just be the h/w block
-that interfaces to I2S/SSI signals. I'd expect you still have a card
-node that references these nodes. Maybe it just references the DSP and
-then you walk the graph from there to find the I2S controller and
-codec.
-
->
-> I2S {
->         port {
->                 i2s-dsp: endpoint {
->                         remote-endpoint = <&dsp>;
->                 }
->                 i2s-codec: endpoint {
->                         remote-endpoint = <&codec>;
->                 }
->         }
-> }
->
-> DSP {
->         port {
->                 dsp: endpoint {
->                         remote-endpoint = <&i2s-dsp>;
->                 }
->         }
-> }
->
-> Codec {
->         port {
->                 codec: endpoint {
->                         remote-endpoint = <&i2s-codec>;
->                 }
->         }
-> }
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
