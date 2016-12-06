@@ -1,92 +1,64 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Tue, 6 Dec 2016 09:10:59 +0800
-Message-ID: <a9db0c7f-7cd5-5cde-dfa9-77fa4ad55385@linaro.org>
-References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
- <3900806.3NUubBDb0Q@wuerfel>
- <e15e76e2-b32d-a4d0-eb8b-850626a3946a@linaro.org>
- <5982682.vMJxVociDa@wuerfel>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V7 00/10] PM / OPP: Multiple regulator support
+Date: Tue, 6 Dec 2016 02:34:35 +0100
+Message-ID: <CAJZ5v0gykH+UwMvgU3SCVgxg9Ufe23zQ1o9bEvnjtafVqjLa8Q@mail.gmail.com>
+References: <cover.1480564564.git.viresh.kumar@linaro.org> <CAKohpokXXhcrhzqs+iW+1kTYjyF47bHF0TupMxP=4cSqXOThtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5982682.vMJxVociDa@wuerfel>
+In-Reply-To: <CAKohpokXXhcrhzqs+iW+1kTYjyF47bHF0TupMxP=4cSqXOThtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Lists linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd
-
-
-On 2016年12月02日 20:32, Arnd Bergmann wrote:
-> On Friday, December 2, 2016 8:21:33 AM CET zhangfei wrote:
->> Hi, Arnd
+On Mon, Dec 5, 2016 at 3:21 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 1 December 2016 at 16:28, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Hi,
 >>
->> On 2016年12月01日 20:05, Arnd Bergmann wrote:
->>> On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
->>>> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
->>>> +                                  0x20 0x10            /* 1: i2c1 */
->>>> +                                  0x20 0x20            /* 2: i2c2 */
->>>> +                                  0x20 0x8000000>;     /* 3: i2c6 */
->>>> +       };
->>>> +
->>>> +Specifying reset lines connected to IP modules
->>>> +==============================================
->>>> +example:
->>>> +
->>>> +        i2c0: i2c@..... {
->>>> +                ...
->>>> +               resets = <&iomcu_rst 0>;
->>>> +                ...
->>>> +        };
->>> I don't really like this approach, since now the information is
->>> in two places. Why not put the data into the reset specifier
->>> directly when it is used?
->> Any example, still not understand.
->> They are consumer and provider.
-> I mean in the i2c node, have
+>> Some platforms (like TI) have complex DVFS configuration for CPU
+>> devices, where multiple regulators are required to be configured to
+>> change DVFS state of the device. This was explained well by Nishanth
+>> earlier [1].
+>>
+>> One of the major complaints around multiple regulators case was that the
+>> DT isn't responsible in any way to represent the order in which multiple
+>> supplies need to be programmed, before or after a frequency change. It
+>> was considered in this patch and such information is left for the
+>> platform specific OPP driver now, which can register its own
+>> opp_set_rate() callback with the OPP core and the OPP core will then
+>> call it during DVFS.
+>>
+>> The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
+>> and code to pass values for multiple regulators and verified that they
+>> are all properly read by the kernel (using debugfs interface).
+>>
+>> Dave Gerlach has already tested [2] it on the real TI platforms and it
+>> works well for him.
+>>
+>> This is rebased over: linux-next branch in the PM tree.
+>>
+>> V6->V7:
+>> - Added RBY from Stephen for the 8th patch as well.
+>> - Rebased over pm/bleeding-edge as the dependency patch is already
+>>   applied there.
+>> - s/dev_pm_opp_set_regulator()/dev_pm_opp_set_regulators() in a comment.
+>> - Removed the local 'names' array in cpufreq-dt and used "&name"
+>>   instead.
+>> - Only the 6th patch doesn't have a Reviewed-by Tag now..
 >
-> 	i2c0: i2c@..... {
-> 		...
-> 		resets = <&iomcu_rst 0x20 0x8>;
-> 		...
-> }
-Got it.
-There is function of_xlate in reset_controller_dev can parse the dts
-when devm_reset_control_get
+> Hi Rafael,
+>
+> V6 of this series received some minor comments [1] and I have
+> resolved them all here. Now that the merge window is so close,
+> I think we should be merge it now so that it gets a chance to live
+> in linux-next for few days.
 
-* @of_xlate: translation function to translate from specifier as found 
-in the
-*            device tree to id as given to the reset control ops
+I've queued them up, but I'd feel more comfortable with an ACK or
+Reviewed-by on patch [6/10] too.
 
-Will use this instead.
-
->>> Also the format seems a little too close to the actual register
->>> layout and could be a little more abstract, using bit numbers instead
->>> of a bitmask and register numbers instead of offsets.
->> We use bit numbers first.
->> But in the developing process, we found several bits may be required for
->> one driver.
->> And they may not be continuous as the bits may already be occupied.
->> Directly using offset, we can set several bits together for simple, to
->> give more flexibility.
->> So after discussion, we directly use offset.
-> Can you give an example for why this is needed? Is this different
-> from a device that has multiple reset lines?
-Yes, we can use multiple reset lines, which is also our original method.
-But it may have too many reset lines, like pcie driver will have 5 resets.
-So just thinking it can be optimized.
-
-However, when using of_xlate, parsing offset & bit to rstc->id (unsigned 
-int),
-It only support u32, so will use bit numbers again.
-rstc_id = rcdev->of_xlate(rcdev, &args);
-
-Will update v3 patch, help take a look.
-
-Thanks
+Thanks,
+Rafael
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
