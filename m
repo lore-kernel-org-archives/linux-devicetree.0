@@ -1,75 +1,53 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v4 3/7] PWM: add pwm-stm32 DT bindings
-Date: Tue,  6 Dec 2016 13:38:45 +0100
-Message-ID: <1481027929-13704-4-git-send-email-benjamin.gaignard@st.com>
-References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 06 Dec 2016 14:46:55 +0200
+Message-ID: <3208429.mJrxuV2Nx6@avalon>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <1849418.teKsJeE0xP@avalon> <20161206100517.q2v73kj256kyhmlg@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linus.walleij@linaro.org, arnaud.pouliquen@st.com, benjamin.gaignard@linaro.org, gerald.baeza@st.com, fabrice.gasnier@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161206100517.q2v73kj256kyhmlg@sirena.org.uk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Define bindings for pwm-stm32
-
-version 2:
-- use parameters instead of compatible of handle the hardware configuration
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-new file mode 100644
-index 0000000..c0cc246
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-@@ -0,0 +1,33 @@
-+STMicroelectronics STM32 General Purpose Timer PWM bindings
-+
-+Must be a sub-node of an STM32 General Purpose Timer device tree node.
-+See ../mfd/stm32-general-purpose-timer.txt for details about the parent node.
-+
-+Required parameters:
-+- compatible:		Must be "st,stm32-pwm".
-+- pinctrl-names: 	Set to "default".
-+- pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
-+			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
-+
-+Optional parameters:
-+- st,breakinput-polarity: If present, a break input is available
-+            for the channel. In that case the property value denotes the
-+            polarity of the break input:
-+            - 0: active low
-+            - 1: active high
-+
-+Example:
-+	gptimer@40010000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "st,stm32-gptimer";
-+		reg = <0x40010000 0x400>;
-+		clocks = <&rcc 0 160>;
-+		clock-names = "clk_int";
-+
-+		pwm@0 {
-+			compatible = "st,stm32-pwm";
-+			pinctrl-0	= <&pwm1_pins>;
-+			pinctrl-names	= "default";
-+		};
-+	};
--- 
-1.9.1
+SGkgTWFyaywKCk9uIFR1ZXNkYXkgMDYgRGVjIDIwMTYgMTA6MDU6MTcgTWFyayBCcm93biB3cm90
+ZToKPiBPbiBNb24sIERlYyAwNSwgMjAxNiBhdCAxMToxNjoyMlBNICswMjAwLCBMYXVyZW50IFBp
+bmNoYXJ0IHdyb3RlOgo+ID4gT24gTW9uZGF5IDA1IERlYyAyMDE2IDEzOjExOjUxIEJqb3JuIEFu
+ZGVyc3NvbiB3cm90ZToKPiA+PiBGdXJ0aGVyIG1vcmUsIGEgRFQgYmluZGluZyBmb3IgYSBwYXJ0
+aWN1bGFyIGJsb2NrIHNob3VsZCBkZXNjcmliZSB0aGF0Cj4gPj4gYmxvY2s7IHNvIGlmIHdlIGhh
+dmUgdGhyZWUgZGlmZmVyZW50IDEuOFYgcGlucyB0aGVuIHRoZSBEVCBiaW5kaW5nCj4gPj4gc2hv
+dWxkIHJlZmxlY3QgdGhpcyAtIGV2ZW4gaWYgb3VyIGN1cnJlbnQgcGxhdGZvcm0gaGF2ZSB0aGVt
+IHdpcmVkIHRvCj4gPj4gdGhlIHNhbWUgcmVndWxhdG9yLgo+ID4gCj4gPiBUaGlzIGhhcyBiZWVu
+IGRpc2N1c3NlZCBwcmV2aW91c2x5LCBhbmQgUm9iIGFncmVlZCB0aGF0IGlmIHRoZSBkYXRhc2hl
+ZXQKPiA+IHJlY29tbWVuZHMgdG8gcG93ZXIgYWxsIHN1cHBsaWVzIGZyb20gdGhlIHNhbWUgcmVn
+dWxhdG9yIHdlIGNhbiB0YWtlIHRoYXQKPiA+IGFzIGEgZ29vZCBoaW50IHRoYXQgYSBzaW5nbGUg
+c3VwcGx5IHNob3VsZCBiZSBlbm91Z2guIEluIHRoZSB2ZXJ5Cj4gPiB1bmxpa2VseSBldmVudCB0
+aGF0IGEgYm9hcmQgd291bGQgcmVxdWlyZSBjb250cm9sIG9mIG1vcmUgcmVndWxhdG9ycyB3ZQo+
+ID4gY2FuIGFsd2F5cyBleHRlbmQgdGhlIERUIGJpbmRpbmdzIGxhdGVyIHdpdGhvdXQgYnJlYWtp
+bmcgYmFja3dhcmQKPiA+IGNvbXBhdGliaWxpdHkuCj4gCj4gTm8sIGRvbid0IGRvIHRoaXMgLSBp
+bnRyb2R1Y2luZyBzcGVjaWFsIHNub3dmbGFrZSBiaW5kaW5ncyBqdXN0IG1ha2VzCj4gdGhpbmdz
+IG1vcmUgY29tcGxleCBhdCB0aGUgc3lzdGVtIGxldmVsIGFuZCB0ZWxscyBldmVyeW9uZSBlbHNl
+IHRoYXQKPiB0aGV5IHRvbyBjYW4gaGF2ZSBzcGVjaWFsIHNub3dmbGFrZSBiaW5kaW5ncy4gIFNv
+bWVvbmUgc2hvdWxkIGJlIGFibGUgdG8KPiBjb25uZWN0IHVwIHRoZSByZWd1bGF0b3JzIGJhc2Vk
+IHB1cmVseSBvbiBhIHNjaGVtYXRpYy4gIEp1c3QgZGVzY3JpYmUKPiB0aGUgaGFyZHdhcmUsIGl0
+J3MganVzdCBvbmUgZXh0cmEgbGluZSBpbiB0aGUgRFQgcGVyIHJlZ3VsYXRvci4KClRoZXJlIGFy
+ZSBwb3dlciBzdXBwbHkgcGluIHRoYXQgaGF2ZSBkaWZmZXJlbnQgbmFtZXMgYnV0IGRvY3VtZW50
+ZWQgYXMgaGF2aW5nIAp0byBiZSBjb25uZWN0ZWQgdG8gdGhlIHNhbWUgc3VwcGx5LiBJIHJlYWxs
+eSBzZWUgbm8gcG9pbnQgaW4gaGF2aW5nIG11bHRpcGxlIApyZWd1bGF0b3JzIGZvciB0aGVtLgoK
+LS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
