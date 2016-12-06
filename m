@@ -1,34 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] doc: dt: add cyclone-spi binding document
-Date: Tue, 6 Dec 2016 10:05:54 -0600
-Message-ID: <20161206160554.luh6zm5a7jj27qe2@rob-hp-laptop>
-References: <cover.1480551148.git.stillcompiling@gmail.com>
- <137f03de76e5f865430b17ca247e8f73e3315c8d.1480551148.git.stillcompiling@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator bindings
+Date: Tue, 06 Dec 2016 18:08:55 +0200
+Message-ID: <4504382.pqKQWZshtj@avalon>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org> <3208429.mJrxuV2Nx6@avalon> <20161206132020.uzchq63pfpaujg6h@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <137f03de76e5f865430b17ca247e8f73e3315c8d.1480551148.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161206132020.uzchq63pfpaujg6h@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm@vger.kernel.org, robh@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 01, 2016 at 09:04:51AM -0800, Joshua Clayton wrote:
-> Describe a cyclonei-ps-spi devicetree entry, required features
+Hi Mark,
 
-cyclonei?
-
+On Tuesday 06 Dec 2016 13:20:20 Mark Brown wrote:
+> On Tue, Dec 06, 2016 at 02:46:55PM +0200, Laurent Pinchart wrote:
+> > On Tuesday 06 Dec 2016 10:05:17 Mark Brown wrote:
+> > > On Mon, Dec 05, 2016 at 11:16:22PM +0200, Laurent Pinchart wrote:
+> > > > This has been discussed previously, and Rob agreed that if the
+> > > > datasheet recommends to power all supplies from the same regulator we
+> > > > can take that as a good hint that a single supply should be enough. In
+> > > > the very
+> > > 
+> > > No, don't do this - introducing special snowflake bindings just makes
+> > > things more complex at the system level and tells everyone else that
+> > > they too can have special snowflake bindings.  Someone should be able to
+> > > connect up the regulators based purely on a schematic.  Just describe
+> > > the hardware, it's just one extra line in the DT per regulator.
+> > 
+> > There are power supply pin that have different names but documented as
+> > having to be connected to the same supply. I really see no point in
+> > having multiple regulators for them.
 > 
-> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> 
->  .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+> The tiny amount of extra typing involved doesn't seem like much of a
+> cost for keeping things consistent with every other regulator user out
+> there.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not concerned by that at all, but by the additional runtime complexity :-/
+
+-- 
+Regards,
+
+Laurent Pinchart
