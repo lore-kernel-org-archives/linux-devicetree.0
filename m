@@ -1,199 +1,92 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3] iio: adc: add device tree bindings for Qualcomm PM8xxx ADCs
-Date: Tue,  6 Dec 2016 14:50:53 +0100
-Message-ID: <1481032253-27019-1-git-send-email-linus.walleij@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun8i: Specify memblock for Nano Pi M1
+Date: Tue, 6 Dec 2016 15:00:25 +0100
+Message-ID: <20161206140025.hnlhnsouvohxweou@lukather>
+References: <20161205020032.26586-1-woogyom.kim@gmail.com>
+ <20161205080932.xaqyl2httgxgso67@lukather>
+ <9607940c-1ca9-bb49-291e-ddc7e77546be@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lkgyj4vfe2e2aqdc"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9607940c-1ca9-bb49-291e-ddc7e77546be-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T . Ivanov" <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Qualcomm PM8xxx
-ADCs. This is based on the existing DT bindings for the
-SPMI ADC so there are hopefully no controversial features.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ivan T. Ivanov <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 160 +++++++++++++++++++++
- 1 file changed, 160 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+--lkgyj4vfe2e2aqdc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-new file mode 100644
-index 000000000000..6e51e3e74b88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-@@ -0,0 +1,160 @@
-+Qualcomm's PM8xxx voltage XOADC
-+
-+The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Chrystal
-+oscillator ADC) encompass PM8018, PM8038, PM8058, PM8917 and PM8921.
-+
-+Required properties:
-+
-+- compatible: should be one of:
-+  "qcom,pm8018-adc"
-+  "qcom,pm8038-adc"
-+  "qcom,pm8058-adc"
-+  "qcom,pm8917-adc"
-+  "qcom,pm8921-adc"
-+
-+- reg: should contain the ADC base address in the PMIC, typically
-+  0x197.
-+
-+The following required properties are standard for IO channels, see
-+iio-bindings.txt for more details:
-+
-+- #address-cells: should be set to <1>
-+
-+- #size-cells: should be set to <0>
-+
-+- #io-channel-cells: should be set to <1>
-+
-+- interrupts: should refer to the parent PMIC interrupt controller
-+  and reference the proper ADC interrupt.
-+
-+Required subnodes:
-+
-+The ADC channels are configured as subnodes of the ADC. Since some of
-+them are used for calibrating the ADC, these nodes are compulsory:
-+
-+ref_625mv {
-+	reg = <0x0c>;
-+};
-+
-+ref_1250mv {
-+	reg = <0x0d>;
-+};
-+
-+ref_muxoff {
-+	reg = <0x0f>;
-+};
-+
-+These three nodes are used for absolute and ratiometric calibration
-+and only need to have these reg values: they are by hardware defined
-+to be 1:1 ratio converters that sample 625, 1250 and 0 V and create
-+an interpolation calibration for all other ADCs.
-+
-+Optional subnodes: any channels other than channel 0x0c, 0x0d and
-+0x0f are optional.
-+
-+Required channel node properties:
-+
-+- reg: should contain the hardware channel number in the range
-+  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-+
-+Optional channel node properties:
-+
-+- qcom,decimation:
-+  Value type: <u32>
-+  Definition: This parameter is used to decrease ADC sampling rate.
-+          Quicker measurements can be made by reducing decimation ratio.
-+          Valid values are 512, 1024, 2048, 4096.
-+          If property is not found, default value of 512 will be used.
-+
-+- qcom,ratiometric:
-+  Value type: <empty>
-+  Definition: Channel calibration type. If this property is specified
-+          VADC will use the VDD reference (1.8V) and GND for channel
-+          calibration. If property is not found, channel will be
-+          calibrated with 0.625V and 1.25V reference channels, also
-+          known as absolute calibration.
-+
-+- qcom,ratiometric-ref:
-+  Value type: <u32>
-+  Definition: The reference voltage pair when using ratiometric
-+          calibration:
-+	  0 = XO_IN/XOADC_GND
-+	  1 = PMIC_IN/XOADC_GND
-+	  2 = PMIC_IN/BMS_CSP
-+	  3 (invalid)
-+	  4 = XOADC_GND/XOADC_GND
-+	  5 = XOADC_VREF/XOADC_GND
-+
-+Example:
-+
-+xoadc: xoadc@197 {
-+	compatible = "qcom,pm8058-adc";
-+	reg = <0x197>;
-+	interrupt-parent = <&pm8058>;
-+	interrupts = <76 1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	#io-channel-cells = <1>;
-+
-+	vcoin {
-+		reg = <0x00>;
-+	};
-+	vbat {
-+		reg = <0x01>;
-+	};
-+	dcin {
-+		reg = <0x02>;
-+	};
-+	ichg {
-+		reg = <0x03>;
-+	};
-+	vph_pwr {
-+		reg = <0x04>;
-+	};
-+	mpp5 {
-+		reg = <0x05>;
-+	};
-+	mpp6 {
-+		reg = <0x06>;
-+	};
-+	mpp7 {
-+		reg = <0x07>;
-+	};
-+	mpp8 {
-+		reg = <0x08>;
-+	};
-+	mpp9 {
-+		reg = <0x09>;
-+	};
-+	usb_vbus {
-+		reg = <0x0a>;
-+	};
-+	die_temp {
-+		reg = <0x0b>;
-+	};
-+	ref_625mv {
-+		reg = <0x0c>;
-+	};
-+	ref_1250mv {
-+		reg = <0x0d>;
-+	};
-+	ref_325mv {
-+		reg = <0x0e>;
-+	};
-+	ref_muxoff {
-+		reg = <0x0f>;
-+	};
-+};
-+
-+
-+/* IIO client node */
-+iio-hwmon {
-+	compatible = "iio-hwmon";
-+	io-channels = <&xoadc 0x01>, /* Battery */
-+		    <&xoadc 0x02>, /* DC in (charger) */
-+		    <&xoadc 0x04>, /* VPH the main system voltage */
-+		    <&xoadc 0x0b>, /* Die temperature */
-+		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
-+		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
-+		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-+};
--- 
-2.7.4
+On Tue, Dec 06, 2016 at 04:23:57PM +0900, Milo Kim wrote:
+> On 12/05/2016 05:09 PM, Maxime Ripard wrote:
+> > On Mon, Dec 05, 2016 at 11:00:31AM +0900, Milo Kim wrote:
+> > > The board has DDR3 512MB. This patch helps scanning the memory and
+> > > adding memblock through the DT.
+> > >=20
+> > > Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts b/arch/arm/boot=
+/dts/sun8i-h3-nanopi-m1.dts
+> > > index ec63d10..be3668f 100644
+> > > --- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
+> > > @@ -45,6 +45,11 @@
+> > >  / {
+> > >  	model =3D "FriendlyArm NanoPi M1";
+> > >  	compatible =3D "friendlyarm,nanopi-m1", "allwinner,sun8i-h3";
+> > > +
+> > > +	memory@40000000 {
+> > > +		device_type =3D "memory";
+> > > +		reg =3D <0x40000000 0x20000000>;
+> > > +	};
+> >=20
+> > U-boot will fill that up, so there's no need to put it there.
+>=20
+> Right, my intention was adding memblock through the DT whether the bootlo=
+ad
+> does or not. However I'm not sure the situation (missing memblock in u-bo=
+ot)
+> could really happen.
 
+No, we need a recent U-Boot in order to boot, and such a uboot will
+setup the memory node anyway.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--lkgyj4vfe2e2aqdc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYRsR0AAoJEBx+YmzsjxAguJwQALdBEeHJTDaZOoOX14IVma0D
+ryJjObY9e0YA0LDFpEBpzOPlFd6TXTSmdZO/EGoAPKbE5AP0VNzq+p8p2Eku77zT
+kYkwyuRKObqMatyhGltsCQdkGb+L+GZl/JP1OdOWAs4JmJgh2dzn6SaZNXPkO4/2
+RFU/i9qXpTiBAcMMJgJmTEJxjJGBCkAmRcddg2bzkyl+xK7Q6TldS5GJMs9KBmSF
+djfDtAnpnA76wfrfXesS2nmLaK79AKxnCsSIxDa5sVsc8ykWH3EiSlB0sX8B10Fq
+ZfyE9+k1sja4r0YIbpBfLjp1TZGeVuE4p4WqyLVanhmO2vievoPie0b+Ps0lFSG7
+r7BsfZTEPV9BBIu+ZDXoNmstdezaHaBMurPd73mjpeT6nDluhFXAkpGQJnBN1B27
+I7CwxZSeHudJs8T97xBIdkHYiUGa1Y4OSk3eY1cj8s5F6fx+0JkdR+q0R4PTo7KQ
+T0r09rzgFU9Nlk404qWmrrcAzucohW/tWLdNaQ5W8+NZY6uEE6+Mjfkrit9PLvH4
+6KKMyNmQNl6B0AjRmD2QIDylyIylfMxVuWmQXqlq/Mt+EtIZgJLOsoOwBiWtP/Hl
+qMgv4j289JMhTQxqJiESLWxvypY5iNT9ernPtmDBqaj6breACt8PhLJCYU0yvJCU
+33rne9AVZTQeaASUxfwh
+=2tgt
+-----END PGP SIGNATURE-----
+
+--lkgyj4vfe2e2aqdc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
