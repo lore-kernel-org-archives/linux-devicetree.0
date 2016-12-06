@@ -1,85 +1,151 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] i2c: rk3x: keep i2c irq ON in suspend
-Date: Tue, 6 Dec 2016 08:31:41 -0800
-Message-ID: <CAD=FV=VgGy5hA4+7nvLs4NPNRuopak+bTW34S6X6S_vWgtnkjg@mail.gmail.com>
-References: <1480924979-13450-1-git-send-email-david.wu@rock-chips.com>
- <1737869.ycGphUXI8X@phil> <1d570232-af87-467e-e6f4-5b514d583a02@rock-chips.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 09/13] net: ethernet: ti: cpts: rework
+ initialization/deinitialization
+Date: Tue, 6 Dec 2016 10:45:55 -0600
+Message-ID: <4e7888b6-9f1c-ca31-e83e-15109bf1df3f@ti.com>
+References: <20161205200525.16664-1-grygorii.strashko@ti.com>
+ <20161205200525.16664-10-grygorii.strashko@ti.com>
+ <20161206134037.GA15946@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d570232-af87-467e-e6f4-5b514d583a02@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David.Wu" <david.wu@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161206134037.GA15946-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tue, Dec 6, 2016 at 12:12 AM, David.Wu <david.wu@rock-chips.com> wrote:
-> Hi Heiko,
->
-> =E5=9C=A8 2016/12/5 18:54, Heiko Stuebner =E5=86=99=E9=81=93:
->>
->> Hi David,
->>
->> Am Montag, 5. Dezember 2016, 16:02:59 CET schrieb David Wu:
->>>
->>> During suspend there may still be some i2c access happening.
->>> And if we don't keep i2c irq ON, there may be i2c access timeout if
->>> i2c is in irq mode of operation.
->>
->>
->> can you describe the issue you're trying to fix a bit more please?
->
->
-> Sometimes we could see the i2c timeout errors during suspend/resume, whic=
-h
-> makes the duration of suspend/resume too longer.
->
-> [  484.171541] CPU4: Booted secondary processor [410fd082]
-> [  485.172777] rk3x-i2c ff3c0000.i2c: timeout, ipd: 0x10, state: 1
-> [  486.172760] rk3x-i2c ff3c0000.i2c: timeout, ipd: 0x10, state: 1
-> [  487.172759] rk3x-i2c ff3c0000.i2c: timeout, ipd: 0x10, state: 1
-> [  487.172840] cpu cpu4: _set_opp_voltage: failed to set voltage (800000
-> 800000 800000 mV): -110
-> [  487.172874] cpu cpu4: failed to set volt 800000
->
->>
->> I.e. I'd think the i2c-core does suspend i2c-client devices first, so th=
-at
->> these should be able to finish up their ongoing transfers and not start
->> any
->> new ones instead?
->>
->> Your irq can still happen slightly after the system started going to
->> actually
->> sleep, so to me it looks like you just widened the window where irqs can
->> be
->> handled. Especially as your irq could also just simply stem from the sta=
-rt
->> state, so you cannot even be sure if your transaction actually is
->> finished.
->
->
-> Okay, you are right. I want to give it a double insurance at first, but i=
-t
-> may hide the unhappend issue.
->
->>
->> So to me it looks like the i2c-connected device driver should be fixed
->> instead?
->
->
-> I tell them to fix it in rk808 driver.
 
-To me it seems like perhaps cpufreq should not be changing frequencies
-until it is resumed properly.  Presumably if all the ordering is done
-right then cpufreq should be resumed _after_ the i2c regulator so you
-should be OK.  ...or am I somehow confused about that?
+On 12/06/2016 07:40 AM, Richard Cochran wrote:
+> On Mon, Dec 05, 2016 at 02:05:21PM -0600, Grygorii Strashko wrote:
+>> @@ -372,34 +354,27 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+>>  }
+>>  EXPORT_SYMBOL_GPL(cpts_tx_timestamp);
+>>  
+>> -int cpts_register(struct device *dev, struct cpts *cpts,
+>> -		  u32 mult, u32 shift)
+>> +int cpts_register(struct cpts *cpts)
+>>  {
+>>  	int err, i;
+>>  
+>> -	cpts->info = cpts_info;
+>> -	spin_lock_init(&cpts->lock);
+>> -
+>> -	cpts->cc.read = cpts_systim_read;
+>> -	cpts->cc.mask = CLOCKSOURCE_MASK(32);
+>> -	cpts->cc_mult = mult;
+>> -	cpts->cc.mult = mult;
+>> -	cpts->cc.shift = shift;
+>> -
+>>  	INIT_LIST_HEAD(&cpts->events);
+>>  	INIT_LIST_HEAD(&cpts->pool);
+>>  	for (i = 0; i < CPTS_MAX_EVENTS; i++)
+>>  		list_add(&cpts->pool_data[i].list, &cpts->pool);
+>>  
+>> -	cpts_clk_init(dev, cpts);
+>> +	clk_enable(cpts->refclk);
+>> +
+>>  	cpts_write32(cpts, CPTS_EN, control);
+>>  	cpts_write32(cpts, TS_PEND_EN, int_enable);
+>>  
+>> +	/* reinitialize cc.mult to original value as it can be modified
+>> +	 * by cpts_ptp_adjfreq().
+>> +	 */
+>> +	cpts->cc.mult = cpts->cc_mult;
+> 
+> This still isn't quite right.  First of all, you shouldn't clobber the
+> learned cc.mult value in cpts_register().  Presumably, if PTP had been
+> run on this port before, then the learned frequency is approximately
+> correct, and it should be left alone.
+> 
+> [ BTW, resetting the timecounter here makes no sense either.  Why
+>   reset the clock just because the interface goes down?  ]
+> 
 
-Also note that previous i2c busses I worked with simply returned -EIO
-in the case where they were called when suspended.  See
-"i2c-exynos5.c" and "i2c-s3c2410.c".
+Huh. This is how it works now (even before my changes) - this is just refactoring!
+(really new thing is the only cpts_calc_mult_shift()).
 
--Doug
+Also, this is how cpts is supported now as part of cpsw (and keystone):
+configure cpsw (cpts)
+- ifup
+   cpsw (*soft_reset*, full reconfiguration of cpsw)
+  (start cpts) - cpts/ptp active
+
+- ifdown
+   if last netdev - shutdown/poweroff cpsw (cpts)
+
+in other words, cpts/ptp is expected to work once and until at least one cpsw netdev is active.
+
+Also there are additional questions such as:
+- is there guarantee that cpsw port will be connected to the same network after ifup?
+- should there be possibility to reset cc.mult if it's value will be kept from the previous run?
+
+> Secondly, you have made the initialization order of these fields hard
+> to follow.  With the whole series applied:
+> 
+> probe()
+> 	cpts_create()
+> 		cpts_of_parse()
+> 		{
+> 			/* Set cc_mult but not cc.mult! */
+> 			set cc_mult
+> 			set cc.shift
+> 		}
+> 		cpts_calc_mult_shift()
+> 		{
+> 			/* Set them both. */
+> 			cpts->cc_mult = mult;
+> 			cpts->cc.mult = mult; 
+
+^^ this assignment of cpts->cc.mult not required.
+
+> 			cpts->cc.shift = shift;
+			
+
+only in case there were not set in DT before
+(I have a requirement to support both - DT and cpts_calc_mult_shift and
+ that introduces a bit of complexity)
+
+Also, I've tried not to add more fields in struct cpts.
+
+> 		}
+> /* later on */
+> cpts_register()
+> 	cpts->cc.mult = cpts->cc_mult;
+> 
+> There is no need for such complexity.  Simply set cc.mult in
+> cpts_create() _once_, immediately after the call to
+> cpts_calc_mult_shift().
+> 
+> You can remove the assignment from cpts_calc_mult_shift() and
+> cpts_register().
+
+Just to clarify: do you propose to get rid of cpts->cc_mult at all?
+
+static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+...
+	if (ppb < 0) {
+		neg_adj = 1;
+		ppb = -ppb;
+	}
+	mult = cpts->cc_mult;
+		^^^^^^^^^^^^^^
+	adj = mult;
+	adj *= ppb;
+	diff = div_u64(adj, 1000000000ULL);
+...
+	cpts->cc.mult = neg_adj ? mult - diff : mult + diff;
+
+Honestly, i'd not prefer to change functional behavior of ptp clock as part of
+this series.
+
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
