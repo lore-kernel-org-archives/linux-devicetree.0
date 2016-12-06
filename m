@@ -1,94 +1,99 @@
-From: Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH v2 3/3] powerpc/fsl/dts: add FMan node for t1042d4rdb
-Date: Tue, 6 Dec 2016 15:13:39 +0200
-Message-ID: <1481030019-31854-3-git-send-email-madalin.bucur@nxp.com>
-References: <1481030019-31854-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: madalin.bucur@nxp.com
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
+ bindings
+Date: Tue, 06 Dec 2016 14:40:25 +0100
+Message-ID: <1481031625.3202.55.camel@pengutronix.de>
+References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
+         <3900806.3NUubBDb0Q@wuerfel>
+         <e15e76e2-b32d-a4d0-eb8b-850626a3946a@linaro.org>
+         <5982682.vMJxVociDa@wuerfel> <1480687813.2460.19.camel@pengutronix.de>
+         <20161205234028.niukdkygbdni5gvm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1481030019-31854-1-git-send-email-madalin.bucur@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org
-Cc: oss@buserror.net, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161205234028.niukdkygbdni5gvm@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- arch/powerpc/boot/dts/fsl/t1042d4rdb.dts | 52 ++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Am Montag, den 05.12.2016, 17:40 -0600 schrieb Rob Herring:
+> On Fri, Dec 02, 2016 at 03:10:13PM +0100, Philipp Zabel wrote:
+> > Am Freitag, den 02.12.2016, 13:32 +0100 schrieb Arnd Bergmann:
+> > > On Friday, December 2, 2016 8:21:33 AM CET zhangfei wrote:
+> > > > Hi, Arnd
+> > > > 
+> > > > On 2016年12月01日 20:05, Arnd Bergmann wrote:
+> > > > > On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
+> > > > >> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
+> > > > >> +                                  0x20 0x10            /* 1: i2c1 */
+> > > > >> +                                  0x20 0x20            /* 2: i2c2 */
+> > > > >> +                                  0x20 0x8000000>;     /* 3: i2c6 */
+> > > > >> +       };
+> > > > >> +
+> > > > >> +Specifying reset lines connected to IP modules
+> > > > >> +==============================================
+> > > > >> +example:
+> > > > >> +
+> > > > >> +        i2c0: i2c@..... {
+> > > > >> +                ...
+> > > > >> +               resets = <&iomcu_rst 0>;
+> > > > >> +                ...
+> > > > >> +        };
+> > > > > I don't really like this approach, since now the information is
+> > > > > in two places. Why not put the data into the reset specifier
+> > > > > directly when it is used?
+> > 
+> > From my point of view, with the binding above, all reset controller
+> > register/bit layout information is in a single place and can be easily
+> > compared to a list in the reference manual, whereas with your suggestion
+> > the description of the reset controller register layout is spread
+> > throughout one or even several dtsi files.
+> 
+> Which can be solved by tools.
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts b/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-index 2a5a90d..fcd2aeb 100644
---- a/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-@@ -48,6 +48,58 @@
- 					"fsl,deepsleep-cpld";
- 		};
- 	};
-+
-+	soc: soc@ffe000000 {
-+		fman0: fman@400000 {
-+			ethernet@e0000 {
-+				phy-handle = <&phy_sgmii_0>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e2000 {
-+				phy-handle = <&phy_sgmii_1>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e4000 {
-+				phy-handle = <&phy_sgmii_2>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e6000 {
-+				phy-handle = <&phy_rgmii_0>;
-+				phy-connection-type = "rgmii";
-+			};
-+
-+			ethernet@e8000 {
-+				phy-handle = <&phy_rgmii_1>;
-+				phy-connection-type = "rgmii";
-+			};
-+
-+			mdio0: mdio@fc000 {
-+				phy_sgmii_0: ethernet-phy@02 {
-+					reg = <0x02>;
-+				};
-+
-+				phy_sgmii_1: ethernet-phy@03 {
-+					reg = <0x03>;
-+				};
-+
-+				phy_sgmii_2: ethernet-phy@01 {
-+					reg = <0x01>;
-+				};
-+
-+				phy_rgmii_0: ethernet-phy@04 {
-+					reg = <0x04>;
-+				};
-+
-+				phy_rgmii_1: ethernet-phy@05 {
-+					reg = <0x05>;
-+				};
-+			};
-+		};
-+	};
-+
- };
- 
- #include "t1042si-post.dtsi"
--- 
-2.1.0
+True.
+
+> > Also, since no two reset controllers are exactly the same, we get a
+> > proliferation of different slightly phandle argument meanings.
+> 
+> phandle args are supposed to be specific to the phandle it points to. 
+> Otherwise, we'd never need more than 1 cell and everything could be a 
+> lookup table.
+
+What I mean is that the clk bindings mostly use <&label index> or
+<&label type index> phandles, not <&label register-offset bit-offset>
+phandles. Usually the bindings don't spread information about the
+register layout of the clock controller throughout the device tree,
+because that is contained in the driver, as determined by the compatible
+property. I assumed the same should be true for reset controllers, if
+possible.
+
+> > > > Any example, still not understand.
+> > > > They are consumer and provider.
+> > > 
+> > > I mean in the i2c node, have
+> > > 
+> > > 	i2c0: i2c@..... {
+> > > 		...
+> > > 		resets = <&iomcu_rst 0x20 0x8>;
+> > > 		...
+> > > 	}
+> > 
+> > There already are a few drivers that use this, and I fear people having
+> > to change their bindings because new flags are needed that have not been
+> > previously thought of. 
+> 
+> Drivers that use what?
+
+Drivers that use <&label register-offset bit-offset> phandles instead of
+<&label index> phandles.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
