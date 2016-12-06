@@ -1,68 +1,46 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v4 4/6] arm: dts: aspeed-g5: Add LPC Controller node
-Date: Tue,  6 Dec 2016 14:53:46 +1100
-Message-ID: <20161206035348.29948-5-andrew@aj.id.au>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH v4 6/6] arm: dts: aspeed-g5: Add gpio controller to devicetree
+Date: Tue,  6 Dec 2016 14:53:48 +1100
+Message-ID: <20161206035348.29948-7-andrew@aj.id.au>
 References: <20161206035348.29948-1-andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161206035348.29948-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161206035348.29948-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm/boot/dts/aspeed-g5.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index c7ff3ea4bf37..1968607326dd 100644
+index 6ccabdb90e95..a95c1b08a816 100644
 --- a/arch/arm/boot/dts/aspeed-g5.dtsi
 +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -92,6 +92,7 @@
- 				clocks = <&clk_apb>;
+@@ -898,6 +898,16 @@
+ 				reg = <0x1e720000 0x9000>;	// 36K
  			};
  
-+
- 			wdt1: wdt@1e785000 {
- 				compatible = "aspeed,wdt";
- 				reg = <0x1e785000 0x1c>;
-@@ -121,6 +122,36 @@
- 				status = "disabled";
- 			};
- 
-+			lpc: lpc@1e789000 {
-+				compatible = "aspeed,ast2500-lpc", "simple-mfd";
-+				reg = <0x1e789000 0x1000>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x1e789000 0x1000>;
-+
-+				lpc_bmc: lpc-bmc@0 {
-+					compatible = "aspeed,ast2500-lpc-bmc";
-+					reg = <0x0 0x80>;
-+				};
-+
-+				lpc_host: lpc-host@80 {
-+					compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
-+					reg = <0x80 0x1e0>;
-+
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					ranges = <0 0x80 0x1e0>;
-+
-+					reg-io-width = <4>;
-+
-+					lhc: lhc@20 {
-+						compatible = "aspeed,ast2500-lhc";
-+						reg = <0x20 0x24 0x48 0x8>;
-+					};
-+				};
++			gpio: gpio@1e780000 {
++				#gpio-cells = <2>;
++				gpio-controller;
++				compatible = "aspeed,ast2500-gpio";
++				reg = <0x1e780000 0x1000>;
++				interrupts = <20>;
++				gpio-ranges = <&pinctrl 0 0 220>;
++				interrupt-controller;
 +			};
 +
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
- 				reg = <0x1e78d000 0x1000>;
+ 			timer: timer@1e782000 {
+ 				compatible = "aspeed,ast2400-timer";
+ 				reg = <0x1e782000 0x90>;
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
