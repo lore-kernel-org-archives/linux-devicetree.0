@@ -1,122 +1,62 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] mtd: spi-nor: add rockchip serial flash controller
- driver
-Date: Tue, 6 Dec 2016 16:44:51 +0100
-Message-ID: <8fae0968-5e3d-2454-c79c-599bc55ac0e5@atmel.com>
-References: <1480906577-38455-1-git-send-email-shawn.lin@rock-chips.com>
- <1480906577-38455-3-git-send-email-shawn.lin@rock-chips.com>
- <852b11c2-daf3-75dc-a5c6-576109a974a9@gmail.com>
- <8cac8489-3fd1-bfc3-9a25-a3fbda74e03e@rock-chips.com>
- <cdc8647b-77c5-5d74-931c-46bcebafae65@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH v3 2/2] drm/panel: Add support for Chunghwa
+ CLAA070WP03XG panel
+Date: Tue, 6 Dec 2016 16:46:25 +0100
+Message-ID: <20161206154625.GA28534@ulmo.ba.sec>
+References: <1474311771-23321-1-git-send-email-ayaka@soulik.info>
+ <1474311771-23321-3-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cdc8647b-77c5-5d74-931c-46bcebafae65-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1474311771-23321-3-git-send-email-ayaka@soulik.info>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Randy Li <ayaka@soulik.info>
+Cc: dri-devel@lists.freedesktop.org, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, airlied@linux.ie, a.hajda@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWxsLAoKTGUgMDYvMTIvMjAxNiDDoCAwNDowOCwgTWFyZWsgVmFzdXQgYSDDqWNyaXQgOgo+
-IE9uIDEyLzA2LzIwMTYgMDM6NTYgQU0sIFNoYXduIExpbiB3cm90ZToKPiAKPiBbLi4uXQo+IAo+
-Pj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgcm9ja2NoaXBfc2ZjX3NldHVwX3RyYW5zZmVyKHN0cnVj
-dCBzcGlfbm9yICpub3IsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvZmZfdCBm
-cm9tX3RvLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplX3QgbGVuLCB1OCBv
-cF90eXBlKQo+Pj4+ICt7Cj4+Pj4gKyAgICBzdHJ1Y3Qgcm9ja2NoaXBfc2ZjX2NoaXBfcHJpdiAq
-cHJpdiA9IG5vci0+cHJpdjsKPj4+PiArICAgIHN0cnVjdCByb2NrY2hpcF9zZmMgKnNmYyA9IHBy
-aXYtPnNmYzsKPj4+PiArICAgIHUzMiByZWc7Cj4+Pj4gKyAgICB1OCBpZl90eXBlID0gMDsKPj4+
-PiArCj4+Pj4gKyAgICBpZl90eXBlID0gZ2V0X2lmX3R5cGUoc2ZjLCBub3ItPmZsYXNoX3JlYWQp
-Owo+Pj4+ICsgICAgd3JpdGVsX3JlbGF4ZWQoKGlmX3R5cGUgPDwgU0ZDX0NUUkxfREFUQV9CSVRT
-X1NISUZUKSB8Cj4+Pj4gKyAgICAgICAgICAgICAgIChpZl90eXBlIDw8IFNGQ19DVFJMX0FERFJf
-QklUU19TSElGVCkgfAo+Pj4+ICsgICAgICAgICAgICAgICAoaWZfdHlwZSA8PCBTRkNfQ1RSTF9D
-TURfQklUU19TSElGVCkgfAo+Pj4KPj4+IEhtLCBsb29raW5nIGF0IHRoaXMsIGRvZXMgdGhlIGNv
-bnRyb2xsZXIgb25seSBzdXBwb3J0IG4tbi1uIG1vZGUgKDEtMS0xLAo+Pj4gMi0yLTIsIDQtNC00
-KSA/IE9yIHdoeSBkb24ndCB5b3UgYWxsb3cgMS0xLW4vMS1uLW4vMi1uLW4gPwo+Pgo+PiBObywg
-aXQgYWxzbyBjb3VsZCBzdXBwb3J0IDEtMS1uLCBldGMuCj4+IEJ5IGxvb2tpbmcgYXQgdGhlIGNh
-ZGVuY2UtcXVhZHNwaS5jLCAgaXQgb25seSBhbGxvd3MKPj4gQ1FTUElfSU5TVF9UWVBFX1NJTkdM
-RSBmb3IgZl9wZGF0YS0+YWRkcl93aWR0aCBhbmQgZl9wZGF0YS0+aW5zdF93aWR0aCwKPj4gc28g
-ZmluYWxseSBpdCBvbmx5IHN1cHBvcnRzIDEtMS0xLCAxLTEtMiwgMS0xLTQ/Cj4+Cj4+PiBJIHdv
-dWxkIGxpa2UgdG8gaGVhciBzb21lIGlucHV0IGZyb20gQ3lyaWxsZSBvbiB0aGlzIG9uZS4KPiAK
-PiBUaGUgQ1FTUEkgZHJpdmVyIGluZGVlZCBkb2VzIG9ubHkgMS0xLXggcmVhZCB0aHVzIGZhci4K
-PiBJIGFtIG5vdCBzdXJlIHdoZXRoZXIgc3VwcG9ydCBmb3IgdGhlIG90aGVyIG1vZGVzIGluIHRo
-ZSBTUEkgTk9SCj4gc3Vic3lzdGVtIGxhbmRlZCBhbHJlYWR5LCB3aGljaCBpcyB3aHkgSSdkIGxp
-a2UgdG8gaGVhciBmcm9tCj4gQ3lyaWxsZSBoZXJlLgo+IAo+IFsuLi5dCj4gCgpObywgdGhlIHN1
-cHBvcnQgb2YgU1BJIHByb3RvY29scyBvdGhlciB0aGFuIDEtMS16IGhhcyBub3QgYmVlbiBtZXJn
-ZWQgeWV0CmludG8gdGhlIHNwaS1ub3Igc3Vic3lzdGVtLiBJJ3ZlIHNlbnQgaXQgYXMgcGFydCBv
-ZiB0aGUgU0ZEUCBzZXJpZXMsIHNpbmNlCnRoZW4gSSd2ZSBiZWVuIHdhaXRpbmcgZm9yIG1vcmUg
-cmV2aWV3cyBhbmQgYXBwcm92YWxzIGJlZm9yZSBtZXJnaW5nIGl0CmJlY2F1c2UgSSBkb24ndCB3
-YW50IHRvIGZvcmNlIGFueXRoaW5nIGFuZCB3YWl0IHRvIGF2b2lkIHJlZ3Jlc3Npb24uCgpSZWNl
-bnRseSBJIHdhcyB0aGlua2luZyBhYm91dCBzcGxpdHRpbmcgdGhlIHNlcmllcyBpbnRvIHNtYWxs
-ZXIgYW5kIGFsbW9zdAppbmRlcGVuZGVudCB0b3BpY3MuIEZvciBpbnN0YW5jZSB0aGUgTWFjcm9u
-aXggcGF0Y2ggdG8gaW1wcm92ZSB0aGUKbWFuYWdlbWVudCBvZiB0aGUgUXVhZCBFbmFibGUgYml0
-IGlzIGEgc3RhbmQgYWxvbmUgcGF0Y2guCgpUaGVuIHRoZSBwYXRjaCBhYm91dCBpbXByb3Zpbmcg
-c3VwcG9ydCBvZiA+IDEyOE1iaXQgbWVtb3J5IGJ5IHVzaW5nIHRoZQpkZWRpY2F0ZWQgNC1ieXRl
-IGluc3RydWN0aW9uIHNldCBvbmx5IGRlcGVuZHMgb24gdGhlIHBhdGNoIHJlbmFtaW5nIHNvbWUK
-U1BJTk9SX09QXyogbWFjcm9zIHRvIHVuaWZ5IHRoZSB1c2Ugb2YgdGhlICJfNEIiIHN1ZmZpeC4g
-VGhvc2UgdHdvIHBhdGNoZXMKc29sdmUgdGhlIGlzc3VlIG9mIGJvb3Rsb2FkZXJzIHdoaWNoIGZh
-aWwgdG8gcmVhZCBmcm9tIFNQSSBmbGFzaCB3aGVuIHRoZQptZW1vcnkgaGFzIGVudGVyZWQgaXRz
-IHN0YXRlZnVsbCA0LWJ5dGUgYWRkcmVzcyBtb2RlLgoKTmV4dCwgdGhlcmUgYXJlIDMgcGF0Y2hl
-cyB0byBhZGQgc3VwcG9ydCB0byBTUEkgcHJvdG9jb2xzIDEteS16LiBJIGd1ZXNzCnRoZXkgYXJl
-IHRoZSBwYXRjaGVzIHlvdXIgYXJlIHRhbGtpbmcgYWJvdXQuIFRob3NlIHBhdGNoZXMgcHJlcGFy
-ZXMgdGhlCm1vdmUgdG8gdGhlIFNGRFAgc3VwcG9ydCBidXQgYWN0dWFsbHkgdGhleSBjYW4gYmUg
-YWxzbyBiZSB1c2VkIGFzIGlzIGp1c3QKdG8gdXNlIFNQSSAxLXkteiBwcm90b2NvbCB3aXRob3V0
-IHRhbGtpbmcgYWJvdXQgU0ZEUC4KCkZpbmFsbHksIHRoZSBsYXN0IHBhdGNoZXMgaW50cm9kdWNl
-IHRoZSBTRkRQIHN1cHBvcnQuIEFzIEkgc2FpZCwgdGhlcmUgYXJlCm5vdCBtYW5kYXRvcnkgZm9y
-IHlvdXIgdXNlIGNhc2UgaWYgeW91IG9ubHkgd2FudCB0byB0ZXN0IFNQSSBwcm90b2NvbHMgc3Vj
-aAphcyAxLTQtNC4KCkluIHlvdXIgY2FzZSwgeW91IG1pZ2h0IGJlIGludGVyZXN0ZWQgaW4gcmV2
-aWV3aW5nL3Rlc3Rpbmc6CgpbdjQsIDQvOF0gbXRkOiBzcGktbm9yOiBhZGQgc3VwcG9ydCBvZiBT
-UEkgcHJvdG9jb2xzIGxpa2UgU1BJIDEtMi0yIGFuZApTUEktMS00LTQKaHR0cDovL3BhdGNod29y
-ay5vemxhYnMub3JnL3BhdGNoLzY5NzI2OC8KVGhpcyBpcyB0aGUgbWFpbiBwYXRjaC4KClt2NCwg
-NS84XSBtdGQ6IHNwaS1ub3I6IHJlbW92ZSB1bnVzZWQgc2V0X3F1YWRfbW9kZSgpIGZ1bmN0aW9u
-Cmh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC82OTcyNjkvCk9ubHkgc21hbGwgY2xl
-YW51cCwgcGxlYXNlIHJlYWQgdGhlIGNvbW1pdCBtZXNzYWdlIGZvciBtb3JlIGV4cGxpbmF0aW9u
-CgpbdjQsIDYvOF0gbXRkOiBtMjVwODA6IGFkZCBzdXBwb3J0IG9mIGR1YWwgYW5kIHF1YWQgc3Bp
-IHByb3RvY29scyB0byBhbGwKY29tbWFuZHMKaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3Bh
-dGNoLzY5NzI3MC8KVGhpcyBvbmUgaXMgbm90IG5lZWQgd2hlbiB0ZXN0aW5nIHdpdGggdGhpcyBy
-b2NrY2hpcCBzZXJpYWwgZmxhc2gKY29udHJvbGxlciBkcml2ZXIgYXMgaXQgZGlyZWN0bHkgY2Fs
-bHMgc3BpX25vcl9zY2FuKCkgZnJvbQpyb2NrY2hpcF9zZmNfcmVnaXN0ZXIuCgpQbGVhc2Ugbm90
-ZSB0aGVyZSBtaWdodCBiZSBhIHNtYWxsIGRlcGVuZGVuY2UgdG8gdGhlIFNQSU5PUl9PUF8qIG1h
-Y3JvCnJlbmFtaW5nIHBhdGNoOgpbdjQsIDIvOF0gbXRkOiBzcGktbm9yOiByZW5hbWUgU1BJTk9S
-X09QXyogbWFjcm9zIG9mIHRoZSA0LWJ5dGUgYWRkcmVzcyBvcApjb2RlcwpodHRwOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcGF0Y2gvNjk3MjY2LwpJbmRlZWQgdGhpcyBwYXRjaCBpbnRyb2R1Y2Vz
-IGluIHNwaS1ub3IuaCB0aGUgU1BJTk9SX09QX1JFQURfMV8yXzIgYW5kClNQSU5PUl9PUF9SRUFE
-XzFfNF80IG1hY3JvcyBhbmQgdGhlaXIgYXNzb2NpYXRlZCBvcCBjb2Rlcy4KCkFib3V0IHRoZSBz
-dXBwb3J0IG9mIFNQSSAyLTItMiBhbmQgU1BJIDQtNC00LCBJIGFsc28gaGF2ZSBwYXRjaGVzIHRv
-IGFkZApzdXBwb3J0IHRvIHRob3NlIHR3byBwcm90b2NvbHMgaG93ZXZlciBJIGRlY2lkZWQgbm90
-IHRvIHN1Ym1pdCB0aGVtIGZvciBub3cKZm9yIG1hbnkgcmVhc29ucy4gRmlyc3QsIHRoZSBzZXJp
-ZXMgaXMgYWxyZWFkeSBsb25nIGFuZCBoYXJkIGVub3VnaCB0bwpyZXZpZXcuIFNlY29uZGx5LCBp
-biBtb3N0IGNhc2VzIHRoZSBwZXJmb3JtYW5jZSBpbmNyZWFzZSBiZXR3ZWVuIFNQSSAxLTQtNAph
-bmQgU1BJIDQtNC00IGlzbid0IHdvcnRoIGl0IHdoZW4geW91IHJlYWQgNTEyIGJ5dGUgcGFnZXMg
-b3IgNjRLQiBzZWN0b3JzLgoKSSB0aGluayBpdCB3YXMgYSBtaXN0YWtlIHRvIHNlbmQgYWxsIHRo
-b3NlIHBhdGNoZXMgaW4gYSBzaW5nbGUgYmlnIHNlcmllcwpzaW5jZSBhY3R1YWxseSBtb3N0IG9m
-IHRoZW0gaGF2ZSBub3RoaW5nIHRvIGRvIHdpdGggU0ZEUC4gVGhleSBqdXN0IHByZXBhcmUKdGhl
-IHRyYW5zaXRpb24uIEkgdW5kZXJzdGFuZCBiaWcgc2VyaWVzIG1pZ2h0IHNjYXJlIHBlb3BsZSBh
-bmQgZGlzY291cmFnZQp0aGVtIGZyb20gcmV2aWV3aW5nIG9yIHRlc3RpbmcuCgpIb3dldmVyLCBp
-ZiB5b3UgYXJlIGludGVyZXN0ZWQgaW4gc29tZSBvZiB0aG9zZSBmZWF0dXJlcywgSSB0aGluayBJ
-IHNob3VsZApzZW5kIHRoZSBwYXRjaGVzIHN0ZXAgYnkgc3RlcC4KCkJlc3QgcmVnYXJkcywKCkN5
-cmlsbGUKCj4+Pj4gKyNpZmRlZiBDT05GSUdfUE0KPj4+PiAraW50IHJvY2tjaGlwX3NmY19ydW50
-aW1lX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQo+Pj4+ICt7Cj4+Pj4gKyAgICBzdHJ1Y3Qg
-cm9ja2NoaXBfc2ZjICpzZmMgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4+PiArCj4+Pj4gKyAg
-ICBjbGtfZGlzYWJsZV91bnByZXBhcmUoc2ZjLT5oY2xrKTsKPj4+PiArICAgIHJldHVybiAwOwo+
-Pj4+ICt9Cj4+Pgo+Pj4gV2FzIHRoZSBzdXNwZW5kIGV2ZXIgcmVhbGx5IHRlc3RlZCB3aXRoIHRo
-aXMgYmxvY2sgPyBJcyBkaXNhYmxpbmcgY2xvY2sKPj4+IHJlYWxseSBlbm91Z2ggPwo+Pgo+PiBJ
-dCB3YXMgdGVzdGVkIGFuZCB3ZSBjb3VsZCBkbyBtb3JlLCBmb3IgaW5zdGFuY2UgcG93ZXIgb2Zm
-IHRoZSBnZW5wZCwKPj4gYnV0IGRpc2FibGluZyBjbGNvayBzaG91bGQgYmUgZW5vdWdoLgo+IAo+
-IFdoYXQgYWJvdXQgcHV0dGluZyB0aGUgY29udHJvbGxlciBpbnRvIHNvbWUgcmVzZXQgc3RhdGUg
-LCBpcyB0aGF0IHBvc3NpYmxlPwo+IAo+Pj4+ICtpbnQgcm9ja2NoaXBfc2ZjX3J1bnRpbWVfcmVz
-dW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPj4+PiArewo+Pj4+ICsgICAgc3RydWN0IHJvY2tjaGlw
-X3NmYyAqc2ZjID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+Pj4gKwo+Pj4+ICsgICAgY2xrX3By
-ZXBhcmVfZW5hYmxlKHNmYy0+aGNsayk7Cj4+Pj4gKyAgICByZXR1cm4gMDsKPj4+PiArfQo+Pj4+
-ICsjZW5kaWYgLyogQ09ORklHX1BNICovCj4+Pgo+Pj4gWy4uLl0KPj4+Cj4+Cj4+Cj4gCj4gCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9j
-a2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Sep 20, 2016 at 03:02:51AM +0800, Randy Li wrote:
+> The Chunghwa CLAA070WP03XG is a 7" 1280x800 panel, which can be
+> supported by the simple panel driver.
+>=20
+> Signed-off-by: Randy Li <ayaka@soulik.info>
+> ---
+>  .../display/panel/chunghwa,claa070wp03xg.txt       |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++=
+++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/chung=
+hwa,claa070wp03xg.txt
+
+Applied, thanks.
+
+Thierry
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJYRt1OAAoJEN0jrNd/PrOhP4AP/2dSeLvsFL70tC23vFmNGVBV
+sxsTAX6hVjcKNi9Texg+mCZo5dPIApBBrsLtuNMdW08IYuaZOe4oTY/EXhNvzCuP
+ZV2C0F6uVScxD42RpdPO5D1NagcFxBALZ01d8oLg0J7drLsUCHBHofsFVO/C2PvJ
+sTEgtR2SHpBl+wPc6ph8xV/C9kqE04wLnKIRZQ5v620tY64qPB4cWrPN6RY26SuW
+i4kq7gpNY6InD5wJnPPoQOaJYcvKrWO3hqGSDO2sUzCT2aAhgzRXeED26Fia2Vpe
+PHNcRZxQENovdHdlwoQDgy4L0JIduWeS5yKgt6m1+dl/JQSrTUHO2LwAHeAtMdQN
+U0w7rO1UJEt6vUjGIC5vP5ri0FU9EYH93s/LOA/UFZ2ljaLhZUycxc0X6Lv5gMqK
+PWTZzNC11wOFNJVaQbyK2uCNuYU4pd7rauNeiOczBU3zNcJ+j+kpoE6scvB681vb
+c4zLQh9p54H+2q7v/aYyvhjW5gsM6R+YeBM54Cs3nnpC4Fr4pjYg6g/IQSXq/h+4
+ZiXBRh3RJkNmKLm0INTmg9RuxTuwpemlJktY/2e8nQdYnMqoJk9sCmidrzcCi767
+i9CAn6twfzC0bmqHfwI8vX4I+LZjdjYXud/CLUF1Qjn/WncyAXkmqosJFOANJpQl
+73lyuHM8us9OuM5kP4zD
+=PHIE
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
