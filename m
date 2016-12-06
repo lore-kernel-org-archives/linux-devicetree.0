@@ -1,44 +1,74 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
-Date: Tue, 6 Dec 2016 14:43:49 -0600
-Message-ID: <e67cfba3-7e57-cc1d-6654-00c0a5378382@ti.com>
-References: <20161128230428.6872-1-grygorii.strashko@ti.com>
- <20161128230428.6872-5-grygorii.strashko@ti.com>
- <20161130100519.GD28680@localhost.localdomain>
- <20161206180857.GA20680@localhost.localdomain>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT binding for S3C24XX
+ MMC/SD/SDIO controller
+Date: Tue, 6 Dec 2016 17:13:18 -0600
+Message-ID: <20161206231318.m4oo2e6t5zk2txbx@rob-hp-laptop>
+References: <1480637665-6325-1-git-send-email-sergio.prado@e-labworks.com>
+ <CGME20161202001621epcas3p2fcc946ce070dfcc594e4b89729e149d7@epcas3p2.samsung.com>
+ <1480637665-6325-2-git-send-email-sergio.prado@e-labworks.com>
+ <054a65d8-8606-eeb0-e028-1b85dbf1c8ba@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161206180857.GA20680@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <054a65d8-8606-eeb0-e028-1b85dbf1c8ba@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Sergio Prado <sergio.prado@e-labworks.com>, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Dec 02, 2016 at 09:48:45AM +0900, Jaehoon Chung wrote:
+> On 12/02/2016 09:14 AM, Sergio Prado wrote:
+> > Adds the device tree bindings description for Samsung S3C24XX
+> > MMC/SD/SDIO controller, used as a connectivity interface with external
+> > MMC, SD and SDIO storage mediums.
+> > 
+> > Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+> > ---
+> >  .../devicetree/bindings/mmc/samsung,s3cmci.txt     | 38 ++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt b/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+> > new file mode 100644
+> > index 000000000000..3f044076e69a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+> > @@ -0,0 +1,38 @@
+> > +* Samsung's S3C24XX MMC/SD/SDIO controller device tree bindings
+> > +
+> > +Samsung's S3C24XX MMC/SD/SDIO controller is used as a connectivity interface
+> > +with external MMC, SD and SDIO storage mediums.
+> > +
+> > +This file documents differences between the core mmc properties described by
+> > +mmc.txt and the properties used by the Samsung S3C24XX MMC/SD/SDIO controller
+> > +implementation.
+> > +
+> > +Required SoC Specific Properties:
+> > +- compatible: should be one of the following
+> > +  - "samsung,s3c2410-sdi": for controllers compatible with s3c2410
+> > +  - "samsung,s3c2412-sdi": for controllers compatible with s3c2412
+> > +  - "samsung,s3c2440-sdi": for controllers compatible with s3c2440
+> > +- clocks: Should reference the controller clock
+> > +- clock-names: Should contain "sdi"
+> > +
+> > +Required Board Specific Properties:
+> > +- pinctrl-0: Should specify pin control groups used for this controller.
+> > +- pinctrl-names: Should contain only one value - "default".
+> 
+> I'm not sure but i think this description doesn't need at here.
+> 
+> > +
+> > +Example:
+> > +	sdi: sdi@5a000000 {
+> 
+> I think it needs to use "mmc0: sdi@5a000000" instead of "sdi: sdi@5a000000"
+> Because mmc is more clear than sdi.
 
+The label doesn't matter much as it is not part of the dtb. The unit 
+name should be 'mmc' though.
 
-On 12/06/2016 12:08 PM, Richard Cochran wrote:
-> On Wed, Nov 30, 2016 at 11:05:19AM +0100, Richard Cochran wrote:
->> Can you adjust the frequency of the keystone devices in hardware?  If
->> so, then please implement it, and just disable PPS for the CPSW.
->>
->> The only reason I used the timecounter for frequency adjustment was
->> because the am335x HW is broken.  But this shouldn't hold back other
->> newer HW without the same silicon flaws.
->
-> I am talking here about the ADPLLLJ units.  Are they usable on the
-> keystone?
->
-> If so, please implement the frequency adjustment with them.
->
+With that,
 
-No, I think it's not impossible (at least as I know now).
-i'll drop this patch for now.
+Acked-by: Rob Herring <robh@kernel.org>
 
-By the way, I've tested am335 (BBB)+ HW_TS_PUSH + PWM.
-Seems works.
-
--- 
-regards,
--grygorii
