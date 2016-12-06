@@ -1,112 +1,96 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v3 -next 1/2] ARM: sunxi: add support for H2+ SoC
-Date: Tue, 6 Dec 2016 13:01:56 +1100
-Message-ID: <4c0bd9ab-05c7-bf53-e55a-fc4c108a456f@ozlabs.ru>
-References: <20161202150513.34691-1-icenowy@aosc.xyz>
- <20161205091955.zkffyktw5trfocnx@lukather>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] mtd: spi-nor: Bindings for Rockchip serial flash
+ controller
+Date: Tue, 6 Dec 2016 10:34:22 +0800
+Message-ID: <c6fb36aa-39a2-28a1-e47c-0efa161bb78a@rock-chips.com>
+References: <1480906577-38455-1-git-send-email-shawn.lin@rock-chips.com>
+ <1480906577-38455-2-git-send-email-shawn.lin@rock-chips.com>
+ <40cb2739-f58d-2e35-5b87-6b46e93e422e@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3167341528611257346=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161205091955.zkffyktw5trfocnx@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-sunxi@googlegroups.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <40cb2739-f58d-2e35-5b87-6b46e93e422e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============3167341528611257346==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk
-Content-Type: multipart/mixed; boundary="qua7W6ePsLbpA4HrODH14lE2DM4oLwo5g";
- protected-headers="v1"
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>,
- Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
- Russell King <linux@armlinux.org.uk>, Andre Przywara
- <andre.przywara@arm.com>, Hans de Goede <hdegoede@redhat.com>,
- Arnd Bergmann <arnd@arndb.de>, Vishnu Patekar <vishnupatekar0510@gmail.com>,
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-sunxi@googlegroups.com
-Message-ID: <4c0bd9ab-05c7-bf53-e55a-fc4c108a456f@ozlabs.ru>
-Subject: Re: [PATCH v3 -next 1/2] ARM: sunxi: add support for H2+ SoC
-References: <20161202150513.34691-1-icenowy@aosc.xyz>
- <20161205091955.zkffyktw5trfocnx@lukather>
-In-Reply-To: <20161205091955.zkffyktw5trfocnx@lukather>
-
---qua7W6ePsLbpA4HrODH14lE2DM4oLwo5g
-Content-Type: text/plain; charset=koi8-r
-Content-Transfer-Encoding: quoted-printable
-
-On 05/12/16 20:19, Maxime Ripard wrote:
-> On Fri, Dec 02, 2016 at 11:05:12PM +0800, Icenowy Zheng wrote:
->> Allwinner H2+ is a quad-core Cortex-A7 SoC.
+On 2016/12/5 11:24, Marek Vasut wrote:
+> On 12/05/2016 03:56 AM, Shawn Lin wrote:
+>> Add binding document for the Rockchip serial flash controller.
 >>
->> It is very like H3, that they share the same SoC ID (0x1680), and H3
->> memory maps as well as drivers works well on the SoC.
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >>
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
->=20
-> Fixed the alphabetical order in the bindings doc, and applied.
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>
+>> Changes in v3:
+>> - rename sfc-no-dma to sfc-no-DMA
+>>
+>> Changes in v2: None
+>>
+>>  .../devicetree/bindings/mtd/rockchip-sfc.txt       | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>> new file mode 100644
+>> index 0000000..c6b4f58
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>> @@ -0,0 +1,31 @@
+>> +Rockchip Serial Flash Controller
+>> +
+>> +Required properties:
+>> +- compatible : Should be
+>> +		"rockchip,rk1108-sfc", "rockchip,sfc" for ROCKCHIP RK1108.
+>> +- address-cells : Should be 1.
+>> +- size-cells : Should be 0.
+>> +- clocks: Must contain two entries for each entry in clock-names.
+>> +- clock-names: Shall be "sfc" for the transfer-clock, and "hsfc" for
+>> +		the peripheral clock.
+>> +- interrupts : Should contain the interrupt for the device.
+>> +- reg: Physical base address of the controller and length of memory mapped.
+>> +
+>> +Optional properties:
+>
+> Uhhh, I apologize for the miscommunication.
+>
+>> +- rockchip,sfc-no-DMA: Indicate the controller doesn't support dma transfer.
+> I didn't mean this   ^^^ DMA, that should be lowercase. I meant   ^^^
+> this one. The property should be lowercase, the description
+> should be uppercase.
 
-Where is that resulting tree, with these ones and EMAC? Thanks.
+Ah, got it.
+
+>
+>> +
+>> +Example:
+>> +nor_flash: sfc@301c0000 {
+>> +	compatible = "rockchip,rk1108-sfc", "rockchip,sfc";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
+>> +	clock-names = "sfc", "hsfc";
+>> +	interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+>> +	reg = <0x301c0000 0x1000>;
+>> +	spi-nor@0 {
+>> +		compatible = "jedec,spi-nor";
+>> +		spi-max-frequency = <12000000>;
+>> +		reg = <0>;
+>> +	};
+>> +};
+>>
+>
+>
 
 
+-- 
+Best Regards
+Shawn Lin
 
---=20
-Alexey
-
-
---qua7W6ePsLbpA4HrODH14lE2DM4oLwo5g--
-
---4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIrBAEBCAAVBQJYRhwUDhxhaWtAb3psYWJzLnJ1AAoJEIYTPdgrwSC59twP/A6L
-Ae8IA01UctHTWR5gtDwBknzsaTFnTDJU/SXyCl5MX3HtM1hvnS7wGAheYXdYV2YX
-4pnDZHGRfg0z31lfr6Abao8aVmkf3RK9NeVpqtNYlcdsGt+BpJZOO0DEy5jsn8/W
-/E2GLIHC2kQfIonjcxfm5mou+6q8G8YFsAmaIt6j+VvCoyFi0sulHlqwt+EUwpY6
-VekfwVpP6//EfxTzYt4Fwdr70TdBPFxKiHrP70jWqJjwEhzE8j+GeZn9hkCp2mRv
-5+naz2gMWsD0lZtlo6rF1Hbl4igngPR7AEO0/Qk1BMqru5qBRWSQCBid4VabGTHu
-AsFwDsnCvSx0YEbK59p5bJGWG0Tqx3pFWlACNRHtNjQO0CEF6rt3UoPnwD15HxdH
-iYEkVCxV9s41FZ7aSlIUiquA8mk57cQvtRZscYA5zZYRIBB6GhOP76agn5Uk4tkE
-cb8fyiYWQxaxGy7mPIbhNdm0iDdR7iEb8DDdy3+XuyWkuXzv+GAABOTwPOk/013N
-nIo5mWTzhA98SHsfteUgP+eWfdSWsR7iKKLl46+mzRSohxuwET2Dgx6pjf3H4Dun
-/XxvdF2JqQpNLkYbiyZW61g8t9SGQ107heMJbb0TfucfwewOfZj4x1xTPItwbqX8
-IUHuTL+OMrHC3lWtWa4Vrr1PebjFnh5ci4hsM61u
-=JkOV
------END PGP SIGNATURE-----
-
---4RngeNA4PtwgxBVrAQqGSnrBS2rcBNOsk--
-
-
---===============3167341528611257346==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3167341528611257346==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
