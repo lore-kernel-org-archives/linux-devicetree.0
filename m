@@ -1,48 +1,43 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 7/7] ARM: dts: stm32: add STM32 General Purpose Timer
- driver in DT
-Date: Tue, 6 Dec 2016 12:57:25 +0000
-Message-ID: <20161206125725.GG25385@dell.home>
-References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
- <1481027929-13704-8-git-send-email-benjamin.gaignard@st.com>
+From: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
+Subject: RE: [PATCH 3/3] powerpc/fsl/dts: add FMan node for t1042d4rdb
+Date: Tue, 6 Dec 2016 12:56:08 +0000
+Message-ID: <AM4PR04MB160452B2FA0A875DC4EB52CFEC820@AM4PR04MB1604.eurprd04.prod.outlook.com>
+References: <1478879598-3362-1-git-send-email-madalin.bucur@nxp.com>
+ <1478879598-3362-3-git-send-email-madalin.bucur@nxp.com>
+ <1479190722.21746.33.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1481027929-13704-8-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1479190722.21746.33.camel@buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <oss@buserror.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 06 Dec 2016, Benjamin Gaignard wrote:
-
-> Add General Purpose Timers and it sub-nodes into DT for stm32f4.
-> Define and enable pwm1 and pwm3 for stm32f469 discovery board
-> 
-> version 4:
-> - remove unwanted indexing in pwm@ and timer@ node name
-> - use "reg" instead of additional parameters to set timer
->   configuration
-> 
-> version 3:
-> - use "st,stm32-timer-trigger" in DT
-> 
-> version 2:
-> - use parameters to describe hardware capabilities
-> - do not use references for pwm and iio timer subnodes
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> ---
->  arch/arm/boot/dts/stm32f429.dtsi      | 276 +++++++++++++++++++++++++++++++++-
->  arch/arm/boot/dts/stm32f469-disco.dts |  28 ++++
->  2 files changed, 303 insertions(+), 1 deletion(-)
-
-This now looks really neat.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+PiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gU2VudDogVHVl
+c2RheSwgTm92ZW1iZXIgMTUsIDIwMTYgODoxOSBBTQ0KPiANCj4gT24gRnJpLCAyMDE2LTExLTEx
+IGF0IDE3OjUzICswMjAwLCBNYWRhbGluIEJ1Y3VyIHdyb3RlOg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IE1hZGFsaW4gQnVjdXIgPG1hZGFsaW4uYnVjdXJAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiDCoGFy
+Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDJkNHJkYi5kdHMgfCA0Nw0KPiA+ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gwqAxIGZpbGUgY2hhbmdlZCwgNDcgaW5zZXJ0
+aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+dDEwNDJkNHJkYi5kdHMNCj4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDJkNHJk
+Yi5kdHMNCj4gPiBpbmRleCAyYTVhOTBkLi44YzBjMzE4IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gv
+cG93ZXJwYy9ib290L2R0cy9mc2wvdDEwNDJkNHJkYi5kdHMNCj4gPiArKysgYi9hcmNoL3Bvd2Vy
+cGMvYm9vdC9kdHMvZnNsL3QxMDQyZDRyZGIuZHRzDQo+ID4gQEAgLTQ4LDYgKzQ4LDUzIEBADQo+
+ID4gwqAJCQkJCSJmc2wsZGVlcHNsZWVwLWNwbGQiOw0KPiA+IMKgCQl9Ow0KPiA+IMKgCX07DQo+
+ID4gKwlzb2M6IHNvY0BmZmUwMDAwMDAgew0KPiANCj4gUGxlYXNlIGxlYXZlIGEgYmxhbmsgbGlu
+ZSBiZXR3ZWVuIG5vZGVzLCBlc3BlY2lhbGx5IGhlcmUgYXQgdGhlIHRvcCBsZXZlbC4NCj4gDQo+
+IC1TY290dA0KDQpJIG1pc3NlZCB5b3VyIGZlZWRiYWNrLCB3aWxsIHNlbmQgYSB2Mi4NCg0KVGhh
+bmtzLA0KTWFkYWxpbg0K
