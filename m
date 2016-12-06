@@ -1,57 +1,56 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v4 1/7] MFD: add bindings for STM32 General Purpose Timer driver
-Date: Tue, 6 Dec 2016 15:02:18 +0100
-Message-ID: <CA+M3ks7nUzbhUeKzi5VzJb0YhC2EWZU5k4gNCEKjHbpGrEWZtg@mail.gmail.com>
-References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
- <1481027929-13704-2-git-send-email-benjamin.gaignard@st.com> <20161206130048.GH25385@dell.home>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] dts: sun8i-h3: correct UART3 pin definitions
+Date: Tue, 6 Dec 2016 15:05:38 +0100
+Message-ID: <20161206140538.ag7nofyca2n5ror2@lukather>
+References: <20161204122948.11921-1-jorik@kippendief.biz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20161206130048.GH25385@dell.home>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, alexandre.torgue@st.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ysyxpa6aemby74wd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQULTPBAKGQEU52GJYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161204122948.11921-1-jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[snip]
->
-> I'm not going to push too hard, but I still thing "advanced-control"
-> would suit better, since this is not *just* a timer.  In fact, the
-> parent device (the MFD) doesn't have any timer functionality.  That's
-> what "timer@0" does.
->
-> The IP is called "Advanced Control" in the datasheet, no?
 
-In datasheet only timers 1 and 8 are called "advanced-control" timers
-Timers 2 to 5 and 9 to 14 are called "general purpose" timers.
-Timers 6 and 7 are named "basic" timers.
+--ysyxpa6aemby74wd
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I have ask around in ST and it seems that "general purpose" name was the
-best to describe all the timers, so I would like to keep using it.
+Hi Jorik,
 
->
->> +             #address-cells =3D <1>;
->> +             #size-cells =3D <0>;
->> +             compatible =3D "st,stm32-gptimer";
->> +             reg =3D <0x40010000 0x400>;
->> +             clocks =3D <&rcc 0 160>;
->> +             clock-names =3D "clk_int";
->> +
->> +             pwm@0 {
->> +                     compatible =3D "st,stm32-pwm";
->> +                     pinctrl-0       =3D <&pwm1_pins>;
->> +                     pinctrl-names   =3D "default";
->> +             };
->> +
->> +             timer@0 {
->> +                     compatible =3D "st,stm32-timer-trigger";
->> +                     reg =3D <0>;
->> +             };
->> +     };
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+On Sun, Dec 04, 2016 at 01:29:48PM +0100, jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org wrote:
+> From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+> 
+> In a previous commit, I made a copy/paste error in the pinmux
+> definitions of UART3: PG{13,14} instead of PA{13,14}. This commit takes
+> care of that. I have tested this commit on Orange Pi PC and Orange Pi
+> Plus, and it works for these boards.
+> 
+> Fixes: e3d11d3c45c5 ("dts: sun8i-h3: add pinmux definitions for
+> UART2-3")
+> 
+> Signed-off-by: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+
+Thanks!
+
+This looks like a late fix for the current release which comes to an
+end. Can you resend it with arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org as a recipient, so that the
+ARM SoC maintainers can apply it directly?
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--ysyxpa6aemby74wd--
