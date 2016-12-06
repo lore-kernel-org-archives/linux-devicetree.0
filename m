@@ -1,16 +1,17 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] misc: atmel-ssc: register as sound DAI if
- #sound-dai-cells is present
-Date: Tue, 6 Dec 2016 09:16:35 -0600
-Message-ID: <20161206151635.psckjlu2pyzjm7k6@rob-hp-laptop>
-References: <1480593549-6464-1-git-send-email-peda@axentia.se>
- <1480593549-6464-2-git-send-email-peda@axentia.se>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
+ board
+Date: Tue, 06 Dec 2016 23:16:44 +0800
+Message-ID: <289751481037404@web27m.yandex.ru>
+References: <20161205120021.0GBGtAl4@smtp3m.mail.yandex.net>
+ <20161205094023.mtymfvpmca4x3ohh@lukather>
+ <17819681480935706@web24g.yandex.ru>
+ <20161206080056.23jpd4e7eeuhuyiq@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1480593549-6464-2-git-send-email-peda@axentia.se>
+In-Reply-To: <20161206080056.23jpd4e7eeuhuyiq@lukather>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,26 +21,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Takashi Iwai <tiwai@suse.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, =?utf-8?B?QW5kcsOpIFByenl3YXJh?= <andre.przywara@arm.com>, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "\"linux-arm-kernel@lists.infradead.org\"" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 01, 2016 at 12:59:08PM +0100, Peter Rosin wrote:
-> The SSC is currently not usable with the ASoC simple-audio-card, as
-> every SSC audio user has to build a platform driver that may do as
-> little as calling atmel_ssc_set_audio/atmel_ssc_put_audio (which
-> allocates the SSC and registers a DAI with the ASoC subsystem).
-> 
-> So, have that happen automatically, if the #sound-dai-cells property
-> is present in devicetree, which it has to be anyway for simple audio
-> card to work.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  .../devicetree/bindings/misc/atmel-ssc.txt         |  2 +
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/misc/atmel-ssc.c                           | 50 ++++++++++++++++++++++
->  include/linux/atmel-ssc.h                          |  1 +
->  3 files changed, 53 insertions(+)
+CgowNi4xMi4yMDE2LCAxNjowMSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gTW9uLCBEZWMgMDUsIDIwMTYgYXQgMDc6MDE6NDZQTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAwNS4xMi4yMDE2LCAxNzo0MCwgIk1heGltZSBS
+aXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT46Cj4+IMKgPiBPbiBNb24s
+IERlYyAwNSwgMjAxNiBhdCAwNDo1OTo0NFBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
+PiDCoD4+IMKgMjAxNuW5tDEy5pyINeaXpSAxNjo1MuS6jiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUu
+cmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT7lhpnpgZPvvJoKPj4gwqA+PiDCoD4KPj4gwqA+PiDC
+oD4gT24gRnJpLCBEZWMgMDIsIDIwMTYgYXQgMTA6MjI6MzBQTSArMDgwMCwgSWNlbm93eSBaaGVu
+ZyB3cm90ZToKPj4gwqA+PiDCoD4gPgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4gMDEuMTIu
+MjAxNiwgMTc6MzYsICJNYXhpbWUgUmlwYXJkIiA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9u
+cy5jb20+Ogo+PiDCoD4+IMKgPiA+ID4gT24gTW9uLCBOb3YgMjgsIDIwMTYgYXQgMTI6Mjk6MDdB
+TSArMDAwMCwgQW5kcsOpIFByenl3YXJhIHdyb3RlOgo+PiDCoD4+IMKgPiA+ID4+IMKgPiBTb21l
+dGhpbmcgbW9yZSBpbnRlcmVzdGluZyBoYXBwZW5lZC4KPj4gwqA+PiDCoD4gPiA+PiDCoD4KPj4g
+wqA+PiDCoD4gPiA+PiDCoD4gWHVubG9uZyBtYWRlIGEgYWRkLW9uIGJvYXJkIGZvciBPcmFuZ2Ug
+UGkgWmVybywgd2hpY2ggZXhwb3NlcyB0aGUKPj4gwqA+PiDCoD4gPiA+PiDCoD4gdHdvIFVTQiBD
+b250cm9sbGVycyBleHBvcnRlZCBhdCBleHBhbnNpb24gYnVzIGFzIFVTQiBUeXBlLUEKPj4gwqA+
+PiDCoD4gPiA+PiDCoD4gY29ubmVjdG9ycy4KPj4gwqA+PiDCoD4gPiA+PiDCoD4KPj4gwqA+PiDC
+oD4gPiA+PiDCoD4gQWxzbyBpdCBleHBvc2VzIGEgYW5hbG9nIEEvViBqYWNrIGFuZCBhIG1pY3Jv
+cGhvbmUuCj4+IMKgPj4gwqA+ID4gPj4gwqA+Cj4+IMKgPj4gwqA+ID4gPj4gwqA+IFNob3VsZCBJ
+IGVuYWJsZSB7ZSxvfWhjaXsyLjN9IGluIHRoZSBkZXZpY2UgdHJlZT8KPj4gwqA+PiDCoD4gPiA+
+Pgo+PiDCoD4+IMKgPiA+ID4+IMKgQWN0dWFsbHkgd2Ugc2hvdWxkIGRvIHRoaXMgcmVnYXJkbGVz
+cyBvZiB0aGlzIGV4dGVuc2lvbiBib2FyZC4gVGhlIFVTQgo+PiDCoD4+IMKgPiA+ID4+IMKgcGlu
+cyBhcmUgbm90IG11bHRpcGxleGVkIGFuZCBhcmUgZXhwb3NlZCBvbiB1c2VyIGFjY2Vzc2libGUg
+cGlucyAoanVzdAo+PiDCoD4+IMKgPiA+ID4+IMKgbm90IHNvbGRlcmVkLCBidXQgdGhhdCdzIGEg
+ZGV0YWlsKSwgc28gSSB0aGluayB0aGV5IHF1YWxpZnkgZm9yIERUCj4+IMKgPj4gwqA+ID4gPj4g
+wqBlbmFibGVtZW50LiBBbmQgZXZlbiBpZiBhIHVzZXIgY2FuJ3QgdXNlIHRoZW0sIGl0IGRvZXNu
+J3QgaHVydCB0byBoYXZlCj4+IMKgPj4gwqA+ID4gPj4gwqB0aGVtIChzaW5jZSB0aGV5IGFyZSBu
+b3QgbXVsdGlwbGV4ZWQpLgo+PiDCoD4+IMKgPiA+ID4KPj4gwqA+PiDCoD4gPiA+IE15IG1haW4g
+Y29uY2VybiBhYm91dCB0aGlzIGlzIHRoYXQgd2UnbGwgbGVhdmUgcmVndWxhdG9ycyBlbmFibGVk
+IGJ5Cj4+IMKgPj4gwqA+ID4gPiBkZWZhdWx0LCBmb3IgYSBtaW5vcml0eSBvZiB1c2Vycy4gQW5k
+IHRoYXQgbWlub3JpdHkgd2lsbCBwcmV2ZW50IHRvIGRvCj4+IMKgPj4gwqA+ID4gPiBhIHByb3Bl
+ciBwb3dlciBtYW5hZ2VtZW50IHdoZW4gdGhlIHRpbWVzIGNvbWUgc2luY2Ugd2UnbGwgaGF2ZSB0
+byBrZWVwCj4+IMKgPj4gwqA+ID4gPiB0aGF0IGJlaGF2aW91ciBmb3JldmVyLgo+PiDCoD4+IMKg
+PiA+Cj4+IMKgPj4gwqA+ID4gSSB0aGluayB0aGVzZSB1c2VycyBjYW4gYWRkIGEgJ2ZkdCBzZXQg
+L3h4eC94eHggc3RhdHVzICJkaXNhYmxlZCIgJyAuCj4+IMKgPj4gwqA+Cj4+IMKgPj4gwqA+IFlv
+dSBjYW4ndCBhc2sgdGhhdCBmcm9tIHRoZSBtYWpvcml0eSBvZiB1c2Vycy4gVGhlc2UgdXNlcnMg
+d2lsbCB0YWtlCj4+IMKgPj4gwqA+IGRlYmlhbiBvciBmZWRvcmEsIGluc3RhbGwgaXQsIGFuZCBl
+eHBlY3QgZXZlcnl0aGluZyB0byB3b3JrCj4+IMKgPj4gwqA+IHByb3Blcmx5LiBJIHdvdWxkIG1h
+a2UgdGhlIG9wcG9zaXRlIGFyZ3VtZW50IGFjdHVhbGx5LiBJZiBzb21lb25lIGlzCj4+IMKgPj4g
+wqA+IGtub3dsZWRnZWFibGUgZW5vdWdoIHRvIHNvbGRlciB0aGUgVVNCIHBpbnMgYSBjb25uZWN0
+b3IsIHRoZW4gKHMpaGUnbGwKPj4gwqA+PiDCoD4gYmUgYWJsZSB0byBtYWtlIHRoYXQgdS1ib290
+IGNhbGwuCj4+IMKgPj4KPj4gwqA+PiDCoE5vdyAocyloZSBkbyBub3QgbmVlZCBzb2xkZXJpbmcu
+Cj4+IMKgPj4KPj4gwqA+PiDCoChTKWhlIG5lZWRzIG9ubHkgcGF5aW5nICQxLjk5IG1vcmUgdG8g
+WHVubG9uZyB0byBnZXQgdGhlIGV4cGFuc2lvbgo+PiDCoD4+IMKgYm9hcmQsIGFuZCBpbnNlcnQg
+aXQgb24gdGhlIE9QaSBaZXJvLgo+PiDCoD4KPj4gwqA+IFdoaWNoIGlzIGdvaW5nIHRvIHJlcXVp
+cmUgYW4gb3ZlcmxheSBhbnl3YXksIHNvIHdlIGNvdWxkIGhhdmUgdGhlIFVTQgo+PiDCoD4gYml0
+cyBpbiB0aGVyZSB0b28uCj4+Cj4+IMKgSWYgc28sIEkgdGhpbmsgdGhlIFtQQVRDSCAtbmV4dCB2
+MyAyLzJdIGlzIHJlYWR5IHRvIGJlIG1lcmdlZCA7LSkKPgo+IEkgbWVhbnQgZW5hYmxpbmcgdGhl
+IFVTQiBpbiB0aGUgb3ZlcmxheSwgeW91IGVuYWJsZWQgaXQgaW4gdGhlIGJhc2UgRFQuCgpJIGVu
+YWJsZWQgb25seSB1c2IxIGluIHRoZSBiYXNlIERULgoKVGhlIFVTQnMgb24gdGhlIGV4cGFuc2lv
+biBib2FyZCBpcyB1c2IyLzMsIGFuZCB1c2IxIGlzIGFuIG9uYm9hcmQgVVNCIGNvbm5lY3Rvci4K
+Ckl0IHNob3VsZCBvZiBjb3Vyc2UgYmUgZW5hYmxlZCA7LSkKCkFuZCB0byBtZW50aW9uOiB0aGlz
+IHVzYidzIFZidXMgaXMgYWxzbyBkaXJlY3RseSBjb25uZWN0ZWQgdG8gRENJTi4KCihUaGVyZSdz
+IG5vIHJlZ3VsYXRvciBhdCA1LjBWIG9uIG9yYW5nZSBwaSBaZXJvKQoKPgo+IE1heGltZQo+Cj4g
+LS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVkZGVkIExpbnV4IGFuZCBL
+ZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
