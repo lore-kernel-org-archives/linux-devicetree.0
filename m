@@ -1,142 +1,106 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v6 4/9] dt-bindings: iio: iio-mux: document iio-mux
- bindings
-Date: Tue, 6 Dec 2016 10:18:53 +0100
-Message-ID: <ea58cfe1-88ed-f215-59df-e9ffba485eaa@axentia.se>
-References: <1480493823-21462-1-git-send-email-peda@axentia.se>
- <1480493823-21462-5-git-send-email-peda@axentia.se>
- <20161205232624.5wjvmchd6jxd24ir@rob-hp-laptop>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 7/7] ARM: dts: stm32: add stm32 general purpose timer
+ driver in DT
+Date: Tue, 6 Dec 2016 10:56:13 +0100
+Message-ID: <8f881cf7-ba63-315f-b852-71869ad480f3@st.com>
+References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
+ <1480673842-20804-8-git-send-email-benjamin.gaignard@st.com>
+ <20161202132251.GL2683@dell> <e15186cb-a93e-c2e7-13bb-6704be5e8949@st.com>
+ <20161206094835.GB25385@dell.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161205232624.5wjvmchd6jxd24ir@rob-hp-laptop>
+In-Reply-To: <20161206094835.GB25385-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-12-06 00:26, Rob Herring wrote:
-> On Wed, Nov 30, 2016 at 09:16:58AM +0100, Peter Rosin wrote:
->> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> ---
->>  .../bindings/iio/multiplexer/iio-mux.txt           | 40 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  6 ++++
->>  2 files changed, 46 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> 
-> I'm still not convinced about this binding, but don't really have more 
-> comments ATM. Sending 6 versions in 2 weeks or so doesn't really help 
-> either.
+Hi Lee,
 
-Sorry about the noise, I'll try to be more careful going forward. On
-the flip side, I haven't touched the code since v6.
+On 12/06/2016 10:48 AM, Lee Jones wrote:
+> On Mon, 05 Dec 2016, Alexandre Torgue wrote:
+>> On 12/02/2016 02:22 PM, Lee Jones wrote:
+>>> On Fri, 02 Dec 2016, Benjamin Gaignard wrote:
+>>>
+>>>> Add general purpose timers and it sub-nodes into DT for stm32f4.
+>>>> Define and enable pwm1 and pwm3 for stm32f469 discovery board
+>>>>
+>>>> version 3:
+>>>> - use "st,stm32-timer-trigger" in DT
+>>>>
+>>>> version 2:
+>>>> - use parameters to describe hardware capabilities
+>>>> - do not use references for pwm and iio timer subnodes
+>>>>
+>>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/stm32f429.dtsi      | 333 +++++++++++++++++++++++++++++++++-
+>>>>  arch/arm/boot/dts/stm32f469-disco.dts |  28 +++
+>>>>  2 files changed, 360 insertions(+), 1 deletion(-)
+>
+> [...]
+>
+> If you're only commenting on a little piece of the patch, it's always
+> a good idea to trim the rest.
+>
+>>>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> index 8a163d7..df4ca7e 100644
+>>>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> @@ -81,3 +81,31 @@
+>>>>  &usart3 {
+>>>>  	status = "okay";
+>>>>  };
+>>>> +
+>>>> +&gptimer1 {
+>>>> +	status = "okay";
+>>>> +
+>>>> +	pwm1@0 {
+>>>> +		pinctrl-0	= <&pwm1_pins>;
+>>>> +		pinctrl-names	= "default";
+>>>> +		status = "okay";
+>>>> +	};
+>>>> +
+>>>> +	timer1@0 {
+>>>> +		status = "okay";
+>>>> +	};
+>>>> +};
+>>>
+>>> This is a much *better* format than before.
+>>>
+>>> I still don't like the '&' syntax though.
+>>
+>> Please keep "&" format to match with existing nodes.
+>
+> Right.  I wasn't suggesting that he differs from the current format in
+> *this* set.  I am suggesting that we change the format in a subsequent
+> set though.
 
-I don't see how bindings that are as flexible as the current (and
-original) phandle link between the mux consumer and the mux controller
-would look, and at the same time be simpler to understand. You need
-to be able to refer to a mux controller from several mux consumers, and
-you need to support several mux controllers in one node (the ADG792A
-case). And, AFAICT, the complex case wasn't really the problem, it was
-that it is overly complex to describe the simple case of one mux
-consumer and one mux controller. But in your comment for v2 [1] you
-said that I was working around limitations with shared GPIO pins. But
-solving that in the GPIO subsystem would not solve all that the
-phandle approach is solving, since you would not have support for
-ADG792A (or other non-GPIO controlled muxes). So, I think listing
-the gpio pins inside the mux consumer node is a non-starter, the mux
-controller has to live in its own node with its own compatible.
+Why change? Looking at Linux ARM kernel patchwork, new DT board file 
+contains this format. Did you already discuss with Arnd or Olof about it 
+?
 
-Would you be happier if I managed to marry the phandle approach with
-the option of having the mux controller as a child node of the mux
-consumer for the simple case?
+regards
+Alex
 
-I added an example at the end of this message (the same as the first
-example in v4 [2], at least in principle) for easy comparison between
-the phandle and the controller-in-child-node approaches. I can't say
-that I personally find the difference all that significant, and do not
-think it is worth it. As I see it, the "simple option" would just muddy
-the waters...
-
-[1] http://marc.info/?l=linux-kernel&m=147948334204795&w=2
-[2] http://marc.info/?l=linux-kernel&m=148001364904240&w=2
-
->> diff --git a/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
->> new file mode 100644
->> index 000000000000..8080cf790d82
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
->> @@ -0,0 +1,40 @@
->> +IIO multiplexer bindings
->> +
->> +If a multiplexer is used to select which hardware signal is fed to
->> +e.g. an ADC channel, these bindings describe that situation.
->> +
->> +Required properties:
->> +- compatible : "iio-mux"
-> 
-> This is a Linuxism. perhaps "adc-mux".
-
-No, that's not general enough, it could just as well be used to mux a
-temperature sensor. Or whatever. Hmmm, given that "iio-mux" is bad, perhaps
-"io-channel-mux" is better? That matches the io-channels property used to
-refer to the parent channel.
-
->> +- io-channels : Channel node of the parent channel that has multiplexed
->> +		input.
->> +- io-channel-names : Should be "parent".
->> +- #address-cells = <1>;
->> +- #size-cells = <0>;
->> +- mux-controls : Mux controller node to use for operating the mux
->> +- channels : List of strings, labeling the mux controller states.
->> +
->> +The multiplexer state as described in ../misc/mux-controller.txt
->> +
->> +For each non-empty string in the channels property, an iio channel will
->> +be created. The number of this iio channel is the same as the index into
->> +the list of strings in the channels property, and also matches the mux
->> +controller state.
->> +
->> +Example:
->> +	mux: mux-controller {
->> +		compatible = "mux-gpio";
->> +		#mux-control-cells = <0>;
->> +
->> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
->> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	adc-mux {
->> +		compatible = "iio-mux";
->> +		io-channels = <&adc 0>;
->> +		io-channel-names = "parent";
->> +
->> +		mux-controls = <&mux>;
->> +
->> +		channels = "sync", "in", system-regulator";
->> +	};
-
-Describing the same as above, but with the mux controller as a child
-node.
-
-	adc-mux {
-		compatible = "iio-mux";
-		io-channels = <&adc 0>;
-		io-channel-names = "parent";
-
-		channels = "sync", "in", system-regulator";
-
-		mux-controller {
-			compatible = "mux-gpio";
-
-			mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-				    <&pioA 1 GPIO_ACTIVE_HIGH>;
-		};
-	};
-
-Cheers,
-Peter
-
+>
+>>>> +&gptimer3 {
+>>>> +	status = "okay";
+>>>> +
+>>>> +	pwm3@0 {
+>>>> +		pinctrl-0	= <&pwm3_pins>;
+>>>> +		pinctrl-names	= "default";
+>>>> +		status = "okay";
+>>>> +	};
+>>>> +
+>>>> +	timer3@0 {
+>>>> +		status = "okay";
+>>>> +	};
+>>>> +};
+>>>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
