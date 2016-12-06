@@ -1,23 +1,177 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 0/3] ARM: dts: imx6: Support Poslab Savageboard dual & quad
-Date: Tue, 6 Dec 2016 10:17:02 -0200
-Message-ID: <CAOMZO5CemQau5-SfWH5u15BtE-QUZH4y3H_nneq2xG_-DjSVqw@mail.gmail.com>
-References: <20161206070829.24098-1-woogyom.kim@gmail.com> <CAOMZO5APWxuRmo5=QgNskxtmU-UN-P1pR1kFMZkHFMb2BPrJBQ@mail.gmail.com>
- <f4e2d926-3f91-c751-67f3-b495dc0f0ba4@gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v3] arm: dts: zynq: Add MicroZed board support
+Date: Tue, 6 Dec 2016 13:19:08 +0100
+Message-ID: <6d9ea52c-e486-7dbf-2ee8-5e0cafa665a6@xilinx.com>
+References: <1474624113-22825-1-git-send-email-jagan@amarulasolutions.com>
+ <f0c33080-0811-a515-f897-e7f851b13b5e@xilinx.com>
+ <CAD6G_RQuJTaXsuHLCGBZMekaGXOc7pzdi7pkoZ0gNq2LWU9ptA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f4e2d926-3f91-c751-67f3-b495dc0f0ba4@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD6G_RQuJTaXsuHLCGBZMekaGXOc7pzdi7pkoZ0gNq2LWU9ptA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jagan Teki <jagan@openedev.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: Jagan Teki <jteki@openedev.com>, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 6, 2016 at 8:25 AM, Milo Kim <woogyom.kim@gmail.com> wrote:
->
-> Oh, I didn't notice because I build the dtbs manually.
-> Thanks for catching this.
->
-> And do you think other patches look OK?
+On 5.12.2016 17:28, Jagan Teki wrote:
+> On Mon, Sep 26, 2016 at 8:22 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>> On 23.9.2016 11:48, Jagan Teki wrote:
+>>> From: Jagan Teki <jteki@openedev.com>
+>>>
+>>> Added basic dts support for MicroZed board.
+>>>
+>>> - UART
+>>> - SDHCI
+>>> - Ethernet
+>>>
+>>> Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>>> Cc: Michal Simek <michal.simek@xilinx.com>
+>>> Signed-off-by: Jagan Teki <jteki@openedev.com>
+>>> ---
+>>> Changes for v3:
+>>>       - Add Xilinx copyright
+>>> Changes for v2:
+>>>       - Add SDHCI
+>>>       - Add Ethernet
+>>>
+>>>  arch/arm/boot/dts/Makefile          |  1 +
+>>>  arch/arm/boot/dts/zynq-microzed.dts | 96 +++++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 97 insertions(+)
+>>>  create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index faacd52..4d7b858 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -862,6 +862,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
+>>>       wm8750-apc8750.dtb \
+>>>       wm8850-w70v2.dtb
+>>>  dtb-$(CONFIG_ARCH_ZYNQ) += \
+>>> +     zynq-microzed.dtb \
+>>>       zynq-parallella.dtb \
+>>>       zynq-zc702.dtb \
+>>>       zynq-zc706.dtb \
+>>> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
+>>> new file mode 100644
+>>> index 0000000..b9376a4
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/zynq-microzed.dts
+>>> @@ -0,0 +1,96 @@
+>>> +/*
+>>> + * Copyright (C) 2011 - 2014 Xilinx
+>>> + * Copyright (C) 2016 Jagan Teki <jteki@openedev.com>
+>>> + *
+>>> + * This software is licensed under the terms of the GNU General Public
+>>> + * License version 2, as published by the Free Software Foundation, and
+>>> + * may be copied, distributed, and modified under those terms.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + */
+>>> +/dts-v1/;
+>>> +/include/ "zynq-7000.dtsi"
+>>> +
+>>> +/ {
+>>> +     model = "Zynq MicroZED Development Board";
+>>> +     compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
+>>> +
+>>> +     aliases {
+>>> +             ethernet0 = &gem0;
+>>> +             serial0 = &uart1;
+>>> +     };
+>>> +
+>>> +     memory {
+>>> +             device_type = "memory";
+>>> +             reg = <0x0 0x40000000>;
+>>> +     };
+>>> +
+>>> +     chosen {
+>>> +             bootargs = "earlycon";
+>>> +             stdout-path = "serial0:115200n8";
+>>> +     };
+>>> +
+>>> +     usb_phy0: phy0 {
+>>> +             compatible = "usb-nop-xceiv";
+>>> +             #phy-cells = <0>;
+>>> +     };
+>>> +};
+>>> +
+>>> +&clkc {
+>>> +     ps-clk-frequency = <33333333>;
+>>> +};
+>>> +
+>>> +&gem0 {
+>>> +     status = "okay";
+>>> +     phy-mode = "rgmii-id";
+>>> +     phy-handle = <&ethernet_phy>;
+>>> +
+>>> +     ethernet_phy: ethernet-phy@0 {
+>>> +             reg = <0>;
+>>> +     };
+>>> +};
+>>> +
+>>> +&sdhci0 {
+>>> +     status = "okay";
+>>> +};
+>>> +
+>>> +&uart1 {
+>>> +     status = "okay";
+>>> +};
+>>> +
+>>> +&usb0 {
+>>> +     status = "okay";
+>>> +     dr_mode = "host";
+>>> +     usb-phy = <&usb_phy0>;
+>>> +     pinctrl-names = "default";
+>>> +     pinctrl-0 = <&pinctrl_usb0_default>;
+>>> +};
+>>> +
+>>> +&pinctrl0 {
+>>> +     pinctrl_usb0_default: usb0-default {
+>>> +             mux {
+>>> +                     groups = "usb0_0_grp";
+>>> +                     function = "usb0";
+>>> +             };
+>>> +
+>>> +             conf {
+>>> +                     groups = "usb0_0_grp";
+>>> +                     slew-rate = <0>;
+>>> +                     io-standard = <1>;
+>>> +             };
+>>> +
+>>> +             conf-rx {
+>>> +                     pins = "MIO29", "MIO31", "MIO36";
+>>> +                     bias-high-impedance;
+>>> +             };
+>>> +
+>>> +             conf-tx {
+>>> +                     pins = "MIO28", "MIO30", "MIO32", "MIO33", "MIO34",
+>>> +                            "MIO35", "MIO37", "MIO38", "MIO39";
+>>> +                     bias-disable;
+>>> +             };
+>>> +     };
+>>> +};
+>>>
+>>
+>> Applied.
+> 
+> Was it missed? I couldn't see it on the source for a while. any help?
 
-Yes, they look good for me.
+Thanks for reminder. I have that patch in one branch (was in different)
+
+https://github.com/Xilinx/linux-xlnx/commits/zynq/dt
+
+Thanks,
+Michal
