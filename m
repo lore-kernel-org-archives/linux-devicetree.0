@@ -1,86 +1,157 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
- board
-Date: Tue, 06 Dec 2016 23:16:44 +0800
-Message-ID: <289751481037404@web27m.yandex.ru>
-References: <20161205120021.0GBGtAl4@smtp3m.mail.yandex.net>
- <20161205094023.mtymfvpmca4x3ohh@lukather>
- <17819681480935706@web24g.yandex.ru>
- <20161206080056.23jpd4e7eeuhuyiq@lukather>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v4 6/7] IIO: add STM32 timer trigger driver
+Date: Tue, 6 Dec 2016 16:19:56 +0100
+Message-ID: <CA+M3ks6fxCucmaY0OgpMb_opA=YLrowijJ0YQ+imeprhWg6N_w@mail.gmail.com>
+References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
+ <1481027929-13704-7-git-send-email-benjamin.gaignard@st.com> <20161206131635.GJ25385@dell.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161206080056.23jpd4e7eeuhuyiq@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, =?utf-8?B?QW5kcsOpIFByenl3YXJh?= <andre.przywara@arm.com>, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "\"linux-arm-kernel@lists.infradead.org\"" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161206131635.GJ25385@dell.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, alexandre.torgue@st.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-CgowNi4xMi4yMDE2LCAxNjowMSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gTW9uLCBEZWMgMDUsIDIwMTYgYXQgMDc6MDE6NDZQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAwNS4xMi4yMDE2LCAxNzo0MCwgIk1heGltZSBS
-aXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT46Cj4+IMKgPiBPbiBNb24s
-IERlYyAwNSwgMjAxNiBhdCAwNDo1OTo0NFBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
-PiDCoD4+IMKgMjAxNuW5tDEy5pyINeaXpSAxNjo1MuS6jiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUu
-cmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT7lhpnpgZPvvJoKPj4gwqA+PiDCoD4KPj4gwqA+PiDC
-oD4gT24gRnJpLCBEZWMgMDIsIDIwMTYgYXQgMTA6MjI6MzBQTSArMDgwMCwgSWNlbm93eSBaaGVu
-ZyB3cm90ZToKPj4gwqA+PiDCoD4gPgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4gMDEuMTIu
-MjAxNiwgMTc6MzYsICJNYXhpbWUgUmlwYXJkIiA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9u
-cy5jb20+Ogo+PiDCoD4+IMKgPiA+ID4gT24gTW9uLCBOb3YgMjgsIDIwMTYgYXQgMTI6Mjk6MDdB
-TSArMDAwMCwgQW5kcsOpIFByenl3YXJhIHdyb3RlOgo+PiDCoD4+IMKgPiA+ID4+IMKgPiBTb21l
-dGhpbmcgbW9yZSBpbnRlcmVzdGluZyBoYXBwZW5lZC4KPj4gwqA+PiDCoD4gPiA+PiDCoD4KPj4g
-wqA+PiDCoD4gPiA+PiDCoD4gWHVubG9uZyBtYWRlIGEgYWRkLW9uIGJvYXJkIGZvciBPcmFuZ2Ug
-UGkgWmVybywgd2hpY2ggZXhwb3NlcyB0aGUKPj4gwqA+PiDCoD4gPiA+PiDCoD4gdHdvIFVTQiBD
-b250cm9sbGVycyBleHBvcnRlZCBhdCBleHBhbnNpb24gYnVzIGFzIFVTQiBUeXBlLUEKPj4gwqA+
-PiDCoD4gPiA+PiDCoD4gY29ubmVjdG9ycy4KPj4gwqA+PiDCoD4gPiA+PiDCoD4KPj4gwqA+PiDC
-oD4gPiA+PiDCoD4gQWxzbyBpdCBleHBvc2VzIGEgYW5hbG9nIEEvViBqYWNrIGFuZCBhIG1pY3Jv
-cGhvbmUuCj4+IMKgPj4gwqA+ID4gPj4gwqA+Cj4+IMKgPj4gwqA+ID4gPj4gwqA+IFNob3VsZCBJ
-IGVuYWJsZSB7ZSxvfWhjaXsyLjN9IGluIHRoZSBkZXZpY2UgdHJlZT8KPj4gwqA+PiDCoD4gPiA+
-Pgo+PiDCoD4+IMKgPiA+ID4+IMKgQWN0dWFsbHkgd2Ugc2hvdWxkIGRvIHRoaXMgcmVnYXJkbGVz
-cyBvZiB0aGlzIGV4dGVuc2lvbiBib2FyZC4gVGhlIFVTQgo+PiDCoD4+IMKgPiA+ID4+IMKgcGlu
-cyBhcmUgbm90IG11bHRpcGxleGVkIGFuZCBhcmUgZXhwb3NlZCBvbiB1c2VyIGFjY2Vzc2libGUg
-cGlucyAoanVzdAo+PiDCoD4+IMKgPiA+ID4+IMKgbm90IHNvbGRlcmVkLCBidXQgdGhhdCdzIGEg
-ZGV0YWlsKSwgc28gSSB0aGluayB0aGV5IHF1YWxpZnkgZm9yIERUCj4+IMKgPj4gwqA+ID4gPj4g
-wqBlbmFibGVtZW50LiBBbmQgZXZlbiBpZiBhIHVzZXIgY2FuJ3QgdXNlIHRoZW0sIGl0IGRvZXNu
-J3QgaHVydCB0byBoYXZlCj4+IMKgPj4gwqA+ID4gPj4gwqB0aGVtIChzaW5jZSB0aGV5IGFyZSBu
-b3QgbXVsdGlwbGV4ZWQpLgo+PiDCoD4+IMKgPiA+ID4KPj4gwqA+PiDCoD4gPiA+IE15IG1haW4g
-Y29uY2VybiBhYm91dCB0aGlzIGlzIHRoYXQgd2UnbGwgbGVhdmUgcmVndWxhdG9ycyBlbmFibGVk
-IGJ5Cj4+IMKgPj4gwqA+ID4gPiBkZWZhdWx0LCBmb3IgYSBtaW5vcml0eSBvZiB1c2Vycy4gQW5k
-IHRoYXQgbWlub3JpdHkgd2lsbCBwcmV2ZW50IHRvIGRvCj4+IMKgPj4gwqA+ID4gPiBhIHByb3Bl
-ciBwb3dlciBtYW5hZ2VtZW50IHdoZW4gdGhlIHRpbWVzIGNvbWUgc2luY2Ugd2UnbGwgaGF2ZSB0
-byBrZWVwCj4+IMKgPj4gwqA+ID4gPiB0aGF0IGJlaGF2aW91ciBmb3JldmVyLgo+PiDCoD4+IMKg
-PiA+Cj4+IMKgPj4gwqA+ID4gSSB0aGluayB0aGVzZSB1c2VycyBjYW4gYWRkIGEgJ2ZkdCBzZXQg
-L3h4eC94eHggc3RhdHVzICJkaXNhYmxlZCIgJyAuCj4+IMKgPj4gwqA+Cj4+IMKgPj4gwqA+IFlv
-dSBjYW4ndCBhc2sgdGhhdCBmcm9tIHRoZSBtYWpvcml0eSBvZiB1c2Vycy4gVGhlc2UgdXNlcnMg
-d2lsbCB0YWtlCj4+IMKgPj4gwqA+IGRlYmlhbiBvciBmZWRvcmEsIGluc3RhbGwgaXQsIGFuZCBl
-eHBlY3QgZXZlcnl0aGluZyB0byB3b3JrCj4+IMKgPj4gwqA+IHByb3Blcmx5LiBJIHdvdWxkIG1h
-a2UgdGhlIG9wcG9zaXRlIGFyZ3VtZW50IGFjdHVhbGx5LiBJZiBzb21lb25lIGlzCj4+IMKgPj4g
-wqA+IGtub3dsZWRnZWFibGUgZW5vdWdoIHRvIHNvbGRlciB0aGUgVVNCIHBpbnMgYSBjb25uZWN0
-b3IsIHRoZW4gKHMpaGUnbGwKPj4gwqA+PiDCoD4gYmUgYWJsZSB0byBtYWtlIHRoYXQgdS1ib290
-IGNhbGwuCj4+IMKgPj4KPj4gwqA+PiDCoE5vdyAocyloZSBkbyBub3QgbmVlZCBzb2xkZXJpbmcu
-Cj4+IMKgPj4KPj4gwqA+PiDCoChTKWhlIG5lZWRzIG9ubHkgcGF5aW5nICQxLjk5IG1vcmUgdG8g
-WHVubG9uZyB0byBnZXQgdGhlIGV4cGFuc2lvbgo+PiDCoD4+IMKgYm9hcmQsIGFuZCBpbnNlcnQg
-aXQgb24gdGhlIE9QaSBaZXJvLgo+PiDCoD4KPj4gwqA+IFdoaWNoIGlzIGdvaW5nIHRvIHJlcXVp
-cmUgYW4gb3ZlcmxheSBhbnl3YXksIHNvIHdlIGNvdWxkIGhhdmUgdGhlIFVTQgo+PiDCoD4gYml0
-cyBpbiB0aGVyZSB0b28uCj4+Cj4+IMKgSWYgc28sIEkgdGhpbmsgdGhlIFtQQVRDSCAtbmV4dCB2
-MyAyLzJdIGlzIHJlYWR5IHRvIGJlIG1lcmdlZCA7LSkKPgo+IEkgbWVhbnQgZW5hYmxpbmcgdGhl
-IFVTQiBpbiB0aGUgb3ZlcmxheSwgeW91IGVuYWJsZWQgaXQgaW4gdGhlIGJhc2UgRFQuCgpJIGVu
-YWJsZWQgb25seSB1c2IxIGluIHRoZSBiYXNlIERULgoKVGhlIFVTQnMgb24gdGhlIGV4cGFuc2lv
-biBib2FyZCBpcyB1c2IyLzMsIGFuZCB1c2IxIGlzIGFuIG9uYm9hcmQgVVNCIGNvbm5lY3Rvci4K
-Ckl0IHNob3VsZCBvZiBjb3Vyc2UgYmUgZW5hYmxlZCA7LSkKCkFuZCB0byBtZW50aW9uOiB0aGlz
-IHVzYidzIFZidXMgaXMgYWxzbyBkaXJlY3RseSBjb25uZWN0ZWQgdG8gRENJTi4KCihUaGVyZSdz
-IG5vIHJlZ3VsYXRvciBhdCA1LjBWIG9uIG9yYW5nZSBwaSBaZXJvKQoKPgo+IE1heGltZQo+Cj4g
-LS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVkZGVkIExpbnV4IGFuZCBL
-ZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+[snip]
+>> +
+>> +static const char * const triggers0[] =3D {
+>> +     TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,
+>> +};
+>> +
+>> +static const char * const triggers1[] =3D {
+>> +     TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,
+>> +};
+>> +
+>> +static const char * const triggers2[] =3D {
+>> +     TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,
+>> +};
+>> +
+>> +static const char * const triggers3[] =3D {
+>> +     TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,
+>> +};
+>> +
+>> +static const char * const triggers4[] =3D {
+>> +     TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,
+>> +};
+>> +
+>> +static const char * const triggers5[] =3D {
+>> +     TIM6_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const triggers6[] =3D {
+>> +     TIM7_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const triggers7[] =3D {
+>> +     TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,
+>> +};
+>> +
+>> +static const char * const triggers8[] =3D {
+>> +     TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,
+>> +};
+>> +
+>> +static const char * const triggers9[] =3D {
+>> +     TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,
+>> +};
+>> +
+>> +static const void *triggers_table[] =3D {
+>> +     triggers0,
+>> +     triggers1,
+>> +     triggers2,
+>> +     triggers3,
+>> +     triggers4,
+>> +     triggers5,
+>> +     triggers6,
+>> +     triggers7,
+>> +     triggers8,
+>> +     triggers9,
+>> +};
+>
+> What about:
+>
+> static const char * const triggers[][] =3D {
+>         { TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL },
+>         { TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL },
+>         { TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL },
+>         { TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL },
+>         { TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL },
+>         { TIM6_TRGO, NULL },
+>         { TIM7_TRGO, NULL },
+>         { TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL },
+>         { TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL },
+>         { TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL }
+> };
+
+I can't because the second dimension of the array isn't fix.
+I could have between 2 and 6 elements per row... to create a dual dimension
+array I would have to add NULL entries like that:
+
+#define MAX_TRIGGERS 6
+
+static const void *triggers_table[][MAX_TRIGGERS] =3D {
+{ TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,},
+{ TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,},
+{ TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,},
+{ TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,},
+{ TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,},
+{ TIM6_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
+{ TIM7_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
+{ TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,},
+{ TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,     NULL,     NULL,},
+{ TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,  NULL,     NULL,},
+};
+
+>> +static const char * const valids0[] =3D {
+>> +     TIM5_TRGO, TIM2_TRGO, TIM4_TRGO, TIM3_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const valids1[] =3D {
+>> +     TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const valids2[] =3D {
+>> +     TIM1_TRGO, TIM8_TRGO, TIM5_TRGO, TIM4_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const valids3[] =3D {
+>> +     TIM1_TRGO, TIM2_TRGO, TIM3_TRGO, TIM8_TRGO, NULL,
+>> +};
+>> +
+>> +static const char *const valids4[] =3D {
+>> +     TIM2_TRGO, TIM3_TRGO, TIM4_TRGO, TIM8_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const valids7[] =3D {
+>> +     TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const valids8[] =3D {
+>> +     TIM2_TRGO, TIM3_TRGO, NULL,
+>> +};
+>> +
+>> +static const char * const valids9[] =3D {
+>> +     TIM4_TRGO, TIM5_TRGO, NULL,
+>> +};
+>> +
+>> +static const void *valids_table[] =3D {
+>> +     valids0,
+>> +     valids1,
+>> +     valids2,
+>> +     valids3,
+>> +     valids4,
+>> +     NULL,
+>> +     NULL,
+>> +     valids7,
+>> +     valids8,
+>> +     valids9,
+>> +};
+>
+> Same here.
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
