@@ -1,64 +1,42 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V7 00/10] PM / OPP: Multiple regulator support
-Date: Tue, 6 Dec 2016 02:34:35 +0100
-Message-ID: <CAJZ5v0gykH+UwMvgU3SCVgxg9Ufe23zQ1o9bEvnjtafVqjLa8Q@mail.gmail.com>
-References: <cover.1480564564.git.viresh.kumar@linaro.org> <CAKohpokXXhcrhzqs+iW+1kTYjyF47bHF0TupMxP=4cSqXOThtA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 4/7] drm/vc4: Add support for the VEC (Video
+ Encoder) IP
+Date: Mon, 5 Dec 2016 17:50:13 -0800
+Message-ID: <c1b904db-be3d-1e83-37bc-1f750ecfe224@gmail.com>
+References: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1480686493-4813-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKohpokXXhcrhzqs+iW+1kTYjyF47bHF0TupMxP=4cSqXOThtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1480686493-4813-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Lists linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 5, 2016 at 3:21 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 1 December 2016 at 16:28, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi,
->>
->> Some platforms (like TI) have complex DVFS configuration for CPU
->> devices, where multiple regulators are required to be configured to
->> change DVFS state of the device. This was explained well by Nishanth
->> earlier [1].
->>
->> One of the major complaints around multiple regulators case was that the
->> DT isn't responsible in any way to represent the order in which multiple
->> supplies need to be programmed, before or after a frequency change. It
->> was considered in this patch and such information is left for the
->> platform specific OPP driver now, which can register its own
->> opp_set_rate() callback with the OPP core and the OPP core will then
->> call it during DVFS.
->>
->> The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
->> and code to pass values for multiple regulators and verified that they
->> are all properly read by the kernel (using debugfs interface).
->>
->> Dave Gerlach has already tested [2] it on the real TI platforms and it
->> works well for him.
->>
->> This is rebased over: linux-next branch in the PM tree.
->>
->> V6->V7:
->> - Added RBY from Stephen for the 8th patch as well.
->> - Rebased over pm/bleeding-edge as the dependency patch is already
->>   applied there.
->> - s/dev_pm_opp_set_regulator()/dev_pm_opp_set_regulators() in a comment.
->> - Removed the local 'names' array in cpufreq-dt and used "&name"
->>   instead.
->> - Only the 6th patch doesn't have a Reviewed-by Tag now..
->
-> Hi Rafael,
->
-> V6 of this series received some minor comments [1] and I have
-> resolved them all here. Now that the merge window is so close,
-> I think we should be merge it now so that it gets a chance to live
-> in linux-next for few days.
+On 12/02/2016 05:48 AM, Boris Brezillon wrote:
+> The VEC IP is a TV DAC, providing support for PAL and NTSC standards.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
 
-I've queued them up, but I'd feel more comfortable with an ACK or
-Reviewed-by on patch [6/10] too.
+> diff --git a/drivers/gpu/drm/vc4/vc4_vec.c b/drivers/gpu/drm/vc4/vc4_vec.c
+> new file mode 100644
+> index 000000000000..2d4256fcc6f2
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vc4/vc4_vec.c
+> @@ -0,0 +1,657 @@
+> +/*
+> + * Copyright (C) 2016 Broadcom Limited
 
-Thanks,
-Rafael
+The standard copyright template post acquisition is just Broadcom, not
+Broadcom Limited, nor Broadcom corporation. Can you audit your entire
+submission and fix this up accordingly?
+
+Thanks!
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
