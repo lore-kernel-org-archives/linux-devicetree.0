@@ -1,63 +1,98 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
-Date: Wed, 7 Dec 2016 20:17:15 +0100
-Message-ID: <20161207191715.63i3exilseqasak5@piout.net>
-References: <1480860279-4570-1-git-send-email-akinobu.mita@gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [RESEND PATCH v2 4/7] drm/vc4: Add support for the VEC (Video
+ Encoder) IP
+Date: Wed, 07 Dec 2016 11:18:19 -0800
+Message-ID: <87inqvblac.fsf@eliezer.anholt.net>
+References: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1480686493-4813-5-git-send-email-boris.brezillon@free-electrons.com>
+ <c1b904db-be3d-1e83-37bc-1f750ecfe224@gmail.com>
+ <20161207161205.485a3046@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBPOAUHBAKGQEBWGU3YQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1480860279-4570-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0730851481=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161207161205.485a3046@bbrezillon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2016 at 23:04:39 +0900, Akinobu Mita wrote :
-> This adds support for EPSON TOYOCOM RTC-7301SF/DG which has parallel
-> interface compatible with SRAM.
-> 
-> This driver supports basic clock, calendar and alarm functionality.
-> 
-> Tested with Microblaze linux running on Artix7 FPGA board with my own
-> custom IP for RTC-7301.
-> 
-> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> * Changes from v2
-> - Convert enum to usual #defines
-> 
->  .../devicetree/bindings/rtc/epson,rtc7301.txt      |  16 +
->  drivers/rtc/Kconfig                                |  11 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-r7301.c                            | 453 +++++++++++++++++++++
->  4 files changed, 481 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
->  create mode 100644 drivers/rtc/rtc-r7301.c
-> 
-Applied, thanks.
+--===============0730851481==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Boris Brezillon <boris.brezillon@free-electrons.com> writes:
+
+> On Mon, 5 Dec 2016 17:50:13 -0800
+> Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>> On 12/02/2016 05:48 AM, Boris Brezillon wrote:
+>> > The VEC IP is a TV DAC, providing support for PAL and NTSC standards.
+>> >=20
+>> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+>> > ---=20=20
+>>=20
+>> > diff --git a/drivers/gpu/drm/vc4/vc4_vec.c b/drivers/gpu/drm/vc4/vc4_v=
+ec.c
+>> > new file mode 100644
+>> > index 000000000000..2d4256fcc6f2
+>> > --- /dev/null
+>> > +++ b/drivers/gpu/drm/vc4/vc4_vec.c
+>> > @@ -0,0 +1,657 @@
+>> > +/*
+>> > + * Copyright (C) 2016 Broadcom Limited=20=20
+>>=20
+>> The standard copyright template post acquisition is just Broadcom, not
+>> Broadcom Limited, nor Broadcom corporation. Can you audit your entire
+>> submission and fix this up accordingly?
+>
+> This is the only patch adding a copyright header.
+> Eric, can you fix that when applying the series or should I resend a
+> new version?
+
+I'll fix it when applying, that's fine.  (I had in v1 and forgot to tell
+you!)
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlhIYHsACgkQtdYpNtH8
+nuimHRAAjjWGsq7S1LElb6gZv2VThi3J9ig7BtH1e5cESwAK5J5HLi69pbSCOS1o
+4InOfEfamGFXEka66k+kQb+fO51c74txarqq34NIFnEilrPqZTnat+PgxyKZ00TI
+3SqtTNkDJ1q11Twq5CVH1AHPW217vbvpaeydYXZs/z9zzUbuSGpCeXX/umM5KnCG
+bO7ZdPf/OOcaWrbXLmGEObOIQXq4eBHfS/BH9VGzw0eonfPpaADt16ostZ8u0t7V
+FD/5hfojotzGvAKgqkhzlk7477XA72RT4jEuA8b1oGfkul+rTOxslw9SrFLFEG+v
+AAJikwMG9VjYyl145SUNu5KX4FHWQ4Y5IHhgbLCroiXC4eGr9UujE5ZA6b9Y5k8j
+6c4osyyzMka9e0frCH4xzfxH6sBpi/RPqbuvHZvX6MVlu2EfxHgWGu4HNpkR2uNr
+k3vaATZJDboxwvAf2uVaWR3wdPrziPUrkaCi7VHJKWN0T1Tw75tyV6nxWShOsbfs
+39NBCHogMd3nClvWtGNYn8StodxE6eELPL5y9/49iF++GCly/WkboQxSuqX0sZPY
+JE3eCt2Lwwsd46ExgW7ajuhzEhKLOztCDh/mUilQsANZxr4zdT2QdaENuKPlnTcO
+z19Gvg+iiwE78JBvcQfUE9cDY6VdauN92fzvSmwdDvtxxgxLTEs=
+=K5Yk
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============0730851481==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0730851481==--
