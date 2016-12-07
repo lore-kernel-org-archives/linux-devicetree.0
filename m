@@ -1,12 +1,12 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] i2c: sh_mobile: List rmobile fallback compatibility last
-Date: Wed, 7 Dec 2016 13:16:58 +0100
-Message-ID: <CAMuHMdX0ONE9SR=av5SpfpTf7psUsEz+SNsSTooJJ91eFyHCSA@mail.gmail.com>
-References: <1481106689-22312-1-git-send-email-horms+renesas@verge.net.au> <1481107176-32409-1-git-send-email-horms+renesas@verge.net.au>
+Subject: Re: [PATCH 2/2] i2c: sh_mobile: Add per-Generation fallback bindings
+Date: Wed, 7 Dec 2016 13:19:54 +0100
+Message-ID: <CAMuHMdVuwr9iA0c7Pupd=gng9w1HKr0mwzD6JqT60qnTzXwpxg@mail.gmail.com>
+References: <1481106689-22312-1-git-send-email-horms+renesas@verge.net.au> <1481107193-32502-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1481107176-32409-1-git-send-email-horms+renesas@verge.net.au>
+In-Reply-To: <1481107193-32502-1-git-send-email-horms+renesas@verge.net.au>
 Sender: linux-i2c-owner@vger.kernel.org
 To: Simon Horman <horms+renesas@verge.net.au>
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
@@ -14,11 +14,10 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Dec 7, 2016 at 11:39 AM, Simon Horman
 <horms+renesas@verge.net.au> wrote:
-> Improve readability by listing the rmobile fallback compatibility string
-> after the more-specific compatibility strings they provide a fallback for.
+> Add per-Generation fallback bindings for R-Car SoCs.
 >
-> This does not effect run-time behaviour as it is the order in the DTB that
-> determines which compatibility string is used.
+> This is in keeping with the compatibility string scheme is being adopted
+> for drivers for Renesas SoCs.
 >
 > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
