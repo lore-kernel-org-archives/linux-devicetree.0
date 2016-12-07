@@ -1,106 +1,75 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 15/16] drivers/fsi: Add documentation for GPIO bindings
-Date: Wed, 7 Dec 2016 12:02:05 +0000
-Message-ID: <20161207120204.GC7054@leverpostej>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 05/16] drivers/fsi: Add fake master driver
+Date: Wed, 7 Dec 2016 12:09:05 +0000
+Message-ID: <20161207120905.GD7054@leverpostej>
 References: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
- <1481069677-53660-16-git-send-email-christopher.lee.bostic@gmail.com>
+ <1481069677-53660-6-git-send-email-christopher.lee.bostic@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481069677-53660-16-git-send-email-christopher.lee.bostic@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Bostic <christopher.lee.bostic@gmail.com>
-Cc: robh+dt@kernel.org, linux@armlinux.org.uk, gregkh@linuxfoundation.org, sre@kernel.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Bostic <cbostic@us.ibm.com>, joel@jms.id.au, jk@ozlabs.org, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+In-Reply-To: <1481069677-53660-6-git-send-email-christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 06, 2016 at 06:14:36PM -0600, Chris Bostic wrote:
-> From: Chris Bostic <cbostic@us.ibm.com>
+On Tue, Dec 06, 2016 at 06:14:26PM -0600, Chris Bostic wrote:
+> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 > 
-> Add fsi master gpio device tree binding documentation
+> For debugging, add a fake master driver, that only supports reads,
+> returning a fixed set of data.
 
-Please see Documentation/devicetree/bindings/submitting-patches.txt.
+> +config FSI_MASTER_FAKE
+> +	tristate "Fake FSI master"
+> +	depends on FSI
+> +	---help---
+> +	This option enables a fake FSI master driver for debugging.
+> +endif
 
-Specifically:
+> +static const struct of_device_id fsi_master_fake_match[] = {
+> +	{ .compatible = "ibm,fsi-master-fake" },
+> +	{ },
+> +};
 
-* Please put binding documents earlier in the series than code
-  implementing the binding.
+NAK.
 
-* Please document _all_ compatible strings used in the
-  series.
+DT should be treated as an ABI, and should describe the HW explicitly.
+This makes no sense. This is also missing a binding document.
 
-Please also write the binding documents in terms of the hardware, rather
-then the driver (e.g. introduce what the hardware is in the document,
-don't mention the driver). The bindings are there to describe the former
-to the latter, and the latter may change arbitrarily.
-
-> Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
-> ---
->  .../devicetree/bindings/fsi/fsi-master-gpio.txt     | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
-
-AFAICT, this is the first use of this directory. We should have a
-general FSI binding document in there, covering what FSI is, the
-"ibm,fsi-master" binding, etc.
-
-> new file mode 100644
-> index 0000000..ff3a62e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
-> @@ -0,0 +1,21 @@
-> +Device-tree bindings for gpio-based FSI master driver
-
-There's very little information here, so I'm not sure what to make of
-this. Can you please elaborate on the above to make it clear what this
-means?
-
-IIUC, this is an FSI controller/master that we only communicate with via
-GPIOs, right?
-
-Or is this a *virtual* master? i.e. the GPIOs themselves form the master
-and are directly connected to slaves?
-
-> +-----------------------------------------------------
-> +
-> +Required properties:
-> +	- compatible = "ibm,fsi-master-gpio";
-> +	- clk-gpios;
-> +	- data-gpios;
-
-Please give a description of what each of these are used for, how many
-are required, and what order elements must come in.
-
-> +Optional properties:
-> +	- enable-gpios;
-> +	- trans-gpios;
-> +	- mux-gpios;
-
-Likewise.
+Have your module take a module parameter allowing you to bind it to
+arbitrary devices, or do something like what PCI does where you can
+bind/unbind arbitrary drivers to devices using sysfs.
 
 > +
-> +fsi-master {
-> +	compatible = "ibm,fsi-master", "ibm,fsi-master-gpio";
+> +static struct platform_driver fsi_master_fake_driver = {
+> +	.driver = {
+> +		.name		= "fsi-master-fake",
+> +		.of_match_table	= fsi_master_fake_match,
+> +	},
+> +	.probe	= fsi_master_fake_probe,
+> +};
+> +
+> +static int __init fsi_master_fake_init(void)
+> +{
+> +	struct device_node *np;
+> +
+> +	platform_driver_register(&fsi_master_fake_driver);
+> +
+> +	for_each_compatible_node(np, NULL, "ibm,fsi-master-fake")
+> +		of_platform_device_create(np, NULL, NULL);
 
-This is backwards. The most specific string must come first.
+As a general note, please use for_each_matching_node in situations like
+this. That way you can reuse your existing of_device_id table, and not
+reproduce the string.
 
-> +	clk-gpios = <&gpio 0 &gpio 6>;
-> +	data-gpios = <&gpio 1 &gpio 7>;
-> +	enable-gpios = <&gpio 2 &gpio 8>;	/* Enable FSI data in/out */
-> +	trans-gpios = <&gpio 3 &gpio 9>;	/* Volts translator direction */
-> +	mux-gpios = <&gpio 4> &gpio 10>;	/* Multiplexer for FSI pins */
-
-If this were described above, we don't need the comment here.
-
-I note that in the patch, the mux-gpios property has an unmatched '>'
-and won't compile.
-
-As a general nit, please bracket elements of a list individually, e.g.
-
-	trans-gpios = <&gpio 3>, <&gpio 9>;
-	mux-gpios = <&gpio 4>, <&gpio 10>;
+That said, this is not necessary. The platform driver has an
+of_match_table, so presumes the parent bus registers children, and hence
+they should already have platform devices.
 
 Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
