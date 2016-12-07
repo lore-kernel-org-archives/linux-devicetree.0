@@ -1,94 +1,72 @@
-From: Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH v3 4/4] powerpc/fsl/dts: add FMan node for t1042d4rdb
-Date: Wed, 7 Dec 2016 17:14:56 +0200
-Message-ID: <1481123696-21028-4-git-send-email-madalin.bucur@nxp.com>
-References: <1481123696-21028-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: madalin.bucur@nxp.com
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Subject: [PATCH] ARM: dts: armada-{370,xp}: drop "marvell,orion-spi" from SPI controllers
+Date: Wed,  7 Dec 2016 16:21:09 +0100
+Message-ID: <20161207152109.17545-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1481123696-21028-1-git-send-email-madalin.bucur@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org
-Cc: oss@buserror.net, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- arch/powerpc/boot/dts/fsl/t1042d4rdb.dts | 52 ++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+From: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts b/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-index 2a5a90d..fcd2aeb 100644
---- a/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-@@ -48,6 +48,58 @@
- 					"fsl,deepsleep-cpld";
- 		};
- 	};
-+
-+	soc: soc@ffe000000 {
-+		fman0: fman@400000 {
-+			ethernet@e0000 {
-+				phy-handle = <&phy_sgmii_0>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e2000 {
-+				phy-handle = <&phy_sgmii_1>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e4000 {
-+				phy-handle = <&phy_sgmii_2>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e6000 {
-+				phy-handle = <&phy_rgmii_0>;
-+				phy-connection-type = "rgmii";
-+			};
-+
-+			ethernet@e8000 {
-+				phy-handle = <&phy_rgmii_1>;
-+				phy-connection-type = "rgmii";
-+			};
-+
-+			mdio0: mdio@fc000 {
-+				phy_sgmii_0: ethernet-phy@02 {
-+					reg = <0x02>;
-+				};
-+
-+				phy_sgmii_1: ethernet-phy@03 {
-+					reg = <0x03>;
-+				};
-+
-+				phy_sgmii_2: ethernet-phy@01 {
-+					reg = <0x01>;
-+				};
-+
-+				phy_rgmii_0: ethernet-phy@04 {
-+					reg = <0x04>;
-+				};
-+
-+				phy_rgmii_1: ethernet-phy@05 {
-+					reg = <0x05>;
-+				};
-+			};
-+		};
-+	};
-+
+The SPI controllers on Armada 370 and XP differ from the original Orion
+SPI controllers (at least) in the configuration of the baud rate. So
+it's wrong to claim compatibility which results in bogus baud rates.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-370.dtsi | 4 ++--
+ arch/arm/boot/dts/armada-xp.dtsi  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index b4258105e91f..b9377c11b379 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -435,13 +435,13 @@
+  * board level if a different configuration is used.
+  */
+ &spi0 {
+-	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
++	compatible = "marvell,armada-370-spi";
+ 	pinctrl-0 = <&spi0_pins1>;
+ 	pinctrl-names = "default";
  };
  
- #include "t1042si-post.dtsi"
+ &spi1 {
+-	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
++	compatible = "marvell,armada-370-spi";
+ 	pinctrl-0 = <&spi1_pins>;
+ 	pinctrl-names = "default";
+ };
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 4a5f99e65b51..3a416834d80b 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -367,13 +367,13 @@
+ };
+ 
+ &spi0 {
+-	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
++	compatible = "marvell,armada-xp-spi";
+ 	pinctrl-0 = <&spi0_pins>;
+ 	pinctrl-names = "default";
+ };
+ 
+ &spi1 {
+-	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
++	compatible = "marvell,armada-xp-spi";
+ 	pinctrl-0 = <&spi1_pins>;
+ 	pinctrl-names = "default";
+ };
 -- 
-2.1.0
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
