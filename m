@@ -1,53 +1,192 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 1/5] ARM: BCM5301X: Fix LAN LED labels for Luxul XWR-3100
-Date: Wed,  7 Dec 2016 08:56:51 +0100
-Message-ID: <20161207075655.7396-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: EXYNOS: remove smp hook from machine descriptor
+Date: Wed, 07 Dec 2016 14:00:41 +0530
+Message-ID: <1481099441-27657-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+Use CPU_METHOD_OF_DECLARE() for smp_ops instead of using it
+via machine descriptor.
 
-They were named incorrectly most likely due to copy & paste mistake.
-
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/exynos3250.dtsi      | 1 +
+ arch/arm/boot/dts/exynos4210.dtsi      | 1 +
+ arch/arm/boot/dts/exynos4212.dtsi      | 1 +
+ arch/arm/boot/dts/exynos4412.dtsi      | 1 +
+ arch/arm/boot/dts/exynos5250.dtsi      | 1 +
+ arch/arm/boot/dts/exynos5260.dtsi      | 1 +
+ arch/arm/boot/dts/exynos5410.dtsi      | 1 +
+ arch/arm/boot/dts/exynos5420-cpus.dtsi | 1 +
+ arch/arm/boot/dts/exynos5422-cpus.dtsi | 1 +
+ arch/arm/boot/dts/exynos5440.dtsi      | 1 +
+ arch/arm/mach-exynos/common.h          | 2 --
+ arch/arm/mach-exynos/exynos.c          | 1 -
+ arch/arm/mach-exynos/platsmp.c         | 2 ++
+ 13 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
-index 2f4a651..93cc91d 100644
---- a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
-+++ b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
-@@ -31,13 +31,13 @@
- 		};
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index ba17ee1..f28f669 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -53,6 +53,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
  
- 		lan3	{
--			label = "bcm53xx:green:lan1";
-+			label = "bcm53xx:green:lan3";
- 			gpios = <&chipcommon 1 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "default-off";
- 		};
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index 7f3a18c..6dfd98d 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -35,6 +35,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
  
- 		lan4	{
--			label = "bcm53xx:green:lan0";
-+			label = "bcm53xx:green:lan4";
- 			gpios = <&chipcommon 2 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "default-off";
- 		};
-@@ -49,7 +49,7 @@
- 		};
+ 		cpu0: cpu@900 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
+index 5389011..3e8982e 100644
+--- a/arch/arm/boot/dts/exynos4212.dtsi
++++ b/arch/arm/boot/dts/exynos4212.dtsi
+@@ -25,6 +25,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
  
- 		lan1	{
--			label = "bcm53xx:green:lan3";
-+			label = "bcm53xx:green:lan1";
- 			gpios = <&chipcommon 4 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "default-off";
- 		};
+ 		cpu0: cpu@A00 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 40beede..faf2fb8 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -25,6 +25,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu0: cpu@A00 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index b6d7444..580897c 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -52,6 +52,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
+index 5818718..1af6e76 100644
+--- a/arch/arm/boot/dts/exynos5260.dtsi
++++ b/arch/arm/boot/dts/exynos5260.dtsi
+@@ -32,6 +32,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+index 2b6adaf..b092cdc 100644
+--- a/arch/arm/boot/dts/exynos5410.dtsi
++++ b/arch/arm/boot/dts/exynos5410.dtsi
+@@ -33,6 +33,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+index 5c052d7..a587704 100644
+--- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+@@ -24,6 +24,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+index bf3c6f1..7fcdfd0 100644
+--- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+@@ -23,6 +23,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu0: cpu@100 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+index 2a2e570..0a958e8 100644
+--- a/arch/arm/boot/dts/exynos5440.dtsi
++++ b/arch/arm/boot/dts/exynos5440.dtsi
+@@ -50,6 +50,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "samsung,exynos-smp";
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+index fb12d11..051e1ab 100644
+--- a/arch/arm/mach-exynos/common.h
++++ b/arch/arm/mach-exynos/common.h
+@@ -143,8 +143,6 @@ static inline void exynos_pm_init(void) {}
+ extern void exynos_cpu_resume(void);
+ extern void exynos_cpu_resume_ns(void);
+ 
+-extern const struct smp_operations exynos_smp_ops;
+-
+ extern void exynos_cpu_power_down(int cpu);
+ extern void exynos_cpu_power_up(int cpu);
+ extern int  exynos_cpu_power_state(int cpu);
+diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+index fa08ef9..f0a766e 100644
+--- a/arch/arm/mach-exynos/exynos.c
++++ b/arch/arm/mach-exynos/exynos.c
+@@ -211,7 +211,6 @@ DT_MACHINE_START(EXYNOS_DT, "SAMSUNG EXYNOS (Flattened Device Tree)")
+ 	/* Maintainer: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
+ 	.l2c_aux_val	= 0x3c400001,
+ 	.l2c_aux_mask	= 0xc20fffff,
+-	.smp		= smp_ops(exynos_smp_ops),
+ 	.map_io		= exynos_init_io,
+ 	.init_early	= exynos_firmware_init,
+ 	.init_irq	= exynos_init_irq,
+diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
+index 94405c7..43eec10 100644
+--- a/arch/arm/mach-exynos/platsmp.c
++++ b/arch/arm/mach-exynos/platsmp.c
+@@ -474,3 +474,5 @@ const struct smp_operations exynos_smp_ops __initconst = {
+ 	.cpu_die		= exynos_cpu_die,
+ #endif
+ };
++
++CPU_METHOD_OF_DECLARE(exynos_smp, "samsung,exynos-smp", &exynos_smp_ops);
 -- 
-2.10.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
