@@ -1,97 +1,97 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v2 00/10] perf: arm64: Support for Hisilicon SoC Hardware event counters
-Date: Wed,  7 Dec 2016 11:53:38 -0500
-Message-ID: <1481129618-159391-1-git-send-email-anurup.m@huawei.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, arnd@arndb.de, geert+renesas@glider.be, davem@davemloft.net, akpm@linux-foundation.org, corbet@lwn.net, mark.rutland@arm.com, will.deacon@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
+From: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+Subject: Re: [PATCH net-next v2] dsa:mv88e6xxx: dispose irq mapping for
+ chip->irq
+Date: Wed, 7 Dec 2016 17:40:12 +0100
+Message-ID: <4388a669-b425-97e0-346b-6b20f7f47f86@westermo.se>
+References: <1481106907-30908-1-git-send-email-volodymyr.bendiuga@westermo.se>
+ <20161207141144.GJ18817@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161207141144.GJ18817-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, volodymyr.bendiuga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Provide Support for Hisilicon SoC(HiP05/06/07) Hardware event counters.
-The Hisilicon SoC HiP0x series has many uncore or non-CPU performance
-events and counters units.
+Yes, most of the users of of_irq_get() do not use irq_dispose_mapping().
 
-This patch series is implemented refering to arm-cci, Intel/AMD uncore and
-also the cavium thunderX and xgene uncore pmu patches.
-This v2 version has addressed the review comments of v1 version.
+But some of them do (some irq chips), and I believe the correct way of 
+doing this is to
 
-Support for Hisilicon L3 cache(L3C) and Misclennaneous nodes(MN) hardware
-events and counters are added in this implementation.
+dispose irq mapping, as the description for this function says that it 
+unmaps
 
-The Hisilicon uncore PMUs can be found under /sys/bus/event_source/devices.
-The counters are exported via sysfs in the corresponding events files
-under the PMU directory so the perf tool can list the event names.
+the irq, which is mapped by of_irq_parse_and_map(). Not disposing irq 
+might not make
 
-ToDo:
-1) The counter overflow handling is currently unsupported in this
-   patch series.
-2) ACPI support.
+any affect on most drivers, but some, that get EPROBE_DEFER error do 
+need to dispose.
 
-Version history
----------------
+This is what I get when I run the code.
 
-v2
+of_irq_put() could be implemented, and it would be a wrapper for 
+irq_dispose_mapping()
+
+as I can see it. Should I do it this way?
+
+
+On 2016-12-07 15:11, Andrew Lunn wrote:
+> On Wed, Dec 07, 2016 at 11:35:07AM +0100, Volodymyr Bendiuga wrote:
+>> Signed-off-by: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+> You need some text in the Change log. Say why this change is needed,
+> etc.
+>
+> Looking through other users of of_irq_get(), i don't see any disposing
+> of the mapping. It is not obvious you need to do this. The name does
+> not give any hint.
+>
+> Maybe we should add an of_irq_put() which would clean up the mapping?
+>
+>        Andrew
+>
+>
+>> ---
+>>   drivers/net/dsa/mv88e6xxx/chip.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+>> index 173ea97..0c3271d 100644
+>> --- a/drivers/net/dsa/mv88e6xxx/chip.c
+>> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+>> @@ -4483,7 +4483,7 @@ static int mv88e6xxx_probe(struct mdio_device *mdiodev)
+>>   		mutex_unlock(&chip->reg_lock);
+>>   
+>>   		if (err)
+>> -			goto out;
+>> +			goto out_dispose;
+>>   
+>>   		if (mv88e6xxx_has(chip, MV88E6XXX_FLAG_G2_INT)) {
+>>   			err = mv88e6xxx_g2_irq_setup(chip);
+>> @@ -4513,6 +4513,9 @@ static int mv88e6xxx_probe(struct mdio_device *mdiodev)
+>>   		mv88e6xxx_g1_irq_free(chip);
+>>   		mutex_unlock(&chip->reg_lock);
+>>   	}
+>> +
+>> +out_dispose:
+>> +	irq_dispose_mapping(chip->irq);
+>>   out:
+>>   	return err;
+>>   }
+>> @@ -4530,6 +4533,7 @@ static void mv88e6xxx_remove(struct mdio_device *mdiodev)
+>>   		if (mv88e6xxx_has(chip, MV88E6XXX_FLAG_G2_INT))
+>>   			mv88e6xxx_g2_irq_free(chip);
+>>   		mv88e6xxx_g1_irq_free(chip);
+>> +		irq_dispose_mapping(chip->irq);
+>>   	}
+>>   }
+>>   
+>> -- 
+>> 2.7.4
+>>
+
 --
-- Fix review comments of v2 version.
-- Move djtag driver to drivers/perf/hisilicon.
-- Have separate PMU instance for each L3 cache banks.
-- Modify device properties in DTS as per review comments.
-- Handle hardware version difference.
-- Change compatible names of djtag so use prefix hisi-
-  and remove chip version as driver only depend on djtag
-  hw version.
-- use devm_kzalloc.
-- Remove DDRC changes in this series. As the DDRC PMU doesnot
-  depend on djtag it will be send separately.
-
-v1
---
--Initial version with support for L3C, MN and DDRC event counters
--Djtag driver is used to access registers of L3 cache and MN.
-
-Anurup M (7):
-  arm64: MAINTAINERS: hisi: Add hisilicon SoC PMU support
-  dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
-  Documentation: perf: hisi: Documentation for HIP05/06/07 PMU event
-    counting.
-  perf: hisi: Update Kconfig for Hisilicon PMU support
-  perf: hisi: Add support for Hisilicon SoC event counters
-  perf: hisi: Add sysfs attributes for L3 cache(L3C) PMU
-  dts: arm64: hip06: Add Hisilicon SoC PMU support
-
-Shaokun Zhang (1):
-  perf: hisi: Miscellanous node(MN) event counting in perf
-
-Tan Xiaojun (2):
-  dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
-  drivers: perf: hisi: Add support for Hisilicon Djtag driver
-
- .../devicetree/bindings/arm/hisilicon/djtag.txt    |  66 ++
- .../devicetree/bindings/arm/hisilicon/pmu.txt      |  98 +++
- Documentation/perf/hisi-pmu.txt                    |  75 +++
- MAINTAINERS                                        |   9 +
- arch/arm64/boot/dts/hisilicon/hip06.dtsi           |  78 +++
- drivers/perf/Kconfig                               |   8 +
- drivers/perf/Makefile                              |   1 +
- drivers/perf/hisilicon/Makefile                    |   1 +
- drivers/perf/hisilicon/djtag.c                     | 729 +++++++++++++++++++++
- drivers/perf/hisilicon/djtag.h                     |  39 ++
- drivers/perf/hisilicon/hisi_uncore_l3c.c           | 629 ++++++++++++++++++
- drivers/perf/hisilicon/hisi_uncore_mn.c            | 516 +++++++++++++++
- drivers/perf/hisilicon/hisi_uncore_pmu.c           | 365 +++++++++++
- drivers/perf/hisilicon/hisi_uncore_pmu.h           | 128 ++++
- 14 files changed, 2742 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
- create mode 100644 Documentation/perf/hisi-pmu.txt
- create mode 100644 drivers/perf/hisilicon/Makefile
- create mode 100644 drivers/perf/hisilicon/djtag.c
- create mode 100644 drivers/perf/hisilicon/djtag.h
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_l3c.c
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn.c
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.c
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.h
-
--- 
-2.1.4
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
