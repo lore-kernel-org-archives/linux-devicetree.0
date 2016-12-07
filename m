@@ -1,48 +1,28 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RFC PATCH v3 2/2] drm/panel: Add support for Chunghwa
- CLAA070WP03XG panel
-Date: Wed, 7 Dec 2016 15:55:55 +0100
-Message-ID: <20161207145555.kdg7azcrpnwnb2r6@phenom.ffwll.local>
-References: <1474311771-23321-1-git-send-email-ayaka@soulik.info>
- <1474311771-23321-3-git-send-email-ayaka@soulik.info>
- <20161206154625.GA28534@ulmo.ba.sec>
- <2C9FE0C5-F521-48CD-B274-66128312CA75@soulik.info>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] mfd: dt: Fix "indicates" typo in mfd bindings document
+Date: Wed, 7 Dec 2016 16:08:44 +0100
+Message-ID: <CACRpkdYziXz94X-aCND4jqzJ3gARWp=Gi4uwm-uFHDYER74Quw@mail.gmail.com>
+References: <20161206025321.1792-1-andrew@aj.id.au> <20161206025321.1792-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2C9FE0C5-F521-48CD-B274-66128312CA75@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ayaka <ayaka@soulik.info>
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, linux-kernel@vger.kernel.org, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161206025321.1792-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 07, 2016 at 08:57:23AM +0800, Ayaka wrote:
-> 
-> 
-> 從我的 iPad 傳送
-> 
-> > Thierry Reding <thierry.reding@gmail.com> 於 2016年12月6日 下午11:46 寫道：
-> > 
-> >> On Tue, Sep 20, 2016 at 03:02:51AM +0800, Randy Li wrote:
-> >> The Chunghwa CLAA070WP03XG is a 7" 1280x800 panel, which can be
-> >> supported by the simple panel driver.
-> >> 
-> >> Signed-off-by: Randy Li <ayaka@soulik.info>
-> >> ---
-> >> .../display/panel/chunghwa,claa070wp03xg.txt       |  7 ++++++
-> >> drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
-> >> 2 files changed, 34 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
-> > 
-> > Applied, thanks.
-> Wait, it is RFC, not pass the test.
+On Tue, Dec 6, 2016 at 3:53 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
 
-Well 2 months of silence, it's reasonable to assume that this works for
-you ... I guess you need to supply a fixup patch asap ;-)
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+
+My speling mistak.
+
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
