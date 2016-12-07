@@ -1,100 +1,91 @@
-From: Chris Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 12/16] drivers/fsi: Set up links for slave communication
-Date: Tue,  6 Dec 2016 20:09:34 -0600
-Message-ID: <1481076574-54711-5-git-send-email-christopher.lee.bostic@gmail.com>
+From: Chris Bostic <christopher.lee.bostic@gmail.com>
+Subject: [PATCH 08/16] drivers/fsi: Add crc4 helpers
+Date: Tue,  6 Dec 2016 20:09:31 -0600
+Message-ID: <1481076574-54711-2-git-send-email-christopher.lee.bostic@gmail.com>
 References: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481076574-54711-1-git-send-email-christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, sre@kernel.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Enable each link and send a break command in preparation
-for scanning each link for slaves.
+Add some helpers for the crc checks for the slave configuration table.
+This works 4-bits-at-a-time, using a simple table approach.
 
-Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+We will need this in the FSI core code, as well as any master
+implementations that need to calculate CRCs in software.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
 ---
- drivers/fsi/fsi-core.c   | 39 ++++++++++++++++++++++++++++++++++++---
- drivers/fsi/fsi-master.h |  2 ++
- 2 files changed, 38 insertions(+), 3 deletions(-)
+ drivers/fsi/fsi-core.c   | 21 +++++++++++++++++++++
+ drivers/fsi/fsi-master.h | 21 +++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 80feeb8..93de0f1 100644
+index ceaf536..f0832c7 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -290,16 +290,49 @@ static int fsi_slave_init(struct fsi_master *master,
+@@ -32,6 +32,27 @@ struct fsi_slave {
  
- /* FSI master support */
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
  
-+static int fsi_master_link_enable(struct fsi_master *master, int link)
++/* crc helpers */
++static const uint8_t crc4_tab[] = {
++	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
++	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
++};
++
++uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
 +{
-+	if (master->link_enable)
-+		return master->link_enable(master, link);
++	int i;
 +
-+	return 0;
++	/* Align to 4-bits */
++	bits = (bits + 3) & ~0x3;
++
++	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
++	for (i = bits; i >= 0; i -= 4)
++		c = crc4_tab[c ^ ((x >> i) & 0xf)];
++
++	return c;
 +}
++EXPORT_SYMBOL_GPL(fsi_crc4);
 +
-+/*
-+ * Issue a break command on this link
-+ */
-+static int fsi_master_break(struct fsi_master *master, int link)
-+{
-+	if (master->send_break)
-+		return master->send_break(master, link);
-+
-+	return 0;
-+}
-+
- static int fsi_master_scan(struct fsi_master *master)
- {
--	int link, slave_id;
-+	int link, slave_id, rc;
-+
-+	for (link = 0; link < master->n_links; link++) {
-+		rc = fsi_master_link_enable(master, link);
-+		if (rc) {
-+			dev_dbg(master->dev,
-+				"enable link:%d failed with:%d\n", link, rc);
-+			continue;
-+		}
-+		rc = fsi_master_break(master, link);
-+		if (rc) {
-+			dev_dbg(master->dev,
-+				"Break to link:%d failed with:%d\n", link, rc);
-+			continue;
-+		}
- 
--	for (link = 0; link < master->n_links; link++)
- 		for (slave_id = 0; slave_id < FSI_N_SLAVES; slave_id++)
- 			fsi_slave_init(master, link, slave_id);
- 
--	return 0;
-+	}
- 
-+	return 0;
- }
- 
- int fsi_master_register(struct fsi_master *master)
+ /* FSI slave support */
+ static int fsi_slave_init(struct fsi_master *master,
+ 		int link, uint8_t slave_id)
 diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index cafb433..56aad0e 100644
+index e75a810..cafb433 100644
 --- a/drivers/fsi/fsi-master.h
 +++ b/drivers/fsi/fsi-master.h
-@@ -29,6 +29,8 @@ struct fsi_master {
- 	int		(*write)(struct fsi_master *, int link,
- 				uint8_t slave, uint32_t addr,
- 				const void *val, size_t size);
-+	int		(*send_break)(struct fsi_master *, int link);
-+	int		(*link_enable)(struct fsi_master *, int link);
- };
- 
+@@ -34,4 +34,25 @@ struct fsi_master {
  extern int fsi_master_register(struct fsi_master *master);
+ extern void fsi_master_unregister(struct fsi_master *master);
+ 
++/**
++ * crc4 helper: Given a starting crc4 state @c, calculate the crc4 vaue of @x,
++ * which is @bits in length. This may be required by master implementations
++ * that do not provide their own hardware checksums.
++ *
++ * The crc4 is performed on 4-bit chunks (which is all we need for FSI
++ * calculations). Typically, we'll want a starting state of 0:
++ *
++ *  c = fsi_crc4(0, msg, len);
++ *
++ * To crc4 a message that includes a single start bit, initialise crc4 state
++ * with:
++ *
++ *  c = fsi_crc4(0, 1, 1);
++ *
++ * Then update with message data:
++ *
++ *  c = fsi_crc4(c, msg, len);
++ */
++uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits);
++
+ #endif /* DRIVERS_FSI_MASTER_H */
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
