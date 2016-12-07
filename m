@@ -1,89 +1,23 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] [media] davinci: vpif_capture: don't lock over s_stream
-Date: Wed, 07 Dec 2016 08:06:36 -0800
-Message-ID: <m21sxjg1v7.fsf@baylibre.com>
-References: <20161129235712.29846-1-khilman@baylibre.com>
-        <4747860.QGGHSuFRpz@avalon> <m237i1gfz1.fsf@baylibre.com>
-        <4999781.kd7ueUSsQd@avalon>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v5 00/13] net: ethernet: ti: cpts: update and fixes
+Date: Wed, 07 Dec 2016 11:14:08 -0500 (EST)
+Message-ID: <20161207.111408.1498110445444952802.davem@davemloft.net>
+References: <20161207000045.28333-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4999781.kd7ueUSsQd@avalon> (Laurent Pinchart's message of "Wed,
-        07 Dec 2016 17:47:59 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161207000045.28333-1-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grygorii.strashko@ti.com
+Cc: netdev@vger.kernel.org, mugunthanvnm@ti.com, richardcochran@gmail.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, m-karicheri2@ti.com, w-kwok2@ti.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> writes:
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Date: Tue, 6 Dec 2016 18:00:32 -0600
 
- > Hi Kevin,
->
-> On Tuesday 06 Dec 2016 08:49:38 Kevin Hilman wrote:
->> Laurent Pinchart writes:
->> > On Tuesday 29 Nov 2016 15:57:09 Kevin Hilman wrote:
->> >> Video capture subdevs may be over I2C and may sleep during xfer, so we
->> >> cannot do IRQ-disabled locking when calling the subdev.
->> >> 
->> >> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> >> ---
->> >>  drivers/media/platform/davinci/vpif_capture.c | 3 +++
->> >>  1 file changed, 3 insertions(+)
->> >> 
->> >> diff --git a/drivers/media/platform/davinci/vpif_capture.c
->> >> b/drivers/media/platform/davinci/vpif_capture.c index
->> >> 5104cc0ee40e..9f8f41c0f251 100644
->> >> --- a/drivers/media/platform/davinci/vpif_capture.c
->> >> +++ b/drivers/media/platform/davinci/vpif_capture.c
->> >> @@ -193,7 +193,10 @@ static int vpif_start_streaming(struct vb2_queue
->> >> *vq, unsigned int count)
->> >>  		}
->> >>  	}
->> >> 
->> >> +	spin_unlock_irqrestore(&common->irqlock, flags);
->> >>  	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
->> >> +	spin_lock_irqsave(&common->irqlock, flags);
->> > 
->> > I always get anxious when I see a spinlock being released randomly with an
->> > operation in the middle of a protected section. Looking at the code it
->> > looks like the spinlock is abused here. irqlock should only protect the
->> > dma_queue and should thus only be taken around the following code:
->> > 
->> > spin_lock_irqsave(&common->irqlock, flags);
->> > /* Get the next frame from the buffer queue */
->> > common->cur_frm = common->next_frm = list_entry(common->dma_queue.next,
->> >                             struct vpif_cap_buffer, list);
->> > 
->> > /* Remove buffer from the buffer queue */
->> > list_del(&common->cur_frm->list);
->> > spin_unlock_irqrestore(&common->irqlock, flags);
->> 
->> Yes, that looks correct.  Will update.
->> 
->> > The code that is currently protected by the lock in the start and stop
->> > streaming functions should be protected by a mutex instead.
->> 
->> I tried taking the mutex here, but lockdep pointed out a deadlock.  I
->> may not be fully understanding the V4L2 internals here, but it seems
->> that the ioctl is already taking a mutex, so taking it again in
->> start/stop streaming is a deadlock.  Unless you think the locking should
->> be nested here, it seems to me that the mutex isn't needed.
->
-> The V4L2 core can lock all ioctls using struct video_device::lock. For buffer-
-> related ioctls, it can optionally use a separate lock from struct 
-> vb2_queue::lock. See v4l2_ioctl_get_lock() in drivers/media/v4l2-core/v4l2-
-> ioctl.c.
->
-> The vpif-capture driver sets both the video_device and vb2_queue locks to the 
-> same lock (which would have the same effect as leaving the vb2_queue lock 
-> NULL). All ioctls are thus serialized. You would only need to handle locking 
-> in start_streaming and stop_streaming manually if you didn't rely on the core 
-> serializing the ioctls.
+> It is preparation series intended to clean up and optimize TI CPTS driver to
+> facilitate further integration with other TI's SoCs like Keystone 2.
+ ...
 
-OK, thanks for clarifying how that works.
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied.
