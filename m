@@ -1,177 +1,117 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] IIO: add STM32 timer trigger driver
-Date: Wed, 7 Dec 2016 12:00:21 +0100
-Message-ID: <CA+M3ks4VbV6z6t7aORKGmduZfFF+Ls7Sq8umWRFyo3sn8WZt7g@mail.gmail.com>
-References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
- <1481027929-13704-7-git-send-email-benjamin.gaignard@st.com>
- <20161206131635.GJ25385@dell.home> <CA+M3ks6fxCucmaY0OgpMb_opA=YLrowijJ0YQ+imeprhWg6N_w@mail.gmail.com>
- <20161207105002.GA3625@dell.home>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 4/5] arm64: dts: exynos5433: Add bus dt node using VDD_INT
+ for Exynos5433
+Date: Wed, 07 Dec 2016 20:17:48 +0900
+Message-ID: <5847EFDC.8050702@samsung.com>
+References: <1480663087-4590-1-git-send-email-cw00.choi@samsung.com>
+ <1480663087-4590-5-git-send-email-cw00.choi@samsung.com>
+ <CGME20161206192211epcas1p3d93e8b202e8b579f9632f49fc23ce0dc@epcas1p3.samsung.com>
+ <20161206192104.GB12683@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161207105002.GA3625-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20161206192104.GB12683@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, tomasz.figa@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2016-12-07 11:50 GMT+01:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On Tue, 06 Dec 2016, Benjamin Gaignard wrote:
->
->> [snip]
->> >> +
->> >> +static const char * const triggers0[] =3D {
->> >> +     TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers1[] =3D {
->> >> +     TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers2[] =3D {
->> >> +     TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers3[] =3D {
->> >> +     TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers4[] =3D {
->> >> +     TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers5[] =3D {
->> >> +     TIM6_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers6[] =3D {
->> >> +     TIM7_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers7[] =3D {
->> >> +     TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers8[] =3D {
->> >> +     TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,
->> >> +};
->> >> +
->> >> +static const char * const triggers9[] =3D {
->> >> +     TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,
->> >> +};
->> >> +
->> >> +static const void *triggers_table[] =3D {
->> >> +     triggers0,
->> >> +     triggers1,
->> >> +     triggers2,
->> >> +     triggers3,
->> >> +     triggers4,
->> >> +     triggers5,
->> >> +     triggers6,
->> >> +     triggers7,
->> >> +     triggers8,
->> >> +     triggers9,
->> >> +};
->> >
->> > What about:
->> >
->> > static const char * const triggers[][] =3D {
->> >         { TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL },
->> >         { TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL },
->> >         { TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL },
->> >         { TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL },
->> >         { TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL },
->> >         { TIM6_TRGO, NULL },
->> >         { TIM7_TRGO, NULL },
->> >         { TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL },
->> >         { TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL },
->> >         { TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL }
->> > };
->>
->> I can't because the second dimension of the array isn't fix.
->> I could have between 2 and 6 elements per row... to create a dual dimens=
-ion
->> array I would have to add NULL entries like that:
->>
->> #define MAX_TRIGGERS 6
->>
->> static const void *triggers_table[][MAX_TRIGGERS] =3D {
->> { TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,},
->> { TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,},
->> { TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,},
->> { TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,},
->> { TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,},
->> { TIM6_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
->> { TIM7_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
->> { TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,},
->> { TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,     NULL,     NULL,},
->> { TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,  NULL,     NULL,},
->> };
->
-> It was just an idea, not a tested implementation.
->
-> I don't understand why you have to pad with NULLs, but either way, it
-> looks much better than before and saves lots of lines of code.
-
-I have tested it this morning and it works fine so I will include it in v5.
-I use NULL as limit when iterate in the table and for table padding too.
-
->
->> >> +static const char * const valids0[] =3D {
->> >> +     TIM5_TRGO, TIM2_TRGO, TIM4_TRGO, TIM3_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const valids1[] =3D {
->> >> +     TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const valids2[] =3D {
->> >> +     TIM1_TRGO, TIM8_TRGO, TIM5_TRGO, TIM4_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const valids3[] =3D {
->> >> +     TIM1_TRGO, TIM2_TRGO, TIM3_TRGO, TIM8_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char *const valids4[] =3D {
->> >> +     TIM2_TRGO, TIM3_TRGO, TIM4_TRGO, TIM8_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const valids7[] =3D {
->> >> +     TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const valids8[] =3D {
->> >> +     TIM2_TRGO, TIM3_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const char * const valids9[] =3D {
->> >> +     TIM4_TRGO, TIM5_TRGO, NULL,
->> >> +};
->> >> +
->> >> +static const void *valids_table[] =3D {
->> >> +     valids0,
->> >> +     valids1,
->> >> +     valids2,
->> >> +     valids3,
->> >> +     valids4,
->> >> +     NULL,
->> >> +     NULL,
->> >> +     valids7,
->> >> +     valids8,
->> >> +     valids9,
->> >> +};
->> >
->> > Same here.
->> >
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxNuuFhCAxMuyblCAwN+ydvCAwNDoyMSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToK
+PiBPbiBGcmksIERlYyAwMiwgMjAxNiBhdCAwNDoxODowNlBNICswOTAwLCBDaGFud29vIENob2kg
+d3JvdGU6Cj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgYnVzIG5vZGVzIHVzaW5nIFZERF9JTlQgZm9y
+IEV4eW5vczU0MzMgU29DLgo+PiBFeHlub3M1NDMzIGhhcyB0aGUgZm9sbG93aW5nIEFNQkEgQVhJ
+IGJ1c2VzIHRvIHRyYW5zbGF0ZSBkYXRhCj4+IGJldHdlZW4gRFJBTSBhbmQgc3ViLWJsb2Nrcy4K
+Pj4KPj4gRm9sbG93aW5nIGxpc3Qgc3BlY2lmeSB0aGUgZGV0YWlsZWQgY29ycmVsYXRpb24gYmV0
+d2VlbiBzdWItYmxvY2sgYW5kIGNsb2NrOgo+PiAtIENMS19BQ0xLX0cyRF97NDAwfDI2Nn0gIDog
+QnVzIGNsb2NrIGZvciBHMkQKPj4gLSBDTEtfQUNMS19NU0NMXzQwMCAgICAgICA6IEJ1cyBjbG9j
+ayBmb3IgTVNDTCAoTW9iaWxlIFNjYWxlcikKPj4gLSBDTEtfQUNMS19HU0NMXzMzMyAgICAgICA6
+IEJ1cyBjbG9jayBmb3IgR1NDTCAoR2VuZXJhbCBTY2FsZXIpCj4+IC0gQ0xLX1NDTEtfSlBFR19N
+U0NMICAgICAgOiBCdXMgY2xvY2sgZm9yIEpQRUcKPj4gLSBDTEtfQUNMS19NRkNfNDAwICAgICAg
+ICA6IEJ1cyBjbG9jayBmb3IgTUZDIChNdWx0aSBGb3JtYXQgQ29kZWMpCj4+IC0gQ0xLX0FDTEtf
+SEVWQ180MDAgICAgICAgOiBCdXMgY2xvY2sgZm9yIEhFVkMgKEhpZ2ggRWZmZWN0aXZlIFZpZGVv
+IENvZGVjKQo+PiAtIENMS19BQ0xLX0JVUzBfNDAwICAgICAgIDogTm9DKE5ldHdvcmsgT24gQ2hp
+cCkncyBidXMgY2xvY2sgZm9yIFBFUklDL1BFUklTL0ZTWVMvTVNDTAo+PiAtIENMS19BQ0xLX0JV
+UzFfNDAwICAgICAgIDogTm9DJ3MgYnVzIGNsb2NrIGZvciBNRkMvSEVWQy9HM0QKPj4gLSBDTEtf
+QUNMS19CVVMyXzQwMCAgICAgICA6IE5vQydzIGJ1cyBjbG9jayBmb3IgR1NDTC9ESVNQL0cyRC9D
+QU0wL0NBTTEvSVNQCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9p
+QHNhbXN1bmcuY29tPgo+PiAtLS0KPj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5v
+czU0MzMtYnVzLmR0c2kgfCAyMDggKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgYXJjaC9h
+cm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy5kdHNpICAgICB8ICAgMSArCj4+ICAyIGZp
+bGVzIGNoYW5nZWQsIDIwOSBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
+aC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy1idXMuZHRzaQo+Pgo+PiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy1idXMuZHRzaSBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtYnVzLmR0c2kKPj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5iMWUxZDljNjIyZTEKPj4gLS0tIC9k
+ZXYvbnVsbAo+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLWJ1
+cy5kdHNpCj4+IEBAIC0wLDAgKzEsMjA4IEBACj4+ICsvKgo+PiArICogU2Ftc3VuZydzIEV4eW5v
+czU0MzMgU29DIE1lbW9yeSBpbnRlcmZhY2UgYW5kIEFNQkEgYnVzIGRldmljZSB0cmVlIHNvdXJj
+ZQo+PiArICoKPj4gKyAqIENvcHlyaWdodCAoYykgMjAxNiBTYW1zdW5nIEVsZWN0cm9uaWNzIENv
+LiwgTHRkLgo+PiArICogQ2hhbndvbyBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+Cj4+ICsg
+Kgo+PiArICogU2Ftc3VuZydzIEV4eW5vczU0MzMgU29DIE1lbW9yeSBpbnRlcmZhY2UgYW5kIEFN
+QkEgYnVzZXMgYXJlIGxpc3RlZAo+PiArICogYXMgZGV2aWNlIHRyZWUgbm9kZXMgYXJlIGxpc3Rl
+ZCBpbiB0aGlzIGZpbGUuCj4gCj4gVGhpcyBkdXBsaWNhdGVzIHRoZSBpbnRyb2R1Y3Rpb24gbGlu
+ZSBhbmQgZG9lcyBub3QgbWFrZSBzZW5zZS4KCkknbGwgcmVtb3ZlIGl0LgoKPiAKPj4gKyAqCj4+
+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUg
+aXQgYW5kL29yIG1vZGlmeQo+PiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2Vu
+ZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKPj4gKyAqIHB1Ymxpc2hlZCBieSB0aGUg
+RnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgo+PiArICovCj4+ICsKPj4gKy8gewo+IAo+IFNob3Vs
+ZG4ndCB0aGVzZSBiZSB1bmRlciBzb2Mgbm9kZT8gSXQgbG9va3MgbGlrZSBwcm9wZXJ0eSBvZiBT
+b0MgaXRzZWxmLgoKT0suIE1vdmUgdG8gdGhlbSB1bmRlciBTb0MuCi0gIi8geyIgLT4gIiZzb2Mg
+eyIKCj4gCj4+ICsJLyogSU5UIChJbnRlcm5hbCkgYmxvY2sgdXNpbmcgVkREX0lOVCAqLwo+PiAr
+CWJ1c19nMmRfNDAwOiBidXNfZzJkXzQwMCB7Cj4gCj4gSW4gbm9kZSBuYW1lLCB0aGUgZGFzaCAn
+LScgaXMgcHJlZmVycmVkLiBUaGUgbmFtZSBzaG91bGQgZGVzY3JpYmUKPiBnZW5lcmFsIGNsYXNz
+IG9mIGRldmljZSBzbyBwcm9iYWJseSB0aGlzIHNob3VsZCBiZSBqdXN0ICJidXMiLi4uIGJ1dCBJ
+Cj4gZG9uJ3Qgc2VlIGEgd2F5IGhvdyB0byBkbyBpdCByZWFzb25hYmxlIGFueXdheS4KCkknbGwg
+Y2hhbmdlIHRoZW0gYXMgZm9sbG93aW5nIHdpdGggJ2J1c1gnLgoKVGhlIGVhY2ggZHQgbm9kZSBo
+YXMgdGhlIHVuaXF1ZSBudW1iZXIoJ1gnKQpiZWNhdXNlIGVhY2ggZHQgbm9kZSBkb2VzIG5vdCBo
+YXZlIHRoZSBiYXNlIGFkZHJlc3MKYW5kIHRoZW4gbmVlZCB0byBpZGVudGlmeSBvbmVzZWxmLgoK
+CWJ1c19nMmRfNDAwOiBidXMwIHsKCWJ1c19nMmRfMjY2OiBidXMxIHsKCWJ1c19nc2NsOiBidXMy
+IHsKCWJ1c19oZXZjOiBidXMzIHsKCWJ1c19qcGVnOiBidXM0IHsKCWJ1c19tZmM6IGJ1czUgewoJ
+YnVzX21zY2w6IGJ1czYgewoJYnVzX25vYzA6IGJ1czcgewoJYnVzX25vYzE6IGJ1czggewoJYnVz
+X25vYzI6IGJ1czkgewoKPiAKPj4gKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vcy1idXMi
+Owo+PiArCQljbG9ja3MgPSA8JmNtdV90b3AgQ0xLX0FDTEtfRzJEXzQwMD47Cj4+ICsJCWNsb2Nr
+LW5hbWVzID0gImJ1cyI7Cj4+ICsJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmJ1c19nMmRfNDAw
+X29wcF90YWJsZT47Cj4+ICsJCXN0YXR1cyA9ImRpc2FibGUiOwo+IAo+IEhtPwoKSSdsbCBmaXgg
+aXQuIGRpc2FibGUgLT4gZGlzYWJsZWQKCj4gCj4gCj4+ICsJfTsKPj4gKwo+PiArCWJ1c19tc2Ns
+OiBidXNfbXNjbCB7Cj4+ICsJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3MtYnVzIjsKPj4g
+KwkJY2xvY2tzID0gPCZjbXVfdG9wIENMS19BQ0xLX01TQ0xfNDAwPjsKPj4gKwkJY2xvY2stbmFt
+ZXMgPSAiYnVzIjsKPj4gKwkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmYnVzX2cyZF80MDBfb3Bw
+X3RhYmxlPjsKPj4gKwkJc3RhdHVzID0iZGlzYWJsZSI7Cj4+ICsJfTsKPj4gKwo+PiArCWJ1c19q
+cGVnOiBidXNfanBlZyB7Cj4+ICsJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3MtYnVzIjsK
+Pj4gKwkJY2xvY2tzID0gPCZjbXVfdG9wIENMS19TQ0xLX0pQRUdfTVNDTD47Cj4+ICsJCWNsb2Nr
+LW5hbWVzID0gImJ1cyI7Cj4+ICsJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmJ1c19nMmRfNDAw
+X29wcF90YWJsZT47Cj4+ICsJCXN0YXR1cyA9ImRpc2FibGUiOwo+PiArCX07Cj4+ICsKPj4gKwli
+dXNfbWZjOiBidXNfbWZjIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vcy1idXMi
+Owo+PiArCQljbG9ja3MgPSA8JmNtdV90b3AgQ0xLX0FDTEtfTUZDXzQwMD47Cj4+ICsKPj4gKwkJ
+Y2xvY2stbmFtZXMgPSAiYnVzIjsKPj4gKwkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmYnVzX2cy
+ZF80MDBfb3BwX3RhYmxlPjsKPj4gKwkJc3RhdHVzID0iZGlzYWJsZSI7Cj4+ICsJfTsKPj4gKwo+
+PiArCWJ1c19nMmRfMjY2OiBidXNfZzJkXzI2NiB7Cj4+ICsJCWNvbXBhdGlibGUgPSAic2Ftc3Vu
+ZyxleHlub3MtYnVzIjsKPj4gKwkJY2xvY2tzID0gPCZjbXVfdG9wIENMS19BQ0xLX0cyRF8yNjY+
+Owo+PiArCQljbG9jay1uYW1lcyA9ICJidXMiOwo+PiArCQlvcGVyYXRpbmctcG9pbnRzLXYyID0g
+PCZidXNfZzJkXzI2Nl9vcHBfdGFibGU+Owo+PiArCQlzdGF0dXMgPSJkaXNhYmxlIjsKPj4gKwl9
+Owo+PiArCj4+ICsJYnVzX2dzY2w6IGJ1c19nc2NsIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJzYW1z
+dW5nLGV4eW5vcy1idXMiOwo+PiArCQljbG9ja3MgPSA8JmNtdV90b3AgQ0xLX0FDTEtfR1NDTF8z
+MzM+Owo+PiArCQljbG9jay1uYW1lcyA9ICJidXMiOwo+PiArCQlvcGVyYXRpbmctcG9pbnRzLXYy
+ID0gPCZidXNfZ3NjbF9vcHBfdGFibGU+Owo+PiArCQlzdGF0dXMgPSJkaXNhYmxlIjsKPj4gKwl9
+Owo+PiArCj4+ICsJYnVzX2hldmM6IGJ1c19oZXZjIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJzYW1z
+dW5nLGV4eW5vcy1idXMiOwo+PiArCQljbG9ja3MgPSA8JmNtdV90b3AgQ0xLX0FDTEtfSEVWQ180
+MDA+Owo+PiArCQljbG9jay1uYW1lcyA9ICJidXMiOwo+PiArCQlvcGVyYXRpbmctcG9pbnRzLXYy
+ID0gPCZidXNfaGV2Y19vcHBfdGFibGU+Owo+PiArCQlzdGF0dXMgPSJkaXNhYmxlIjsKPj4gKwl9
+Owo+PiArCj4+ICsJYnVzX2J1czA6IGJ1c19idXMwIHsKPiAKPiBidXMsIGJ1cywgYnVzLCBidXMs
+IGphY2twb3QhIExldCdzIHRyeSB0byBmaW5kIGJldHRlciBuYW1lIGFuZCBsYWJlbCBmb3IKPiB0
+aGVzZS4gOikKCkknbGwgY2hhbmdlIHRoZSBuYW1lIHdpdGggJ25vYycgcHJlZml4IGJlY2F1c2Ug
+dGhpcyBidXMgaXMgdXNlZApmb3IgTm9DIChOZXR3b3JrIE9uIENoaXApJ3MgYnVzIGNsb2NrIGFz
+IGNvbW1pdCBtc2cuCi0gb2xkIDogYnVzX2J1czAKLSBuZXcgOiBidXNfbm9jMAoKCkJlc3QgUmVn
+YXJkcywKQ2hhbndvbyBDaG9pCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
