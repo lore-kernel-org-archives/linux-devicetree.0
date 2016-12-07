@@ -1,134 +1,202 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] drm: bridge: add support for TI ths8135
-Date: Wed, 07 Dec 2016 16:23:16 +0200
-Message-ID: <2593175.GXXQ1USl1T@avalon>
-References: <1481107365-24839-1-git-send-email-bgolaszewski@baylibre.com> <1481107365-24839-3-git-send-email-bgolaszewski@baylibre.com> <CAMpxmJX9b3UqNz_nERH-N58Yw3jkSZ1P+PjjA51x3wTC0So7mQ@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v3 5/6] net: stmmac: add support for independent DMA pbl for tx/rx
+Date: Wed, 7 Dec 2016 15:20:07 +0100
+Message-ID: <1481120409-18103-6-git-send-email-niklass@axis.com>
+References: <1481120409-18103-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMpxmJX9b3UqNz_nERH-N58Yw3jkSZ1P+PjjA51x3wTC0So7mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1481120409-18103-1-git-send-email-niklass@axis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, "David S. Miller" <davem@davemloft.net>, Phil Reid <preid@electromag.com.au>, Eric Engestrom <eric@engestrom.ch>, Pavel Machek <pavel@ucw.cz>, Joachim Eastwood <manabian@gmail.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Vincent Palatin <vpalatin@chromium.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Niklas Cassel <niklass@axis.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz,
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-Thank you for the patch.
+GMAC and newer supports independent programmable burst lengths for
+DMA tx/rx. Add new optional devicetree properties representing this.
 
-On Wednesday 07 Dec 2016 11:45:11 Bartosz Golaszewski wrote:
-> 2016-12-07 11:42 GMT+01:00 Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>:
-> > THS8135 is a configurable video DAC. Add DT bindings for this chip and
-> > use the dumb-vga-dac driver for now as no configuration is required to
-> > make it work.
-> > 
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> > 
-> >  .../bindings/display/bridge/ti,ths8135.txt         | 52 +++++++++++++++++
-> >  drivers/gpu/drm/bridge/dumb-vga-dac.c              |  1 +
+To be backwards compatible, snps,pbl will still be valid, but
+snps,txpbl/snps,rxpbl will override the value in snps,pbl if set.
 
-You might be asked by DT maintainers to split this in two, but regardless of 
-whether it's one patch or two, you can add my
+If the IP is synthesized to use the AXI interface, there is a register
+and a matching DT property inside the optional stmmac-axi-config DT node
+for controlling burst lengths, named snps,blen.
+However, using this register, it is not possible to control tx and rx
+independently. Also, this register is not available if the IP was
+synthesized with, e.g., the AHB interface.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt      |  6 +++++-
+ Documentation/networking/stmmac.txt                   | 19 +++++++++++++------
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c   | 12 ++++++------
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c      | 12 +++++++-----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c |  2 ++
+ include/linux/stmmac.h                                |  2 ++
+ 6 files changed, 35 insertions(+), 18 deletions(-)
 
-> >  2 files changed, 53 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> > b/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt new
-> > file mode 100644
-> > index 0000000..23cd8ee
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> > @@ -0,0 +1,52 @@
-> > +THS8135 Video DAC
-> > +-----------------
-> > +
-> > +This is the binding for Texas Instruments THS8135 Video DAC bridge.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: Must be "ti,ths8135"
-> > +
-> > +Required nodes:
-> > +
-> > +This device has two video ports. Their connections are modelled using the
-> > OF +graph bindings specified in
-> > Documentation/devicetree/bindings/graph.txt. +
-> > +- Video port 0 for RGB input
-> > +- Video port 1 for VGA output
-> > +
-> > +Example
-> > +-------
-> > +
-> > +vga-bridge {
-> > +       compatible = "ti,ths8135";
-> > +       #address-cells = <1>;
-> > +       #size-cells = <0>;
-> > +
-> > +       ports {
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +
-> > +               port@0 {
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +                       reg = <0>;
-> > +
-> > +                       vga_bridge_in: endpoint@0 {
-> > +                               reg = <0>;
-> > +                               remote-endpoint = <&lcdc_out_vga>;
-> > +                       };
-> > +               };
-> > +
-> > +               port@1 {
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +                       reg = <1>;
-> > +
-> > +                       vga_bridge_out: endpoint@0 {
-> > +                               reg = <0>;
-> > +                               remote-endpoint = <&vga_con_in>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > b/drivers/gpu/drm/bridge/dumb-vga-dac.c index afec232..498fa75 100644
-> > --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> > @@ -204,6 +204,7 @@ static int dumb_vga_remove(struct platform_device
-> > *pdev)> 
-> >  static const struct of_device_id dumb_vga_match[] = {
-> >  
-> >         { .compatible = "dumb-vga-dac" },
-> > 
-> > +       { .compatible = "ti,ths8135" },
-> > 
-> >         {},
-> >  
-> >  };
-> >  MODULE_DEVICE_TABLE(of, dumb_vga_match);
-> > 
-> > --
-> > 2.9.3
-> 
-> + Maxime
-> 
-> Sorry, I forgot to include your e-mail.
-> 
-> Bartosz
-
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index b95ff998ba73..8080038ff1b2 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -34,7 +34,11 @@ Optional properties:
+   platforms.
+ - tx-fifo-depth: See ethernet.txt file in the same directory
+ - rx-fifo-depth: See ethernet.txt file in the same directory
+-- snps,pbl		Programmable Burst Length
++- snps,pbl		Programmable Burst Length (tx and rx)
++- snps,txpbl		Tx Programmable Burst Length. Only for GMAC and newer.
++			If set, DMA tx will use this value rather than snps,pbl.
++- snps,rxpbl		Rx Programmable Burst Length. Only for GMAC and newer.
++			If set, DMA rx will use this value rather than snps,pbl.
+ - snps,aal		Address-Aligned Beats
+ - snps,fixed-burst	Program the DMA to use the fixed burst mode
+ - snps,mixed-burst	Program the DMA to use the mixed burst mode
+diff --git a/Documentation/networking/stmmac.txt b/Documentation/networking/stmmac.txt
+index 014f4f756cb7..6add57374f70 100644
+--- a/Documentation/networking/stmmac.txt
++++ b/Documentation/networking/stmmac.txt
+@@ -153,7 +153,8 @@ Where:
+    o pbl: the Programmable Burst Length is maximum number of beats to
+        be transferred in one DMA transaction.
+        GMAC also enables the 4xPBL by default.
+-   o fixed_burst/mixed_burst/burst_len
++   o txpbl/rxpbl: GMAC and newer supports independent DMA pbl for tx/rx.
++   o fixed_burst/mixed_burst/aal
+  o clk_csr: fixed CSR Clock range selection.
+  o has_gmac: uses the GMAC core.
+  o enh_desc: if sets the MAC will use the enhanced descriptor structure.
+@@ -205,16 +206,22 @@ tuned according to the HW capabilities.
+ 
+ struct stmmac_dma_cfg {
+ 	int pbl;
++	int txpbl;
++	int rxpbl;
+ 	int fixed_burst;
+-	int burst_len_supported;
++	int mixed_burst;
++	bool aal;
+ };
+ 
+ Where:
+- o pbl: Programmable Burst Length
++ o pbl: Programmable Burst Length (tx and rx)
++ o txpbl: Transmit Programmable Burst Length. Only for GMAC and newer.
++	 If set, DMA tx will use this value rather than pbl.
++ o rxpbl: Receive Programmable Burst Length. Only for GMAC and newer.
++	 If set, DMA rx will use this value rather than pbl.
+  o fixed_burst: program the DMA to use the fixed burst mode
+- o burst_len: this is the value we put in the register
+-	      supported values are provided as macros in
+-	      linux/stmmac.h header file.
++ o mixed_burst: program the DMA to use the mixed burst mode
++ o aal: Address-Aligned Beats
+ 
+ ---
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+index 318ae9f10104..99b8040af592 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+@@ -89,20 +89,20 @@ static void dwmac1000_dma_init(void __iomem *ioaddr,
+ 			       u32 dma_tx, u32 dma_rx, int atds)
+ {
+ 	u32 value = readl(ioaddr + DMA_BUS_MODE);
++	int txpbl = dma_cfg->txpbl ?: dma_cfg->pbl;
++	int rxpbl = dma_cfg->rxpbl ?: dma_cfg->pbl;
+ 
+ 	/*
+ 	 * Set the DMA PBL (Programmable Burst Length) mode.
+ 	 *
+ 	 * Note: before stmmac core 3.50 this mode bit was 4xPBL, and
+ 	 * post 3.5 mode bit acts as 8*PBL.
+-	 *
+-	 * This configuration doesn't take care about the Separate PBL
+-	 * so only the bits: 13-8 are programmed with the PBL passed from the
+-	 * platform.
+ 	 */
+ 	value |= DMA_BUS_MODE_MAXPBL;
+-	value &= ~DMA_BUS_MODE_PBL_MASK;
+-	value |= (dma_cfg->pbl << DMA_BUS_MODE_PBL_SHIFT);
++	value |= DMA_BUS_MODE_USP;
++	value &= ~(DMA_BUS_MODE_PBL_MASK | DMA_BUS_MODE_RPBL_MASK);
++	value |= (txpbl << DMA_BUS_MODE_PBL_SHIFT);
++	value |= (rxpbl << DMA_BUS_MODE_RPBL_SHIFT);
+ 
+ 	/* Set the Fixed burst mode */
+ 	if (dma_cfg->fixed_burst)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+index 7d82a3464097..2c3b2098f350 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+@@ -71,11 +71,14 @@ static void dwmac4_dma_axi(void __iomem *ioaddr, struct stmmac_axi *axi)
+ 	writel(value, ioaddr + DMA_SYS_BUS_MODE);
+ }
+ 
+-static void dwmac4_dma_init_channel(void __iomem *ioaddr, int pbl,
++static void dwmac4_dma_init_channel(void __iomem *ioaddr,
++				    struct stmmac_dma_cfg *dma_cfg,
+ 				    u32 dma_tx_phy, u32 dma_rx_phy,
+ 				    u32 channel)
+ {
+ 	u32 value;
++	int txpbl = dma_cfg->txpbl ?: dma_cfg->pbl;
++	int rxpbl = dma_cfg->rxpbl ?: dma_cfg->pbl;
+ 
+ 	/* set PBL for each channels. Currently we affect same configuration
+ 	 * on each channel
+@@ -85,11 +88,11 @@ static void dwmac4_dma_init_channel(void __iomem *ioaddr, int pbl,
+ 	writel(value, ioaddr + DMA_CHAN_CONTROL(channel));
+ 
+ 	value = readl(ioaddr + DMA_CHAN_TX_CONTROL(channel));
+-	value = value | (pbl << DMA_BUS_MODE_PBL_SHIFT);
++	value = value | (txpbl << DMA_BUS_MODE_PBL_SHIFT);
+ 	writel(value, ioaddr + DMA_CHAN_TX_CONTROL(channel));
+ 
+ 	value = readl(ioaddr + DMA_CHAN_RX_CONTROL(channel));
+-	value = value | (pbl << DMA_BUS_MODE_RPBL_SHIFT);
++	value = value | (rxpbl << DMA_BUS_MODE_RPBL_SHIFT);
+ 	writel(value, ioaddr + DMA_CHAN_RX_CONTROL(channel));
+ 
+ 	/* Mask interrupts by writing to CSR7 */
+@@ -120,8 +123,7 @@ static void dwmac4_dma_init(void __iomem *ioaddr,
+ 	writel(value, ioaddr + DMA_SYS_BUS_MODE);
+ 
+ 	for (i = 0; i < DMA_CHANNEL_NB_MAX; i++)
+-		dwmac4_dma_init_channel(ioaddr, dma_cfg->pbl,
+-					dma_tx, dma_rx, i);
++		dwmac4_dma_init_channel(ioaddr, dma_cfg, dma_tx, dma_rx, i);
+ }
+ 
+ static void _dwmac4_dump_dma_regs(void __iomem *ioaddr, u32 channel)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 81800f23a9c4..96afe0561c99 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -315,6 +315,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+ 	of_property_read_u32(np, "snps,pbl", &dma_cfg->pbl);
+ 	if (!dma_cfg->pbl)
+ 		dma_cfg->pbl = DEFAULT_DMA_PBL;
++	of_property_read_u32(np, "snps,txpbl", &dma_cfg->txpbl);
++	of_property_read_u32(np, "snps,rxpbl", &dma_cfg->rxpbl);
+ 
+ 	dma_cfg->aal = of_property_read_bool(np, "snps,aal");
+ 	dma_cfg->fixed_burst = of_property_read_bool(np, "snps,fixed-burst");
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 3537fb33cc90..e6d7a5940819 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -88,6 +88,8 @@ struct stmmac_mdio_bus_data {
+ 
+ struct stmmac_dma_cfg {
+ 	int pbl;
++	int txpbl;
++	int rxpbl;
+ 	int fixed_burst;
+ 	int mixed_burst;
+ 	bool aal;
 -- 
-Regards,
+2.1.4
 
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
