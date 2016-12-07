@@ -1,44 +1,50 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v5 3/3] fpga manager: Add cyclone-ps-spi driver for
- Altera FPGAs
-Date: Wed, 7 Dec 2016 22:21:27 +0100
-Message-ID: <20161207222127.23f6b8b4@crub>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] fpga manager: Add cyclone-ps-spi driver for Altera
+ FPGAs
+Date: Wed, 7 Dec 2016 13:29:29 -0800
+Message-ID: <6e33619c-e8a4-e372-04ab-d03c379cbfa0@gmail.com>
 References: <cover.1481139171.git.stillcompiling@gmail.com>
  <1778a82d1989d13919b24e47fa09eeb56b2cb8e5.1481139171.git.stillcompiling@gmail.com>
+ <20161207222127.23f6b8b4@crub>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1778a82d1989d13919b24e47fa09eeb56b2cb8e5.1481139171.git.stillcompiling@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joshua Clayton <stillcompiling@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161207222127.23f6b8b4@crub>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  7 Dec 2016 13:04:40 -0800
-Joshua Clayton stillcompiling@gmail.com wrote:
-...
->+static int cyclonespi_write_init(struct fpga_manager *mgr, u32 flags,
->+				 const char *buf, size_t count)
+Anatolij,
+Thanks for the quick look and response.
+I guess I should have rebased before submitting.
+I just realized I also forgot to send this patch series to
+the newly minted FPGA Manager mailing list. V6 coming soon :)
 
-there is a minor API change in linux-next [1]. struct fpga_image_info *
-is passed instead of u32 flags. I assume this will be merged soon, so
-please prepare this driver accordingly.
+On 12/07/2016 01:21 PM, Anatolij Gustschin wrote:
+> On Wed,  7 Dec 2016 13:04:40 -0800
+> Joshua Clayton stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> ...
+>> +static int cyclonespi_write_init(struct fpga_manager *mgr, u32 flags,
+>> +				 const char *buf, size_t count)
+> there is a minor API change in linux-next [1]. struct fpga_image_info *
+> is passed instead of u32 flags. I assume this will be merged soon, so
+> please prepare this driver accordingly.
+>
+> ...
+Ah. Thanks.
 
-...
->+static int cyclonespi_write_complete(struct fpga_manager *mgr, u32 flags)
-
-same here.
-
-[1] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/drivers/fpga?id=1df2865f8dd9d56cb76aa7aa1298921e7bece2af
-
+>> +static int cyclonespi_write_complete(struct fpga_manager *mgr, u32 flags)
+> same here.
+OK.
+>
+> [1] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/drivers/fpga?id=1df2865f8dd9d56cb76aa7aa1298921e7bece2af
+>
+> --
+> Anatolij
+Joshua
 --
-Anatolij
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
