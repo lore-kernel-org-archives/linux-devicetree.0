@@ -1,71 +1,99 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Subject: [PATCH] ARM: dts: armada-{370,xp}: drop "marvell,orion-spi" from SPI controllers
-Date: Wed,  7 Dec 2016 16:21:09 +0100
-Message-ID: <20161207152109.17545-1-uwe@kleine-koenig.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada-{370,xp}: drop "marvell,orion-spi" from SPI controllers
+Date: Wed, 07 Dec 2016 16:30:02 +0100
+Message-ID: <87eg1jhi4l.fsf@free-electrons.com>
+References: <20161207152109.17545-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161207152109.17545-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> ("Uwe
+        =?utf-8?Q?Kleine-K=C3=B6nig=22's?= message of "Wed, 7 Dec 2016 16:21:09
+ +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-The SPI controllers on Armada 370 and XP differ from the original Orion
-SPI controllers (at least) in the configuration of the baud rate. So
-it's wrong to claim compatibility which results in bogus baud rates.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/armada-370.dtsi | 4 ++--
- arch/arm/boot/dts/armada-xp.dtsi  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index b4258105e91f..b9377c11b379 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -435,13 +435,13 @@
-  * board level if a different configuration is used.
-  */
- &spi0 {
--	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
-+	compatible = "marvell,armada-370-spi";
- 	pinctrl-0 = <&spi0_pins1>;
- 	pinctrl-names = "default";
- };
+Hi Uwe,
  
- &spi1 {
--	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
-+	compatible = "marvell,armada-370-spi";
- 	pinctrl-0 = <&spi1_pins>;
- 	pinctrl-names = "default";
- };
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 4a5f99e65b51..3a416834d80b 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -367,13 +367,13 @@
- };
- 
- &spi0 {
--	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
-+	compatible = "marvell,armada-xp-spi";
- 	pinctrl-0 = <&spi0_pins>;
- 	pinctrl-names = "default";
- };
- 
- &spi1 {
--	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
-+	compatible = "marvell,armada-xp-spi";
- 	pinctrl-0 = <&spi1_pins>;
- 	pinctrl-names = "default";
- };
+ On mer., déc. 07 2016, Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> wrote:
+
+> From: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> The SPI controllers on Armada 370 and XP differ from the original Orion
+> SPI controllers (at least) in the configuration of the baud rate. So
+> it's wrong to claim compatibility which results in bogus baud rates.
+
+Until two years ago with the commits
+df59fa7f4bca9658b75f0f5fee225b3a057475c5 and
+4dacccfac69494ba70248b134352f299171c41b7
+we used "marvell,orion-spi" compatible on Armada XP and Armada 370
+without any problem.
+
+The new compatible "marvell,armada-xp-spi" and "marvell,armada-xp-spi"
+allows to have more choice for the baudrate for a given clock but it is
+not true that Armada 370 and Armada XP are not compatible with
+"marvell,orion-spi".
+
+Gregory
+
+>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-370.dtsi | 4 ++--
+>  arch/arm/boot/dts/armada-xp.dtsi  | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+> index b4258105e91f..b9377c11b379 100644
+> --- a/arch/arm/boot/dts/armada-370.dtsi
+> +++ b/arch/arm/boot/dts/armada-370.dtsi
+> @@ -435,13 +435,13 @@
+>   * board level if a different configuration is used.
+>   */
+>  &spi0 {
+> -	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
+> +	compatible = "marvell,armada-370-spi";
+>  	pinctrl-0 = <&spi0_pins1>;
+>  	pinctrl-names = "default";
+>  };
+>  
+>  &spi1 {
+> -	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
+> +	compatible = "marvell,armada-370-spi";
+>  	pinctrl-0 = <&spi1_pins>;
+>  	pinctrl-names = "default";
+>  };
+> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+> index 4a5f99e65b51..3a416834d80b 100644
+> --- a/arch/arm/boot/dts/armada-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp.dtsi
+> @@ -367,13 +367,13 @@
+>  };
+>  
+>  &spi0 {
+> -	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
+> +	compatible = "marvell,armada-xp-spi";
+>  	pinctrl-0 = <&spi0_pins>;
+>  	pinctrl-names = "default";
+>  };
+>  
+>  &spi1 {
+> -	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
+> +	compatible = "marvell,armada-xp-spi";
+>  	pinctrl-0 = <&spi1_pins>;
+>  	pinctrl-names = "default";
+>  };
+> -- 
+> 2.10.2
+>
+
 -- 
-2.10.2
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
