@@ -1,33 +1,44 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] mfd: dt: Add bindings for the Aspeed LPC Host
- Controller (LHC)
-Date: Wed, 7 Dec 2016 16:12:29 +0100
-Message-ID: <CACRpkdYhKYjmaXf31Q44Wjvw=Bfjt=fViXH=SjaoDC6Kggotfg@mail.gmail.com>
-References: <20161206025321.1792-1-andrew@aj.id.au> <20161206025321.1792-5-andrew@aj.id.au>
+From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 3/4] powerpc/fsl/dts: add sg_2500_aqr105_phy4 alias on t1024rdb
+Date: Wed, 7 Dec 2016 17:14:55 +0200
+Message-ID: <1481123696-21028-3-git-send-email-madalin.bucur@nxp.com>
+References: <1481123696-21028-1-git-send-email-madalin.bucur@nxp.com>
+Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161206025321.1792-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
+In-Reply-To: <1481123696-21028-1-git-send-email-madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 6, 2016 at 3:53 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+The alias is used by the boot loader to perform a device tree
+fixup.
 
-> The LPC bus pinmux configuration on fifth generation Aspeed SoCs depends
-> on bits in both the System Control Unit and the LPC Host Controller.
->
-> The Aspeed LPC Host Controller is described as a child node of the
-> LPC host-range syscon device for arbitration of access by the host
-> controller and pinmux drivers.
->
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Signed-off-by: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/powerpc/boot/dts/fsl/t1024rdb.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+index c7f4f62..73a6453 100644
+--- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
+@@ -41,6 +41,10 @@
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&mpic>;
+ 
++	aliases {
++		sg_2500_aqr105_phy4 = &sg_2500_aqr105_phy4;
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+-- 
+2.1.0
 
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
