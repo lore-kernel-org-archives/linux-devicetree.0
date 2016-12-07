@@ -1,110 +1,147 @@
-From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] spi: Add basic support for Armada 3700 SPI
- Controller
-Date: Wed, 7 Dec 2016 13:42:28 +0100
-Message-ID: <13532b8e-4fd8-fd39-772c-f350ab7473b6@free-electrons.com>
-References: <20161201102719.4291-1-romain.perier@free-electrons.com>
- <20161201102719.4291-2-romain.perier@free-electrons.com>
- <20161205120540.mvihgafelszitzhq@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v13 0/7] dtc: Dynamic DT support
+Date: Wed,  7 Dec 2016 14:48:16 +0200
+Message-ID: <1481114903-8197-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161205120540.mvihgafelszitzhq-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patchset adds Dynamic DT support in the DTC compiler
+as used in a number of boards like the beaglebone/rpi/chip and others.
 
-Le 05/12/2016 à 13:05, Mark Brown a écrit :
-> On Thu, Dec 01, 2016 at 11:27:15AM +0100, Romain Perier wrote:
->
->> +config SPI_ARMADA_3700
->> +	tristate "Marvell Armada 3700 SPI Controller"
->> +	depends on ARCH_MVEBU && OF
->
-> Why does this not have a COMPILE_TEST dependency?
+The first patch documents the internals of overlay generation, while
+the second one adds dynamic object/overlay support proper.
 
-Because that's a mistake, I will fix it.
+The third patch adds a test method that can is used by the subsequent
+patch which adds a few overlay tests verifying operation.
 
->
->> +	/* Reset SPI unit */
->> +	val = spireg_read(a3700_spi, A3700_SPI_IF_CFG_REG);
->> +	val |= A3700_SPI_SRST;
->> +	spireg_write(a3700_spi, A3700_SPI_IF_CFG_REG, val);
->> +
->> +	for (i = 0; i < A3700_SPI_TIMEOUT; i++)
->> +		udelay(1);
->
-> Why not just do a single udelay()?
+The following 3 patches add support for the syntactic sugar version
+of &foo { }; in a similar manner.
 
-Mhhhh... good point.
+This patchset is against DTC mainline and is also available for a pull
+request from https://github.com/pantoniou/dtc/tree/overlays
 
+Regards
 
->
->> +static irqreturn_t a3700_spi_interrupt(int irq, void *dev_id)
->> +{
->> +	struct spi_master *master = dev_id;
->> +	struct a3700_spi *a3700_spi;
->> +	u32 cause;
->> +
->> +	a3700_spi = spi_master_get_devdata(master);
->> +
->> +	/* Get interrupt causes */
->> +	cause = spireg_read(a3700_spi, A3700_SPI_INT_STAT_REG);
->> +
->> +	/* mask and acknowledge the SPI interrupts */
->> +	spireg_write(a3700_spi, A3700_SPI_INT_MASK_REG, 0);
->> +	spireg_write(a3700_spi, A3700_SPI_INT_STAT_REG, cause);
->> +
->> +	/* Wake up the transfer */
->> +	if (a3700_spi->wait_mask & cause)
->> +		complete(&a3700_spi->done);
->> +
->> +	return IRQ_HANDLED;
->> +}
->
-> This reports that we handled an interrupt even if we did not in fact
-> handle an interrupt.  It's also a bit dodgy that it doesn't check what
-> the interrupt was but that's less serious.
+-- Pantelis
 
-I don't understand, what do you expect ? That I return something != 
-IRQ_HANDLED when the cause of the interrupt is not present in wait_mask ?
+Changes since v12:
+* Dropped DTBO magic option completely.
+* Dropped fixup generation option.
+* Renamed dstversionflags to dstflags
+* Drop support for the new style /plugin/ tag. 
 
->
->> +	master->bus_num = (pdev->id != -1) ? pdev->id : 0;
->
-> At most this should be just setting the bus number to pdev->id like
-> other drivers do.
+Changes since v11:
+* Syntax and grammatical fixes to the documentation.
+* Renamed options and internal variables controlling generation of symbols
+and fixups.
+* Rename version flags to specify that they refer to DTS version.
+* Made sure that no symbols/fixup nodes are only generated if they contain
+entries.
 
-ack
+Changes since v10:
+* Split out the syntactic sugar version of &foo { }; into a different
+patches to make things clearer.
+* Reworked a bit the arguments passed to fixup node generation method
+making things simpler and utilize common methodology.
+* Avoid string parsing the full path using the node walking instead for
+local fixup generation.
+* Added an option to suppress generation of fixup nodes on base trees.
+* Added automatic generation of symbols and fixups when compiling a
+plugin.
+* Minor rework according to maintainer requests.
 
->
->> +	ret = clk_prepare_enable(spi->clk);
->> +	if (ret) {
->> +		dev_err(dev, "could not prepare clk: %d\n", ret);
->> +		goto error;
->> +	}
->
-> I'd expect the hardware prepare/unprepare to be managing the enable and
-> disable of the clock in order to save a little power.
+Changes since v9:
+* Reversed -M switch to by default use new DTBO magic value.
+* Removed global versionflags in the parser by using inherited
+attributes.
+* build_node instead of malloc at add_orphan_node().
+* Do not use escape for path copy
+* Do not generate /plugin/ when generating a dts file even when
+the plugin flag is set..
 
-Ok, if that's better for power management, why not then.
+Changes since v8:
+* Removed extra member of boot_info in each node; passing boot_info
+parameter to the check methods instead.
+* Reworked yacc syntax that supports both old and new plugin syntax
+* Added handling for new magic number (enabled by 'M' switch).
+* Dropped dtbo/asmo formats.
+* Added overlay testsuite.
+* Addressed last version maintainer comments.
 
->
->> +	dev_info(dev, "Marvell Armada 3700 SPI Controller at 0x%08lx, irq %d\n",
->> +		 (unsigned long)res->start, spi->irq);
->
-> This is just adding noise to the boot, remove it.  It's not telling us
-> anything we read from the hardware or anything.
+Changes since v7:
+* Dropped xasprintf & backward compatibility patch
+* Rebased against dgibson's overlay branch
+* Minor doc wording fixes.
 
-ack
+Changes since v6:
+* Introduced xasprintf
+* Added append_to_property and used it
+* Changed some die()'s to assert
+* Reordered node generation to respect sort
+* Addressed remaining maintainer changes from v6
 
+Changes since v5:
+* Rebase to latest dtc version.
+* Addressed all the maintainer requested changes from v5
+* Added new magic value for dynamic objects and new format
 
-Thanks,
-Romain
+Changes since v4:
+* Rebase to latest dtc version.
+* Completely redesigned the generation of resolution data.
+Now instead of being generated as part of blob generation
+they are created in the live tree.
+* Consequently the patchset is much smaller.
+* Added -A auto-label alias generation option.
+* Addressed maintainer comments.
+* Added syntactic sugar for overlays in the form of .dtsi
+* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
+the previous form (although still works for backward compatibility)
+
+Changes since v3:
+* Rebase to latest dtc version.
+
+Changes since v2:
+* Split single patch to a patchset.
+* Updated to dtc mainline.
+* Changed __local_fixups__ format
+* Clean up for better legibility.
+Pantelis Antoniou (7):
+  dtc: Document the dynamic plugin internals
+  dtc: Plugin and fixup support
+  tests: Add check_path test
+  tests: Add overlay tests
+  overlay: Documentation for the overlay sugar syntax
+  overlay: Add syntactic sugar version of overlays
+  tests: Add a test for overlays syntactic sugar
+
+ Documentation/dt-object-internal.txt | 327 +++++++++++++++++++++++++++++++++++
+ Documentation/manual.txt             |  21 ++-
+ checks.c                             |   8 +-
+ dtc-lexer.l                          |   5 +
+ dtc-parser.y                         |  48 ++++-
+ dtc.c                                |  33 +++-
+ dtc.h                                |  17 +-
+ flattree.c                           |   2 +-
+ fstree.c                             |   2 +-
+ livetree.c                           | 291 ++++++++++++++++++++++++++++++-
+ tests/.gitignore                     |   1 +
+ tests/Makefile.tests                 |   3 +-
+ tests/check_path.c                   |  82 +++++++++
+ tests/overlay_base_fixups.dts        |  22 +++
+ tests/overlay_overlay_dtc.dts        |   1 +
+ tests/overlay_overlay_simple.dts     |  12 ++
+ tests/run_tests.sh                   |  38 ++++
+ 17 files changed, 898 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/dt-object-internal.txt
+ create mode 100644 tests/check_path.c
+ create mode 100644 tests/overlay_base_fixups.dts
+ create mode 100644 tests/overlay_overlay_simple.dts
+
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
