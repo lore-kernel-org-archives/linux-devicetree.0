@@ -1,163 +1,169 @@
 From: Chris Bostic <christopher.lee.bostic@gmail.com>
-Subject: [PATCH 01/16] drivers/fsi: Add empty fsi bus definitions
-Date: Tue,  6 Dec 2016 18:14:22 -0600
-Message-ID: <1481069677-53660-2-git-send-email-christopher.lee.bostic@gmail.com>
+Subject: [PATCH 13/16] drivers/fsi: Set slave SMODE to init communication
+Date: Tue,  6 Dec 2016 18:14:34 -0600
+Message-ID: <1481069677-53660-14-git-send-email-christopher.lee.bostic@gmail.com>
 References: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, sre@kernel.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Chris Bostic <cbostic@us.ibm.com>, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
+Cc: Chris Bostic <cbostic@us.ibm.com>, joel@jms.id.au, jk@ozlabs.org, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Chris Bostic <cbostic@us.ibm.com>
 
-This change adds the initial (empty) fsi bus definition, and introduces
-drivers/fsi/.
+Set CFAM to appropriate ID so that the controlling master
+can manage link memory ranges.  Add slave engine register
+definitions.
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
 ---
- drivers/Kconfig        |  2 ++
- drivers/Makefile       |  1 +
- drivers/fsi/Kconfig    | 12 ++++++++++++
- drivers/fsi/Makefile   |  2 ++
- drivers/fsi/fsi-core.c | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/fsi.h    | 22 ++++++++++++++++++++++
- 6 files changed, 77 insertions(+)
- create mode 100644 drivers/fsi/Kconfig
- create mode 100644 drivers/fsi/Makefile
- create mode 100644 drivers/fsi/fsi-core.c
- create mode 100644 include/linux/fsi.h
+ drivers/fsi/fsi-core.c | 90 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 89 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index e1e2066..117ca14c 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -202,4 +202,6 @@ source "drivers/hwtracing/intel_th/Kconfig"
- 
- source "drivers/fpga/Kconfig"
- 
-+source "drivers/fsi/Kconfig"
-+
- endmenu
-diff --git a/drivers/Makefile b/drivers/Makefile
-index f0afdfb..126e109 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -173,3 +173,4 @@ obj-$(CONFIG_STM)		+= hwtracing/stm/
- obj-$(CONFIG_ANDROID)		+= android/
- obj-$(CONFIG_NVMEM)		+= nvmem/
- obj-$(CONFIG_FPGA)		+= fpga/
-+obj-$(CONFIG_FSI)		+= fsi/
-diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-new file mode 100644
-index 0000000..04c1a0e
---- /dev/null
-+++ b/drivers/fsi/Kconfig
-@@ -0,0 +1,12 @@
-+#
-+# FSI subsystem
-+#
-+
-+menu "FSI support"
-+
-+config FSI
-+	tristate "FSI support"
-+	---help---
-+	  FSI - the FRU Support Interface - is a simple bus for low-level
-+	  access to POWER-based hardware.
-+endmenu
-diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
-new file mode 100644
-index 0000000..db0e5e7
---- /dev/null
-+++ b/drivers/fsi/Makefile
-@@ -0,0 +1,2 @@
-+
-+obj-$(CONFIG_FSI) += fsi-core.o
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-new file mode 100644
-index 0000000..3e45306
---- /dev/null
+index 93de0f1..a28434b 100644
+--- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -0,0 +1,38 @@
+@@ -34,6 +34,7 @@
+ #define FSI_SLAVE_CONF_DATA_BITS	28
+ 
+ #define FSI_PEEK_BASE			0x410
++#define	FSI_SLAVE_BASE			0x800
+ 
+ static const int engine_page_size = 0x400;
+ 
+@@ -53,8 +54,26 @@ static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 		const void *val, size_t size);
+ 
+-/* FSI endpoint-device support */
 +/*
-+ * FSI core driver
-+ *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * FSI slave engine control register offsets
 + */
++#define	FSI_SMODE		0x0	/* R/W: Mode register */
 +
-+#include <linux/device.h>
-+#include <linux/fsi.h>
-+#include <linux/module.h>
-+
-+/* FSI core & Linux bus type definitions */
-+
-+struct bus_type fsi_bus_type = {
-+	.name		= "fsi",
-+};
-+EXPORT_SYMBOL_GPL(fsi_bus_type);
-+
-+static int fsi_init(void)
++/*
++ * SMODE fields
++ */
++#define	FSI_SMODE_WSC		0x80000000	/* Warm start done */
++#define	FSI_SMODE_ECRC		0x20000000	/* Hw CRC check */
++#define	FSI_SMODE_SID_SHIFT	24		/* ID shift */
++#define	FSI_SMODE_SID_MASK	3		/* ID Mask */
++#define	FSI_SMODE_ED_SHIFT	20		/* Echo delay shift */
++#define	FSI_SMODE_ED_MASK	0xf		/* Echo delay mask */
++#define	FSI_SMODE_SD_SHIFT	16		/* Send delay shift */
++#define	FSI_SMODE_SD_MASK	0xf		/* Send delay mask */
++#define	FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
++#define	FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
+ 
++/* FSI endpoint-device support */
+ int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
+ 		size_t size)
+ {
+@@ -133,6 +152,30 @@ uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
+ 
+ /* FSI slave support */
+ 
++/* Encode slave local bus echo delay */
++static inline uint32_t fsi_smode_echodly(int x)
 +{
-+	return bus_register(&fsi_bus_type);
++	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
 +}
 +
-+static void fsi_exit(void)
++/* Encode slave local bus send delay */
++static inline uint32_t fsi_smode_senddly(int x)
 +{
-+	bus_unregister(&fsi_bus_type);
++	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
 +}
 +
-+module_init(fsi_init);
-+module_exit(fsi_exit);
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-new file mode 100644
-index 0000000..47aa181
---- /dev/null
-+++ b/include/linux/fsi.h
-@@ -0,0 +1,22 @@
-+/* FSI device & driver interfaces
-+ *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++/* Encode slave local bus clock rate ratio */
++static inline uint32_t fsi_smode_lbcrr(int x)
++{
++	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
++}
 +
-+#ifndef LINUX_FSI_H
-+#define LINUX_FSI_H
++/* Encode slave ID */
++static inline uint32_t fsi_smode_sid(int x)
++{
++	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
++}
 +
-+#include <linux/device.h>
+ static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+ 			void *val, size_t size)
+ {
+@@ -240,6 +283,22 @@ static void fsi_slave_release(struct device *dev)
+ 	kfree(slave);
+ }
+ 
++static uint32_t set_smode_defaults(struct fsi_master *master)
++{
++	return FSI_SMODE_WSC | FSI_SMODE_ECRC
++		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
++		| fsi_smode_lbcrr(1);
++}
 +
-+extern struct bus_type fsi_bus_type;
++static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
++{
++	uint32_t smode = set_smode_defaults(master);
 +
-+#endif /* LINUX_FSI_H */
++	smode |= fsi_smode_sid(id);
++	return master->write(master, link, 3, FSI_SLAVE_BASE + FSI_SMODE,
++				&smode, sizeof(smode));
++}
++
+ static int fsi_slave_init(struct fsi_master *master,
+ 		int link, uint8_t slave_id)
+ {
+@@ -248,6 +307,21 @@ static int fsi_slave_init(struct fsi_master *master,
+ 	int rc;
+ 	uint8_t crc;
+ 
++	/*
++	 * todo: Due to CFAM hardware issues related to BREAK commands we're
++	 * limited to only one CFAM per link.  Once issues are resolved this
++	 * restriction can be removed.
++	 */
++	if (slave_id > 0)
++		return 0;
++
++	rc = fsi_slave_set_smode(master, link, slave_id);
++	if (rc) {
++		dev_warn(master->dev, "can't set smode on slave:%02x:%02x %d\n",
++				link, slave_id, rc);
++		return -ENODEV;
++	}
++
+ 	rc = master->read(master, link, slave_id, 0, &chip_id, sizeof(chip_id));
+ 	if (rc) {
+ 		dev_warn(master->dev, "can't read slave %02x:%02x: %d\n",
+@@ -312,6 +386,7 @@ static int fsi_master_break(struct fsi_master *master, int link)
+ static int fsi_master_scan(struct fsi_master *master)
+ {
+ 	int link, slave_id, rc;
++	uint32_t smode;
+ 
+ 	for (link = 0; link < master->n_links; link++) {
+ 		rc = fsi_master_link_enable(master, link);
+@@ -327,6 +402,19 @@ static int fsi_master_scan(struct fsi_master *master)
+ 			continue;
+ 		}
+ 
++		/*
++		 * Verify can read slave at default ID location. If fails
++		 * there must be nothing on other end of link
++		 */
++		rc = master->read(master, link, 3, FSI_SLAVE_BASE + FSI_SMODE,
++				&smode, sizeof(smode));
++		if (rc) {
++			dev_dbg(master->dev,
++				"Read link:%d smode default id failed:%d\n",
++				link, rc);
++			continue;
++		}
++
+ 		for (slave_id = 0; slave_id < FSI_N_SLAVES; slave_id++)
+ 			fsi_slave_init(master, link, slave_id);
+ 
 -- 
 1.8.2.2
