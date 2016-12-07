@@ -1,115 +1,71 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v13 6/7] overlay: Add syntactic sugar version of overlays
-Date: Wed,  7 Dec 2016 14:48:22 +0200
-Message-ID: <1481114903-8197-7-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1481114903-8197-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481114903-8197-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] iio: light: add DT bindings for Capella CM3605
+Date: Wed,  7 Dec 2016 14:49:18 +0100
+Message-ID: <1481118558-8016-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For simple overlays that use a single target there exists a
-simpler syntax version.
+This adds device tree bindings for the Capella Microsystems CM3605
+ambient light sensor and short range proximity sensor.
 
-&foo { }; generates an overlay with a single target at foo.
-
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- dtc-parser.y | 20 +++++++++++++++++---
- dtc.h        |  1 +
- livetree.c   | 22 ++++++++++++++++++++++
- 3 files changed, 40 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/iio/light/cm3605.txt       | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/cm3605.txt
 
-diff --git a/dtc-parser.y b/dtc-parser.y
-index 27d358f..50da917 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -183,10 +183,19 @@ devicetree:
- 		{
- 			struct node *target = get_node_by_ref($1, $2);
- 
--			if (target)
-+			if (target) {
- 				merge_nodes(target, $3);
--			else
--				ERROR(&@2, "Label or path %s not found", $2);
-+			} else {
-+				/*
-+				 * We rely on the rule being always:
-+				 *   versioninfo plugindecl memreserves devicetree
-+				 * so $-1 is what we want (plugindecl)
-+				 */
-+				if ($<flags>-1 & DTSF_PLUGIN)
-+					add_orphan_node($1, $3, $2);
-+				else
-+					ERROR(&@2, "Label or path %s not found", $2);
-+			}
- 			$$ = $1;
- 		}
- 	| devicetree DT_DEL_NODE DT_REF ';'
-@@ -201,6 +210,11 @@ devicetree:
- 
- 			$$ = $1;
- 		}
-+	| /* empty */
-+		{
-+			/* build empty node */
-+			$$ = name_node(build_node(NULL, NULL), "");
-+		}
- 	;
- 
- nodedef:
-diff --git a/dtc.h b/dtc.h
-index 2ca8601..c97e291 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -198,6 +198,7 @@ struct node *build_node_delete(void);
- struct node *name_node(struct node *node, char *name);
- struct node *chain_node(struct node *first, struct node *list);
- struct node *merge_nodes(struct node *old_node, struct node *new_node);
-+void add_orphan_node(struct node *old_node, struct node *new_node, char *ref);
- 
- void add_property(struct node *node, struct property *prop);
- void delete_property_by_name(struct node *node, char *name);
-diff --git a/livetree.c b/livetree.c
-index df1bc04..0806e47 100644
---- a/livetree.c
-+++ b/livetree.c
-@@ -216,6 +216,28 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
- 	return old_node;
- }
- 
-+void add_orphan_node(struct node *dt, struct node *new_node, char *ref)
-+{
-+	static unsigned int next_orphan_fragment = 0;
-+	struct node *node;
-+	struct property *p;
-+	struct data d = empty_data;
-+	char *name;
+diff --git a/Documentation/devicetree/bindings/iio/light/cm3605.txt b/Documentation/devicetree/bindings/iio/light/cm3605.txt
+new file mode 100644
+index 000000000000..f0152559bdb9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/cm3605.txt
+@@ -0,0 +1,41 @@
++Capella Microsystems CM3605
++Ambient Light and Short Distance Proximity Sensor
 +
-+	d = data_add_marker(d, REF_PHANDLE, ref);
-+	d = data_append_integer(d, 0xffffffff, 32);
++The CM3605 is an entirely analog part which however require quite a bit of
++software logic to interface a host operating system.
 +
-+	p = build_property("target", d);
++This ALS and proximity sensor was one of the very first deployed in mobile
++handsets, notably it is used in the very first Nexus One Android phone from
++2010.
 +
-+	xasprintf(&name, "fragment@%u",
-+			next_orphan_fragment++);
-+	name_node(new_node, "__overlay__");
-+	node = build_node(p, new_node);
-+	name_node(node, name);
++Required properties:
++- compatible: must be: "capella,cm3605"
++- aset-gpios: GPIO line controlling the ASET line (drive low
++  to activate the ALS, should be flagged GPIO_ACTIVE_LOW)
++- interrupts: the IRQ line (such as a GPIO) that is connected to
++  the POUT (proximity sensor out) line. The edge detection must
++  be set to IRQ_TYPE_EDGE_BOTH so as to detect movements toward
++  and away from the proximity sensor.
++- io-channels: the ADC channel used for converting the voltage from
++  AOUT to a digital representation.
++- io-channel-names: must be "aout"
 +
-+	add_child(dt, node);
-+}
++Optional properties:
++- vdd-supply: regulator supplying VDD power to the component.
++- capella,aset-resistance: the sensitivity calibration resistance,
++  in Ohms. Valid values are: 50000, 100000, 300000 and 600000,
++  as these are the resistance values that we are supplied with
++  calibration curves for. If not supplied, 100 kOhm will be assumed
++  but it is strongly recommended to supply this.
 +
- struct node *chain_node(struct node *first, struct node *list)
- {
- 	assert(first->next_sibling == NULL);
++Example:
++
++cm3605 {
++	compatible = "capella,cm3605";
++	vdd-supply = <&foo_reg>;
++	aset-gpios = <&foo_gpio 1 GPIO_ACTIVE_LOW>;
++	capella,aset-resistance = <100000>; // Ohms
++	interrupts = <1 IRQ_TYPE_EDGE_BOTH>;
++	io-channels = <&adc 0x01>;
++	io-channel-names = "aout";
++};
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
