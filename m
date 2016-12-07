@@ -1,52 +1,58 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/8] rtc: add STM32 RTC driver
-Date: Wed, 7 Dec 2016 19:37:09 +0100
-Message-ID: <20161207183709.tbkapu34ljlg4skp@piout.net>
-References: <1480687801-19525-2-git-send-email-amelie.delaunay@st.com>
- <1480687801-19525-5-git-send-email-amelie.delaunay@st.com>
- <20161202175646.GA3284@linaro.org>
- <15bea9e9-adcc-edb0-1bd1-33d395c72eec@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 1/5] i2c: designware: Refactoring of the
+ i2c-designware
+Date: Wed, 07 Dec 2016 20:58:56 +0200
+Message-ID: <1481137136.30772.8.camel@linux.intel.com>
+References: <cover.1481131072.git.lolivei@synopsys.com>
+         <486c43e4c57116fa955ab99cea7f484ee8a2bdf3.1481131072.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBVVNUHBAKGQEBUS7VUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <15bea9e9-adcc-edb0-1bd1-33d395c72eec-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <486c43e4c57116fa955ab99cea7f484ee8a2bdf3.1481131072.git.lolivei@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2016 at 10:43:14 +0100, Amelie DELAUNAY wrote :
-> >> +
-> >> +    device_init_wakeup(&pdev->dev, true);
-> >
-> > What happens if device_init_wakeup() returns an error?
-> It means that RTC won't be able to wake up the board with RTC alarm. I can
-> add a warning for the user in this case ?
-> >
+On Wed, 2016-12-07 at 17:55 +0000, Luis Oliveira wrote:
+> - Factor out all _master() part of code from i2c-designware-core
+>   and i2c-designware-platdrv to separate functions.
+> - Standardize all code related with MASTER modes.
+> 
 
-There is exactly one driver ever checking the return value of
-device_init_wakeup(). It basically always succeeds.
+Couple of comments, after addressing them
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+
+> +	if ((dev->master_cfg & DW_IC_CON_MASTER) &&
+> +		 (dev->master_cfg & DW_IC_CON_SLAVE_DISABLE))
+> +		i2c_dw_configure_fifo_master(dev);
+
+So, logically it's a part of slave patch.
+For now it would be just 
+ i2c_dw_configure_fifo_master(dev);
+
+> +static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
+> +{
+> +	struct dw_i2c_dev *dev = dev_id;
+> +	u32 stat, enabled, mode;
+
+mode is unused here, this is a part of slave patch either.
+
+> +static void i2c_dw_configure_master(struct platform_device *pdev)
+> +{
+> +	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
+
+> +	dev_info(&pdev->dev, "I am registed as a I2C Master!\n");
+
+I don't want bikeshedding here, but the question just comes:
+"Do we need to have this available via sysfs as a part of ABI?" So. user
+space can check for / set a mode.
+
+In any case this one is a separate story and another patch, here just to
+make the message less annoying, it looks like dev_dbg() to me.
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
