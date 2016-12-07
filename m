@@ -1,142 +1,60 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 3/4] ARM: dts: da850-lcdk: add the vga-bridge node
-Date: Wed, 7 Dec 2016 15:30:46 +0100
-Message-ID: <CAMpxmJU3v2NCNHYoPyp6N9dP+2kt1cc4Mt6pbt1kfEiDa5b6=Q@mail.gmail.com>
-References: <1481107365-24839-1-git-send-email-bgolaszewski@baylibre.com>
- <1481107365-24839-4-git-send-email-bgolaszewski@baylibre.com> <1620991.lLXgDihv8c@avalon>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3] ARM: at91/dt: add dts file for sama5d36ek CMP board
+Date: Wed, 7 Dec 2016 15:44:41 +0100
+Message-ID: <20161207144441.ponnh4eeyxpifbxt@piout.net>
+References: <1479705283-3052-1-git-send-email-wenyou.yang@atmel.com>
+ <20161121140248.utlir6krokjeeobi@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1620991.lLXgDihv8c@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20161121140248.utlir6krokjeeobi@piout.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Wenyou Yang <wenyou.yang@microchip.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2016-12-07 15:25 GMT+01:00 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
-> Hi Bartosz,
->
-> Thank you for the patch.
->
-> On Wednesday 07 Dec 2016 11:42:44 Bartosz Golaszewski wrote:
->> Add the vga-bridge node to the board DT together with corresponding
->> ports and vga connector. This allows to retrieve the edid info from
->> the display automatically.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->> ---
->>  arch/arm/boot/dts/da850-lcdk.dts | 67 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 67 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850-lcdk.dts
->> b/arch/arm/boot/dts/da850-lcdk.dts index afcb482..39602eb 100644
->> --- a/arch/arm/boot/dts/da850-lcdk.dts
->> +++ b/arch/arm/boot/dts/da850-lcdk.dts
->> @@ -51,6 +51,51 @@
->>                       system-clock-frequency = <24576000>;
->>               };
->>       };
->> +
->> +     vga-bridge {
->> +             compatible = "ti,ths8135";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             ports {
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +
->> +                     port@0 {
->> +                             #address-cells = <1>;
->> +                             #size-cells = <0>;
->> +                             reg = <0>;
->> +
->> +                             vga_bridge_in: endpoint@0 {
->> +                                     reg = <0>;
->> +                                     remote-endpoint = <&lcdc_out_vga>;
->> +                             };
->> +                     };
->> +
->> +                     port@1 {
->> +                             #address-cells = <1>;
->> +                             #size-cells = <0>;
->> +                             reg = <1>;
->> +
->> +                             vga_bridge_out: endpoint@0 {
->> +                                     reg = <0>;
->> +                                     remote-endpoint = <&vga_con_in>;
->> +                             };
->> +                     };
->> +             };
->> +     };
->> +
->> +     vga {
->> +             compatible = "vga-connector";
->> +
->> +             ddc-i2c-bus = <&i2c0>;
->> +
->> +             port {
->> +                     vga_con_in: endpoint {
->> +                             remote-endpoint = <&vga_bridge_out>;
->> +                     };
->> +             };
->> +     };
->>  };
->>
->>  &pmx_core {
->> @@ -236,3 +281,25 @@
->>  &memctrl {
->>       status = "okay";
->>  };
->> +
->> +&lcdc {
->> +     status = "okay";
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&lcd_pins>;
->> +
->> +     ports {
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             lcdc_out: port@1 {
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +                     reg = <1>;
->> +
->> +                     lcdc_out_vga: endpoint@0 {
->> +                             reg = <0>;
->> +                             remote-endpoint = <&vga_bridge_in>;
->> +                     };
->> +             };
->
-> Just to make sure you're aware, when there's a single endpoint you can
-> simplify the DT by omitting the endpoint number. This would become
->
->                 lcdc_out: port@1 {
->                         reg = <1>;
->
->                         lcdc_out_vga: endpoint {
->                                 remote-endpoint = <&vga_bridge_in>;
->                         };
->                 };
->
-> It's entirely up to you, both get my
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
->> +     };
->> +};
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
+Hi,
 
-Hi Laurent,
+On 21/11/2016 at 15:02:48 +0100, Alexandre Belloni wrote :
+> > Changes in v3:
+> >  - Use a dual license scheme for DT files.
+> >  - Use the proper model name and the compatible string to reflect
+> >    the nature of this new "CMP" board.
+> >  - Change name of wakeup property to "wakeup-source".
+> >  - Remove unnecessary comments.
+> >  - Remove bootargs.
+> > 
+> > Changes in v2:
+> >  - Add the pinctrl sleep state for adc0 node to fix the over
+> >    consumption on VDDANA.
+> >  - Improve the commit log.
+> > 
+> >  arch/arm/boot/dts/sama5d36ek_cmp.dts  |  87 ++++++++++
+> >  arch/arm/boot/dts/sama5d3xcm_cmp.dtsi | 201 +++++++++++++++++++++++
+> >  arch/arm/boot/dts/sama5d3xmb_cmp.dtsi | 301 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 589 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/sama5d36ek_cmp.dts
+> >  create mode 100644 arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
+> >  create mode 100644 arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+> > 
+> Applied, thanks.
+> 
 
-thanks for the hint, I'll change it if there's going to be a new
-version of the series.
+Actually, I have to postpone this one for 4.12 because it depends on
+https://patchwork.ozlabs.org/patch/688265/
 
-Best regards,
-Bartosz Golaszewski
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
