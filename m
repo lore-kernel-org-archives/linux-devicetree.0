@@ -1,45 +1,34 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RESEND PATCH v2 4/7] drm/vc4: Add support for the VEC (Video
- Encoder) IP
-Date: Wed, 7 Dec 2016 16:12:05 +0100
-Message-ID: <20161207161205.485a3046@bbrezillon>
-References: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
- <1480686493-4813-5-git-send-email-boris.brezillon@free-electrons.com>
- <c1b904db-be3d-1e83-37bc-1f750ecfe224@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] mfd: dt: Add bindings for the Aspeed LPC Host
+ Controller (LHC)
+Date: Wed, 7 Dec 2016 16:12:29 +0100
+Message-ID: <CACRpkdYhKYjmaXf31Q44Wjvw=Bfjt=fViXH=SjaoDC6Kggotfg@mail.gmail.com>
+References: <20161206025321.1792-1-andrew@aj.id.au> <20161206025321.1792-5-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c1b904db-be3d-1e83-37bc-1f750ecfe224@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161206025321.1792-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCA1IERlYyAyMDE2IDE3OjUwOjEzIC0wODAwCkZsb3JpYW4gRmFpbmVsbGkgPGYuZmFp
-bmVsbGlAZ21haWwuY29tPiB3cm90ZToKCj4gT24gMTIvMDIvMjAxNiAwNTo0OCBBTSwgQm9yaXMg
-QnJlemlsbG9uIHdyb3RlOgo+ID4gVGhlIFZFQyBJUCBpcyBhIFRWIERBQywgcHJvdmlkaW5nIHN1
-cHBvcnQgZm9yIFBBTCBhbmQgTlRTQyBzdGFuZGFyZHMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
-IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+
-IC0tLSAgCj4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdmVjLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92ZWMuYwo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-PiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMmQ0MjU2ZmNjNmYyCj4gPiAtLS0gL2Rldi9udWxsCj4g
-PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92ZWMuYwo+ID4gQEAgLTAsMCArMSw2NTcg
-QEAKPiA+ICsvKgo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxNiBCcm9hZGNvbSBMaW1pdGVkICAK
-PiAKPiBUaGUgc3RhbmRhcmQgY29weXJpZ2h0IHRlbXBsYXRlIHBvc3QgYWNxdWlzaXRpb24gaXMg
-anVzdCBCcm9hZGNvbSwgbm90Cj4gQnJvYWRjb20gTGltaXRlZCwgbm9yIEJyb2FkY29tIGNvcnBv
-cmF0aW9uLiBDYW4geW91IGF1ZGl0IHlvdXIgZW50aXJlCj4gc3VibWlzc2lvbiBhbmQgZml4IHRo
-aXMgdXAgYWNjb3JkaW5nbHk/CgpUaGlzIGlzIHRoZSBvbmx5IHBhdGNoIGFkZGluZyBhIGNvcHly
-aWdodCBoZWFkZXIuCkVyaWMsIGNhbiB5b3UgZml4IHRoYXQgd2hlbiBhcHBseWluZyB0aGUgc2Vy
-aWVzIG9yIHNob3VsZCBJIHJlc2VuZCBhCm5ldyB2ZXJzaW9uPwoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Dec 6, 2016 at 3:53 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+
+> The LPC bus pinmux configuration on fifth generation Aspeed SoCs depends
+> on bits in both the System Control Unit and the LPC Host Controller.
+>
+> The Aspeed LPC Host Controller is described as a child node of the
+> LPC host-range syscon device for arbitration of access by the host
+> controller and pinmux drivers.
+>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+
+Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
