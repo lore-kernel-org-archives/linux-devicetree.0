@@ -1,99 +1,58 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada-{370,xp}: drop "marvell,orion-spi" from SPI controllers
-Date: Wed, 07 Dec 2016 16:30:02 +0100
-Message-ID: <87eg1jhi4l.fsf@free-electrons.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada-{370,xp}: drop "marvell,orion-spi" from
+ SPI controllers
+Date: Wed, 7 Dec 2016 16:41:45 +0100
+Message-ID: <20161207154145.yr2iua73xnoyjsse@pengutronix.de>
 References: <20161207152109.17545-1-uwe@kleine-koenig.org>
+ <87eg1jhi4l.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161207152109.17545-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> ("Uwe
-        =?utf-8?Q?Kleine-K=C3=B6nig=22's?= message of "Wed, 7 Dec 2016 16:21:09
- +0100")
+Content-Disposition: inline
+In-Reply-To: <87eg1jhi4l.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
- 
- On mer., dÃ©c. 07 2016, Uwe Kleine-KÃ¶nig <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> wrote:
+Hello Gregory,
 
-> From: Uwe Kleine-KÃ¶nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->
-> The SPI controllers on Armada 370 and XP differ from the original Orion
-> SPI controllers (at least) in the configuration of the baud rate. So
-> it's wrong to claim compatibility which results in bogus baud rates.
+On Wed, Dec 07, 2016 at 04:30:02PM +0100, Gregory CLEMENT wrote:
+>  On mer., déc. 07 2016, Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> wrote:
+> 
+> > From: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> > The SPI controllers on Armada 370 and XP differ from the original Orion
+> > SPI controllers (at least) in the configuration of the baud rate. So
+> > it's wrong to claim compatibility which results in bogus baud rates.
+> 
+> Until two years ago with the commits
+> df59fa7f4bca9658b75f0f5fee225b3a057475c5 and
+> 4dacccfac69494ba70248b134352f299171c41b7
+> we used "marvell,orion-spi" compatible on Armada XP and Armada 370
+> without any problem.
+> 
+> The new compatible "marvell,armada-xp-spi" and "marvell,armada-xp-spi"
+> allows to have more choice for the baudrate for a given clock but it is
+> not true that Armada 370 and Armada XP are not compatible with
+> "marvell,orion-spi".
 
-Until two years ago with the commits
-df59fa7f4bca9658b75f0f5fee225b3a057475c5 and
-4dacccfac69494ba70248b134352f299171c41b7
-we used "marvell,orion-spi" compatible on Armada XP and Armada 370
-without any problem.
+The issue I was faced with that made me create this patch is that in
+barebox no special case for 370/XP was active. The result was that a
+device that could be operated at 60 MHz only got a clock of 11 MHz and
+the driver assumed it configured 41.666 MHz. I didn't check if the same
+can happen in the opposite direction (or if there are other important
+incompatibilities) but still I'd say this is a bug with my patch being
+the obvious fix.
 
-The new compatible "marvell,armada-xp-spi" and "marvell,armada-xp-spi"
-allows to have more choice for the baudrate for a given clock but it is
-not true that Armada 370 and Armada XP are not compatible with
-"marvell,orion-spi".
-
-Gregory
-
->
-> Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370.dtsi | 4 ++--
->  arch/arm/boot/dts/armada-xp.dtsi  | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index b4258105e91f..b9377c11b379 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -435,13 +435,13 @@
->   * board level if a different configuration is used.
->   */
->  &spi0 {
-> -	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
-> +	compatible = "marvell,armada-370-spi";
->  	pinctrl-0 = <&spi0_pins1>;
->  	pinctrl-names = "default";
->  };
->  
->  &spi1 {
-> -	compatible = "marvell,armada-370-spi", "marvell,orion-spi";
-> +	compatible = "marvell,armada-370-spi";
->  	pinctrl-0 = <&spi1_pins>;
->  	pinctrl-names = "default";
->  };
-> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-> index 4a5f99e65b51..3a416834d80b 100644
-> --- a/arch/arm/boot/dts/armada-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp.dtsi
-> @@ -367,13 +367,13 @@
->  };
->  
->  &spi0 {
-> -	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
-> +	compatible = "marvell,armada-xp-spi";
->  	pinctrl-0 = <&spi0_pins>;
->  	pinctrl-names = "default";
->  };
->  
->  &spi1 {
-> -	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
-> +	compatible = "marvell,armada-xp-spi";
->  	pinctrl-0 = <&spi1_pins>;
->  	pinctrl-names = "default";
->  };
-> -- 
-> 2.10.2
->
+Best regards
+Uwe
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
