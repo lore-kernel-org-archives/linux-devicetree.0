@@ -1,35 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] i2c: sh_mobile: Add per-Generation fallback bindings
-Date: Wed, 7 Dec 2016 13:19:54 +0100
-Message-ID: <CAMuHMdVuwr9iA0c7Pupd=gng9w1HKr0mwzD6JqT60qnTzXwpxg@mail.gmail.com>
-References: <1481106689-22312-1-git-send-email-horms+renesas@verge.net.au> <1481107193-32502-1-git-send-email-horms+renesas@verge.net.au>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [RESEND PATCH 1/3] bindings: net: stmmac: correct note about TSO
+Date: Wed, 7 Dec 2016 13:41:06 +0100
+Message-ID: <1481114469-4788-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1481107193-32502-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Phil Reid <preid@electromag.com.au>, Eric Engestrom <eric@engestrom.ch>, Niklas Cassel <niklass@axis.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 7, 2016 at 11:39 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> Add per-Generation fallback bindings for R-Car SoCs.
->
-> This is in keeping with the compatibility string scheme is being adopted
-> for drivers for Renesas SoCs.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+snps,tso was previously placed under AXI BUS Mode parameters,
+suggesting that the property should be in the stmmac-axi-config node.
 
-Gr{oetje,eeting}s,
+TSO (TCP Segmentation Offloading) has nothing to do with AXI BUS Mode
+parameters, and the parser actually expects it to be in the root node,
+not in the stmmac-axi-config.
 
-                        Geert
+Also added a note about snps,tso only being available on GMAC4 and newer.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index 41b49e6075f5..b95ff998ba73 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -1,7 +1,7 @@
+ * STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
+ 
+ Required properties:
+-- compatible: Should be "snps,dwmac-<ip_version>" "snps,dwmac"
++- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
+ 	For backwards compatibility: "st,spear600-gmac" is also supported.
+ - reg: Address and length of the register set for the device
+ - interrupt-parent: Should be the phandle for the interrupt controller
+@@ -50,6 +50,8 @@ Optional properties:
+ - snps,ps-speed: port selection speed that can be passed to the core when
+ 		 PCS is supported. For example, this is used in case of SGMII
+ 		 and MAC2MAC connection.
++- snps,tso: this enables the TSO feature otherwise it will be managed by
++		 MAC HW capability register. Only for GMAC4 and newer.
+ - AXI BUS Mode parameters: below the list of all the parameters to program the
+ 			   AXI register inside the DMA module:
+ 	- snps,lpi_en: enable Low Power Interface
+@@ -62,8 +64,6 @@ Optional properties:
+ 	- snps,fb: fixed-burst
+ 	- snps,mb: mixed-burst
+ 	- snps,rb: rebuild INCRx Burst
+-	- snps,tso: this enables the TSO feature otherwise it will be managed by
+-	    MAC HW capability register.
+ - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+ 
+ Examples:
+-- 
+2.1.4
