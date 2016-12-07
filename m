@@ -1,47 +1,97 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: rockchip: add qos node for rk3288
-Date: Wed, 07 Dec 2016 17:53:57 +0100
-Message-ID: <5856854.mtF1yXxMzF@phil>
-References: <1481077065-11309-1-git-send-email-zhangqing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481077065-11309-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Anurup M <anurupvasu@gmail.com>
+Subject: [PATCH v2 00/10] perf: arm64: Support for Hisilicon SoC Hardware event counters
+Date: Wed,  7 Dec 2016 11:53:38 -0500
+Message-ID: <1481129618-159391-1-git-send-email-anurup.m@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, arnd@arndb.de, geert+renesas@glider.be, davem@davemloft.net, akpm@linux-foundation.org, corbet@lwn.net, mark.rutland@arm.com, will.deacon@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 7. Dezember 2016, 10:17:45 CET schrieb Elaine Zhang:
-> when pd power on/off, the qos regs need to save and restore.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 84
-> +++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 84
-> insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 4fad13368a7b..2628edc871fa 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -699,6 +699,76 @@
->  		reg = <0xff720000 0x1000>;
->  	};
-> 
-> +	qos_gpu_r: qos@ffaa0000 {
-> +		compatible = "syscon";
-> +		reg = <0xffaa0000 0x20>;
-> +	};
+Provide Support for Hisilicon SoC(HiP05/06/07) Hardware event counters.
+The Hisilicon SoC HiP0x series has many uncore or non-CPU performance
+events and counters units.
 
-applied for 4.11, after moving the qos nodes to their correct place (please 
-sort according to register address [aka 0xffaa.... behind the hdmi])
+This patch series is implemented refering to arm-cci, Intel/AMD uncore and
+also the cavium thunderX and xgene uncore pmu patches.
+This v2 version has addressed the review comments of v1 version.
 
+Support for Hisilicon L3 cache(L3C) and Misclennaneous nodes(MN) hardware
+events and counters are added in this implementation.
 
-Thanks
-Heiko
+The Hisilicon uncore PMUs can be found under /sys/bus/event_source/devices.
+The counters are exported via sysfs in the corresponding events files
+under the PMU directory so the perf tool can list the event names.
+
+ToDo:
+1) The counter overflow handling is currently unsupported in this
+   patch series.
+2) ACPI support.
+
+Version history
+---------------
+
+v2
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Fix review comments of v2 version.
+- Move djtag driver to drivers/perf/hisilicon.
+- Have separate PMU instance for each L3 cache banks.
+- Modify device properties in DTS as per review comments.
+- Handle hardware version difference.
+- Change compatible names of djtag so use prefix hisi-
+  and remove chip version as driver only depend on djtag
+  hw version.
+- use devm_kzalloc.
+- Remove DDRC changes in this series. As the DDRC PMU doesnot
+  depend on djtag it will be send separately.
+
+v1
+--
+-Initial version with support for L3C, MN and DDRC event counters
+-Djtag driver is used to access registers of L3 cache and MN.
+
+Anurup M (7):
+  arm64: MAINTAINERS: hisi: Add hisilicon SoC PMU support
+  dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
+  Documentation: perf: hisi: Documentation for HIP05/06/07 PMU event
+    counting.
+  perf: hisi: Update Kconfig for Hisilicon PMU support
+  perf: hisi: Add support for Hisilicon SoC event counters
+  perf: hisi: Add sysfs attributes for L3 cache(L3C) PMU
+  dts: arm64: hip06: Add Hisilicon SoC PMU support
+
+Shaokun Zhang (1):
+  perf: hisi: Miscellanous node(MN) event counting in perf
+
+Tan Xiaojun (2):
+  dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
+  drivers: perf: hisi: Add support for Hisilicon Djtag driver
+
+ .../devicetree/bindings/arm/hisilicon/djtag.txt    |  66 ++
+ .../devicetree/bindings/arm/hisilicon/pmu.txt      |  98 +++
+ Documentation/perf/hisi-pmu.txt                    |  75 +++
+ MAINTAINERS                                        |   9 +
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi           |  78 +++
+ drivers/perf/Kconfig                               |   8 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/hisilicon/Makefile                    |   1 +
+ drivers/perf/hisilicon/djtag.c                     | 729 +++++++++++++++++++++
+ drivers/perf/hisilicon/djtag.h                     |  39 ++
+ drivers/perf/hisilicon/hisi_uncore_l3c.c           | 629 ++++++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_mn.c            | 516 +++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.c           | 365 +++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.h           | 128 ++++
+ 14 files changed, 2742 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ create mode 100644 Documentation/perf/hisi-pmu.txt
+ create mode 100644 drivers/perf/hisilicon/Makefile
+ create mode 100644 drivers/perf/hisilicon/djtag.c
+ create mode 100644 drivers/perf/hisilicon/djtag.h
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_l3c.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.h
+
+-- 
+2.1.4
