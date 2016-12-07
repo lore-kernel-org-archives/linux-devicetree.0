@@ -1,101 +1,105 @@
-From: Chris Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 04/16] drivers/fsi: Add fsi master definition
-Date: Tue,  6 Dec 2016 20:09:30 -0600
-Message-ID: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+From: Chris Bostic <christopher.lee.bostic@gmail.com>
+Subject: [PATCH 09/16] drivers/fsi: Implement slave initialisation
+Date: Tue,  6 Dec 2016 20:09:32 -0600
+Message-ID: <1481076574-54711-3-git-send-email-christopher.lee.bostic@gmail.com>
+References: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, sre@kernel.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Create fsi_slave devices during the master scan.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
 ---
- drivers/fsi/fsi-core.c   | 20 ++++++++++++++++++++
- drivers/fsi/fsi-master.h | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
- create mode 100644 drivers/fsi/fsi-master.h
+ drivers/fsi/fsi-core.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 3d55bd5..ce9428d 100644
+index f0832c7..aa4330a 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -17,6 +17,26 @@
+@@ -16,10 +16,14 @@
+ #include <linux/device.h>
  #include <linux/fsi.h>
  #include <linux/module.h>
++#include <linux/slab.h>
  
-+#include "fsi-master.h"
-+
-+static atomic_t master_idx = ATOMIC_INIT(-1);
-+
-+/* FSI master support */
-+
-+int fsi_master_register(struct fsi_master *master)
-+{
-+	master->idx = atomic_inc_return(&master_idx);
-+	get_device(master->dev);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(fsi_master_register);
-+
-+void fsi_master_unregister(struct fsi_master *master)
-+{
-+	put_device(master->dev);
-+}
-+EXPORT_SYMBOL_GPL(fsi_master_unregister);
-+
- /* FSI core & Linux bus type definitions */
+ #include "fsi-master.h"
  
- static int fsi_bus_match(struct device *dev, struct device_driver *drv)
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-new file mode 100644
-index 0000000..e75a810
---- /dev/null
-+++ b/drivers/fsi/fsi-master.h
-@@ -0,0 +1,37 @@
-+/*
-+ * FSI master definitions. These comprise the core <--> master interface,
-+ * to allow the core to interact with the (hardware-specific) masters.
-+ *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
+ #define FSI_N_SLAVES	4
++#define FSI_SLAVE_CONF_CRC_SHIFT        4
++#define FSI_SLAVE_CONF_CRC_MASK         0x0000000f
++#define FSI_SLAVE_CONF_DATA_BITS        28
+ 
+ static atomic_t master_idx = ATOMIC_INIT(-1);
+ 
+@@ -54,12 +58,59 @@ uint8_t fsi_crc4(uint8_t c, uint64_t x, int bits)
+ EXPORT_SYMBOL_GPL(fsi_crc4);
+ 
+ /* FSI slave support */
 +
-+#ifndef DRIVERS_FSI_MASTER_H
-+#define DRIVERS_FSI_MASTER_H
++static void fsi_slave_release(struct device *dev)
++{
++	struct fsi_slave *slave = to_fsi_slave(dev);
 +
-+#include <linux/device.h>
++	kfree(slave);
++}
 +
-+struct fsi_master {
-+	struct device	*dev;
-+	int		idx;
-+	int		n_links;
-+	int		(*read)(struct fsi_master *, int link,
-+				uint8_t slave, uint32_t addr,
-+				void *val, size_t size);
-+	int		(*write)(struct fsi_master *, int link,
-+				uint8_t slave, uint32_t addr,
-+				const void *val, size_t size);
-+};
+ static int fsi_slave_init(struct fsi_master *master,
+ 		int link, uint8_t slave_id)
+ {
+-	/* todo: initialise slave device, perform engine scan */
++	struct fsi_slave *slave;
++	uint32_t chip_id;
++	int rc;
++	uint8_t crc;
 +
-+extern int fsi_master_register(struct fsi_master *master);
-+extern void fsi_master_unregister(struct fsi_master *master);
++	rc = master->read(master, link, slave_id, 0, &chip_id, sizeof(chip_id));
++	if (rc) {
++		dev_warn(master->dev, "can't read slave %02x:%02x: %d\n",
++				link, slave_id, rc);
++		return -ENODEV;
++	}
++	crc = fsi_crc4(0, chip_id >> FSI_SLAVE_CONF_CRC_SHIFT,
++			FSI_SLAVE_CONF_DATA_BITS);
++	if (crc != (chip_id & FSI_SLAVE_CONF_CRC_MASK)) {
++		dev_warn(master->dev, "slave %02x:%02x invalid chip id CRC!\n",
++				link, slave_id);
++		return -EIO;
++	}
 +
-+#endif /* DRIVERS_FSI_MASTER_H */
++	pr_debug("fsi: found chip %08x at %02x:%02x:%02x\n",
++			master->idx, chip_id, link, slave_id);
++
++	/* we can communicate with a slave; create devices and scan */
++	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
++	if (!slave)
++		return -ENOMEM;
++
++	slave->master = master;
++	slave->id = slave_id;
++	slave->dev.parent = master->dev;
++	slave->dev.release = fsi_slave_release;
++
++	dev_set_name(&slave->dev, "slave@%02x:%02x", link, slave_id);
++	rc = device_register(&slave->dev);
++	if (rc < 0) {
++		dev_warn(master->dev, "failed to create slave device: %d\n",
++				rc);
++		put_device(&slave->dev);
++		return rc;
++	}
+ 
+-	return -ENODEV;
++	return rc;
+ }
+ 
+ /* FSI master support */
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
