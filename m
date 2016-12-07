@@ -1,105 +1,175 @@
-From: Chris Bostic <christopher.lee.bostic@gmail.com>
-Subject: [PATCH 03/16] drivers/fsi: add driver to device matches
-Date: Tue,  6 Dec 2016 18:14:24 -0600
-Message-ID: <1481069677-53660-4-git-send-email-christopher.lee.bostic@gmail.com>
-References: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] i2c: aspeed: added documentation for Aspeed I2C
+ driver
+Date: Wed, 7 Dec 2016 02:19:26 +0200
+Message-ID: <5ca0db30-76e1-5ffa-fb48-6e0ace945f82@mleia.com>
+References: <1480467618-7497-1-git-send-email-brendanhiggins@google.com>
+ <1480467618-7497-3-git-send-email-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, sre@kernel.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Chris Bostic <cbostic@us.ibm.com>, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480467618-7497-3-git-send-email-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+Hello Brendan,
 
-Driver bind to devices based on the engine types & (optional) versions.
+please find review comments below.
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
----
- drivers/fsi/fsi-core.c | 21 +++++++++++++++++++++
- include/linux/fsi.h    | 21 +++++++++++++++++++--
- 2 files changed, 40 insertions(+), 2 deletions(-)
+On 11/30/2016 03:00 AM, Brendan Higgins wrote:
+> Added device tree binding documentation for Aspeed I2C controller and
+> busses.
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 3e45306..3d55bd5 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -19,8 +19,29 @@
- 
- /* FSI core & Linux bus type definitions */
- 
-+static int fsi_bus_match(struct device *dev, struct device_driver *drv)
-+{
-+	struct fsi_device *fsi_dev = to_fsi_dev(dev);
-+	struct fsi_driver *fsi_drv = to_fsi_drv(drv);
-+	const struct fsi_device_id *id;
-+
-+	if (!fsi_drv->id_table)
-+		return 0;
-+
-+	for (id = fsi_drv->id_table; id->engine_type; id++) {
-+		if (id->engine_type != fsi_dev->engine_type)
-+			continue;
-+		if (id->version == FSI_VERSION_ANY ||
-+				id->version == fsi_dev->version)
-+			return 1;
-+	}
-+
-+	return 0;
-+}
-+
- struct bus_type fsi_bus_type = {
- 	.name		= "fsi",
-+	.match		= fsi_bus_match,
- };
- EXPORT_SYMBOL_GPL(fsi_bus_type);
- 
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index f73886a..273cbf6 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -18,11 +18,28 @@
- #include <linux/device.h>
- 
- struct fsi_device {
--	struct device dev;
-+	struct device		dev;
-+	u8			engine_type;
-+	u8			version;
- };
- 
-+struct fsi_device_id {
-+	u8	engine_type;
-+	u8	version;
-+};
-+
-+#define FSI_VERSION_ANY		0
-+
-+#define FSI_DEVICE(t) \
-+	.engine_type = (t), .version = FSI_VERSION_ANY,
-+
-+#define FSI_DEVICE_VERSIONED(t, v) \
-+	.engine_type = (t), .version = (v),
-+
-+
- struct fsi_driver {
--	struct device_driver drv;
-+	struct device_driver		drv;
-+	const struct fsi_device_id	*id_table;
- };
- 
- #define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
--- 
-1.8.2.2
+This is not the exact description of the added bindings, here you add two
+device tree bindings of interrupt controller device and I2C bus controller
+device.
+
+Please separate the description into two separate files, place one into
+../interrupt-controller/aspeed,ast2400-i2c-ic.txt and another one into
+../i2c/aspeed,ast2400-i2c.txt file
+
+The description of device tree bindings must precede the actual drivers,
+assuming that the file with two drivers is also split into two files
+there should be 4 patches for v6:
+1) device tree description of the interrupt controller,
+2) interrupt controller driver,
+3) device tree description of the I2C bus controller,
+4) I2C bus controller driver.
+
+> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes for v2:
+>   - None
+> Changes for v3:
+>   - Removed reference to "bus" device tree param
+> Changes for v4:
+>   - None
+> Changes for v5:
+>   - None
+> ---
+>  .../devicetree/bindings/i2c/i2c-aspeed.txt         | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> new file mode 100644
+> index 0000000..dd11a97
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> @@ -0,0 +1,61 @@
+> +Device tree configuration for the I2C controller and busses on the AST24XX
+> +and AST25XX SoCs.
+> +
+> +Controller:
+
+Interrupt controller.
+
+> +
+> +	Required Properties:
+> +	- #address-cells	: should be 1
+> +	- #size-cells 		: should be 1
+> +	- #interrupt-cells 	: should be 1
+> +	- compatible 		: should be "aspeed,ast2400-i2c-controller"
+> +				  or "aspeed,ast2500-i2c-controller"
+> +	- reg			: address start and range of controller
+> +	- ranges		: defines address offset and range for busses
+> +	- interrupts		: interrupt number
+> +	- clocks		: root clock of bus, should reference the APB
+> +				  clock
+> +	- clock-ranges		: specifies that child busses can inherit clocks
+> +	- interrupt-controller	: denotes that the controller receives and fires
+> +				  new interrupts for child busses
+> +
+> +Bus:
+
+I2C bus controller.
+
+> +
+> +	Required Properties:
+> +	- #address-cells	: should be 1
+> +	- #size-cells		: should be 0
+> +	- reg			: address offset and range of bus
+> +	- compatible		: should be "aspeed,ast2400-i2c-bus"
+> +				  or "aspeed,ast2500-i2c-bus"
+> +	- interrupts		: interrupt number
+> +
+> +	Optional Properties:
+> +	- clock-frequency	: frequency of the bus clock in Hz
+> +				  defaults to 100 kHz when not specified
+> +
+> +Example:
+> +
+> +i2c: i2c@1e78a000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	#interrupt-cells = <1>;
+> +
+> +	compatible = "aspeed,ast2400-i2c-controller";
+> +	reg = <0x1e78a000 0x40>;
+> +	ranges = <0 0x1e78a000 0x1000>;
+> +	interrupts = <12>;
+> +	clocks = <&clk_apb>;
+> +	clock-ranges;
+> +	interrupt-controller;
+> +
+> +	i2c0: i2c-bus@40 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x40 0x40>;
+> +		compatible = "aspeed,ast2400-i2c-bus";
+> +		clock-frequency = <100000>;
+> +		status = "disabled";
+> +		interrupts = <0>;
+> +		interrupt-parent = <&i2c>;
+> +	};
+> +};
+
+The selected layout of device tree nodes does not reflect the actual
+hardware, I2C bus controller (sub-)devices can not be children of the
+interrupt controller device, they are only consumers of interrupts from
+the interrupt controller device.
+
+In this case the proper and expected device tree description should
+look like the one below:
+
+i2c {
+	compatible = "simple-bus";
+	#address-cells = <1>;
+	#size-cells = <1>;
+	ranges = <0 0x1e78a000 0x1000>;
+
+	i2c-ic: interrupt-controller@0 {
+		compatible = "aspeed,ast2400-i2c-ic";
+		reg = <0x0 0x40>;
+		clocks = <&clk_apb>;
+		interrupt-controller;
+		interrupts = <12>;
+		#interrupt-cells = <1>;
+	};
+
+	i2c0: i2c@40 {
+		compatible = "aspeed,ast2400-i2c";
+		reg = <0x40 0x40>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		clock-frequency = <100000>;
+		interrupt-parent = <&i2c-ic>;
+		interrupts = <0>;
+		status = "disabled";
+	};
+
+	i2c1: i2c-bus@80 {
+		.....
+	};
+};
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
