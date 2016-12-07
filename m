@@ -1,79 +1,168 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 2/4] drm: bridge: add support for TI ths8135
-Date: Wed, 7 Dec 2016 11:45:11 +0100
-Message-ID: <CAMpxmJX9b3UqNz_nERH-N58Yw3jkSZ1P+PjjA51x3wTC0So7mQ@mail.gmail.com>
-References: <1481107365-24839-1-git-send-email-bgolaszewski@baylibre.com>
- <1481107365-24839-3-git-send-email-bgolaszewski@baylibre.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] IIO: add STM32 timer trigger driver
+Date: Wed, 7 Dec 2016 10:50:02 +0000
+Message-ID: <20161207105002.GA3625@dell.home>
+References: <1481027929-13704-1-git-send-email-benjamin.gaignard@st.com>
+ <1481027929-13704-7-git-send-email-benjamin.gaignard@st.com>
+ <20161206131635.GJ25385@dell.home>
+ <CA+M3ks6fxCucmaY0OgpMb_opA=YLrowijJ0YQ+imeprhWg6N_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1481107365-24839-3-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CA+M3ks6fxCucmaY0OgpMb_opA=YLrowijJ0YQ+imeprhWg6N_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNi0xMi0wNyAxMTo0MiBHTVQrMDE6MDAgQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3
-c2tpQGJheWxpYnJlLmNvbT46Cj4gVEhTODEzNSBpcyBhIGNvbmZpZ3VyYWJsZSB2aWRlbyBEQUMu
-IEFkZCBEVCBiaW5kaW5ncyBmb3IgdGhpcyBjaGlwIGFuZAo+IHVzZSB0aGUgZHVtYi12Z2EtZGFj
-IGRyaXZlciBmb3Igbm93IGFzIG5vIGNvbmZpZ3VyYXRpb24gaXMgcmVxdWlyZWQgdG8KPiBtYWtl
-IGl0IHdvcmsuCj4KPiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6
-ZXdza2lAYmF5bGlicmUuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-dGksdGhzODEzNS50eHQgICAgICAgICB8IDUyICsrKysrKysrKysrKysrKysrKysrKysKPiAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYyAgICAgICAgICAgICAgfCAgMSArCj4g
-IDIgZmlsZXMgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgx
-MzUudHh0Cj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0Cj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPiBpbmRleCAwMDAwMDAwLi4yM2NkOGVlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTM1
-LnR4dAo+IEBAIC0wLDAgKzEsNTIgQEAKPiArVEhTODEzNSBWaWRlbyBEQUMKPiArLS0tLS0tLS0t
-LS0tLS0tLS0KPiArCj4gK1RoaXMgaXMgdGhlIGJpbmRpbmcgZm9yIFRleGFzIEluc3RydW1lbnRz
-IFRIUzgxMzUgVmlkZW8gREFDIGJyaWRnZS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
-Kwo+ICstIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHRoczgxMzUiCj4gKwo+ICtSZXF1aXJlZCBu
-b2RlczoKPiArCj4gK1RoaXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5l
-Y3Rpb25zIGFyZSBtb2RlbGxlZCB1c2luZyB0aGUgT0YKPiArZ3JhcGggYmluZGluZ3Mgc3BlY2lm
-aWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+
-ICstIFZpZGVvIHBvcnQgMCBmb3IgUkdCIGlucHV0Cj4gKy0gVmlkZW8gcG9ydCAxIGZvciBWR0Eg
-b3V0cHV0Cj4gKwo+ICtFeGFtcGxlCj4gKy0tLS0tLS0KPiArCj4gK3ZnYS1icmlkZ2Ugewo+ICsg
-ICAgICAgY29tcGF0aWJsZSA9ICJ0aSx0aHM4MTM1IjsKPiArICAgICAgICNhZGRyZXNzLWNlbGxz
-ID0gPDE+Owo+ICsgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsgICAgICAgcG9ydHMg
-ewo+ICsgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsgICAgICAgICAgICAgICBwb3J0QDAgewo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHJlZyA9IDwwPjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgdmdhX2JyaWRnZV9pbjog
-ZW5kcG9pbnRAMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jmxj
-ZGNfb3V0X3ZnYT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAg
-ICAgfTsKPiArCj4gKyAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI3Np
-emUtY2VsbHMgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+ICsK
-PiArICAgICAgICAgICAgICAgICAgICAgICB2Z2FfYnJpZGdlX291dDogZW5kcG9pbnRAMCB7Cj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9jb25faW4+Owo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICB9
-Owo+ICt9Owo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRh
-Yy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+IGluZGV4IGFmZWMy
-MzIuLjQ5OGZhNzUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZn
-YS1kYWMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMKPiBA
-QCAtMjA0LDYgKzIwNCw3IEBAIHN0YXRpYyBpbnQgZHVtYl92Z2FfcmVtb3ZlKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYpCj4KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-ZHVtYl92Z2FfbWF0Y2hbXSA9IHsKPiAgICAgICAgIHsgLmNvbXBhdGlibGUgPSAiZHVtYi12Z2Et
-ZGFjIiB9LAo+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJ0aSx0aHM4MTM1IiB9LAo+ICAgICAg
-ICAge30sCj4gIH07Cj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGR1bWJfdmdhX21hdGNoKTsK
-PiAtLQo+IDIuOS4zCj4KCisgTWF4aW1lCgpTb3JyeSwgSSBmb3Jnb3QgdG8gaW5jbHVkZSB5b3Vy
-IGUtbWFpbC4KCkJhcnRvc3oKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Tue, 06 Dec 2016, Benjamin Gaignard wrote:
+
+> [snip]
+> >> +
+> >> +static const char * const triggers0[] = {
+> >> +     TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers1[] = {
+> >> +     TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers2[] = {
+> >> +     TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers3[] = {
+> >> +     TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers4[] = {
+> >> +     TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers5[] = {
+> >> +     TIM6_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers6[] = {
+> >> +     TIM7_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers7[] = {
+> >> +     TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers8[] = {
+> >> +     TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,
+> >> +};
+> >> +
+> >> +static const char * const triggers9[] = {
+> >> +     TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,
+> >> +};
+> >> +
+> >> +static const void *triggers_table[] = {
+> >> +     triggers0,
+> >> +     triggers1,
+> >> +     triggers2,
+> >> +     triggers3,
+> >> +     triggers4,
+> >> +     triggers5,
+> >> +     triggers6,
+> >> +     triggers7,
+> >> +     triggers8,
+> >> +     triggers9,
+> >> +};
+> >
+> > What about:
+> >
+> > static const char * const triggers[][] = {
+> >         { TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL },
+> >         { TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL },
+> >         { TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL },
+> >         { TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL },
+> >         { TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL },
+> >         { TIM6_TRGO, NULL },
+> >         { TIM7_TRGO, NULL },
+> >         { TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL },
+> >         { TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL },
+> >         { TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL }
+> > };
+> 
+> I can't because the second dimension of the array isn't fix.
+> I could have between 2 and 6 elements per row... to create a dual dimension
+> array I would have to add NULL entries like that:
+> 
+> #define MAX_TRIGGERS 6
+> 
+> static const void *triggers_table[][MAX_TRIGGERS] = {
+> { TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4, NULL,},
+> { TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4, NULL,},
+> { TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4, NULL,},
+> { TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4, NULL,},
+> { TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4, NULL,},
+> { TIM6_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
+> { TIM7_TRGO, NULL,     NULL,     NULL,     NULL,     NULL,},
+> { TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4, NULL,},
+> { TIM9_TRGO, TIM9_CH1, TIM9_CH2, NULL,     NULL,     NULL,},
+> { TIM12_TRGO, TIM12_CH1, TIM12_CH2, NULL,  NULL,     NULL,},
+> };
+
+It was just an idea, not a tested implementation.
+
+I don't understand why you have to pad with NULLs, but either way, it
+looks much better than before and saves lots of lines of code.
+
+> >> +static const char * const valids0[] = {
+> >> +     TIM5_TRGO, TIM2_TRGO, TIM4_TRGO, TIM3_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const valids1[] = {
+> >> +     TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const valids2[] = {
+> >> +     TIM1_TRGO, TIM8_TRGO, TIM5_TRGO, TIM4_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const valids3[] = {
+> >> +     TIM1_TRGO, TIM2_TRGO, TIM3_TRGO, TIM8_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char *const valids4[] = {
+> >> +     TIM2_TRGO, TIM3_TRGO, TIM4_TRGO, TIM8_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const valids7[] = {
+> >> +     TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const valids8[] = {
+> >> +     TIM2_TRGO, TIM3_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const char * const valids9[] = {
+> >> +     TIM4_TRGO, TIM5_TRGO, NULL,
+> >> +};
+> >> +
+> >> +static const void *valids_table[] = {
+> >> +     valids0,
+> >> +     valids1,
+> >> +     valids2,
+> >> +     valids3,
+> >> +     valids4,
+> >> +     NULL,
+> >> +     NULL,
+> >> +     valids7,
+> >> +     valids8,
+> >> +     valids9,
+> >> +};
+> >
+> > Same here.
+> >
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
