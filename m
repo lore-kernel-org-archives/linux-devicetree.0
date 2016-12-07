@@ -1,60 +1,48 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v3] ARM: at91/dt: add dts file for sama5d36ek CMP board
-Date: Wed, 7 Dec 2016 15:44:41 +0100
-Message-ID: <20161207144441.ponnh4eeyxpifbxt@piout.net>
-References: <1479705283-3052-1-git-send-email-wenyou.yang@atmel.com>
- <20161121140248.utlir6krokjeeobi@piout.net>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [RFC PATCH v3 2/2] drm/panel: Add support for Chunghwa
+ CLAA070WP03XG panel
+Date: Wed, 7 Dec 2016 15:55:55 +0100
+Message-ID: <20161207145555.kdg7azcrpnwnb2r6@phenom.ffwll.local>
+References: <1474311771-23321-1-git-send-email-ayaka@soulik.info>
+ <1474311771-23321-3-git-send-email-ayaka@soulik.info>
+ <20161206154625.GA28534@ulmo.ba.sec>
+ <2C9FE0C5-F521-48CD-B274-66128312CA75@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161121140248.utlir6krokjeeobi@piout.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Wenyou Yang <wenyou.yang@microchip.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <2C9FE0C5-F521-48CD-B274-66128312CA75@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ayaka <ayaka@soulik.info>
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, linux-kernel@vger.kernel.org, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 21/11/2016 at 15:02:48 +0100, Alexandre Belloni wrote :
-> > Changes in v3:
-> >  - Use a dual license scheme for DT files.
-> >  - Use the proper model name and the compatible string to reflect
-> >    the nature of this new "CMP" board.
-> >  - Change name of wakeup property to "wakeup-source".
-> >  - Remove unnecessary comments.
-> >  - Remove bootargs.
-> > 
-> > Changes in v2:
-> >  - Add the pinctrl sleep state for adc0 node to fix the over
-> >    consumption on VDDANA.
-> >  - Improve the commit log.
-> > 
-> >  arch/arm/boot/dts/sama5d36ek_cmp.dts  |  87 ++++++++++
-> >  arch/arm/boot/dts/sama5d3xcm_cmp.dtsi | 201 +++++++++++++++++++++++
-> >  arch/arm/boot/dts/sama5d3xmb_cmp.dtsi | 301 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 589 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/sama5d36ek_cmp.dts
-> >  create mode 100644 arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-> >  create mode 100644 arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-> > 
-> Applied, thanks.
+On Wed, Dec 07, 2016 at 08:57:23AM +0800, Ayaka wrote:
 > 
+> 
+> 從我的 iPad 傳送
+> 
+> > Thierry Reding <thierry.reding@gmail.com> 於 2016年12月6日 下午11:46 寫道：
+> > 
+> >> On Tue, Sep 20, 2016 at 03:02:51AM +0800, Randy Li wrote:
+> >> The Chunghwa CLAA070WP03XG is a 7" 1280x800 panel, which can be
+> >> supported by the simple panel driver.
+> >> 
+> >> Signed-off-by: Randy Li <ayaka@soulik.info>
+> >> ---
+> >> .../display/panel/chunghwa,claa070wp03xg.txt       |  7 ++++++
+> >> drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+> >> 2 files changed, 34 insertions(+)
+> >> create mode 100644 Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
+> > 
+> > Applied, thanks.
+> Wait, it is RFC, not pass the test.
 
-Actually, I have to postpone this one for 4.12 because it depends on
-https://patchwork.ozlabs.org/patch/688265/
-
-
+Well 2 months of silence, it's reasonable to assume that this works for
+you ... I guess you need to supply a fixup patch asap ;-)
+-Daniel
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
