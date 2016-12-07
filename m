@@ -1,191 +1,33 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: EXYNOS: remove smp hook from machine descriptor
-Date: Wed, 07 Dec 2016 14:00:41 +0530
-Message-ID: <1481099441-27657-1-git-send-email-pankaj.dubey@samsung.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 00/13] net: ethernet: ti: cpts: update and fixes
+Date: Wed, 7 Dec 2016 09:58:43 +0100
+Message-ID: <20161207085843.GA3066@localhost.localdomain>
+References: <20161207000045.28333-1-grygorii.strashko@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161207000045.28333-1-grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use CPU_METHOD_OF_DECLARE() for smp_ops instead of using it
-via machine descriptor.
+On Tue, Dec 06, 2016 at 06:00:32PM -0600, Grygorii Strashko wrote:
+> It is preparation series intended to clean up and optimize TI CPTS driver to
+> facilitate further integration with other TI's SoCs like Keystone 2.
+> 
+> Changes in v5:
+> - fixed copy paste error in cpts_release
+> - reworked cc.mult/shift and cc_mult initialization 
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos3250.dtsi      | 1 +
- arch/arm/boot/dts/exynos4210.dtsi      | 1 +
- arch/arm/boot/dts/exynos4212.dtsi      | 1 +
- arch/arm/boot/dts/exynos4412.dtsi      | 1 +
- arch/arm/boot/dts/exynos5250.dtsi      | 1 +
- arch/arm/boot/dts/exynos5260.dtsi      | 1 +
- arch/arm/boot/dts/exynos5410.dtsi      | 1 +
- arch/arm/boot/dts/exynos5420-cpus.dtsi | 1 +
- arch/arm/boot/dts/exynos5422-cpus.dtsi | 1 +
- arch/arm/boot/dts/exynos5440.dtsi      | 1 +
- arch/arm/mach-exynos/common.h          | 2 --
- arch/arm/mach-exynos/exynos.c          | 1 -
- arch/arm/mach-exynos/platsmp.c         | 2 ++
- 13 files changed, 12 insertions(+), 3 deletions(-)
+Looks good to me now.  For the series:
 
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index ba17ee1..f28f669 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -53,6 +53,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 7f3a18c..6dfd98d 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -35,6 +35,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@900 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
-index 5389011..3e8982e 100644
---- a/arch/arm/boot/dts/exynos4212.dtsi
-+++ b/arch/arm/boot/dts/exynos4212.dtsi
-@@ -25,6 +25,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@A00 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 40beede..faf2fb8 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -25,6 +25,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@A00 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index b6d7444..580897c 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -52,6 +52,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
-index 5818718..1af6e76 100644
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -32,6 +32,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 2b6adaf..b092cdc 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -33,6 +33,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-index 5c052d7..a587704 100644
---- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-@@ -24,6 +24,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-index bf3c6f1..7fcdfd0 100644
---- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-@@ -23,6 +23,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@100 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 2a2e570..0a958e8 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -50,6 +50,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-index fb12d11..051e1ab 100644
---- a/arch/arm/mach-exynos/common.h
-+++ b/arch/arm/mach-exynos/common.h
-@@ -143,8 +143,6 @@ static inline void exynos_pm_init(void) {}
- extern void exynos_cpu_resume(void);
- extern void exynos_cpu_resume_ns(void);
- 
--extern const struct smp_operations exynos_smp_ops;
--
- extern void exynos_cpu_power_down(int cpu);
- extern void exynos_cpu_power_up(int cpu);
- extern int  exynos_cpu_power_state(int cpu);
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index fa08ef9..f0a766e 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -211,7 +211,6 @@ DT_MACHINE_START(EXYNOS_DT, "SAMSUNG EXYNOS (Flattened Device Tree)")
- 	/* Maintainer: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
- 	.l2c_aux_val	= 0x3c400001,
- 	.l2c_aux_mask	= 0xc20fffff,
--	.smp		= smp_ops(exynos_smp_ops),
- 	.map_io		= exynos_init_io,
- 	.init_early	= exynos_firmware_init,
- 	.init_irq	= exynos_init_irq,
-diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
-index 94405c7..43eec10 100644
---- a/arch/arm/mach-exynos/platsmp.c
-+++ b/arch/arm/mach-exynos/platsmp.c
-@@ -474,3 +474,5 @@ const struct smp_operations exynos_smp_ops __initconst = {
- 	.cpu_die		= exynos_cpu_die,
- #endif
- };
-+
-+CPU_METHOD_OF_DECLARE(exynos_smp, "samsung,exynos-smp", &exynos_smp_ops);
--- 
-2.7.4
+Acked-by: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+
+Thanks,
+Richard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
