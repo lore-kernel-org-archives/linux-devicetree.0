@@ -1,112 +1,89 @@
-From: "Rob (William) Rice" <rob.rice@broadcom.com>
-Subject: Re: [PATCH 2/3] crypto: brcm: Add Broadcom SPU driver
-Date: Wed, 7 Dec 2016 10:49:22 -0500
-Message-ID: <77434ed0-34de-f980-a39b-e1e0dcd6c3d5@broadcom.com>
-References: <1480536453-24781-1-git-send-email-rob.rice@broadcom.com>
- <1480536453-24781-3-git-send-email-rob.rice@broadcom.com>
- <20161206141826.GC24177@leverpostej>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] [media] davinci: vpif_capture: don't lock over s_stream
+Date: Wed, 07 Dec 2016 08:06:36 -0800
+Message-ID: <m21sxjg1v7.fsf@baylibre.com>
+References: <20161129235712.29846-1-khilman@baylibre.com>
+        <4747860.QGGHSuFRpz@avalon> <m237i1gfz1.fsf@baylibre.com>
+        <4999781.kd7ueUSsQd@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20161206141826.GC24177@leverpostej>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Steve Lin <steven.lin1@broadcom.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4999781.kd7ueUSsQd@avalon> (Laurent Pinchart's message of "Wed,
+        07 Dec 2016 17:47:59 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> writes:
 
-Thanks for the comments. Replies below.
+ > Hi Kevin,
+>
+> On Tuesday 06 Dec 2016 08:49:38 Kevin Hilman wrote:
+>> Laurent Pinchart writes:
+>> > On Tuesday 29 Nov 2016 15:57:09 Kevin Hilman wrote:
+>> >> Video capture subdevs may be over I2C and may sleep during xfer, so we
+>> >> cannot do IRQ-disabled locking when calling the subdev.
+>> >> 
+>> >> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> >> ---
+>> >>  drivers/media/platform/davinci/vpif_capture.c | 3 +++
+>> >>  1 file changed, 3 insertions(+)
+>> >> 
+>> >> diff --git a/drivers/media/platform/davinci/vpif_capture.c
+>> >> b/drivers/media/platform/davinci/vpif_capture.c index
+>> >> 5104cc0ee40e..9f8f41c0f251 100644
+>> >> --- a/drivers/media/platform/davinci/vpif_capture.c
+>> >> +++ b/drivers/media/platform/davinci/vpif_capture.c
+>> >> @@ -193,7 +193,10 @@ static int vpif_start_streaming(struct vb2_queue
+>> >> *vq, unsigned int count)
+>> >>  		}
+>> >>  	}
+>> >> 
+>> >> +	spin_unlock_irqrestore(&common->irqlock, flags);
+>> >>  	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
+>> >> +	spin_lock_irqsave(&common->irqlock, flags);
+>> > 
+>> > I always get anxious when I see a spinlock being released randomly with an
+>> > operation in the middle of a protected section. Looking at the code it
+>> > looks like the spinlock is abused here. irqlock should only protect the
+>> > dma_queue and should thus only be taken around the following code:
+>> > 
+>> > spin_lock_irqsave(&common->irqlock, flags);
+>> > /* Get the next frame from the buffer queue */
+>> > common->cur_frm = common->next_frm = list_entry(common->dma_queue.next,
+>> >                             struct vpif_cap_buffer, list);
+>> > 
+>> > /* Remove buffer from the buffer queue */
+>> > list_del(&common->cur_frm->list);
+>> > spin_unlock_irqrestore(&common->irqlock, flags);
+>> 
+>> Yes, that looks correct.  Will update.
+>> 
+>> > The code that is currently protected by the lock in the start and stop
+>> > streaming functions should be protected by a mutex instead.
+>> 
+>> I tried taking the mutex here, but lockdep pointed out a deadlock.  I
+>> may not be fully understanding the V4L2 internals here, but it seems
+>> that the ioctl is already taking a mutex, so taking it again in
+>> start/stop streaming is a deadlock.  Unless you think the locking should
+>> be nested here, it seems to me that the mutex isn't needed.
+>
+> The V4L2 core can lock all ioctls using struct video_device::lock. For buffer-
+> related ioctls, it can optionally use a separate lock from struct 
+> vb2_queue::lock. See v4l2_ioctl_get_lock() in drivers/media/v4l2-core/v4l2-
+> ioctl.c.
+>
+> The vpif-capture driver sets both the video_device and vb2_queue locks to the 
+> same lock (which would have the same effect as leaving the vb2_queue lock 
+> NULL). All ioctls are thus serialized. You would only need to handle locking 
+> in start_streaming and stop_streaming manually if you didn't rely on the core 
+> serializing the ioctls.
 
-Rob
+OK, thanks for clarifying how that works.
 
-
-On 12/6/2016 9:18 AM, Mark Rutland wrote:
-> On Wed, Nov 30, 2016 at 03:07:32PM -0500, Rob Rice wrote:
->> +static const struct of_device_id bcm_spu_dt_ids[] = {
->> +	{
->> +		.compatible = "brcm,spum-crypto",
->> +		.data = &spum_ns2_types,
->> +	},
->> +	{
->> +		.compatible = "brcm,spum-nsp-crypto",
->> +		.data = &spum_nsp_types,
->> +	},
->> +	{
->> +		.compatible = "brcm,spu2-crypto",
->> +		.data = &spu2_types,
->> +	},
->> +	{
->> +		.compatible = "brcm,spu2-v2-crypto",
->> +		.data = &spu2_v2_types,
->> +	},
-> These last two weren't in the binding document.
-yes, I'll add them.
->
->> +	{ /* sentinel */ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, bcm_spu_dt_ids);
->> +
->> +static int spu_dt_read(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct spu_hw *spu = &iproc_priv.spu;
->> +	struct device_node *dn = pdev->dev.of_node;
->> +	struct resource *spu_ctrl_regs;
->> +	const struct of_device_id *match;
->> +	struct spu_type_subtype *matched_spu_type;
->> +	void __iomem *spu_reg_vbase[MAX_SPUS];
->> +	int i;
->> +	int err;
->> +
->> +	if (!of_device_is_available(dn)) {
->> +		dev_crit(dev, "SPU device not available");
->> +		return -ENODEV;
->> +	}
-> How can this happen?
-You are correct. This is unnecessary. I will remove.
->
->> +	/* Count number of mailbox channels */
->> +	spu->num_chan = of_count_phandle_with_args(dn, "mboxes", "#mbox-cells");
->> +	dev_dbg(dev, "Device has %d SPU channels", spu->num_chan);
->> +
->> +	match = of_match_device(of_match_ptr(bcm_spu_dt_ids), dev);
->> +	matched_spu_type = (struct spu_type_subtype *)match->data;
-> This cast usn't necessary.
-Ok, will remove.
->
->> +	spu->spu_type = matched_spu_type->type;
->> +	spu->spu_subtype = matched_spu_type->subtype;
->> +
->> +	/* Read registers and count number of SPUs */
->> +	i = 0;
->> +	while ((i < MAX_SPUS) && ((spu_ctrl_regs =
->> +		platform_get_resource(pdev, IORESOURCE_MEM, i)) != NULL)) {
->> +		dev_dbg(dev,
->> +			"SPU %d control register region res.start = %#x, res.end = %#x",
->> +			i,
->> +			(unsigned int)spu_ctrl_regs->start,
->> +			(unsigned int)spu_ctrl_regs->end);
->> +
->> +		spu_reg_vbase[i] = devm_ioremap_resource(dev, spu_ctrl_regs);
->> +		if (IS_ERR(spu_reg_vbase[i])) {
->> +			err = PTR_ERR(spu_reg_vbase[i]);
->> +			dev_err(&pdev->dev, "Failed to map registers: %d\n",
->> +				err);
->> +			spu_reg_vbase[i] = NULL;
->> +			return err;
->> +		}
->> +		i++;
->> +	}
-> These *really* sound like independent devices. There are no shared
-> registers, and each has its own mbox.
->
-> Why do we group them like this?
-As I said in the previous email, I want one instance of the driver to 
-register crypto algos once with the crypto API and to distribute crypto 
-requests among all available SPU hw blocks.
->
-> Thanks,
-> Mark.
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
