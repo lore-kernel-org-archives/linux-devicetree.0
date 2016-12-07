@@ -1,33 +1,37 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V7 06/10] PM / OPP: Add infrastructure to manage multiple
- regulators
-Date: Tue, 6 Dec 2016 16:39:15 -0800
-Message-ID: <20161207003915.GD4388@codeaurora.org>
-References: <cover.1480564564.git.viresh.kumar@linaro.org>
- <804d4f89c517f7a0b0bb98ef513c329fd5f76d39.1480564564.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <804d4f89c517f7a0b0bb98ef513c329fd5f76d39.1480564564.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, broonie@kernel.org, devicetree@vger.kernel.org
+From: Ayaka <ayaka@soulik.info>
+Subject: Re: [RFC PATCH v3 2/2] drm/panel: Add support for Chunghwa CLAA070WP03XG panel
+Date: Wed, 7 Dec 2016 08:57:23 +0800
+Message-ID: <2C9FE0C5-F521-48CD-B274-66128312CA75@soulik.info>
+References: <1474311771-23321-1-git-send-email-ayaka@soulik.info> <1474311771-23321-3-git-send-email-ayaka@soulik.info> <20161206154625.GA28534@ulmo.ba.sec>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+        charset=big5
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20161206154625.GA28534@ulmo.ba.sec>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, airlied@linux.ie, a.hajda@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/01, Viresh Kumar wrote:
-> This patch adds infrastructure to manage multiple regulators and updates
-> the only user (cpufreq-dt) of dev_pm_opp_set{put}_regulator().
-> 
-> This is preparatory work for adding full support for devices with
-> multiple regulators.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Tested-by: Dave Gerlach <d-gerlach@ti.com>
-> ---
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+從我的 iPad 傳送
+
+> Thierry Reding <thierry.reding@gmail.com> 於 2016年12月6日 下午11:46 寫道：
+> 
+>> On Tue, Sep 20, 2016 at 03:02:51AM +0800, Randy Li wrote:
+>> The Chunghwa CLAA070WP03XG is a 7" 1280x800 panel, which can be
+>> supported by the simple panel driver.
+>> 
+>> Signed-off-by: Randy Li <ayaka@soulik.info>
+>> ---
+>> .../display/panel/chunghwa,claa070wp03xg.txt       |  7 ++++++
+>> drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>> 2 files changed, 34 insertions(+)
+>> create mode 100644 Documentation/devicetree/bindings/display/panel/chunghwa,claa070wp03xg.txt
+> 
+> Applied, thanks.
+Wait, it is RFC, not pass the test.
+> 
+> Thierry
