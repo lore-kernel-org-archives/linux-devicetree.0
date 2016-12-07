@@ -1,49 +1,99 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 8/9] arm64: dts: rockchip: partially describe PWM
- regulators for Gru
-Date: Wed, 07 Dec 2016 17:48:24 +0100
-Message-ID: <2418784.7dMdkAyuIx@phil>
-References: <1480645653-36943-1-git-send-email-briannorris@chromium.org>
- <1480645653-36943-9-git-send-email-briannorris@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1480645653-36943-9-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Anurup M <anurupvasu@gmail.com>
+Subject: [PATCH v2 00/10] perf: arm64: Support for Hisilicon SoC Hardware event counters
+Date: Wed,  7 Dec 2016 11:50:56 -0500
+Message-ID: <1481129456-159241-1-git-send-email-anurup.m@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, arnd@arndb.de, geert+renesas@glider.be, davem@davemloft.net, akpm@linux-foundation.org, corbet@lwn.net, mark.rutland@arm.com, will.deacon@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+From: John Garry <john.garry@huawei.com>
 
-Am Donnerstag, 1. Dezember 2016, 18:27:32 CET schrieb Brian Norris:
-> We need to add regulators to the CPU nodes, so cpufreq doesn't think it
-> can crank up the clock speed without changing the voltage. However, we
-> don't yet have the DT bindings to fully describe the Over Voltage
-> Protection (OVP) circuits on these boards. Without that description, we
-> might end up changing the voltage too much, too fast.
-> 
-> Add the pwm-regulator descriptions and associate the CPU OPPs, but leave
-> them disabled.
-> 
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Provide Support for Hisilicon SoC(HiP05/06/07) Hardware event counters.
+The Hisilicon SoC HiP0x series has many uncore or non-CPU performance
+events and counters units.
 
-is there a specific reason for keeping this change separate?
-While it is nice for documentation reasons, as it stands now the previous 
-patch introduces a regression (cpufreq trying to scale without regulators) and 
-immediately fixes it here.
+This patch series is implemented refering to arm-cci, Intel/AMD uncore and
+also the cavium thunderX and xgene uncore pmu patches.
+This v2 version has addressed the review comments of v1 version.
 
-So if you're ok with it, I'd like to merge this one back into the previous 
-patch when applying.
+Support for Hisilicon L3 cache(L3C) and Misclennaneous nodes(MN) hardware
+events and counters are added in this implementation.
 
+The Hisilicon uncore PMUs can be found under /sys/bus/event_source/devices.
+The counters are exported via sysfs in the corresponding events files
+under the PMU directory so the perf tool can list the event names.
 
-Heiko
+ToDo:
+1) The counter overflow handling is currently unsupported in this
+   patch series.
+2) ACPI support.
+
+Version history
+---------------
+
+v2
+--
+- Fix review comments of v2 version.
+- Move djtag driver to drivers/perf/hisilicon.
+- Have separate PMU instance for each L3 cache banks.
+- Modify device properties in DTS as per review comments.
+- Handle hardware version difference.
+- Change compatible names of djtag so use prefix hisi-
+  and remove chip version as driver only depend on djtag
+  hw version.
+- use devm_kzalloc.
+- Remove DDRC changes in this series. As the DDRC PMU doesnot
+  depend on djtag it will be send separately.
+
+v1
+--
+-Initial version with support for L3C, MN and DDRC event counters
+-Djtag driver is used to access registers of L3 cache and MN.
+
+Anurup M (7):
+  arm64: MAINTAINERS: hisi: Add hisilicon SoC PMU support
+  dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
+  Documentation: perf: hisi: Documentation for HIP05/06/07 PMU event
+    counting.
+  perf: hisi: Update Kconfig for Hisilicon PMU support
+  perf: hisi: Add support for Hisilicon SoC event counters
+  perf: hisi: Add sysfs attributes for L3 cache(L3C) PMU
+  dts: arm64: hip06: Add Hisilicon SoC PMU support
+
+Shaokun Zhang (1):
+  perf: hisi: Miscellanous node(MN) event counting in perf
+
+Tan Xiaojun (2):
+  dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
+  drivers: perf: hisi: Add support for Hisilicon Djtag driver
+
+ .../devicetree/bindings/arm/hisilicon/djtag.txt    |  66 ++
+ .../devicetree/bindings/arm/hisilicon/pmu.txt      |  98 +++
+ Documentation/perf/hisi-pmu.txt                    |  75 +++
+ MAINTAINERS                                        |   9 +
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi           |  78 +++
+ drivers/perf/Kconfig                               |   8 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/hisilicon/Makefile                    |   1 +
+ drivers/perf/hisilicon/djtag.c                     | 729 +++++++++++++++++++++
+ drivers/perf/hisilicon/djtag.h                     |  39 ++
+ drivers/perf/hisilicon/hisi_uncore_l3c.c           | 629 ++++++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_mn.c            | 516 +++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.c           | 365 +++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.h           | 128 ++++
+ 14 files changed, 2742 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ create mode 100644 Documentation/perf/hisi-pmu.txt
+ create mode 100644 drivers/perf/hisilicon/Makefile
+ create mode 100644 drivers/perf/hisilicon/djtag.c
+ create mode 100644 drivers/perf/hisilicon/djtag.h
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_l3c.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.h
+
+-- 
+2.1.4
