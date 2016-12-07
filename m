@@ -1,70 +1,24 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v2 02/10] dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
-Date: Wed,  7 Dec 2016 11:55:19 -0500
-Message-ID: <1481129719-159487-1-git-send-email-anurup.m@huawei.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/9] arm64: dts: rockchip: add rk3399 thermal_zones phandle
+Date: Wed, 07 Dec 2016 17:55:40 +0100
+Message-ID: <12449055.mcq1Pi5Jys@phil>
+References: <1480645653-36943-1-git-send-email-briannorris@chromium.org> <1480645653-36943-3-git-send-email-briannorris@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480645653-36943-3-git-send-email-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
+To: Brian Norris <briannorris@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Barber <smbarber@chromium.org>, linux-arm-kernel@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+Am Donnerstag, 1. Dezember 2016, 18:27:26 CET schrieb Brian Norris:
+> We're going to need to amend this table in board files.
+> 
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
+applied for 4.11
 
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Signed-off-by: Anurup M <anurup.m@huawei.com>
----
- .../devicetree/bindings/arm/hisilicon/djtag.txt    | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-new file mode 100644
-index 0000000..733498e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-@@ -0,0 +1,41 @@
-+The Hisilicon Djtag is an independent component which connects with some other
-+components in the SoC by Debug Bus. The djtag is available in CPU and IO dies
-+in the chip. The djtag controls access to connecting modules of CPU and IO
-+dies.
-+The various connecting components in CPU die (like L3 cache, L3 cache PMU etc.)
-+are accessed by djtag during real time debugging. In IO die there are connecting
-+components like RSA. These components appear as devices atatched to djtag bus.
-+
-+Hisilicon HiP05/06 djtag for CPU and HiP05 IO die
-+Required properties:
-+  - compatible : "hisilicon,hisi-djtag-v1"
-+  - reg : Register address and size
-+  - scl-id : The Super Cluster ID for CPU or IO die
-+
-+Hisilicon HiP06 djtag for IO die and HiP07 djtag for CPU and IO die
-+Required properties:
-+  - compatible : "hisilicon,hisi-djtag-v2"
-+  - reg : Register address and size
-+  - scl-id : The Super Cluster ID for CPU or IO die
-+
-+Example 1: Djtag for CPU die
-+
-+	/* for Hisilicon HiP05 djtag for CPU Die */
-+	djtag0: djtag@80010000 {
-+		compatible = "hisilicon,hisi-djtag-v1";
-+		reg = <0x0 0x80010000 0x0 0x10000>;
-+		scl-id = <0x02>;
-+
-+		/* All connecting components will appear as child nodes */
-+	};
-+
-+Example 2: Djtag for IO die
-+
-+	/* for Hisilicon HiP05 djtag for IO Die */
-+	djtag1: djtag@d0000000 {
-+		compatible = "hisilicon,hisi-djtag-v1";
-+		reg = <0x0 0xd0000000 0x0 0x10000>;
-+		scl-id = <0x01>;
-+
-+		/* All connecting components will appear as child nodes */
-+	};
--- 
-2.1.4
+Thanks
+Heiko
