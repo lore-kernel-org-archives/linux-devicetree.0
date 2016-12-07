@@ -1,157 +1,48 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v2 1/2] misc: atmel-ssc: register as sound DAI if
- #sound-dai-cells is present
-Date: Wed, 7 Dec 2016 10:04:37 +0100
-Message-ID: <7771e45b-bd00-b66f-a102-d46b3b90310c@atmel.com>
-References: <1481052157-23400-1-git-send-email-peda@axentia.se>
- <1481052157-23400-2-git-send-email-peda@axentia.se>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 04/16] drivers/fsi: Add fsi master definition
+Date: Wed, 7 Dec 2016 10:06:10 +0100
+Message-ID: <20161207090610.GB14742@kroah.com>
+References: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481052157-23400-2-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1481076574-54711-1-git-send-email-christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 06/12/2016 à 20:22, Peter Rosin a écrit :
-> The SSC is currently not usable with the ASoC simple-audio-card, as
-> every SSC audio user has to build a platform driver that may do as
-> little as calling atmel_ssc_set_audio/atmel_ssc_put_audio (which
-> allocates the SSC and registers a DAI with the ASoC subsystem).
+On Tue, Dec 06, 2016 at 08:09:30PM -0600, Chris Bostic wrote:
+> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 > 
-> So, have that happen automatically, if the #sound-dai-cells property
-> is present in devicetree, which it has to be anyway for simple audio
-> card to work.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-
-Sounds okay: thanks Peter.
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-
-I don't think my tag is needed for second patch but you can add it if
-you wish.
-
-Regards,
-
-
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/misc/atmel-ssc.txt         |  2 +
->  drivers/misc/atmel-ssc.c                           | 50 ++++++++++++++++++++++
->  include/linux/atmel-ssc.h                          |  1 +
->  3 files changed, 53 insertions(+)
+>  drivers/fsi/fsi-core.c   | 20 ++++++++++++++++++++
+>  drivers/fsi/fsi-master.h | 37 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+>  create mode 100644 drivers/fsi/fsi-master.h
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-> index efc98ea1f23d..f8629bb73945 100644
-> --- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-> +++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-> @@ -24,6 +24,8 @@ Optional properties:
->         this parameter to choose where the clock from.
->       - By default the clock is from TK pin, if the clock from RK pin, this
->         property is needed.
-> +  - #sound-dai-cells: Should contain <0>.
-> +     - This property makes the SSC into an automatically registered DAI.
+> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+> index 3d55bd5..ce9428d 100644
+> --- a/drivers/fsi/fsi-core.c
+> +++ b/drivers/fsi/fsi-core.c
+> @@ -17,6 +17,26 @@
+>  #include <linux/fsi.h>
+>  #include <linux/module.h>
 >  
->  Examples:
->  - PDC transfer:
-> diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
-> index 0516ecda54d3..b2a0340f277e 100644
-> --- a/drivers/misc/atmel-ssc.c
-> +++ b/drivers/misc/atmel-ssc.c
-> @@ -20,6 +20,8 @@
->  
->  #include <linux/of.h>
->  
-> +#include "../../sound/soc/atmel/atmel_ssc_dai.h"
+> +#include "fsi-master.h"
 > +
->  /* Serialize access to ssc_list and user count */
->  static DEFINE_SPINLOCK(user_lock);
->  static LIST_HEAD(ssc_list);
-> @@ -145,6 +147,49 @@ static inline const struct atmel_ssc_platform_data * __init
->  		platform_get_device_id(pdev)->driver_data;
->  }
->  
-> +#ifdef CONFIG_SND_ATMEL_SOC_SSC
-> +static int ssc_sound_dai_probe(struct ssc_device *ssc)
-> +{
-> +	struct device_node *np = ssc->pdev->dev.of_node;
-> +	int ret;
-> +	int id;
-> +
-> +	ssc->sound_dai = false;
-> +
-> +	if (!of_property_read_bool(np, "#sound-dai-cells"))
-> +		return 0;
-> +
-> +	id = of_alias_get_id(np, "ssc");
-> +	if (id < 0)
-> +		return id;
-> +
-> +	ret = atmel_ssc_set_audio(id);
-> +	ssc->sound_dai = !ret;
-> +
-> +	return ret;
-> +}
-> +
-> +static void ssc_sound_dai_remove(struct ssc_device *ssc)
-> +{
-> +	if (!ssc->sound_dai)
-> +		return;
-> +
-> +	atmel_ssc_put_audio(of_alias_get_id(ssc->pdev->dev.of_node, "ssc"));
-> +}
-> +#else
-> +static inline int ssc_sound_dai_probe(struct ssc_device *ssc)
-> +{
-> +	if (of_property_read_bool(ssc->pdev->dev.of_node, "#sound-dai-cells"))
-> +		return -ENOTSUPP;
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void ssc_sound_dai_remove(struct ssc_device *ssc)
-> +{
-> +}
-> +#endif
-> +
->  static int ssc_probe(struct platform_device *pdev)
->  {
->  	struct resource *regs;
-> @@ -204,6 +249,9 @@ static int ssc_probe(struct platform_device *pdev)
->  	dev_info(&pdev->dev, "Atmel SSC device at 0x%p (irq %d)\n",
->  			ssc->regs, ssc->irq);
->  
-> +	if (ssc_sound_dai_probe(ssc))
-> +		dev_err(&pdev->dev, "failed to auto-setup ssc for audio\n");
-> +
->  	return 0;
->  }
->  
-> @@ -211,6 +259,8 @@ static int ssc_remove(struct platform_device *pdev)
->  {
->  	struct ssc_device *ssc = platform_get_drvdata(pdev);
->  
-> +	ssc_sound_dai_remove(ssc);
-> +
->  	spin_lock(&user_lock);
->  	list_del(&ssc->list);
->  	spin_unlock(&user_lock);
-> diff --git a/include/linux/atmel-ssc.h b/include/linux/atmel-ssc.h
-> index 7c0f6549898b..fdb545101ede 100644
-> --- a/include/linux/atmel-ssc.h
-> +++ b/include/linux/atmel-ssc.h
-> @@ -20,6 +20,7 @@ struct ssc_device {
->  	int			user;
->  	int			irq;
->  	bool			clk_from_rk_pin;
-> +	bool			sound_dai;
->  };
->  
->  struct ssc_device * __must_check ssc_request(unsigned int ssc_num);
-> 
+> +static atomic_t master_idx = ATOMIC_INIT(-1);
 
+You don't really want/need an atomic variable, please use the simple ida
+interface instead.
 
--- 
-Nicolas Ferre
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
