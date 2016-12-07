@@ -1,208 +1,52 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH v4 1/5] i2c: designware: Refactoring of the i2c-designware
-Date: Wed,  7 Dec 2016 17:55:48 +0000
-Message-ID: <486c43e4c57116fa955ab99cea7f484ee8a2bdf3.1481131072.git.lolivei@synopsys.com>
-References: <cover.1481131072.git.lolivei@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1481131072.git.lolivei@synopsys.com>
-In-Reply-To: <cover.1481131072.git.lolivei@synopsys.com>
-References: <cover.1481131072.git.lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/8] rtc: add STM32 RTC driver
+Date: Wed, 7 Dec 2016 19:37:09 +0100
+Message-ID: <20161207183709.tbkapu34ljlg4skp@piout.net>
+References: <1480687801-19525-2-git-send-email-amelie.delaunay@st.com>
+ <1480687801-19525-5-git-send-email-amelie.delaunay@st.com>
+ <20161202175646.GA3284@linaro.org>
+ <15bea9e9-adcc-edb0-1bd1-33d395c72eec@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBVVNUHBAKGQEBUS7VUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <15bea9e9-adcc-edb0-1bd1-33d395c72eec-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-- Factor out all _master() part of code from i2c-designware-core
-  and i2c-designware-platdrv to separate functions.
-- Standardize all code related with MASTER modes.
+On 05/12/2016 at 10:43:14 +0100, Amelie DELAUNAY wrote :
+> >> +
+> >> +    device_init_wakeup(&pdev->dev, true);
+> >
+> > What happens if device_init_wakeup() returns an error?
+> It means that RTC won't be able to wake up the board with RTC alarm. I can
+> add a warning for the user in this case ?
+> >
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
----
-Changes V3->V4: (Andy Shevchenko)
-- I have to take off DW_IC_INTR_TX_EMPTY from DW_IC_INTR_DEFAULT_MASK
-  because is not common to both operating modes 
-- Comments were changed to be specific to "master"
+There is exactly one driver ever checking the return value of
+device_init_wakeup(). It basically always succeeds.
 
- drivers/i2c/busses/i2c-designware-core.c    | 57 +++++++++++++++++++----------
- drivers/i2c/busses/i2c-designware-platdrv.c | 35 +++++++++++-------
- 2 files changed, 59 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index 6d81c56184d3..a51addfde565 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -87,10 +87,12 @@
- #define DW_IC_INTR_GEN_CALL	0x800
- 
- #define DW_IC_INTR_DEFAULT_MASK		(DW_IC_INTR_RX_FULL | \
--					 DW_IC_INTR_TX_EMPTY | \
- 					 DW_IC_INTR_TX_ABRT | \
- 					 DW_IC_INTR_STOP_DET)
- 
-+#define DW_IC_INTR_MASTER_MASK		(DW_IC_INTR_DEFAULT_MASK | \
-+					 DW_IC_INTR_TX_EMPTY)
-+
- #define DW_IC_STATUS_ACTIVITY	0x1
- 
- #define DW_IC_SDA_HOLD_RX_SHIFT		16
-@@ -202,6 +204,16 @@ static void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
- 	}
- }
- 
-+static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
-+{
-+	/* Configure Tx/Rx FIFO threshold levels */
-+	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
-+	dw_writel(dev, 0, DW_IC_RX_TL);
-+
-+	/* configure the i2c master */
-+	dw_writel(dev, dev->master_cfg, DW_IC_CON);
-+}
-+
- static u32
- i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
- {
-@@ -318,10 +330,10 @@ static void i2c_dw_release_lock(struct dw_i2c_dev *dev)
- }
- 
- /**
-- * i2c_dw_init() - initialize the designware i2c master hardware
-+ * i2c_dw_init() - initialize the designware i2c hardware
-  * @dev: device private data
-  *
-- * This functions configures and enables the I2C master.
-+ * This functions configures and enables the I2C.
-  * This function is called during I2C init function, and in case of timeout at
-  * run time.
-  */
-@@ -440,12 +452,9 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 			"Hardware too old to adjust SDA hold time.\n");
- 	}
- 
--	/* Configure Tx/Rx FIFO threshold levels */
--	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
--	dw_writel(dev, 0, DW_IC_RX_TL);
--
--	/* configure the i2c master */
--	dw_writel(dev, dev->master_cfg , DW_IC_CON);
-+	if ((dev->master_cfg & DW_IC_CON_MASTER) &&
-+		 (dev->master_cfg & DW_IC_CON_SLAVE_DISABLE))
-+		i2c_dw_configure_fifo_master(dev);
- 
- 	i2c_dw_release_lock(dev);
- 
-@@ -513,7 +522,7 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
- 
- 	/* Clear and enable interrupts */
- 	dw_readl(dev, DW_IC_CLR_INTR);
--	dw_writel(dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
-+	dw_writel(dev, DW_IC_INTR_MASTER_MASK, DW_IC_INTR_MASK);
- }
- 
- /*
-@@ -533,7 +542,7 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
- 	u8 *buf = dev->tx_buf;
- 	bool need_restart = false;
- 
--	intr_mask = DW_IC_INTR_DEFAULT_MASK;
-+	intr_mask = DW_IC_INTR_MASTER_MASK;
- 
- 	for (; dev->msg_write_idx < dev->msgs_num; dev->msg_write_idx++) {
- 		u32 flags = msgs[dev->msg_write_idx].flags;
-@@ -886,16 +895,9 @@ static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
-  * Interrupt service routine. This gets called whenever an I2C interrupt
-  * occurs.
-  */
--static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
- {
--	struct dw_i2c_dev *dev = dev_id;
--	u32 stat, enabled;
--
--	enabled = dw_readl(dev, DW_IC_ENABLE);
--	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
--	dev_dbg(dev->dev, "%s: enabled=%#x stat=%#x\n", __func__, enabled, stat);
--	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
--		return IRQ_NONE;
-+	u32 stat;
- 
- 	stat = i2c_dw_read_clear_intrbits(dev);
- 
-@@ -932,7 +934,22 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
- 		i2c_dw_disable_int(dev);
- 		dw_writel(dev, stat, DW_IC_INTR_MASK);
- 	}
-+	return 0;
-+}
-+
-+static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+{
-+	struct dw_i2c_dev *dev = dev_id;
-+	u32 stat, enabled, mode;
-+
-+	enabled = dw_readl(dev, DW_IC_ENABLE);
-+	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
-+	dev_dbg(dev->dev, "%s: enabled=%#x stat=%#x\n", __func__, enabled, stat);
-+	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
-+		return IRQ_NONE;
- 
-+	i2c_dw_irq_handler_master(dev);
-+	complete(&dev->cmd_complete);
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 08153ea4d848..e55b5544c733 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -138,6 +138,27 @@ static inline int dw_i2c_acpi_configure(struct platform_device *pdev)
- }
- #endif
- 
-+static void i2c_dw_configure_master(struct platform_device *pdev)
-+{
-+	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
-+
-+	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			  DW_IC_CON_RESTART_EN;
-+
-+	dev_info(&pdev->dev, "I am registed as a I2C Master!\n");
-+
-+	switch (dev->clk_freq) {
-+	case 100000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_STD;
-+		break;
-+	case 3400000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
-+		break;
-+	default:
-+		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
-+	}
-+}
-+
- static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
- {
- 	if (IS_ERR(i_dev->clk))
-@@ -221,19 +242,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
- 
--	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--			  DW_IC_CON_RESTART_EN;
--
--	switch (dev->clk_freq) {
--	case 100000:
--		dev->master_cfg |= DW_IC_CON_SPEED_STD;
--		break;
--	case 3400000:
--		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
--		break;
--	default:
--		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
--	}
-+	i2c_dw_configure_master(pdev);
- 
- 	dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (!i2c_dw_plat_prepare_clk(dev, true)) {
 -- 
-2.11.0
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
