@@ -1,62 +1,63 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 6/9] dt-bindings: Document rk3399 Gru/Kevin
-Date: Wed, 07 Dec 2016 20:15:32 +0100
-Message-ID: <4532061.zEGHLIjg0t@phil>
-References: <1480645653-36943-1-git-send-email-briannorris@chromium.org> <1720836.rjtWqG8OD3@phil> <20161207174139.GA87970@google.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
+Date: Wed, 7 Dec 2016 20:17:15 +0100
+Message-ID: <20161207191715.63i3exilseqasak5@piout.net>
+References: <1480860279-4570-1-git-send-email-akinobu.mita@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161207174139.GA87970@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Barber <smbarber@chromium.org>, linux-arm-kernel@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBPOAUHBAKGQEBWGU3YQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1480860279-4570-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 7. Dezember 2016, 09:41:39 CET schrieb Brian Norris:
-> On Wed, Dec 07, 2016 at 06:12:13PM +0100, Heiko Stuebner wrote:
-> > Hi Brian,
-> > 
-> > Am Donnerstag, 1. Dezember 2016, 18:27:30 CET schrieb Brian Norris:
-> > > Gru is a base dev board for a family of devices, including Kevin. Both
-> > > utilize Rockchip RK3399, and they share much of their design.
-> > > 
-> > > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > > ---
-> > > 
-> > >  Documentation/devicetree/bindings/arm/rockchip.txt | 20
-> > > 
-> > > ++++++++++++++++++++ 1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
-> > > b/Documentation/devicetree/bindings/arm/rockchip.txt index
-> > > cc4ace6397ab..830e13f5890c 100644
-> > > --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> > > @@ -99,6 +99,26 @@ Rockchip platforms device tree bindings
-> > > 
-> > >  		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
-> > >  		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
-> > > 
-> > > +- Google Gru (dev-board):
-> > boards sorted alphabetically please
-> > 
-> > Brian, Gru, Jaq, ... Kevin, ...
-> > 
-> > While the sorting of old boards is not right yet, new boards should be
-> > sorted.
-> I got the idea that there was some attempt to group logically before
-> alphabetically. Like keeping board/SoC families together. But maybe not.
+On 04/12/2016 at 23:04:39 +0900, Akinobu Mita wrote :
+> This adds support for EPSON TOYOCOM RTC-7301SF/DG which has parallel
+> interface compatible with SRAM.
 > 
-> I can do as you suggested, if you don't care about keeping actual
-> similar boards together (i.e., veyron/3288 vs gru/3399).
+> This driver supports basic clock, calendar and alarm functionality.
+> 
+> Tested with Microblaze linux running on Artix7 FPGA board with my own
+> custom IP for RTC-7301.
+> 
+> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+> * Changes from v2
+> - Convert enum to usual #defines
+> 
+>  .../devicetree/bindings/rtc/epson,rtc7301.txt      |  16 +
+>  drivers/rtc/Kconfig                                |  11 +
+>  drivers/rtc/Makefile                               |   1 +
+>  drivers/rtc/rtc-r7301.c                            | 453 +++++++++++++++++++++
+>  4 files changed, 481 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
+>  create mode 100644 drivers/rtc/rtc-r7301.c
+> 
+Applied, thanks.
 
-I'd prefer a simple alphabetical sorting.
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-I think people reading the document will know what device they have, but not 
-necessarily the actual soc in it. At least I would look for Google Kevin 
-primarily without thinking of the soc at first.
-
-And in general, most Rockchip boards (maybe except Google-boards) tend to 
-follow the reference design quite closely, so it may become hard to decide 
-when one is similar to another :-) . So best to keep it simple.
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
