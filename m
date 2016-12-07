@@ -1,70 +1,41 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] Add OV5647 device tree documentation
-Date: Thu, 8 Dec 2016 00:33:19 +0200
-Message-ID: <20161207223319.GZ16630@valkosipuli.retiisi.org.uk>
-References: <cover.1480958609.git.roliveir@synopsys.com>
- <bb5a2ae3078a977eb52aec0ffa3a0a0de558e6ad.1480958609.git.roliveir@synopsys.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH v2] ARM: dts: lpc32xx: add pwm-cells to base dts file
+Date: Thu, 8 Dec 2016 00:50:48 +0200
+Message-ID: <3cbc7c24-0a0a-d8a0-ebdb-722cf9d2eb02@mleia.com>
+References: <1481139047-13166-1-git-send-email-slemieux.tyco@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bb5a2ae3078a977eb52aec0ffa3a0a0de558e6ad.1480958609.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1481139047-13166-1-git-send-email-slemieux.tyco@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylvain Lemieux <slemieux.tyco@gmail.com>, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+Hi Sylvain,
 
-Thank you for the patch.
-
-On Mon, Dec 05, 2016 at 05:36:33PM +0000, Ramiro Oliveira wrote:
-> Add device tree documentation.
+On 12/07/2016 09:30 PM, Sylvain Lemieux wrote:
+> From: Sylvain Lemieux <slemieux@tycoint.com>
 > 
-> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> There is no need to define the "pwm-cells" in the board
+> specific dts file; move the entry to the base dts file.
+> 
+> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
 > ---
->  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> new file mode 100644
-> index 0000000..4c91b3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> @@ -0,0 +1,19 @@
-> +Omnivision OV5647 raw image sensor
-> +---------------------------------
-> +
-> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible	: "ovti,ov5647";
-> +- reg		: I2C slave address of the sensor;
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be
-> +used to specify link to the image data receiver. The OV5647 device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Following properties are valid for the endpoint node:
-> +
-> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> +  video-interfaces.txt.  The sensor supports only two data lanes.
 
-Doesn't this sensor require a external clock, a reset GPIO and / or a
-regulator or a few? Do you need data-lanes, unless you can change the order
-or the number?
+thank you for the change,
 
-An example DT snippet wouldn't hurt.
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
 
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
