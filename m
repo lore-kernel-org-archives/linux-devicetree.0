@@ -1,75 +1,105 @@
 From: Chris Bostic <christopher.lee.bostic@gmail.com>
-Subject: [PATCH 07/16] drivers/fsi: Add empty master scan
-Date: Tue,  6 Dec 2016 18:14:28 -0600
-Message-ID: <1481069677-53660-8-git-send-email-christopher.lee.bostic@gmail.com>
+Subject: [PATCH 03/16] drivers/fsi: add driver to device matches
+Date: Tue,  6 Dec 2016 18:14:24 -0600
+Message-ID: <1481069677-53660-4-git-send-email-christopher.lee.bostic@gmail.com>
 References: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1481069677-53660-1-git-send-email-christopher.lee.bostic@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, sre@kernel.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@us.ibm.com>
+Cc: andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Chris Bostic <cbostic@us.ibm.com>, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-When a new fsi master is added, we will need to scan its links, and
-slaves attached to those links. This change introduces a little shell to
-iterate the links, which we will populate with the actual slave scan in
-a later change.
+Driver bind to devices based on the engine types & (optional) versions.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/fsi/fsi-core.c | 21 +++++++++++++++++++++
+ include/linux/fsi.h    | 21 +++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 60a6d91..ceaf536 100644
+index 3e45306..3d55bd5 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -19,6 +19,8 @@
+@@ -19,8 +19,29 @@
  
- #include "fsi-master.h"
+ /* FSI core & Linux bus type definitions */
  
-+#define FSI_N_SLAVES	4
-+
- static atomic_t master_idx = ATOMIC_INIT(-1);
- 
- struct fsi_slave {
-@@ -30,12 +32,34 @@ struct fsi_slave {
- 
- #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
- 
-+/* FSI slave support */
-+static int fsi_slave_init(struct fsi_master *master,
-+		int link, uint8_t slave_id)
++static int fsi_bus_match(struct device *dev, struct device_driver *drv)
 +{
-+	/* todo: initialise slave device, perform engine scan */
++	struct fsi_device *fsi_dev = to_fsi_dev(dev);
++	struct fsi_driver *fsi_drv = to_fsi_drv(drv);
++	const struct fsi_device_id *id;
 +
-+	return -ENODEV;
-+}
++	if (!fsi_drv->id_table)
++		return 0;
 +
- /* FSI master support */
- 
-+static int fsi_master_scan(struct fsi_master *master)
-+{
-+	int link, slave_id;
-+
-+	for (link = 0; link < master->n_links; link++)
-+		for (slave_id = 0; slave_id < FSI_N_SLAVES; slave_id++)
-+			fsi_slave_init(master, link, slave_id);
++	for (id = fsi_drv->id_table; id->engine_type; id++) {
++		if (id->engine_type != fsi_dev->engine_type)
++			continue;
++		if (id->version == FSI_VERSION_ANY ||
++				id->version == fsi_dev->version)
++			return 1;
++	}
 +
 +	return 0;
-+
 +}
 +
- int fsi_master_register(struct fsi_master *master)
- {
- 	master->idx = atomic_inc_return(&master_idx);
- 	get_device(master->dev);
-+	fsi_master_scan(master);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(fsi_master_register);
+ struct bus_type fsi_bus_type = {
+ 	.name		= "fsi",
++	.match		= fsi_bus_match,
+ };
+ EXPORT_SYMBOL_GPL(fsi_bus_type);
+ 
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index f73886a..273cbf6 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -18,11 +18,28 @@
+ #include <linux/device.h>
+ 
+ struct fsi_device {
+-	struct device dev;
++	struct device		dev;
++	u8			engine_type;
++	u8			version;
+ };
+ 
++struct fsi_device_id {
++	u8	engine_type;
++	u8	version;
++};
++
++#define FSI_VERSION_ANY		0
++
++#define FSI_DEVICE(t) \
++	.engine_type = (t), .version = FSI_VERSION_ANY,
++
++#define FSI_DEVICE_VERSIONED(t, v) \
++	.engine_type = (t), .version = (v),
++
++
+ struct fsi_driver {
+-	struct device_driver drv;
++	struct device_driver		drv;
++	const struct fsi_device_id	*id_table;
+ };
+ 
+ #define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
 -- 
 1.8.2.2
