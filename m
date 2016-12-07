@@ -1,41 +1,38 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v2] ARM: dts: lpc32xx: add pwm-cells to base dts file
-Date: Thu, 8 Dec 2016 00:50:48 +0200
-Message-ID: <3cbc7c24-0a0a-d8a0-ebdb-722cf9d2eb02@mleia.com>
-References: <1481139047-13166-1-git-send-email-slemieux.tyco@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH pci/next v3 0/3] PCI: rcar, rcar-gen2: Bindings cleanups
+Date: Wed, 7 Dec 2016 16:57:39 -0600
+Message-ID: <20161207225739.GJ22129@bhelgaas-glaptop.roam.corp.google.com>
+References: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1481139047-13166-1-git-send-email-slemieux.tyco@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylvain Lemieux <slemieux.tyco@gmail.com>, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1481039491-30364-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylvain,
-
-On 12/07/2016 09:30 PM, Sylvain Lemieux wrote:
-> From: Sylvain Lemieux <slemieux@tycoint.com>
+On Tue, Dec 06, 2016 at 04:51:28PM +0100, Simon Horman wrote:
+> Hi,
 > 
-> There is no need to define the "pwm-cells" in the board
-> specific dts file; move the entry to the base dts file.
+> this short series makes some bindings cleanups to the Renesas PCI drivers.
 > 
-> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
-> ---
+> Changes v2->v3:
+> * Reworded changelogs to indicate that re-ordering struct of_device_id
+>   entries does not effect run-time behaviour
+> * Corrected compile error due to typo in symbol name
+> Changes v1->v2:
+> * re-order struct of_device_id entries
+> 
+> Simon Horman (3):
+>   PCI: rcar-gen2: Use gen2 fallback compatibility last
+>   PCI: rcar: Use gen2 fallback compatibility last
+>   PCI: rcar: Add gen3 fallback compatibility string for pcie-rcar
+> 
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  drivers/pci/host/pci-rcar-gen2.c                   | 2 +-
+>  drivers/pci/host/pcie-rcar.c                       | 5 +++--
+>  3 files changed, 5 insertions(+), 3 deletions(-)
 
-thank you for the change,
-
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-
---
-With best wishes,
-Vladimir
+Applied to pci/host-rcar for v4.10, thanks!
