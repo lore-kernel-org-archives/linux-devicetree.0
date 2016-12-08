@@ -1,77 +1,29 @@
-From: Guy Shapiro <guy.shapiro@mobi-wize.com>
-Subject: Re: [PATCH 1/2] Documentation: sample averaging for imx6ul_tsc
-Date: Thu, 8 Dec 2016 17:15:17 +0200
-Message-ID: <82b04890-692d-4e22-36c1-a21affad5126@mobi-wize.com>
-References: <1480232698-23075-1-git-send-email-guy.shapiro@mobi-wize.com>
- <20161201161343.g7p2maxiatp4m5di@rob-hp-laptop>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 6/6] net: smmac: allow configuring lower pbl values
+Date: Thu, 08 Dec 2016 10:18:11 -0500 (EST)
+Message-ID: <20161208.101811.1986670509082376828.davem@davemloft.net>
+References: <1481120409-18103-1-git-send-email-niklass@axis.com>
+        <1481120409-18103-7-git-send-email-niklass@axis.com>
+        <4d43479f-8373-308b-8c7d-cfed5346dc53@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161201161343.g7p2maxiatp4m5di@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: fabio.estevam@freescale.com, mark.rutland@arm.com, devicetree@vger.kernel.org, haibo.chen@freescale.com, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4d43479f-8373-308b-8c7d-cfed5346dc53@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: alexandre.torgue@st.com
+Cc: niklas.cassel@axis.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, peppe.cavallaro@st.com, preid@electromag.com.au, eric@engestrom.ch, pavel@ucw.cz, afaerber@suse.de, manabian@gmail.com, vpalatin@chromium.org, gabriel.fernandez@linaro.org, niklass@axis.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2016 18:13, Rob Herring wrote:
-> On Sun, Nov 27, 2016 at 09:44:57AM +0200, Guy Shapiro wrote:
->> The i.MX6UL internal touchscreen controller contains an option to
->> average upon samples. This feature reduces noise from the produced
->> touch locations.
->>
->> This patch introduces a new device tree optional property for this
->> feature. It provides control over the amount of averaged samples per
->> touch event.
->>
->> The property was inspired by a similar property on the
->> "brcm,iproc-touchscreen" binding.
->>
->> Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
->> ---
->>   .../devicetree/bindings/input/touchscreen/imx6ul_tsc.txt          | 8
-> ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git
-> a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
-> b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->> index 853dff9..a66069f 100644
->> --- a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->> +++ b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->> @@ -17,6 +17,13 @@ Optional properties:
->>     This value depends on the touch screen.
->>   - pre-charge-time: the touch screen need some time to precharge.
->>     This value depends on the touch screen.
->> +- average-samples: Number of data samples which are averaged for each
-> read.
->> +	Valid values 0-4
->> +	0 =  1 sample
->> +	1 =  4 samples
->> +	2 =  8 samples
->> +	3 = 16 samples
->> +	4 = 32 samples
-> Either this needs a vendor prefix or should be documented as a generic
-> property. In the latter case, you should use actual number of samples
-> (1-32) for the values.
-In the term "generic property", do you mean to document it on 
-bindings/input/touchscreen/touchscreen.txt ?
-If so, should I add the "touchscreen-" prefix like all the other 
-properties in that file?
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Date: Thu, 8 Dec 2016 11:42:56 +0100
 
-Grepping bindings/input/touchscreen/, I found two other device drivers 
-that implement a
-similar property - "ti-tsc-adc" and "brcm,iproc-touchscreen" (The 
-latter, BTW, uses a non
-vendor prefixed property name).
+> Thanks for this patch, you can add my Acked-by.
 
-Do we want to move from per-vendor properties to a generic one?
-If we do, should we deprecate the existing vendor specific properties?
+Please simply state:
+
+Acked-by: Alexandre Torgue <alexandre.torgue@st.com>
+
+in your reply and it will automatically appear when the patch is
+applied.  You don't have to ask the patch submitter or the person who
+applies it to do it as you are doing here.
