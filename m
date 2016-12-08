@@ -1,26 +1,108 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7d: fix LCDIF clock assignment
-Date: Thu, 8 Dec 2016 08:54:55 +0800
-Message-ID: <20161208005454.GF2749@dragon>
-References: <20161123004204.10851-1-stefan@agner.ch>
- <CAOMZO5AqKupmmKb4biGfmy4v3ZwS-BFjPY=MLd8Rc0ZXL+vQvg@mail.gmail.com>
- <7e4829f484f6c4425fc9d01bea1a094f@agner.ch>
- <20161205020123.GA2066@dragon>
- <20161207205314.GA20203@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH 02/12] ARM: dts: imx6qdl: rename ipu client nodes
+Date: Wed,  7 Dec 2016 16:57:43 -0800
+Message-ID: <1481158673-15937-3-git-send-email-steve_longerbeam@mentor.com>
+References: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161207205314.GA20203@localhost>
+In-Reply-To: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, Peter Chen <peter.chen@freescale.com>, Fabio Estevam <fabio.estevam@nxp.com>, Liu Ying <Ying.Liu@freescale.com>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, tomi.valkeinen@ti.com, p.zabel@pengutronix.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 07, 2016 at 12:53:14PM -0800, Olof Johansson wrote:
-> Applied, with the fixes line. In the future, please email arm@kernel.org too,
-> it's easier to make sure we don't miss it that way.
+To allow for IPU client devices that are composed of more than one
+port for input and output (SMFC and IC), change the nodes from being
+a single port node to nodes that can contain multiple ports. Rename
+the nodes to use the following format: "ipu<id>_<subunit>".
 
-Noted.  Thanks, Olof.
+The IPUv3 driver will then need to lookup the client nodes by name
+rather than by port id.
 
-Shawn
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+---
+ arch/arm/boot/dts/imx6q.dtsi   | 12 ++++++------
+ arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index e9a5d0b..2b261ba 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -141,18 +141,18 @@
+ 			clock-names = "bus", "di0", "di1";
+ 			resets = <&src 4>;
+ 
+-			ipu2_csi0: port@0 {
++			ipu2_csi0: ipu2_csi@0 {
+ 				reg = <0>;
+ 			};
+ 
+-			ipu2_csi1: port@1 {
++			ipu2_csi1: ipu2_csi@1 {
+ 				reg = <1>;
+ 			};
+ 
+-			ipu2_di0: port@2 {
++			ipu2_di0: ipu2_di@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				reg = <2>;
++				reg = <0>;
+ 
+ 				ipu2_di0_disp0: disp0-endpoint {
+ 				};
+@@ -174,10 +174,10 @@
+ 				};
+ 			};
+ 
+-			ipu2_di1: port@3 {
++			ipu2_di1: ipu2_di@1 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				reg = <3>;
++				reg = <1>;
+ 
+ 				ipu2_di1_hdmi: hdmi-endpoint {
+ 					remote-endpoint = <&hdmi_mux_3>;
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index e01e5d5..2465187 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1226,18 +1226,18 @@
+ 			clock-names = "bus", "di0", "di1";
+ 			resets = <&src 2>;
+ 
+-			ipu1_csi0: port@0 {
++			ipu1_csi0: ipu1_csi@0 {
+ 				reg = <0>;
+ 			};
+ 
+-			ipu1_csi1: port@1 {
++			ipu1_csi1: ipu1_csi@1 {
+ 				reg = <1>;
+ 			};
+ 
+-			ipu1_di0: port@2 {
++			ipu1_di0: ipu1_di@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				reg = <2>;
++				reg = <0>;
+ 
+ 				ipu1_di0_disp0: disp0-endpoint {
+ 				};
+@@ -1259,10 +1259,10 @@
+ 				};
+ 			};
+ 
+-			ipu1_di1: port@3 {
++			ipu1_di1: ipu1_di@1 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				reg = <3>;
++				reg = <1>;
+ 
+ 				ipu1_di1_disp1: disp1-endpoint {
+ 				};
+-- 
+2.7.4
