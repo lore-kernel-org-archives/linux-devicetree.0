@@ -1,28 +1,47 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 6/6] net: smmac: allow configuring lower pbl values
-Date: Thu, 8 Dec 2016 14:44:04 +0100
-Message-ID: <209cb37b-341a-cf34-2f12-cce666f4442e@suse.de>
-References: <1481120409-18103-1-git-send-email-niklass@axis.com>
- <1481120409-18103-7-git-send-email-niklass@axis.com>
- <4d43479f-8373-308b-8c7d-cfed5346dc53@st.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
+Date: Thu, 8 Dec 2016 15:05:41 +0100
+Message-ID: <CAPDyKFpFmBnydazS0pYOYajN1-QOiw=Sxid6Uuxn8z4RMVO3KA@mail.gmail.com>
+References: <1480903854-22701-1-git-send-email-yamada.masahiro@socionext.com>
+ <1480903854-22701-3-git-send-email-yamada.masahiro@socionext.com>
+ <CAPDyKFqbAzCyXArikgTUeTrs9vOzfwKWJcs3TgF7D-4f_xfjfQ@mail.gmail.com> <CAK7LNAQkJO0vN9T-pB3ys4N=3pG9wdWZ9z+VkYToL7F_fLo9dA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d43479f-8373-308b-8c7d-cfed5346dc53@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>, Niklas Cassel <niklas.cassel@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "David S. Miller" <davem@davemloft.net>, Phil Reid <preid@electromag.com.au>, Eric Engestrom <eric@engestrom.ch>, Pavel Machek <pavel@ucw.cz>, Joachim Eastwood <manabian@gmail.com>, Vincent Palatin <vpalatin@chromium.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Niklas Cassel <niklass@axis.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNAQkJO0vN9T-pB3ys4N=3pG9wdWZ9z+VkYToL7F_fLo9dA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Douglas Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Al Cooper <alcooperx@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Andrei Pistirica <andrei.pistirica@microchip.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Joshua Henderson <joshua.henderson@microchip.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 8 December 2016 at 13:52, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Hi Ulf,
+>
+> 2016-12-08 21:32 GMT+09:00 Ulf Hansson <ulf.hansson@linaro.org>:
+>> On 5 December 2016 at 03:10, Masahiro Yamada
+>> <yamada.masahiro@socionext.com> wrote:
+>>> Add a driver for the Cadence SD4HC SD/SDIO/eMMC Controller.
+>>>
+>>> For SD, it basically relies on the SDHCI standard code.
+>>> For eMMC, this driver provides some callbacks to support the
+>>> hardware part that is specific to this IP design.
+>>>
+>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>
+>> Thanks, applied for next!
+>>
+>
+>
+> Very sorry for my fix at the last minute.
+>
+> I've just posted v5.
+>
+> Please make sure to apply v5.
 
-In subject: s/smmac/stmmac/
+Okay, I have replaced v4 with v5.
 
-Regards,
-Andreas
+Perhaps you should have a look at my next branch to make sure it's all okay.
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Kind regards
+Uffe
