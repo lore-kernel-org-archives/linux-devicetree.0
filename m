@@ -1,212 +1,200 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND-PATCH] ARM: EXYNOS: remove smp hook from machine
- descriptor
-Date: Thu, 8 Dec 2016 19:33:49 +0200
-Message-ID: <20161208173349.GA8522@kozik-lap>
-References: <1481166135-1588-1-git-send-email-pankaj.dubey@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] misc: eeprom: implement compatible DT probing
+Date: Thu,  8 Dec 2016 18:47:59 +0100
+Message-ID: <1481219279-6982-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1481166135-1588-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 08, 2016 at 08:32:15AM +0530, Pankaj Dubey wrote:
-> Use CPU_METHOD_OF_DECLARE() for smp_ops instead of using it
-> via machine descriptor.
-> 
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
-> Resending as I missed to include samsung mailing list.
-> 
->  arch/arm/boot/dts/exynos3250.dtsi      | 1 +
->  arch/arm/boot/dts/exynos4210.dtsi      | 1 +
->  arch/arm/boot/dts/exynos4212.dtsi      | 1 +
->  arch/arm/boot/dts/exynos4412.dtsi      | 1 +
->  arch/arm/boot/dts/exynos5250.dtsi      | 1 +
->  arch/arm/boot/dts/exynos5260.dtsi      | 1 +
->  arch/arm/boot/dts/exynos5410.dtsi      | 1 +
->  arch/arm/boot/dts/exynos5420-cpus.dtsi | 1 +
->  arch/arm/boot/dts/exynos5422-cpus.dtsi | 1 +
->  arch/arm/boot/dts/exynos5440.dtsi      | 1 +
->  arch/arm/mach-exynos/common.h          | 2 --
->  arch/arm/mach-exynos/exynos.c          | 1 -
->  arch/arm/mach-exynos/platsmp.c         | 2 ++
->  13 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index ba17ee1..f28f669 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -53,6 +53,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-> index 7f3a18c..6dfd98d 100644
-> --- a/arch/arm/boot/dts/exynos4210.dtsi
-> +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> @@ -35,6 +35,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@900 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
-> index 5389011..3e8982e 100644
-> --- a/arch/arm/boot/dts/exynos4212.dtsi
-> +++ b/arch/arm/boot/dts/exynos4212.dtsi
-> @@ -25,6 +25,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@A00 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> index 40beede..faf2fb8 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -25,6 +25,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@A00 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index b6d7444..580897c 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -52,6 +52,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
-> index 5818718..1af6e76 100644
-> --- a/arch/arm/boot/dts/exynos5260.dtsi
-> +++ b/arch/arm/boot/dts/exynos5260.dtsi
-> @@ -32,6 +32,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu@0 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> index 2b6adaf..b092cdc 100644
-> --- a/arch/arm/boot/dts/exynos5410.dtsi
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -33,6 +33,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> index 5c052d7..a587704 100644
-> --- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> @@ -24,6 +24,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> index bf3c6f1..7fcdfd0 100644
-> --- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> @@ -23,6 +23,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu0: cpu@100 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-> index 2a2e570..0a958e8 100644
-> --- a/arch/arm/boot/dts/exynos5440.dtsi
-> +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> @@ -50,6 +50,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "samsung,exynos-smp";
->  
->  		cpu@0 {
->  			device_type = "cpu";
-> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-> index fb12d11..051e1ab 100644
-> --- a/arch/arm/mach-exynos/common.h
-> +++ b/arch/arm/mach-exynos/common.h
-> @@ -143,8 +143,6 @@ static inline void exynos_pm_init(void) {}
->  extern void exynos_cpu_resume(void);
->  extern void exynos_cpu_resume_ns(void);
->  
-> -extern const struct smp_operations exynos_smp_ops;
-> -
->  extern void exynos_cpu_power_down(int cpu);
->  extern void exynos_cpu_power_up(int cpu);
->  extern int  exynos_cpu_power_state(int cpu);
-> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-> index fa08ef9..f0a766e 100644
-> --- a/arch/arm/mach-exynos/exynos.c
-> +++ b/arch/arm/mach-exynos/exynos.c
-> @@ -211,7 +211,6 @@ DT_MACHINE_START(EXYNOS_DT, "SAMSUNG EXYNOS (Flattened Device Tree)")
->  	/* Maintainer: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> */
->  	.l2c_aux_val	= 0x3c400001,
->  	.l2c_aux_mask	= 0xc20fffff,
-> -	.smp		= smp_ops(exynos_smp_ops),
->  	.map_io		= exynos_init_io,
->  	.init_early	= exynos_firmware_init,
->  	.init_irq	= exynos_init_irq,
-> diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
-> index 94405c7..43eec10 100644
-> --- a/arch/arm/mach-exynos/platsmp.c
-> +++ b/arch/arm/mach-exynos/platsmp.c
-> @@ -474,3 +474,5 @@ const struct smp_operations exynos_smp_ops __initconst = {
->  	.cpu_die		= exynos_cpu_die,
->  #endif
->  };
-> +
-> +CPU_METHOD_OF_DECLARE(exynos_smp, "samsung,exynos-smp", &exynos_smp_ops);
+The compatible string for an EEPROM in the device tree is currently
+completely ignored by the kernel, simply stated it will not make the
+corresponding AT24 EEPROM driver probe properly. It is instead still
+relying on the DT node name to be set to one of the I2C device IDs
+which works due to a side effect in the I2C DT parsing code.
 
-Three issues:
-1. This has to be documented. Checkpatch did not complain about it?
-2. I think this breaks the ABI with existing DTBs because now the
-   enable-method of cpus becomes mandatory. But the
-   Documentation/devicetree/bindings/arm/cpus.txt is saying that:
-   "On ARM 32-bit systems this property is optional and can be one of"
+Fix this up by making the DT probe mechanism a bit more elaborate:
+actually match on the compatible strings defined in the device
+tree bindings in Documentation/devicetree/bindings/eeprom/eeprom.txt:
+map these to the corresponding I2C IDs by name and look up the
+magic flags from the I2C ID before proceeding, also make the DT
+compatible string take precedence.
 
-3. Please split DTS changes to separate patches. This is, by the way,
-   connected with #2 above: if there was no ABI break, then the DTS
-   could go to separate branch easily.
+Keep the second DT parsing callback that sets up per-chip flags as
+this needs to happen after mangling the magic flags passed from the
+I2C ID table.
 
-Best regards,
-Krzysztof
+All vendor compatible strings listed in the binding document are
+added to the driver.
+
+After this it is possible to name the device tree node for the EEPROM
+whatever you actually like to call it, and the probing will be done
+from the compatible string.
+
+Before this patch, the following device tree node does not probe,
+which might be considered a bug:
+
+eeprom@52 {
+	compatible = "atmel,at24c128";
+	reg = <0x52>;
+	pagesize = <64>;
+};
+
+After this patch, the driver probes fine from this node.
+
+As checkpatch is complaining about the vendor "catalyst" not
+existing in the vendor prefixes, despite being mentioned in the
+EEPROM DT binding document, we add this as part of this patch so
+that checkpatch is happy.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/misc/eeprom/at24.c                         | 82 ++++++++++++++++++----
+ 2 files changed, 68 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index f0a48ea78659..40bdf9aa590c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -47,6 +47,7 @@ brcm	Broadcom Corporation
+ buffalo	Buffalo, Inc.
+ calxeda	Calxeda
+ capella	Capella Microsystems, Inc
++catalyst	Catalyst Semiconductor Inc.
+ cavium	Cavium, Inc.
+ cdns	Cadence Design Systems Inc.
+ ceva	Ceva, Inc.
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 051b14766ef9..246b15539d45 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -20,6 +20,7 @@
+ #include <linux/bitops.h>
+ #include <linux/jiffies.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/acpi.h>
+ #include <linux/i2c.h>
+ #include <linux/nvmem-provider.h>
+@@ -563,23 +564,70 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ }
+ 
+ #ifdef CONFIG_OF
+-static void at24_get_ofdata(struct i2c_client *client,
+-			    struct at24_platform_data *chip)
++static void at24_get_of_magic(struct device *dev,
++			      kernel_ulong_t *magic)
+ {
+-	const __be32 *val;
+-	struct device_node *node = client->dev.of_node;
+-
+-	if (node) {
+-		if (of_get_property(node, "read-only", NULL))
+-			chip->flags |= AT24_FLAG_READONLY;
+-		val = of_get_property(node, "pagesize", NULL);
+-		if (val)
+-			chip->page_size = be32_to_cpup(val);
++	const char *name;
++	const struct i2c_device_id *id;
++	int i;
++
++	name = of_device_get_match_data(dev);
++	if (!name)
++		return;
++
++	for (i = 0; i < ARRAY_SIZE(at24_ids); i++) {
++		id = &at24_ids[i];
++		if (!strcmp(id->name, name)) {
++			*magic = id->driver_data;
++			break;
++		}
+ 	}
++	if (i == ARRAY_SIZE(at24_ids))
++		return;
++
++	dev_dbg(dev, "DT match for %s -> %s\n", name, id->name);
++}
++
++static void at24_get_of_chipdata(struct device_node *np,
++				 struct at24_platform_data *chip)
++{
++	u32 val;
++	int ret;
++
++	if (of_property_read_bool(np, "read-only"))
++		chip->flags |= AT24_FLAG_READONLY;
++
++	ret = of_property_read_u32(np, "pagesize", &val);
++	if (!ret)
++		chip->page_size = val;
+ }
++
++static const struct of_device_id at24_of_match[] = {
++	{ .compatible = "atmel,at24c00", .data = "24c00" },
++	{ .compatible = "atmel,at24c01", .data = "24c01" },
++	{ .compatible = "atmel,at24c02", .data = "24c02" },
++	{ .compatible = "atmel,at24c04", .data = "24c04" },
++	{ .compatible = "atmel,at24c08", .data = "24c08" },
++	{ .compatible = "atmel,at24c16", .data = "24c16" },
++	{ .compatible = "atmel,at24c32", .data = "24c32" },
++	{ .compatible = "atmel,at24c64", .data = "24c64" },
++	{ .compatible = "atmel,at24c128", .data = "24c128" },
++	{ .compatible = "atmel,at24c256", .data = "24c256" },
++	{ .compatible = "atmel,at24c512", .data = "24c512" },
++	{ .compatible = "atmel,at24c1024", .data = "24c1024" },
++	{ .compatible = "catalyst,24c32", .data = "24c32" },
++	{ .compatible = "ramtron,24c64", .data = "24c64" },
++	{ .compatible = "renesas,r1ex24002", .data = "24c02" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, at24_of_match);
++
+ #else
+-static void at24_get_ofdata(struct i2c_client *client,
+-			    struct at24_platform_data *chip)
++static void at24_get_of_magic(struct device *dev,
++			      kernel_ulong_t *magic)
++{ }
++static void at24_get_of_chipdata(struct device_node *np,
++				 struct at24_platform_data *chip)
+ { }
+ #endif /* CONFIG_OF */
+ 
+@@ -598,7 +646,10 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (client->dev.platform_data) {
+ 		chip = *(struct at24_platform_data *)client->dev.platform_data;
+ 	} else {
+-		if (id) {
++		if (client->dev.of_node) {
++			/* Get chipdata if OF is present */
++			at24_get_of_magic(&client->dev, &magic);
++		} else if (id) {
+ 			magic = id->driver_data;
+ 		} else {
+ 			const struct acpi_device_id *aid;
+@@ -621,7 +672,7 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		chip.page_size = 1;
+ 
+ 		/* update chipdata if OF is present */
+-		at24_get_ofdata(client, &chip);
++		at24_get_of_chipdata(client->dev.of_node, &chip);
+ 
+ 		chip.setup = NULL;
+ 		chip.context = NULL;
+@@ -822,6 +873,7 @@ static struct i2c_driver at24_driver = {
+ 	.driver = {
+ 		.name = "at24",
+ 		.acpi_match_table = ACPI_PTR(at24_acpi_ids),
++		.of_match_table = of_match_ptr(at24_of_match),
+ 	},
+ 	.probe = at24_probe,
+ 	.remove = at24_remove,
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
