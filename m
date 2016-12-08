@@ -1,57 +1,74 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: Add I2C1 support for STM32429 eval board
-Date: Thu, 8 Dec 2016 09:47:46 +0100
-Message-ID: <CAOAejn239D+R9AZuCVB8MChidAcQqWZvFzkkTTJF7s9UprzoaQ@mail.gmail.com>
-References: <1481185563-8735-1-git-send-email-cedric.madianga@gmail.com>
- <1481185563-8735-5-git-send-email-cedric.madianga@gmail.com> <e61ae4d6-a65a-5cfa-6845-27351ac43af6@st.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] Add crypto driver support for some MediaTek chips
+Date: Thu, 8 Dec 2016 17:05:26 +0800
+Message-ID: <1481187926.14860.19.camel@mtkswgap22>
+References: <1480921284-45827-1-git-send-email-ryder.lee@mediatek.com>
+         <1480921284-45827-2-git-send-email-ryder.lee@mediatek.com>
+         <20161205085220.GA333@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e61ae4d6-a65a-5cfa-6845-27351ac43af6-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20161205085220.GA333@Red>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Roy Luo <cheng-hao.luo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+Hello,
+
+On Mon, 2016-12-05 at 09:52 +0100, Corentin Labbe wrote:
+> Hello
+> 
+> I have two minor comment.
+> 
+> On Mon, Dec 05, 2016 at 03:01:23PM +0800, Ryder Lee wrote:
+> > This adds support for the MediaTek hardware accelerator on
+> > mt7623/mt2701/mt8521p SoC.
+> > 
+> > This driver currently implement:
+> > - SHA1 and SHA2 family(HMAC) hash alogrithms.
+> 
+> There is a typo for algorithms.
+> 
+> [...]
+> > +/**
+> > + * struct mtk_desc - DMA descriptor
+> > + * @hdr:	the descriptor control header
+> > + * @buf:	DMA address of input buffer segment
+> > + * @ct:		DMA address of command token that control operation flow
+> > + * @ct_hdr:	the command token control header
+> > + * @tag:	the user-defined field
+> > + * @tfm:	DMA address of transform state
+> > + * @bound:	align descriptors offset boundary
+> > + *
+> > + * Structure passed to the crypto engine to describe where source
+> > + * data needs to be fetched and how it needs to be processed.
+> > + */
+> > +struct mtk_desc {
+> > +	u32 hdr;
+> > +	u32 buf;
+> > +	u32 ct;
+> > +	u32 ct_hdr;
+> > +	u32 tag;
+> > +	u32 tfm;
+> > +	u32 bound[2];
+> > +};
+> 
+> Do you have tested this descriptor with BE/LE kernel ?
+
+I did not test it with BE kernel, because both CPU and accelerator in
+our SoC just run on LE system. 
+
+Thanks for reminding me, i will use byteorder conversion macros and type
+identifiers.
+
+> Regards
+> Corentin Labbe
 
 
-2016-12-08 9:39 GMT+01:00 Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>:
-> Hi Cedric,
->
-> On 12/08/2016 09:26 AM, M'boumba Cedric Madianga wrote:
->>
->> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/stm32429i-eval.dts | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
-> Can you change the commit header by: ARM: dts: stm32: Add I2C1 support for
-> STM32429 eval board
-Ok, I will use this typo in the next version
 
->
-> thx
-> Alex
->
->
->> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts
->> b/arch/arm/boot/dts/stm32429i-eval.dts
->> index afb90bc..74e0045 100644
->> --- a/arch/arm/boot/dts/stm32429i-eval.dts
->> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
->> @@ -141,3 +141,9 @@
->>         pinctrl-names = "default";
->>         status = "okay";
->>  };
->> +
->> +&i2c1 {
->> +       pinctrl-0 = <&i2c1_pins_b>;
->> +       pinctrl-names = "default";
->> +       status = "okay";
->> +};
->>
->
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
