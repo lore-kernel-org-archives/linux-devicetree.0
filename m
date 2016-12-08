@@ -1,166 +1,344 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v3 6/6] net: smmac: allow configuring lower pbl values
-Date: Thu, 8 Dec 2016 11:42:56 +0100
-Message-ID: <4d43479f-8373-308b-8c7d-cfed5346dc53@st.com>
-References: <1481120409-18103-1-git-send-email-niklass@axis.com>
- <1481120409-18103-7-git-send-email-niklass@axis.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 3/3] clk: keystone: Add sci-clk driver support
+Date: Thu, 8 Dec 2016 12:45:49 +0200
+Message-ID: <cb608729-b617-0eab-5ddf-d78ff47b237e@ti.com>
+References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+ <1477053961-27128-4-git-send-email-t-kristo@ti.com>
+ <20161208001348.GC5423@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481120409-18103-7-git-send-email-niklass@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "David S. Miller" <davem@davemloft.net>, Phil Reid <preid@electromag.com.au>, Eric Engestrom <eric@engestrom.ch>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Joachim Eastwood <manabian@gmail.com>, Vincent Palatin <vpalatin@chromium.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Niklas Cassel <niklass@axis.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161208001348.GC5423@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: nm@ti.com, devicetree@vger.kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On 08/12/16 02:13, Stephen Boyd wrote:
+> On 10/21, Tero Kristo wrote:
+>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+>> index 6a8ac04..dce08a7 100644
+>> --- a/drivers/clk/Kconfig
+>> +++ b/drivers/clk/Kconfig
+>> @@ -169,6 +169,15 @@ config COMMON_CLK_NXP
+>>  	---help---
+>>  	  Support for clock providers on NXP platforms.
+>>
+>> +config TI_SCI_CLK
+>> +	tristate "TI System Control Interface clock drivers"
+>> +	depends on (TI_SCI_PROTOCOL && COMMON_CLK_KEYSTONE) || COMPILE_TEST
+>
+> Given that we depend on COMMON_CLK_KEYSTONE (just for the
+> Makefile dependency?) this should be moved to right below the
+> COMMON_CLK_KEYSTONE config. And we should consider making a
+> Kconfig file in drivers/clk/keystone/ to hold both those configs
+> instead of having them at the toplevel.
 
-On 12/07/2016 03:20 PM, Niklas Cassel wrote:
-> From: Niklas Cassel <niklas.cassel@axis.com>
->
-> The driver currently always sets the PBLx8/PBLx4 bit, which means that
-> the pbl values configured via the pbl/txpbl/rxpbl DT properties are
-> always multiplied by 8/4 in the hardware.
->
-> In order to allow the DT to configure lower pbl values, while at the
-> same time not changing behavior of any existing device trees using the
-> pbl/txpbl/rxpbl settings, add a property to disable the multiplication
-> of the pbl by 8/4 in the hardware.
->
-> Suggested-by: Rabin Vincent <rabinv@axis.com>
-> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Its a makefile dependency only right now. I'll have a look at how to 
+handle this properly.
 
-Thanks for this patch, you can add my Acked-by.
+>
+>> +	default TI_SCI_PROTOCOL
+>> +	---help---
+>> +	  This adds the clock driver support over TI System Control Interface.
+>> +	  If you wish to use clock resources from the PMMC firmware, say Y.
+>> +	  Otherwise, say N.
+>> +
+>>  config COMMON_CLK_PALMAS
+>>  	tristate "Clock driver for TI Palmas devices"
+>>  	depends on MFD_PALMAS
+>> diff --git a/drivers/clk/keystone/Makefile b/drivers/clk/keystone/Makefile
+>> index 0477cf6..0e7993d 100644
+>> --- a/drivers/clk/keystone/Makefile
+>> +++ b/drivers/clk/keystone/Makefile
+>> @@ -1 +1,2 @@
+>>  obj-y			+= pll.o gate.o
+>> +obj-$(CONFIG_TI_SCI_CLK)	+= sci-clk.o
+>> diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
+>> new file mode 100644
+>> index 0000000..f6af5bd
+>> --- /dev/null
+>> +++ b/drivers/clk/keystone/sci-clk.c
+>> @@ -0,0 +1,589 @@
+> [...]
+>> +
+>> +/**
+>> + * sci_clk_recalc_rate - Get clock rate for a TI SCI clock
+>> + * @hw: clock to get rate for
+>> + * @parent_rate: parent rate provided by common clock framework, not used
+>> + *
+>> + * Gets the current clock rate of a TI SCI clock. Returns the current
+>> + * clock rate, or zero in failure.
+>> + */
+>> +static unsigned long sci_clk_recalc_rate(struct clk_hw *hw,
+>> +					 unsigned long parent_rate)
+>> +{
+>> +	struct sci_clk *clk = to_sci_clk(hw);
+>> +	u64 freq;
+>> +	int ret;
+>> +
+>> +	ret = clk->provider->ops->get_freq(clk->provider->sci, clk->dev_id,
+>> +					   clk->clk_id, &freq);
+>> +	if (ret) {
+>> +		dev_err(clk->provider->dev,
+>> +			"recalc-rate failed for dev=%d, clk=%d, ret=%d\n",
+>> +			clk->dev_id, clk->clk_id, ret);
+>> +		return 0;
+>> +	}
+>> +
+>> +	return (u32)freq;
+>
+> Do we need the cast? sizeof(u32) doesn't always equal
+> sizeof(unsigned long).
 
-Thanks for the whole series.
+Hmm, not sure where that came from. But yea, can be dropped.
 
-Alex
 
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt      | 2 ++
->  Documentation/networking/stmmac.txt                   | 5 ++++-
->  drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c   | 3 ++-
->  drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c      | 3 ++-
->  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c      | 2 ++
->  drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 1 +
->  include/linux/stmmac.h                                | 1 +
->  7 files changed, 14 insertions(+), 3 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index 8080038ff1b2..128da752fec9 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -39,6 +39,8 @@ Optional properties:
->  			If set, DMA tx will use this value rather than snps,pbl.
->  - snps,rxpbl		Rx Programmable Burst Length. Only for GMAC and newer.
->  			If set, DMA rx will use this value rather than snps,pbl.
-> +- snps,no-pbl-x8	Don't multiply the pbl/txpbl/rxpbl values by 8.
-> +			For core rev < 3.50, don't multiply the values by 4.
->  - snps,aal		Address-Aligned Beats
->  - snps,fixed-burst	Program the DMA to use the fixed burst mode
->  - snps,mixed-burst	Program the DMA to use the mixed burst mode
-> diff --git a/Documentation/networking/stmmac.txt b/Documentation/networking/stmmac.txt
-> index 6add57374f70..2bb07078f535 100644
-> --- a/Documentation/networking/stmmac.txt
-> +++ b/Documentation/networking/stmmac.txt
-> @@ -152,8 +152,9 @@ Where:
->   o dma_cfg: internal DMA parameters
->     o pbl: the Programmable Burst Length is maximum number of beats to
->         be transferred in one DMA transaction.
-> -       GMAC also enables the 4xPBL by default.
-> +       GMAC also enables the 4xPBL by default. (8xPBL for GMAC 3.50 and newer)
->     o txpbl/rxpbl: GMAC and newer supports independent DMA pbl for tx/rx.
-> +   o pblx8: Enable 8xPBL (4xPBL for core rev < 3.50). Enabled by default.
->     o fixed_burst/mixed_burst/aal
->   o clk_csr: fixed CSR Clock range selection.
->   o has_gmac: uses the GMAC core.
-> @@ -208,6 +209,7 @@ struct stmmac_dma_cfg {
->  	int pbl;
->  	int txpbl;
->  	int rxpbl;
-> +	bool pblx8;
->  	int fixed_burst;
->  	int mixed_burst;
->  	bool aal;
-> @@ -219,6 +221,7 @@ Where:
->  	 If set, DMA tx will use this value rather than pbl.
->   o rxpbl: Receive Programmable Burst Length. Only for GMAC and newer.
->  	 If set, DMA rx will use this value rather than pbl.
-> + o pblx8: Enable 8xPBL (4xPBL for core rev < 3.50). Enabled by default.
->   o fixed_burst: program the DMA to use the fixed burst mode
->   o mixed_burst: program the DMA to use the mixed burst mode
->   o aal: Address-Aligned Beats
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-> index 99b8040af592..612d3aaac9a4 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-> @@ -98,7 +98,8 @@ static void dwmac1000_dma_init(void __iomem *ioaddr,
->  	 * Note: before stmmac core 3.50 this mode bit was 4xPBL, and
->  	 * post 3.5 mode bit acts as 8*PBL.
->  	 */
-> -	value |= DMA_BUS_MODE_MAXPBL;
-> +	if (dma_cfg->pblx8)
-> +		value |= DMA_BUS_MODE_MAXPBL;
->  	value |= DMA_BUS_MODE_USP;
->  	value &= ~(DMA_BUS_MODE_PBL_MASK | DMA_BUS_MODE_RPBL_MASK);
->  	value |= (txpbl << DMA_BUS_MODE_PBL_SHIFT);
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-> index 2c3b2098f350..8196ab5fc33c 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-> @@ -84,7 +84,8 @@ static void dwmac4_dma_init_channel(void __iomem *ioaddr,
->  	 * on each channel
->  	 */
->  	value = readl(ioaddr + DMA_CHAN_CONTROL(channel));
-> -	value = value | DMA_BUS_MODE_PBL;
-> +	if (dma_cfg->pblx8)
-> +		value = value | DMA_BUS_MODE_PBL;
->  	writel(value, ioaddr + DMA_CHAN_CONTROL(channel));
+>> +
+>> +/**
+>> + * _sci_clk_get - Gets a handle for an SCI clock
+>> + * @provider: Handle to SCI clock provider
+>> + * @dev_id: device ID for the clock to register
+>> + * @clk_id: clock ID for the clock to register
+>> + *
+>> + * Gets a handle to an existing TI SCI hw clock, or builds a new clock
+>> + * entry and registers it with the common clock framework. Called from
+>> + * the common clock framework, when a corresponding of_clk_get call is
+>> + * executed, or recursively from itself when parsing parent clocks.
+>> + * Returns a pointer to the hw clock struct, or ERR_PTR value in failure.
+>> + */
+>> +static struct clk_hw *_sci_clk_build(struct sci_clk_provider *provider,
+>> +				     u16 dev_id, u8 clk_id)
+>> +{
+>> +	struct clk_init_data init = { NULL };
+>> +	struct sci_clk *sci_clk = NULL;
+>> +	char *name = NULL;
+>> +	char **parent_names = NULL;
+>> +	int i;
+>> +	int ret;
+>> +
+>> +	sci_clk = devm_kzalloc(provider->dev, sizeof(*sci_clk), GFP_KERNEL);
+>> +	if (!sci_clk)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	sci_clk->dev_id = dev_id;
+>> +	sci_clk->clk_id = clk_id;
+>> +	sci_clk->provider = provider;
+>> +
+>> +	ret = provider->ops->get_num_parents(provider->sci, dev_id,
+>> +					     clk_id,
+>> +					     &init.num_parents);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	name = kasprintf(GFP_KERNEL, "%s:%d:%d", dev_name(provider->dev),
+>> +			 sci_clk->dev_id, sci_clk->clk_id);
+>> +
+>> +	init.name = name;
+>> +
+>> +	if (init.num_parents < 2)
+>> +		init.num_parents = 0;
 >
->  	value = readl(ioaddr + DMA_CHAN_TX_CONTROL(channel));
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-> index 56c8a2342c14..a2831773431a 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-> @@ -81,6 +81,7 @@ static void stmmac_default_data(struct plat_stmmacenet_data *plat)
->  	plat->mdio_bus_data->phy_mask = 0;
+> This deserves a comment. Why is num_parents == 1 the same as
+> num_parents == 0?
+
+I'll add a comment on this. Basically some clocks can be root clocks 
+which don't have parents, and we only want to have parent control for 
+clocks that can switch their parent. This is kind of a quirk of the 
+firmware.
+
 >
->  	plat->dma_cfg->pbl = 32;
-> +	plat->dma_cfg->pblx8 = true;
->  	/* TODO: AXI */
+>> +
+>> +	if (init.num_parents) {
+>> +		parent_names = devm_kcalloc(provider->dev, init.num_parents,
+>> +					    sizeof(char *), GFP_KERNEL);
+>> +
+>> +		if (!parent_names) {
+>> +			ret = -ENOMEM;
+>> +			goto err;
+>> +		}
+>> +
+>> +		for (i = 0; i < init.num_parents; i++) {
+>> +			char *parent_name;
+>> +
+>> +			parent_name = kasprintf(GFP_KERNEL, "%s:%d:%d",
+>> +						dev_name(provider->dev),
+>> +						sci_clk->dev_id,
+>> +						sci_clk->clk_id + 1 + i);
+>> +			if (!parent_name) {
+>> +				ret = -ENOMEM;
+>> +				goto err;
+>> +			}
+>> +			parent_names[i] = parent_name;
+>> +		}
+>> +		init.parent_names = (const char * const *)parent_names;
 >
->  	/* Set default value for multicast hash bins */
-> @@ -115,6 +116,7 @@ static int quark_default_data(struct plat_stmmacenet_data *plat,
->  	plat->mdio_bus_data->phy_mask = 0;
+> Does that really need a cast?
+
+Doesn't seem like so... I think without this it was generating some 
+checkpatch issue sometime back, but doesn't seem to be the case anymore.
+
 >
->  	plat->dma_cfg->pbl = 16;
-> +	plat->dma_cfg->pblx8 = true;
->  	plat->dma_cfg->fixed_burst = 1;
->  	/* AXI (TODO) */
+>> +	}
+>> +
+>> +	init.ops = &sci_clk_ops;
+>> +	sci_clk->hw.init = &init;
+>> +
+>> +	ret = devm_clk_hw_register(provider->dev, &sci_clk->hw);
+>> +	if (ret) {
+>> +		dev_err(provider->dev, "failed clk register with %d\n", ret);
+>> +		goto err;
+>> +	}
+>> +	kfree(name);
+>> +
+>> +	return &sci_clk->hw;
+>> +
+>> +err:
+>> +	if (parent_names) {
+>> +		for (i = 0; i < init.num_parents; i++)
+>> +			devm_kfree(provider->dev, parent_names[i]);
+>> +
+>> +		devm_kfree(provider->dev, parent_names);
 >
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> index 96afe0561c99..082cd48db6a7 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> @@ -317,6 +317,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  		dma_cfg->pbl = DEFAULT_DMA_PBL;
->  	of_property_read_u32(np, "snps,txpbl", &dma_cfg->txpbl);
->  	of_property_read_u32(np, "snps,rxpbl", &dma_cfg->rxpbl);
-> +	dma_cfg->pblx8 = !of_property_read_bool(np, "snps,no-pbl-x8");
+> Shouldn't we be freeing the parent names all the time? It should
+> be deep copied in the framework.
+
+I'll check this.
+
 >
->  	dma_cfg->aal = of_property_read_bool(np, "snps,aal");
->  	dma_cfg->fixed_burst = of_property_read_bool(np, "snps,fixed-burst");
-> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-> index e6d7a5940819..266dab9ad782 100644
-> --- a/include/linux/stmmac.h
-> +++ b/include/linux/stmmac.h
-> @@ -90,6 +90,7 @@ struct stmmac_dma_cfg {
->  	int pbl;
->  	int txpbl;
->  	int rxpbl;
-> +	bool pblx8;
->  	int fixed_burst;
->  	int mixed_burst;
->  	bool aal;
+>> +	}
+>> +
+>> +	devm_kfree(provider->dev, sci_clk);
+>> +
+>> +	kfree(name);
+>> +
+>> +	return ERR_PTR(ret);
+>> +}
+> [..]
+>> +
+>> +static int ti_sci_init_clocks(struct sci_clk_provider *p)
+>> +{
+>> +	struct sci_clk_data *data = p->clocks;
+>> +	struct clk_hw *hw;
+>> +	int i;
+>> +
+>> +	while (data->num_clks) {
+>> +		data->clocks = devm_kcalloc(p->dev, data->num_clks,
+>> +					    sizeof(struct sci_clk),
+>> +					    GFP_KERNEL);
+>> +		if (!data->clocks)
+>> +			return -ENOMEM;
+>> +
+>> +		for (i = 0; i < data->num_clks; i++) {
+>> +			hw = _sci_clk_build(p, data->dev, i);
+>> +			if (!IS_ERR(hw)) {
+>> +				data->clocks[i] = hw;
+>> +				continue;
+>> +			}
+>> +
+>> +			/* Skip any holes in the clock lists */
+>> +			if (PTR_ERR(hw) == -ENODEV)
 >
+> Does this happen? I don't see where _sci_clk_build() returns
+> -ENODEV.
+
+Yes, it can and will happen. get_num_parents() called by sci_clk_build 
+will return ENODEV for device/clock pairs that don't exist.
+
+>
+>> +				continue;
+>> +
+>> +			return PTR_ERR(hw);
+>> +		}
+>> +		data++;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>
+>> +
+>> +/**
+>> + * ti_sci_clk_probe - Probe function for the TI SCI clock driver
+>> + * @pdev: platform device pointer to be probed
+>> + *
+>> + * Probes the TI SCI clock device. Allocates a new clock provider
+>> + * and registers this to the common clock framework. Also applies
+>> + * any required flags to the identified clocks via clock lists
+>> + * supplied from DT. Returns 0 for success, negative error value
+>> + * for failure.
+>> + */
+>> +static int ti_sci_clk_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct sci_clk_provider *provider;
+>> +	const struct ti_sci_handle *handle;
+>> +	struct sci_clk_data *data;
+>> +	int ret;
+>> +
+>> +	data = (struct sci_clk_data *)
+>> +		of_match_node(ti_sci_clk_of_match, np)->data;
+>
+> Just use of_device_get_match_data() instead.
+
+All righty.
+
+>
+>> +
+>> +	handle = devm_ti_sci_get_handle(dev);
+>> +	if (IS_ERR(handle))
+>> +		return PTR_ERR(handle);
+>> +
+>> +	provider = devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);
+>> +	if (!provider)
+>> +		return -ENOMEM;
+>> +
+>> +	provider->clocks = data;
+>> +
+>> +	provider->sci = handle;
+>> +	provider->ops = &handle->ops.clk_ops;
+>> +	provider->dev = dev;
+>> +
+>> +	ti_sci_init_clocks(provider);
+>
+> And if this fails?
+
+Yea this is kind of controversial. ti_sci_init_clocks() can fail if any 
+of the clocks registered will fail. I decided to have it this way so 
+that at least some clocks might work in failure cause, and you might 
+have a booting device instead of total lock-up.
+
+Obviously it could be done so that if any clock fails, we would 
+de-register all clocks at that point, but personally I think this is a 
+worse option.
+
+ti_sci_init_clocks could probably be modified to continue registering 
+clocks when a single clock fails though. Currently it aborts at first 
+failure.
+
+Thoughts on that?
+
+>
+>> +
+>> +	ret = of_clk_add_hw_provider(np, sci_clk_get, provider);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>
+> Just "return of_clk_add_hw_provider()" please.
+
+True that, will fix.
+
+-Tero
