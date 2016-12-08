@@ -1,743 +1,413 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v5 6/7] IIO: add STM32 timer trigger driver
-Date: Thu,  8 Dec 2016 13:20:49 +0100
-Message-ID: <1481199650-22484-7-git-send-email-benjamin.gaignard@st.com>
-References: <1481199650-22484-1-git-send-email-benjamin.gaignard@st.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
+Date: Thu, 8 Dec 2016 13:32:15 +0100
+Message-ID: <CAPDyKFqbAzCyXArikgTUeTrs9vOzfwKWJcs3TgF7D-4f_xfjfQ@mail.gmail.com>
+References: <1480903854-22701-1-git-send-email-yamada.masahiro@socionext.com> <1480903854-22701-3-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1481199650-22484-1-git-send-email-benjamin.gaignard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linus.walleij@linaro.org, arnaud.pouliquen@st.com, benjamin.gaignard@linaro.org, gerald.baeza@st.com, fabrice.gasnier@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1480903854-22701-3-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Douglas Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Al Cooper <alcooperx@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Andrei Pistirica <andrei.pistirica@microchip.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Joshua Henderson <joshua.henderson@microchip.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Timers IPs can be used to generate triggers for other IPs like
-DAC, ADC or other timers.
-Each trigger may result of timer internals signals like counter enable,
-reset or edge, this configuration could be done through "master_mode"
-device attribute.
+On 5 December 2016 at 03:10, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Add a driver for the Cadence SD4HC SD/SDIO/eMMC Controller.
+>
+> For SD, it basically relies on the SDHCI standard code.
+> For eMMC, this driver provides some callbacks to support the
+> hardware part that is specific to this IP design.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-A timer device could be triggered by other timers, we use the trigger
-name and is_stm32_iio_timer_trigger() function to distinguish them
-and configure IP input switch.
+Thanks, applied for next!
 
-Timer may also decide on which event (edge, level) they could
-be activated by a trigger, this configuration is done by writing in
-"slave_mode" device attribute.
+Kind regards
+Uffe
 
-Since triggers could also be used by DAC or ADC their names are defined
-in include/ nux/iio/timer/stm32-timer-trigger.h so those IPs will be able
-to configure themselves in valid_trigger function
 
-Trigger have a "sampling_frequency" attribute which allow to configure
-timer sampling frequency without using PWM interface
-
-version 5:
-- simplify tables of triggers
-- only create an IIO device when needed
-
-version 4:
-- get triggers configuration from "reg" in DT
-- add tables of triggers
-- sampling frequency is enable/disable when writing in trigger
-  sampling_frequency attribute
-- no more use of interruptions
-
-version 3:
-- change compatible to "st,stm32-timer-trigger"
-- fix attributes access right
-- use string instead of int for master_mode and slave_mode
-- document device attributes in sysfs-bus-iio-timer-stm32
-
-version 2:
-- keep only one compatible
-- use st,input-triggers-names and st,output-triggers-names
-  to know which triggers are accepted and/or create by the device
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../ABI/testing/sysfs-bus-iio-timer-stm32          |  55 +++
- drivers/iio/Kconfig                                |   2 +-
- drivers/iio/Makefile                               |   1 +
- drivers/iio/timer/Kconfig                          |  13 +
- drivers/iio/timer/Makefile                         |   1 +
- drivers/iio/timer/stm32-timer-trigger.c            | 466 +++++++++++++++++++++
- drivers/iio/trigger/Kconfig                        |   1 -
- include/linux/iio/timer/stm32-timer-trigger.h      |  62 +++
- 8 files changed, 599 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
- create mode 100644 drivers/iio/timer/Kconfig
- create mode 100644 drivers/iio/timer/Makefile
- create mode 100644 drivers/iio/timer/stm32-timer-trigger.c
- create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
-new file mode 100644
-index 0000000..26583dd
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
-@@ -0,0 +1,55 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/master_mode_available
-+KernelVersion:	4.10
-+Contact:	benjamin.gaignard@st.com
-+Description:
-+		Reading returns the list possible master modes which are:
-+		- "reset"     :	The UG bit from the TIMx_EGR register is used as trigger output (TRGO).
-+		- "enable"    : The Counter Enable signal CNT_EN is used as trigger output.
-+		- "update"    : The update event is selected as trigger output.
-+				For instance a master timer can then be used as a prescaler for a slave timer.
-+		- "compare_pulse" : The trigger output send a positive pulse when the CC1IF flag is to be set.
-+		- "OC1REF"    : OC1REF signal is used as trigger output.
-+		- "OC2REF"    : OC2REF signal is used as trigger output.
-+		- "OC3REF"    : OC3REF signal is used as trigger output.
-+		- "OC4REF"    : OC4REF signal is used as trigger output.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/master_mode
-+KernelVersion:	4.10
-+Contact:	benjamin.gaignard@st.com
-+Description:
-+		Reading returns the current master modes.
-+		Writing set the master mode
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/slave_mode_available
-+KernelVersion:	4.10
-+Contact:	benjamin.gaignard@st.com
-+Description:
-+		Reading returns the list possible slave modes which are:
-+		- "disabled"  : The prescaler is clocked directly by the internal clock.
-+		- "encoder_1" : Counter counts up/down on TI2FP1 edge depending on TI1FP2 level.
-+		- "encoder_2" : Counter counts up/down on TI1FP2 edge depending on TI2FP1 level.
-+		- "encoder_3" : Counter counts up/down on both TI1FP1 and TI2FP2 edges depending
-+				on the level of the other input.
-+		- "reset"     : Rising edge of the selected trigger input reinitializes the counter
-+				and generates an update of the registers.
-+		- "gated"     : The counter clock is enabled when the trigger input is high.
-+				The counter stops (but is not reset) as soon as the trigger becomes low.
-+				Both start and stop of the counter are controlled.
-+		- "trigger"   : The counter starts at a rising edge of the trigger TRGI (but it is not
-+				reset). Only the start of the counter is controlled.
-+		- "external_clock": Rising edges of the selected trigger (TRGI) clock the counter.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/slave_mode
-+KernelVersion:	4.10
-+Contact:	benjamin.gaignard@st.com
-+Description:
-+		Reading returns the current slave mode.
-+		Writing set the slave mode
-+
-+What:		/sys/bus/iio/devices/triggerX/sampling_frequency
-+KernelVersion:	4.10
-+Contact:	benjamin.gaignard@st.com
-+Description:
-+		Reading returns the current sampling frequency.
-+		Writing an value different of 0 set and start sampling.
-+		Writing 0 stop sampling.
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index 6743b18..2de2a80 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -90,5 +90,5 @@ source "drivers/iio/potentiometer/Kconfig"
- source "drivers/iio/pressure/Kconfig"
- source "drivers/iio/proximity/Kconfig"
- source "drivers/iio/temperature/Kconfig"
--
-+source "drivers/iio/timer/Kconfig"
- endif # IIO
-diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
-index 87e4c43..b797c08 100644
---- a/drivers/iio/Makefile
-+++ b/drivers/iio/Makefile
-@@ -32,4 +32,5 @@ obj-y += potentiometer/
- obj-y += pressure/
- obj-y += proximity/
- obj-y += temperature/
-+obj-y += timer/
- obj-y += trigger/
-diff --git a/drivers/iio/timer/Kconfig b/drivers/iio/timer/Kconfig
-new file mode 100644
-index 0000000..8e44dde
---- /dev/null
-+++ b/drivers/iio/timer/Kconfig
-@@ -0,0 +1,13 @@
-+#
-+# Timers drivers
-+
-+menu "Timers"
-+
-+config IIO_STM32_TIMER_TRIGGER
-+	tristate "STM32 Timer Trigger"
-+	depends on (ARCH_STM32 && OF && MFD_STM32_GP_TIMER) || COMPILE_TEST
-+	select IIO_TRIGGERED_EVENT
-+	help
-+	  Select this option to enable STM32 Timer Trigger
-+
-+endmenu
-diff --git a/drivers/iio/timer/Makefile b/drivers/iio/timer/Makefile
-new file mode 100644
-index 0000000..4ad95ec9
---- /dev/null
-+++ b/drivers/iio/timer/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_IIO_STM32_TIMER_TRIGGER) += stm32-timer-trigger.o
-diff --git a/drivers/iio/timer/stm32-timer-trigger.c b/drivers/iio/timer/stm32-timer-trigger.c
-new file mode 100644
-index 0000000..deaf925
---- /dev/null
-+++ b/drivers/iio/timer/stm32-timer-trigger.c
-@@ -0,0 +1,466 @@
-+/*
-+ * Copyright (C) STMicroelectronics 2016
-+ *
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com>
-+ *
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/timer/stm32-timer-trigger.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_event.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/stm32-gptimer.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define MAX_TRIGGERS 6
-+#define MAX_VALIDS 5
-+
-+/* List the triggers created by each timer */
-+static const void *triggers_table[][MAX_TRIGGERS] = {
-+	{ TIM1_TRGO, TIM1_CH1, TIM1_CH2, TIM1_CH3, TIM1_CH4,},
-+	{ TIM2_TRGO, TIM2_CH1, TIM2_CH2, TIM2_CH3, TIM2_CH4,},
-+	{ TIM3_TRGO, TIM3_CH1, TIM3_CH2, TIM3_CH3, TIM3_CH4,},
-+	{ TIM4_TRGO, TIM4_CH1, TIM4_CH2, TIM4_CH3, TIM4_CH4,},
-+	{ TIM5_TRGO, TIM5_CH1, TIM5_CH2, TIM5_CH3, TIM5_CH4,},
-+	{ TIM6_TRGO,},
-+	{ TIM7_TRGO,},
-+	{ TIM8_TRGO, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4,},
-+	{ TIM9_TRGO, TIM9_CH1, TIM9_CH2,},
-+	{ TIM12_TRGO, TIM12_CH1, TIM12_CH2,},
-+};
-+
-+/* List the triggers accepted by each timer */
-+static const void *valids_table[][MAX_VALIDS] = {
-+	{ TIM5_TRGO, TIM2_TRGO, TIM4_TRGO, TIM3_TRGO,},
-+	{ TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO,},
-+	{ TIM1_TRGO, TIM8_TRGO, TIM5_TRGO, TIM4_TRGO,},
-+	{ TIM1_TRGO, TIM2_TRGO, TIM3_TRGO, TIM8_TRGO,},
-+	{ TIM2_TRGO, TIM3_TRGO, TIM4_TRGO, TIM8_TRGO,},
-+	{ }, /* timer 6 */
-+	{ }, /* timer 7 */
-+	{ TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO,},
-+	{ TIM2_TRGO, TIM3_TRGO,},
-+	{ TIM4_TRGO, TIM5_TRGO,},
-+};
-+
-+struct stm32_timer_trigger {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	u32 max_arr;
-+	const void *triggers;
-+	const void *valids;
-+};
-+
-+static int stm32_timer_start(struct stm32_timer_trigger *priv,
-+			     unsigned int frequency)
-+{
-+	unsigned long long prd, div;
-+	int prescaler = 0;
-+	u32 ccer, cr1;
-+
-+	/* Period and prescaler values depends of clock rate */
-+	div = (unsigned long long)clk_get_rate(priv->clk);
-+
-+	do_div(div, frequency);
-+
-+	prd = div;
-+
-+	/*
-+	 * Increase prescaler value until we get a result that fit
-+	 * with auto reload register maximum value.
-+	 */
-+	while (div > priv->max_arr) {
-+		prescaler++;
-+		div = prd;
-+		do_div(div, (prescaler + 1));
-+	}
-+	prd = div;
-+
-+	if (prescaler > MAX_TIM_PSC) {
-+		dev_err(priv->dev, "prescaler exceeds the maximum value\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Check if nobody else use the timer */
-+	regmap_read(priv->regmap, TIM_CCER, &ccer);
-+	if (ccer & TIM_CCER_CCXE)
-+		return -EBUSY;
-+
-+	regmap_read(priv->regmap, TIM_CR1, &cr1);
-+	if (!(cr1 & TIM_CR1_CEN))
-+		clk_enable(priv->clk);
-+
-+	regmap_write(priv->regmap, TIM_PSC, prescaler);
-+	regmap_write(priv->regmap, TIM_ARR, prd - 1);
-+	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, TIM_CR1_ARPE);
-+
-+	/* Force master mode to update mode */
-+	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0x20);
-+
-+	/* Make sure that registers are updated */
-+	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
-+
-+	/* Enable controller */
-+	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
-+
-+	return 0;
-+}
-+
-+static void stm32_timer_stop(struct stm32_timer_trigger *priv)
-+{
-+	u32 ccer, cr1;
-+
-+	regmap_read(priv->regmap, TIM_CCER, &ccer);
-+	if (ccer & TIM_CCER_CCXE)
-+		return;
-+
-+	regmap_read(priv->regmap, TIM_CR1, &cr1);
-+	if (cr1 & TIM_CR1_CEN)
-+		clk_disable(priv->clk);
-+
-+	/* Stop timer */
-+	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-+	regmap_write(priv->regmap, TIM_PSC, 0);
-+	regmap_write(priv->regmap, TIM_ARR, 0);
-+}
-+
-+static ssize_t stm32_tt_store_frequency(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t len)
-+{
-+	struct iio_trigger *trig = to_iio_trigger(dev);
-+	struct stm32_timer_trigger *priv = iio_trigger_get_drvdata(trig);
-+	unsigned int freq;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 10, &freq);
-+	if (ret)
-+		return ret;
-+
-+	if (freq == 0) {
-+		stm32_timer_stop(priv);
-+	} else {
-+		ret = stm32_timer_start(priv, freq);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t stm32_tt_read_frequency(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct iio_trigger *trig = to_iio_trigger(dev);
-+	struct stm32_timer_trigger *priv = iio_trigger_get_drvdata(trig);
-+	u32 psc, arr, cr1;
-+	unsigned long long freq = 0;
-+
-+	regmap_read(priv->regmap, TIM_CR1, &cr1);
-+	regmap_read(priv->regmap, TIM_PSC, &psc);
-+	regmap_read(priv->regmap, TIM_ARR, &arr);
-+
-+	if (psc && arr && (cr1 & TIM_CR1_CEN)) {
-+		freq = (unsigned long long)clk_get_rate(priv->clk);
-+		do_div(freq, psc);
-+		do_div(freq, arr);
-+	}
-+
-+	return sprintf(buf, "%d\n", (unsigned int)freq);
-+}
-+
-+static IIO_DEV_ATTR_SAMP_FREQ(0660,
-+			      stm32_tt_read_frequency,
-+			      stm32_tt_store_frequency);
-+
-+static struct attribute *stm32_trigger_attrs[] = {
-+	&iio_dev_attr_sampling_frequency.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group stm32_trigger_attr_group = {
-+	.attrs = stm32_trigger_attrs,
-+};
-+
-+static const struct attribute_group *stm32_trigger_attr_groups[] = {
-+	&stm32_trigger_attr_group,
-+	NULL,
-+};
-+
-+static char *master_mode_table[] = {
-+	"reset",
-+	"enable",
-+	"update",
-+	"compare_pulse",
-+	"OC1REF",
-+	"OC2REF",
-+	"OC3REF",
-+	"OC4REF"
-+};
-+
-+static ssize_t stm32_tt_show_master_mode(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
-+	u32 cr2;
-+
-+	regmap_read(priv->regmap, TIM_CR2, &cr2);
-+	cr2 = (cr2 & TIM_CR2_MMS) >> TIM_CR2_MMS_SHIFT;
-+
-+	return snprintf(buf, PAGE_SIZE, "%s\n", master_mode_table[cr2]);
-+}
-+
-+static ssize_t stm32_tt_store_master_mode(struct device *dev,
-+					  struct device_attribute *attr,
-+					  const char *buf, size_t len)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(master_mode_table); i++) {
-+		if (!strncmp(master_mode_table[i], buf,
-+			     strlen(master_mode_table[i]))) {
-+			regmap_update_bits(priv->regmap, TIM_CR2,
-+					   TIM_CR2_MMS, i << TIM_CR2_MMS_SHIFT);
-+			return len;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static IIO_CONST_ATTR(master_mode_available,
-+	"reset enable update compare_pulse OC1REF OC2REF OC3REF OC4REF");
-+
-+static IIO_DEVICE_ATTR(master_mode, 0660,
-+		       stm32_tt_show_master_mode,
-+		       stm32_tt_store_master_mode,
-+		       0);
-+
-+static char *slave_mode_table[] = {
-+	"disabled",
-+	"encoder_1",
-+	"encoder_2",
-+	"encoder_3",
-+	"reset",
-+	"gated",
-+	"trigger",
-+	"external_clock",
-+};
-+
-+static ssize_t stm32_tt_show_slave_mode(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
-+	u32 smcr;
-+
-+	regmap_read(priv->regmap, TIM_SMCR, &smcr);
-+	smcr &= TIM_SMCR_SMS;
-+
-+	return snprintf(buf, PAGE_SIZE, "%s\n", slave_mode_table[smcr]);
-+}
-+
-+static ssize_t stm32_tt_store_slave_mode(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t len)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(slave_mode_table); i++) {
-+		if (!strncmp(slave_mode_table[i], buf,
-+			     strlen(slave_mode_table[i]))) {
-+			regmap_update_bits(priv->regmap,
-+					   TIM_SMCR, TIM_SMCR_SMS, i);
-+			return len;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static IIO_CONST_ATTR(slave_mode_available,
-+"disabled encoder_1 encoder_2 encoder_3 reset gated trigger external_clock");
-+
-+static IIO_DEVICE_ATTR(slave_mode, 0660,
-+		       stm32_tt_show_slave_mode,
-+		       stm32_tt_store_slave_mode,
-+		       0);
-+
-+static struct attribute *stm32_timer_attrs[] = {
-+	&iio_dev_attr_master_mode.dev_attr.attr,
-+	&iio_const_attr_master_mode_available.dev_attr.attr,
-+	&iio_dev_attr_slave_mode.dev_attr.attr,
-+	&iio_const_attr_slave_mode_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group stm32_timer_attr_group = {
-+	.attrs = stm32_timer_attrs,
-+};
-+
-+static const struct iio_trigger_ops timer_trigger_ops = {
-+	.owner = THIS_MODULE,
-+};
-+
-+static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
-+{
-+	int ret;
-+	const char * const *cur = priv->triggers;
-+
-+	while (cur && *cur) {
-+		struct iio_trigger *trig;
-+
-+		trig = devm_iio_trigger_alloc(priv->dev, "%s", *cur);
-+		if  (!trig)
-+			return -ENOMEM;
-+
-+		trig->dev.parent = priv->dev->parent;
-+		trig->ops = &timer_trigger_ops;
-+		trig->dev.groups = stm32_trigger_attr_groups;
-+		iio_trigger_set_drvdata(trig, priv);
-+
-+		ret = devm_iio_trigger_register(priv->dev, trig);
-+		if (ret)
-+			return ret;
-+		cur++;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * is_stm32_timer_trigger
-+ * @trig: trigger to be checked
-+ *
-+ * return true if the trigger is a valid stm32 iio timer trigger
-+ * either return false
-+ */
-+bool is_stm32_timer_trigger(struct iio_trigger *trig)
-+{
-+	return (trig->ops == &timer_trigger_ops);
-+}
-+EXPORT_SYMBOL(is_stm32_timer_trigger);
-+
-+static int stm32_validate_trigger(struct iio_dev *indio_dev,
-+				  struct iio_trigger *trig)
-+{
-+	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
-+	const char * const *cur = priv->valids;
-+	unsigned int i = 0;
-+
-+	if (!is_stm32_timer_trigger(trig))
-+		return -EINVAL;
-+
-+	while (cur && *cur) {
-+		if (!strncmp(trig->name, *cur, strlen(trig->name))) {
-+			regmap_update_bits(priv->regmap,
-+					   TIM_SMCR, TIM_SMCR_TS,
-+					   i << TIM_SMCR_TS_SHIFT);
-+			return 0;
-+		}
-+		cur++;
-+		i++;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct iio_info stm32_trigger_info = {
-+	.driver_module = THIS_MODULE,
-+	.validate_trigger = stm32_validate_trigger,
-+	.attrs = &stm32_timer_attr_group,
-+};
-+
-+static struct stm32_timer_trigger *stm32_setup_iio_device(struct device *dev)
-+{
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev,
-+					  sizeof(struct stm32_timer_trigger));
-+	if (!indio_dev)
-+		return NULL;
-+
-+	indio_dev->name = dev_name(dev);
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &stm32_trigger_info;
-+	indio_dev->modes = INDIO_EVENT_TRIGGERED;
-+	indio_dev->num_channels = 0;
-+	indio_dev->dev.of_node = dev->of_node;
-+
-+	ret = devm_iio_device_register(dev, indio_dev);
-+	if (ret)
-+		return NULL;
-+
-+	return iio_priv(indio_dev);
-+}
-+
-+static int stm32_timer_trigger_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stm32_timer_trigger *priv;
-+	struct stm32_gptimer *ddata = dev_get_drvdata(pdev->dev.parent);
-+	unsigned int index;
-+	int ret;
-+
-+	if (of_property_read_u32(dev->of_node, "reg", &index))
-+		return -EINVAL;
-+
-+	if (index >= ARRAY_SIZE(triggers_table))
-+		return -EINVAL;
-+
-+	/* Create an IIO device only if we have triggers to be validated */
-+	if (*valids_table[index])
-+		priv = stm32_setup_iio_device(dev);
-+	else
-+		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->regmap = ddata->regmap;
-+	priv->clk = ddata->clk;
-+	priv->max_arr = ddata->max_arr;
-+	priv->triggers = triggers_table[index];
-+	priv->valids = valids_table[index];
-+
-+	ret = stm32_setup_iio_triggers(priv);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_trig_of_match[] = {
-+	{ .compatible = "st,stm32-timer-trigger", },
-+	{ /* sentinelle */ },
-+};
-+MODULE_DEVICE_TABLE(of, stm32_trig_of_match);
-+
-+static struct platform_driver stm32_timer_trigger_driver = {
-+	.probe = stm32_timer_trigger_probe,
-+	.driver = {
-+		.name = "stm32-timer-trigger",
-+		.of_match_table = stm32_trig_of_match,
-+	},
-+};
-+module_platform_driver(stm32_timer_trigger_driver);
-+
-+MODULE_ALIAS("platform: stm32-timer-trigger");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 Timer Trigger driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/trigger/Kconfig b/drivers/iio/trigger/Kconfig
-index 809b2e7..f2af4fe 100644
---- a/drivers/iio/trigger/Kconfig
-+++ b/drivers/iio/trigger/Kconfig
-@@ -46,5 +46,4 @@ config IIO_SYSFS_TRIGGER
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called iio-trig-sysfs.
--
- endmenu
-diff --git a/include/linux/iio/timer/stm32-timer-trigger.h b/include/linux/iio/timer/stm32-timer-trigger.h
-new file mode 100644
-index 0000000..55535ae
---- /dev/null
-+++ b/include/linux/iio/timer/stm32-timer-trigger.h
-@@ -0,0 +1,62 @@
-+/*
-+ * Copyright (C) STMicroelectronics 2016
-+ *
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com>
-+ *
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#ifndef _STM32_TIMER_TRIGGER_H_
-+#define _STM32_TIMER_TRIGGER_H_
-+
-+#define TIM1_TRGO	"tim1_trgo"
-+#define TIM1_CH1	"tim1_ch1"
-+#define TIM1_CH2	"tim1_ch2"
-+#define TIM1_CH3	"tim1_ch3"
-+#define TIM1_CH4	"tim1_ch4"
-+
-+#define TIM2_TRGO	"tim2_trgo"
-+#define TIM2_CH1	"tim2_ch1"
-+#define TIM2_CH2	"tim2_ch2"
-+#define TIM2_CH3	"tim2_ch3"
-+#define TIM2_CH4	"tim2_ch4"
-+
-+#define TIM3_TRGO	"tim3_trgo"
-+#define TIM3_CH1	"tim3_ch1"
-+#define TIM3_CH2	"tim3_ch2"
-+#define TIM3_CH3	"tim3_ch3"
-+#define TIM3_CH4	"tim3_ch4"
-+
-+#define TIM4_TRGO	"tim4_trgo"
-+#define TIM4_CH1	"tim4_ch1"
-+#define TIM4_CH2	"tim4_ch2"
-+#define TIM4_CH3	"tim4_ch3"
-+#define TIM4_CH4	"tim4_ch4"
-+
-+#define TIM5_TRGO	"tim5_trgo"
-+#define TIM5_CH1	"tim5_ch1"
-+#define TIM5_CH2	"tim5_ch2"
-+#define TIM5_CH3	"tim5_ch3"
-+#define TIM5_CH4	"tim5_ch4"
-+
-+#define TIM6_TRGO	"tim6_trgo"
-+
-+#define TIM7_TRGO	"tim7_trgo"
-+
-+#define TIM8_TRGO	"tim8_trgo"
-+#define TIM8_CH1	"tim8_ch1"
-+#define TIM8_CH2	"tim8_ch2"
-+#define TIM8_CH3	"tim8_ch3"
-+#define TIM8_CH4	"tim8_ch4"
-+
-+#define TIM9_TRGO	"tim9_trgo"
-+#define TIM9_CH1	"tim9_ch1"
-+#define TIM9_CH2	"tim9_ch2"
-+
-+#define TIM12_TRGO	"tim12_trgo"
-+#define TIM12_CH1	"tim12_ch1"
-+#define TIM12_CH2	"tim12_ch2"
-+
-+bool is_stm32_timer_trigger(struct iio_trigger *trig);
-+
-+#endif
--- 
-1.9.1
+> ---
+>
+> Changes in v4:
+>   - Override mmc_host_ops.execute_tuning instead of the
+>     .platform_execute_tuning implementation
+>
+> Changes in v3:
+>   - Remove unneeded explanation about HRS and SRS from DT binding;
+>     the offsets to HRS/SRS are fixed for this hardware and this is
+>     quite normal, like each hardware has a fixed register view except
+>     the register base.  The detailed register map is what the driver
+>     cares about, so no need to explain it in the binding.
+>
+> Changes in v2:
+>   - Remove unnecessary "select MMC_SDHCI_IO_ACCESSORS"
+>
+>  .../devicetree/bindings/mmc/sdhci-cadence.txt      |  30 +++
+>  drivers/mmc/host/Kconfig                           |  11 +
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/sdhci-cadence.c                   | 280 +++++++++++++++++++++
+>  4 files changed, 322 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+>  create mode 100644 drivers/mmc/host/sdhci-cadence.c
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+> new file mode 100644
+> index 0000000..750374f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+> @@ -0,0 +1,30 @@
+> +* Cadence SD/SDIO/eMMC Host Controller
+> +
+> +Required properties:
+> +- compatible: should be "cdns,sd4hc".
+> +- reg: offset and length of the register set for the device.
+> +- interrupts: a single interrupt specifier.
+> +- clocks: phandle to the input clock.
+> +
+> +Optional properties:
+> +For eMMC configuration, supported speed modes are not indicated by the SDHCI
+> +Capabilities Register.  Instead, the following properties should be specified
+> +if supported.  See mmc.txt for details.
+> +- mmc-ddr-1_8v
+> +- mmc-ddr-1_2v
+> +- mmc-hs200-1_8v
+> +- mmc-hs200-1_2v
+> +- mmc-hs400-1_8v
+> +- mmc-hs400-1_2v
+> +
+> +Example:
+> +       emmc: sdhci@5a000000 {
+> +               compatible = "cdns,sd4hc";
+> +               reg = <0x5a000000 0x400>;
+> +               interrupts = <0 78 4>;
+> +               clocks = <&clk 4>;
+> +               bus-width = <8>;
+> +               mmc-ddr-1_8v;
+> +               mmc-hs200-1_8v;
+> +               mmc-hs400-1_8v;
+> +       };
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index ab9181e..8ac1640 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -164,6 +164,17 @@ config MMC_SDHCI_OF_HLWD
+>
+>           If unsure, say N.
+>
+> +config MMC_SDHCI_CADENCE
+> +       tristate "SDHCI support for the Cadence SD/SDIO/eMMC controller"
+> +       depends on MMC_SDHCI_PLTFM
+> +       depends on OF
+> +       help
+> +         This selects the Cadence SD/SDIO/eMMC driver.
+> +
+> +         If you have a controller with this interface, say Y or M here.
+> +
+> +         If unsure, say N.
+> +
+>  config MMC_SDHCI_CNS3XXX
+>         tristate "SDHCI support on the Cavium Networks CNS3xxx SoC"
+>         depends on ARCH_CNS3XXX
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index e49a82a..55f7193 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -63,6 +63,7 @@ obj-$(CONFIG_MMC_REALTEK_PCI) += rtsx_pci_sdmmc.o
+>  obj-$(CONFIG_MMC_REALTEK_USB)  += rtsx_usb_sdmmc.o
+>
+>  obj-$(CONFIG_MMC_SDHCI_PLTFM)          += sdhci-pltfm.o
+> +obj-$(CONFIG_MMC_SDHCI_CADENCE)                += sdhci-cadence.o
+>  obj-$(CONFIG_MMC_SDHCI_CNS3XXX)                += sdhci-cns3xxx.o
+>  obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)      += sdhci-esdhc-imx.o
+>  obj-$(CONFIG_MMC_SDHCI_DOVE)           += sdhci-dove.o
+> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+> new file mode 100644
+> index 0000000..6e2545f
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-cadence.c
+> @@ -0,0 +1,280 @@
+> +/*
+> + * Copyright (C) 2016 Socionext Inc.
+> + *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/mmc/host.h>
+> +
+> +#include "sdhci-pltfm.h"
+> +
+> +/* HRS - Host Register Set (specific to Cadence) */
+> +#define SDHCI_CDNS_HRS04               0x10            /* PHY access port */
+> +#define   SDHCI_CDNS_HRS04_ACK                 BIT(26)
+> +#define   SDHCI_CDNS_HRS04_RD                  BIT(25)
+> +#define   SDHCI_CDNS_HRS04_WR                  BIT(24)
+> +#define   SDHCI_CDNS_HRS04_RDATA_SHIFT         12
+> +#define   SDHCI_CDNS_HRS04_WDATA_SHIFT         8
+> +#define   SDHCI_CDNS_HRS04_ADDR_SHIFT          0
+> +
+> +#define SDHCI_CDNS_HRS06               0x18            /* eMMC control */
+> +#define   SDHCI_CDNS_HRS06_TUNE_UP             BIT(15)
+> +#define   SDHCI_CDNS_HRS06_TUNE_SHIFT          8
+> +#define   SDHCI_CDNS_HRS06_TUNE_MASK           0x3f
+> +#define   SDHCI_CDNS_HRS06_MODE_MASK           0x7
+> +#define   SDHCI_CDNS_HRS06_MODE_SD             0x0
+> +#define   SDHCI_CDNS_HRS06_MODE_MMC_SDR                0x2
+> +#define   SDHCI_CDNS_HRS06_MODE_MMC_DDR                0x3
+> +#define   SDHCI_CDNS_HRS06_MODE_MMC_HS200      0x4
+> +#define   SDHCI_CDNS_HRS06_MODE_MMC_HS400      0x5
+> +
+> +/* SRS - Slot Register Set (SDHCI-compatible) */
+> +#define SDHCI_CDNS_SRS_BASE            0x200
+> +
+> +/* PHY */
+> +#define SDHCI_CDNS_PHY_DLY_SD_HS       0x00
+> +#define SDHCI_CDNS_PHY_DLY_SD_DEFAULT  0x01
+> +#define SDHCI_CDNS_PHY_DLY_UHS_SDR12   0x02
+> +#define SDHCI_CDNS_PHY_DLY_UHS_SDR25   0x03
+> +#define SDHCI_CDNS_PHY_DLY_UHS_SDR50   0x04
+> +#define SDHCI_CDNS_PHY_DLY_UHS_DDR50   0x05
+> +#define SDHCI_CDNS_PHY_DLY_EMMC_LEGACY 0x06
+> +#define SDHCI_CDNS_PHY_DLY_EMMC_SDR    0x07
+> +#define SDHCI_CDNS_PHY_DLY_EMMC_DDR    0x08
+> +
+> +/*
+> + * The tuned val register is 6 bit-wide, but not the whole of the range is
+> + * available.  The range 0-42 seems to be available (then 43 wraps around to 0)
+> + * but I am not quite sure if it is official.  Use only 0 to 39 for safety.
+> + */
+> +#define SDHCI_CDNS_MAX_TUNING_LOOP     40
+> +
+> +struct sdhci_cdns_priv {
+> +       void __iomem *hrs_addr;
+> +};
+> +
+> +static void sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
+> +                                    u8 addr, u8 data)
+> +{
+> +       void __iomem *reg = priv->hrs_addr + SDHCI_CDNS_HRS04;
+> +       u32 tmp;
+> +
+> +       tmp = (data << SDHCI_CDNS_HRS04_WDATA_SHIFT) |
+> +             (addr << SDHCI_CDNS_HRS04_ADDR_SHIFT);
+> +       writel(tmp, reg);
+> +
+> +       tmp |= SDHCI_CDNS_HRS04_WR;
+> +       writel(tmp, reg);
+> +
+> +       tmp &= ~SDHCI_CDNS_HRS04_WR;
+> +       writel(tmp, reg);
+> +}
+> +
+> +static void sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
+> +{
+> +       sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_SD_HS, 4);
+> +       sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_SD_DEFAULT, 4);
+> +       sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_LEGACY, 9);
+> +       sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_SDR, 2);
+> +       sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_DDR, 3);
+> +}
+> +
+> +static inline void *sdhci_cdns_priv(struct sdhci_host *host)
+> +{
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +
+> +       return sdhci_pltfm_priv(pltfm_host);
+> +}
+> +
+> +static unsigned int sdhci_cdns_get_timeout_clock(struct sdhci_host *host)
+> +{
+> +       /*
+> +        * Cadence's spec says the Timeout Clock Frequency is the same as the
+> +        * Base Clock Frequency.  Divide it by 1000 to return a value in kHz.
+> +        */
+> +       return host->max_clk / 1000;
+> +}
+> +
+> +static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
+> +                                        unsigned int timing)
+> +{
+> +       struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+> +       u32 mode, tmp;
+> +
+> +       switch (timing) {
+> +       case MMC_TIMING_MMC_HS:
+> +               mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
+> +               break;
+> +       case MMC_TIMING_MMC_DDR52:
+> +               mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
+> +               break;
+> +       case MMC_TIMING_MMC_HS200:
+> +               mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
+> +               break;
+> +       case MMC_TIMING_MMC_HS400:
+> +               mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
+> +               break;
+> +       default:
+> +               mode = SDHCI_CDNS_HRS06_MODE_SD;
+> +               break;
+> +       }
+> +
+> +       /* The speed mode for eMMC is selected by HRS06 register */
+> +       tmp = readl(priv->hrs_addr + SDHCI_CDNS_HRS06);
+> +       tmp &= ~SDHCI_CDNS_HRS06_MODE_MASK;
+> +       tmp |= mode;
+> +       writel(tmp, priv->hrs_addr + SDHCI_CDNS_HRS06);
+> +
+> +       /* For SD, fall back to the default handler */
+> +       if (mode == SDHCI_CDNS_HRS06_MODE_SD)
+> +               sdhci_set_uhs_signaling(host, timing);
+> +}
+> +
+> +static const struct sdhci_ops sdhci_cdns_ops = {
+> +       .set_clock = sdhci_set_clock,
+> +       .get_timeout_clock = sdhci_cdns_get_timeout_clock,
+> +       .set_bus_width = sdhci_set_bus_width,
+> +       .reset = sdhci_reset,
+> +       .set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+> +};
+> +
+> +static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+> +       .ops = &sdhci_cdns_ops,
+> +};
+> +
+> +static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+> +{
+> +       struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+> +       void __iomem *reg = priv->hrs_addr + SDHCI_CDNS_HRS06;
+> +       u32 tmp;
+> +
+> +       if (WARN_ON(val > SDHCI_CDNS_HRS06_TUNE_MASK))
+> +               return -EINVAL;
+> +
+> +       tmp = readl(reg);
+> +       tmp &= ~(SDHCI_CDNS_HRS06_TUNE_MASK << SDHCI_CDNS_HRS06_TUNE_SHIFT);
+> +       tmp |= val << SDHCI_CDNS_HRS06_TUNE_SHIFT;
+> +       tmp |= SDHCI_CDNS_HRS06_TUNE_UP;
+> +       writel(tmp, reg);
+> +
+> +       return readl_poll_timeout(reg, tmp, !(tmp & SDHCI_CDNS_HRS06_TUNE_UP),
+> +                                 0, 1);
+> +}
+> +
+> +static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> +{
+> +       struct sdhci_host *host = mmc_priv(mmc);
+> +       int max_streak = 0;
+> +       int cur_streak = 0;
+> +       int end_of_streak, i;
+> +
+> +       /*
+> +        * This handler only implements the eMMC tuning that is specific to
+> +        * this controller.  Fall back to the standard method for SD timing.
+> +        */
+> +       if (host->timing != MMC_TIMING_MMC_HS200)
+> +               return sdhci_execute_tuning(mmc, opcode);
+> +
+> +       if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+> +               return -EINVAL;
+> +
+> +       for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
+> +               if (sdhci_cdns_set_tune_val(host, i) ||
+> +                   mmc_send_tuning(host->mmc, opcode, NULL)) { /* bad */
+> +                       cur_streak = 0;
+> +               } else { /* good */
+> +                       cur_streak++;
+> +                       max_streak = max(max_streak, cur_streak);
+> +                       end_of_streak = i;
+> +               }
+> +       }
+> +
+> +       if (!max_streak) {
+> +               dev_err(mmc_dev(host->mmc), "no tuning point found\n");
+> +               return -EIO;
+> +       }
+> +
+> +       return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
+> +}
+> +
+> +static int sdhci_cdns_probe(struct platform_device *pdev)
+> +{
+> +       struct sdhci_host *host;
+> +       struct sdhci_pltfm_host *pltfm_host;
+> +       struct sdhci_cdns_priv *priv;
+> +       struct clk *clk;
+> +       int ret;
+> +
+> +       clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(clk))
+> +               return PTR_ERR(clk);
+> +
+> +       ret = clk_prepare_enable(clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data, sizeof(*priv));
+> +       if (IS_ERR(host)) {
+> +               ret = PTR_ERR(host);
+> +               goto disable_clk;
+> +       }
+> +
+> +       pltfm_host = sdhci_priv(host);
+> +       pltfm_host->clk = clk;
+> +
+> +       priv = sdhci_cdns_priv(host);
+> +       priv->hrs_addr = host->ioaddr;
+> +       host->ioaddr += SDHCI_CDNS_SRS_BASE;
+> +       host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+> +
+> +       ret = mmc_of_parse(host->mmc);
+> +       if (ret)
+> +               goto free;
+> +
+> +       sdhci_cdns_phy_init(priv);
+> +
+> +       ret = sdhci_add_host(host);
+> +       if (ret)
+> +               goto free;
+> +
+> +       return 0;
+> +free:
+> +       sdhci_pltfm_free(pdev);
+> +disable_clk:
+> +       clk_disable_unprepare(clk);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct of_device_id sdhci_cdns_match[] = {
+> +       { .compatible = "cdns,sd4hc" },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sdhci_cdns_match);
+> +
+> +static struct platform_driver sdhci_cdns_driver = {
+> +       .driver = {
+> +               .name = "sdhci-cdns",
+> +               .pm = &sdhci_pltfm_pmops,
+> +               .of_match_table = sdhci_cdns_match,
+> +       },
+> +       .probe = sdhci_cdns_probe,
+> +       .remove = sdhci_pltfm_unregister,
+> +};
+> +module_platform_driver(sdhci_cdns_driver);
+> +
+> +MODULE_AUTHOR("Masahiro Yamada <yamada.masahiro@socionext.com>");
+> +MODULE_DESCRIPTION("Cadence SD/SDIO/eMMC Host Controller Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.7.4
+>
