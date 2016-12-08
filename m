@@ -1,99 +1,145 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: sample averaging for imx6ul_tsc
-Date: Thu, 8 Dec 2016 09:45:36 -0600
-Message-ID: <CAL_JsqKLPsdi+fm8Dt=hRBqnd+JOr+1wcbimD+ynXaUj5Udn-Q@mail.gmail.com>
-References: <1480232698-23075-1-git-send-email-guy.shapiro@mobi-wize.com>
- <20161201161343.g7p2maxiatp4m5di@rob-hp-laptop>
- <82b04890-692d-4e22-36c1-a21affad5126@mobi-wize.com>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH] i2c: rk3x: keep i2c irq ON in suspend
+Date: Thu, 8 Dec 2016 23:50:15 +0800
+Message-ID: <f6fe8a66-05d2-91c9-ddfe-b90b929ac8a1@rock-chips.com>
+References: <1480924979-13450-1-git-send-email-david.wu@rock-chips.com>
+ <1737869.ycGphUXI8X@phil>
+ <1d570232-af87-467e-e6f4-5b514d583a02@rock-chips.com>
+ <CAD=FV=VgGy5hA4+7nvLs4NPNRuopak+bTW34S6X6S_vWgtnkjg@mail.gmail.com>
+ <a6694d7d-6fca-e5ef-7bbd-9956562132a2@rock-chips.com>
+ <e34bab0d-b4b1-ff0d-3a27-c3701b8206c1@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <82b04890-692d-4e22-36c1-a21affad5126@mobi-wize.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guy Shapiro <guy.shapiro@mobi-wize.com>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e34bab0d-b4b1-ff0d-3a27-c3701b8206c1@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Doug Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 8, 2016 at 9:15 AM, Guy Shapiro <guy.shapiro@mobi-wize.com> wrote:
-> On 01/12/2016 18:13, Rob Herring wrote:
->>
->> On Sun, Nov 27, 2016 at 09:44:57AM +0200, Guy Shapiro wrote:
->>>
->>> The i.MX6UL internal touchscreen controller contains an option to
->>> average upon samples. This feature reduces noise from the produced
->>> touch locations.
->>>
->>> This patch introduces a new device tree optional property for this
->>> feature. It provides control over the amount of averaged samples per
->>> touch event.
->>>
->>> The property was inspired by a similar property on the
->>> "brcm,iproc-touchscreen" binding.
->>>
->>> Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
->>> ---
->>>   .../devicetree/bindings/input/touchscreen/imx6ul_tsc.txt          | 8
->>
->> ++++++++
->>>
->>>   1 file changed, 8 insertions(+)
->>>
->>> diff --git
->>
->> a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->> b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->>>
->>> index 853dff9..a66069f 100644
->>> --- a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->>> +++ b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
->>> @@ -17,6 +17,13 @@ Optional properties:
->>>     This value depends on the touch screen.
->>>   - pre-charge-time: the touch screen need some time to precharge.
->>>     This value depends on the touch screen.
->>> +- average-samples: Number of data samples which are averaged for each
->>
->> read.
->>>
->>> +       Valid values 0-4
->>> +       0 =  1 sample
->>> +       1 =  4 samples
->>> +       2 =  8 samples
->>> +       3 = 16 samples
->>> +       4 = 32 samples
->>
->> Either this needs a vendor prefix or should be documented as a generic
->> property. In the latter case, you should use actual number of samples
->> (1-32) for the values.
+Hi Grygorii, Doug and Heiko,
+
+Thanks for your replies.
+I will do 2 steps:
+
+1. Add "suspended" flag in suspend_noirq()/resume_noirq() callback to 
+prevent new i2c started, and use i2c_lock_adapter() to wait for current 
+i2c transfer finished.
+
+2. IRQF_NO_SUSPEND added could make i2c work well during the time 
+between suspend_device_irqs() and i2c_suspend_noirq() callback. In the 
+other side, it is the the time between resume_device_irqs() and 
+i2c_resume_noirq() callback.
+
+If any i2c client try to access I2C after suspend_noirq() or before 
+resume_noirq() callback, print the warning, and they should fix it, not 
+to start i2c access and the moment.
+
+在 2016/12/8 0:27, Grygorii Strashko 写道:
 >
-> In the term "generic property", do you mean to document it on
-> bindings/input/touchscreen/touchscreen.txt ?
-
-Yes.
-
-> If so, should I add the "touchscreen-" prefix like all the other properties
-> in that file?
-
-Yes.
-
-> Grepping bindings/input/touchscreen/, I found two other device drivers that
-> implement a
-> similar property - "ti-tsc-adc" and "brcm,iproc-touchscreen" (The latter,
-> BTW, uses a non
-> vendor prefixed property name).
-
-Unfortunately, the brcm one doesn't look directly usable.
-
-> Do we want to move from per-vendor properties to a generic one?
-
-No. Those are set already. I just don't want to get more vendor properties.
-
-Rob
+>
+> On 12/06/2016 09:37 PM, David.Wu wrote:
+>> Hi Doug,
+>>
+>> 在 2016/12/7 0:31, Doug Anderson 写道:
+>>> Hi,
+>>>
+>>> On Tue, Dec 6, 2016 at 12:12 AM, David.Wu <david.wu@rock-chips.com>
+>>> wrote:
+>>>> Hi Heiko,
+>>>>
+>>>> 在 2016/12/5 18:54, Heiko Stuebner 写道:
+>>>>>
+>>>>> Hi David,
+>>>>>
+>>>>> Am Montag, 5. Dezember 2016, 16:02:59 CET schrieb David Wu:
+>>>>>>
+>>>>>> During suspend there may still be some i2c access happening.
+>>>>>> And if we don't keep i2c irq ON, there may be i2c access timeout if
+>>>>>> i2c is in irq mode of operation.
+>>>>>
+>>>>>
+>>>>> can you describe the issue you're trying to fix a bit more please?
+>>>>
+>>>>
+>>>> Sometimes we could see the i2c timeout errors during suspend/resume,
+>>>> which
+>>>> makes the duration of suspend/resume too longer.
+>>>>
+>>>> [  484.171541] CPU4: Booted secondary processor [410fd082]
+>>>> [  485.172777] rk3x-i2c ff3c0000.i2c: timeout, ipd: 0x10, state: 1
+>>>> [  486.172760] rk3x-i2c ff3c0000.i2c: timeout, ipd: 0x10, state: 1
+>>>> [  487.172759] rk3x-i2c ff3c0000.i2c: timeout, ipd: 0x10, state: 1
+>>>> [  487.172840] cpu cpu4: _set_opp_voltage: failed to set voltage (800000
+>>>> 800000 800000 mV): -110
+>>>> [  487.172874] cpu cpu4: failed to set volt 800000
+>>>>
+>>>>>
+>>>>> I.e. I'd think the i2c-core does suspend i2c-client devices first,
+>>>>> so that
+>>>>> these should be able to finish up their ongoing transfers and not start
+>>>>> any
+>>>>> new ones instead?
+>>>>>
+>>>>> Your irq can still happen slightly after the system started going to
+>>>>> actually
+>>>>> sleep, so to me it looks like you just widened the window where irqs
+>>>>> can
+>>>>> be
+>>>>> handled. Especially as your irq could also just simply stem from the
+>>>>> start
+>>>>> state, so you cannot even be sure if your transaction actually is
+>>>>> finished.
+>>>>
+>>>>
+>>>> Okay, you are right. I want to give it a double insurance at first,
+>>>> but it
+>>>> may hide the unhappend issue.
+>>>>
+>>>>>
+>>>>> So to me it looks like the i2c-connected device driver should be fixed
+>>>>> instead?
+>>>>
+>>>>
+>>>> I tell them to fix it in rk808 driver.
+>>>
+>>> To me it seems like perhaps cpufreq should not be changing frequencies
+>>> until it is resumed properly.  Presumably if all the ordering is done
+>>> right then cpufreq should be resumed _after_ the i2c regulator so you
+>>> should be OK.  ...or am I somehow confused about that?
+>>
+>> yes，the cpufreq and regulator should start i2c job after they resume
+>> properly.
+>>
+>>>
+>>> Also note that previous i2c busses I worked with simply returned -EIO
+>>> in the case where they were called when suspended.  See
+>>> "i2c-exynos5.c" and "i2c-s3c2410.c".
+>>
+>> In "i2c-exynos5.c", it seems that using the "i2c->suspended" to protect
+>> i2c transfer works most of the time. Of course it could prevent the next
+>> new i2c transfer to start. But in one case, if the current i2c job was
+>> not finished until the i2c irq was disabled by system suspend, the i2c
+>> timeout error would also happen, as the current i2c job may have a large
+>> data to transfer and it lasts from a long time.
+>
+> And this means you have bug in some of I2C client drivers which do not stop
+> their activities during suspend properly (most usual case - driver uses work
+> and this work still active during suspend and can run on one CPU while suspend
+> runs on another).
+>
+> At the moment .suspend_noirq() callback is called there should be no active
+> I2C transactions in general.
+>
+>>
+>> So is it necessary to add a mutex lock to wait the current job to be
+>> finished before the "i2c->suspended" is changed in i2c_suspend_noirq()?
+>>
+>
+> You need to catch and fix all driver who will try to access I2C after your
+> I2C bus driver passes suspend_noirq stage. Smth, like [1], uses i2c_lock_adapter().
+>
+>
+> [1] https://git.ti.com/android-sdk/kernel-omap/commit/125ef8f7016e7b205886f93862288a45a312b1d8
+>
