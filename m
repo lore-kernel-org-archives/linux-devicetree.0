@@ -1,87 +1,26 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
-Date: Thu, 08 Dec 2016 01:13:01 +0100
-Message-ID: <1526421.aCsca4sLnR@aspire.rjw.lan>
-References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org> <CAPDyKFqFnk6+Rfdzp-4wzEy8KNkq=03q5qfbkQD4pPNF0Pc6ww@mail.gmail.com> <1616414.c1s7NxTqJS@aspire.rjw.lan>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx7d: fix LCDIF clock assignment
+Date: Thu, 8 Dec 2016 08:54:55 +0800
+Message-ID: <20161208005454.GF2749@dragon>
+References: <20161123004204.10851-1-stefan@agner.ch>
+ <CAOMZO5AqKupmmKb4biGfmy4v3ZwS-BFjPY=MLd8Rc0ZXL+vQvg@mail.gmail.com>
+ <7e4829f484f6c4425fc9d01bea1a094f@agner.ch>
+ <20161205020123.GA2066@dragon>
+ <20161207205314.GA20203@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1616414.c1s7NxTqJS-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161207205314.GA20203@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, Peter Chen <peter.chen@freescale.com>, Fabio Estevam <fabio.estevam@nxp.com>, Liu Ying <Ying.Liu@freescale.com>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 01, 2016 10:21:59 PM Rafael J. Wysocki wrote:
-> On Tuesday, November 29, 2016 09:47:03 AM Ulf Hansson wrote:
-> > On 10 November 2016 at 20:58, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > On Mon, Nov 07, 2016 at 12:14:28PM +0100, Ulf Hansson wrote:
-> > >> On 3 November 2016 at 22:54, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > >> > Re-using idle state definition provided by arm,idle-state for domain
-> > >> > idle states creates a lot of confusion and limits further evolution of
-> > >> > the domain idle definition. To keep things clear and simple, define a
-> > >> > idle states for domain using a new compatible "domain-idle-state".
-> > >> >
-> > >> > Fix existing PM domains code to look for the newly defined compatible.
-> > >> >
-> > >> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > >> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >> > Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >> > ---
-> > >> >  .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
-> > >> >  .../devicetree/bindings/power/power_domain.txt     |  8 +++---
-> > >> >  drivers/base/power/domain.c                        |  2 +-
-> > >> >  3 files changed, 38 insertions(+), 5 deletions(-)
-> > >> >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
-> > >> >
-> > >> > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
-> > >> > new file mode 100644
-> > >> > index 0000000..eefc7ed
-> > >> > --- /dev/null
-> > >> > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
-> > >> > @@ -0,0 +1,33 @@
-> > >> > +PM Domain Idle State Node:
-> > >> > +
-> > >> > +A domain idle state node represents the state parameters that will be used to
-> > >> > +select the state when there are no active components in the domain.
-> > >> > +
-> > >> > +The state node has the following parameters -
-> > >> > +
-> > >> > +- compatible:
-> > >> > +       Usage: Required
-> > >> > +       Value type: <string>
-> > >> > +       Definition: Must be "domain-idle-state".
-> > >> > +
-> > >> > +- entry-latency-us
-> > >> > +       Usage: Required
-> > >> > +       Value type: <prop-encoded-array>
-> > >> > +       Definition: u32 value representing worst case latency in
-> > >> > +                   microseconds required to enter the idle state.
-> > >> > +                   The exit-latency-us duration may be guaranteed
-> > >> > +                   only after entry-latency-us has passed.
-> > >>
-> > >> As we anyway are going to change this, why not use an u64 and have the
-> > >> value in ns instead of us?
-> > >
-> > > I can't imagine that you would need more resolution or range. For times
-> > > less than 1us, s/w and register access times are going to dominate the
-> > > time.
-> > >
-> > > Unless there is a real need, I'd keep alignment with the existing
-> > > binding.
-> > 
-> > Rob, are you fine with this? I thought it would be great to get this
-> > in for 4.10 rc1.
-> 
-> Rob, any objections here?
+On Wed, Dec 07, 2016 at 12:53:14PM -0800, Olof Johansson wrote:
+> Applied, with the fixes line. In the future, please email arm@kernel.org too,
+> it's easier to make sure we don't miss it that way.
 
-Well, no objections, so applied.
+Noted.  Thanks, Olof.
 
-Thanks,
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
