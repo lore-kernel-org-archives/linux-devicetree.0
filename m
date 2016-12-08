@@ -1,35 +1,49 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v5 0/2] mmc: sdhci: export sdhci_execute_tuning(), then add Cadence SDHCI driver
-Date: Thu,  8 Dec 2016 21:50:53 +0900
-Message-ID: <1481201455-3483-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Andrei Pistirica <andrei.pistirica@microchip.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
+Date: Thu, 8 Dec 2016 21:52:41 +0900
+Message-ID: <CAK7LNAQkJO0vN9T-pB3ys4N=3pG9wdWZ9z+VkYToL7F_fLo9dA@mail.gmail.com>
+References: <1480903854-22701-1-git-send-email-yamada.masahiro@socionext.com>
+ <1480903854-22701-3-git-send-email-yamada.masahiro@socionext.com> <CAPDyKFqbAzCyXArikgTUeTrs9vOzfwKWJcs3TgF7D-4f_xfjfQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFqbAzCyXArikgTUeTrs9vOzfwKWJcs3TgF7D-4f_xfjfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulf,
 
-1/2 exports sdhci_execute_tuning(), which I want to use for 2/2.
+2016-12-08 21:32 GMT+09:00 Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 5 December 2016 at 03:10, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> Add a driver for the Cadence SD4HC SD/SDIO/eMMC Controller.
+>>
+>> For SD, it basically relies on the SDHCI standard code.
+>> For eMMC, this driver provides some callbacks to support the
+>> hardware part that is specific to this IP design.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>
+> Thanks, applied for next!
+>
 
-2/2 adds a new driver for Cadence's controller IP.
+
+Very sorry for my fix at the last minute.
+
+I've just posted v5.
+
+Please make sure to apply v5.
+
+Thanks!
 
 
-Changes in v2:
-  - Remove unnecessary "select MMC_SDHCI_IO_ACCESSORS"
-
-Masahiro Yamada (2):
-  mmc: sdhci: export sdhci_execute_tuning()
-  mmc: sdhci-cadence: add Cadence SD4HC support
-
- .../devicetree/bindings/mmc/sdhci-cadence.txt      |  30 +++
- drivers/mmc/host/Kconfig                           |  11 +
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/sdhci-cadence.c                   | 283 +++++++++++++++++++++
- drivers/mmc/host/sdhci.c                           |   3 +-
- drivers/mmc/host/sdhci.h                           |   1 +
- 6 files changed, 328 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
- create mode 100644 drivers/mmc/host/sdhci-cadence.c
 
 -- 
-2.7.4
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
