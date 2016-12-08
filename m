@@ -1,128 +1,117 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] mfd: dt: Add bindings for the Aspeed LPC Host
- Controller (LHC)
-Date: Thu, 08 Dec 2016 22:38:26 +1030
-Message-ID: <1481198906.3112.4.camel@aj.id.au>
-References: <20161206025321.1792-1-andrew@aj.id.au>
-         <20161206025321.1792-5-andrew@aj.id.au>
-         <CACPK8XfuZ14Ud3Kginut7f0-_-UjTB-=Pma-9WwNecF93k0Ktg@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 8 Dec 2016 20:18:38 +0800
+Message-ID: <201612082011.VNNsRbpL%fengguang.wu@intel.com>
+References: <1481185563-8735-3-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-3Dr7ZSlHC7l36VekEiIU"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8XfuZ14Ud3Kginut7f0-_-UjTB-=Pma-9WwNecF93k0Ktg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1481185563-8735-3-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+Cc: kbuild-all@01.org, wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi M'boumba,
 
---=-3Dr7ZSlHC7l36VekEiIU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[auto build test WARNING on wsa/i2c/for-next]
+[also build test WARNING on v4.9-rc8 next-20161208]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-On Thu, 2016-12-08 at 12:42 +1030, Joel Stanley wrote:
-> > On Tue, Dec 6, 2016 at 1:23 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
-> > The LPC bus pinmux configuration on fifth generation Aspeed SoCs depend=
-s
-> > on bits in both the System Control Unit and the LPC Host Controller.
-> >=20
-> > The Aspeed LPC Host Controller is described as a child node of the
-> > LPC host-range syscon device for arbitration of access by the host
-> > controller and pinmux drivers.
-> >=20
-> > > > Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> > ---
-> > =C2=A0.../devicetree/bindings/mfd/aspeed-lpc.txt=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 22 ++++++++++++++++++++++
-> > =C2=A01 file changed, 22 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Doc=
-umentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > index a97131aba446..9de318ef72da 100644
-> > --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > > > @@ -109,3 +109,25 @@ lpc: lpc@1e789000 {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> > =C2=A0};
-> >=20
-> > +Host Node Children
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +LPC Host Controller
-> > +-------------------
-> > +
-> > +The Aspeed LPC Host Controller configures the Low Pin Count (LPC) bus =
-behaviour
-> > +between the host and the baseboard management controller. The register=
-s exist
-> > +in the "host" portion of the Aspeed LPC controller, which must be the =
-parent of
-> > +the LPC host controller node.
-> > +
-> > +Required properties:
-> > +- compatible:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0"aspeed,ast2500-lhc";
->=20
-> Can you remind me why this binding doesn't cover the ast2400?
+url:    https://github.com/0day-ci/linux/commits/M-boumba-Cedric-Madianga/Add-support-for-the-STM32F4-I2C/20161208-173240
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-Partly that we haven't yet needed the LHC for the AST2400.
 
-Mostly that I overlooked it.
+sparse warnings: (new ones prefixed by >>)
 
-If there are other problems with series I'll address this issue, but if
-not we can add it when we need it down the track.
+   include/linux/compiler.h:253:8: sparse: attribute 'no_sanitize_address': unknown attribute
+>> drivers/i2c/busses/i2c-stm32f4.c:201:16: sparse: incompatible types in comparison expression (different signedness)
+>> drivers/i2c/busses/i2c-stm32f4.c:201:16: sparse: incompatible types in comparison expression (different signedness)
+>> drivers/i2c/busses/i2c-stm32f4.c:201:16: sparse: incompatible types in comparison expression (different signedness)
+   In file included from include/linux/clk.h:16:0,
+                    from drivers/i2c/busses/i2c-stm32f4.c:12:
+   drivers/i2c/busses/i2c-stm32f4.c: In function 'stm32f4_i2c_set_periph_clk_freq':
+   include/linux/kernel.h:749:16: warning: comparison of distinct pointer types lacks a cast
+     (void) (&max1 == &max2);   \
+                   ^
+   include/linux/kernel.h:737:2: note: in definition of macro '__min'
+     t1 min1 = (x);     \
+     ^~
+   include/linux/kernel.h:778:28: note: in expansion of macro 'min'
+    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+                               ^~~
+   include/linux/kernel.h:752:2: note: in expansion of macro '__max'
+     __max(typeof(x), typeof(y),   \
+     ^~~~~
+   include/linux/kernel.h:778:45: note: in expansion of macro 'max'
+    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+                                                ^~~
+   drivers/i2c/busses/i2c-stm32f4.c:201:9: note: in expansion of macro 'clamp'
+     freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
+            ^~~~~
+   include/linux/kernel.h:749:16: warning: comparison of distinct pointer types lacks a cast
+     (void) (&max1 == &max2);   \
+                   ^
+   include/linux/kernel.h:737:13: note: in definition of macro '__min'
+     t1 min1 = (x);     \
+                ^
+   include/linux/kernel.h:778:28: note: in expansion of macro 'min'
+    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+                               ^~~
+   include/linux/kernel.h:752:2: note: in expansion of macro '__max'
+     __max(typeof(x), typeof(y),   \
+     ^~~~~
+   include/linux/kernel.h:778:45: note: in expansion of macro 'max'
+    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+                                                ^~~
+   drivers/i2c/busses/i2c-stm32f4.c:201:9: note: in expansion of macro 'clamp'
+     freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
+            ^~~~~
+   include/linux/kernel.h:739:16: warning: comparison of distinct pointer types lacks a cast
+     (void) (&min1 == &min2);   \
+                   ^
+   include/linux/kernel.h:742:2: note: in expansion of macro '__min'
+     __min(typeof(x), typeof(y),   \
+     ^~~~~
+   include/linux/kernel.h:778:28: note: in expansion of macro 'min'
+    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+                               ^~~
+   drivers/i2c/busses/i2c-stm32f4.c:201:9: note: in expansion of macro 'clamp'
+     freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
+            ^~~~~
 
-Andrew
+vim +201 drivers/i2c/busses/i2c-stm32f4.c
 
->=20
-> Cheers,
->=20
-> Joel
->=20
-> > +- reg:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0contains offset/length value of the =
-LHC memory
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0region=
-.
-> > +
-> > +Example:
-> > +
-> > > > +lhc: lhc@20 {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "aspeed,ast25=
-00-lhc";
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reg =3D <0x20 0x24 0x48 0x8>=
-;
-> > +};
-> > --
-> > 2.9.3
-> >=20
---=-3Dr7ZSlHC7l36VekEiIU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+   185	
+   186	static void stm32f4_i2c_disable_it(struct stm32f4_i2c_dev *i2c_dev)
+   187	{
+   188		void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
+   189	
+   190		stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_IRQ_MASK);
+   191	}
+   192	
+   193	static void stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
+   194	{
+   195		u32 clk_rate, cr2, freq;
+   196	
+   197		cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
+   198		cr2 &= ~STM32F4_I2C_CR2_FREQ_MASK;
+   199		clk_rate = clk_get_rate(i2c_dev->clk);
+   200		freq = clk_rate / MHZ_TO_HZ;
+ > 201		freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
+   202		cr2 |= STM32F4_I2C_CR2_FREQ(freq);
+   203		writel_relaxed(cr2, i2c_dev->base + STM32F4_I2C_CR2);
+   204	}
+   205	
+   206	static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
+   207	{
+   208		u32 trise, freq, cr2, val;
+   209	
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJYSU06AAoJEJ0dnzgO5LT5wvUQAK0QlkMewBtFa3YJOtJ4G7n5
-C6YARdhQyF7544dR5lg3S1UDTyxb29kQ0n9cimKoCFuL1gY5ias8MpnzIGZbdlko
-daMD39x8/kXuZAvTNC+p2cn0nPKnsXBbcjU2LTL980DVWWpBNS4FZ9qfw1X1N1/Q
-L5vXeMLJNTze8aJsoPfI/c9ccALUvp8h0JY0WFdqqPI9m4AoMEdQ7eSC3tCN/GR4
-Az+1fibOQj+iBVWrxupALQTifwWJlKcfQZnPKr2PGC67hvwKm72se4VLo2mr8Sib
-qgx/LJ7kPZHYdeAQqWuRlTkF9coW4mmsf1iAY1/U4JrpR2HzBtzomdI8Evdksfuo
-mh8al6Rh24v348zZoOwBksGJHPHzkumRDlgHgvfQayPgBQA0CyaSK8YtJk0Xdn7r
-UhZ2ZsFb2zyAsu45nJwDEZ/aecJogJ/IuLBuHNZVwpevOrtH66H1e66N+d4U0gFo
-sPpzGMBVBtDzOawYazos6j4RrIvt+j6n9xCC1V6DJB3B0fo3RpTtYiu7Y/rRL6uL
-YkuI5ZQbo7kphfazgp5zQCxYVM5TQ8FqeJVZitbTOOdnaVlrHWMTpcbCyAwE6OKd
-wkfBVTT9RH2WmnPtpGBJ4WXzPXQdvseqbmeADi+3jwFpI6l6nV79FUg9br+wu3VZ
-3zWmb0QElnjnEBM64Xp2
-=AhjT
------END PGP SIGNATURE-----
-
---=-3Dr7ZSlHC7l36VekEiIU--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
