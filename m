@@ -1,56 +1,51 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 10/11] Document: dt: binding: imx: update doc for imx6sll
-Date: Thu, 8 Dec 2016 14:54:24 -0800
-Message-ID: <20161208225424.GQ5423@codeaurora.org>
-References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
- <1480660774-25055-11-git-send-email-ping.bai@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] misc: eeprom: implement compatible DT probing
+Date: Fri, 9 Dec 2016 00:32:28 +0100
+Message-ID: <CACRpkda+_0+y6U-gjt2ym45gi=KZ69hixMw6T=tAQGTGy5J37Q@mail.gmail.com>
+References: <1481219279-6982-1-git-send-email-linus.walleij@linaro.org> <95d9c739-8a69-b990-2840-b5381d54a99d@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480660774-25055-11-git-send-email-ping.bai@nxp.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Bai Ping <ping.bai@nxp.com>
-Cc: shawnguo@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, kernel@pengutronix.de, fabio.estevam@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, p.zabel@pengutronix.de, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <95d9c739-8a69-b990-2840-b5381d54a99d@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/02, Bai Ping wrote:
-> Add necessary document update for i.MX6SLL support.
-> 
-> Signed-off-by: Bai Ping <ping.bai@nxp.com>
-> ---
->  .../devicetree/bindings/clock/imx6sll-clock.txt    | 13 ++++++++
->  .../bindings/pinctrl/fsl,imx6sll-pinctrl.txt       | 37 ++++++++++++++++++++++
+On Thu, Dec 8, 2016 at 7:23 PM, Peter Rosin <peda@axentia.se> wrote:
+> On 2016-12-08 18:47, Linus Walleij wrote:
 
-Please split the bindings into different patches and put them
-closer to the drivers that use them in the series.
+>> Before this patch, the following device tree node does not probe,
+>> which might be considered a bug:
+>>
+>> eeprom@52 {
+>>       compatible = "atmel,at24c128";
+>
+> The way I read it, that should be "atmel,24c128", i.e. w/o the "at" prefix.
+(...)
+> and then lists the compatibles you have added to the match table (but you
+> have this extra "at" prefix for the atmel manufacturer).
+>
+> The way I read the above, you are free to use any manufacturer and still
+> have it work, and indeed, I have success with this node:
+>
+>         eeprom@50 {
+>                 compatible = "nxp,24c02";
+>                 reg = <0x50>;
+>                 pagesize = <16>;
+>         };
+>
+> I fear that your patch will regress this matching on the wildcard
+> manufacturer. I haven't tested that though, but there are enough
+> question marks anyway...
 
->  2 files changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
-> new file mode 100644
-> index 0000000..4f52efa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
-> @@ -0,0 +1,13 @@
-> +* Clock bindings for Freescale i.MX6 UltraLite
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx6sll-ccm"
-> +- reg: Address and length of the register set
-> +- #clock-cells: Should be <1>
-> +- clocks: list of clock specifiers, must contain an entry for each required
-> +  entry in clock-names
-> +- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
-> +
-> +The clock consumer should specify the desired clock by having the clock
-> +ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sll-clock.h
-> +for the full list of i.MX6 SLL clock IDs.
+Bah I probably just screwed up syntactically and now worked around
+a non-existing problem. I will try as you suggest, just "vendor,type"
+and see if it works. It probably does.
 
-Can you add an example node here?
+Some days I feel just utterly stupid. Sorry for the fuzz.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Wolfram: ignore the patch for now.
+
+Yours,
+Linus Walleij
