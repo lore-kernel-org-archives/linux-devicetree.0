@@ -1,190 +1,129 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [RESEND-PATCH] ARM: EXYNOS: remove smp hook from machine descriptor
-Date: Thu, 08 Dec 2016 08:32:15 +0530
-Message-ID: <1481166135-1588-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: arnd@arndb.de, krzk@kernel.org, kgene@kernel.org, javier@osg.samsung.com, thomas.ab@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: Jia Hongtao <hongtao.jia@nxp.com>
+Subject: [PATCH 2/2] arm64:dt:ls1012a: Add TMU device tree support for LS1012A
+Date: Thu, 8 Dec 2016 11:28:26 +0800
+Message-ID: <1481167706-44234-2-git-send-email-hongtao.jia@nxp.com>
+References: <1481167706-44234-1-git-send-email-hongtao.jia@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1481167706-44234-1-git-send-email-hongtao.jia@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, scott.wood@nxp.com
+Cc: hongtao.jia@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use CPU_METHOD_OF_DECLARE() for smp_ops instead of using it
-via machine descriptor.
+Also add nodes and properties for thermal management support.
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Signed-off-by: Jia Hongtao <hongtao.jia@nxp.com>
 ---
+Depend on patch "[v3] arm64: Add DTS support for FSL's LS1012A SoC".
+https://patchwork.kernel.org/patch/9462399/
 
-Resending as I missed to include samsung mailing list.
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 76 ++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
- arch/arm/boot/dts/exynos3250.dtsi      | 1 +
- arch/arm/boot/dts/exynos4210.dtsi      | 1 +
- arch/arm/boot/dts/exynos4212.dtsi      | 1 +
- arch/arm/boot/dts/exynos4412.dtsi      | 1 +
- arch/arm/boot/dts/exynos5250.dtsi      | 1 +
- arch/arm/boot/dts/exynos5260.dtsi      | 1 +
- arch/arm/boot/dts/exynos5410.dtsi      | 1 +
- arch/arm/boot/dts/exynos5420-cpus.dtsi | 1 +
- arch/arm/boot/dts/exynos5422-cpus.dtsi | 1 +
- arch/arm/boot/dts/exynos5440.dtsi      | 1 +
- arch/arm/mach-exynos/common.h          | 2 --
- arch/arm/mach-exynos/exynos.c          | 1 -
- arch/arm/mach-exynos/platsmp.c         | 2 ++
- 13 files changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index ba17ee1..f28f669 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -53,6 +53,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 92e64f3..bc694b4 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -43,6 +43,7 @@
+  */
  
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 7f3a18c..6dfd98d 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -35,6 +35,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/thermal/thermal.h>
  
- 		cpu0: cpu@900 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
-index 5389011..3e8982e 100644
---- a/arch/arm/boot/dts/exynos4212.dtsi
-+++ b/arch/arm/boot/dts/exynos4212.dtsi
-@@ -25,6 +25,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@A00 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 40beede..faf2fb8 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -25,6 +25,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@A00 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index b6d7444..580897c 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -52,6 +52,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
-index 5818718..1af6e76 100644
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -32,6 +32,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 2b6adaf..b092cdc 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -33,6 +33,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-index 5c052d7..a587704 100644
---- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-@@ -24,6 +24,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-index bf3c6f1..7fcdfd0 100644
---- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-@@ -23,6 +23,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu0: cpu@100 {
- 			device_type = "cpu";
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 2a2e570..0a958e8 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -50,6 +50,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "samsung,exynos-smp";
- 
- 		cpu@0 {
- 			device_type = "cpu";
-diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-index fb12d11..051e1ab 100644
---- a/arch/arm/mach-exynos/common.h
-+++ b/arch/arm/mach-exynos/common.h
-@@ -143,8 +143,6 @@ static inline void exynos_pm_init(void) {}
- extern void exynos_cpu_resume(void);
- extern void exynos_cpu_resume_ns(void);
- 
--extern const struct smp_operations exynos_smp_ops;
--
- extern void exynos_cpu_power_down(int cpu);
- extern void exynos_cpu_power_up(int cpu);
- extern int  exynos_cpu_power_state(int cpu);
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index fa08ef9..f0a766e 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -211,7 +211,6 @@ DT_MACHINE_START(EXYNOS_DT, "SAMSUNG EXYNOS (Flattened Device Tree)")
- 	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
- 	.l2c_aux_val	= 0x3c400001,
- 	.l2c_aux_mask	= 0xc20fffff,
--	.smp		= smp_ops(exynos_smp_ops),
- 	.map_io		= exynos_init_io,
- 	.init_early	= exynos_firmware_init,
- 	.init_irq	= exynos_init_irq,
-diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
-index 94405c7..43eec10 100644
---- a/arch/arm/mach-exynos/platsmp.c
-+++ b/arch/arm/mach-exynos/platsmp.c
-@@ -474,3 +474,5 @@ const struct smp_operations exynos_smp_ops __initconst = {
- 	.cpu_die		= exynos_cpu_die,
- #endif
- };
+ / {
+ 	compatible = "fsl,ls1012a";
+@@ -127,6 +128,81 @@
+ 			#clock-cells = <2>;
+ 			clocks = <&sysclk>;
+ 		};
++		tmu: tmu@1f00000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f00000 0x0 0x10000>;
++			interrupts = <0 33 0x4>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-calibration = <0x00000000 0x00000026
++					       0x00000001 0x0000002d
++					       0x00000002 0x00000032
++					       0x00000003 0x00000039
++					       0x00000004 0x0000003f
++					       0x00000005 0x00000046
++					       0x00000006 0x0000004d
++					       0x00000007 0x00000054
++					       0x00000008 0x0000005a
++					       0x00000009 0x00000061
++					       0x0000000a 0x0000006a
++					       0x0000000b 0x00000071
 +
-+CPU_METHOD_OF_DECLARE(exynos_smp, "samsung,exynos-smp", &exynos_smp_ops);
++					       0x00010000 0x00000025
++					       0x00010001 0x0000002c
++					       0x00010002 0x00000035
++					       0x00010003 0x0000003d
++					       0x00010004 0x00000045
++					       0x00010005 0x0000004e
++					       0x00010006 0x00000057
++					       0x00010007 0x00000061
++					       0x00010008 0x0000006b
++					       0x00010009 0x00000076
++
++					       0x00020000 0x00000029
++					       0x00020001 0x00000033
++					       0x00020002 0x0000003d
++					       0x00020003 0x00000049
++					       0x00020004 0x00000056
++					       0x00020005 0x00000061
++					       0x00020006 0x0000006d
++
++					       0x00030000 0x00000021
++					       0x00030001 0x0000002a
++					       0x00030002 0x0000003c
++					       0x00030003 0x0000004e>;
++			big-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++
++				thermal-sensors = <&tmu 0>;
++
++				trips {
++					cpu_alert: cpu-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++					cpu_crit: cpu-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
+ 
+ 		i2c0: i2c@2180000 {
+ 			compatible = "fsl,vf610-i2c";
 -- 
-2.7.4
+2.1.0.27.g96db324
