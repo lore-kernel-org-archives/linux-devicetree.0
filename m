@@ -1,57 +1,202 @@
-From: Christopher Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/16] drivers/fsi: Add fsi master definition
-Date: Thu, 8 Dec 2016 16:49:06 -0600
-Message-ID: <CAA0LjjUOuQXW_pJ0yM=vtKKS09Y-oALUvhF9KPDzx0GF+Xkmew@mail.gmail.com>
-References: <1481076574-54711-1-git-send-email-christopher.lee.bostic@gmail.com>
- <20161207090610.GB14742@kroah.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 03/11] driver: clk: imx: Add clock driver for imx6sll
+Date: Thu, 8 Dec 2016 14:52:57 -0800
+Message-ID: <20161208225257.GP5423@codeaurora.org>
+References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
+ <1480660774-25055-4-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161207090610.GB14742-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Open List OF Flattened dev tree bindings <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Moderated list: ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Linux open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480660774-25055-4-git-send-email-ping.bai@nxp.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Bai Ping <ping.bai@nxp.com>
+Cc: shawnguo@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, kernel@pengutronix.de, fabio.estevam@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, p.zabel@pengutronix.de, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 7, 2016 at 3:06 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Tue, Dec 06, 2016 at 08:09:30PM -0600, Chris Bostic wrote:
->> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
->>
->> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/fsi/fsi-core.c   | 20 ++++++++++++++++++++
->>  drivers/fsi/fsi-master.h | 37 +++++++++++++++++++++++++++++++++++++
->>  2 files changed, 57 insertions(+)
->>  create mode 100644 drivers/fsi/fsi-master.h
->>
->> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
->> index 3d55bd5..ce9428d 100644
->> --- a/drivers/fsi/fsi-core.c
->> +++ b/drivers/fsi/fsi-core.c
->> @@ -17,6 +17,26 @@
->>  #include <linux/fsi.h>
->>  #include <linux/module.h>
->>
->> +#include "fsi-master.h"
->> +
->> +static atomic_t master_idx = ATOMIC_INIT(-1);
->
-> You don't really want/need an atomic variable, please use the simple ida
-> interface instead.
+On 12/02, Bai Ping wrote:
+> diff --git a/drivers/clk/imx/clk-imx6sll.c b/drivers/clk/imx/clk-imx6sll.c
+> new file mode 100644
+> index 0000000..c5219e1
+> --- /dev/null
+> +++ b/drivers/clk/imx/clk-imx6sll.c
+> @@ -0,0 +1,366 @@
+> +/*
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <dt-bindings/clock/imx6sll-clock.h>
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
 
-Greg,
+Is this include used?
 
-Will make the change to simple ida interface.
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/types.h>
 
-Thanks for your feedback,
-Chris
+Is there an include of clk_provider.h missing?
 
->
-> thanks,
->
-> greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +#include "clk.h"
+> +
+> +#define BM_CCM_CCDR_MMDC_CH0_MASK	(0x2 << 16)
+> +#define CCDR	0x4
+> +
+> +static const char *pll_bypass_src_sels[] = { "osc", "dummy", };
+
+const char * const? For all of these names.
+
+> +static const char *pll1_bypass_sels[] = { "pll1", "pll1_bypass_src", };
+> +static const char *pll2_bypass_sels[] = { "pll2", "pll2_bypass_src", };
+> +static const char *pll3_bypass_sels[] = { "pll3", "pll3_bypass_src", };
+> +static const char *pll4_bypass_sels[] = { "pll4", "pll4_bypass_src", };
+> +static const char *pll5_bypass_sels[] = { "pll5", "pll5_bypass_src", };
+> +static const char *pll6_bypass_sels[] = { "pll6", "pll6_bypass_src", };
+> +static const char *pll7_bypass_sels[] = { "pll7", "pll7_bypass_src", };
+> +static const char *step_sels[] = { "osc", "pll2_pfd2_396m", };
+> +static const char *pll1_sw_sels[] = { "pll1_sys", "step", };
+> +static const char *axi_alt_sels[] = { "pll2_pfd2_396m", "pll3_pfd1_540m", };
+> +static const char *axi_sels[] = {"periph", "axi_alt_sel", };
+> +static const char *periph_pre_sels[] = { "pll2_bus", "pll2_pfd2_396m", "pll2_pfd0_352m", "pll2_198m", };
+> +static const char *periph2_pre_sels[] = { "pll2_bus", "pll2_pfd2_396m", "pll2_pfd0_352m", "pll4_audio_div", };
+> +static const char *periph_clk2_sels[] = { "pll3_usb_otg", "osc", "osc", };
+> +static const char *periph2_clk2_sels[] = { "pll3_usb_otg", "osc", };
+> +static const char *periph_sels[] = { "periph_pre", "periph_clk2", };
+> +static const char *periph2_sels[] = { "periph2_pre", "periph2_clk2", };
+> +static const char *usdhc_sels[] = { "pll2_pfd2_396m", "pll2_pfd0_352m", };
+> +static const char *ssi_sels[] = {"pll3_pfd2_508m", "pll3_pfd3_454m", "pll4_audio_div", "dummy",};
+> +static const char *spdif_sels[] = { "pll4_audio_div", "pll3_pfd2_508m", "pll5_video_div", "pll3_usb_otg", };
+> +static const char *ldb_di0_div_sels[] = { "ldb_di0_div_3_5", "ldb_di0_div_7", };
+> +static const char *ldb_di1_div_sels[] = { "ldb_di1_div_3_5", "ldb_di1_div_7", };
+> +static const char *ldb_di0_sels[] = { "pll5_video_div", "pll2_pfd0_352m", "pll2_pfd2_396m", "pll2_pfd3_594m", "pll2_pfd1_594m", "pll3_pfd3_454m", };
+> +static const char *ldb_di1_sels[] = { "pll3_usb_otg", "pll2_pfd0_352m", "pll2_pfd2_396m", "pll2_bus", "pll3_pfd3_454m", "pll3_pfd2_508m", };
+> +static const char *lcdif_pre_sels[] = { "pll2_bus", "pll3_pfd3_454m", "pll5_video_div", "pll2_pfd0_352m", "pll2_pfd1_594m", "pll3_pfd1_540m", };
+> +static const char *ecspi_sels[] = { "pll3_60m", "osc", };
+> +static const char *uart_sels[] = { "pll3_80m", "osc", };
+> +static const char *perclk_sels[] = { "ipg", "osc", };
+> +static const char *lcdif_sels[] = { "lcdif_podf", "ipp_di0", "ipp_di1", "ldb_di0", "ldb_di1", };
+> +
+> +static const char *epdc_pre_sels[] = { "pll2_bus", "pll3_usb_otg", "pll5_video_div", "pll2_pfd0_352m", "pll2_pfd2_396m", "pll3_pfd2_508m", };
+> +static const char *epdc_sels[] = { "epdc_podf", "ipp_di0", "ipp_di1", "ldb_di0", "ldb_di1", };
+> +
+> +static struct clk *clks[IMX6SLL_CLK_END];
+> +static struct clk_onecell_data clk_data;
+> +
+> +static int const clks_init_on[] __initconst = {
+
+static const int is more preferred style.
+
+> +	IMX6SLL_CLK_AIPSTZ1, IMX6SLL_CLK_AIPSTZ2,
+> +	IMX6SLL_CLK_OCRAM, IMX6SLL_CLK_ARM, IMX6SLL_CLK_ROM,
+> +	IMX6SLL_CLK_MMDC_P0_FAST, IMX6SLL_CLK_MMDC_P0_IPG,
+> +};
+> +
+> +static struct clk_div_table post_div_table[] = {
+
+const?
+
+> +	{ .val = 2, .div = 1, },
+> +	{ .val = 1, .div = 2, },
+> +	{ .val = 0, .div = 4, },
+> +	{ }
+> +};
+> +
+> +static struct clk_div_table video_div_table[] = {
+
+const?
+
+> +	{ .val = 0, .div = 1, },
+> +	{ .val = 1, .div = 2, },
+> +	{ .val = 2, .div = 1, },
+> +	{ .val = 3, .div = 4, },
+> +	{ }
+> +};
+> +
+> +static u32 share_count_audio;
+> +static u32 share_count_ssi1;
+> +static u32 share_count_ssi2;
+> +static u32 share_count_ssi3;
+> +
+> +static void __init imx6sll_clocks_init(struct device_node *ccm_node)
+> +{
+> +	struct device_node *np;
+> +	void __iomem *base;
+> +	int i;
+> +
+> +	clks[IMX6SLL_CLK_DUMMY] = imx_clk_fixed("dummy", 0);
+> +
+> +	clks[IMX6SLL_CLK_CKIL] = of_clk_get_by_name(ccm_node, "ckil");
+> +	clks[IMX6SLL_CLK_OSC] = of_clk_get_by_name(ccm_node, "osc");
+> +
+> +	/* ipp_di clock is external input */
+> +	clks[IMX6SLL_CLK_IPP_DI0] = of_clk_get_by_name(ccm_node, "ipp_di0");
+> +	clks[IMX6SLL_CLK_IPP_DI1] = of_clk_get_by_name(ccm_node, "ipp_di1");
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx6sll-anatop");
+> +	base = of_iomap(np, 0);
+> +	WARN_ON(!base);
+> +
+> +	clks[IMX6SLL_PLL1_BYPASS_SRC] = imx_clk_mux("pll1_bypass_src", base + 0x00, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +	clks[IMX6SLL_PLL2_BYPASS_SRC] = imx_clk_mux("pll2_bypass_src", base + 0x30, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +	clks[IMX6SLL_PLL3_BYPASS_SRC] = imx_clk_mux("pll3_bypass_src", base + 0x10, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +	clks[IMX6SLL_PLL4_BYPASS_SRC] = imx_clk_mux("pll4_bypass_src", base + 0x70, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +	clks[IMX6SLL_PLL5_BYPASS_SRC] = imx_clk_mux("pll5_bypass_src", base + 0xa0, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +	clks[IMX6SLL_PLL6_BYPASS_SRC] = imx_clk_mux("pll6_bypass_src", base + 0xe0, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +	clks[IMX6SLL_PLL7_BYPASS_SRC] = imx_clk_mux("pll7_bypass_src", base + 0x20, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+> +
+> +	clks[IMX6SLL_CLK_PLL1] = imx_clk_pllv3(IMX_PLLV3_SYS,	 "pll1", "pll1_bypass_src", base + 0x00, 0x7f);
+> +	clks[IMX6SLL_CLK_PLL2] = imx_clk_pllv3(IMX_PLLV3_GENERIC, "pll2", "pll2_bypass_src", base + 0x30, 0x1);
+> +	clks[IMX6SLL_CLK_PLL3] = imx_clk_pllv3(IMX_PLLV3_USB,	 "pll3", "pll3_bypass_src", base + 0x10, 0x3);
+> +	clks[IMX6SLL_CLK_PLL4] = imx_clk_pllv3(IMX_PLLV3_AV,	 "pll4", "pll4_bypass_src", base + 0x70, 0x7f);
+> +	clks[IMX6SLL_CLK_PLL5] = imx_clk_pllv3(IMX_PLLV3_AV,	 "pll5", "pll5_bypass_src", base + 0xa0, 0x7f);
+> +	clks[IMX6SLL_CLK_PLL6] = imx_clk_pllv3(IMX_PLLV3_ENET,	 "pll6", "pll6_bypass_src", base + 0xe0, 0x3);
+> +	clks[IMX6SLL_CLK_PLL7] = imx_clk_pllv3(IMX_PLLV3_USB,	 "pll7", "pll7_bypass_src", base + 0x20, 0x3);
+> +
+> +	clks[IMX6SLL_PLL1_BYPASS] = imx_clk_mux_flags("pll1_bypass", base + 0x00, 16, 1, pll1_bypass_sels, ARRAY_SIZE(pll1_bypass_sels), CLK_SET_RATE_PARENT);
+> +	clks[IMX6SLL_PLL2_BYPASS] = imx_clk_mux_flags("pll2_bypass", base + 0x30, 16, 1, pll2_bypass_sels, ARRAY_SIZE(pll2_bypass_sels), CLK_SET_RATE_PARENT);
+> +	clks[IMX6SLL_PLL3_BYPASS] = imx_clk_mux_flags("pll3_bypass", base + 0x10, 16, 1, pll3_bypass_sels, ARRAY_SIZE(pll3_bypass_sels), CLK_SET_RATE_PARENT);
+> +	clks[IMX6SLL_PLL4_BYPASS] = imx_clk_mux_flags("pll4_bypass", base + 0x70, 16, 1, pll4_bypass_sels, ARRAY_SIZE(pll4_bypass_sels), CLK_SET_RATE_PARENT);
+> +	clks[IMX6SLL_PLL5_BYPASS] = imx_clk_mux_flags("pll5_bypass", base + 0xa0, 16, 1, pll5_bypass_sels, ARRAY_SIZE(pll5_bypass_sels), CLK_SET_RATE_PARENT);
+> +	clks[IMX6SLL_PLL6_BYPASS] = imx_clk_mux_flags("pll6_bypass", base + 0xe0, 16, 1, pll6_bypass_sels, ARRAY_SIZE(pll6_bypass_sels), CLK_SET_RATE_PARENT);
+> +	clks[IMX6SLL_PLL7_BYPASS] = imx_clk_mux_flags("pll7_bypass", base + 0x20, 16, 1, pll7_bypass_sels, ARRAY_SIZE(pll7_bypass_sels), CLK_SET_RATE_PARENT);
+> +
+> +	/* Do not bypass PLLs initially */
+> +	clk_set_parent(clks[IMX6SLL_PLL1_BYPASS], clks[IMX6SLL_CLK_PLL1]);
+> +	clk_set_parent(clks[IMX6SLL_PLL2_BYPASS], clks[IMX6SLL_CLK_PLL2]);
+> +	clk_set_parent(clks[IMX6SLL_PLL3_BYPASS], clks[IMX6SLL_CLK_PLL3]);
+> +	clk_set_parent(clks[IMX6SLL_PLL4_BYPASS], clks[IMX6SLL_CLK_PLL4]);
+> +	clk_set_parent(clks[IMX6SLL_PLL5_BYPASS], clks[IMX6SLL_CLK_PLL5]);
+> +	clk_set_parent(clks[IMX6SLL_PLL6_BYPASS], clks[IMX6SLL_CLK_PLL6]);
+> +	clk_set_parent(clks[IMX6SLL_PLL7_BYPASS], clks[IMX6SLL_CLK_PLL7]);
+
+Can we just put raw register writes here instead? I'd prefer we
+didn't use clk consumer APIs to do things to the clk tree from
+the providers. The problem there being that:
+
+ 1) We're trying to move away from using consumer APIs in
+ provider drivers. It's ok if they're used during probe, but
+ inside clk_ops is not preferred.
+
+ 2) Even if you have a clk pointer, it may be "orphaned" at the
+ time of registration and so calling the APIs here works now but
+ eventually we may want to return an EPROBE_DEFER error in that
+ case and this may block that effort.
+
+I suppose if this is the only clk driver on this machine then
+this last point isn't a concern and things are probably ok here.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
