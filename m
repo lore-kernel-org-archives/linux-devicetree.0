@@ -1,63 +1,61 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v2 3/5] arm64: dts: exynos5433: Add PPMU dt node
-Date: Thu, 08 Dec 2016 13:58:09 +0900
-Message-ID: <1481173091-9728-4-git-send-email-cw00.choi@samsung.com>
-References: <1481173091-9728-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1481173091-9728-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, robh+dt@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Changming Huang <jerry.huang@nxp.com>
+Subject: [PATCH] fsl/usb: Add USB node in FSL's ls1012a DTS
+Date: Thu, 8 Dec 2016 14:06:08 +0800
+Message-ID: <1481177168-11347-1-git-send-email-jerry.huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, scott.wood@nxp.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Changming Huang <jerry.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds PPMU (Platform Performance Monitoring Unit) Device-tree node
-to measure the utilization of each IP in Exynos SoC.
+Add USB node in ls1012a device tree
 
-- PPMU_D{0|1}_CPU are used to measure the utilization of MIF (Memory Interface)
-  block with VDD_MIF power source.
-- PPMU_D{0|1}_GENERAL are used to measure the utilization of INT(Internal)
-  block with VDD_INT power source.
-
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Changming Huang <jerry.huang@nxp.com>
 ---
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Dependence on patch "[v3] arm64: Add DTS support for FSL's LS1012A SoC".
+https://patchwork.kernel.org/patch/9462399/
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 64226d5ae471..8c4ee84d5232 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -599,6 +599,30 @@
- 			clock-names = "fin_pll", "mct";
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 92e64f3..3e4bda6 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -235,6 +235,23 @@
+ 				 <&clockgen 4 3>;
  		};
  
-+		ppmu_d0_cpu: ppmu@10480000 {
-+			compatible = "samsung,exynos-ppmu-v2";
-+			reg = <0x10480000 0x2000>;
-+			status = "disabled";
++		usb0: usb3@2f00000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x2f00000 0x0 0x10000>;
++			interrupts = <0 60 0x4>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
 +		};
 +
-+		ppmu_d0_general: ppmu@10490000 {
-+			compatible = "samsung,exynos-ppmu-v2";
-+			reg = <0x10490000 0x2000>;
-+			status = "disabled";
++		usb1: usb2@8600000 {
++			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
++			reg = <0x0 0x8600000 0x0 0x1000>;
++			interrupts = <0 139 0x4>;
++			dr_mode = "host";
++			phy_type = "ulpi";
 +		};
 +
-+		ppmu_d1_cpu: ppmu@104b0000 {
-+			compatible = "samsung,exynos-ppmu-v2";
-+			reg = <0x104b0000 0x2000>;
-+			status = "disabled";
-+		};
-+
-+		ppmu_d1_general: ppmu@104c0000 {
-+			compatible = "samsung,exynos-ppmu-v2";
-+			reg = <0x104c0000 0x2000>;
-+			status = "disabled";
-+		};
-+
- 		pinctrl_alive: pinctrl@10580000 {
- 			compatible = "samsung,exynos5433-pinctrl";
- 			reg = <0x10580000 0x1a20>, <0x11090000 0x100>;
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1012a-ahci", "fsl,ls1043a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>;
 -- 
-1.9.1
+1.7.9.5
