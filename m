@@ -1,117 +1,76 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v5 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 8 Dec 2016 20:18:38 +0800
-Message-ID: <201612082011.VNNsRbpL%fengguang.wu@intel.com>
-References: <1481185563-8735-3-git-send-email-cedric.madianga@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1481185563-8735-3-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-Cc: kbuild-all@01.org, wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 1/7] MFD: add bindings for STM32 General Purpose Timer driver
+Date: Thu,  8 Dec 2016 13:20:44 +0100
+Message-ID: <1481199650-22484-2-git-send-email-benjamin.gaignard@st.com>
+References: <1481199650-22484-1-git-send-email-benjamin.gaignard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481199650-22484-1-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi M'boumba,
+Add bindings information for STM32 General Purpose Timer
 
-[auto build test WARNING on wsa/i2c/for-next]
-[also build test WARNING on v4.9-rc8 next-20161208]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+version 2:
+- rename stm32-mfd-timer to stm32-gptimer
+- only keep one compatible string
 
-url:    https://github.com/0day-ci/linux/commits/M-boumba-Cedric-Madianga/Add-support-for-the-STM32F4-I2C/20161208-173240
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
-   include/linux/compiler.h:253:8: sparse: attribute 'no_sanitize_address': unknown attribute
->> drivers/i2c/busses/i2c-stm32f4.c:201:16: sparse: incompatible types in comparison expression (different signedness)
->> drivers/i2c/busses/i2c-stm32f4.c:201:16: sparse: incompatible types in comparison expression (different signedness)
->> drivers/i2c/busses/i2c-stm32f4.c:201:16: sparse: incompatible types in comparison expression (different signedness)
-   In file included from include/linux/clk.h:16:0,
-                    from drivers/i2c/busses/i2c-stm32f4.c:12:
-   drivers/i2c/busses/i2c-stm32f4.c: In function 'stm32f4_i2c_set_periph_clk_freq':
-   include/linux/kernel.h:749:16: warning: comparison of distinct pointer types lacks a cast
-     (void) (&max1 == &max2);   \
-                   ^
-   include/linux/kernel.h:737:2: note: in definition of macro '__min'
-     t1 min1 = (x);     \
-     ^~
-   include/linux/kernel.h:778:28: note: in expansion of macro 'min'
-    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
-                               ^~~
-   include/linux/kernel.h:752:2: note: in expansion of macro '__max'
-     __max(typeof(x), typeof(y),   \
-     ^~~~~
-   include/linux/kernel.h:778:45: note: in expansion of macro 'max'
-    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
-                                                ^~~
-   drivers/i2c/busses/i2c-stm32f4.c:201:9: note: in expansion of macro 'clamp'
-     freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
-            ^~~~~
-   include/linux/kernel.h:749:16: warning: comparison of distinct pointer types lacks a cast
-     (void) (&max1 == &max2);   \
-                   ^
-   include/linux/kernel.h:737:13: note: in definition of macro '__min'
-     t1 min1 = (x);     \
-                ^
-   include/linux/kernel.h:778:28: note: in expansion of macro 'min'
-    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
-                               ^~~
-   include/linux/kernel.h:752:2: note: in expansion of macro '__max'
-     __max(typeof(x), typeof(y),   \
-     ^~~~~
-   include/linux/kernel.h:778:45: note: in expansion of macro 'max'
-    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
-                                                ^~~
-   drivers/i2c/busses/i2c-stm32f4.c:201:9: note: in expansion of macro 'clamp'
-     freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
-            ^~~~~
-   include/linux/kernel.h:739:16: warning: comparison of distinct pointer types lacks a cast
-     (void) (&min1 == &min2);   \
-                   ^
-   include/linux/kernel.h:742:2: note: in expansion of macro '__min'
-     __min(typeof(x), typeof(y),   \
-     ^~~~~
-   include/linux/kernel.h:778:28: note: in expansion of macro 'min'
-    #define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
-                               ^~~
-   drivers/i2c/busses/i2c-stm32f4.c:201:9: note: in expansion of macro 'clamp'
-     freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
-            ^~~~~
-
-vim +201 drivers/i2c/busses/i2c-stm32f4.c
-
-   185	
-   186	static void stm32f4_i2c_disable_it(struct stm32f4_i2c_dev *i2c_dev)
-   187	{
-   188		void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
-   189	
-   190		stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_IRQ_MASK);
-   191	}
-   192	
-   193	static void stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
-   194	{
-   195		u32 clk_rate, cr2, freq;
-   196	
-   197		cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
-   198		cr2 &= ~STM32F4_I2C_CR2_FREQ_MASK;
-   199		clk_rate = clk_get_rate(i2c_dev->clk);
-   200		freq = clk_rate / MHZ_TO_HZ;
- > 201		freq = clamp(freq, STM32F4_I2C_MIN_FREQ, STM32F4_I2C_MAX_FREQ);
-   202		cr2 |= STM32F4_I2C_CR2_FREQ(freq);
-   203		writel_relaxed(cr2, i2c_dev->base + STM32F4_I2C_CR2);
-   204	}
-   205	
-   206	static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
-   207	{
-   208		u32 trise, freq, cr2, val;
-   209	
-
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../bindings/mfd/stm32-general-purpose-timer.txt   | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt b/Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt
+new file mode 100644
+index 0000000..ce67755
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt
+@@ -0,0 +1,39 @@
++STM32 General Purpose Timer driver bindings
++
++Required parameters:
++- compatible: must be "st,stm32-gptimer"
++
++- reg:			Physical base address and length of the controller's
++			registers.
++- clock-names: 		Set to "clk_int".
++- clocks: 		Phandle to the clock used by the timer module.
++			For Clk properties, please refer to ../clock/clock-bindings.txt
++
++Optional parameters:
++- resets:		Phandle to the parent reset controller.
++			See ../reset/st,stm32-rcc.txt
++
++Optional subnodes:
++- pwm:			See ../pwm/pwm-stm32.txt
++- timer:		See ../iio/timer/stm32-timer-trigger.txt
++
++Example:
++	timers@40010000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "st,stm32-gptimer";
++		reg = <0x40010000 0x400>;
++		clocks = <&rcc 0 160>;
++		clock-names = "clk_int";
++
++		pwm@0 {
++			compatible = "st,stm32-pwm";
++			pinctrl-0	= <&pwm1_pins>;
++			pinctrl-names	= "default";
++		};
++
++		timer@0 {
++			compatible = "st,stm32-timer-trigger";
++			reg = <0>;
++		};
++	};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
