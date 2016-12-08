@@ -1,84 +1,36 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v1 2/2] crypto: mediatek - add DT bindings documentation
-Date: Thu, 8 Dec 2016 17:19:36 +0800
-Message-ID: <1481188776.14860.26.camel@mtkswgap22>
-References: <1480921284-45827-1-git-send-email-ryder.lee@mediatek.com>
-         <1480921284-45827-3-git-send-email-ryder.lee@mediatek.com>
-         <4b0df417-825f-65c6-4c02-85fe1c20ce50@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <4b0df417-825f-65c6-4c02-85fe1c20ce50@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: zx296718-clk: add compatible for audio clock controller
+Date: Thu,  8 Dec 2016 17:25:56 +0800
+Message-ID: <1481189157-8995-1-git-send-email-shawnguo@kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baoyou Xie <xie.baoyou@zte.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Shawn Guo <shawn.guo@linaro.org>
 
-On Mon, 2016-12-05 at 11:18 +0100, Matthias Brugger wrote:
-> 
-> On 05/12/16 08:01, Ryder Lee wrote:
-> > Add DT bindings documentation for the crypto driver
-> >
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/crypto/mediatek-crypto.txt | 32 ++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
-> > new file mode 100644
-> > index 0000000..8b1db08
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
-> > @@ -0,0 +1,32 @@
-> > +MediaTek cryptographic accelerators
-> > +
-> > +Required properties:
-> > +- compatible: Should be "mediatek,mt7623-crypto"
-> 
-> Do you know how big the difference is between the crypto engine for 
-> mt7623/mt2701/mt8521p in comparison, let's say mt8173 or mt6797?
-> Do this SoCs have a crypot engine? If so and they are quite similar, we 
-> might think of adding a mtk-crypto binding and add soc specific bindings.
+It adds the compatible string for zx296718 audio clock controller.
 
-This engine is just available in mt7623/mt2701/mt8521p series SoCs and
-they have no difference.
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ Documentation/devicetree/bindings/clock/zx296718-clk.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-But there are still other crypto IPs in MTK, i think maybe we could use
-"mediatek,{IP name}-crypto” to distinguish them ?
+diff --git a/Documentation/devicetree/bindings/clock/zx296718-clk.txt b/Documentation/devicetree/bindings/clock/zx296718-clk.txt
+index 8c18b7b237bf..4ad703808407 100644
+--- a/Documentation/devicetree/bindings/clock/zx296718-clk.txt
++++ b/Documentation/devicetree/bindings/clock/zx296718-clk.txt
+@@ -13,6 +13,9 @@ Required properties:
+ 	"zte,zx296718-lsp1crm":
+ 		zx296718 device level clock selection and gating
+ 
++	"zte,zx296718-audiocrm":
++		zx296718 audio clock selection, divider and gating
++
+ - reg: Address and length of the register set
+ 
+ The clock consumer should specify the desired clock by having the clock
+-- 
+1.9.1
 
-> Regards,
-> Matthias
-> 
-> > +- reg: Address and length of the register set for the device
-> > +- interrupts: Should contain the five crypto engines interrupts in numeric
-> > +	order. These are global system and four descriptor rings.
-> > +- clocks: the clock used by the core
-> > +- clock-names: the names of the clock listed in the clocks property. These are
-> > +	"ethif", "cryp"
-> > +- power-domains: Must contain a reference to the PM domain.
-> > +
-> > +
-> > +Optional properties:
-> > +- interrupt-parent: Should be the phandle for the interrupt controller
-> > +  that services interrupts for this device
-> > +
-> > +
-> > +Example:
-> > +	crypto: crypto@1b240000 {
-> > +		compatible = "mediatek,mt7623-crypto";
-> > +		reg = <0 0x1b240000 0 0x20000>;
-> > +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 97 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-> > +			 <&ethsys CLK_ETHSYS_CRYPTO>;
-> > +		clock-names = "ethif","cryp";
-> > +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-> > +	};
-> >
