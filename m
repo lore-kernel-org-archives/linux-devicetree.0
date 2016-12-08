@@ -1,53 +1,116 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH 01/12] ARM: dts: imx6qdl: Add compatible, clocks,
- irqs to MIPI CSI-2 node
-Date: Wed,  7 Dec 2016 16:57:42 -0800
-Message-ID: <1481158673-15937-2-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 09/12] ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+Date: Wed,  7 Dec 2016 16:57:50 -0800
+Message-ID: <1481158673-15937-10-git-send-email-steve_longerbeam@mentor.com>
 References: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, tomi.valkeinen@ti.com, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481158673-15937-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add to the MIPI CSI2 receiver node: compatible string, interrupt sources,
-clocks.
+Enables the ADV7180 decoder sensor. The ADV7180 connects to the
+parallel-bus mux input on ipu1_csi0_mux.
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+On the sabreauto, two analog video inputs are routed to the ADV7180,
+composite on Ain1, and composite on Ain3. Those inputs are defined
+via inputs and input-names under the ADV7180 node. The ADV7180 power
+pin is via max7310_b port expander.
+
+Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 62 ++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index b13b0b2..e01e5d5 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1121,7 +1121,14 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index d74882a..9222026 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -147,10 +147,48 @@
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
  			};
++
++			camera: adv7180@21 {
++				compatible = "adi,adv7180";
++				reg = <0x21>;
++				powerdown-gpios = <&max7310_b 2 GPIO_ACTIVE_LOW>;
++				interrupt-parent = <&gpio1>;
++				interrupts = <27 0x8>;
++				inputs = <0x00 0x02>;
++				input-names = "ADV7180 Composite on Ain1",
++						"ADV7180 Composite on Ain3";
++
++				port {
++					adv7180_to_ipu1_csi0_mux: endpoint {
++						remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++						bus-width = <8>;
++					};
++				};
++			};
+ 		};
+ 	};
+ };
  
- 			mipi_csi: mipi@021dc000 {
-+				compatible = "fsl,imx-mipi-csi2";
- 				reg = <0x021dc000 0x4000>;
-+				interrupts = <0 100 0x04>, <0 101 0x04>;
-+				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
-+					 <&clks IMX6QDL_CLK_VIDEO_27M>,
-+					 <&clks IMX6QDL_CLK_EIM_SEL>;
-+				clock-names = "dphy_clk", "cfg_clk", "pix_clk";
-+				status = "disabled";
- 			};
++&ipu1_smfc0 {
++	fim {
++		enable = <1>;
++	};
++};
++
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
++};
++
+ &clks {
+ 	assigned-clocks = <&clks IMX6QDL_PLL4_BYPASS_SRC>,
+ 			  <&clks IMX6QDL_PLL4_BYPASS>,
+@@ -451,6 +489,30 @@
+ 			>;
+ 		};
  
- 			mipi_dsi: mipi@021e0000 {
++		pinctrl_ipu1_csi0: ipu1grp-csi0 {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04   0x80000000
++				MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05   0x80000000
++				MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06   0x80000000
++				MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07   0x80000000
++				MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08   0x80000000
++				MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09   0x80000000
++				MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10  0x80000000
++				MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11  0x80000000
++				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12  0x80000000
++				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13  0x80000000
++				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14  0x80000000
++				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15  0x80000000
++				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16  0x80000000
++				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17  0x80000000
++				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18  0x80000000
++				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19  0x80000000
++				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x80000000
++				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC    0x80000000
++				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC   0x80000000
++			>;
++		};
++
+ 		pinctrl_pwm3: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
