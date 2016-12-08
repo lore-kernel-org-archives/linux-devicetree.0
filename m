@@ -1,292 +1,87 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/3] clk: keystone: Add sci-clk driver support
-Date: Wed, 7 Dec 2016 16:13:48 -0800
-Message-ID: <20161208001348.GC5423@codeaurora.org>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-4-git-send-email-t-kristo@ti.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
+Date: Thu, 08 Dec 2016 01:13:01 +0100
+Message-ID: <1526421.aCsca4sLnR@aspire.rjw.lan>
+References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org> <CAPDyKFqFnk6+Rfdzp-4wzEy8KNkq=03q5qfbkQD4pPNF0Pc6ww@mail.gmail.com> <1616414.c1s7NxTqJS@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1477053961-27128-4-git-send-email-t-kristo@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk@vger.kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, nm@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1616414.c1s7NxTqJS-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21, Tero Kristo wrote:
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 6a8ac04..dce08a7 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -169,6 +169,15 @@ config COMMON_CLK_NXP
->  	---help---
->  	  Support for clock providers on NXP platforms.
->  
-> +config TI_SCI_CLK
-> +	tristate "TI System Control Interface clock drivers"
-> +	depends on (TI_SCI_PROTOCOL && COMMON_CLK_KEYSTONE) || COMPILE_TEST
+On Thursday, December 01, 2016 10:21:59 PM Rafael J. Wysocki wrote:
+> On Tuesday, November 29, 2016 09:47:03 AM Ulf Hansson wrote:
+> > On 10 November 2016 at 20:58, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > > On Mon, Nov 07, 2016 at 12:14:28PM +0100, Ulf Hansson wrote:
+> > >> On 3 November 2016 at 22:54, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > >> > Re-using idle state definition provided by arm,idle-state for domain
+> > >> > idle states creates a lot of confusion and limits further evolution of
+> > >> > the domain idle definition. To keep things clear and simple, define a
+> > >> > idle states for domain using a new compatible "domain-idle-state".
+> > >> >
+> > >> > Fix existing PM domains code to look for the newly defined compatible.
+> > >> >
+> > >> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > >> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >> > Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >> > ---
+> > >> >  .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
+> > >> >  .../devicetree/bindings/power/power_domain.txt     |  8 +++---
+> > >> >  drivers/base/power/domain.c                        |  2 +-
+> > >> >  3 files changed, 38 insertions(+), 5 deletions(-)
+> > >> >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > >> >
+> > >> > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > >> > new file mode 100644
+> > >> > index 0000000..eefc7ed
+> > >> > --- /dev/null
+> > >> > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > >> > @@ -0,0 +1,33 @@
+> > >> > +PM Domain Idle State Node:
+> > >> > +
+> > >> > +A domain idle state node represents the state parameters that will be used to
+> > >> > +select the state when there are no active components in the domain.
+> > >> > +
+> > >> > +The state node has the following parameters -
+> > >> > +
+> > >> > +- compatible:
+> > >> > +       Usage: Required
+> > >> > +       Value type: <string>
+> > >> > +       Definition: Must be "domain-idle-state".
+> > >> > +
+> > >> > +- entry-latency-us
+> > >> > +       Usage: Required
+> > >> > +       Value type: <prop-encoded-array>
+> > >> > +       Definition: u32 value representing worst case latency in
+> > >> > +                   microseconds required to enter the idle state.
+> > >> > +                   The exit-latency-us duration may be guaranteed
+> > >> > +                   only after entry-latency-us has passed.
+> > >>
+> > >> As we anyway are going to change this, why not use an u64 and have the
+> > >> value in ns instead of us?
+> > >
+> > > I can't imagine that you would need more resolution or range. For times
+> > > less than 1us, s/w and register access times are going to dominate the
+> > > time.
+> > >
+> > > Unless there is a real need, I'd keep alignment with the existing
+> > > binding.
+> > 
+> > Rob, are you fine with this? I thought it would be great to get this
+> > in for 4.10 rc1.
+> 
+> Rob, any objections here?
 
-Given that we depend on COMMON_CLK_KEYSTONE (just for the
-Makefile dependency?) this should be moved to right below the
-COMMON_CLK_KEYSTONE config. And we should consider making a
-Kconfig file in drivers/clk/keystone/ to hold both those configs
-instead of having them at the toplevel.
+Well, no objections, so applied.
 
-> +	default TI_SCI_PROTOCOL
-> +	---help---
-> +	  This adds the clock driver support over TI System Control Interface.
-> +	  If you wish to use clock resources from the PMMC firmware, say Y.
-> +	  Otherwise, say N.
-> +
->  config COMMON_CLK_PALMAS
->  	tristate "Clock driver for TI Palmas devices"
->  	depends on MFD_PALMAS
-> diff --git a/drivers/clk/keystone/Makefile b/drivers/clk/keystone/Makefile
-> index 0477cf6..0e7993d 100644
-> --- a/drivers/clk/keystone/Makefile
-> +++ b/drivers/clk/keystone/Makefile
-> @@ -1 +1,2 @@
->  obj-y			+= pll.o gate.o
-> +obj-$(CONFIG_TI_SCI_CLK)	+= sci-clk.o
-> diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
-> new file mode 100644
-> index 0000000..f6af5bd
-> --- /dev/null
-> +++ b/drivers/clk/keystone/sci-clk.c
-> @@ -0,0 +1,589 @@
-[...]
-> +
-> +/**
-> + * sci_clk_recalc_rate - Get clock rate for a TI SCI clock
-> + * @hw: clock to get rate for
-> + * @parent_rate: parent rate provided by common clock framework, not used
-> + *
-> + * Gets the current clock rate of a TI SCI clock. Returns the current
-> + * clock rate, or zero in failure.
-> + */
-> +static unsigned long sci_clk_recalc_rate(struct clk_hw *hw,
-> +					 unsigned long parent_rate)
-> +{
-> +	struct sci_clk *clk = to_sci_clk(hw);
-> +	u64 freq;
-> +	int ret;
-> +
-> +	ret = clk->provider->ops->get_freq(clk->provider->sci, clk->dev_id,
-> +					   clk->clk_id, &freq);
-> +	if (ret) {
-> +		dev_err(clk->provider->dev,
-> +			"recalc-rate failed for dev=%d, clk=%d, ret=%d\n",
-> +			clk->dev_id, clk->clk_id, ret);
-> +		return 0;
-> +	}
-> +
-> +	return (u32)freq;
+Thanks,
+Rafael
 
-Do we need the cast? sizeof(u32) doesn't always equal
-sizeof(unsigned long).
-
-> +
-> +/**
-> + * _sci_clk_get - Gets a handle for an SCI clock
-> + * @provider: Handle to SCI clock provider
-> + * @dev_id: device ID for the clock to register
-> + * @clk_id: clock ID for the clock to register
-> + *
-> + * Gets a handle to an existing TI SCI hw clock, or builds a new clock
-> + * entry and registers it with the common clock framework. Called from
-> + * the common clock framework, when a corresponding of_clk_get call is
-> + * executed, or recursively from itself when parsing parent clocks.
-> + * Returns a pointer to the hw clock struct, or ERR_PTR value in failure.
-> + */
-> +static struct clk_hw *_sci_clk_build(struct sci_clk_provider *provider,
-> +				     u16 dev_id, u8 clk_id)
-> +{
-> +	struct clk_init_data init = { NULL };
-> +	struct sci_clk *sci_clk = NULL;
-> +	char *name = NULL;
-> +	char **parent_names = NULL;
-> +	int i;
-> +	int ret;
-> +
-> +	sci_clk = devm_kzalloc(provider->dev, sizeof(*sci_clk), GFP_KERNEL);
-> +	if (!sci_clk)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	sci_clk->dev_id = dev_id;
-> +	sci_clk->clk_id = clk_id;
-> +	sci_clk->provider = provider;
-> +
-> +	ret = provider->ops->get_num_parents(provider->sci, dev_id,
-> +					     clk_id,
-> +					     &init.num_parents);
-> +	if (ret)
-> +		goto err;
-> +
-> +	name = kasprintf(GFP_KERNEL, "%s:%d:%d", dev_name(provider->dev),
-> +			 sci_clk->dev_id, sci_clk->clk_id);
-> +
-> +	init.name = name;
-> +
-> +	if (init.num_parents < 2)
-> +		init.num_parents = 0;
-
-This deserves a comment. Why is num_parents == 1 the same as
-num_parents == 0?
-
-> +
-> +	if (init.num_parents) {
-> +		parent_names = devm_kcalloc(provider->dev, init.num_parents,
-> +					    sizeof(char *), GFP_KERNEL);
-> +
-> +		if (!parent_names) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +
-> +		for (i = 0; i < init.num_parents; i++) {
-> +			char *parent_name;
-> +
-> +			parent_name = kasprintf(GFP_KERNEL, "%s:%d:%d",
-> +						dev_name(provider->dev),
-> +						sci_clk->dev_id,
-> +						sci_clk->clk_id + 1 + i);
-> +			if (!parent_name) {
-> +				ret = -ENOMEM;
-> +				goto err;
-> +			}
-> +			parent_names[i] = parent_name;
-> +		}
-> +		init.parent_names = (const char * const *)parent_names;
-
-Does that really need a cast?
-
-> +	}
-> +
-> +	init.ops = &sci_clk_ops;
-> +	sci_clk->hw.init = &init;
-> +
-> +	ret = devm_clk_hw_register(provider->dev, &sci_clk->hw);
-> +	if (ret) {
-> +		dev_err(provider->dev, "failed clk register with %d\n", ret);
-> +		goto err;
-> +	}
-> +	kfree(name);
-> +
-> +	return &sci_clk->hw;
-> +
-> +err:
-> +	if (parent_names) {
-> +		for (i = 0; i < init.num_parents; i++)
-> +			devm_kfree(provider->dev, parent_names[i]);
-> +
-> +		devm_kfree(provider->dev, parent_names);
-
-Shouldn't we be freeing the parent names all the time? It should
-be deep copied in the framework.
-
-> +	}
-> +
-> +	devm_kfree(provider->dev, sci_clk);
-> +
-> +	kfree(name);
-> +
-> +	return ERR_PTR(ret);
-> +}
-[..]
-> +
-> +static int ti_sci_init_clocks(struct sci_clk_provider *p)
-> +{
-> +	struct sci_clk_data *data = p->clocks;
-> +	struct clk_hw *hw;
-> +	int i;
-> +
-> +	while (data->num_clks) {
-> +		data->clocks = devm_kcalloc(p->dev, data->num_clks,
-> +					    sizeof(struct sci_clk),
-> +					    GFP_KERNEL);
-> +		if (!data->clocks)
-> +			return -ENOMEM;
-> +
-> +		for (i = 0; i < data->num_clks; i++) {
-> +			hw = _sci_clk_build(p, data->dev, i);
-> +			if (!IS_ERR(hw)) {
-> +				data->clocks[i] = hw;
-> +				continue;
-> +			}
-> +
-> +			/* Skip any holes in the clock lists */
-> +			if (PTR_ERR(hw) == -ENODEV)
-
-Does this happen? I don't see where _sci_clk_build() returns
--ENODEV.
-
-> +				continue;
-> +
-> +			return PTR_ERR(hw);
-> +		}
-> +		data++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-> +
-> +/**
-> + * ti_sci_clk_probe - Probe function for the TI SCI clock driver
-> + * @pdev: platform device pointer to be probed
-> + *
-> + * Probes the TI SCI clock device. Allocates a new clock provider
-> + * and registers this to the common clock framework. Also applies
-> + * any required flags to the identified clocks via clock lists
-> + * supplied from DT. Returns 0 for success, negative error value
-> + * for failure.
-> + */
-> +static int ti_sci_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct sci_clk_provider *provider;
-> +	const struct ti_sci_handle *handle;
-> +	struct sci_clk_data *data;
-> +	int ret;
-> +
-> +	data = (struct sci_clk_data *)
-> +		of_match_node(ti_sci_clk_of_match, np)->data;
-
-Just use of_device_get_match_data() instead.
-
-> +
-> +	handle = devm_ti_sci_get_handle(dev);
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +
-> +	provider = devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);
-> +	if (!provider)
-> +		return -ENOMEM;
-> +
-> +	provider->clocks = data;
-> +
-> +	provider->sci = handle;
-> +	provider->ops = &handle->ops.clk_ops;
-> +	provider->dev = dev;
-> +
-> +	ti_sci_init_clocks(provider);
-
-And if this fails?
-
-> +
-> +	ret = of_clk_add_hw_provider(np, sci_clk_get, provider);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-Just "return of_clk_add_hw_provider()" please.
-
-> +}
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
