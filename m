@@ -1,82 +1,45 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH] misc: eeprom: implement compatible DT probing
-Date: Thu, 8 Dec 2016 19:23:03 +0100
-Message-ID: <95d9c739-8a69-b990-2840-b5381d54a99d@axentia.se>
-References: <1481219279-6982-1-git-send-email-linus.walleij@linaro.org>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/6] net: ethernet: ti: cpts: add support of cpts
+ HW_TS_PUSH
+Date: Thu, 8 Dec 2016 13:04:11 -0600
+Message-ID: <58eea45f-b8fe-6892-e784-b41638c62fd8@ti.com>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-4-grygorii.strashko@ti.com>
+ <20161203232130.GA17944@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481219279-6982-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20161203232130.GA17944@netboy>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-12-08 18:47, Linus Walleij wrote:
-> The compatible string for an EEPROM in the device tree is currently
-> completely ignored by the kernel, simply stated it will not make the
-> corresponding AT24 EEPROM driver probe properly. It is instead still
-> relying on the DT node name to be set to one of the I2C device IDs
-> which works due to a side effect in the I2C DT parsing code.
+
+
+On 12/03/2016 05:21 PM, Richard Cochran wrote:
+> On Mon, Nov 28, 2016 at 05:04:25PM -0600, Grygorii Strashko wrote:
+>> This also change overflow polling period when HW_TS_PUSH feature is
+>> enabled - overflow check work will be scheduled more often (every
+>> 200ms) for proper HW_TS_PUSH events reporting.
 > 
-> Fix this up by making the DT probe mechanism a bit more elaborate:
-> actually match on the compatible strings defined in the device
-> tree bindings in Documentation/devicetree/bindings/eeprom/eeprom.txt:
-> map these to the corresponding I2C IDs by name and look up the
-> magic flags from the I2C ID before proceeding, also make the DT
-> compatible string take precedence.
+> For proper reporting, you should make use of the interrupt.  The small
+> fifo (16 iirc) could very well overflow in 200 ms.  The interrupt
+> handler should read out the entire fifo at each interrupt.
 > 
-> Keep the second DT parsing callback that sets up per-chip flags as
-> this needs to happen after mangling the magic flags passed from the
-> I2C ID table.
-> 
-> All vendor compatible strings listed in the binding document are
-> added to the driver.
-> 
-> After this it is possible to name the device tree node for the EEPROM
-> whatever you actually like to call it, and the probing will be done
-> from the compatible string.
-> 
-> Before this patch, the following device tree node does not probe,
-> which might be considered a bug:
-> 
-> eeprom@52 {
-> 	compatible = "atmel,at24c128";
 
-The way I read it, that should be "atmel,24c128", i.e. w/o the "at" prefix.
+huh. Seems this is not really good idea, because MISC Irq will be 
+triggered for *any* CPTS event and there is no way to enable it just for
+HW_TS_PUSH. So, this doesn't work will with current code for RX/TX timestamping
+(which uses polling mode). + runtime overhead in net RX/TX caused by 
+triggering more interrupts. 
 
-> 	reg = <0x52>;
-> 	pagesize = <64>;
-> };
-> 
-> After this patch, the driver probes fine from this node.
+May be, overflow check/polling timeout can be made configurable (module parameter). 
 
-The bindings says:
-
-	Required properties:
-
-	  - compatible should be "<manufacturer>,<type>", like these:
-
-and then lists the compatibles you have added to the match table (but you
-have this extra "at" prefix for the atmel manufacturer).
-
-The way I read the above, you are free to use any manufacturer and still
-have it work, and indeed, I have success with this node:
-
-	eeprom@50 {
-		compatible = "nxp,24c02";
-		reg = <0x50>;
-		pagesize = <16>;
-	};
-
-I fear that your patch will regress this matching on the wildcard
-manufacturer. I haven't tested that though, but there are enough
-question marks anyway...
-
-Cheers,
-Peter
-
+-- 
+regards,
+-grygorii
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
