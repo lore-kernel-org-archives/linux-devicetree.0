@@ -1,106 +1,120 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 09/12] ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
-Date: Wed,  7 Dec 2016 16:57:50 -0800
-Message-ID: <1481158673-15937-10-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH 06/12] ARM: dts: imx6-sabreauto: create i2cmux for i2c3
+Date: Wed,  7 Dec 2016 16:57:47 -0800
+Message-ID: <1481158673-15937-7-git-send-email-steve_longerbeam@mentor.com>
 References: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481158673-15937-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, tomi.valkeinen@ti.com, p.zabel@pengutronix.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Enables the ADV7180 decoder sensor. The ADV7180 connects to the
-parallel-bus mux input on ipu1_csi0_mux.
+The sabreauto uses a steering pin to select between the SDA signal on
+i2c3 bus, and a data-in pin for an SPI NOR chip. Use i2cmux to control
+this steering pin. Idle state of the i2cmux selects SPI NOR. This is not
+a classic way to use i2cmux, since one side of the mux selects something
+other than an i2c bus, but it works and is probably the cleanest
+solution. Note that if one thread is attempting to access SPI NOR while
+another thread is accessing i2c3, the SPI NOR access will fail since the
+i2cmux has selected the SDA pin rather than SPI NOR data-in. This couldn't
+be avoided in any case, the board is not designed to allow concurrent
+i2c3 and SPI NOR functions (and the default device-tree does not enable
+SPI NOR anyway).
 
-On the sabreauto, two analog video inputs are routed to the ADV7180,
-composite on Ain1, and composite on Ain3. Those inputs are defined
-via inputs and input-names under the ADV7180 node. The ADV7180 power
-pin is via max7310_b port expander.
+Devices hanging off i2c3 should now be defined under i2cmux, so
+that the steering pin can be properly controlled to access those
+devices. The port expanders (MAX7310) are thus moved into i2cmux.
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 62 ++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 65 +++++++++++++++++++++-----------
+ 1 file changed, 44 insertions(+), 21 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index d74882a..9222026 100644
+index e000e6f..043d20c 100644
 --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -147,10 +147,48 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 			};
-+
-+			camera: adv7180@21 {
-+				compatible = "adi,adv7180";
-+				reg = <0x21>;
-+				powerdown-gpios = <&max7310_b 2 GPIO_ACTIVE_LOW>;
-+				interrupt-parent = <&gpio1>;
-+				interrupts = <27 0x8>;
-+				inputs = <0x00 0x02>;
-+				input-names = "ADV7180 Composite on Ain1",
-+						"ADV7180 Composite on Ain3";
-+
-+				port {
-+					adv7180_to_ipu1_csi0_mux: endpoint {
-+						remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-+						bus-width = <8>;
-+					};
-+				};
-+			};
- 		};
+@@ -108,6 +108,44 @@
+ 		default-brightness-level = <7>;
+ 		status = "okay";
  	};
++
++	i2cmux {
++		compatible = "i2c-mux-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c3mux>;
++		mux-gpios = <&gpio5 4 0>;
++		i2c-parent = <&i2c3>;
++		idle-state = <0>;
++
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			max7310_a: gpio@30 {
++				compatible = "maxim,max7310";
++				reg = <0x30>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++
++			max7310_b: gpio@32 {
++				compatible = "maxim,max7310";
++				reg = <0x32>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++
++			max7310_c: gpio@34 {
++				compatible = "maxim,max7310";
++				reg = <0x34>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++		};
++	};
  };
  
-+&ipu1_smfc0 {
-+	fim {
-+		enable = <1>;
-+	};
-+};
-+
-+&ipu1_csi0_from_ipu1_csi0_mux {
-+	bus-width = <8>;
-+};
-+
-+&ipu1_csi0_mux_from_parallel_sensor {
-+	remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
-+	bus-width = <8>;
-+};
-+
-+&ipu1_csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ipu1_csi0>;
-+};
-+
  &clks {
- 	assigned-clocks = <&clks IMX6QDL_PLL4_BYPASS_SRC>,
- 			  <&clks IMX6QDL_PLL4_BYPASS>,
-@@ -451,6 +489,30 @@
+@@ -291,27 +329,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
+-
+-	max7310_a: gpio@30 {
+-		compatible = "maxim,max7310";
+-		reg = <0x30>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+-	max7310_b: gpio@32 {
+-		compatible = "maxim,max7310";
+-		reg = <0x32>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+-	max7310_c: gpio@34 {
+-		compatible = "maxim,max7310";
+-		reg = <0x34>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+ };
+ 
+ &iomuxc {
+@@ -419,6 +436,12 @@
  			>;
  		};
  
-+		pinctrl_ipu1_csi0: ipu1grp-csi0 {
++		pinctrl_i2c3mux: i2c3muxgrp {
 +			fsl,pins = <
-+				MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04   0x80000000
-+				MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05   0x80000000
-+				MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06   0x80000000
-+				MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07   0x80000000
-+				MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08   0x80000000
-+				MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09   0x80000000
-+				MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10  0x80000000
-+				MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11  0x80000000
-+				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12  0x80000000
-+				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13  0x80000000
-+				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14  0x80000000
-+				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15  0x80000000
-+				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16  0x80000000
-+				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17  0x80000000
-+				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18  0x80000000
-+				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19  0x80000000
-+				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x80000000
-+				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC    0x80000000
-+				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC   0x80000000
++				MX6QDL_PAD_EIM_A24__GPIO5_IO04 0x80000000
 +			>;
 +		};
 +
@@ -109,8 +123,3 @@ index d74882a..9222026 100644
  				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
