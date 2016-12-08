@@ -1,73 +1,35 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/3] clk: keystone: Add sci-clk driver support
-Date: Thu, 8 Dec 2016 13:10:44 -0800
-Message-ID: <20161208211044.GI5423@codeaurora.org>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-4-git-send-email-t-kristo@ti.com>
- <20161208001348.GC5423@codeaurora.org>
- <cb608729-b617-0eab-5ddf-d78ff47b237e@ti.com>
+Subject: Re: [PATCH 0/3] clkdev: add devm_get_clk_from_child()
+Date: Thu, 8 Dec 2016 14:08:24 -0800
+Message-ID: <20161208220824.GM5423@codeaurora.org>
+References: <874m2jvtmw.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cb608729-b617-0eab-5ddf-d78ff47b237e@ti.com>
+In-Reply-To: <874m2jvtmw.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk@vger.kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, nm@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-DT <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux-Kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org, Linux-ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/08, Tero Kristo wrote:
-> On 08/12/16 02:13, Stephen Boyd wrote:
-> >On 10/21, Tero Kristo wrote:
-> >>diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
-> >>new file mode 100644
-> >>index 0000000..f6af5bd
-> >>--- /dev/null
-> >>+++ b/drivers/clk/keystone/sci-clk.c
+On 12/05, Kuninori Morimoto wrote:
 > 
-> >
-> >>+
-> >>+	handle = devm_ti_sci_get_handle(dev);
-> >>+	if (IS_ERR(handle))
-> >>+		return PTR_ERR(handle);
-> >>+
-> >>+	provider = devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);
-> >>+	if (!provider)
-> >>+		return -ENOMEM;
-> >>+
-> >>+	provider->clocks = data;
-> >>+
-> >>+	provider->sci = handle;
-> >>+	provider->ops = &handle->ops.clk_ops;
-> >>+	provider->dev = dev;
-> >>+
-> >>+	ti_sci_init_clocks(provider);
-> >
-> >And if this fails?
+> Hi Stephen
 > 
-> Yea this is kind of controversial. ti_sci_init_clocks() can fail if
-> any of the clocks registered will fail. I decided to have it this
-> way so that at least some clocks might work in failure cause, and
-> you might have a booting device instead of total lock-up.
-> 
-> Obviously it could be done so that if any clock fails, we would
-> de-register all clocks at that point, but personally I think this is
-> a worse option.
-> 
-> ti_sci_init_clocks could probably be modified to continue
-> registering clocks when a single clock fails though. Currently it
-> aborts at first failure.
-> 
+> This is v5 of "clkdev: add devm_of_clk_get()", but new series.
+> I hope my understanding was correct with your idea.
 
-That sounds like a better approach if we don't care about
-failures to register a clock. Returning a value from a function
-and not using it isn't really a great design.
+Yes this looks good. Given that we're so close to the merge
+window, perhaps I should just merge the first patch into clk-next
+and then it will be ready for anyone who wants to use it? The
+sound patches can be left up to others to handle.
 
-I worry that if we start returning errors from clk_hw_register()
-that something will go wrong though, so really I don't know why
-we want to ignore errors at all. Just for debugging a boot hang?
-Can't we use early console to at least see that this driver is
-failing to probe and debug that way?
+> 
+> Kuninori Morimoto (3):
+>   1) clkdev: add devm_get_clk_from_child()
+>   2) ASoC: simple-card: use devm_get_clk_from_child()
+>   3) ASoC: simple-card-utils: enable clocks/clock-names/clock-ranges
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
