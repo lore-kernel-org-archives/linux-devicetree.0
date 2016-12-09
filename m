@@ -1,79 +1,74 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [RESEND PATCH v2 5/7] drm/vc4: Document VEC DT binding
-Date: Fri, 09 Dec 2016 15:37:15 -0800
-Message-ID: <87bmwkvfmc.fsf@eliezer.anholt.net>
-References: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
- <1480686493-4813-6-git-send-email-boris.brezillon@free-electrons.com>
- <20161209210028.ehylahb6o4mv5eil@rob-hp-laptop>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/3] dt: pwm: lpc32xx: add description of clocks and
+ #pwm-cells properties
+Date: Sat, 10 Dec 2016 01:51:01 +0200
+Message-ID: <015305d5-c22f-52da-9605-f2c19e3108b1@mleia.com>
+References: <20161205014237.1689-1-vz@mleia.com>
+ <20161205014237.1689-2-vz@mleia.com>
+ <20161209214137.2hdugl5rmnwjrus4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1390627523=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161209210028.ehylahb6o4mv5eil@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, dri-devel@lists.freedesktop.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20161209214137.2hdugl5rmnwjrus4@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1390627523==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Hi Rob,
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Rob Herring <robh@kernel.org> writes:
-
-> On Fri, Dec 02, 2016 at 02:48:11PM +0100, Boris Brezillon wrote:
->> Document the DT binding for the VEC (Video EnCoder) IP.
->>=20
->> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+On 12/09/2016 11:41 PM, Rob Herring wrote:
+> On Mon, Dec 05, 2016 at 03:42:37AM +0200, Vladimir Zapolskiy wrote:
+>> NXP LPC32xx SoCs have two simple independent PWM controllers with a single
+>> output each, in this case there is no need to specify PWM channel argument
+>> on client side, one cell for setting PWM output frequency is sufficient.
+>>
+>> Another added to the description property 'clocks' has a standard meaning
+>> of a controller supply clock, in the LPC32xx User's Manual the clock is
+>> denoted as PWM1_CLK or PWM2_CLK clock.
+>>
+>> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 >> ---
->>  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt | 14 +++++++=
-+++++++
->>  1 file changed, 14 insertions(+)
->
-> Acked-by: Rob Herring <robh@kernel.org>
+>>  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>> index 74b5bc5..523d796 100644
+>> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>> @@ -3,15 +3,22 @@ LPC32XX PWM controller
+>>  Required properties:
+>>  - compatible: should be "nxp,lpc3220-pwm"
+>>  - reg: physical base address and length of the controller's registers
+>> +- clocks: clock phandle and clock specifier pair
+>> +- #pwm-cells: should be 1, the cell is used to specify the period in
+>> +  nanoseconds.
+> 
+> This use of the cell is a bit odd as the period is s/w config and this 
+> would typically be a channel selection or such.
 
-Thanks.  Pulling the series now.
+this is a classic PWM channel configuration property for PWM consumers
+described in DT, for instance PWM frequency for display panel backlight
+on boot.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+I think >90% of PWM controllers with device tree bindings have this
+argument in #pwm-cells, from bindings/pwm/pwm.txt :
 
------BEGIN PGP SIGNATURE-----
+    pwm-specifier typically encodes the chip-relative PWM number and
+    the PWM period in nanoseconds.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlhLQCsACgkQtdYpNtH8
-nui+OhAAsiDmuUuD2oiKRTGNuDipVV3ziw2Bv62O3UZtoM+6VPfa0eeIMsqZWE2I
-lwZziJcV5zy2eec2w7FnrhDlQ5IIhtvohEEXlfyQ25VDPW9MwMFmcaMof4xS+1Q/
-AyEd/xJiGr51lfwH5HrQK9vYgrXUd9z/bu0BdvZ7g9vMoj4K3Xy+05pCP01+yFLJ
-r2oporNb+iwaePIR+DmocD+PyoaJiAXWTDMqgHmE3Gjle8IxekqZcAY5uXQOG9MK
-IccCC1XfFIx9Ei5EvgFLH40OvgliQ9Kd7Yr3gXRPdrlt3lsWx3JImthLEKUxwje2
-dAVxFiSNtjM2Iq5f1eWh7I73l5A/8wTmEVA+WpFnYmvUJwzFqDreho2ugNg+oudz
-4tbts4Wgo+meupXC3vlgcEyiu624VDlcHO8E45LyqlhjY5uluqQU3zlo0uUenjwW
-J7RH0QQbCGzOXeYT8TyHvsiH9z+nAPMemSL6Dy2Yx4DAoUXdzEd/+FArs2fqVyvL
-oRAnLYRhRXYeyv5IxR9qNTysNimOwslzUA/W5QgTJceaGViXXpfOMbQvzf1u2m1G
-y60fTzRCqjrgQan7agTGXlCUqQi43lB7f2BzaUw3R1251pcXBebIXUIX6hNvPRJR
-ydNfv3mlBnt2lE1AIAUhZk/3j5MIHs6ftD6NLjaVOIOeRA2GzrU=
-=p6X4
------END PGP SIGNATURE-----
---=-=-=--
+You also may skim through phandle arguments of 'pwms' property,
+commonly the second argument is the requested frequency.
 
---===============1390627523==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+In this particular case I just drop PWM channel number, because
+the LPC32xx PWM controller has a single output channel.
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+> What if I want user specified/changed periods?
+> 
 
---===============1390627523==--
+The preset period still can be changed over sysfs in runtime.
+
+--
+With best wishes,
+Vladimir
