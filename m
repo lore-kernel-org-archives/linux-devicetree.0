@@ -1,266 +1,173 @@
-From: Sergio Prado <sergio.prado@e-labworks.com>
-Subject: [PATCH v2 2/2] mmc: host: s3cmci: allow probing from device tree
-Date: Fri,  9 Dec 2016 11:14:44 -0200
-Message-ID: <1481289284-19919-3-git-send-email-sergio.prado@e-labworks.com>
-References: <1481289284-19919-1-git-send-email-sergio.prado@e-labworks.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481289284-19919-1-git-send-email-sergio.prado@e-labworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
-Cc: Sergio Prado <sergio.prado@e-labworks.com>
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v4 2/4] cpuidle:powernv: Add helper function to populate powernv idle states.
+Date: Fri,  9 Dec 2016 19:02:01 +0530
+Message-ID: <36f9cd2d944772d8e414a8240f9ec36eaec65ebd.1481288905.git.ego@linux.vnet.ibm.com>
+References: <cover.1481288905.git.ego@linux.vnet.ibm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1481288905.git.ego@linux.vnet.ibm.com>
+In-Reply-To: <cover.1481288905.git.ego@linux.vnet.ibm.com>
+References: <cover.1481288905.git.ego@linux.vnet.ibm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Allows configuring Samsung S3C24XX MMC/SD/SDIO controller using a device
-tree.
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+In the current code for powernv_add_idle_states, there is a lot of code
+duplication while initializing an idle state in powernv_states table.
+
+Add an inline helper function to populate the powernv_states[] table for
+a given idle state. Invoke this for populating the "Nap", "Fastsleep"
+and the stop states in powernv_add_idle_states.
+
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 ---
- drivers/mmc/host/s3cmci.c | 155 +++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 131 insertions(+), 24 deletions(-)
+ drivers/cpuidle/cpuidle-powernv.c | 85 ++++++++++++++++++++++-----------------
+ include/linux/cpuidle.h           |  1 +
+ 2 files changed, 50 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-index 932a4b1fed33..bfeb90e8ffee 100644
---- a/drivers/mmc/host/s3cmci.c
-+++ b/drivers/mmc/host/s3cmci.c
-@@ -23,6 +23,9 @@
- #include <linux/gpio.h>
- #include <linux/irq.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <plat/gpio-cfg.h>
- #include <mach/dma.h>
-@@ -127,6 +130,22 @@ enum dbg_channels {
- 	dbg_conf  = (1 << 8),
- };
- 
-+struct s3cmci_drv_data {
-+	int is2440;
-+};
-+
-+static const struct s3cmci_drv_data s3c2410_s3cmci_drv_data = {
-+	.is2440 = 0,
-+};
-+
-+static const struct s3cmci_drv_data s3c2412_s3cmci_drv_data = {
-+	.is2440 = 1,
-+};
-+
-+static const struct s3cmci_drv_data s3c2440_s3cmci_drv_data = {
-+	.is2440 = 1,
-+};
-+
- static const int dbgmap_err   = dbg_fail;
- static const int dbgmap_info  = dbg_info | dbg_conf;
- static const int dbgmap_debug = dbg_err | dbg_debug;
-@@ -1241,8 +1260,9 @@ static void s3cmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	case MMC_POWER_ON:
- 	case MMC_POWER_UP:
- 		/* Configure GPE5...GPE10 pins in SD mode */
--		s3c_gpio_cfgall_range(S3C2410_GPE(5), 6, S3C_GPIO_SFN(2),
--				      S3C_GPIO_PULL_NONE);
-+		if (!host->pdev->dev.of_node)
-+			s3c_gpio_cfgall_range(S3C2410_GPE(5), 6, S3C_GPIO_SFN(2),
-+					      S3C_GPIO_PULL_NONE);
- 
- 		if (host->pdata->set_power)
- 			host->pdata->set_power(ios->power_mode, ios->vdd);
-@@ -1254,7 +1274,8 @@ static void s3cmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 
- 	case MMC_POWER_OFF:
- 	default:
--		gpio_direction_output(S3C2410_GPE(5), 0);
-+		if (!host->pdev->dev.of_node)
-+			gpio_direction_output(S3C2410_GPE(5), 0);
- 
- 		if (host->is2440)
- 			mci_con |= S3C2440_SDICON_SDRESET;
-@@ -1544,21 +1565,12 @@ static inline void s3cmci_debugfs_remove(struct s3cmci_host *host) { }
- 
- #endif /* CONFIG_DEBUG_FS */
- 
--static int s3cmci_probe(struct platform_device *pdev)
-+static int s3cmci_probe_pdata(struct s3cmci_host *host)
- {
--	struct s3cmci_host *host;
--	struct mmc_host	*mmc;
--	int ret;
--	int is2440;
--	int i;
-+	struct platform_device *pdev = host->pdev;
-+	int i, ret;
- 
--	is2440 = platform_get_device_id(pdev)->driver_data;
--
--	mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
--	if (!mmc) {
--		ret = -ENOMEM;
--		goto probe_out;
--	}
-+	host->is2440 = platform_get_device_id(pdev)->driver_data;
- 
- 	for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++) {
- 		ret = gpio_request(i, dev_name(&pdev->dev));
-@@ -1568,14 +1580,90 @@ static int s3cmci_probe(struct platform_device *pdev)
- 			for (i--; i >= S3C2410_GPE(5); i--)
- 				gpio_free(i);
- 
--			goto probe_free_host;
-+			return ret;
- 		}
- 	}
- 
-+	return 0;
-+}
-+
-+static int s3cmci_probe_dt(struct s3cmci_host *host)
-+{
-+	struct platform_device *pdev = host->pdev;
-+	struct s3c24xx_mci_pdata *pdata;
-+	const struct s3cmci_drv_data *drvdata;
-+	struct mmc_host *mmc = host->mmc;
-+	int gpio, ret;
-+
-+	drvdata = of_device_get_match_data(&pdev->dev);
-+	if (!drvdata)
-+		return -ENODEV;
-+
-+	host->is2440 = drvdata->is2440;
-+
-+	ret = mmc_of_parse(mmc);
-+	if (ret)
-+		return ret;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	pdata->ocr_avail = mmc->ocr_avail;
-+
-+	if (mmc->caps2 & MMC_CAP2_NO_WRITE_PROTECT)
-+		pdata->no_wprotect = 1;
-+
-+	if (mmc->caps & MMC_CAP_NEEDS_POLL)
-+		pdata->no_detect = 1;
-+
-+	if (mmc->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
-+		pdata->wprotect_invert = 1;
-+
-+	if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
-+		pdata->detect_invert = 1;
-+
-+	gpio = of_get_named_gpio(pdev->dev.of_node, "cd-gpios", 0);
-+	if (gpio_is_valid(gpio)) {
-+		pdata->gpio_detect = gpio;
-+		gpio_free(gpio);
-+	}
-+
-+	gpio = of_get_named_gpio(pdev->dev.of_node, "wp-gpios", 0);
-+	if (gpio_is_valid(gpio)) {
-+		pdata->gpio_wprotect = gpio;
-+		gpio_free(gpio);
-+	}
-+
-+	pdev->dev.platform_data = pdata;
-+
-+	return 0;
-+}
-+
-+static int s3cmci_probe(struct platform_device *pdev)
-+{
-+	struct s3cmci_host *host;
-+	struct mmc_host	*mmc;
-+	int ret;
-+	int i;
-+
-+	mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
-+	if (!mmc) {
-+		ret = -ENOMEM;
-+		goto probe_out;
-+	}
-+
- 	host = mmc_priv(mmc);
- 	host->mmc 	= mmc;
- 	host->pdev	= pdev;
--	host->is2440	= is2440;
-+
-+	if (pdev->dev.of_node)
-+		ret = s3cmci_probe_dt(host);
-+	else
-+		ret = s3cmci_probe_pdata(host);
-+
-+	if (ret)
-+		goto probe_free_host;
- 
- 	host->pdata = pdev->dev.platform_data;
- 	if (!host->pdata) {
-@@ -1586,7 +1674,7 @@ static int s3cmci_probe(struct platform_device *pdev)
- 	spin_lock_init(&host->complete_lock);
- 	tasklet_init(&host->pio_tasklet, pio_tasklet, (unsigned long) host);
- 
--	if (is2440) {
-+	if (host->is2440) {
- 		host->sdiimsk	= S3C2440_SDIIMSK;
- 		host->sdidata	= S3C2440_SDIDATA;
- 		host->clk_div	= 1;
-@@ -1789,8 +1877,9 @@ static int s3cmci_probe(struct platform_device *pdev)
- 	release_mem_region(host->mem->start, resource_size(host->mem));
- 
-  probe_free_gpio:
--	for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
--		gpio_free(i);
-+	if (!pdev->dev.of_node)
-+		for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
-+			gpio_free(i);
- 
-  probe_free_host:
- 	mmc_free_host(mmc);
-@@ -1837,9 +1926,9 @@ static int s3cmci_remove(struct platform_device *pdev)
- 	if (!pd->no_detect)
- 		gpio_free(pd->gpio_detect);
- 
--	for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
--		gpio_free(i);
--
-+	if (!pdev->dev.of_node)
-+		for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
-+			gpio_free(i);
- 
- 	iounmap(host->base);
- 	release_mem_region(host->mem->start, resource_size(host->mem));
-@@ -1848,6 +1937,23 @@ static int s3cmci_remove(struct platform_device *pdev)
+diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
+index 7fe442c..db18af1 100644
+--- a/drivers/cpuidle/cpuidle-powernv.c
++++ b/drivers/cpuidle/cpuidle-powernv.c
+@@ -167,6 +167,24 @@ static int powernv_cpuidle_driver_init(void)
  	return 0;
  }
  
-+static const struct of_device_id s3cmci_dt_match[] = {
-+	{
-+		.compatible = "samsung,s3c2410-sdi",
-+		.data = &s3c2410_s3cmci_drv_data,
-+	},
-+	{
-+		.compatible = "samsung,s3c2412-sdi",
-+		.data = &s3c2412_s3cmci_drv_data,
-+	},
-+	{
-+		.compatible = "samsung,s3c2440-sdi",
-+		.data = &s3c2440_s3cmci_drv_data,
-+	},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
++static inline void add_powernv_state(int index, const char *name,
++				     unsigned int flags,
++				     int (*idle_fn)(struct cpuidle_device *,
++						    struct cpuidle_driver *,
++						    int),
++				     unsigned int target_residency,
++				     unsigned int exit_latency,
++				     u64 psscr_val)
++{
++	strlcpy(powernv_states[index].name, name, CPUIDLE_NAME_LEN);
++	strlcpy(powernv_states[index].desc, name, CPUIDLE_NAME_LEN);
++	powernv_states[index].flags = flags;
++	powernv_states[index].target_residency = target_residency;
++	powernv_states[index].exit_latency = exit_latency;
++	powernv_states[index].enter = idle_fn;
++	stop_psscr_table[index] = psscr_val;
++}
 +
- static const struct platform_device_id s3cmci_driver_ids[] = {
- 	{
- 		.name	= "s3c2410-sdi",
-@@ -1867,6 +1973,7 @@ static int s3cmci_remove(struct platform_device *pdev)
- static struct platform_driver s3cmci_driver = {
- 	.driver	= {
- 		.name	= "s3c-sdi",
-+		.of_match_table = s3cmci_dt_match,
- 	},
- 	.id_table	= s3cmci_driver_ids,
- 	.probe		= s3cmci_probe,
+ static int powernv_add_idle_states(void)
+ {
+ 	struct device_node *power_mgt;
+@@ -236,6 +254,7 @@ static int powernv_add_idle_states(void)
+ 		"ibm,cpu-idle-state-residency-ns", residency_ns, dt_idle_states);
+ 
+ 	for (i = 0; i < dt_idle_states; i++) {
++		unsigned int exit_latency, target_residency;
+ 		/*
+ 		 * If an idle state has exit latency beyond
+ 		 * POWERNV_THRESHOLD_LATENCY_NS then don't use it
+@@ -243,28 +262,33 @@ static int powernv_add_idle_states(void)
+ 		 */
+ 		if (latency_ns[i] > POWERNV_THRESHOLD_LATENCY_NS)
+ 			continue;
++		/*
++		 * Firmware passes residency and latency values in ns.
++		 * cpuidle expects it in us.
++		 */
++		exit_latency = ((unsigned int)latency_ns[i]) / 1000;
++		if (!rc)
++			target_residency = residency_ns[i] / 1000;
++		else
++			target_residency = 0;
+ 
+ 		/*
+-		 * Cpuidle accepts exit_latency and target_residency in us.
+-		 * Use default target_residency values if f/w does not expose it.
++		 * For nap and fastsleep, use default target_residency
++		 * values if f/w does not expose it.
+ 		 */
+ 		if (flags[i] & OPAL_PM_NAP_ENABLED) {
++			if (!rc)
++				target_residency = 100;
+ 			/* Add NAP state */
+-			strcpy(powernv_states[nr_idle_states].name, "Nap");
+-			strcpy(powernv_states[nr_idle_states].desc, "Nap");
+-			powernv_states[nr_idle_states].flags = 0;
+-			powernv_states[nr_idle_states].target_residency = 100;
+-			powernv_states[nr_idle_states].enter = nap_loop;
++			add_powernv_state(nr_idle_states, "Nap",
++					  CPUIDLE_FLAG_NONE, nap_loop,
++					  target_residency, exit_latency, 0);
+ 		} else if ((flags[i] & OPAL_PM_STOP_INST_FAST) &&
+ 				!(flags[i] & OPAL_PM_TIMEBASE_STOP)) {
+-			strncpy(powernv_states[nr_idle_states].name,
+-				names[i], CPUIDLE_NAME_LEN);
+-			strncpy(powernv_states[nr_idle_states].desc,
+-				names[i], CPUIDLE_NAME_LEN);
+-			powernv_states[nr_idle_states].flags = 0;
+-
+-			powernv_states[nr_idle_states].enter = stop_loop;
+-			stop_psscr_table[nr_idle_states] = psscr_val[i];
++			add_powernv_state(nr_idle_states, names[i],
++					  CPUIDLE_FLAG_NONE, stop_loop,
++					  target_residency, exit_latency,
++					  psscr_val[i]);
+ 		}
+ 
+ 		/*
+@@ -274,32 +298,21 @@ static int powernv_add_idle_states(void)
+ #ifdef CONFIG_TICK_ONESHOT
+ 		if (flags[i] & OPAL_PM_SLEEP_ENABLED ||
+ 			flags[i] & OPAL_PM_SLEEP_ENABLED_ER1) {
++			if (!rc)
++				target_residency = 300000;
+ 			/* Add FASTSLEEP state */
+-			strcpy(powernv_states[nr_idle_states].name, "FastSleep");
+-			strcpy(powernv_states[nr_idle_states].desc, "FastSleep");
+-			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIMER_STOP;
+-			powernv_states[nr_idle_states].target_residency = 300000;
+-			powernv_states[nr_idle_states].enter = fastsleep_loop;
++			add_powernv_state(nr_idle_states, "FastSleep",
++					  CPUIDLE_FLAG_TIMER_STOP,
++					  fastsleep_loop,
++					  target_residency, exit_latency, 0);
+ 		} else if ((flags[i] & OPAL_PM_STOP_INST_DEEP) &&
+ 				(flags[i] & OPAL_PM_TIMEBASE_STOP)) {
+-			strncpy(powernv_states[nr_idle_states].name,
+-				names[i], CPUIDLE_NAME_LEN);
+-			strncpy(powernv_states[nr_idle_states].desc,
+-				names[i], CPUIDLE_NAME_LEN);
+-
+-			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIMER_STOP;
+-			powernv_states[nr_idle_states].enter = stop_loop;
+-			stop_psscr_table[nr_idle_states] = psscr_val[i];
++			add_powernv_state(nr_idle_states, names[i],
++					  CPUIDLE_FLAG_TIMER_STOP, stop_loop,
++					  target_residency, exit_latency,
++					  psscr_val[i]);
+ 		}
+ #endif
+-		powernv_states[nr_idle_states].exit_latency =
+-				((unsigned int)latency_ns[i]) / 1000;
+-
+-		if (!rc) {
+-			powernv_states[nr_idle_states].target_residency =
+-				((unsigned int)residency_ns[i]) / 1000;
+-		}
+-
+ 		nr_idle_states++;
+ 	}
+ out:
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index bb31373..c4e10f8 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -62,6 +62,7 @@ struct cpuidle_state {
+ };
+ 
+ /* Idle State Flags */
++#define CPUIDLE_FLAG_NONE       (0x00)
+ #define CPUIDLE_FLAG_COUPLED	(0x02) /* state applies to multiple cpus */
+ #define CPUIDLE_FLAG_TIMER_STOP (0x04)  /* timer is stopped on this state */
+ 
 -- 
-1.9.1
+1.9.4
+
