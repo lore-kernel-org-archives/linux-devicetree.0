@@ -1,50 +1,128 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH] ARM: dts: am335x-chilisom: Wakeup from RTC-only state by power on event
-Date: Fri,  9 Dec 2016 12:33:27 +0100
-Message-ID: <20161209113327.19727-1-m.niestroj@grinn-global.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 02/12] ARM: dts: imx6qdl: rename ipu client nodes
+Date: Fri, 09 Dec 2016 12:39:30 +0100
+Message-ID: <1481283570.2520.17.camel@pengutronix.de>
+References: <1481158673-15937-1-git-send-email-steve_longerbeam@mentor.com>
+         <1481158673-15937-3-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481158673-15937-3-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On chiliSOM TPS65217 nWAKEUP pin is connected to AM335x internal RTC
-EXT_WAKEUP input. In RTC-only state TPS65217 is notifying about power on
-events (such as power buton presses) by setting nWAKEUP output
-low. After that it waits 5s for proper device boot. Currently it doesn't
-happen, as the processor doesn't listen for such events. Consequently
-TPS65217 changes state from SLEEP (RTC-only state) to OFF.
+Hi Steve,
 
-Enable EXT_WAKEUP input of AM335x's RTC, so the processor can properly
-detect power on events and recover immediately from RTC-only states,
-without powering off RTC and losing time.
+Am Mittwoch, den 07.12.2016, 16:57 -0800 schrieb Steve Longerbeam:
+> To allow for IPU client devices that are composed of more than one
+> port for input and output (SMFC and IC), change the nodes from being
+> a single port node to nodes that can contain multiple ports. Rename
+> the nodes to use the following format: "ipu<id>_<subunit>".
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
----
- arch/arm/boot/dts/am335x-chilisom.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Don't do this. These are not IPU client device nodes, they are input and
+output port nodes according to the of graph bindings, as described in
+Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt.
 
-diff --git a/arch/arm/boot/dts/am335x-chilisom.dtsi b/arch/arm/boot/dts/am335x-chilisom.dtsi
-index f9ee585..1b43ebd 100644
---- a/arch/arm/boot/dts/am335x-chilisom.dtsi
-+++ b/arch/arm/boot/dts/am335x-chilisom.dtsi
-@@ -124,6 +124,14 @@
- 
- &rtc {
- 	system-power-controller;
-+
-+	pinctrl-0 = <&ext_wakeup>;
-+	pinctrl-names = "default";
-+
-+	ext_wakeup: ext-wakeup {
-+		pins = "ext_wakeup0";
-+		input-enable;
-+	};
- };
- 
- /* NAND Flash */
--- 
-2.10.2
+They happen to match to the CSI0/1 and DI0/1 modules, but really what is
+described here are the external connections of the IPU. The IPU
+internals are not described in the device tree at all.
+
+regards
+Philipp
+
+> The IPUv3 driver will then need to lookup the client nodes by name
+> rather than by port id.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6q.dtsi   | 12 ++++++------
+>  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++++------
+>  2 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index e9a5d0b..2b261ba 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -141,18 +141,18 @@
+>  			clock-names = "bus", "di0", "di1";
+>  			resets = <&src 4>;
+>  
+> -			ipu2_csi0: port@0 {
+> +			ipu2_csi0: ipu2_csi@0 {
+>  				reg = <0>;
+>  			};
+>  
+> -			ipu2_csi1: port@1 {
+> +			ipu2_csi1: ipu2_csi@1 {
+>  				reg = <1>;
+>  			};
+>  
+> -			ipu2_di0: port@2 {
+> +			ipu2_di0: ipu2_di@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> -				reg = <2>;
+> +				reg = <0>;
+>  
+>  				ipu2_di0_disp0: disp0-endpoint {
+>  				};
+> @@ -174,10 +174,10 @@
+>  				};
+>  			};
+>  
+> -			ipu2_di1: port@3 {
+> +			ipu2_di1: ipu2_di@1 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> -				reg = <3>;
+> +				reg = <1>;
+>  
+>  				ipu2_di1_hdmi: hdmi-endpoint {
+>  					remote-endpoint = <&hdmi_mux_3>;
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index e01e5d5..2465187 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -1226,18 +1226,18 @@
+>  			clock-names = "bus", "di0", "di1";
+>  			resets = <&src 2>;
+>  
+> -			ipu1_csi0: port@0 {
+> +			ipu1_csi0: ipu1_csi@0 {
+>  				reg = <0>;
+>  			};
+>  
+> -			ipu1_csi1: port@1 {
+> +			ipu1_csi1: ipu1_csi@1 {
+>  				reg = <1>;
+>  			};
+>  
+> -			ipu1_di0: port@2 {
+> +			ipu1_di0: ipu1_di@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> -				reg = <2>;
+> +				reg = <0>;
+>  
+>  				ipu1_di0_disp0: disp0-endpoint {
+>  				};
+> @@ -1259,10 +1259,10 @@
+>  				};
+>  			};
+>  
+> -			ipu1_di1: port@3 {
+> +			ipu1_di1: ipu1_di@1 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> -				reg = <3>;
+> +				reg = <1>;
+>  
+>  				ipu1_di1_disp1: disp1-endpoint {
+>  				};
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
