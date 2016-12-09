@@ -1,88 +1,76 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v2 06/11] mfd: axp20x: add separate MFD cell for AXP223
-Date: Fri,  9 Dec 2016 12:04:14 +0100
-Message-ID: <20161209110419.28981-7-quentin.schulz@free-electrons.com>
-References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/8] mfd: sun6i-prcm: Add codec analog controls
+ sub-device for Allwinner A23
+Date: Fri, 9 Dec 2016 11:22:38 +0000
+Message-ID: <20161209112238.GM3625@dell.home>
+References: <20161125123442.28410-1-wens@csie.org>
+ <20161125123442.28410-2-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+Content-Disposition: inline
+In-Reply-To: <20161125123442.28410-2-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
-Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mylene Josserand <mylene.josserand@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The AXP223 shares most of its logic with the AXP221 but has some
-differences for the VBUS power supply driver. Thus, to probe the driver
-with the correct compatible, the AXP221 and the AXP223 now have separate
-MFD cells.
+On Fri, 25 Nov 2016, Chen-Yu Tsai wrote:
 
-AXP221 MFD cells are renamed from axp22x_cells to axp221_cells to avoid
-confusion.
+> The PRCM block on the A23 contains a message box like interface to
+> the registers for the analog path controls of the internal codec.
+> 
+> Add a sub-device for it.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/mfd/sun6i-prcm.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
----
+Applied for v4.11, thanks.
 
-v2:
- - correct indentation,
- - renaming axp22x_cells to axp221_cells to avoid confusion between axp22x,
-axp221 and axp223
+> diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
+> index 011fcc555945..2b658bed47db 100644
+> --- a/drivers/mfd/sun6i-prcm.c
+> +++ b/drivers/mfd/sun6i-prcm.c
+> @@ -12,6 +12,9 @@
+>  #include <linux/init.h>
+>  #include <linux/of.h>
+>  
+> +#define SUN8I_CODEC_ANALOG_BASE	0x1c0
+> +#define SUN8I_CODEC_ANALOG_SIZE	0x4
+> +
+>  struct prcm_data {
+>  	int nsubdevs;
+>  	const struct mfd_cell *subdevs;
+> @@ -57,6 +60,10 @@ static const struct resource sun6i_a31_apb0_rstc_res[] = {
+>  	},
+>  };
+>  
+> +static const struct resource sun8i_codec_analog_res[] = {
+> +	DEFINE_RES_MEM(SUN8I_CODEC_ANALOG_BASE, SUN8I_CODEC_ANALOG_SIZE),
+> +};
+> +
+>  static const struct mfd_cell sun6i_a31_prcm_subdevs[] = {
+>  	{
+>  		.name = "sun6i-a31-ar100-clk",
+> @@ -109,6 +116,12 @@ static const struct mfd_cell sun8i_a23_prcm_subdevs[] = {
+>  		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
+>  		.resources = sun6i_a31_apb0_rstc_res,
+>  	},
+> +	{
+> +		.name		= "sun8i-codec-analog",
+> +		.of_compatible	= "allwinner,sun8i-a23-codec-analog",
+> +		.num_resources	= ARRAY_SIZE(sun8i_codec_analog_res),
+> +		.resources	= sun8i_codec_analog_res,
+> +	},
+>  };
+>  
+>  static const struct prcm_data sun6i_a31_prcm_data = {
 
- drivers/mfd/axp20x.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 6ee2cc6..b31f123 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -591,7 +591,22 @@ static struct mfd_cell axp20x_cells[] = {
- 	},
- };
- 
--static struct mfd_cell axp22x_cells[] = {
-+static struct mfd_cell axp221_cells[] = {
-+	{
-+		.name		= "axp20x-pek",
-+		.num_resources	= ARRAY_SIZE(axp22x_pek_resources),
-+		.resources	= axp22x_pek_resources,
-+	}, {
-+		.name		= "axp20x-regulator",
-+	}, {
-+		.name		= "axp20x-usb-power-supply",
-+		.of_compatible	= "x-powers,axp221-usb-power-supply",
-+		.num_resources	= ARRAY_SIZE(axp22x_usb_power_supply_resources),
-+		.resources	= axp22x_usb_power_supply_resources,
-+	},
-+};
-+
-+static struct mfd_cell axp223_cells[] = {
- 	{
- 		.name			= "axp20x-pek",
- 		.num_resources		= ARRAY_SIZE(axp22x_pek_resources),
-@@ -600,7 +615,7 @@ static struct mfd_cell axp22x_cells[] = {
- 		.name			= "axp20x-regulator",
- 	}, {
- 		.name		= "axp20x-usb-power-supply",
--		.of_compatible	= "x-powers,axp221-usb-power-supply",
-+		.of_compatible	= "x-powers,axp223-usb-power-supply",
- 		.num_resources	= ARRAY_SIZE(axp22x_usb_power_supply_resources),
- 		.resources	= axp22x_usb_power_supply_resources,
- 	},
-@@ -793,9 +808,14 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
- 		axp20x->regmap_irq_chip = &axp20x_regmap_irq_chip;
- 		break;
- 	case AXP221_ID:
-+		axp20x->nr_cells = ARRAY_SIZE(axp221_cells);
-+		axp20x->cells = axp221_cells;
-+		axp20x->regmap_cfg = &axp22x_regmap_config;
-+		axp20x->regmap_irq_chip = &axp22x_regmap_irq_chip;
-+		break;
- 	case AXP223_ID:
--		axp20x->nr_cells = ARRAY_SIZE(axp22x_cells);
--		axp20x->cells = axp22x_cells;
-+		axp20x->nr_cells = ARRAY_SIZE(axp223_cells);
-+		axp20x->cells = axp223_cells;
- 		axp20x->regmap_cfg = &axp22x_regmap_config;
- 		axp20x->regmap_irq_chip = &axp22x_regmap_irq_chip;
- 		break;
 -- 
-2.9.3
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
