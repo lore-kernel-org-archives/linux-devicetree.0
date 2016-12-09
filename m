@@ -1,76 +1,47 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/8] mfd: sun6i-prcm: Add codec analog controls
- sub-device for Allwinner A23
-Date: Fri, 9 Dec 2016 11:22:38 +0000
-Message-ID: <20161209112238.GM3625@dell.home>
-References: <20161125123442.28410-1-wens@csie.org>
- <20161125123442.28410-2-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161125123442.28410-2-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mylene Josserand <mylene.josserand@free-electrons.com>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: [PATCH] ARM: dts: am335x-chiliboard: Support power button
+Date: Fri,  9 Dec 2016 12:32:37 +0100
+Message-ID: <20161209113237.19678-1-m.niestroj@grinn-global.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Nov 2016, Chen-Yu Tsai wrote:
+On chiliBoard power button is connected to TPS65217. It signals power
+button presses by asserting interrupt output and allows to read the
+state by i2c bus.
 
-> The PRCM block on the A23 contains a message box like interface to
-> the registers for the analog path controls of the internal codec.
-> 
-> Add a sub-device for it.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  drivers/mfd/sun6i-prcm.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+Handle TPS65217 interrupts and enable notifications of power button
+presses.
 
-Applied for v4.11, thanks.
+Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-chiliboard.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
-> index 011fcc555945..2b658bed47db 100644
-> --- a/drivers/mfd/sun6i-prcm.c
-> +++ b/drivers/mfd/sun6i-prcm.c
-> @@ -12,6 +12,9 @@
->  #include <linux/init.h>
->  #include <linux/of.h>
->  
-> +#define SUN8I_CODEC_ANALOG_BASE	0x1c0
-> +#define SUN8I_CODEC_ANALOG_SIZE	0x4
-> +
->  struct prcm_data {
->  	int nsubdevs;
->  	const struct mfd_cell *subdevs;
-> @@ -57,6 +60,10 @@ static const struct resource sun6i_a31_apb0_rstc_res[] = {
->  	},
->  };
->  
-> +static const struct resource sun8i_codec_analog_res[] = {
-> +	DEFINE_RES_MEM(SUN8I_CODEC_ANALOG_BASE, SUN8I_CODEC_ANALOG_SIZE),
-> +};
-> +
->  static const struct mfd_cell sun6i_a31_prcm_subdevs[] = {
->  	{
->  		.name = "sun6i-a31-ar100-clk",
-> @@ -109,6 +116,12 @@ static const struct mfd_cell sun8i_a23_prcm_subdevs[] = {
->  		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
->  		.resources = sun6i_a31_apb0_rstc_res,
->  	},
-> +	{
-> +		.name		= "sun8i-codec-analog",
-> +		.of_compatible	= "allwinner,sun8i-a23-codec-analog",
-> +		.num_resources	= ARRAY_SIZE(sun8i_codec_analog_res),
-> +		.resources	= sun8i_codec_analog_res,
-> +	},
->  };
->  
->  static const struct prcm_data sun6i_a31_prcm_data = {
-
+diff --git a/arch/arm/boot/dts/am335x-chiliboard.dts b/arch/arm/boot/dts/am335x-chiliboard.dts
+index 2a624b3..3cc870a 100644
+--- a/arch/arm/boot/dts/am335x-chiliboard.dts
++++ b/arch/arm/boot/dts/am335x-chiliboard.dts
+@@ -185,3 +185,13 @@
+ 	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
++
++/* Power button */
++&tps {
++	interrupt-parent = <&intc>;
++	interrupts = <7>; /* NNMI */
++
++	tps65217-pwrbutton {
++		compatible = "ti,tps65217-pwrbutton";
++	};
++};
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
