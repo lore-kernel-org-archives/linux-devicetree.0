@@ -1,68 +1,110 @@
-From: Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] misc: eeprom: implement compatible DT probing
-Date: Fri, 9 Dec 2016 09:18:46 +0100
-Message-ID: <20161209081846.GA1446@katana>
-References: <1481219279-6982-1-git-send-email-linus.walleij@linaro.org>
- <95d9c739-8a69-b990-2840-b5381d54a99d@axentia.se>
- <CACRpkda+_0+y6U-gjt2ym45gi=KZ69hixMw6T=tAQGTGy5J37Q@mail.gmail.com>
- <806f55f3-3fed-572d-4859-7c7dc76c5e08@axentia.se>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/7] MFD: add bindings for STM32 General Purpose Timer
+ driver
+Date: Fri, 9 Dec 2016 08:53:31 +0000
+Message-ID: <20161209085331.GB3625@dell.home>
+References: <1481199650-22484-1-git-send-email-benjamin.gaignard@st.com>
+ <1481199650-22484-2-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <806f55f3-3fed-572d-4859-7c7dc76c5e08-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481199650-22484-2-git-send-email-benjamin.gaignard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
+Sorry to do this Ben.  Not much to do now though!
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Add bindings information for STM32 General Purpose Timer
+> 
+> version 2:
+> - rename stm32-mfd-timer to stm32-gptimer
+> - only keep one compatible string
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../bindings/mfd/stm32-general-purpose-timer.txt   | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt b/Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt
+> new file mode 100644
+> index 0000000..ce67755
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/stm32-general-purpose-timer.txt
+> @@ -0,0 +1,39 @@
+> +STM32 General Purpose Timer driver bindings
+
+This is a great place to describe what we're *actually* trying to
+achieve with this driver, and the worst place to use the term "general
+purpose", since this IP is so much more than that.
 
 
-> Many on the patterns at,24c256 and at24,24c256 (should be probably
-> be atmel,24c256)
+"STM32 Timers
 
-I remember patches fixing that. Since I usually don't take DTS patches,
-I can't recall what happened to them. It might well be that those were
-accepted and meanwhile new bad bindings got in.
+This IP provides 3 types of timer along with PWM functionality.
 
-> but also a few atmel,at24c16 and atmel,at24c128b.
-> I don't understand how those last ones ever worked, if it is not
-> working for you? Especially those with the trailing "b". WTF?
+[...]"
 
-I'd simply assume it was never tested. EEPROMs are often convenience
-storage and not essential for a working board. Also, for historic
-reasons, they are often used via the i2c-dev interface directly, so a
-wrong binding with the kernel driver might simply go unnoticed.
+... then go on to explain what the 3 types are and how they can be
+used.
 
+> +Required parameters:
+> +- compatible: must be "st,stm32-gptimer"
 
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
+I vehemently disagree that this entire IP is a GP Timer.  It contains
+GP timers, sure, but it also contains Advanced and Basic timers.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+IMHO this compatible should be "st,stm32-timers".
 
-iQIcBAEBAgAGBQJYSmjmAAoJEBQN5MwUoCm2z/UP/1sUNQT34QvDguQjOWpI55Vi
-RUxC9cLLh6ybP1p9HDY69Il2PDlIyCyCVtGE0pbNeq5iGq+hmKYh0dIMFmgFg7Xi
-8ZzqjXR/vPYwDv1Tspb8yhfY0CX1FIWmCRbm0tfLU6HMqw3ATddw/sON+mU5qC0d
-a4k+pjxIE84m60Nab5R14lUV+0Vk7vyb6ikPvj53t56hw6rggCC8QXKm1eVQw7lA
-7F+dNR4Lk5/jGbePmoUNlzimYTVIOLsTZxy8LAMd85W8ITLZ7eGS8b0NG0uy7Z8+
-dqOzfUGjGGvLHKDEfDCZfBQ/U7++wKCKgo3XFwR7MZiiECyAwiBIBOOEdr8liRih
-M3IL0DsH221/ZuroGGoTqJtto8Jowh98IpEalpI95d0r00hF0y/COBcypTCt+uB4
-elYKjtsNTKv+pbuMFusomIOxNcTTe7hzruyP8Bt3LqmoUetjtg09xycIKMe7FrjZ
-bz0oLuOO4RNC4HuWENiDzA1yd4xWem+Oh+PFRgP/g46Ls3wL/Sx2NznVgbRGoXIF
-la7SfAU+9RQcJU7n3CiXKu7zIXam8irtFeLv2mneSDV899tBNsaAnXc8dXHkl50k
-4U/seOoj+nGk3YqJVITC3cmPrt++G9gg6rG5SVgu8A9s+Te/BjwnmOhTFaCVKgJ4
-4nMUGyZpmLRLk0jggmfl
-=/IDQ
------END PGP SIGNATURE-----
+And the file name of both this and the *.c file should reflect that
+too.
 
---T4sUOijqQbZv57TR--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Remainder looks nice.
+
+> +- reg:			Physical base address and length of the controller's
+> +			registers.
+> +- clock-names: 		Set to "clk_int".
+> +- clocks: 		Phandle to the clock used by the timer module.
+> +			For Clk properties, please refer to ../clock/clock-bindings.txt
+> +
+> +Optional parameters:
+> +- resets:		Phandle to the parent reset controller.
+> +			See ../reset/st,stm32-rcc.txt
+> +
+> +Optional subnodes:
+> +- pwm:			See ../pwm/pwm-stm32.txt
+> +- timer:		See ../iio/timer/stm32-timer-trigger.txt
+> +
+> +Example:
+> +	timers@40010000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "st,stm32-gptimer";
+> +		reg = <0x40010000 0x400>;
+> +		clocks = <&rcc 0 160>;
+> +		clock-names = "clk_int";
+> +
+> +		pwm@0 {
+
+Out of interest, do you use the "@0", "@1" for anything now?
+
+> +			compatible = "st,stm32-pwm";
+> +			pinctrl-0	= <&pwm1_pins>;
+> +			pinctrl-names	= "default";
+> +		};
+> +
+> +		timer@0 {
+> +			compatible = "st,stm32-timer-trigger";
+> +			reg = <0>;
+> +		};
+> +	};
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
