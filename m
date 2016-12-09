@@ -1,62 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/9] dt-bindings: Document rk3399 Gru/Kevin
-Date: Fri, 9 Dec 2016 11:54:02 -0600
-Message-ID: <20161209175402.gy4mqjaf2rsib7qf@rob-hp-laptop>
-References: <1480645653-36943-1-git-send-email-briannorris@chromium.org>
- <1480645653-36943-7-git-send-email-briannorris@chromium.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH net-next v2] dsa:mv88e6xxx: dispose irq mapping for
+ chip->irq
+Date: Fri, 9 Dec 2016 19:00:29 +0100
+Message-ID: <20161209180029.GK9923@lunn.ch>
+References: <1481106907-30908-1-git-send-email-volodymyr.bendiuga@westermo.se>
+ <20161207141144.GJ18817@lunn.ch>
+ <4388a669-b425-97e0-346b-6b20f7f47f86@westermo.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1480645653-36943-7-git-send-email-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Stephen Barber <smbarber@chromium.org>, linux-arm-kernel@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>
+In-Reply-To: <4388a669-b425-97e0-346b-6b20f7f47f86-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+Cc: vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, volodymyr.bendiuga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 01, 2016 at 06:27:30PM -0800, Brian Norris wrote:
-> Gru is a base dev board for a family of devices, including Kevin. Both
-> utilize Rockchip RK3399, and they share much of their design.
+On Wed, Dec 07, 2016 at 05:40:12PM +0100, Volodymyr Bendiuga wrote:
+> Yes, most of the users of of_irq_get() do not use irq_dispose_mapping().
 > 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.txt | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> But some of them do (some irq chips), and I believe the correct way
+> of doing this is to
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-> index cc4ace6397ab..830e13f5890c 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> @@ -99,6 +99,26 @@ Rockchip platforms device tree bindings
->  		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
->  		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
->  
-> +- Google Gru (dev-board):
-> +    Required root node properties:
-> +      - compatible = "google,gru-rev15", "google,gru-rev14",
-> +		     "google,gru-rev13", "google,gru-rev12",
-> +		     "google,gru-rev11", "google,gru-rev10",
-> +		     "google,gru-rev9", "google,gru-rev8",
-> +		     "google,gru-rev7", "google,gru-rev6",
-> +		     "google,gru-rev5", "google,gru-rev4",
-> +		     "google,gru-rev3", "google,gru-rev2",
-> +		     "google,gru", "rockchip,rk3399";
+> dispose irq mapping, as the description for this function says that
+> it unmaps
+> 
+> the irq, which is mapped by of_irq_parse_and_map(). Not disposing
+> irq might not make
+> 
+> any affect on most drivers, but some, that get EPROBE_DEFER error do
+> need to dispose.
+> 
+> This is what I get when I run the code.
+> 
+> of_irq_put() could be implemented, and it would be a wrapper for
+> irq_dispose_mapping()
+> 
+> as I can see it. Should I do it this way?
 
-All of these are supposed to be specified or just one rev at a time?
+Hi Volodymyr
 
-> +
-> +- Google Kevin:
-> +    Required root node properties:
-> +      - compatible = "google,kevin-rev15", "google,kevin-rev14",
-> +		     "google,kevin-rev13", "google,kevin-rev12",
-> +		     "google,kevin-rev11", "google,kevin-rev10",
-> +		     "google,kevin-rev9", "google,kevin-rev8",
-> +		     "google,kevin-rev7", "google,kevin-rev6",
-> +		     "google,kevin", "google,gru", "rockchip,rk3399";
-> +
->  - mqmaker MiQi:
->      Required root node properties:
->        - compatible = "mqmaker,miqi", "rockchip,rk3288";
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
+Yes, i think having of_irq_put() would be good. It gives some symmetry
+to the API.
+
+   Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
