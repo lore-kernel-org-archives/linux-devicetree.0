@@ -1,43 +1,63 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Subject: [PATCH v3 5/5] mtd: spi-nor: add a label property to jedec,spi-nor
-Date: Fri,  9 Dec 2016 17:49:27 +0100
-Message-ID: <1481302167-28044-6-git-send-email-clg@kaod.org>
-References: <1481302167-28044-1-git-send-email-clg@kaod.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1481302167-28044-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+From: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 0/7] Add support for Video Data Order Adapter
+Date: Fri,  9 Dec 2016 17:58:56 +0100
+Message-ID: <20161209165903.1293-1-m.tretter@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBjYW4gYmUgdXNlZCB0byBlYXNpbHkgaWRlbnRpZnkgYSBjaGlwIG9uIGEgc3lzdGVtIHdp
-dGggbXVsdGlwbGUKY2hpcHMuCgpTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xn
-QGthb2Qub3JnPgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVk
-ZWMsc3BpLW5vci50eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxz
-cGktbm9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVkZWMs
-c3BpLW5vci50eHQKaW5kZXggMmM5MWMwM2U3ZWIwLi5iN2NkMDJhM2ViZTggMTAwNjQ0Ci0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9y
-LnR4dApAQCAtNjUsNiArNjUsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogICAgICAgICAgICAg
-ICAgICAgIGFsbCBjaGlwcyBhbmQgc3VwcG9ydCBmb3IgaXQgY2FuIG5vdCBiZSBkZXRlY3RlZCBh
-dCBydW50aW1lLgogICAgICAgICAgICAgICAgICAgIFJlZmVyIHRvIHlvdXIgY2hpcHMnIGRhdGFz
-aGVldCB0byBjaGVjayBpZiB0aGlzIGlzIHN1cHBvcnRlZAogICAgICAgICAgICAgICAgICAgIGJ5
-IHlvdXIgY2hpcC4KKy0gbGFiZWwgOiBuYW1lIHRvIGFzc2lnbiB0byBtdGQuIElmIG9taXR0ZWQs
-IHRoZSBsYWJlbCBpcyB0aGUgTVREIGRldmljZSBuYW1lLgogCiBFeGFtcGxlOgogCkBAIC03NSw0
-ICs3Niw1IEBAIEV4YW1wbGU6CiAJCXJlZyA9IDwwPjsKIAkJc3BpLW1heC1mcmVxdWVuY3kgPSA8
-NDAwMDAwMDA+OwogCQltMjVwLGZhc3QtcmVhZDsKKwkJbGFiZWwgPSAiU3lzdGVtLWZpcm13YXJl
-IjsKIAl9OwotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+Hello,
+
+This is v2 of a patch series that adds support for the Video Data Order
+Adapter (VDOA) that can be found on Freescale i.MX6. It converts the
+macroblock tiled format produced by the CODA 960 video decoder to a
+raster-ordered format for scanout.
+
+Changes since v1:
+
+- Dropped patch 8/9 of v1
+- Patch 1/7: Add devicetree binding documentation for fsl-vdoa
+- Patch 6/7: I merged patch 5/9 and patch 8/9 of v1 into a single patch
+- Patch 6/7: Use dt compatible instead of a phandle to find VDOA device
+- Patch 6/7: Always check VDOA availability even if disabled via module
+  parameter and do not print a message if VDOA cannot be found
+- Patch 6/7: Do not change the CODA context in coda_try_fmt()
+- Patch 6/7: Allocate an additional internal frame if the VDOA is in use
+
+Michael
+
+
+Michael Tretter (3):
+  [media] coda: fix frame index to returned error
+  [media] coda: use VDOA for un-tiling custom macroblock format
+  [media] coda: support YUYV output if VDOA is used
+
+Philipp Zabel (4):
+  ARM: dts: imx6qdl: Add VDOA compatible and clocks properties
+  [media] coda: add i.MX6 VDOA driver
+  [media] coda: correctly set capture compose rectangle
+  [media] coda: add debug output about tiling
+
+ .../devicetree/bindings/media/fsl-vdoa.txt         |  21 ++
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   2 +
+ drivers/media/platform/Kconfig                     |   3 +
+ drivers/media/platform/coda/Makefile               |   1 +
+ drivers/media/platform/coda/coda-bit.c             |  93 ++++--
+ drivers/media/platform/coda/coda-common.c          | 175 ++++++++++-
+ drivers/media/platform/coda/coda.h                 |   3 +
+ drivers/media/platform/coda/imx-vdoa.c             | 335 +++++++++++++++++++++
+ drivers/media/platform/coda/imx-vdoa.h             |  58 ++++
+ 9 files changed, 649 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/fsl-vdoa.txt
+ create mode 100644 drivers/media/platform/coda/imx-vdoa.c
+ create mode 100644 drivers/media/platform/coda/imx-vdoa.h
+
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
