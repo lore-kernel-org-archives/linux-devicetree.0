@@ -1,93 +1,135 @@
-From: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
-Subject: [PATCH] rtc: pcf8563: Do not disable clk out by default
-Date: Fri,  9 Dec 2016 16:03:49 +0100
-Message-ID: <1481295829-21974-1-git-send-email-volodymyr.bendiuga@westermo.se>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
+Date: Fri, 9 Dec 2016 16:46:35 +0100
+Message-ID: <9c4a8f50-d030-40f7-e7f2-45f1b95ccf2d@kaod.org>
+References: <1478688149-4554-1-git-send-email-clg@kaod.org>
+ <08dc9a53-505f-0b79-5bb3-1d9e73166b6c@atmel.com>
+ <d37aa469-68a3-90ee-1215-d5d64e6315db@gmail.com>
+ <fbe09cbd-66da-a723-8ac1-4fa10c690388@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBAABBOEQVPBAKGQEQZLRCUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, volodymyr.bendiuga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: =?UTF-8?q?Mattias=20Walstr=C3=B6m?= <mattias.walstrom-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>, Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <fbe09cbd-66da-a723-8ac1-4fa10c690388@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mattias Walstr=C3=B6m <mattias.walstrom-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
-
-Commit a39a6405d5f949bc651694028a disables CLKOUT of
-the rtc after power-up to improve power consumption.
-This is very useful, but some designs do require to
-have the rtc on all the time, otherwise devices will
-be bricked. Therefore this patch is a compromise that
-works for both cases, where the default case is when
-CLKOUT is on. If one wants to disable the CLKOUT,
-clkout-allow-disable can be added to devicetree's rtc node.
-
-Signed-off-by: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
----
- Documentation/devicetree/bindings/rtc/pcf8563.txt |  1 +
- drivers/rtc/rtc-pcf8563.c                         | 11 +++--------
- 2 files changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/rtc/pcf8563.txt b/Documentat=
-ion/devicetree/bindings/rtc/pcf8563.txt
-index 086c998..0b06a36 100644
---- a/Documentation/devicetree/bindings/rtc/pcf8563.txt
-+++ b/Documentation/devicetree/bindings/rtc/pcf8563.txt
-@@ -7,6 +7,7 @@ see: Documentation/devicetree/bindings/i2c/trivial-admin-gu=
-ide/devices.rst
-=20
- Optional property:
- - #clock-cells: Should be 0.
-+- clkout-allow-disable: Allow the CLKOUT to be disabled if not used.
- - clock-output-names:
-   overwrite the default clock name "pcf8563-clkout"
-=20
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index 1227cea..1489ee9 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -519,18 +519,13 @@ static struct clk *pcf8563_clkout_register_clk(struct=
- pcf8563 *pcf8563)
- 	struct device_node *node =3D client->dev.of_node;
- 	struct clk *clk;
- 	struct clk_init_data init;
--	int ret;
--	unsigned char buf;
--
--	/* disable the clkout output */
--	buf =3D 0;
--	ret =3D pcf8563_write_block_data(client, PCF8563_REG_CLKO, 1, &buf);
--	if (ret < 0)
--		return ERR_PTR(ret);
-=20
- 	init.name =3D "pcf8563-clkout";
- 	init.ops =3D &pcf8563_clkout_ops;
-+
-+	/* disable the clkout output only if it is allowed in devicetree */
- 	init.flags =3D 0;
-+	init.flags |=3D !of_property_read_bool(node, "clkout-allow-disable") ? CL=
-K_IGNORE_UNUSED : 0;
- 	init.parent_names =3D NULL;
- 	init.num_parents =3D 0;
- 	pcf8563->clkout_hw.init =3D &init;
---=20
-2.7.4
-
---=20
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGVsbG8gQ3lyaWxsZQoKT24gMTIvMDkvMjAxNiAwMzoxMyBQTSwgQ3lyaWxsZSBQaXRjaGVuIHdy
+b3RlOgo+IExlIDA5LzEyLzIwMTYgw6AgMTU6MDMsIE1hcmVrIFZhc3V0IGEgw6ljcml0IDoKPj4g
+T24gMTIvMDkvMjAxNiAwMjozNyBQTSwgQ3lyaWxsZSBQaXRjaGVuIHdyb3RlOgo+Pj4gSGkgQ2Vk
+cmljLAo+Pj4KPj4+IExlIDA5LzExLzIwMTYgw6AgMTE6NDIsIEPDqWRyaWMgTGUgR29hdGVyIGEg
+w6ljcml0IDoKPj4+PiBUaGlzIGRyaXZlciBhZGRzIG10ZCBzdXBwb3J0IGZvciBzcGktbm9yIGF0
+dGFjaGVkIHRvIGVpdGhlciBvciBib3RoIG9mCj4+Pj4gdGhlIEZpcm13YXJlIE1lbW9yeSBDb250
+cm9sbGVyIG9yIHRoZSBTUEkgRmxhc2ggQ29udHJvbGxlciAoQVNUMjQwMAo+Pj4+IG9ubHkpLgo+
+Pj4+Cj4+Pj4gVGhlIFNNQyBjb250cm9sbGVycyBvbiB0aGUgQXNwZWVkIEFTVDI1MDAgU29DIGFy
+ZSB2ZXJ5IHNpbWlsYXIgdG8gdGhlCj4+Pj4gb25lcyBmb3VuZCBvbiB0aGUgQVNUMjQwMC4gVGhl
+IGRpZmZlcmVuY2VzIGFyZSBvbiB0aGUgbnVtYmVyIG9mCj4+Pj4gc3VwcG9ydGVkIGZsYXNoIG1v
+ZHVsZXMgYW5kIHRoZWlyIGRlZmF1bHQgbWFwcGluZ3MgaW4gdGhlIFNvQyBhZGRyZXNzCj4+Pj4g
+c3BhY2UuCj4+Pj4KPj4+PiBUaGUgQXNwZWVkIEFTVDI1MDAgaGFzIG9uZSBTUEkgY29udHJvbGxl
+ciBmb3IgdGhlIEJNQyBmaXJtd2FyZSBhbmQgdHdvCj4+Pj4gZm9yIHRoZSBob3N0IGZpcm13YXJl
+LiBBbGwgY29udHJvbGxlcnMgaGF2ZSBub3cgdGhlIHNhbWUgc2V0IG9mCj4+Pj4gcmVnaXN0ZXJz
+IGNvbXBhdGlibGUgd2l0aCB0aGUgQVNUMjQwMCBGTUMgY29udHJvbGxlciBhbmQgdGhlIGxlZ2Fj
+eQo+Pj4+ICdTTUMnIGNvbnRyb2xsZXIgaXMgZnVsbHkgZ29uZS4KPj4+Pgo+Pj4+IEVhY2ggY29u
+dHJvbGxlciBoYXMgYSBtZW1vcnkgcmFuZ2Ugb24gd2hpY2ggaXQgbWFwcyBpdHMgZmxhc2ggbW9k
+dWxlCj4+Pj4gc2xhdmVzLiBFYWNoIHNsYXZlIGlzIGFzc2lnbmVkIGEgbWVtb3J5IHdpbmRvdyBm
+b3IgaXRzIG1hcHBpbmcgdGhhdAo+Pj4+IGNhbiBiZSBjaGFuZ2VkIGF0IGJvb3RpbWUgd2l0aCB0
+aGUgU2VnbWVudCBBZGRyZXNzIFJlZ2lzdGVyLgo+Pj4+Cj4+Pj4gRWFjaCBTUEkgZmxhc2ggc2xh
+dmUgY2FuIHRoZW4gYmUgYWNjZXNzZWQgaW4gdHdvIG1vZGVzOiBDb21tYW5kIGFuZAo+Pj4+IFVz
+ZXIuIFdoZW4gaW4gVXNlciBtb2RlLCBhY2Nlc3NlcyB0byB0aGUgbWVtb3J5IHNlZ21lbnQgb2Yg
+dGhlIHNsYXZlcwo+Pj4+IGFyZSB0cmFuc2xhdGVkIGluIFNQSSB0cmFuc2ZlcnMuIFdoZW4gaW4g
+Q29tbWFuZCBtb2RlLCB0aGUgSFcKPj4+PiBnZW5lcmF0ZXMgdGhlIFNQSSBjb21tYW5kcyBhdXRv
+bWF0aWNhbGx5IGFuZCB0aGUgbWVtb3J5IHNlZ21lbnQgaXMKPj4+PiBhY2Nlc3NlZCBhcyBpZiBk
+b2luZyBhIE1NSU8uCj4+Pj4KPj4+PiBDdXJyZW50bHksIG9ubHkgdGhlIFVzZXIgbW9kZSBpcyBz
+dXBwb3J0ZWQuIENvbW1hbmQgbW9kZSBuZWVkcyBhCj4+Pj4gbGl0dGxlIG1vcmUgd29yayB0byBj
+aGVjayB0aGF0IHRoZSBtZW1vcnkgd2luZG93IG9uIHRoZSBBSEIgYnVzIGZpdHMKPj4+PiB0aGUg
+bW9kdWxlIHNpemUuCj4+Pj4KPj4+PiBCYXNlZCBvbiBwcmV2aW91cyB3b3JrIGZyb20gTWlsdG9u
+IEQuIE1pbGxlciBJSSA8bWlsdG9ubUB1cy5pYm0uY29tPgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1i
+eTogQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9kLm9yZz4KPj4+PiAtLS0KPj4+IFsuLi5dCj4+
+Pj4gK3N0YXRpYyBpbnQgYXNwZWVkX3NtY19yZWFkX3JlZyhzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1
+OCBvcGNvZGUsIHU4ICpidWYsIGludCBsZW4pCj4+Pj4gK3sKPj4+PiArCXN0cnVjdCBhc3BlZWRf
+c21jX2NoaXAgKmNoaXAgPSBub3ItPnByaXY7Cj4+Pj4gKwo+Pj4+ICsJbXV0ZXhfbG9jaygmY2hp
+cC0+Y29udHJvbGxlci0+bXV0ZXgpOwo+Pj4+ICsKPj4+PiArCWFzcGVlZF9zbWNfc3RhcnRfdXNl
+cihub3IpOwo+Pj4+ICsJYXNwZWVkX3NtY193cml0ZV90b19haGIoY2hpcC0+YmFzZSwgJm9wY29k
+ZSwgMSk7Cj4+Pj4gKwlhc3BlZWRfc21jX3JlYWRfZnJvbV9haGIoYnVmLCBjaGlwLT5iYXNlLCBs
+ZW4pOwo+Pj4+ICsJYXNwZWVkX3NtY19zdG9wX3VzZXIobm9yKTsKPj4+PiArCj4+Pj4gKwltdXRl
+eF91bmxvY2soJmNoaXAtPmNvbnRyb2xsZXItPm11dGV4KTsKPj4+PiArCj4+Pj4gKwlyZXR1cm4g
+MDsKPj4+PiArfQo+Pj4+ICsKPj4+PiArc3RhdGljIGludCBhc3BlZWRfc21jX3dyaXRlX3JlZyhz
+dHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCBvcGNvZGUsIHU4ICpidWYsCj4+Pj4gKwkJCQlpbnQgbGVu
+KQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3QgYXNwZWVkX3NtY19jaGlwICpjaGlwID0gbm9yLT5wcml2
+Owo+Pj4+ICsKPj4+PiArCW11dGV4X2xvY2soJmNoaXAtPmNvbnRyb2xsZXItPm11dGV4KTsKPj4+
+PiArCj4+Pj4gKwlhc3BlZWRfc21jX3N0YXJ0X3VzZXIobm9yKTsKPj4+PiArCWFzcGVlZF9zbWNf
+d3JpdGVfdG9fYWhiKGNoaXAtPmJhc2UsICZvcGNvZGUsIDEpOwo+Pj4+ICsJYXNwZWVkX3NtY193
+cml0ZV90b19haGIoY2hpcC0+YmFzZSwgYnVmLCBsZW4pOwo+Pj4+ICsJYXNwZWVkX3NtY19zdG9w
+X3VzZXIobm9yKTsKPj4+PiArCj4+Pj4gKwltdXRleF91bmxvY2soJmNoaXAtPmNvbnRyb2xsZXIt
+Pm11dGV4KTsKPj4+PiArCj4+Pj4gKwlyZXR1cm4gMDsKPj4+PiArfQo+Pj4+ICsKPj4+IFsuLi5d
+Cj4+Pj4gK3N0YXRpYyBzc2l6ZV90IGFzcGVlZF9zbWNfcmVhZF91c2VyKHN0cnVjdCBzcGlfbm9y
+ICpub3IsIGxvZmZfdCBmcm9tLAo+Pj4+ICsJCQkJICAgIHNpemVfdCBsZW4sIHVfY2hhciAqcmVh
+ZF9idWYpCj4+Pj4gK3sKPj4+PiArCXN0cnVjdCBhc3BlZWRfc21jX2NoaXAgKmNoaXAgPSBub3It
+PnByaXY7Cj4+Pj4gKwo+Pj4+ICsJbXV0ZXhfbG9jaygmY2hpcC0+Y29udHJvbGxlci0+bXV0ZXgp
+Owo+Pj4+ICsKPj4+PiArCWFzcGVlZF9zbWNfc3RhcnRfdXNlcihub3IpOwo+Pj4+ICsJYXNwZWVk
+X3NtY19zZW5kX2NtZF9hZGRyKG5vciwgbm9yLT5yZWFkX29wY29kZSwgZnJvbSk7Cj4+Pj4gKwlh
+c3BlZWRfc21jX3JlYWRfZnJvbV9haGIocmVhZF9idWYsIGNoaXAtPmJhc2UsIGxlbik7Cj4+Pj4g
+Kwlhc3BlZWRfc21jX3N0b3BfdXNlcihub3IpOwo+Pj4+ICsKPj4+PiArCW11dGV4X3VubG9jaygm
+Y2hpcC0+Y29udHJvbGxlci0+bXV0ZXgpOwo+Pj4+ICsKPj4+PiArCXJldHVybiBsZW47Cj4+Pj4g
+K30KPj4+PiArCj4+Pj4gK3N0YXRpYyBzc2l6ZV90IGFzcGVlZF9zbWNfd3JpdGVfdXNlcihzdHJ1
+Y3Qgc3BpX25vciAqbm9yLCBsb2ZmX3QgdG8sIHNpemVfdCBsZW4sCj4+Pj4gKwkJCQkgICAgIGNv
+bnN0IHVfY2hhciAqd3JpdGVfYnVmKQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3QgYXNwZWVkX3NtY19j
+aGlwICpjaGlwID0gbm9yLT5wcml2Owo+Pj4+ICsKPj4+PiArCW11dGV4X2xvY2soJmNoaXAtPmNv
+bnRyb2xsZXItPm11dGV4KTsKPj4+PiArCj4+Pj4gKwlhc3BlZWRfc21jX3N0YXJ0X3VzZXIobm9y
+KTsKPj4+PiArCWFzcGVlZF9zbWNfc2VuZF9jbWRfYWRkcihub3IsIG5vci0+cHJvZ3JhbV9vcGNv
+ZGUsIHRvKTsKPj4+PiArCWFzcGVlZF9zbWNfd3JpdGVfdG9fYWhiKGNoaXAtPmJhc2UsIHdyaXRl
+X2J1ZiwgbGVuKTsKPj4+PiArCWFzcGVlZF9zbWNfc3RvcF91c2VyKG5vcik7Cj4+Pj4gKwo+Pj4+
+ICsJbXV0ZXhfdW5sb2NrKCZjaGlwLT5jb250cm9sbGVyLT5tdXRleCk7Cj4+Pj4gKwo+Pj4+ICsJ
+cmV0dXJuIGxlbjsKPj4+PiArfQo+Pj4KPj4+IEFzIEkndmUgZXhwbGFpbmVkIGluIHJldmlldyBv
+ZiB0aGUgc2VyaWVzIHYxLCB0aGUgY2hpcC0+Y29udHJvbGxlci0+bXV0ZXgKPj4+IHNlZW1zIHRv
+IGJlIHVzZWQgb25seSBieSBhc3BlZWRfc21jX3JlYWRfcmVnKCksIGFzcGVlZF9zbWNfd3JpdGVf
+cmVnKCksCj4+PiBhc3BlZWRfc21jX3JlYWRfdXNlcigpIGFuZCBhc3BlZWRfc21jX3dyaXRlX3Vz
+ZXIoKSwgdGhlIGRyaXZlcgo+Pj4gaW1wbGVtZW50YXRpb25zIG9mIG5vci0+cmVhZF9yZWcoKSwg
+bm9yLT53cml0ZV9yZWcoKSwgbm9yLT5yZWFkKCkgYW5kCj4+PiBub3ItPndyaXRlKCkuCj4+Pgo+
+Pj4gVGhpcyBkcml2ZXIgbG9ja3MgdGhlIG11dGV4IGF0IHRoZSB2ZXJ5IGJlZ2lubmluZyBvZiBl
+YWNoIG9mIHRob3NlCj4+PiBmdW5jdGlvbnMgYW5kIHVubG9ja3MgdGhlIG11dGV4IGJlZm9yZSBy
+ZXR1cm5pbmcuCj4+Pgo+Pj4gU28gbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHlvdSB1c2UgdGhp
+cyBtdXRleCB0byBwcmV2ZW50Cj4+PiBhc3BlZWRfc21jX1tyZWFkfHdyaXRlXV9bcmVnfHVzZXJd
+KCkgZnJvbSBiZWluZyBjYWxsZWQgY29uY3VycmVudGx5Lgo+Pj4KPj4+IElmIHNvLCB0aGUgc3Bp
+LW5vciBmcmFtZXdvcmsgYWxyZWFkeSB0YWtlcyBjYXJlIG9mIHRoaXMgaXNzdWUgd2l0aCB0aGUK
+Pj4+IGNvdXBsZSBvZiBmdW5jdGlvbnM6IHNwaV9ub3JfbG9ja19hbmRfcHJlcCgpIC8gc3BpX25v
+cl91bmxvY2tfYW5kX3VucHJlcCgpLgo+Pj4KPj4+IEluZGVlZCwgc3BpX25vcl9sb2NrX2FuZF9w
+cmVwKCkgaXMgY2FsbGVkIG9uIGVudGVyaW5nIGFuZAo+Pj4gc3BpX25vcl91bmxvY2tfYW5kX3Vu
+cHJlcCgpIG9uIGV4aXRpbmcgZWFjaCBvZiB0aGUgZm9sbG93aW5nIGZ1bmN0aW9uczoKPj4+IC0g
+bXRkLT5fcmVhZCA9IHNwaV9ub3JfcmVhZAo+Pj4gLSBtdGQtPl93cml0ZSA9IHNwaV9ub3Jfd3Jp
+dGUgLyBzc3Rfd3JpdGUKPj4+IC0gbXRkLT5fZXJhc2UgPSBzcGlfbm9yX2VyYXNlCj4+PiAtIG10
+ZC0+X2xvY2sgPSBzcGlfbm9yX2xvY2sKPj4+IC0gbXRkLT5fdW5sb2NrID0gc3BpX25vcl91bmxv
+Y2sKPj4+IC0gbXRkLT5faXNfbG9jayA9IHNwaV9ub3JfaXNfbG9ja2VkCj4+Pgo+Pj4gRXhjZXB0
+IGZvciBzcGlfbm9yX3NjYW4oKSwgd2hpY2ggaXMgY2FsbGVkIG9uY2UgZm9yIGFsbCBkdXJpbmcg
+dGhlIHByb2JlCj4+PiBhbmQgYmVmb3JlIHJlZ2lzdGVyaW5nIHRoZSBtdGRfaW5mbyBzdHJ1Y3R1
+cmUsIG9ubHkgdGhlIGFib3ZlCj4+PiBtdGQtPl88aGFuZGxlcnM+IGNhbGwgdGhlIG5vci0+cmVh
+ZF9yZWcsIG5vci0+d3JpdGVfcmVnLCBub3ItPnJlYWQsCj4+PiBub3ItPmVyYXNlIGFuZCBub3It
+PndyaXRlIHNwaS1ub3IgaGFuZGxlcnMuCj4+PiBTbyB5b3VyIHNwaS1ub3IgLyBhc3BlZWRfc21j
+XzxoYW5kbGVycz4gYXJlIGFsd2F5cyBwcm90ZWN0ZWQgZnJvbQo+Pj4gY29uY3VycmVudCBhY2Nl
+c3MgYnkgdGhlIG11dGV4IGxvY2tlZCBpbiBzcGlfbm9yX2xvY2tfYW5kX3ByZXAoKS4KPj4+Cj4+
+PiBTbyBkb24ndCB3b3JyeSBhYm91dCBjb25jdXJyZW50IGFjY2VzcyBpc3N1ZSwgdGhlIHNwaS1u
+b3IgZnJhbWV3b3JrIHRha2VzCj4+PiBjYXJlIG9mIHlvdSA6KQo+Pgo+PiBEb2VzIGl0IHRha2Ug
+Y2FyZSBvZiBtZSBldmVuIGlmIEkgaGF2ZSBtdWx0aXBsZSBmbGFzaGVzID8gSSByZWNhbGwgSSBo
+YWQKPj4gdG8gcHV0IG11dGV4ZXMgaW50byBwcmVwYXJlIGFuZCB1bnByZXBhcmUgbXlzZWxmIGlu
+IHRoZSBDUVNQSSBkcml2ZXIgdG8KPj4gcHJldmVudCBwcm9ibGVtcyB3aGVuIGFjY2Vzc2luZyB0
+d28gZmxhc2hlcyBzaW11bHRhbmVvdXNseS4KPj4KPj4KPiAKPiBXZWxsIGluZGVlZCB5b3UncmUg
+cmlnaHQsIHdpdGggbXVsdGlwbGUgZmxhc2hlcyBJIGd1ZXNzIHRoZSBkcml2ZXIgd2lsbAo+IG5l
+ZWQgdG8gdXNlIGFuIGFkZGl0aW9uYWwgbXV0ZXguIFRoZW4gaXQgY2FuIGJlIHBsYWNlZCBlaXRo
+ZXIgaW4gZWFjaAo+IHJlYWRfcmVnL3dyaXRlX3JlZy9yZWFkL3dyaXRlIGhhbmRsZXJzIGxpa2Ug
+Q2VkcmljIGRpZCBvciBpbgo+IHByZXBhcmUvdW5wcmVwYXJlIGhhbmRsZXJzIGxpa2UgTWFyZWsg
+ZGlkIGluIHRoZSBDYWRlbmNlIFF1YWQgU1BJIGRyaXZlcnMuCj4gQm90aCBzb2x1dGlvbnMgd29y
+ayBhbmQgYXJlIGZpbmUgZm9yIG1lLgoKU28gSSB3aWxsIGdvIGZvciB0aGUgcHJlcGFyZS91bnBy
+ZXBhcmUgaGFuZGxlciBzb2x1dGlvbiBmb3Igbm93LgoKVGhhbmtzLAoKQy4KCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRp
+c2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtbXRkLwo=
