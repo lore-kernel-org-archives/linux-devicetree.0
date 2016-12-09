@@ -1,99 +1,38 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] crypto: mediatek - add DT bindings documentation
-Date: Fri, 9 Dec 2016 10:45:00 +0100
-Message-ID: <826b263f-8963-11c9-0302-8048cd1dea8e@gmail.com>
-References: <1480921284-45827-1-git-send-email-ryder.lee@mediatek.com>
- <1480921284-45827-3-git-send-email-ryder.lee@mediatek.com>
- <4b0df417-825f-65c6-4c02-85fe1c20ce50@gmail.com>
- <1481188776.14860.26.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH] Documentation: ti-syscon-reset: fix header path
+Date: Fri,  9 Dec 2016 11:11:27 +0100
+Message-ID: <1481278287-23842-1-git-send-email-yegorslists@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481188776.14860.26.camel@mtkswgap22>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Roy Luo <cheng-hao.luo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
+'include' was missing from path.
 
-On 08/12/16 10:19, Ryder Lee wrote:
-> Hello,
->
-> On Mon, 2016-12-05 at 11:18 +0100, Matthias Brugger wrote:
->>
->> On 05/12/16 08:01, Ryder Lee wrote:
->>> Add DT bindings documentation for the crypto driver
->>>
->>> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/crypto/mediatek-crypto.txt | 32 ++++++++++++++++++++++
->>>  1 file changed, 32 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
->>> new file mode 100644
->>> index 0000000..8b1db08
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
->>> @@ -0,0 +1,32 @@
->>> +MediaTek cryptographic accelerators
->>> +
->>> +Required properties:
->>> +- compatible: Should be "mediatek,mt7623-crypto"
->>
->> Do you know how big the difference is between the crypto engine for
->> mt7623/mt2701/mt8521p in comparison, let's say mt8173 or mt6797?
->> Do this SoCs have a crypot engine? If so and they are quite similar, we
->> might think of adding a mtk-crypto binding and add soc specific bindings.
->
-> This engine is just available in mt7623/mt2701/mt8521p series SoCs and
-> they have no difference.
->
-> But there are still other crypto IPs in MTK, i think maybe we could use
-> "mediatek,{IP name}-crypto” to distinguish them ?
->
+Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sounds good, thanks for the clarification.
+diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+index 164c7f3..5b20e20 100644
+--- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
++++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+@@ -44,7 +44,7 @@ Required properties:
+ 			              reset status register
+ 			    Cell #7 : Flags used to control reset behavior,
+ 			              availible flags defined in the DT include
+-			              file <dt-bindings/reset/ti-syscon.h>
++			              file <include/dt-bindings/reset/ti-syscon.h>
+ 
+ SysCon Reset Consumer Nodes
+ ===========================
+-- 
+2.1.4
 
-Matthias
-
-
->> Regards,
->> Matthias
->>
->>> +- reg: Address and length of the register set for the device
->>> +- interrupts: Should contain the five crypto engines interrupts in numeric
->>> +	order. These are global system and four descriptor rings.
->>> +- clocks: the clock used by the core
->>> +- clock-names: the names of the clock listed in the clocks property. These are
->>> +	"ethif", "cryp"
->>> +- power-domains: Must contain a reference to the PM domain.
->>> +
->>> +
->>> +Optional properties:
->>> +- interrupt-parent: Should be the phandle for the interrupt controller
->>> +  that services interrupts for this device
->>> +
->>> +
->>> +Example:
->>> +	crypto: crypto@1b240000 {
->>> +		compatible = "mediatek,mt7623-crypto";
->>> +		reg = <0 0x1b240000 0 0x20000>;
->>> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>,
->>> +			     <GIC_SPI 97 IRQ_TYPE_LEVEL_LOW>;
->>> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
->>> +			 <&ethsys CLK_ETHSYS_CRYPTO>;
->>> +		clock-names = "ethif","cryp";
->>> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
->>> +	};
->>>
->
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
