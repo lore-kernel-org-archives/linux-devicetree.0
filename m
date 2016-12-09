@@ -1,45 +1,62 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 1/2] irqchip/renesas-intc-irqpin: List fallback compatibility last
-Date: Fri,  9 Dec 2016 11:50:49 +0100
-Message-ID: <1481280650-9258-2-git-send-email-horms+renesas@verge.net.au>
-References: <1481280650-9258-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481280650-9258-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH v2 02/11] mfd: axp20x: add volatile and writeable reg ranges for VBUS power supply driver
+Date: Fri,  9 Dec 2016 12:04:10 +0100
+Message-ID: <20161209110419.28981-3-quentin.schulz@free-electrons.com>
+References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
+Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Improve readability by listing the rmobile fallback compatibility string
-after the more-specific compatibility strings they provide a fallback for.
+The X-Powers AXP20X and AXP22X PMICs allow to choose the maximum voltage
+and minimum current delivered by the VBUS power supply.
 
-This does not effect run-time behaviour as it is the order in the DTB that
-determines which compatibility string is used.
+This adds the register used by the VBUS power supply driver to the range
+of volatile and writeable regs ranges.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 ---
- drivers/irqchip/irq-renesas-intc-irqpin.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-index 713177d97c7a..5fe1207a079c 100644
---- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-+++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-@@ -374,7 +374,6 @@ static const struct intc_irqpin_config intc_irqpin_rmobile = {
+added in v2
+
+ drivers/mfd/axp20x.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index ba130be..6ee2cc6 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -65,12 +65,14 @@ static const struct regmap_access_table axp152_volatile_table = {
+ 
+ static const struct regmap_range axp20x_writeable_ranges[] = {
+ 	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
++	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+ 	regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
+ 	regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(AXP20X_OCV_MAX)),
  };
  
- static const struct of_device_id intc_irqpin_dt_ids[] = {
--	{ .compatible = "renesas,intc-irqpin", },
- 	{ .compatible = "renesas,intc-irqpin-r8a7778",
- 	  .data = &intc_irqpin_irlm_r8a777x },
- 	{ .compatible = "renesas,intc-irqpin-r8a7779",
-@@ -383,6 +382,7 @@ static const struct of_device_id intc_irqpin_dt_ids[] = {
- 	  .data = &intc_irqpin_rmobile },
- 	{ .compatible = "renesas,intc-irqpin-sh73a0",
- 	  .data = &intc_irqpin_rmobile },
-+	{ .compatible = "renesas,intc-irqpin", },
- 	{},
+ static const struct regmap_range axp20x_volatile_ranges[] = {
+ 	regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_USB_OTG_STATUS),
++	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+ 	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL2),
+ 	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+ 	regmap_reg_range(AXP20X_ACIN_V_ADC_H, AXP20X_IPSOUT_V_HIGH_L),
+@@ -91,11 +93,13 @@ static const struct regmap_access_table axp20x_volatile_table = {
+ /* AXP22x ranges are shared with the AXP809, as they cover the same range */
+ static const struct regmap_range axp22x_writeable_ranges[] = {
+ 	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
++	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+ 	regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
  };
- MODULE_DEVICE_TABLE(of, intc_irqpin_dt_ids);
+ 
+ static const struct regmap_range axp22x_volatile_ranges[] = {
+ 	regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_PWR_OP_MODE),
++	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+ 	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+ 	regmap_reg_range(AXP22X_GPIO_STATE, AXP22X_GPIO_STATE),
+ 	regmap_reg_range(AXP20X_FG_RES, AXP20X_FG_RES),
 -- 
-2.7.0.rc3.207.g0ac5344
+2.9.3
+
