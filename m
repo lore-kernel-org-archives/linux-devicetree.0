@@ -1,7 +1,7 @@
 From: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 5/7] [media] coda: fix frame index to returned error
-Date: Fri,  9 Dec 2016 17:59:01 +0100
-Message-ID: <20161209165903.1293-6-m.tretter@pengutronix.de>
+Subject: [PATCH v2 3/7] [media] coda: correctly set capture compose rectangle
+Date: Fri,  9 Dec 2016 17:58:59 +0100
+Message-ID: <20161209165903.1293-4-m.tretter@pengutronix.de>
 References: <20161209165903.1293-1-m.tretter@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161209165903.1293-1-m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,29 +10,106 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-display_idx refers to the frame that will be returned in the next round.
-The currently processed frame is ctx->display_idx and errors should be
-reported for this frame.
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
+Correctly store the rectangle of valid video data in the destination
+q_data before rounding up to macroblock size. This fixes the output
+of VIDIOC_G_SELECTION for the capture side compose rectangle.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/media/platform/coda/coda-bit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/coda/coda-common.c | 37 ++++++++++++++++++++++++-------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index b662504..309eb4e 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -2057,7 +2057,7 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		}
- 		vb2_set_plane_payload(&dst_buf->vb2_buf, 0, payload);
+diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
+index c39718a..e0184194 100644
+--- a/drivers/media/platform/coda/coda-common.c
++++ b/drivers/media/platform/coda/coda-common.c
+@@ -566,7 +566,8 @@ static int coda_try_fmt_vid_out(struct file *file, void *priv,
+ 	return coda_try_fmt(ctx, codec, f);
+ }
  
--		coda_m2m_buf_done(ctx, dst_buf, ctx->frame_errors[display_idx] ?
-+		coda_m2m_buf_done(ctx, dst_buf, ctx->frame_errors[ctx->display_idx] ?
- 				  VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE);
+-static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f)
++static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
++		      struct v4l2_rect *r)
+ {
+ 	struct coda_q_data *q_data;
+ 	struct vb2_queue *vq;
+@@ -589,10 +590,14 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f)
+ 	q_data->height = f->fmt.pix.height;
+ 	q_data->bytesperline = f->fmt.pix.bytesperline;
+ 	q_data->sizeimage = f->fmt.pix.sizeimage;
+-	q_data->rect.left = 0;
+-	q_data->rect.top = 0;
+-	q_data->rect.width = f->fmt.pix.width;
+-	q_data->rect.height = f->fmt.pix.height;
++	if (r) {
++		q_data->rect = *r;
++	} else {
++		q_data->rect.left = 0;
++		q_data->rect.top = 0;
++		q_data->rect.width = f->fmt.pix.width;
++		q_data->rect.height = f->fmt.pix.height;
++	}
  
- 		v4l2_dbg(1, coda_debug, &dev->v4l2_dev,
+ 	switch (f->fmt.pix.pixelformat) {
+ 	case V4L2_PIX_FMT_NV12:
+@@ -621,27 +626,37 @@ static int coda_s_fmt_vid_cap(struct file *file, void *priv,
+ 			      struct v4l2_format *f)
+ {
+ 	struct coda_ctx *ctx = fh_to_ctx(priv);
++	struct coda_q_data *q_data_src;
++	struct v4l2_rect r;
+ 	int ret;
+ 
+ 	ret = coda_try_fmt_vid_cap(file, priv, f);
+ 	if (ret)
+ 		return ret;
+ 
+-	return coda_s_fmt(ctx, f);
++	q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
++	r.left = 0;
++	r.top = 0;
++	r.width = q_data_src->width;
++	r.height = q_data_src->height;
++
++	return coda_s_fmt(ctx, f, &r);
+ }
+ 
+ static int coda_s_fmt_vid_out(struct file *file, void *priv,
+ 			      struct v4l2_format *f)
+ {
+ 	struct coda_ctx *ctx = fh_to_ctx(priv);
++	struct coda_q_data *q_data_src;
+ 	struct v4l2_format f_cap;
++	struct v4l2_rect r;
+ 	int ret;
+ 
+ 	ret = coda_try_fmt_vid_out(file, priv, f);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = coda_s_fmt(ctx, f);
++	ret = coda_s_fmt(ctx, f, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -657,7 +672,13 @@ static int coda_s_fmt_vid_out(struct file *file, void *priv,
+ 	if (ret)
+ 		return ret;
+ 
+-	return coda_s_fmt(ctx, &f_cap);
++	q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
++	r.left = 0;
++	r.top = 0;
++	r.width = q_data_src->width;
++	r.height = q_data_src->height;
++
++	return coda_s_fmt(ctx, &f_cap, &r);
+ }
+ 
+ static int coda_reqbufs(struct file *file, void *priv,
 -- 
 2.10.2
 
