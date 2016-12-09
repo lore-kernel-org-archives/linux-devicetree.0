@@ -1,83 +1,99 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v13 0/7] dtc: Dynamic DT support
-Date: Fri, 9 Dec 2016 11:12:39 +0200
-Message-ID: <3B8E91D4-76F7-4CA3-B67C-44B88D3F2CA3@konsulko.com>
-References: <1481114903-8197-1-git-send-email-pantelis.antoniou@konsulko.com> <20161209055709.GP13139@umbus.fritz.box> <3C4DD870-3736-42A7-A110-0975C31E74A4@konsulko.com> <20161209085432.GR13139@umbus.fritz.box>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] crypto: mediatek - add DT bindings documentation
+Date: Fri, 9 Dec 2016 10:45:00 +0100
+Message-ID: <826b263f-8963-11c9-0302-8048cd1dea8e@gmail.com>
+References: <1480921284-45827-1-git-send-email-ryder.lee@mediatek.com>
+ <1480921284-45827-3-git-send-email-ryder.lee@mediatek.com>
+ <4b0df417-825f-65c6-4c02-85fe1c20ce50@gmail.com>
+ <1481188776.14860.26.camel@mtkswgap22>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161209085432.GR13139-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+In-Reply-To: <1481188776.14860.26.camel@mtkswgap22>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Roy Luo <cheng-hao.luo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
 
-> On Dec 9, 2016, at 10:54 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
->=20
-> On Fri, Dec 09, 2016 at 10:16:51AM +0200, Pantelis Antoniou wrote:
->> Hi David,
->>=20
->>> On Dec 9, 2016, at 07:57 , David Gibson =
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->>>=20
->>> On Wed, Dec 07, 2016 at 02:48:16PM +0200, Pantelis Antoniou wrote:
->>>> This patchset adds Dynamic DT support in the DTC compiler
->>>> as used in a number of boards like the beaglebone/rpi/chip and =
-others.
->>>>=20
->>>> The first patch documents the internals of overlay generation, =
-while
->>>> the second one adds dynamic object/overlay support proper.
->>>>=20
->>>> The third patch adds a test method that can is used by the =
-subsequent
->>>> patch which adds a few overlay tests verifying operation.
->>>>=20
->>>> The following 3 patches add support for the syntactic sugar version
->>>> of &foo { }; in a similar manner.
->>>>=20
->>>> This patchset is against DTC mainline and is also available for a =
-pull
->>>> request from https://github.com/pantoniou/dtc/tree/overlays
->>>=20
->>> Ok, I've merged patches 1-4 into mainline, along with a bunch of =
-minor
->>> fixes of my own on top.  5..7 (the start of the new) I want to hold
->>> off on for now, to thrash out the details of what we want a new
->>> cleaner format to look like a bit more thoroughly.
->>>=20
->>=20
->> Thank you.
->>=20
->> My git tree contains an updated patchset of the syntactic sugar =
-patches
->> for reference now.
->=20
-> Ok.  Note that one of the patches I merged afterwards was a big rename
-> of struct boot_info, so your patches will probably need a fair bit of
-> fiddly though straightforward rebasing.
->=20
 
-Fortunately not. The syntax sugar stuff do not rely on boot_info at all =
-now
-that the rule uses the inherited attribute trick.
+On 08/12/16 10:19, Ryder Lee wrote:
+> Hello,
+>
+> On Mon, 2016-12-05 at 11:18 +0100, Matthias Brugger wrote:
+>>
+>> On 05/12/16 08:01, Ryder Lee wrote:
+>>> Add DT bindings documentation for the crypto driver
+>>>
+>>> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/crypto/mediatek-crypto.txt | 32 ++++++++++++++++++++++
+>>>  1 file changed, 32 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+>>> new file mode 100644
+>>> index 0000000..8b1db08
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+>>> @@ -0,0 +1,32 @@
+>>> +MediaTek cryptographic accelerators
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "mediatek,mt7623-crypto"
+>>
+>> Do you know how big the difference is between the crypto engine for
+>> mt7623/mt2701/mt8521p in comparison, let's say mt8173 or mt6797?
+>> Do this SoCs have a crypot engine? If so and they are quite similar, we
+>> might think of adding a mtk-crypto binding and add soc specific bindings.
+>
+> This engine is just available in mt7623/mt2701/mt8521p series SoCs and
+> they have no difference.
+>
+> But there are still other crypto IPs in MTK, i think maybe we could use
+> "mediatek,{IP name}-crypto” to distinguish them ?
+>
 
-> --=20
-> David Gibson			| I'll have my music baroque, and my =
-code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
-_the_ _other_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
+Sounds good, thanks for the clarification.
 
-Regards
+Matthias
 
-=E2=80=94 Pantelis
 
+>> Regards,
+>> Matthias
+>>
+>>> +- reg: Address and length of the register set for the device
+>>> +- interrupts: Should contain the five crypto engines interrupts in numeric
+>>> +	order. These are global system and four descriptor rings.
+>>> +- clocks: the clock used by the core
+>>> +- clock-names: the names of the clock listed in the clocks property. These are
+>>> +	"ethif", "cryp"
+>>> +- power-domains: Must contain a reference to the PM domain.
+>>> +
+>>> +
+>>> +Optional properties:
+>>> +- interrupt-parent: Should be the phandle for the interrupt controller
+>>> +  that services interrupts for this device
+>>> +
+>>> +
+>>> +Example:
+>>> +	crypto: crypto@1b240000 {
+>>> +		compatible = "mediatek,mt7623-crypto";
+>>> +		reg = <0 0x1b240000 0 0x20000>;
+>>> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_SPI 97 IRQ_TYPE_LEVEL_LOW>;
+>>> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+>>> +			 <&ethsys CLK_ETHSYS_CRYPTO>;
+>>> +		clock-names = "ethif","cryp";
+>>> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+>>> +	};
+>>>
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
