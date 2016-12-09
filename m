@@ -1,296 +1,417 @@
-From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Subject: [PATCH 2/2] usb: gadget: s3c2410: allow probing from device tree
-Date: Fri,  9 Dec 2016 17:06:40 -0200
-Message-ID: <1481310400-28676-3-git-send-email-sergio.prado@e-labworks.com>
-References: <1481310400-28676-1-git-send-email-sergio.prado@e-labworks.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCHv4 11/15] clk: ti: clockdomain: add clock provider support to
+ clockdomains
+Date: Fri, 09 Dec 2016 12:02:48 -0800
+Message-ID: <148131376868.16621.16082839810419290638@resonance>
+References: <20161028005047.GQ26139@codeaurora.org>
+ <20161028125112.xfyrx7l7m64z6cu6@atomide.com>
+ <20161028233617.GP16026@codeaurora.org>
+ <20161028235448.57squdf6cu2wxxvm@atomide.com>
+ <148071802182.32158.11479184984645880313@resonance>
+ <20161202231240.GH4705@atomide.com>
+ <148072274164.32158.6012452044533845688@resonance>
+ <20161203001852.GI4705@atomide.com>
+ <ed253013-1f12-9fd8-d007-400a6c6fd427@ti.com>
+ <20161205152534.GJ4705@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481310400-28676-1-git-send-email-sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+In-Reply-To: <20161205152534.GJ4705-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allows configuring Samsung's s3c2410 and compatible USB device
-controller using a devicetree.
+Quoting Tony Lindgren (2016-12-05 07:25:34)
+> * Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [161205 02:09]:
+> > On 03/12/16 02:18, Tony Lindgren wrote:
+> > > * Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [161202 15:52]:
+> > > > Quoting Tony Lindgren (2016-12-02 15:12:40)
+> > > > > * Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [161202 14:34]:
+> > > > > > Quoting Tony Lindgren (2016-10-28 16:54:48)
+> > > > > > > * Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> [161028 16:37]:
+> > > > > > > > On 10/28, Tony Lindgren wrote:
+> > > > > > > > > * Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [161028 00:43]:
+> > > > > > > > > > On 28/10/16 03:50, Stephen Boyd wrote:
+> > > > > > > > > > > I suppose a PRCM is
+> > > > > > > > > > > like an MFD that has clocks and resets under it? On o=
+ther
+> > > > > > > > > > > platforms we've combined that all into one node and j=
+ust had
+> > > > > > > > > > > #clock-cells and #reset-cells in that node. Is there =
+any reason
+> > > > > > > > > > > we can't do that here?
+> > > > > > > > > > =
 
-Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
----
- drivers/usb/gadget/udc/s3c2410_udc.c | 142 +++++++++++++++++++++++++++++------
- drivers/usb/gadget/udc/s3c2410_udc.h |   4 +
- 2 files changed, 123 insertions(+), 23 deletions(-)
+> > > > > > > > > > For OMAPs, there are typically multiple instances of th=
+e PRCM around; OMAP4
+> > > > > > > > > > for example has:
+> > > > > > > > > > =
 
-diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
-index 4643a01262b4..e3b5a0e6646e 100644
---- a/drivers/usb/gadget/udc/s3c2410_udc.c
-+++ b/drivers/usb/gadget/udc/s3c2410_udc.c
-@@ -30,6 +30,9 @@
- #include <linux/gpio.h>
- #include <linux/prefetch.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-@@ -55,6 +58,18 @@
- #define DRIVER_AUTHOR	"Herbert Pötzl <herbert-dBHVzrDq9nF4Lj/PQRBjDg@public.gmane.org>, " \
- 			"Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>"
- 
-+struct s3c2410_udc_drv_data {
-+	int ep_fifo_size;
-+};
-+
-+static const struct s3c2410_udc_drv_data s3c2410_udc_2410_drv_data = {
-+	.ep_fifo_size = EP_FIFO_SIZE,
-+};
-+
-+static const struct s3c2410_udc_drv_data s3c2410_udc_2440_drv_data = {
-+	.ep_fifo_size = S3C2440_EP_FIFO_SIZE,
-+};
-+
- static const char		gadget_name[] = "s3c2410_udc";
- static const char		driver_desc[] = DRIVER_DESC;
- 
-@@ -62,8 +77,6 @@
- static struct clk		*udc_clock;
- static struct clk		*usb_bus_clock;
- static void __iomem		*base_addr;
--static u64			rsrc_start;
--static u64			rsrc_len;
- static struct dentry		*s3c2410_udc_debugfs_root;
- 
- static inline u32 udc_read(u32 reg)
-@@ -997,7 +1010,7 @@ static irqreturn_t s3c2410_udc_irq(int dummy, void *_dev)
- 		}
- 	}
- 
--	dprintk(DEBUG_VERBOSE, "irq: %d s3c2410_udc_done.\n", IRQ_USBD);
-+	dprintk(DEBUG_VERBOSE, "irq: %d s3c2410_udc_done.\n", dev->irq);
- 
- 	/* Restore old index */
- 	udc_write(idx, S3C2410_UDC_INDEX_REG);
-@@ -1757,6 +1770,49 @@ static int s3c2410_udc_stop(struct usb_gadget *g)
- 
- };
- 
-+static int s3c2410_udc_probe_dt(struct s3c2410_udc *udc)
-+{
-+	const struct s3c2410_udc_drv_data *drvdata;
-+	struct platform_device *pdev = udc->pdev;
-+	struct s3c2410_udc_mach_info *pdata;
-+	int gpio;
-+
-+	drvdata = of_device_get_match_data(&pdev->dev);
-+
-+	if (drvdata)
-+		udc->ep_fifo_size = drvdata->ep_fifo_size;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	gpio = of_get_named_gpio(pdev->dev.of_node, "samsung,vbus-gpio", 0);
-+	if (gpio_is_valid(gpio))
-+		pdata->vbus_pin = gpio;
-+
-+	gpio = of_get_named_gpio(pdev->dev.of_node, "samsung,pullup-gpio", 0);
-+	if (gpio_is_valid(gpio))
-+		pdata->pullup_pin = gpio;
-+
-+	pdev->dev.platform_data = pdata;
-+
-+	return 0;
-+}
-+
-+static int s3c2410_udc_probe_pdata(struct s3c2410_udc *udc)
-+{
-+	const struct s3c2410_udc_drv_data *drvdata;
-+	struct platform_device *pdev = udc->pdev;
-+
-+	drvdata = (struct s3c2410_udc_drv_data *)
-+		platform_get_device_id(pdev)->driver_data;
-+
-+	if (drvdata)
-+		udc->ep_fifo_size = drvdata->ep_fifo_size;
-+
-+	return 0;
-+}
-+
- /*
-  *	probe - binds to the platform device
-  */
-@@ -1769,6 +1825,16 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 
- 	dev_dbg(dev, "%s()\n", __func__);
- 
-+	udc->pdev = pdev;
-+
-+	if (pdev->dev.of_node)
-+		retval = s3c2410_udc_probe_dt(udc);
-+	else
-+		retval = s3c2410_udc_probe_pdata(udc);
-+
-+	if (retval)
-+		return retval;
-+
- 	usb_bus_clock = clk_get(NULL, "usb-bus-gadget");
- 	if (IS_ERR(usb_bus_clock)) {
- 		dev_err(dev, "failed to get usb bus clock source\n");
-@@ -1789,24 +1855,27 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 
- 	dev_dbg(dev, "got and enabled clocks\n");
- 
--	if (strncmp(pdev->name, "s3c2440", 7) == 0) {
--		dev_info(dev, "S3C2440: increasing FIFO to 128 bytes\n");
--		memory.ep[1].fifo_size = S3C2440_EP_FIFO_SIZE;
--		memory.ep[2].fifo_size = S3C2440_EP_FIFO_SIZE;
--		memory.ep[3].fifo_size = S3C2440_EP_FIFO_SIZE;
--		memory.ep[4].fifo_size = S3C2440_EP_FIFO_SIZE;
-+	if (udc->ep_fifo_size) {
-+		dev_info(dev, "setting FIFO to %d bytes\n", udc->ep_fifo_size);
-+		memory.ep[1].fifo_size = udc->ep_fifo_size;
-+		memory.ep[2].fifo_size = udc->ep_fifo_size;
-+		memory.ep[3].fifo_size = udc->ep_fifo_size;
-+		memory.ep[4].fifo_size = udc->ep_fifo_size;
- 	}
- 
- 	spin_lock_init(&udc->lock);
- 	udc_info = dev_get_platdata(&pdev->dev);
- 
--	rsrc_start = S3C2410_PA_USBDEV;
--	rsrc_len   = S3C24XX_SZ_USBDEV;
-+	udc->mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!udc->mem) {
-+		dev_err(dev, "failed to get I/O memory region\n");
-+		return -ENOENT;
-+	}
- 
--	if (!request_mem_region(rsrc_start, rsrc_len, gadget_name))
-+	if (!request_mem_region(udc->mem->start, resource_size(udc->mem), gadget_name))
- 		return -EBUSY;
- 
--	base_addr = ioremap(rsrc_start, rsrc_len);
-+	base_addr = ioremap(udc->mem->start, resource_size(udc->mem));
- 	if (!base_addr) {
- 		retval = -ENOMEM;
- 		goto err_mem;
-@@ -1818,17 +1887,24 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 	s3c2410_udc_disable(udc);
- 	s3c2410_udc_reinit(udc);
- 
-+	udc->irq = platform_get_irq(pdev, 0);
-+	if (udc->irq == 0) {
-+		dev_err(dev, "failed to get interrupt\n");
-+		retval = -EINVAL;
-+		goto err_map;
-+	}
-+
- 	/* irq setup after old hardware state is cleaned up */
--	retval = request_irq(IRQ_USBD, s3c2410_udc_irq,
-+	retval = request_irq(udc->irq, s3c2410_udc_irq,
- 			     0, gadget_name, udc);
- 
- 	if (retval != 0) {
--		dev_err(dev, "cannot get irq %i, err %d\n", IRQ_USBD, retval);
-+		dev_err(dev, "cannot get irq %i, err %d\n", udc->irq, retval);
- 		retval = -EBUSY;
- 		goto err_map;
- 	}
- 
--	dev_dbg(dev, "got irq %i\n", IRQ_USBD);
-+	dev_dbg(dev, "got irq %i\n", udc->irq);
- 
- 	if (udc_info && udc_info->vbus_pin > 0) {
- 		retval = gpio_request(udc_info->vbus_pin, "udc vbus");
-@@ -1899,11 +1975,11 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 	if (udc_info && udc_info->vbus_pin > 0)
- 		gpio_free(udc_info->vbus_pin);
- err_int:
--	free_irq(IRQ_USBD, udc);
-+	free_irq(udc->irq, udc);
- err_map:
- 	iounmap(base_addr);
- err_mem:
--	release_mem_region(rsrc_start, rsrc_len);
-+	release_mem_region(udc->mem->start, resource_size(udc->mem));
- 
- 	return retval;
- }
-@@ -1933,10 +2009,10 @@ static int s3c2410_udc_remove(struct platform_device *pdev)
- 		free_irq(irq, udc);
- 	}
- 
--	free_irq(IRQ_USBD, udc);
-+	free_irq(udc->irq, udc);
- 
- 	iounmap(base_addr);
--	release_mem_region(rsrc_start, rsrc_len);
-+	release_mem_region(udc->mem->start, resource_size(udc->mem));
- 
- 	if (!IS_ERR(udc_clock) && udc_clock != NULL) {
- 		clk_disable_unprepare(udc_clock);
-@@ -1974,16 +2050,36 @@ static int s3c2410_udc_resume(struct platform_device *pdev)
- #define s3c2410_udc_resume	NULL
- #endif
- 
-+static const struct of_device_id s3c_udc_dt_ids[] = {
-+	{
-+		.compatible = "samsung,s3c2410-udc",
-+		.data = &s3c2410_udc_2410_drv_data,
-+	},
-+	{
-+		.compatible = "samsung,s3c2440-udc",
-+		.data = &s3c2410_udc_2440_drv_data,
-+	},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, s3c_udc_dt_ids);
-+
- static const struct platform_device_id s3c_udc_ids[] = {
--	{ "s3c2410-usbgadget", },
--	{ "s3c2440-usbgadget", },
--	{ }
-+	{
-+		.name = "s3c2410-usbgadget",
-+		.driver_data = (kernel_ulong_t) &s3c2410_udc_2410_drv_data,
-+	},
-+	{
-+		.name = "s3c2440-usbgadget",
-+		.driver_data = (kernel_ulong_t) &s3c2410_udc_2440_drv_data,
-+	},
-+	{ /* sentinel */},
- };
- MODULE_DEVICE_TABLE(platform, s3c_udc_ids);
- 
- static struct platform_driver udc_driver_24x0 = {
- 	.driver		= {
- 		.name	= "s3c24x0-usbgadget",
-+		.of_match_table = s3c_udc_dt_ids,
- 	},
- 	.probe		= s3c2410_udc_probe,
- 	.remove		= s3c2410_udc_remove,
-diff --git a/drivers/usb/gadget/udc/s3c2410_udc.h b/drivers/usb/gadget/udc/s3c2410_udc.h
-index 93bf225f1969..8fdbe77a804d 100644
---- a/drivers/usb/gadget/udc/s3c2410_udc.h
-+++ b/drivers/usb/gadget/udc/s3c2410_udc.h
-@@ -94,6 +94,10 @@ struct s3c2410_udc {
- 	unsigned			req_pending : 1;
- 	u8				vbus;
- 	struct dentry			*regs_info;
-+	struct platform_device		*pdev;
-+	struct resource			*mem;
-+	int				irq;
-+	unsigned int			ep_fifo_size;
- };
- #define to_s3c2410(g)	(container_of((g), struct s3c2410_udc, gadget))
- 
--- 
-1.9.1
+> > > > > > > > > > cm1 @ 0x4a004000 (clocks + clockdomains)
+> > > > > > > > > > cm2 @ 0x4a008000 (clocks + clockdomains)
+> > > > > > > > > > prm @ 0x4a306000 (few clocks + resets + power state han=
+dling)
+> > > > > > > > > > scrm @ 0x4a30a000 (few external clocks + plenty of misc=
+ stuff)
+> > > > > > > > > > =
 
+> > > > > > > > > > These instances are also under different power/voltage =
+domains which means
+> > > > > > > > > > their PM behavior is different.
+> > > > > > > > > > =
+
+> > > > > > > > > > The idea behind having a clockdomain as a provider was =
+mostly to have the
+> > > > > > > > > > topology visible : prcm-instance -> clockdomain -> cloc=
+ks
+> > > > > > > > > =
+
+> > > > > > > > > Yeah that's needed to get the interconnect hierarchy righ=
+t for
+> > > > > > > > > genpd :)
+> > > > > > > > > =
+
+> > > > > > > > > > ... but basically I think it would be possible to drop =
+the clockdomain
+> > > > > > > > > > representation and just mark the prcm-instance as a clo=
+ck provider. Tony,
+> > > > > > > > > > any thoughts on that?
+> > > > > > > > > =
+
+> > > > > > > > > No let's not drop the clockdomains as those will be neede=
+d when we
+> > > > > > > > > move things into proper hierarchy within the interconnect=
+ instances.
+> > > > > > > > > This will then help with getting things right with genpd.
+> > > > > > > > > =
+
+> > > > > > > > > In the long run we just want to specify clockdomain and t=
+he offset of
+> > > > > > > > > the clock instance within the clockdomain in the dts file=
+s.
+> > > > > > > > > =
+
+> > > > > > > > =
+
+> > > > > > > > Sorry, I have very little idea how OMAP hardware works. Do =
+you
+> > > > > > > > mean that you will have different nodes for each clockdomai=
+n so
+> > > > > > > > that genpd can map 1:1 to the node in dts? But in hardware
+> > > > > > > > there's a prcm that allows us to control many clock domains
+> > > > > > > > through register read/writes? How is the interconnect invol=
+ved?
+> > > > > > > =
+
+> > > > > > > There are multiple clockdomains, at least one for each interc=
+onnect
+> > > > > > > instance. Once a clockdomain is idle, the related interconnec=
+t can
+> > > > > > > idle too. So yeah genpd pretty much maps 1:1 with the clockdo=
+mains.
+> > > > > > > =
+
+> > > > > > > There's more info in for example omap4 TRM section "3.4.1 Dev=
+ice
+> > > > > > > Power-Management Layout" that shows the voltage/power/clock d=
+omains.
+> > > > > > > The interconnect instances are mostly named there too looking=
+ at
+> > > > > > > the L4/L3 naming.
+> > > > > > =
+
+> > > > > > I'm confused on two points:
+> > > > > > =
+
+> > > > > > 1) why are the clkdm's acting as clock providers? I've always h=
+ated the
+> > > > > > name "clock domain" since those bits are for managing module st=
+ate, not
+> > > > > > clock state. The PRM, CM1 and CM2 provide the clocks, not the
+> > > > > > clockdomains.
+> > > > > =
+
+> > > > > The clock domains have multiple clock inputs that are routed to m=
+ultiple
+> > > > > child clocks. So it is a clock :)
+> > > > > =
+
+> > > > > See for example omap4430 TRM "3.6.4 CD_WKUP Clock Domain" on page
+> > > > > 393 in my revision here.
+> > > > > =
+
+> > > > > On that page "Figure 3-48" shows CD_WKUP with the four input cloc=
+ks.
+> > > > > And then "Table 3-84. CD_WKUP Control and Status Parameters" shows
+> > > > > the CD_WKUP clock domain specific registers. These registers show
+> > > > > the status, I think they are all read-only registers. Then CD_WKUP
+> > > > > has multiple child clocks with configurable registers.
+> > > > > =
+
+> > > > > From hardware register point of view, each clock domain has:
+> > > > > =
+
+> > > > > - Read-only clockdomain status registers in the beginning of
+> > > > >   the address space
+> > > > > =
+
+> > > > > - Multiple similar clock instances register instances each
+> > > > >   mapping to a specific interconnect target module
+> > > > > =
+
+> > > > > These are documented in "3.11.16.1 WKUP_CM Register Summary".
+> > > > =
+
+> > > > Oh, this is because you are treating the MODULEMODE bits like gate
+> > > > clocks. I never really figured out if this was the best way to model
+> > > > those bits since they do more than control a line toggling at a rat=
+e.
+> > > > For instance this bit will affect the master/slave IDLE protocol be=
+tween
+> > > > the module and the PRCM.
+> > > =
+
+> > > Yes seems like there is some negotiation going on there with the
+> > > target module. But from practical point of view the CLKCTRL
+> > > register is the gate for a module functional clock.
+> > =
+
+> > There's some confusion on this, clockdomain is effectively a collection=
+ of
+> > clocks, and can be used to force control that collection if needed. Cha=
+pter
+> > "3.1.1.1.3 Clock Domain" in some OMAP4 TRM shows the relationship neatl=
+y.
+> =
+
+> Yeah that's my understanding too.
+
+There is no clk api for this type of behavior. We keep clocks enabled so
+long as consumers have a positive prepare_count or enable_count. The
+concept of force-idle doesn't work very well here, unless any calls to
+force the clkdm to idle also use a usecount.
+
+> =
+
+> > > > > From hardware point of view, we ideally want to map interconnect
+> > > > > target modules to the clock instance offset from the clock domain
+> > > > > for that interconnect segment. For example gptimer1 clocks would
+> > > > > be just:
+> > > > > =
+
+> > > > > clocks =3D <&cd_wkup 0x40>;
+> > > > > =
+
+> > > > > > 2) why aren't the clock domains modeled as genpds with their as=
+sociated
+> > > > > > devices attached to them? Note that it is possible to "nest" ge=
+npd
+> > > > > > objects. This would also allow for the "Clockdomain Dependency"
+> > > > > > relationships to be properly modeled (see section 3.1.1.1.7 Clo=
+ck Domain
+> > > > > > Dependency in the OMAP4 TRM).
+> > > > > =
+
+> > > > > Clock domains only route clocks to child clocks. Power domains
+> > > > > are different registers. The power domains map roughly to
+> > > > > interconnect instances, there we have registers to disable the
+> > > > > whole interconnect when idle.
+> > > > =
+
+> > > > I'm not talking about power islands at all, but the genpd object in
+> > > > Linux. For instance, if we treat each clock domain like a clock
+> > > > provider, how could the functional dependency between clkdm_A and
+> > > > clkdm_B be asserted?
+> > > =
+
+> > > To me it seems that some output of a clockdomain is just a input
+> > > of another clockdomain? So it's just the usual parent child
+> > > relationship once we treat a clockdomain just as a clock. Tero
+> > > probably has some input here.
+> > =
+
+> > A clockdomain should be modelled as a genpd, that I agree. However, it
+> > doesn't prevent it from being a clock provider also, or does it?
+
+It does not prevent it, but I don't understand why you would want both.
+
+I had a recent conversation with Kevin Hilman about a related issue
+(we were not discussing this thread or this series) and we both agreed
+that most drivers don't even need to managed their clocks directly, so
+much as they need to manage their on/off resources. Clocks are just one
+part of that, and if we can hide that stuff inside of an attached genpd
+then it would be better than having the driver manage clocks explicitly.
+
+Obviously some devices such as audio codec or uart will need to manage
+clocks directly, but this is mostly the exception, not the rule.
+
+> > =
+
+> > > > There is certainly no API for that in the clock framework, but for =
+genpd
+> > > > your runtime_pm_get() callback for clkdm_A could call runtime_pm_get
+> > > > against clkdm_B, which would satisfy the requirement. See section
+> > > > 3.1.1.1.7 Clock Domain Dependency in the OMAP4 TRM, version AB.
+> > =
+
+> > For static dependencies the apis genpd_add/remove_subdomain could proba=
+bly
+> > be used.
+> > =
+
+> > > To me it seems the API is just clk_get() :) Do you have some
+> > > specific example we can use to check? My guess is that the
+> > > TRM "Clock Domain Dependency" is just the usual parent child
+> > > relationship between clocks that are the clockdomains..
+
+clk_get() only fetches a pointer to the clk. I guess you mean
+clk_prepare_enable() to actually increment the use count?
+
+If we used the clk framework here is that it would look something like
+this:
+
+clk_enable(clk_a)
+-> .enable(clk_a_hw)
+   -> clk_enable(clk_b)
+
+However, clk_a and clk_b do not have a parent-child relationship in the
+clock tree. This is purely a functional relationship between IP blocks.
+Modeling this sort of thing in the clk framework would be wrong, and
+genpd is a much better place to establish these arbitrary relationships.
+
+> > > =
+
+> > > If there is something more magical there certainly that should
+> > > be considered though.
+> > =
+
+> > The hwmods could be transformed to individual genpds also I guess. On DT
+> > level though, we would still need a clock pointer to the main clock and=
+ a
+> > genpd pointer in addition to that.
+> =
+
+> Hmm a genpd pointer to where exactly? AFAIK each interconnect
+> instance should be a genpd provider, and the individual interconnect
+> target modules should be consumers for that genpd.
+
+I was thinking that the clock domains would be modeled as genpd objects
+with the interconnect target modules attached as struct devices.
+
+> =
+
+> > Tony, any thoughts on that? Would this break up the plans for the
+> > interconnect completely?
+> =
+
+> Does using genpd for clockdomains cause issues for using genpd for
+> interconnect instances and the target modules?
+
+Can they be the same object in Linux? If there is a one-to-one mapping
+between clock domains and the interconnect port then maybe you can just
+model them together.
+
+> =
+
+> The thing I'd be worried about there is that the clockdomains and
+> their child clocks are just devices sitting on the interconnect,
+> so we could easily end up with genpd modeling something that does
+> not represent the hardware.
+> =
+
+> For example, on 4430 we have:
+> =
+
+> l4_cfg interconnect
+>        ...
+>        segment@0
+>                 ...
+>                 target_module@4000
+>                         cm1: cm1@0
+
+How about:
+
+l4_cfg interconnect
+       ...
+       segment@0
+                ...
+                cm1@4000
+                	module: foo_module@0
+
+I don't know much about the segments. Do they map one-to-one with the
+clock domains?
+
+>                              ...
+>                 ...
+>                 target_module@8000
+>                         cm2: cm2@0
+>                 ...
+> =
+
+> =
+
+> l4_wkup interonnect
+>         ...
+>         segment@0
+>                 ...
+>                 target_module@6000
+>                         prm: prm@0
+>                 ...
+>                 target_module@a000
+>                         scrm: scrm@0
+>                 ...
+> =
+
+> So what do you guys have in mind for using genpd in the above
+> example for the clockdomains?
+
+If my quick-and-dirty DT above makes sense, then the target modules
+(e.g. io controller) would not get clocks anymore, but just
+pm_runtime_get(). The genpd backing object would call clk_enable/disable
+as needed.
+
+If fine grained control of a clock is needed (e.g. for clk_set_rate)
+then the driver can still clk_get it. Whether or not the clockdomain
+provides that clock or if it comes from the clock generator (e.g. cm1,
+cm2, prm, etc) isn't as important to me, but I prefer for the
+clockdomain to not be a clock provider if possible.
+
+> =
+
+> To me it seems that the interconnect instances like l4_cfg and
+> l4_wkup above should be genpd providers.
+
+Agreed.
+
+> I don't at least yet
+> follow what we need to do with the clockdomains with genpd :)
+
+Use the clockdomain genpd to call clk_enable/disable under the hood.
+Don't use them as clock providers to the target modules. Clockdomain
+genpds would be the clock consumers.
+
+> =
+
+> Wouldn't just doing clk_get() from one clockdomain clock to
+> another clockdomain clock (or it's output) be enough to
+> represent the clockdomain dependencies?
+
+s/clk_get/clk_prepare_enable/
+
+Yes, but you're stuffing functional dependencies into the clock tree,
+which sucks. genpd was created to model these arbitrary dependencies.
+
+Regards,
+Mike
+
+> =
+
+> Regards,
+> =
+
+> Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
