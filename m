@@ -1,70 +1,93 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
- regulator support
-Date: Fri, 9 Dec 2016 09:01:18 -0600
-Message-ID: <CAL_JsqLpjhHeeKq3PmNToux1Rgkg0M84-dv9HGCOws223ima4w@mail.gmail.com>
-References: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
- <20161201143434.GD1280@mail.corp.redhat.com> <20161201172448.GA46688@google.com>
- <20161205235908.rmiyd7io4kddple6@rob-hp-laptop> <20161206084803.GR1280@mail.corp.redhat.com>
- <CAL_Jsq+C1MWrN4Sg_xOgpTzQh9gfL12G5Uxb1ya2MTkoa=7fMA@mail.gmail.com>
- <CAD=FV=UMonRe8WJ1feDv3Nh9g8hEGAwwFT5NYLbzXADBqhTf-A@mail.gmail.com>
- <20161208154145.GA30888@mail.corp.redhat.com> <CAL_Jsq+fdoFnarXYkPv6FjVue3v31ry-Ddfkq9fQk9Ek+AjETw@mail.gmail.com>
- <E409F66F-1E4B-4A63-9977-69DF44ACAB0A@gmail.com> <CAL_JsqKu0yhLVyEjcZs_rn=VqM9O4F_VMhOkfhEEvbYAjvWSTg@mail.gmail.com>
- <alpine.LNX.2.00.1612091532240.16984@cbobk.fhfr.pm>
+From: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+Subject: [PATCH] rtc: pcf8563: Do not disable clk out by default
+Date: Fri,  9 Dec 2016 16:03:49 +0100
+Message-ID: <1481295829-21974-1-git-send-email-volodymyr.bendiuga@westermo.se>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <alpine.LNX.2.00.1612091532240.16984@cbobk.fhfr.pm>
-Sender: linux-input-owner@vger.kernel.org
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Caesar Wang <wxt@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBAABBOEQVPBAKGQEQZLRCUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, volodymyr.bendiuga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: =?UTF-8?q?Mattias=20Walstr=C3=B6m?= <mattias.walstrom-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>, Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 9, 2016 at 8:36 AM, Jiri Kosina <jikos@kernel.org> wrote:
-> On Thu, 8 Dec 2016, Rob Herring wrote:
->
->> > And if tomorrow there is Elan device that is drop-in compatible (same
->> > connector, etc) with Wacom i2c-hid, will you ask for Elan-specific
->> > binding? Atmel? Weida? They all need to be powered up ultimately.
->>
->> Yes, I will.
->
-> What advantage does that bring?
->
->> That in no way means the OS driver has to know about each and every one.
->> If they can all claim compatibility with Wacom (including power
->> control), then they can have a Wacom compatible string too. Or you can
->> just never tell me that there's a different manufacturer and I won't
->> care as long you don't need different control. But soon as a device
->> needs another power rail, GPIO or different timing, then you'd better
->> have a new compatible string.
->
-> Again, I simply don't understand what advantage does the aproach you are
-> trying to use bring.
+From: Mattias Walstr=C3=B6m <mattias.walstrom-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
 
-This is simply how DT works. HID-over-I2C devices are no different
-than any other I2C device or any other component. You are not special.
+Commit a39a6405d5f949bc651694028a disables CLKOUT of
+the rtc after power-up to improve power consumption.
+This is very useful, but some designs do require to
+have the rtc on all the time, otherwise devices will
+be bricked. Therefore this patch is a compromise that
+works for both cases, where the default case is when
+CLKOUT is on. If one wants to disable the CLKOUT,
+clkout-allow-disable can be added to devicetree's rtc node.
 
-> HID over I2C is a generic protocol.
+Signed-off-by: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/rtc/pcf8563.txt |  1 +
+ drivers/rtc/rtc-pcf8563.c                         | 11 +++--------
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-DT describes h/w, not protocols.
+diff --git a/Documentation/devicetree/bindings/rtc/pcf8563.txt b/Documentat=
+ion/devicetree/bindings/rtc/pcf8563.txt
+index 086c998..0b06a36 100644
+--- a/Documentation/devicetree/bindings/rtc/pcf8563.txt
++++ b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+@@ -7,6 +7,7 @@ see: Documentation/devicetree/bindings/i2c/trivial-admin-gu=
+ide/devices.rst
+=20
+ Optional property:
+ - #clock-cells: Should be 0.
++- clkout-allow-disable: Allow the CLKOUT to be disabled if not used.
+ - clock-output-names:
+   overwrite the default clock name "pcf8563-clkout"
+=20
+diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+index 1227cea..1489ee9 100644
+--- a/drivers/rtc/rtc-pcf8563.c
++++ b/drivers/rtc/rtc-pcf8563.c
+@@ -519,18 +519,13 @@ static struct clk *pcf8563_clkout_register_clk(struct=
+ pcf8563 *pcf8563)
+ 	struct device_node *node =3D client->dev.of_node;
+ 	struct clk *clk;
+ 	struct clk_init_data init;
+-	int ret;
+-	unsigned char buf;
+-
+-	/* disable the clkout output */
+-	buf =3D 0;
+-	ret =3D pcf8563_write_block_data(client, PCF8563_REG_CLKO, 1, &buf);
+-	if (ret < 0)
+-		return ERR_PTR(ret);
+=20
+ 	init.name =3D "pcf8563-clkout";
+ 	init.ops =3D &pcf8563_clkout_ops;
++
++	/* disable the clkout output only if it is allowed in devicetree */
+ 	init.flags =3D 0;
++	init.flags |=3D !of_property_read_bool(node, "clkout-allow-disable") ? CL=
+K_IGNORE_UNUSED : 0;
+ 	init.parent_names =3D NULL;
+ 	init.num_parents =3D 0;
+ 	pcf8563->clkout_hw.init =3D &init;
+--=20
+2.7.4
 
-> Sure, we need to have quirks for
-> device-specific bugs, and in such cases enumerate particular devices. But
-> we don't need DT for that at all.
-
-When it is related to powering on the device you may need to know the
-specific device in DT. Compatibles are like VID/PID for devices, a
-unique identifier for the specific device. Having that does not to
-prevent generic/common drivers. The same rules apply. You wouldn't
-want different devices having the same VID/PID (surely that has never
-happened) or only change a VID/PID when you find a bug. The same rules
-apply for compatible strings. You should be able to apply quirks
-without changing/adding compatible strings (or more generally, without
-changing the dtb). Just like you wouldn't change a VID/PID for a
-device only when you find a bug, you can't add/change a DT compatible.
-
-BTW, As you do have a VID/PID, you could define a compatible string
-syntax using VID/PID like is done for PCI and USB.
-
-Rob
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
