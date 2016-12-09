@@ -1,15 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Tianma Micro-electronics
-Date: Fri, 9 Dec 2016 12:12:48 -0600
-Message-ID: <20161209181248.if2fv2spambffxzo@rob-hp-laptop>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Tianma TM070JDHG30
+Date: Fri, 9 Dec 2016 12:14:37 -0600
+Message-ID: <20161209181436.47guhgu76jcn5ooi@rob-hp-laptop>
 References: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
- <20161202085208.19459-2-gary.bisson@boundarydevices.com>
+ <20161202085208.19459-3-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20161202085208.19459-2-gary.bisson@boundarydevices.com>
+In-Reply-To: <20161202085208.19459-3-gary.bisson@boundarydevices.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -23,14 +23,19 @@ To: Gary Bisson <gary.bisson@boundarydevices.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMDIsIDIwMTYgYXQgMDk6NTI6MDdBTSArMDEwMCwgR2FyeSBCaXNzb24gd3Jv
-dGU6Cj4gVGlhbm1hIE1pY3JvLWVsZWN0cm9uaWNzIENvLiwgTHRkLiAoVGlhbm1hKSBzcGVjaWFs
-aXplcyBpbiBwcm92aWRpbmcKPiBkaXNwbGF5IHNvbHV0aW9ucyBhbmQgZWZmaWNpZW50IHN1cHBv
-cnQgc2VydmljZXMgd29ybGR3aWRlLgo+IAo+IE1vcmUgaW5mbzoKPiBodHRwOi8vZW4udGlhbm1h
-LmNvbS9hYm91dC5zaHRtbAo+IAo+IFNpZ25lZC1vZmYtYnk6IEdhcnkgQmlzc29uIDxnYXJ5LmJp
-c3NvbkBib3VuZGFyeWRldmljZXMuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+T24gRnJpLCBEZWMgMDIsIDIwMTYgYXQgMDk6NTI6MDhBTSArMDEwMCwgR2FyeSBCaXNzb24gd3Jv
+dGU6Cj4gVGhlIFRpYW5tYSBUTTA3MEpESEczMCBpcyBhIDciIExWRFMgZGlzcGxheSB3aXRoIGEg
+cmVzb2x1dGlvbiBvZgo+IDEyODB4ODAwLgo+IGh0dHA6Ly91c2EudGlhbm1hLmNvbS9wcm9kdWN0
+cy10ZWNobm9sb2d5L3Byb2R1Y3QvdG0wNzBqZGhnMzAtMDAKPiAKPiBZb3UgY2FuIGFsc28gZmlu
+ZCB0aGlzIHByb2R1Y3QgYWxvbmcgd2l0aCBhIEZUNXgwNiB0b3VjaCBjb250cm9sbGVyCj4gZnJv
+bSBCb3VuZGFyeSBEZXZpY2VzOgo+IGh0dHBzOi8vYm91bmRhcnlkZXZpY2VzLmNvbS9wcm9kdWN0
+L2JkMDcwbGljMi8KPiAKPiBTaWduZWQtb2ZmLWJ5OiBHYXJ5IEJpc3NvbiA8Z2FyeS5iaXNzb25A
+Ym91bmRhcnlkZXZpY2VzLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+dGlhbm1hLHRtMDcwamRoZzMwLnR4dCAgfCAgNyArKysrKysKCkFja2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPiAKCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
+bGUuYyAgICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVz
+IGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MGpkaGcz
+MC50eHQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
