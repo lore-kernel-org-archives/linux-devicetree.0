@@ -1,46 +1,190 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 -next 2/2] ARM: dts: sunxi: add support
- for Orange Pi Zero board
-Date: Fri, 9 Dec 2016 09:17:34 +0100
-Message-ID: <20161209081734.ves6ljo4hz57n4tp@lukather>
-References: <20161202150513.34691-1-icenowy@aosc.xyz>
- <20161202150513.34691-2-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5y2yiuslvpj3ljcl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKGRVHBAKGQELJ2WHCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161202150513.34691-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v13 0/7] dtc: Dynamic DT support
+Date: Fri, 9 Dec 2016 10:16:51 +0200
+Message-ID: <3C4DD870-3736-42A7-A110-0975C31E74A4@konsulko.com>
+References: <1481114903-8197-1-git-send-email-pantelis.antoniou@konsulko.com> <20161209055709.GP13139@umbus.fritz.box>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161209055709.GP13139-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi David,
 
---5y2yiuslvpj3ljcl
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+> On Dec 9, 2016, at 07:57 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
+wrote:
+>=20
+> On Wed, Dec 07, 2016 at 02:48:16PM +0200, Pantelis Antoniou wrote:
+>> This patchset adds Dynamic DT support in the DTC compiler
+>> as used in a number of boards like the beaglebone/rpi/chip and =
+others.
+>>=20
+>> The first patch documents the internals of overlay generation, while
+>> the second one adds dynamic object/overlay support proper.
+>>=20
+>> The third patch adds a test method that can is used by the subsequent
+>> patch which adds a few overlay tests verifying operation.
+>>=20
+>> The following 3 patches add support for the syntactic sugar version
+>> of &foo { }; in a similar manner.
+>>=20
+>> This patchset is against DTC mainline and is also available for a =
+pull
+>> request from https://github.com/pantoniou/dtc/tree/overlays
+>=20
+> Ok, I've merged patches 1-4 into mainline, along with a bunch of minor
+> fixes of my own on top.  5..7 (the start of the new) I want to hold
+> off on for now, to thrash out the details of what we want a new
+> cleaner format to look like a bit more thoroughly.
+>=20
 
-On Fri, Dec 02, 2016 at 11:05:13PM +0800, Icenowy Zheng wrote:
-> Orange Pi Zero is a board that came with the new Allwinner H2+ SoC and a
-> SDIO Wi-Fi chip by Allwinner (XR819).
-> 
-> Add a device tree file for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Thank you.
 
-Applied, thanks!
-Maxime
+My git tree contains an updated patchset of the syntactic sugar patches
+for reference now.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---5y2yiuslvpj3ljcl--
+Regards
+
+=E2=80=94 Pantelis
+
+>>=20
+>> Regards
+>>=20
+>> -- Pantelis
+>>=20
+>> Changes since v12:
+>> * Dropped DTBO magic option completely.
+>> * Dropped fixup generation option.
+>> * Renamed dstversionflags to dstflags
+>> * Drop support for the new style /plugin/ tag.=20
+>>=20
+>> Changes since v11:
+>> * Syntax and grammatical fixes to the documentation.
+>> * Renamed options and internal variables controlling generation of =
+symbols
+>> and fixups.
+>> * Rename version flags to specify that they refer to DTS version.
+>> * Made sure that no symbols/fixup nodes are only generated if they =
+contain
+>> entries.
+>>=20
+>> Changes since v10:
+>> * Split out the syntactic sugar version of &foo { }; into a different
+>> patches to make things clearer.
+>> * Reworked a bit the arguments passed to fixup node generation method
+>> making things simpler and utilize common methodology.
+>> * Avoid string parsing the full path using the node walking instead =
+for
+>> local fixup generation.
+>> * Added an option to suppress generation of fixup nodes on base =
+trees.
+>> * Added automatic generation of symbols and fixups when compiling a
+>> plugin.
+>> * Minor rework according to maintainer requests.
+>>=20
+>> Changes since v9:
+>> * Reversed -M switch to by default use new DTBO magic value.
+>> * Removed global versionflags in the parser by using inherited
+>> attributes.
+>> * build_node instead of malloc at add_orphan_node().
+>> * Do not use escape for path copy
+>> * Do not generate /plugin/ when generating a dts file even when
+>> the plugin flag is set..
+>>=20
+>> Changes since v8:
+>> * Removed extra member of boot_info in each node; passing boot_info
+>> parameter to the check methods instead.
+>> * Reworked yacc syntax that supports both old and new plugin syntax
+>> * Added handling for new magic number (enabled by 'M' switch).
+>> * Dropped dtbo/asmo formats.
+>> * Added overlay testsuite.
+>> * Addressed last version maintainer comments.
+>>=20
+>> Changes since v7:
+>> * Dropped xasprintf & backward compatibility patch
+>> * Rebased against dgibson's overlay branch
+>> * Minor doc wording fixes.
+>>=20
+>> Changes since v6:
+>> * Introduced xasprintf
+>> * Added append_to_property and used it
+>> * Changed some die()'s to assert
+>> * Reordered node generation to respect sort
+>> * Addressed remaining maintainer changes from v6
+>>=20
+>> Changes since v5:
+>> * Rebase to latest dtc version.
+>> * Addressed all the maintainer requested changes from v5
+>> * Added new magic value for dynamic objects and new format
+>>=20
+>> Changes since v4:
+>> * Rebase to latest dtc version.
+>> * Completely redesigned the generation of resolution data.
+>> Now instead of being generated as part of blob generation
+>> they are created in the live tree.
+>> * Consequently the patchset is much smaller.
+>> * Added -A auto-label alias generation option.
+>> * Addressed maintainer comments.
+>> * Added syntactic sugar for overlays in the form of .dtsi
+>> * Added /dts-v1/ /plugin/ preferred plugin form and deprecate
+>> the previous form (although still works for backward compatibility)
+>>=20
+>> Changes since v3:
+>> * Rebase to latest dtc version.
+>>=20
+>> Changes since v2:
+>> * Split single patch to a patchset.
+>> * Updated to dtc mainline.
+>> * Changed __local_fixups__ format
+>> * Clean up for better legibility.
+>> Pantelis Antoniou (7):
+>>  dtc: Document the dynamic plugin internals
+>>  dtc: Plugin and fixup support
+>>  tests: Add check_path test
+>>  tests: Add overlay tests
+>>  overlay: Documentation for the overlay sugar syntax
+>>  overlay: Add syntactic sugar version of overlays
+>>  tests: Add a test for overlays syntactic sugar
+>>=20
+>> Documentation/dt-object-internal.txt | 327 =
++++++++++++++++++++++++++++++++++++
+>> Documentation/manual.txt             |  21 ++-
+>> checks.c                             |   8 +-
+>> dtc-lexer.l                          |   5 +
+>> dtc-parser.y                         |  48 ++++-
+>> dtc.c                                |  33 +++-
+>> dtc.h                                |  17 +-
+>> flattree.c                           |   2 +-
+>> fstree.c                             |   2 +-
+>> livetree.c                           | 291 =
+++++++++++++++++++++++++++++++-
+>> tests/.gitignore                     |   1 +
+>> tests/Makefile.tests                 |   3 +-
+>> tests/check_path.c                   |  82 +++++++++
+>> tests/overlay_base_fixups.dts        |  22 +++
+>> tests/overlay_overlay_dtc.dts        |   1 +
+>> tests/overlay_overlay_simple.dts     |  12 ++
+>> tests/run_tests.sh                   |  38 ++++
+>> 17 files changed, 898 insertions(+), 15 deletions(-)
+>> create mode 100644 Documentation/dt-object-internal.txt
+>> create mode 100644 tests/check_path.c
+>> create mode 100644 tests/overlay_base_fixups.dts
+>> create mode 100644 tests/overlay_overlay_simple.dts
+>>=20
+>=20
+> --=20
+> David Gibson			| I'll have my music baroque, and my =
+code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
+_the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
