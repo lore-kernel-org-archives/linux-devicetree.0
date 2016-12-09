@@ -1,189 +1,67 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v13 0/7] dtc: Dynamic DT support
-Date: Fri, 9 Dec 2016 10:16:51 +0200
-Message-ID: <3C4DD870-3736-42A7-A110-0975C31E74A4@konsulko.com>
-References: <1481114903-8197-1-git-send-email-pantelis.antoniou@konsulko.com> <20161209055709.GP13139@umbus.fritz.box>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH] misc: eeprom: implement compatible DT probing
+Date: Fri, 9 Dec 2016 09:18:46 +0100
+Message-ID: <20161209081846.GA1446@katana>
+References: <1481219279-6982-1-git-send-email-linus.walleij@linaro.org>
+ <95d9c739-8a69-b990-2840-b5381d54a99d@axentia.se>
+ <CACRpkda+_0+y6U-gjt2ym45gi=KZ69hixMw6T=tAQGTGy5J37Q@mail.gmail.com>
+ <806f55f3-3fed-572d-4859-7c7dc76c5e08@axentia.se>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161209055709.GP13139-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <806f55f3-3fed-572d-4859-7c7dc76c5e08-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
 
-> On Dec 9, 2016, at 07:57 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
->=20
-> On Wed, Dec 07, 2016 at 02:48:16PM +0200, Pantelis Antoniou wrote:
->> This patchset adds Dynamic DT support in the DTC compiler
->> as used in a number of boards like the beaglebone/rpi/chip and =
-others.
->>=20
->> The first patch documents the internals of overlay generation, while
->> the second one adds dynamic object/overlay support proper.
->>=20
->> The third patch adds a test method that can is used by the subsequent
->> patch which adds a few overlay tests verifying operation.
->>=20
->> The following 3 patches add support for the syntactic sugar version
->> of &foo { }; in a similar manner.
->>=20
->> This patchset is against DTC mainline and is also available for a =
-pull
->> request from https://github.com/pantoniou/dtc/tree/overlays
->=20
-> Ok, I've merged patches 1-4 into mainline, along with a bunch of minor
-> fixes of my own on top.  5..7 (the start of the new) I want to hold
-> off on for now, to thrash out the details of what we want a new
-> cleaner format to look like a bit more thoroughly.
->=20
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you.
 
-My git tree contains an updated patchset of the syntactic sugar patches
-for reference now.
+> Many on the patterns at,24c256 and at24,24c256 (should be probably
+> be atmel,24c256)
 
-Regards
+I remember patches fixing that. Since I usually don't take DTS patches,
+I can't recall what happened to them. It might well be that those were
+accepted and meanwhile new bad bindings got in.
 
-=E2=80=94 Pantelis
+> but also a few atmel,at24c16 and atmel,at24c128b.
+> I don't understand how those last ones ever worked, if it is not
+> working for you? Especially those with the trailing "b". WTF?
 
->>=20
->> Regards
->>=20
->> -- Pantelis
->>=20
->> Changes since v12:
->> * Dropped DTBO magic option completely.
->> * Dropped fixup generation option.
->> * Renamed dstversionflags to dstflags
->> * Drop support for the new style /plugin/ tag.=20
->>=20
->> Changes since v11:
->> * Syntax and grammatical fixes to the documentation.
->> * Renamed options and internal variables controlling generation of =
-symbols
->> and fixups.
->> * Rename version flags to specify that they refer to DTS version.
->> * Made sure that no symbols/fixup nodes are only generated if they =
-contain
->> entries.
->>=20
->> Changes since v10:
->> * Split out the syntactic sugar version of &foo { }; into a different
->> patches to make things clearer.
->> * Reworked a bit the arguments passed to fixup node generation method
->> making things simpler and utilize common methodology.
->> * Avoid string parsing the full path using the node walking instead =
-for
->> local fixup generation.
->> * Added an option to suppress generation of fixup nodes on base =
-trees.
->> * Added automatic generation of symbols and fixups when compiling a
->> plugin.
->> * Minor rework according to maintainer requests.
->>=20
->> Changes since v9:
->> * Reversed -M switch to by default use new DTBO magic value.
->> * Removed global versionflags in the parser by using inherited
->> attributes.
->> * build_node instead of malloc at add_orphan_node().
->> * Do not use escape for path copy
->> * Do not generate /plugin/ when generating a dts file even when
->> the plugin flag is set..
->>=20
->> Changes since v8:
->> * Removed extra member of boot_info in each node; passing boot_info
->> parameter to the check methods instead.
->> * Reworked yacc syntax that supports both old and new plugin syntax
->> * Added handling for new magic number (enabled by 'M' switch).
->> * Dropped dtbo/asmo formats.
->> * Added overlay testsuite.
->> * Addressed last version maintainer comments.
->>=20
->> Changes since v7:
->> * Dropped xasprintf & backward compatibility patch
->> * Rebased against dgibson's overlay branch
->> * Minor doc wording fixes.
->>=20
->> Changes since v6:
->> * Introduced xasprintf
->> * Added append_to_property and used it
->> * Changed some die()'s to assert
->> * Reordered node generation to respect sort
->> * Addressed remaining maintainer changes from v6
->>=20
->> Changes since v5:
->> * Rebase to latest dtc version.
->> * Addressed all the maintainer requested changes from v5
->> * Added new magic value for dynamic objects and new format
->>=20
->> Changes since v4:
->> * Rebase to latest dtc version.
->> * Completely redesigned the generation of resolution data.
->> Now instead of being generated as part of blob generation
->> they are created in the live tree.
->> * Consequently the patchset is much smaller.
->> * Added -A auto-label alias generation option.
->> * Addressed maintainer comments.
->> * Added syntactic sugar for overlays in the form of .dtsi
->> * Added /dts-v1/ /plugin/ preferred plugin form and deprecate
->> the previous form (although still works for backward compatibility)
->>=20
->> Changes since v3:
->> * Rebase to latest dtc version.
->>=20
->> Changes since v2:
->> * Split single patch to a patchset.
->> * Updated to dtc mainline.
->> * Changed __local_fixups__ format
->> * Clean up for better legibility.
->> Pantelis Antoniou (7):
->>  dtc: Document the dynamic plugin internals
->>  dtc: Plugin and fixup support
->>  tests: Add check_path test
->>  tests: Add overlay tests
->>  overlay: Documentation for the overlay sugar syntax
->>  overlay: Add syntactic sugar version of overlays
->>  tests: Add a test for overlays syntactic sugar
->>=20
->> Documentation/dt-object-internal.txt | 327 =
-+++++++++++++++++++++++++++++++++++
->> Documentation/manual.txt             |  21 ++-
->> checks.c                             |   8 +-
->> dtc-lexer.l                          |   5 +
->> dtc-parser.y                         |  48 ++++-
->> dtc.c                                |  33 +++-
->> dtc.h                                |  17 +-
->> flattree.c                           |   2 +-
->> fstree.c                             |   2 +-
->> livetree.c                           | 291 =
-++++++++++++++++++++++++++++++-
->> tests/.gitignore                     |   1 +
->> tests/Makefile.tests                 |   3 +-
->> tests/check_path.c                   |  82 +++++++++
->> tests/overlay_base_fixups.dts        |  22 +++
->> tests/overlay_overlay_dtc.dts        |   1 +
->> tests/overlay_overlay_simple.dts     |  12 ++
->> tests/run_tests.sh                   |  38 ++++
->> 17 files changed, 898 insertions(+), 15 deletions(-)
->> create mode 100644 Documentation/dt-object-internal.txt
->> create mode 100644 tests/check_path.c
->> create mode 100644 tests/overlay_base_fixups.dts
->> create mode 100644 tests/overlay_overlay_simple.dts
->>=20
->=20
-> --=20
-> David Gibson			| I'll have my music baroque, and my =
-code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
-_the_ _other_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
+I'd simply assume it was never tested. EEPROMs are often convenience
+storage and not essential for a working board. Also, for historic
+reasons, they are often used via the i2c-dev interface directly, so a
+wrong binding with the kernel driver might simply go unnoticed.
 
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYSmjmAAoJEBQN5MwUoCm2z/UP/1sUNQT34QvDguQjOWpI55Vi
+RUxC9cLLh6ybP1p9HDY69Il2PDlIyCyCVtGE0pbNeq5iGq+hmKYh0dIMFmgFg7Xi
+8ZzqjXR/vPYwDv1Tspb8yhfY0CX1FIWmCRbm0tfLU6HMqw3ATddw/sON+mU5qC0d
+a4k+pjxIE84m60Nab5R14lUV+0Vk7vyb6ikPvj53t56hw6rggCC8QXKm1eVQw7lA
+7F+dNR4Lk5/jGbePmoUNlzimYTVIOLsTZxy8LAMd85W8ITLZ7eGS8b0NG0uy7Z8+
+dqOzfUGjGGvLHKDEfDCZfBQ/U7++wKCKgo3XFwR7MZiiECyAwiBIBOOEdr8liRih
+M3IL0DsH221/ZuroGGoTqJtto8Jowh98IpEalpI95d0r00hF0y/COBcypTCt+uB4
+elYKjtsNTKv+pbuMFusomIOxNcTTe7hzruyP8Bt3LqmoUetjtg09xycIKMe7FrjZ
+bz0oLuOO4RNC4HuWENiDzA1yd4xWem+Oh+PFRgP/g46Ls3wL/Sx2NznVgbRGoXIF
+la7SfAU+9RQcJU7n3CiXKu7zIXam8irtFeLv2mneSDV899tBNsaAnXc8dXHkl50k
+4U/seOoj+nGk3YqJVITC3cmPrt++G9gg6rG5SVgu8A9s+Te/BjwnmOhTFaCVKgJ4
+4nMUGyZpmLRLk0jggmfl
+=/IDQ
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
