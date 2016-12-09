@@ -1,30 +1,28 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree: bindings: Add vendor prefix for Oki
-Date: Fri, 9 Dec 2016 10:28:16 -0600
-Message-ID: <20161209162816.3xthgkyrbjlduanc@rob-hp-laptop>
-References: <1480068945-29822-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drivers/of: fix missing pr_cont()s in
+ of_print_phandle_args
+Date: Fri, 9 Dec 2016 10:32:54 -0600
+Message-ID: <20161209163254.aev5dc53edwiqyf4@rob-hp-laptop>
+References: <1480579255-28446-1-git-send-email-marcin.nowakowski@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1480068945-29822-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1480579255-28446-1-git-send-email-marcin.nowakowski@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 11:15:45AM +0100, Geert Uytterhoeven wrote:
-> Already in use for "oki,ml86v7667".
+On Thu, Dec 01, 2016 at 09:00:55AM +0100, Marcin Nowakowski wrote:
+> Since the KERN_CONT changes, the current debug printks have a lot of
+> empty lines making the log messages very hard to read.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/of/base.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
 Applied, thanks.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
