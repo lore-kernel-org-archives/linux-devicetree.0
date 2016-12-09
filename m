@@ -1,107 +1,160 @@
-From: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 0/4] powernv:stop: Use psscr_val,mask provided by firmware
-Date: Fri,  9 Dec 2016 19:01:59 +0530
-Message-ID: <cover.1481288905.git.ego@linux.vnet.ibm.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed
+ SoCs
+Date: Fri, 9 Dec 2016 14:37:36 +0100
+Message-ID: <08dc9a53-505f-0b79-5bb3-1d9e73166b6c@atmel.com>
+References: <1478688149-4554-1-git-send-email-clg@kaod.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478688149-4554-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Neuling <mikey-/owAOxkjmzZAfugRpC6u6w@public.gmane.org>, Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Shreyas B. Prabhu" <shreyasbp-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shilpasri G Bhat <shilpa.bhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Hi Cedric,
 
-This is the fourth iteration of the patchset to use the psscr_val and
-psscr_mask provided by the firmware for each of the stop states.
+Le 09/11/2016 à 11:42, Cédric Le Goater a écrit :
+> This driver adds mtd support for spi-nor attached to either or both of
+> the Firmware Memory Controller or the SPI Flash Controller (AST2400
+> only).
+> 
+> The SMC controllers on the Aspeed AST2500 SoC are very similar to the
+> ones found on the AST2400. The differences are on the number of
+> supported flash modules and their default mappings in the SoC address
+> space.
+> 
+> The Aspeed AST2500 has one SPI controller for the BMC firmware and two
+> for the host firmware. All controllers have now the same set of
+> registers compatible with the AST2400 FMC controller and the legacy
+> 'SMC' controller is fully gone.
+> 
+> Each controller has a memory range on which it maps its flash module
+> slaves. Each slave is assigned a memory window for its mapping that
+> can be changed at bootime with the Segment Address Register.
+> 
+> Each SPI flash slave can then be accessed in two modes: Command and
+> User. When in User mode, accesses to the memory segment of the slaves
+> are translated in SPI transfers. When in Command mode, the HW
+> generates the SPI commands automatically and the memory segment is
+> accessed as if doing a MMIO.
+> 
+> Currently, only the User mode is supported. Command mode needs a
+> little more work to check that the memory window on the AHB bus fits
+> the module size.
+> 
+> Based on previous work from Milton D. Miller II <miltonm-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> ---
+[...]
+> +static int aspeed_smc_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
+> +{
+> +	struct aspeed_smc_chip *chip = nor->priv;
+> +
+> +	mutex_lock(&chip->controller->mutex);
+> +
+> +	aspeed_smc_start_user(nor);
+> +	aspeed_smc_write_to_ahb(chip->base, &opcode, 1);
+> +	aspeed_smc_read_from_ahb(buf, chip->base, len);
+> +	aspeed_smc_stop_user(nor);
+> +
+> +	mutex_unlock(&chip->controller->mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int aspeed_smc_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
+> +				int len)
+> +{
+> +	struct aspeed_smc_chip *chip = nor->priv;
+> +
+> +	mutex_lock(&chip->controller->mutex);
+> +
+> +	aspeed_smc_start_user(nor);
+> +	aspeed_smc_write_to_ahb(chip->base, &opcode, 1);
+> +	aspeed_smc_write_to_ahb(chip->base, buf, len);
+> +	aspeed_smc_stop_user(nor);
+> +
+> +	mutex_unlock(&chip->controller->mutex);
+> +
+> +	return 0;
+> +}
+> +
+[...]
+> +static ssize_t aspeed_smc_read_user(struct spi_nor *nor, loff_t from,
+> +				    size_t len, u_char *read_buf)
+> +{
+> +	struct aspeed_smc_chip *chip = nor->priv;
+> +
+> +	mutex_lock(&chip->controller->mutex);
+> +
+> +	aspeed_smc_start_user(nor);
+> +	aspeed_smc_send_cmd_addr(nor, nor->read_opcode, from);
+> +	aspeed_smc_read_from_ahb(read_buf, chip->base, len);
+> +	aspeed_smc_stop_user(nor);
+> +
+> +	mutex_unlock(&chip->controller->mutex);
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t aspeed_smc_write_user(struct spi_nor *nor, loff_t to, size_t len,
+> +				     const u_char *write_buf)
+> +{
+> +	struct aspeed_smc_chip *chip = nor->priv;
+> +
+> +	mutex_lock(&chip->controller->mutex);
+> +
+> +	aspeed_smc_start_user(nor);
+> +	aspeed_smc_send_cmd_addr(nor, nor->program_opcode, to);
+> +	aspeed_smc_write_to_ahb(chip->base, write_buf, len);
+> +	aspeed_smc_stop_user(nor);
+> +
+> +	mutex_unlock(&chip->controller->mutex);
+> +
+> +	return len;
+> +}
 
-The previous version can be found here:
+As I've explained in review of the series v1, the chip->controller->mutex
+seems to be used only by aspeed_smc_read_reg(), aspeed_smc_write_reg(),
+aspeed_smc_read_user() and aspeed_smc_write_user(), the driver
+implementations of nor->read_reg(), nor->write_reg(), nor->read() and
+nor->write().
 
-[v3]: https://lkml.org/lkml/2016/11/10/37
-[v2]: https://lkml.org/lkml/2016/10/27/143
-[v1]: https://lkml.org/lkml/2016/9/29/45
+This driver locks the mutex at the very beginning of each of those
+functions and unlocks the mutex before returning.
 
-This version fixes some of the coding style issues pointed out by
-Michael Ellerman in v3. This version also documents the device-tree
-bindings defining the properties under the @power-mgt node in the
-device tree describing the idle states for Linux running on baremetal
-POWER servers.
+So my understanding is that you use this mutex to prevent
+aspeed_smc_[read|write]_[reg|user]() from being called concurrently.
 
-Synopsis
-==========
-In the current implementation, the code for ISA
-v3.0 stop implementation has a couple of shortcomings.
+If so, the spi-nor framework already takes care of this issue with the
+couple of functions: spi_nor_lock_and_prep() / spi_nor_unlock_and_unprep().
 
-a) The code hand-codes the values for ESL,EC,TR,MTL bits of PSSCR and
-   uses only the RL field from the firmware. While this is not
-   incorrect, since the hand-coded values are legitimate, it is not a
-   very flexible design since the firmware has the capability to
-   communicate these values via the "ibm,cpu-idle-state-psscr" and
-   "ibm,cpu-idle-state-psscr-mask" properties. In case where the
-   firmware provides values for these fields that is different from
-   the hand-coded values, the current code will not work as intended.
+Indeed, spi_nor_lock_and_prep() is called on entering and
+spi_nor_unlock_and_unprep() on exiting each of the following functions:
+- mtd->_read = spi_nor_read
+- mtd->_write = spi_nor_write / sst_write
+- mtd->_erase = spi_nor_erase
+- mtd->_lock = spi_nor_lock
+- mtd->_unlock = spi_nor_unlock
+- mtd->_is_lock = spi_nor_is_locked
 
-b) Due to issue a), the current code assumes that ESL=EC=1 for all the
-   stop states and hence the wakeup from the stop instruction will
-   happen at 0x100, the system-reset vector. However, the ISA v3.0
-   allows the ESL=EC=0 behaviour where the corresponding stop-state
-   loses no state and wakes up from the subsequent instruction. The
-   current code doesn't handle this case.
-   
-This patch series addresses these issues.
+Except for spi_nor_scan(), which is called once for all during the probe
+and before registering the mtd_info structure, only the above
+mtd->_<handlers> call the nor->read_reg, nor->write_reg, nor->read,
+nor->erase and nor->write spi-nor handlers.
+So your spi-nor / aspeed_smc_<handlers> are always protected from
+concurrent access by the mutex locked in spi_nor_lock_and_prep().
 
-The first patch in the series renames the existing
-IDLE_STATE_ENTER_SEQ macro to IDLE_STATE_ENTER_SEQ_NORET. It reuses
-the name IDLE_STATE_ENTER_SEQ for entering into stop-states which wake
-up at the subsequent instruction.
+So don't worry about concurrent access issue, the spi-nor framework takes
+care of you :)
 
-The second patch adds a helper function in cpuidle-powernv.c for
-initializing entries of the powernv_states[] table that is passed to
-the cpu-idle core. This eliminates some of the code duplication in the
-function that discovers and initializes the stop states.
+Best regards,
 
-The third patch in the series fixes issues a) and b) by ensuring that
-the psscr-value and the psscr-mask provided by the firmware are what
-will be used to set a particular stop state. It also adds support for
-handling wake-up from stop states which were entered with ESL=EC=0.
-
-The third patch also handles the older firmware which sets only the
-Requested Level (RL) field in the psscr and psscr-mask exposed in the
-device tree. In the presence of such older firmware, this patch will
-set the default sane values for for remaining PSSCR fields (i.e PSLL,
-MTL, ESL, EC, and TR).
-
-The fourth patch provides the documentation for the device-tree
-bindings describing the idle state properties under the @power-mgt
-node in the device-tree.
-
-The skiboot patch populates all the relevant fields in the PSSCR
-values and the mask for all the stop states can be found here:
-https://lists.ozlabs.org/pipermail/skiboot/2016-September/004869.html
-
-The patches are based on top of
-git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git fixes
-
-Gautham R. Shenoy (4):
-  powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
-  cpuidle:powernv: Add helper function to populate powernv idle states.
-  powernv: Pass PSSCR value and mask to power9_idle_stop
-  Documentation:powerpc: Add device-tree bindings for power-mgt
-
- .../devicetree/bindings/powerpc/opal/power-mgt.txt | 123 +++++++++++++++++++++
- arch/powerpc/include/asm/cpuidle.h                 |  46 +++++++-
- arch/powerpc/include/asm/processor.h               |   3 +-
- arch/powerpc/kernel/exceptions-64s.S               |   6 +-
- arch/powerpc/kernel/idle_book3s.S                  |  41 ++++---
- arch/powerpc/platforms/powernv/idle.c              |  81 +++++++++++---
- arch/powerpc/platforms/powernv/powernv.h           |   3 +-
- arch/powerpc/platforms/powernv/smp.c               |  14 ++-
- drivers/cpuidle/cpuidle-powernv.c                  | 113 ++++++++++++-------
- include/linux/cpuidle.h                            |   1 +
- 10 files changed, 348 insertions(+), 83 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
-
--- 
-1.9.4
-
+Cyrille
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
