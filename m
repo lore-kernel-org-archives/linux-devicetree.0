@@ -1,51 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: usb:xhci: support disable usb2 LPM Remote Wakeup
-Date: Fri, 9 Dec 2016 15:36:29 -0600
-Message-ID: <20161209213629.76ixdmr24ln72uaw@rob-hp-laptop>
-References: <1480855321-5047-1-git-send-email-tqnguyen@apm.com>
+Subject: Re: [PATCH] dt: pwm: bcm2835: fix typo in clocks property name
+Date: Fri, 9 Dec 2016 15:38:19 -0600
+Message-ID: <20161209213819.okynrznewofatbac@rob-hp-laptop>
+References: <20161205001025.13909-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1480855321-5047-1-git-send-email-tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <20161205001025.13909-1-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Vu Nguyen <vnguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 04, 2016 at 07:42:01PM +0700, Thang Q. Nguyen wrote:
-> From: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+On Mon, Dec 05, 2016 at 02:10:25AM +0200, Vladimir Zapolskiy wrote:
+> According to the examples of BCM2835 PWM device nodes there is a typo in
+> 'clocks' property name, which is a common property name on clock consumer
+> side to store a phandle to an input clock.
 > 
-> As per USB 2.0 link power management addendum ECN, table 1-2, page 4,
-> device or host initiated via resume signaling; device-initiated resumes
-> can be optionally enabled/disabled by software. This patch adds support
-> to control enabling the USB2 RWE feature via DT/ACPI attribute.
-> 
-> Signed-off-by: Vu Nguyen <vnguyen-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
->  drivers/usb/host/xhci-plat.c                       | 3 +++
->  drivers/usb/host/xhci.c                            | 5 ++++-
->  drivers/usb/host/xhci.h                            | 1 +
->  4 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 966885c..9b4cd14 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -25,6 +25,7 @@ Required properties:
->  
->  Optional properties:
->    - clocks: reference to a clock
-> +  - usb2-rwe-disable: disable USB2 LPM Remote Wakeup capable
+>  Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Remote wakeup has been around since USB 1.0 days. Does this need to be 
-USB2 or XHCI specific?
+Applied, thanks.
 
->    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->  
->  Example:
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
