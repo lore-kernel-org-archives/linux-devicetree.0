@@ -1,43 +1,59 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: [PATCH v3 3/5] mtd: aspeed: used a label property
-Date: Fri,  9 Dec 2016 17:49:25 +0100
-Message-ID: <1481302167-28044-4-git-send-email-clg@kaod.org>
-References: <1481302167-28044-1-git-send-email-clg@kaod.org>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Subject: [PATCH v3 0/5] Static memory controllers for the Aspeed SoC
+Date: Fri,  9 Dec 2016 17:49:22 +0100
+Message-ID: <1481302167-28044-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481302167-28044-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
 List-Id: devicetree@vger.kernel.org
 
-This can be used to easily identify a chip on a system with multiple
-chips.
-
-Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
----
- drivers/mtd/spi-nor/aspeed-smc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/aspeed-smc.c b/drivers/mtd/spi-nor/aspeed-smc.c
-index 99302b0d7786..9119c0ca86b6 100644
---- a/drivers/mtd/spi-nor/aspeed-smc.c
-+++ b/drivers/mtd/spi-nor/aspeed-smc.c
-@@ -676,6 +676,8 @@ static int aspeed_smc_setup_flash(struct aspeed_smc_controller *controller,
- 		nor->prepare = aspeed_smc_prep;
- 		nor->unprepare = aspeed_smc_unprep;
- 
-+		mtd->name = of_get_property(child, "label", NULL);
-+
- 		ret = aspeed_smc_chip_setup_init(chip, r);
- 		if (ret)
- 			break;
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sCgpIZXJlIGlzIGEgc2VyaWUgaW50cm9kdWNpbmcgYSBuZXcgZHJpdmVyIGZvciB0aGUg
+ZGlmZmVyZW50IG1lbW9yeQpjb250cm9sbGVycyBvZiB0aGUgQXNwZWVkIEFTVDI1MDAgYW5kIEFT
+VDI0MDAgU29Dcy4gRWFjaCBTb0MgaGFzIGF0CmxlYXN0IGEgbWVtb3J5IGNvbnRyb2xsZXIgZm9y
+IHRoZSBCTUMgZmlybXdhcmUgYW5kIGFub3RoZXIgb25lIGZvciB0aGUKaG9zdCBmaXJtd2FyZS4g
+VGhlIHJlZ2lzdGVyIHNldCBhcmUgbW9zdGx5IGNvbXB0YXRpYmxlIGJ1dCB0aGVyZSBhcmUKc29t
+ZSBzbGlnaHQgZGlmZmVyZW5jZXMgb24gdGhlIEFTVDI0MDAuCgpUaGUgZHJpdmVyIG9ubHkgc3Vw
+cG9ydCBTUEkgdHlwZSBmbGFzaC4KClRlc3RlZCBvbjoKCiAqIE9wZW5QT1dFUiBQYWxtZXR0byAo
+QVNUMjQwMCkgd2l0aAogCUZNQyBjb250cm9sbGVyIDogbjI1cTI1NmEKCVNQSSBjb250cm9sbGVy
+IDogbXgyNWwyNTYzNWUgYW5kIG4yNXE1MTJheDMKCiAqIEV2YWx1YXRpb24gYm9hcmQgKEFTVDI1
+MDApIHdpdGgKIAlGTUMgY29udHJvbGxlciA6IHcyNXEyNTYgCglTUEkgY29udHJvbGxlciA6IHcy
+NXEyNTYKCiAqIE9wZW5QT1dFUiBXaXRoZXJzcG9vbiAoQVNUMjUwMCkgd2l0aAogCUZNQyBjb250
+cm9sbGVyIDogbXgyNWwyNTYzNWUgKiAyCglTUEkgY29udHJvbGxlciA6IG14NjZsMWc0NWcKCkNo
+YW5nZXMgc2luY2UgdjI6CiAtIHNwbGl0dGVkIHBhdGNoIHRvIGRpc3Rpbmd1aXNoIEFTVDI0MDAg
+YW5kIEFTVDI1MDAgY29udHJvbGxlcnMKIC0gZml4ZWQgY29udHJvbGxlciBuYW1lcwogLSBpbnRy
+b2R1Y2VkIHByZXBhcmUvdW5wcmVwYXJlIG9wcwogLSBpbnRyb2R1Y2VkIGEgYXNwZWVkX3NtY19z
+ZXR1cF9mbGFzaCgpIHJvdXRpbmUKIC0gdmFyaW91cyBjbGVhbnVwcwoKQ2hhbmdlcyBzaW5jZSB2
+MToKIC0gYWRkZWQgYSBzZXQ0YiBvcHMgdG8gaGFuZGxlIGRpZmZlcmVuY2UgaW4gdGhlIGNvbnRy
+b2xsZXJzCiAtIHNpbXBsaWZpZWQgdGhlIElPIHJvdXRpbmVzCiAtIHByZXBhcmVkIGZvciBmYXN0
+IHJlYWQgdXNpbmcgZHVtbXkgY3ljbGVzCgpXb3JrIGluIHByb2dyZXNzOgogLSByZWFkIG9wdGlt
+aXphdGlvbiB1c2luZyBoaWdoZXIgU1BJIGNsb2NrIGZyZXF1ZW5jaWVzCiAtIGNvbW1hbmQgbW9k
+ZSB0byBkaXJlY3QgcmVhZHMgZnJvbSBBSEIKIC0gRE1BIHN1cHBvcnQKClRoYW5rcywKCkMuCgpD
+w6lkcmljIExlIEdvYXRlciAoNSk6CiAgbXRkOiBzcGktbm9yOiBhZGQgbWVtb3J5IGNvbnRyb2xs
+ZXJzIGZvciB0aGUgQXNwZWVkIEFTVDI1MDAgU29DCiAgbXRkOiBhc3BlZWQ6IGFkZCBtZW1vcnkg
+Y29udHJvbGxlcnMgZm9yIHRoZSBBc3BlZWQgQVNUMjQwMCBTb0MKICBtdGQ6IGFzcGVlZDogdXNl
+ZCBhIGxhYmVsIHByb3BlcnR5CiAgbXRkOiBzcGktbm9yOiBiaW5kaW5ncyBmb3IgdGhlIEFzcGVl
+ZCBtZW1vcnkgY29udHJvbGxlcnMKICBtdGQ6IHNwaS1ub3I6IGFkZCBhIGxhYmVsIHByb3BlcnR5
+IHRvIGplZGVjLHNwaS1ub3IKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXNwZWVkLXNt
+Yy50eHQgICAgICAgICB8ICA1MSArKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2plZGVj
+LHNwaS1ub3IudHh0ICAgICAgfCAgIDIgKwogZHJpdmVycy9tdGQvc3BpLW5vci9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKwogZHJpdmVycy9tdGQvc3BpLW5vci9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9tdGQvc3BpLW5vci9hc3Bl
+ZWQtc21jLmMgICAgICAgICAgICAgICAgICAgfCA3NzAgKysrKysrKysrKysrKysrKysrKysrCiA1
+IGZpbGVzIGNoYW5nZWQsIDgzNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hc3BlZWQtc21jLnR4dAogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvbXRkL3NwaS1ub3IvYXNwZWVkLXNtYy5jCgotLSAKMi43LjQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+TGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
