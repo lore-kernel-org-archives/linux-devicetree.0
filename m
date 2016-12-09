@@ -1,53 +1,78 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt: pwm: lpc32xx: add description of clocks and
- #pwm-cells properties
-Date: Fri, 9 Dec 2016 15:41:37 -0600
-Message-ID: <20161209214137.2hdugl5rmnwjrus4@rob-hp-laptop>
-References: <20161205014237.1689-1-vz@mleia.com>
- <20161205014237.1689-2-vz@mleia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/5] mmc: dt-bindings: add ZTE ZX296718 MMC bindings
+Date: Fri, 9 Dec 2016 15:47:20 -0600
+Message-ID: <20161209214720.lymj7dfadksleryr@rob-hp-laptop>
+References: <1480904976-7081-1-git-send-email-jun.nie@linaro.org>
+ <1480904976-7081-2-git-send-email-jun.nie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161205014237.1689-2-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1480904976-7081-2-git-send-email-jun.nie@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jun Nie <jun.nie@linaro.org>
+Cc: mark.rutland@arm.com, shawn.guo@linaro.org, xie.baoyou@zte.com.cn, devicetree@vger.kernel.org, ulf.hansson@linaro.org, jh80.chung@samsung.com, jason.liu@linaro.org, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2016 at 03:42:37AM +0200, Vladimir Zapolskiy wrote:
-> NXP LPC32xx SoCs have two simple independent PWM controllers with a single
-> output each, in this case there is no need to specify PWM channel argument
-> on client side, one cell for setting PWM output frequency is sufficient.
+On Mon, Dec 05, 2016 at 10:29:32AM +0800, Jun Nie wrote:
+> Document the device-tree binding of ZTE MMC host on
+> ZX296718 SoC.
 > 
-> Another added to the description property 'clocks' has a standard meaning
-> of a controller supply clock, in the LPC32xx User's Manual the clock is
-> denoted as PWM1_CLK or PWM2_CLK clock.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 > ---
->  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  .../devicetree/bindings/mmc/zx-dw-mshc.txt         | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> index 74b5bc5..523d796 100644
-> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> @@ -3,15 +3,22 @@ LPC32XX PWM controller
->  Required properties:
->  - compatible: should be "nxp,lpc3220-pwm"
->  - reg: physical base address and length of the controller's registers
-> +- clocks: clock phandle and clock specifier pair
-> +- #pwm-cells: should be 1, the cell is used to specify the period in
-> +  nanoseconds.
+> diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+> new file mode 100644
+> index 0000000..c175c4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+> @@ -0,0 +1,35 @@
+> +* ZTE specific extensions to the Synopsys Designware Mobile Storage
+> +  Host Controller
+> +
+> +The Synopsys designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+> +differences between the core Synopsys dw mshc controller properties described
+> +by synopsys-dw-mshc.txt and the properties used by the ZTE specific
+> +extensions to the Synopsys Designware Mobile Storage Host Controller.
+> +
+> +Required Properties:
+> +
+> +* compatible: should be
+> +	- "zte,zx296718-dw-mshc": for ZX SoCs
+> +
+> +Example:
+> +
+> +	mmc1: mmc@1110000 {
+> +		compatible = "zte,zx296718-dw-mshc";
 
-This use of the cell is a bit odd as the period is s/w config and this 
-would typically be a channel selection or such.
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 
-What if I want user specified/changed periods?
+These aren't needed unless you have child nodes with reg property. The 
+DW binding says you should have at least one child.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		reg = <0x01110000 0x1000>;
+> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +		fifo-depth = <32>;
+> +		data-addr = <0x200>;
+> +		fifo-watermark-aligned;
+
+Custom properties should have vendor prefix.
+
+> +		bus-width = <4>;
+> +		clock-frequency = <50000000>;
+> +		clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
+> +		clock-names = "biu", "ciu";
+> +		num-slots = <1>;
+> +		max-frequency = <50000000>;
+> +		cap-sdio-irq;
+> +		cap-sd-highspeed;
+> +		status = "disabled";
+> +	};
+> -- 
+> 1.9.1
+> 
