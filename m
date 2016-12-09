@@ -1,107 +1,81 @@
-From: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] of/irq: improve error report on irq discovery process
- failure
-Date: Fri, 9 Dec 2016 16:19:08 -0200
-Message-ID: <584AF59C.50500@linux.vnet.ibm.com>
-References: <1480946356-16778-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
- <CAL_JsqKg4+SANVuhfjFQRrC4Ax7OhAjwuBpo0Xes9UFevFAdWg@mail.gmail.com>
- <5845B980.2030609@linux.vnet.ibm.com>
- <CAL_JsqJQEYmxbUaL5qhym1MHRvUbo=PvUWDMKRDqLnBhuJAYzQ@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 6/9] dt-bindings: Document rk3399 Gru/Kevin
+Date: Fri, 09 Dec 2016 19:28:36 +0100
+Message-ID: <3895286.MqKyp9eiJu@phil>
+References: <1480645653-36943-1-git-send-email-briannorris@chromium.org> <1480645653-36943-7-git-send-email-briannorris@chromium.org> <20161209175402.gy4mqjaf2rsib7qf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJQEYmxbUaL5qhym1MHRvUbo=PvUWDMKRDqLnBhuJAYzQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Frank Rowand <frowand.list@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161209175402.gy4mqjaf2rsib7qf@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2016 02:25 PM, Rob Herring wrote:
-> On Mon, Dec 5, 2016 at 1:01 PM, Guilherme G. Piccoli
-> <gpiccoli@linux.vnet.ibm.com> wrote:
->> On 12/05/2016 12:28 PM, Rob Herring wrote:
->>> On Mon, Dec 5, 2016 at 7:59 AM, Guilherme G. Piccoli
->>> <gpiccoli@linux.vnet.ibm.com> wrote:
->>>> On PowerPC machines some PCI slots might not have level triggered
->>>> interrupts capability (also know as level signaled interrupts),
->>>> leading of_irq_parse_pci() to complain by presenting error messages
->>>> on the kernel log - in this case, the properties "interrupt-map" and
->>>> "interrupt-map-mask" are not present on device's node in the device
->>>> tree.
->>>>
->>>> This patch introduces a different message for this specific case,
->>>> and also reduces its level from error to warning. Besides, we warn
->>>> (once) that possibly some PCI slots on the system have no level
->>>> triggered interrupts available.
->>>> We changed some error return codes too on function of_irq_parse_raw()
->>>> in order other failure's cases can be presented in a more precise way.
->>>>
->>>> Before this patch, when an adapter was plugged in a slot without level
->>>> interrupts capabilitiy on PowerPC, we saw a generic error message
->>>> like this:
->>>>
->>>>     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-22
->>>>
->>>> Now, with this applied, we see the following specific message:
->>>>
->>>>     [16.154] pci 0014:60:00.1: of_irq_parse_pci: no interrupt-map found,
->>>>     INTx interrupts not available
->>>>
->>>> Finally, we standardize the error path in of_irq_parse_raw() by always
->>>> taking the fail path instead of returning directly from the loop.
->>>>
->>>> Signed-off-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
->>>> ---
->>>>
->>>> v2:
->>>>   * Changed function return code to always return negative values;
->>>
->>> Are you sure this is safe? This is tricky because of differing values
->>> of NO_IRQ (0 or -1).
->>
->> Thanks Rob, but this is purely bad wording from myself. I'm sorry - I
->> meant to say that I changed only my positive return code (that was
->> suggested to be removed in the prior revision) to negative return code!
->>
->> So, I changed only code I added myself in v1 =)
->>
->>
->>>
->>>>   * Improved/simplified warning outputs;
->>>>   * Changed some return codes and some error paths in of_irq_parse_raw()
->>>> in order to be more precise/consistent;
->>>
->>> This too could have some side effects on callers.
->>>
->>> Not saying don't do these changes, just need some assurances this has
->>> been considered.
->>
->> Thanks for your attention. I performed a quick investigation before
->> changing this, all the places that use the return values are just
->> getting "true/false" information from that, meaning they just are
->> comparing to 0 basically. So change -EINVAL to -ENOENT wouldn't hurt any
->> user of these return values, it'll only become more informative IMHO.
->>
->> Now, regarding the only error path that was changed: for some reason,
->> this was the only place in which we didn't goto fail label in case of
->> failure - it was added by a legacy commit from Ben, dated from 2006:
->> 006b64de60 ("[POWERPC] Make OF irq map code detect more error cases").
->> Then it was carried by Grant Likely's commit 7dc2e1134a ("of/irq: merge
->> irq mapping code"), 6-year old commit.
->> I wasn't able to imagine a scenario in which changing this would break
->> something; I believe the change improve consistency, but I'd remove it
->> if you or somebody else thinks it worth be removed.
+Am Freitag, 9. Dezember 2016, 11:54:02 CET schrieb Rob Herring:
+> On Thu, Dec 01, 2016 at 06:27:30PM -0800, Brian Norris wrote:
+> > Gru is a base dev board for a family of devices, including Kevin. Both
+> > utilize Rockchip RK3399, and they share much of their design.
+> > 
+> > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/arm/rockchip.txt | 20
+> >  ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+> > b/Documentation/devicetree/bindings/arm/rockchip.txt index
+> > cc4ace6397ab..830e13f5890c 100644
+> > --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> > +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> > @@ -99,6 +99,26 @@ Rockchip platforms device tree bindings
+> > 
+> >  		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
+> >  		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
+> > 
+> > +- Google Gru (dev-board):
+> > +    Required root node properties:
+> > +      - compatible = "google,gru-rev15", "google,gru-rev14",
+> > +		     "google,gru-rev13", "google,gru-rev12",
+> > +		     "google,gru-rev11", "google,gru-rev10",
+> > +		     "google,gru-rev9", "google,gru-rev8",
+> > +		     "google,gru-rev7", "google,gru-rev6",
+> > +		     "google,gru-rev5", "google,gru-rev4",
+> > +		     "google,gru-rev3", "google,gru-rev2",
+> > +		     "google,gru", "rockchip,rk3399";
 > 
-> Okay. It's a bit late for 4.10 now and want this to be in -next for a
-> while, so I'll queue it after the merge window.
+> All of these are supposed to be specified or just one rev at a time?
+
+All of them. I.e. the devicetree is supposed to be compatible with all of 
+those, while the bootloader determines the actual board revision and sets the 
+choosen compatible - at least that was the way with the previous series of 
+devices based around the rk3288 (veyron) and I think it will be the same way 
+still.
+
+I.e. as you can see below, Kevin starts being compatible at -rev6, as 
+(engineering) revisions before that probably had some differences on the 
+board.
+
+
 > 
+> > +
+> > +- Google Kevin:
+> > +    Required root node properties:
+> > +      - compatible = "google,kevin-rev15", "google,kevin-rev14",
+> > +		     "google,kevin-rev13", "google,kevin-rev12",
+> > +		     "google,kevin-rev11", "google,kevin-rev10",
+> > +		     "google,kevin-rev9", "google,kevin-rev8",
+> > +		     "google,kevin-rev7", "google,kevin-rev6",
+> > +		     "google,kevin", "google,gru", "rockchip,rk3399";
+> > +
+> > 
+> >  - mqmaker MiQi:
+> >      Required root node properties:
+> >        - compatible = "mqmaker,miqi", "rockchip,rk3288";
 
-OK, perfect! Thanks Rob
-Cheers,
 
-
-Guilherme
-
-> Rob
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
