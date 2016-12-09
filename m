@@ -1,81 +1,26 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] dt-bindings: Document rk3399 Gru/Kevin
-Date: Fri, 09 Dec 2016 19:28:36 +0100
-Message-ID: <3895286.MqKyp9eiJu@phil>
-References: <1480645653-36943-1-git-send-email-briannorris@chromium.org> <1480645653-36943-7-git-send-email-briannorris@chromium.org> <20161209175402.gy4mqjaf2rsib7qf@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161209175402.gy4mqjaf2rsib7qf@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: [PATCH 0/2] usb: gadget: s3c2410: add device tree support
+Date: Fri,  9 Dec 2016 17:06:38 -0200
+Message-ID: <1481310400-28676-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 9. Dezember 2016, 11:54:02 CET schrieb Rob Herring:
-> On Thu, Dec 01, 2016 at 06:27:30PM -0800, Brian Norris wrote:
-> > Gru is a base dev board for a family of devices, including Kevin. Both
-> > utilize Rockchip RK3399, and they share much of their design.
-> > 
-> > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/arm/rockchip.txt | 20
-> >  ++++++++++++++++++++ 1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
-> > b/Documentation/devicetree/bindings/arm/rockchip.txt index
-> > cc4ace6397ab..830e13f5890c 100644
-> > --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> > +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> > @@ -99,6 +99,26 @@ Rockchip platforms device tree bindings
-> > 
-> >  		     "google,veyron-speedy-rev3", "google,veyron-speedy-rev2",
-> >  		     "google,veyron-speedy", "google,veyron", "rockchip,rk3288";
-> > 
-> > +- Google Gru (dev-board):
-> > +    Required root node properties:
-> > +      - compatible = "google,gru-rev15", "google,gru-rev14",
-> > +		     "google,gru-rev13", "google,gru-rev12",
-> > +		     "google,gru-rev11", "google,gru-rev10",
-> > +		     "google,gru-rev9", "google,gru-rev8",
-> > +		     "google,gru-rev7", "google,gru-rev6",
-> > +		     "google,gru-rev5", "google,gru-rev4",
-> > +		     "google,gru-rev3", "google,gru-rev2",
-> > +		     "google,gru", "rockchip,rk3399";
-> 
-> All of these are supposed to be specified or just one rev at a time?
+This series adds support for configuring Samsung's s3c2410 and
+compatible USB device controller via devicetree.
 
-All of them. I.e. the devicetree is supposed to be compatible with all of 
-those, while the bootloader determines the actual board revision and sets the 
-choosen compatible - at least that was the way with the previous series of 
-devices based around the rk3288 (veyron) and I think it will be the same way 
-still.
+Tested on FriendlyARM mini2440, based on s3c2440 SoC.
 
-I.e. as you can see below, Kevin starts being compatible at -rev6, as 
-(engineering) revisions before that probably had some differences on the 
-board.
+Sergio Prado (2):
+  dt-bindings: usb: add DT binding for s3c2410 USB device controller
+  usb: gadget: s3c2410: allow probing from device tree
 
+ .../devicetree/bindings/usb/s3c2410-usb.txt        |  28 ++++
+ drivers/usb/gadget/udc/s3c2410_udc.c               | 142 +++++++++++++++++----
+ drivers/usb/gadget/udc/s3c2410_udc.h               |   4 +
+ 3 files changed, 151 insertions(+), 23 deletions(-)
 
-> 
-> > +
-> > +- Google Kevin:
-> > +    Required root node properties:
-> > +      - compatible = "google,kevin-rev15", "google,kevin-rev14",
-> > +		     "google,kevin-rev13", "google,kevin-rev12",
-> > +		     "google,kevin-rev11", "google,kevin-rev10",
-> > +		     "google,kevin-rev9", "google,kevin-rev8",
-> > +		     "google,kevin-rev7", "google,kevin-rev6",
-> > +		     "google,kevin", "google,gru", "rockchip,rk3399";
-> > +
-> > 
-> >  - mqmaker MiQi:
-> >      Required root node properties:
-> >        - compatible = "mqmaker,miqi", "rockchip,rk3288";
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
