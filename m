@@ -1,128 +1,127 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [RFC] New Device Tree property - "bonding"
-Date: Fri, 9 Dec 2016 16:45:40 +0000
-Message-ID: <SG2PR06MB1038804921686E334AC2802EC3870@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
- <2054258.NRXTrTF0Rj@avalon>
- <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
- <10679912.HCjz6JNtZJ@avalon>
- <SG2PR06MB1038A0DADECF2EB7795A487AC3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <CAL_JsqKJcEmNUzOm-3j3FODkN1faXMAMmURRxfRpHfiGs_a+qA@mail.gmail.com>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: [PATCH v3 2/5] mtd: aspeed: add memory controllers for the Aspeed AST2400 SoC
+Date: Fri,  9 Dec 2016 17:49:24 +0100
+Message-ID: <1481302167-28044-3-git-send-email-clg@kaod.org>
+References: <1481302167-28044-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481302167-28044-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQo+ID4gPj4gT24gTW9uZGF5IDA1IERlYyAyMDE2IDA5OjU3OjMyIFJvYiBI
-ZXJyaW5nIHdyb3RlOg0KPiA+ID4+ID4gT24gTW9uLCBEZWMgNSwgMjAxNiBhdCA4OjQwIEFNLCBM
-YXVyZW50IFBpbmNoYXJ0IHdyb3RlOg0KPiA+ID4+ID4gPiBPbiBNb25kYXkgMDUgRGVjIDIwMTYg
-MDg6MTg6MzQgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gPj4gPiA+PiBPbiBGcmksIE5vdiAyNSwg
-MjAxNiBhdCAxMDo1NSBBTSwgUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0gd3JvdGU6DQo+ID4gPj4g
-PiA+Pj4gSGVsbG8gRFQgbWFpbnRhaW5lcnMsDQo+ID4gPj4gPiA+Pj4NCj4gPiA+PiA+ID4+PiBJ
-biBvbmUgb2YgdGhlIFJlbmVzYXMgU29DcyB3ZSBoYXZlIGEgZGV2aWNlIGNhbGxlZCBEUklGDQo+
-ID4gPj4gPiA+Pj4gKERpZ2l0YWwgUmFkaW8NCj4gPiA+PiA+ID4+PiBJbnRlcmZhY2UpIGNvbnRy
-b2xsZXIuIEEgRFJJRiBjaGFubmVsIGNvbnRhaW5zIDQgZXh0ZXJuYWwNCj4gPiA+PiA+ID4+PiBw
-aW5zDQo+ID4gPj4gPiA+Pj4gLSBTQ0ssIFNZTkMsIERhdGEgcGlucyBEMCAmIEQxLg0KPiA+ID4+
-ID4gPj4+DQo+ID4gPj4gPiA+Pj4gSW50ZXJuYWxseSBhIERSSUYgY2hhbm5lbCBpcyBtYWRlIHVw
-IG9mIHR3byBTUEkgc2xhdmUgZGV2aWNlcw0KPiA+ID4+ID4gPj4+IChhbHNvIGNhbGxlZCBzdWIt
-Y2hhbm5lbHMgaGVyZSkgdGhhdCBzaGFyZSBjb21tb24gQ0xLICYgU1lOQw0KPiA+ID4+ID4gPj4+
-IHNpZ25hbHMgYnV0IGhhdmUgdGhlaXIgb3duIHJlc291cmNlIHNldC4gVGhlIERSSUYgY2hhbm5l
-bCBjYW4NCj4gPiA+PiA+ID4+PiBoYXZlIGVpdGhlciBvbmUgb2YgdGhlIHN1Yi1jaGFubmVsIGFj
-dGl2ZSBhdCBhIHRpbWUgb3IgYm90aC4NCj4gPiA+PiA+ID4+PiBXaGVuIGJvdGggc3ViLWNoYW5u
-ZWxzIGFyZSBhY3RpdmUsIHRoZXkgbmVlZCB0byBiZSBtYW5hZ2VkDQo+ID4gPj4gPiA+Pj4gdG9n
-ZXRoZXIgYXMgb25lIGRldmljZSBhcyB0aGV5IHNoYXJlIHNhbWUgQ0xLICYgU1lOQy4gV2UgcGxh
-bg0KPiA+ID4+ID4gPj4+IHRvIHRpZSB0aGVzZSB0d28gc3ViLWNoYW5uZWxzIHRvZ2V0aGVyIHdp
-dGggYSBuZXcgcHJvcGVydHkNCj4gPiA+PiA+ID4+PiBjYWxsZWQNCj4gPiAicmVuZXNhcyxib25k
-aW5nIi4NCj4gPiA+PiA+ID4+DQo+ID4gPj4gPiA+PiBJcyB0aGVyZSBubyBuZWVkIHRvIGRlc2Ny
-aWJlIHRoZSBtYXN0ZXIgZGV2aWNlPyBObyBHUElPcywNCj4gPiA+PiA+ID4+IHJlZ3VsYXRvcnMg
-b3Igb3RoZXIgc2lkZWJhbmQgY29udHJvbHMgbmVlZGVkPyBJZiB0aGF0J3MgbmV2ZXINCj4gPiA+
-PiA+ID4+IG5lZWRlZCAod2hpY2ggc2VlbXMgZG91YnRmdWwpLCB0aGVuIEkgd291bGQgZG8gc29t
-ZXRoaW5nDQo+ID4gPj4gPiA+PiBkaWZmZXJlbnQgaGVyZSBwcm9iYWJseSB3aXRoIHRoZSBtYXN0
-ZXIgZGV2aWNlIGFzIGEgY2hpbGQgb2YNCj4gPiA+PiA+ID4+IG9uZSBEUklGIGFuZCB0aGVuIHBo
-YW5kbGVzIHRvIG1hc3RlciBmcm9tIHRoZSBvdGhlciBEUklGcy4NCj4gPiA+PiA+ID4+IE90aGVy
-d2lzZSwgdGhpcyBsb29rcw0KPiA+ID4+IGZpbmUgdG8gbWUuDQo+ID4gPj4gPiA+DQo+ID4gPj4g
-PiA+IEhlcmUncyBhIGJpdCBvZiBiYWNrZ3JvdW5kLg0KPiA+ID4+ID4gPg0KPiA+ID4+ID4gPiBU
-aGUgRFJJRiBpcyBhbiBTUEkgcmVjZWl2ZXIuIEl0IGhhcyB0aHJlZSBpbnB1dCBwaW5zLCBhIGNs
-b2NrDQo+ID4gPj4gPiA+IGxpbmUsIGEgZGF0YSBsaW5lIGFuZCBhIHN5bmMgc2lnbmFsLiBUaGUg
-ZGV2aWNlIGlzIGRlc2lnbmVkIHRvDQo+ID4gPj4gPiA+IGJlIGNvbm5lY3RlZCB0byBhIHZhcmll
-dHkgb2YgZGF0YSBzb3VyY2VzLCB1c3VhbGx5IHBsYWluIFNQSSAoMQ0KPiA+ID4+ID4gPiBkYXRh
-IGxpbmUpLCBJSVMgKDEgZGF0YQ0KPiA+ID4+ID4gPiBsaW5lKSBidXQgYWxzbyByYWRpbyB0dW5l
-cnMgdGhhdCBvdXRwdXQgSS9RIGRhdGENCj4gPiA+PiA+ID4gKGh0dHA6Ly93d3cubmkuY29tL3R1
-dG9yaWFsLzQ4MDUvZW4vKSBvdmVyIHR3byBkYXRhIGxpbmVzLg0KPiA+ID4+ID4gPg0KPiA+ID4+
-ID4gPiBJbiB0aGUgY2FzZSBvZiBJUSBlYWNoIGRhdGEgc2FtcGxlIGlzIHNwbGl0IGluIHR3byBJ
-IGFuZCBRDQo+ID4gPj4gPiA+IHZhbHVlcyAodHlwaWNhbGx5IDE2IHRvIDIwIGJpdHMgZWFjaCBp
-biB0aGlzIGNhc2UpLCBhbmQgdGhlDQo+ID4gPj4gPiA+IHZhbHVlcyBhcmUgdHJhbnNtaXR0ZWQg
-c2VyaWFsbHkgb3ZlciBvbmUgZGF0YSBsaW5lIGVhY2guIFRoZQ0KPiA+ID4+ID4gPiBzeW5jaHJv
-bml6YXRpb24gYW5kIGNsb2NrIHNpZ25hbHMgYXJlIGNvbW1vbiB0byBib3RoIGRhdGENCj4gPiA+
-PiA+ID4gbGluZXMuIFRoZSBEUklGIGlzIG9wdGltaXplZCBmb3IgdGhpcyB1c2UgY2FzZSBhcyB0
-aGUgRFJJRg0KPiA+ID4+ID4gPiBpbnN0YW5jZXMgaW4gdGhlIFNvQyAoZWFjaCBvZiB0aGVtIGhh
-dmluZyBpbmRlcGVuZGVudCBjbG9ja3MsDQo+ID4gPj4gPiA+IGludGVycnVwdHMgYW5kIGNvbnRy
-b2wNCj4gPiA+PiA+ID4gcmVnaXN0ZXJzKSBhcmUgZ3JvdXBlZCBieSB0d28sIGFuZCB0aGUgdHdv
-IGluc3RhbmNlcyBpbiBhIGdyb3VwDQo+ID4gPj4gPiA+IGhhbmRsZSBhIHNpbmdsZSBkYXRhIGxp
-bmUgZWFjaCBidXQgc2hhcmUgdGhlIHNhbWUgY2xvY2sgYW5kDQo+ID4gPj4gPiA+IHN5bmMNCj4g
-PiBpbnB1dC4NCj4gPiA+PiA+ID4NCj4gPiA+PiA+ID4gT24gdGhlIHNvZnR3YXJlIHNpZGUgd2Ug
-bmVlZCB0byBncm91cCB0aGUgSSBhbmQgUSB2YWx1ZXMsIHdoaWNoDQo+ID4gPj4gPiA+IGFyZSBE
-TUEnZWQgdG8gbWVtb3J5IGJ5IHRoZSB0d28gRFJJRiBpbnN0YW5jZXMsIGFuZCBtYWtlIHRoZW0N
-Cj4gPiA+PiA+ID4gYXZhaWxhYmxlIHRvIHVzZXJzcGFjZS4gVGhlIFY0TDIgQVBJIHVzZWQgaGVy
-ZSBpbiBTRFIgKFNvZnR3YXJlDQo+ID4gPj4gPiA+IERlZmluZWQgUmFkaW8pIG1vZGUgc3VwcG9y
-dHMgc3VjaCB1c2UgY2FzZXMgYW5kIGV4cG9zZXMgYQ0KPiA+ID4+ID4gPiBzaW5nbGUgZGV2aWNl
-IG5vZGUgdG8gdXNlcnNwYWNlIHRoYXQgYWxsb3dzIGNvbnRyb2wgb2YgdGhlIHR3bw0KPiA+ID4+
-ID4gPiBEUklGIGluc3RhbmNlcyBhcyBhIHNpbmdsZSBkZXZpY2UuIFRvIGJlIGFibGUgdG8gaW1w
-bGVtZW50IHRoaXMNCj4gPiA+PiA+ID4gd2UgbmVlZCBrZXJuZWwgY29kZSB0byBiZSBhd2FyZSBv
-ZiBEUklGIGdyb3VwcyBhbmQsIHdoaWxlDQo+ID4gPj4gPiA+IGJpbmRpbmcgdG8gdGhlIERSSUYg
-aW5zdGFuY2VzIHNlcGFyYXRlbHksIGV4cG9zZSBvbmx5IG9uZSBWNEwyDQo+ID4gPj4gPiA+IGRl
-dmljZSB0bw0KPiA+IHVzZXJzcGFjZSBmb3IgZWFjaCBncm91cC4NCj4gPiA+PiA+ID4NCj4gPiA+
-PiA+ID4gVGhlcmUncyBubyBtYXN0ZXIgb3Igc2xhdmUgaW5zdGFuY2UgZnJvbSBhIGhhcmR3YXJl
-IHBvaW50IG9mDQo+ID4gPj4gPiA+IHZpZXcsIGJ1dCB0aGUgdHdvIGluc3RhbmNlcyBhcmUgbm90
-IGludGVyY2hhbmdlYWJsZSBhcyB0aGV5DQo+ID4gPj4gPiA+IGNhcnJ5IHNlcGFyYXRlDQo+ID4g
-Pj4gaW5mb3JtYXRpb24uDQo+ID4gPj4gPiA+IFRoZXkgbXVzdCB0aHVzIGJlIGlkZW50aWZpZWQg
-YXQgdGhlIGRyaXZlciBsZXZlbC4NCj4gPiA+PiA+DQo+ID4gPj4gPiBCeSBtYXN0ZXIsIEkgbWVh
-bnQgdGhlIGV4dGVybmFsIG1hc3RlciBkZXZpY2UgdGhhdCBnZW5lcmF0ZXMgdGhlDQo+ID4gPj4g
-PiBJUSBkYXRhLCBub3Qgd2hpY2ggb2YgdGhlIGludGVybmFsIERSSUYgYmxvY2tzIGlzIGEgbWFz
-dGVyIG9mIHRoZQ0KPiBvdGhlci4NCj4gPiA+PiA+IFNvIGJhY2sgdG8gbXkgcXVlc3Rpb24sIGRv
-ZXMgdGhlIGV4dGVybmFsIG1hc3RlciBkZXZpY2UgbmVlZCB0bw0KPiA+ID4+ID4gYmUgZGVzY3Jp
-YmVkPyBJIHdvcnJ5IHRoZSBhbnN3ZXIgbm93IGZvciBhIHNpbXBsZSBjYXNlIGlzIG5vLCBidXQN
-Cj4gPiA+PiA+IHRoZW4gbGF0ZXIgcGVvcGxlIGFyZSBnb2luZyB0byBoYXZlIGNhc2VzIG5lZWRp
-bmcgdG8gZGVzY3JpYmUNCj4gPiA+PiA+IG1vcmUuIFdlIG5lZWQgdG8gYW5zd2VyIHRoaXMgcXVl
-c3Rpb24gZmlyc3QgYmVmb3JlIHdlIGNhbiBkZWNpZGUNCj4gPiA+PiA+IHdoYXQgdGhpcyBiaW5k
-aW5nIHNob3VsZCBsb29rIGxpa2UuDQo+ID4gPj4NCj4gPiA+PiBPaCB5ZXMgdGhlIGV4dGVybmFs
-IGRldmljZSBjZXJ0YWlubHkgbmVlZHMgdG8gYmUgZGVzY3JpYmVkLiBBcyBpdA0KPiA+ID4+IGlz
-IGNvbnRyb2xsZWQgdGhyb3VnaCBhIHNlcGFyYXRlLCBnZW5lcmFsLXB1cnBvc2UgSTJDIG9yIFNQ
-SQ0KPiA+ID4+IGNvbnRyb2xsZXIsIGl0IHNob3VsZCBiZSBhIGNoaWxkIG5vZGUgb2YgdGhhdCBj
-b250cm9sbGVyLiBUaGUgRFJJRg0KPiA+ID4+IGhhbmRsZXMgdGhlIGRhdGEgaW50ZXJmYWNlIG9u
-bHksIG5vdCB0aGUgY29udHJvbCBpbnRlcmZhY2Ugb2YgdGhlDQo+IGV4dGVybmFsIGRldmljZS4N
-Cj4gPiA+DQo+ID4gPiBZZXMsIGFzIExhdXJlbnQgbWVudGlvbmVkLCB0aGUgZXh0ZXJuYWwgbWFz
-dGVyIHdpbGwgYmUgZGVzY3JpYmVkDQo+ID4gc2VwYXJhdGVseS4gVGhlIGRhdGEgaW50ZXJmYWNl
-IHdpdGggdGhlIG1hc3RlciBpcyBkZXNjcmliZWQgdGhyb3VnaA0KPiA+IHBvcnQgbm9kZXMuIEUu
-Zy4NCj4gPiA+DQo+ID4gPiAgICAgICAgIHBvcnQgew0KPiA+ID4gICAgICAgICAgICAgICAgIGRy
-aWYwX2VwOiBlbmRwb2ludCB7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5k
-cG9pbnQgPSA8JnR1bmVyX2VwPjsNCj4gPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+ID4gICAg
-ICAgICB9Ow0KPiA+ID4NCj4gPiA+IERvIHdlIGFncmVlIG9uIHRoaXMgbW9kZWwgcGxlYXNlPw0K
-PiA+DQo+ID4gV2VsbCwgdGhhdCdzIG5vdCBjb21wbGV0ZSBhcyB5b3Ugc2hvdWxkIGhhdmUgYm90
-aCBEUklGMCBhbmQgRFJJRjENCj4gPiBoYXZpbmcgY29ubmVjdGlvbnMgdG8gdGhlIHR1bmVyLiBU
-aGVuIHlvdSBjYW4gd2FsayB0aGUgZ3JhcGggYW5kIGZpbmQNCj4gPiBldmVyeXRoaW5nLCBhbmQg
-eW91IHRoZW4gZG9uJ3QgbmVlZCB0aGUgYm9uZGluZyBwcm9wZXJ0eS4NCj4gDQo+IEFzc3VtaW5n
-IHRoZSB0aGlyZCBwYXJ0eSB0dW5lciBleHBvc2VzIGl0J3MgdHdvIGRhdGEgbGluZXMgYXMgdHdv
-DQo+IGVuZHBvaW50cywgaXQgc2VlbXMgcG9zc2libGUgd2l0aCBvZl9ncmFwaC5oIGFwaXMgdG8g
-d2FsayB0aHJvdWdoIHR1bmVyDQo+IGVuZCBwb2ludHMgYW5kIGdldCB0aGUgcGhhbmRsZSBvZiB0
-aGUgb3RoZXIgRFJJRiBkZXZpY2UuIEhvd2V2ZXIsIHRoZXJlDQo+IGFyZSBjb3VwbGUgb2YgcG9p
-bnRzIGNvbWluZyB0byBtaW5kLg0KPiANCj4gLSBUaGUgY3RybCBwaW5zIHNoYXJlZCBiZXR3ZWVu
-IHR3byBEUklGcyBuZWVkcyB0byBiZSBlbmFibGVkIGluIG9uZSBvZiB0aGUNCj4gRFJJRiBkZXZp
-Y2UuIERvIHdlIGNob29zZSB0aGlzIGRldmljZSBhcmJpdHJhcmlseT8gRG8gd2UgZXhwb3NlIHRo
-ZSBDVFJMDQo+IHNpZ25hbCBwcm9wZXJ0aWVzIChtc2IvbHNiIGZpcnN0LCBwb2xhcml0eSBldGMp
-IG9uIGJvdGggRFJJRiBkZXZpY2VzPw0KPiBTaG91bGQgd2UgdGhpbmsgYWJvdXQgc2NhbGFiaWxp
-dHk/DQo+IA0KPiAtIEl0IG1hbmRhdGVzIHRoZSB0aGlyZCBwYXJ0eSB0dW5lciBkZXZpY2UgdG8g
-ZXhwb3NlIGl0J3MgdHdvIGRhdGEgbGluZXMNCj4gYXMgdHdvIGVuZHBvaW50cy4gSXQgYXNzdW1l
-cyB0aGF0IGEgc2luZ2xlIHRoaXJkIHBhcnR5IG1hc3RlciBkZXZpY2UNCj4gY29udHJvbHMgYm90
-aCB0aGUgZGF0YSBsaW5lcyBjb21pbmcgdG8gZWFjaCBEUklGIGRldmljZS4NCj4gDQo+IFRoZSBi
-b25kaW5nIHByb3BlcnR5IGxvb2tzIGEgYml0IGNsZWFuZXIgb24gdGhlc2UgYXNwZWN0cyBiZWNh
-dXNlIGl0DQo+IGRlc2NyaWJlcyBvbmx5IHRoZSBEUklGIGRldmljZS4NCg0KU2hhbGwgd2UgcGxl
-YXNlIGNvbmNsdWRlIG9uIHRoZSBtb2RlbD8gQXJlIHlvdSBoYXBweSB3aXRoIHRoZSB1c2Ugb2Yg
-InJlbmVzYXMsYm9uZGluZyIgcHJvcGVydHkgaWYgdGhlIGNvbmNlcm4gaXMgb24gcHVzaGluZyB0
-aGlzIGFzIGEgZ2VuZXJpYyBwcm9wZXJ0eT8NCg0KSSB3b3VsZCBhcHByZWNpYXRlIHlvdXIgZmVl
-ZGJhY2suDQoNClRoYW5rcywNClJhbWVzaA0K
+This driver adds mtd support for the Aspeed AST2400 SoC static memory
+controllers:
+
+ * New Static Memory Controller (referred as FMC)
+   . BMC firmware
+   . AST2500 compatible register set
+   . 5 chip select pins (CE0 ∼ CE4)
+   . supports NOR flash, NAND flash and SPI flash memory.
+
+ * SPI Flash Controller (SPI)
+   . host Firmware
+   . slightly different register set, between AST2500 and the legacy
+     controller
+   . supports SPI flash memory
+   . 1 chip select pin (CE0)
+
+The legacy static memory controller (referred as SMC) is not
+supported, as well as types other than SPI.
+
+Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+---
+ drivers/mtd/spi-nor/Kconfig      |  2 +-
+ drivers/mtd/spi-nor/aspeed-smc.c | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+index 5c0efbd9dd89..22bea563f9bc 100644
+--- a/drivers/mtd/spi-nor/Kconfig
++++ b/drivers/mtd/spi-nor/Kconfig
+@@ -35,7 +35,7 @@ config SPI_ASPEED
+ 	depends on HAS_IOMEM && OF
+ 	help
+ 	  This enables support for the Firmware Memory controller (FMC)
+-	  in the Aspeed AST2500 SoC when attached to SPI NOR chips,
++	  in the Aspeed AST2500/AST2400 SoCs when attached to SPI NOR chips,
+ 	  and support for the SPI flash memory controller (SPI) for
+ 	  the host firmware. The implementation only supports SPI NOR.
+ 
+diff --git a/drivers/mtd/spi-nor/aspeed-smc.c b/drivers/mtd/spi-nor/aspeed-smc.c
+index 6f9244f07aef..99302b0d7786 100644
+--- a/drivers/mtd/spi-nor/aspeed-smc.c
++++ b/drivers/mtd/spi-nor/aspeed-smc.c
+@@ -119,8 +119,27 @@ struct aspeed_smc_info {
+ 	void (*set_4b)(struct aspeed_smc_chip *chip);
+ };
+ 
++static void aspeed_smc_chip_set_4b_spi_2400(struct aspeed_smc_chip *chip);
+ static void aspeed_smc_chip_set_4b(struct aspeed_smc_chip *chip);
+ 
++static const struct aspeed_smc_info fmc_2400_info = {
++	.maxsize = 64 * 1024 * 1024,
++	.nce = 5,
++	.hastype = true,
++	.we0 = 16,
++	.ctl0 = 0x10,
++	.set_4b = aspeed_smc_chip_set_4b,
++};
++
++static const struct aspeed_smc_info spi_2400_info = {
++	.maxsize = 64 * 1024 * 1024,
++	.nce = 1,
++	.hastype = false,
++	.we0 = 0,
++	.ctl0 = 0x04,
++	.set_4b = aspeed_smc_chip_set_4b_spi_2400,
++};
++
+ static const struct aspeed_smc_info fmc_2500_info = {
+ 	.maxsize = 256 * 1024 * 1024,
+ 	.nce = 3,
+@@ -210,6 +229,7 @@ struct aspeed_smc_controller {
+ #define CONTROL_IO_DUMMY_HI		BIT(14)
+ #define CONTROL_IO_DUMMY_HI_SHIFT	14
+ #define CONTROL_CLK_DIV4		BIT(13) /* others */
++#define CONTROL_IO_ADDRESS_4B		BIT(13) /* AST2400 SPI */
+ #define CONTROL_RW_MERGE		BIT(12)
+ #define CONTROL_IO_DUMMY_LO_SHIFT	6
+ #define CONTROL_IO_DUMMY_LO		GENMASK(7, \
+@@ -406,6 +426,8 @@ static int aspeed_smc_remove(struct platform_device *dev)
+ }
+ 
+ static const struct of_device_id aspeed_smc_matches[] = {
++	{ .compatible = "aspeed,ast2400-fmc", .data = &fmc_2400_info },
++	{ .compatible = "aspeed,ast2400-spi", .data = &spi_2400_info },
+ 	{ .compatible = "aspeed,ast2500-fmc", .data = &fmc_2500_info },
+ 	{ .compatible = "aspeed,ast2500-spi", .data = &spi_2500_info },
+ 	{ }
+@@ -479,6 +501,17 @@ static void aspeed_smc_chip_set_4b(struct aspeed_smc_chip *chip)
+ 	}
+ }
+ 
++/*
++ * The AST2400 SPI flash controller does not have a CE Control
++ * register. It uses the CE0 control register to set 4Byte mode at the
++ * controller level.
++ */
++static void aspeed_smc_chip_set_4b_spi_2400(struct aspeed_smc_chip *chip)
++{
++	chip->ctl_val[smc_base] |= CONTROL_IO_ADDRESS_4B;
++	chip->ctl_val[smc_read] |= CONTROL_IO_ADDRESS_4B;
++}
++
+ static int aspeed_smc_chip_setup_init(struct aspeed_smc_chip *chip,
+ 				      struct resource *res)
+ {
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
