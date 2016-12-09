@@ -1,135 +1,582 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
-Date: Fri, 9 Dec 2016 16:46:35 +0100
-Message-ID: <9c4a8f50-d030-40f7-e7f2-45f1b95ccf2d@kaod.org>
-References: <1478688149-4554-1-git-send-email-clg@kaod.org>
- <08dc9a53-505f-0b79-5bb3-1d9e73166b6c@atmel.com>
- <d37aa469-68a3-90ee-1215-d5d64e6315db@gmail.com>
- <fbe09cbd-66da-a723-8ac1-4fa10c690388@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <fbe09cbd-66da-a723-8ac1-4fa10c690388@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Subject: [PATCH v2 1/2] backlight arcxcnn add support for ArcticSand devices
+Date: Fri,  9 Dec 2016 10:49:09 -0500
+Message-ID: <1481298549-15400-1-git-send-email-olimpiu@arcticsand.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQ3lyaWxsZQoKT24gMTIvMDkvMjAxNiAwMzoxMyBQTSwgQ3lyaWxsZSBQaXRjaGVuIHdy
-b3RlOgo+IExlIDA5LzEyLzIwMTYgw6AgMTU6MDMsIE1hcmVrIFZhc3V0IGEgw6ljcml0IDoKPj4g
-T24gMTIvMDkvMjAxNiAwMjozNyBQTSwgQ3lyaWxsZSBQaXRjaGVuIHdyb3RlOgo+Pj4gSGkgQ2Vk
-cmljLAo+Pj4KPj4+IExlIDA5LzExLzIwMTYgw6AgMTE6NDIsIEPDqWRyaWMgTGUgR29hdGVyIGEg
-w6ljcml0IDoKPj4+PiBUaGlzIGRyaXZlciBhZGRzIG10ZCBzdXBwb3J0IGZvciBzcGktbm9yIGF0
-dGFjaGVkIHRvIGVpdGhlciBvciBib3RoIG9mCj4+Pj4gdGhlIEZpcm13YXJlIE1lbW9yeSBDb250
-cm9sbGVyIG9yIHRoZSBTUEkgRmxhc2ggQ29udHJvbGxlciAoQVNUMjQwMAo+Pj4+IG9ubHkpLgo+
-Pj4+Cj4+Pj4gVGhlIFNNQyBjb250cm9sbGVycyBvbiB0aGUgQXNwZWVkIEFTVDI1MDAgU29DIGFy
-ZSB2ZXJ5IHNpbWlsYXIgdG8gdGhlCj4+Pj4gb25lcyBmb3VuZCBvbiB0aGUgQVNUMjQwMC4gVGhl
-IGRpZmZlcmVuY2VzIGFyZSBvbiB0aGUgbnVtYmVyIG9mCj4+Pj4gc3VwcG9ydGVkIGZsYXNoIG1v
-ZHVsZXMgYW5kIHRoZWlyIGRlZmF1bHQgbWFwcGluZ3MgaW4gdGhlIFNvQyBhZGRyZXNzCj4+Pj4g
-c3BhY2UuCj4+Pj4KPj4+PiBUaGUgQXNwZWVkIEFTVDI1MDAgaGFzIG9uZSBTUEkgY29udHJvbGxl
-ciBmb3IgdGhlIEJNQyBmaXJtd2FyZSBhbmQgdHdvCj4+Pj4gZm9yIHRoZSBob3N0IGZpcm13YXJl
-LiBBbGwgY29udHJvbGxlcnMgaGF2ZSBub3cgdGhlIHNhbWUgc2V0IG9mCj4+Pj4gcmVnaXN0ZXJz
-IGNvbXBhdGlibGUgd2l0aCB0aGUgQVNUMjQwMCBGTUMgY29udHJvbGxlciBhbmQgdGhlIGxlZ2Fj
-eQo+Pj4+ICdTTUMnIGNvbnRyb2xsZXIgaXMgZnVsbHkgZ29uZS4KPj4+Pgo+Pj4+IEVhY2ggY29u
-dHJvbGxlciBoYXMgYSBtZW1vcnkgcmFuZ2Ugb24gd2hpY2ggaXQgbWFwcyBpdHMgZmxhc2ggbW9k
-dWxlCj4+Pj4gc2xhdmVzLiBFYWNoIHNsYXZlIGlzIGFzc2lnbmVkIGEgbWVtb3J5IHdpbmRvdyBm
-b3IgaXRzIG1hcHBpbmcgdGhhdAo+Pj4+IGNhbiBiZSBjaGFuZ2VkIGF0IGJvb3RpbWUgd2l0aCB0
-aGUgU2VnbWVudCBBZGRyZXNzIFJlZ2lzdGVyLgo+Pj4+Cj4+Pj4gRWFjaCBTUEkgZmxhc2ggc2xh
-dmUgY2FuIHRoZW4gYmUgYWNjZXNzZWQgaW4gdHdvIG1vZGVzOiBDb21tYW5kIGFuZAo+Pj4+IFVz
-ZXIuIFdoZW4gaW4gVXNlciBtb2RlLCBhY2Nlc3NlcyB0byB0aGUgbWVtb3J5IHNlZ21lbnQgb2Yg
-dGhlIHNsYXZlcwo+Pj4+IGFyZSB0cmFuc2xhdGVkIGluIFNQSSB0cmFuc2ZlcnMuIFdoZW4gaW4g
-Q29tbWFuZCBtb2RlLCB0aGUgSFcKPj4+PiBnZW5lcmF0ZXMgdGhlIFNQSSBjb21tYW5kcyBhdXRv
-bWF0aWNhbGx5IGFuZCB0aGUgbWVtb3J5IHNlZ21lbnQgaXMKPj4+PiBhY2Nlc3NlZCBhcyBpZiBk
-b2luZyBhIE1NSU8uCj4+Pj4KPj4+PiBDdXJyZW50bHksIG9ubHkgdGhlIFVzZXIgbW9kZSBpcyBz
-dXBwb3J0ZWQuIENvbW1hbmQgbW9kZSBuZWVkcyBhCj4+Pj4gbGl0dGxlIG1vcmUgd29yayB0byBj
-aGVjayB0aGF0IHRoZSBtZW1vcnkgd2luZG93IG9uIHRoZSBBSEIgYnVzIGZpdHMKPj4+PiB0aGUg
-bW9kdWxlIHNpemUuCj4+Pj4KPj4+PiBCYXNlZCBvbiBwcmV2aW91cyB3b3JrIGZyb20gTWlsdG9u
-IEQuIE1pbGxlciBJSSA8bWlsdG9ubUB1cy5pYm0uY29tPgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1i
-eTogQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9kLm9yZz4KPj4+PiAtLS0KPj4+IFsuLi5dCj4+
-Pj4gK3N0YXRpYyBpbnQgYXNwZWVkX3NtY19yZWFkX3JlZyhzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1
-OCBvcGNvZGUsIHU4ICpidWYsIGludCBsZW4pCj4+Pj4gK3sKPj4+PiArCXN0cnVjdCBhc3BlZWRf
-c21jX2NoaXAgKmNoaXAgPSBub3ItPnByaXY7Cj4+Pj4gKwo+Pj4+ICsJbXV0ZXhfbG9jaygmY2hp
-cC0+Y29udHJvbGxlci0+bXV0ZXgpOwo+Pj4+ICsKPj4+PiArCWFzcGVlZF9zbWNfc3RhcnRfdXNl
-cihub3IpOwo+Pj4+ICsJYXNwZWVkX3NtY193cml0ZV90b19haGIoY2hpcC0+YmFzZSwgJm9wY29k
-ZSwgMSk7Cj4+Pj4gKwlhc3BlZWRfc21jX3JlYWRfZnJvbV9haGIoYnVmLCBjaGlwLT5iYXNlLCBs
-ZW4pOwo+Pj4+ICsJYXNwZWVkX3NtY19zdG9wX3VzZXIobm9yKTsKPj4+PiArCj4+Pj4gKwltdXRl
-eF91bmxvY2soJmNoaXAtPmNvbnRyb2xsZXItPm11dGV4KTsKPj4+PiArCj4+Pj4gKwlyZXR1cm4g
-MDsKPj4+PiArfQo+Pj4+ICsKPj4+PiArc3RhdGljIGludCBhc3BlZWRfc21jX3dyaXRlX3JlZyhz
-dHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCBvcGNvZGUsIHU4ICpidWYsCj4+Pj4gKwkJCQlpbnQgbGVu
-KQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3QgYXNwZWVkX3NtY19jaGlwICpjaGlwID0gbm9yLT5wcml2
-Owo+Pj4+ICsKPj4+PiArCW11dGV4X2xvY2soJmNoaXAtPmNvbnRyb2xsZXItPm11dGV4KTsKPj4+
-PiArCj4+Pj4gKwlhc3BlZWRfc21jX3N0YXJ0X3VzZXIobm9yKTsKPj4+PiArCWFzcGVlZF9zbWNf
-d3JpdGVfdG9fYWhiKGNoaXAtPmJhc2UsICZvcGNvZGUsIDEpOwo+Pj4+ICsJYXNwZWVkX3NtY193
-cml0ZV90b19haGIoY2hpcC0+YmFzZSwgYnVmLCBsZW4pOwo+Pj4+ICsJYXNwZWVkX3NtY19zdG9w
-X3VzZXIobm9yKTsKPj4+PiArCj4+Pj4gKwltdXRleF91bmxvY2soJmNoaXAtPmNvbnRyb2xsZXIt
-Pm11dGV4KTsKPj4+PiArCj4+Pj4gKwlyZXR1cm4gMDsKPj4+PiArfQo+Pj4+ICsKPj4+IFsuLi5d
-Cj4+Pj4gK3N0YXRpYyBzc2l6ZV90IGFzcGVlZF9zbWNfcmVhZF91c2VyKHN0cnVjdCBzcGlfbm9y
-ICpub3IsIGxvZmZfdCBmcm9tLAo+Pj4+ICsJCQkJICAgIHNpemVfdCBsZW4sIHVfY2hhciAqcmVh
-ZF9idWYpCj4+Pj4gK3sKPj4+PiArCXN0cnVjdCBhc3BlZWRfc21jX2NoaXAgKmNoaXAgPSBub3It
-PnByaXY7Cj4+Pj4gKwo+Pj4+ICsJbXV0ZXhfbG9jaygmY2hpcC0+Y29udHJvbGxlci0+bXV0ZXgp
-Owo+Pj4+ICsKPj4+PiArCWFzcGVlZF9zbWNfc3RhcnRfdXNlcihub3IpOwo+Pj4+ICsJYXNwZWVk
-X3NtY19zZW5kX2NtZF9hZGRyKG5vciwgbm9yLT5yZWFkX29wY29kZSwgZnJvbSk7Cj4+Pj4gKwlh
-c3BlZWRfc21jX3JlYWRfZnJvbV9haGIocmVhZF9idWYsIGNoaXAtPmJhc2UsIGxlbik7Cj4+Pj4g
-Kwlhc3BlZWRfc21jX3N0b3BfdXNlcihub3IpOwo+Pj4+ICsKPj4+PiArCW11dGV4X3VubG9jaygm
-Y2hpcC0+Y29udHJvbGxlci0+bXV0ZXgpOwo+Pj4+ICsKPj4+PiArCXJldHVybiBsZW47Cj4+Pj4g
-K30KPj4+PiArCj4+Pj4gK3N0YXRpYyBzc2l6ZV90IGFzcGVlZF9zbWNfd3JpdGVfdXNlcihzdHJ1
-Y3Qgc3BpX25vciAqbm9yLCBsb2ZmX3QgdG8sIHNpemVfdCBsZW4sCj4+Pj4gKwkJCQkgICAgIGNv
-bnN0IHVfY2hhciAqd3JpdGVfYnVmKQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3QgYXNwZWVkX3NtY19j
-aGlwICpjaGlwID0gbm9yLT5wcml2Owo+Pj4+ICsKPj4+PiArCW11dGV4X2xvY2soJmNoaXAtPmNv
-bnRyb2xsZXItPm11dGV4KTsKPj4+PiArCj4+Pj4gKwlhc3BlZWRfc21jX3N0YXJ0X3VzZXIobm9y
-KTsKPj4+PiArCWFzcGVlZF9zbWNfc2VuZF9jbWRfYWRkcihub3IsIG5vci0+cHJvZ3JhbV9vcGNv
-ZGUsIHRvKTsKPj4+PiArCWFzcGVlZF9zbWNfd3JpdGVfdG9fYWhiKGNoaXAtPmJhc2UsIHdyaXRl
-X2J1ZiwgbGVuKTsKPj4+PiArCWFzcGVlZF9zbWNfc3RvcF91c2VyKG5vcik7Cj4+Pj4gKwo+Pj4+
-ICsJbXV0ZXhfdW5sb2NrKCZjaGlwLT5jb250cm9sbGVyLT5tdXRleCk7Cj4+Pj4gKwo+Pj4+ICsJ
-cmV0dXJuIGxlbjsKPj4+PiArfQo+Pj4KPj4+IEFzIEkndmUgZXhwbGFpbmVkIGluIHJldmlldyBv
-ZiB0aGUgc2VyaWVzIHYxLCB0aGUgY2hpcC0+Y29udHJvbGxlci0+bXV0ZXgKPj4+IHNlZW1zIHRv
-IGJlIHVzZWQgb25seSBieSBhc3BlZWRfc21jX3JlYWRfcmVnKCksIGFzcGVlZF9zbWNfd3JpdGVf
-cmVnKCksCj4+PiBhc3BlZWRfc21jX3JlYWRfdXNlcigpIGFuZCBhc3BlZWRfc21jX3dyaXRlX3Vz
-ZXIoKSwgdGhlIGRyaXZlcgo+Pj4gaW1wbGVtZW50YXRpb25zIG9mIG5vci0+cmVhZF9yZWcoKSwg
-bm9yLT53cml0ZV9yZWcoKSwgbm9yLT5yZWFkKCkgYW5kCj4+PiBub3ItPndyaXRlKCkuCj4+Pgo+
-Pj4gVGhpcyBkcml2ZXIgbG9ja3MgdGhlIG11dGV4IGF0IHRoZSB2ZXJ5IGJlZ2lubmluZyBvZiBl
-YWNoIG9mIHRob3NlCj4+PiBmdW5jdGlvbnMgYW5kIHVubG9ja3MgdGhlIG11dGV4IGJlZm9yZSBy
-ZXR1cm5pbmcuCj4+Pgo+Pj4gU28gbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHlvdSB1c2UgdGhp
-cyBtdXRleCB0byBwcmV2ZW50Cj4+PiBhc3BlZWRfc21jX1tyZWFkfHdyaXRlXV9bcmVnfHVzZXJd
-KCkgZnJvbSBiZWluZyBjYWxsZWQgY29uY3VycmVudGx5Lgo+Pj4KPj4+IElmIHNvLCB0aGUgc3Bp
-LW5vciBmcmFtZXdvcmsgYWxyZWFkeSB0YWtlcyBjYXJlIG9mIHRoaXMgaXNzdWUgd2l0aCB0aGUK
-Pj4+IGNvdXBsZSBvZiBmdW5jdGlvbnM6IHNwaV9ub3JfbG9ja19hbmRfcHJlcCgpIC8gc3BpX25v
-cl91bmxvY2tfYW5kX3VucHJlcCgpLgo+Pj4KPj4+IEluZGVlZCwgc3BpX25vcl9sb2NrX2FuZF9w
-cmVwKCkgaXMgY2FsbGVkIG9uIGVudGVyaW5nIGFuZAo+Pj4gc3BpX25vcl91bmxvY2tfYW5kX3Vu
-cHJlcCgpIG9uIGV4aXRpbmcgZWFjaCBvZiB0aGUgZm9sbG93aW5nIGZ1bmN0aW9uczoKPj4+IC0g
-bXRkLT5fcmVhZCA9IHNwaV9ub3JfcmVhZAo+Pj4gLSBtdGQtPl93cml0ZSA9IHNwaV9ub3Jfd3Jp
-dGUgLyBzc3Rfd3JpdGUKPj4+IC0gbXRkLT5fZXJhc2UgPSBzcGlfbm9yX2VyYXNlCj4+PiAtIG10
-ZC0+X2xvY2sgPSBzcGlfbm9yX2xvY2sKPj4+IC0gbXRkLT5fdW5sb2NrID0gc3BpX25vcl91bmxv
-Y2sKPj4+IC0gbXRkLT5faXNfbG9jayA9IHNwaV9ub3JfaXNfbG9ja2VkCj4+Pgo+Pj4gRXhjZXB0
-IGZvciBzcGlfbm9yX3NjYW4oKSwgd2hpY2ggaXMgY2FsbGVkIG9uY2UgZm9yIGFsbCBkdXJpbmcg
-dGhlIHByb2JlCj4+PiBhbmQgYmVmb3JlIHJlZ2lzdGVyaW5nIHRoZSBtdGRfaW5mbyBzdHJ1Y3R1
-cmUsIG9ubHkgdGhlIGFib3ZlCj4+PiBtdGQtPl88aGFuZGxlcnM+IGNhbGwgdGhlIG5vci0+cmVh
-ZF9yZWcsIG5vci0+d3JpdGVfcmVnLCBub3ItPnJlYWQsCj4+PiBub3ItPmVyYXNlIGFuZCBub3It
-PndyaXRlIHNwaS1ub3IgaGFuZGxlcnMuCj4+PiBTbyB5b3VyIHNwaS1ub3IgLyBhc3BlZWRfc21j
-XzxoYW5kbGVycz4gYXJlIGFsd2F5cyBwcm90ZWN0ZWQgZnJvbQo+Pj4gY29uY3VycmVudCBhY2Nl
-c3MgYnkgdGhlIG11dGV4IGxvY2tlZCBpbiBzcGlfbm9yX2xvY2tfYW5kX3ByZXAoKS4KPj4+Cj4+
-PiBTbyBkb24ndCB3b3JyeSBhYm91dCBjb25jdXJyZW50IGFjY2VzcyBpc3N1ZSwgdGhlIHNwaS1u
-b3IgZnJhbWV3b3JrIHRha2VzCj4+PiBjYXJlIG9mIHlvdSA6KQo+Pgo+PiBEb2VzIGl0IHRha2Ug
-Y2FyZSBvZiBtZSBldmVuIGlmIEkgaGF2ZSBtdWx0aXBsZSBmbGFzaGVzID8gSSByZWNhbGwgSSBo
-YWQKPj4gdG8gcHV0IG11dGV4ZXMgaW50byBwcmVwYXJlIGFuZCB1bnByZXBhcmUgbXlzZWxmIGlu
-IHRoZSBDUVNQSSBkcml2ZXIgdG8KPj4gcHJldmVudCBwcm9ibGVtcyB3aGVuIGFjY2Vzc2luZyB0
-d28gZmxhc2hlcyBzaW11bHRhbmVvdXNseS4KPj4KPj4KPiAKPiBXZWxsIGluZGVlZCB5b3UncmUg
-cmlnaHQsIHdpdGggbXVsdGlwbGUgZmxhc2hlcyBJIGd1ZXNzIHRoZSBkcml2ZXIgd2lsbAo+IG5l
-ZWQgdG8gdXNlIGFuIGFkZGl0aW9uYWwgbXV0ZXguIFRoZW4gaXQgY2FuIGJlIHBsYWNlZCBlaXRo
-ZXIgaW4gZWFjaAo+IHJlYWRfcmVnL3dyaXRlX3JlZy9yZWFkL3dyaXRlIGhhbmRsZXJzIGxpa2Ug
-Q2VkcmljIGRpZCBvciBpbgo+IHByZXBhcmUvdW5wcmVwYXJlIGhhbmRsZXJzIGxpa2UgTWFyZWsg
-ZGlkIGluIHRoZSBDYWRlbmNlIFF1YWQgU1BJIGRyaXZlcnMuCj4gQm90aCBzb2x1dGlvbnMgd29y
-ayBhbmQgYXJlIGZpbmUgZm9yIG1lLgoKU28gSSB3aWxsIGdvIGZvciB0aGUgcHJlcGFyZS91bnBy
-ZXBhcmUgaGFuZGxlciBzb2x1dGlvbiBmb3Igbm93LgoKVGhhbmtzLAoKQy4KCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRp
-c2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtbXRkLwo=
+Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+---
+
+v1 => v2:
+- Removed "magic numbers" to initialize registers
+- Cleaned up device tree bindings
+- Fixed code style to address comments and pass "checkpatch"
+- Removed unneeded debug and testing code
+
+ drivers/video/backlight/Kconfig      |   7 +
+ drivers/video/backlight/Makefile     |   1 +
+ drivers/video/backlight/arcxcnn_bl.c | 458 +++++++++++++++++++++++++++++++++++
+ include/linux/i2c/arcxcnn.h          |  51 ++++
+ 4 files changed, 517 insertions(+)
+ create mode 100644 drivers/video/backlight/arcxcnn_bl.c
+ create mode 100644 include/linux/i2c/arcxcnn.h
+
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 5ffa4b4..4e1d2ad 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -460,6 +460,13 @@ config BACKLIGHT_BD6107
+ 	help
+ 	  If you have a Rohm BD6107 say Y to enable the backlight driver.
+ 
++config BACKLIGHT_ARCXCNN
++	tristate "Backlight driver for the Arctic Sands ARCxCnnnn family"
++	depends on I2C
++	help
++	  If you have an ARCxCnnnn family backlight say Y to enable
++	  the backlight driver.
++
+ endif # BACKLIGHT_CLASS_DEVICE
+ 
+ endif # BACKLIGHT_LCD_SUPPORT
+diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+index 16ec534..8905129 100644
+--- a/drivers/video/backlight/Makefile
++++ b/drivers/video/backlight/Makefile
+@@ -55,3 +55,4 @@ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+ obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+ obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
++obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+diff --git a/drivers/video/backlight/arcxcnn_bl.c b/drivers/video/backlight/arcxcnn_bl.c
+new file mode 100644
+index 0000000..fcebbd6
+--- /dev/null
++++ b/drivers/video/backlight/arcxcnn_bl.c
+@@ -0,0 +1,458 @@
++/*
++ * Backlight driver for ArcticSand ARC_X_C_0N_0N Devices
++ *
++ * Copyright 2016 ArcticSand, Inc.
++ * Author : Brian Dodge <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/backlight.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++
++#include "linux/i2c/arcxcnn.h"
++
++#define ARCXCNN_CMD		0x00	/* Command Register */
++#define ARCXCNN_CMD_STDBY	0x80	/*   I2C Standby */
++#define ARCXCNN_CMD_RESET	0x40	/*   Reset */
++#define ARCXCNN_CMD_BOOST	0x10	/*   Boost */
++#define ARCXCNN_CMD_OVP_MASK	0x0C	/*   --- Over Voltage Threshold */
++#define ARCXCNN_CMD_OVP_XXV	0x0C	/*   <rsvrd> Over Voltage Threshold */
++#define ARCXCNN_CMD_OVP_20V	0x08	/*   20v Over Voltage Threshold */
++#define ARCXCNN_CMD_OVP_24V	0x04	/*   24v Over Voltage Threshold */
++#define ARCXCNN_CMD_OVP_31V	0x00	/*   31.4v Over Voltage Threshold */
++#define ARCXCNN_CMD_EXT_COMP	0x01	/*   part (0) or full (1) ext. comp */
++
++#define ARCXCNN_CONFIG		0x01	/* Configuration */
++#define ARCXCNN_STATUS1		0x02	/* Status 1 */
++#define ARCXCNN_STATUS2		0x03	/* Status 2 */
++#define ARCXCNN_FADECTRL	0x04	/* Fading Control */
++#define ARCXCNN_ILED_CONFIG	0x05	/* ILED Configuration */
++#define ARCXCNN_ILED_DIM_PWM	0x00	/*   config dim mode pwm */
++#define ARCXCNN_ILED_DIM_INT	0x04	/*   config dim mode internal */
++#define ARCXCNN_LEDEN		0x06	/* LED Enable Register */
++#define ARCXCNN_LEDEN_ISETEXT	0x80	/*   Full-scale current set extern */
++#define ARCXCNN_LEDEN_MASK	0x3F	/*   LED string enables mask */
++#define ARCXCNN_LEDEN_BITS	0x06	/*   Bits of LED string enables */
++#define ARCXCNN_LEDEN_LED1	0x01
++#define ARCXCNN_LEDEN_LED2	0x02
++#define ARCXCNN_LEDEN_LED3	0x04
++#define ARCXCNN_LEDEN_LED4	0x08
++#define ARCXCNN_LEDEN_LED5	0x10
++#define ARCXCNN_LEDEN_LED6	0x20
++
++#define ARCXCNN_WLED_ISET_LSB	0x07	/* LED ISET LSB (in upper nibble) */
++#define ARCXCNN_WLED_ISET_LSB_SHIFT 0x04  /* ISET LSB Left Shift */
++#define ARCXCNN_WLED_ISET_MSB	0x08	/* LED ISET MSB (8 bits) */
++
++#define ARCXCNN_DIMFREQ		0x09
++#define ARCXCNN_COMP_CONFIG	0x0A
++#define ARCXCNN_FILT_CONFIG	0x0B
++#define ARCXCNN_IMAXTUNE	0x0C
++#define ARCXCNN_ID_MSB		0x1E
++#define ARCXCNN_ID_LSB		0x1F
++
++#define MAX_BRIGHTNESS		4095
++
++static int s_no_reset_on_remove;
++module_param_named(noreset, s_no_reset_on_remove, int, 0644);
++MODULE_PARM_DESC(noreset, "No reset on module removal");
++
++static int s_ibright = 60;
++module_param_named(ibright, s_ibright, int, 0644);
++MODULE_PARM_DESC(ibright, "Initial brightness (when no plat data)");
++
++static int s_ileden = ARCXCNN_LEDEN_MASK;
++module_param_named(ileden, s_ileden, int, 0644);
++MODULE_PARM_DESC(ileden, "Initial LED String Enables (when no plat data)");
++
++struct arcxcnn {
++	char chipname[64];
++	struct i2c_client *client;
++	struct backlight_device *bl;
++	struct device *dev;
++	struct arcxcnn_platform_data *pdata;
++};
++
++static int arcxcnn_update_bit(struct arcxcnn *lp, u8 reg, u8 mask, u8 data)
++{
++	int ret;
++	u8 tmp;
++
++	ret = i2c_smbus_read_byte_data(lp->client, reg);
++	if (ret < 0) {
++		dev_err(lp->dev, "failed to read 0x%.2x\n", reg);
++		return ret;
++	}
++
++	tmp = (u8)ret;
++	tmp &= ~mask;
++	tmp |= data & mask;
++
++	return i2c_smbus_write_byte_data(lp->client, reg, tmp);
++}
++
++static int arcxcnn_set_brightness(struct arcxcnn *lp, u32 brightness)
++{
++	int ret;
++	u8 val;
++
++	/* lower nibble of brightness goes in upper nibble of LSB register */
++	val = (brightness & 0xF) << ARCXCNN_WLED_ISET_LSB_SHIFT;
++	ret = i2c_smbus_write_byte_data(lp->client, ARCXCNN_WLED_ISET_LSB, val);
++	if (ret < 0)
++		return ret;
++
++	/* remaining 8 bits of brightness go in MSB register */
++	val = (brightness >> 4);
++	ret = i2c_smbus_write_byte_data(lp->client, ARCXCNN_WLED_ISET_MSB, val);
++
++	return ret;
++}
++
++static int arcxcnn_bl_update_status(struct backlight_device *bl)
++{
++	struct arcxcnn *lp = bl_get_data(bl);
++	u32 brightness = bl->props.brightness;
++
++	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
++		brightness = 0;
++
++	arcxcnn_set_brightness(lp, brightness);
++
++	/* set power-on/off/save modes */
++	if (bl->props.power == 0)
++		/* take out of standby */
++		arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY, 0);
++	else
++		 /* place in low-power standby mode */
++		arcxcnn_update_bit(lp, ARCXCNN_CMD,
++				ARCXCNN_CMD_STDBY, ARCXCNN_CMD_STDBY);
++	return 0;
++}
++
++static const struct backlight_ops arcxcnn_bl_ops = {
++	.options = BL_CORE_SUSPENDRESUME,
++	.update_status = arcxcnn_bl_update_status,
++};
++
++static int arcxcnn_backlight_register(struct arcxcnn *lp)
++{
++	struct backlight_properties *props;
++	const char *name = lp->pdata->name ? : "arctic_bl";
++
++	props = devm_kzalloc(lp->dev, sizeof(*props), GFP_KERNEL);
++	if (!props)
++		return -ENOMEM;
++
++	memset(props, 0, sizeof(props));
++	props->type = BACKLIGHT_PLATFORM;
++	props->max_brightness = MAX_BRIGHTNESS;
++
++	if (lp->pdata->initial_brightness > props->max_brightness)
++		lp->pdata->initial_brightness = props->max_brightness;
++
++	props->brightness = lp->pdata->initial_brightness;
++
++	lp->bl = devm_backlight_device_register(lp->dev, name, lp->dev, lp,
++				       &arcxcnn_bl_ops, props);
++
++	if (IS_ERR(lp->bl))
++		return PTR_ERR(lp->bl);
++
++	return 0;
++}
++
++static ssize_t arcxcnn_chip_id_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct arcxcnn *lp = dev_get_drvdata(dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%s\n", lp->chipname);
++}
++
++static ssize_t arcxcnn_leden_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct arcxcnn *lp = dev_get_drvdata(dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%02X\n", lp->pdata->leden);
++}
++
++static ssize_t arcxcnn_leden_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t len)
++{
++	struct arcxcnn *lp = dev_get_drvdata(dev);
++	unsigned long leden;
++
++	if (kstrtoul(buf, 0, &leden))
++		return 0;
++
++	if (leden != lp->pdata->leden) {
++		/* don't allow 0 for leden, use power to turn all off */
++		if (leden == 0)
++			return -EINVAL;
++		lp->pdata->leden = leden & ARCXCNN_LEDEN_MASK;
++		arcxcnn_update_bit(lp, ARCXCNN_LEDEN,
++			ARCXCNN_LEDEN_MASK, lp->pdata->leden);
++	}
++
++	return len;
++}
++
++static DEVICE_ATTR(chip_id, 0444, arcxcnn_chip_id_show, NULL);
++static DEVICE_ATTR(leden, 0664, arcxcnn_leden_show, arcxcnn_leden_store);
++
++static struct attribute *arcxcnn_attributes[] = {
++	&dev_attr_chip_id.attr,
++	&dev_attr_leden.attr,
++	NULL,
++};
++
++static const struct attribute_group arcxcnn_attr_group = {
++	.attrs = arcxcnn_attributes,
++};
++
++static void arcxcnn_parse_dt(struct arcxcnn *lp)
++{
++	struct device *dev = lp->dev;
++	struct device_node *node = dev->of_node;
++	u32 prog_val, num_entry, entry, sources[ARCXCNN_LEDEN_BITS];
++	int ret;
++
++	/* device tree entry isn't required, defaults are OK */
++	if (!node)
++		return;
++
++	ret = of_property_read_string(node, "label", &lp->pdata->name);
++	if (ret < 0)
++		lp->pdata->name = NULL;
++
++	ret = of_property_read_u32(node, "default-brightness", &prog_val);
++	if (ret == 0)
++		lp->pdata->initial_brightness = prog_val;
++
++	ret = of_property_read_u32(node, "arc,led-config-0", &prog_val);
++	if (ret == 0)
++		lp->pdata->led_config_0 = (u8)prog_val;
++
++	ret = of_property_read_u32(node, "arc,led-config-1", &prog_val);
++	if (ret == 0)
++		lp->pdata->led_config_1 = (u8)prog_val;
++
++	ret = of_property_read_u32(node, "arc,dim-freq", &prog_val);
++	if (ret == 0)
++		lp->pdata->dim_freq = (u8)prog_val;
++
++	ret = of_property_read_u32(node, "arc,comp-config", &prog_val);
++	if (ret == 0)
++		lp->pdata->comp_config = (u8)prog_val;
++
++	ret = of_property_read_u32(node, "arc,filter-config", &prog_val);
++	if (ret == 0)
++		lp->pdata->filter_config = (u8)prog_val;
++
++	ret = of_property_read_u32(node, "arc,trim-config", &prog_val);
++	if (ret == 0)
++		lp->pdata->trim_config = (u8)prog_val;
++
++	ret = of_property_count_u32_elems(node, "led-sources");
++	if (ret < 0) {
++		lp->pdata->leden = ARCXCNN_LEDEN_MASK; /* all on is default */
++	} else {
++		num_entry = ret;
++		if (num_entry > ARCXCNN_LEDEN_BITS)
++			num_entry = ARCXCNN_LEDEN_BITS;
++
++		ret = of_property_read_u32_array(node, "led-sources", sources,
++					num_entry);
++		if (ret < 0) {
++			dev_err(dev, "led-sources node is invalid.\n");
++		} else {
++			u8 onbit;
++
++			lp->pdata->leden = 0;
++
++			/* for each enable in source, set bit in led enable */
++			for (entry = 0; entry < num_entry; entry++) {
++				onbit = 1 << sources[entry];
++				lp->pdata->leden |= onbit;
++			}
++		}
++	}
++}
++
++static int arcxcnn_probe(struct i2c_client *cl, const struct i2c_device_id *id)
++{
++	struct arcxcnn *lp;
++	int ret;
++	u8 regval;
++	u16 chipid;
++
++	if (!i2c_check_functionality(cl->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
++		return -EIO;
++
++	lp = devm_kzalloc(&cl->dev, sizeof(*lp), GFP_KERNEL);
++	if (!lp)
++		return -ENOMEM;
++
++	lp->client = cl;
++	lp->dev = &cl->dev;
++	lp->pdata = dev_get_platdata(&cl->dev);
++
++	/* reset the device */
++	i2c_smbus_write_byte_data(lp->client,
++		ARCXCNN_CMD, ARCXCNN_CMD_RESET);
++
++	/* read device ID */
++	regval = i2c_smbus_read_byte_data(lp->client, ARCXCNN_ID_MSB);
++	chipid = regval;
++	chipid <<= 8;
++
++	regval = i2c_smbus_read_byte_data(lp->client, ARCXCNN_ID_LSB);
++	chipid |= regval;
++
++	snprintf(lp->chipname, sizeof(lp->chipname),
++		"%s-%04X", id->name, chipid);
++
++	if (!lp->pdata) {
++		lp->pdata = devm_kzalloc(lp->dev,
++				sizeof(*lp->pdata), GFP_KERNEL);
++		if (!lp->pdata)
++			return -ENOMEM;
++
++		/* Setup defaults based on power-on defaults */
++		lp->pdata->name = NULL;
++		lp->pdata->initial_brightness = s_ibright;
++		lp->pdata->leden = s_ileden;
++
++		lp->pdata->led_config_0 = i2c_smbus_read_byte_data(
++			lp->client, ARCXCNN_FADECTRL);
++
++		lp->pdata->led_config_1 = i2c_smbus_read_byte_data(
++			lp->client, ARCXCNN_ILED_CONFIG);
++		/* insure dim mode is not default pwm */
++		lp->pdata->led_config_1 |= ARCXCNN_ILED_DIM_INT;
++
++		lp->pdata->dim_freq = i2c_smbus_read_byte_data(
++			lp->client, ARCXCNN_DIMFREQ);
++
++		lp->pdata->comp_config = i2c_smbus_read_byte_data(
++			lp->client, ARCXCNN_COMP_CONFIG);
++
++		lp->pdata->filter_config = i2c_smbus_read_byte_data(
++			lp->client, ARCXCNN_FILT_CONFIG);
++
++		lp->pdata->trim_config = i2c_smbus_read_byte_data(
++			lp->client, ARCXCNN_IMAXTUNE);
++
++		if (IS_ENABLED(CONFIG_OF))
++			arcxcnn_parse_dt(lp);
++	}
++
++	i2c_set_clientdata(cl, lp);
++
++	/* constrain settings to what is possible */
++	if (lp->pdata->initial_brightness > MAX_BRIGHTNESS)
++		lp->pdata->initial_brightness = MAX_BRIGHTNESS;
++
++	/* set initial brightness */
++	arcxcnn_set_brightness(lp, lp->pdata->initial_brightness);
++
++	/* set other register values directly */
++	i2c_smbus_write_byte_data(lp->client, ARCXCNN_FADECTRL,
++		lp->pdata->led_config_0);
++	i2c_smbus_write_byte_data(lp->client, ARCXCNN_ILED_CONFIG,
++		lp->pdata->led_config_1);
++	i2c_smbus_write_byte_data(lp->client, ARCXCNN_DIMFREQ,
++		lp->pdata->dim_freq);
++	i2c_smbus_write_byte_data(lp->client, ARCXCNN_COMP_CONFIG,
++		lp->pdata->comp_config);
++	i2c_smbus_write_byte_data(lp->client, ARCXCNN_FILT_CONFIG,
++		lp->pdata->filter_config);
++	i2c_smbus_write_byte_data(lp->client, ARCXCNN_IMAXTUNE,
++		lp->pdata->trim_config);
++
++	/* set initial LED Enables */
++	arcxcnn_update_bit(lp, ARCXCNN_LEDEN,
++		ARCXCNN_LEDEN_MASK, lp->pdata->leden);
++
++	ret = arcxcnn_backlight_register(lp);
++	if (ret) {
++		dev_err(lp->dev,
++			"failed to register backlight. err: %d\n", ret);
++		return ret;
++	}
++
++	ret = sysfs_create_group(&lp->dev->kobj, &arcxcnn_attr_group);
++	if (ret) {
++		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
++		return ret;
++	}
++
++	backlight_update_status(lp->bl);
++
++	return 0;
++}
++
++static int arcxcnn_remove(struct i2c_client *cl)
++{
++	struct arcxcnn *lp = i2c_get_clientdata(cl);
++
++	if (!s_no_reset_on_remove) {
++		/* disable all strings */
++		i2c_smbus_write_byte_data(lp->client,
++			ARCXCNN_LEDEN, 0x00);
++		/* reset the device */
++		i2c_smbus_write_byte_data(lp->client,
++			ARCXCNN_CMD, ARCXCNN_CMD_RESET);
++	}
++	lp->bl->props.brightness = 0;
++
++	backlight_update_status(lp->bl);
++
++	sysfs_remove_group(&lp->dev->kobj, &arcxcnn_attr_group);
++
++	return 0;
++}
++
++static const struct of_device_id arcxcnn_dt_ids[] = {
++	{ .compatible = "arc,arc2c0608" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, arcxcnn_dt_ids);
++
++static const struct i2c_device_id arcxcnn_ids[] = {
++	{"arc2c0608", ARC2C0608},
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, arcxcnn_ids);
++
++static struct i2c_driver arcxcnn_driver = {
++	.driver = {
++		.name = "arcxcnn_bl",
++		.of_match_table = of_match_ptr(arcxcnn_dt_ids),
++	},
++	.probe = arcxcnn_probe,
++	.remove = arcxcnn_remove,
++	.id_table = arcxcnn_ids,
++};
++module_i2c_driver(arcxcnn_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Brian Dodge <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>");
++MODULE_DESCRIPTION("ARCXCNN Backlight driver");
+diff --git a/include/linux/i2c/arcxcnn.h b/include/linux/i2c/arcxcnn.h
+new file mode 100644
+index 0000000..e378d63
+--- /dev/null
++++ b/include/linux/i2c/arcxcnn.h
+@@ -0,0 +1,51 @@
++/*
++ * Backlight driver for ArcticSand ARC_X_C_0N_0N Devices
++ *
++ * Copyright 2016 ArcticSand, Inc.
++ * Author : Brian Dodge <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _ARCXCNN_H
++#define _ARCXCNN_H
++
++enum arcxcnn_chip_id {
++	ARC2C0608
++};
++
++/**
++ * struct arcxcnn_platform_data
++ * @name		: Backlight driver name (NULL will use default)
++ * @initial_brightness	: initial value of backlight brightness
++ * @leden		: initial LED string enables, upper bit is global on/off
++ * @led_config_0	: fading speed (period between intensity steps)
++ * @led_config_1	: misc settings, see datasheet
++ * @dim_freq		: pwm dimming frequency if in pwm mode
++ * @comp_config		: misc config, see datasheet
++ * @filter_config	: RC/PWM filter config, see datasheet
++ * @trim_config		: full scale current trim, see datasheet
++ */
++struct arcxcnn_platform_data {
++	const char *name;
++	u16 initial_brightness;
++	u8	leden;
++	u8	led_config_0;
++	u8	led_config_1;
++	u8	dim_freq;
++	u8	comp_config;
++	u8	filter_config;
++	u8	trim_config;
++};
++
++#endif
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
