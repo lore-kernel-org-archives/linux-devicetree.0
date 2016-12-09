@@ -1,80 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
-Date: Fri, 9 Dec 2016 12:09:30 -0600
-Message-ID: <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
- <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
- <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
- <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
- <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
- <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 10/11] Document: dt: binding: imx: update doc for imx6sll
+Date: Fri, 9 Dec 2016 12:12:01 -0600
+Message-ID: <20161209181201.ewcqeqslyf3je7kq@rob-hp-laptop>
+References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
+ <1480660774-25055-11-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Liam Breck <liam@networkimprov.net>
+In-Reply-To: <1480660774-25055-11-git-send-email-ping.bai-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 01:06:47AM -0800, Matt Ranostay wrote:
-> On Fri, Dec 2, 2016 at 12:28 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> > On 2 December 2016 at 08:22, Matt Ranostay <matt@ranostay.consulting> wrote:
-> >>
-> >>
-> >>> On Dec 1, 2016, at 23:13, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >>>
-> >>>> On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wrote:
-> >>>> Add optional device-post-power-on parameters to disable post_power_on
-> >>>> function from being called since this breaks some device.
-> >>>>
-> >>>> Cc: Tony Lindgren <tony@atomide.com>
-> >>>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> >>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> >>>> ---
-> >>>> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
-> >>>> drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
-> >>>> 2 files changed, 9 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> >>>> index bea306d772d1..09fa153f743e 100644
-> >>>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> >>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> >>>> @@ -24,6 +24,8 @@ Optional properties:
-> >>>>        de-asserting the reset-gpios (if any)
-> >>>> - invert-off-state: Invert the power down state for the reset-gpios (if any)
-> >>>>        and pwrdn-gpios (if any)
-> >>>> +- disable-post-power-on : Avoid post_power_on function from being called since
-> >>>> +       this breaks some devices
-> >>>
-> >>> This is a bit weird. I would like to avoid this, if possible.
-> >>>
-> >>> Perhaps if you simply describe the sequence in detail for your device
-> >>> we can figure out the best option together.
-> >>
-> >> Yeah I know it is a bit weird but we need to keep that reset pin high for at least some time after pre power on.   So any case it would be another property
-> >
-> > This went offlist, please resend.
-> >
-> > Moreover, please try to describe the sequence you need in detail
-> > according to your HW spec.
-> >
+On Fri, Dec 02, 2016 at 02:39:33PM +0800, Bai Ping wrote:
+> Add necessary document update for i.MX6SLL support.
 > 
-> Yeah oops....
+> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/imx6sll-clock.txt    | 13 ++++++++
+>  .../bindings/pinctrl/fsl,imx6sll-pinctrl.txt       | 37 ++++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt
 > 
-> So basically we need to drive the reset and powerdown lines high with
-> a 300 milliseconds delay between both...
-> can't have the reset line low with post power on (pretty sure but
-> would need a delay anyway), and we need both reset + powerdown line
-> set low on powerdown.
-> 
-> So the power down sequence would need to be reversed for this
-> application in pwrseq-simple.
+> diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+> new file mode 100644
+> index 0000000..4f52efa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+> @@ -0,0 +1,13 @@
+> +* Clock bindings for Freescale i.MX6 UltraLite
 
-This sounds like you need a device specific sequence to me. Otherwise, 
-write a language to describe any power control waveforms rather than 
-trying to bolt on more and more properties. (Don't really go write a 
-language.) 
+I thought UltraLite was MX6UL?
 
-Rob
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx6sll-ccm"
+> +- reg: Address and length of the register set
+> +- #clock-cells: Should be <1>
+> +- clocks: list of clock specifiers, must contain an entry for each required
+> +  entry in clock-names
+> +- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
+> +
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sll-clock.h
+> +for the full list of i.MX6 SLL clock IDs.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt
+> new file mode 100644
+> index 0000000..096e471
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt
+> @@ -0,0 +1,37 @@
+> +* Freescale i.MX6 UltraLite IOMUX Controller
+
+ditto
+
+> +
+> +Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
+> +and usage.
+> +
+> +Required properties:
+> +- compatible: "fsl,imx6sll-iomuxc"
+> +- fsl,pins: each entry consists of 6 integers and represents the mux and config
+> +  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+> +  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> +  imx6ul-pinfunc.h under device tree source folder.  The last integer CONFIG is
+> +  the pad setting value like pull-up on this pin.  Please refer to i.MX6SLL
+> +  Reference Manual for detailed CONFIG settings.
+> +
+> +CONFIG bits definition:
+> +PAD_CTL_LVE			(1 << 22)
+> +PAD_CTL_HYS                     (1 << 16)
+> +PAD_CTL_PUS_100K_DOWN           (0 << 14)
+> +PAD_CTL_PUS_47K_UP              (1 << 14)
+> +PAD_CTL_PUS_100K_UP             (2 << 14)
+> +PAD_CTL_PUS_22K_UP              (3 << 14)
+> +PAD_CTL_PUE                     (1 << 13)
+> +PAD_CTL_PKE                     (1 << 12)
+> +PAD_CTL_ODE                     (1 << 11)
+> +PAD_CTL_SPEED_LOW               (0 << 6)
+> +PAD_CTL_SPEED_MED               (1 << 6)
+> +PAD_CTL_SPEED_HIGH              (3 << 6)
+> +PAD_CTL_DSE_DISABLE             (0 << 3)
+> +PAD_CTL_DSE_260ohm              (1 << 3)
+> +PAD_CTL_DSE_130ohm              (2 << 3)
+> +PAD_CTL_DSE_87ohm               (3 << 3)
+> +PAD_CTL_DSE_65ohm               (4 << 3)
+> +PAD_CTL_DSE_52ohm               (5 << 3)
+> +PAD_CTL_DSE_43ohm               (6 << 3)
+> +PAD_CTL_DSE_37ohm               (7 << 3)
+> +PAD_CTL_SRE_FAST                (1 << 0)
+> +PAD_CTL_SRE_SLOW                (0 << 0)
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
