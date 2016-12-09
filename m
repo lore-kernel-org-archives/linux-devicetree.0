@@ -1,93 +1,33 @@
 From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/3] ARM: dts: imx6: Support Savageboard dual
-Date: Fri,  9 Dec 2016 10:04:35 +0900
-Message-ID: <20161209010436.7994-3-woogyom.kim@gmail.com>
-References: <20161209010436.7994-1-woogyom.kim@gmail.com>
+Subject: [PATCH] ARM: dts: sun8i: Support DTB build for NanoPi M1
+Date: Fri,  9 Dec 2016 10:47:58 +0900
+Message-ID: <20161209014758.27368-1-woogyom.kim@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161209010436.7994-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Common savageboard DT file is used for board support.
-Specify this dtb file for i.MX6Q build.
+The commit 10efbf5f1633 introduced NanoPi M1 board but it's missing in
+Allwinner H3 DTB build.
 
 Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile               |  1 +
- arch/arm/boot/dts/imx6dl-savageboard.dts | 50 ++++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
+ arch/arm/boot/dts/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c558ba7..64660c7 100644
+index cccdbcb..4cbdf6f 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -348,6 +348,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-sabreauto.dtb \
- 	imx6dl-sabrelite.dtb \
- 	imx6dl-sabresd.dtb \
-+	imx6dl-savageboard.dtb \
- 	imx6dl-ts4900.dtb \
- 	imx6dl-tx6dl-comtft.dtb \
- 	imx6dl-tx6s-8034.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-savageboard.dts b/arch/arm/boot/dts/imx6dl-savageboard.dts
-new file mode 100644
-index 0000000..2cac30d
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-savageboard.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright (C) 2016 Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-savageboard.dtsi"
-+
-+/ {
-+	model = "Poslab SavageBoard Dual";
-+	compatible = "poslab,imx6dl-savageboard", "fsl,imx6dl";
-+};
+@@ -845,6 +845,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
++	sun8i-h3-nanopi-m1.dtb \
+ 	sun8i-h3-nanopi-neo.dtb \
+ 	sun8i-h3-orangepi-2.dtb \
+ 	sun8i-h3-orangepi-lite.dtb \
 -- 
 2.9.3
 
