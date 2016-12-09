@@ -1,100 +1,59 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/2] irqchip/renesas-intc-irqpin: Add R-Car Gen1 fallback binding
-Date: Fri, 9 Dec 2016 13:52:20 +0100
-Message-ID: <CAMuHMdX_Cg6T10pMXe420kOwQn27_PRm-osNb7L4_M==fJnE_Q@mail.gmail.com>
-References: <1481280650-9258-1-git-send-email-horms+renesas@verge.net.au> <1481280650-9258-3-git-send-email-horms+renesas@verge.net.au>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v9 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Fri, 9 Dec 2016 14:05:54 +0100
+Message-ID: <6dc1eb03-5e0e-84cf-ee2e-e3d7f8cb7a42@denx.de>
+References: <1481261749-15301-1-git-send-email-joel@airwebreathe.org.uk>
+ <1481261749-15301-3-git-send-email-joel@airwebreathe.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481280650-9258-3-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+In-Reply-To: <1481261749-15301-3-git-send-email-joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On 12/09/2016 06:35 AM, Joel Holdsworth wrote:
+> The Lattice iCE40 is a family of FPGAs with a minimalistic architecture
+> and very regular structure, designed for low-cost, high-volume consumer
+> and system applications.
+> 
+> This patch adds support to the FPGA manager for configuring the SRAM of
+> iCE40LM, iCE40LP, iCE40HX, iCE40 Ultra, iCE40 UltraLite and iCE40
+> UltraPlus devices, through slave SPI.
+> 
+> The iCE40 family is notable because it is the first FPGA family to have
+> complete reverse engineered bit-stream documentation for the iCE40LP and
+> iCE40HX devices. Furthermore, there is now a Free Software Verilog
+> synthesis tool-chain: the "IceStorm" tool-chain.
+> 
+> This project is the work of Clifford Wolf, who is the maintainer of
+> Yosys Verilog RTL synthesis framework, and Mathias Lasser, with notable
+> contributions from "Cotton Seed", the main author of "arachne-pnr"; a
+> place-and-route tool for iCE40 FPGAs.
+> 
+> Having a Free Software synthesis tool-chain offers interesting
+> opportunities for embedded devices that are able reconfigure themselves
+> with open firmware that is generated on the device itself. For example
+> a mobile device might have an application processor with an iCE40 FPGA
+> attached, which implements slave devices, or through which the processor
+> communicates with other devices through the FPGA fabric.
+> 
+> A kernel driver for the iCE40 is useful, because in some cases, the FPGA
+> may need to be configured before other devices can be accessed.
+> 
+> An example of such a device is the icoBoard; a RaspberryPI HAT which
+> features an iCE40HX8K with a 1 or 8 MBit SRAM and ports for
+> Digilent-compatible PMOD modules. A PMOD module may contain a device
+> with which the kernel communicates, via the FPGA.
+> 
+> Signed-off-by: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
 
-On Fri, Dec 9, 2016 at 11:50 AM, Simon Horman
-<horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> In the case of Renesas R-Car hardware we know that there are generations of
-> SoCs, e.g. Gen 1, Gen 2 and Gen 3. But beyond that its not clear what the
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-it's
-
-> relationship between IP blocks might be. For example, I believe that
-> r8a7779 is older than r8a7778 but that doesn't imply that the latter is a
-> descendant of the former or vice versa.
->
-> We can, however, by examining the documentation and behaviour of the
-> hardware at run-time observe that the current driver implementation appears
-> to be compatible with the IP blocks on SoCs within a given generation.
->
-> For the above reasons and convenience when enabling new SoCs a
-> per-generation fallback compatibility string scheme being adopted for
-> drivers for Renesas SoCs.
->
-> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> ---
->  .../interrupt-controller/renesas,intc-irqpin.txt   | 44 ++++++++++++----------
->  drivers/irqchip/irq-renesas-intc-irqpin.c          |  2 +
->  2 files changed, 26 insertions(+), 20 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> index 772c550d3b4b..e5a5251be9f5 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> @@ -2,13 +2,19 @@ DT bindings for the R-/SH-Mobile irqpin controller
->
->  Required properties:
->
-> -- compatible: has to be "renesas,intc-irqpin-<soctype>", "renesas,intc-irqpin"
-> -  as fallback.
-> -  Examples with soctypes are:
-> +- compatible:
->      - "renesas,intc-irqpin-r8a7740" (R-Mobile A1)
->      - "renesas,intc-irqpin-r8a7778" (R-Car M1A)
->      - "renesas,intc-irqpin-r8a7779" (R-Car H1)
->      - "renesas,intc-irqpin-sh73a0" (SH-Mobile AG5)
-> +    - "renesas,rcar-gen1-intc-irqpin" (generic R-Car Gen1 compatible device)
-
-Does it make sense to add a new family-specific compatible value to a driver
-that's unlikely to receive more users in the future? More recent SoCs use
-renesas,irqc.
-
-If the answer is yes, do we want one for SH/R-Mobile too?
-
-> +    - "renesas,intc-irqpin"         (generic device)
-> +
-> +    When compatible with a generic R-Car version, nodes must list the
-> +    SoC-specific version corresponding to the platform first followed by
-> +    the generic R-Car version.
-> +
-> +    "renesas,intc-irqpin" must be present and last.
->
->  - reg: Base address and length of each register bank used by the external
->    IRQ pins driven by the interrupt controller hardware module. The base
-> @@ -39,24 +45,22 @@ Optional properties:
->  Example
->  -------
->
-> -       irqpin1: interrupt-controller@e6900004 {
-> -               compatible = "renesas,intc-irqpin-r8a7740",
-> +       irqpin0: interrupt-controller@fe78001c {
-> +               compatible = "renesas,intc-irqpin-r8a7779",
-> +                            "renesas,rcar-gen1-intc-irqpin",
-
-And now we have three compatible values to list...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
