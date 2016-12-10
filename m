@@ -1,33 +1,60 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: [PATCH 1/2] devicetree: add Garmin vendor prefix
-Date: Fri,  9 Dec 2016 22:35:34 -0800
-Message-ID: <1481351734-23452-1-git-send-email-matt@ranostay.consulting>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] add support to STM LSM6DS3-LSM6DSM 6-axis Mems sensor
+Date: Sat, 10 Dec 2016 10:02:16 +0100
+Message-ID: <20161210090218.4609-1-lorenzo.bianconi@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v2:
+- improve code documentation
+- improve code readability
+- use spi_write() instead of spi_sync_transfer() in st_lsm6dsx_spi_write()
+- use SMBus commands instead of I2C protocol
+- use fifo_lock mutex to prevent concurrent access to hw FIFO instead of
+  disabling/enabling irq line in st_lsm6dsx_flush_fifo()
+- rename ring occurrences in buffer ones
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 64fdc8c1503b..aedd9979d1e9 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -106,6 +106,7 @@ firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
- friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
- fsl	Freescale Semiconductor
-+garmin	Garmin Limited
- ge	General Electric Company
- geekbuying	GeekBuying
- gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+Changes since v1:
+- add sw fifo support
+- drop trigger dependency
+- use iio_claim_direct_mode() routine instead of grabbing the mutex directly
+- use more unique prefix for all defines
+- use info_mask_shared_by_all element for sampling_frequency
+- use devm_iio_* routines
+- use of_match_ptr instead of access directly to of_match_table
+- fix device tree binding
+- rename st_lsm6dsx_dev in st_lsm6dsx_hw
+- cosmetics
+
+Lorenzo Bianconi (2):
+  iio: imu: add support to lsm6dsx driver
+  Documentation: dt: iio: add st_lsm6dsx sensor device binding
+
+ .../devicetree/bindings/iio/imu/st_lsm6dsx.txt     |  24 +
+ drivers/iio/imu/Kconfig                            |   1 +
+ drivers/iio/imu/Makefile                           |   2 +
+ drivers/iio/imu/st_lsm6dsx/Kconfig                 |  23 +
+ drivers/iio/imu/st_lsm6dsx/Makefile                |   5 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h            | 133 +++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c     | 437 ++++++++++++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       | 655 +++++++++++++++++++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c        |  88 +++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c        | 126 ++++
+ 10 files changed, 1494 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/Kconfig
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/Makefile
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+
 -- 
-2.7.4
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
