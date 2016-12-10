@@ -1,139 +1,138 @@
-From: Jason Liu <liu.h.jason-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: of_reserved_mem: Ensure cma reserved region not
- cross the low/high memory
-Date: Sat, 10 Dec 2016 12:29:57 +0800
-Message-ID: <CAB4PhKfVJL+5V=EPbeQokTLWQ7FtNJ0RaYL6uoKBEoQgynX-vw@mail.gmail.com>
-References: <1479901021-25064-1-git-send-email-jason.hui.liu@nxp.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] mtd: aspeed: add memory controllers for the Aspeed
+ AST2400 SoC
+Date: Sat, 10 Dec 2016 05:03:05 +0100
+Message-ID: <076683ea-fa94-2284-f269-2fcebd793940@gmail.com>
+References: <1481302167-28044-1-git-send-email-clg@kaod.org>
+ <1481302167-28044-3-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479901021-25064-1-git-send-email-jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1481302167-28044-3-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-11-23 19:37 GMT+08:00 Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>:
-> Need ensure the cma reserved region not cross the low/high memory boundary
-> when using the dynamic allocation methond through device-tree, otherwise,
-> kernel will fail to boot up when cma reserved region cross how/high mem.
->
-> Signed-off-by: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
-> Cc: Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On 12/09/2016 05:49 PM, Cédric Le Goater wrote:
+> This driver adds mtd support for the Aspeed AST2400 SoC static memory
+> controllers:
+> 
+>  * New Static Memory Controller (referred as FMC)
+>    . BMC firmware
+>    . AST2500 compatible register set
+>    . 5 chip select pins (CE0 ∼ CE4)
+>    . supports NOR flash, NAND flash and SPI flash memory.
+> 
+>  * SPI Flash Controller (SPI)
+>    . host Firmware
+>    . slightly different register set, between AST2500 and the legacy
+>      controller
+>    . supports SPI flash memory
+>    . 1 chip select pin (CE0)
+> 
+> The legacy static memory controller (referred as SMC) is not
+> supported, as well as types other than SPI.
+> 
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+
+Well this is a nice split :-)
+
 > ---
->  drivers/of/of_reserved_mem.c    | 42 +++++++++++++++++++++++++++++++----------
->  include/linux/of_reserved_mem.h |  3 ++-
->  2 files changed, 34 insertions(+), 11 deletions(-)
-
-
-Rob, any comments about this patch?
-
-
-Jason Liu
-
->
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 366d8c3..852345a 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -31,11 +31,15 @@
->
->  #if defined(CONFIG_HAVE_MEMBLOCK)
->  #include <linux/memblock.h>
-> -int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
-> -       phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
-> -       phys_addr_t *res_base)
-> +int __init __weak early_init_dt_alloc_reserved_memory_arch(unsigned long node,
-> +       phys_addr_t size, phys_addr_t align, phys_addr_t start, phys_addr_t end,
-> +       bool nomap, phys_addr_t *res_base)
->  {
->         phys_addr_t base;
-> +       phys_addr_t highmem_start;
+>  drivers/mtd/spi-nor/Kconfig      |  2 +-
+>  drivers/mtd/spi-nor/aspeed-smc.c | 33 +++++++++++++++++++++++++++++++++
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 5c0efbd9dd89..22bea563f9bc 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -35,7 +35,7 @@ config SPI_ASPEED
+>  	depends on HAS_IOMEM && OF
+>  	help
+>  	  This enables support for the Firmware Memory controller (FMC)
+> -	  in the Aspeed AST2500 SoC when attached to SPI NOR chips,
+> +	  in the Aspeed AST2500/AST2400 SoCs when attached to SPI NOR chips,
+>  	  and support for the SPI flash memory controller (SPI) for
+>  	  the host firmware. The implementation only supports SPI NOR.
+>  
+> diff --git a/drivers/mtd/spi-nor/aspeed-smc.c b/drivers/mtd/spi-nor/aspeed-smc.c
+> index 6f9244f07aef..99302b0d7786 100644
+> --- a/drivers/mtd/spi-nor/aspeed-smc.c
+> +++ b/drivers/mtd/spi-nor/aspeed-smc.c
+> @@ -119,8 +119,27 @@ struct aspeed_smc_info {
+>  	void (*set_4b)(struct aspeed_smc_chip *chip);
+>  };
+>  
+> +static void aspeed_smc_chip_set_4b_spi_2400(struct aspeed_smc_chip *chip);
+>  static void aspeed_smc_chip_set_4b(struct aspeed_smc_chip *chip);
+>  
+> +static const struct aspeed_smc_info fmc_2400_info = {
+> +	.maxsize = 64 * 1024 * 1024,
+> +	.nce = 5,
+> +	.hastype = true,
+> +	.we0 = 16,
+> +	.ctl0 = 0x10,
+> +	.set_4b = aspeed_smc_chip_set_4b,
+> +};
 > +
-> +       highmem_start = __pa(high_memory - 1) + 1;
+> +static const struct aspeed_smc_info spi_2400_info = {
+> +	.maxsize = 64 * 1024 * 1024,
+> +	.nce = 1,
+> +	.hastype = false,
+> +	.we0 = 0,
+> +	.ctl0 = 0x04,
+> +	.set_4b = aspeed_smc_chip_set_4b_spi_2400,
+> +};
 > +
->         /*
->          * We use __memblock_alloc_base() because memblock_alloc_base()
->          * panic()s on allocation failure.
-> @@ -53,15 +57,33 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
->                 return -ENOMEM;
->         }
->
-> +       /*
-> +        * Sanity check for the cma reserved region:If the reserved region
-> +        * crosses the low/high memory boundary, try to fix it up and then
-> +        * fall back to allocate the cma region from the low mememory space.
-> +        */
-> +
-> +       if (IS_ENABLED(CONFIG_CMA)
-> +           && of_flat_dt_is_compatible(node, "shared-dma-pool")
-> +           && of_get_flat_dt_prop(node, "reusable", NULL) && !nomap) {
-> +               if (base < highmem_start && (base + size) > highmem_start) {
-> +                       memblock_free(base, size);
-> +                       base = memblock_alloc_range(size, align, start,
-> +                                               highmem_start, MEMBLOCK_NONE);
-> +                       if (!base)
-> +                               return -ENOMEM;
-> +               }
-> +       }
-> +
->         *res_base = base;
->         if (nomap)
->                 return memblock_remove(base, size);
->         return 0;
+>  static const struct aspeed_smc_info fmc_2500_info = {
+>  	.maxsize = 256 * 1024 * 1024,
+>  	.nce = 3,
+> @@ -210,6 +229,7 @@ struct aspeed_smc_controller {
+>  #define CONTROL_IO_DUMMY_HI		BIT(14)
+>  #define CONTROL_IO_DUMMY_HI_SHIFT	14
+>  #define CONTROL_CLK_DIV4		BIT(13) /* others */
+> +#define CONTROL_IO_ADDRESS_4B		BIT(13) /* AST2400 SPI */
+>  #define CONTROL_RW_MERGE		BIT(12)
+>  #define CONTROL_IO_DUMMY_LO_SHIFT	6
+>  #define CONTROL_IO_DUMMY_LO		GENMASK(7, \
+> @@ -406,6 +426,8 @@ static int aspeed_smc_remove(struct platform_device *dev)
 >  }
->  #else
-> -int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
-> -       phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
-> -       phys_addr_t *res_base)
-> +int __init __weak early_init_dt_alloc_reserved_memory_arch(unsigned long node,
-> +       phys_addr_t size, phys_addr_t align, phys_addr_t start, phys_addr_t end,
-> +       bool nomap, phys_addr_t *res_base)
+>  
+>  static const struct of_device_id aspeed_smc_matches[] = {
+> +	{ .compatible = "aspeed,ast2400-fmc", .data = &fmc_2400_info },
+> +	{ .compatible = "aspeed,ast2400-spi", .data = &spi_2400_info },
+>  	{ .compatible = "aspeed,ast2500-fmc", .data = &fmc_2500_info },
+>  	{ .compatible = "aspeed,ast2500-spi", .data = &spi_2500_info },
+>  	{ }
+> @@ -479,6 +501,17 @@ static void aspeed_smc_chip_set_4b(struct aspeed_smc_chip *chip)
+>  	}
+>  }
+>  
+> +/*
+> + * The AST2400 SPI flash controller does not have a CE Control
+> + * register. It uses the CE0 control register to set 4Byte mode at the
+> + * controller level.
+> + */
+> +static void aspeed_smc_chip_set_4b_spi_2400(struct aspeed_smc_chip *chip)
+> +{
+> +	chip->ctl_val[smc_base] |= CONTROL_IO_ADDRESS_4B;
+> +	chip->ctl_val[smc_read] |= CONTROL_IO_ADDRESS_4B;
+
+How do you know the SPI NOR is in 4B mode ?
+
+> +}
+> +
+>  static int aspeed_smc_chip_setup_init(struct aspeed_smc_chip *chip,
+>  				      struct resource *res)
 >  {
->         pr_err("Reserved memory not supported, ignoring region 0x%llx%s\n",
->                   size, nomap ? " (nomap)" : "");
-> @@ -155,8 +177,8 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
->                         end = start + dt_mem_next_cell(dt_root_size_cells,
->                                                        &prop);
->
-> -                       ret = early_init_dt_alloc_reserved_memory_arch(size,
-> -                                       align, start, end, nomap, &base);
-> +                       ret = early_init_dt_alloc_reserved_memory_arch(node,
-> +                                       size, align, start, end, nomap, &base);
->                         if (ret == 0) {
->                                 pr_debug("allocated memory for '%s' node: base %pa, size %ld MiB\n",
->                                         uname, &base,
-> @@ -167,8 +189,8 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
->                 }
->
->         } else {
-> -               ret = early_init_dt_alloc_reserved_memory_arch(size, align,
-> -                                                       0, 0, nomap, &base);
-> +               ret = early_init_dt_alloc_reserved_memory_arch(node,
-> +                                       size, align, 0, 0, nomap, &base);
->                 if (ret == 0)
->                         pr_debug("allocated memory for '%s' node: base %pa, size %ld MiB\n",
->                                 uname, &base, (unsigned long)size / SZ_1M);
-> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-> index f8e1992..a6ee451 100644
-> --- a/include/linux/of_reserved_mem.h
-> +++ b/include/linux/of_reserved_mem.h
-> @@ -34,7 +34,8 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
->                                        struct device_node *np, int idx);
->  void of_reserved_mem_device_release(struct device *dev);
->
-> -int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
-> +int early_init_dt_alloc_reserved_memory_arch(unsigned long node,
-> +                                            phys_addr_t size,
->                                              phys_addr_t align,
->                                              phys_addr_t start,
->                                              phys_addr_t end,
-> --
-> 1.8.3.2
->
+> 
+
+
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
