@@ -1,50 +1,88 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] mtd: aspeed: used a label property
-Date: Sat, 10 Dec 2016 05:03:42 +0100
-Message-ID: <6bc350c3-b162-dc10-4cd3-c32f9a3d4eaf@gmail.com>
-References: <1481302167-28044-1-git-send-email-clg@kaod.org>
- <1481302167-28044-4-git-send-email-clg@kaod.org>
+From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
+Date: Fri, 9 Dec 2016 21:47:29 -0800
+Message-ID: <CAJ_EiSTBmm6HDCCNSTp1moOM3gOQx3eiMEBT0vo6Eawi_cxNcQ@mail.gmail.com>
+References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
+ <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
+ <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
+ <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
+ <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
+ <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com> <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481302167-28044-4-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+In-Reply-To: <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2016 05:49 PM, Cédric Le Goater wrote:
-> This can be used to easily identify a chip on a system with multiple
-> chips.
+On Fri, Dec 9, 2016 at 10:09 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 02, 2016 at 01:06:47AM -0800, Matt Ranostay wrote:
+>> On Fri, Dec 2, 2016 at 12:28 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On 2 December 2016 at 08:22, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
+>> >>
+>> >>
+>> >>> On Dec 1, 2016, at 23:13, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >>>
+>> >>>> On 2 December 2016 at 07:17, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
+>> >>>> Add optional device-post-power-on parameters to disable post_power_on
+>> >>>> function from being called since this breaks some device.
+>> >>>>
+>> >>>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>> >>>> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >>>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>> >>>> ---
+>> >>>> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+>> >>>> drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
+>> >>>> 2 files changed, 9 insertions(+)
+>> >>>>
+>> >>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> >>>> index bea306d772d1..09fa153f743e 100644
+>> >>>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> >>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> >>>> @@ -24,6 +24,8 @@ Optional properties:
+>> >>>>        de-asserting the reset-gpios (if any)
+>> >>>> - invert-off-state: Invert the power down state for the reset-gpios (if any)
+>> >>>>        and pwrdn-gpios (if any)
+>> >>>> +- disable-post-power-on : Avoid post_power_on function from being called since
+>> >>>> +       this breaks some devices
+>> >>>
+>> >>> This is a bit weird. I would like to avoid this, if possible.
+>> >>>
+>> >>> Perhaps if you simply describe the sequence in detail for your device
+>> >>> we can figure out the best option together.
+>> >>
+>> >> Yeah I know it is a bit weird but we need to keep that reset pin high for at least some time after pre power on.   So any case it would be another property
+>> >
+>> > This went offlist, please resend.
+>> >
+>> > Moreover, please try to describe the sequence you need in detail
+>> > according to your HW spec.
+>> >
+>>
+>> Yeah oops....
+>>
+>> So basically we need to drive the reset and powerdown lines high with
+>> a 300 milliseconds delay between both...
+>> can't have the reset line low with post power on (pretty sure but
+>> would need a delay anyway), and we need both reset + powerdown line
+>> set low on powerdown.
+>>
+>> So the power down sequence would need to be reversed for this
+>> application in pwrseq-simple.
+>
+> This sounds like you need a device specific sequence to me. Otherwise,
+> write a language to describe any power control waveforms rather than
+> trying to bolt on more and more properties. (Don't really go write a
+> language.)
+>
 
-I don't think I understand what this patch does.
-It seems to me like this one should be wrapped into 1/5.
+Yeah I no interest in that as well :).
 
-> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-> ---
->  drivers/mtd/spi-nor/aspeed-smc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/mtd/spi-nor/aspeed-smc.c b/drivers/mtd/spi-nor/aspeed-smc.c
-> index 99302b0d7786..9119c0ca86b6 100644
-> --- a/drivers/mtd/spi-nor/aspeed-smc.c
-> +++ b/drivers/mtd/spi-nor/aspeed-smc.c
-> @@ -676,6 +676,8 @@ static int aspeed_smc_setup_flash(struct aspeed_smc_controller *controller,
->  		nor->prepare = aspeed_smc_prep;
->  		nor->unprepare = aspeed_smc_unprep;
->  
-> +		mtd->name = of_get_property(child, "label", NULL);
-> +
->  		ret = aspeed_smc_chip_setup_init(chip, r);
->  		if (ret)
->  			break;
-> 
+So I'll resubmit with the patchset comments so far.
 
-
--- 
-Best regards,
-Marek Vasut
+> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
