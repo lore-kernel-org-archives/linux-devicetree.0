@@ -1,69 +1,52 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 1/2] i2c: aspeed: added driver for Aspeed I2C
-Date: Sun, 11 Dec 2016 23:26:22 +0100
-Message-ID: <20161211222622.GK2552@katana>
-References: <1480467618-7497-1-git-send-email-brendanhiggins@google.com>
- <1480467618-7497-2-git-send-email-brendanhiggins@google.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] mtd: aspeed: used a label property
+Date: Mon, 12 Dec 2016 10:46:03 +1100
+Message-ID: <CACPK8Xcj4P34-4krGbnimVG89wMcHoRX4XJ66-_7KtAt6-vTkA@mail.gmail.com>
+References: <1481302167-28044-1-git-send-email-clg@kaod.org> <1481302167-28044-4-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5mZBmBd1ZkdwT1ny"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480467618-7497-2-git-send-email-brendanhiggins@google.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: vz@mleia.com, clg@kaod.org, mouse@mayc.ru, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481302167-28044-4-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Dec 10, 2016 at 3:49 AM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote=
+:
+> This can be used to easily identify a chip on a system with multiple
+> chips.
+>
+> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
 
---5mZBmBd1ZkdwT1ny
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Our userspace benefits from having this.
 
-On Tue, Nov 29, 2016 at 05:00:17PM -0800, Brendan Higgins wrote:
-> Added initial master and slave support for Aspeed I2C controller.
-> Supports fourteen busses present in ast24xx and ast25xx BMC SoCs by
-> Aspeed.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 
-BTW first the bindings patch please, then the driver.
-
-And one seperate question I just stumbled over:
-
-> +	/* Switch from master mode to slave mode. */
-> +	func_ctrl_reg_val =3D aspeed_i2c_read(bus, ASPEED_I2C_FUN_CTRL_REG);
-> +	func_ctrl_reg_val &=3D ~ASPEED_I2CD_MASTER_EN;
-> +	func_ctrl_reg_val |=3D ASPEED_I2CD_SLAVE_EN;
-> +	aspeed_i2c_write(bus, func_ctrl_reg_val, ASPEED_I2C_FUN_CTRL_REG);
-
-Can't the hardware work both as master and slave on the same bus?
-
-Regards,
-
-   Wolfram
-
-
---5mZBmBd1ZkdwT1ny
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYTdKOAAoJEBQN5MwUoCm2vxgP/0Gnbf5Ja3LHi7pwd67PYfmA
-nMxNGHtRwi/zdW6Mfk45fIhTXFV+7rz6UH36/XlNjE0C7vEBQxXVf1Wg6r66l8Yl
-gz9n7sl0HThldTvkyZqmMFZiyG+jjOYU2/GHqgpon8D2i/zagKYiG+f3ygMtlVEI
-6u1Wu0tvSzTmbSRNaJskR6bU+rKiJELopAzxsa05kceQPOqnSKjpcdcT1T8i896C
-67felp6ALKf0oECZ2IXr9rKlqFB+qErmqHYlSwhQLgF0uGJvENNgDXI+FQ4+Sex2
-WihGydD0epjJVeOq1/3YfawjOYIKTmiR93rOdSGWXElamhK3agW9XMMyDF3QiJqq
-mzVNVKP2/4Vy0ITHaNVFDv5mMON2J/9j1qXu2IIMYHn1ALHhHsULS7l4WHoGB2AW
-XZWflaZVh7K1ZaFyOLAV36ajOCNWO7mU8Ow8xFfLnGqPVkZA/RXqLyIO31Tbhh9Z
-PliBgX0tHtI3vsx2/GcP17+3NuxFc1q5al5P72I8rxRXuElxa2wQ/Sznh4ZnLK60
-l6XnqSAYvTZ42JJY8+mC7ycHvu3m3ys378dTB+uWoVUyi/V910HBY+K9viGPzd8c
-jUGIbIFghdRUaA/NliXyZfpq9y4ke1u0BryZYPBth5GElM1Denw2DtZnSkLbDo3B
-FyIkHK/1FWj2ZpFzk5Eb
-=Vm0m
------END PGP SIGNATURE-----
-
---5mZBmBd1ZkdwT1ny--
+> ---
+>  drivers/mtd/spi-nor/aspeed-smc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/mtd/spi-nor/aspeed-smc.c b/drivers/mtd/spi-nor/aspee=
+d-smc.c
+> index 99302b0d7786..9119c0ca86b6 100644
+> --- a/drivers/mtd/spi-nor/aspeed-smc.c
+> +++ b/drivers/mtd/spi-nor/aspeed-smc.c
+> @@ -676,6 +676,8 @@ static int aspeed_smc_setup_flash(struct aspeed_smc_c=
+ontroller *controller,
+>                 nor->prepare =3D aspeed_smc_prep;
+>                 nor->unprepare =3D aspeed_smc_unprep;
+>
+> +               mtd->name =3D of_get_property(child, "label", NULL);
+> +
+>                 ret =3D aspeed_smc_chip_setup_init(chip, r);
+>                 if (ret)
+>                         break;
+> --
+> 2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
