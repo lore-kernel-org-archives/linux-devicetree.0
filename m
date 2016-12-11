@@ -1,88 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] ARM: i.MX: dts: add fsl, imx25-wdt compatible to
- all relevant watchdog nodes
-Date: Sun, 11 Dec 2016 10:40:18 +0100
-Message-ID: <20161211094018.zechblje3pburxx3@pengutronix.de>
-References: <1474850361-20884-1-git-send-email-vz@mleia.com>
- <1474850361-20884-3-git-send-email-vz@mleia.com>
- <20160926062759.3eoezyezog6clz6x@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160926062759.3eoezyezog6clz6x-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH v10 0/2] the fixup for the USB HOST1 at rk3288 platform
+Date: Sun, 11 Dec 2016 23:36:06 +0800
+Message-ID: <1481470568-32072-1-git-send-email-ayaka@soulik.info>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, randy.li@rock-chips.com, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+changelog:
+v10
+ minior fixup
+v9
+ use a work_queue to reset usb phy to prevent access mutex lock at interrupter
+ runtime.
+v8
+  minior fixup
+v7
+  add the forgot dummy phy_reset() for the generic phy is disabled.
+v7
+  Some minor fixup
+v6
+  Send the last two patches
+v5
+  A few modification at style, add the missing doc in the last 
+  commit.
+v4
+  1. Adding the reset callback in struct phy_ops.
+  2. Moving the reset into phy rockchip usb.
+  3. Trying to call a reset when dwc2 wakeup in rk3288.
+v3
+ Rebased from previous commit
+v2
+ Rebased from previous commit
+v1
+ orignal from google
 
-On Mon, Sep 26, 2016 at 08:27:59AM +0200, Uwe Kleine-König wrote:
-> On Mon, Sep 26, 2016 at 03:39:21AM +0300, Vladimir Zapolskiy wrote:
-> > Watchdog device controller found on all modern SoCs from i.MX series
-> > and firstly introduced in i.MX25 is not one in one compatible with the
-> > watchdog controllers on i.MX21, i.MX27 and i.MX31, the latter
-> > controlles don't have WICR (and pretimeout notification support) and
-> > WMCR registers. To get benefit from the more advanced watchdog device
-> > and to avoid operations over non-existing registers on legacy SoCs add
-> > fsl,imx25-wdt compatible to descriptions of all i.MX25 compatible
-> > watchdog controllers.
-> > 
-> > Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx35.dtsi   |  3 ++-
-> >  arch/arm/boot/dts/imx50.dtsi   |  3 ++-
-> >  arch/arm/boot/dts/imx51.dtsi   |  6 ++++--
-> >  arch/arm/boot/dts/imx53.dtsi   |  6 ++++--
-> >  arch/arm/boot/dts/imx6qdl.dtsi |  6 ++++--
-> >  arch/arm/boot/dts/imx6sl.dtsi  |  6 ++++--
-> >  arch/arm/boot/dts/imx6sx.dtsi  |  9 ++++++---
-> >  arch/arm/boot/dts/imx6ul.dtsi  |  6 ++++--
-> >  arch/arm/boot/dts/imx7s.dtsi   | 12 ++++++++----
-> >  arch/arm/boot/dts/ls1021a.dtsi |  2 +-
-> >  arch/arm/boot/dts/vfxxx.dtsi   |  3 ++-
-> >  11 files changed, 41 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-> > index 490b7b4..8fd4482 100644
-> > --- a/arch/arm/boot/dts/imx35.dtsi
-> > +++ b/arch/arm/boot/dts/imx35.dtsi
-> > @@ -284,7 +284,8 @@
-> >  			};
-> >  
-> >  			wdog: wdog@53fdc000 {
-> > -				compatible = "fsl,imx35-wdt", "fsl,imx21-wdt";
-> > +				compatible = "fsl,imx35-wdt", "fsl,imx25-wdt",
-> > +					     "fsl,imx21-wdt";
-> 
-> When this is used on an old kernel that doesn't know about fsl,imx25-wdt
-> this picks up the imx21 driver logic. As this is wrong I think you
-> should drop imx21-wdt here. Can one of the dt-people comfirm?
+Randy Li (2):
+  usb: dwc2: assert phy reset when waking up in rk3288 platform
+  ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
 
-I forgot in the mail at the other end of this thread that the dti were
-already addressed. I (implicitly) wrote there that fsl,imx35-wdt should
-be the new compatible describing the wdt with misc register. Picking
-imx25 (as you did) works, too, but e.g. the CSPI device has
-
-	compatible = "fsl,imx25-cspi", "fsl,imx35-cspi";
-
-on the i.MX25 and
-
-	compatible = "fsl,imx35-cspi";
-
-on the i.MX35. So I think we should pick i.MX35 here, too, as the one
-giving its name.
-
-Best regards
-Uwe
+ arch/arm/boot/dts/rk3288.dtsi |  4 ++++
+ drivers/usb/dwc2/core.h       |  1 +
+ drivers/usb/dwc2/core_intr.c  | 11 +++++++++++
+ drivers/usb/dwc2/platform.c   |  9 +++++++++
+ 4 files changed, 25 insertions(+)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
