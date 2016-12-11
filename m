@@ -1,56 +1,69 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/2] devicetree: power: add bindings for GPIO-driven power switches
-Date: Sun, 11 Dec 2016 23:21:44 +0100
-Message-ID: <1481494905-18037-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v5 1/2] i2c: aspeed: added driver for Aspeed I2C
+Date: Sun, 11 Dec 2016 23:26:22 +0100
+Message-ID: <20161211222622.GK2552@katana>
+References: <1480467618-7497-1-git-send-email-brendanhiggins@google.com>
+ <1480467618-7497-2-git-send-email-brendanhiggins@google.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="5mZBmBd1ZkdwT1ny"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480467618-7497-2-git-send-email-brendanhiggins@google.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: vz@mleia.com, clg@kaod.org, mouse@mayc.ru, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Some boards are equipped with simple, GPIO-driven power load switches.
-An example of such ICs is the TI tps229* series.
 
-Add device tree bindings allowing to describe them.
+--5mZBmBd1ZkdwT1ny
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../bindings/power/gpio-power-switch.txt           | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/gpio-power-switch.txt
+On Tue, Nov 29, 2016 at 05:00:17PM -0800, Brendan Higgins wrote:
+> Added initial master and slave support for Aspeed I2C controller.
+> Supports fourteen busses present in ast24xx and ast25xx BMC SoCs by
+> Aspeed.
+>=20
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-diff --git a/Documentation/devicetree/bindings/power/gpio-power-switch.txt b/Documentation/devicetree/bindings/power/gpio-power-switch.txt
-new file mode 100644
-index 0000000..21420ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/gpio-power-switch.txt
-@@ -0,0 +1,25 @@
-+GPIO Power Switch
-+-----------------
-+
-+This is the device tree binding for simple, GPIO-driven power load switches
-+that do not have any control signals.
-+
-+Required properties:
-+
-+- compatible:           must be "gpio-power-switch"
-+- power-gpios:          phandle for the GPIO driving the power load switch
-+
-+Optional properties:
-+
-+- power-switch-name:    the name of the power switch
-+- power-switch-on:      the power switch GPIO is driven high by default
-+
-+Example
-+-------
-+
-+acme_probe0_power_switch: gpio_power_switch@0 {
-+	compatible = "gpio-power-switch";
-+	power-switch-name = "acme_probe0_switch";
-+	power-gpios = <&pca9535 1 GPIO_ACTIVE_HIGH>;
-+	power-switch-on;
-+};
--- 
-2.9.3
+BTW first the bindings patch please, then the driver.
+
+And one seperate question I just stumbled over:
+
+> +	/* Switch from master mode to slave mode. */
+> +	func_ctrl_reg_val =3D aspeed_i2c_read(bus, ASPEED_I2C_FUN_CTRL_REG);
+> +	func_ctrl_reg_val &=3D ~ASPEED_I2CD_MASTER_EN;
+> +	func_ctrl_reg_val |=3D ASPEED_I2CD_SLAVE_EN;
+> +	aspeed_i2c_write(bus, func_ctrl_reg_val, ASPEED_I2C_FUN_CTRL_REG);
+
+Can't the hardware work both as master and slave on the same bus?
+
+Regards,
+
+   Wolfram
+
+
+--5mZBmBd1ZkdwT1ny
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYTdKOAAoJEBQN5MwUoCm2vxgP/0Gnbf5Ja3LHi7pwd67PYfmA
+nMxNGHtRwi/zdW6Mfk45fIhTXFV+7rz6UH36/XlNjE0C7vEBQxXVf1Wg6r66l8Yl
+gz9n7sl0HThldTvkyZqmMFZiyG+jjOYU2/GHqgpon8D2i/zagKYiG+f3ygMtlVEI
+6u1Wu0tvSzTmbSRNaJskR6bU+rKiJELopAzxsa05kceQPOqnSKjpcdcT1T8i896C
+67felp6ALKf0oECZ2IXr9rKlqFB+qErmqHYlSwhQLgF0uGJvENNgDXI+FQ4+Sex2
+WihGydD0epjJVeOq1/3YfawjOYIKTmiR93rOdSGWXElamhK3agW9XMMyDF3QiJqq
+mzVNVKP2/4Vy0ITHaNVFDv5mMON2J/9j1qXu2IIMYHn1ALHhHsULS7l4WHoGB2AW
+XZWflaZVh7K1ZaFyOLAV36ajOCNWO7mU8Ow8xFfLnGqPVkZA/RXqLyIO31Tbhh9Z
+PliBgX0tHtI3vsx2/GcP17+3NuxFc1q5al5P72I8rxRXuElxa2wQ/Sznh4ZnLK60
+l6XnqSAYvTZ42JJY8+mC7ycHvu3m3ys378dTB+uWoVUyi/V910HBY+K9viGPzd8c
+jUGIbIFghdRUaA/NliXyZfpq9y4ke1u0BryZYPBth5GElM1Denw2DtZnSkLbDo3B
+FyIkHK/1FWj2ZpFzk5Eb
+=Vm0m
+-----END PGP SIGNATURE-----
+
+--5mZBmBd1ZkdwT1ny--
