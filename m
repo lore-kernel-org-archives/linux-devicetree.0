@@ -1,57 +1,53 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/2] i2c: sh_mobile: Add per-Generation fallback bindings
-Date: Sun, 11 Dec 2016 22:53:52 +0100
-Message-ID: <20161211215352.GC2552@katana>
-References: <1481106689-22312-1-git-send-email-horms+renesas@verge.net.au>
- <1481107193-32502-1-git-send-email-horms+renesas@verge.net.au>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1481107193-32502-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] iio: GPIO power switch support
+Date: Sun, 11 Dec 2016 23:21:43 +0100
+Message-ID: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series is aimed at improving the support for baylibre-acme[1]
+power measurement capes. 
 
---wxDdMuZNg1r63Hyj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We would like to add support for power-cycling of devices measured
+using TI INA226 ADCs. An example use case would be measuring the power
+consumption of a development board during boot and power-cycling it
+remotely using a GPIO power switch.
 
-On Wed, Dec 07, 2016 at 11:39:53AM +0100, Simon Horman wrote:
-> Add per-Generation fallback bindings for R-Car SoCs.
->=20
-> This is in keeping with the compatibility string scheme is being adopted
-> for drivers for Renesas SoCs.
->=20
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+The first patch proposes to add a new DT binding for describing simple
+power switches.
 
-I took the liberty to merge patch 1/2 into this one. Then, applied to
-for-next, thanks!
+The second adds a simple IIO driver exposing a single attribute.
 
+The motivation for using the IIO framework is the fact that we already
+use it for reading the data from the ADC and that power-cycling the
+measured devices is an integral part of our use case. Users would find
+it convenient to be able to use libiio as the single interface.
 
---wxDdMuZNg1r63Hyj
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] http://baylibre.com/acme/
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Bartosz Golaszewski (2):
+  devicetree: power: add bindings for GPIO-driven power switches
+  iio: misc: add support for GPIO power switches
 
-iQIcBAEBAgAGBQJYTcrwAAoJEBQN5MwUoCm2Z7wP+wSAU8DndWHPURH5itFzS3ln
-ypV2icsIUbjPmIl66/DnDBWXc0mjwGP4rFvyxcK6lSkEFrYvhrghQjOQGGBeM6s3
-eIZOiptm0A+YpJgERD/3ajOmT42gxlZYf5CBSesoJe5VB79n6y2K4+F05ZXFI6mT
-ulBQOtuv3yFZFlS5g5UabMzgFaqb8T4/jO/vXT/nHUzfyD8gfwnGOSRvs7msfceo
-a6zpeqdMbuB0OKWut95KMdLcEseBcz1H0tUoEql2oY54QWDbd0vXuKiggQ1UffQ6
-CcJyAcAIbLXvDZStIiqj/fqNISf2p7pNaRixOJ+v9x06CeQlZ0RS8Pt3K+fxB0Zj
-XKGdD1XXQwZDZ26PlA2qcoitDRdkgr5jqSWmlGK/zca2ZviJV8vj+elZr8UEp5Fd
-m+oGR9cBdNqHFQXj1ztmt8r3lvewBdLOCQFaEhqZOW6yX9ye7VjsPyvBGQoQAbxS
-wjEk1FO3Ka/YpMKqY9nCDt7VAC6WxDQuome9z2aJpYGyziPmfpty3n7RbIJAcBio
-GXA9KilffW1mygJNdNS6B8UH9QJLvKSrytU3iNMTk6LhppGC38gYE4NbSWwB2lYl
-IJ53wtKp9MIeq7/t4plkgVpAxyBFGYkNuwBjyjjRogDLb0XNK9/dcy9HAz8qSZlb
-zKVmQJdOL+1q7d0ohfb0
-=n85g
------END PGP SIGNATURE-----
+ .../bindings/power/gpio-power-switch.txt           |  25 ++++
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/misc/Kconfig                           |  17 +++
+ drivers/iio/misc/Makefile                          |   6 +
+ drivers/iio/misc/gpio-power-switch.c               | 127 +++++++++++++++++++++
+ 6 files changed, 177 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/gpio-power-switch.txt
+ create mode 100644 drivers/iio/misc/Kconfig
+ create mode 100644 drivers/iio/misc/Makefile
+ create mode 100644 drivers/iio/misc/gpio-power-switch.c
 
---wxDdMuZNg1r63Hyj--
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
