@@ -1,73 +1,56 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] iio: misc: add a generic regulator driver
-Date: Sun, 11 Dec 2016 23:23:00 +0100
-Message-ID: <CAMpxmJVoOkwPwF3fdERtJXFjhFgR7cFmvQs88ybJScMAKxw6mg@mail.gmail.com>
-References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
- <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de> <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
- <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de> <bf3dde7e-cee8-c54c-db93-447ffa063116@kernel.org>
- <CAMpxmJVJ+y9tRbRBsVg+i0EJO_6EFuvrypwC=ETnBWbMnxRFyg@mail.gmail.com> <c028b2fc-7ed1-772c-82e3-b98a25f58ffb@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH 1/2] devicetree: power: add bindings for GPIO-driven power switches
+Date: Sun, 11 Dec 2016 23:21:44 +0100
+Message-ID: <1481494905-18037-2-git-send-email-bgolaszewski@baylibre.com>
+References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c028b2fc-7ed1-772c-82e3-b98a25f58ffb@kernel.org>
+In-Reply-To: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-2016-12-10 19:17 GMT+01:00 Jonathan Cameron <jic23@kernel.org>:
-> On 06/12/16 11:12, Bartosz Golaszewski wrote:
->>
->> I wrote the initial patch quickly and didn't give it much of a
->> thought. Now I realized I completely missed the point and managed to
->> confuse everybody - myself included.
->>
->> So the problem we have is not power-cycling the adc - it's
->> power-cycling the device connected to a probe on which there's an adc.
->> What I was trying to do was adding support for the power-switch on
->> baylibre-acme[1] probes.
->>
->> For example: we have a USB probe on which the VBUS signal goes through
->> a power load switch and than through the adc. The adc (in this case
->> ina226) is always powered on, while the fixed regulator I wanted to
->> enable/disable actually drives the power switch to cut/restore power
->> to the connected USB device i.e. there's no real regulator - just a
->> GPIO driving the power switch.
->>
->> A typical use case is measuring the power consumption of development
->> boards[2]. Rebooting them remotely using acme probes is already done,
->> but we're using the obsolete /sys/class/gpio interface.
->>
->> We're already using libiio to read the measured data from the power
->> monitor, that's why we'd like to use the iio framework for
->> power-cycling the devices as well. My question is: would bridging the
->> regulator framework be the right solution? Should we look for
->> something else? Bridge the GPIO framework instead?
->
-> Definitely doesn't fit inside standard scope of IIO - though I can see
-> why you were thinking along these lines.
->
+Some boards are equipped with simple, GPIO-driven power load switches.
+An example of such ICs is the TI tps229* series.
 
-Well, it's industrial INPUT/output right? I guess we can consider
-power-cycling input in this case. :)
+Add device tree bindings allowing to describe them.
 
-In our particular use case, the main reason for using IIO is having a
-single interface (libiio) instead of introducing a new one just for
-that (in the form of random sysfs attributes for example), but I'm
-sure such power switches could find application elsewhere too
-(measuring temperature, while power-cycling some cooling mechanism is
-the first thing that comes to mind).
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../bindings/power/gpio-power-switch.txt           | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/gpio-power-switch.txt
 
-> Mark Brown, any thoughts?
->
-> Effectively we are are looking at something that (in general form) might
-> be the equivalent of controlling a lab bench supply... So regulators
-> at the edge of the known world, with no visibility of what lies beyond.
->
-
-Please consider the two patches I just sent. Instead of regulators,
-they add DT bindings for gpio power switches and introduce a simple
-iio driver using the gpio consumer API.
-
-Best regards,
-Bartosz Golaszewski
+diff --git a/Documentation/devicetree/bindings/power/gpio-power-switch.txt b/Documentation/devicetree/bindings/power/gpio-power-switch.txt
+new file mode 100644
+index 0000000..21420ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/gpio-power-switch.txt
+@@ -0,0 +1,25 @@
++GPIO Power Switch
++-----------------
++
++This is the device tree binding for simple, GPIO-driven power load switches
++that do not have any control signals.
++
++Required properties:
++
++- compatible:           must be "gpio-power-switch"
++- power-gpios:          phandle for the GPIO driving the power load switch
++
++Optional properties:
++
++- power-switch-name:    the name of the power switch
++- power-switch-on:      the power switch GPIO is driven high by default
++
++Example
++-------
++
++acme_probe0_power_switch: gpio_power_switch@0 {
++	compatible = "gpio-power-switch";
++	power-switch-name = "acme_probe0_switch";
++	power-gpios = <&pca9535 1 GPIO_ACTIVE_HIGH>;
++	power-switch-on;
++};
+-- 
+2.9.3
