@@ -1,69 +1,50 @@
-From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Subject: RE: [PATCH v4 3/5] i2c: designware: Add slave definitions
-Date: Mon, 12 Dec 2016 18:35:47 +0000
-Message-ID: <BCF0D4927F9C694C9AEA8827D4A9C7C897CE12@de02wembxa.internal.synopsys.com>
-References: <cover.1481131072.git.lolivei@synopsys.com>
- <5173a9456c423025d8f15baafa2499440cbe1b51.1481131072.git.lolivei@synopsys.com>
- <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH] of/platform: depopulate devices in the reverse order of
+ creation
+Date: Mon, 12 Dec 2016 11:39:05 -0700
+Message-ID: <20161212183905.GA30702@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Ramiro.Oliveira@synopsys.com" <Ramiro.Oliveira@synopsys.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+If the DT has inter-dependencies, then the devices need to be removed
+in the right order to avoid removal problems.
 
-The slave address could be set by the I2C slave backend so I can't use it to setup the controller. 
-A boolean property was my initial approach then Andy and Wolfram Sang suggested the use of compatible strings and later It was suggested to use a property to select mode but I can do it again if it's the best way. 
-Can you please tell me where should it be documented? 
+Assuming the DT is constructed so that EPROBE_DEFER doesn't happen
+during creating then a good way to avoid removal problems is reversing
+the order during depopulation.
 
-Luis
+Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+---
+ drivers/of/platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
------Original Message-----
-From: Rob Herring [mailto:robh@kernel.org] 
-Sent: Monday, December 12, 2016 17:02
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: wsa@the-dreams.de; mark.rutland@arm.com; jarkko.nikula@linux.intel.com; andriy.shevchenko@linux.intel.com; mika.westerberg@linux.intel.com; linux-i2c@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Ramiro.Oliveira@synopsys.com; Joao.Pinto@synopsys.com; CARLOS.PALMINHA@synopsys.com
-Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
+In my specific case I have a gpio driver, followed by a i2c bitbang
+using that driver. So gpiolib prints an error if it the gpio driver is
+removed before the gpio client..
 
-On Wed, Dec 07, 2016 at 05:55:50PM +0000, Luis Oliveira wrote:
-> - Add slave definitions to i2c-designware-core
-> - Changes in Kconfig to auto-enable I2C_SLAVE when compiling the 
-> modules
-> - Add mode property to designware-core.txt that enable the "slave" selection:
->   - "mode" is an optional property that could be "slave" or "master"
->   - if "mode" is not set the block is considered master by default
-> 
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> ---
-> Changes V3->V4: (Andy Shevchenko)
-> - created a common property for modes
-> - placed the generic dependency first
-> 
->  .../devicetree/bindings/i2c/i2c-designware.txt     |  4 ++++
->  drivers/i2c/busses/Kconfig                         |  1 +
->  drivers/i2c/busses/i2c-designware-common.c         |  6 +++++
->  drivers/i2c/busses/i2c-designware-core.h           | 26 ++++++++++++++++++++++
->  4 files changed, 37 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt 
-> b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index fee26dc3e858..8ed2b532cd54 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -20,6 +20,9 @@ Optional properties :
->   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
->     This value which is by default 300ns is used to compute the tHIGH period.
->  
-> + - mode : should be either:
-> +           - "master" to setup the hardware block as a I2C master
-> +           - "slave" to setup the hardware block as a I2C slave
-
-This should be documented in a common location. Can't it be a boolean to enable slave mode? Or don't you need to set the slave address? That could be enough to enable slave mode and there's already one example doing that.
-
-Rob
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index cd72c0156db2ba..5720fe44f991e9 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -568,7 +568,8 @@ static int of_platform_device_destroy(struct device *dev, void *data)
+ void of_platform_depopulate(struct device *parent)
+ {
+ 	if (parent->of_node && of_node_check_flag(parent->of_node, OF_POPULATED_BUS)) {
+-		device_for_each_child(parent, NULL, of_platform_device_destroy);
++		device_for_each_child_reverse(parent, NULL,
++					      of_platform_device_destroy);
+ 		of_node_clear_flag(parent->of_node, OF_POPULATED_BUS);
+ 	}
+ }
+-- 
+2.7.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
