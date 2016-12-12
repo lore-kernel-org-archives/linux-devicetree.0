@@ -1,61 +1,125 @@
-From: "Thang Q. Nguyen" <tqnguyen@apm.com>
-Subject: Re: usb:xhci: support disable usb2 LPM Remote Wakeup
-Date: Mon, 12 Dec 2016 11:00:07 +0700
-Message-ID: <CAKrQpStd4+ZZjdYyq93zq-wnqQCiQmSi5jJrYbuiZX5kVH74YA@mail.gmail.com>
-References: <1480855321-5047-1-git-send-email-tqnguyen@apm.com> <20161209213629.76ixdmr24ln72uaw@rob-hp-laptop>
+From: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 2/4] vcodec: mediatek: Add Mediatek JPEG Decoder Driver
+Date: Mon, 12 Dec 2016 12:34:01 +0800
+Message-ID: <CAAJzSMfNyMiia==mXKo6aBw1VxMBxGE20LB870Zm1u9mCoioyQ@mail.gmail.com>
+References: <1480475340-21893-1-git-send-email-rick.chang@mediatek.com> <1480475340-21893-3-git-send-email-rick.chang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161209213629.76ixdmr24ln72uaw@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Vu Nguyen <vnguyen@apm.com>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480475340-21893-3-git-send-email-rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bin Liu <bin.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 10, 2016 at 4:36 AM, Rob Herring <robh@kernel.org> wrote:
-> On Sun, Dec 04, 2016 at 07:42:01PM +0700, Thang Q. Nguyen wrote:
->> From: Thang Nguyen <tqnguyen@apm.com>
->>
->> As per USB 2.0 link power management addendum ECN, table 1-2, page 4,
->> device or host initiated via resume signaling; device-initiated resumes
->> can be optionally enabled/disabled by software. This patch adds support
->> to control enabling the USB2 RWE feature via DT/ACPI attribute.
->>
->> Signed-off-by: Vu Nguyen <vnguyen@apm.com>
->> Signed-off-by: Thang Nguyen <tqnguyen@apm.com>
->> ---
->>  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
->>  drivers/usb/host/xhci-plat.c                       | 3 +++
->>  drivers/usb/host/xhci.c                            | 5 ++++-
->>  drivers/usb/host/xhci.h                            | 1 +
->>  4 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> index 966885c..9b4cd14 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> @@ -25,6 +25,7 @@ Required properties:
->>
->>  Optional properties:
->>    - clocks: reference to a clock
->> +  - usb2-rwe-disable: disable USB2 LPM Remote Wakeup capable
+Hi Rick,
+
+On Wed, Nov 30, 2016 at 11:08 AM, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Add v4l2 driver for Mediatek JPEG Decoder
 >
-> Remote wakeup has been around since USB 1.0 days. Does this need to be
-> USB2 or XHCI specific?
-This is XHCI specific. Per XHCI specification 1.1, remote wakeup is
-optional for XHCI 1.0 and required for XHCI 1.1. This patch provides
-ability for software to disable RWE for USB2 in XHCI1.0 controller.
->
->>    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->>
->>  Example:
+> Signed-off-by: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
+<snip...>
 
+> +static bool mtk_jpeg_check_resolution_change(struct mtk_jpeg_ctx *ctx,
+> +                                            struct mtk_jpeg_dec_param *param)
+> +{
+> +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> +       struct mtk_jpeg_q_data *q_data;
+> +
+> +       q_data = &ctx->out_q;
+> +       if (q_data->w != param->pic_w || q_data->h != param->pic_h) {
+> +               v4l2_dbg(1, debug, &jpeg->v4l2_dev, "Picture size change\n");
+> +               return true;
+> +       }
+> +
+> +       q_data = &ctx->cap_q;
+> +       if (q_data->fmt != mtk_jpeg_find_format(ctx, param->dst_fourcc,
+> +                                               MTK_JPEG_FMT_TYPE_CAPTURE)) {
+> +               v4l2_dbg(1, debug, &jpeg->v4l2_dev, "format change\n");
+> +               return true;
+> +       }
+> +       return false;
 
--- 
+<snip...>
 
-Thang Q. Nguyen    | Staff SW Eng.
+> +static void mtk_jpeg_device_run(void *priv)
+> +{
+> +       struct mtk_jpeg_ctx *ctx = priv;
+> +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> +       struct vb2_buffer *src_buf, *dst_buf;
+> +       enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> +       unsigned long flags;
+> +       struct mtk_jpeg_src_buf *jpeg_src_buf;
+> +       struct mtk_jpeg_bs bs;
+> +       struct mtk_jpeg_fb fb;
+> +       int i;
+> +
+> +       src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> +       dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> +       jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
+> +
+> +       if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
+> +               for (i = 0; i < dst_buf->num_planes; i++)
+> +                       vb2_set_plane_payload(dst_buf, i, 0);
+> +               buf_state = VB2_BUF_STATE_DONE;
+> +               goto dec_end;
+> +       }
+> +
+> +       if (mtk_jpeg_check_resolution_change(ctx, &jpeg_src_buf->dec_param)) {
+> +               mtk_jpeg_queue_src_chg_event(ctx);
+> +               ctx->state = MTK_JPEG_SOURCE_CHANGE;
+> +               v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> +               return;
+> +       }
 
-C: +849.7684.7606 | O: +848.3770.0640
+This only detects source change if multiple OUPUT buffers are queued.
+It does not catch the source change in the following scenario:
 
-F: +848.3770.0641  | tqnguyen@apm.com
+- OUPUT buffers for jpeg1 enqueued
+- OUTPUT queue STREAMON
+- userspace creates CAPTURE buffers
+- CAPTURE buffers enqueued
+- CAPTURE queue STREAMON
+- decode
+- OUTPUT queue STREAMOFF
+- userspace recreates OUTPUT buffers for jpeg2
+- OUTPUT buffers for jpeg2 enqueued
+- OUTPUT queue STREAMON
+
+In the above sequence if jpeg2's decoded size is larger than jpeg1 the
+function fails to detect that the existing CAPTURE buffers are not big
+enough to hold the decoded data.
+
+A possible fix is to pass *dst_buf to
+mtk_jpeg_check_resolution_change(), and check in the function that all
+the dst_buf planes are large enough to hold the decoded data.
+
+> +
+> +       mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
+> +       if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
+> +               goto dec_end;
+> +
+> +       spin_lock_irqsave(&jpeg->hw_lock, flags);
+> +       mtk_jpeg_dec_reset(jpeg->dec_reg_base);
+> +       mtk_jpeg_dec_set_config(jpeg->dec_reg_base,
+> +                               &jpeg_src_buf->dec_param, &bs, &fb);
+> +
+> +       mtk_jpeg_dec_start(jpeg->dec_reg_base);
+> +       spin_unlock_irqrestore(&jpeg->hw_lock, flags);
+> +       return;
+> +
+> +dec_end:
+> +       v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+> +       v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> +       v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
+> +       v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
+> +       v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> +}
+
+<snip...>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
