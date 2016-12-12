@@ -1,124 +1,61 @@
-From: Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] vcodec: mediatek: Add Mediatek JPEG Decoder Driver
-Date: Mon, 12 Dec 2016 12:34:01 +0800
-Message-ID: <CAAJzSMfNyMiia==mXKo6aBw1VxMBxGE20LB870Zm1u9mCoioyQ@mail.gmail.com>
-References: <1480475340-21893-1-git-send-email-rick.chang@mediatek.com> <1480475340-21893-3-git-send-email-rick.chang@mediatek.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] mtd: spi-nor: add memory controllers for the
+ Aspeed AST2500 SoC
+Date: Mon, 12 Dec 2016 16:02:07 +1100
+Message-ID: <CACPK8XeTw4uNCjzp7qmbwkojrSAJw_U=7vXD-wTjDL2gb220qQ@mail.gmail.com>
+References: <1481302167-28044-1-git-send-email-clg@kaod.org> <1481302167-28044-2-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480475340-21893-3-git-send-email-rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1481302167-28044-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bin Liu <bin.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rick,
+On Sat, Dec 10, 2016 at 3:49 AM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote=
+:
 
-On Wed, Nov 30, 2016 at 11:08 AM, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Add v4l2 driver for Mediatek JPEG Decoder
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 4a682ee0f632..5c0efbd9dd89 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -29,6 +29,16 @@ config MTD_SPI_NOR_USE_4K_SECTORS
+>           Please note that some tools/drivers/filesystems may not work wi=
+th
+>           4096 B erase size (e.g. UBIFS requires 15 KiB as a minimum).
 >
-> Signed-off-by: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-<snip...>
-
-> +static bool mtk_jpeg_check_resolution_change(struct mtk_jpeg_ctx *ctx,
-> +                                            struct mtk_jpeg_dec_param *param)
-> +{
-> +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
-> +       struct mtk_jpeg_q_data *q_data;
+> +config SPI_ASPEED
+> +       tristate "Aspeed flash controllers in SPI mode"
+> +       depends on ARCH_ASPEED || COMPILE_TEST
+> +       depends on HAS_IOMEM && OF
+> +       help
+> +         This enables support for the Firmware Memory controller (FMC)
+> +         in the Aspeed AST2500 SoC when attached to SPI NOR chips,
+> +         and support for the SPI flash memory controller (SPI) for
+> +         the host firmware. The implementation only supports SPI NOR.
 > +
-> +       q_data = &ctx->out_q;
-> +       if (q_data->w != param->pic_w || q_data->h != param->pic_h) {
-> +               v4l2_dbg(1, debug, &jpeg->v4l2_dev, "Picture size change\n");
-> +               return true;
-> +       }
-> +
-> +       q_data = &ctx->cap_q;
-> +       if (q_data->fmt != mtk_jpeg_find_format(ctx, param->dst_fourcc,
-> +                                               MTK_JPEG_FMT_TYPE_CAPTURE)) {
-> +               v4l2_dbg(1, debug, &jpeg->v4l2_dev, "format change\n");
-> +               return true;
-> +       }
-> +       return false;
+>  config SPI_ATMEL_QUADSPI
+>         tristate "Atmel Quad SPI Controller"
+>         depends on ARCH_AT91 || (ARM && COMPILE_TEST)
+> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+> index 121695e83542..d73d772c689c 100644
+> --- a/drivers/mtd/spi-nor/Makefile
+> +++ b/drivers/mtd/spi-nor/Makefile
+> @@ -1,4 +1,5 @@
+>  obj-$(CONFIG_MTD_SPI_NOR)      +=3D spi-nor.o
+> +obj-$(CONFIG_SPI_ASPEED)       +=3D aspeed-smc.o
 
-<snip...>
+Can we make the symbol CONFIG_SPI_ASPEED_SMC?
 
-> +static void mtk_jpeg_device_run(void *priv)
-> +{
-> +       struct mtk_jpeg_ctx *ctx = priv;
-> +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
-> +       struct vb2_buffer *src_buf, *dst_buf;
-> +       enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
-> +       unsigned long flags;
-> +       struct mtk_jpeg_src_buf *jpeg_src_buf;
-> +       struct mtk_jpeg_bs bs;
-> +       struct mtk_jpeg_fb fb;
-> +       int i;
-> +
-> +       src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-> +       dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> +       jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-> +
-> +       if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
-> +               for (i = 0; i < dst_buf->num_planes; i++)
-> +                       vb2_set_plane_payload(dst_buf, i, 0);
-> +               buf_state = VB2_BUF_STATE_DONE;
-> +               goto dec_end;
-> +       }
-> +
-> +       if (mtk_jpeg_check_resolution_change(ctx, &jpeg_src_buf->dec_param)) {
-> +               mtk_jpeg_queue_src_chg_event(ctx);
-> +               ctx->state = MTK_JPEG_SOURCE_CHANGE;
-> +               v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> +               return;
-> +       }
+Brendan has proposed a generic SPI master driver for the Aspeed SoC
+that would allow the controller to be used for non-flash devices. The
+obvious symbol for that driver is CONFIG_SPI_ASPEED.
 
-This only detects source change if multiple OUPUT buffers are queued.
-It does not catch the source change in the following scenario:
+Cheers,
 
-- OUPUT buffers for jpeg1 enqueued
-- OUTPUT queue STREAMON
-- userspace creates CAPTURE buffers
-- CAPTURE buffers enqueued
-- CAPTURE queue STREAMON
-- decode
-- OUTPUT queue STREAMOFF
-- userspace recreates OUTPUT buffers for jpeg2
-- OUTPUT buffers for jpeg2 enqueued
-- OUTPUT queue STREAMON
-
-In the above sequence if jpeg2's decoded size is larger than jpeg1 the
-function fails to detect that the existing CAPTURE buffers are not big
-enough to hold the decoded data.
-
-A possible fix is to pass *dst_buf to
-mtk_jpeg_check_resolution_change(), and check in the function that all
-the dst_buf planes are large enough to hold the decoded data.
-
-> +
-> +       mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
-> +       if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
-> +               goto dec_end;
-> +
-> +       spin_lock_irqsave(&jpeg->hw_lock, flags);
-> +       mtk_jpeg_dec_reset(jpeg->dec_reg_base);
-> +       mtk_jpeg_dec_set_config(jpeg->dec_reg_base,
-> +                               &jpeg_src_buf->dec_param, &bs, &fb);
-> +
-> +       mtk_jpeg_dec_start(jpeg->dec_reg_base);
-> +       spin_unlock_irqrestore(&jpeg->hw_lock, flags);
-> +       return;
-> +
-> +dec_end:
-> +       v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
-> +       v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
-> +       v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
-> +       v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-> +       v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> +}
-
-<snip...>
+Joel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
