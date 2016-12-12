@@ -1,77 +1,112 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Mon, 12 Dec 2016 22:10:36 +0530
-Message-ID: <CAFp+6iFz4Nut6e=CF2q6pLjmqYHw=WSC0Bs5NCtQRX7mNvBXrQ@mail.gmail.com>
-References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
- <1479816163-5260-4-git-send-email-vivek.gautam@codeaurora.org> <20161128225543.GM6095@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] drm: bridge: add support for TI ths8135
+Date: Mon, 12 Dec 2016 10:45:47 -0600
+Message-ID: <20161212164547.jw5ejbums6nwwtw2@rob-hp-laptop>
+References: <1481107365-24839-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481107365-24839-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161128225543.GM6095-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1481107365-24839-3-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: kishon <kishon-l0cyMroinI0@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Wed, Dec 07, 2016 at 11:42:43AM +0100, Bartosz Golaszewski wrote:
+> THS8135 is a configurable video DAC. Add DT bindings for this chip and
+> use the dumb-vga-dac driver for now as no configuration is required to
+> make it work.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../bindings/display/bridge/ti,ths8135.txt         | 52 ++++++++++++++++++++++
+>  drivers/gpu/drm/bridge/dumb-vga-dac.c              |  1 +
+>  2 files changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
 
-On Tue, Nov 29, 2016 at 4:25 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 11/22, Vivek Gautam wrote:
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> new file mode 100644
->> index 0000000..ffb173b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> @@ -0,0 +1,74 @@
->> +Qualcomm QMP PHY
->> +----------------
->> +
->> +QMP phy controller supports physical layer functionality for a number of
->> +controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
->> +
->> +Required properties:
->> + - compatible: compatible list, contains:
->> +            "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
->> +            "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
->> + - reg: list of offset and length pair of the PHY register sets.
->> +     at index 0: offset and length of register set for PHY common
->> +                 serdes block.
->> +     from index 1 - N: offset and length of register set for each lane,
->> +                       for N number of phy lanes (ports).
->> + - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
->> + - #phy-cells: must be 1
->> +    - Cell after phy phandle should be the port (lane) number.
->> + - clocks: a list of phandles and clock-specifier pairs,
->> +        one for each entry in clock-names.
->> + - clock-names: must be "cfg_ahb" for phy config clock,
->> +                     "aux" for phy aux clock,
->> +                     "ref_clk" for 19.2 MHz ref clk,
->> +                     "ref_clk_src" for reference clock source,
->
-> We typically leave "clk" out of clk names because it's redundant.
->
->> +                     "pipe<port-number>" for pipe clock specific to
->> +                     each port/lane (Optional).
->
-> The pipe clocks are orphaned right now. We should add an output
-> clock from the phy to go into the controller and back into the
-> phy if I recall correctly. The phy should be a clock provider
-> itself so it can output the pipe clock source into GCC and back
-> into the phy and controller.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-You are correct. The pipe clocks come out of PHY controllers and
-go back to the gcc that gates them finally.
+But one nit below:
 
-I will register the phy drivers as clock providers so that gcc can make
-reference to it.
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> new file mode 100644
+> index 0000000..23cd8ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> @@ -0,0 +1,52 @@
+> +THS8135 Video DAC
+> +-----------------
+> +
+> +This is the binding for Texas Instruments THS8135 Video DAC bridge.
+> +
+> +Required properties:
+> +
+> +- compatible: Must be "ti,ths8135"
+> +
+> +Required nodes:
+> +
+> +This device has two video ports. Their connections are modelled using the OF
+> +graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> +
+> +- Video port 0 for RGB input
+> +- Video port 1 for VGA output
+> +
+> +Example
+> +-------
+> +
+> +vga-bridge {
+> +	compatible = "ti,ths8135";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			vga_bridge_in: endpoint@0 {
+> +				reg = <0>;
 
+You don't need reg here.
 
-Best Regards
-Vivek
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +				remote-endpoint = <&lcdc_out_vga>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +
+> +			vga_bridge_out: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&vga_con_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> index afec232..498fa75 100644
+> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> @@ -204,6 +204,7 @@ static int dumb_vga_remove(struct platform_device *pdev)
+>  
+>  static const struct of_device_id dumb_vga_match[] = {
+>  	{ .compatible = "dumb-vga-dac" },
+> +	{ .compatible = "ti,ths8135" },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dumb_vga_match);
+> -- 
+> 2.9.3
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
