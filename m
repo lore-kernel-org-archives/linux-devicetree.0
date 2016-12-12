@@ -1,94 +1,68 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH v2 00/11] add support for VBUS max current and min voltage
- limits AXP20X and AXP22X PMICs
-Date: Mon, 12 Dec 2016 09:07:45 +0100
-Message-ID: <2189bf2a-b577-85d6-c54a-0440aed05411@free-electrons.com>
-References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] i2c: Add STM32F4 I2C driver
+Date: Mon, 12 Dec 2016 09:34:29 +0100
+Message-ID: <CAOAejn0gH3t8NGLUELfB3nv-UM=Gtr04JtLqrm=SiYfPVbYv-g@mail.gmail.com>
+References: <1481185563-8735-1-git-send-email-cedric.madianga@gmail.com>
+ <1481185563-8735-3-git-send-email-cedric.madianga@gmail.com> <20161211214232.GA2552@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161211214232.GA2552@katana>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Wolfram,
 
-I forgot to add a question to my cover letter so here it is:
+Thanks for your comments.
+I will fix all of them + build errors reported by build-bot in the V6.
 
-The X-Powers AXP209 and AXP223 PMICs allow to not limit the maximal
-current for the VBUS power supply.[1]
-(If a Chinese-speaking person could check it's the same for the AXP221
-that would be great also[2]).
+Best regards,
 
-In the get_property (axp20x_usb_power_get_property) of the power supply
-driver, I see that we use -1 as value for "no limit". Should we use the
-same (-1) value for the set_property (axp20x_usb_power_set_property) to
-disable max current limit?
+Cedric Madianga
 
-[1] http://dl.linux-sunxi.org/AXP/AXP209_Datasheet_v1.0en.pdf page 33,
-REG 30H, BITS 0 & 1
-[2]
-http://dl.linux-sunxi.org/AXP/AXP221%20Datasheet%20V1.2%2020130326%20.pdf
-page 33, REG 30H, BITS 0 & 1 => 不限流 is written for when the BIT(1) is
-set.
-
-Thanks,
-Quentin
-
-On 09/12/2016 12:04, Quentin Schulz wrote:
-> The X-Powers AXP209 and AXP20X PMICs are able to set a limit for the
-> VBUS power supply for both max current and min voltage supplied. This
-> series of patch adds the possibility to set these limits from sysfs.
-> 
-> Also, the AXP223 PMIC shares most of its behaviour with the AXP221 but
-> the former can set the VBUS power supply max current to 100mA, unlike
-> the latter. The AXP223 VBUS power supply driver used to probe on the
-> AXP221 compatible. This series of patch introduces a new compatible for
-> the AXP223 to be able to set the current max limit to 100mA.
-> 
-> With that new compatible, boards having the AXP223 see their DT updated
-> to use the VBUS power supply driver with the correct compatible.
-> 
-> This series of patch also migrates from of_device_is_compatible function
-> to the data field of of_device_id to identify the compatible used to
-> probe. This improves the code readability.
-> 
-> Mostly cosmetic changes in v2 and adding volatile and writeable regs to
-> AXP20X and AXP22X MFD cells for the VBUS power supply driver.
-> 
-> Quentin Schulz (11):
->   power: supply: axp20x_usb_power: use of_device_id data field instead
->     of device_is_compatible
->   mfd: axp20x: add volatile and writeable reg ranges for VBUS power
->     supply driver
->   power: supply: axp20x_usb_power: set min voltage and max current from
->     sysfs
->   Documentation: DT: binding: axp20x_usb_power: add axp223 compatible
->   power: supply: axp20x_usb_power: add 100mA max current limit for
->     AXP223
->   mfd: axp20x: add separate MFD cell for AXP223
->   ARM: dtsi: add DTSI for AXP223
->   ARM: dts: sun8i-a33-olinuxino: use AXP223 DTSI
->   ARM: dts: sun8i-a33-sinlinx-sina33: use AXP223 DTSI
->   ARM: dts: sun8i-r16-parrot: use AXP223 DTSI
->   ARM: dtsi: sun8i-reference-design-tablet: use AXP223 DTSI
-> 
->  .../bindings/power/supply/axp20x_usb_power.txt     |   5 +
->  arch/arm/boot/dts/axp223.dtsi                      |  58 +++++++++++
->  arch/arm/boot/dts/sun8i-a33-olinuxino.dts          |   2 +-
->  arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   2 +-
->  arch/arm/boot/dts/sun8i-r16-parrot.dts             |   2 +-
->  .../boot/dts/sun8i-reference-design-tablet.dtsi    |   2 +-
->  drivers/mfd/axp20x.c                               |  32 +++++-
->  drivers/power/supply/axp20x_usb_power.c            | 116 ++++++++++++++++++---
->  8 files changed, 197 insertions(+), 22 deletions(-)
->  create mode 100644 arch/arm/boot/dts/axp223.dtsi
-> 
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2016-12-11 22:42 GMT+01:00 Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>:
+> Hi,
+>
+>> +config I2C_STM32F4
+>> +     tristate "STMicroelectronics STM32F4 I2C support"
+>> +     depends on ARCH_STM32  || COMPILE_TEST
+>
+> Double space.
+>
+>> +#define STM32F4_I2C_MIN_FREQ         2
+>> +#define STM32F4_I2C_MAX_FREQ         42
+>
+> Those two must be unsigned to fix the build error (e.g. 2U) reported by
+> build-bot.
+>
+> Also, I get the following build warnings:
+>
+>   CC      drivers/i2c/busses/i2c-stm32f4.o
+> drivers/i2c/busses/i2c-stm32f4.c: In function =E2=80=98stm32f4_i2c_handle=
+_rx_addr=E2=80=99:
+> drivers/i2c/busses/i2c-stm32f4.c:445:6: warning: variable =E2=80=98sr2=E2=
+=80=99 set but not used [-Wunused-but-set-variable]
+>   u32 sr2;
+>       ^~~
+> drivers/i2c/busses/i2c-stm32f4.c: In function =E2=80=98stm32f4_i2c_isr_ev=
+ent=E2=80=99:
+> drivers/i2c/busses/i2c-stm32f4.c:496:41: warning: variable =E2=80=98sr2=
+=E2=80=99 set but not used [-Wunused-but-set-variable]
+>   u32 real_status, possible_status, ien, sr2;
+>
+> I assume those are reads to clear the register, so we really don't need
+> to save the value in a variable.
+>
+> Rest is looking good.
+>
+> Thanks,
+>
+>    Wolfram
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
