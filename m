@@ -1,58 +1,132 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 4/5] ARM: dts: da850-lcdk: add the vga-bridge node
-Date: Mon, 12 Dec 2016 14:05:41 +0100
-Message-ID: <1481547942-24775-5-git-send-email-bgolaszewski@baylibre.com>
-References: <1481547942-24775-1-git-send-email-bgolaszewski@baylibre.com>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: Re: [PATCH v5 1/2] Add OV5647 device tree documentation
+Date: Mon, 12 Dec 2016 13:07:53 +0000
+Message-ID: <db9fcc03-9db0-856a-8fbd-e641862f9bc8@synopsys.com>
+References: <20161212114900.GS16630@valkosipuli.retiisi.org.uk>
+ <0f72309f-ec5e-4252-f6d7-7a7f7a9dc4c5@synopsys.com>
+ <20161212121947.GU16630@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1481547942-24775-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161212121947.GU16630@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: mchehab@kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, hverkuil@xs4all.nl, dheitmueller@kernellabs.com, slongerbeam@gmail.com, lars@metafoo.de, robert.jarzmik@free.fr, pavel@ucw.cz, pali.rohar@gmail.com, sakari.ailus@linux.intel.com, mark.rutland@arm.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSB2Z2EtYnJpZGdlIG5vZGUgdG8gdGhlIGJvYXJkIERUIHRvZ2V0aGVyIHdpdGggY29y
-cmVzcG9uZGluZwpwb3J0cyBhbmQgdmdhIGNvbm5lY3Rvci4gVGhpcyBhbGxvd3MgdG8gcmV0cmll
-dmUgdGhlIGVkaWQgaW5mbyBmcm9tCnRoZSBkaXNwbGF5IGF1dG9tYXRpY2FsbHkuCgpTaWduZWQt
-b2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgpS
-ZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
-cmQuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzIHwgNjcgKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDY3IGlu
-c2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0
-cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzCmluZGV4IGFmY2I0ODIuLmUwMDMx
-MTEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzCisrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzCkBAIC01MSw2ICs1MSw1MSBAQAogCQkJc3lz
-dGVtLWNsb2NrLWZyZXF1ZW5jeSA9IDwyNDU3NjAwMD47CiAJCX07CiAJfTsKKworCXZnYS1icmlk
-Z2UgeworCQljb21wYXRpYmxlID0gInRpLHRoczgxMzUiOworCQkjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKKwkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJcG9ydHMgeworCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJcG9ydEAwIHsKKwkJCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJCQlyZWcgPSA8MD47CisK
-KwkJCQl2Z2FfYnJpZGdlX2luOiBlbmRwb2ludCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZsY2RjX291dF92Z2E+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0
-QDEgeworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+Owor
-CQkJCXJlZyA9IDwxPjsKKworCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludCB7CisJCQkJCXJl
-ZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfY29uX2luPjsKKwkJCQl9Owor
-CQkJfTsKKwkJfTsKKwl9OworCisJdmdhIHsKKwkJY29tcGF0aWJsZSA9ICJ2Z2EtY29ubmVjdG9y
-IjsKKworCQlkZGMtaTJjLWJ1cyA9IDwmaTJjMD47CisKKwkJcG9ydCB7CisJCQl2Z2FfY29uX2lu
-OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfYnJpZGdlX291dD47CisJ
-CQl9OworCQl9OworCX07CiB9OwogCiAmcG14X2NvcmUgewpAQCAtMjM2LDMgKzI4MSwyNSBAQAog
-Jm1lbWN0cmwgewogCXN0YXR1cyA9ICJva2F5IjsKIH07CisKKyZsY2RjIHsKKwlzdGF0dXMgPSAi
-b2theSI7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmxjZF9w
-aW5zPjsKKworCXBvcnRzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxz
-ID0gPDA+OworCisJCWxjZGNfb3V0OiBwb3J0QDEgeworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJCXJlZyA9IDwxPjsKKworCQkJbGNkY19vdXRfdmdh
-OiBlbmRwb2ludCB7CisJCQkJcmVnID0gPDA+OworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdmdh
-X2JyaWRnZV9pbj47CisJCQl9OworCQl9OworCX07Cit9OwotLSAKMi45LjMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Sakari
+
+On 12/12/2016 12:19 PM, Sakari Ailus wrote:
+> Hi Ramiro,
+> 
+> On Mon, Dec 12, 2016 at 12:15:04PM +0000, Ramiro Oliveira wrote:
+>> Hi Sakari
+>>
+>> On 12/12/2016 11:49 AM, Sakari Ailus wrote:
+>>> Hi Ramiro,
+>>>
+>>> On Mon, Dec 12, 2016 at 11:39:31AM +0000, Ramiro Oliveira wrote:
+>>>> Hi Sakari,
+>>>>
+>>>> Thank you for the feedback.
+>>>>
+>>>> On 12/7/2016 10:33 PM, Sakari Ailus wrote:
+>>>>> Hi Ramiro,
+>>>>>
+>>>>> Thank you for the patch.
+>>>>>
+>>>>> On Mon, Dec 05, 2016 at 05:36:33PM +0000, Ramiro Oliveira wrote:
+>>>>>> Add device tree documentation.
+>>>>>>
+>>>>>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
+>>>>>>  1 file changed, 19 insertions(+)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..4c91b3b
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>>>>> @@ -0,0 +1,19 @@
+>>>>>> +Omnivision OV5647 raw image sensor
+>>>>>> +---------------------------------
+>>>>>> +
+>>>>>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+>>>>>> +and CCI (I2C compatible) control bus.
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +
+>>>>>> +- compatible	: "ovti,ov5647";
+>>>>>> +- reg		: I2C slave address of the sensor;
+>>>>>> +
+>>>>>> +The common video interfaces bindings (see video-interfaces.txt) should be
+>>>>>> +used to specify link to the image data receiver. The OV5647 device
+>>>>>> +node should contain one 'port' child node with an 'endpoint' subnode.
+>>>>>> +
+>>>>>> +Following properties are valid for the endpoint node:
+>>>>>> +
+>>>>>> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+>>>>>> +  video-interfaces.txt.  The sensor supports only two data lanes.
+>>>>>
+>>>>> Doesn't this sensor require a external clock, a reset GPIO and / or a
+>>>>> regulator or a few? Do you need data-lanes, unless you can change the order
+>>>>> or the number?
+>>>>
+>>>> In the setup I'm using, I'm not aware of any reset GPIO or regulator. I do use a
+>>>> external clock but it's fixed and not controlled by SW. Should I add a property
+>>>> for this?
+>>>
+>>> The sensor datasheet defines a power-up and power-down sequence for the
+>>> device. If you don't implement these sequences in the driver on a DT based
+>>> system, nothing suggests that they're implemented correctly. Could it be
+>>> that the boot loader simply enables the regulators or another device
+>>> requires them to be enabled?
+>>>
+>>> I presume at least the reset GPIO should be controlled explicitly in order
+>>> to ensure correct function. Although hardware can be surprising: I have one
+>>> production system that has no reset GPIO for the sensor albeit the sensor
+>>> datasheet says that's part of the power up sequence.
+>>>
+>>
+>> Sorry for the misunderstanding. I wanted to say that, there is no SW controlled
+>> reset. In the board we're using to connect the sensor to our D-PHY we have a
+>> GPIO controller that when it receives power, it removes the sensor from reset,
+>> so I have no control over that.
+> 
+> Do you mean to say that there's a GPIO controller but there's not (yet?) a
+> driver for that or that the reset line is actually hard-wired to something
+> else?
+> 
+
+The reset line is hardwired to a GPIO controller that when powered-on removes
+the sensor from reset. However I have no control over the GPIO controller.
+
+>>
+>> Regarding the clock, should I create a new property?
+> 
+> Yes. The sensor does require a clock.
+> 
+>>
+>> And also, regarding the data-lanes, AFAIK it isn't possible to change the order
+>> of the data and clock lanes so should I remove that property?
+> 
+> Sounds good to me.
+> 
+>>
+>>>>
+>>>>>
+>>>>> An example DT snippet wouldn't hurt.
+>>>>
+>>>> Sure, I can add a example snippet.
+>>>>
+>>>>>
+>>>>
+>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
