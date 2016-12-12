@@ -1,94 +1,69 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
- regulator support
-Date: Mon, 12 Dec 2016 10:34:23 -0800
-Message-ID: <20161212183422.GA138477@google.com>
-References: <CAD=FV=UMonRe8WJ1feDv3Nh9g8hEGAwwFT5NYLbzXADBqhTf-A@mail.gmail.com>
- <20161208154145.GA30888@mail.corp.redhat.com>
- <CAL_Jsq+fdoFnarXYkPv6FjVue3v31ry-Ddfkq9fQk9Ek+AjETw@mail.gmail.com>
- <E409F66F-1E4B-4A63-9977-69DF44ACAB0A@gmail.com>
- <CAL_JsqKu0yhLVyEjcZs_rn=VqM9O4F_VMhOkfhEEvbYAjvWSTg@mail.gmail.com>
- <alpine.LNX.2.00.1612091532240.16984@cbobk.fhfr.pm>
- <CAL_JsqLpjhHeeKq3PmNToux1Rgkg0M84-dv9HGCOws223ima4w@mail.gmail.com>
- <alpine.LNX.2.00.1612120951130.16984@cbobk.fhfr.pm>
- <20161212100110.GA13907@mail.corp.redhat.com>
- <CAL_JsqJ7t=C4+PgCyNTev66V33-cyPkUHKsTcbnsYgvAaffVfw@mail.gmail.com>
+From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Subject: RE: [PATCH v4 3/5] i2c: designware: Add slave definitions
+Date: Mon, 12 Dec 2016 18:35:47 +0000
+Message-ID: <BCF0D4927F9C694C9AEA8827D4A9C7C897CE12@de02wembxa.internal.synopsys.com>
+References: <cover.1481131072.git.lolivei@synopsys.com>
+ <5173a9456c423025d8f15baafa2499440cbe1b51.1481131072.git.lolivei@synopsys.com>
+ <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ7t=C4+PgCyNTev66V33-cyPkUHKsTcbnsYgvAaffVfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Ramiro.Oliveira@synopsys.com" <Ramiro.Oliveira@synopsys.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi all,
 
-On Mon, Dec 12, 2016 at 08:47:06AM -0600, Rob Herring wrote:
+The slave address could be set by the I2C slave backend so I can't use it to setup the controller. 
+A boolean property was my initial approach then Andy and Wolfram Sang suggested the use of compatible strings and later It was suggested to use a property to select mode but I can do it again if it's the best way. 
+Can you please tell me where should it be documented? 
 
-[Snip Benjamin's proposal; I agree we don't really want a multi-level DT
-layout purely for making the driver look a little nicer (I'm not sure
-this would really be nicer anyway). And I think, as Rob notes here, our
-disagreement is smaller than appears. But I might be wrong.]
+Luis
 
-> Anyway, we're only debating this:
+-----Original Message-----
+From: Rob Herring [mailto:robh@kernel.org] 
+Sent: Monday, December 12, 2016 17:02
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: wsa@the-dreams.de; mark.rutland@arm.com; jarkko.nikula@linux.intel.com; andriy.shevchenko@linux.intel.com; mika.westerberg@linux.intel.com; linux-i2c@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Ramiro.Oliveira@synopsys.com; Joao.Pinto@synopsys.com; CARLOS.PALMINHA@synopsys.com
+Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
 
-OK, so I think we might have a consensus of sorts? I'll describe it
-here, in case I'm wrong. Otherwise, I'll send another rev.
-
->          i2c-hid-dev@2c {
->                  compatible = "wacom,w9013", "hid-over-i2c";
-
-I plan to document the above, but not treat "wacom,w9013" specially in
-the driver, apart from possibly listing it in the driver of_match_table.
-This was mentioned by Dmitry earlier, and I didn't see any objection.
-
-(Note that there are problems with module autoload when using multiple
-compatible strings like above. May not be supremely relevant to the
-documentation, but it *is* practically important.)
-
->                  reg = <0x2c>;
->                  hid-descr-addr = <0x0020>;
->                  interrupt-parent = <&gpx3>;
->                  interrupts = <3 2>;
->                  vdd-supply = <sth>;
-
-Document and support 'vdd-supply', optionally.
-
->                  init-delay-ms = <100>;
-
-Per Rob's mention below, support this as 'post-power-on-delay-ms',
-optionally.
-
-We can use either of these properties on any device, with the
-intention that if there are future needs for divergent bindings, the
-aforementioned compatible property can help us differentiate.
-
->          };
+On Wed, Dec 07, 2016 at 05:55:50PM +0000, Luis Oliveira wrote:
+> - Add slave definitions to i2c-designware-core
+> - Changes in Kconfig to auto-enable I2C_SLAVE when compiling the 
+> modules
+> - Add mode property to designware-core.txt that enable the "slave" selection:
+>   - "mode" is an optional property that could be "slave" or "master"
+>   - if "mode" is not set the block is considered master by default
 > 
-> vs.
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+> Changes V3->V4: (Andy Shevchenko)
+> - created a common property for modes
+> - placed the generic dependency first
 > 
->          i2c-hid-dev@2c {
->                  compatible = "hid-over-i2c";
->                  reg = <0x2c>;
->                  hid-descr-addr = <0x0020>;
->                  interrupt-parent = <&gpx3>;
->                  interrupts = <3 2>;
->                  vdd-supply = <sth>;
->                  init-delay-ms = <100>;
->          };
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |  4 ++++
+>  drivers/i2c/busses/Kconfig                         |  1 +
+>  drivers/i2c/busses/i2c-designware-common.c         |  6 +++++
+>  drivers/i2c/busses/i2c-designware-core.h           | 26 ++++++++++++++++++++++
+>  4 files changed, 37 insertions(+)
 > 
-> My only other nit is use "post-power-on-delay-ms" which is already a
-> defined property name rather than "init-delay-ms".
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt 
+> b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> index fee26dc3e858..8ed2b532cd54 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -20,6 +20,9 @@ Optional properties :
+>   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+>     This value which is by default 300ns is used to compute the tHIGH period.
+>  
+> + - mode : should be either:
+> +           - "master" to setup the hardware block as a I2C master
+> +           - "slave" to setup the hardware block as a I2C slave
 
-Any objections? Speak now or forever [1] hold your peace.
+This should be documented in a common location. Can't it be a boolean to enable slave mode? Or don't you need to set the slave address? That could be enough to enable slave mode and there's already one example doing that.
 
-Brian
-
-[1] Who am I kidding? There's always room for more paint on the
-bikeshed.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
