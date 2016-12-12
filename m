@@ -1,37 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] ASoC: atmel: tse850: rely on the ssc to register
- as a cpu dai by itself
-Date: Mon, 12 Dec 2016 10:34:23 -0600
-Message-ID: <20161212163423.kwlxy56ys2o2e7nn@rob-hp-laptop>
-References: <1481052157-23400-1-git-send-email-peda@axentia.se>
- <1481052157-23400-3-git-send-email-peda@axentia.se>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Mon, 12 Dec 2016 22:10:36 +0530
+Message-ID: <CAFp+6iFz4Nut6e=CF2q6pLjmqYHw=WSC0Bs5NCtQRX7mNvBXrQ@mail.gmail.com>
+References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1479816163-5260-4-git-send-email-vivek.gautam@codeaurora.org> <20161128225543.GM6095@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1481052157-23400-3-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Takashi Iwai <tiwai@suse.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161128225543.GM6095-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: kishon <kishon-l0cyMroinI0@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 06, 2016 at 08:22:37PM +0100, Peter Rosin wrote:
-> This breaks devicetree compatibility, but in this case that is ok. All
-> affected units are either on my desk, or running an even older version
-> of the driver that is not compatible with the upstreamed version anyway
-> (and when these other units are eventually updated, they will get a
-> fresh dtb as well, so that is not a significant problem either).
+Hi Stephen,
 
-Perfect.
+On Tue, Nov 29, 2016 at 4:25 AM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 11/22, Vivek Gautam wrote:
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> new file mode 100644
+>> index 0000000..ffb173b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> @@ -0,0 +1,74 @@
+>> +Qualcomm QMP PHY
+>> +----------------
+>> +
+>> +QMP phy controller supports physical layer functionality for a number of
+>> +controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+>> +
+>> +Required properties:
+>> + - compatible: compatible list, contains:
+>> +            "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+>> +            "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
+>> + - reg: list of offset and length pair of the PHY register sets.
+>> +     at index 0: offset and length of register set for PHY common
+>> +                 serdes block.
+>> +     from index 1 - N: offset and length of register set for each lane,
+>> +                       for N number of phy lanes (ports).
+>> + - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
+>> + - #phy-cells: must be 1
+>> +    - Cell after phy phandle should be the port (lane) number.
+>> + - clocks: a list of phandles and clock-specifier pairs,
+>> +        one for each entry in clock-names.
+>> + - clock-names: must be "cfg_ahb" for phy config clock,
+>> +                     "aux" for phy aux clock,
+>> +                     "ref_clk" for 19.2 MHz ref clk,
+>> +                     "ref_clk_src" for reference clock source,
+>
+> We typically leave "clk" out of clk names because it's redundant.
+>
+>> +                     "pipe<port-number>" for pipe clock specific to
+>> +                     each port/lane (Optional).
+>
+> The pipe clocks are orphaned right now. We should add an output
+> clock from the phy to go into the controller and back into the
+> phy if I recall correctly. The phy should be a clock provider
+> itself so it can output the pipe clock source into GCC and back
+> into the phy and controller.
 
-> All of that is of course assuming that noone else has managed to build
-> something that can use this driver, but that seems extremely improbable.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  .../bindings/sound/axentia,tse850-pcm5142.txt      | 11 ++++++++---
+You are correct. The pipe clocks come out of PHY controllers and
+go back to the gcc that gates them finally.
 
-Acked-by: Rob Herring <robh@kernel.org>
+I will register the phy drivers as clock providers so that gcc can make
+reference to it.
 
->  sound/soc/atmel/tse850-pcm5142.c                   | 23 +++-------------------
->  2 files changed, 11 insertions(+), 23 deletions(-)
+
+Best Regards
+Vivek
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
