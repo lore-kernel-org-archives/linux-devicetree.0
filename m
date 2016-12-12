@@ -1,53 +1,79 @@
-From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 3/8] rtc: add STM32 RTC driver
-Date: Mon, 12 Dec 2016 10:59:51 +0100
-Message-ID: <a2d3ddc0-c8f6-0f42-ad33-a92e0ac6aee4@st.com>
-References: <1480687801-19525-2-git-send-email-amelie.delaunay@st.com>
- <1480687801-19525-5-git-send-email-amelie.delaunay@st.com>
- <20161202175646.GA3284@linaro.org>
- <15bea9e9-adcc-edb0-1bd1-33d395c72eec@st.com>
- <20161207183709.tbkapu34ljlg4skp@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
+ regulator support
+Date: Mon, 12 Dec 2016 11:01:10 +0100
+Message-ID: <20161212100110.GA13907@mail.corp.redhat.com>
+References: <20161206084803.GR1280@mail.corp.redhat.com>
+ <CAL_Jsq+C1MWrN4Sg_xOgpTzQh9gfL12G5Uxb1ya2MTkoa=7fMA@mail.gmail.com>
+ <CAD=FV=UMonRe8WJ1feDv3Nh9g8hEGAwwFT5NYLbzXADBqhTf-A@mail.gmail.com>
+ <20161208154145.GA30888@mail.corp.redhat.com>
+ <CAL_Jsq+fdoFnarXYkPv6FjVue3v31ry-Ddfkq9fQk9Ek+AjETw@mail.gmail.com>
+ <E409F66F-1E4B-4A63-9977-69DF44ACAB0A@gmail.com>
+ <CAL_JsqKu0yhLVyEjcZs_rn=VqM9O4F_VMhOkfhEEvbYAjvWSTg@mail.gmail.com>
+ <alpine.LNX.2.00.1612091532240.16984@cbobk.fhfr.pm>
+ <CAL_JsqLpjhHeeKq3PmNToux1Rgkg0M84-dv9HGCOws223ima4w@mail.gmail.com>
+ <alpine.LNX.2.00.1612120951130.16984@cbobk.fhfr.pm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <rtc-linux+bncBAABBKPKXHBAKGQE2GEU3TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161207183709.tbkapu34ljlg4skp-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.00.1612120951130.16984@cbobk.fhfr.pm>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Caesar Wang <wxt@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On Dec 12 2016 or thereabouts, Jiri Kosina wrote:
+> Given the timing (merge window being open) and given then NACK given by 
+> Rob, I've now unapplied the patches (the for-4.10/i2c-hid branch is now 
+> obsolete, and has been superseded by for-4.10/i2c-hid-nopower).
+> 
+> However, this is mostly done in order to provide more time for discussion; 
+> I still disagree with the reasoning behind the NACK.
+> 
 
-On 12/07/2016 07:37 PM, Alexandre Belloni wrote:
-> On 05/12/2016 at 10:43:14 +0100, Amelie DELAUNAY wrote :
->>>> +
->>>> +    device_init_wakeup(&pdev->dev, true);
->>>
->>> What happens if device_init_wakeup() returns an error?
->> It means that RTC won't be able to wake up the board with RTC alarm. I can
->> add a warning for the user in this case ?
->>>
->
-> There is exactly one driver ever checking the return value of
-> device_init_wakeup(). It basically always succeeds.
->
->
-OK so, is it OK for everyone that I bet on the fact that it will always 
-succeed?
+To hopefully make things going forward a little bit, I was wondering
+over the week-end if we should not solve this particular issue by adding
+an intermediate platform DT node:
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+instead of having:
+---
+	i2c-hid-dev@2c {
+		compatible = "hid-over-i2c";
+		reg = <0x2c>;
+		hid-descr-addr = <0x0020>;
+		interrupt-parent = <&gpx3>;
+		interrupts = <3 2>;
+		vdd-supply = <sth>;
+		init-delay-ms = <100>;
+	};
+---
+
+we would have:
+---
+	platform-i2c-hid@01 {
+		compatible = "very-special-board-that-needs-firmware-quirks-and-delay-of-100ms";
+		vdd-supply = <sth>;
+		i2c-hid-dev@2c {
+			compatible = "hid-over-i2c";
+			reg = <0x2c>;
+			hid-descr-addr = <0x0020>;
+			interrupt-parent = <&gpx3>;
+			interrupts = <3 2>;
+                };
+	};
+---
+
+If I am not wrong, the platform device should be initialized before
+i2c-hid get called, which allows to setup properly the vdd supply.
+On resume/suspend, the tree should be respected and we should be able to
+enable/disable power in the same fashion this patch provides.
+
+We could then extend this platform device at will without tinkering in
+i2c-hid and we could also handle the GPIOs, reset or whatever is
+required in the future through compatibles.
+
+Thoughts? yes? no? bullshit?
+
+Cheers,
+Benjamin
