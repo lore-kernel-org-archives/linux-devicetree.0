@@ -1,49 +1,61 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: [PATCH v4 4/4] mtd: spi-nor: add a label property to jedec,spi-nor
-Date: Mon, 12 Dec 2016 16:40:52 +0100
-Message-ID: <1481557252-13656-5-git-send-email-clg@kaod.org>
-References: <1481557252-13656-1-git-send-email-clg@kaod.org>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Subject: [PATCH v4 0/4] Static memory controllers for the Aspeed SoC
+Date: Mon, 12 Dec 2016 16:40:48 +0100
+Message-ID: <1481557252-13656-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481557252-13656-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
 List-Id: devicetree@vger.kernel.org
 
-This can be used to easily identify a chip on a system with multiple
-chips.
-
-Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-index 2c91c03e7eb0..b7cd02a3ebe8 100644
---- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-+++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-@@ -65,6 +65,7 @@ Optional properties:
-                    all chips and support for it can not be detected at runtime.
-                    Refer to your chips' datasheet to check if this is supported
-                    by your chip.
-+- label : name to assign to mtd. If omitted, the label is the MTD device name.
- 
- Example:
- 
-@@ -75,4 +76,5 @@ Example:
- 		reg = <0>;
- 		spi-max-frequency = <40000000>;
- 		m25p,fast-read;
-+		label = "System-firmware";
- 	};
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sCgpIZXJlIGlzIGEgc2VyaWVzIGludHJvZHVjaW5nIGEgbmV3IGRyaXZlciBmb3IgdGhl
+IGRpZmZlcmVudCBtZW1vcnkKY29udHJvbGxlcnMgb2YgdGhlIEFzcGVlZCBBU1QyNTAwIGFuZCBB
+U1QyNDAwIFNvQ3MuIEVhY2ggU29DIGhhcyBhdApsZWFzdCBhIG1lbW9yeSBjb250cm9sbGVyIGZv
+ciB0aGUgQk1DIGZpcm13YXJlIGFuZCBhbm90aGVyIG9uZSBmb3IgdGhlCmhvc3QgZmlybXdhcmUu
+IFRoZSByZWdpc3RlciBzZXQgYXJlIG1vc3RseSBjb21wYXRpYmxlIGJ1dCB0aGVyZSBhcmUKc29t
+ZSBzbGlnaHQgZGlmZmVyZW5jZXMgb24gdGhlIEFTVDI0MDAuCgpUaGUgZHJpdmVyIG9ubHkgc3Vw
+cG9ydHMgU1BJIHR5cGUgZmxhc2guCgpUZXN0ZWQgb246CgogKiBPcGVuUE9XRVIgUGFsbWV0dG8g
+KEFTVDI0MDApIHdpdGgKIAlGTUMgY29udHJvbGxlciA6IG4yNXEyNTZhCglTUEkgY29udHJvbGxl
+ciA6IG14MjVsMjU2MzVlIGFuZCBuMjVxNTEyYXgzCgogKiBFdmFsdWF0aW9uIGJvYXJkIChBU1Qy
+NTAwKSB3aXRoCiAJRk1DIGNvbnRyb2xsZXIgOiB3MjVxMjU2IAoJU1BJIGNvbnRyb2xsZXIgOiB3
+MjVxMjU2CgogKiBPcGVuUE9XRVIgV2l0aGVyc3Bvb24gKEFTVDI1MDApIHdpdGgKIAlGTUMgY29u
+dHJvbGxlciA6IG14MjVsMjU2MzVlICogMgoJU1BJIGNvbnRyb2xsZXIgOiBteDY2bDFnNDVnCgpD
+aGFuZ2VzIHNpbmNlIHYzOgogLSByZXdvcmtlZCBJTyByb3V0aW5lcyB0byB1c2UgaW97cmVhZCx3
+cml0ZX0zMl9yZXAKIC0gY2hhbmdlZCBjb25maWcgb3B0aW9uIHRvIFNQSV9BU1BFRURfU01DCiAt
+IGZpeGVkIGFzcGVlZF9zbWNfY2hpcF9zZXR1cF9pbml0KCkgcmV0dXJuZWQgdmFsdWUKCkNoYW5n
+ZXMgc2luY2UgdjI6CiAtIHNwbGl0dGVkIHBhdGNoIHRvIGRpc3Rpbmd1aXNoIEFTVDI0MDAgYW5k
+IEFTVDI1MDAgY29udHJvbGxlcnMKIC0gZml4ZWQgY29udHJvbGxlciBuYW1lcwogLSBpbnRyb2R1
+Y2VkIHByZXBhcmUvdW5wcmVwYXJlIG9wcwogLSBpbnRyb2R1Y2VkIGEgYXNwZWVkX3NtY19zZXR1
+cF9mbGFzaCgpIHJvdXRpbmUKIC0gdmFyaW91cyBjbGVhbnVwcwoKQ2hhbmdlcyBzaW5jZSB2MToK
+IC0gYWRkZWQgYSBzZXQ0YiBvcHMgdG8gaGFuZGxlIGRpZmZlcmVuY2UgaW4gdGhlIGNvbnRyb2xs
+ZXJzCiAtIHNpbXBsaWZpZWQgdGhlIElPIHJvdXRpbmVzCiAtIHByZXBhcmVkIGZvciBmYXN0IHJl
+YWQgdXNpbmcgZHVtbXkgY3ljbGVzCgpXb3JrIGluIHByb2dyZXNzOgogLSByZWFkIG9wdGltaXph
+dGlvbiB1c2luZyBoaWdoZXIgU1BJIGNsb2NrIGZyZXF1ZW5jaWVzCiAtIGNvbW1hbmQgbW9kZSB0
+byBkaXJlY3QgcmVhZHMgZnJvbSBBSEIKIC0gRE1BIHN1cHBvcnQKClRoYW5rcywKCkMuCgpDw6lk
+cmljIExlIEdvYXRlciAoNCk6CiAgbXRkOiBzcGktbm9yOiBhZGQgbWVtb3J5IGNvbnRyb2xsZXJz
+IGZvciB0aGUgQXNwZWVkIEFTVDI1MDAgU29DCiAgbXRkOiBhc3BlZWQ6IGFkZCBtZW1vcnkgY29u
+dHJvbGxlcnMgZm9yIHRoZSBBc3BlZWQgQVNUMjQwMCBTb0MKICBtdGQ6IHNwaS1ub3I6IGJpbmRp
+bmdzIGZvciB0aGUgQXNwZWVkIG1lbW9yeSBjb250cm9sbGVycwogIG10ZDogc3BpLW5vcjogYWRk
+IGEgbGFiZWwgcHJvcGVydHkgdG8gamVkZWMsc3BpLW5vcgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL210ZC9hc3BlZWQtc21jLnR4dCAgICAgICAgIHwgIDUxICsrCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQgICAgICB8ICAgMiArCiBkcml2ZXJzL210ZC9z
+cGktbm9yL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCArCiBkcml2ZXJzL210
+ZC9zcGktbm9yL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJz
+L210ZC9zcGktbm9yL2FzcGVlZC1zbWMuYyAgICAgICAgICAgICAgICAgICB8IDc1MiArKysrKysr
+KysrKysrKysrKysrKysKIDUgZmlsZXMgY2hhbmdlZCwgODE2IGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2FzcGVl
+ZC1zbWMudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tdGQvc3BpLW5vci9hc3BlZWQt
+c21jLmMKCi0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
