@@ -1,85 +1,25 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Mon, 12 Dec 2016 09:17:27 -0600
-Message-ID: <CAL_JsqJvmiVn4hM0dVAWN0yDJxmmnDd3ACLb-Y=sP0Vc-NfSOg@mail.gmail.com>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
- <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop> <582F5DC0.4080804@gmail.com>
- <5834921F.2020809@gmail.com> <CAL_JsqLsw6BNSDY8pGJ8x3XF21WdciLC7WC+z796pYtDk_kvxA@mail.gmail.com>
- <195d492b-c674-e096-4f84-d37ca5448db2@arm.com> <CAL_JsqKioaP6JvihmJ3HK6cEfCgFRrtYr+EbJ2KvptxcrWCLnA@mail.gmail.com>
- <584B442D.4020104@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/6] mfd: dt: Add Aspeed Low Pin Count Controller
+ bindings
+Date: Mon, 12 Dec 2016 09:28:54 -0600
+Message-ID: <20161212152854.j6seqz4rohmr7yly@rob-hp-laptop>
+References: <20161206025321.1792-1-andrew@aj.id.au>
+ <20161206025321.1792-4-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <584B442D.4020104-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161206025321.1792-4-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 9, 2016 at 5:54 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 12/09/16 08:03, Rob Herring wrote:
->> On Wed, Nov 23, 2016 at 4:25 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>
->>>
->>> On 22/11/16 21:35, Rob Herring wrote:
->>>>
->>>> On Tue, Nov 22, 2016 at 12:44 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> wrote:
->>>
->>>
->>> [...]
->>>
->>>>>
->>>>> This patch adds a function that leads to conflating the "model" property
->>>>> and the "compatible" property. This leads to opaque, confusing and
->>>>> unclear
->>>>> code where ever it is used.   I think it is not good for the device tree
->>>>> framework to contribute to writing unclear code.
->>>>>
->>>>> Further, only two of the proposed users of this new function appear to
->>>>> be proper usage.  I do not think that the small amount of reduced lines
->>>>> of code is a good trade off for the reduced code clarity and for the
->>>>> potential for future mis-use of this function.
->>>>>
->>>>> Can I convince you to revert this patch?
->>>>
->>>>
->>>> Yes, I will revert.
->>
->> I looked at this again and the users. They are all informational, so
->
-> A comment in the function docbook header stating that the intent of the
-> returned value is for informational use only would make me happy.
->
-> There is at least on proposed use in patch 2/2 that is not just
-> informational.  init_octeon_system_type() sometimes uses the value of
-> the model property to create the value of variable octeon_system_type.
-> octeon_pcie_pcibios_map_irq() checks the value of octeon_system_type
-> (via the function octeon_board_type_string()) to determine whether
-> to apply a fixup:
->
-> int __init octeon_pcie_pcibios_map_irq(const struct pci_dev *dev,
->                                        u8 slot, u8 pin)
-> {
->         /*
->          * The EBH5600 board with the PCI to PCIe bridge mistakenly
->          * wires the first slot for both device id 2 and interrupt
->          * A. According to the PCI spec, device id 2 should be C. The
->          * following kludge attempts to fix this.
->          */
->         if (strstr(octeon_board_type_string(), "EBH5600") &&
->             dev->bus && dev->bus->parent) {
+On Tue, Dec 06, 2016 at 01:53:18PM +1100, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  .../devicetree/bindings/mfd/aspeed-lpc.txt         | 111 +++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
 
-True, it is more than informational, but let's think about what would
-have to happen for the change here to matter. We would have to have a
-board with no model property. Then we'd have to have a compatible
-string of "EBH5600" on a board which is not the same one as model
-EBH5600 and wouldn't be valid anyway with no vendor prefix. IMO, this
-code should be using of_machine_is_compatible() anyway. MIPS SoC and
-board code is a mess anyway. Linus needs to yell at them.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
