@@ -1,67 +1,86 @@
-From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 1/8] Documentation: arm: define DT cpu
- capacity-dmips-mhz bindings
-Date: Mon, 12 Dec 2016 13:33:53 +0000
-Message-ID: <20161212133353.GB27472@e106622-lin>
-References: <1473085372-2840-1-git-send-email-juri.lelli@arm.com>
- <1473085372-2840-2-git-send-email-juri.lelli@arm.com>
- <20161212124005.GA19177@red-moon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] net: hix5hd2_gmac: add generic compatible string
+Date: Mon, 12 Dec 2016 08:21:16 -0600
+Message-ID: <CAL_Jsq+d5xHsxMKxbWSYy3cDXnC+HQj3=wun1zxf5PZ_BYrD-Q@mail.gmail.com>
+References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
+ <1480944481-118803-2-git-send-email-lidongpo@hisilicon.com>
+ <20161209223521.5dnj7l44e663sntl@rob-hp-laptop> <584E871D.7060200@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161212124005.GA19177@red-moon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni@free-ele>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <584E871D.7060200@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, salil.mehta@huawei.com, David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Jiancheng Xue <xuejiancheng@hisilicon.com>, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/16 12:40, Lorenzo Pieralisi wrote:
-> On Mon, Sep 05, 2016 at 03:22:45PM +0100, Juri Lelli wrote:
-> 
-> [...]
-> 
-> > +===========================================
-> > +5 - References
-> > +===========================================
-> > +
-> > +[1] ARM Linux Kernel documentation - CPUs bindings
-> > +    Documentation/devicetree/bindings/arm/cpus.txt
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > index e6782d50cbcd..c1dcf4cade2e 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -241,6 +241,14 @@ nodes to be present and contain the properties described below.
-> >  			# List of phandles to idle state nodes supported
-> >  			  by this cpu [3].
-> >  
-> > +	- capacity-dmips-mhz
-> > +		Usage: Optional
-> > +		Value type: <u32>
-> > +		Definition:
-> > +			# u32 value representing CPU capacity [3] in
-> > +			  DMIPS/MHz, relative to highest capacity-dmips-mhz
-> > +			  in the system.
-> > +
-> >  	- rockchip,pmu
-> >  		Usage: optional for systems that have an "enable-method"
-> >  		       property value of "rockchip,rk3066-smp"
-> > @@ -464,3 +472,5 @@ cpus {
-> >  [2] arm/msm/qcom,kpss-acc.txt
-> >  [3] ARM Linux kernel documentation - idle states bindings
-> >      Documentation/devicetree/bindings/arm/idle-states.txt
-> > +[3] ARM Linux kernel documentation - cpu capacity bindings
-> > +    Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> 
-> Trivia: bumped into this while reviewing something else, too many
-> threes, you will have to fix the added reference up.
+On Mon, Dec 12, 2016 at 5:16 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
+> Hi Rob,
+>
+> On 2016/12/10 6:35, Rob Herring wrote:
+>> On Mon, Dec 05, 2016 at 09:27:58PM +0800, Dongpo Li wrote:
+>>> The "hix5hd2" is SoC name, add the generic ethernet driver name.
+>>> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
+>>> the SG/TXCSUM/TSO/UFO features.
+>>>
+>>> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
+>>> ---
+>>>  .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt    |  9 +++++++--
+>>>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c             | 15 +++++++++++----
+>>>  2 files changed, 18 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>> index 75d398b..75920f0 100644
+>>> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>> @@ -1,7 +1,12 @@
+>>>  Hisilicon hix5hd2 gmac controller
+>>>
+>>>  Required properties:
+>>> -- compatible: should be "hisilicon,hix5hd2-gmac".
+>>> +- compatible: should contain one of the following SoC strings:
+>>> +    * "hisilicon,hix5hd2-gemac"
+>>> +    * "hisilicon,hi3798cv200-gemac"
+>>> +    and one of the following version string:
+>>> +    * "hisilicon,hisi-gemac-v1"
+>>> +    * "hisilicon,hisi-gemac-v2"
+>>
+>> What combinations are valid? I assume both chips don't have both v1 and
+>> v2. 2 SoCs and 2 versions so far, I don't think there is much point to
+>> have the v1 and v2 compatible strings.
+>>
+> The v1 and v2 are generic MAC compatible strings, many HiSilicon SoCs may
+> use the same MAC version. For example,
+> hix5hd2, hi3716cv200 SoCs use the v1 MAC version,
+> hi3798cv200, hi3516a SoCs use the v2 MAC version,
+> and there may be more SoCs added in future.
+> So I think the generic compatible strings are okay here.
+> Should I add the hi3716cv200, hi3516a SoCs compatible here?
 
-Argh! Fixed locally, thanks for catching it.
+Yes.
 
-Best,
+> Do you have any good advice?
+>
+>>>  - reg: specifies base physical address(s) and size of the device registers.
+>>>    The first region is the MAC register base and size.
+>>>    The second region is external interface control register.
+>>> @@ -20,7 +25,7 @@ Required properties:
+>>>
+>>>  Example:
+>>>      gmac0: ethernet@f9840000 {
+>>> -            compatible = "hisilicon,hix5hd2-gmac";
+>>> +            compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
+>>
+>> You can't just change compatible strings.
+>>
+> Okay, maybe I should name all the compatible string with the suffix "-gmac" instead of
+> "-gemac". This can keep the compatible strings with the same suffix. Is this okay?
+> Can I just add the generic compatible string without changing the SoCs compatible string?
+> Like following:
+>         gmac0: ethernet@f9840000 {
+>  -              compatible = "hisilicon,hix5hd2-gmac";
+>  +              compatible = "hisilicon,hix5hd2-gmac", "hisilicon,hisi-gmac-v1";
 
-- Juri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, this is fine.
+
+Rob
