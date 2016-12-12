@@ -1,132 +1,84 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] Add OV5647 device tree documentation
-Date: Mon, 12 Dec 2016 17:12:56 +0200
-Message-ID: <20161212151256.GV16630@valkosipuli.retiisi.org.uk>
-References: <20161212114900.GS16630@valkosipuli.retiisi.org.uk>
- <0f72309f-ec5e-4252-f6d7-7a7f7a9dc4c5@synopsys.com>
- <20161212121947.GU16630@valkosipuli.retiisi.org.uk>
- <db9fcc03-9db0-856a-8fbd-e641862f9bc8@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Mon, 12 Dec 2016 09:17:27 -0600
+Message-ID: <CAL_JsqJvmiVn4hM0dVAWN0yDJxmmnDd3ACLb-Y=sP0Vc-NfSOg@mail.gmail.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop> <582F5DC0.4080804@gmail.com>
+ <5834921F.2020809@gmail.com> <CAL_JsqLsw6BNSDY8pGJ8x3XF21WdciLC7WC+z796pYtDk_kvxA@mail.gmail.com>
+ <195d492b-c674-e096-4f84-d37ca5448db2@arm.com> <CAL_JsqKioaP6JvihmJ3HK6cEfCgFRrtYr+EbJ2KvptxcrWCLnA@mail.gmail.com>
+ <584B442D.4020104@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <db9fcc03-9db0-856a-8fbd-e641862f9bc8-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <584B442D.4020104-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+On Fri, Dec 9, 2016 at 5:54 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 12/09/16 08:03, Rob Herring wrote:
+>> On Wed, Nov 23, 2016 at 4:25 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>>
+>>> On 22/11/16 21:35, Rob Herring wrote:
+>>>>
+>>>> On Tue, Nov 22, 2016 at 12:44 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> wrote:
+>>>
+>>>
+>>> [...]
+>>>
+>>>>>
+>>>>> This patch adds a function that leads to conflating the "model" property
+>>>>> and the "compatible" property. This leads to opaque, confusing and
+>>>>> unclear
+>>>>> code where ever it is used.   I think it is not good for the device tree
+>>>>> framework to contribute to writing unclear code.
+>>>>>
+>>>>> Further, only two of the proposed users of this new function appear to
+>>>>> be proper usage.  I do not think that the small amount of reduced lines
+>>>>> of code is a good trade off for the reduced code clarity and for the
+>>>>> potential for future mis-use of this function.
+>>>>>
+>>>>> Can I convince you to revert this patch?
+>>>>
+>>>>
+>>>> Yes, I will revert.
+>>
+>> I looked at this again and the users. They are all informational, so
+>
+> A comment in the function docbook header stating that the intent of the
+> returned value is for informational use only would make me happy.
+>
+> There is at least on proposed use in patch 2/2 that is not just
+> informational.  init_octeon_system_type() sometimes uses the value of
+> the model property to create the value of variable octeon_system_type.
+> octeon_pcie_pcibios_map_irq() checks the value of octeon_system_type
+> (via the function octeon_board_type_string()) to determine whether
+> to apply a fixup:
+>
+> int __init octeon_pcie_pcibios_map_irq(const struct pci_dev *dev,
+>                                        u8 slot, u8 pin)
+> {
+>         /*
+>          * The EBH5600 board with the PCI to PCIe bridge mistakenly
+>          * wires the first slot for both device id 2 and interrupt
+>          * A. According to the PCI spec, device id 2 should be C. The
+>          * following kludge attempts to fix this.
+>          */
+>         if (strstr(octeon_board_type_string(), "EBH5600") &&
+>             dev->bus && dev->bus->parent) {
 
-On Mon, Dec 12, 2016 at 01:07:53PM +0000, Ramiro Oliveira wrote:
-> Hi Sakari
-> 
-> On 12/12/2016 12:19 PM, Sakari Ailus wrote:
-> > Hi Ramiro,
-> > 
-> > On Mon, Dec 12, 2016 at 12:15:04PM +0000, Ramiro Oliveira wrote:
-> >> Hi Sakari
-> >>
-> >> On 12/12/2016 11:49 AM, Sakari Ailus wrote:
-> >>> Hi Ramiro,
-> >>>
-> >>> On Mon, Dec 12, 2016 at 11:39:31AM +0000, Ramiro Oliveira wrote:
-> >>>> Hi Sakari,
-> >>>>
-> >>>> Thank you for the feedback.
-> >>>>
-> >>>> On 12/7/2016 10:33 PM, Sakari Ailus wrote:
-> >>>>> Hi Ramiro,
-> >>>>>
-> >>>>> Thank you for the patch.
-> >>>>>
-> >>>>> On Mon, Dec 05, 2016 at 05:36:33PM +0000, Ramiro Oliveira wrote:
-> >>>>>> Add device tree documentation.
-> >>>>>>
-> >>>>>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> >>>>>> ---
-> >>>>>>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
-> >>>>>>  1 file changed, 19 insertions(+)
-> >>>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>>>>
-> >>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 0000000..4c91b3b
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>>>> @@ -0,0 +1,19 @@
-> >>>>>> +Omnivision OV5647 raw image sensor
-> >>>>>> +---------------------------------
-> >>>>>> +
-> >>>>>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> >>>>>> +and CCI (I2C compatible) control bus.
-> >>>>>> +
-> >>>>>> +Required properties:
-> >>>>>> +
-> >>>>>> +- compatible	: "ovti,ov5647";
-> >>>>>> +- reg		: I2C slave address of the sensor;
-> >>>>>> +
-> >>>>>> +The common video interfaces bindings (see video-interfaces.txt) should be
-> >>>>>> +used to specify link to the image data receiver. The OV5647 device
-> >>>>>> +node should contain one 'port' child node with an 'endpoint' subnode.
-> >>>>>> +
-> >>>>>> +Following properties are valid for the endpoint node:
-> >>>>>> +
-> >>>>>> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> >>>>>> +  video-interfaces.txt.  The sensor supports only two data lanes.
-> >>>>>
-> >>>>> Doesn't this sensor require a external clock, a reset GPIO and / or a
-> >>>>> regulator or a few? Do you need data-lanes, unless you can change the order
-> >>>>> or the number?
-> >>>>
-> >>>> In the setup I'm using, I'm not aware of any reset GPIO or regulator. I do use a
-> >>>> external clock but it's fixed and not controlled by SW. Should I add a property
-> >>>> for this?
-> >>>
-> >>> The sensor datasheet defines a power-up and power-down sequence for the
-> >>> device. If you don't implement these sequences in the driver on a DT based
-> >>> system, nothing suggests that they're implemented correctly. Could it be
-> >>> that the boot loader simply enables the regulators or another device
-> >>> requires them to be enabled?
-> >>>
-> >>> I presume at least the reset GPIO should be controlled explicitly in order
-> >>> to ensure correct function. Although hardware can be surprising: I have one
-> >>> production system that has no reset GPIO for the sensor albeit the sensor
-> >>> datasheet says that's part of the power up sequence.
-> >>>
-> >>
-> >> Sorry for the misunderstanding. I wanted to say that, there is no SW controlled
-> >> reset. In the board we're using to connect the sensor to our D-PHY we have a
-> >> GPIO controller that when it receives power, it removes the sensor from reset,
-> >> so I have no control over that.
-> > 
-> > Do you mean to say that there's a GPIO controller but there's not (yet?) a
-> > driver for that or that the reset line is actually hard-wired to something
-> > else?
-> > 
-> 
-> The reset line is hardwired to a GPIO controller that when powered-on removes
-> the sensor from reset. However I have no control over the GPIO controller.
+True, it is more than informational, but let's think about what would
+have to happen for the change here to matter. We would have to have a
+board with no model property. Then we'd have to have a compatible
+string of "EBH5600" on a board which is not the same one as model
+EBH5600 and wouldn't be valid anyway with no vendor prefix. IMO, this
+code should be using of_machine_is_compatible() anyway. MIPS SoC and
+board code is a mess anyway. Linus needs to yell at them.
 
-A GPIO controller is a piece of hardware that lets software to, typically,
-both configure the direction and change and read the state of its input /
-output pins. You seem to have something else on the board, such as chip
-giving a power good signal.
-
-If there really is no software control to to these resources, I suggest not
-to implement the power up / down sequences as you can't test them anyway. We
-can always add the DT properties (as optional) to the DT documentation.
-
-You still should have the clock frequency in DT and check that in the
-driver, even if you don't get a clock. Presumably your current register
-lists assume a particular frequency but AFAIR that wasn't clearly visible
-anywhere.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
