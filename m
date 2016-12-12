@@ -1,79 +1,190 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
- regulator support
-Date: Mon, 12 Dec 2016 11:01:10 +0100
-Message-ID: <20161212100110.GA13907@mail.corp.redhat.com>
-References: <20161206084803.GR1280@mail.corp.redhat.com>
- <CAL_Jsq+C1MWrN4Sg_xOgpTzQh9gfL12G5Uxb1ya2MTkoa=7fMA@mail.gmail.com>
- <CAD=FV=UMonRe8WJ1feDv3Nh9g8hEGAwwFT5NYLbzXADBqhTf-A@mail.gmail.com>
- <20161208154145.GA30888@mail.corp.redhat.com>
- <CAL_Jsq+fdoFnarXYkPv6FjVue3v31ry-Ddfkq9fQk9Ek+AjETw@mail.gmail.com>
- <E409F66F-1E4B-4A63-9977-69DF44ACAB0A@gmail.com>
- <CAL_JsqKu0yhLVyEjcZs_rn=VqM9O4F_VMhOkfhEEvbYAjvWSTg@mail.gmail.com>
- <alpine.LNX.2.00.1612091532240.16984@cbobk.fhfr.pm>
- <CAL_JsqLpjhHeeKq3PmNToux1Rgkg0M84-dv9HGCOws223ima4w@mail.gmail.com>
- <alpine.LNX.2.00.1612120951130.16984@cbobk.fhfr.pm>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and usable memory range
+Date: Mon, 12 Dec 2016 11:18:01 +0100
+Message-ID: <20161212101801.28491-1-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.00.1612120951130.16984@cbobk.fhfr.pm>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Caesar Wang <wxt@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: heinrich.schuchardt@gmx.de, khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Dec 12 2016 or thereabouts, Jiri Kosina wrote:
-> Given the timing (merge window being open) and given then NACK given by 
-> Rob, I've now unapplied the patches (the for-4.10/i2c-hid branch is now 
-> obsolete, and has been superseded by for-4.10/i2c-hid-nopower).
-> 
-> However, this is mostly done in order to provide more time for discussion; 
-> I still disagree with the reasoning behind the NACK.
-> 
+The Amlogic Meson GXBB secure monitor uses part of the memory space, this
+patch adds these reserved zones and redefines the usable memory range for
+each boards.
 
-To hopefully make things going forward a little bit, I was wondering
-over the week-end if we should not solve this particular issue by adding
-an intermediate platform DT node:
-
-instead of having:
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-	i2c-hid-dev@2c {
-		compatible = "hid-over-i2c";
-		reg = <0x2c>;
-		hid-descr-addr = <0x0020>;
-		interrupt-parent = <&gpx3>;
-		interrupts = <3 2>;
-		vdd-supply = <sth>;
-		init-delay-ms = <100>;
-	};
----
+ arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 21 +++++++++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi    |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts   |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts    |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts  |  2 +-
+ .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts      |  2 +-
+ .../arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 +-
+ 11 files changed, 31 insertions(+), 10 deletions(-)
 
-we would have:
----
-	platform-i2c-hid@01 {
-		compatible = "very-special-board-that-needs-firmware-quirks-and-delay-of-100ms";
-		vdd-supply = <sth>;
-		i2c-hid-dev@2c {
-			compatible = "hid-over-i2c";
-			reg = <0x2c>;
-			hid-descr-addr = <0x0020>;
-			interrupt-parent = <&gpx3>;
-			interrupts = <3 2>;
-                };
-	};
----
-
-If I am not wrong, the platform device should be initialized before
-i2c-hid get called, which allows to setup properly the vdd supply.
-On resume/suspend, the tree should be respected and we should be able to
-enable/disable power in the same fashion this patch provides.
-
-We could then extend this platform device at will without tinkering in
-i2c-hid and we could also handle the GPIOs, reset or whatever is
-required in the future through compatibles.
-
-Thoughts? yes? no? bullshit?
-
-Cheers,
-Benjamin
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+index 7a078be..ac40b2d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+@@ -56,7 +56,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ 
+ 	vddio_boot: regulator-vddio_boot {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index fc033c0..e085588 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -55,6 +55,27 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		secos: secos {
++			reg = <0x0 0x05300000 0x0 0x2000000>;
++			no-map;
++		};
++
++		pstore: pstore {
++			reg = <0x0 0x07300000 0x0 0x100000>;
++			no-map;
++		};
++
++		secmon: secmon {
++			reg = <0x0 0x10000000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <0x2>;
+ 		#size-cells = <0x0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 9696820..25b8832 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -62,7 +62,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
++		reg = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ 
+ 	leds {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 238fbea..839c66a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -61,7 +61,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ 
+ 	usb_otg_pwr: regulator-usb-pwrs {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 203be28..9a39518 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -55,7 +55,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
++		reg = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ 
+ 	usb_pwr: regulator-usb-pwrs {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+index 62fb496..287a4c7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+@@ -50,6 +50,6 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+index 9a9663a..8bdbbe2 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+@@ -50,6 +50,6 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
++		reg = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+index 2fe167b..2d85295 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+@@ -50,6 +50,6 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+index e99101a..4ec2bbb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+@@ -60,7 +60,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ 
+ 	vddio_card: gpio-regulator {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+index 9639f01..b8b5b74 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+@@ -59,7 +59,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index f859d75..1544747 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -62,7 +62,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ 
+ 	vddio_boot: regulator-vddio-boot {
+-- 
+2.7.0
