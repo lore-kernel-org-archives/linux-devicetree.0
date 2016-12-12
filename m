@@ -1,228 +1,607 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 3/3] power: supply: bq24735-charger: allow chargers to share the ac-detect gpio
-Date: Mon, 12 Dec 2016 12:00:24 +0100
-Message-ID: <1481540424-19293-4-git-send-email-peda@axentia.se>
-References: <1481540424-19293-1-git-send-email-peda@axentia.se>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] dts: hisi: add dts files for Hi3516CV300 demo board
+Date: Mon, 12 Dec 2016 19:34:17 +0800
+Message-ID: <4b7476e4-b4ef-965a-d5d4-2e16c83ea21a@hisilicon.com>
+References: <20161017120705.3726-1-wenpan@hisilicon.com>
+ <20161017120705.3726-4-wenpan@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481540424-19293-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161017120705.3726-4-wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If several parallel bq24735 chargers have their ac-detect gpios wired
-together (or if only one of the parallel bq24735 chargers have its
-ac-detect pin wired to a gpio, and the others are assumed to react the
-same), then all driver instances need to check the same gpio. But the
-gpio subsystem does not allow sharing gpios, so handle that locally.
 
-However, only do this for the polling case, sharing is not supported if
-the ac detection is handled with interrupts.
+On 2016/10/17 20:07, Pan Wen wrote:
+> Add dts files for Hi3516CV300 demo board.
+> 
+> Signed-off-by: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/power/supply/bq24735-charger.c | 101 +++++++++++++++++++++++++++++----
- 1 file changed, 90 insertions(+), 11 deletions(-)
+Could you help to review this patch, please?
 
-diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
-index 3765806d5d46..3b21a064a9a7 100644
---- a/drivers/power/supply/bq24735-charger.c
-+++ b/drivers/power/supply/bq24735-charger.c
-@@ -25,6 +25,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/power_supply.h>
- #include <linux/slab.h>
-@@ -43,12 +44,24 @@
- #define BQ24735_MANUFACTURER_ID		0xfe
- #define BQ24735_DEVICE_ID		0xff
- 
-+struct bq24735;
-+
-+struct bq24735_shared {
-+	struct list_head		list;
-+	struct bq24735			*owner;
-+	struct gpio_desc		*status_gpio;
-+};
-+
-+static struct mutex shared_lock;
-+static LIST_HEAD(shared_list);
-+
- struct bq24735 {
- 	struct power_supply		*charger;
- 	struct power_supply_desc	charger_desc;
- 	struct i2c_client		*client;
- 	struct bq24735_platform		*pdata;
- 	struct mutex			lock;
-+	struct bq24735_shared		*shared;
- 	struct gpio_desc		*status_gpio;
- 	struct delayed_work		poll;
- 	u32				poll_interval;
-@@ -346,6 +359,65 @@ static struct bq24735_platform *bq24735_parse_dt_data(struct i2c_client *client)
- 	return pdata;
- }
- 
-+static struct gpio_desc *bq24735_get_status_gpio(struct bq24735 *charger)
-+{
-+	struct device *dev = &charger->client->dev;
-+	struct bq24735_shared *shared;
-+	int gpio;
-+	struct list_head *pos;
-+
-+	if (!of_property_read_bool(dev->of_node, "ti,ac-detect-gpios"))
-+		return NULL;
-+
-+	gpio = of_get_named_gpio(dev->of_node, "ti,ac-detect-gpios", 0);
-+	if (gpio < 0)
-+		return ERR_PTR(gpio);
-+
-+	mutex_lock(&shared_lock);
-+	list_for_each(pos, &shared_list) {
-+		shared = list_entry(pos, struct bq24735_shared, list);
-+		if (gpio != desc_to_gpio(shared->status_gpio))
-+			continue;
-+
-+		get_device(&shared->owner->client->dev);
-+		dev_dbg(dev, "sharing gpio with %s\n",
-+			shared->owner->pdata->name);
-+		charger->shared = shared;
-+		mutex_unlock(&shared_lock);
-+		return shared->status_gpio;
-+	}
-+
-+	shared = devm_kzalloc(dev, sizeof(*shared), GFP_KERNEL);
-+	if (!shared) {
-+		mutex_unlock(&shared_lock);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	shared->owner = charger;
-+	shared->status_gpio = gpiod_get(dev, "ti,ac-detect", GPIOD_IN);
-+	if (!IS_ERR(shared->status_gpio)) {
-+		charger->shared = shared;
-+		list_add(&shared->list, &shared_list);
-+	}
-+	mutex_unlock(&shared_lock);
-+
-+	return shared->status_gpio;
-+}
-+
-+static void bq24735_put_status_gpio(struct bq24735 *charger)
-+{
-+	if (!charger->shared)
-+		return;
-+
-+	mutex_lock(&shared_lock);
-+	if (charger->shared->owner != charger) {
-+		put_device(&charger->shared->owner->client->dev);
-+	} else {
-+		list_del(&charger->shared->list);
-+		gpiod_put(charger->shared->status_gpio);
-+	}
-+	mutex_unlock(&shared_lock);
-+}
-+
- static int bq24735_charger_probe(struct i2c_client *client,
- 				 const struct i2c_device_id *id)
- {
-@@ -402,9 +474,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, charger);
- 
--	charger->status_gpio = devm_gpiod_get_optional(&client->dev,
--						       "ti,ac-detect",
--						       GPIOD_IN);
-+	charger->status_gpio = bq24735_get_status_gpio(charger);
- 	if (IS_ERR(charger->status_gpio)) {
- 		ret = PTR_ERR(charger->status_gpio);
- 		dev_err(&client->dev, "Getting gpio failed: %d\n", ret);
-@@ -416,28 +486,30 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 		if (ret < 0) {
- 			dev_err(&client->dev, "Failed to read manufacturer id : %d\n",
- 				ret);
--			return ret;
-+			goto out;
- 		} else if (ret != 0x0040) {
- 			dev_err(&client->dev,
- 				"manufacturer id mismatch. 0x0040 != 0x%04x\n", ret);
--			return -ENODEV;
-+			ret = -ENODEV;
-+			goto out;
- 		}
- 
- 		ret = bq24735_read_word(client, BQ24735_DEVICE_ID);
- 		if (ret < 0) {
- 			dev_err(&client->dev, "Failed to read device id : %d\n", ret);
--			return ret;
-+			goto out;
- 		} else if (ret != 0x000B) {
- 			dev_err(&client->dev,
- 				"device id mismatch. 0x000b != 0x%04x\n", ret);
--			return -ENODEV;
-+			ret = -ENODEV;
-+			goto out;
- 		}
- 	}
- 
- 	ret = bq24735_config_charger(charger);
- 	if (ret < 0) {
- 		dev_err(&client->dev, "failed in configuring charger");
--		return ret;
-+		goto out;
- 	}
- 
- 	/* check for AC adapter presence */
-@@ -445,7 +517,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 		ret = bq24735_enable_charging(charger);
- 		if (ret < 0) {
- 			dev_err(&client->dev, "Failed to enable charging\n");
--			return ret;
-+			goto out;
- 		}
- 	}
- 
-@@ -455,7 +527,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 		ret = PTR_ERR(charger->charger);
- 		dev_err(&client->dev, "Failed to register power supply: %d\n",
- 			ret);
--		return ret;
-+		goto out;
- 	}
- 
- 	if (client->irq) {
-@@ -470,7 +542,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 			dev_err(&client->dev,
- 				"Unable to register IRQ %d err %d\n",
- 				client->irq, ret);
--			return ret;
-+			goto out;
- 		}
- 	} else if (charger->status_gpio) {
- 		ret = of_property_read_u32(client->dev.of_node,
-@@ -487,6 +559,11 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 	}
- 
- 	return 0;
-+
-+out:
-+	bq24735_put_status_gpio(charger);
-+
-+	return ret;
- }
- 
- static int bq24735_charger_remove(struct i2c_client *client)
-@@ -496,6 +573,8 @@ static int bq24735_charger_remove(struct i2c_client *client)
- 	if (charger->poll_interval)
- 		cancel_delayed_work_sync(&charger->poll);
- 
-+	bq24735_put_status_gpio(charger);
-+
- 	return 0;
- }
- 
--- 
-2.1.4
+>  arch/arm/boot/dts/Makefile             |   1 +
+>  arch/arm/boot/dts/hi3516cv300-demb.dts | 148 ++++++++++++
+>  arch/arm/boot/dts/hi3516cv300.dtsi     | 397 +++++++++++++++++++++++++++++++++
+>  3 files changed, 546 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/hi3516cv300-demb.dts
+>  create mode 100644 arch/arm/boot/dts/hi3516cv300.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index befcd26..1f25530 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -171,6 +171,7 @@ dtb-$(CONFIG_ARCH_HIP01) += \
+>  dtb-$(CONFIG_ARCH_HIP04) += \
+>  	hip04-d01.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += \
+> +	hi3516cv300-demb.dtb \
+>  	hi3519-demb.dtb
+>  dtb-$(CONFIG_ARCH_HIX5HD2) += \
+>  	hisi-x5hd2-dkb.dtb
+> diff --git a/arch/arm/boot/dts/hi3516cv300-demb.dts b/arch/arm/boot/dts/hi3516cv300-demb.dts
+> new file mode 100644
+> index 0000000..6a75cd6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/hi3516cv300-demb.dts
+> @@ -0,0 +1,148 @@
+> +/*
+> + * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +
+> +
+> +/dts-v1/;
+> +#include "hi3516cv300.dtsi"
+> +
+> +/ {
+> +	model = "Hisilicon Hi3516CV300 DEMO Board";
+> +	compatible = "hisilicon,hi3516cv300";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +		i2c0 = &i2c_bus0;
+> +		i2c1 = &i2c_bus1;
+> +		spi0 = &spi_bus0;
+> +		spi1 = &spi_bus1;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x10000000>;
+> +	};
+> +};
+> +
+> +&dual_timer0 {
+> +	status = "okay";
+> +};
+> +
+> +&watchdog {
+> +	status = "okay";
+> +};
+> +
+> +&pwm {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c_bus0 {
+> +	status = "okay";
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_pmux>;
+> +};
+> +
+> +&i2c_bus1 {
+> +	status = "okay";
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pmux>;
+> +};
+> +
+> +&spi_bus0{
+> +	status = "disabled";
+> +	num-cs = <1>;
+> +	cs-gpios = <&gpio_chip0 6 0>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi0_pmux>;
+> +};
+> +
+> +&spi_bus1{
+> +	status = "okay";
+> +	num-cs = <2>;
+> +	cs-gpios = <&gpio_chip5 3 0>, <&gpio_chip5 4 0>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi1_pmux>;
+> +};
+> +
+> +&fmc {
+> +	spi-nor@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <160000000>;
+> +		m25p,fast-read;
+> +	};
+> +};
+> +
+> +&mdio {
+> +	phy0: phy@1 {
+> +		reg = <1>;
+> +	};
+> +};
+> +
+> +&hisi_femac {
+> +	mac-address = [00 00 00 00 00 00];
+> +	phy-mode = "rmii";
+> +	phy-handle = <&phy0>;
+> +	hisilicon,phy-reset-delays-us = <10000 10000 150000>;
+> +};
+> +
+> +&dmac {
+> +	status = "okay";
+> +};
+> +
+> +&pmux {
+> +	i2c0_pmux: i2c0_pmux {
+> +		pinctrl-single,pins = <
+> +			0x2c 0x3
+> +			0x30 0x3>;
+> +	};
+> +
+> +	i2c1_pmux: i2c1_pmux {
+> +		pinctrl-single,pins = <
+> +			0x20 0x1
+> +			0x24 0x1>;
+> +	};
+> +
+> +	spi0_pmux: spi0_pmux {
+> +		pinctrl-single,pins = <
+> +			0x28 0x1
+> +			0x2c 0x1
+> +			0x30 0x1
+> +			0x34 0x1>;
+> +	};
+> +
+> +	spi1_pmux: spi1_pmux {
+> +		pinctrl-single,pins = <
+> +			0xc4 0x1
+> +			0xc8 0x1
+> +			0xcc 0x1
+> +			0xd0 0x1
+> +			0xd4 0x1>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/hi3516cv300.dtsi b/arch/arm/boot/dts/hi3516cv300.dtsi
+> new file mode 100644
+> index 0000000..1da41ab
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/hi3516cv300.dtsi
+> @@ -0,0 +1,397 @@
+> +/*
+> + * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +
+> +#include "skeleton.dtsi"
+> +#include <dt-bindings/clock/hi3516cv300-clock.h>
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,arm926ej-s";
+> +			reg = <0>;
+> +		};
+> +	};
+> +
+> +	vic: interrupt-controller@10040000 {
+> +		compatible = "arm,pl190-vic";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <0x10040000 0x1000>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		interrupt-parent = <&vic>;
+> +		ranges;
+> +
+> +		clk_3m: clk_3m {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <3000000>;
+> +		};
+> +
+> +		clk_apb: clk_apb {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <50000000>;
+> +		};
+> +
+> +		crg: clock-reset-controller@12010000 {
+> +			compatible = "hisilicon,hi3516cv300-crg";
+> +			reg = <0x12010000 0x1000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <2>;
+> +		};
+> +
+> +		sysctrl: system-controller@12020000 {
+> +			compatible = "hisilicon,hi3516cv300-sysctrl", "syscon";
+> +			reg = <0x12020000 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		reboot {
+> +			compatible = "syscon-reboot";
+> +			regmap = <&sysctrl>;
+> +			offset = <0x4>;
+> +			mask = <0xdeadbeef>;
+> +		};
+> +
+> +		dual_timer0: dual_timer@12000000 {
+> +			compatible = "arm,sp804", "arm,primecell";
+> +			reg = <0x12000000 0x1000>;
+> +			interrupts = <3>;
+> +			clocks = <&clk_3m>, <&clk_3m>, <&clk_apb>;
+> +			clock-names = "timer0", "timer1", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		dual_timer1: dual_timer@12001000 {
+> +			compatible = "arm,sp804", "arm,primecell";
+> +			reg = <0x12001000 0x1000>;
+> +			interrupts = <4>;
+> +			clocks = <&clk_3m>, <&clk_3m>, <&clk_apb>;
+> +			clock-names = "timer0", "timer1", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		watchdog: watchdog@12080000 {
+> +			compatible = "arm,sp805-wdt", "arm,primecell";
+> +			arm,primecell-periphid = <0x00141805>;
+> +			reg = <0x12080000 0x1000>;
+> +			clocks = <&sysctrl HI3516CV300_WDT_CLK>,
+> +				<&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "wdog_clk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		pwm: pwm@12130000 {
+> +			compatible = "hisilicon,hi3516cv300-pwm",
+> +				"hisilicon,hibvt-pwm";
+> +			reg = <0x12130000 0x10000>;
+> +			clocks = <&crg HI3516CV300_PWM_CLK>;
+> +			resets = <&crg 0x38 0>;
+> +			#pwm-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart0: uart@12100000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x12100000 0x1000>;
+> +			interrupts = <5>;
+> +			clocks = <&crg HI3516CV300_UART0_CLK>;
+> +			clock-names = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: uart@12101000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x12101000 0x1000>;
+> +			interrupts = <30>;
+> +			clocks = <&crg HI3516CV300_UART1_CLK>;
+> +			clock-names = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: uart@12102000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x12102000 0x1000>;
+> +			interrupts = <25>;
+> +			clocks = <&crg HI3516CV300_UART2_CLK>;
+> +			clock-names = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c_bus0: i2c@12110000 {
+> +			compatible = "hisilicon,hi3516cv300-i2c",
+> +				"hisilicon,hibvt-i2c";
+> +			reg = <0x12110000 0x1000>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c_bus1: i2c@12112000 {
+> +			compatible = "hisilicon,hi3516cv300-i2c",
+> +				"hisilicon,hibvt-i2c";
+> +			reg = <0x12112000 0x1000>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi_bus0: spi@12120000 {
+> +			compatible = "arm,pl022", "arm,primecell";
+> +			reg = <0x12120000 0x1000>;
+> +			interrupts = <6>;
+> +			clocks = <&crg HI3516CV300_SPI0_CLK>;
+> +			clock-names = "apb_pclk";
+> +			dmas = <&dmac 12 1>, <&dmac 13 2>;
+> +			dma-names = "rx", "tx";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi_bus1: spi@12121000 {
+> +			compatible = "arm,pl022", "arm,primecell";
+> +			reg = <0x12121000 0x1000>, <0x12030000 0x4>;
+> +			interrupts = <7>;
+> +			clocks = <&crg HI3516CV300_SPI1_CLK>;
+> +			clock-names = "apb_pclk";
+> +			dmas = <&dmac 14 1>, <&dmac 15 2>;
+> +			dma-names = "rx", "tx";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		fmc: spi-nor-controller@10000000 {
+> +			compatible = "hisilicon,fmc-spi-nor";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
+> +			reg-names = "control", "memory";
+> +			clocks = <&crg HI3516CV300_FMC_CLK>;
+> +			assigned-clocks = <&crg HI3516CV300_FMC_CLK>;
+> +			assigned-clock-rates = <24000000>;
+> +		};
+> +
+> +		mdio: mdio@10051100 {
+> +			compatible = "hisilicon,hisi-femac-mdio";
+> +			reg = <0x10051100 0x10>;
+> +			clocks = <&crg HI3516CV300_ETH_CLK>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		hisi_femac: ethernet@10090000 {
+> +			compatible = "hisilicon,hi3516cv300-femac",
+> +				"hisilicon,hisi-femac-v2";
+> +			reg = <0x10050000 0x1000>,<0x10051300 0x200>;
+> +			interrupts = <12>;
+> +			clocks = <&crg HI3516CV300_ETH_CLK>;
+> +			resets = <&crg 0xec 0>, <&crg 0xec 3>;
+> +			reset-names = "mac","phy";
+> +		};
+> +
+> +		dmac: dma-controller@10030000 {
+> +			compatible = "arm,pl080", "arm,primecell";
+> +			reg = <0x10030000 0x1000>;
+> +			interrupts = <14>;
+> +			clocks = <&crg HI3516CV300_DMAC_CLK>;
+> +			clock-names = "apb_pclk";
+> +			lli-bus-interface-ahb1;
+> +			lli-bus-interface-ahb2;
+> +			mem-bus-interface-ahb1;
+> +			mem-bus-interface-ahb2;
+> +			memcpy-burst-size = <256>;
+> +			memcpy-bus-width = <32>;
+> +			#dma-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip0: gpio@12140000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12140000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 61 2>,
+> +				<&pmux 4 11 1>,
+> +				<&pmux 5 10 1>,
+> +				<&pmux 6 13 2>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip1: gpio@12141000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12141000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 16 7>,
+> +				<&pmux 7 0 1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip2: gpio@12142000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12142000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 46 1>,
+> +				<&pmux 1 45 1>,
+> +				<&pmux 2 44 1>,
+> +				<&pmux 3 43 1>,
+> +				<&pmux 4 39 1>,
+> +				<&pmux 5 38 1>,
+> +				<&pmux 6 40 1>,
+> +				<&pmux 7 48 1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip3: gpio@12143000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12143000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 37 1>,
+> +				<&pmux 1 36 1>,
+> +				<&pmux 2 35 1>,
+> +				<&pmux 3 34 1>,
+> +				<&pmux 4 23 2>,
+> +				<&pmux 6 8 2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip4: gpio@12144000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12144000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 27 1>,
+> +				<&pmux 1 26 1>,
+> +				<&pmux 2 31 1>,
+> +				<&pmux 3 30 1>,
+> +				<&pmux 4 28 2>,
+> +				<&pmux 6 33 1>,
+> +				<&pmux 7 32 1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip5: gpio@12145000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12145000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 53 1>,
+> +				<&pmux 1 51 2>,
+> +				<&pmux 3 50 1>,
+> +				<&pmux 4 49 1>,
+> +				<&pmux 5 47 1>,
+> +				<&pmux 6 40 2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip6: gpio@12146000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12146000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 7 1>,
+> +				<&pmux 1 6 1>,
+> +				<&pmux 2 4 1>,
+> +				<&pmux 3 5 1>,
+> +				<&pmux 4 15 1>,
+> +				<&pmux 5 1 3>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip7: gpio@12147000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12147000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 1 55 6>,
+> +				<&pmux 7 25 1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio_chip8: gpio@12148000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12148000 0x1000>;
+> +			interrupts = <31>;
+> +			clocks = <&crg HI3516CV300_APB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pmux 0 63 3>,
+> +				<&pmux 3 12 1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pmux: pinmux@12040000 {
+> +			compatible = "pinctrl-single";
+> +			reg = <0x12040000 0x108>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			#gpio-range-cells = <3>;
+> +			ranges;
+> +
+> +			pinctrl-single,register-width = <32>;
+> +			pinctrl-single,function-mask = <7>;
+> +			/* pin base, nr pins & gpio function */
+> +			pinctrl-single,gpio-range = <&range 0 54 0
+> +				&range 55 6 1 &range 61 5 0>;
+> +
+> +			range: gpio-range {
+> +				#pinctrl-single,gpio-range-cells = <3>;
+> +			};
+> +		};
+> +
+> +		pconf: pinconf@12040800 {
+> +			compatible = "pinconf-single";
+> +			reg = <0x12040800 0x130>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			pinctrl-single,register-width = <32>;
+> +		};
+> +	};
+> +};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
