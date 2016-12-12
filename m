@@ -1,97 +1,228 @@
-From: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] net: hix5hd2_gmac: add generic compatible string
-Date: Mon, 12 Dec 2016 19:16:45 +0800
-Message-ID: <584E871D.7060200@hisilicon.com>
-References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
- <1480944481-118803-2-git-send-email-lidongpo@hisilicon.com>
- <20161209223521.5dnj7l44e663sntl@rob-hp-laptop>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 3/3] power: supply: bq24735-charger: allow chargers to share the ac-detect gpio
+Date: Mon, 12 Dec 2016 12:00:24 +0100
+Message-ID: <1481540424-19293-4-git-send-email-peda@axentia.se>
+References: <1481540424-19293-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161209223521.5dnj7l44e663sntl@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, benjamin.chenhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, caizhiyong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481540424-19293-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+If several parallel bq24735 chargers have their ac-detect gpios wired
+together (or if only one of the parallel bq24735 chargers have its
+ac-detect pin wired to a gpio, and the others are assumed to react the
+same), then all driver instances need to check the same gpio. But the
+gpio subsystem does not allow sharing gpios, so handle that locally.
 
-On 2016/12/10 6:35, Rob Herring wrote:
-> On Mon, Dec 05, 2016 at 09:27:58PM +0800, Dongpo Li wrote:
->> The "hix5hd2" is SoC name, add the generic ethernet driver name.
->> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
->> the SG/TXCSUM/TSO/UFO features.
->>
->> Signed-off-by: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> ---
->>  .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt    |  9 +++++++--
->>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c             | 15 +++++++++++----
->>  2 files changed, 18 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->> index 75d398b..75920f0 100644
->> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->> @@ -1,7 +1,12 @@
->>  Hisilicon hix5hd2 gmac controller
->>  
->>  Required properties:
->> -- compatible: should be "hisilicon,hix5hd2-gmac".
->> +- compatible: should contain one of the following SoC strings:
->> +	* "hisilicon,hix5hd2-gemac"
->> +	* "hisilicon,hi3798cv200-gemac"
->> +	and one of the following version string:
->> +	* "hisilicon,hisi-gemac-v1"
->> +	* "hisilicon,hisi-gemac-v2"
-> 
-> What combinations are valid? I assume both chips don't have both v1 and 
-> v2. 2 SoCs and 2 versions so far, I don't think there is much point to 
-> have the v1 and v2 compatible strings.
-> 
-The v1 and v2 are generic MAC compatible strings, many HiSilicon SoCs may
-use the same MAC version. For example,
-hix5hd2, hi3716cv200 SoCs use the v1 MAC version,
-hi3798cv200, hi3516a SoCs use the v2 MAC version,
-and there may be more SoCs added in future.
-So I think the generic compatible strings are okay here.
-Should I add the hi3716cv200, hi3516a SoCs compatible here?
-Do you have any good advice?
+However, only do this for the polling case, sharing is not supported if
+the ac detection is handled with interrupts.
 
->>  - reg: specifies base physical address(s) and size of the device registers.
->>    The first region is the MAC register base and size.
->>    The second region is external interface control register.
->> @@ -20,7 +25,7 @@ Required properties:
->>  
->>  Example:
->>  	gmac0: ethernet@f9840000 {
->> -		compatible = "hisilicon,hix5hd2-gmac";
->> +		compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
-> 
-> You can't just change compatible strings.
-> 
-Okay, maybe I should name all the compatible string with the suffix "-gmac" instead of
-"-gemac". This can keep the compatible strings with the same suffix. Is this okay?
-Can I just add the generic compatible string without changing the SoCs compatible string?
-Like following:
-  	gmac0: ethernet@f9840000 {
- -		compatible = "hisilicon,hix5hd2-gmac";
- +		compatible = "hisilicon,hix5hd2-gmac", "hisilicon,hisi-gmac-v1";
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/power/supply/bq24735-charger.c | 101 +++++++++++++++++++++++++++++----
+ 1 file changed, 90 insertions(+), 11 deletions(-)
 
->>  		reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
->>  		interrupts = <0 71 4>;
->>  		#address-cells = <1>;
-> 
-> .
-> 
-
-
-    Regards,
-    Dongpo
-
-.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
+index 3765806d5d46..3b21a064a9a7 100644
+--- a/drivers/power/supply/bq24735-charger.c
++++ b/drivers/power/supply/bq24735-charger.c
+@@ -25,6 +25,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/power_supply.h>
+ #include <linux/slab.h>
+@@ -43,12 +44,24 @@
+ #define BQ24735_MANUFACTURER_ID		0xfe
+ #define BQ24735_DEVICE_ID		0xff
+ 
++struct bq24735;
++
++struct bq24735_shared {
++	struct list_head		list;
++	struct bq24735			*owner;
++	struct gpio_desc		*status_gpio;
++};
++
++static struct mutex shared_lock;
++static LIST_HEAD(shared_list);
++
+ struct bq24735 {
+ 	struct power_supply		*charger;
+ 	struct power_supply_desc	charger_desc;
+ 	struct i2c_client		*client;
+ 	struct bq24735_platform		*pdata;
+ 	struct mutex			lock;
++	struct bq24735_shared		*shared;
+ 	struct gpio_desc		*status_gpio;
+ 	struct delayed_work		poll;
+ 	u32				poll_interval;
+@@ -346,6 +359,65 @@ static struct bq24735_platform *bq24735_parse_dt_data(struct i2c_client *client)
+ 	return pdata;
+ }
+ 
++static struct gpio_desc *bq24735_get_status_gpio(struct bq24735 *charger)
++{
++	struct device *dev = &charger->client->dev;
++	struct bq24735_shared *shared;
++	int gpio;
++	struct list_head *pos;
++
++	if (!of_property_read_bool(dev->of_node, "ti,ac-detect-gpios"))
++		return NULL;
++
++	gpio = of_get_named_gpio(dev->of_node, "ti,ac-detect-gpios", 0);
++	if (gpio < 0)
++		return ERR_PTR(gpio);
++
++	mutex_lock(&shared_lock);
++	list_for_each(pos, &shared_list) {
++		shared = list_entry(pos, struct bq24735_shared, list);
++		if (gpio != desc_to_gpio(shared->status_gpio))
++			continue;
++
++		get_device(&shared->owner->client->dev);
++		dev_dbg(dev, "sharing gpio with %s\n",
++			shared->owner->pdata->name);
++		charger->shared = shared;
++		mutex_unlock(&shared_lock);
++		return shared->status_gpio;
++	}
++
++	shared = devm_kzalloc(dev, sizeof(*shared), GFP_KERNEL);
++	if (!shared) {
++		mutex_unlock(&shared_lock);
++		return ERR_PTR(-ENOMEM);
++	}
++	shared->owner = charger;
++	shared->status_gpio = gpiod_get(dev, "ti,ac-detect", GPIOD_IN);
++	if (!IS_ERR(shared->status_gpio)) {
++		charger->shared = shared;
++		list_add(&shared->list, &shared_list);
++	}
++	mutex_unlock(&shared_lock);
++
++	return shared->status_gpio;
++}
++
++static void bq24735_put_status_gpio(struct bq24735 *charger)
++{
++	if (!charger->shared)
++		return;
++
++	mutex_lock(&shared_lock);
++	if (charger->shared->owner != charger) {
++		put_device(&charger->shared->owner->client->dev);
++	} else {
++		list_del(&charger->shared->list);
++		gpiod_put(charger->shared->status_gpio);
++	}
++	mutex_unlock(&shared_lock);
++}
++
+ static int bq24735_charger_probe(struct i2c_client *client,
+ 				 const struct i2c_device_id *id)
+ {
+@@ -402,9 +474,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, charger);
+ 
+-	charger->status_gpio = devm_gpiod_get_optional(&client->dev,
+-						       "ti,ac-detect",
+-						       GPIOD_IN);
++	charger->status_gpio = bq24735_get_status_gpio(charger);
+ 	if (IS_ERR(charger->status_gpio)) {
+ 		ret = PTR_ERR(charger->status_gpio);
+ 		dev_err(&client->dev, "Getting gpio failed: %d\n", ret);
+@@ -416,28 +486,30 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "Failed to read manufacturer id : %d\n",
+ 				ret);
+-			return ret;
++			goto out;
+ 		} else if (ret != 0x0040) {
+ 			dev_err(&client->dev,
+ 				"manufacturer id mismatch. 0x0040 != 0x%04x\n", ret);
+-			return -ENODEV;
++			ret = -ENODEV;
++			goto out;
+ 		}
+ 
+ 		ret = bq24735_read_word(client, BQ24735_DEVICE_ID);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "Failed to read device id : %d\n", ret);
+-			return ret;
++			goto out;
+ 		} else if (ret != 0x000B) {
+ 			dev_err(&client->dev,
+ 				"device id mismatch. 0x000b != 0x%04x\n", ret);
+-			return -ENODEV;
++			ret = -ENODEV;
++			goto out;
+ 		}
+ 	}
+ 
+ 	ret = bq24735_config_charger(charger);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "failed in configuring charger");
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	/* check for AC adapter presence */
+@@ -445,7 +517,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 		ret = bq24735_enable_charging(charger);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "Failed to enable charging\n");
+-			return ret;
++			goto out;
+ 		}
+ 	}
+ 
+@@ -455,7 +527,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 		ret = PTR_ERR(charger->charger);
+ 		dev_err(&client->dev, "Failed to register power supply: %d\n",
+ 			ret);
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	if (client->irq) {
+@@ -470,7 +542,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 			dev_err(&client->dev,
+ 				"Unable to register IRQ %d err %d\n",
+ 				client->irq, ret);
+-			return ret;
++			goto out;
+ 		}
+ 	} else if (charger->status_gpio) {
+ 		ret = of_property_read_u32(client->dev.of_node,
+@@ -487,6 +559,11 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 	}
+ 
+ 	return 0;
++
++out:
++	bq24735_put_status_gpio(charger);
++
++	return ret;
+ }
+ 
+ static int bq24735_charger_remove(struct i2c_client *client)
+@@ -496,6 +573,8 @@ static int bq24735_charger_remove(struct i2c_client *client)
+ 	if (charger->poll_interval)
+ 		cancel_delayed_work_sync(&charger->poll);
+ 
++	bq24735_put_status_gpio(charger);
++
+ 	return 0;
+ }
+ 
+-- 
+2.1.4
