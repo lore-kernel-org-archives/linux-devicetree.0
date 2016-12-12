@@ -1,141 +1,69 @@
-From: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: Add support for CS43130 codec
-Date: Mon, 12 Dec 2016 15:05:35 -0600
-Message-ID: <ddf10db7-eb44-49c7-9d83-38b0e8a502d4@EX3.ad.cirrus.com>
-References: <09a77398-831b-4be7-9089-f7ac4fcfc16a@EX4.ad.cirrus.com>
- <20161208162336.l5g5cbcc2bzt65ke@sirena.org.uk>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Mon, 12 Dec 2016 13:15:02 -0800
+Message-ID: <20161212211502.GA96889@google.com>
+References: <20160906190524.GB79728@google.com>
+ <20160912185633.GH27946@sirena.org.uk>
+ <20160913172140.GC62872@google.com>
+ <20160915143945.GJ27974@sirena.org.uk>
+ <20160915180223.GE62872@google.com>
+ <20160916163253.GA10189@sirena.org.uk>
+ <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com>
+ <20160924184133.seh6v6eayt7hwgue@sirena.org.uk>
+ <CAD=FV=V_ncaKDzwEyCrZNqicoE+dGXN8CJ8dDuvxQ6XP8uxsDg@mail.gmail.com>
+ <20161028181521.ywzmow6bgndfotq3@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161208162336.l5g5cbcc2bzt65ke-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <20161028181521.ywzmow6bgndfotq3-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thank you for your prompt reply.
+El Fri, Oct 28, 2016 at 07:15:21PM +0100 Mark Brown ha dit:
 
-I have updated v2 patch to include your recommmendations except
-following:
+> On Mon, Sep 26, 2016 at 10:41:59AM -0700, Doug Anderson wrote:
+> 
+> > I guess I think of the whole network of components as the PWM
+> > regulator and not the individual discreet BUCK.  I'm also not quite
+> > sure how you would model it as you're asking.  I suppose you could say
+> > that all of the resistors / capacitors / inductors end up producing a
+> > voltage and this voltage is an input to the BUCK.  ...then the BUCK
+> 
+> Yes, that's what's happening.
+> 
+> > I know for sure that our EEs have massively modified the behavior of
+> > the whole thing by just changing the resistors / capacitors /
+> > inductors, changing the undershoot, OVP issue, voltage ranges, default
+> > voltage, etc.  That's what leads me to believe it's not so separable.
+> 
+> What you're describing to me is a discrete DCDC that has an input
+> voltage that sets the output voltage which happens to be set with a PWM.
+> It's of course going to be the case that the passives are important to
+> the system performance but it seems we have two bits here - the PWM
+> regulator providing an input to the DCDC and the DCDC itself which is
+> sensitive to rate changes.
 
-----------------------------------------------------------------------------
-> > +			regmap_update_bits(cs43130->regmap, CS43130_PLL_SET_9,
-> > +					    CS43130_PLL_REF_PREDIV_MASK,
-> > +						pll_ratio_table[i].sclk_prediv
-> > +						);
-> 
-> There's no need for the ); to be on a new line here, nor for the extra
-> indentation on the line before.  There are lots more coding style
-> issues, checkpatch will probably pick up many of them.
+I experimented a bit with this. Besides the question of how to model
+the passives I wonder how the two regulators would interact. The
+correct thing seems to be to specify the input regulator as a supply
+of the DCDC. dcdc->set_voltage breaks down a voltage transition into
+steps (if needed) and calls regulator_set_voltage(supply) for each
+step. The problem with that is that regulator_set_voltage(dcdc)
+acquires the supply lock(s), later regulator_set_voltage(supply) tries
+to acquire its own lock which is already held. This can be worked
+around by only using the supply regulator in the DCDC, but not
+specify it as a supply. However this seems more a hack than a proper
+solution.
 
-Fixed.
+Am I missing something obvious here or approaching this from a wrong
+angle?
 
-In v2 patch, checkpatch do not show addional formatting issues.
+Thanks
 
-I have cleaned 'regmap_update_bits' API call with 80-char line
-constraint.
-----------------------------------------------------------------------------
-> > +	case SND_SOC_DAPM_PRE_PMU:
-> > +		if (cs43130->pll_bypass)
-> > +			cs43130_change_clksrc(codec, CS43130_MCLK_SRC_XTAL);
-> > +		else
-> > +			cs43130_change_clksrc(codec, CS43130_MCLK_SRC_PLL);
-> > +
-> > +		usleep_range(10000, 10050);
-> > +		/*ASP_3ST = 0 in master mode*/
-> > +		if (cs43130->dai_mode)
-> > +			regmap_update_bits(cs43130->regmap, CS43130_PAD_INT_CFG,
-> > +						    0x01, 0x00);
-> 
-> No need to undo this in slave mode?
-
-Only needed for master mode, so no need for slave mode
-----------------------------------------------------------------------------
-> > +	/* Enable HP detect */
-> > +	regmap_update_bits(cs43130->regmap, CS43130_HP_DETECT,
-> > +		CS43130_HP_DETECT_CTRL_MASK, CS43130_HP_DETECT_CTRL_MASK);
-> 
-> Why enable this when the only handling is a couple of log messages?
-
-I suppose I could remove it, but it may be helpful for
-system integrators to know where HP detect hooks are.
-
-But if you insist, I could remove it.
-----------------------------------------------------------------------------
-
-
-On Thu, Dec 08, 2016 at 04:23:36PM +0000, Mark Brown wrote:
-> On Wed, Dec 07, 2016 at 02:17:27PM -0600, Li Xu wrote:
-> 
-> Overall this looks pretty good - there's a fair number of issues below
-> but they're all fairly simple stylistic things rather than anything
-> majorly wrong so hopefully should be easy to correct.
-> 
-> >  	select SND_SOC_CS53L30 if I2C
-> > +	select SND_SOC_CS43130 if I2C
-> >  	select SND_SOC_CX20442 if TTY
-> 
-> Please keep Kconfig and Makefile sorted.
-> 
-> > +static bool cs43130_volatile_register(struct device *dev, unsigned int reg)
-> > +{
-> > +	switch (reg) {
-> > +	case CS43130_DEVID_AB ... CS43130_SUBREV_ID:
-> > +	case CS43130_INT_STATUS_1 ... CS43130_INT_STATUS_5:
-> > +		return true;
-> 
-> You don't need to mark the device ID volatile, just don't provide
-> defaults and regmap will cache it the first time it reads it.  If the
-> device ID is volatile you've got bigger problems.
-> 
-> > +			/*PDN_PLL= 0,enable*/
-> 
-> Please use the standard kernel coding style, need spaces here.
-> 
-> > +			regmap_update_bits(cs43130->regmap, CS43130_PLL_SET_9,
-> > +					    CS43130_PLL_REF_PREDIV_MASK,
-> > +						pll_ratio_table[i].sclk_prediv
-> > +						);
-> 
-> There's no need for the ); to be on a new line here, nor for the extra
-> indentation on the line before.  There are lots more coding style
-> issues, checkpatch will probably pick up many of them.
-> 
-> > +	case SND_SOC_DAPM_PRE_PMU:
-> > +		if (cs43130->pll_bypass)
-> > +			cs43130_change_clksrc(codec, CS43130_MCLK_SRC_XTAL);
-> > +		else
-> > +			cs43130_change_clksrc(codec, CS43130_MCLK_SRC_PLL);
-> > +
-> > +		usleep_range(10000, 10050);
-> > +		/*ASP_3ST = 0 in master mode*/
-> > +		if (cs43130->dai_mode)
-> > +			regmap_update_bits(cs43130->regmap, CS43130_PAD_INT_CFG,
-> > +						    0x01, 0x00);
-> 
-> No need to undo this in slave mode?
-> 
-> > +	if (stickies[0] & CS43130_XTAL_ERR_INT)
-> > +		pr_debug("%s: Crystal err\n", __func__);
-> 
-> dev_ prints and shouldn't this one be an error?
-> 
-> > +	/* Enable HP detect */
-> > +	regmap_update_bits(cs43130->regmap, CS43130_HP_DETECT,
-> > +		CS43130_HP_DETECT_CTRL_MASK, CS43130_HP_DETECT_CTRL_MASK);
-> 
-> Why enable this when the only handling is a couple of log messages?
-> 
-> > +#ifdef CONFIG_PM
-> > +static int cs43130_runtime_suspend(struct device *dev)
-> > +{
-> > +	return 0;
-> > +}
-> 
-> Remove empty functions, they don't serve any purpose.
-
-
+Matthias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
