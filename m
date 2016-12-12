@@ -1,256 +1,75 @@
-From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 3/8] rtc: add STM32 RTC driver
-Date: Mon, 12 Dec 2016 11:19:36 +0100
-Message-ID: <a98f04e5-2ad5-542a-2e60-276c1a82a428@st.com>
-References: <bc5c308d-472a-bf05-89b8-6d813fb5321d@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <rtc-linux+bncBAABBRPTXHBAKGQEUWYW3YY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <bc5c308d-472a-bf05-89b8-6d813fb5321d-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V2 0/2] PM / Domains / OPP: Introduce domain-performance-state binding
+Date: Mon, 12 Dec 2016 16:26:17 +0530
+Message-ID: <cover.1481539827.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Nayak Rajendra <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-Thanks for the review.
+Some platforms have the capability to configure the performance state of
+their Power Domains. The performance levels are represented by positive
+integer values, a lower value represents lower performance state.
 
-On 12/07/2016 08:08 PM, Alexandre Belloni wrote:
-> Hi,
->
-> It seems mostly fine.
->
-> On 02/12/2016 at 15:09:56 +0100, Amelie Delaunay wrote :
->> This patch adds support for the STM32 RTC.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
->> ---
->>  drivers/rtc/Kconfig     |  10 +
->>  drivers/rtc/Makefile    |   1 +
->>  drivers/rtc/rtc-stm32.c | 777 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 788 insertions(+)
->>  create mode 100644 drivers/rtc/rtc-stm32.c
->>
->> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
->> index e859d14..dd8b218 100644
->> --- a/drivers/rtc/Kconfig
->> +++ b/drivers/rtc/Kconfig
->> @@ -1706,6 +1706,16 @@ config RTC_DRV_PIC32
->>  	   This driver can also be built as a module. If so, the module
->>  	   will be called rtc-pic32
->>
->> +config RTC_DRV_STM32
->> +	tristate "STM32 On-Chip RTC"
->> +	depends on ARCH_STM32
->
-> Can you add COMPILE_TEST? Looking at it, nothing seemed to be
-> architecture specific and this nicely increases compile test coverage.
->
-> It should also probably select REGMAP_MMIO.
->
-Ok.
->> diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
->> new file mode 100644
->> index 0000000..9e710ff
->> --- /dev/null
->> +++ b/drivers/rtc/rtc-stm32.c
->> @@ -0,0 +1,777 @@
->> +/*
->> + * Copyright (C) Amelie Delaunay 2015
->> + * Author:  Amelie Delaunay <adelaunay.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> This differs from your SoB. I don't really care but it seems odd.
->
-Yes, I've already changed it in my upcoming V2!
->> + * License terms:  GNU General Public License (GPL), version 2
->> + */
->> +
->> +#include <linux/bcd.h>
->> +#include <linux/clk.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/ioport.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/rtc.h>
->> +#include <linux/spinlock.h>
->> +
->
-> I have the feeling that some of those headers are not necessary maybe
-> some cleanup should be done.
->
-Ok I'll have a look.
->> +static struct regmap *dbp;
->> +
->> +struct stm32_rtc {
->> +	struct rtc_device *rtc_dev;
->> +	void __iomem *base;
->> +	struct clk *pclk;
->> +	struct clk *ck_rtc;
->> +	unsigned int clksrc;
->> +	spinlock_t lock; /* Protects registers accesses */
->
-> That comment makes checkpatch happy but is not super useful :) Anyway...
->
-Lack of inspiration :)
->> +static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
->> +{
->
-> ...can you make that one a threaded IRQ? If that's the case, just take
-> the rtc_device mutex here and remove the spinlock. All the other
-> function are already protected.
->
-Ok I'll study this point.
->> +static int stm32_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
->> +{
->> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
->> +	struct rtc_time *tm = &alrm->time;
->> +	unsigned int alrmar, cr, isr;
->> +	unsigned long irqflags;
->> +
->> +	spin_lock_irqsave(&rtc->lock, irqflags);
->> +
->> +	alrmar = stm32_rtc_readl(rtc, STM32_RTC_ALRMAR);
->> +	cr = stm32_rtc_readl(rtc, STM32_RTC_CR);
->> +	isr = stm32_rtc_readl(rtc, STM32_RTC_ISR);
->> +
->> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
->> +
->> +	if (alrmar & STM32_RTC_ALRMXR_DATE_MASK) {
->> +		/*
->> +		 * Date/day don't care in Alarm comparison so alarm triggers
->
-> I guess you meant "doesn't matter" (that is also valid for the other
-> usages of "don't care".
->
->> +		 * every day
->> +		 */
->> +		tm->tm_mday = -1;
->> +		tm->tm_wday = -1;
->> +	} else {
->> +		if (alrmar & STM32_RTC_ALRMXR_WDSEL) {
->> +			/* Alarm is set to a day of week */
->> +			tm->tm_mday = -1;
->> +			tm->tm_wday = (alrmar & STM32_RTC_ALRMXR_WDAY) >>
->> +				      STM32_RTC_ALRMXR_WDAY_SHIFT;
->> +			tm->tm_wday %= 7;
->> +		} else {
->> +			/* Alarm is set to a day of month */
->> +			tm->tm_wday = -1;
->> +			tm->tm_mday = (alrmar & STM32_RTC_ALRMXR_DATE) >>
->> +				       STM32_RTC_ALRMXR_DATE_SHIFT;
->> +		}
->> +	}
->> +
->> +	if (alrmar & STM32_RTC_ALRMXR_HOUR_MASK) {
->> +		/* Hours don't care in Alarm comparison */
->> +		tm->tm_hour = -1;
->> +	} else {
->> +		tm->tm_hour = (alrmar & STM32_RTC_ALRMXR_HOUR) >>
->> +			       STM32_RTC_ALRMXR_HOUR_SHIFT;
->> +		if (alrmar & STM32_RTC_ALRMXR_PM)
->> +			tm->tm_hour += 12;
->> +	}
->> +
->> +	if (alrmar & STM32_RTC_ALRMXR_MIN_MASK) {
->> +		/* Minutes don't care in Alarm comparison */
->> +		tm->tm_min = -1;
->> +	} else {
->> +		tm->tm_min = (alrmar & STM32_RTC_ALRMXR_MIN) >>
->> +			      STM32_RTC_ALRMXR_MIN_SHIFT;
->> +	}
->> +
->> +	if (alrmar & STM32_RTC_ALRMXR_SEC_MASK) {
->> +		/* Seconds don't care in Alarm comparison */
->> +		tm->tm_sec = -1;
->> +	} else {
->> +		tm->tm_sec = (alrmar & STM32_RTC_ALRMXR_SEC) >>
->> +			      STM32_RTC_ALRMXR_SEC_SHIFT;
->> +	}
->> +
-> I'm not sure those multiple cases (including STM32_RTC_ALRMXR_WDSEL) are
-> useful because the core will always give you valid tm_sec, tm_min,
-> tm_hour and tm_mday (it is actually checked up to four times!) so you
-> should always end up in the same configuration.
->
-> If you think some code other than Linux may set an alarm (e.g. the
-> bootloader) then you may keep them in read_alarm but at least you can
-> remove them from set_alarm.
->
->
-Ok I'll clean this part.
->> +static int stm32_rtc_probe(struct platform_device *pdev)
->> +{
->> +	struct stm32_rtc *rtc;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
->> +	if (!rtc)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	rtc->base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(rtc->base))
->> +		return PTR_ERR(rtc->base);
->> +
->> +	dbp = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "st,syscfg");
->> +	if (IS_ERR(dbp)) {
->> +		dev_err(&pdev->dev, "no st,syscfg\n");
->> +		return PTR_ERR(dbp);
->> +	}
->> +
->> +	spin_lock_init(&rtc->lock);
->> +
->> +	rtc->ck_rtc = devm_clk_get(&pdev->dev, "ck_rtc");
->> +	if (IS_ERR(rtc->ck_rtc)) {
->> +		dev_err(&pdev->dev, "no ck_rtc clock");
->> +		return PTR_ERR(rtc->ck_rtc);
->> +	}
->> +
->> +	ret = clk_prepare_enable(rtc->ck_rtc);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (dbp)
->> +		regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, PWR_CR_DBP);
->> +
->> +	ret = stm32_rtc_init(pdev, rtc);
->> +	if (ret)
->> +		goto err;
->> +
->
-> Isn't that RTC backuped in some way, do you really need to reinit it
-> each time the system reboots?
->
->
-Indeed, RTC is backuped. I need to reinit it only if RTC parent clock 
-has changed.
+We had some discussions about it in the past on the PM list [1], which is
+followed by discussions during the LPC. The outcome of all that was that we
+should extend Power Domain framework to support active state power management
+as well.
 
+The power-domains until now were only concentrating on the idle state
+management of the device and this needs to change in order to reuse the
+infrastructure of power domains for active state management.
 
-Best Regards,
-Amelie
+To get a complete picture of the proposed plan, following is what we
+need to do:
+- Create DT bindings to get domain performance state information for the
+  platforms.
+- Enhance OPP framework to parse these and call into the PM Qos
+  framework with a performance state request.
+- Enhance PM Qos framework to provide the API to be used by consumers
+  (or OPP framework) and pass it on to the (Generic) Power Domain
+  framework.
+- Enhance Generic Power Domain framework to accept such requests,
+  accumulate all belonging to a single power domain and call domain
+  driver specific callback with the performance state we want for the
+  domain.
+- The domain driver shall then, in a platform specific way, set the
+  requested performance level.
+- Note that these features are applicable to the CPU, GPU and other IIO
+  or non-IIO devices.
+- There can be cases where a device can choose between multiple power
+  domains based on what performance level we want for the device. In
+  such cases, we should represent the multiplexer with a separate power
+  domain. In effect, the device (or OPP table) will correspond to a
+  single power domain, but the backend driver of that domain shall
+  implement the multiplexing functionality.
+
+This patchset implements the very first part of this chain and
+introduces a new optional property for the consumers of the
+power-domains: domain-performance-state. This property can be used
+directly by the consumer or its OPP table.
+
+V1->V2:
+- The performance states get their own nodes as they can have multiple
+  values.
+- Allow optional property domain-microvolt for the performance states
+
+--
+viresh
+
+[1] https://marc.info/?l=linux-pm&m=147747923708075&w=2
+
+Viresh Kumar (2):
+  PM / Domains: Introduce domain-performance-states binding
+  PM / OPP: Introduce domain-performance-state binding to OPP nodes
+
+ Documentation/devicetree/bindings/opp/opp.txt      | 59 ++++++++++++++++++
+ .../devicetree/bindings/power/power_domain.txt     | 69 ++++++++++++++++++++++
+ 2 files changed, 128 insertions(+)
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+2.7.1.410.g6faf27b
+
