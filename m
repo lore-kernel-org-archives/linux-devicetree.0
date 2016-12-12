@@ -1,37 +1,36 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Support DTB build for NanoPi M1
-Date: Mon, 12 Dec 2016 16:49:03 +0100
-Message-ID: <20161212154903.wy3vgp3grr3y3bs3@lukather>
-References: <20161209014758.27368-1-woogyom.kim@gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 04/11] Documentation: DT: binding: axp20x_usb_power:
+ add axp223 compatible
+Date: Mon, 12 Dec 2016 16:51:04 +0100
+Message-ID: <20161212155104.knjiwbvpi55vbio7@lukather>
+References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+ <20161209110419.28981-5-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nub7hhhcbpkuo4da"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="uz4uvxackn7qdyvf"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161209014758.27368-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161209110419.28981-5-quentin.schulz@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, lee.jones@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
 
---nub7hhhcbpkuo4da
+--uz4uvxackn7qdyvf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Fri, Dec 09, 2016 at 10:47:58AM +0900, Milo Kim wrote:
-> The commit 10efbf5f1633 introduced NanoPi M1 board but it's missing in
-> Allwinner H3 DTB build.
+On Fri, Dec 09, 2016 at 12:04:12PM +0100, Quentin Schulz wrote:
+> This adds the "x-powers,axp223-usb-power-supply" to the list of
+> compatibles for AXP20X VBUS power supply driver.
 >=20
-> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 
-checkpatch reports an error on this one (commit format), please fix
-and resend.
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Thanks!
+Thanks,
 Maxime
 
 --=20
@@ -39,28 +38,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---nub7hhhcbpkuo4da
+--uz4uvxackn7qdyvf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYTsbvAAoJEBx+YmzsjxAgSyAP/j2nIUE88AJOOYaOsCeppc7g
-eWDBECAzvWcsdgZM4+r4kBS5WUFfgsPZ1HyKBs1QtUnkh07lNUfiQyli+HbQGZtP
-ujOjS+g9UX8TgpWRL/N7UK0CSLOlpat9zi1W9zuvJVG9uDGJ8KkEcQnGuQw461gg
-mKVW+LOO2qJxHIEcRzosT8MYnJTKk41p8rv2V3Ipi9D1pTD7IU4zFUrAzqQ6YLEL
-7xbRYvqgfJ1QZOAQHQoakHUVk4759BkMWW7OFDvCzj+rK2NYRkUIV8MIAagyxXwP
-cjNbSVqdRms1JMcQ7nDYNcZw4M0Dh4KxWP/6Jd5MHi0wt3fvACK54OkMCp9niUJU
-tK0qD2T+Wc05pjEqi4ornw+VZcWzde4M7Qx6frY7BmzrYyOSF9MmqGsf9rjZQj9m
-VVDH91OEkDuFo49EFY6p9vSSgICIL8ohf+cQze3WJlBcHfx4Vw7aAB133LzKaNot
-CUfQgwiDfxvSSGN6rbLTilSKhUfjI0hke0mLnKAnk3GQ+bvBEmIw2Sl7ir9deZTC
-kELOARnyxFxyUDaMQu5G57od6TJDkrdvGPJjQCUNG54qyMYmwDo6yo9POyd0WbmC
-NFfA7i8+zVcFV+GwFSVkCdMtA4GQmCZa73BC2GFpciUOG6UXG1SVmtScKoYVhaGn
-XJV8to+up+YbQtoQGuRM
-=E0Xy
+iQIcBAEBCAAGBQJYTsdoAAoJEBx+YmzsjxAgPoMP/3AGadOTWhsaiYufBLJIbxIw
+3E8b0jz7rplbG41WZVrwv+TrS9wTZ/qx900Xwl3FGR5jdGdEb8sRhuywzH5JHquv
+MV4U1mbL5mz4J/O0nWf3CnardSYcZ8E2e2TBgndYefei0ZNhwnS8sFcKSq77dV0+
+9nA216FLoIkZNBTn3Q37C84w5fHYN3Gv4wIbz6qGP4mstd75E/upUTqGWvpqdUkI
+8RBPRZspdVBc2K8zulY9lyLcK8KW7GacVMpxT57/1Vn2K0e0kijPGFmpc1GvYWn7
+lkIlofe9YWMPumRkOG7va5x5hsb4al7KyrAJjExsrvaR0UYJr81ZYDti70fHEBWp
+69+1dN/v9hl4yhxgvT0X3cugxDWrFiLo2nKW3M4zqsrEkXzY0wUgEcdZTF/xnxgM
+EW+KV9X9FYrDsv2UQEAtSnnSglNRhikhU3NyIZNoE72cd9/cAuAOVi2EBhwcQivY
+zczGbXUKn0lRtoh599+1Ve7FrpQnvzakY5dt9WQN8ez3sLdREISXoD0pamL8iWnv
+ik0LHyYiMF9h7f9E0MaJiZWdQgJdcQ0jPzybb4qfu6B7Ug/u3d20buF6O8pV/D0/
+uI/oa1ZzLekxsyXXYF1M6VvqYNxQJ3Z1xnDD39b4InPTYic6susUSJKKhVDFLFxv
+Q534UhmuR+nENXVGjnDz
+=d4Yc
 -----END PGP SIGNATURE-----
 
---nub7hhhcbpkuo4da--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--uz4uvxackn7qdyvf--
