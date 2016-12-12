@@ -1,32 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] Documentation: fsl: dspi: Add fsl, ls1012a-dspi
- compatible string
-Date: Mon, 12 Dec 2016 11:08:10 -0600
-Message-ID: <20161212170810.i7ylklromhszxwf3@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] Documentation: dt: mtd: add chip support for "jedec,
+ spi-nor"
+Date: Mon, 12 Dec 2016 11:09:03 -0600
+Message-ID: <20161212170903.ixr6iu4c5txzreub@rob-hp-laptop>
 References: <1481188984-43683-1-git-send-email-yao.yuan@freescale.com>
- <1481188984-43683-3-git-send-email-yao.yuan@freescale.com>
+ <1481188984-43683-4-git-send-email-yao.yuan@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481188984-43683-3-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yao.yuan-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1481188984-43683-4-git-send-email-yao.yuan@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuan Yao <yao.yuan@freescale.com>
+Cc: shawnguo@kernel.org, mark.rutland@arm.com, computersforpeace@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, yao.yuan@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 08, 2016 at 05:23:01PM +0800, Yuan Yao wrote:
-> From: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-> 
-> new compatible string: "fsl,ls1012a-dspi".
-> 
-> Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Thu, Dec 08, 2016 at 05:23:02PM +0800, Yuan Yao wrote:
+> From: Yuan Yao <yao.yuan@nxp.com>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The compatible string is wrong in the subject.
+
+> 
+> "sst25wf040b" and "en25s64" are also chip compatible with SPI NOR flash.
+> 
+> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
