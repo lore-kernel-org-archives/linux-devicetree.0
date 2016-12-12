@@ -1,82 +1,60 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: usb:xhci: support disable usb2 LPM Remote Wakeup
-Date: Mon, 12 Dec 2016 15:00:09 +0200
-Message-ID: <584E9F59.8080303@linux.intel.com>
-References: <1480855321-5047-1-git-send-email-tqnguyen@apm.com>
- <20161209213629.76ixdmr24ln72uaw@rob-hp-laptop>
- <CAKrQpStd4+ZZjdYyq93zq-wnqQCiQmSi5jJrYbuiZX5kVH74YA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKrQpStd4+ZZjdYyq93zq-wnqQCiQmSi5jJrYbuiZX5kVH74YA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Thang Q. Nguyen" <tqnguyen@apm.com>, Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Vu Nguyen <vnguyen@apm.com>, patches <patches@apm.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 0/5] ARM: dts: da850: tilcdc related DT changes
+Date: Mon, 12 Dec 2016 14:05:37 +0100
+Message-ID: <1481547942-24775-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.12.2016 06:00, Thang Q. Nguyen wrote:
-> On Sat, Dec 10, 2016 at 4:36 AM, Rob Herring <robh@kernel.org> wrote:
->> On Sun, Dec 04, 2016 at 07:42:01PM +0700, Thang Q. Nguyen wrote:
->>> From: Thang Nguyen <tqnguyen@apm.com>
->>>
->>> As per USB 2.0 link power management addendum ECN, table 1-2, page 4,
->>> device or host initiated via resume signaling; device-initiated resumes
->>> can be optionally enabled/disabled by software. This patch adds support
->>> to control enabling the USB2 RWE feature via DT/ACPI attribute.
->>>
->>> Signed-off-by: Vu Nguyen <vnguyen@apm.com>
->>> Signed-off-by: Thang Nguyen <tqnguyen@apm.com>
->>> ---
->>>   Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
->>>   drivers/usb/host/xhci-plat.c                       | 3 +++
->>>   drivers/usb/host/xhci.c                            | 5 ++++-
->>>   drivers/usb/host/xhci.h                            | 1 +
->>>   4 files changed, 9 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->>> index 966885c..9b4cd14 100644
->>> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
->>> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->>> @@ -25,6 +25,7 @@ Required properties:
->>>
->>>   Optional properties:
->>>     - clocks: reference to a clock
->>> +  - usb2-rwe-disable: disable USB2 LPM Remote Wakeup capable
->>
->> Remote wakeup has been around since USB 1.0 days. Does this need to be
->> USB2 or XHCI specific?
-> This is XHCI specific. Per XHCI specification 1.1, remote wakeup is
-> optional for XHCI 1.0 and required for XHCI 1.1. This patch provides
-> ability for software to disable RWE for USB2 in XHCI1.0 controller.
+This series contains the last DT changes required for LCDC support
+on da850-lcdk. The first one adds the dumb-vga-dac nodes, the second
+limits the maximum pixel clock rate.
 
-I think I understand what's going on.
+v1 -> v2:
+- drop patch 3/3 (already merged)
+- use max-pixelclock instead of max-bandwidth for display mode limiting
 
-USB:
-   
-The good old USB2 suspend is called L2. Device enters it after 3ms if there is no link activity.
-If a device can remote wakeup (RWE) it's stated in the descriptor. RWE can be turned on
-of off using standard SET/CLEAR Fature requests
+v2 -> v3:
+- make the commit message in patch [2/2] more detailed
+- move the max-pixelclock property to da850.dtsi as the limit
+  affects all da850-based boards
 
-The LPM L1 USB2 state again is entered with a LPM extended transaction to avoid the
-3ms wait before powersaving. L1 state is exit can be done with a simialr RWE as L2 resume.
-The RWE from L1 can turned on/off using a bit in the LPM extended transaction.
+v3 -> v4:
+- remove the input port from the display node
+- move the display ports node to da850-lcdk.dts
+- rename the vga_bridge node to vga-bridge
+- move the LCDC pins to the LCDC node (from the vga bridge node)
 
-XHCI:
+v4 -> v5:
+- rename the display label to lcdc
+- instead of using the 'dumb-vga-dac' compatible, add bindings for
+  ti,ths8135 and use it as the vga-bridge node compatible
 
-Specs say that if the device supports RWE we should enable it for LPM L1 exit as well.
-This is done by setting the RWE (LPM L1) bit in PORTPMSC register. This bit only affect LPM L1 remote
-wake. see 4.23.5.1.1.1
+v5 -> v6:
+- drop the endpoint numbers for nodes with single endpoints
+- split patch 2/4 from v5 into two separate patches: one adding DT
+  bindings and one adding actual support for ths8135
 
-The issue might be that xhci driver never check if the device actually supports RWE, we always
-set the PORTPMSC RWE  (for LPM L1) bit.
+Bartosz Golaszewski (5):
+  ARM: dts: da850: rename the display node label
+  drm: bridge: add DT bindings for TI ths8135
+  drm: bridge: add support for TI ths8135
+  ARM: dts: da850-lcdk: add the vga-bridge node
+  ARM: dts: da850: specify the maximum pixel clock rate for tilcdc
 
-How about checking something like udev->do_remote_wakeup and setting and setting the bit
-based on that.
+ .../bindings/display/bridge/ti,ths8135.txt         | 52 +++++++++++++++++
+ arch/arm/boot/dts/da850-lcdk.dts                   | 67 ++++++++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi                       |  3 +-
+ drivers/gpu/drm/bridge/dumb-vga-dac.c              |  1 +
+ 4 files changed, 122 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
 
-The function that you are changing,  xhci_set_usb2_hardware_lpm() should only be used if
-host has Hardware LPM Cabaility bit (HLC) set for that USB2 port in the
-USB 2.0 xHCI Supported Protocol Capability.
-Host that don't supprt LPM won't have that set. See xhci 7.2.2.1.3.2
-  
--Mathias
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
