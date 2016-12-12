@@ -1,137 +1,74 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 2/3] power: supply: bq24735-charger: optionally poll the ac-detect gpio
-Date: Mon, 12 Dec 2016 12:00:23 +0100
-Message-ID: <1481540424-19293-3-git-send-email-peda@axentia.se>
-References: <1481540424-19293-1-git-send-email-peda@axentia.se>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] i2c: aspeed: added driver for Aspeed I2C
+Date: Mon, 12 Dec 2016 12:10:05 +0100
+Message-ID: <20161212111005.GA1450@katana>
+References: <1480467618-7497-1-git-send-email-brendanhiggins@google.com>
+ <1480467618-7497-2-git-send-email-brendanhiggins@google.com>
+ <20161211222622.GK2552@katana>
+ <825541481540788@web11j.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481540424-19293-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <825541481540788-Mr5SgJCofHtxpj1cXAZ9Bg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>
+Cc: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org" <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, "clg-Bxea+6Xhats@public.gmane.org" <clg-Bxea+6Xhats@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If the ac-detect gpio does not support interrupts, provide a fallback
-to poll the gpio at a configurable interval.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- .../bindings/power/supply/ti,bq24735.txt           |  2 +
- drivers/power/supply/bq24735-charger.c             | 50 +++++++++++++++++++---
- 2 files changed, 47 insertions(+), 5 deletions(-)
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-index 3bf55757ceec..59c4dde589cf 100644
---- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-@@ -25,6 +25,8 @@ Optional properties :
-  - ti,external-control : Indicates that the charger is configured externally
-    and that the host should not attempt to enable/disable charging or set the
-    charge voltage/current.
-+ - ti,poll-interval-ms : In case there is no interrupts specified, poll AC
-+   presense on the ti,ac-detect-gpios GPIO with this interval.
- 
- Example:
- 
-diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
-index 1d5c9206e0ed..3765806d5d46 100644
---- a/drivers/power/supply/bq24735-charger.c
-+++ b/drivers/power/supply/bq24735-charger.c
-@@ -50,6 +50,8 @@ struct bq24735 {
- 	struct bq24735_platform		*pdata;
- 	struct mutex			lock;
- 	struct gpio_desc		*status_gpio;
-+	struct delayed_work		poll;
-+	u32				poll_interval;
- 	bool				charging;
- };
- 
-@@ -209,11 +211,8 @@ static int bq24735_charger_is_charging(struct bq24735 *charger)
- 	return !(ret & BQ24735_CHG_OPT_CHARGE_DISABLE);
- }
- 
--static irqreturn_t bq24735_charger_isr(int irq, void *devid)
-+static void bq24735_update(struct bq24735 *charger)
- {
--	struct power_supply *psy = devid;
--	struct bq24735 *charger = to_bq24735(psy);
--
- 	mutex_lock(&charger->lock);
- 
- 	if (charger->charging && bq24735_charger_is_present(charger))
-@@ -223,11 +222,29 @@ static irqreturn_t bq24735_charger_isr(int irq, void *devid)
- 
- 	mutex_unlock(&charger->lock);
- 
--	power_supply_changed(psy);
-+	power_supply_changed(charger->charger);
-+}
-+
-+static irqreturn_t bq24735_charger_isr(int irq, void *devid)
-+{
-+	struct power_supply *psy = devid;
-+	struct bq24735 *charger = to_bq24735(psy);
-+
-+	bq24735_update(charger);
- 
- 	return IRQ_HANDLED;
- }
- 
-+static void bq24735_poll(struct work_struct *work)
-+{
-+	struct bq24735 *charger = container_of(work, struct bq24735, poll.work);
-+
-+	bq24735_update(charger);
-+
-+	schedule_delayed_work(&charger->poll,
-+			      msecs_to_jiffies(charger->poll_interval));
-+}
-+
- static int bq24735_charger_get_property(struct power_supply *psy,
- 					enum power_supply_property psp,
- 					union power_supply_propval *val)
-@@ -455,11 +472,33 @@ static int bq24735_charger_probe(struct i2c_client *client,
- 				client->irq, ret);
- 			return ret;
- 		}
-+	} else if (charger->status_gpio) {
-+		ret = of_property_read_u32(client->dev.of_node,
-+					   "ti,poll-interval-ms",
-+					   &charger->poll_interval);
-+		if (ret)
-+			return 0;
-+		if (!charger->poll_interval)
-+			return 0;
-+
-+		INIT_DELAYED_WORK(&charger->poll, bq24735_poll);
-+		schedule_delayed_work(&charger->poll,
-+				      msecs_to_jiffies(charger->poll_interval));
- 	}
- 
- 	return 0;
- }
- 
-+static int bq24735_charger_remove(struct i2c_client *client)
-+{
-+	struct bq24735 *charger = i2c_get_clientdata(client);
-+
-+	if (charger->poll_interval)
-+		cancel_delayed_work_sync(&charger->poll);
-+
-+	return 0;
-+}
-+
- static const struct i2c_device_id bq24735_charger_id[] = {
- 	{ "bq24735-charger", 0 },
- 	{}
-@@ -478,6 +517,7 @@ static struct i2c_driver bq24735_charger_driver = {
- 		.of_match_table = bq24735_match_ids,
- 	},
- 	.probe = bq24735_charger_probe,
-+	.remove = bq24735_charger_remove,
- 	.id_table = bq24735_charger_id,
- };
- 
--- 
-2.1.4
+
+> >> =C2=A0+ /* Switch from master mode to slave mode. */
+> >> =C2=A0+ func_ctrl_reg_val =3D aspeed_i2c_read(bus, ASPEED_I2C_FUN_CTRL=
+_REG);
+> >> =C2=A0+ func_ctrl_reg_val &=3D ~ASPEED_I2CD_MASTER_EN;
+> >> =C2=A0+ func_ctrl_reg_val |=3D ASPEED_I2CD_SLAVE_EN;
+> >> =C2=A0+ aspeed_i2c_write(bus, func_ctrl_reg_val, ASPEED_I2C_FUN_CTRL_R=
+EG);
+> >
+> > Can't the hardware work both as master and slave on the same bus?
+>=20
+> The hardware can work as master and slave on the same bus. This is how IP=
+MB over i2c works on Aspeed.
+
+Thanks! Then the driver should support this. Maybe it is an idea to
+first upstream the master support and add the slave support
+incrementally?
+
+Regards,
+
+   Wolfram
+
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYToWNAAoJEBQN5MwUoCm2hFAP/22BMbapwx6CqPolipaU+8Bz
+BC1Onxd5oWZ9odKoDRkgpg1GUdIOK6o/12s4HMG2XDweuqLysW3ZaCzKTGL1jsqI
+b1I32go7nSAmMLMtlP3QW+R4YSXymVSjRYWj5nfTp0ovdPeh5bTbv4zUk25dhTuy
+e/ULjgMeLXaIB6Ujopcrs3+6OuuwuIKM/23v23d+wePoPa2cmSPIzNKi5URjmle+
+VcTjEkPIF8aLpJhwYdZvG5QAUCB5dSWpKrAUo/oY0/g6HbABDkBWbMZXTCwl7rmP
+b1G1J9ebjffFTmbdxm4w6rWyt0J1X3WwyNXB3mpNYPBYiQgrdITi4el4XITRXPsJ
++lsfhslHpWqswHWYDeUo9M3HzuH9DmhDj9QeR/C5qXueX0sBPAhVmfb8tbbXe5wR
+lBmMT6ONT1UaQnGYNoN3eMF+Viz88lH41dDoJT1X0/23m9xSB0AwcSBKbqoo8RsA
+NXm1Y8UMAO7dUcbqvhDCXwK5lmdmUv4N4pKohXByiJHfogfeTMHczeYnVL+2doTO
+Sm+7/JqbVCOCO1iNxwQdJFjCIw/HBi9YyFP5opujWWJan8+UqSTvlTNw/YfsxkDB
+yWaFeewk1czTUt30tzMXCZ+XhffIvOQayZCOfvmN/4smWHIzL9dNoRSWAVx64/IE
+eLDrHM7Yy44gtva5BUk9
+=A4Ap
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
