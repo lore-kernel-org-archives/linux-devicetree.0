@@ -1,92 +1,66 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Subject: [PATCH v4 2/4] mtd: aspeed: add memory controllers for the Aspeed
- AST2400 SoC
-Date: Mon, 12 Dec 2016 16:40:50 +0100
-Message-ID: <1481557252-13656-3-git-send-email-clg@kaod.org>
-References: <1481557252-13656-1-git-send-email-clg@kaod.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: Support DTB build for NanoPi M1
+Date: Mon, 12 Dec 2016 16:49:03 +0100
+Message-ID: <20161212154903.wy3vgp3grr3y3bs3@lukather>
+References: <20161209014758.27368-1-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1481557252-13656-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nub7hhhcbpkuo4da"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161209014758.27368-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBkcml2ZXIgYWRkcyBtdGQgc3VwcG9ydCBmb3IgdGhlIEFzcGVlZCBBU1QyNDAwIFNvQyBz
-dGF0aWMgbWVtb3J5CmNvbnRyb2xsZXJzOgoKICogTmV3IFN0YXRpYyBNZW1vcnkgQ29udHJvbGxl
-ciAocmVmZXJyZWQgYXMgRk1DKQogICAuIEJNQyBmaXJtd2FyZQogICAuIEFTVDI1MDAgY29tcGF0
-aWJsZSByZWdpc3RlciBzZXQKICAgLiA1IGNoaXAgc2VsZWN0IHBpbnMgKENFMCDiiLwgQ0U0KQog
-ICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFORCBmbGFzaCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4K
-CiAqIFNQSSBGbGFzaCBDb250cm9sbGVyIChTUEkpCiAgIC4gaG9zdCBGaXJtd2FyZQogICAuIHNs
-aWdodGx5IGRpZmZlcmVudCByZWdpc3RlciBzZXQsIGJldHdlZW4gQVNUMjUwMCBhbmQgdGhlIGxl
-Z2FjeQogICAgIGNvbnRyb2xsZXIKICAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVtb3J5CiAgIC4g
-MSBjaGlwIHNlbGVjdCBwaW4gKENFMCkKClRoZSBsZWdhY3kgc3RhdGljIG1lbW9yeSBjb250cm9s
-bGVyIChyZWZlcnJlZCBhcyBTTUMpIGlzIG5vdApzdXBwb3J0ZWQsIGFzIHdlbGwgYXMgdHlwZXMg
-b3RoZXIgdGhhbiBTUEkuCgpTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGth
-b2Qub3JnPgpSZXZpZXdlZC1ieTogSm9lbCBTdGFubGV5IDxqb2VsQGptcy5pZC5hdT4KLS0tCiBk
-cml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcgICAgICB8ICAyICstCiBkcml2ZXJzL210ZC9zcGkt
-bm9yL2FzcGVlZC1zbWMuYyB8IDMzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwog
-MiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9LY29uZmlnIGIvZHJpdmVycy9tdGQvc3BpLW5vci9L
-Y29uZmlnCmluZGV4IDQyMTY4ZTlkNjA5Ny4uN2IwMGEwY2I5ZWQ4IDEwMDY0NAotLS0gYS9kcml2
-ZXJzL210ZC9zcGktbm9yL0tjb25maWcKKysrIGIvZHJpdmVycy9tdGQvc3BpLW5vci9LY29uZmln
-CkBAIC0zNSw3ICszNSw3IEBAIGNvbmZpZyBTUElfQVNQRUVEX1NNQwogCWRlcGVuZHMgb24gSEFT
-X0lPTUVNICYmIE9GCiAJaGVscAogCSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIHRoZSBGaXJt
-d2FyZSBNZW1vcnkgY29udHJvbGxlciAoRk1DKQotCSAgaW4gdGhlIEFzcGVlZCBBU1QyNTAwIFNv
-QyB3aGVuIGF0dGFjaGVkIHRvIFNQSSBOT1IgY2hpcHMsCisJICBpbiB0aGUgQXNwZWVkIEFTVDI1
-MDAvQVNUMjQwMCBTb0NzIHdoZW4gYXR0YWNoZWQgdG8gU1BJIE5PUiBjaGlwcywKIAkgIGFuZCBz
-dXBwb3J0IGZvciB0aGUgU1BJIGZsYXNoIG1lbW9yeSBjb250cm9sbGVyIChTUEkpIGZvcgogCSAg
-dGhlIGhvc3QgZmlybXdhcmUuIFRoZSBpbXBsZW1lbnRhdGlvbiBvbmx5IHN1cHBvcnRzIFNQSSBO
-T1IuCiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvYXNwZWVkLXNtYy5jIGIvZHJp
-dmVycy9tdGQvc3BpLW5vci9hc3BlZWQtc21jLmMKaW5kZXggMjY2N2FiN2FlYjliLi5jZTJhYjEz
-ZDExNGQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvYXNwZWVkLXNtYy5jCisrKyBi
-L2RyaXZlcnMvbXRkL3NwaS1ub3IvYXNwZWVkLXNtYy5jCkBAIC00NCw4ICs0NCwyNyBAQCBzdHJ1
-Y3QgYXNwZWVkX3NtY19pbmZvIHsKIAl2b2lkICgqc2V0XzRiKShzdHJ1Y3QgYXNwZWVkX3NtY19j
-aGlwICpjaGlwKTsKIH07CiAKK3N0YXRpYyB2b2lkIGFzcGVlZF9zbWNfY2hpcF9zZXRfNGJfc3Bp
-XzI0MDAoc3RydWN0IGFzcGVlZF9zbWNfY2hpcCAqY2hpcCk7CiBzdGF0aWMgdm9pZCBhc3BlZWRf
-c21jX2NoaXBfc2V0XzRiKHN0cnVjdCBhc3BlZWRfc21jX2NoaXAgKmNoaXApOwogCitzdGF0aWMg
-Y29uc3Qgc3RydWN0IGFzcGVlZF9zbWNfaW5mbyBmbWNfMjQwMF9pbmZvID0geworCS5tYXhzaXpl
-ID0gNjQgKiAxMDI0ICogMTAyNCwKKwkubmNlID0gNSwKKwkuaGFzdHlwZSA9IHRydWUsCisJLndl
-MCA9IDE2LAorCS5jdGwwID0gMHgxMCwKKwkuc2V0XzRiID0gYXNwZWVkX3NtY19jaGlwX3NldF80
-YiwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYXNwZWVkX3NtY19pbmZvIHNwaV8yNDAwX2lu
-Zm8gPSB7CisJLm1heHNpemUgPSA2NCAqIDEwMjQgKiAxMDI0LAorCS5uY2UgPSAxLAorCS5oYXN0
-eXBlID0gZmFsc2UsCisJLndlMCA9IDAsCisJLmN0bDAgPSAweDA0LAorCS5zZXRfNGIgPSBhc3Bl
-ZWRfc21jX2NoaXBfc2V0XzRiX3NwaV8yNDAwLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBh
-c3BlZWRfc21jX2luZm8gZm1jXzI1MDBfaW5mbyA9IHsKIAkubWF4c2l6ZSA9IDI1NiAqIDEwMjQg
-KiAxMDI0LAogCS5uY2UgPSAzLApAQCAtMTM1LDYgKzE1NCw3IEBAIHN0cnVjdCBhc3BlZWRfc21j
-X2NvbnRyb2xsZXIgewogI2RlZmluZSBDT05UUk9MX0lPX0RVTU1ZX0hJCQlCSVQoMTQpCiAjZGVm
-aW5lIENPTlRST0xfSU9fRFVNTVlfSElfU0hJRlQJMTQKICNkZWZpbmUgQ09OVFJPTF9DTEtfRElW
-NAkJQklUKDEzKSAvKiBvdGhlcnMgKi8KKyNkZWZpbmUgQ09OVFJPTF9JT19BRERSRVNTXzRCCQlC
-SVQoMTMpIC8qIEFTVDI0MDAgU1BJICovCiAjZGVmaW5lIENPTlRST0xfUldfTUVSR0UJCUJJVCgx
-MikKICNkZWZpbmUgQ09OVFJPTF9JT19EVU1NWV9MT19TSElGVAk2CiAjZGVmaW5lIENPTlRST0xf
-SU9fRFVNTVlfTE8JCUdFTk1BU0soNywgXApAQCAtMzg4LDYgKzQwOCw4IEBAIHN0YXRpYyBpbnQg
-YXNwZWVkX3NtY19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2KQogfQogCiBzdGF0
-aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhc3BlZWRfc21jX21hdGNoZXNbXSA9IHsKKwl7
-IC5jb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNDAwLWZtYyIsIC5kYXRhID0gJmZtY18yNDAwX2lu
-Zm8gfSwKKwl7IC5jb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNDAwLXNwaSIsIC5kYXRhID0gJnNw
-aV8yNDAwX2luZm8gfSwKIAl7IC5jb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWZtYyIsIC5k
-YXRhID0gJmZtY18yNTAwX2luZm8gfSwKIAl7IC5jb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAw
-LXNwaSIsIC5kYXRhID0gJnNwaV8yNTAwX2luZm8gfSwKIAl7IH0KQEAgLTQ2MSw2ICs0ODMsMTcg
-QEAgc3RhdGljIHZvaWQgYXNwZWVkX3NtY19jaGlwX3NldF80YihzdHJ1Y3QgYXNwZWVkX3NtY19j
-aGlwICpjaGlwKQogCX0KIH0KIAorLyoKKyAqIFRoZSBBU1QyNDAwIFNQSSBmbGFzaCBjb250cm9s
-bGVyIGRvZXMgbm90IGhhdmUgYSBDRSBDb250cm9sCisgKiByZWdpc3Rlci4gSXQgdXNlcyB0aGUg
-Q0UwIGNvbnRyb2wgcmVnaXN0ZXIgdG8gc2V0IDRCeXRlIG1vZGUgYXQgdGhlCisgKiBjb250cm9s
-bGVyIGxldmVsLgorICovCitzdGF0aWMgdm9pZCBhc3BlZWRfc21jX2NoaXBfc2V0XzRiX3NwaV8y
-NDAwKHN0cnVjdCBhc3BlZWRfc21jX2NoaXAgKmNoaXApCit7CisJY2hpcC0+Y3RsX3ZhbFtzbWNf
-YmFzZV0gfD0gQ09OVFJPTF9JT19BRERSRVNTXzRCOworCWNoaXAtPmN0bF92YWxbc21jX3JlYWRd
-IHw9IENPTlRST0xfSU9fQUREUkVTU180QjsKK30KKwogc3RhdGljIGludCBhc3BlZWRfc21jX2No
-aXBfc2V0dXBfaW5pdChzdHJ1Y3QgYXNwZWVkX3NtY19jaGlwICpjaGlwLAogCQkJCSAgICAgIHN0
-cnVjdCByZXNvdXJjZSAqcmVzKQogewotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFp
-bGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtbXRkLwo=
+
+--nub7hhhcbpkuo4da
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Dec 09, 2016 at 10:47:58AM +0900, Milo Kim wrote:
+> The commit 10efbf5f1633 introduced NanoPi M1 board but it's missing in
+> Allwinner H3 DTB build.
+>=20
+> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+checkpatch reports an error on this one (commit format), please fix
+and resend.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--nub7hhhcbpkuo4da
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYTsbvAAoJEBx+YmzsjxAgSyAP/j2nIUE88AJOOYaOsCeppc7g
+eWDBECAzvWcsdgZM4+r4kBS5WUFfgsPZ1HyKBs1QtUnkh07lNUfiQyli+HbQGZtP
+ujOjS+g9UX8TgpWRL/N7UK0CSLOlpat9zi1W9zuvJVG9uDGJ8KkEcQnGuQw461gg
+mKVW+LOO2qJxHIEcRzosT8MYnJTKk41p8rv2V3Ipi9D1pTD7IU4zFUrAzqQ6YLEL
+7xbRYvqgfJ1QZOAQHQoakHUVk4759BkMWW7OFDvCzj+rK2NYRkUIV8MIAagyxXwP
+cjNbSVqdRms1JMcQ7nDYNcZw4M0Dh4KxWP/6Jd5MHi0wt3fvACK54OkMCp9niUJU
+tK0qD2T+Wc05pjEqi4ornw+VZcWzde4M7Qx6frY7BmzrYyOSF9MmqGsf9rjZQj9m
+VVDH91OEkDuFo49EFY6p9vSSgICIL8ohf+cQze3WJlBcHfx4Vw7aAB133LzKaNot
+CUfQgwiDfxvSSGN6rbLTilSKhUfjI0hke0mLnKAnk3GQ+bvBEmIw2Sl7ir9deZTC
+kELOARnyxFxyUDaMQu5G57od6TJDkrdvGPJjQCUNG54qyMYmwDo6yo9POyd0WbmC
+NFfA7i8+zVcFV+GwFSVkCdMtA4GQmCZa73BC2GFpciUOG6UXG1SVmtScKoYVhaGn
+XJV8to+up+YbQtoQGuRM
+=E0Xy
+-----END PGP SIGNATURE-----
+
+--nub7hhhcbpkuo4da--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
