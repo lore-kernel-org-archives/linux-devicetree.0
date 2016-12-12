@@ -1,112 +1,91 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] drm: bridge: add support for TI ths8135
-Date: Mon, 12 Dec 2016 10:45:47 -0600
-Message-ID: <20161212164547.jw5ejbums6nwwtw2@rob-hp-laptop>
-References: <1481107365-24839-1-git-send-email-bgolaszewski@baylibre.com>
- <1481107365-24839-3-git-send-email-bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 1/2] iio: light: add DT bindings for Capella CM3605
+Date: Mon, 12 Dec 2016 10:48:00 -0600
+Message-ID: <20161212164800.xynnixwelszkwwhs@rob-hp-laptop>
+References: <1481118558-8016-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481107365-24839-3-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1481118558-8016-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 07, 2016 at 11:42:43AM +0100, Bartosz Golaszewski wrote:
-> THS8135 is a configurable video DAC. Add DT bindings for this chip and
-> use the dumb-vga-dac driver for now as no configuration is required to
-> make it work.
+On Wed, Dec 07, 2016 at 02:49:18PM +0100, Linus Walleij wrote:
+> This adds device tree bindings for the Capella Microsystems CM3605
+> ambient light sensor and short range proximity sensor.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../bindings/display/bridge/ti,ths8135.txt         | 52 ++++++++++++++++++++++
->  drivers/gpu/drm/bridge/dumb-vga-dac.c              |  1 +
->  2 files changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+>  .../devicetree/bindings/iio/light/cm3605.txt       | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/cm3605.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/cm3605.txt b/Documentation/devicetree/bindings/iio/light/cm3605.txt
+> new file mode 100644
+> index 000000000000..f0152559bdb9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/cm3605.txt
+> @@ -0,0 +1,41 @@
+> +Capella Microsystems CM3605
+> +Ambient Light and Short Distance Proximity Sensor
+> +
+> +The CM3605 is an entirely analog part which however require quite a bit of
+> +software logic to interface a host operating system.
+> +
+> +This ALS and proximity sensor was one of the very first deployed in mobile
+> +handsets, notably it is used in the very first Nexus One Android phone from
+> +2010.
+> +
+> +Required properties:
+> +- compatible: must be: "capella,cm3605"
+> +- aset-gpios: GPIO line controlling the ASET line (drive low
+> +  to activate the ALS, should be flagged GPIO_ACTIVE_LOW)
+> +- interrupts: the IRQ line (such as a GPIO) that is connected to
+> +  the POUT (proximity sensor out) line. The edge detection must
+> +  be set to IRQ_TYPE_EDGE_BOTH so as to detect movements toward
+> +  and away from the proximity sensor.
+> +- io-channels: the ADC channel used for converting the voltage from
+> +  AOUT to a digital representation.
+> +- io-channel-names: must be "aout"
+> +
+> +Optional properties:
+> +- vdd-supply: regulator supplying VDD power to the component.
+> +- capella,aset-resistance: the sensitivity calibration resistance,
+
+Add a '-ohms' suffix. With that,
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-But one nit below:
 
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> new file mode 100644
-> index 0000000..23cd8ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> @@ -0,0 +1,52 @@
-> +THS8135 Video DAC
-> +-----------------
+> +  in Ohms. Valid values are: 50000, 100000, 300000 and 600000,
+> +  as these are the resistance values that we are supplied with
+> +  calibration curves for. If not supplied, 100 kOhm will be assumed
+> +  but it is strongly recommended to supply this.
 > +
-> +This is the binding for Texas Instruments THS8135 Video DAC bridge.
+> +Example:
 > +
-> +Required properties:
-> +
-> +- compatible: Must be "ti,ths8135"
-> +
-> +Required nodes:
-> +
-> +This device has two video ports. Their connections are modelled using the OF
-> +graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> +
-> +- Video port 0 for RGB input
-> +- Video port 1 for VGA output
-> +
-> +Example
-> +-------
-> +
-> +vga-bridge {
-> +	compatible = "ti,ths8135";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			vga_bridge_in: endpoint@0 {
-> +				reg = <0>;
-
-You don't need reg here.
-
-> +				remote-endpoint = <&lcdc_out_vga>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +
-> +			vga_bridge_out: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&vga_con_in>;
-> +			};
-> +		};
-> +	};
+> +cm3605 {
+> +	compatible = "capella,cm3605";
+> +	vdd-supply = <&foo_reg>;
+> +	aset-gpios = <&foo_gpio 1 GPIO_ACTIVE_LOW>;
+> +	capella,aset-resistance = <100000>; // Ohms
+> +	interrupts = <1 IRQ_TYPE_EDGE_BOTH>;
+> +	io-channels = <&adc 0x01>;
+> +	io-channel-names = "aout";
 > +};
-> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> index afec232..498fa75 100644
-> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> @@ -204,6 +204,7 @@ static int dumb_vga_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id dumb_vga_match[] = {
->  	{ .compatible = "dumb-vga-dac" },
-> +	{ .compatible = "ti,ths8135" },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dumb_vga_match);
 > -- 
-> 2.9.3
+> 2.7.4
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
