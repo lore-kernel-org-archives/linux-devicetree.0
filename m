@@ -1,50 +1,41 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH] of/platform: depopulate devices in the reverse order of
- creation
-Date: Mon, 12 Dec 2016 11:39:05 -0700
-Message-ID: <20161212183905.GA30702@obsidianresearch.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Documentation: ti-syscon-reset: fix header path
+Date: Mon, 12 Dec 2016 12:40:21 -0600
+Message-ID: <20161212184021.hewybkfaygrle63a@rob-hp-laptop>
+References: <1481278287-23842-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1481278287-23842-1-git-send-email-yegorslists@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yegorslists@googlemail.com
+Cc: linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-If the DT has inter-dependencies, then the devices need to be removed
-in the right order to avoid removal problems.
+On Fri, Dec 09, 2016 at 11:11:27AM +0100, yegorslists@googlemail.com wrote:
+> From: Yegor Yefremov <yegorslists@googlemail.com>
+> 
+> 'include' was missing from path.
+> 
+> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+> ---
+>  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> index 164c7f3..5b20e20 100644
+> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> @@ -44,7 +44,7 @@ Required properties:
+>  			              reset status register
+>  			    Cell #7 : Flags used to control reset behavior,
+>  			              availible flags defined in the DT include
+> -			              file <dt-bindings/reset/ti-syscon.h>
+> +			              file <include/dt-bindings/reset/ti-syscon.h>
 
-Assuming the DT is constructed so that EPROBE_DEFER doesn't happen
-during creating then a good way to avoid removal problems is reversing
-the order during depopulation.
+There's pretty much equal mixture of include or not. Not really much 
+point in fixing 1 instance if there's no clear correct way. Given it is 
+written with <...>, that matches how you write the include statement.
 
-Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
----
- drivers/of/platform.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-In my specific case I have a gpio driver, followed by a i2c bitbang
-using that driver. So gpiolib prints an error if it the gpio driver is
-removed before the gpio client..
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index cd72c0156db2ba..5720fe44f991e9 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -568,7 +568,8 @@ static int of_platform_device_destroy(struct device *dev, void *data)
- void of_platform_depopulate(struct device *parent)
- {
- 	if (parent->of_node && of_node_check_flag(parent->of_node, OF_POPULATED_BUS)) {
--		device_for_each_child(parent, NULL, of_platform_device_destroy);
-+		device_for_each_child_reverse(parent, NULL,
-+					      of_platform_device_destroy);
- 		of_node_clear_flag(parent->of_node, OF_POPULATED_BUS);
- 	}
- }
--- 
-2.7.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
