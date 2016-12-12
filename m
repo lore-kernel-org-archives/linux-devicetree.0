@@ -1,132 +1,67 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: Re: [PATCH v5 1/2] Add OV5647 device tree documentation
-Date: Mon, 12 Dec 2016 13:07:53 +0000
-Message-ID: <db9fcc03-9db0-856a-8fbd-e641862f9bc8@synopsys.com>
-References: <20161212114900.GS16630@valkosipuli.retiisi.org.uk>
- <0f72309f-ec5e-4252-f6d7-7a7f7a9dc4c5@synopsys.com>
- <20161212121947.GU16630@valkosipuli.retiisi.org.uk>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 3/3] power: supply: bq24735-charger: allow chargers to
+ share the ac-detect gpio
+Date: Mon, 12 Dec 2016 12:39:32 +0100
+Message-ID: <f3eab793-84bc-53da-9485-8a12f95c7f59@axentia.se>
+References: <1481540424-19293-1-git-send-email-peda@axentia.se>
+ <1481540424-19293-4-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161212121947.GU16630@valkosipuli.retiisi.org.uk>
+In-Reply-To: <1481540424-19293-4-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: mchehab@kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, hverkuil@xs4all.nl, dheitmueller@kernellabs.com, slongerbeam@gmail.com, lars@metafoo.de, robert.jarzmik@free.fr, pavel@ucw.cz, pali.rohar@gmail.com, sakari.ailus@linux.intel.com, mark.rutland@arm.com, CARLOS.PALMINHA@synopsys.com
+To: linux-kernel@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari
+On 2016-12-12 12:00, Peter Rosin wrote:
+> If several parallel bq24735 chargers have their ac-detect gpios wired
+> together (or if only one of the parallel bq24735 chargers have its
+> ac-detect pin wired to a gpio, and the others are assumed to react the
+> same), then all driver instances need to check the same gpio. But the
+> gpio subsystem does not allow sharing gpios, so handle that locally.
+> 
+> However, only do this for the polling case, sharing is not supported if
+> the ac detection is handled with interrupts.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/power/supply/bq24735-charger.c | 101 +++++++++++++++++++++++++++++----
+>  1 file changed, 90 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
+> index 3765806d5d46..3b21a064a9a7 100644
+> --- a/drivers/power/supply/bq24735-charger.c
+> +++ b/drivers/power/supply/bq24735-charger.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/slab.h>
+> @@ -43,12 +44,24 @@
+>  #define BQ24735_MANUFACTURER_ID		0xfe
+>  #define BQ24735_DEVICE_ID		0xff
+>  
+> +struct bq24735;
+> +
+> +struct bq24735_shared {
+> +	struct list_head		list;
+> +	struct bq24735			*owner;
+> +	struct gpio_desc		*status_gpio;
+> +};
+> +
+> +static struct mutex shared_lock;
 
-On 12/12/2016 12:19 PM, Sakari Ailus wrote:
-> Hi Ramiro,
-> 
-> On Mon, Dec 12, 2016 at 12:15:04PM +0000, Ramiro Oliveira wrote:
->> Hi Sakari
->>
->> On 12/12/2016 11:49 AM, Sakari Ailus wrote:
->>> Hi Ramiro,
->>>
->>> On Mon, Dec 12, 2016 at 11:39:31AM +0000, Ramiro Oliveira wrote:
->>>> Hi Sakari,
->>>>
->>>> Thank you for the feedback.
->>>>
->>>> On 12/7/2016 10:33 PM, Sakari Ailus wrote:
->>>>> Hi Ramiro,
->>>>>
->>>>> Thank you for the patch.
->>>>>
->>>>> On Mon, Dec 05, 2016 at 05:36:33PM +0000, Ramiro Oliveira wrote:
->>>>>> Add device tree documentation.
->>>>>>
->>>>>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
->>>>>> ---
->>>>>>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
->>>>>>  1 file changed, 19 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..4c91b3b
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>>>>> @@ -0,0 +1,19 @@
->>>>>> +Omnivision OV5647 raw image sensor
->>>>>> +---------------------------------
->>>>>> +
->>>>>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
->>>>>> +and CCI (I2C compatible) control bus.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +
->>>>>> +- compatible	: "ovti,ov5647";
->>>>>> +- reg		: I2C slave address of the sensor;
->>>>>> +
->>>>>> +The common video interfaces bindings (see video-interfaces.txt) should be
->>>>>> +used to specify link to the image data receiver. The OV5647 device
->>>>>> +node should contain one 'port' child node with an 'endpoint' subnode.
->>>>>> +
->>>>>> +Following properties are valid for the endpoint node:
->>>>>> +
->>>>>> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
->>>>>> +  video-interfaces.txt.  The sensor supports only two data lanes.
->>>>>
->>>>> Doesn't this sensor require a external clock, a reset GPIO and / or a
->>>>> regulator or a few? Do you need data-lanes, unless you can change the order
->>>>> or the number?
->>>>
->>>> In the setup I'm using, I'm not aware of any reset GPIO or regulator. I do use a
->>>> external clock but it's fixed and not controlled by SW. Should I add a property
->>>> for this?
->>>
->>> The sensor datasheet defines a power-up and power-down sequence for the
->>> device. If you don't implement these sequences in the driver on a DT based
->>> system, nothing suggests that they're implemented correctly. Could it be
->>> that the boot loader simply enables the regulators or another device
->>> requires them to be enabled?
->>>
->>> I presume at least the reset GPIO should be controlled explicitly in order
->>> to ensure correct function. Although hardware can be surprising: I have one
->>> production system that has no reset GPIO for the sensor albeit the sensor
->>> datasheet says that's part of the power up sequence.
->>>
->>
->> Sorry for the misunderstanding. I wanted to say that, there is no SW controlled
->> reset. In the board we're using to connect the sensor to our D-PHY we have a
->> GPIO controller that when it receives power, it removes the sensor from reset,
->> so I have no control over that.
-> 
-> Do you mean to say that there's a GPIO controller but there's not (yet?) a
-> driver for that or that the reset line is actually hard-wired to something
-> else?
-> 
+Aww crap, that should of course be
 
-The reset line is hardwired to a GPIO controller that when powered-on removes
-the sensor from reset. However I have no control over the GPIO controller.
+static DEFINE_MUTEX(shared_lock);
 
->>
->> Regarding the clock, should I create a new property?
-> 
-> Yes. The sensor does require a clock.
-> 
->>
->> And also, regarding the data-lanes, AFAIK it isn't possible to change the order
->> of the data and clock lanes so should I remove that property?
-> 
-> Sounds good to me.
-> 
->>
->>>>
->>>>>
->>>>> An example DT snippet wouldn't hurt.
->>>>
->>>> Sure, I can add a example snippet.
->>>>
->>>>>
->>>>
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-media" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Will fix in v2, but I'll wait for other feedback first. Why is it
+impossible to see these things before hitting send?
+
+Cheers,
+peda
