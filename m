@@ -1,55 +1,112 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [PATCH v8 3/8] drivers:input:tsc2007: add iio interface to read external ADC input and temperature
-Date: Mon, 12 Dec 2016 22:21:25 +0100
-Message-ID: <E4E31180-A686-4631-9713-519987C55F06@goldelico.com>
-References: <cover.1479823354.git.hns@goldelico.com> <cover.1479823354.git.hns@goldelico.com> <99f236df48b03b3188e12f94a20097f8440db7a5.1479823354.git.hns@goldelico.com> <E42B1EF7-222E-46D6-878B-30C789CFBBC5@jic23.retrosnub.co.uk> <811B6F6A-2E3D-45B4-A984-74ABE0E37192@goldelico.com> <8d3fc752-e69c-f568-4f71-4f1768a3fffe@kernel.org> <AC7B3C1C-C05B-45B5-8426-5225F151DC26@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
+ usable memory range
+Date: Mon, 12 Dec 2016 22:22:11 +0100
+Message-ID: <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
+References: <20161212101801.28491-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AC7B3C1C-C05B-45B5-8426-5225F151DC26-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?windows-1252?Q?Mika_Penttil=E4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161212101801.28491-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 12/12/2016 11:18 AM, Neil Armstrong wrote:
+> The Amlogic Meson GXBB secure monitor uses part of the memory space, this
+> patch adds these reserved zones and redefines the usable memory range for
+> each boards.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 21 +++++++++++++++++++++
+>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     |  2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi    |  2 +-
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts   |  2 +-
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts    |  2 +-
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts  |  2 +-
+>  .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts      |  2 +-
+>  .../arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts |  2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 +-
+>  11 files changed, 31 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> index 7a078be..ac40b2d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> @@ -56,7 +56,7 @@
+>  
+>  	memory@0 {
+>  		device_type = "memory";
+> -		reg = <0x0 0x0 0x0 0x80000000>;
+> +		reg = <0x0 0x1000000 0x0 0x7f000000>;
+>  	};
+>  
+>  	vddio_boot: regulator-vddio_boot {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> index fc033c0..e085588 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -55,6 +55,27 @@
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		secos: secos {
+> +			reg = <0x0 0x05300000 0x0 0x2000000>;
+> +			no-map;
+> +		};
+
+Hello Neil,
+
+In
+https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/meson64_odroidc2.dts
+the secos region does not exist. In linux-next I find no reference to
+the secos label. Where is the consumer of the region defined?
+
+> +
+> +		pstore: pstore {
+> +			reg = <0x0 0x07300000 0x0 0x100000>;
+> +			no-map;
+> +		};
+
+In
+https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/amlogic/gxbb_skt.dts
+and other files pstore uses a different position
+(reg = <0x0 0x20000000 0x0 0x100000>;).
+Why are we moving this?
+Should this region be marked
+compatible = "ramoops"; ?
+Cf. Documentation/devicetree/bindings/reserved-memory/ramoops.txt.
+
+It would be nice if you could add a short description of each reserved
+area to the commit message.
+
+Regards
+
+Heinrich Schuchardt
+
+> +
+> +		secmon: secmon {
+> +			reg = <0x0 0x10000000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+>  	cpus {
+>  		#address-cells = <0x2>;
+>  		#size-cells = <0x0>;
 
 
-> Am 27.11.2016 um 16:47 schrieb H. Nikolaus Schaller =
-<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>:
->=20
-> Hi Jonathan,
->=20
->> Am 27.11.2016 um 12:02 schrieb Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->>=20
->> On 24/11/16 18:05, H. Nikolaus Schaller wrote:
->>>=20
->>>> Am 24.11.2016 um 18:38 schrieb Jonathan Cameron =
-<jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>:
->>>>=20
->>>>=20
->>>>=20
->>>> On 22 November 2016 14:02:30 GMT+00:00, "H. Nikolaus Schaller" =
-<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-
->=20
->> - hence cc'd Yann and the Kbuild list
->> to see if they can offer some advices.
-
-no response / advice so far.
-
->=20
-> Thanks!
->=20
-> BTW, the other tsc2007 and ads7846 patches could already be merged (if =
-there
-> are no more changes needed) since this one only depends on the result =
-of applying
-> all others before.
-
-I wonder if input maintainers can already merge the other patches of =
-this patch series?
-
-BR and thanks,
-Nikolaus=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
