@@ -1,98 +1,100 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] Add OV5647 device tree documentation
-Date: Mon, 12 Dec 2016 13:49:00 +0200
-Message-ID: <20161212114900.GS16630@valkosipuli.retiisi.org.uk>
-References: <cc5229b9-0705-4189-39d5-7c3e0a96c008@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2] PCI: rockchip: Add quirk to disable RC's ASPM L0s
+Date: Mon, 12 Dec 2016 19:51:27 +0800
+Message-ID: <1481543487-33152-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cc5229b9-0705-4189-39d5-7c3e0a96c008-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+Rockchip's RC outputs 100MHz reference clock but there are
+two methods for PHY to generate it.
 
-On Mon, Dec 12, 2016 at 11:39:31AM +0000, Ramiro Oliveira wrote:
-> Hi Sakari,
-> 
-> Thank you for the feedback.
-> 
-> On 12/7/2016 10:33 PM, Sakari Ailus wrote:
-> > Hi Ramiro,
-> > 
-> > Thank you for the patch.
-> > 
-> > On Mon, Dec 05, 2016 at 05:36:33PM +0000, Ramiro Oliveira wrote:
-> >> Add device tree documentation.
-> >>
-> >> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
-> >>  1 file changed, 19 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >> new file mode 100644
-> >> index 0000000..4c91b3b
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >> @@ -0,0 +1,19 @@
-> >> +Omnivision OV5647 raw image sensor
-> >> +---------------------------------
-> >> +
-> >> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> >> +and CCI (I2C compatible) control bus.
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible	: "ovti,ov5647";
-> >> +- reg		: I2C slave address of the sensor;
-> >> +
-> >> +The common video interfaces bindings (see video-interfaces.txt) should be
-> >> +used to specify link to the image data receiver. The OV5647 device
-> >> +node should contain one 'port' child node with an 'endpoint' subnode.
-> >> +
-> >> +Following properties are valid for the endpoint node:
-> >> +
-> >> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> >> +  video-interfaces.txt.  The sensor supports only two data lanes.
-> > 
-> > Doesn't this sensor require a external clock, a reset GPIO and / or a
-> > regulator or a few? Do you need data-lanes, unless you can change the order
-> > or the number?
-> 
-> In the setup I'm using, I'm not aware of any reset GPIO or regulator. I do use a
-> external clock but it's fixed and not controlled by SW. Should I add a property
-> for this?
+(1)One of them is to use system PLL to generate 100MHz clock and
+the PHY will relock it and filter signal noise then outputs the
+reference clock.
 
-The sensor datasheet defines a power-up and power-down sequence for the
-device. If you don't implement these sequences in the driver on a DT based
-system, nothing suggests that they're implemented correctly. Could it be
-that the boot loader simply enables the regulators or another device
-requires them to be enabled?
+(2)Another way is to share Soc's 24MHZ crystal oscillator with
+PHY and force PHY's DLL to generate 100MHz internally.
 
-I presume at least the reset GPIO should be controlled explicitly in order
-to ensure correct function. Although hardware can be surprising: I have one
-production system that has no reset GPIO for the sensor albeit the sensor
-datasheet says that's part of the power up sequence.
+When using case(2), the exit from L0s doesn't work fine occasionally
+due to the broken design of RC receiver's logical circuit. So even if
+we use extended-synch, it still fails for PHY to relock the bits from
+FTS sometimes. This will hang the system.
 
-> 
-> > 
-> > An example DT snippet wouldn't hurt.
-> 
-> Sure, I can add a example snippet.
-> 
-> > 
-> 
+Maybe we could argue that why not use case(1) to avoid it? The reason
+is that as we could see the reference clock is derived from system PLL
+and the path from it to PHY isn't so clean which means there are some
+noise introduced by power-domain and other buses can't be filterd out
+by PHY and we could see noise from the frequency spectrum by
+oscilloscope. This makes the TX compatibility test a little difficult
+to pass the spec. So case(1) and case(2) are both used indeed now. If
+using case(2), we should disable RC's L0s support, and that is why we
+need this property to indicate this quirk.
 
+Also after checking quirk.c, I noticed there is already a quirk for
+disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
+shouldn't do that as mentioned above that case(1) could still works fine
+with L0s.
+
+Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+---
+
+Changes in v2:
+- drop the quirk prefix
+
+ Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 2 ++
+ drivers/pci/host/pcie-rockchip.c                        | 9 +++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+index 71aeda1..1453a73 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+@@ -43,6 +43,8 @@ Required properties:
+ - interrupt-map-mask and interrupt-map: standard PCI properties
+ 
+ Optional Property:
++- aspm-no-l0s: RC won't support ASPM L0s. This property is needed if
++	using 24MHz OSC for RC's PHY.
+ - ep-gpios: contain the entry for pre-reset gpio
+ - num-lanes: number of lanes to use
+ - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+index f2dca7b..35988fc 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -140,6 +140,8 @@
+ #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+ #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+ #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
++#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
++#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+ #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+ #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+ #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+@@ -653,6 +655,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 	status &= ~PCIE_RC_CONFIG_THP_CAP_NEXT_MASK;
+ 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_THP_CAP);
+ 
++	/* Clear L0s from RC's link cap */
++	if (of_property_read_bool(dev->of_node, "apsm-no-l0s")) {
++		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LINK_CAP);
++		status &= ~PCIE_RC_CONFIG_LINK_CAP_L0S;
++		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LINK_CAP);
++	}
++
+ 	rockchip_pcie_write(rockchip, 0x0, PCIE_RC_BAR_CONF);
+ 
+ 	rockchip_pcie_write(rockchip,
 -- 
-Kind regards,
+1.9.1
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
