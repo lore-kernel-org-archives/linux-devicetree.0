@@ -1,43 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 5/8] IIO: add bindings for STM32 timer trigger driver
-Date: Mon, 12 Dec 2016 13:28:09 -0600
-Message-ID: <20161212192809.hwcq2owmybacsqke@rob-hp-laptop>
-References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
- <1481292919-26587-6-git-send-email-benjamin.gaignard@st.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 3/3] clk: keystone: Add sci-clk driver support
+Date: Mon, 12 Dec 2016 11:38:02 -0800
+Message-ID: <20161212193800.GL5423@codeaurora.org>
+References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+ <1477053961-27128-4-git-send-email-t-kristo@ti.com>
+ <20161208001348.GC5423@codeaurora.org>
+ <cb608729-b617-0eab-5ddf-d78ff47b237e@ti.com>
+ <20161208211044.GI5423@codeaurora.org>
+ <22dacb0c-a3bc-50ce-e4b9-f74a0c706f20@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481292919-26587-6-git-send-email-benjamin.gaignard@st.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: lee.jones@linaro.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+In-Reply-To: <22dacb0c-a3bc-50ce-e4b9-f74a0c706f20@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-clk@vger.kernel.org, mturquette@baylibre.com, ssantosh@kernel.org, nm@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 09, 2016 at 03:15:16PM +0100, Benjamin Gaignard wrote:
-> Define bindings for STM32 timer trigger
+On 12/09, Tero Kristo wrote:
+> On 08/12/16 23:10, Stephen Boyd wrote:
+> >On 12/08, Tero Kristo wrote:
+> >>On 08/12/16 02:13, Stephen Boyd wrote:
+> >>>On 10/21, Tero Kristo wrote:
+> >>>>diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
+> >>>>new file mode 100644
+> >>>>index 0000000..f6af5bd
+> >>>>--- /dev/null
+> >>>>+++ b/drivers/clk/keystone/sci-clk.c
+> >>
+> >>>
+> >>>>+
+> >>>>+	handle = devm_ti_sci_get_handle(dev);
+> >>>>+	if (IS_ERR(handle))
+> >>>>+		return PTR_ERR(handle);
+> >>>>+
+> >>>>+	provider = devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);
+> >>>>+	if (!provider)
+> >>>>+		return -ENOMEM;
+> >>>>+
+> >>>>+	provider->clocks = data;
+> >>>>+
+> >>>>+	provider->sci = handle;
+> >>>>+	provider->ops = &handle->ops.clk_ops;
+> >>>>+	provider->dev = dev;
+> >>>>+
+> >>>>+	ti_sci_init_clocks(provider);
+> >>>
+> >>>And if this fails?
+> >>
+> >>Yea this is kind of controversial. ti_sci_init_clocks() can fail if
+> >>any of the clocks registered will fail. I decided to have it this
+> >>way so that at least some clocks might work in failure cause, and
+> >>you might have a booting device instead of total lock-up.
+> >>
+> >>Obviously it could be done so that if any clock fails, we would
+> >>de-register all clocks at that point, but personally I think this is
+> >>a worse option.
+> >>
+> >>ti_sci_init_clocks could probably be modified to continue
+> >>registering clocks when a single clock fails though. Currently it
+> >>aborts at first failure.
+> >>
+> >
+> >That sounds like a better approach if we don't care about
+> >failures to register a clock. Returning a value from a function
+> >and not using it isn't really a great design.
+> >
+> >I worry that if we start returning errors from clk_hw_register()
+> >that something will go wrong though, so really I don't know why
+> >we want to ignore errors at all. Just for debugging a boot hang?
+> >Can't we use early console to at least see that this driver is
+> >failing to probe and debug that way?
 > 
-> version 4:
-> - remove triggers enumeration from DT
-> - add reg parameter
-> 
-> version 3:
-> - change file name
-> - add cross reference with mfd bindings
-> 
-> version 2:
-> - only keep one compatible
-> - add DT parameters to set lists of the triggers:
->   one list describe the triggers created by the device
->   another one give the triggers accepted by the device
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../bindings/iio/timer/stm32-timer-trigger.txt     | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> Early console can be used to debug that, but it is kind of annoying
+> to recompile most of the kernel when you suddenly need to use it.
 
-Other than same comments I made in the other patches for the example, 
-looks fine.
+I thought SERIAL_EARLYCON was selected by drivers that support
+it? So there shouldn't be any rebuilding required.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> 
+> How about modifying the ti_sci_init_clocks func to print an error
+> for each failed clock?
+
+Ok that's fine too. I'd prefer the function had a return type of
+void if we're not planning on using the return value, that's all.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
