@@ -1,36 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/9] dt-bindings: stm32-dma: Fix typo regarding DMA
- client binding
-Date: Tue, 13 Dec 2016 14:09:06 -0600
-Message-ID: <20161213200906.zikhjnvivqrdpgqh@rob-hp-laptop>
-References: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
- <1481636451-27863-4-git-send-email-cedric.madianga@gmail.com>
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH 1/2] iio: adc: hx711: Add DT binding for avia,hx711
+Date: Tue, 13 Dec 2016 21:11:20 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1612132110240.8653@pmeerw.net>
+References: <20161213180142.GA3162@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1481636451-27863-4-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161213180142.GA3162@andreas>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2016 at 02:40:45PM +0100, M'boumba Cedric Madianga wrote:
-> Only four cells are required for dma client binding not five.
-> 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
-> ---
->  Documentation/devicetree/bindings/dma/stm32-dma.txt | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+> Add DT bindings for avia,hx711
+> Add vendor avia to vendor list
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../devicetree/bindings/iio/adc/avia-hx711.txt     | 23 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> new file mode 100644
+> index 000000000000..d56f95705fd2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> @@ -0,0 +1,23 @@
+> +* AVIA HX711 ADC chip for weight cells
+> +  Bit-banging driver
+> +
+> +Required properties:
+> + - compatible: Should be "avia,hx711"
+> + - sck-gpios:	Definition of the GPIO for the clock
+> + - dout-gpios:	Definition of the GPIO for Data-Out
+
+data-out (lowercase)
+
+
+> +		See Documentation/devicetree/bindings/gpio/gpio.txt
+> +
+> +Recommended properties:
+> + - gain:	Gain select, can be 32, 64 or 128
+> +		default is 128
+> +
+> +Optional properties:
+
+maybe delete this empty section?
+
+> +
+> +Example:
+> +weight@0 {
+> +	compatible = "avia,hx711";
+> +	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+> +	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+> +	gain = <32>
+> +};
+> +
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 44ddc980b085..4696bb5c2198 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -32,6 +32,7 @@ atlas	Atlas Scientific LLC
+>  atmel	Atmel Corporation
+>  auo	AU Optronics Corporation
+>  avago	Avago Technologies
+> +avia	avia semiconductor
+>  avic	Shanghai AVIC Optoelectronics Co., Ltd.
+>  axis	Axis Communications AB
+>  boe	BOE Technology Group Co., Ltd.
+> 
+
+-- 
+
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
