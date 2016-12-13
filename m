@@ -1,89 +1,139 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
-Date: Tue, 13 Dec 2016 09:01:18 +0100
-Message-ID: <CAPDyKFp2L7x=dV6O5XrA53-OOXE0sf+P3tNH93XGyzNheX9vjQ@mail.gmail.com>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
- <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
- <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
- <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
- <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
- <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com> <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v6 4/5] ARM: dts: da850-lcdk: add the vga-bridge node
+Date: Tue, 13 Dec 2016 10:46:44 +0200
+Message-ID: <9d5fa409-bb4f-f62b-2548-0a3b82228e08@ti.com>
+References: <1481547942-24775-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481547942-24775-5-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Matt Ranostay <matt@ranostay.consulting>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Breck <liam@networkimprov.net>
+Content-Type: multipart/mixed; boundary="===============0354520129=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1481547942-24775-5-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Jyri Sarha <jsarha@ti.com>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 December 2016 at 19:09, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Dec 02, 2016 at 01:06:47AM -0800, Matt Ranostay wrote:
->> On Fri, Dec 2, 2016 at 12:28 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> > On 2 December 2016 at 08:22, Matt Ranostay <matt@ranostay.consulting> wrote:
->> >>
->> >>
->> >>> On Dec 1, 2016, at 23:13, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> >>>
->> >>>> On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wrote:
->> >>>> Add optional device-post-power-on parameters to disable post_power_on
->> >>>> function from being called since this breaks some device.
->> >>>>
->> >>>> Cc: Tony Lindgren <tony@atomide.com>
->> >>>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
->> >>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->> >>>> ---
->> >>>> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
->> >>>> drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
->> >>>> 2 files changed, 9 insertions(+)
->> >>>>
->> >>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> >>>> index bea306d772d1..09fa153f743e 100644
->> >>>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> >>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> >>>> @@ -24,6 +24,8 @@ Optional properties:
->> >>>>        de-asserting the reset-gpios (if any)
->> >>>> - invert-off-state: Invert the power down state for the reset-gpios (if any)
->> >>>>        and pwrdn-gpios (if any)
->> >>>> +- disable-post-power-on : Avoid post_power_on function from being called since
->> >>>> +       this breaks some devices
->> >>>
->> >>> This is a bit weird. I would like to avoid this, if possible.
->> >>>
->> >>> Perhaps if you simply describe the sequence in detail for your device
->> >>> we can figure out the best option together.
->> >>
->> >> Yeah I know it is a bit weird but we need to keep that reset pin high for at least some time after pre power on.   So any case it would be another property
->> >
->> > This went offlist, please resend.
->> >
->> > Moreover, please try to describe the sequence you need in detail
->> > according to your HW spec.
->> >
->>
->> Yeah oops....
->>
->> So basically we need to drive the reset and powerdown lines high with
->> a 300 milliseconds delay between both...
->> can't have the reset line low with post power on (pretty sure but
->> would need a delay anyway), and we need both reset + powerdown line
->> set low on powerdown.
->>
->> So the power down sequence would need to be reversed for this
->> application in pwrseq-simple.
->
-> This sounds like you need a device specific sequence to me. Otherwise,
-> write a language to describe any power control waveforms rather than
-> trying to bolt on more and more properties. (Don't really go write a
-> language.)
+--===============0354520129==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="2xMBPNrwB41GkK2hgX9fwGc1ESl9rhVn5"
 
-Actually this isn't so device specific. The cw1200 wifi chip which is
-being used with ux500 SoCs has a very similar sequence. Allow me to
-check the details and get back.
+--2xMBPNrwB41GkK2hgX9fwGc1ESl9rhVn5
+Content-Type: multipart/mixed; boundary="muXGduK0IrB2IRpfmL1B5TsELpNW97HIN";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King
+ <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>
+Message-ID: <9d5fa409-bb4f-f62b-2548-0a3b82228e08@ti.com>
+Subject: Re: [PATCH v6 4/5] ARM: dts: da850-lcdk: add the vga-bridge node
+References: <1481547942-24775-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481547942-24775-5-git-send-email-bgolaszewski@baylibre.com>
+In-Reply-To: <1481547942-24775-5-git-send-email-bgolaszewski@baylibre.com>
 
-Anyway, my point is that I think we can figure out a common sequence
-to support these kind required sequences. That is to me preferred over
-adding a new (two to support cw1200) device specific pwrseq driver.
+--muXGduK0IrB2IRpfmL1B5TsELpNW97HIN
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Uffe
+Hi,
+
+On 12/12/16 15:05, Bartosz Golaszewski wrote:
+
+> +&lcdc {
+> +	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&lcd_pins>;
+> +
+> +	ports {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		lcdc_out: port@1 {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			reg =3D <1>;
+> +
+> +			lcdc_out_vga: endpoint {
+> +				reg =3D <0>;
+> +				remote-endpoint =3D <&vga_bridge_in>;
+> +			};
+> +		};
+> +	};
+> +};
+>=20
+
+This is not correct. LCDC has just one output, so port@1 doesn't make
+sense. It's port@0. But with just one port, you can leave "ports" away.
+And you don't need the port's label for anything, if I'm not mistaken. So=
+:
+
+&lcdc {
+	status =3D "okay";
+	pinctrl-names =3D "default";
+	pinctrl-0 =3D <&lcd_pins>;
+
+	port {
+		lcdc_out_vga: endpoint {
+			remote-endpoint =3D <&vga_bridge_in>;
+		};
+	};
+};
+
+ Tomi
+
+
+--muXGduK0IrB2IRpfmL1B5TsELpNW97HIN--
+
+--2xMBPNrwB41GkK2hgX9fwGc1ESl9rhVn5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYT7V0AAoJEPo9qoy8lh71jbwQALG4a8TrujmZr/7Meq0jgjWa
+7/kUmbM3Iq5Ru9w9rN0jP8jkZVJrcOnnrk+3WgiskmiIfZTGnI+fWtP7CjLGLwuX
+EQsWZEyrVEF0SMXxE4yjCGeE5fTM85yltlZkhbO3iFbOmCKDfVqB6BqpBVsp2Uzq
+ZU5XNsvQl6DSEnIRKVjNcEYpjDO4gdefjNzevjtBlrRImB1L/t2vCiuz9NKST5cl
+q/vQlprtj+SUVgHbp5PzoEITxaeaMKGrkw2u0AHK3WM6d3qfM5Nv4lvgL/avUNhm
++TaA/xq5NJhSB2Wn0d02YAhYC886M7VxUSAoNqvrlLhNBJKSLE30GbKZ37KH3t9J
+ljUAswxBCFXnppdRt2lUtgP65SIq4VKbj0QpuNiFGxEhFR1ZG6fKH8dHqpx4GhRc
+IFdxd3dx+YjGObBAW5vXf4tBC9+pHMAgrI9vhM4eqz8/mqE/ub/kfYc0MVf0PdOs
+CWszIztmFmDUIVkm8/mANFTbX4wHS6TSefYvMWGbW6tpSSbJ7S8jvG9y2BPZybX8
+ewZv47rvgEgyxTd946JTqgbcf/ajgA91PQX9WvxU8C0RsR3+wOWXSRr9/nGmkEuC
+x3FFRDhy97zaLmbRTBBNAFOD5RrG6dT6TcJonpIFc9c01DiegopboAllaGvih26a
+pKFjzXcRXMyCVvVB7e0X
+=bvSo
+-----END PGP SIGNATURE-----
+
+--2xMBPNrwB41GkK2hgX9fwGc1ESl9rhVn5--
+
+--===============0354520129==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0354520129==--
