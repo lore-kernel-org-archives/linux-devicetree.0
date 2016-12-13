@@ -1,80 +1,53 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 1/2] Add OV5647 device tree documentation
-Date: Tue, 13 Dec 2016 20:05:54 +0100
-Message-ID: <20161213190554.GD8676@amd>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] Add support for OV5647 sensor.
+Date: Tue, 13 Dec 2016 20:09:27 +0100
+Message-ID: <20161213190927.GE8676@amd>
 References: <cover.1481639091.git.roliveir@synopsys.com>
- <c47834c1c9c2a8e23f41a12c8717601f4a901506.1481639091.git.roliveir@synopsys.com>
+ <d8ac513cd1d84063f73452e0b3ab12ab5f5728a0.1481639091.git.roliveir@synopsys.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IMjqdzrDRly81ofr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="3XA6nns4nE4KvaS/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <c47834c1c9c2a8e23f41a12c8717601f4a901506.1481639091.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: mchehab@kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, hverkuil@xs4all.nl, dheitmueller@kernellabs.com, slongerbeam@gmail.com, lars@metafoo.de, robert.jarzmik@free.fr, pali.rohar@gmail.com, sakari.ailus@linux.intel.com, mark.rutland@arm.com, CARLOS.PALMINHA@synopsys.com
+In-Reply-To: <d8ac513cd1d84063f73452e0b3ab12ab5f5728a0.1481639091.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---IMjqdzrDRly81ofr
+--3XA6nns4nE4KvaS/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue 2016-12-13 14:32:36, Ramiro Oliveira wrote:
-> Create device tree bindings documentation.
+On Tue 2016-12-13 14:32:37, Ramiro Oliveira wrote:
+> Modes supported:
+>  - 640x480 RAW 8
 >=20
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++=
-++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Doc=
-umentation/devicetree/bindings/media/i2c/ov5647.txt
-> new file mode 100644
-> index 0000000..46e5e30
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> @@ -0,0 +1,35 @@
-> +Omnivision OV5647 raw image sensor
-> +---------------------------------
-> +
-> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfa=
-ces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible	: "ovti,ov5647";
-> +- reg		: I2C slave address of the sensor;
-> +- clocks	: Reference to the xclk clock.
-> +- clock-names	: Should be "xclk".
-> +- clock-frequency: Frequency of the xclk clock
+> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-Nit pick: you end the lines here with ';', '.' and nothing. Pick one
-:-).
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-Otherwise it looks good.
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---IMjqdzrDRly81ofr
+--3XA6nns4nE4KvaS/
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlhQRpIACgkQMOfwapXb+vLh0QCghGL62LMN0HleUeagxAK5WrXe
-IWgAoIdaoxc8y8dvhZpVHBZ7QD8oHz88
-=dOWd
+iEYEARECAAYFAlhQR2cACgkQMOfwapXb+vKm2gCggVYvdSDPj90cyAuqUf6cZ7z4
+s28AnjDouYvB5mPkI18VmFHznZ9aYxfL
+=J2og
 -----END PGP SIGNATURE-----
 
---IMjqdzrDRly81ofr--
+--3XA6nns4nE4KvaS/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
