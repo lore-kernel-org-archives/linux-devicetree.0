@@ -1,65 +1,59 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Tue, 13 Dec 2016 12:00:32 -0800
-Message-ID: <CAD=FV=WhUVeq5GZ5-ae4SxypHGB9jWqgvkO02S=G6Zz6cexRzQ@mail.gmail.com>
-References: <20160912185633.GH27946@sirena.org.uk> <20160913172140.GC62872@google.com>
- <20160915143945.GJ27974@sirena.org.uk> <20160915180223.GE62872@google.com>
- <20160916163253.GA10189@sirena.org.uk> <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com>
- <20160924184133.seh6v6eayt7hwgue@sirena.org.uk> <CAD=FV=V_ncaKDzwEyCrZNqicoE+dGXN8CJ8dDuvxQ6XP8uxsDg@mail.gmail.com>
- <20161028181521.ywzmow6bgndfotq3@sirena.org.uk> <20161212211502.GA96889@google.com>
- <20161213171904.ohsxc3xhscdinctt@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 07/12] scsi: ufs: add option to change default UFS
+ power management level
+Date: Tue, 13 Dec 2016 14:04:27 -0600
+Message-ID: <20161213200427.vzdwyzajcftvvcgu@rob-hp-laptop>
+References: <1481590462-9981-1-git-send-email-subhashj@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161213171904.ohsxc3xhscdinctt@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1481590462-9981-1-git-send-email-subhashj@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Brian Norris <briannorris@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Subhash Jadavani <subhashj@codeaurora.org>
+Cc: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Hannes Reinecke <hare@suse.com>, Yaniv Gardi <ygardi@codeaurora.org>, Joao Pinto <Joao.Pinto@synopsys.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Dec 12, 2016 at 04:54:20PM -0800, Subhash Jadavani wrote:
+> UFS device and link can be put in multiple different low power modes hence
+> UFS driver supports multiple different low power modes. By default UFS
+> driver selects the default (optimal) low power mode (which gives moderate
+> power savings and have relatively less enter and exit latencies) but
+> we might have to tune this default power mode for different chipset
+> platforms to meet the low power requirements/goals. Hence this patch
+> adds option to change default UFS low power mode (level).
+> 
+> Reviewed-by: Yaniv Gardi <ygardi@codeaurora.org>
+> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> ---
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 10 ++++++
+>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 ++++++++
+>  drivers/scsi/ufs/ufshcd.c                          | 39 ++++++++++++++++++++++
+>  drivers/scsi/ufs/ufshcd.h                          |  4 +--
+>  4 files changed, 65 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index a99ed55..c3836c5 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -41,6 +41,14 @@ Optional properties:
+>  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+>  			  Note that it is assume same number of lanes is used both
+>  			  directions at once. If not specified, default is 2 lanes per direction.
+> +- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
+> +			  0 - Both UFS device and Link in active state (Highest power consumption)
+> +			  1 - UFS device in active state but Link in Hibern8 state
+> +			  2 - UFS device in Sleep state but Link in active state
+> +			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
+> +			  4 - UFS device in Power-down state and Link in Hibern8 state
+> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
+> +- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
 
-On Tue, Dec 13, 2016 at 9:19 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Dec 12, 2016 at 01:15:02PM -0800, Matthias Kaehlcke wrote:
->> El Fri, Oct 28, 2016 at 07:15:21PM +0100 Mark Brown ha dit:
->> > On Mon, Sep 26, 2016 at 10:41:59AM -0700, Doug Anderson wrote:
->
->> > What you're describing to me is a discrete DCDC that has an input
->> > voltage that sets the output voltage which happens to be set with a PWM.
->
->> I experimented a bit with this. Besides the question of how to model
->> the passives I wonder how the two regulators would interact. The
->> correct thing seems to be to specify the input regulator as a supply
->> of the DCDC. dcdc->set_voltage breaks down a voltage transition into
->
-> No, not unless the prior descriptions of the hardware have been wildly
-> inaccurate - my understanding had been that the DCDC was a normal DCDC
-> with an analogue input intended to be biased to set the output voltage
-> (presumably in terms of a full rail supply) and that the PWM had been
-> connected to this analogue input.  If the PWM is supplying the DCDC then
-> the hardware design just seems bizzare, I can't see how this would even
-> work.
+This looks like you are putting policy for Linux into DT.
 
-Looking at one schematic, the discrete BUCK for at least one of the
-rails is TPS65261RHBR, which appears to be described at
-<https://store.ti.com/TPS65261RHBR.aspx>.  Data sheet appears to be at
-<http://www.ti.com/product/tps65261/technicaldocuments?HQS=TI-null-null-octopart-df-pf-null-wwe>.
+What I would expect to see here is disabling of states that don't work 
+due to some h/w limitation. Otherwise, it is a user decision for what 
+modes to go into. Also, I think link and device states should be 
+separate.
 
-As you can see from the datasheet ("Adjusting the Output Voltage"
-section), it is intended that you stuff a resistor to make a voltage
-divider and that's how you select the output voltage.  In our case the
-PWM interacts here and allows you to make a more dynamic output
-voltage.  I've always thought about the input to the "FB" pin as
-making an input voltage, but I guess it's not terribly simple since
-the voltage divider ends up dividing between ground and the output
-voltage.
-
-Also as you can see, the datasheet never talks about using a PWM to
-control the feedback and as I understand it the BUCK wasn't designed
-for this, but it (mostly) works just fine.
-
-...you can also see details about the Over Voltage Protection (at last
-for this BUCK) in the TPS65261RHBR datasheet.
-
-
--Doug
+Rob
