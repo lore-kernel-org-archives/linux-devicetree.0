@@ -1,79 +1,208 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/8] PWM: add pwm-stm32 DT bindings
-Date: Tue, 13 Dec 2016 09:57:15 -0600
-Message-ID: <CAL_JsqL8pJSFb8LbABAYJOQ0URaMpyupbFryk_mS2ToN1kStdA@mail.gmail.com>
-References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
- <1481292919-26587-4-git-send-email-benjamin.gaignard@st.com>
- <20161212190205.b5t3x6i2o7igldlo@rob-hp-laptop>
- <20161213111137.GW3625@dell.home>
+From: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] ASoC: cs35l35: Add device tree documentation for CS35L35
+Date: Tue, 13 Dec 2016 10:08:51 -0600
+Message-ID: <1b0cca7d-007f-4b8d-b184-838d36ba3a9c@EX4.ad.cirrus.com>
+References: <1481645331-15114-1-git-send-email-li.xu@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161213111137.GW3625@dell.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Alexandre Torgue <alexandre.torgue@st.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>Benjamin Gaignard <benjamin.g>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481645331-15114-1-git-send-email-li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2016 at 5:11 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 12 Dec 2016, Rob Herring wrote:
->
->> On Fri, Dec 09, 2016 at 03:15:14PM +0100, Benjamin Gaignard wrote:
->> > Define bindings for pwm-stm32
->> >
->> > version 6:
->> > - change st,breakinput parameter format to make it usuable on stm32f7 too.
->> >
->> > version 2:
->> > - use parameters instead of compatible of handle the hardware configuration
->> >
->> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->> > ---
->> >  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++++++++
->> >  1 file changed, 33 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->> > new file mode 100644
->> > index 0000000..866f222
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->> > @@ -0,0 +1,33 @@
->> > +STMicroelectronics STM32 Timers PWM bindings
->> > +
->> > +Must be a sub-node of an STM32 Timers device tree node.
->> > +See ../mfd/stm32-timers.txt for details about the parent node.
->> > +
->> > +Required parameters:
->> > +- compatible:              Must be "st,stm32-pwm".
->> > +- pinctrl-names:   Set to "default".
->> > +- pinctrl-0:               List of phandles pointing to pin configuration nodes for PWM module.
->> > +                   For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
->> > +
->> > +Optional parameters:
->> > +- st,breakinput:   Arrays of three u32 <index level filter> to describe break input configurations.
->> > +                   "index" indicates on which break input the configuration should be applied.
->> > +                   "level" gives the active level (0=low or 1=high) for this configuration.
->> > +                   "filter" gives the filtering value to be applied.
->> > +
->> > +Example:
->> > +   timers@40010000 {
->>
->> timer@...
->
-> No, it should be timers.
+Add device tree documentation for Cirrus Logic CS35L35
+speaker amplifier
 
-Read the spec. "timer" is a generic node name. "timers" is not. How
-many is not relevant.
+Signed-off-by: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs35l35.txt          | 172 +++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l35.txt
 
-> The 's' is intentional, since this parent (MFD) device houses 3
-> different types of timers.  The "timer" node is a child of this one.
+diff --git a/Documentation/devicetree/bindings/sound/cs35l35.txt b/Documentation/devicetree/bindings/sound/cs35l35.txt
+new file mode 100644
+index 0000000..8b13f67
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l35.txt
+@@ -0,0 +1,172 @@
++CS35L35 Speaker Amplifier
++
++Required properties:
++
++  - compatible : "cirrus,cs35l35"
++
++  - reg : the I2C address of the device for I2C
++
++  - VA-supply, VP-supply : power supplies for the device,
++    as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt.
++
++  - interrupt-parent : Specifies the phandle of the interrupt controller to
++    which the IRQs from CS35L35 are delivered to.
++  - interrupts : IRQ line info CS35L35.
++    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++    for further information relating to interrupt properties)
++
++Optional properties:
++  - cirrus,reset-gpios : Active low GPIO used to reset the amplifier
++
++  - cirrus,stereo-config : Boolean to determine if there are 2 AMPs for a
++  Stereo configuration
++
++  - cirrus,audio-channel : Set Location of Audio Signal on Serial Port
++  0 = Data Packet received on Left I2S Channel
++  1 = Data Packet received on Right I2S Channel
++
++  - cirrus,advisory-channel : Set Location of Advisory Signal on Serial Port
++  0 = Data Packet received on Left I2S Channel
++  1 = Data Packet received on Right I2S Channel
++
++  - cirrus,shared-boost : Boolean to enable ClassH tracking of Advisory Signal
++  if 2 Devices share Boost BST_CTL
++
++  - cirrus,sp-drv-strength : Value for setting the Serial Port drive strength
++  Table 3-10 of the datasheet lists drive-strength specifications
++  0 = 1x (Default)
++  1 = .5x
++
++  - cirrus,bst-pdn-fet-on : Boolean to determine if the Boost PDN control
++  powers down with a rectification FET On or Off. If VSPK is supplied
++  externally then FET is off.
++
++  - cirrus,boost-ctl-millivolt : Boost Converter control word. Step Size of 100mV
++  0x00 = (Default) VP
++  0x01 = 2600mV
++  0x41 = 9000mV
++
++  - cirrus,boost-ipk-milliamp : Boost-converter peak current limit.
++  Configures the peak current by monitoring the current through the boost FET.
++  Step size: 112mA
++  0x00 = 1680mA
++  0x19 = 4480mA
++
++  - cirrus,amp-gain-zc : Boolean to determine if to use Amplifier gain-change
++  zero-cross
++
++Optional H/G Algorithm sub-node:
++
++  The cs35l35 node can have a single "cirrus,classh-internal-algo" sub-node
++  that will disable automatic control of the internal H/G Algorithm.
++
++  It is strongly recommended that the Datasheet be referenced when adjusting
++  or using these Class H Algorithm controls over the internal Algorithm.
++  Serious damage can occur to the Device and surrounding components.
++
++  - cirrus,classh-internal-algo : Sub-node for the Internal Class H Algorithm
++  See Section 4.3 Internal Class H Algorithm in the Datasheet.
++  If not used, the device manages the ClassH Algorithm internally.
++
++Optional properties for the "cirrus,classh-internal-algo" Sub-node
++
++  Section 7.29 Class H Control
++  - cirrus,classh-bst-overide : Boolean
++  - cirrus,classh-bst-max-limit
++  - cirrus,classh-mem-depth
++
++  Section 7.30 Class H Headroom Control
++  - cirrus,classh-headroom
++
++  Section 7.31 Class H Release Rate
++  - cirrus,classh-release-rate
++
++  Section 7.32 Class H Weak FET Drive Control
++  - cirrus,classh-wk-fet-disable
++  - cirrus,classh-wk-fet-delay
++  - cirrus,classh-wk-fet-thld
++
++  Section 7.34 Class H VP Control
++  - cirrus,classh-vpch-auto
++  - cirrus,classh-vpch-rate
++  - cirrus,classh-vpch-man
++
++Optional Monitor Signal Format sub-node:
++
++  The cs35l35 node can have a single "cirrus,monitor-signal-format" sub-node
++  for adjusting the Depth, Location and Frame of the Monitoring Signals
++  for Algorithms.
++
++  See Sections 4.8.2 through 4.8.4 Serial-Port Control in the Datasheet
++
++  -cirrus,monitor-signal-format : Sub-node for the Monitor Signaling Formating
++  on the I2S Port. Each of the 3 8 bit values in the array contain the settings
++  for depth, location, and frame.
++
++  If not used, the defaults for the 6 monitor signals is used.
++
++  Sections 7.44 - 7.53 lists values for the depth, location, and frame
++  for each monitoring signal.
++
++  - cirrus,imon : 3 8 bit values to set the depth, location, and frame
++  of the IMON monitor signal.
++
++  - cirrus,vmon : 3 8 bit values to set the depth, location, and frame
++  of the VMON monitor signal.
++
++  - cirrus,vpmon : 3 8 bit values to set the depth, location, and frame
++  of the VPMON monitor signal.
++
++  - cirrus,vbstmon : 3 8 bit values to set the depth, location, and frame
++  of the VBSTMON monitor signal
++
++  - cirrus,vpbrstat : 3 8 bit values to set the depth, location, and frame
++  of the VPBRSTAT monitor signal
++
++  - cirrus,zerofill : 3 8 bit values to set the depth, location, and frame\
++  of the ZEROFILL packet in the monitor signal
++
++Example:
++
++cs35l35: audio-codec@20 {
++	compatible = "cirrus,cs35l35";
++	reg = <0x20>;
++	VA-supply = <&dummy_vreg>;
++	VP-supply = <&dummy_vreg>;
++	reset-gpios = <&axi_gpio 54 1>;
++	interrupt-parent = <&gpio8>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++	cirrus,boost-ctl = <0x41>;
++
++	cirrus,stereo-config {
++		cirrus,audio-channel = <0x00>;
++		cirrus,advisory-channel = <0x01>;
++		cirrus,shared-boost;
++	};
++
++	cirrus,classh-internal-algo {
++		cirrus,classh-bst-overide;
++		cirrus,classh-bst-max-limit = <0x01>;
++		cirrus,classh-mem-depth = <0x01>;
++		cirrus,classh-release-rate = <0x08>;
++		cirrus,classh-headroom-millivolt = <0x0B>;
++		cirrus,classh-wk-fet-disable = <0x01>;
++		cirrus,classh-wk-fet-delay = <0x04>;
++		cirrus,classh-wk-fet-thld = <0x01>;
++		cirrus,classh-vpch-auto = <0x01>;
++		cirrus,classh-vpch-rate = <0x02>;
++		cirrus,classh-vpch-man = <0x05>;
++	};
++
++	/* Depth, Location, Frame */
++	cirrus,monitor-signal-format {
++		cirrus,imon = /bits/ 8 <0x03 0x00 0x01>;
++		cirrus,vmon = /bits/ 8 <0x03 0x00 0x00>;
++		cirrus,vpmon = /bits/ 8 <0x03 0x04 0x00>;
++		cirrus,vbstmon = /bits/ 8 <0x03 0x04 0x01>;
++		cirrus,vpbrstat = /bits/ 8 <0x00 0x04 0x00>;
++		cirrus,zerofill = /bits/ 8 <0x00 0x00 0x00>;
++	};
++
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
