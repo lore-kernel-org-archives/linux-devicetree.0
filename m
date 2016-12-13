@@ -1,139 +1,35 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 5/7] ARM: dts: NSP: Add and enable amac2
-Date: Tue, 13 Dec 2016 13:13:49 -0500
-Message-ID: <1481652831-2744-6-git-send-email-jon.mason@broadcom.com>
-References: <1481652831-2744-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481652831-2744-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] i2c: designware: Cleaning and comment style fixes.
+Date: Tue, 13 Dec 2016 10:34:10 -0800
+Message-ID: <1481654050.29291.21.camel@perches.com>
+References: <32604e59cde19a8981681ad2f0ee447af847bf60.1481646098.git.lolivei@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <32604e59cde19a8981681ad2f0ee447af847bf60.1481646098.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add and enable the third AMAC ethernet interface in the device trees for
-the platforms where it is present.  Also, enable amac1 on some of the
-platforms where that was missing.
+On Tue, 2016-12-13 at 16:34 +0000, Luis Oliveira wrote:
+> - Misspelling of some words
+> - Comment format fix
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi    | 9 +++++++++
- arch/arm/boot/dts/bcm958622hr.dts | 8 ++++++++
- arch/arm/boot/dts/bcm958623hr.dts | 8 ++++++++
- arch/arm/boot/dts/bcm958625hr.dts | 8 ++++++++
- arch/arm/boot/dts/bcm958625k.dts  | 4 ++++
- arch/arm/boot/dts/bcm988312hr.dts | 8 ++++++++
- 6 files changed, 45 insertions(+)
+Most all adding periods to comments.
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 9cd77ab..ecffc16 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -227,6 +227,15 @@
- 			status = "disabled";
- 		};
- 
-+		amac2: ethernet@24000 {
-+			compatible = "brcm,nsp-amac";
-+			reg = <0x024000 0x1000>,
-+			      <0x112000 0x1000>;
-+			reg-names = "amac_base", "idm_base";
-+			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		nand: nand@26000 {
- 			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
- 			reg = <0x026000 0x600>,
-diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
-index 18b8ffb..477c486 100644
---- a/arch/arm/boot/dts/bcm958622hr.dts
-+++ b/arch/arm/boot/dts/bcm958622hr.dts
-@@ -65,6 +65,14 @@
- 	status = "okay";
- };
- 
-+&amac1 {
-+	status = "okay";
-+};
-+
-+&amac2 {
-+	status = "okay";
-+};
-+
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
-diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
-index 61499ae..c0a499d 100644
---- a/arch/arm/boot/dts/bcm958623hr.dts
-+++ b/arch/arm/boot/dts/bcm958623hr.dts
-@@ -65,6 +65,14 @@
- 	status = "okay";
- };
- 
-+&amac1 {
-+	status = "okay";
-+};
-+
-+&amac2 {
-+	status = "okay";
-+};
-+
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-index 94cce23..f7eb585 100644
---- a/arch/arm/boot/dts/bcm958625hr.dts
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -63,6 +63,14 @@
- 	status = "okay";
- };
- 
-+&amac1 {
-+	status = "okay";
-+};
-+
-+&amac2 {
-+	status = "okay";
-+};
-+
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-index 7aa86c7..6e994f2 100644
---- a/arch/arm/boot/dts/bcm958625k.dts
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -61,6 +61,10 @@
- 	status = "okay";
- };
- 
-+&amac2 {
-+	status = "okay";
-+};
-+
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
-diff --git a/arch/arm/boot/dts/bcm988312hr.dts b/arch/arm/boot/dts/bcm988312hr.dts
-index c324c9f..16666324 100644
---- a/arch/arm/boot/dts/bcm988312hr.dts
-+++ b/arch/arm/boot/dts/bcm988312hr.dts
-@@ -65,6 +65,14 @@
- 	status = "okay";
- };
- 
-+&amac1 {
-+	status = "okay";
-+};
-+
-+&amac2 {
-+	status = "okay";
-+};
-+
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
--- 
-2.7.4
+I think this is generally a value free change as these are
+frequently sentence fragments, but, hey, it's not my code.
+
+>  /*
+> - * Registers offset
+> + * Registers offset.
+>   */
+
+Like this.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
