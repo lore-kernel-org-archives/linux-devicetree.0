@@ -1,40 +1,47 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/6] USB support for Broadcom NSP SoC
-Date: Mon, 12 Dec 2016 18:20:13 -0800
-Message-ID: <79483fc3-5e91-a1f0-1dbf-1987682373e6@gmail.com>
-References: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
+From: Yao Yuan <yao.yuan@nxp.com>
+Subject: RE: [PATCH 3/5] Documentation: dt: mtd: add chip support for "jedec,
+ spi-nor"
+Date: Tue, 13 Dec 2016 02:46:10 +0000
+Message-ID: <DB6PR0402MB2902124A1862A91F4FA18643899B0@DB6PR0402MB2902.eurprd04.prod.outlook.com>
+References: <1481188984-43683-1-git-send-email-yao.yuan@freescale.com>
+ <1481188984-43683-4-git-send-email-yao.yuan@freescale.com>
+ <20161212170903.ixr6iu4c5txzreub@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161212170903.ixr6iu4c5txzreub@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2016 01:33 AM, Yendapally Reddy Dhananjaya Reddy wrote:
-> This patch set contains the usb support for Broadcom NSP SoC.
-> The usb phy is connected through mdio interface. The mdio interface
-> can be used to access either internal phys or external phys using a
-> multiplexer.
+On Thu, Dec 13, 2016 at 05:23:02PM +0800, Rob Herring wrote:
+> On Thu, Dec 08, 2016 at 05:23:02PM +0800, Yuan Yao wrote:
+> > From: Yuan Yao <yao.yuan@nxp.com>
 > 
-> The first patch provides the documentation details for mdio-mux and
-> second patch provides the documentation details for usb3 phy. The third
-> patch contains the mdio-mux support and fourth patch contains the
-> changes to the mdio bus driver.
+> The compatible string is wrong in the subject.
 > 
-> The fifth patch provides the phy driver and sixth patch provides the
-> enable method for usb.
+> >
+> > "sst25wf040b" and "en25s64" are also chip compatible with SPI NOR flash.
+> >
+> > Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > 
-> This patch series has been tested on NSP bcm958625HR board.
-> This patch series is based on v4.9.0-rc1 and is available from github-
-> repo: https://github.com/Broadcom/cygnus-linux.git
-> branch:nsp-usb-v1
+> Otherwise,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Can you resubmit this patch series with the feedback from Andrew, Rob
-and Scott addressed?
-
-Thanks!
--- 
-Florian
+Thanks for your review.
+I will update the subject and send v2 soon.
