@@ -1,92 +1,400 @@
-From: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v1 07/12] scsi: ufs: add option to change default UFS
- power management level
-Date: Tue, 13 Dec 2016 12:16:55 -0800
-Message-ID: <b326fb4217bb894295e83fe252aa7bf1@codeaurora.org>
-References: <1481590462-9981-1-git-send-email-subhashj@codeaurora.org>
- <20161213200427.vzdwyzajcftvvcgu@rob-hp-laptop>
+From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: hx711: Add IIO driver for AVIA HX711
+Date: Tue, 13 Dec 2016 21:22:35 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1612132111320.8653@pmeerw.net>
+References: <20161213180254.GA3185@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161213200427.vzdwyzajcftvvcgu@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hannes Reinecke <hare-IBi9RG/b67k@public.gmane.org>, Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161213180254.GA3185@andreas>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-12-13 12:04, Rob Herring wrote:
-> On Mon, Dec 12, 2016 at 04:54:20PM -0800, Subhash Jadavani wrote:
->> UFS device and link can be put in multiple different low power modes 
->> hence
->> UFS driver supports multiple different low power modes. By default UFS
->> driver selects the default (optimal) low power mode (which gives 
->> moderate
->> power savings and have relatively less enter and exit latencies) but
->> we might have to tune this default power mode for different chipset
->> platforms to meet the low power requirements/goals. Hence this patch
->> adds option to change default UFS low power mode (level).
->> 
->> Reviewed-by: Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Signed-off-by: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 10 ++++++
->>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 ++++++++
->>  drivers/scsi/ufs/ufshcd.c                          | 39 
->> ++++++++++++++++++++++
->>  drivers/scsi/ufs/ufshcd.h                          |  4 +--
->>  4 files changed, 65 insertions(+), 2 deletions(-)
->> 
->> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt 
->> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> index a99ed55..c3836c5 100644
->> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> @@ -41,6 +41,14 @@ Optional properties:
->>  -lanes-per-direction	: number of lanes available per direction - 
->> either 1 or 2.
->>  			  Note that it is assume same number of lanes is used both
->>  			  directions at once. If not specified, default is 2 lanes per 
->> direction.
->> +- rpm-level		: UFS Runtime power management level. Following PM 
->> levels are supported:
->> +			  0 - Both UFS device and Link in active state (Highest power 
->> consumption)
->> +			  1 - UFS device in active state but Link in Hibern8 state
->> +			  2 - UFS device in Sleep state but Link in active state
->> +			  3 - UFS device in Sleep state and Link in hibern8 state (default 
->> PM level)
->> +			  4 - UFS device in Power-down state and Link in Hibern8 state
->> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest 
->> power consumption)
->> +- spm-level		: UFS System power management level. Allowed PM levels 
->> are same as rpm-level.
-> 
-> This looks like you are putting policy for Linux into DT.
-> 
-> What I would expect to see here is disabling of states that don't work
-> due to some h/w limitation. Otherwise, it is a user decision for what
-> modes to go into. Also, I think link and device states should be
-> separate.
 
-Yes, generally default level (3) is good enough (and recommended) for 
-all platforms and most likely user is only expected to change this if 
-they see issues (most H/W) on their platform or they want even more 
-aggressive power state (level-4 or level-5) and ready to take the 
-performance hit associated with resume latencies.
+> This is the IIO driver for AVIA HX711 ADC which ist mostly used in weighting
+> cells.
 
-Also, I think it is better to keep Link and device states tied, one 
-reason is that we can't keep device in sleep/active state when Link is 
-in OFF state.
+comments below
+ 
+> The protocol is quite simple and using GPIO's:
 
+GPIOs
+
+> One GPIO is used as clock (SCK) while another GPIO is read (DOUT)
 > 
-> Rob
+> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> ---
+>  drivers/iio/adc/Kconfig  |  13 +++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/hx711.c  | 269 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 283 insertions(+)
+>  create mode 100644 drivers/iio/adc/hx711.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 932de1f9d1e7..7902b50fcf32 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -205,6 +205,19 @@ config HI8435
+>  	  This driver can also be built as a module. If so, the module will be
+>  	  called hi8435.
+>  
+> +config HX711
+> +	tristate "AVIA HX711 ADC for weight cells"
+> +	depends on GPIOLIB
+> +	help
+> +	  If you say yes here you get support for AVIA HX711 ADC which is used
+> +	  for weight cells
+> +
+> +	  This driver uses two GPIO's, one for setting the clock and the other
+
+GPIOs
+
+> +	  one for getting the data
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called hx711.
+> +
+>  config INA2XX_ADC
+>  	tristate "Texas Instruments INA2xx Power Monitors IIO driver"
+>  	depends on I2C && !SENSORS_INA2XX
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index b1aa456e6af3..d46e289900ef 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+>  obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_HI8435) += hi8435.o
+> +obj-$(CONFIG_HX711) += hx711.o
+>  obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
+>  obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+> diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
+> new file mode 100644
+> index 000000000000..cbc89e467985
+> --- /dev/null
+> +++ b/drivers/iio/adc/hx711.c
+> @@ -0,0 +1,269 @@
+> +/*
+> + * HX711: analog to digital converter for weight sensor module
+> + *
+> + * Copyright (c) Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/slab.h>
+> +#include <linux/sched.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +
+> +#define HX711_GAIN_32		2	/* gain = 32 for channel B  */
+> +#define HX711_GAIN_64		3	/* gain = 64 for channel A  */
+> +#define HX711_GAIN_128		1	/* gain = 128 for channel A */
+> +
+
+only one newline here please
+
+> +
+> +struct hx711_data {
+> +	struct device		*dev;
+> +	dev_t			devt;
+
+devt is not used, delete
+
+> +	struct gpio_desc	*gpiod_sck;
+> +	struct gpio_desc	*gpiod_dout;
+> +	int			gain_pulse;
+> +	struct mutex		lock;
+> +};
+> +
+> +static void hx711_reset(struct hx711_data *hx711_data)
+> +{
+> +	int val;
+> +	int i;
+> +
+> +	val = gpiod_get_value(hx711_data->gpiod_dout);
+> +	if (val) {
+> +		dev_warn(hx711_data->dev, "RESET-HX711\n");
+
+message needed?
+
+> +
+> +		gpiod_set_value(hx711_data->gpiod_sck, 1);
+> +		udelay(80);
+> +		gpiod_set_value(hx711_data->gpiod_sck, 0);
+> +
+> +		for (i = 0; i < 1000; i++) {
+> +			val = gpiod_get_value(hx711_data->gpiod_dout);
+> +			if (!val)
+> +				break;
+> +			/* sleep at least 1 ms*/
+
+add space before */
+
+> +			msleep(1);
+> +		}
+
+can this fail? what is it takes longer than 1000 * 1ms?
+
+> +	}
+> +}
+> +
+> +static int hx711_cycle(struct hx711_data *hx711_data)
+> +{
+> +	int val;
+> +
+> +	/* if preempted for more then 60us while SCK is high:
+> +	 * hx711 is going in reset
+> +	 * ==> measuring is false
+> +	 */
+> +	preempt_disable();
+> +	gpiod_set_value(hx711_data->gpiod_sck, 1);
+> +	val = gpiod_get_value(hx711_data->gpiod_dout);
+> +	gpiod_set_value(hx711_data->gpiod_sck, 0);
+> +	preempt_enable();
+> +
+> +	return val;
+> +}
+> +
+> +static unsigned int hx711_read(struct hx711_data *hx711_data)
+> +{
+> +	int i;
+> +	int ret;
+> +	int wert = 0;
+
+val or value maybe?
+should be unsigned int to match the return type of the function
+
+> +
+> +	hx711_reset(hx711_data);
+> +
+> +	for (i = 0; i < 24; i++) {
+> +		wert <<= 1;
+> +		ret = hx711_cycle(hx711_data);
+> +		if (ret)
+> +			wert++;
+> +	}
+> +
+> +	wert ^= 0x800000;
+> +
+> +	for (i = 0; i < hx711_data->gain_pulse; i++)
+> +		ret = hx711_cycle(hx711_data);
+> +
+> +	return wert;
+> +}
+> +
+
+delete newline
+
+> +
+> +static int hx711_read_raw(struct iio_dev *iio_dev,
+> +				const struct iio_chan_spec *chan,
+> +				int *val, int *val2, long mask)
+> +{
+> +	struct hx711_data *hx711_data = iio_priv(iio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			mutex_lock(&hx711_data->lock);
+> +			*val = (int)hx711_read(hx711_data);
+> +			mutex_unlock(&hx711_data->lock);
+> +			ret = IIO_VAL_INT;
+
+return IIO_VAL_INT;
+
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return ret;
+
+delete, dead code
+
+> +}
+> +
+> +static const struct iio_info hx711_iio_info = {
+> +	.driver_module		= THIS_MODULE,
+> +	.read_raw		= hx711_read_raw,
+> +};
+> +
+> +static const struct iio_chan_spec hx711_chan_spec[] = {
+> +	{ .type = IIO_VOLTAGE,
+> +		.channel = 0,
+
+.channel = 0 not needed, there is only one channel
+
+> +		.info_mask_separate =
+> +			BIT(IIO_CHAN_INFO_RAW),
+> +		.scan_type = {
+
+scan_type not needed, driver does not support buffered reads
+
+> +			.sign = 'u',
+> +			.realbits = 24,
+> +			.storagebits = 32,
+> +			.shift = 0,
+> +		}
+> +	},
+> +};
+> +
+> +static int hx711_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct hx711_data *hx711_data = NULL;
+> +	struct iio_dev *iio;
+> +	int ret = 0, ival;
+> +
+> +	iio = devm_iio_device_alloc(dev, sizeof(struct hx711_data));
+> +	if (!iio) {
+> +		dev_err(dev, "failed to allocate IIO device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	hx711_data = iio_priv(iio);
+> +	hx711_data->dev = dev;
+> +
+> +	mutex_init(&hx711_data->lock);
+> +
+> +	hx711_data->gpiod_sck = devm_gpiod_get(dev, "sck", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(hx711_data->gpiod_sck)) {
+> +		ret = PTR_ERR(hx711_data->gpiod_sck);
+> +		goto err;
+> +	}
+> +
+> +	hx711_data->gpiod_dout = devm_gpiod_get(dev, "dout", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(hx711_data->gpiod_dout)) {
+> +		ret = PTR_ERR(hx711_data->gpiod_dout);
+> +		goto err;
+> +	}
+> +
+> +	ret = of_property_read_u32 (node, "gain", &ival);
+> +	if (!ret) {
+> +		switch (ival) {
+> +		case 32:
+> +			hx711_data->gain_pulse = HX711_GAIN_32;
+> +			break;
+> +		case 64:
+> +			hx711_data->gain_pulse = HX711_GAIN_64;
+> +			break;
+> +		case 128:
+
+merge default and case 128?
+
+> +			hx711_data->gain_pulse = HX711_GAIN_128;
+> +			break;
+> +		default:
+> +			hx711_data->gain_pulse = HX711_GAIN_128;
+> +		}
+> +	} else
+> +		hx711_data->gain_pulse = HX711_GAIN_128;
+> +	dev_dbg(hx711_data->dev, "gain: %d\n", hx711_data->gain_pulse);
+> +
+> +	ret = gpiod_direction_input(hx711_data->gpiod_dout);
+> +	if (ret < 0) {
+> +		dev_err(hx711_data->dev, "gpiod_direction_input: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = gpiod_direction_output(hx711_data->gpiod_sck, 0);
+> +	if (ret < 0) {
+> +		dev_err(hx711_data->dev, "gpiod_direction_output: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, iio);
+> +
+> +	iio->name = pdev->name;
+> +	iio->dev.parent = &pdev->dev;
+> +	iio->info = &hx711_iio_info;
+> +	iio->modes = INDIO_DIRECT_MODE;
+> +	iio->channels = hx711_chan_spec;
+> +	iio->num_channels = ARRAY_SIZE(hx711_chan_spec);
+> +
+> +	dev_err(hx711_data->dev, "initialized\n");
+
+excessive logging, please remove
+
+> +
+> +	return devm_iio_device_register(dev, iio);
+> +
+> +err:
+> +	return ret;
+
+just return directly without goto?
+
+> +}
+> +
+> +
+> +static int hx711_suspend(struct device *dev)
+> +{
+
+pointless, just don't do PM support
+
+> +	return 0;
+> +}
+> +
+> +static int hx711_resume(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(hx711_pm_ops, hx711_suspend, hx711_resume);
+> +
+> +
+> +static const struct of_device_id of_hx711_match[] = {
+> +	{ .compatible = "avia,hx711", },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_hx711_match);
+> +
+> +static struct platform_driver hx711_driver = {
+> +	.probe		= hx711_probe,
+> +	.driver		= {
+> +		.name		= "hx711-gpio",
+> +		.pm		= &hx711_pm_ops,
+> +		.of_match_table	= of_hx711_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(hx711_driver);
+> +
+> +MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
+> +MODULE_DESCRIPTION("HX711 bitbanging driver - ADC for weight cells");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:hx711-gpio");
+> +
+> 
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
