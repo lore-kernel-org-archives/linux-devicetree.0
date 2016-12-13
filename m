@@ -1,7 +1,7 @@
 From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH 3/9] dt-bindings: stm32-dma: Fix typo regarding DMA client binding
-Date: Tue, 13 Dec 2016 14:40:45 +0100
-Message-ID: <1481636451-27863-4-git-send-email-cedric.madianga@gmail.com>
+Subject: [PATCH 9/9] dmaengine: stm32-dma: Add max_burst support
+Date: Tue, 13 Dec 2016 14:40:51 +0100
+Message-ID: <1481636451-27863-10-git-send-email-cedric.madianga@gmail.com>
 References: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
@@ -10,36 +10,32 @@ To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.st
 Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Only four cells are required for dma client binding not five.
+This patch sets the max_burst value supported by the STM32 DMA
 
 Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
 ---
- Documentation/devicetree/bindings/dma/stm32-dma.txt | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/dma/stm32-dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-index 70cd13f..4408af6 100644
---- a/Documentation/devicetree/bindings/dma/stm32-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
-@@ -40,8 +40,7 @@ Example:
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index b7be43a..49f86ca 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -114,6 +114,7 @@
+ #define STM32_DMA_MAX_CHANNELS		0x08
+ #define STM32_DMA_MAX_REQUEST_ID	0x08
+ #define STM32_DMA_MAX_DATA_PARAM	0x03
++#define STM32_DMA_MAX_BURST		16
  
- DMA clients connected to the STM32 DMA controller must use the format
- described in the dma.txt file, using a five-cell specifier for each
--channel: a phandle plus four integer cells.
--The four cells in order are:
-+channel: a phandle to the DMA controller plus the following four integer cells:
+ enum stm32_dma_width {
+ 	STM32_DMA_BYTE,
+@@ -1084,6 +1085,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+ 	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
++	dd->max_burst = STM32_DMA_MAX_BURST;
+ 	dd->dev = &pdev->dev;
+ 	INIT_LIST_HEAD(&dd->channels);
  
- 1. The channel id
- 2. The request line number
-@@ -61,7 +60,7 @@ The four cells in order are:
- 	0x1: medium
- 	0x2: high
- 	0x3: very high
--5. A 32bit mask specifying the DMA FIFO threshold configuration which are device
-+4. A 32bit mask specifying the DMA FIFO threshold configuration which are device
-    dependent:
-  -bit 0-1: Fifo threshold
- 	0x0: 1/4 full FIFO
 -- 
 1.9.1
