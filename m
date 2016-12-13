@@ -1,49 +1,49 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v4 1/4] mtd: spi-nor: add memory controllers for the
- Aspeed AST2500 SoC
-Date: Tue, 13 Dec 2016 13:22:26 +0100
-Message-ID: <4ed8b39b-69af-e62b-f6d6-472a6c791bcc@kaod.org>
-References: <1481557252-13656-1-git-send-email-clg@kaod.org>
- <1481557252-13656-2-git-send-email-clg@kaod.org>
- <3f3260d1-e677-b6d9-5571-a08a80344495@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
+Date: Tue, 13 Dec 2016 13:34:02 +0100
+Message-ID: <b34f49c8-6b37-cabf-2a0f-c8d465c53159@xs4all.nl>
+References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+ <c956e27e-7e01-2a2f-0e35-796c4a6556ae@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <3f3260d1-e677-b6d9-5571-a08a80344495@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <c956e27e-7e01-2a2f-0e35-796c4a6556ae@xs4all.nl>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
+Cc: tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMTMvMjAxNiAwODo1MCBBTSwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gT24gMTIvMTIvMjAx
-NiAwNDo0MCBQTSwgQ8OpZHJpYyBMZSBHb2F0ZXIgd3JvdGU6Cj4+IFRoaXMgZHJpdmVyIGFkZHMg
-bXRkIHN1cHBvcnQgZm9yIHRoZSBBc3BlZWQgQVNUMjUwMCBTb0Mgc3RhdGljIG1lbW9yeQo+PiBj
-b250cm9sbGVycyA6Cj4gCj4gWy4uLl0KPiAKPj4gKyNkZWZpbmUgREVWSUNFX05BTUUJImFzcGVl
-ZC1zbWMiCj4+ICsKPj4gKy8qCj4+ICsgKiBUaGUgZHJpdmVyIG9ubHkgc3VwcG9ydCBTUEkgZmxh
-c2gKPj4gKyAqLwo+PiArZW51bSBhc3BlZWRfc21jX2ZsYXNoX3R5cGUgewo+PiArCXNtY190eXBl
-X25vciAgPSAwLAo+PiArCXNtY190eXBlX25hbmQgPSAxLAo+PiArCXNtY190eXBlX3NwaSAgPSAy
-LAo+PiArfTsKPiAKPiBTbyB3aHkgaXMgdGhpcyBoZXJlID8gOikKCndlbGwsIGJlY2F1c2Ugd2Ug
-ZG8gZW5mb3JjZSB0aGUgU1BJIHR5cGUgaW4gYXNwZWVkX3NtY19jaGlwX3NldF90eXBlKCkKYnV0
-IEkgYWdyZWUsIHdlIGNvdWxkIGJlIGEgYml0IG1vcmUgZGlyZWN0IHdpdGggaXQgYW5kIGp1c3Qg
-d3JpdGUKdGhlIFNQSSB0eXBlLiBNYXkgYmUgaW4gYSBmb2xsb3d1cCBwYXRjaCB0aGVuLgoKPiAK
-Pj4gK3N0cnVjdCBhc3BlZWRfc21jX2NoaXA7Cj4+ICsKPj4gK3N0cnVjdCBhc3BlZWRfc21jX2lu
-Zm8gewo+PiArCXUzMiBtYXhzaXplOwkJLyogbWF4aW11bSBzaXplIG9mIGNoaXAgd2luZG93ICov
-Cj4+ICsJdTggbmNlOwkJCS8qIG51bWJlciBvZiBjaGlwIGVuYWJsZXMgKi8KPj4gKwlib29sIGhh
-c3R5cGU7CQkvKiBmbGFzaCB0eXBlIGZpZWxkIGV4aXN0cyBpbiBjb25maWcgcmVnICovCj4+ICsJ
-dTggd2UwOwkJCS8qIHNoaWZ0IGZvciB3cml0ZSBlbmFibGUgYml0IGZvciBDRTAgKi8KPj4gKwl1
-OCBjdGwwOwkJLyogb2Zmc2V0IGluIHJlZ3Mgb2YgY3RsIGZvciBDRTAgKi8KPj4gKwo+PiArCXZv
-aWQgKCpzZXRfNGIpKHN0cnVjdCBhc3BlZWRfc21jX2NoaXAgKmNoaXApOwo+PiArfTsKPiAKPiBP
-dGhlcndpc2UgbG9va3MgZ29vZDoKPiBSZXZpZXdlZC1ieTogTWFyZWsgVmFzdXQgPG1hcmVrLnZh
-c3V0QGdtYWlsLmNvbT4KPiAKClRoYW5rcyBmb3IgdGhlIHJldmlldywKCkMuIAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBk
-aXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LW10ZC8K
+Try again, this time with Krzysztof's new email address...
+
+On 13/12/16 13:20, Hans Verkuil wrote:
+> Hi Krzysztof,
+>
+> This still seems to be broken with the latest 4.9 kernel, right?
+>
+> Has there been any progress on this? Do you have an updated patch series
+> for me to use?
+>
+> Regards,
+>
+>     Hans
+>
+> On 05/05/16 14:34, Krzysztof Kozlowski wrote:
+>> Hi,
+>>
+>> This is a different, second try to fix usb3503+lan on Odroid U3 board
+>> if it was initialized by bootloader (e.g. for TFTP boot).
+>>
+>> First version:
+>> http://www.spinics.net/lists/linux-usb/msg140042.html
+>>
+>>
+>> Problem
+>> =======
+>> When Odroid U3 (usb3503 + smsc95xx + max77686) boots from network (TFTP),
+>> the usb3503 and LAN smsc95xx do not show up in "lsusb". Hard-reset
+>> is required, e.g. by suspend to RAM. The actual TFTP boot does
+>> not have to happen. Just "usb start" from U-Boot is sufficient.
+>>
+>
+>
