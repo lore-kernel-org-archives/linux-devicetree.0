@@ -1,92 +1,109 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Add DT bindings info for FlexRM ring manager
-Date: Tue, 13 Dec 2016 09:12:40 +0530
-Message-ID: <CAALAos-B0a3VhiuNWyWVeuitmUZh=2Y=ubFNe+_5eo29sBw6Sg@mail.gmail.com>
-References: <1480653536-5551-1-git-send-email-anup.patel@broadcom.com>
- <1480653536-5551-3-git-send-email-anup.patel@broadcom.com> <20161209180132.lnpvwybnij5uykuq@rob-hp-laptop>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v5 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
+Date: Tue, 13 Dec 2016 13:39:13 +0900
+Message-ID: <CAK7LNATO+vpxmDV-XEupjeXXhPNdrXHNwfwWcAVWLdbJi+37QA@mail.gmail.com>
+References: <1481201455-3483-1-git-send-email-yamada.masahiro@socionext.com>
+ <1481201455-3483-3-git-send-email-yamada.masahiro@socionext.com> <20161212171408.2yf4jauz7czv44fy@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161209180132.lnpvwybnij5uykuq@rob-hp-laptop>
+In-Reply-To: <20161212171408.2yf4jauz7czv44fy@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Andrei Pistirica <andrei.pistirica@microchip.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 9, 2016 at 11:31 PM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Dec 02, 2016 at 10:08:56AM +0530, Anup Patel wrote:
->> This patch adds device tree bindings document for the FlexRM
->> ring manager found on Broadcom iProc SoCs.
->>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->> ---
->>  .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    | 60 ++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+Hi Rob.
+
+2016-12-13 2:14 GMT+09:00 Rob Herring <robh@kernel.org>:
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
 >> new file mode 100644
->> index 0000000..e81f116
+>> index 0000000..750374f
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
->> @@ -0,0 +1,60 @@
->
-> [...]
->
->> +Example:
->> +--------
->> +crypto_mbox: mbox@67000000 {
->> +     compatible = "brcm,flexrm-mbox";
->> +     reg = <0x67000000 0x200000>;
->> +     msi-parent = <&gic_its 0x7f00>;
->> +     #mbox-cells = <3>;
->> +};
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+>> @@ -0,0 +1,30 @@
+>> +* Cadence SD/SDIO/eMMC Host Controller
 >> +
->> +crypto_client {
->> +     ...
->> +     mboxes = <&crypto_mbox 0 0x1 0xffff>,
->> +              <&crypto_mbox 1 0x1 0xffff>,
->> +              <&crypto_mbox 16 0x1 0xffff>,
->> +              <&crypto_mbox 17 0x1 0xffff>,
->> +              <&crypto_mbox 30 0x1 0xffff>,
->> +              <&crypto_mbox 31 0x1 0xffff>;
+>> +Required properties:
+>> +- compatible: should be "cdns,sd4hc".
 >
-> The FlexRM part looks fine. I still don't understand what this node is.
-> Is this a h/w block or just a list of mailboxes? What determines the
-> mailbox channel numbers here? I need to see what the complete node looks
-> like.
+> Needs SoC specific compatible strings too.
 
-The crypto_client is an example mailbox client for FlexRM mailbox.
 
-The example shows that we have FlexRM ring manager providing
-ring based programming interface to Crypto offload engine. The
-Crypto offload engine driver is a mailbox client driver.
+I remember you mentioned the vendor prefix
+stands for the SoC vendor, not the IP vendor.
+The compatible prefixed with the IP vendor is prepared for a fallback.
 
-FlexRM mailbox requires 3 cells to specify each mailbox channel in
-"mboxes" attribute of mailbox client DT node. The 1st cell is
-mailbox channel number (or FlexRM ring number). Rest of the
-cells are explained in bindings document.
+I will add "socionext,sd4hc".
 
-Complete node would look something like below:
 
-crypto_client {
-     compatible = "brcm,iproc-spu2";
-     mboxes = <&crypto_mbox 0 0x1 0xffff>,
-                     <&crypto_mbox 1 0x1 0xffff>,
-                     <&crypto_mbox 16 0x1 0xffff>,
-                     <&crypto_mbox 17 0x1 0xffff>,
-                     <&crypto_mbox 30 0x1 0xffff>,
-                     <&crypto_mbox 31 0x1 0xffff>;
-};
 
-The Crypto driver was recently submitted by Rob Rice.
-Refer https://www.spinics.net/lists/kernel/msg2395306.html
 
-Similar to Crypto offload engine, we also have RAID offload
-engine. The RAID offload engine driver is also implemented
-as mailbox client driver.
+>> +- reg: offset and length of the register set for the device.
+>> +- interrupts: a single interrupt specifier.
+>> +- clocks: phandle to the input clock.
+>> +
+>> +Optional properties:
+>> +For eMMC configuration, supported speed modes are not indicated by the SDHCI
+>> +Capabilities Register.  Instead, the following properties should be specified
+>> +if supported.  See mmc.txt for details.
+>> +- mmc-ddr-1_8v
+>> +- mmc-ddr-1_2v
+>> +- mmc-hs200-1_8v
+>> +- mmc-hs200-1_2v
+>> +- mmc-hs400-1_8v
+>> +- mmc-hs400-1_2v
+>
+> There's now a property to override SDHCI capabilities register. Maybe
+> you should use that instead? I'll defer to Ulf.
+>
 
-Regards,
-Anup
+I did not know this new property.
+
+So, now we have two ways to specify MMC speed mode capabilities
+by only touching DT.
+
+[1] Add MMC mode flags directly, like I did.
+[2] Use "sdhci-caps-mask" and "sdhci-caps"
+
+
+The problem for [2] is that eMMC capabilities
+do not perfectly correspond to the SDHCI capabilities register.
+
+
+>> +- mmc-hs400-1_8v
+>> +- mmc-hs400-1_2v
+
+If the driver sets SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400,
+we can use the bit63 of caps for specifying HS400.
+
+But, this is not defined in the SDHCI standard.
+#define  SDHCI_SUPPORT_HS400 0x80000000 /* Non-standard */
+
+
+
+>> +- mmc-ddr-1_8v
+
+For High Speed DDR, perhaps we can imply MMC_CAP_1_8V_DDR
+from MMC_CAP_UHS_DDR50  (bit34 of caps)
+
+This is not supported in the current code, but
+if this is a good idea, I can send a patch.
+
+
+>> +- mmc-ddr-1_2v
+
+This does not have the corresponding bit, but
+1.2V is not commonly used, so this is not a fatal problem.
+
+
+
+What I can do at most now, is to delete the
+Optional properties section entirely
+so users can choose [1] or [2] as they like.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
