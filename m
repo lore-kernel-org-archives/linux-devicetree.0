@@ -1,58 +1,50 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH resend] ARM: dts: sun8i: Support DTB build for NanoPi M1
-Date: Tue, 13 Dec 2016 16:15:26 +0100
-Message-ID: <20161213151526.ljhs5hq466rolr3l@lukather>
-References: <20161212231815.6114-1-woogyom.kim@gmail.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH 0/6] Allwinner A33 CPU frequency scaling support
+Date: Tue, 13 Dec 2016 23:22:46 +0800
+Message-ID: <20161213152252.53749-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="skcyelocia3gsqya"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161212231815.6114-1-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jorik Jonker <jorik@kippendief.biz>, Hans de Goede <hdegoede@redhat.com>, Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This series of patch adds frequency scaling support to Allwinner A33 SoC.
 
---skcyelocia3gsqya
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The first two patches fixes some bugs in the A33 CCU code.
 
-On Tue, Dec 13, 2016 at 08:18:15AM +0900, Milo Kim wrote:
-> The commit 10efbf5f1633 ("ARM: dts: sun8i: Add dts file for NanoPi M1 SBC=
-")
-> introduced NanoPi M1 board but it's missing in Allwinner H3 DTB build.
->=20
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+The patch 3 and 4 is for enabling the cpufreq-dt driver to work.
 
-Applied, thanks!
-Maxime
+The patch 5 is for enabling the voltage adjusting on reference design tablets.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+The patch 6 is for enabling the "turbo-mode" of A33. (According to the
+"extremity_freq" property in the FEX file. When I tested it with 3.4 BSP, it
+really performs as a turbo mode.)
 
---skcyelocia3gsqya
-Content-Type: application/pgp-signature; name="signature.asc"
+If there's any doubt of safety, the patch 6 can be ignored.
 
------BEGIN PGP SIGNATURE-----
+If there's any problem in patch 3, 4 and 5, they can also be temporarily
+ignored, but finally we need them ;-)
 
-iQIcBAEBCAAGBQJYUBCKAAoJEBx+YmzsjxAgXFsP/jOJzj1egyfXcHoubnLF0HPy
-KItdvwXejUS1cNUmh48qwLPqwyP4z4HjRlXw4BX6crue1xNvAiXskF3C3N7GuFEt
-0/K+GbPCGWBv2Chz8BDuYmBOtHDTFR4RjaZ2D4v7WXDzKm2/7j17hVCds+VkFIua
-vRKqsImLwoYzenHqIVvD9/sq6pBGlw2Zza2gn88izQggwOR7KM/KshR/1UpMUNMF
-7RkXsSSzRe/Fb7EAwZgolRmTo+yXsorjy+EexpFLLo9cxdrX5+SM7QIZIXZUoBaD
-B/TwAQ/9loVwS4XibmyQbkpZ2uLdvCGJkpZVub73+1VYgyBDsrM/fCGRpSHFhn0g
-NSDMGSLm/Y/lRph48zKoxJppAj1pB3968AXnu3D51Hq5tV42aLwPy6CJ/DEe/EOf
-nLFfpp93wIuOpmE66x+E4+sHKJAw2JSauo0XiMOAjpoeb/CqZKjVy3bYroRvdx/l
-gNFrxLzRVTDwxGT17oD/F9ecEAAOMze6JOe91WOWonIsPRvvKQYqRoUIuoEtK3OD
-KvkJO7SomYtgbfPw45rb0mJNy5yBq6H9IB5IK7rkL8EfxHYlE/eWCSLCKFy10I3t
-scJuZ3yBk/5niBm1q8rwRfQo/2v88mfTl88bYGOg/p/cDu54dvg/gVNsPT7w/u9y
-3swCIuFpd4vCGwg+y3Hd
-=igbi
------END PGP SIGNATURE-----
+Although there's now currently no thermal support for A33, many A33 devices
+are tablets with battery, and it will be valuable to save some power energy,
+so cpufreq support is also useful.
 
---skcyelocia3gsqya--
+P.S.
+
+Chen-Yu,
+
+Do you want to test the CCU fix and the operating point table on A23?
+
+Regards,
+Icenowy
