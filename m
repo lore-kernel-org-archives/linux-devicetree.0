@@ -1,81 +1,42 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: Re: [PATCH 2/2] arm: dts: sun8i: reuse the uart1
- node of iNet D978 rev2 board
-Date: Fri, 09 Dec 2016 19:42:15 +0800
-Message-ID: <20161213233646.agnmUDHf@smtp2h.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 2/6] clk: sunxi-ng: set the parent rate when adjustin CPUX
+ clock on A33
+Date: Wed, 14 Dec 2016 04:54:14 +0800
+Message-ID: <306991481662454@web33j.yandex.ru>
+References: <20161213152252.53749-1-icenowy@aosc.xyz>
+ <20161213152252.53749-3-icenowy@aosc.xyz>
+ <20161213154451.y4wcrqhtcc5sqli7@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBZNXYHBAKGQEDA3Y22I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161213154451.y4wcrqhtcc5sqli7@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jorik Jonker <jorik@kippendief.biz>
 List-Id: devicetree@vger.kernel.org
 
-
-2016=E5=B9=B412=E6=9C=889=E6=97=A5 =E4=B8=8B=E5=8D=884:11=E4=BA=8E Maxime R=
-ipard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Mon, Dec 05, 2016 at 05:03:35PM +0800, Icenowy Zheng wrote:=20
-> >=20
-> > 2016=E5=B9=B412=E6=9C=885=E6=97=A5 16:50=E4=BA=8E Maxime Ripard <maxime=
-.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A=20
-> > >=20
-> > > On Fri, Dec 02, 2016 at 11:19:13PM +0800, Icenowy Zheng wrote:=20
-> > > > As a uart1 node is added into sun8i-reference-design-tablet.dtsi, s=
-imply=20
-> > > > use it in iNet D978 rev2 device tree.=20
-> > > >=20
-> > > > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
-> > >=20
-> > > I'd like to see more consolidation before that change is needed. If w=
-e=20
-> > > find more boards using that, it will make sense, but for a single=20
-> > > board it's not worth it.=20
-> >=20
-> > At least 2~3 Q8 A33 tablets in #linux-sunxi are found to have=20
-> > rtl8703as, which contains UART bluetooth. (including mine)=20
->
-> Still, I'm not fond of creating a default on such a low count sample=20
-> of (out-of-tree) DTs. Support and enable the bluetooth on more boards,=20
-> and then consolidate.=20
->
-> > In fact, what I want to do is to get the node ready-to-be-okay in Q8=20
-> > dts, so it can be enabled by either u-boot command or (theortically)=20
-> > Hans de Goede's q8-hardwaremgr, just like what is done at=20
-> > touchscreen node.=20
->
-> If your plan is to enable all the combinations possible accross the Q8=20
-> tablets and let the bootloader/user figure it all out, then it's not=20
-> going to happen, sorry.=20
-
-This wire is in the A23/33 tablet reference design schemetics.
-
->
-> Maxime=20
->
-> --=20
-> Maxime Ripard, Free Electrons=20
-> Embedded Linux and Kernel engineering=20
-> http://free-electrons.com=20
->
-> --=20
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.=20
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
-> For more options, visit https://groups.google.com/d/optout.=20
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+CgoxMy4xMi4yMDE2LCAyMzo0NCwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gVHVlLCBEZWMgMTMsIDIwMTYgYXQgMTE6MjI6NDhQTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqBUaGUgQ1BVWCBjbG9jayBvbiBBMzMsIHdoaWNo
+IGlzIGZvciB0aGUgQ29ydGV4LUE3IGNvcmVzLCBpcyBkZXNpZ25lZCB0bwo+PiDCoGJlIGNoYW5n
+ZWFibGUgYnkgY2hhbmdpbmcgdGhlIHJhdGUgb2YgUExMX0NQVVguCj4+Cj4+IMKgQWRkIENMS19T
+RVRfUkFURV9QQVJFTlQgZmxhZyB0byB0aGlzIGNsb2NrLgo+Pgo+PiDCoFNpZ25lZC1vZmYtYnk6
+IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4KPiBBY2tlZC1ieTogTWF4aW1lIFJp
+cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+CgpFeGN1c2UgbWUsIGhhdmUg
+eW91IG1lcmdlZCB0aGlzIHBhdGNoPwoKSWYgbWVyZ2VkLCBJIHdvbid0IGNvbnRhaW4gaXQgaW4g
+bXkgUEFUQ0ggdjIsIHRodXMgdGhlIFBBVENIIHYyIHdpbGwgY29udGFpbgpvbmx5IGFuIHVwZGF0
+ZWQgT1BQIHBhdGNoLgoKPgo+IFRoYW5rcyEKPiBNYXhpbWUKPgo+IC0tCj4gTWF4aW1lIFJpcGFy
+ZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5n
+Cj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
