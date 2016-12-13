@@ -1,86 +1,38 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v3 2/2] drm/panel: simple: Add support BOE nv101wxmn51
-Date: Wed, 14 Dec 2016 11:19:56 +0800
-Message-ID: <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
-References: <1481685596-15608-1-git-send-email-wxt@rock-chips.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v2 1/3] power: supply: bq24735-charger: simplify register update to stop charging
+Date: Wed, 14 Dec 2016 00:56:43 +0100
+Message-ID: <1481673405-4547-2-git-send-email-peda@axentia.se>
+References: <1481673405-4547-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1481685596-15608-1-git-send-email-wxt@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, robh+dt@kernel.org, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1481673405-4547-1-git-send-email-peda@axentia.se>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-MTAuMVdYR0EgaXMgYSBjb2xvciBhY3RpdmUgbWF0cml4IFRGVCBMQ0QgbW9kdWxlIHVzaW5nIGFt
-b3JwaG91cyBzaWxpY29uClRGVCdzIGFzIGFuIGFjdGl2ZSBzd2l0Y2hpbmcgZGV2aWNlcy4gSXQg
-Y2FuIGJlIHN1cHBvcnRlZCBieSB0aGUKc2ltcGxlLXBhbmVsIGRyaXZlci4KClJlYWQgdGhlIHBh
-bmVsIGRlZmF1bHQgZWRpZCBpbmZvcm1hdGlvbjoKCkVESUQgTU9ERSBERVRBSUxTCiAgICAgICAg
-ICAgICAgICBuYW1lID0gPE5VTEw+CiAgICAgICAgICAgICAgICBwaXhlbF9jbG9jayA9IDcxOTAw
-CiAgICAgICAgICAgICAgICBsdmRzX2R1YWxfY2hhbm5lbCA9IDAKICAgICAgICAgICAgICAgIHJl
-ZnJlc2ggPSAwCiAgICAgICAgICAgICAgICBoYSA9IDEyODAKICAgICAgICAgICAgICAgIGhibCA9
-IDE2MAogICAgICAgICAgICAgICAgaHNvID0gNDgKICAgICAgICAgICAgICAgIGhzcHcgPSAzMgog
-ICAgICAgICAgICAgICAgaGJvcmRlciA9IDAKICAgICAgICAgICAgICAgIHZhID0gODAwCiAgICAg
-ICAgICAgICAgICB2YmwgPSAzMgogICAgICAgICAgICAgICAgdnNvID0gMwogICAgICAgICAgICAg
-ICAgdnNwdyA9IDUKICAgICAgICAgICAgICAgIHZib3JkZXIgPSAwCiAgICAgICAgICAgICAgICBw
-aHN5bmMgPSArCiAgICAgICAgICAgICAgICBwdnN5bmMgPSAtCiAgICAgICAgICAgICAgICB4X21t
-ID0gMAogICAgICAgICAgICAgICAgeV9tbSA9IDAKZHJtX2Rpc3BsYXlfbW9kZQogICAgICAgICAg
-ICAgICAgLmhkaXNwbGF5ID0gMTI4MAogICAgICAgICAgICAgICAgLmhzeW5jX3N0YXJ0ID0gMTMy
-OAogICAgICAgICAgICAgICAgLmhzeW5jX2VuZCA9IDEzNjAKICAgICAgICAgICAgICAgIC5odG90
-YWwgPSAxNDQwCiAgICAgICAgICAgICAgICAudmRpc3BsYXkgPSA4MDAKICAgICAgICAgICAgICAg
-IC52c3luY19zdGFydCA9IDgwMwogICAgICAgICAgICAgICAgLnZzeW5jX2VuZCA9IDgwOAogICAg
-ICAgICAgICAgICAgLnZ0b3RhbCA9IDgzMgoKVGhlcmUgYXJlIHR3byBtb2RlcyBpbiB0aGUgZWRp
-ZDoKRGV0YWlsZWQgbW9kZTE6IENsb2NrIDcxLjkwMCBNSHosIDIxNiBtbSB4IDEzNSBtbQogICAg
-ICAgICAgICAgICAxMjgwIDEzMjggMTM2MCAxNDQwIGhib3JkZXIgMAogICAgICAgICAgICAgICAg
-ODAwICA4MDMgIDgwOCAgODMyIHZib3JkZXIgMAogICAgICAgICAgICAgICAraHN5bmMgLXZzeW5j
-CkRldGFpbGVkIG1vZGUyOiBDbG9jayA1Ny41MDAgTUh6LCAyMTYgbW0geCAxMzUgbW0KICAgICAg
-ICAgICAgICAgMTI4MCAxMzI4IDEzNjAgMTQ0MCBoYm9yZGVyIDAKICAgICAgICAgICAgICAgIDgw
-MCAgODAzICA4MDggIDgzMiB2Ym9yZGVyIDAKICAgICAgICAgICAgICAgK2hzeW5jIC12c3luYwoK
-QWRkIHRoZSBib3RoIGVkaWQgdG8gc3VwcG9ydCBtb3JlIG1vZGVzIGZvciBCT0UgbnYxMDF3eG1u
-NTEuCgpTaWduZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgotLS0K
-CkNoYW5nZXMgaW4gdjM6Ci0gQXMgU3TDqXBoYW5lIGNvbW1lbnRlZCBvbiBodHRwczovL3BhdGNo
-d29yay5rZXJuZWwub3JnL3BhdGNoLzk0NjU5MTEsCiAgYWRkIGRvd25jbG9jayBtb2RlIGZvciBl
-ZGlkLgoKQ2hhbmdlcyBpbiB2MjoKLSBmaXggdGhlIHZzeW5jX3N0YXJ0IGFuZCB2c3luY19lbmQg
-ZnJvbSB0aGUgZWRpZC4KLSBjaGFuZ2UgdGhlIGNvbW1pdC4KCiBkcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtc2ltcGxlLmMgfCA0NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLXNpbXBsZS5jCmluZGV4IDA2YWFmNzkuLjFjZTI1YjUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwv
-cGFuZWwtc2ltcGxlLmMKQEAgLTY2OCw2ICs2NjgsNDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBw
-YW5lbF9kZXNjIGF2aWNfdG0wNzBkZGgwMyA9IHsKIAl9LAogfTsKIAorc3RhdGljIGNvbnN0IHN0
-cnVjdCBkcm1fZGlzcGxheV9tb2RlIGJvZV9udjEwMXd4bW41MV9tb2Rlc1tdID0geworCXsKKwkJ
-LmNsb2NrID0gNzE5MDAsCisJCS5oZGlzcGxheSA9IDEyODAsCisJCS5oc3luY19zdGFydCA9IDEy
-ODAgKyA0OCwKKwkJLmhzeW5jX2VuZCA9IDEyODAgKyA0OCArIDMyLAorCQkuaHRvdGFsID0gMTI4
-MCArIDQ4ICsgMzIgKyA4MCwKKwkJLnZkaXNwbGF5ID0gODAwLAorCQkudnN5bmNfc3RhcnQgPSA4
-MDAgKyAzLAorCQkudnN5bmNfZW5kID0gODAwICsgMyArIDUsCisJCS52dG90YWwgPSA4MDAgKyAz
-ICsgNSArIDI0LAorCQkudnJlZnJlc2ggPSA2MCwKKwl9LAorCXsKKwkJLmNsb2NrID0gNTc1MDAs
-CisJCS5oZGlzcGxheSA9IDEyODAsCisJCS5oc3luY19zdGFydCA9IDEyODAgKyA0OCwKKwkJLmhz
-eW5jX2VuZCA9IDEyODAgKyA0OCArIDMyLAorCQkuaHRvdGFsID0gMTI4MCArIDQ4ICsgMzIgKyA4
-MCwKKwkJLnZkaXNwbGF5ID0gODAwLAorCQkudnN5bmNfc3RhcnQgPSA4MDAgKyAzLAorCQkudnN5
-bmNfZW5kID0gODAwICsgMyArIDUsCisJCS52dG90YWwgPSA4MDAgKyAzICsgNSArIDI0LAorCQku
-dnJlZnJlc2ggPSA0OCwKKwl9LAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNj
-IGJvZV9udjEwMXd4bW41MSA9IHsKKwkubW9kZXMgPSBib2VfbnYxMDF3eG1uNTFfbW9kZXMsCisJ
-Lm51bV9tb2RlcyA9IEFSUkFZX1NJWkUoYm9lX252MTAxd3htbjUxX21vZGVzKSwKKwkuYnBjID0g
-OCwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMjE3LAorCQkuaGVpZ2h0ID0gMTM2LAorCX0sCisJ
-LmRlbGF5ID0geworCQkucHJlcGFyZSA9IDIxMCwKKwkJLmVuYWJsZSA9IDUwLAorCQkudW5wcmVw
-YXJlID0gMTYwLAorCX0sCit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21v
-ZGUgY2h1bmdod2FfY2xhYTA3MHdwMDN4Z19tb2RlID0gewogCS5jbG9jayA9IDY2NzcwLAogCS5o
-ZGlzcGxheSA9IDgwMCwKQEAgLTE3NDgsNiArMTc5MCw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-b2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0gImF2
-aWMsdG0wNzBkZGgwMyIsCiAJCS5kYXRhID0gJmF2aWNfdG0wNzBkZGgwMywKIAl9LCB7CisJCS5j
-b21wYXRpYmxlID0gImJvZSxudjEwMXd4bW41MSIsCisJCS5kYXRhID0gJmJvZV9udjEwMXd4bW41
-MSwKKwl9LCB7CiAJCS5jb21wYXRpYmxlID0gImNodW5naHdhLGNsYWEwNzB3cDAzeGciLAogCQku
-ZGF0YSA9ICZjaHVuZ2h3YV9jbGFhMDcwd3AwM3hnLAogCX0sIHsKLS0gCjIuNy40CgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Providing value bits outside of the mask is pointless.
+
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/power/supply/bq24735-charger.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
+index eb7783b42e0a..1d5c9206e0ed 100644
+--- a/drivers/power/supply/bq24735-charger.c
++++ b/drivers/power/supply/bq24735-charger.c
+@@ -111,8 +111,7 @@ static inline int bq24735_enable_charging(struct bq24735 *charger)
+ 		return 0;
+ 
+ 	return bq24735_update_word(charger->client, BQ24735_CHG_OPT,
+-				   BQ24735_CHG_OPT_CHARGE_DISABLE,
+-				   ~BQ24735_CHG_OPT_CHARGE_DISABLE);
++				   BQ24735_CHG_OPT_CHARGE_DISABLE, 0);
+ }
+ 
+ static inline int bq24735_disable_charging(struct bq24735 *charger)
+-- 
+2.1.4
+
