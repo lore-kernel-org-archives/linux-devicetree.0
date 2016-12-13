@@ -1,117 +1,35 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/8] MFD: add bindings for STM32 Timers driver
-Date: Tue, 13 Dec 2016 15:07:14 -0600
-Message-ID: <CAL_Jsq+qzhUAMG_jL6CSHz+kHu6M6N8Nko4KfRQRgRgtk-KTKg@mail.gmail.com>
-References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
- <1481292919-26587-2-git-send-email-benjamin.gaignard@st.com>
- <20161212185149.rt3xqpn3mbaavb4l@rob-hp-laptop> <CA+M3ks4ukP14YE5-6+gAzJBjEmjEyGyVbsVGOm8ehVm0EfzO-w@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: mfd: Remove TPS65217 interrupts
+Date: Tue, 13 Dec 2016 15:09:23 -0600
+Message-ID: <CAL_JsqJL-oh9FwXSH=R2Vr1J2TDD1LqHfFY2es88rsq4Jz7DjQ@mail.gmail.com>
+References: <20161209062833.5768-1-woogyom.kim@gmail.com> <20161209062833.5768-3-woogyom.kim@gmail.com>
+ <20161212172511.5nj7whzytpkmrk7z@rob-hp-laptop> <fe4985c0-d60a-2562-12a7-064404efd64c@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+M3ks4ukP14YE5-6+gAzJBjEmjEyGyVbsVGOm8ehVm0EfzO-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij@>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fe4985c0-d60a-2562-12a7-064404efd64c@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2016 at 3:29 AM, Benjamin Gaignard
-<benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 2016-12-12 19:51 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> On Fri, Dec 09, 2016 at 03:15:12PM +0100, Benjamin Gaignard wrote:
->>> Add bindings information for STM32 Timers
->>>
->>> version 6:
->>> - rename stm32-gtimer to stm32-timers
->>> - change compatible
->>> - add description about the IPs
->>>
->>> version 2:
->>> - rename stm32-mfd-timer to stm32-gptimer
->>> - only keep one compatible string
->>>
->>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/mfd/stm32-timers.txt       | 46 ++++++++++++++++++++++
->>>  1 file changed, 46 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
->>> new file mode 100644
->>> index 0000000..b30868e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
->>> @@ -0,0 +1,46 @@
->>> +STM32 Timers driver bindings
->>> +
->>> +This IP provides 3 types of timer along with PWM functionality:
->>> +- advanced-control timers consist of a 16-bit auto-reload counter driven by a programmable
->>> +  prescaler, break input feature, PWM outputs and complementary PWM ouputs channels.
->>> +- general-purpose timers consist of a 16-bit or 32-bit auto-reload counter driven by a
->>> +  programmable prescaler and PWM outputs.
->>> +- basic timers consist of a 16-bit auto-reload counter driven by a programmable prescaler.
->>> +
->>> +Required parameters:
->>> +- compatible: must be "st,stm32-timers"
->>> +
->>> +- reg:                       Physical base address and length of the controller's
->>> +                     registers.
->>> +- clock-names:               Set to "clk_int".
+On Mon, Dec 12, 2016 at 5:24 PM, Milo Kim <woogyom.kim@gmail.com> wrote:
+> On 12/13/2016 02:25 AM, Rob Herring wrote:
 >>
->> 'clk' is redundant. Also, you don't really need -names when there is
->> only one of them.
->
-> I use devm_regmap_init_mmio_clk() which get the clock by it name so
-> I have to define it in DT.
-
-Are you sure NULL is not allowed? I don't know, but at least clk_get()
-allows NULL.
-
-It's fine to keep, just drop the "clk_" part.
-
->
->>> +- clocks:            Phandle to the clock used by the timer module.
->>> +                     For Clk properties, please refer to ../clock/clock-bindings.txt
->>> +
->>> +Optional parameters:
->>> +- resets:            Phandle to the parent reset controller.
->>> +                     See ../reset/st,stm32-rcc.txt
->>> +
->>> +Optional subnodes:
->>> +- pwm:                       See ../pwm/pwm-stm32.txt
->>> +- timer:             See ../iio/timer/stm32-timer-trigger.txt
->>> +
->>> +Example:
->>> +     timers@40010000 {
->>> +             #address-cells = <1>;
->>> +             #size-cells = <0>;
->>> +             compatible = "st,stm32-timers";
->>> +             reg = <0x40010000 0x400>;
->>> +             clocks = <&rcc 0 160>;
->>> +             clock-names = "clk_int";
->>> +
->>> +             pwm {
->>> +                     compatible = "st,stm32-pwm";
->>> +                     pinctrl-0       = <&pwm1_pins>;
->>> +                     pinctrl-names   = "default";
->>> +             };
->>> +
->>> +             timer {
->>> +                     compatible = "st,stm32-timer-trigger";
->>> +                     reg = <0>;
+>> On Fri, Dec 09, 2016 at 03:28:31PM +0900, Milo Kim wrote:
+>>>
+>>> Interrupt numbers are from the datasheet, so no need to keep them in
+>>> the ABI. Use the number in the DT file.
 >>
->> You don't need reg here as there is only one. In turn, you don't need
->> #address-cells or #size-cells.
+>> I don't see the purpose of ripping this out. The headers have always
+>> been for convienence, not whether the values come from the datasheet or
+>> not.
 >
-> I use "reg" to set each timer configuration.
-> From hardware point of view they are all the same except for which hardware
-> signals they could consume and/or send.
+>
+> My understanding is it's a same rule as other interrupt controllers.
 
-This sounds okay, but...
+Oh yes, that's true. We never use defines for interrupts. In that case:
 
-> "reg" is used as index of the two tables in driver code.
-
-this statement doesn't really sound like valid use of reg.
-
-If you keep reg, then the node needs a unit address (timer@0).
+Acked-by: Rob Herring <robh@kernel.org>
 
 Rob
