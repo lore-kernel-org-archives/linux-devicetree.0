@@ -1,54 +1,64 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v7 2/5] drm: bridge: add DT bindings for TI ths8135
-Date: Tue, 13 Dec 2016 11:09:16 +0100
-Message-ID: <1481623759-12786-3-git-send-email-bgolaszewski@baylibre.com>
-References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v4 1/4] powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
+Date: Tue, 13 Dec 2016 21:13:26 +1100
+Message-ID: <f1bc3387-1118-6fd7-8e1b-2e59bfabdad1@gmail.com>
+References: <cover.1481288905.git.ego@linux.vnet.ibm.com>
+ <0947ced2f87c68a0a10ede8e1aaf39838a6f8d52.1481288905.git.ego@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <0947ced2f87c68a0a10ede8e1aaf39838a6f8d52.1481288905.git.ego@linux.vnet.ibm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Oliver O'Halloran <oohall@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-VEhTODEzNSBpcyBhIGNvbmZpZ3VyYWJsZSB2aWRlbyBEQUMuIEFkZCBEVCBiaW5kaW5ncyBmb3Ig
-dGhpcyBjaGlwLgoKU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3
-c2tpQGJheWxpYnJlLmNvbT4KUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQu
-cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
-cm5lbC5vcmc+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0
-ICAgICAgICAgfCA0NiArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNDYg
-aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTM1LnR4dAoKZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTM1
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
-aSx0aHM4MTM1LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi42ZWMxYTg4
-Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0CkBAIC0wLDAgKzEsNDYgQEAKK1RIUzgxMzUgVmlk
-ZW8gREFDCistLS0tLS0tLS0tLS0tLS0tLQorCitUaGlzIGlzIHRoZSBiaW5kaW5nIGZvciBUZXhh
-cyBJbnN0cnVtZW50cyBUSFM4MTM1IFZpZGVvIERBQyBicmlkZ2UuCisKK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6CisKKy0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksdGhzODEzNSIKKworUmVxdWlyZWQg
-bm9kZXM6CisKK1RoaXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rp
-b25zIGFyZSBtb2RlbGxlZCB1c2luZyB0aGUgT0YKK2dyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBp
-biBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgorCistIFZpZGVv
-IHBvcnQgMCBmb3IgUkdCIGlucHV0CistIFZpZGVvIHBvcnQgMSBmb3IgVkdBIG91dHB1dAorCitF
-eGFtcGxlCistLS0tLS0tCisKK3ZnYS1icmlkZ2UgeworCWNvbXBhdGlibGUgPSAidGksdGhzODEz
-NSI7CisJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJI3NpemUtY2VsbHMgPSA8MD47CisKKwlwb3J0
-cyB7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQlw
-b3J0QDAgeworCQkJcmVnID0gPDA+OworCisJCQl2Z2FfYnJpZGdlX2luOiBlbmRwb2ludCB7CisJ
-CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2RjX291dF92Z2E+OworCQkJfTsKKwkJfTsKKworCQlw
-b3J0QDEgeworCQkJcmVnID0gPDE+OworCisJCQl2Z2FfYnJpZGdlX291dDogZW5kcG9pbnQgewor
-CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdmdhX2Nvbl9pbj47CisJCQl9OworCQl9OworCX07Cit9
-OwotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+
+
+On 10/12/16 00:32, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> Currently all the low-power idle states are expected to wake up
+> at reset vector 0x100. Which is why the macro IDLE_STATE_ENTER_SEQ
+> that puts the CPU to an idle state and never returns.
+> 
+> On ISA_300, when the ESL and EC bits in the PSSCR are zero, the
+> CPU is expected to wake up at the next instruction of the idle
+> instruction.
+> 
+> This patch adds a new macro named IDLE_STATE_ENTER_SEQ_NORET for the
+> no-return variant and reuses the name IDLE_STATE_ENTER_SEQ
+> for a variant that allows resuming operation at the instruction next
+> to the idle-instruction.
+> 
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/include/asm/cpuidle.h   |  5 ++++-
+>  arch/powerpc/kernel/exceptions-64s.S |  6 +++---
+>  arch/powerpc/kernel/idle_book3s.S    | 10 +++++-----
+>  3 files changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/cpuidle.h b/arch/powerpc/include/asm/cpuidle.h
+> index 3919332..0a3255b 100644
+> --- a/arch/powerpc/include/asm/cpuidle.h
+> +++ b/arch/powerpc/include/asm/cpuidle.h
+> @@ -21,7 +21,7 @@
+>  
+>  /* Idle state entry routines */
+>  #ifdef	CONFIG_PPC_P7_NAP
+> -#define	IDLE_STATE_ENTER_SEQ(IDLE_INST)				\
+> +#define IDLE_STATE_ENTER_SEQ(IDLE_INST)                         \
+>  	/* Magic NAP/SLEEP/WINKLE mode enter sequence */	\
+>  	std	r0,0(r1);					\
+>  	ptesync;						\
+> @@ -29,6 +29,9 @@
+>  1:	cmpd	cr0,r0,r0;					\
+>  	bne	1b;						\
+>  	IDLE_INST;						\
+> +
+
+Is the power saving magic sequence the same as before for power 9
+as well?
+
+Balbir Singh
