@@ -1,100 +1,120 @@
-From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] cpuidle:powernv: Add helper function to populate
- powernv idle states.
-Date: Tue, 13 Dec 2016 22:51:04 +1100
-Message-ID: <d50fa1c4-9f48-c463-ddf8-293c23053b8f@gmail.com>
-References: <cover.1481288905.git.ego@linux.vnet.ibm.com>
- <36f9cd2d944772d8e414a8240f9ec36eaec65ebd.1481288905.git.ego@linux.vnet.ibm.com>
+From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
+Date: Tue, 13 Dec 2016 12:03:18 +0000
+Message-ID: <87twa8yr22.fsf@kamboji.qca.qualcomm.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+        <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
+        <87insxg0yc.fsf@kamboji.qca.qualcomm.com>
+        <871sxza9al.fsf@kamboji.qca.qualcomm.com>
+        <CAFBinCC6JWBhZwma=66fBi3_to2SaHOMNDQS23jHNhcc+RUcYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <36f9cd2d944772d8e414a8240f9ec36eaec65ebd.1481288905.git.ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAFBinCC6JWBhZwma=66fBi3_to2SaHOMNDQS23jHNhcc+RUcYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>       (Martin
+ Blumenstingl's message of "Mon, 12 Dec 2016 21:05:53 +0100")
+Content-Language: en-US
+Content-ID: <4548E2274EB7ED4E8FD68C877BC2DF4F-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Neuling <mikey-/owAOxkjmzZAfugRpC6u6w@public.gmane.org>, Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Shreyas B. Prabhu" <shreyasbp-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shilpasri G Bhat <shilpa.bhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
+> Hello Kalle,
+>
+> On Fri, Nov 25, 2016 at 4:06 PM, Valo, Kalle <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org> wro=
+te:
+>> Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>
+>>> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+>>>
+>>>> There are two types of swapping the EEPROM data in the ath9k driver.
+>>>> Before this series one type of swapping could not be used without the
+>>>> other.
+>>>>
+>>>> The first type of swapping looks at the "magic bytes" at the start of
+>>>> the EEPROM data and performs swab16 on the EEPROM contents if needed.
+>>>> The second type of swapping is EEPROM format specific and swaps
+>>>> specific fields within the EEPROM itself (swab16, swab32 - depends on
+>>>> the EEPROM format).
+>>>>
+>>>> With this series the second part now looks at the EEPMISC register
+>>>> inside the EEPROM, which uses a bit to indicate if the EEPROM data
+>>>> is Big Endian (this is also done by the FreeBSD kernel).
+>>>> This has a nice advantage: currently there are some out-of-tree hacks
+>>>> (in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
+>>>> Big Endian system (=3D no swab16 is performed) but the EEPROM itself
+>>>> indicates that it's data is Little Endian. Until now the out-of-tree
+>>>> code simply did a swab16 before passing the data to ath9k, so ath9k
+>>>> first did the swab16 - this also enabled the format specific swapping.
+>>>> These out-of-tree hacks are still working with the new logic, but it
+>>>> is recommended to remove them. This implementation is based on a
+>>>> discussion with Arnd Bergmann who raised concerns about the
+>>>> robustness and portability of the swapping logic in the original OF
+>>>> support patch review, see [0].
+>>>>
+>>>> After a second round of patches (=3D v1 of this series) neither Arnd
+>>>> Bergmann nor I were really happy with the complexity of the EEPROM
+>>>> swapping logic. Based on a discussion (see [1] and [2]) we decided
+>>>> that ath9k should use a defined format (specifying the endianness
+>>>> of the data - I went with __le16 and __le32) when accessing the
+>>>> EEPROM fields. A benefit of this is that we enable the EEPMISC based
+>>>> swapping logic by default, just like the FreeBSD driver, see [3]. On
+>>>> the devices which I have tested (see below) ath9k now works without
+>>>> having to specify the "endian_check" field in ath9k_platform_data (or
+>>>> a similar logic which could provide this via devicetree) as ath9k now
+>>>> detects the endianness automatically. Only EEPROMs which are mangled
+>>>> by some out-of-tree code still need the endian_check flag (or one can
+>>>> simply remove that mangling from the out-of-tree code).
+>>>>
+>>>> Testing:
+>>>> - tested by myself on AR9287 with Big Endian EEPROM
+>>>> - tested by myself on AR9227 with Little Endian EEPROM
+>>>> - tested by myself on AR9381 (using the ar9003_eeprom implementation,
+>>>>   which did not suffer from this whole problem)
+>>>> - how do we proceed with testing? maybe we could keep this in a
+>>>>   feature-branch and add these patches to LEDE once we have an ACK to
+>>>>   get more people to test this
+>>>>
+>>>> This series depends on my other series (v7):
+>>>> "add devicetree support to ath9k" - see [4]
+>>>
+>>> I think this looks pretty good. If there's a bug somewhere it should be
+>>> quite easy to fix so I'm not that worried and would be willing to take
+>>> these as soon as I have applied the dependency series. IIRC your
+>>> devicetree patches will have at least one more review round so that wil=
+l
+>>> take some time still. In the meantime it would be great if LEDE folks
+>>> could take a look at these and comment (or test).
+>>
+>> So are everyone happy with this? I haven't seen any comments. If I don't
+>> here anything I'm planning to take these, most likely for 4.11.
+>
+> the patches have been in LEDE for almost two weeks now and I did not
+> see any reports of ath9k breakage (footnote below).
+>
+> It seems that there are a few devices out there where the whole EEPROM
+> is swab16'ed which switches the position of the 1-byte fields
+> opCapFlags and eepMisc.
+> those still work fine with the new code, however I had a second patch
+> in LEDE [0] which results in ath9k_platform_data.endian_check NOT
+> being set anymore.
+> that endian_check flag was used before to swab16 the whole EEPROM, to
+> correct the position of the 1-byte fields again.
+> Currently we are fixing this in the firmware hotplug script: [1]
+> This is definitely not a blocker for this series though (if we want to
+> have a devicetree replacement for "ath9k_platform_data.endian_check"
+> then I'd work on that within a separate series, but I somewhat
+> consider these EEPROMs as "broken" so fixing them in
+> userspace/firmware hotplug script is fine for me)
 
-On 10/12/16 00:32, Gautham R. Shenoy wrote:
-> From: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> 
-> In the current code for powernv_add_idle_states, there is a lot of code
-> duplication while initializing an idle state in powernv_states table.
-> 
-> Add an inline helper function to populate the powernv_states[] table for
-> a given idle state. Invoke this for populating the "Nap", "Fastsleep"
-> and the stop states in powernv_add_idle_states.
-> 
-> Signed-off-by: Gautham R. Shenoy <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/cpuidle/cpuidle-powernv.c | 85 ++++++++++++++++++++++-----------------
->  include/linux/cpuidle.h           |  1 +
->  2 files changed, 50 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-> index 7fe442c..db18af1 100644
-> --- a/drivers/cpuidle/cpuidle-powernv.c
-> +++ b/drivers/cpuidle/cpuidle-powernv.c
-> @@ -167,6 +167,24 @@ static int powernv_cpuidle_driver_init(void)
->  	return 0;
->  }
->  
-> +static inline void add_powernv_state(int index, const char *name,
-> +				     unsigned int flags,
-> +				     int (*idle_fn)(struct cpuidle_device *,
-> +						    struct cpuidle_driver *,
-> +						    int),
-> +				     unsigned int target_residency,
-> +				     unsigned int exit_latency,
-> +				     u64 psscr_val)
-> +{
-> +	strlcpy(powernv_states[index].name, name, CPUIDLE_NAME_LEN);
-> +	strlcpy(powernv_states[index].desc, name, CPUIDLE_NAME_LEN);
+Sounds good to me, thanks for the thorough followup. I'm planning to
+apply these any day.
 
-Do name and desc ever diverge?
-
-> +	powernv_states[index].flags = flags;
-> +	powernv_states[index].target_residency = target_residency;
-> +	powernv_states[index].exit_latency = exit_latency;
-> +	powernv_states[index].enter = idle_fn;
-
-Why not call it idle_fn instead of enter?
-
-> +	stop_psscr_table[index] = psscr_val;
-> +}
-> +
->  static int powernv_add_idle_states(void)
->  {
->  	struct device_node *power_mgt;
-> @@ -236,6 +254,7 @@ static int powernv_add_idle_states(void)
->  		"ibm,cpu-idle-state-residency-ns", residency_ns, dt_idle_states);
->  
->  	for (i = 0; i < dt_idle_states; i++) {
-> +		unsigned int exit_latency, target_residency;
->  		/*
->  		 * If an idle state has exit latency beyond
->  		 * POWERNV_THRESHOLD_LATENCY_NS then don't use it
-> @@ -243,28 +262,33 @@ static int powernv_add_idle_states(void)
->  		 */
->  		if (latency_ns[i] > POWERNV_THRESHOLD_LATENCY_NS)
-
-Ideally this should be called POWERNV_MAX_THRESHOLD_LATENCY_NS then
-
->  			continue;
-> +		/*
-> +		 * Firmware passes residency and latency values in ns.
-> +		 * cpuidle expects it in us.
-> +		 */
-> +		exit_latency = ((unsigned int)latency_ns[i]) / 1000;
-> +		if (!rc)
-> +			target_residency = residency_ns[i] / 1000;
-> +		else
-> +			target_residency = 0;
-
-Where do we get rc from? what does target_residency = 0 mean?
-Balbir Singh
+--=20
+Kalle Valo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
