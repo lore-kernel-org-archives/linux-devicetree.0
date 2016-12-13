@@ -1,169 +1,65 @@
-From: Subhash Jadavani <subhashj@codeaurora.org>
-Subject: [PATCH v2 07/12] scsi: ufs: add option to change default UFS power management level
-Date: Tue, 13 Dec 2016 11:51:12 -0800
-Message-ID: <1481658674-32092-1-git-send-email-subhashj@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hannes Reinecke <hare@suse.com>, Yaniv Gardi <ygardi@codeaurora.org>, Gilad Broner <gbroner@codeaurora.org>, Joao Pinto <Joao.Pinto@synopsys.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Input: imx6ul_tsc - generalize the averaging property
+Date: Tue, 13 Dec 2016 13:54:54 -0600
+Message-ID: <CAL_JsqJAdxrUGL5pjTPDkrXTsKJU-vL1Y4TpqhP79bESs9vR-g@mail.gmail.com>
+References: <1481440003-27168-1-git-send-email-guy.shapiro@mobi-wize.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1481440003-27168-1-git-send-email-guy.shapiro@mobi-wize.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guy Shapiro <guy.shapiro@mobi-wize.com>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-UFS device and link can be put in multiple different low power modes hence
-UFS driver supports multiple different low power modes. By default UFS
-driver selects the default (optimal) low power mode (which gives moderate
-power savings and have relatively less enter and exit latencies) but
-we might have to tune this default power mode for different chipset
-platforms to meet the low power requirements/goals. Hence this patch
-adds option to change default UFS low power mode (level).
+On Sun, Dec 11, 2016 at 1:06 AM, Guy Shapiro <guy.shapiro@mobi-wize.com> wrote:
+> Make the avarage-samples property a general touchscreen property
+> rather than imx6ul device specific.
+>
+> Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
+> ---
+>  .../bindings/input/touchscreen/imx6ul_tsc.txt      | 11 ++----
+>  .../bindings/input/touchscreen/touchscreen.txt     |  3 ++
+>  drivers/input/touchscreen/imx6ul_tsc.c             | 46 ++++++++++++++++------
+>  3 files changed, 41 insertions(+), 19 deletions(-)
 
-Reviewed-by: Yaniv Gardi <ygardi@codeaurora.org>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 10 ++++++
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 ++++++++
- drivers/scsi/ufs/ufshcd.c                          | 39 ++++++++++++++++++++++
- drivers/scsi/ufs/ufshcd.h                          |  4 +--
- 4 files changed, 65 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index a99ed55..c3836c5 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -41,6 +41,14 @@ Optional properties:
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-+- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
-+			  0 - Both UFS device and Link in active state (Highest power consumption)
-+			  1 - UFS device in active state but Link in Hibern8 state
-+			  2 - UFS device in Sleep state but Link in active state
-+			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
-+			  4 - UFS device in Power-down state and Link in Hibern8 state
-+			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
-+- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-@@ -66,4 +74,6 @@ Example:
- 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		rpm-level = <3>;
-+		spm-level = <5>;
- 	};
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index a72a4ba..896943d 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -223,6 +223,19 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
- 	return err;
- }
- 
-+static void ufshcd_parse_pm_levels(struct ufs_hba *hba)
-+{
-+	struct device *dev = hba->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	if (np) {
-+		if (of_property_read_u32(np, "rpm-level", &hba->rpm_lvl))
-+			hba->rpm_lvl = -1;
-+		if (of_property_read_u32(np, "spm-level", &hba->spm_lvl))
-+			hba->spm_lvl = -1;
-+	}
-+}
-+
- #ifdef CONFIG_PM
- /**
-  * ufshcd_pltfrm_suspend - suspend power management function
-@@ -342,6 +355,7 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 		goto dealloc_host;
- 	}
- 
-+	ufshcd_parse_pm_levels(hba);
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 982802c..c5e4b86 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -191,6 +191,22 @@ enum {
- 	return ufs_pm_lvl_states[lvl].link_state;
- }
- 
-+static inline enum ufs_pm_level
-+ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
-+					enum uic_link_state link_state)
-+{
-+	enum ufs_pm_level lvl;
-+
-+	for (lvl = UFS_PM_LVL_0; lvl < UFS_PM_LVL_MAX; lvl++) {
-+		if ((ufs_pm_lvl_states[lvl].dev_state == dev_state) &&
-+			(ufs_pm_lvl_states[lvl].link_state == link_state))
-+			return lvl;
-+	}
-+
-+	/* if no match found, return the level 0 */
-+	return UFS_PM_LVL_0;
-+}
-+
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
-@@ -215,6 +231,14 @@ enum {
- 	END_FIX
- };
- 
-+static inline bool ufshcd_is_valid_pm_lvl(int lvl)
-+{
-+	if (lvl >= 0 && lvl < ARRAY_SIZE(ufs_pm_lvl_states))
-+		return true;
-+	else
-+		return false;
-+}
-+
- static void ufshcd_tmc_handler(struct ufs_hba *hba);
- static void ufshcd_async_scan(void *data, async_cookie_t cookie);
- static int ufshcd_reset_and_restore(struct ufs_hba *hba);
-@@ -7290,6 +7314,21 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 		ufshcd_clkscaling_init_sysfs(hba);
- 	}
- 
-+	/*
-+	 * If rpm_lvl and and spm_lvl are not already set to valid levels,
-+	 * set the default power management level for UFS runtime and system
-+	 * suspend. Default power saving mode selected is keeping UFS link in
-+	 * Hibern8 state and UFS device in sleep.
-+	 */
-+	if (!ufshcd_is_valid_pm_lvl(hba->rpm_lvl))
-+		hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-+							UFS_SLEEP_PWR_MODE,
-+							UIC_LINK_HIBERN8_STATE);
-+	if (!ufshcd_is_valid_pm_lvl(hba->spm_lvl))
-+		hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-+							UFS_SLEEP_PWR_MODE,
-+							UIC_LINK_HIBERN8_STATE);
-+
- 	/* Hold auto suspend until async scan completes */
- 	pm_runtime_get_sync(dev);
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 787323b..97fbe4a 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -432,9 +432,9 @@ struct ufs_hba {
- 	enum ufs_dev_pwr_mode curr_dev_pwr_mode;
- 	enum uic_link_state uic_link_state;
- 	/* Desired UFS power management level during runtime PM */
--	enum ufs_pm_level rpm_lvl;
-+	int rpm_lvl;
- 	/* Desired UFS power management level during system PM */
--	enum ufs_pm_level spm_lvl;
-+	int spm_lvl;
- 	struct device_attribute rpm_lvl_attr;
- 	struct device_attribute spm_lvl_attr;
- 	int pm_op_in_progress;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +       switch (average_samples) {
+> +       case 1:
+> +               tsc->average_enable = false;
+> +               tsc->average_select = 0; /* value unused; initialize anyway */
+> +               break;
+> +       case 4:
+> +               tsc->average_enable = true;
+> +               tsc->average_select = 0;
+> +               break;
+> +       case 8:
+> +               tsc->average_enable = true;
+> +               tsc->average_select = 1;
+> +               break;
+> +       case 16:
+> +               tsc->average_enable = true;
+> +               tsc->average_select = 2;
+> +               break;
+> +       case 32:
+> +               tsc->average_enable = true;
+> +               tsc->average_select = 3;
+> +               break;
+
+This could be more efficiently written as
+
+tsc->average_select = log2(average_samples) - 2;
+
+Then enable if >=0.
+
+Rob
