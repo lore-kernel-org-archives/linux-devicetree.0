@@ -1,25 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] Documentation: dt: iio: add st_lsm6dsx sensor
- device binding
-Date: Tue, 13 Dec 2016 13:03:13 -0600
-Message-ID: <20161213190313.22kexw56cvzznw3s@rob-hp-laptop>
-References: <20161210090218.4609-1-lorenzo.bianconi@st.com>
- <20161210090218.4609-3-lorenzo.bianconi@st.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 1/2] Add OV5647 device tree documentation
+Date: Tue, 13 Dec 2016 20:05:54 +0100
+Message-ID: <20161213190554.GD8676@amd>
+References: <cover.1481639091.git.roliveir@synopsys.com>
+ <c47834c1c9c2a8e23f41a12c8717601f4a901506.1481639091.git.roliveir@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IMjqdzrDRly81ofr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161210090218.4609-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <c47834c1c9c2a8e23f41a12c8717601f4a901506.1481639091.git.roliveir@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: mchehab@kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, hverkuil@xs4all.nl, dheitmueller@kernellabs.com, slongerbeam@gmail.com, lars@metafoo.de, robert.jarzmik@free.fr, pali.rohar@gmail.com, sakari.ailus@linux.intel.com, mark.rutland@arm.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 10, 2016 at 10:02:18AM +0100, Lorenzo Bianconi wrote:
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/imu/st_lsm6dsx.txt     | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--IMjqdzrDRly81ofr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 2016-12-13 14:32:36, Ramiro Oliveira wrote:
+> Create device tree bindings documentation.
+>=20
+> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++=
+++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Doc=
+umentation/devicetree/bindings/media/i2c/ov5647.txt
+> new file mode 100644
+> index 0000000..46e5e30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> @@ -0,0 +1,35 @@
+> +Omnivision OV5647 raw image sensor
+> +---------------------------------
+> +
+> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfa=
+ces
+> +and CCI (I2C compatible) control bus.
+> +
+> +Required properties:
+> +
+> +- compatible	: "ovti,ov5647";
+> +- reg		: I2C slave address of the sensor;
+> +- clocks	: Reference to the xclk clock.
+> +- clock-names	: Should be "xclk".
+> +- clock-frequency: Frequency of the xclk clock
+
+Nit pick: you end the lines here with ';', '.' and nothing. Pick one
+:-).
+
+Otherwise it looks good.
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IMjqdzrDRly81ofr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlhQRpIACgkQMOfwapXb+vLh0QCghGL62LMN0HleUeagxAK5WrXe
+IWgAoIdaoxc8y8dvhZpVHBZ7QD8oHz88
+=dOWd
+-----END PGP SIGNATURE-----
+
+--IMjqdzrDRly81ofr--
