@@ -1,74 +1,58 @@
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH v4 5/5] i2c: designware: Cleaning comments and formatation
-Date: Tue, 13 Dec 2016 17:08:06 +0200
-Message-ID: <b83be13e-483d-2d0c-d80d-ff752cc8bf04@linux.intel.com>
-References: <cover.1481131072.git.lolivei@synopsys.com>
- <02856fdb6ce3230a4ac1ba0958938ad51e763205.1481131072.git.lolivei@synopsys.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH resend] ARM: dts: sun8i: Support DTB build for NanoPi M1
+Date: Tue, 13 Dec 2016 16:15:26 +0100
+Message-ID: <20161213151526.ljhs5hq466rolr3l@lukather>
+References: <20161212231815.6114-1-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <02856fdb6ce3230a4ac1ba0958938ad51e763205.1481131072.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="skcyelocia3gsqya"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161212231815.6114-1-woogyom.kim@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/07/2016 07:55 PM, Luis Oliveira wrote:
-> - Missspelling, comment formatation and fix a string of
->   the existing code
->
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> ---
-> Changes V3->V4: (Andy Shevchenko)
-> - created a commit message
->
->  drivers/i2c/busses/i2c-designware-common.c |  2 +-
->  drivers/i2c/busses/i2c-designware-slave.c  | 10 ++++++----
->  2 files changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
-> index 41b38d8b8732..838ef662d2c8 100644
-> --- a/drivers/i2c/busses/i2c-designware-common.c
-> +++ b/drivers/i2c/busses/i2c-designware-common.c
-> @@ -42,7 +42,7 @@ static char *abort_sources[] = {
->  	[ABRT_TXDATA_NOACK] =
->  		"data not acknowledged",
->  	[ABRT_GCALL_NOACK] =
-> -		"no acknowledgement for a general call",
-> +		"no acknowledgment for a general call",
 
-I'm not a native speaker but are both acknowledgement and acknowledgment 
-ok? I.e. is there need to change?
+--skcyelocia3gsqya
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
-> index 1c7f82bb2513..442bc5ce6d47 100644
-> --- a/drivers/i2c/busses/i2c-designware-slave.c
-> +++ b/drivers/i2c/busses/i2c-designware-slave.c
-> @@ -70,8 +70,8 @@ int i2c_dw_init_slave(struct dw_i2c_dev *dev)
->  		/* Configure register access mode 16bit */
->  		dev->accessor_flags |= ACCESS_16BIT;
->  	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
-> -		dev_err(dev->dev, "Unknown Synopsys component type: "
-> -			"0x%08x\n", reg);
-> +		dev_err(dev->dev,
-> +		 "Unknown Synopsys component type: 0x%08x\n", reg);
->  		i2c_dw_release_lock(dev);
->  		return -ENODEV;
->  	}
-> @@ -181,8 +181,10 @@ int i2c_dw_reg_slave(struct i2c_client *slave)
->  		return -EBUSY;
->  	if (slave->flags & I2C_CLIENT_TEN)
->  		return -EAFNOSUPPORT;
-> -		/* set slave address in the IC_SAR register,
-> -		* the address to which the DW_apb_i2c responds */
-> +		/*
-> +		 * set slave address in the IC_SAR register,
-> +		 * the address to which the DW_apb_i2c responds
-> +		 */
+On Tue, Dec 13, 2016 at 08:18:15AM +0900, Milo Kim wrote:
+> The commit 10efbf5f1633 ("ARM: dts: sun8i: Add dts file for NanoPi M1 SBC=
+")
+> introduced NanoPi M1 board but it's missing in Allwinner H3 DTB build.
+>=20
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
 
-These two should be done already in the patch 4/5 since it introduced 
-the lines that you are changing here.
+Applied, thanks!
+Maxime
 
--- 
-Jarkko
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--skcyelocia3gsqya
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYUBCKAAoJEBx+YmzsjxAgXFsP/jOJzj1egyfXcHoubnLF0HPy
+KItdvwXejUS1cNUmh48qwLPqwyP4z4HjRlXw4BX6crue1xNvAiXskF3C3N7GuFEt
+0/K+GbPCGWBv2Chz8BDuYmBOtHDTFR4RjaZ2D4v7WXDzKm2/7j17hVCds+VkFIua
+vRKqsImLwoYzenHqIVvD9/sq6pBGlw2Zza2gn88izQggwOR7KM/KshR/1UpMUNMF
+7RkXsSSzRe/Fb7EAwZgolRmTo+yXsorjy+EexpFLLo9cxdrX5+SM7QIZIXZUoBaD
+B/TwAQ/9loVwS4XibmyQbkpZ2uLdvCGJkpZVub73+1VYgyBDsrM/fCGRpSHFhn0g
+NSDMGSLm/Y/lRph48zKoxJppAj1pB3968AXnu3D51Hq5tV42aLwPy6CJ/DEe/EOf
+nLFfpp93wIuOpmE66x+E4+sHKJAw2JSauo0XiMOAjpoeb/CqZKjVy3bYroRvdx/l
+gNFrxLzRVTDwxGT17oD/F9ecEAAOMze6JOe91WOWonIsPRvvKQYqRoUIuoEtK3OD
+KvkJO7SomYtgbfPw45rb0mJNy5yBq6H9IB5IK7rkL8EfxHYlE/eWCSLCKFy10I3t
+scJuZ3yBk/5niBm1q8rwRfQo/2v88mfTl88bYGOg/p/cDu54dvg/gVNsPT7w/u9y
+3swCIuFpd4vCGwg+y3Hd
+=igbi
+-----END PGP SIGNATURE-----
+
+--skcyelocia3gsqya--
