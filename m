@@ -1,7 +1,7 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v4 7/9] clk: stm32f4: SDIO & 48Mhz clock management for STM32F469 board
-Date: Tue, 13 Dec 2016 15:20:18 +0100
-Message-ID: <1481638820-29324-8-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v4 3/9] clk: stm32f4: Add post divisor for I2S & SAI PLLs
+Date: Tue, 13 Dec 2016 15:20:14 +0100
+Message-ID: <1481638820-29324-4-git-send-email-gabriel.fernandez@st.com>
 References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,96 +14,101 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-In the stm32f469 soc, the 48Mhz clock could be derived from pll-q or
-from pll-sai-p.
-
-The SDIO clock could be also derived from 48Mhz or from sys clock.
+This patch adds post dividers of I2S & SAI PLLs.
+These dividers are managed by a dedicated register (RCC_DCKCFGR).
+The PLL should be off before a set rate.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32f4.c | 49 ++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 3 deletions(-)
+ drivers/clk/clk-stm32f4.c | 55 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
 diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index 2bff436..11174a5 100644
+index cab2014..70ca93c 100644
 --- a/drivers/clk/clk-stm32f4.c
 +++ b/drivers/clk/clk-stm32f4.c
-@@ -211,7 +211,7 @@ struct stm32f4_gate_data {
- 	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
--	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"pll48" },
-+	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"sdmux" },
- 	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
-@@ -951,6 +951,10 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
- static const char *sai_parents[4] = { "pllsai-q-div", "plli2s-q-div", NULL,
- 	"no-clock" };
- 
-+static const char *pll48_parents[2] = { "pll-q", "pllsai-p" };
+@@ -47,6 +47,10 @@
+ #define STM32F4_RCC_CSR			0x74
+ #define STM32F4_RCC_PLLI2SCFGR		0x84
+ #define STM32F4_RCC_PLLSAICFGR		0x88
++#define STM32F4_RCC_DCKCFGR		0x8c
 +
-+static const char *sdmux_parents[2] = { "pll48", "sys" };
-+
- struct stm32_aux_clk {
- 	int idx;
- 	const char *name;
-@@ -1000,6 +1004,45 @@ struct stm32f4_clk_data {
- 	},
- };
++#define NONE -1
++#define NO_IDX  NONE
  
-+static const struct stm32_aux_clk stm32f469_aux_clk[] = {
-+	{
-+		CLK_LCD, "lcd-tft", lcd_parent, ARRAY_SIZE(lcd_parent),
-+		NO_MUX, 0, 0,
-+		STM32F4_RCC_APB2ENR, 26,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_I2S, "i2s", i2s_parents, ARRAY_SIZE(i2s_parents),
-+		STM32F4_RCC_CFGR, 23, 1,
-+		NO_GATE, 0,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI1, "sai1-a", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 20, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI2, "sai1-b", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 22, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		NO_IDX, "pll48", pll48_parents, ARRAY_SIZE(pll48_parents),
-+		STM32F4_RCC_DCKCFGR, 27, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+	{
-+		NO_IDX, "sdmux", sdmux_parents, ARRAY_SIZE(sdmux_parents),
-+		STM32F4_RCC_DCKCFGR, 28, 1,
-+		NO_GATE, 0,
-+		0
-+	},
+ struct stm32f4_gate_data {
+ 	u8	offset;
+@@ -357,6 +361,19 @@ struct stm32f4_pll {
+ 
+ #define to_stm32f4_pll(_gate) container_of(_gate, struct stm32f4_pll, gate)
+ 
++struct stm32f4_pll_post_div_data {
++	int idx;
++	u8 pll_num;
++	const char *name;
++	const char *parent;
++	u8 flag;
++	u8 offset;
++	u8 shift;
++	u8 width;
++	u8 flag_div;
++	const struct clk_div_table *div_table;
 +};
 +
- static const struct stm32f4_clk_data stm32f429_clk_data = {
- 	.gates_data	= stm32f429_gates,
- 	.gates_map	= stm32f42xx_gate_map,
-@@ -1014,8 +1057,8 @@ struct stm32f4_clk_data {
- 	.gates_map	= stm32f46xx_gate_map,
- 	.gates_num	= ARRAY_SIZE(stm32f469_gates),
- 	.pll_data	= stm32f469_pll,
--	.aux_clk	= stm32f429_aux_clk,
--	.aux_clk_num	= ARRAY_SIZE(stm32f429_aux_clk),
-+	.aux_clk	= stm32f469_aux_clk,
-+	.aux_clk_num	= ARRAY_SIZE(stm32f469_aux_clk),
+ struct stm32f4_vco_data {
+ 	const char *vco_name;
+ 	u8 offset;
+@@ -370,6 +387,23 @@ struct stm32f4_vco_data {
+ 	{ "vco-sai", STM32F4_RCC_PLLSAICFGR, 28, 29 },
  };
  
- static const struct of_device_id stm32f4_of_match[] = {
++
++static const struct clk_div_table post_divr_table[] = {
++	{ 0, 2 }, { 1, 4 }, { 2, 8 }, { 3, 16 }, { 0 }
++};
++
++#define MAX_POST_DIV 3
++static const struct stm32f4_pll_post_div_data  post_div_data[MAX_POST_DIV] = {
++	{ CLK_I2SQ_PDIV, PLL_I2S, "plli2s-q-div", "plli2s-q",
++		CLK_SET_RATE_PARENT, STM32F4_RCC_DCKCFGR, 0, 5, 0, NULL},
++
++	{ CLK_SAIQ_PDIV, PLL_SAI, "pllsai-q-div", "pllsai-q",
++		CLK_SET_RATE_PARENT, STM32F4_RCC_DCKCFGR, 8, 5, 0, NULL },
++
++	{ NO_IDX, PLL_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
++		STM32F4_RCC_DCKCFGR, 16, 2, 0, post_divr_table },
++};
++
+ struct stm32f4_div_data {
+ 	u8 shift;
+ 	u8 width;
+@@ -996,6 +1030,27 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+ 	clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll("vco_in",
+ 			&data->pll_data[2], &stm32f4_clk_lock);
+ 
++	for (n = 0; n < MAX_POST_DIV; n++) {
++		const struct stm32f4_pll_post_div_data *post_div;
++		struct clk_hw *hw;
++
++		post_div = &post_div_data[n];
++
++		hw = clk_register_pll_div(post_div->name,
++				post_div->parent,
++				post_div->flag,
++				base + post_div->offset,
++				post_div->shift,
++				post_div->width,
++				post_div->flag_div,
++				post_div->div_table,
++				clks[post_div->pll_num],
++				&stm32f4_clk_lock);
++
++		if (post_div->idx != NO_IDX)
++			clks[post_div->idx] = hw;
++	}
++
+ 	sys_parents[1] = hse_clk;
+ 	clk_register_mux_table(
+ 	    NULL, "sys", sys_parents, ARRAY_SIZE(sys_parents), 0,
 -- 
 1.9.1
