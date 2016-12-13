@@ -1,90 +1,41 @@
-From: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/9] dmaengine: stm32-dma: Rework starting transfer management
-Date: Tue, 13 Dec 2016 14:40:47 +0100
-Message-ID: <1481636451-27863-6-git-send-email-cedric.madianga@gmail.com>
-References: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481636451-27863-1-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
+Date: Tue, 13 Dec 2016 15:53:50 +0200
+Message-ID: <CAJKOXPdEy5N3qR3YGWJi41wD3uRDONmd16gC5LuayZ4_krT6YA@mail.gmail.com>
+References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+ <c956e27e-7e01-2a2f-0e35-796c4a6556ae@xs4all.nl> <b34f49c8-6b37-cabf-2a0f-c8d465c53159@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <b34f49c8-6b37-cabf-2a0f-c8d465c53159@xs4all.nl>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, tjakobi@math.uni-bielefeld.de, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch reworks the way to manage transfer starting.
-Now, starting DMA is only allowed when the channel is not busy.
-Then, stm32_dma_start_transfer is declared as void.
-At least, after each transfer completion, we start the next transfer if a
-new descriptor as been queued in the issued list during an ongoing
-transfer.
+On Tue, Dec 13, 2016 at 2:34 PM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> Try again, this time with Krzysztof's new email address...
+>
+>
+> On 13/12/16 13:20, Hans Verkuil wrote:
+>>
+>> Hi Krzysztof,
+>>
+>> This still seems to be broken with the latest 4.9 kernel, right?
+>>
+>> Has there been any progress on this? Do you have an updated patch series
+>> for me to use?
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
----
- drivers/dma/stm32-dma.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+Hi,
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 3056ce7..adb846c 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -421,7 +421,7 @@ static void stm32_dma_dump_reg(struct stm32_dma_chan *chan)
- 	dev_dbg(chan2dev(chan), "SFCR:  0x%08x\n", sfcr);
- }
- 
--static int stm32_dma_start_transfer(struct stm32_dma_chan *chan)
-+static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- {
- 	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
- 	struct virt_dma_desc *vdesc;
-@@ -432,12 +432,12 @@ static int stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 
- 	ret = stm32_dma_disable_chan(chan);
- 	if (ret < 0)
--		return ret;
-+		return;
- 
- 	if (!chan->desc) {
- 		vdesc = vchan_next_desc(&chan->vchan);
- 		if (!vdesc)
--			return -EPERM;
-+			return;
- 
- 		chan->desc = to_stm32_dma_desc(vdesc);
- 		chan->next_sg = 0;
-@@ -471,7 +471,7 @@ static int stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 
- 	chan->busy = true;
- 
--	return 0;
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
-@@ -552,15 +552,13 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
- {
- 	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
- 	unsigned long flags;
--	int ret;
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
--	if (!chan->busy) {
--		if (vchan_issue_pending(&chan->vchan) && !chan->desc) {
--			ret = stm32_dma_start_transfer(chan);
--			if ((!ret) && (chan->desc->cyclic))
--				stm32_dma_configure_next_sg(chan);
--		}
-+	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
-+		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
-+		stm32_dma_start_transfer(chan);
-+		if (chan->desc->cyclic)
-+			stm32_dma_configure_next_sg(chan);
- 	}
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
--- 
-1.9.1
+I think it is not fixed. Still. I left this work to others. AFAIK,
+Peter Chen is working on a new generic approach:
+https://lwn.net/Articles/703556/
+On top of his patchset, Odroid would need some DTS code as well (and
+maybe something in usb3503). However I do not plan to work on this
+anymore as I do not have Odroid U3 anymore. Marek and Bartlomiej from
+Samsung Poland are in CC-list so maybe they would like to continue the
+work?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
