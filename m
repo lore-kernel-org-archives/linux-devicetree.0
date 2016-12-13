@@ -1,62 +1,59 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: arm: update Armada CP110 system controller binding
-Date: Tue, 13 Dec 2016 13:41:18 +0100
-Message-ID: <1481632880-9198-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 2/3] clk: mvebu: adjust clock handling for the CP110 system controller
+Date: Tue, 13 Dec 2016 13:41:19 +0100
+Message-ID: <1481632880-9198-3-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1481632880-9198-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481632880-9198-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1481632880-9198-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
+Cc: Marcin Wojtas <mw@semihalf.com>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-It turns out that in the CP110 HW block present in Marvell Armada
-7K/8K SoCs, gatable clock n°18 not only controls SD/MMC, but also the
-GOP block. This commit updates the Device Tree binding for this piece
-of hardware accordingly.
+This commit adds support for the GOP_DP gatable clock found in the
+CP110 system controller. This clock is controlled by bit 9, and has
+clock 18 as its parent. Therefore, clock 18 is in fact not only
+controlling SD/MMC, but also GOP, but it is renamed as SD_MMC_GOP
+accordingly.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- .../devicetree/bindings/arm/marvell/cp110-system-controller0.txt    | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/clk/mvebu/cp110-system-controller.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-index 30c5469..07dbb35 100644
---- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-@@ -45,7 +45,7 @@ The following clocks are available:
-    - 1 15	SATA
-    - 1 16	SATA USB
-    - 1 17	Main
--   - 1 18	SD/MMC
-+   - 1 18	SD/MMC/GOP
-    - 1 21	Slow IO (SPI, NOR, BootROM, I2C, UART)
-    - 1 22	USB3H0
-    - 1 23	USB3H1
-@@ -65,7 +65,7 @@ Required properties:
- 	"cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
- 	"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "none",
- 	"cpm-pcie_x10", "cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata",
--	"cpm-sata-usb", "cpm-main", "cpm-sd-mmc", "none", "none", "cpm-slow-io",
-+	"cpm-sata-usb", "cpm-main", "cpm-sd-mmc-gop", "none", "none", "cpm-slow-io",
- 	"cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150", "cpm-eip197";
- 
- Example:
-@@ -78,6 +78,6 @@ Example:
- 		gate-clock-output-names = "cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
- 			"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "none",
- 			"cpm-pcie_x10", "cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata",
--			"cpm-sata-usb", "cpm-main", "cpm-sd-mmc", "none", "none", "cpm-slow-io",
-+			"cpm-sata-usb", "cpm-main", "cpm-sd-mmc-gop", "none", "none", "cpm-slow-io",
- 			"cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150", "cpm-eip197";
- 	};
+diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
+index f2303da..3c91cab 100644
+--- a/drivers/clk/mvebu/cp110-system-controller.c
++++ b/drivers/clk/mvebu/cp110-system-controller.c
+@@ -66,6 +66,7 @@ enum {
+ #define CP110_GATE_SDIO			4
+ #define CP110_GATE_XOR1			7
+ #define CP110_GATE_XOR0			8
++#define CP110_GATE_GOP_DP		9
+ #define CP110_GATE_PCIE_X1_0		11
+ #define CP110_GATE_PCIE_X1_1		12
+ #define CP110_GATE_PCIE_X4		13
+@@ -73,7 +74,7 @@ enum {
+ #define CP110_GATE_SATA			15
+ #define CP110_GATE_SATA_USB		16
+ #define CP110_GATE_MAIN			17
+-#define CP110_GATE_SDMMC		18
++#define CP110_GATE_SDMMC_GOP		18
+ #define CP110_GATE_SLOW_IO		21
+ #define CP110_GATE_USB3H0		22
+ #define CP110_GATE_USB3H1		23
+@@ -309,9 +310,10 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 			parent = ppv2_name;
+ 			break;
+ 		case CP110_GATE_SDIO:
++		case CP110_GATE_GOP_DP:
+ 			of_property_read_string_index(np,
+ 						      "gate-clock-output-names",
+-						      CP110_GATE_SDMMC, &parent);
++						      CP110_GATE_SDMMC_GOP, &parent);
+ 			break;
+ 		case CP110_GATE_XOR1:
+ 		case CP110_GATE_XOR0:
 -- 
 2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
