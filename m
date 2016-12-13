@@ -1,57 +1,109 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v4 8/9] ARM: dts: stm32f4: Add external I2S clock
-Date: Tue, 13 Dec 2016 15:20:19 +0100
-Message-ID: <1481638820-29324-9-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v4 7/9] clk: stm32f4: SDIO & 48Mhz clock management for STM32F469 board
+Date: Tue, 13 Dec 2016 15:20:18 +0100
+Message-ID: <1481638820-29324-8-git-send-email-gabriel.fernandez@st.com>
 References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481638820-29324-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-This patch adds an external I2S clock in the DT.
-The I2S clock could be derived from an external I2S clock or by I2S pll.
+In the stm32f469 soc, the 48Mhz clock could be derived from pll-q or
+from pll-sai-p.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+The SDIO clock could be also derived from 48Mhz or from sys clock.
+
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/clk/clk-stm32f4.c | 49 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index e4dae0e..7c7dfbd 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -68,6 +68,12 @@
- 			compatible = "fixed-clock";
- 			clock-frequency = <32000>;
- 		};
+diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+index 2bff436..11174a5 100644
+--- a/drivers/clk/clk-stm32f4.c
++++ b/drivers/clk/clk-stm32f4.c
+@@ -211,7 +211,7 @@ struct stm32f4_gate_data {
+ 	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
+-	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"pll48" },
++	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"sdmux" },
+ 	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
+@@ -951,6 +951,10 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
+ static const char *sai_parents[4] = { "pllsai-q-div", "plli2s-q-div", NULL,
+ 	"no-clock" };
+ 
++static const char *pll48_parents[2] = { "pll-q", "pllsai-p" };
 +
-+		clk_i2s_ckin: i2s-ckin {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
- 	};
++static const char *sdmux_parents[2] = { "pll48", "sys" };
++
+ struct stm32_aux_clk {
+ 	int idx;
+ 	const char *name;
+@@ -1000,6 +1004,45 @@ struct stm32f4_clk_data {
+ 	},
+ };
  
- 	soc {
-@@ -362,7 +368,7 @@
- 			#clock-cells = <2>;
- 			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
- 			reg = <0x40023800 0x400>;
--			clocks = <&clk_hse>;
-+			clocks = <&clk_hse>, <&clk_i2s_ckin>;
- 			st,syscfg = <&pwrcfg>;
- 		};
++static const struct stm32_aux_clk stm32f469_aux_clk[] = {
++	{
++		CLK_LCD, "lcd-tft", lcd_parent, ARRAY_SIZE(lcd_parent),
++		NO_MUX, 0, 0,
++		STM32F4_RCC_APB2ENR, 26,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		CLK_I2S, "i2s", i2s_parents, ARRAY_SIZE(i2s_parents),
++		STM32F4_RCC_CFGR, 23, 1,
++		NO_GATE, 0,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		CLK_SAI1, "sai1-a", sai_parents, ARRAY_SIZE(sai_parents),
++		STM32F4_RCC_DCKCFGR, 20, 3,
++		STM32F4_RCC_APB2ENR, 22,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		CLK_SAI2, "sai1-b", sai_parents, ARRAY_SIZE(sai_parents),
++		STM32F4_RCC_DCKCFGR, 22, 3,
++		STM32F4_RCC_APB2ENR, 22,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		NO_IDX, "pll48", pll48_parents, ARRAY_SIZE(pll48_parents),
++		STM32F4_RCC_DCKCFGR, 27, 1,
++		NO_GATE, 0,
++		0
++	},
++	{
++		NO_IDX, "sdmux", sdmux_parents, ARRAY_SIZE(sdmux_parents),
++		STM32F4_RCC_DCKCFGR, 28, 1,
++		NO_GATE, 0,
++		0
++	},
++};
++
+ static const struct stm32f4_clk_data stm32f429_clk_data = {
+ 	.gates_data	= stm32f429_gates,
+ 	.gates_map	= stm32f42xx_gate_map,
+@@ -1014,8 +1057,8 @@ struct stm32f4_clk_data {
+ 	.gates_map	= stm32f46xx_gate_map,
+ 	.gates_num	= ARRAY_SIZE(stm32f469_gates),
+ 	.pll_data	= stm32f469_pll,
+-	.aux_clk	= stm32f429_aux_clk,
+-	.aux_clk_num	= ARRAY_SIZE(stm32f429_aux_clk),
++	.aux_clk	= stm32f469_aux_clk,
++	.aux_clk_num	= ARRAY_SIZE(stm32f469_aux_clk),
+ };
  
+ static const struct of_device_id stm32f4_of_match[] = {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
