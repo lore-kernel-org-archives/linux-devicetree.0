@@ -1,79 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
- regulator support
-Date: Tue, 13 Dec 2016 16:10:49 -0600
-Message-ID: <CAL_Jsq+ApH0jn3YNPxqJ54ryYVmN781B_wHTwS8cT1Nf2ej0zw@mail.gmail.com>
-References: <CAD=FV=UMonRe8WJ1feDv3Nh9g8hEGAwwFT5NYLbzXADBqhTf-A@mail.gmail.com>
- <20161208154145.GA30888@mail.corp.redhat.com> <CAL_Jsq+fdoFnarXYkPv6FjVue3v31ry-Ddfkq9fQk9Ek+AjETw@mail.gmail.com>
- <E409F66F-1E4B-4A63-9977-69DF44ACAB0A@gmail.com> <CAL_JsqKu0yhLVyEjcZs_rn=VqM9O4F_VMhOkfhEEvbYAjvWSTg@mail.gmail.com>
- <alpine.LNX.2.00.1612091532240.16984@cbobk.fhfr.pm> <CAL_JsqLpjhHeeKq3PmNToux1Rgkg0M84-dv9HGCOws223ima4w@mail.gmail.com>
- <alpine.LNX.2.00.1612120951130.16984@cbobk.fhfr.pm> <20161212100110.GA13907@mail.corp.redhat.com>
- <CAL_JsqJ7t=C4+PgCyNTev66V33-cyPkUHKsTcbnsYgvAaffVfw@mail.gmail.com> <20161212183422.GA138477@google.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH] pinctrl: fix DT bindings for marvell,kirkwood-pinctrl
+Date: Wed, 14 Dec 2016 00:08:27 +0100
+Message-ID: <20161213230827.GA5286@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20161212183422.GA138477@google.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Doug Anderson <dianders@chromium.org>, Caesar Wang <wxt@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-gpio-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 12:34 PM, Brian Norris <briannorris@chromium.org> wrote:
-> Hi all,
->
-> On Mon, Dec 12, 2016 at 08:47:06AM -0600, Rob Herring wrote:
->
-> [Snip Benjamin's proposal; I agree we don't really want a multi-level DT
-> layout purely for making the driver look a little nicer (I'm not sure
-> this would really be nicer anyway). And I think, as Rob notes here, our
-> disagreement is smaller than appears. But I might be wrong.]
->
->> Anyway, we're only debating this:
->
-> OK, so I think we might have a consensus of sorts? I'll describe it
-> here, in case I'm wrong. Otherwise, I'll send another rev.
->
->>          i2c-hid-dev@2c {
->>                  compatible = "wacom,w9013", "hid-over-i2c";
->
-> I plan to document the above, but not treat "wacom,w9013" specially in
-> the driver, apart from possibly listing it in the driver of_match_table.
-> This was mentioned by Dmitry earlier, and I didn't see any objection.
->
-> (Note that there are problems with module autoload when using multiple
-> compatible strings like above. May not be supremely relevant to the
-> documentation, but it *is* practically important.)
+On Marvell mv88f6180 mpp pins range from 0 to 19 as well as from 35 to 44.
+This is already fixed in commit: 9573e7923007961799beff38bc5c5a7635634eef
 
-I'm not sure what is not working here exactly. We emit all the
-compatible strings in the uevent. However, it looks like this is only
-called for platform devices. In the case of i2c, I don't think any
-compatible string is emitted. It looks to me like i2c_device_uevent
-just needs a call to of_device_get_modalias to fix this. There's some
-issues in the I2C core in how it does matching and maybe this is
-related? I would guess if it was that easy, then it would be fixed
-already. Maybe not.
+This is the documentation change for above commit.
 
->>                  reg = <0x2c>;
->>                  hid-descr-addr = <0x0020>;
->>                  interrupt-parent = <&gpx3>;
->>                  interrupts = <3 2>;
->>                  vdd-supply = <sth>;
->
-> Document and support 'vdd-supply', optionally.
->
->>                  init-delay-ms = <100>;
->
-> Per Rob's mention below, support this as 'post-power-on-delay-ms',
-> optionally.
->
-> We can use either of these properties on any device, with the
-> intention that if there are future needs for divergent bindings, the
-> aforementioned compatible property can help us differentiate.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../bindings/pinctrl/marvell,kirkwood-pinctrl.txt    | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-TBC, from a DT perspective (and what the binding should say), is the
-properties are only valid with a wacom compatible present (or any
-others you want to add). If the driver doesn't enforce that and
-supports having those properties with just "hid-over-i2c", then
-downstream dts's can use that for all I care.
+diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
+index 730444a9a4de..6c0ea155b708 100644
+--- a/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
+@@ -44,16 +44,16 @@ mpp16         16       gpio, sdio(d2), uart0(cts), uart1(rxd), mii(crs)
+ mpp17         17       gpio, sdio(d3)
+ mpp18         18       gpo, nand(io0)
+ mpp19         19       gpo, nand(io1)
+-mpp20         20       gpio, mii(rxerr)
+-mpp21         21       gpio, audio(spdifi)
+-mpp22         22       gpio, audio(spdifo)
+-mpp23         23       gpio, audio(rmclk)
+-mpp24         24       gpio, audio(bclk)
+-mpp25         25       gpio, audio(sdo)
+-mpp26         26       gpio, audio(lrclk)
+-mpp27         27       gpio, audio(mclk)
+-mpp28         28       gpio, audio(sdi)
+-mpp29         29       gpio, audio(extclk)
++mpp35         35       gpio, mii(rxerr)
++mpp36         36       gpio, audio(spdifi)
++mpp37         37       gpio, audio(spdifo)
++mpp38         38       gpio, audio(rmclk)
++mpp39         39       gpio, audio(bclk)
++mpp40         40       gpio, audio(sdo)
++mpp41         41       gpio, audio(lrclk)
++mpp42         42       gpio, audio(mclk)
++mpp43         43       gpio, audio(sdi)
++mpp44         44       gpio, audio(extclk)
+ 
+ * Marvell Kirkwood 88f6190
+ 
+-- 
+2.1.4
 
-Rob
