@@ -1,61 +1,83 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH] i2c: designware: Cleaning and comment style fixes.
-Date: Tue, 13 Dec 2016 19:00:28 +0200
-Message-ID: <1481648428.8991.4.camel@linux.intel.com>
-References: <32604e59cde19a8981681ad2f0ee447af847bf60.1481646098.git.lolivei@synopsys.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: Add support for CS43130 codec
+Date: Tue, 13 Dec 2016 17:05:13 +0000
+Message-ID: <20161213170513.sik7igsdeg2mdyx2@sirena.org.uk>
+References: <09a77398-831b-4be7-9089-f7ac4fcfc16a@EX4.ad.cirrus.com>
+ <20161208162336.l5g5cbcc2bzt65ke@sirena.org.uk>
+ <148597dd-ce8d-4684-8f39-149e780d2b3b@EX3.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r2aaxzesnobkfsgq"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <32604e59cde19a8981681ad2f0ee447af847bf60.1481646098.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <148597dd-ce8d-4684-8f39-149e780d2b3b-XU/xxMRwCJnfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-12-13 at 16:34 +0000, Luis Oliveira wrote:
-> - Misspelling of some words
 
-So, do you use codespell tool for that? I would suggest to use that tool
-and propose any fix there first. At least that tool has a good history
-of changes back in forward until some native speaker(s) settle some
-cases.
+--r2aaxzesnobkfsgq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> - Comment format fix
+On Mon, Dec 12, 2016 at 02:21:03PM -0600, li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org wrote:
+> Thank you for timely feedback.
+>=20
+> I have fixed all except following.
 
-No need to use dot at the end of one-liner comments
+Please fix your mail client configuration, it is not marking quoted
+material as quoted and there's no word wrapping which makes everything
+very hard to read.
 
-/* One line */
+> -------------------------------------------------------------------------=
+--------------------------------------------------------------------------
 
-/*
- * Multi-line comments. Might include several lines or
- * even paragraphs.
- */
+There's also random stuff like the above appearing in the mail.
 
-Also I would leave 
-/*
- * One line
- */
+I strongly suggest working with some of your colleagues who are more
+familiar with working upstream to try to understand the processes and
+tooling.
 
-Without dots here. AFAIU they are used to better distinguish group of
-definitions inside headers (that's why 3 lines).
+> -------------------------------------------------------------------------=
+--------------------------------------------------------------------------
+> > +     /* Enable HP detect */
+> > +     regmap_update_bits(cs43130->regmap, CS43130_HP_DETECT,
+> > +             CS43130_HP_DETECT_CTRL_MASK, CS43130_HP_DETECT_CTRL_MASK);
 
-> - Minor fix in coding style
-> 
+> Why enable this when the only handling is a couple of log messages?
 
-I'm almost fine with the change itself, but people may be concerned in:
+> Placeholder for driver modification when the driver is integrated to syst=
+em such as Android OS.
 
-1) what is the value of the change (would be nice to put this in commit
-message);
+> I suppose I could remove it, but when the driver is integrated into actua=
+l system, it may not be clear to system integrators,
+> where to add HP DET IRQ hooks
 
-2) how much additional work this change may bring for backported fixes
-if any;
+Don't just add unfinished code that does nothing useful - that just
+wastes everyone's time and makes the driver harder to review.  I'm
+fairly sure that if people are able to implement jack detection they
+will be able to figure out the fairly trivial code that's here and of
+course this is something that when it's done should be just a driver
+feature accessed through normal driver APIs.
 
-3) native speakers are the best who can re-read this and Ack.
+--r2aaxzesnobkfsgq
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhQKkgACgkQJNaLcl1U
+h9B31wf/aWjvC4TbLI8q8URB3qP4ZgS8AsfR7YLn6fFwyfin5raQLycV+LXiY3Zh
+s191RZWCANGrrYHCMXPgpIl7poiL9F8c9Fd4yjNKh+1TSlUgdL+zzdtO0MGxrDr1
+FzTmlSEwXxngDswGxGfM1CPoqg+2hlFysoYNbCVYGoNdIo15x2zsI0v+d65Qlr72
+BHJ9ytV58TuvmwROiYCIL1ou8UkeKaQm1TVb0wvPjwiLDk488eHJngmqbqMu0dWY
+YyO6oEFbSfoXj/Qw/aj9irJxIyR2LxTJ63jiBrPiLwPLuEpELOvnKOoWW7PPff47
+6Yl+sBi7XA1YKLxQpqSiG0XzQwElxg==
+=2BVD
+-----END PGP SIGNATURE-----
+
+--r2aaxzesnobkfsgq--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
