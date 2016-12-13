@@ -1,156 +1,208 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
-Date: Tue, 13 Dec 2016 17:52:29 +0100
-Message-ID: <5220084.l31t5oJbsy@amdc3058>
+From: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 2/2] ASoC: cs35l35: Add device tree documentation for CS35L35
+Date: Tue, 13 Dec 2016 10:59:04 -0600
+Message-ID: <1e88c458-bd2d-454f-a5e3-a19ff56281de@EX3.ad.cirrus.com>
+References: <1481648344-14445-1-git-send-email-li.xu@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, Ben Gamari <ben@smart-cactus.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Andreas Faerber <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481648344-14445-1-git-send-email-li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing 2000MHz & 1900MHz OPPs (for A15 cores) and 1400MHz OPP
-(for A7 cores).  Also update common Odroid-XU3 Lite/XU3/XU4 thermal
-cooling maps to account for new OPPs.
+Add device tree documentation for Cirrus Logic CS35L35
+speaker amplifier
 
-Since new OPPs are not available on all Exynos5422/5800 boards modify
-dts files for Odroid-XU3 Lite (limited to 1.8 GHz / 1.3 GHz) & Peach
-Pi (limited to 2.0 GHz / 1.3 GHz) accordingly.
-
-Tested on Odroid-XU3 and XU3 Lite.
-
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Andreas Faerber <afaerber@suse.de>
-Cc: Thomas Abraham <thomas.ab@samsung.com>
-Cc: Ben Gamari <ben@smart-cactus.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   14 +++++++-------
- arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |   17 +++++++++++++++++
- arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 ++++
- arch/arm/boot/dts/exynos5800.dtsi                  |   15 +++++++++++++++
- 4 files changed, 43 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/sound/cs35l35.txt          | 172 +++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l35.txt
 
-Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-===================================================================
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.779763261 +0100
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.775763261 +0100
-@@ -118,7 +118,7 @@
- 				/*
- 				 * When reaching cpu_alert3, reduce CPU
- 				 * by 2 steps. On Exynos5422/5800 that would
--				 * be: 1600 MHz and 1100 MHz.
-+				 * (usually) be: 1800 MHz and 1200 MHz.
- 				 */
- 				map3 {
- 					trip = <&cpu_alert3>;
-@@ -131,16 +131,16 @@
- 
- 				/*
- 				 * When reaching cpu_alert4, reduce CPU
--				 * further, down to 600 MHz (11 steps for big,
--				 * 7 steps for LITTLE).
-+				 * further, down to 600 MHz (13 steps for big,
-+				 * 8 steps for LITTLE).
- 				 */
--				map5 {
-+				cooling_map5: map5 {
- 					trip = <&cpu_alert4>;
--					cooling-device = <&cpu0 3 7>;
-+					cooling-device = <&cpu0 3 8>;
- 				};
--				map6 {
-+				cooling_map6: map6 {
- 					trip = <&cpu_alert4>;
--					cooling-device = <&cpu4 3 11>;
-+					cooling-device = <&cpu4 3 13>;
- 				};
- 			};
- 		};
-Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-===================================================================
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.779763261 +0100
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.775763261 +0100
-@@ -21,6 +21,23 @@
- 	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
- };
- 
-+&cluster_a15_opp_table {
-+	/delete-node/opp@2000000000;
-+	/delete-node/opp@1900000000;
-+};
+diff --git a/Documentation/devicetree/bindings/sound/cs35l35.txt b/Documentation/devicetree/bindings/sound/cs35l35.txt
+new file mode 100644
+index 0000000..80a1ed7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l35.txt
+@@ -0,0 +1,172 @@
++CS35L35 Speaker Amplifier
 +
-+&cluster_a7_opp_table {
-+	/delete-node/opp@1400000000;
-+};
++Required properties:
 +
-+&cooling_map5 {
-+	cooling-device = <&cpu0 3 7>;
-+};
++  - compatible : "cirrus,cs35l35"
 +
-+&cooling_map6 {
-+	cooling-device = <&cpu4 3 11>;
-+};
++  - reg : the I2C address of the device for I2C
 +
- &pwm {
- 	/*
- 	 * PWM 0 -- fan
-Index: b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-===================================================================
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
-@@ -146,6 +146,10 @@
- 	vdd-supply = <&ldo9_reg>;
- };
- 
-+&cluster_a7_opp_table {
-+	/delete-property/opp@1400000000;
-+};
++  - VA-supply, VP-supply : power supplies for the device,
++    as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt.
 +
- &cpu0 {
- 	cpu-supply = <&buck2_reg>;
- };
-Index: b/arch/arm/boot/dts/exynos5800.dtsi
-===================================================================
---- a/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
-+++ b/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
-@@ -24,6 +24,16 @@
- };
- 
- &cluster_a15_opp_table {
-+	opp@2000000000 {
-+		opp-hz = /bits/ 64 <2000000000>;
-+		opp-microvolt = <1250000>;
-+		clock-latency-ns = <140000>;
++  - interrupt-parent : Specifies the phandle of the interrupt controller to
++    which the IRQs from CS35L35 are delivered to.
++  - interrupts : IRQ line info CS35L35.
++    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++    for further information relating to interrupt properties)
++
++Optional properties:
++  - cirrus,reset-gpios : Active low GPIO used to reset the amplifier
++
++  - cirrus,stereo-config : Boolean to determine if there are 2 AMPs for a
++  Stereo configuration
++
++  - cirrus,audio-channel : Set Location of Audio Signal on Serial Port
++  0 = Data Packet received on Left I2S Channel
++  1 = Data Packet received on Right I2S Channel
++
++  - cirrus,advisory-channel : Set Location of Advisory Signal on Serial Port
++  0 = Data Packet received on Left I2S Channel
++  1 = Data Packet received on Right I2S Channel
++
++  - cirrus,shared-boost : Boolean to enable ClassH tracking of Advisory Signal
++  if 2 Devices share Boost BST_CTL
++
++  - cirrus,sp-drv-strength : Value for setting the Serial Port drive strength
++  Table 3-10 of the datasheet lists drive-strength specifications
++  0 = 1x (Default)
++  1 = .5x
++
++  - cirrus,bst-pdn-fet-on : Boolean to determine if the Boost PDN control
++  powers down with a rectification FET On or Off. If VSPK is supplied
++  externally then FET is off.
++
++  - cirrus,boost-ctl-millivolt : Boost Converter control word. Step Size of 100mV
++  0x00 = (Default) VP
++  0x01 = 2600mV
++  0x41 = 9000mV
++
++  - cirrus,boost-ipk-milliamp : Boost-converter peak current limit.
++  Configures the peak current by monitoring the current through the boost FET.
++  Step size: 112mA
++  0x00 = 1680mA
++  0x19 = 4480mA
++
++  - cirrus,amp-gain-zc : Boolean to determine if to use Amplifier gain-change
++  zero-cross
++
++Optional H/G Algorithm sub-node:
++
++  The cs35l35 node can have a single "cirrus,classh-internal-algo" sub-node
++  that will disable automatic control of the internal H/G Algorithm.
++
++  It is strongly recommended that the Datasheet be referenced when adjusting
++  or using these Class H Algorithm controls over the internal Algorithm.
++  Serious damage can occur to the Device and surrounding components.
++
++  - cirrus,classh-internal-algo : Sub-node for the Internal Class H Algorithm
++  See Section 4.3 Internal Class H Algorithm in the Datasheet.
++  If not used, the device manages the ClassH Algorithm internally.
++
++Optional properties for the "cirrus,classh-internal-algo" Sub-node
++
++  Section 7.29 Class H Control
++  - cirrus,classh-bst-overide : Boolean
++  - cirrus,classh-bst-max-limit
++  - cirrus,classh-mem-depth
++
++  Section 7.30 Class H Headroom Control
++  - cirrus,classh-headroom
++
++  Section 7.31 Class H Release Rate
++  - cirrus,classh-release-rate
++
++  Section 7.32 Class H Weak FET Drive Control
++  - cirrus,classh-wk-fet-disable
++  - cirrus,classh-wk-fet-delay
++  - cirrus,classh-wk-fet-thld
++
++  Section 7.34 Class H VP Control
++  - cirrus,classh-vpch-auto
++  - cirrus,classh-vpch-rate
++  - cirrus,classh-vpch-man
++
++Optional Monitor Signal Format sub-node:
++
++  The cs35l35 node can have a single "cirrus,monitor-signal-format" sub-node
++  for adjusting the Depth, Location and Frame of the Monitoring Signals
++  for Algorithms.
++
++  See Sections 4.8.2 through 4.8.4 Serial-Port Control in the Datasheet
++
++  -cirrus,monitor-signal-format : Sub-node for the Monitor Signaling Formating
++  on the I2S Port. Each of the 3 8 bit values in the array contain the settings
++  for depth, location, and frame.
++
++  If not used, the defaults for the 6 monitor signals is used.
++
++  Sections 7.44 - 7.53 lists values for the depth, location, and frame
++  for each monitoring signal.
++
++  - cirrus,imon : 3 8 bit values to set the depth, location, and frame
++  of the IMON monitor signal.
++
++  - cirrus,vmon : 3 8 bit values to set the depth, location, and frame
++  of the VMON monitor signal.
++
++  - cirrus,vpmon : 3 8 bit values to set the depth, location, and frame
++  of the VPMON monitor signal.
++
++  - cirrus,vbstmon : 3 8 bit values to set the depth, location, and frame
++  of the VBSTMON monitor signal
++
++  - cirrus,vpbrstat : 3 8 bit values to set the depth, location, and frame
++  of the VPBRSTAT monitor signal
++
++  - cirrus,zerofill : 3 8 bit values to set the depth, location, and frame\
++  of the ZEROFILL packet in the monitor signal
++
++Example:
++
++cs35l35: audio-codec@40 {
++	compatible = "cirrus,cs35l35";
++	reg = <0x20>;
++	VA-supply = <&dummy_vreg>;
++	VP-supply = <&dummy_vreg>;
++	reset-gpios = <&axi_gpio 54 1>;
++	interrupt-parent = <&gpio8>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++	cirrus,boost-ctl = <0x41>;
++
++	cirrus,stereo-config {
++		cirrus,audio-channel = <0x00>;
++		cirrus,advisory-channel = <0x01>;
++		cirrus,shared-boost;
 +	};
-+	opp@1900000000 {
-+		opp-hz = /bits/ 64 <1900000000>;
-+		opp-microvolt = <1250000>;
-+		clock-latency-ns = <140000>;
++
++	cirrus,classh-internal-algo {
++		cirrus,classh-bst-overide;
++		cirrus,classh-bst-max-limit = <0x01>;
++		cirrus,classh-mem-depth = <0x01>;
++		cirrus,classh-release-rate = <0x08>;
++		cirrus,classh-headroom-millivolt = <0x0B>;
++		cirrus,classh-wk-fet-disable = <0x01>;
++		cirrus,classh-wk-fet-delay = <0x04>;
++		cirrus,classh-wk-fet-thld = <0x01>;
++		cirrus,classh-vpch-auto = <0x01>;
++		cirrus,classh-vpch-rate = <0x02>;
++		cirrus,classh-vpch-man = <0x05>;
 +	};
- 	opp@1700000000 {
- 		opp-microvolt = <1250000>;
- 	};
-@@ -85,6 +95,11 @@
- };
- 
- &cluster_a7_opp_table {
-+	opp_a7_14: opp@1400000000 {
-+		opp-hz = /bits/ 64 <1400000000>;
-+		opp-microvolt = <1250000>;
-+		clock-latency-ns = <140000>;
++
++	/* Depth, Location, Frame */
++	cirrus,monitor-signal-format {
++		cirrus,imon = /bits/ 8 <0x03 0x00 0x01>;
++		cirrus,vmon = /bits/ 8 <0x03 0x00 0x00>;
++		cirrus,vpmon = /bits/ 8 <0x03 0x04 0x00>;
++		cirrus,vbstmon = /bits/ 8 <0x03 0x04 0x01>;
++		cirrus,vpbrstat = /bits/ 8 <0x00 0x04 0x00>;
++		cirrus,zerofill = /bits/ 8 <0x00 0x00 0x00>;
 +	};
- 	opp@1300000000 {
- 		opp-microvolt = <1250000>;
- 	};
++
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
