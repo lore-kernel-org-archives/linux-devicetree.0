@@ -1,84 +1,77 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: Add support for CS43130 codec
-Date: Tue, 13 Dec 2016 17:05:13 +0000
-Message-ID: <20161213170513.sik7igsdeg2mdyx2@sirena.org.uk>
-References: <09a77398-831b-4be7-9089-f7ac4fcfc16a@EX4.ad.cirrus.com>
- <20161208162336.l5g5cbcc2bzt65ke@sirena.org.uk>
- <148597dd-ce8d-4684-8f39-149e780d2b3b@EX3.ad.cirrus.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 3/8] PWM: add pwm-stm32 DT bindings
+Date: Tue, 13 Dec 2016 11:11:04 -0600
+Message-ID: <CAL_Jsq+y175h8HE3c+r7ArGVqpHe5hKyrjY_Ay-w0oEcLMy6TA@mail.gmail.com>
+References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
+ <1481292919-26587-4-git-send-email-benjamin.gaignard@st.com>
+ <20161212190205.b5t3x6i2o7igldlo@rob-hp-laptop> <20161213111137.GW3625@dell.home>
+ <CAL_JsqL8pJSFb8LbABAYJOQ0URaMpyupbFryk_mS2ToN1kStdA@mail.gmail.com> <CA+M3ks6CQsOA0w82yiTaCw04e7gRwNx1mfeHanE3MDjkuX-gjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="r2aaxzesnobkfsgq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <148597dd-ce8d-4684-8f39-149e780d2b3b-XU/xxMRwCJnfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+M3ks6CQsOA0w82yiTaCw04e7gRwNx1mfeHanE3MDjkuX-gjg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@lin>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 13, 2016 at 10:28 AM, Benjamin Gaignard
+<benjamin.gaignard@linaro.org> wrote:
+> 2016-12-13 16:57 GMT+01:00 Rob Herring <robh@kernel.org>:
+>> On Tue, Dec 13, 2016 at 5:11 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>>> On Mon, 12 Dec 2016, Rob Herring wrote:
+>>>
+>>>> On Fri, Dec 09, 2016 at 03:15:14PM +0100, Benjamin Gaignard wrote:
+>>>> > Define bindings for pwm-stm32
+>>>> >
+>>>> > version 6:
+>>>> > - change st,breakinput parameter format to make it usuable on stm32f7 too.
+>>>> >
+>>>> > version 2:
+>>>> > - use parameters instead of compatible of handle the hardware configuration
+>>>> >
+>>>> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>>>> > ---
+>>>> >  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++++++++
+>>>> >  1 file changed, 33 insertions(+)
+>>>> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>>>> >
+>>>> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>>>> > new file mode 100644
+>>>> > index 0000000..866f222
+>>>> > --- /dev/null
+>>>> > +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>>>> > @@ -0,0 +1,33 @@
+>>>> > +STMicroelectronics STM32 Timers PWM bindings
+>>>> > +
+>>>> > +Must be a sub-node of an STM32 Timers device tree node.
+>>>> > +See ../mfd/stm32-timers.txt for details about the parent node.
+>>>> > +
+>>>> > +Required parameters:
+>>>> > +- compatible:              Must be "st,stm32-pwm".
+>>>> > +- pinctrl-names:   Set to "default".
+>>>> > +- pinctrl-0:               List of phandles pointing to pin configuration nodes for PWM module.
+>>>> > +                   For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
+>>>> > +
+>>>> > +Optional parameters:
+>>>> > +- st,breakinput:   Arrays of three u32 <index level filter> to describe break input configurations.
+>>>> > +                   "index" indicates on which break input the configuration should be applied.
+>>>> > +                   "level" gives the active level (0=low or 1=high) for this configuration.
+>>>> > +                   "filter" gives the filtering value to be applied.
+>>>> > +
+>>>> > +Example:
+>>>> > +   timers@40010000 {
+>>>>
+>>>> timer@...
+>>>
+>>> No, it should be timers.
+>>
+>> Read the spec. "timer" is a generic node name. "timers" is not. How
+>> many is not relevant.
+>
+> "timer" is already used in stm32 DT for clocksource node... It is also why
+> I use "timers" for this.
 
---r2aaxzesnobkfsgq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That doesn't matter. They are at different levels in the hierarchy.
 
-On Mon, Dec 12, 2016 at 02:21:03PM -0600, li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org wrote:
-> Thank you for timely feedback.
->=20
-> I have fixed all except following.
-
-Please fix your mail client configuration, it is not marking quoted
-material as quoted and there's no word wrapping which makes everything
-very hard to read.
-
-> -------------------------------------------------------------------------=
---------------------------------------------------------------------------
-
-There's also random stuff like the above appearing in the mail.
-
-I strongly suggest working with some of your colleagues who are more
-familiar with working upstream to try to understand the processes and
-tooling.
-
-> -------------------------------------------------------------------------=
---------------------------------------------------------------------------
-> > +     /* Enable HP detect */
-> > +     regmap_update_bits(cs43130->regmap, CS43130_HP_DETECT,
-> > +             CS43130_HP_DETECT_CTRL_MASK, CS43130_HP_DETECT_CTRL_MASK);
-
-> Why enable this when the only handling is a couple of log messages?
-
-> Placeholder for driver modification when the driver is integrated to syst=
-em such as Android OS.
-
-> I suppose I could remove it, but when the driver is integrated into actua=
-l system, it may not be clear to system integrators,
-> where to add HP DET IRQ hooks
-
-Don't just add unfinished code that does nothing useful - that just
-wastes everyone's time and makes the driver harder to review.  I'm
-fairly sure that if people are able to implement jack detection they
-will be able to figure out the fairly trivial code that's here and of
-course this is something that when it's done should be just a driver
-feature accessed through normal driver APIs.
-
---r2aaxzesnobkfsgq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhQKkgACgkQJNaLcl1U
-h9B31wf/aWjvC4TbLI8q8URB3qP4ZgS8AsfR7YLn6fFwyfin5raQLycV+LXiY3Zh
-s191RZWCANGrrYHCMXPgpIl7poiL9F8c9Fd4yjNKh+1TSlUgdL+zzdtO0MGxrDr1
-FzTmlSEwXxngDswGxGfM1CPoqg+2hlFysoYNbCVYGoNdIo15x2zsI0v+d65Qlr72
-BHJ9ytV58TuvmwROiYCIL1ou8UkeKaQm1TVb0wvPjwiLDk488eHJngmqbqMu0dWY
-YyO6oEFbSfoXj/Qw/aj9irJxIyR2LxTJ63jiBrPiLwPLuEpELOvnKOoWW7PPff47
-6Yl+sBi7XA1YKLxQpqSiG0XzQwElxg==
-=2BVD
------END PGP SIGNATURE-----
-
---r2aaxzesnobkfsgq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
