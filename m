@@ -1,63 +1,99 @@
 From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH 1/9] dmaengine: stm32-dma: Set correct args number for DMA
- request from DT
-Date: Tue, 13 Dec 2016 14:40:43 +0100
-Message-ID: <1481636451-27863-2-git-send-email-cedric.madianga@gmail.com>
+Subject: [PATCH 6/9] dmaengine: stm32-dma: Fix residue computation issue in cyclic mode
+Date: Tue, 13 Dec 2016 14:40:48 +0100
+Message-ID: <1481636451-27863-7-git-send-email-cedric.madianga@gmail.com>
 References: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch sets the right number of arguments to be used for DMA clients
-which request channels from DT.
+This patch resolves the residue computation issue detected in cyclic mode.
+Now, in cyclic mode, we increment next_sg variable as soon as a period is
+transferred instead of after pushing a new sg request.
+Then, we take into account that after transferring a complete buffer,
+the next_sg variable is equal to 0.
 
 Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
 ---
- drivers/dma/stm32-dma.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/dma/stm32-dma.c | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 3688d08..a884b85 100644
+index adb846c..ba929a9 100644
 --- a/drivers/dma/stm32-dma.c
 +++ b/drivers/dma/stm32-dma.c
-@@ -972,21 +972,18 @@ static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
- 	struct stm32_dma_chan *chan;
- 	struct dma_chan *c;
- 
--	if (dma_spec->args_count < 3)
-+	if (dma_spec->args_count < 4)
- 		return NULL;
- 
- 	cfg.channel_id = dma_spec->args[0];
- 	cfg.request_line = dma_spec->args[1];
- 	cfg.stream_config = dma_spec->args[2];
--	cfg.threshold = 0;
-+	cfg.threshold = dma_spec->args[3];
- 
- 	if ((cfg.channel_id >= STM32_DMA_MAX_CHANNELS) || (cfg.request_line >=
- 				STM32_DMA_MAX_REQUEST_ID))
- 		return NULL;
- 
--	if (dma_spec->args_count > 3)
--		cfg.threshold = dma_spec->args[3];
+@@ -500,8 +500,6 @@ static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
+ 			dev_dbg(chan2dev(chan), "CT=0 <=> SM1AR: 0x%08x\n",
+ 				stm32_dma_read(dmadev, STM32_DMA_SM1AR(id)));
+ 		}
 -
- 	chan = &dmadev->chan[cfg.channel_id];
+-		chan->next_sg++;
+ 	}
+ }
  
- 	c = dma_get_slave_channel(&chan->vchan.chan);
+@@ -510,6 +508,7 @@ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan)
+ 	if (chan->desc) {
+ 		if (chan->desc->cyclic) {
+ 			vchan_cyclic_callback(&chan->desc->vdesc);
++			chan->next_sg++;
+ 			stm32_dma_configure_next_sg(chan);
+ 		} else {
+ 			chan->busy = false;
+@@ -846,26 +845,40 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
+ 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+ }
+ 
++static u32 stm32_dma_get_remaining_bytes(struct stm32_dma_chan *chan)
++{
++	u32 dma_scr, width, ndtr;
++	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
++
++	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
++	width = STM32_DMA_SCR_PSIZE_GET(dma_scr);
++	ndtr = stm32_dma_read(dmadev, STM32_DMA_SNDTR(chan->id));
++
++	return ndtr << width;
++}
++
+ static size_t stm32_dma_desc_residue(struct stm32_dma_chan *chan,
+ 				     struct stm32_dma_desc *desc,
+ 				     u32 next_sg)
+ {
+-	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
+-	u32 dma_scr, width, residue, count;
++	u32 residue = 0;
+ 	int i;
+ 
+-	residue = 0;
++	/*
++	 * In cyclic mode, for the last period, residue = remaining bytes from
++	 * NDTR
++	 */
++	if (chan->desc->cyclic && next_sg == 0)
++		return stm32_dma_get_remaining_bytes(chan);
+ 
++	/*
++	 * For all other periods in cyclic mode, and in sg mode,
++	 * residue = remaining bytes from NDTR + remaining periods/sg to be
++	 * transferred
++	 */
+ 	for (i = next_sg; i < desc->num_sgs; i++)
+ 		residue += desc->sg_req[i].len;
+-
+-	if (next_sg != 0) {
+-		dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
+-		width = STM32_DMA_SCR_PSIZE_GET(dma_scr);
+-		count = stm32_dma_read(dmadev, STM32_DMA_SNDTR(chan->id));
+-
+-		residue += count << width;
+-	}
++	residue += stm32_dma_get_remaining_bytes(chan);
+ 
+ 	return residue;
+ }
 -- 
 1.9.1
