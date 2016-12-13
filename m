@@ -1,105 +1,379 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/3] clk: keystone: Add sci-clk driver support
-Date: Tue, 13 Dec 2016 11:01:53 +0200
-Message-ID: <53ca4fc2-04a3-5260-e0de-2d2f9abbee2c@ti.com>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-4-git-send-email-t-kristo@ti.com>
- <20161208001348.GC5423@codeaurora.org>
- <cb608729-b617-0eab-5ddf-d78ff47b237e@ti.com>
- <20161208211044.GI5423@codeaurora.org>
- <22dacb0c-a3bc-50ce-e4b9-f74a0c706f20@ti.com>
- <20161212193800.GL5423@codeaurora.org>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 7/8] ARM: dts: stm32: add Timers driver for stm32f429 MCU
+Date: Tue, 13 Dec 2016 10:15:21 +0100
+Message-ID: <CA+M3ks6hMDVqDkjn_vcu-d2YkJkiAmCS44Nc7rtfgAkD09LNFA@mail.gmail.com>
+References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
+ <1481292919-26587-8-git-send-email-benjamin.gaignard@st.com> <20161212185943.ph7njaqb2lxtgdn4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161212193800.GL5423-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161212185943.ph7njaqb2lxtgdn4@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/16 21:38, Stephen Boyd wrote:
-> On 12/09, Tero Kristo wrote:
->> On 08/12/16 23:10, Stephen Boyd wrote:
->>> On 12/08, Tero Kristo wrote:
->>>> On 08/12/16 02:13, Stephen Boyd wrote:
->>>>> On 10/21, Tero Kristo wrote:
->>>>>> diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
->>>>>> new file mode 100644
->>>>>> index 0000000..f6af5bd
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/clk/keystone/sci-clk.c
->>>>
->>>>>
->>>>>> +
->>>>>> +	handle = devm_ti_sci_get_handle(dev);
->>>>>> +	if (IS_ERR(handle))
->>>>>> +		return PTR_ERR(handle);
->>>>>> +
->>>>>> +	provider = devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);
->>>>>> +	if (!provider)
->>>>>> +		return -ENOMEM;
->>>>>> +
->>>>>> +	provider->clocks = data;
->>>>>> +
->>>>>> +	provider->sci = handle;
->>>>>> +	provider->ops = &handle->ops.clk_ops;
->>>>>> +	provider->dev = dev;
->>>>>> +
->>>>>> +	ti_sci_init_clocks(provider);
->>>>>
->>>>> And if this fails?
->>>>
->>>> Yea this is kind of controversial. ti_sci_init_clocks() can fail if
->>>> any of the clocks registered will fail. I decided to have it this
->>>> way so that at least some clocks might work in failure cause, and
->>>> you might have a booting device instead of total lock-up.
->>>>
->>>> Obviously it could be done so that if any clock fails, we would
->>>> de-register all clocks at that point, but personally I think this is
->>>> a worse option.
->>>>
->>>> ti_sci_init_clocks could probably be modified to continue
->>>> registering clocks when a single clock fails though. Currently it
->>>> aborts at first failure.
->>>>
->>>
->>> That sounds like a better approach if we don't care about
->>> failures to register a clock. Returning a value from a function
->>> and not using it isn't really a great design.
->>>
->>> I worry that if we start returning errors from clk_hw_register()
->>> that something will go wrong though, so really I don't know why
->>> we want to ignore errors at all. Just for debugging a boot hang?
->>> Can't we use early console to at least see that this driver is
->>> failing to probe and debug that way?
+2016-12-12 19:59 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Fri, Dec 09, 2016 at 03:15:18PM +0100, Benjamin Gaignard wrote:
+>> Add Timers and it sub-nodes into DT for stm32f429 family.
 >>
->> Early console can be used to debug that, but it is kind of annoying
->> to recompile most of the kernel when you suddenly need to use it.
->
-> I thought SERIAL_EARLYCON was selected by drivers that support
-> it? So there shouldn't be any rebuilding required.
-
-Actually you can probably ignore my comment, I was just speaking out of 
-OMAP experience where the clocks are initialized very early, but this 
-doesn't apply to keystone. Sci-clock is a proper driver now with proper 
-probe etc. in place so my comment here is invalid.
-
->
+>> version 6:
+>> - split patch in two: one for SoC family and one for stm32f469
+>>   discovery board.
 >>
->> How about modifying the ti_sci_init_clocks func to print an error
->> for each failed clock?
+>> version 5:
+>> - rename gptimer node to timers
+>> - re-order timers node par addresses
+>>
+>> version 4:
+>> - remove unwanted indexing in pwm@ and timer@ node name
+>> - use "reg" instead of additional parameters to set timer
+>>   configuration
+>>
+>> version 3:
+>> - use "st,stm32-timer-trigger" in DT
+>>
+>> version 2:
+>> - use parameters to describe hardware capabilities
+>> - do not use references for pwm and iio timer subnodes
+>>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/stm32f429.dtsi | 275 ++++++++++++++++++++++++++++++++=
++++++++
+>>  1 file changed, 275 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f=
+429.dtsi
+>> index bca491d..d0fb9cc 100644
+>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>> @@ -355,6 +355,21 @@
+>>                                       slew-rate =3D <2>;
+>>                               };
+>>                       };
+>> +
+>> +                     pwm1_pins: pwm@1 {
 >
-> Ok that's fine too. I'd prefer the function had a return type of
-> void if we're not planning on using the return value, that's all.
+> No reg prop, so should not have a unit-address. Given the names in the
+> define below, seems like "timer1" would be appropriate.
+>
+>> +                             pins {
+>> +                                     pinmux =3D <STM32F429_PA8_FUNC_TIM=
+1_CH1>,
+>> +                                              <STM32F429_PB13_FUNC_TIM1=
+_CH1N>,
+>> +                                              <STM32F429_PB12_FUNC_TIM1=
+_BKIN>;
+>> +                             };
+>> +                     };
+>> +
+>> +                     pwm3_pins: pwm@3 {
+>> +                             pins {
+>> +                                     pinmux =3D <STM32F429_PB4_FUNC_TIM=
+3_CH1>,
+>> +                                              <STM32F429_PB5_FUNC_TIM3_=
+CH2>;
+>> +                             };
+>> +                     };
+>>               };
+>>
+>>               rcc: rcc@40023810 {
+>> @@ -426,6 +441,266 @@
+>>                       interrupts =3D <80>;
+>>                       clocks =3D <&rcc 0 38>;
+>>               };
+>> +
+>> +             timers2: timers@40000000 {
+>
+> timer@...
+>
+> It may be more than just a timer, there's not a better generic name.
+>
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40000000 0x400>;
+>> +                     clocks =3D <&rcc 0 128>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <1>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers3: timers@40000400 {
+>
+> ditto
+>
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40000400 0x400>;
+>> +                     clocks =3D <&rcc 0 129>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <2>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers4: timers@40000800 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40000800 0x400>;
+>> +                     clocks =3D <&rcc 0 130>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <3>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers5: timers@40000C00 {
+>
+> timer@...
+>
+> And use lowercase hex.
+>
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40000C00 0x400>;
+>
+> ditto
+>
+>> +                     clocks =3D <&rcc 0 131>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <4>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers6: timers@40001000 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40001000 0x400>;
+>> +                     clocks =3D <&rcc 0 132>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <5>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers7: timers@40001400 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40001400 0x400>;
+>> +                     clocks =3D <&rcc 0 133>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <6>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers12: timers@40001800 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40001800 0x400>;
+>> +                     clocks =3D <&rcc 0 134>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <9>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers13: timers@40001C00 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40001C00 0x400>;
+>> +                     clocks =3D <&rcc 0 135>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers14: timers@40002000 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40002000 0x400>;
+>> +                     clocks =3D <&rcc 0 136>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers1: timers@40010000 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40010000 0x400>;
+>> +                     clocks =3D <&rcc 0 160>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <0>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers8: timers@40010400 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40010400 0x400>;
+>> +                     clocks =3D <&rcc 0 161>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <7>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers9: timers@40014000 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40014000 0x400>;
+>> +                     clocks =3D <&rcc 0 176>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +
+>> +                     timer {
+>> +                             compatible =3D "st,stm32-timer-trigger";
+>> +                             reg =3D <8>;
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers10: timers@40014400 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40014400 0x400>;
+>> +                     clocks =3D <&rcc 0 177>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>> +
+>> +             timers11: timers@40014800 {
+>> +                     #address-cells =3D <1>;
+>> +                     #size-cells =3D <0>;
+>> +                     compatible =3D "st,stm32-timers";
+>> +                     reg =3D <0x40014800 0x400>;
+>> +                     clocks =3D <&rcc 0 178>;
+>> +                     clock-names =3D "clk_int";
+>> +                     status =3D "disabled";
+>> +
+>> +                     pwm {
+>> +                             compatible =3D "st,stm32-pwm";
+>> +                             status =3D "disabled";
+>> +                     };
+>> +             };
+>>       };
+>>  };
+>>
+>> --
+>> 1.9.1
+>>
 
-Ok, I'll see which way I go in v2 of the series, but seems I can pick 
-either your original proposal or mine.
 
--Tero
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
