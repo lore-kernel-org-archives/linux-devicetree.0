@@ -1,96 +1,57 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/8] PWM: add pwm-stm32 DT bindings
-Date: Tue, 13 Dec 2016 11:11:37 +0000
-Message-ID: <20161213111137.GW3625@dell.home>
-References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
- <1481292919-26587-4-git-send-email-benjamin.gaignard@st.com>
- <20161212190205.b5t3x6i2o7igldlo@rob-hp-laptop>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] mtd: spi-nor: add memory controllers for the
+ Aspeed AST2500 SoC
+Date: Tue, 13 Dec 2016 08:50:20 +0100
+Message-ID: <3f3260d1-e677-b6d9-5571-a08a80344495@gmail.com>
+References: <1481557252-13656-1-git-send-email-clg@kaod.org>
+ <1481557252-13656-2-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161212190205.b5t3x6i2o7igldlo@rob-hp-laptop>
+In-Reply-To: <1481557252-13656-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Dec 2016, Rob Herring wrote:
+On 12/12/2016 04:40 PM, Cédric Le Goater wrote:
+> This driver adds mtd support for the Aspeed AST2500 SoC static memory
+> controllers :
 
-> On Fri, Dec 09, 2016 at 03:15:14PM +0100, Benjamin Gaignard wrote:
-> > Define bindings for pwm-stm32
-> > 
-> > version 6:
-> > - change st,breakinput parameter format to make it usuable on stm32f7 too.
-> > 
-> > version 2:
-> > - use parameters instead of compatible of handle the hardware configuration
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> > new file mode 100644
-> > index 0000000..866f222
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> > @@ -0,0 +1,33 @@
-> > +STMicroelectronics STM32 Timers PWM bindings
-> > +
-> > +Must be a sub-node of an STM32 Timers device tree node.
-> > +See ../mfd/stm32-timers.txt for details about the parent node.
-> > +
-> > +Required parameters:
-> > +- compatible:		Must be "st,stm32-pwm".
-> > +- pinctrl-names: 	Set to "default".
-> > +- pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
-> > +			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
-> > +
-> > +Optional parameters:
-> > +- st,breakinput:	Arrays of three u32 <index level filter> to describe break input configurations.
-> > +			"index" indicates on which break input the configuration should be applied.
-> > +			"level" gives the active level (0=low or 1=high) for this configuration.
-> > +			"filter" gives the filtering value to be applied.
-> > +
-> > +Example:
-> > +	timers@40010000 {
-> 
-> timer@...
+[...]
 
-No, it should be timers.
+> +#define DEVICE_NAME	"aspeed-smc"
+> +
+> +/*
+> + * The driver only support SPI flash
+> + */
+> +enum aspeed_smc_flash_type {
+> +	smc_type_nor  = 0,
+> +	smc_type_nand = 1,
+> +	smc_type_spi  = 2,
+> +};
 
-The 's' is intentional, since this parent (MFD) device houses 3
-different types of timers.  The "timer" node is a child of this one.
+So why is this here ? :)
 
-> With that,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> 
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		compatible = "st,stm32-timers";
-> > +		reg = <0x40010000 0x400>;
-> > +		clocks = <&rcc 0 160>;
-> > +		clock-names = "clk_int";
-> > +
-> > +		pwm {
-> > +			compatible = "st,stm32-pwm";
-> > +			pinctrl-0	= <&pwm1_pins>;
-> > +			pinctrl-names	= "default";
-> > +			st,breakinput = <0 1 5>;
-> > +		};
-> > +	};
+> +struct aspeed_smc_chip;
+> +
+> +struct aspeed_smc_info {
+> +	u32 maxsize;		/* maximum size of chip window */
+> +	u8 nce;			/* number of chip enables */
+> +	bool hastype;		/* flash type field exists in config reg */
+> +	u8 we0;			/* shift for write enable bit for CE0 */
+> +	u8 ctl0;		/* offset in regs of ctl for CE0 */
+> +
+> +	void (*set_4b)(struct aspeed_smc_chip *chip);
+> +};
+
+Otherwise looks good:
+Reviewed-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
