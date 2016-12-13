@@ -1,64 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
-Date: Tue, 13 Dec 2016 08:11:49 -0600
-Message-ID: <CAL_Jsq+DDx460jcLj34_X9MdtCqyc4izwc=3ThnFri+NjBaGUA@mail.gmail.com>
-References: <cover.1481131072.git.lolivei@synopsys.com> <5173a9456c423025d8f15baafa2499440cbe1b51.1481131072.git.lolivei@synopsys.com>
- <20161212170214.4cydp256jsp7srar@rob-hp-laptop> <BCF0D4927F9C694C9AEA8827D4A9C7C897CE12@de02wembxa.internal.synopsys.com>
- <CAL_JsqJwjX1Y=bDD-hKcXqa1aBKjVhXjEZm6j2tMAQszyv-QhA@mail.gmail.com> <BCF0D4927F9C694C9AEA8827D4A9C7C897CEDB@de02wembxa.internal.synopsys.com>
+From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] mmc: dt-bindings: add ZTE ZX296718 MMC bindings
+Date: Tue, 13 Dec 2016 22:20:47 +0800
+Message-ID: <CABymUCMw2RnysbqgLPZXhWcLDk8XbaK_oB0Lpuub6Y_9+Vc7Jg@mail.gmail.com>
+References: <1480904976-7081-1-git-send-email-jun.nie@linaro.org>
+ <1480904976-7081-2-git-send-email-jun.nie@linaro.org> <20161209214720.lymj7dfadksleryr@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BCF0D4927F9C694C9AEA8827D4A9C7C897CEDB@de02wembxa.internal.synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Ramiro.Oliveira@synopsys.com" <Ramiro.Oliveira@synopsys.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161209214720.lymj7dfadksleryr@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Liu <jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, lai.binz-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Again, please don't top post. And your line wrapping is messed up.
-IOW, you can't use Outlook.
-
-On Tue, Dec 13, 2016 at 4:50 AM, Luis de Oliveira
-<Luis.Oliveira@synopsys.com> wrote:
-> The controller for i2c-designware cannot be slave/master at the same time and it has to be enabled knowing beforehand if we want it to be slave or master by something outside of the controller itself.
->
-> I as looking and I see the use of this I2C_OWN_SLAVE_ADDRESS with the "linux,slave-24c02" slave interface  but I am not seeing how it will help me identify a selected i2c-designware block as a "slave" device before instantiation. I'm sorry if I'm not understanding properly.
-> I use the "linux,slave-24c02" to instantiate the i2c-designware as a slave with an address so I can do write/read operations, it is how I tested it.
-
-Something like this:
-
-of_for_each_child_node(child) {
-  of_property_read_u32(child, "reg", &reg);
-  if (reg & I2C_OWN_SLAVE_ADDRESS))
-    im_a_slave = true;
-}
-
-...rather than testing "mode" is equal to "slave".
-
-Rob
-
->
-> Luis
->
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Monday, December 12, 2016 23:16
-> To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-> Cc: wsa@the-dreams.de; mark.rutland@arm.com; jarkko.nikula@linux.intel.com; andriy.shevchenko@linux.intel.com; mika.westerberg@linux.intel.com; linux-i2c@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Ramiro.Oliveira@synopsys.com; Joao.Pinto@synopsys.com; CARLOS.PALMINHA@synopsys.com
-> Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
->
-> On Mon, Dec 12, 2016 at 12:35 PM, Luis de Oliveira <Luis.Oliveira@synopsys.com> wrote:
->> Hi all,
->
-> Please don't top post.
->
+2016-12-10 5:47 GMT+08:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Dec 05, 2016 at 10:29:32AM +0800, Jun Nie wrote:
+>> Document the device-tree binding of ZTE MMC host on
+>> ZX296718 SoC.
 >>
->> The slave address could be set by the I2C slave backend so I can't use it to setup the controller.
->> A boolean property was my initial approach then Andy and Wolfram Sang suggested the use of compatible strings and later It was suggested to use a property to select mode but I can do it again if it's the best way.
->> Can you please tell me where should it be documented?
+>> Signed-off-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mmc/zx-dw-mshc.txt         | 35 ++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>> new file mode 100644
+>> index 0000000..c175c4b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>> @@ -0,0 +1,35 @@
+>> +* ZTE specific extensions to the Synopsys Designware Mobile Storage
+>> +  Host Controller
+>> +
+>> +The Synopsys designware mobile storage host controller is used to interface
+>> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+>> +differences between the core Synopsys dw mshc controller properties described
+>> +by synopsys-dw-mshc.txt and the properties used by the ZTE specific
+>> +extensions to the Synopsys Designware Mobile Storage Host Controller.
+>> +
+>> +Required Properties:
+>> +
+>> +* compatible: should be
+>> +     - "zte,zx296718-dw-mshc": for ZX SoCs
+>> +
+>> +Example:
+>> +
+>> +     mmc1: mmc@1110000 {
+>> +             compatible = "zte,zx296718-dw-mshc";
 >
-> bindings/i2c/i2c.txt.
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
 >
-> Actually, looking at this some more, we already have a way to describe the controller being a slave device with the I2C_OWN_SLAVE_ADDRESS flag in the reg property. We should just need a helper to read reg property of each child and check for the bit set.
+> These aren't needed unless you have child nodes with reg property. The
+> DW binding says you should have at least one child.
+
+Will remove them in next version.
 >
-> Rob
+>> +             reg = <0x01110000 0x1000>;
+>> +             interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>> +             fifo-depth = <32>;
+>> +             data-addr = <0x200>;
+>> +             fifo-watermark-aligned;
+>
+> Custom properties should have vendor prefix.
+
+These properties are consumed by DW MMC driver, not by ZTE driver. And
+they may reused by SoCs from other vendors that integrate DW MMC IP.
+The names are OK in this case?
+
+Jun
+
+>
+>> +             bus-width = <4>;
+>> +             clock-frequency = <50000000>;
+>> +             clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
+>> +             clock-names = "biu", "ciu";
+>> +             num-slots = <1>;
+>> +             max-frequency = <50000000>;
+>> +             cap-sdio-irq;
+>> +             cap-sd-highspeed;
+>> +             status = "disabled";
+>> +     };
+>> --
+>> 1.9.1
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
