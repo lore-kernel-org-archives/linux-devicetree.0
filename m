@@ -1,14 +1,16 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 3/6] ARM: dts: sun8i: add a cpu0 label to cpu@0 node on
- A23/33
-Date: Tue, 13 Dec 2016 16:45:48 +0100
-Message-ID: <20161213154548.qfbk4zd35n6tovpr@lukather>
-References: <20161213152252.53749-1-icenowy@aosc.xyz>
- <20161213152252.53749-4-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 3/8] PWM: add pwm-stm32 DT bindings
+Date: Tue, 13 Dec 2016 09:57:15 -0600
+Message-ID: <CAL_JsqL8pJSFb8LbABAYJOQ0URaMpyupbFryk_mS2ToN1kStdA@mail.gmail.com>
+References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
+ <1481292919-26587-4-git-send-email-benjamin.gaignard@st.com>
+ <20161212190205.b5t3x6i2o7igldlo@rob-hp-laptop>
+ <20161213111137.GW3625@dell.home>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8246735567648047028=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161213152252.53749-4-icenowy@aosc.xyz>
+In-Reply-To: <20161213111137.GW3625@dell.home>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,69 +20,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jorik Jonker <jorik@kippendief.biz>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Alexandre Torgue <alexandre.torgue@st.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>Benjamin Gaignard <benjamin.g>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 13, 2016 at 5:11 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 12 Dec 2016, Rob Herring wrote:
+>
+>> On Fri, Dec 09, 2016 at 03:15:14PM +0100, Benjamin Gaignard wrote:
+>> > Define bindings for pwm-stm32
+>> >
+>> > version 6:
+>> > - change st,breakinput parameter format to make it usuable on stm32f7 too.
+>> >
+>> > version 2:
+>> > - use parameters instead of compatible of handle the hardware configuration
+>> >
+>> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>> > ---
+>> >  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++++++++
+>> >  1 file changed, 33 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>> > new file mode 100644
+>> > index 0000000..866f222
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>> > @@ -0,0 +1,33 @@
+>> > +STMicroelectronics STM32 Timers PWM bindings
+>> > +
+>> > +Must be a sub-node of an STM32 Timers device tree node.
+>> > +See ../mfd/stm32-timers.txt for details about the parent node.
+>> > +
+>> > +Required parameters:
+>> > +- compatible:              Must be "st,stm32-pwm".
+>> > +- pinctrl-names:   Set to "default".
+>> > +- pinctrl-0:               List of phandles pointing to pin configuration nodes for PWM module.
+>> > +                   For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
+>> > +
+>> > +Optional parameters:
+>> > +- st,breakinput:   Arrays of three u32 <index level filter> to describe break input configurations.
+>> > +                   "index" indicates on which break input the configuration should be applied.
+>> > +                   "level" gives the active level (0=low or 1=high) for this configuration.
+>> > +                   "filter" gives the filtering value to be applied.
+>> > +
+>> > +Example:
+>> > +   timers@40010000 {
+>>
+>> timer@...
+>
+> No, it should be timers.
 
---===============8246735567648047028==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ik6geqlrhfiwixba"
-Content-Disposition: inline
+Read the spec. "timer" is a generic node name. "timers" is not. How
+many is not relevant.
 
-
---ik6geqlrhfiwixba
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 13, 2016 at 11:22:49PM +0800, Icenowy Zheng wrote:
-> A "cpu0" label is needed on cpu@0 for cpufreq-dt to work.
->=20
-> Add such a label, in order to prepare for cpufreq support of A23/33.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ik6geqlrhfiwixba
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYUBesAAoJEBx+YmzsjxAgbd0P/3sQIOWwd8IxOFA8MSjjoEyS
-9bFPwIez39uRBHbksxbFvpdMormy54V1bafboyB27HW3U9oIXrR5+NLYObChEhwh
-zW1QCP/l9PA2QYTql4aBlihA+2DbQMl1tlNtiY3Z5MDtsowFtyY+0qxkVhidP7tp
-KCaEMr9CtMJLLikZcfV72NmxzOMaYSebqybyiS4etFosvZQNcBiDgOOMj5GPdDuu
-m9qD5NsyCLq51Jeultup7Gwaz+zdDpnKc1TC3JNlF32rt86a2IYa4dZZHh7koYWy
-niLSH+w8072/q4v82ViuZ4ANmJv5vznTGSfw/QHKhsjIJ0XZeYIhk/HT+nIK77qY
-CDbfJUsPxS7BJsThLnbJjn42DOcqNWn4sCqtZQ+AJkvxifVEBhHyIhFZc04MRRum
-OQ9Yq+IaajdM9I1uDifF0op2JsXSaI3FYwhOBuMU8qpzOpP0xjOcRb3FHEtGu852
-98orThlKD2kLTo/kw3XLsO5N2q4oDV7DUWT96q73NMY4YEej419IAwo7GcYqi2tG
-EZInqjsKe49WLQWoooRonDVrQASzk4GoMdHvTUWK6YwdiKkPEDo/TBbQ6DL/gz16
-gIjrkRgm+KsBKAlde2B9IEK5VsMxW5CzkIpt9Qx8DrrL0YuhKo5V5lxe0w4/3Ots
-HsUivSU0fcYCSoRwp2su
-=VmUl
------END PGP SIGNATURE-----
-
---ik6geqlrhfiwixba--
-
-
---===============8246735567648047028==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8246735567648047028==--
+> The 's' is intentional, since this parent (MFD) device houses 3
+> different types of timers.  The "timer" node is a child of this one.
