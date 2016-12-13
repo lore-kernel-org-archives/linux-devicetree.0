@@ -1,14 +1,14 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/6] clk: sunxi-ng: set the parent rate when adjustin
- CPUX clock on A33
-Date: Tue, 13 Dec 2016 16:44:51 +0100
-Message-ID: <20161213154451.y4wcrqhtcc5sqli7@lukather>
+Subject: Re: [PATCH 3/6] ARM: dts: sun8i: add a cpu0 label to cpu@0 node on
+ A23/33
+Date: Tue, 13 Dec 2016 16:45:48 +0100
+Message-ID: <20161213154548.qfbk4zd35n6tovpr@lukather>
 References: <20161213152252.53749-1-icenowy@aosc.xyz>
- <20161213152252.53749-3-icenowy@aosc.xyz>
+ <20161213152252.53749-4-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1528239232879443947=="
+Content-Type: multipart/mixed; boundary="===============8246735567648047028=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161213152252.53749-3-icenowy@aosc.xyz>
+In-Reply-To: <20161213152252.53749-4-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,28 +23,25 @@ Cc: devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.co
 List-Id: devicetree@vger.kernel.org
 
 
---===============1528239232879443947==
+--===============8246735567648047028==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hu75rc2qyp55un53"
+	protocol="application/pgp-signature"; boundary="ik6geqlrhfiwixba"
 Content-Disposition: inline
 
 
---hu75rc2qyp55un53
+--ik6geqlrhfiwixba
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 13, 2016 at 11:22:48PM +0800, Icenowy Zheng wrote:
-> The CPUX clock on A33, which is for the Cortex-A7 cores, is designed to
-> be changeable by changing the rate of PLL_CPUX.
+On Tue, Dec 13, 2016 at 11:22:49PM +0800, Icenowy Zheng wrote:
+> A "cpu0" label is needed on cpu@0 for cpufreq-dt to work.
 >=20
-> Add CLK_SET_RATE_PARENT flag to this clock.
+> Add such a label, in order to prepare for cpufreq support of A23/33.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-Thanks!
+Applied, thanks!
 Maxime
 
 --=20
@@ -52,30 +49,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---hu75rc2qyp55un53
+--ik6geqlrhfiwixba
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYUBdzAAoJEBx+YmzsjxAg39gP/jCLHnY4aXMESlxWDRK2cluJ
-XaNYBo+/bQUqzxy4dV8WYrUcB/IOaSa+/tu5c9g6DAiJeKsP4wzS+RuPhWMUFPd0
-b1sOJM5HXXhF7AJioFBwVqQK6oRF7ThImwLjlNPH1d6OkND35AaNKBrdmlPLx5zE
-RYyGcLQtgNEK/mkLW+HtHN+CJ0NNhJuU/jv9bFoL2KsrQn9OKQr2Q2RzMRKiSEGI
-B9SIgxovANEyynwAMpPXcm1GcVW9mIdRaOZzhzVBi97pblEalLNtg3FQJPZDV2ln
-Xfhzwi4cDxmPN+QzEIW7/eE2MXBGwmpw4/E66g+c/4+0j7ojbzt4gT6/JWLv8uF4
-lY6VuPl7HPo4CZ/356XEcBZy+YoPsRxd7n9e1xYb0/w0NrYewGtcjSV1i8GKVl3F
-xbOiaC7efbdY0sMu3LHBQUAM5UUpwnud1JBwhrFQV/WRRK2ld2KgAE10oClqrJCV
-vjVcNSWcVrcK2ODpHxbIaZx9DLFdoQGkcL+8u7cv16JLqaszZKcenJNB5MXt9sz1
-rZfAbhpUzNb0XrbZxmiG6fAVifRvWZ3tqBoOIwsw2/YDA6Dh14HxTQk92Yeb/rXj
-1SV5mO3GOIfOJXcVK3i7QxkGiAgDARQ/SxNJq1QEp9kTxaWhfOAnUyeH0aY9emYZ
-CveufVzrss8Hx6A4UFOa
-=EwYm
+iQIcBAEBCAAGBQJYUBesAAoJEBx+YmzsjxAgbd0P/3sQIOWwd8IxOFA8MSjjoEyS
+9bFPwIez39uRBHbksxbFvpdMormy54V1bafboyB27HW3U9oIXrR5+NLYObChEhwh
+zW1QCP/l9PA2QYTql4aBlihA+2DbQMl1tlNtiY3Z5MDtsowFtyY+0qxkVhidP7tp
+KCaEMr9CtMJLLikZcfV72NmxzOMaYSebqybyiS4etFosvZQNcBiDgOOMj5GPdDuu
+m9qD5NsyCLq51Jeultup7Gwaz+zdDpnKc1TC3JNlF32rt86a2IYa4dZZHh7koYWy
+niLSH+w8072/q4v82ViuZ4ANmJv5vznTGSfw/QHKhsjIJ0XZeYIhk/HT+nIK77qY
+CDbfJUsPxS7BJsThLnbJjn42DOcqNWn4sCqtZQ+AJkvxifVEBhHyIhFZc04MRRum
+OQ9Yq+IaajdM9I1uDifF0op2JsXSaI3FYwhOBuMU8qpzOpP0xjOcRb3FHEtGu852
+98orThlKD2kLTo/kw3XLsO5N2q4oDV7DUWT96q73NMY4YEej419IAwo7GcYqi2tG
+EZInqjsKe49WLQWoooRonDVrQASzk4GoMdHvTUWK6YwdiKkPEDo/TBbQ6DL/gz16
+gIjrkRgm+KsBKAlde2B9IEK5VsMxW5CzkIpt9Qx8DrrL0YuhKo5V5lxe0w4/3Ots
+HsUivSU0fcYCSoRwp2su
+=VmUl
 -----END PGP SIGNATURE-----
 
---hu75rc2qyp55un53--
+--ik6geqlrhfiwixba--
 
 
---===============1528239232879443947==
+--===============8246735567648047028==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -86,4 +83,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1528239232879443947==--
+--===============8246735567648047028==--
