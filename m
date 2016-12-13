@@ -1,13 +1,14 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 4/6] ARM: dts: sun8i: add opp-v2 table for A33
-Date: Tue, 13 Dec 2016 20:12:54 +0100
-Message-ID: <20161213191254.pgcuvrpnebgw666g@lukather>
+Subject: Re: [PATCH 5/6] ARM: dts: sun8i: set cpu-supply in reference tablet
+ DTSI
+Date: Tue, 13 Dec 2016 20:13:50 +0100
+Message-ID: <20161213191350.dsybyjfuocrvx4zj@lukather>
 References: <20161213152252.53749-1-icenowy@aosc.xyz>
- <20161213152252.53749-5-icenowy@aosc.xyz>
+ <20161213152252.53749-6-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6901722562837239763=="
+Content-Type: multipart/mixed; boundary="===============5755112281354732498=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161213152252.53749-5-icenowy@aosc.xyz>
+In-Reply-To: <20161213152252.53749-6-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,83 +23,26 @@ Cc: devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.co
 List-Id: devicetree@vger.kernel.org
 
 
---===============6901722562837239763==
+--===============5755112281354732498==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nkhll3tmoidspbu2"
+	protocol="application/pgp-signature"; boundary="uv2vtn7agm7c5d3p"
 Content-Disposition: inline
 
 
---nkhll3tmoidspbu2
+--uv2vtn7agm7c5d3p
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 13, 2016 at 11:22:50PM +0800, Icenowy Zheng wrote:
-> An operating point table is needed for the cpu frequency adjusting to
-> work.
+On Tue, Dec 13, 2016 at 11:22:51PM +0800, Icenowy Zheng wrote:
+> All reference design A33 tablets uses DCDC2 of AXP223 as the power
+> supply of the Cortex-A7 cores.
 >=20
-> The operating point table is converted from the common value in
-> extracted script.fex from many A33 board/tablets.
->=20
-> 1.344GHz is set as a turbo-mode operating point, as it's described as
-> "extremity_freq" in the FEX file. (the "max_freq" is 1.2GHz)
+> Set the cpu-supply in the DTSI of sun8i reference tablets.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> ---
->  arch/arm/boot/dts/sun8i-a33.dtsi | 38 ++++++++++++++++++++++++++++++++++=
-++++
->  1 file changed, 38 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a=
-33.dtsi
-> index 504996cbee29..035c058324b8 100644
-> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-> @@ -46,7 +46,45 @@
->  #include <dt-bindings/dma/sun4i-a10.h>
-> =20
->  / {
-> +	cpu0_opp_table: opp_table0 {
-> +		compatible =3D "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp@648000000 {
-> +			opp-hz =3D /bits/ 64 <648000000>;
-> +			opp-microvolt =3D <1040000>;
-> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
-> +		};
 
-Please add new lines between the nodes.
-
-> +		opp@816000000 {
-> +			opp-hz =3D /bits/ 64 <816000000>;
-> +			opp-microvolt =3D <1100000>;
-> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
-> +		};
-> +		opp@1008000000 {
-> +			opp-hz =3D /bits/ 64 <1008000000>;
-> +			opp-microvolt =3D <1200000>;
-> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
-> +		};
-> +		opp@1200000000 {
-> +			opp-hz =3D /bits/ 64 <1200000000>;
-> +			opp-microvolt =3D <1320000>;
-> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
-> +		};
-> +		opp@1344000000 {
-> +			opp-hz =3D /bits/ 64 <1344000000>;
-> +			opp-microvolt =3D <1460000>;
-> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
-> +			turbo-mode;
-> +		};
-
-As far as I know, this OPP is not used by Allwinner, is not usable in
-any A33 board so far (both the A33-olinuxino and the SinA33 do not
-allow such a voltage on their CPU regulator), and overvolting and
-overclocking is something that is very risky, and might lead to
-stability issues.
-
-Please remove this OPP.
+Applied, thanks
 
 Maxime
 
@@ -107,30 +51,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---nkhll3tmoidspbu2
+--uv2vtn7agm7c5d3p
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYUEgyAAoJEBx+YmzsjxAgiF8P/0yVm5s6rvegpYfOz9HdGGZr
-RZPI5n89Gwmirr9HzSm/mnYo4bXfO6LLmsAGJxIqz/wkIkF3xONfx8paprsmOHSd
-V/J0Pqvn3oiyXFBqskCqCSsZw7voge8aM8lja0/ymPlzloNMV5GmPRH2Hdi/8Org
-d3THl+8GMwpW23lzCWcoZuwLQpvqL4KJPZEe33/z7J1JQu1tFFN8Pa1OoQlXLl90
-tQR7+YqhTZJsZM3af6GFZOzw+8XEt1UpHmtps5bpWV9cts+fDGfP8OXSbblLn/j1
-Crs4TTpNw2v0VYNp4Q9imOnzgSDYZIbrOU4xtf2HAIMTbmVWurmnNK8DumgpmcC1
-se5hG0TLr+oHdk7w1RVBviE/cK+X4bc5bSZ5jEMjwa7C6xpxWyTD7e73TKJE38IT
-8XgZTGfoj0K5BlDWADHI9zS5e8m2SqK+0U2J8lR/8Cu+T1eU/4W7QQLMb84zSUkO
-5sRts33y9Pehlf8Ueg7rP6uyxxy00AoEhqcpUpl9RIG73qsaY49V8LzUvvO8qpQT
-fprY3MF+Snq3RmXR1a3xxP5U76ZdrFj3e6dHE+JhtWqL2R9QORPMBJ6sYo/XWJNy
-1SPqIbP0CuTYci9A0kmuACRsT6XyozqXESpSUNFXwMOFUwwmFPmRms6tylCcN0n1
-QJEmXU7jHrwJQLVRyQ8k
-=S7WT
+iQIcBAEBCAAGBQJYUEhuAAoJEBx+YmzsjxAgQ54QAIRKLQJFblVSZ6AfhLN8vSMI
+DUzceHqS2McEFLpS/oseTIfugkHSqfgHA3Hn4RRHIanWQnh8oz/ldQfBPA3lj0sf
+WoqFWJh1wnWftwP2kw8Rs4EjV4F5kOaszUsWEFPGH8QNDh9FpWu17xr9dLM+b9Ns
+PVi0tzV0OttXznu6i2GpodiqSP9yCtAVJr3v6irZ3+pL8KwEwKQm4jcknEybMHbW
+I9ewrK5r2kJwHTB5G76wPIEoQvuV3mDW7TQHWVRUbfMILr6h/NVSdp5hZqe4sL+v
+FMhyp6iUnp90Xav3mkl1PpwD64/XMHkrYNqesYn6KJz8PM5EzroCAU1uC4nqBUV7
+mNLg5LrKNcqOaUiSbC7HDBgvvvDDFLAvEc3mdJ3SbcRd7/XhNqqdGJ30myrX6Rla
+EC8nnwgDY/jl6Et1zC6jG76juJ9KzOdLIrP2M++bespvG1t2vm+SBwO2QTVPPxB9
+j0ryuLHhlCrojIOGfdqifLHX2DDr/7fmealMsDq9NprOKPrEMSr0KOWCKPmwJUb0
+hkfV1IRYwU6+DiiOEIvGtNs3JocN+aPKBZ3MTBsOYAH+INgfT+arI9m0zONgOzdO
+xszwBjuVHWZ4oiFJr3JaVszu2KktFjiY8yfhxj2NF28sGYgj5EToIHIKZevkjAGl
+4khVMF+geLUSEJyq9kVq
+=tilk
 -----END PGP SIGNATURE-----
 
---nkhll3tmoidspbu2--
+--uv2vtn7agm7c5d3p--
 
 
---===============6901722562837239763==
+--===============5755112281354732498==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -141,4 +85,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============6901722562837239763==--
+--===============5755112281354732498==--
