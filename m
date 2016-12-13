@@ -1,27 +1,40 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: NS2: add support for XMC form factor
-Date: Mon, 12 Dec 2016 18:15:51 -0800
-Message-ID: <20161213021551.15667-1-f.fainelli@gmail.com>
-References: <1480979542-26871-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480979542-26871-3-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/6] USB support for Broadcom NSP SoC
+Date: Mon, 12 Dec 2016 18:20:13 -0800
+Message-ID: <79483fc3-5e91-a1f0-1dbf-1987682373e6@gmail.com>
+References: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 5 Dec 2016 18:12:22 -0500, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> The BCM958712DxXMC board is a smaller form factor typically used as
-> controller boards for switches. This smaller board has less devices
-> pinned out, so only a few need be populated in the device tree.
->
-> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
+On 11/09/2016 01:33 AM, Yendapally Reddy Dhananjaya Reddy wrote:
+> This patch set contains the usb support for Broadcom NSP SoC.
+> The usb phy is connected through mdio interface. The mdio interface
+> can be used to access either internal phys or external phys using a
+> multiplexer.
+> 
+> The first patch provides the documentation details for mdio-mux and
+> second patch provides the documentation details for usb3 phy. The third
+> patch contains the mdio-mux support and fourth patch contains the
+> changes to the mdio bus driver.
+> 
+> The fifth patch provides the phy driver and sixth patch provides the
+> enable method for usb.
+> 
+> This patch series has been tested on NSP bcm958625HR board.
+> This patch series is based on v4.9.0-rc1 and is available from github-
+> repo: https://github.com/Broadcom/cygnus-linux.git
+> branch:nsp-usb-v1
 
-Applied, thanks!
---
+Can you resubmit this patch series with the feedback from Andrew, Rob
+and Scott addressed?
+
+Thanks!
+-- 
 Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
