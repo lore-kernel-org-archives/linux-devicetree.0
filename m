@@ -1,79 +1,92 @@
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH 1/2] iio: adc: hx711: Add DT binding for avia,hx711
-Date: Tue, 13 Dec 2016 21:11:20 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1612132110240.8653@pmeerw.net>
-References: <20161213180142.GA3162@andreas>
+From: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v1 07/12] scsi: ufs: add option to change default UFS
+ power management level
+Date: Tue, 13 Dec 2016 12:16:55 -0800
+Message-ID: <b326fb4217bb894295e83fe252aa7bf1@codeaurora.org>
+References: <1481590462-9981-1-git-send-email-subhashj@codeaurora.org>
+ <20161213200427.vzdwyzajcftvvcgu@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161213180142.GA3162@andreas>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161213200427.vzdwyzajcftvvcgu@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hannes Reinecke <hare-IBi9RG/b67k@public.gmane.org>, Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> Add DT bindings for avia,hx711
-> Add vendor avia to vendor list
+On 2016-12-13 12:04, Rob Herring wrote:
+> On Mon, Dec 12, 2016 at 04:54:20PM -0800, Subhash Jadavani wrote:
+>> UFS device and link can be put in multiple different low power modes 
+>> hence
+>> UFS driver supports multiple different low power modes. By default UFS
+>> driver selects the default (optimal) low power mode (which gives 
+>> moderate
+>> power savings and have relatively less enter and exit latencies) but
+>> we might have to tune this default power mode for different chipset
+>> platforms to meet the low power requirements/goals. Hence this patch
+>> adds option to change default UFS low power mode (level).
+>> 
+>> Reviewed-by: Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 10 ++++++
+>>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 ++++++++
+>>  drivers/scsi/ufs/ufshcd.c                          | 39 
+>> ++++++++++++++++++++++
+>>  drivers/scsi/ufs/ufshcd.h                          |  4 +--
+>>  4 files changed, 65 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt 
+>> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index a99ed55..c3836c5 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -41,6 +41,14 @@ Optional properties:
+>>  -lanes-per-direction	: number of lanes available per direction - 
+>> either 1 or 2.
+>>  			  Note that it is assume same number of lanes is used both
+>>  			  directions at once. If not specified, default is 2 lanes per 
+>> direction.
+>> +- rpm-level		: UFS Runtime power management level. Following PM 
+>> levels are supported:
+>> +			  0 - Both UFS device and Link in active state (Highest power 
+>> consumption)
+>> +			  1 - UFS device in active state but Link in Hibern8 state
+>> +			  2 - UFS device in Sleep state but Link in active state
+>> +			  3 - UFS device in Sleep state and Link in hibern8 state (default 
+>> PM level)
+>> +			  4 - UFS device in Power-down state and Link in Hibern8 state
+>> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest 
+>> power consumption)
+>> +- spm-level		: UFS System power management level. Allowed PM levels 
+>> are same as rpm-level.
 > 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../devicetree/bindings/iio/adc/avia-hx711.txt     | 23 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> This looks like you are putting policy for Linux into DT.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> new file mode 100644
-> index 000000000000..d56f95705fd2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> @@ -0,0 +1,23 @@
-> +* AVIA HX711 ADC chip for weight cells
-> +  Bit-banging driver
-> +
-> +Required properties:
-> + - compatible: Should be "avia,hx711"
-> + - sck-gpios:	Definition of the GPIO for the clock
-> + - dout-gpios:	Definition of the GPIO for Data-Out
+> What I would expect to see here is disabling of states that don't work
+> due to some h/w limitation. Otherwise, it is a user decision for what
+> modes to go into. Also, I think link and device states should be
+> separate.
 
-data-out (lowercase)
+Yes, generally default level (3) is good enough (and recommended) for 
+all platforms and most likely user is only expected to change this if 
+they see issues (most H/W) on their platform or they want even more 
+aggressive power state (level-4 or level-5) and ready to take the 
+performance hit associated with resume latencies.
 
+Also, I think it is better to keep Link and device states tied, one 
+reason is that we can't keep device in sleep/active state when Link is 
+in OFF state.
 
-> +		See Documentation/devicetree/bindings/gpio/gpio.txt
-> +
-> +Recommended properties:
-> + - gain:	Gain select, can be 32, 64 or 128
-> +		default is 128
-> +
-> +Optional properties:
-
-maybe delete this empty section?
-
-> +
-> +Example:
-> +weight@0 {
-> +	compatible = "avia,hx711";
-> +	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-> +	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> +	gain = <32>
-> +};
-> +
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 44ddc980b085..4696bb5c2198 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -32,6 +32,7 @@ atlas	Atlas Scientific LLC
->  atmel	Atmel Corporation
->  auo	AU Optronics Corporation
->  avago	Avago Technologies
-> +avia	avia semiconductor
->  avic	Shanghai AVIC Optoelectronics Co., Ltd.
->  axis	Axis Communications AB
->  boe	BOE Technology Group Co., Ltd.
 > 
+> Rob
 
 -- 
-
-Peter Meerwald-Stadler
-+43-664-2444418 (mobile)
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
