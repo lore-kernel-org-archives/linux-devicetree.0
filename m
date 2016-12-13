@@ -1,14 +1,14 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 5/6] ARM: dts: sun8i: set cpu-supply in reference tablet
- DTSI
-Date: Tue, 13 Dec 2016 20:13:50 +0100
-Message-ID: <20161213191350.dsybyjfuocrvx4zj@lukather>
-References: <20161213152252.53749-1-icenowy@aosc.xyz>
- <20161213152252.53749-6-icenowy@aosc.xyz>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: imx6ul_tsc - generalize the averaging property
+Date: Tue, 13 Dec 2016 11:14:49 -0800
+Message-ID: <1CDAF0C6-25E1-4CE9-8F98-F07333827B98@gmail.com>
+References: <1481440003-27168-1-git-send-email-guy.shapiro@mobi-wize.com>
+ <20161213191050.3yrmxaubpgjh65bz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5755112281354732498=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161213152252.53749-6-icenowy@aosc.xyz>
+In-Reply-To: <20161213191050.3yrmxaubpgjh65bz@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,71 +18,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jorik Jonker <jorik@kippendief.biz>
+To: Rob Herring <robh@kernel.org>, Guy Shapiro <guy.shapiro@mobi-wize.com>
+Cc: fabio.estevam@freescale.com, mark.rutland@arm.com, devicetree@vger.kernel.org, haibo.chen@freescale.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On December 13, 2016 11:10:50 AM PST, Rob Herring <robh@kernel.org> wrote:
+>On Sun, Dec 11, 2016 at 09:06:43AM +0200, Guy Shapiro wrote:
+>> Make the avarage-samples property a general touchscreen property
+>> rather than imx6ul device specific.
+>> 
+>> Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
+>> ---
+>>  .../bindings/input/touchscreen/imx6ul_tsc.txt      | 11 ++----
+>>  .../bindings/input/touchscreen/touchscreen.txt     |  3 ++
+>>  drivers/input/touchscreen/imx6ul_tsc.c             | 46
+>++++++++++++++++------
+>>  3 files changed, 41 insertions(+), 19 deletions(-)
+>
+>You can't just switch existing bindings as that breaks compatibility 
+>with old dtbs. The kernel driver would need to support both. Just 
+>introduce the new common property and use it for your device.
+>
 
---===============5755112281354732498==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uv2vtn7agm7c5d3p"
-Content-Disposition: inline
+The old binding is only in my tree at the moment, so I do not think there is compatibility concerns.
 
-
---uv2vtn7agm7c5d3p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 13, 2016 at 11:22:51PM +0800, Icenowy Zheng wrote:
-> All reference design A33 tablets uses DCDC2 of AXP223 as the power
-> supply of the Cortex-A7 cores.
->=20
-> Set the cpu-supply in the DTSI of sun8i reference tablets.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-
-Applied, thanks
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---uv2vtn7agm7c5d3p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYUEhuAAoJEBx+YmzsjxAgQ54QAIRKLQJFblVSZ6AfhLN8vSMI
-DUzceHqS2McEFLpS/oseTIfugkHSqfgHA3Hn4RRHIanWQnh8oz/ldQfBPA3lj0sf
-WoqFWJh1wnWftwP2kw8Rs4EjV4F5kOaszUsWEFPGH8QNDh9FpWu17xr9dLM+b9Ns
-PVi0tzV0OttXznu6i2GpodiqSP9yCtAVJr3v6irZ3+pL8KwEwKQm4jcknEybMHbW
-I9ewrK5r2kJwHTB5G76wPIEoQvuV3mDW7TQHWVRUbfMILr6h/NVSdp5hZqe4sL+v
-FMhyp6iUnp90Xav3mkl1PpwD64/XMHkrYNqesYn6KJz8PM5EzroCAU1uC4nqBUV7
-mNLg5LrKNcqOaUiSbC7HDBgvvvDDFLAvEc3mdJ3SbcRd7/XhNqqdGJ30myrX6Rla
-EC8nnwgDY/jl6Et1zC6jG76juJ9KzOdLIrP2M++bespvG1t2vm+SBwO2QTVPPxB9
-j0ryuLHhlCrojIOGfdqifLHX2DDr/7fmealMsDq9NprOKPrEMSr0KOWCKPmwJUb0
-hkfV1IRYwU6+DiiOEIvGtNs3JocN+aPKBZ3MTBsOYAH+INgfT+arI9m0zONgOzdO
-xszwBjuVHWZ4oiFJr3JaVszu2KktFjiY8yfhxj2NF28sGYgj5EToIHIKZevkjAGl
-4khVMF+geLUSEJyq9kVq
-=tilk
------END PGP SIGNATURE-----
-
---uv2vtn7agm7c5d3p--
+Are you OK with the new binding itself?
 
 
---===============5755112281354732498==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks.
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5755112281354732498==--
+-- 
+Dmitry
