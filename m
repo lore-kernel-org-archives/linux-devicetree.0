@@ -1,343 +1,76 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: [PATCH 2/2] iio: adc: hx711: Add IIO driver for AVIA HX711
-Date: Tue, 13 Dec 2016 19:02:55 +0100
-Message-ID: <20161213180254.GA3185@andreas>
+From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: Re: [PATCH] i2c: designware: Cleaning and comment style fixes.
+Date: Tue, 13 Dec 2016 18:05:50 +0000
+Message-ID: <f9020e81-d608-a9c0-38aa-931c59efb497@synopsys.com>
+References: <32604e59cde19a8981681ad2f0ee447af847bf60.1481646098.git.lolivei@synopsys.com>
+ <1481648428.8991.4.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <1481648428.8991.4.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, ak-n176/SwNRljddJNmlsFzeA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is the IIO driver for AVIA HX711 ADC which ist mostly used in weighting
-cells.
+On 13-Dec-16 17:00, Andy Shevchenko wrote:
+> On Tue, 2016-12-13 at 16:34 +0000, Luis Oliveira wrote:
+>> - Misspelling of some words
+> 
+> So, do you use codespell tool for that? I would suggest to use that tool
+> and propose any fix there first. At least that tool has a good history
+> of changes back in forward until some native speaker(s) settle some
+> cases.
+> 
 
-The protocol is quite simple and using GPIO's:
-One GPIO is used as clock (SCK) while another GPIO is read (DOUT)
+I just fixed the words "acknowledgment" and "endianness" because checkpatch.pl
+says it should be fixed.
 
-Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
----
- drivers/iio/adc/Kconfig  |  13 +++
- drivers/iio/adc/Makefile |   1 +
- drivers/iio/adc/hx711.c  | 269 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 283 insertions(+)
- create mode 100644 drivers/iio/adc/hx711.c
+>> - Comment format fix
+> 
+> No need to use dot at the end of one-liner comments
+> 
+> /* One line */
+> 
+> /*
+>  * Multi-line comments. Might include several lines or
+>  * even paragraphs.
+>  */
+> 
+> Also I would leave 
+> /*
+>  * One line
+>  */
+> 
+> Without dots here. AFAIU they are used to better distinguish group of
+> definitions inside headers (that's why 3 lines).
+> 
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 932de1f9d1e7..7902b50fcf32 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -205,6 +205,19 @@ config HI8435
- 	  This driver can also be built as a module. If so, the module will be
- 	  called hi8435.
- 
-+config HX711
-+	tristate "AVIA HX711 ADC for weight cells"
-+	depends on GPIOLIB
-+	help
-+	  If you say yes here you get support for AVIA HX711 ADC which is used
-+	  for weight cells
-+
-+	  This driver uses two GPIO's, one for setting the clock and the other
-+	  one for getting the data
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called hx711.
-+
- config INA2XX_ADC
- 	tristate "Texas Instruments INA2xx Power Monitors IIO driver"
- 	depends on I2C && !SENSORS_INA2XX
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index b1aa456e6af3..d46e289900ef 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
- obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
- obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
- obj-$(CONFIG_HI8435) += hi8435.o
-+obj-$(CONFIG_HX711) += hx711.o
- obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
- obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
- obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
-diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-new file mode 100644
-index 000000000000..cbc89e467985
---- /dev/null
-+++ b/drivers/iio/adc/hx711.c
-@@ -0,0 +1,269 @@
-+/*
-+ * HX711: analog to digital converter for weight sensor module
-+ *
-+ * Copyright (c) Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/sched.h>
-+#include <linux/delay.h>
-+#include <linux/iio/iio.h>
-+
-+#define HX711_GAIN_32		2	/* gain = 32 for channel B  */
-+#define HX711_GAIN_64		3	/* gain = 64 for channel A  */
-+#define HX711_GAIN_128		1	/* gain = 128 for channel A */
-+
-+
-+struct hx711_data {
-+	struct device		*dev;
-+	dev_t			devt;
-+	struct gpio_desc	*gpiod_sck;
-+	struct gpio_desc	*gpiod_dout;
-+	int			gain_pulse;
-+	struct mutex		lock;
-+};
-+
-+static void hx711_reset(struct hx711_data *hx711_data)
-+{
-+	int val;
-+	int i;
-+
-+	val = gpiod_get_value(hx711_data->gpiod_dout);
-+	if (val) {
-+		dev_warn(hx711_data->dev, "RESET-HX711\n");
-+
-+		gpiod_set_value(hx711_data->gpiod_sck, 1);
-+		udelay(80);
-+		gpiod_set_value(hx711_data->gpiod_sck, 0);
-+
-+		for (i = 0; i < 1000; i++) {
-+			val = gpiod_get_value(hx711_data->gpiod_dout);
-+			if (!val)
-+				break;
-+			/* sleep at least 1 ms*/
-+			msleep(1);
-+		}
-+	}
-+}
-+
-+static int hx711_cycle(struct hx711_data *hx711_data)
-+{
-+	int val;
-+
-+	/* if preempted for more then 60us while SCK is high:
-+	 * hx711 is going in reset
-+	 * ==> measuring is false
-+	 */
-+	preempt_disable();
-+	gpiod_set_value(hx711_data->gpiod_sck, 1);
-+	val = gpiod_get_value(hx711_data->gpiod_dout);
-+	gpiod_set_value(hx711_data->gpiod_sck, 0);
-+	preempt_enable();
-+
-+	return val;
-+}
-+
-+static unsigned int hx711_read(struct hx711_data *hx711_data)
-+{
-+	int i;
-+	int ret;
-+	int wert = 0;
-+
-+	hx711_reset(hx711_data);
-+
-+	for (i = 0; i < 24; i++) {
-+		wert <<= 1;
-+		ret = hx711_cycle(hx711_data);
-+		if (ret)
-+			wert++;
-+	}
-+
-+	wert ^= 0x800000;
-+
-+	for (i = 0; i < hx711_data->gain_pulse; i++)
-+		ret = hx711_cycle(hx711_data);
-+
-+	return wert;
-+}
-+
-+
-+static int hx711_read_raw(struct iio_dev *iio_dev,
-+				const struct iio_chan_spec *chan,
-+				int *val, int *val2, long mask)
-+{
-+	struct hx711_data *hx711_data = iio_priv(iio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		switch (chan->type) {
-+		case IIO_VOLTAGE:
-+			mutex_lock(&hx711_data->lock);
-+			*val = (int)hx711_read(hx711_data);
-+			mutex_unlock(&hx711_data->lock);
-+			ret = IIO_VAL_INT;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		return ret;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct iio_info hx711_iio_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= hx711_read_raw,
-+};
-+
-+static const struct iio_chan_spec hx711_chan_spec[] = {
-+	{ .type = IIO_VOLTAGE,
-+		.channel = 0,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_RAW),
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 24,
-+			.storagebits = 32,
-+			.shift = 0,
-+		}
-+	},
-+};
-+
-+static int hx711_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct hx711_data *hx711_data = NULL;
-+	struct iio_dev *iio;
-+	int ret = 0, ival;
-+
-+	iio = devm_iio_device_alloc(dev, sizeof(struct hx711_data));
-+	if (!iio) {
-+		dev_err(dev, "failed to allocate IIO device\n");
-+		return -ENOMEM;
-+	}
-+
-+	hx711_data = iio_priv(iio);
-+	hx711_data->dev = dev;
-+
-+	mutex_init(&hx711_data->lock);
-+
-+	hx711_data->gpiod_sck = devm_gpiod_get(dev, "sck", GPIOD_OUT_HIGH);
-+	if (IS_ERR(hx711_data->gpiod_sck)) {
-+		ret = PTR_ERR(hx711_data->gpiod_sck);
-+		goto err;
-+	}
-+
-+	hx711_data->gpiod_dout = devm_gpiod_get(dev, "dout", GPIOD_OUT_HIGH);
-+	if (IS_ERR(hx711_data->gpiod_dout)) {
-+		ret = PTR_ERR(hx711_data->gpiod_dout);
-+		goto err;
-+	}
-+
-+	ret = of_property_read_u32 (node, "gain", &ival);
-+	if (!ret) {
-+		switch (ival) {
-+		case 32:
-+			hx711_data->gain_pulse = HX711_GAIN_32;
-+			break;
-+		case 64:
-+			hx711_data->gain_pulse = HX711_GAIN_64;
-+			break;
-+		case 128:
-+			hx711_data->gain_pulse = HX711_GAIN_128;
-+			break;
-+		default:
-+			hx711_data->gain_pulse = HX711_GAIN_128;
-+		}
-+	} else
-+		hx711_data->gain_pulse = HX711_GAIN_128;
-+	dev_dbg(hx711_data->dev, "gain: %d\n", hx711_data->gain_pulse);
-+
-+	ret = gpiod_direction_input(hx711_data->gpiod_dout);
-+	if (ret < 0) {
-+		dev_err(hx711_data->dev, "gpiod_direction_input: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = gpiod_direction_output(hx711_data->gpiod_sck, 0);
-+	if (ret < 0) {
-+		dev_err(hx711_data->dev, "gpiod_direction_output: %d\n", ret);
-+		goto err;
-+	}
-+
-+	platform_set_drvdata(pdev, iio);
-+
-+	iio->name = pdev->name;
-+	iio->dev.parent = &pdev->dev;
-+	iio->info = &hx711_iio_info;
-+	iio->modes = INDIO_DIRECT_MODE;
-+	iio->channels = hx711_chan_spec;
-+	iio->num_channels = ARRAY_SIZE(hx711_chan_spec);
-+
-+	dev_err(hx711_data->dev, "initialized\n");
-+
-+	return devm_iio_device_register(dev, iio);
-+
-+err:
-+	return ret;
-+}
-+
-+
-+static int hx711_suspend(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static int hx711_resume(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(hx711_pm_ops, hx711_suspend, hx711_resume);
-+
-+
-+static const struct of_device_id of_hx711_match[] = {
-+	{ .compatible = "avia,hx711", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_hx711_match);
-+
-+static struct platform_driver hx711_driver = {
-+	.probe		= hx711_probe,
-+	.driver		= {
-+		.name		= "hx711-gpio",
-+		.pm		= &hx711_pm_ops,
-+		.of_match_table	= of_hx711_match,
-+	},
-+};
-+
-+module_platform_driver(hx711_driver);
-+
-+MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
-+MODULE_DESCRIPTION("HX711 bitbanging driver - ADC for weight cells");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:hx711-gpio");
-+
--- 
-2.1.4
+Ok thank you, I will go redo that.
+
+>> - Minor fix in coding style
+>>
+> 
+> I'm almost fine with the change itself, but people may be concerned in:
+> 
+> 1) what is the value of the change (would be nice to put this in commit
+> message);
+> 
+
+The value of this, besides the Linux kernel rules of coding style, is because I
+will use this code after and it will make my future patch a lot bigger and
+complicated to review if I have to do it all together.
+
+> 2) how much additional work this change may bring for backported fixes
+> if any;
+> 
+
+I don't think there is any.
+
+> 3) native speakers are the best who can re-read this and Ack.
+> 
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
