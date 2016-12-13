@@ -1,48 +1,63 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v6 5/5] ARM: configs: stm32: Add I2C support for STM32
- defconfig
-Date: Tue, 13 Dec 2016 11:03:11 +0100
-Message-ID: <7a48ebd1-94cc-a0e8-6a6c-25ca76aaeed5@st.com>
-References: <1481559342-6106-1-git-send-email-cedric.madianga@gmail.com>
- <1481559342-6106-6-git-send-email-cedric.madianga@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/5] ARM: dts: da850: tilcdc related DT changes
+Date: Tue, 13 Dec 2016 11:09:14 +0100
+Message-ID: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481559342-6106-6-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cedric,
+This series contains the last DT changes required for LCDC support
+on da850-lcdk. The first one adds the dumb-vga-dac nodes, the second
+limits the maximum pixel clock rate.
 
-On 12/12/2016 05:15 PM, M'boumba Cedric Madianga wrote:
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+v1 -> v2:
+- drop patch 3/3 (already merged)
+- use max-pixelclock instead of max-bandwidth for display mode limiting
 
-Can you please add a commit message.
+v2 -> v3:
+- make the commit message in patch [2/2] more detailed
+- move the max-pixelclock property to da850.dtsi as the limit
+  affects all da850-based boards
 
-Thx in advance
-Alex
+v3 -> v4:
+- remove the input port from the display node
+- move the display ports node to da850-lcdk.dts
+- rename the vga_bridge node to vga-bridge
+- move the LCDC pins to the LCDC node (from the vga bridge node)
 
-> ---
->  arch/arm/configs/stm32_defconfig | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-> index e7b56d4..9494eaf 100644
-> --- a/arch/arm/configs/stm32_defconfig
-> +++ b/arch/arm/configs/stm32_defconfig
-> @@ -52,6 +52,9 @@ CONFIG_SERIAL_NONSTANDARD=y
->  CONFIG_SERIAL_STM32=y
->  CONFIG_SERIAL_STM32_CONSOLE=y
->  # CONFIG_HW_RANDOM is not set
-> +CONFIG_I2C=y
-> +CONFIG_I2C_CHARDEV=y
-> +CONFIG_I2C_STM32F4=y
->  # CONFIG_HWMON is not set
->  # CONFIG_USB_SUPPORT is not set
->  CONFIG_NEW_LEDS=y
->
+v4 -> v5:
+- rename the display label to lcdc
+- instead of using the 'dumb-vga-dac' compatible, add bindings for
+  ti,ths8135 and use it as the vga-bridge node compatible
+
+v5 -> v6:
+- drop the endpoint numbers for nodes with single endpoints
+- split patch 2/4 from v5 into two separate patches: one adding DT
+  bindings and one adding actual support for ths8135
+
+v6 -> v7:
+- simplified patch 4/5 by removing unnecessary properties from ports
+  and endpoints nodes
+
+Bartosz Golaszewski (5):
+  ARM: dts: da850: rename the display node label
+  drm: bridge: add DT bindings for TI ths8135
+  drm: bridge: add support for TI ths8135
+  ARM: dts: da850-lcdk: add the vga-bridge node
+  ARM: dts: da850: specify the maximum pixel clock rate for tilcdc
+
+ .../bindings/display/bridge/ti,ths8135.txt         | 46 +++++++++++++++++++
+ arch/arm/boot/dts/da850-lcdk.dts                   | 51 ++++++++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi                       |  3 +-
+ drivers/gpu/drm/bridge/dumb-vga-dac.c              |  1 +
+ 4 files changed, 100 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
