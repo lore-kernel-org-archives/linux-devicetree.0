@@ -1,31 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ASoC: cs43130: Add devicetree bindings for CS43130
-Date: Tue, 13 Dec 2016 13:46:46 -0600
-Message-ID: <20161213194646.546pdlysycajvlde@rob-hp-laptop>
-References: <1481573851-1421-1-git-send-email-li.xu@cirrus.com>
- <63e40838-0226-4f9d-ab41-5815c724e9ef@EX3.ad.cirrus.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Input: imx6ul_tsc - generalize the averaging property
+Date: Tue, 13 Dec 2016 13:48:18 -0600
+Message-ID: <CAL_Jsq+nDO32w5Mky9ecAMxmzFcdG6dEjWM=XSDFDhxH4otqMQ@mail.gmail.com>
+References: <1481440003-27168-1-git-send-email-guy.shapiro@mobi-wize.com>
+ <20161213191050.3yrmxaubpgjh65bz@rob-hp-laptop>
+ <1CDAF0C6-25E1-4CE9-8F98-F07333827B98@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <63e40838-0226-4f9d-ab41-5815c724e9ef-XU/xxMRwCJnfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1CDAF0C6-25E1-4CE9-8F98-F07333827B98@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Guy Shapiro <guy.shapiro@mobi-wize.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Haibo Chen <haibo.chen@freescale.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 02:17:31PM -0600, Li Xu wrote:
-> Add devicetree bindings documentation file for Cirrus
-> Logic CS43130 codec.
-> 
-> Signed-off-by: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/cs43130.txt          | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/cs43130.txt
+On Tue, Dec 13, 2016 at 1:14 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On December 13, 2016 11:10:50 AM PST, Rob Herring <robh@kernel.org> wrote:
+>>On Sun, Dec 11, 2016 at 09:06:43AM +0200, Guy Shapiro wrote:
+>>> Make the avarage-samples property a general touchscreen property
+>>> rather than imx6ul device specific.
+>>>
+>>> Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
+>>> ---
+>>>  .../bindings/input/touchscreen/imx6ul_tsc.txt      | 11 ++----
+>>>  .../bindings/input/touchscreen/touchscreen.txt     |  3 ++
+>>>  drivers/input/touchscreen/imx6ul_tsc.c             | 46
+>>++++++++++++++++------
+>>>  3 files changed, 41 insertions(+), 19 deletions(-)
+>>
+>>You can't just switch existing bindings as that breaks compatibility
+>>with old dtbs. The kernel driver would need to support both. Just
+>>introduce the new common property and use it for your device.
+>>
+>
+> The old binding is only in my tree at the moment, so I do not think there is compatibility concerns.
+>
+> Are you OK with the new binding itself?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ah, then yes. For the binding:
+
+Acked-by: Rob Herring <robh@kernel.org>
