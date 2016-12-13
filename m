@@ -1,69 +1,63 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Tue, 13 Dec 2016 15:14:52 -0800
-Message-ID: <20161213231452.GB96889@google.com>
-References: <20160915143945.GJ27974@sirena.org.uk>
- <20160915180223.GE62872@google.com>
- <20160916163253.GA10189@sirena.org.uk>
- <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com>
- <20160924184133.seh6v6eayt7hwgue@sirena.org.uk>
- <CAD=FV=V_ncaKDzwEyCrZNqicoE+dGXN8CJ8dDuvxQ6XP8uxsDg@mail.gmail.com>
- <20161028181521.ywzmow6bgndfotq3@sirena.org.uk>
- <20161212211502.GA96889@google.com>
- <20161213171904.ohsxc3xhscdinctt@sirena.org.uk>
- <CAD=FV=WhUVeq5GZ5-ae4SxypHGB9jWqgvkO02S=G6Zz6cexRzQ@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 03/11] driver: clk: imx: Add clock driver for imx6sll
+Date: Tue, 13 Dec 2016 15:28:35 -0800
+Message-ID: <20161213232835.GR5423@codeaurora.org>
+References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
+ <1480660774-25055-4-git-send-email-ping.bai@nxp.com>
+ <20161208225257.GP5423@codeaurora.org>
+ <AM3PR04MB5302BE33BE1F2C9913FF61587980@AM3PR04MB530.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=WhUVeq5GZ5-ae4SxypHGB9jWqgvkO02S=G6Zz6cexRzQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Brian Norris <briannorris@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <AM3PR04MB5302BE33BE1F2C9913FF61587980@AM3PR04MB530.eurprd04.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmai>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-El Tue, Dec 13, 2016 at 12:00:32PM -0800 Doug Anderson ha dit:
-
-> On Tue, Dec 13, 2016 at 9:19 AM, Mark Brown <broonie@kernel.org> wrote:
-> > On Mon, Dec 12, 2016 at 01:15:02PM -0800, Matthias Kaehlcke wrote:
-> >> El Fri, Oct 28, 2016 at 07:15:21PM +0100 Mark Brown ha dit:
-> >> > On Mon, Sep 26, 2016 at 10:41:59AM -0700, Doug Anderson wrote:
-> >
-> >> > What you're describing to me is a discrete DCDC that has an input
-> >> > voltage that sets the output voltage which happens to be set with a PWM.
-> >
-> >> I experimented a bit with this. Besides the question of how to model
-> >> the passives I wonder how the two regulators would interact. The
-> >> correct thing seems to be to specify the input regulator as a supply
-> >> of the DCDC. dcdc->set_voltage breaks down a voltage transition into
-> >
-> > No, not unless the prior descriptions of the hardware have been wildly
-> > inaccurate - my understanding had been that the DCDC was a normal DCDC
-> > with an analogue input intended to be biased to set the output voltage
-> > (presumably in terms of a full rail supply) and that the PWM had been
-> > connected to this analogue input.  If the PWM is supplying the DCDC then
-> > the hardware design just seems bizzare, I can't see how this would even
-> > work.
+On 12/12, Jacky Bai wrote:
+> > On 12/02, Bai Ping wrote:
+> > > diff --git a/drivers/clk/imx/clk-imx6sll.c
+> > > b/drivers/clk/imx/clk-imx6sll.c new file mode 100644 index
+> > > 0000000..c5219e1
+> > > --- /dev/null
+> > > +++ b/drivers/clk/imx/clk-imx6sll.c
+> > > +0x20, 16, 1, pll7_bypass_sels, ARRAY_SIZE(pll7_bypass_sels),
+> > > +CLK_SET_RATE_PARENT);
+> > > +
+> > > +	/* Do not bypass PLLs initially */
+> > > +	clk_set_parent(clks[IMX6SLL_PLL1_BYPASS], clks[IMX6SLL_CLK_PLL1]);
+> > > +	clk_set_parent(clks[IMX6SLL_PLL2_BYPASS], clks[IMX6SLL_CLK_PLL2]);
+> > > +	clk_set_parent(clks[IMX6SLL_PLL3_BYPASS], clks[IMX6SLL_CLK_PLL3]);
+> > > +	clk_set_parent(clks[IMX6SLL_PLL4_BYPASS], clks[IMX6SLL_CLK_PLL4]);
+> > > +	clk_set_parent(clks[IMX6SLL_PLL5_BYPASS], clks[IMX6SLL_CLK_PLL5]);
+> > > +	clk_set_parent(clks[IMX6SLL_PLL6_BYPASS], clks[IMX6SLL_CLK_PLL6]);
+> > > +	clk_set_parent(clks[IMX6SLL_PLL7_BYPASS], clks[IMX6SLL_CLK_PLL7]);
+> > 
+> > Can we just put raw register writes here instead? I'd prefer we didn't use clk
+> > consumer APIs to do things to the clk tree from the providers. The problem
+> > there being that:
+> > 
+> >  1) We're trying to move away from using consumer APIs in  provider drivers.
+> > It's ok if they're used during probe, but  inside clk_ops is not preferred.
+> > 
+> >  2) Even if you have a clk pointer, it may be "orphaned" at the  time of
+> > registration and so calling the APIs here works now but  eventually we may
+> > want to return an EPROBE_DEFER error in that  case and this may block that
+> > effort.
+> > 
+> > I suppose if this is the only clk driver on this machine then this last point isn't a
+> > concern and things are probably ok here.
+> > 
 > 
-> Looking at one schematic, the discrete BUCK for at least one of the
-> rails is TPS65261RHBR, which appears to be described at
-> <https://store.ti.com/TPS65261RHBR.aspx>.  Data sheet appears to be at
-> <http://www.ti.com/product/tps65261/technicaldocuments?HQS=TI-null-null-octopart-df-pf-null-wwe>.
-> 
-> As you can see from the datasheet ("Adjusting the Output Voltage"
-> section), it is intended that you stuff a resistor to make a voltage
-> divider and that's how you select the output voltage.  In our case the
-> PWM interacts here and allows you to make a more dynamic output
-> voltage.  I've always thought about the input to the "FB" pin as
-> making an input voltage, but I guess it's not terribly simple since
-> the voltage divider ends up dividing between ground and the output
-> voltage.
+> Using raw register writing has an issue.  The register is modified, but it seems the clock 'parent-child' relationship can 
+> not match the register setting. The register setting is not bypass the pll, but in debug 'clk_summary', the
+> pll is bypassed.  
 
-I also had put my mind on seeing the output of the PWM circuitry as an
-input voltage, but technically it isn't a supply of the buck
-regulator. It seems we could consider it a "control voltage" instead
-and thus avoid the recursive lock acquisition.
+So program the register settings before registering the clocks
+with the framework?
 
-Matthias
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
