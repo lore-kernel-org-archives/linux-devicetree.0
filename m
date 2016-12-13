@@ -1,109 +1,122 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v5 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
-Date: Tue, 13 Dec 2016 13:39:13 +0900
-Message-ID: <CAK7LNATO+vpxmDV-XEupjeXXhPNdrXHNwfwWcAVWLdbJi+37QA@mail.gmail.com>
-References: <1481201455-3483-1-git-send-email-yamada.masahiro@socionext.com>
- <1481201455-3483-3-git-send-email-yamada.masahiro@socionext.com> <20161212171408.2yf4jauz7czv44fy@rob-hp-laptop>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] mfd: dt: Add bindings for the Aspeed LPC Host
+ Controller (LHC)
+Date: Tue, 13 Dec 2016 15:10:00 +1030
+Message-ID: <1481604000.3112.30.camel@aj.id.au>
+References: <20161206025321.1792-1-andrew@aj.id.au>
+         <20161206025321.1792-5-andrew@aj.id.au>
+         <20161212153018.lfkicwknikfbzdlf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161212171408.2yf4jauz7czv44fy@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Andrei Pistirica <andrei.pistirica@microchip.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-qq3Tfj7JwU7kAgTTQ9z1"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161212153018.lfkicwknikfbzdlf@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob.
 
-2016-12-13 2:14 GMT+09:00 Rob Herring <robh@kernel.org>:
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
->> new file mode 100644
->> index 0000000..750374f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
->> @@ -0,0 +1,30 @@
->> +* Cadence SD/SDIO/eMMC Host Controller
->> +
->> +Required properties:
->> +- compatible: should be "cdns,sd4hc".
->
-> Needs SoC specific compatible strings too.
+--=-qq3Tfj7JwU7kAgTTQ9z1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2016-12-12 at 09:30 -0600, Rob Herring wrote:
+> On Tue, Dec 06, 2016 at 01:53:19PM +1100, Andrew Jeffery wrote:
+> > The LPC bus pinmux configuration on fifth generation Aspeed SoCs depend=
+s
+> > on bits in both the System Control Unit and the LPC Host Controller.
+> >=20
+> > The Aspeed LPC Host Controller is described as a child node of the
+> > LPC host-range syscon device for arbitration of access by the host
+> > controller and pinmux drivers.
+> >=20
+> > > > Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> > ---
+> > =C2=A0.../devicetree/bindings/mfd/aspeed-lpc.txt=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 22 ++++++++++++++++++++++
+> > =C2=A01 file changed, 22 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Doc=
+umentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> > index a97131aba446..9de318ef72da 100644
+> > --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> > > > @@ -109,3 +109,25 @@ lpc: lpc@1e789000 {
+> > > > =C2=A0	};
+> > =C2=A0};
+> > =C2=A0
+> > +Host Node Children
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +LPC Host Controller
+> > +-------------------
+> > +
+> > +The Aspeed LPC Host Controller configures the Low Pin Count (LPC) bus =
+behaviour
+> > +between the host and the baseboard management controller. The register=
+s exist
+> > +in the "host" portion of the Aspeed LPC controller, which must be the =
+parent of
+> > +the LPC host controller node.
+> > +
+> > +Required properties:
+> > > > +- compatible:		"aspeed,ast2500-lhc";
+> > > > +- reg:			contains offset/length value of the LHC memory
+> > +			region.
+>=20
+> How many regions? Looks like 2.
 
-I remember you mentioned the vendor prefix
-stands for the SoC vendor, not the IP vendor.
-The compatible prefixed with the IP vendor is prepared for a fallback.
+Yes, two. The first region is registers configuring various LPC host
+controller properties. The second region is for configuring the LPC
+serial IRQ trigger modes.
 
-I will add "socionext,sd4hc".
+Would you like me to say as much in the patch? It's not a completely
+clear split of functionality as other serial IRQ properties are also
+described in the first region. Maybe describing the datasheet's
+register names for the regions (LHCR[0-8] for the first, LHCR[A-B] for
+the second) would help?
 
+Cheers,
 
+Andrew
 
+>=20
+> > +
+> > +Example:
+> > +
+> > > > +lhc: lhc@20 {
+> > > > +	compatible =3D "aspeed,ast2500-lhc";
+> > > > +	reg =3D <0x20 0x24 0x48 0x8>;
+> > +};
+> > --=C2=A0
+> > 2.9.3
+> >=20
+--=-qq3Tfj7JwU7kAgTTQ9z1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
->> +- reg: offset and length of the register set for the device.
->> +- interrupts: a single interrupt specifier.
->> +- clocks: phandle to the input clock.
->> +
->> +Optional properties:
->> +For eMMC configuration, supported speed modes are not indicated by the SDHCI
->> +Capabilities Register.  Instead, the following properties should be specified
->> +if supported.  See mmc.txt for details.
->> +- mmc-ddr-1_8v
->> +- mmc-ddr-1_2v
->> +- mmc-hs200-1_8v
->> +- mmc-hs200-1_2v
->> +- mmc-hs400-1_8v
->> +- mmc-hs400-1_2v
->
-> There's now a property to override SDHCI capabilities register. Maybe
-> you should use that instead? I'll defer to Ulf.
->
+-----BEGIN PGP SIGNATURE-----
 
-I did not know this new property.
+iQIcBAABCgAGBQJYT3ugAAoJEJ0dnzgO5LT53UcQAKPkMw1FYSnd5ExxSfher5i0
+Stfou/u6b5IcMwQDxJPXY3iNVxzFHfpvrrxx3fIGELJy45ZtgOq83J1V1+aIOWO/
+2MmEmuBfU9Hc7AEaQeIM5kkVvXZRQJGr8RT3u7tnn2af9YbWRpjbwIvhXkZ5rVwf
+NM+qL/yBdDl15uplAerPXgutbcBJgQRNtmcsxOhok0Y2fABcNcwx75dMC3ss8U7E
+WURYhfCI2tF9tkebi8/4jK0TqtQ94lBxqStNBB8uTDs2dk57IN7PEBrMU1su+Y1M
+UIbIcWJf302+3a2ktHW6+k8zEdBM4LyA8r3pbjbK2GzVTQ6aGx90h2iMpk/+cwM9
+wO0Smtm7obWXwr2bd1x8kRR3S/5fAkQskkIv3b+f3Bsk13t+N08e62FlQ/bDDMek
+rOrDM0oqTx3JSvPDZXEc/KXmYgltIkKDfFBzNlzlWPsfIv6ZRqsYiS7uaOTe0p0L
+f03Md2cjgYpcahZUG48XR3l+ojfoB9qC1ZoIBjXmezF0SCtsbnw8TeESiabP2rot
+xP4B9Z2IN2W6lX0m+19vZc7hSQew4fo1omPEJ5RrzMTS+F/yDZZGPeYsNd3NXjxi
+ZDzQlmwGWddMD62Klvr7pp8+1moapZyBcwVZrqFF27jL7+r9iM1ow9mzutv69NzS
+DLbGLk9cZ2otX7fRtDp8
+=2X6s
+-----END PGP SIGNATURE-----
 
-So, now we have two ways to specify MMC speed mode capabilities
-by only touching DT.
+--=-qq3Tfj7JwU7kAgTTQ9z1--
 
-[1] Add MMC mode flags directly, like I did.
-[2] Use "sdhci-caps-mask" and "sdhci-caps"
-
-
-The problem for [2] is that eMMC capabilities
-do not perfectly correspond to the SDHCI capabilities register.
-
-
->> +- mmc-hs400-1_8v
->> +- mmc-hs400-1_2v
-
-If the driver sets SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400,
-we can use the bit63 of caps for specifying HS400.
-
-But, this is not defined in the SDHCI standard.
-#define  SDHCI_SUPPORT_HS400 0x80000000 /* Non-standard */
-
-
-
->> +- mmc-ddr-1_8v
-
-For High Speed DDR, perhaps we can imply MMC_CAP_1_8V_DDR
-from MMC_CAP_UHS_DDR50  (bit34 of caps)
-
-This is not supported in the current code, but
-if this is a good idea, I can send a patch.
-
-
->> +- mmc-ddr-1_2v
-
-This does not have the corresponding bit, but
-1.2V is not commonly used, so this is not a fatal problem.
-
-
-
-What I can do at most now, is to delete the
-Optional properties section entirely
-so users can choose [1] or [2] as they like.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
