@@ -1,121 +1,147 @@
-From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
-Date: Tue, 13 Dec 2016 12:03:18 +0000
-Message-ID: <87twa8yr22.fsf@kamboji.qca.qualcomm.com>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
-        <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
-        <87insxg0yc.fsf@kamboji.qca.qualcomm.com>
-        <871sxza9al.fsf@kamboji.qca.qualcomm.com>
-        <CAFBinCC6JWBhZwma=66fBi3_to2SaHOMNDQS23jHNhcc+RUcYQ@mail.gmail.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH v3 6/6] mfd: dt: Move syscon bindings to syscon
+ subdirectory
+Date: Tue, 13 Dec 2016 22:35:34 +1030
+Message-ID: <1481630734.3112.40.camel@aj.id.au>
+References: <20161206025321.1792-1-andrew@aj.id.au>
+ <20161206025321.1792-7-andrew@aj.id.au>
+ <20161212153911.drhczoagyyhu7jm4@rob-hp-laptop>
+ <1481604793.3112.32.camel@aj.id.au> <20161213110710.GV3625@dell.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCC6JWBhZwma=66fBi3_to2SaHOMNDQS23jHNhcc+RUcYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>       (Martin
- Blumenstingl's message of "Mon, 12 Dec 2016 21:05:53 +0100")
-Content-Language: en-US
-Content-ID: <4548E2274EB7ED4E8FD68C877BC2DF4F-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8179148162186615951=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161213110710.GV3625@dell.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Corey Minyard <minyard@acm.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, linux-arm-kernel@lists.infradead.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-> Hello Kalle,
->
-> On Fri, Nov 25, 2016 at 4:06 PM, Valo, Kalle <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org> wro=
-te:
->> Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>
->>> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->>>
->>>> There are two types of swapping the EEPROM data in the ath9k driver.
->>>> Before this series one type of swapping could not be used without the
->>>> other.
->>>>
->>>> The first type of swapping looks at the "magic bytes" at the start of
->>>> the EEPROM data and performs swab16 on the EEPROM contents if needed.
->>>> The second type of swapping is EEPROM format specific and swaps
->>>> specific fields within the EEPROM itself (swab16, swab32 - depends on
->>>> the EEPROM format).
->>>>
->>>> With this series the second part now looks at the EEPMISC register
->>>> inside the EEPROM, which uses a bit to indicate if the EEPROM data
->>>> is Big Endian (this is also done by the FreeBSD kernel).
->>>> This has a nice advantage: currently there are some out-of-tree hacks
->>>> (in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
->>>> Big Endian system (=3D no swab16 is performed) but the EEPROM itself
->>>> indicates that it's data is Little Endian. Until now the out-of-tree
->>>> code simply did a swab16 before passing the data to ath9k, so ath9k
->>>> first did the swab16 - this also enabled the format specific swapping.
->>>> These out-of-tree hacks are still working with the new logic, but it
->>>> is recommended to remove them. This implementation is based on a
->>>> discussion with Arnd Bergmann who raised concerns about the
->>>> robustness and portability of the swapping logic in the original OF
->>>> support patch review, see [0].
->>>>
->>>> After a second round of patches (=3D v1 of this series) neither Arnd
->>>> Bergmann nor I were really happy with the complexity of the EEPROM
->>>> swapping logic. Based on a discussion (see [1] and [2]) we decided
->>>> that ath9k should use a defined format (specifying the endianness
->>>> of the data - I went with __le16 and __le32) when accessing the
->>>> EEPROM fields. A benefit of this is that we enable the EEPMISC based
->>>> swapping logic by default, just like the FreeBSD driver, see [3]. On
->>>> the devices which I have tested (see below) ath9k now works without
->>>> having to specify the "endian_check" field in ath9k_platform_data (or
->>>> a similar logic which could provide this via devicetree) as ath9k now
->>>> detects the endianness automatically. Only EEPROMs which are mangled
->>>> by some out-of-tree code still need the endian_check flag (or one can
->>>> simply remove that mangling from the out-of-tree code).
->>>>
->>>> Testing:
->>>> - tested by myself on AR9287 with Big Endian EEPROM
->>>> - tested by myself on AR9227 with Little Endian EEPROM
->>>> - tested by myself on AR9381 (using the ar9003_eeprom implementation,
->>>>   which did not suffer from this whole problem)
->>>> - how do we proceed with testing? maybe we could keep this in a
->>>>   feature-branch and add these patches to LEDE once we have an ACK to
->>>>   get more people to test this
->>>>
->>>> This series depends on my other series (v7):
->>>> "add devicetree support to ath9k" - see [4]
->>>
->>> I think this looks pretty good. If there's a bug somewhere it should be
->>> quite easy to fix so I'm not that worried and would be willing to take
->>> these as soon as I have applied the dependency series. IIRC your
->>> devicetree patches will have at least one more review round so that wil=
-l
->>> take some time still. In the meantime it would be great if LEDE folks
->>> could take a look at these and comment (or test).
->>
->> So are everyone happy with this? I haven't seen any comments. If I don't
->> here anything I'm planning to take these, most likely for 4.11.
->
-> the patches have been in LEDE for almost two weeks now and I did not
-> see any reports of ath9k breakage (footnote below).
->
-> It seems that there are a few devices out there where the whole EEPROM
-> is swab16'ed which switches the position of the 1-byte fields
-> opCapFlags and eepMisc.
-> those still work fine with the new code, however I had a second patch
-> in LEDE [0] which results in ath9k_platform_data.endian_check NOT
-> being set anymore.
-> that endian_check flag was used before to swab16 the whole EEPROM, to
-> correct the position of the 1-byte fields again.
-> Currently we are fixing this in the firmware hotplug script: [1]
-> This is definitely not a blocker for this series though (if we want to
-> have a devicetree replacement for "ath9k_platform_data.endian_check"
-> then I'd work on that within a separate series, but I somewhat
-> consider these EEPROMs as "broken" so fixing them in
-> userspace/firmware hotplug script is fine for me)
+--===============8179148162186615951==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-76zxxbvG4YgxPDrmCnxT"
 
-Sounds good to me, thanks for the thorough followup. I'm planning to
-apply these any day.
 
---=20
-Kalle Valo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-76zxxbvG4YgxPDrmCnxT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2016-12-13 at 11:07 +0000, Lee Jones wrote:
+> On Tue, 13 Dec 2016, Andrew Jeffery wrote:
+>=20
+> > On Mon, 2016-12-12 at 09:39 -0600, Rob Herring wrote:
+> > > On Tue, Dec 06, 2016 at 01:53:21PM +1100, Andrew Jeffery wrote:
+> > > > The use of syscons is growing, lets collate them in their own part =
+of
+> > > > the bindings tree.
+> > > >=20
+> > > > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > >=20
+> > > > ---
+> > > > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/aspeed-s=
+cu.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > > > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel-gp=
+br.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > > > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel-ma=
+trix.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > > > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel-sm=
+c.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > > > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/qcom,tcs=
+r.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > > > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/syscon.t=
+xt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0| 0
+> > > > =C2=A0.../devicetree/bindings/mfd/{ =3D> syscon}/ti-keystone-devctr=
+l.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > > > =C2=A07 files changed, 0 insertions(+), 0 deletions(-)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/a=
+speed-scu.txt (100%)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/a=
+tmel-gpbr.txt (100%)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/a=
+tmel-matrix.txt (100%)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/a=
+tmel-smc.txt (100%)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/q=
+com,tcsr.txt (100%)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/s=
+yscon.txt (100%)
+> > > > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/t=
+i-keystone-devctrl.txt (100%)
+> > >=20
+> > > I'm not so sure this is the right direction. syscon usage is pretty m=
+uch=C2=A0
+> > > spread throughout the tree.
+> >=20
+> > This patch was created based on my interpretation of Lee's feedback
+> > here:
+> >=20
+> > https://lkml.org/lkml/2016/11/18/650
+> >=20
+> > Lee's next email in the chain poked Arnd for an opinion, but Arnd
+> > didn't reply.
+> >=20
+> > I don't mind. I moved these bindings separately so we could just drop
+> > the patch if there was push-back. If we drop the whole idea I'll need
+> > to apply a small fix to patch 5/6 to avoid creating the syscon
+> > subdirectory.
+>=20
+> The sub-directory is a good idea for drivers who are *solely* syscon
+> based.
+>=20
+
+Yes, I wasn't saying otherwise, just commenting on my motivation and
+approach.
+
+As far as I can tell all of the bindings I move here describe solely
+syscon-based devices.
+
+Cheers,
+
+Andrew
+--=-76zxxbvG4YgxPDrmCnxT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCgAGBQJYT+QPAAoJEJ0dnzgO5LT5QIoP+QG/NgKZdolCLssq0ENTsdXf
+nTXPGxU9bfT9QKVHP8bj52pD6KbiHLMvDXy/vS0y9h3lsyOljdOF/Gmy/usoc2Pg
+nl5baoyeLPCdhKEb/K+GcxTTYz063IvOLliEyViEX3RQrQ9p4COUFvdD2LJEJC4e
+Og/D+MnhuoXuKPR+jjwtQIvCdOsFs43h8V8Ej3XkHniytWzEzNiKRY2oPkJaVgS1
+2GwrC1HHhh1P9JTQazMRekfOXNCRKIBLOjj5Oz8pQjtIijGhOHfCOiqC9GLoH24F
+XHkNGW/pJ6eEihx9hJrFbJ0TrfGuao39k1hJV0144Ia03K+jPVsbfvlqW63RS28I
+9B4S98o+lpeqxubRocjcUgkHSH3qqlF9vyG1ObotBvLclkRqyimX0I2RzCFwggKg
+9yztc4YOwexdBB0e/DEuWFA+m6aoDPKvzkYhZMVdADtSTT9X1HpYWrpMM2+KtPPG
+GgZB185pdlEIOySA6MOe8I66XSIFVNhKH7LfUv/UQ9P3N1pS7Ux9YIeP8JkS6EHN
+e46P8HG1yXUK8aafXfK4A5KvVwQkTNf2Tq1ZEZ/WAq2tcupBBXzHVIsaOoTsxFYf
+cqkB5ThlZapQtgWrfabijMDWi4eiJ6VKnl/u3iKPQD2ZjmoLdFcGinhD8zqVlYaD
+jVAbCMrip08oQTley2sx
+=z3TL
+-----END PGP SIGNATURE-----
+
+--=-76zxxbvG4YgxPDrmCnxT--
+
+
+
+--===============8179148162186615951==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8179148162186615951==--
