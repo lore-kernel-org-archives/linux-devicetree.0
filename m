@@ -1,53 +1,63 @@
-From: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 8/9] dmaengine: stm32-dma: Add synchronization support
-Date: Tue, 13 Dec 2016 14:40:50 +0100
-Message-ID: <1481636451-27863-9-git-send-email-cedric.madianga@gmail.com>
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH 1/9] dmaengine: stm32-dma: Set correct args number for DMA
+ request from DT
+Date: Tue, 13 Dec 2016 14:40:43 +0100
+Message-ID: <1481636451-27863-2-git-send-email-cedric.madianga@gmail.com>
 References: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481636451-27863-1-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Implement the new device_synchronize() callback to allow proper
-synchronization when stopping a channel.
+This patch sets the right number of arguments to be used for DMA clients
+which request channels from DT.
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
 ---
- drivers/dma/stm32-dma.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dma/stm32-dma.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 35639f6..b7be43a 100644
+index 3688d08..a884b85 100644
 --- a/drivers/dma/stm32-dma.c
 +++ b/drivers/dma/stm32-dma.c
-@@ -403,6 +403,13 @@ static int stm32_dma_terminate_all(struct dma_chan *c)
- 	return 0;
- }
+@@ -972,21 +972,18 @@ static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
+ 	struct stm32_dma_chan *chan;
+ 	struct dma_chan *c;
  
-+static void stm32_dma_synchronize(struct dma_chan *c)
-+{
-+	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
-+
-+	vchan_synchronize(&chan->vchan);
-+}
-+
- static void stm32_dma_dump_reg(struct stm32_dma_chan *chan)
- {
- 	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
-@@ -1068,6 +1075,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dd->device_prep_dma_cyclic = stm32_dma_prep_dma_cyclic;
- 	dd->device_config = stm32_dma_slave_config;
- 	dd->device_terminate_all = stm32_dma_terminate_all;
-+	dd->device_synchronize = stm32_dma_synchronize;
- 	dd->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
- 		BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+-	if (dma_spec->args_count < 3)
++	if (dma_spec->args_count < 4)
+ 		return NULL;
+ 
+ 	cfg.channel_id = dma_spec->args[0];
+ 	cfg.request_line = dma_spec->args[1];
+ 	cfg.stream_config = dma_spec->args[2];
+-	cfg.threshold = 0;
++	cfg.threshold = dma_spec->args[3];
+ 
+ 	if ((cfg.channel_id >= STM32_DMA_MAX_CHANNELS) || (cfg.request_line >=
+ 				STM32_DMA_MAX_REQUEST_ID))
+ 		return NULL;
+ 
+-	if (dma_spec->args_count > 3)
+-		cfg.threshold = dma_spec->args[3];
+-
+ 	chan = &dmadev->chan[cfg.channel_id];
+ 
+ 	c = dma_get_slave_channel(&chan->vchan.chan);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
