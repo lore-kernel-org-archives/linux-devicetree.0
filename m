@@ -1,122 +1,105 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] mfd: dt: Add bindings for the Aspeed LPC Host
- Controller (LHC)
-Date: Tue, 13 Dec 2016 15:10:00 +1030
-Message-ID: <1481604000.3112.30.camel@aj.id.au>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH v3 6/6] mfd: dt: Move syscon bindings to syscon
+ subdirectory
+Date: Tue, 13 Dec 2016 15:23:13 +1030
+Message-ID: <1481604793.3112.32.camel@aj.id.au>
 References: <20161206025321.1792-1-andrew@aj.id.au>
-         <20161206025321.1792-5-andrew@aj.id.au>
-         <20161212153018.lfkicwknikfbzdlf@rob-hp-laptop>
+         <20161206025321.1792-7-andrew@aj.id.au>
+         <20161212153911.drhczoagyyhu7jm4@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-qq3Tfj7JwU7kAgTTQ9z1"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161212153018.lfkicwknikfbzdlf@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+        protocol="application/pgp-signature"; boundary="=-cxXXHkhny37++GJzoGIn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161212153911.drhczoagyyhu7jm4@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-qq3Tfj7JwU7kAgTTQ9z1
+--=-cxXXHkhny37++GJzoGIn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2016-12-12 at 09:30 -0600, Rob Herring wrote:
-> On Tue, Dec 06, 2016 at 01:53:19PM +1100, Andrew Jeffery wrote:
-> > The LPC bus pinmux configuration on fifth generation Aspeed SoCs depend=
-s
-> > on bits in both the System Control Unit and the LPC Host Controller.
+On Mon, 2016-12-12 at 09:39 -0600, Rob Herring wrote:
+> On Tue, Dec 06, 2016 at 01:53:21PM +1100, Andrew Jeffery wrote:
+> > The use of syscons is growing, lets collate them in their own part of
+> > the bindings tree.
 > >=20
-> > The Aspeed LPC Host Controller is described as a child node of the
-> > LPC host-range syscon device for arbitration of access by the host
-> > controller and pinmux drivers.
-> >=20
-> > > > Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > > ---
-> > =C2=A0.../devicetree/bindings/mfd/aspeed-lpc.txt=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 22 ++++++++++++++++++++++
-> > =C2=A01 file changed, 22 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Doc=
-umentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > index a97131aba446..9de318ef72da 100644
-> > --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > > > @@ -109,3 +109,25 @@ lpc: lpc@1e789000 {
-> > > > =C2=A0	};
-> > =C2=A0};
-> > =C2=A0
-> > +Host Node Children
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +LPC Host Controller
-> > +-------------------
-> > +
-> > +The Aspeed LPC Host Controller configures the Low Pin Count (LPC) bus =
-behaviour
-> > +between the host and the baseboard management controller. The register=
-s exist
-> > +in the "host" portion of the Aspeed LPC controller, which must be the =
-parent of
-> > +the LPC host controller node.
-> > +
-> > +Required properties:
-> > > > +- compatible:		"aspeed,ast2500-lhc";
-> > > > +- reg:			contains offset/length value of the LHC memory
-> > +			region.
+> > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/aspeed-scu.t=
+xt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel-gpbr.t=
+xt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel-matrix=
+.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel-smc.tx=
+t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/qcom,tcsr.tx=
+t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > =C2=A0Documentation/devicetree/bindings/mfd/{ =3D> syscon}/syscon.txt=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0| 0
+> > =C2=A0.../devicetree/bindings/mfd/{ =3D> syscon}/ti-keystone-devctrl.tx=
+t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 0
+> > =C2=A07 files changed, 0 insertions(+), 0 deletions(-)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/aspee=
+d-scu.txt (100%)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel=
+-gpbr.txt (100%)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel=
+-matrix.txt (100%)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/atmel=
+-smc.txt (100%)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/qcom,=
+tcsr.txt (100%)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/sysco=
+n.txt (100%)
+> > =C2=A0rename Documentation/devicetree/bindings/mfd/{ =3D> syscon}/ti-ke=
+ystone-devctrl.txt (100%)
 >=20
-> How many regions? Looks like 2.
+> I'm not so sure this is the right direction. syscon usage is pretty much=
+=C2=A0
+> spread throughout the tree.
 
-Yes, two. The first region is registers configuring various LPC host
-controller properties. The second region is for configuring the LPC
-serial IRQ trigger modes.
+This patch was created based on my interpretation of Lee's feedback
+here:
 
-Would you like me to say as much in the patch? It's not a completely
-clear split of functionality as other serial IRQ properties are also
-described in the first region. Maybe describing the datasheet's
-register names for the regions (LHCR[0-8] for the first, LHCR[A-B] for
-the second) would help?
+https://lkml.org/lkml/2016/11/18/650
 
-Cheers,
+Lee's next email in the chain poked Arnd for an opinion, but Arnd
+didn't reply.
+
+I don't mind. I moved these bindings separately so we could just drop
+the patch if there was push-back. If we drop the whole idea I'll need
+to apply a small fix to patch 5/6 to avoid creating the syscon
+subdirectory.
 
 Andrew
 
 >=20
-> > +
-> > +Example:
-> > +
-> > > > +lhc: lhc@20 {
-> > > > +	compatible =3D "aspeed,ast2500-lhc";
-> > > > +	reg =3D <0x20 0x24 0x48 0x8>;
-> > +};
-> > --=C2=A0
-> > 2.9.3
-> >=20
---=-qq3Tfj7JwU7kAgTTQ9z1
+> Rob
+--=-cxXXHkhny37++GJzoGIn
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCgAGBQJYT3ugAAoJEJ0dnzgO5LT53UcQAKPkMw1FYSnd5ExxSfher5i0
-Stfou/u6b5IcMwQDxJPXY3iNVxzFHfpvrrxx3fIGELJy45ZtgOq83J1V1+aIOWO/
-2MmEmuBfU9Hc7AEaQeIM5kkVvXZRQJGr8RT3u7tnn2af9YbWRpjbwIvhXkZ5rVwf
-NM+qL/yBdDl15uplAerPXgutbcBJgQRNtmcsxOhok0Y2fABcNcwx75dMC3ss8U7E
-WURYhfCI2tF9tkebi8/4jK0TqtQ94lBxqStNBB8uTDs2dk57IN7PEBrMU1su+Y1M
-UIbIcWJf302+3a2ktHW6+k8zEdBM4LyA8r3pbjbK2GzVTQ6aGx90h2iMpk/+cwM9
-wO0Smtm7obWXwr2bd1x8kRR3S/5fAkQskkIv3b+f3Bsk13t+N08e62FlQ/bDDMek
-rOrDM0oqTx3JSvPDZXEc/KXmYgltIkKDfFBzNlzlWPsfIv6ZRqsYiS7uaOTe0p0L
-f03Md2cjgYpcahZUG48XR3l+ojfoB9qC1ZoIBjXmezF0SCtsbnw8TeESiabP2rot
-xP4B9Z2IN2W6lX0m+19vZc7hSQew4fo1omPEJ5RrzMTS+F/yDZZGPeYsNd3NXjxi
-ZDzQlmwGWddMD62Klvr7pp8+1moapZyBcwVZrqFF27jL7+r9iM1ow9mzutv69NzS
-DLbGLk9cZ2otX7fRtDp8
-=2X6s
+iQIcBAABCgAGBQJYT365AAoJEJ0dnzgO5LT5TXwQALSwwQVD641rIc4oybJUS2tw
+uSWwEOPyAcrjnVazMgoF63Ok5r2OXzLa49MelCDO+RsnOVUU+9qDtDvq2WLDtbTJ
++9vVVwCd6dB1TzrCW5Lhesn3pap57wHpeIPXM3zyKufzTb2kI2z0bYJhk+3pgTba
+Evt1JA5jGwuWErTWYqK3WGGSbLxtIbjJWAPiR0RwP8dt70ZJesKbRRErcrrcK12h
+svMuCP2QHj4Vq72l+t2HqA4O2Kg4EDD0iGdzbzdprzJqJ085iwwmcYO/JM2NU+Uq
+UzLZy+axoWvwiCbAISeuf2eTazUXa1/z615jL3ggXO62raoOp/7sX7jjUl9bnhas
+hDCUIpxbVoGN2HVu2pzY6p2qTrRWlcuTPDjDyepsnFfjX/enkP8OwVyhdRiGQNHs
+v7BWv+zmsWnxGFnI5m5VU/qPylwLzhZa2zQngMjHXP/LHyOpazKhe9dfkyOQCnBu
+56LGJXWBafmVSG2DxsE6GEc161+m52gcUlj21XuUQDYCKGBdMHCjT76nzVffFey4
+s4wJAXu2tjrsB8AriZFgo8R3CZ2/kXOuY6u+xQqZ9mOifsaDvDdSgNiOlwdj19PN
+57Xe4nlxng/HhGFwPusZuk5x6XNJ5sfHlpndl1mxyR4gWdRIWhf+pdACFIB3i2DX
+hk2+KGr5w1O3jGfqf0dU
+=ZtFX
 -----END PGP SIGNATURE-----
 
---=-qq3Tfj7JwU7kAgTTQ9z1--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-cxXXHkhny37++GJzoGIn--
