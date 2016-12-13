@@ -1,42 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] power: supply: bq24735-charger: optionally poll the
- ac-detect gpio
-Date: Tue, 13 Dec 2016 13:30:09 -0600
-Message-ID: <20161213193009.5cqyaii3gjrttqyk@rob-hp-laptop>
-References: <1481540424-19293-1-git-send-email-peda@axentia.se>
- <1481540424-19293-3-git-send-email-peda@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] PCI: rockchip: Add quirk to disable RC's ASPM L0s
+Date: Tue, 13 Dec 2016 13:41:15 -0600
+Message-ID: <20161213194115.tqacbotxgsvphoje@rob-hp-laptop>
+References: <1481543487-33152-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481540424-19293-3-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1481543487-33152-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 12:00:23PM +0100, Peter Rosin wrote:
-> If the ac-detect gpio does not support interrupts, provide a fallback
-> to poll the gpio at a configurable interval.
+On Mon, Dec 12, 2016 at 07:51:27PM +0800, Shawn Lin wrote:
+> Rockchip's RC outputs 100MHz reference clock but there are
+> two methods for PHY to generate it.
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> (1)One of them is to use system PLL to generate 100MHz clock and
+> the PHY will relock it and filter signal noise then outputs the
+> reference clock.
+> 
+> (2)Another way is to share Soc's 24MHZ crystal oscillator with
+> PHY and force PHY's DLL to generate 100MHz internally.
+> 
+> When using case(2), the exit from L0s doesn't work fine occasionally
+> due to the broken design of RC receiver's logical circuit. So even if
+> we use extended-synch, it still fails for PHY to relock the bits from
+> FTS sometimes. This will hang the system.
+> 
+> Maybe we could argue that why not use case(1) to avoid it? The reason
+> is that as we could see the reference clock is derived from system PLL
+> and the path from it to PHY isn't so clean which means there are some
+> noise introduced by power-domain and other buses can't be filterd out
+> by PHY and we could see noise from the frequency spectrum by
+> oscilloscope. This makes the TX compatibility test a little difficult
+> to pass the spec. So case(1) and case(2) are both used indeed now. If
+> using case(2), we should disable RC's L0s support, and that is why we
+> need this property to indicate this quirk.
+> 
+> Also after checking quirk.c, I noticed there is already a quirk for
+> disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
+> shouldn't do that as mentioned above that case(1) could still works fine
+> with L0s.
+> 
+> Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
 > ---
->  .../bindings/power/supply/ti,bq24735.txt           |  2 +
->  drivers/power/supply/bq24735-charger.c             | 50 +++++++++++++++++++---
->  2 files changed, 47 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-> index 3bf55757ceec..59c4dde589cf 100644
-> --- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-> @@ -25,6 +25,8 @@ Optional properties :
->   - ti,external-control : Indicates that the charger is configured externally
->     and that the host should not attempt to enable/disable charging or set the
->     charge voltage/current.
-> + - ti,poll-interval-ms : In case there is no interrupts specified, poll AC
-> +   presense on the ti,ac-detect-gpios GPIO with this interval.
+> Changes in v2:
+> - drop the quirk prefix
+> 
+>  Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 2 ++
+>  drivers/pci/host/pcie-rockchip.c                        | 9 +++++++++
+>  2 files changed, 11 insertions(+)
 
-We already have poll-interval and cm-poll-interval properties. Just use 
-poll-interval here.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
