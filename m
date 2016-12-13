@@ -1,53 +1,31 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] Add support for OV5647 sensor.
-Date: Tue, 13 Dec 2016 20:09:27 +0100
-Message-ID: <20161213190927.GE8676@amd>
-References: <cover.1481639091.git.roliveir@synopsys.com>
- <d8ac513cd1d84063f73452e0b3ab12ab5f5728a0.1481639091.git.roliveir@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Input: imx6ul_tsc - generalize the averaging property
+Date: Tue, 13 Dec 2016 13:10:50 -0600
+Message-ID: <20161213191050.3yrmxaubpgjh65bz@rob-hp-laptop>
+References: <1481440003-27168-1-git-send-email-guy.shapiro@mobi-wize.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3XA6nns4nE4KvaS/"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d8ac513cd1d84063f73452e0b3ab12ab5f5728a0.1481639091.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+In-Reply-To: <1481440003-27168-1-git-send-email-guy.shapiro@mobi-wize.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Guy Shapiro <guy.shapiro@mobi-wize.com>
+Cc: dmitry.torokhov@gmail.com, fabio.estevam@freescale.com, mark.rutland@arm.com, devicetree@vger.kernel.org, haibo.chen@freescale.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Dec 11, 2016 at 09:06:43AM +0200, Guy Shapiro wrote:
+> Make the avarage-samples property a general touchscreen property
+> rather than imx6ul device specific.
+> 
+> Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
+> ---
+>  .../bindings/input/touchscreen/imx6ul_tsc.txt      | 11 ++----
+>  .../bindings/input/touchscreen/touchscreen.txt     |  3 ++
+>  drivers/input/touchscreen/imx6ul_tsc.c             | 46 ++++++++++++++++------
+>  3 files changed, 41 insertions(+), 19 deletions(-)
 
---3XA6nns4nE4KvaS/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You can't just switch existing bindings as that breaks compatibility 
+with old dtbs. The kernel driver would need to support both. Just 
+introduce the new common property and use it for your device.
 
-On Tue 2016-12-13 14:32:37, Ramiro Oliveira wrote:
-> Modes supported:
->  - 640x480 RAW 8
->=20
-> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3XA6nns4nE4KvaS/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlhQR2cACgkQMOfwapXb+vKm2gCggVYvdSDPj90cyAuqUf6cZ7z4
-s28AnjDouYvB5mPkI18VmFHznZ9aYxfL
-=J2og
------END PGP SIGNATURE-----
-
---3XA6nns4nE4KvaS/--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
