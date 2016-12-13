@@ -1,64 +1,70 @@
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH v4 1/4] powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
-Date: Tue, 13 Dec 2016 21:13:26 +1100
-Message-ID: <f1bc3387-1118-6fd7-8e1b-2e59bfabdad1@gmail.com>
-References: <cover.1481288905.git.ego@linux.vnet.ibm.com>
- <0947ced2f87c68a0a10ede8e1aaf39838a6f8d52.1481288905.git.ego@linux.vnet.ibm.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 4/5] ARM: dts: da850-lcdk: add the vga-bridge node
+Date: Tue, 13 Dec 2016 11:18:45 +0100
+Message-ID: <CAMpxmJU2Xn8NZnx7S6Eo0Syh-KVKWVNsJ1zATkwYciXPdDfdTw@mail.gmail.com>
+References: <1481547942-24775-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481547942-24775-5-git-send-email-bgolaszewski@baylibre.com> <9d5fa409-bb4f-f62b-2548-0a3b82228e08@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <0947ced2f87c68a0a10ede8e1aaf39838a6f8d52.1481288905.git.ego@linux.vnet.ibm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Oliver O'Halloran <oohall@gmail.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9d5fa409-bb4f-f62b-2548-0a3b82228e08-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+2016-12-13 9:46 GMT+01:00 Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>:
+> Hi,
+>
+> On 12/12/16 15:05, Bartosz Golaszewski wrote:
+>
+>> +&lcdc {
+>> +     status = "okay";
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&lcd_pins>;
+>> +
+>> +     ports {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +
+>> +             lcdc_out: port@1 {
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +                     reg = <1>;
+>> +
+>> +                     lcdc_out_vga: endpoint {
+>> +                             reg = <0>;
+>> +                             remote-endpoint = <&vga_bridge_in>;
+>> +                     };
+>> +             };
+>> +     };
+>> +};
+>>
+>
+> This is not correct. LCDC has just one output, so port@1 doesn't make
+> sense. It's port@0. But with just one port, you can leave "ports" away.
+> And you don't need the port's label for anything, if I'm not mistaken. So:
+>
+> &lcdc {
+>         status = "okay";
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&lcd_pins>;
+>
+>         port {
+>                 lcdc_out_vga: endpoint {
+>                         remote-endpoint = <&vga_bridge_in>;
+>                 };
+>         };
+> };
+>
+>  Tomi
+>
 
+Right, fixed in v7.
 
-On 10/12/16 00:32, Gautham R. Shenoy wrote:
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> 
-> Currently all the low-power idle states are expected to wake up
-> at reset vector 0x100. Which is why the macro IDLE_STATE_ENTER_SEQ
-> that puts the CPU to an idle state and never returns.
-> 
-> On ISA_300, when the ESL and EC bits in the PSSCR are zero, the
-> CPU is expected to wake up at the next instruction of the idle
-> instruction.
-> 
-> This patch adds a new macro named IDLE_STATE_ENTER_SEQ_NORET for the
-> no-return variant and reuses the name IDLE_STATE_ENTER_SEQ
-> for a variant that allows resuming operation at the instruction next
-> to the idle-instruction.
-> 
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/include/asm/cpuidle.h   |  5 ++++-
->  arch/powerpc/kernel/exceptions-64s.S |  6 +++---
->  arch/powerpc/kernel/idle_book3s.S    | 10 +++++-----
->  3 files changed, 12 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/cpuidle.h b/arch/powerpc/include/asm/cpuidle.h
-> index 3919332..0a3255b 100644
-> --- a/arch/powerpc/include/asm/cpuidle.h
-> +++ b/arch/powerpc/include/asm/cpuidle.h
-> @@ -21,7 +21,7 @@
->  
->  /* Idle state entry routines */
->  #ifdef	CONFIG_PPC_P7_NAP
-> -#define	IDLE_STATE_ENTER_SEQ(IDLE_INST)				\
-> +#define IDLE_STATE_ENTER_SEQ(IDLE_INST)                         \
->  	/* Magic NAP/SLEEP/WINKLE mode enter sequence */	\
->  	std	r0,0(r1);					\
->  	ptesync;						\
-> @@ -29,6 +29,9 @@
->  1:	cmpd	cr0,r0,r0;					\
->  	bne	1b;						\
->  	IDLE_INST;						\
-> +
-
-Is the power saving magic sequence the same as before for power 9
-as well?
-
-Balbir Singh
+Thanks,
+Bartosz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
