@@ -1,59 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 07/12] scsi: ufs: add option to change default UFS
- power management level
-Date: Tue, 13 Dec 2016 14:04:27 -0600
-Message-ID: <20161213200427.vzdwyzajcftvvcgu@rob-hp-laptop>
-References: <1481590462-9981-1-git-send-email-subhashj@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] crypto: mediatek - add DT bindings documentation
+Date: Tue, 13 Dec 2016 14:06:20 -0600
+Message-ID: <20161213200620.kh34dptxpdcbhkhl@rob-hp-laptop>
+References: <1481592676-2248-1-git-send-email-ryder.lee@mediatek.com>
+ <1481592676-2248-3-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481590462-9981-1-git-send-email-subhashj@codeaurora.org>
+In-Reply-To: <1481592676-2248-3-git-send-email-ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Subhash Jadavani <subhashj@codeaurora.org>
-Cc: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Hannes Reinecke <hare@suse.com>, Yaniv Gardi <ygardi@codeaurora.org>, Joao Pinto <Joao.Pinto@synopsys.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 04:54:20PM -0800, Subhash Jadavani wrote:
-> UFS device and link can be put in multiple different low power modes hence
-> UFS driver supports multiple different low power modes. By default UFS
-> driver selects the default (optimal) low power mode (which gives moderate
-> power savings and have relatively less enter and exit latencies) but
-> we might have to tune this default power mode for different chipset
-> platforms to meet the low power requirements/goals. Hence this patch
-> adds option to change default UFS low power mode (level).
+On Tue, Dec 13, 2016 at 09:31:16AM +0800, Ryder Lee wrote:
+> Add DT bindings documentation for the crypto driver
 > 
-> Reviewed-by: Yaniv Gardi <ygardi@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 10 ++++++
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 ++++++++
->  drivers/scsi/ufs/ufshcd.c                          | 39 ++++++++++++++++++++++
->  drivers/scsi/ufs/ufshcd.h                          |  4 +--
->  4 files changed, 65 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/crypto/mediatek-crypto.txt | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index a99ed55..c3836c5 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -41,6 +41,14 @@ Optional properties:
->  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
->  			  Note that it is assume same number of lanes is used both
->  			  directions at once. If not specified, default is 2 lanes per direction.
-> +- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
-> +			  0 - Both UFS device and Link in active state (Highest power consumption)
-> +			  1 - UFS device in active state but Link in Hibern8 state
-> +			  2 - UFS device in Sleep state but Link in active state
-> +			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
-> +			  4 - UFS device in Power-down state and Link in Hibern8 state
-> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
-> +- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
+> diff --git a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+> new file mode 100644
+> index 0000000..47a786e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+> @@ -0,0 +1,32 @@
+> +MediaTek cryptographic accelerators
+> +
+> +Required properties:
+> +- compatible: Should be "mediatek,eip97-crypto"
+> +- reg: Address and length of the register set for the device
+> +- interrupts: Should contain the five crypto engines interrupts in numeric
+> +	order. These are global system and four descriptor rings.
+> +- clocks: the clock used by the core
+> +- clock-names: the names of the clock listed in the clocks property. These are
+> +	"ethif", "cryp"
+> +- power-domains: Must contain a reference to the PM domain.
+> +
+> +
+> +Optional properties:
+> +- interrupt-parent: Should be the phandle for the interrupt controller
+> +  that services interrupts for this device
 
-This looks like you are putting policy for Linux into DT.
-
-What I would expect to see here is disabling of states that don't work 
-due to some h/w limitation. Otherwise, it is a user decision for what 
-modes to go into. Also, I think link and device states should be 
-separate.
+This is not optional. It's perhaps inherited from the parent. You can 
+drop it as it's implied by interrupts property.
 
 Rob
