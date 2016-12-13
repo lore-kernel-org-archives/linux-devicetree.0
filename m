@@ -1,59 +1,71 @@
-From: Luis de Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v4 3/5] i2c: designware: Add slave definitions
-Date: Tue, 13 Dec 2016 10:50:44 +0000
-Message-ID: <BCF0D4927F9C694C9AEA8827D4A9C7C897CEDB@de02wembxa.internal.synopsys.com>
-References: <cover.1481131072.git.lolivei@synopsys.com>
- <5173a9456c423025d8f15baafa2499440cbe1b51.1481131072.git.lolivei@synopsys.com>
- <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
- <BCF0D4927F9C694C9AEA8827D4A9C7C897CE12@de02wembxa.internal.synopsys.com>
- <CAL_JsqJwjX1Y=bDD-hKcXqa1aBKjVhXjEZm6j2tMAQszyv-QhA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 6/6] mfd: dt: Move syscon bindings to syscon
+ subdirectory
+Date: Tue, 13 Dec 2016 11:07:10 +0000
+Message-ID: <20161213110710.GV3625@dell.home>
+References: <20161206025321.1792-1-andrew@aj.id.au>
+ <20161206025321.1792-7-andrew@aj.id.au>
+ <20161212153911.drhczoagyyhu7jm4@rob-hp-laptop>
+ <1481604793.3112.32.camel@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJwjX1Y=bDD-hKcXqa1aBKjVhXjEZm6j2tMAQszyv-QhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luis de Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1481604793.3112.32.camel@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGNvbnRyb2xsZXIgZm9yIGkyYy1kZXNpZ253YXJlIGNhbm5vdCBiZSBzbGF2ZS9tYXN0ZXIg
-YXQgdGhlIHNhbWUgdGltZSBhbmQgaXQgaGFzIHRvIGJlIGVuYWJsZWQga25vd2luZyBiZWZvcmVo
-YW5kIGlmIHdlIHdhbnQgaXQgdG8gYmUgc2xhdmUgb3IgbWFzdGVyIGJ5IHNvbWV0aGluZyBvdXRz
-aWRlIG9mIHRoZSBjb250cm9sbGVyIGl0c2VsZi4NCg0KSSBhcyBsb29raW5nIGFuZCBJIHNlZSB0
-aGUgdXNlIG9mIHRoaXMgSTJDX09XTl9TTEFWRV9BRERSRVNTIHdpdGggdGhlICJsaW51eCxzbGF2
-ZS0yNGMwMiIgc2xhdmUgaW50ZXJmYWNlICBidXQgSSBhbSBub3Qgc2VlaW5nIGhvdyBpdCB3aWxs
-IGhlbHAgbWUgaWRlbnRpZnkgYSBzZWxlY3RlZCBpMmMtZGVzaWdud2FyZSBibG9jayBhcyBhICJz
-bGF2ZSIgZGV2aWNlIGJlZm9yZSBpbnN0YW50aWF0aW9uLiBJJ20gc29ycnkgaWYgSSdtIG5vdCB1
-bmRlcnN0YW5kaW5nIHByb3Blcmx5Lg0KSSB1c2UgdGhlICJsaW51eCxzbGF2ZS0yNGMwMiIgdG8g
-aW5zdGFudGlhdGUgdGhlIGkyYy1kZXNpZ253YXJlIGFzIGEgc2xhdmUgd2l0aCBhbiBhZGRyZXNz
-IHNvIEkgY2FuIGRvIHdyaXRlL3JlYWQgb3BlcmF0aW9ucywgaXQgaXMgaG93IEkgdGVzdGVkIGl0
-LiANCg0KTHVpcw0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogUm9iIEhlcnJp
-bmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddIA0KU2VudDogTW9uZGF5LCBEZWNlbWJlciAxMiwg
-MjAxNiAyMzoxNg0KVG86IEx1aXMgZGUgT2xpdmVpcmEgPEx1aXMuT2xpdmVpcmFAc3lub3BzeXMu
-Y29tPg0KQ2M6IHdzYUB0aGUtZHJlYW1zLmRlOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgamFya2tv
-Lm5pa3VsYUBsaW51eC5pbnRlbC5jb207IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNv
-bTsgbWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNvbTsgbGludXgtaTJjQHZnZXIua2VybmVs
-Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7IFJhbWlyby5PbGl2ZWlyYUBzeW5vcHN5cy5jb207IEpvYW8uUGludG9Ac3lub3BzeXMu
-Y29tOyBDQVJMT1MuUEFMTUlOSEFAc3lub3BzeXMuY29tDQpTdWJqZWN0OiBSZTogW1BBVENIIHY0
-IDMvNV0gaTJjOiBkZXNpZ253YXJlOiBBZGQgc2xhdmUgZGVmaW5pdGlvbnMNCg0KT24gTW9uLCBE
-ZWMgMTIsIDIwMTYgYXQgMTI6MzUgUE0sIEx1aXMgZGUgT2xpdmVpcmEgPEx1aXMuT2xpdmVpcmFA
-c3lub3BzeXMuY29tPiB3cm90ZToNCj4gSGkgYWxsLA0KDQpQbGVhc2UgZG9uJ3QgdG9wIHBvc3Qu
-DQoNCj4NCj4gVGhlIHNsYXZlIGFkZHJlc3MgY291bGQgYmUgc2V0IGJ5IHRoZSBJMkMgc2xhdmUg
-YmFja2VuZCBzbyBJIGNhbid0IHVzZSBpdCB0byBzZXR1cCB0aGUgY29udHJvbGxlci4NCj4gQSBi
-b29sZWFuIHByb3BlcnR5IHdhcyBteSBpbml0aWFsIGFwcHJvYWNoIHRoZW4gQW5keSBhbmQgV29s
-ZnJhbSBTYW5nIHN1Z2dlc3RlZCB0aGUgdXNlIG9mIGNvbXBhdGlibGUgc3RyaW5ncyBhbmQgbGF0
-ZXIgSXQgd2FzIHN1Z2dlc3RlZCB0byB1c2UgYSBwcm9wZXJ0eSB0byBzZWxlY3QgbW9kZSBidXQg
-SSBjYW4gZG8gaXQgYWdhaW4gaWYgaXQncyB0aGUgYmVzdCB3YXkuDQo+IENhbiB5b3UgcGxlYXNl
-IHRlbGwgbWUgd2hlcmUgc2hvdWxkIGl0IGJlIGRvY3VtZW50ZWQ/DQoNCmJpbmRpbmdzL2kyYy9p
-MmMudHh0Lg0KDQpBY3R1YWxseSwgbG9va2luZyBhdCB0aGlzIHNvbWUgbW9yZSwgd2UgYWxyZWFk
-eSBoYXZlIGEgd2F5IHRvIGRlc2NyaWJlIHRoZSBjb250cm9sbGVyIGJlaW5nIGEgc2xhdmUgZGV2
-aWNlIHdpdGggdGhlIEkyQ19PV05fU0xBVkVfQUREUkVTUyBmbGFnIGluIHRoZSByZWcgcHJvcGVy
-dHkuIFdlIHNob3VsZCBqdXN0IG5lZWQgYSBoZWxwZXIgdG8gcmVhZCByZWcgcHJvcGVydHkgb2Yg
-ZWFjaCBjaGlsZCBhbmQgY2hlY2sgZm9yIHRoZSBiaXQgc2V0Lg0KDQpSb2INCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, 13 Dec 2016, Andrew Jeffery wrote:
+
+> On Mon, 2016-12-12 at 09:39 -0600, Rob Herring wrote:
+> > On Tue, Dec 06, 2016 at 01:53:21PM +1100, Andrew Jeffery wrote:
+> > > The use of syscons is growing, lets collate them in their own part of
+> > > the bindings tree.
+> > > 
+> > > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/{ => syscon}/aspeed-scu.txt         | 0
+> > >  Documentation/devicetree/bindings/mfd/{ => syscon}/atmel-gpbr.txt         | 0
+> > >  Documentation/devicetree/bindings/mfd/{ => syscon}/atmel-matrix.txt       | 0
+> > >  Documentation/devicetree/bindings/mfd/{ => syscon}/atmel-smc.txt          | 0
+> > >  Documentation/devicetree/bindings/mfd/{ => syscon}/qcom,tcsr.txt          | 0
+> > >  Documentation/devicetree/bindings/mfd/{ => syscon}/syscon.txt             | 0
+> > >  .../devicetree/bindings/mfd/{ => syscon}/ti-keystone-devctrl.txt          | 0
+> > >  7 files changed, 0 insertions(+), 0 deletions(-)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/aspeed-scu.txt (100%)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/atmel-gpbr.txt (100%)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/atmel-matrix.txt (100%)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/atmel-smc.txt (100%)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/qcom,tcsr.txt (100%)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/syscon.txt (100%)
+> > >  rename Documentation/devicetree/bindings/mfd/{ => syscon}/ti-keystone-devctrl.txt (100%)
+> > 
+> > I'm not so sure this is the right direction. syscon usage is pretty much 
+> > spread throughout the tree.
+> 
+> This patch was created based on my interpretation of Lee's feedback
+> here:
+> 
+> https://lkml.org/lkml/2016/11/18/650
+> 
+> Lee's next email in the chain poked Arnd for an opinion, but Arnd
+> didn't reply.
+> 
+> I don't mind. I moved these bindings separately so we could just drop
+> the patch if there was push-back. If we drop the whole idea I'll need
+> to apply a small fix to patch 5/6 to avoid creating the syscon
+> subdirectory.
+
+The sub-directory is a good idea for drivers who are *solely* syscon
+based.
+
+
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
