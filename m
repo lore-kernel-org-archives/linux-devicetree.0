@@ -1,74 +1,84 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH linux v1 2/4] drivers: misc: Character device driver for
- seven segment display
-Date: Wed, 14 Dec 2016 12:32:33 +0000
-Message-ID: <20161214123233.GF14217@n2100.armlinux.org.uk>
-References: <1481702104-8617-1-git-send-email-jaghu@google.com>
- <1481702104-8617-3-git-send-email-jaghu@google.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: dra72-evm-tps65917: Add voltage supplies to
+ usb_phy, mmc, dss
+Date: Wed, 14 Dec 2016 18:05:09 +0530
+Message-ID: <972859e0-30ff-8170-d5d3-af9b8591276b@ti.com>
+References: <20161214085703.506-1-lokeshvutla@ti.com>
+ <2bb73170-dbb5-01a3-5b3a-4d5d9414e3a9@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1481702104-8617-3-git-send-email-jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <2bb73170-dbb5-01a3-5b3a-4d5d9414e3a9-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Carlos Hernandez <ceh-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2016 at 11:55:02PM -0800, Jaghathiswari Rankappagounder Natarajan wrote:
-> +int seven_seg_setup_cdev(struct seven_seg_disp_dev *disp_dev,
-> +	void (*update_disp_data)(struct device *, u16 data))
-> +{
-> +	struct device *dev;
-> +	int err;
-> +
-> +	dev = device_create(seven_seg_disp_class, &disp_dev->parent,
-> +			seven_seg_devno,
-> +			NULL, "seven_seg_disp_val");
-> +	if (dev == NULL)
-> +		return -1;
 
-Do not use return -1 in kernel code.
 
-> +	disp_dev->dev = dev;
-> +	disp_dev->update_seven_seg_data = update_disp_data;
-> +	disp_dev->disp_data_valid = false;
-> +
-> +	cdev_init(&disp_dev->cdev, &seven_seg_disp_fops);
-> +	err = cdev_add(&disp_dev->cdev, seven_seg_devno, 1);
-> +	if (err)
-> +		device_destroy(seven_seg_disp_class, seven_seg_devno);
-> +	return err;
-> +}
-> +
-> +static int __init seven_seg_disp_init(void)
-> +{
-> +	if (alloc_chrdev_region(&seven_seg_devno, 0, 1, "disp_state") < 0)
-> +		return -1;
+On Wednesday 14 December 2016 04:30 PM, Roger Quadros wrote:
+> Lokesh,
+> 
+> On 14/12/16 10:57, Lokesh Vutla wrote:
+>> Commit 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
+>> added a separate dtsi for dra72-evm-tps65917 moving all the voltage supplies
+>> to this file. But it missed adding voltage supplies to usb_phy, mmc,
+>> dss and deleted from dra72-evm-common.dtsi. Adding the voltage supply
+>> phandles to these nodes in dra72-evm-tps65917.dtsi
+>>
+>> Fixes: 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
+>> Reported-by: Carlos Hernandez <ceh-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+>> ---
+>> Logs:
+>> - DRA72-evm revC: http://pastebin.ubuntu.com/23627665/ 
+>> - DRA72-evm revB: http://pastebin.ubuntu.com/23627658/
+>>  arch/arm/boot/dts/dra72-evm-tps65917.dtsi | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
+>> index ee6dac44edf1..e6df676886c0 100644
+>> --- a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
+>> +++ b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
+>> @@ -132,3 +132,19 @@
+>>  		ti,palmas-long-press-seconds = <6>;
+>>  	};
+>>  };
+>> +
+>> +&usb2_phy1 {
+>> +	phy-supply = <&ldo4_reg>;
+>> +};
+>> +
+>> +&usb2_phy2 {
+>> +	phy-supply = <&ldo4_reg>;
+>> +};
+>> +
+>> +&dss {
+>> +	vdda_video-supply = <&ldo5_reg>;
+>> +};
+>> +
+>> +&mmc1 {
+>> +	vmmc_aux-supply = <&ldo1_reg>;
+>> +};
+>>
+> 
+> Are you sure that all future users of dra72-evm-tps65917.dtsi will use this same configuration?
+> If not I'd rather put this in the board dts files.
 
-Do not use return -1 in kernel code.
+hmm..This debate already happened when creating dra72-evm-tps65917 file
+and concluded that all the common regulator stuff on dra72 evm revA,B,C
+should go in this file. Any new board which is not similar to dra72-evm
+will not be using this file.
 
-> +
-> +	seven_seg_disp_class = class_create(THIS_MODULE, "disp_state");
-> +	if (seven_seg_disp_class == NULL)
-> +		goto unreg_chrdev;
-> +
-> +unreg_chrdev:
-> +	unregister_chrdev_region(seven_seg_devno, 1);
-> +	return -1;
+Thanks and regards,
+Lokesh
 
-Do not use return -1 in kernel code.
-
-(Look up what an errno value of '1' means.  Negative values returned from
-functions are interpreted as negated errno values.)
-
-Always propagate error codes, or select an appropriate errno value to
-return.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> 
+> cheers,
+> -roger
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
