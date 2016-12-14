@@ -1,75 +1,34 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH linux v1 4/4] arm: dts: Add dt-binding to support seven
- segment display on zaius
-Date: Wed, 14 Dec 2016 11:40:51 +0000
-Message-ID: <20161214114051.GC14217@n2100.armlinux.org.uk>
-References: <1481702104-8617-1-git-send-email-jaghu@google.com>
- <1481702104-8617-5-git-send-email-jaghu@google.com>
- <3917905.e4iOqADnVQ@wuerfel>
- <10697525.O7CkPN6Gfl@wuerfel>
- <20161214110635.GB14217@n2100.armlinux.org.uk>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: clk: clk-mstp has never worked for RZ/A1
+Date: Wed, 14 Dec 2016 11:43:43 +0000
+Message-ID: <SG2PR06MB1165A2D1E74663B03BD6B87C8A9A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <SG2PR06MB1165A4A8A555A3176D0C4ED98A9A0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUJFSbX96pqY2Ogxztxz-SWCNfbe=d3eWKn+eWSdHLwfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161214110635.GB14217@n2100.armlinux.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: mark.rutland@arm.com, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, robh+dt@kernel.org, joel@jms.id.au, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUJFSbX96pqY2Ogxztxz-SWCNfbe=d3eWKn+eWSdHLwfw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 11:06:35AM +0000, Russell King - ARM Linux wrote:
-> On Wed, Dec 14, 2016 at 10:00:46AM +0100, Arnd Bergmann wrote:
-> > On Wednesday, December 14, 2016 9:55:47 AM CET Arnd Bergmann wrote:
-> > > According to your introductory mail, the interface is assumed to be
-> > > a 74HC164. Should we use that ID in the compatible string?
-> > > 
-> > > We can always add other strings later if we want to support multiple
-> > > wire formats.
-> > 
-> > Actually, looking up 74hc164, that seems to be a gpio expander,
-> > so maybe a more flexible way to do the same is to put a driver
-> > for the expander into drivers/gpio/ and have the main driver
-> > access the outputs of that using the gpiolib interface.
-> 
-> There already is - drivers/gpio/gpio-74x164.c
-
-Looking at this more, it's a SPI driver, presumably because the first
-case where it appeared was on a SPI bus.
-
-However, it's not a SPI device as such, it's a piece of standard,
-general purpose logic that's been around for many years, pre-dating
-the SPI bus.
-
-Now, as for DT, we have this "DT represents the hardware, not the
-implementation" edict, which now brings up an interesting problem.
-
-If we want to use this driver in its existing form, we need to:
-
-- declare in DT a spi-gpio driver to provide a SPI bus on the GPIO
-  pins connected to the 74HC164.
-- attach the 74HC164 to the SPI bus.
-
-The problem with that is it's not representative of the hardware -
-what we're saying is that we want to reuse our existing implementation
-and make DT conform to the implementation.  At that point, we might as
-well scrap our "DT is implementation independent" edict above.
-
-What if, tomorrow, we end up with 74HC164 connected to via a different
-method?
-
-I think a much more sensible approach would be to turn the GPIO side
-of the 74x164 driver into a library, which can be re-used by multiple
-bus-specific drivers - one for SPI which allows it to be used in its
-current form, one for our platform bus which takes the GPIO lines for
-the data, clock and clear signals.
-
-I also don't see why they shouldn't use the same compatible - they're
-the same _device_ at the end of the day, just wired up differently.
-It makes the binding documentation a little fun wrt what are required
-and optional properties, but nothing that shouldn't be too difficult.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+SGkgR2VlcnQsDQoNCk9uIDEyLzE0LzIwNiwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiBP
+b3BzLi4uIFdoZXJlIGRpZCB5b3VyIChvZmZsaXN0KSBidWcgcmVwb3J0IGZvciByc3BpIG5lZWRp
+bmcgYSBkZWxheSBhZnRlcg0KPiBjbG9jayBlbmFibGUgY29tZSBmcm9tPw0KDQpCZWNhdXNlIHRo
+ZSBSU1BJIGRyaXZlciBpbiBvdXIgY3VycmVudCBCU1AgaXMgYWxtb3N0IGV4YWN0bHkgdGhlIHNh
+bWUgc28gSSB3YXMgbWFraW5nIHRoZSBhc3N1bXB0aW9uIHRoYXQgaXQgd291bGQgYmUgYSBwcm9i
+bGVtIChidXQgSSBoYXZlIG5vdCB0ZXN0ZWQgaXQgeWV0KS4NCg0KDQo+IEkgd2FzIGF3YXJlIHRo
+ZSByZWdpc3RlcnMgYXJlIGRvY3VtZW50ZWQgdG8gYmUgOC1iaXQgd2lkZSwgYnV0IEkgYWx3YXlz
+DQo+IGFzc3VtZWQgMzItYml0IGFjY2Vzc2VzIGRvIHdvcmsuDQoNCkF0IGZpcnN0LCBJIGRpZCB0
+b28uDQoNCg0KPiBBbm90aGVyIG9wdGlvbiBpcyB0byBsZXQgdGhlIGRyaXZlciBiaW5kIGFnYWlu
+c3QgInJlbmVzYXMscjdzNzIxMDAtbXN0cC0NCj4gY2xvY2tzIiwgYW5kIHN3aXRjaCB0byA4LWJp
+dCBhY2Nlc3MgbW9kZS4NCj4gDQo+IENMS19PRl9ERUNMQVJFKGNwZ19tc3RwX2Nsa3MsICJyZW5l
+c2FzLHI3czcyMTAwLW1zdHAtY2xvY2tzIiwNCj4gY3BnX21zdHBfY2xvY2tzX2luaXQ4KTsNCj4g
+DQo+IGNwZ19tc3RwX2Nsb2Nrc19pbml0OCgpIGNhbiBzZXQgYSBnbG9hbCBmbGFnLCBhbmQgY2Fs
+bA0KPiBjcGdfbXN0cF9jbG9ja3NfaW5pdCgpLg0KPiANCj4gVGhlIGxhdHRlciBtZWFucyBubyBE
+VCB1cGRhdGUgaXMgbmVlZGVkLCBhbmQgdGh1cyBwcmVzZXJ2ZXMgY29tcGF0aWJpbGl0eQ0KPiB3
+aXRoIG9sZCBEVEJzLg0KDQpJIGxpa2UgdGhpcyBpZGVhLiBJJ2xsIGNvZGUgaXQgdXAgYW5kIGdp
+dmUgaXQgYSBzaG90Lg0KDQpUaGFuayB5b3UuDQoNCkNocmlzDQo=
