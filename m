@@ -1,351 +1,82 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] fpga: Add support for Lattice iCE40 FPGAs
-Date: Wed, 14 Dec 2016 09:40:27 -0600 (CST)
-Message-ID: <alpine.DEB.2.10.1612140939160.2636@atull-730U3E-740U3E>
-References: <1481261749-15301-1-git-send-email-joel@airwebreathe.org.uk> <1481261749-15301-3-git-send-email-joel@airwebreathe.org.uk> <CAAtXAHcV+AG4en2U=KB0DeLa6RauC9ndojT=ffj+8hWtzS1o4w@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 02/11] mfd: axp20x: add volatile and writeable reg
+ ranges for VBUS power supply driver
+Date: Wed, 14 Dec 2016 23:43:01 +0800
+Message-ID: <CAGb2v66jDsU2rt4d-0ydWR926y-hHTfOBJQmyYVdKd7rcm1WWQ@mail.gmail.com>
+References: <20161209110419.28981-1-quentin.schulz@free-electrons.com> <20161209110419.28981-3-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHcV+AG4en2U=KB0DeLa6RauC9ndojT=ffj+8hWtzS1o4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-15?Q?Marek_Va=A8ut?= <marex-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161209110419.28981-3-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Dec 2016, Moritz Fischer wrote:
+On Fri, Dec 9, 2016 at 7:04 PM, Quentin Schulz
+<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> The X-Powers AXP20X and AXP22X PMICs allow to choose the maximum voltage
+> and minimum current delivered by the VBUS power supply.
+>
+> This adds the register used by the VBUS power supply driver to the range
+> of volatile and writeable regs ranges.
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>
+> added in v2
+>
+>  drivers/mfd/axp20x.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index ba130be..6ee2cc6 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -65,12 +65,14 @@ static const struct regmap_access_table axp152_volatile_table = {
+>
+>  static const struct regmap_range axp20x_writeable_ranges[] = {
+>         regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+> +       regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
 
-> Joel,
-> 
-> A couple of minor nits below (none of them are real blockers), other
-> than that looks good.
-> 
-> On Thu, Dec 8, 2016 at 9:35 PM, Joel Holdsworth
-> <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org> wrote:
-> > The Lattice iCE40 is a family of FPGAs with a minimalistic architecture
-> > and very regular structure, designed for low-cost, high-volume consumer
-> > and system applications.
-> 
-> <snip>
-> 
-> > This patch adds support to the FPGA manager for configuring the SRAM of
-> > iCE40LM, iCE40LP, iCE40HX, iCE40 Ultra, iCE40 UltraLite and iCE40
-> > UltraPlus devices, through slave SPI.
-> 
-> </snip>
-> 
-> I think just this paragraph would be enough.
+This is already covered by the previous entry.
 
-With these changes,
+>         regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
+>         regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(AXP20X_OCV_MAX)),
+>  };
+>
+>  static const struct regmap_range axp20x_volatile_ranges[] = {
+>         regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_USB_OTG_STATUS),
+> +       regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
 
-Acked-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+And I'm not sure why you specify it as volatile? The PMIC doesn't change any
+of the bits in this register on its own.
 
-Thanks,
-Alan
+Same for the AXP22x bits. So basically I think you don't need this patch.
 
+ChenYu
 
-> >
-> > The iCE40 family is notable because it is the first FPGA family to have
-> > complete reverse engineered bit-stream documentation for the iCE40LP and
-> > iCE40HX devices. Furthermore, there is now a Free Software Verilog
-> > synthesis tool-chain: the "IceStorm" tool-chain.
-> >
-> > This project is the work of Clifford Wolf, who is the maintainer of
-> > Yosys Verilog RTL synthesis framework, and Mathias Lasser, with notable
-> > contributions from "Cotton Seed", the main author of "arachne-pnr"; a
-> > place-and-route tool for iCE40 FPGAs.
-> >
-> > Having a Free Software synthesis tool-chain offers interesting
-> > opportunities for embedded devices that are able reconfigure themselves
-> > with open firmware that is generated on the device itself. For example
-> > a mobile device might have an application processor with an iCE40 FPGA
-> > attached, which implements slave devices, or through which the processor
-> > communicates with other devices through the FPGA fabric.
-> >
-> > A kernel driver for the iCE40 is useful, because in some cases, the FPGA
-> > may need to be configured before other devices can be accessed.
-> >
-> > An example of such a device is the icoBoard; a RaspberryPI HAT which
-> > features an iCE40HX8K with a 1 or 8 MBit SRAM and ports for
-> > Digilent-compatible PMOD modules. A PMOD module may contain a device
-> > with which the kernel communicates, via the FPGA.
-> >
-> > Signed-off-by: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-> Modulo nits:
-> 
-> Reviewed-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> 
-> > ---
-> >  drivers/fpga/Kconfig     |   6 ++
-> >  drivers/fpga/Makefile    |   1 +
-> >  drivers/fpga/ice40-spi.c | 213 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 220 insertions(+)
-> >  create mode 100644 drivers/fpga/ice40-spi.c
-> >
-> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> > index ce861a2..967cda4 100644
-> > --- a/drivers/fpga/Kconfig
-> > +++ b/drivers/fpga/Kconfig
-> > @@ -20,6 +20,12 @@ config FPGA_REGION
-> >           FPGA Regions allow loading FPGA images under control of
-> >           the Device Tree.
-> >
-> > +config FPGA_MGR_ICE40_SPI
-> > +       tristate "Lattice iCE40 SPI"
-> > +       depends on OF && SPI
-> > +       help
-> > +         FPGA manager driver support for Lattice iCE40 FPGAs over SPI.
-> > +
-> >  config FPGA_MGR_SOCFPGA
-> >         tristate "Altera SOCFPGA FPGA Manager"
-> >         depends on ARCH_SOCFPGA || COMPILE_TEST
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> > index 8df07bc..cc0d364 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -6,6 +6,7 @@
-> >  obj-$(CONFIG_FPGA)                     += fpga-mgr.o
-> >
-> >  # FPGA Manager Drivers
-> > +obj-$(CONFIG_FPGA_MGR_ICE40_SPI)       += ice40-spi.o
-> >  obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
-> >  obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)     += socfpga-a10.o
-> >  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)       += zynq-fpga.o
-> > diff --git a/drivers/fpga/ice40-spi.c b/drivers/fpga/ice40-spi.c
-> > new file mode 100644
-> > index 0000000..3c99859
-> > --- /dev/null
-> > +++ b/drivers/fpga/ice40-spi.c
-> > @@ -0,0 +1,213 @@
-> > +/*
-> > + * FPGA Manager Driver for Lattice iCE40.
-> > + *
-> > + *  Copyright (c) 2016 Joel Holdsworth
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; version 2 of the License.
-> > + *
-> > + * This driver adds support to the FPGA manager for configuring the SRAM of
-> > + * Lattice iCE40 FPGAs through slave SPI.
-> > + */
-> > +
-> > +#include <linux/fpga/fpga-mgr.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/spi/spi.h>
-> > +
-> > +#define ICE40_SPI_FPGAMGR_RESET_DELAY 1 /* us (>200ns) */
-> > +#define ICE40_SPI_FPGAMGR_HOUSEKEEPING_DELAY 1200 /* us */
-> > +
-> > +#define ICE40_SPI_FPGAMGR_NUM_ACTIVATION_BYTES DIV_ROUND_UP(49, 8)
-> > +
-> > +struct ice40_fpga_priv {
-> > +       struct spi_device *dev;
-> > +       struct gpio_desc *reset;
-> > +       struct gpio_desc *cdone;
-> > +};
-> > +
-> > +static enum fpga_mgr_states ice40_fpga_ops_state(struct fpga_manager *mgr)
-> > +{
-> > +       struct ice40_fpga_priv *priv = mgr->priv;
-> > +
-> > +       return gpiod_get_value(priv->cdone) ? FPGA_MGR_STATE_OPERATING :
-> > +               FPGA_MGR_STATE_UNKNOWN;
-> > +}
-> > +
-> > +static int ice40_fpga_ops_write_init(struct fpga_manager *mgr,
-> > +                                    struct fpga_image_info *info,
-> > +                                    const char *buf, size_t count)
-> > +{
-> > +       struct ice40_fpga_priv *priv = mgr->priv;
-> > +       struct spi_device *dev = priv->dev;
-> > +       struct spi_message message;
-> > +       struct spi_transfer assert_cs_then_reset_delay = {
-> > +               .cs_change   = 1,
-> > +               .delay_usecs = ICE40_SPI_FPGAMGR_RESET_DELAY
-> > +       };
-> > +       struct spi_transfer housekeeping_delay_then_release_cs = {
-> > +               .delay_usecs = ICE40_SPI_FPGAMGR_HOUSEKEEPING_DELAY
-> > +       };
-> > +       int ret;
-> > +
-> > +       if ((info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
-> > +               dev_err(&dev->dev,
-> > +                       "Partial reconfiguration is not supported\n");
-> > +               return -ENOTSUPP;
-> > +       }
-> > +
-> > +       /* Lock the bus, assert CRESET_B and SS_B and delay >200ns */
-> > +       spi_bus_lock(dev->master);
-> > +
-> > +       gpiod_set_value(priv->reset, 1);
-> > +
-> > +       spi_message_init(&message);
-> > +       spi_message_add_tail(&assert_cs_then_reset_delay, &message);
-> > +       ret = spi_sync_locked(dev, &message);
-> > +
-> > +       /* Come out of reset */
-> > +       gpiod_set_value(priv->reset, 0);
-> > +
-> > +       /* Abort if the chip-select failed */
-> > +       if (ret)
-> > +               goto fail;
-> > +
-> > +       /* Check CDONE is de-asserted i.e. the FPGA is reset */
-> > +       if (gpiod_get_value(priv->cdone)) {
-> > +               dev_err(&dev->dev, "Device reset failed, CDONE is asserted\n");
-> > +               ret = -EIO;
-> > +               goto fail;
-> > +       }
-> > +
-> > +       /* Wait for the housekeeping to complete, and release SS_B */
-> > +       spi_message_init(&message);
-> > +       spi_message_add_tail(&housekeeping_delay_then_release_cs, &message);
-> > +       ret = spi_sync_locked(dev, &message);
-> > +
-> > +fail:
-> > +       spi_bus_unlock(dev->master);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static int ice40_fpga_ops_write(struct fpga_manager *mgr,
-> > +                               const char *buf, size_t count)
-> > +{
-> > +       struct ice40_fpga_priv *priv = mgr->priv;
-> > +
-> > +       return spi_write(priv->dev, buf, count);
-> > +}
-> > +
-> > +static int ice40_fpga_ops_write_complete(struct fpga_manager *mgr,
-> > +                                        struct fpga_image_info *info)
-> > +{
-> > +       struct ice40_fpga_priv *priv = mgr->priv;
-> > +       struct spi_device *dev = priv->dev;
-> > +       const u8 padding[ICE40_SPI_FPGAMGR_NUM_ACTIVATION_BYTES] = {0};
-> > +
-> > +       /* Check CDONE is asserted */
-> > +       if (!gpiod_get_value(priv->cdone)) {
-> > +               dev_err(&dev->dev,
-> > +                       "CDONE was not asserted after firmware transfer\n");
-> > +               return -EIO;
-> > +       }
-> > +
-> > +       /* Send of zero-padding to activate the firmware */
-> > +       return spi_write(dev, padding, sizeof(padding));
-> > +}
-> > +
-> > +static const struct fpga_manager_ops ice40_fpga_ops = {
-> > +       .state = ice40_fpga_ops_state,
-> > +       .write_init = ice40_fpga_ops_write_init,
-> > +       .write = ice40_fpga_ops_write,
-> > +       .write_complete = ice40_fpga_ops_write_complete,
-> > +};
-> > +
-> > +static int ice40_fpga_probe(struct spi_device *spi)
-> > +{
-> > +       struct device *dev = &spi->dev;
-> > +       struct device_node *np = spi->dev.of_node;
-> > +       struct ice40_fpga_priv *priv;
-> > +       int ret;
-> > +
-> > +       if (!np) {
-> > +               dev_err(dev, "No Device Tree entry\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       priv = devm_kzalloc(&spi->dev, sizeof(*priv), GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
-> > +
-> > +       priv->dev = spi;
-> > +
-> > +       /* Check board setup data. */
-> > +       if (spi->max_speed_hz > 25000000) {
-> > +               dev_err(dev, "Speed is too high\n");
-> 
-> Speed is too high, maximum speed is X. Maybe make it a ICE40_SPI_MAX_SPEED
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       if (spi->max_speed_hz < 1000000) {
-> > +               dev_err(dev, "Speed is too low\n");
-> 
-> Speed is too low, minimum speed is X. Maybe make it a ICE40_SPI_MIN_SPEED
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       if (spi->mode & SPI_CPHA) {
-> > +               dev_err(dev, "Bad mode\n");
-> 
-> 'Bad mode, SPI_CPHA not supported' mabye.
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       /* Set up the GPIOs */
-> > +       priv->cdone = devm_gpiod_get(dev, "cdone", GPIOD_IN);
-> > +       if (IS_ERR(priv->cdone)) {
-> > +               dev_err(dev, "Failed to get CDONE GPIO: %ld\n",
-> > +                       PTR_ERR(priv->cdone));
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       priv->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> > +       if (IS_ERR(priv->reset)) {
-> > +               dev_err(dev, "Failed to get CRESET_B GPIO: %ld\n",
-> > +                       PTR_ERR(priv->reset));
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       /* Register with the FPGA manager */
-> > +       ret = fpga_mgr_register(dev, "Lattice iCE40 FPGA Manager",
-> > +                               &ice40_fpga_ops, priv);
-> > +       if (ret) {
-> > +               dev_err(dev, "Unable to register FPGA manager");
-> > +               return ret;
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int ice40_fpga_remove(struct spi_device *spi)
-> > +{
-> > +       fpga_mgr_unregister(&spi->dev);
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct of_device_id ice40_fpga_of_match[] = {
-> > +       { .compatible = "lattice,ice40-fpga-mgr", },
-> > +       {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ice40_fpga_of_match);
-> > +
-> > +static struct spi_driver ice40_fpga_driver = {
-> > +       .probe = ice40_fpga_probe,
-> > +       .remove = ice40_fpga_remove,
-> > +       .driver = {
-> > +               .name = "ice40spi",
-> > +               .of_match_table = of_match_ptr(ice40_fpga_of_match),
-> > +       },
-> > +};
-> > +
-> > +module_spi_driver(ice40_fpga_driver);
-> > +
-> > +MODULE_AUTHOR("Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>");
-> > +MODULE_DESCRIPTION("Lattice iCE40 FPGA Manager");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.7.4
-> >
-> 
-> Thanks,
-> 
-> Moritz
-> 
-> PS: can you also Cc linux-fpga mailing list in the future?
-> 
+>         regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL2),
+>         regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+>         regmap_reg_range(AXP20X_ACIN_V_ADC_H, AXP20X_IPSOUT_V_HIGH_L),
+> @@ -91,11 +93,13 @@ static const struct regmap_access_table axp20x_volatile_table = {
+>  /* AXP22x ranges are shared with the AXP809, as they cover the same range */
+>  static const struct regmap_range axp22x_writeable_ranges[] = {
+>         regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+> +       regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+>         regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
+>  };
+>
+>  static const struct regmap_range axp22x_volatile_ranges[] = {
+>         regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_PWR_OP_MODE),
+> +       regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+>         regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+>         regmap_reg_range(AXP22X_GPIO_STATE, AXP22X_GPIO_STATE),
+>         regmap_reg_range(AXP20X_FG_RES, AXP20X_FG_RES),
+> --
+> 2.9.3
+>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
