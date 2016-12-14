@@ -1,147 +1,63 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: Re: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
- usable memory range
-Date: Wed, 14 Dec 2016 22:44:43 +0100
-Message-ID: <5c06db98-f773-d84e-f2b4-828c9a615ee8@gmx.de>
-References: <20161212101801.28491-1-narmstrong@baylibre.com>
- <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
- <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: dts: r8a7791: link DU to VSPDs
+Date: Thu, 15 Dec 2016 01:07:52 +0300
+Message-ID: <1922293.x1RvWWSErN@wasted.cogentembedded.com>
+References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, carlo@caione.org
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1529351.Fac5N2tKoF-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2016 10:52 AM, Neil Armstrong wrote:
-> On 12/12/2016 10:22 PM, Heinrich Schuchardt wrote:
->> On 12/12/2016 11:18 AM, Neil Armstrong wrote:
->>> The Amlogic Meson GXBB secure monitor uses part of the memory space, this
->>> patch adds these reserved zones and redefines the usable memory range for
->>> each boards.
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> ---
->>>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  2 +-
->>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 21 +++++++++++++++++++++
->>>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     |  2 +-
->>>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  2 +-
->>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi    |  2 +-
->>>  .../boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts   |  2 +-
->>>  .../boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts    |  2 +-
->>>  .../boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts  |  2 +-
->>>  .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts      |  2 +-
->>>  .../arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts |  2 +-
->>>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 +-
->>>  11 files changed, 31 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->>> index 7a078be..ac40b2d 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->>> @@ -56,7 +56,7 @@
->>>  
->>>  	memory@0 {
->>>  		device_type = "memory";
->>> -		reg = <0x0 0x0 0x0 0x80000000>;
->>> +		reg = <0x0 0x1000000 0x0 0x7f000000>;
->>>  	};
->>>  
->>>  	vddio_boot: regulator-vddio_boot {
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> index fc033c0..e085588 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> @@ -55,6 +55,27 @@
->>>  	#address-cells = <2>;
->>>  	#size-cells = <2>;
->>>  
->>> +	reserved-memory {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <2>;
->>> +		ranges;
->>> +
->>> +		secos: secos {
->>> +			reg = <0x0 0x05300000 0x0 0x2000000>;
->>> +			no-map;
->>> +		};
->>
->> Hello Neil,
->>
->> In
->> https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/meson64_odroidc2.dts
->> the secos region does not exist. In linux-next I find no reference to
->> the secos label. Where is the consumer of the region defined?
->>
->>> +
->>> +		pstore: pstore {
->>> +			reg = <0x0 0x07300000 0x0 0x100000>;
->>> +			no-map;
->>> +		};
->>
->> In
->> https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/amlogic/gxbb_skt.dts
->> and other files pstore uses a different position
->> (reg = <0x0 0x20000000 0x0 0x100000>;).
->> Why are we moving this?
->> Should this region be marked
->> compatible = "ramoops"; ?
->> Cf. Documentation/devicetree/bindings/reserved-memory/ramoops.txt.
->>
->> It would be nice if you could add a short description of each reserved
->> area to the commit message.
->>
->> Regards
->>
->> Heinrich Schuchardt
->>
->>> +
->>> +		secmon: secmon {
->>> +			reg = <0x0 0x10000000 0x0 0x200000>;
->>> +			no-map;
->>> +		};
->>> +	};
->>> +
->>>  	cpus {
->>>  		#address-cells = <0x2>;
->>>  		#size-cells = <0x0>;
->>
->>
-> 
-> Hi Heinrich,
-> 
-> Thanks for testing and for the report,
-> we are still struggling into finding what are these zones and how to label them correctly.
-> 
-> We need to identify the zones on all boards, the patch I provided works on a non-odroid-c2 and gxm and gxl boards.
-> 
-> Neil
-> 
+Add the "vsps" property to the DU device node in order to link this node to
+the VSPD nodes.
 
-Hi Neil,
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-the 3.14 Ubuntu kernel provided by Hardkernel for Odroid C2 has no fixed
-address reserved-memory inside the first 2GB and does not show the
-problem I have been observing with the linux-next kernel.
+---
+This patch is against the 'renesas-devel-20161212-v4.9' of Simon Horman's
+'renesas.git' repo.  It's  only meaningful if the DU driver patch I've just
+posted is applied.
 
-Many zones for interfacing different peripherals are defined but these
-are all above 2GB.
+ arch/arm/boot/dts/r8a7791.dtsi |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-For small loads I never saw any oops. So I recommend that on the boards
-which you think are working, make a full linux-next git checkout and try
-to build the kernel natively for the respective board.
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -989,7 +989,7 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 	};
+ 
+-	vsp1@fe930000 {
++	vspd0: vsp1@fe930000 {
+ 		compatible = "renesas,vsp1";
+ 		reg = <0 0xfe930000 0 0x8000>;
+ 		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
+@@ -997,7 +997,7 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 	};
+ 
+-	vsp1@fe938000 {
++	vspd1: vsp1@fe938000 {
+ 		compatible = "renesas,vsp1";
+ 		reg = <0 0xfe938000 0 0x8000>;
+ 		interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1016,6 +1016,7 @@
+ 			 <&mstp7_clks R8A7791_CLK_DU1>,
+ 			 <&mstp7_clks R8A7791_CLK_LVDS0>;
+ 		clock-names = "du.0", "du.1", "lvds.0";
++		vsps = <&vspd0 &vspd1>;
+ 		status = "disabled";
+ 
+ 		ports {
 
-Best regards
-
-Heinrich Schuchardt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
