@@ -1,46 +1,92 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/3] clk: rockchip: rk3399: add USBPHYx_480M_SRC clock IDs
-Date: Wed, 14 Dec 2016 18:11:39 +0800
-Message-ID: <1481710301-1454-2-git-send-email-zhengxing@rock-chips.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci of rk3399
+Date: Wed, 14 Dec 2016 18:11:41 +0800
+Message-ID: <1481710301-1454-4-git-send-email-zhengxing@rock-chips.com>
 References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1481710301-1454-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: dianders@google.com, heiko@sntech.de, William wu <wulf@rock-chips.com>, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, Caesar Wang <wxt@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Shawn Lin <shawn.lin@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add two clock IDs for the usb phy 480m source clocks.
+From: William wu <wulf@rock-chips.com>
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+We found that the suspend process was blocked when it run into
+ehci/ohci module due to clk-480m of usb2-phy was disabled.
+
+The root cause is that usb2-phy suspended earlier than ehci/ohci
+(usb2-phy will be auto suspended if no devices plug-in). and the
+clk-480m provided by it was disabled if no module used. However,
+some suspend process related ehci/ohci are base on this clock,
+so we should refer it into ehci/ohci driver to prevent this case.
+
+Signed-off-by: William wu <wulf@rock-chips.com>
+Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 ---
 
- include/dt-bindings/clock/rk3399-cru.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/include/dt-bindings/clock/rk3399-cru.h b/include/dt-bindings/clock/rk3399-cru.h
-index 220a60f..224daf7 100644
---- a/include/dt-bindings/clock/rk3399-cru.h
-+++ b/include/dt-bindings/clock/rk3399-cru.h
-@@ -132,6 +132,8 @@
- #define SCLK_RMII_SRC			166
- #define SCLK_PCIEPHY_REF100M		167
- #define SCLK_DDRC			168
-+#define SCLK_USBPHY0_480M_SRC		169
-+#define SCLK_USBPHY1_480M_SRC		170
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index b65c193..228c764 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -315,8 +315,10 @@
+ 		compatible = "generic-ehci";
+ 		reg = <0x0 0xfe380000 0x0 0x20000>;
+ 		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>;
+-		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+-		clock-names = "hclk_host0", "hclk_host0_arb";
++		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
++			 <&cru SCLK_USBPHY0_480M_SRC>;
++		clock-names = "hclk_host0", "hclk_host0_arb",
++			      "usbphy0_480m";
+ 		phys = <&u2phy0_host>;
+ 		phy-names = "usb";
+ 		status = "disabled";
+@@ -326,8 +328,12 @@
+ 		compatible = "generic-ohci";
+ 		reg = <0x0 0xfe3a0000 0x0 0x20000>;
+ 		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>;
+-		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+-		clock-names = "hclk_host0", "hclk_host0_arb";
++		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
++			 <&cru SCLK_USBPHY0_480M_SRC>;
++		clock-names = "hclk_host0", "hclk_host0_arb",
++			      "usbphy0_480m";
++		phys = <&u2phy0_host>;
++		phy-names = "usb";
+ 		status = "disabled";
+ 	};
  
- #define DCLK_VOP0			180
- #define DCLK_VOP1			181
+@@ -335,8 +341,10 @@
+ 		compatible = "generic-ehci";
+ 		reg = <0x0 0xfe3c0000 0x0 0x20000>;
+ 		interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>;
+-		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+-		clock-names = "hclk_host1", "hclk_host1_arb";
++		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>,
++			 <&cru SCLK_USBPHY1_480M_SRC>;
++		clock-names = "hclk_host1", "hclk_host1_arb",
++			      "usbphy1_480m";
+ 		phys = <&u2phy1_host>;
+ 		phy-names = "usb";
+ 		status = "disabled";
+@@ -346,8 +354,12 @@
+ 		compatible = "generic-ohci";
+ 		reg = <0x0 0xfe3e0000 0x0 0x20000>;
+ 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH 0>;
+-		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+-		clock-names = "hclk_host1", "hclk_host1_arb";
++		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>,
++			 <&cru SCLK_USBPHY1_480M_SRC>;
++		clock-names = "hclk_host1", "hclk_host1_arb",
++			      "usbphy1_480m";
++		phys = <&u2phy1_host>;
++		phy-names = "usb";
+ 		status = "disabled";
+ 	};
+ 
 -- 
 2.7.4
