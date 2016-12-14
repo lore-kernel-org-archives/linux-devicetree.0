@@ -1,86 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH linux v1 0/4] Seven segment display support
-Date: Wed, 14 Dec 2016 15:15:53 +0100
-Message-ID: <2512681.Wh85HyB8FH@wuerfel>
-References: <1481702104-8617-1-git-send-email-jaghu@google.com> <20161214125641.GA5379@kroah.com> <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH] clk: stm32f4: Use CLK_OF_DECLARE_DRIVER initialization method
+Date: Wed, 14 Dec 2016 15:22:28 +0100
+Message-ID: <1481725348-860-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ac324946-41da-c090-a0ca-78155611bb7e-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
+Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, gabriel.fernandez@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, December 14, 2016 2:12:41 PM CET Neil Armstrong wrote:
-> On 12/14/2016 01:56 PM, Greg KH wrote:
-> > On Wed, Dec 14, 2016 at 01:45:30PM +0100, Thomas Petazzoni wrote:
-> >> Hello,
-> >>
-> >> On Tue, 13 Dec 2016 23:55:00 -0800, Jaghathiswari Rankappagounder
-> >> Natarajan wrote:
-> >>
-> >>> Documentation for the binding which provides an interface for adding clock,
-> >>> data and clear signal GPIO lines to control seven segment display.
-> >>>
-> >>> The platform device driver provides an API for displaying on two 7-segment
-> >>> displays, and implements the required bit-banging. The hardware assumed is
-> >>> 74HC164 wired to two 7-segment displays.
-> >>>
-> >>> The character device driver implements the user-space API for letting a user
-> >>> write to two 7-segment displays including any conversion methods necessary
-> >>> to map the user input to two 7-segment displays.
-> >>>
-> >>> Adding clock, data and clear signal GPIO lines in the devicetree to control
-> >>> seven segment display on zaius platform.
-> >>>
-> >>> The platform driver matches on the device tree node; the platform driver also
-> >>> initializes the character device.
-> >>>
-> >>> Tested that the seven segment display works properly by writing to the
-> >>> character device file on a EVB AST2500 board which also has 74HC164 wired
-> >>> to two 7-segment displays.
-> >>
-> >> FWIW, I proposed a driver for seven segment displays back in 2013:
-> >>
-> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139986.html
-> >>
-> >> And the feedback from Greg KH was: we don't need a driver for that, do
-> >> it from userspace. See:
-> >>
-> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139992.html
-> >>
-> >> So: good luck 
-> > 
-> > Did anyone ever write a library for this type of thing?
-> > 
-> > Again, I don't want to see one-off drivers for random devices like this
-> > that should be able to all be controlled from userspace in a common
-> > manner.  Much like we did for fingerprint readers a long long time
-> > ago...
-> > 
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-> Actually, it's more than a random interface, a lot of SoCs and boards actually have such displays
-> and it's a pity to use UIO, sysfs gpio bitbanging and all sort of ugly stuff to only print a few
-> characters a simple and clean driver could achieve.
-> Some very well known SoCs even have integrated registers to lower the BOM and bypass the need for
-> a 74HC164 like component and avoid gpio bit banging.
-> 
-> My personal concern is that you could also need to drive more segments, thus 7-segments
-> is too restrictive.
-> 
-> But this driver is well structured, the gpio-bitbanging sub-driver is welcome.
+Clock and reset controller use same compatible strings (same IP).
 
-Maybe we can find a way to fit this into the existing drivers/leds/ subsystem?
+Since commit 989eafd0b609 ("clk: core: Avoid double initialization of
+clocks") the OF core flags clock controllers registered with the
+CLK_OF_DECLARE() macro as OF_POPULATED, so platform devices with the same
+compatible string will not be registered.
 
-That already supports blinking, brightness and colour attributes of LEDs,
-so could this be extended to support (one of) digit, number, character
-or string with a common sysfs attribute and a way to hook up a led driver
-to that?
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ drivers/clk/clk-stm32f4.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+index 11174a5..0f5ab9b 100644
+--- a/drivers/clk/clk-stm32f4.c
++++ b/drivers/clk/clk-stm32f4.c
+@@ -1325,5 +1325,5 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+ 	kfree(clks);
+ 	iounmap(base);
+ }
+-CLK_OF_DECLARE(stm32f42xx_rcc, "st,stm32f42xx-rcc", stm32f4_rcc_init);
+-CLK_OF_DECLARE(stm32f46xx_rcc, "st,stm32f469-rcc", stm32f4_rcc_init);
++CLK_OF_DECLARE_DRIVER(stm32f42xx_rcc, "st,stm32f42xx-rcc", stm32f4_rcc_init);
++CLK_OF_DECLARE_DRIVER(stm32f46xx_rcc, "st,stm32f469-rcc", stm32f4_rcc_init);
+-- 
+1.9.1
