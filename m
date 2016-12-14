@@ -1,75 +1,42 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] ARM: dts: dra72-evm-tps65917: Add voltage supplies to
- usb_phy, mmc, dss
-Date: Wed, 14 Dec 2016 13:00:50 +0200
-Message-ID: <2bb73170-dbb5-01a3-5b3a-4d5d9414e3a9@ti.com>
-References: <20161214085703.506-1-lokeshvutla@ti.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH linux v1 4/4] arm: dts: Add dt-binding to support seven
+ segment display on zaius
+Date: Wed, 14 Dec 2016 11:06:35 +0000
+Message-ID: <20161214110635.GB14217@n2100.armlinux.org.uk>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com>
+ <1481702104-8617-5-git-send-email-jaghu@google.com>
+ <3917905.e4iOqADnVQ@wuerfel>
+ <10697525.O7CkPN6Gfl@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161214085703.506-1-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Carlos Hernandez <ceh@ti.com>, Tero Kristo <t-kristo@ti.com>, robh+dt@kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <10697525.O7CkPN6Gfl@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Lokesh,
-
-On 14/12/16 10:57, Lokesh Vutla wrote:
-> Commit 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
-> added a separate dtsi for dra72-evm-tps65917 moving all the voltage supplies
-> to this file. But it missed adding voltage supplies to usb_phy, mmc,
-> dss and deleted from dra72-evm-common.dtsi. Adding the voltage supply
-> phandles to these nodes in dra72-evm-tps65917.dtsi
+On Wed, Dec 14, 2016 at 10:00:46AM +0100, Arnd Bergmann wrote:
+> On Wednesday, December 14, 2016 9:55:47 AM CET Arnd Bergmann wrote:
+> > According to your introductory mail, the interface is assumed to be
+> > a 74HC164. Should we use that ID in the compatible string?
+> > 
+> > We can always add other strings later if we want to support multiple
+> > wire formats.
 > 
-> Fixes: 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
-> Reported-by: Carlos Hernandez <ceh@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
-> Logs:
-> - DRA72-evm revC: http://pastebin.ubuntu.com/23627665/ 
-> - DRA72-evm revB: http://pastebin.ubuntu.com/23627658/
->  arch/arm/boot/dts/dra72-evm-tps65917.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
-> index ee6dac44edf1..e6df676886c0 100644
-> --- a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
-> +++ b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
-> @@ -132,3 +132,19 @@
->  		ti,palmas-long-press-seconds = <6>;
->  	};
->  };
-> +
-> +&usb2_phy1 {
-> +	phy-supply = <&ldo4_reg>;
-> +};
-> +
-> +&usb2_phy2 {
-> +	phy-supply = <&ldo4_reg>;
-> +};
-> +
-> +&dss {
-> +	vdda_video-supply = <&ldo5_reg>;
-> +};
-> +
-> +&mmc1 {
-> +	vmmc_aux-supply = <&ldo1_reg>;
-> +};
-> 
+> Actually, looking up 74hc164, that seems to be a gpio expander,
+> so maybe a more flexible way to do the same is to put a driver
+> for the expander into drivers/gpio/ and have the main driver
+> access the outputs of that using the gpiolib interface.
 
-Are you sure that all future users of dra72-evm-tps65917.dtsi will use this same configuration?
-If not I'd rather put this in the board dts files.
+There already is - drivers/gpio/gpio-74x164.c
 
-cheers,
--roger
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
