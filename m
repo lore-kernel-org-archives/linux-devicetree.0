@@ -1,84 +1,34 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH linux v1 0/4] Seven segment display support
-Date: Wed, 14 Dec 2016 08:50:19 -0800
-Message-ID: <20161214165019.GC14275@kroah.com>
-References: <1481702104-8617-1-git-send-email-jaghu@google.com>
- <20161214134530.2bd54a4e@free-electrons.com>
- <20161214125641.GA5379@kroah.com>
- <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 1/2] devicetree: power: add bindings for GPIO-driven power switches
+Date: Wed, 14 Dec 2016 17:58:21 +0100
+Message-ID: <CAMpxmJWw3wCE4ch8TVik+2b3BC8Lvxbi13HGd9GxruSRLu95Mg@mail.gmail.com>
+References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481494905-18037-2-git-send-email-bgolaszewski@baylibre.com> <20161213192712.gbaw4t4awayybnta@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, mark.rutland@arm.com, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, arnd@arndb.de, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161213192712.gbaw4t4awayybnta@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio <linux-gpio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-pm <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 02:12:41PM +0100, Neil Armstrong wrote:
-> On 12/14/2016 01:56 PM, Greg KH wrote:
-> > On Wed, Dec 14, 2016 at 01:45:30PM +0100, Thomas Petazzoni wrote:
-> >> Hello,
-> >>
-> >> On Tue, 13 Dec 2016 23:55:00 -0800, Jaghathiswari Rankappagounder
-> >> Natarajan wrote:
-> >>
-> >>> Documentation for the binding which provides an interface for adding clock,
-> >>> data and clear signal GPIO lines to control seven segment display.
-> >>>
-> >>> The platform device driver provides an API for displaying on two 7-segment
-> >>> displays, and implements the required bit-banging. The hardware assumed is
-> >>> 74HC164 wired to two 7-segment displays.
-> >>>
-> >>> The character device driver implements the user-space API for letting a user
-> >>> write to two 7-segment displays including any conversion methods necessary
-> >>> to map the user input to two 7-segment displays.
-> >>>
-> >>> Adding clock, data and clear signal GPIO lines in the devicetree to control
-> >>> seven segment display on zaius platform.
-> >>>
-> >>> The platform driver matches on the device tree node; the platform driver also
-> >>> initializes the character device.
-> >>>
-> >>> Tested that the seven segment display works properly by writing to the
-> >>> character device file on a EVB AST2500 board which also has 74HC164 wired
-> >>> to two 7-segment displays.
-> >>
-> >> FWIW, I proposed a driver for seven segment displays back in 2013:
-> >>
-> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139986.html
-> >>
-> >> And the feedback from Greg KH was: we don't need a driver for that, do
-> >> it from userspace. See:
-> >>
-> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139992.html
-> >>
-> >> So: good luck :-)
-> > 
-> > Did anyone ever write a library for this type of thing?
-> > 
-> > Again, I don't want to see one-off drivers for random devices like this
-> > that should be able to all be controlled from userspace in a common
-> > manner.  Much like we did for fingerprint readers a long long time
-> > ago...
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Hi Greg,
-> 
-> Actually, it's more than a random interface, a lot of SoCs and boards actually have such displays
-> and it's a pity to use UIO, sysfs gpio bitbanging and all sort of ugly stuff to only print a few
-> characters a simple and clean driver could achieve.
+2016-12-13 20:27 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Sun, Dec 11, 2016 at 11:21:44PM +0100, Bartosz Golaszewski wrote:
+>> Some boards are equipped with simple, GPIO-driven power load switches.
+>> An example of such ICs is the TI tps229* series.
+>
+> How is this different than a GPIO regulator? The input and output
+> voltages just happen to be the same. I could be convinced this is
+> different enough to have a different compatible, but it somewhat seems
+> you want to use this for IIO, so you are creating a different binding
+> for that usecase.
+>
 
-Great, then let's make an API that all devices of this type could use,
-and not just take individual drivers that all have a custom char or
-sysfs interface which requires custom userspace code to be able to drive
-all of the different devices in a common way (i.e. a library would have
-to be written anyways...)
+It's more of a fixed regulator I suppose. Do you mean adding a new
+compatible to the fixed-regulator binding (e.g. "gpio-power-switch" or
+"simple-power-switch") and then providing an iio driver for toggling
+the switch?
 
-thanks,
-
-greg k-h
+Thanks,
+Bartosz
