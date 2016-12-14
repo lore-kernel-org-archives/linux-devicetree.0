@@ -1,26 +1,41 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: of_reserved_mem: Ensure cma reserved region not
- cross the low/high memory
-Date: Wed, 14 Dec 2016 14:45:19 -0600
-Message-ID: <CAL_JsqLHh96D0VULuYfYC1P5K_Bbz6iRjizuYP3Mb6bdERbDnA@mail.gmail.com>
-References: <1479901021-25064-1-git-send-email-jason.hui.liu@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/platform: depopulate devices in the reverse order of creation
+Date: Wed, 14 Dec 2016 14:54:02 -0600
+Message-ID: <CAL_Jsq+JdmKj88Tp=N+V781qj+muEB6nuGpjDCgiPsrzB9tWMg@mail.gmail.com>
+References: <20161212183905.GA30702@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479901021-25064-1-git-send-email-jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20161212183905.GA30702-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 5:37 AM, Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org> wrote:
-> Need ensure the cma reserved region not cross the low/high memory boundary
-> when using the dynamic allocation methond through device-tree, otherwise,
-> kernel will fail to boot up when cma reserved region cross how/high mem.
+On Mon, Dec 12, 2016 at 12:39 PM, Jason Gunthorpe
+<jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
+> If the DT has inter-dependencies, then the devices need to be removed
+> in the right order to avoid removal problems.
+>
+> Assuming the DT is constructed so that EPROBE_DEFER doesn't happen
+> during creating then a good way to avoid removal problems is reversing
+> the order during depopulation.
 
-The kernel command line code setting CMA already deals with this. Why
-don't we just call the CMA code (cma_declare_contiguous) to deal with
-this?
+I assume you mean by sorting the nodes to get lucky with the init
+order. Not sure I want any patches that help that. I'm tempted to
+randomize the device creation order instead.
+
+> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> ---
+>  drivers/of/platform.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> In my specific case I have a gpio driver, followed by a i2c bitbang
+> using that driver. So gpiolib prints an error if it the gpio driver is
+> removed before the gpio client..
+
+Good news, functional dependencies are going into 4.10. Let's fix GPIO
+and use that.
 
 Rob
 --
