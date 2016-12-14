@@ -1,63 +1,66 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 04/11] Documentation: DT: binding: axp20x_usb_power:
- add axp223 compatible
-Date: Thu, 15 Dec 2016 00:12:57 +0800
-Message-ID: <CAGb2v667MzjsnPhZBz3avi_oUho7WH=e6-Ez0J4Qhg1_Q0K0aQ@mail.gmail.com>
-References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
- <20161209110419.28981-5-quentin.schulz@free-electrons.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v3 0/2] iio: adc: hx711: Add IIO driver for AVIA HX711 ADC
+Date: Wed, 14 Dec 2016 17:16:03 +0100
+Message-ID: <20161214161603.GA13873@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161209110419.28981-5-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, ak@it-klinger.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 9, 2016 at 7:04 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> This adds the "x-powers,axp223-usb-power-supply" to the list of
-> compatibles for AXP20X VBUS power supply driver.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->
-> v2:
->  - adding small explanation on AXP223 variation compared to the AXP221,
->
->  Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt b/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt
-> index f1d7bee..ba8d35f 100644
-> --- a/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_usb_power.txt
-> @@ -3,6 +3,11 @@ AXP20x USB power supply
->  Required Properties:
->  -compatible: One of: "x-powers,axp202-usb-power-supply"
->                       "x-powers,axp221-usb-power-supply"
-> +                     "x-powers,axp223-usb-power-supply"
-> +
-> +The AXP223 PMIC shares most of its behaviour with the AXP221 but has slight
-> +variations such as the former being able to set the VBUS power supply max
-> +current to 100mA, unlike the latter.
+This series adds IIO driver support for the AVIA HX711 ADC which is 
+mostly used in weighting cells.
 
-I actually wanted this in the commit log, but this works too.
+The first patch adds the new DT binding for which a new vendor avia
+was also added.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+The second patch is the simple IIO driver implemented as ADC.
+The protocol is specific to this device and implemented using GPIO's.
+Documentation of the chip can be found here:
 
->
->  This node is a subnode of the axp20x PMIC.
->
-> --
-> 2.9.3
->
+https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf
+
+Changes in v3:
+moved gain from devicetree to sysfs, according to comment of Lars-Peter
+Thanks for reviewing and giving suggestions
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - removed property gain
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - removed property gain from devicetree
+  - added device attribute (rw) for gain
+  - support reading from both channels now
+
+Changes in v2:
+Lots of updates thanks to Peters review.
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - typo
+  - removed unneded section
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - updated help text in Kconfig
+  - removed dead code
+  - removed unused power management
+  - reduced channel spec to what is actually used
+  - added error handling in case reset of chip not possible
+
+Andreas Klinger (2):
+  iio: adc: hx711: Add DT binding for avia,hx711
+  iio: adc: hx711: Add IIO driver for AVIA HX711
+
+ .../devicetree/bindings/iio/adc/avia-hx711.txt     |  16 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/adc/Kconfig                            |  18 ++
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/hx711.c                            | 292 +++++++++++++++++++++
+ 5 files changed, 328 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+ create mode 100644 drivers/iio/adc/hx711.c
+
+-- 
+2.1.4
