@@ -1,60 +1,37 @@
-From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 0/6] Add board support for TS-4600
-Date: Wed, 14 Dec 2016 18:12:30 -0500
-Message-ID: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
-Cc: mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, lucile.quirion-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Subject: [PATCH 1/6] of: documentation: add bindings documentation for TS-4600
+Date: Wed, 14 Dec 2016 18:12:31 -0500
+Message-ID: <20161214231237.17496-2-sebastien.bourdelin@savoirfairelinux.com>
+References: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@savoirfairelinux.com
+Cc: mark@embeddedarm.com, kris@embeddedarm.com, horms+renesas@verge.net.au, treding@nvidia.com, jonathanh@nvidia.com, f.fainelli@gmail.com, fabio.estevam@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, linux@armlinux.org.uk, linux@roeck-us.net, wim@iguana.be, mark.rutland@arm.com, robh+dt@kernel.org, damien.riegel@savoirfairelinux.com, lucile.quirion@savoirfairelinux.com, olof@lixom.net, arnd@arndb.de, suzuki.poulose@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, yamada.masahiro@socionext.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch serie adds support for the TS-4600 boards rev A and B. These
-boards, manufactured by Technologic Systems, are based on an i.MX28.
+This adds the documentation for the TS-4600 by Technologic Systems.
 
-This serie include the support for the watchdog which could be enable
-at Linux boot time depending on the bootloader.
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+---
+ Documentation/devicetree/bindings/arm/technologic.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-The watchdog and few peripherals are implemented in a FPGA, and can
-only be access using a custom GPIOs bit-banged bus which is called the
-NBUS by Technologic Systems.
-A driver for this bus is also included and used by the watchdog.
-
-Sebastien Bourdelin (6):
-  of: documentation: add bindings documentation for TS-4600
-  ARM: dts: TS-4600: add basic device tree
-  dt-bindings: bus: Add documentation for the Technologic Systems NBUS
-  bus: add driver for the Technologic Systems NBUS
-  ARM: dts: TS-4600: add NBUS support
-  watchdog: ts4600: add driver for TS-4600 watchdog
-
- .../devicetree/bindings/arm/technologic.txt        |   5 +
- Documentation/devicetree/bindings/bus/ts-nbus.txt  |  50 +++
- .../devicetree/bindings/watchdog/ts4600-wdt.txt    |  16 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/imx28-ts4600-common.dtsi         | 126 ++++++
- arch/arm/boot/dts/imx28-ts4600-rev-a.dts           |  22 +
- arch/arm/boot/dts/imx28-ts4600-rev-b.dts           |  22 +
- drivers/bus/Kconfig                                |   9 +
- drivers/bus/Makefile                               |   1 +
- drivers/bus/ts-nbus.c                              | 451 +++++++++++++++++++++
- drivers/watchdog/Kconfig                           |  10 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/ts4600_wdt.c                      | 213 ++++++++++
- include/linux/ts-nbus.h                            |  17 +
- 14 files changed, 945 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
- create mode 100644 arch/arm/boot/dts/imx28-ts4600-common.dtsi
- create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-a.dts
- create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-b.dts
- create mode 100644 drivers/bus/ts-nbus.c
- create mode 100644 drivers/watchdog/ts4600_wdt.c
- create mode 100644 include/linux/ts-nbus.h
-
+diff --git a/Documentation/devicetree/bindings/arm/technologic.txt b/Documentation/devicetree/bindings/arm/technologic.txt
+index 33797ac..e9d6d65 100644
+--- a/Documentation/devicetree/bindings/arm/technologic.txt
++++ b/Documentation/devicetree/bindings/arm/technologic.txt
+@@ -1,6 +1,11 @@
+ Technologic Systems Platforms Device Tree Bindings
+ --------------------------------------------------
+ 
++TS-4600 is a System-on-Module based on the Freescale i.MX28 System-on-Chip.
++It can be mounted on a carrier board providing additional peripheral connectors.
++Required root node properties:
++	- compatible = "technologic,imx28-ts4600", "fsl,imx28"
++
+ TS-4800 board
+ Required root node properties:
+ 	- compatible = "technologic,imx51-ts4800", "fsl,imx51";
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
