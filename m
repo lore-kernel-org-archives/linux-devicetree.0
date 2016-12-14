@@ -1,70 +1,75 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2 1/2] iio: adc: hx711: Add DT binding for avia,hx711
-Date: Wed, 14 Dec 2016 12:18:11 +0100
-Message-ID: <10cef06e-a3d0-ef9e-2a6a-b044f02d8df3@metafoo.de>
-References: <20161214095945.GA26511@andreas>
- <470f0017-2607-d5bd-bcd3-69f892cdc88b@metafoo.de>
- <20161214103455.GA27362@andreas>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH linux v1 4/4] arm: dts: Add dt-binding to support seven
+ segment display on zaius
+Date: Wed, 14 Dec 2016 11:40:51 +0000
+Message-ID: <20161214114051.GC14217@n2100.armlinux.org.uk>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com>
+ <1481702104-8617-5-git-send-email-jaghu@google.com>
+ <3917905.e4iOqADnVQ@wuerfel>
+ <10697525.O7CkPN6Gfl@wuerfel>
+ <20161214110635.GB14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161214103455.GA27362@andreas>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161214110635.GB14217@n2100.armlinux.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: mark.rutland@arm.com, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, robh+dt@kernel.org, joel@jms.id.au, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2016 11:34 AM, Andreas Klinger wrote:
-> Hi Lars-Peter,
+On Wed, Dec 14, 2016 at 11:06:35AM +0000, Russell King - ARM Linux wrote:
+> On Wed, Dec 14, 2016 at 10:00:46AM +0100, Arnd Bergmann wrote:
+> > On Wednesday, December 14, 2016 9:55:47 AM CET Arnd Bergmann wrote:
+> > > According to your introductory mail, the interface is assumed to be
+> > > a 74HC164. Should we use that ID in the compatible string?
+> > > 
+> > > We can always add other strings later if we want to support multiple
+> > > wire formats.
+> > 
+> > Actually, looking up 74hc164, that seems to be a gpio expander,
+> > so maybe a more flexible way to do the same is to put a driver
+> > for the expander into drivers/gpio/ and have the main driver
+> > access the outputs of that using the gpiolib interface.
 > 
-> Lars-Peter Clausen <lars@metafoo.de> schrieb am Wed, 14. Dec 11:11:
->> On 12/14/2016 10:59 AM, Andreas Klinger wrote:
->>> Add DT bindings for avia,hx711
->>> Add vendor avia to vendor list
->>>
->>> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
->>> ---
->>>  .../devicetree/bindings/iio/adc/avia-hx711.txt      | 21 +++++++++++++++++++++
->>>  .../devicetree/bindings/vendor-prefixes.txt         |  1 +
->>>  2 files changed, 22 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
->>> new file mode 100644
->>> index 000000000000..6a4659fc7a4f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
->>> @@ -0,0 +1,21 @@
->>> +* AVIA HX711 ADC chip for weight cells
->>> +  Bit-banging driver
->>> +
->>> +Required properties:
->>> + - compatible: Should be "avia,hx711"
->>> + - sck-gpios:	Definition of the GPIO for the clock
->>> + - dout-gpios:	Definition of the GPIO for data-out
->>> +		See Documentation/devicetree/bindings/gpio/gpio.txt
->>> +
->>> +Recommended properties:
->>> + - gain:	Gain select, can be 32, 64 or 128
->>> +		default is 128
->>
->> If the gain is software programmable it should be exposed by the driver
->> allowing the application to change it rather than putting it in the devicetree.
->>
-> There is also a hardware dependency in terms of where to connect the input
-> channel to:
-> - gain 64 and gain 128 are available only on input channel A
-> - gain 32 is only available on input channel B
-> 
-> Do you still think, it should be removed from the devicetree?
+> There already is - drivers/gpio/gpio-74x164.c
 
-I believe so, especially considering that there are two channels and your
-driver currently only exposes one of them, which is elected by the gain
-configuration. I'd expect that there are use-cases where both inputs are
-connected and the application wants to switch between them dynamically at
-runtime.
+Looking at this more, it's a SPI driver, presumably because the first
+case where it appeared was on a SPI bus.
 
-The only tricky part here seems to be that the configuration for the next
-conversion is selected on the current conversion. This means you probably
-need to do a dummy conversion whenever the settings change.
+However, it's not a SPI device as such, it's a piece of standard,
+general purpose logic that's been around for many years, pre-dating
+the SPI bus.
+
+Now, as for DT, we have this "DT represents the hardware, not the
+implementation" edict, which now brings up an interesting problem.
+
+If we want to use this driver in its existing form, we need to:
+
+- declare in DT a spi-gpio driver to provide a SPI bus on the GPIO
+  pins connected to the 74HC164.
+- attach the 74HC164 to the SPI bus.
+
+The problem with that is it's not representative of the hardware -
+what we're saying is that we want to reuse our existing implementation
+and make DT conform to the implementation.  At that point, we might as
+well scrap our "DT is implementation independent" edict above.
+
+What if, tomorrow, we end up with 74HC164 connected to via a different
+method?
+
+I think a much more sensible approach would be to turn the GPIO side
+of the 74x164 driver into a library, which can be re-used by multiple
+bus-specific drivers - one for SPI which allows it to be used in its
+current form, one for our platform bus which takes the GPIO lines for
+the data, clock and clear signals.
+
+I also don't see why they shouldn't use the same compatible - they're
+the same _device_ at the end of the day, just wired up differently.
+It makes the binding documentation a little fun wrt what are required
+and optional properties, but nothing that shouldn't be too difficult.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
