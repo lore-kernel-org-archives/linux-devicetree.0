@@ -1,41 +1,80 @@
-From: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-Subject: [PATCH linux v1 4/4] arm: dts: Add dt-binding to support seven segment display on zaius
-Date: Tue, 13 Dec 2016 23:55:04 -0800
-Message-ID: <1481702104-8617-5-git-send-email-jaghu@google.com>
-References: <1481702104-8617-1-git-send-email-jaghu@google.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481702104-8617-1-git-send-email-jaghu@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] irqchip/renesas-intc-irqpin: Add R-Car Gen1 fallback
+ binding
+Date: Wed, 14 Dec 2016 09:03:18 +0100
+Message-ID: <20161214080318.GA32481@verge.net.au>
+References: <1481280650-9258-1-git-send-email-horms+renesas@verge.net.au>
+ <1481280650-9258-3-git-send-email-horms+renesas@verge.net.au>
+ <CAMuHMdX_Cg6T10pMXe420kOwQn27_PRm-osNb7L4_M==fJnE_Q@mail.gmail.com>
+ <20161212184311.2gciuj5lgkp5x7st@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161212184311.2gciuj5lgkp5x7st@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add clock, data and clear signal GPIO lines to control seven segment display on
-zaius platform.
+On Mon, Dec 12, 2016 at 12:43:11PM -0600, Rob Herring wrote:
+> On Fri, Dec 09, 2016 at 01:52:20PM +0100, Geert Uytterhoeven wrote:
+> > Hi Simon,
+> > 
+> > On Fri, Dec 9, 2016 at 11:50 AM, Simon Horman
+> > <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > > In the case of Renesas R-Car hardware we know that there are generations of
+> > > SoCs, e.g. Gen 1, Gen 2 and Gen 3. But beyond that its not clear what the
+> > 
+> > it's
+> > 
+> > > relationship between IP blocks might be. For example, I believe that
+> > > r8a7779 is older than r8a7778 but that doesn't imply that the latter is a
+> > > descendant of the former or vice versa.
+> > >
+> > > We can, however, by examining the documentation and behaviour of the
+> > > hardware at run-time observe that the current driver implementation appears
+> > > to be compatible with the IP blocks on SoCs within a given generation.
+> > >
+> > > For the above reasons and convenience when enabling new SoCs a
+> > > per-generation fallback compatibility string scheme being adopted for
+> > > drivers for Renesas SoCs.
+> > >
+> > > Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> > > ---
+> > >  .../interrupt-controller/renesas,intc-irqpin.txt   | 44 ++++++++++++----------
+> > >  drivers/irqchip/irq-renesas-intc-irqpin.c          |  2 +
+> > >  2 files changed, 26 insertions(+), 20 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> > > index 772c550d3b4b..e5a5251be9f5 100644
+> > > --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> > > @@ -2,13 +2,19 @@ DT bindings for the R-/SH-Mobile irqpin controller
+> > >
+> > >  Required properties:
+> > >
+> > > -- compatible: has to be "renesas,intc-irqpin-<soctype>", "renesas,intc-irqpin"
+> > > -  as fallback.
+> > > -  Examples with soctypes are:
+> > > +- compatible:
+> > >      - "renesas,intc-irqpin-r8a7740" (R-Mobile A1)
+> > >      - "renesas,intc-irqpin-r8a7778" (R-Car M1A)
+> > >      - "renesas,intc-irqpin-r8a7779" (R-Car H1)
+> > >      - "renesas,intc-irqpin-sh73a0" (SH-Mobile AG5)
+> > > +    - "renesas,rcar-gen1-intc-irqpin" (generic R-Car Gen1 compatible device)
+> > 
+> > Does it make sense to add a new family-specific compatible value to a driver
+> > that's unlikely to receive more users in the future? More recent SoCs use
+> > renesas,irqc.
+> 
+> If that's the case, then no. Please don't go crazy with your generic 
+> strings. I don't mind them, but I don't know that I'd call it best 
+> practice.
 
-Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
----
- arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-index 8ef4ece..ccb8147 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-@@ -43,6 +43,14 @@
- 			gpios = <&gpio ASPEED_GPIO(H, 7) GPIO_ACTIVE_LOW>;
- 		};
- 	};
-+
-+	seven-seg-disp {
-+		compatible = "seven-seg-gpio-dev";
-+		refresh-interval-ms = "1000";
-+		clock-gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_HIGH>;
-+		data-gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
-+		clear-gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_HIGH>;
-+	};
- };
-
- &fmc {
+Understood. I do not see any new users of this driver on the horizon
+and given the above I withdraw this patch.
 --
-2.8.0.rc3.226.g39d4020
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
