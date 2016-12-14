@@ -1,64 +1,171 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 2/2] drm/panel: simple: Add support BOE nv101wxmn51
-Date: Wed, 14 Dec 2016 10:08:25 -0800
-Message-ID: <CAD=FV=XcmsQruWeAUNVoOgmHzVrGsyKOx1_bS1+6ZyWDrE=ijg@mail.gmail.com>
-References: <1481685596-15608-1-git-send-email-wxt@rock-chips.com>
- <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
+Date: Wed, 14 Dec 2016 20:20:40 +0200
+Message-ID: <20161214182040.GA5292@kozik-lap>
+References: <5220084.l31t5oJbsy@amdc3058>
+ <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Doug Anderson <dianders@chromium.org>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIERlYyAxMywgMjAxNiBhdCA3OjE5IFBNLCBDYWVzYXIgV2FuZyA8d3h0QHJv
-Y2stY2hpcHMuY29tPiB3cm90ZToKPiAxMC4xV1hHQSBpcyBhIGNvbG9yIGFjdGl2ZSBtYXRyaXgg
-VEZUIExDRCBtb2R1bGUgdXNpbmcgYW1vcnBob3VzIHNpbGljb24KPiBURlQncyBhcyBhbiBhY3Rp
-dmUgc3dpdGNoaW5nIGRldmljZXMuIEl0IGNhbiBiZSBzdXBwb3J0ZWQgYnkgdGhlCj4gc2ltcGxl
-LXBhbmVsIGRyaXZlci4KPgo+IFJlYWQgdGhlIHBhbmVsIGRlZmF1bHQgZWRpZCBpbmZvcm1hdGlv
-bjoKPgo+IEVESUQgTU9ERSBERVRBSUxTCj4gICAgICAgICAgICAgICAgIG5hbWUgPSA8TlVMTD4K
-PiAgICAgICAgICAgICAgICAgcGl4ZWxfY2xvY2sgPSA3MTkwMAo+ICAgICAgICAgICAgICAgICBs
-dmRzX2R1YWxfY2hhbm5lbCA9IDAKPiAgICAgICAgICAgICAgICAgcmVmcmVzaCA9IDAKPiAgICAg
-ICAgICAgICAgICAgaGEgPSAxMjgwCj4gICAgICAgICAgICAgICAgIGhibCA9IDE2MAo+ICAgICAg
-ICAgICAgICAgICBoc28gPSA0OAo+ICAgICAgICAgICAgICAgICBoc3B3ID0gMzIKPiAgICAgICAg
-ICAgICAgICAgaGJvcmRlciA9IDAKPiAgICAgICAgICAgICAgICAgdmEgPSA4MDAKPiAgICAgICAg
-ICAgICAgICAgdmJsID0gMzIKPiAgICAgICAgICAgICAgICAgdnNvID0gMwo+ICAgICAgICAgICAg
-ICAgICB2c3B3ID0gNQo+ICAgICAgICAgICAgICAgICB2Ym9yZGVyID0gMAo+ICAgICAgICAgICAg
-ICAgICBwaHN5bmMgPSArCj4gICAgICAgICAgICAgICAgIHB2c3luYyA9IC0KPiAgICAgICAgICAg
-ICAgICAgeF9tbSA9IDAKPiAgICAgICAgICAgICAgICAgeV9tbSA9IDAKPiBkcm1fZGlzcGxheV9t
-b2RlCj4gICAgICAgICAgICAgICAgIC5oZGlzcGxheSA9IDEyODAKPiAgICAgICAgICAgICAgICAg
-LmhzeW5jX3N0YXJ0ID0gMTMyOAo+ICAgICAgICAgICAgICAgICAuaHN5bmNfZW5kID0gMTM2MAo+
-ICAgICAgICAgICAgICAgICAuaHRvdGFsID0gMTQ0MAo+ICAgICAgICAgICAgICAgICAudmRpc3Bs
-YXkgPSA4MDAKPiAgICAgICAgICAgICAgICAgLnZzeW5jX3N0YXJ0ID0gODAzCj4gICAgICAgICAg
-ICAgICAgIC52c3luY19lbmQgPSA4MDgKPiAgICAgICAgICAgICAgICAgLnZ0b3RhbCA9IDgzMgo+
-Cj4gVGhlcmUgYXJlIHR3byBtb2RlcyBpbiB0aGUgZWRpZDoKPiBEZXRhaWxlZCBtb2RlMTogQ2xv
-Y2sgNzEuOTAwIE1IeiwgMjE2IG1tIHggMTM1IG1tCj4gICAgICAgICAgICAgICAgMTI4MCAxMzI4
-IDEzNjAgMTQ0MCBoYm9yZGVyIDAKPiAgICAgICAgICAgICAgICAgODAwICA4MDMgIDgwOCAgODMy
-IHZib3JkZXIgMAo+ICAgICAgICAgICAgICAgICtoc3luYyAtdnN5bmMKPiBEZXRhaWxlZCBtb2Rl
-MjogQ2xvY2sgNTcuNTAwIE1IeiwgMjE2IG1tIHggMTM1IG1tCj4gICAgICAgICAgICAgICAgMTI4
-MCAxMzI4IDEzNjAgMTQ0MCBoYm9yZGVyIDAKPiAgICAgICAgICAgICAgICAgODAwICA4MDMgIDgw
-OCAgODMyIHZib3JkZXIgMAo+ICAgICAgICAgICAgICAgICtoc3luYyAtdnN5bmMKPgo+IEFkZCB0
-aGUgYm90aCBlZGlkIHRvIHN1cHBvcnQgbW9yZSBtb2RlcyBmb3IgQk9FIG52MTAxd3htbjUxLgo+
-Cj4gU2lnbmVkLW9mZi1ieTogQ2Flc2FyIFdhbmcgPHd4dEByb2NrLWNoaXBzLmNvbT4KPiAtLS0K
-Pgo+IENoYW5nZXMgaW4gdjM6Cj4gLSBBcyBTdMOpcGhhbmUgY29tbWVudGVkIG9uIGh0dHBzOi8v
-cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTQ2NTkxMSwKPiAgIGFkZCBkb3duY2xvY2sgbW9k
-ZSBmb3IgZWRpZC4KPgo+IENoYW5nZXMgaW4gdjI6Cj4gLSBmaXggdGhlIHZzeW5jX3N0YXJ0IGFu
-ZCB2c3luY19lbmQgZnJvbSB0aGUgZWRpZC4KPiAtIGNoYW5nZSB0aGUgY29tbWl0Lgo+Cj4gIGRy
-aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8IDQ1ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKQoK
-U2VlbXMgc2FuZSB0byBtZS4KClJldmlld2VkLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVy
-c0BjaHJvbWl1bS5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Tue, Dec 13, 2016 at 04:18:05PM -0300, Javier Martinez Canillas wrote:
+> Hello Bartlomiej,
+> 
+> On 12/13/2016 01:52 PM, Bartlomiej Zolnierkiewicz wrote:
+> > Add missing 2000MHz & 1900MHz OPPs (for A15 cores) and 1400MHz OPP
+> > (for A7 cores).  Also update common Odroid-XU3 Lite/XU3/XU4 thermal
+> > cooling maps to account for new OPPs.
+> > 
+> > Since new OPPs are not available on all Exynos5422/5800 boards modify
+> > dts files for Odroid-XU3 Lite (limited to 1.8 GHz / 1.3 GHz) & Peach
+> > Pi (limited to 2.0 GHz / 1.3 GHz) accordingly.
+> > 
+> > Tested on Odroid-XU3 and XU3 Lite.
+> > 
+> > Cc: Doug Anderson <dianders@chromium.org>
+> > Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+> > Cc: Andreas Faerber <afaerber@suse.de>
+> > Cc: Thomas Abraham <thomas.ab@samsung.com>
+> > Cc: Ben Gamari <ben@smart-cactus.org>
+> > Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   14 +++++++-------
+> >  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |   17 +++++++++++++++++
+> >  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 ++++
+> >  arch/arm/boot/dts/exynos5800.dtsi                  |   15 +++++++++++++++
+> >  4 files changed, 43 insertions(+), 7 deletions(-)
+> > 
+> > Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> > ===================================================================
+> > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.779763261 +0100
+> > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.775763261 +0100
+> > @@ -118,7 +118,7 @@
+> >  				/*
+> >  				 * When reaching cpu_alert3, reduce CPU
+> >  				 * by 2 steps. On Exynos5422/5800 that would
+> > -				 * be: 1600 MHz and 1100 MHz.
+> > +				 * (usually) be: 1800 MHz and 1200 MHz.
+> >  				 */
+> >  				map3 {
+> >  					trip = <&cpu_alert3>;
+> > @@ -131,16 +131,16 @@
+> >  
+> >  				/*
+> >  				 * When reaching cpu_alert4, reduce CPU
+> > -				 * further, down to 600 MHz (11 steps for big,
+> > -				 * 7 steps for LITTLE).
+> > +				 * further, down to 600 MHz (13 steps for big,
+> > +				 * 8 steps for LITTLE).
+> >  				 */
+> > -				map5 {
+> > +				cooling_map5: map5 {
+> >  					trip = <&cpu_alert4>;
+> > -					cooling-device = <&cpu0 3 7>;
+> > +					cooling-device = <&cpu0 3 8>;
+> >  				};
+> > -				map6 {
+> > +				cooling_map6: map6 {
+> >  					trip = <&cpu_alert4>;
+> > -					cooling-device = <&cpu4 3 11>;
+> > +					cooling-device = <&cpu4 3 13>;
+> >  				};
+> >  			};
+> >  		};
+> > Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+> > ===================================================================
+> > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.779763261 +0100
+> > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.775763261 +0100
+> > @@ -21,6 +21,23 @@
+> >  	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
+> >  };
+> >  
+> > +&cluster_a15_opp_table {
+> > +	/delete-node/opp@2000000000;
+> > +	/delete-node/opp@1900000000;
+> > +};
+> > +
+> > +&cluster_a7_opp_table {
+> > +	/delete-node/opp@1400000000;
+> > +};
+> > +
+> 
+> I think that a comment in the DTS why these operating points aren't available
+> in this board will make more clear why the nodes are being deleted.
+> 
+> > +&cooling_map5 {
+> > +	cooling-device = <&cpu0 3 7>;
+> > +};
+> > +
+> > +&cooling_map6 {
+> > +	cooling-device = <&cpu4 3 11>;
+> > +};
+> > +
+> >  &pwm {
+> >  	/*
+> >  	 * PWM 0 -- fan
+> > Index: b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> > ===================================================================
+> > --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
+> > +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
+> > @@ -146,6 +146,10 @@
+> >  	vdd-supply = <&ldo9_reg>;
+> >  };
+> >  
+> > +&cluster_a7_opp_table {
+> > +	/delete-property/opp@1400000000;
+> > +};
+> > +
+> >  &cpu0 {
+> >  	cpu-supply = <&buck2_reg>;
+> >  };
+> > Index: b/arch/arm/boot/dts/exynos5800.dtsi
+> > ===================================================================
+> > --- a/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
+> > +++ b/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
+> > @@ -24,6 +24,16 @@
+> >  };
+> >  
+> >  &cluster_a15_opp_table {
+> > +	opp@2000000000 {
+> > +		opp-hz = /bits/ 64 <2000000000>;
+> > +		opp-microvolt = <1250000>;
+> > +		clock-latency-ns = <140000>;
+> > +	};
+> > +	opp@1900000000 {
+> > +		opp-hz = /bits/ 64 <1900000000>;
+> > +		opp-microvolt = <1250000>;
+> > +		clock-latency-ns = <140000>;
+> > +	};
+> >  	opp@1700000000 {
+> >  		opp-microvolt = <1250000>;
+> >  	};
+> > @@ -85,6 +95,11 @@
+> >  };
+> >
+> 
+> AFAIK Thomas restricted the maximum OPP, because for A15 freqs > 1.8GHz the
+> INT rail would need to be scaled up as well since there's a maximum voltage
+> difference between the ARM and INT rails before the system becomes unstable:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/276766.html
+> https://lkml.org/lkml/2014/5/2/419
+
+The choice of skipping > 1.8 GHz could be also made because of missing
+ASV which is important to detect the BIN2 of Exynos5422. The BIN2 is
+capped to 1.8/1.3.
+
+Anyway this shouldn't be limiting us now because we have all data
+statically coded in DTS - in mainline boards, only Odroid XU3-lite
+uses BIN2.
+
+Beside comments from Javier, I would be happy to see high frequencies
+Tested-by on Peach Pi/Pit. AFAIR, we did not have these in SRPOL. :)
+
+Best regards,
+Krzysztof
