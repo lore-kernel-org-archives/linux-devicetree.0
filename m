@@ -1,43 +1,86 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/2] drm/panel: Add support for S6E3HA2 panel driver on TM2
- board
-Date: Wed, 14 Dec 2016 15:14:44 +0100
-Message-ID: <583d4da7-a3c5-f84f-ba11-1bb1e6890e9b@samsung.com>
-References: <1481695445-13088-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20161214060522epcas2p49bd0d7ca0f8fc370e91e0de199f4c788@epcas2p4.samsung.com>
- <1481695445-13088-2-git-send-email-hoegeun.kwon@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH linux v1 0/4] Seven segment display support
+Date: Wed, 14 Dec 2016 15:15:53 +0100
+Message-ID: <2512681.Wh85HyB8FH@wuerfel>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com> <20161214125641.GA5379@kroah.com> <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1481695445-13088-2-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ac324946-41da-c090-a0ca-78155611bb7e-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQuMTIuMjAxNiAwNzowNCwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRk
-IHN1cHBvcnQgZm9yIE1JUEktRFNJIGJhc2VkIFM2RTNIQTIgQU1PTEVEIHBhbmVsCj4gZHJpdmVy
-LiBUaGlzIHBhbmVsIGhhcyAxNDQweDI1NjAgcmVzb2x1dGlvbiBpbiA1LjctaW5jaCBwaHlzaWNh
-bAo+IHBhbmVsIGluIHRoZSBUTTIgZGV2aWNlLgo+Cj4gU2lnbmVkLW9mZi1ieTogRG9uZ2h3YSBM
-ZWUgPGRoMDkubGVlQHNhbXN1bmcuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5n
-IDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24g
-PGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KCkhpIEhvZWdldW4gS3dvbiwKCklzIHRoZXJlIGEg
-cmVhc29uIHRvIHVwc3RyZWFtIG9ic29sZXRlIGRyaXZlcj8gQ3VycmVudCB2ZXJzaW9uIG9mIHRo
-ZQpkcml2ZXIgaXMgYXZhaWxhYmxlIGF0IFsxXS4gSXQgZGlmZmVycyBzaWduaWZpY2FudGx5IGFu
-ZCBjb250YWlucwptdWx0aXBsZSBmaXhlcyBhbmQgaW1wcm92ZW1lbnRzLiBJIGd1ZXNzIGl0IHN0
-aWxsIHJlcXVpcmVzIHNvbWUKcG9saXNoaW5nIGJ1dCBpdCBpcyBiZXR0ZXIgYmFzZSBmb3Igc3Rh
-cnQuCgpbMV06Cmh0dHBzOi8vcmV2aWV3LnRpemVuLm9yZy9naXQvP3A9cGxhdGZvcm0va2VybmVs
-L2xpbnV4LWV4eW5vcy5naXQ7YT1ibG9iO2Y9ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXM2
-ZTNoYTIuYztoYj1yZWZzL2hlYWRzL3RpemVuCgpSZWdhcmRzCkFuZHJ6ZWoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wednesday, December 14, 2016 2:12:41 PM CET Neil Armstrong wrote:
+> On 12/14/2016 01:56 PM, Greg KH wrote:
+> > On Wed, Dec 14, 2016 at 01:45:30PM +0100, Thomas Petazzoni wrote:
+> >> Hello,
+> >>
+> >> On Tue, 13 Dec 2016 23:55:00 -0800, Jaghathiswari Rankappagounder
+> >> Natarajan wrote:
+> >>
+> >>> Documentation for the binding which provides an interface for adding clock,
+> >>> data and clear signal GPIO lines to control seven segment display.
+> >>>
+> >>> The platform device driver provides an API for displaying on two 7-segment
+> >>> displays, and implements the required bit-banging. The hardware assumed is
+> >>> 74HC164 wired to two 7-segment displays.
+> >>>
+> >>> The character device driver implements the user-space API for letting a user
+> >>> write to two 7-segment displays including any conversion methods necessary
+> >>> to map the user input to two 7-segment displays.
+> >>>
+> >>> Adding clock, data and clear signal GPIO lines in the devicetree to control
+> >>> seven segment display on zaius platform.
+> >>>
+> >>> The platform driver matches on the device tree node; the platform driver also
+> >>> initializes the character device.
+> >>>
+> >>> Tested that the seven segment display works properly by writing to the
+> >>> character device file on a EVB AST2500 board which also has 74HC164 wired
+> >>> to two 7-segment displays.
+> >>
+> >> FWIW, I proposed a driver for seven segment displays back in 2013:
+> >>
+> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139986.html
+> >>
+> >> And the feedback from Greg KH was: we don't need a driver for that, do
+> >> it from userspace. See:
+> >>
+> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139992.html
+> >>
+> >> So: good luck 
+> > 
+> > Did anyone ever write a library for this type of thing?
+> > 
+> > Again, I don't want to see one-off drivers for random devices like this
+> > that should be able to all be controlled from userspace in a common
+> > manner.  Much like we did for fingerprint readers a long long time
+> > ago...
+> > 
+
+> Actually, it's more than a random interface, a lot of SoCs and boards actually have such displays
+> and it's a pity to use UIO, sysfs gpio bitbanging and all sort of ugly stuff to only print a few
+> characters a simple and clean driver could achieve.
+> Some very well known SoCs even have integrated registers to lower the BOM and bypass the need for
+> a 74HC164 like component and avoid gpio bit banging.
+> 
+> My personal concern is that you could also need to drive more segments, thus 7-segments
+> is too restrictive.
+> 
+> But this driver is well structured, the gpio-bitbanging sub-driver is welcome.
+
+Maybe we can find a way to fit this into the existing drivers/leds/ subsystem?
+
+That already supports blinking, brightness and colour attributes of LEDs,
+so could this be extended to support (one of) digit, number, character
+or string with a common sysfs attribute and a way to hook up a led driver
+to that?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
