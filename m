@@ -1,92 +1,74 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] n900 device tree: cleanup
-Date: Wed, 14 Dec 2016 13:28:27 +0100
-Message-ID: <201612141328.27244@pali>
-References: <20161011075416.GA22453@amd> <20161011081243.GA24580@amd> <20161207031048.pi7j4dms5uuco3yf@earth>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH linux v1 2/4] drivers: misc: Character device driver for
+ seven segment display
+Date: Wed, 14 Dec 2016 12:32:33 +0000
+Message-ID: <20161214123233.GF14217@n2100.armlinux.org.uk>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com>
+ <1481702104-8617-3-git-send-email-jaghu@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3638040.DW2B4hSsXt";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161207031048.pi7j4dms5uuco3yf@earth>
+Content-Disposition: inline
+In-Reply-To: <1481702104-8617-3-git-send-email-jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart3638040.DW2B4hSsXt
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 13, 2016 at 11:55:02PM -0800, Jaghathiswari Rankappagounder Natarajan wrote:
+> +int seven_seg_setup_cdev(struct seven_seg_disp_dev *disp_dev,
+> +	void (*update_disp_data)(struct device *, u16 data))
+> +{
+> +	struct device *dev;
+> +	int err;
+> +
+> +	dev = device_create(seven_seg_disp_class, &disp_dev->parent,
+> +			seven_seg_devno,
+> +			NULL, "seven_seg_disp_val");
+> +	if (dev == NULL)
+> +		return -1;
 
-On Wednesday 07 December 2016 04:10:48 Sebastian Reichel wrote:
-> Hi Tony,
->=20
-> It looks like this fell through the cracks. Apart from inconsistent
-> patch subject:
->=20
-> Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Do not use return -1 in kernel code.
 
-=46ine for me too. Reviewed-By: Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> +	disp_dev->dev = dev;
+> +	disp_dev->update_seven_seg_data = update_disp_data;
+> +	disp_dev->disp_data_valid = false;
+> +
+> +	cdev_init(&disp_dev->cdev, &seven_seg_disp_fops);
+> +	err = cdev_add(&disp_dev->cdev, seven_seg_devno, 1);
+> +	if (err)
+> +		device_destroy(seven_seg_disp_class, seven_seg_devno);
+> +	return err;
+> +}
+> +
+> +static int __init seven_seg_disp_init(void)
+> +{
+> +	if (alloc_chrdev_region(&seven_seg_devno, 0, 1, "disp_state") < 0)
+> +		return -1;
 
-> -- Sebastian
->=20
-> On Tue, Oct 11, 2016 at 10:12:43AM +0200, Pavel Machek wrote:
-> > Fix GPIO comment to be consistent with rest of file and add comment
-> > what tpa6130 is.
-> >=20
-> > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >=20
-> > diff --git a/arch/arm/boot/dts/omap3-n900.dts
-> > b/arch/arm/boot/dts/omap3-n900.dts index bfffd6c..ca9fe8c 100644
-> > --- a/arch/arm/boot/dts/omap3-n900.dts
-> > +++ b/arch/arm/boot/dts/omap3-n900.dts
-> > @@ -47,7 +47,7 @@
-> >=20
-> >  		compatible =3D "gpio-leds";
-> >  		heartbeat {
-> >  	=09
-> >  			label =3D "debug::sleep";
-> >=20
-> > -			gpios =3D <&gpio6 2 GPIO_ACTIVE_HIGH>;  /* gpio162 */
-> > +			gpios =3D <&gpio6 2 GPIO_ACTIVE_HIGH>;  /* 162 */
-> >=20
-> >  			linux,default-trigger =3D "default-on";
-> >  			pinctrl-names =3D "default";
-> >  			pinctrl-0 =3D <&debug_leds>;
-> >=20
-> > @@ -637,6 +637,7 @@
-> >=20
-> >  		reg =3D <0x55>;
-> >  =09
-> >  	};
-> >=20
-> > +	/* Stereo headphone amplifier */
-> >=20
-> >  	tpa6130a2: tpa6130a2@60 {
-> >  =09
-> >  		compatible =3D "ti,tpa6130a2";
-> >  		reg =3D <0x60>;
+Do not use return -1 in kernel code.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> +
+> +	seven_seg_disp_class = class_create(THIS_MODULE, "disp_state");
+> +	if (seven_seg_disp_class == NULL)
+> +		goto unreg_chrdev;
+> +
+> +unreg_chrdev:
+> +	unregister_chrdev_region(seven_seg_devno, 1);
+> +	return -1;
 
---nextPart3638040.DW2B4hSsXt
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+Do not use return -1 in kernel code.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+(Look up what an errno value of '1' means.  Negative values returned from
+functions are interpreted as negated errno values.)
 
-iEYEABECAAYFAlhROusACgkQi/DJPQPkQ1KqIgCgpXmjSy8k78ZLYJOuhYALLbsN
-Hk8An3Ol5j64MuvFtp3OJ0s1699hEmhu
-=0Yiq
------END PGP SIGNATURE-----
+Always propagate error codes, or select an appropriate errno value to
+return.
 
---nextPart3638040.DW2B4hSsXt--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
