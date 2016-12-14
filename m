@@ -1,44 +1,60 @@
-From: Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: of_reserved_mem: Ensure cma reserved region not
- cross the low/high memory
-Date: Wed, 14 Dec 2016 14:21:26 -0800
-Message-ID: <833f99b1-d10b-27ba-e0f9-a7c6398fb63d@redhat.com>
-References: <1479901021-25064-1-git-send-email-jason.hui.liu@nxp.com>
- <CAL_JsqLHh96D0VULuYfYC1P5K_Bbz6iRjizuYP3Mb6bdERbDnA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLHh96D0VULuYfYC1P5K_Bbz6iRjizuYP3Mb6bdERbDnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH 0/6] Add board support for TS-4600
+Date: Wed, 14 Dec 2016 18:12:30 -0500
+Message-ID: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Cc: mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, lucile.quirion-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2016 12:45 PM, Rob Herring wrote:
-> On Wed, Nov 23, 2016 at 5:37 AM, Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org> wrote:
->> Need ensure the cma reserved region not cross the low/high memory boundary
->> when using the dynamic allocation methond through device-tree, otherwise,
->> kernel will fail to boot up when cma reserved region cross how/high mem.
-> 
-> The kernel command line code setting CMA already deals with this. Why
-> don't we just call the CMA code (cma_declare_contiguous) to deal with
-> this?
-> 
-> Rob
-> 
+This patch serie adds support for the TS-4600 boards rev A and B. These
+boards, manufactured by Technologic Systems, are based on an i.MX28.
 
-That was proposed in the first version[1] but I think this is a generic
-problem not specific to CMA. Even non-CMA reservations trying to span
-zones could cause problems so the devicetree allocation code should
-restrict reservations to a single zone.
+This serie include the support for the watchdog which could be enable
+at Linux boot time depending on the bootloader.
 
-Thanks,
-Laura
+The watchdog and few peripherals are implemented in a FPGA, and can
+only be access using a custom GPIOs bit-banged bus which is called the
+NBUS by Technologic Systems.
+A driver for this bus is also included and used by the watchdog.
 
+Sebastien Bourdelin (6):
+  of: documentation: add bindings documentation for TS-4600
+  ARM: dts: TS-4600: add basic device tree
+  dt-bindings: bus: Add documentation for the Technologic Systems NBUS
+  bus: add driver for the Technologic Systems NBUS
+  ARM: dts: TS-4600: add NBUS support
+  watchdog: ts4600: add driver for TS-4600 watchdog
 
-[1] https://marc.info/?l=linux-kernel&m=147928325113103&w=2
+ .../devicetree/bindings/arm/technologic.txt        |   5 +
+ Documentation/devicetree/bindings/bus/ts-nbus.txt  |  50 +++
+ .../devicetree/bindings/watchdog/ts4600-wdt.txt    |  16 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx28-ts4600-common.dtsi         | 126 ++++++
+ arch/arm/boot/dts/imx28-ts4600-rev-a.dts           |  22 +
+ arch/arm/boot/dts/imx28-ts4600-rev-b.dts           |  22 +
+ drivers/bus/Kconfig                                |   9 +
+ drivers/bus/Makefile                               |   1 +
+ drivers/bus/ts-nbus.c                              | 451 +++++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  10 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/ts4600_wdt.c                      | 213 ++++++++++
+ include/linux/ts-nbus.h                            |  17 +
+ 14 files changed, 945 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
+ create mode 100644 arch/arm/boot/dts/imx28-ts4600-common.dtsi
+ create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-a.dts
+ create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-b.dts
+ create mode 100644 drivers/bus/ts-nbus.c
+ create mode 100644 drivers/watchdog/ts4600_wdt.c
+ create mode 100644 include/linux/ts-nbus.h
+
+-- 
+2.10.2
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
