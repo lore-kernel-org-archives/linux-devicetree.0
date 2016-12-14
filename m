@@ -1,195 +1,141 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
-Date: Wed, 14 Dec 2016 14:28:06 +0100
-Message-ID: <2340115.HEG9AYUCMD@amdc3058>
-References: <5220084.l31t5oJbsy@amdc3058>
- <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
- <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Arjun K V <arjun.kv@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Doug Anderson <dianders@chromium.org>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/6] Add support for IR transmitters
+Date: Wed, 14 Dec 2016 23:00:24 +0900
+Message-ID: <20161214140030.28537-1-andi.shyti@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-
-On Tuesday, December 13, 2016 04:18:05 PM Javier Martinez Canillas wrote:
-> Hello Bartlomiej,
 
 Hi,
 
-> On 12/13/2016 01:52 PM, Bartlomiej Zolnierkiewicz wrote:
-> > Add missing 2000MHz & 1900MHz OPPs (for A15 cores) and 1400MHz OPP
-> > (for A7 cores).  Also update common Odroid-XU3 Lite/XU3/XU4 thermal
-> > cooling maps to account for new OPPs.
-> > 
-> > Since new OPPs are not available on all Exynos5422/5800 boards modify
-> > dts files for Odroid-XU3 Lite (limited to 1.8 GHz / 1.3 GHz) & Peach
-> > Pi (limited to 2.0 GHz / 1.3 GHz) accordingly.
-> > 
-> > Tested on Odroid-XU3 and XU3 Lite.
-> > 
-> > Cc: Doug Anderson <dianders@chromium.org>
-> > Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-> > Cc: Andreas Faerber <afaerber@suse.de>
-> > Cc: Thomas Abraham <thomas.ab@samsung.com>
-> > Cc: Ben Gamari <ben@smart-cactus.org>
-> > Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > ---
-> >  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   14 +++++++-------
-> >  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |   17 +++++++++++++++++
-> >  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 ++++
-> >  arch/arm/boot/dts/exynos5800.dtsi                  |   15 +++++++++++++++
-> >  4 files changed, 43 insertions(+), 7 deletions(-)
-> > 
-> > Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> > ===================================================================
-> > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.779763261 +0100
-> > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.775763261 +0100
-> > @@ -118,7 +118,7 @@
-> >  				/*
-> >  				 * When reaching cpu_alert3, reduce CPU
-> >  				 * by 2 steps. On Exynos5422/5800 that would
-> > -				 * be: 1600 MHz and 1100 MHz.
-> > +				 * (usually) be: 1800 MHz and 1200 MHz.
-> >  				 */
-> >  				map3 {
-> >  					trip = <&cpu_alert3>;
-> > @@ -131,16 +131,16 @@
-> >  
-> >  				/*
-> >  				 * When reaching cpu_alert4, reduce CPU
-> > -				 * further, down to 600 MHz (11 steps for big,
-> > -				 * 7 steps for LITTLE).
-> > +				 * further, down to 600 MHz (13 steps for big,
-> > +				 * 8 steps for LITTLE).
-> >  				 */
-> > -				map5 {
-> > +				cooling_map5: map5 {
-> >  					trip = <&cpu_alert4>;
-> > -					cooling-device = <&cpu0 3 7>;
-> > +					cooling-device = <&cpu0 3 8>;
-> >  				};
-> > -				map6 {
-> > +				cooling_map6: map6 {
-> >  					trip = <&cpu_alert4>;
-> > -					cooling-device = <&cpu4 3 11>;
-> > +					cooling-device = <&cpu4 3 13>;
-> >  				};
-> >  			};
-> >  		};
-> > Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-> > ===================================================================
-> > --- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.779763261 +0100
-> > +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.775763261 +0100
-> > @@ -21,6 +21,23 @@
-> >  	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
-> >  };
-> >  
-> > +&cluster_a15_opp_table {
-> > +	/delete-node/opp@2000000000;
-> > +	/delete-node/opp@1900000000;
-> > +};
-> > +
-> > +&cluster_a7_opp_table {
-> > +	/delete-node/opp@1400000000;
-> > +};
-> > +
-> 
-> I think that a comment in the DTS why these operating points aren't available
-> in this board will make more clear why the nodes are being deleted.
+The main goal is to add support in the rc framework for IR
+transmitters, which currently is only supported by lirc but that
+is not the preferred way.
 
-Ok, I will add these comments in the next patch revision.
+The last patch adds support for an IR transmitter driven by
+the MOSI line of an SPI controller, it's the case of the Samsung
+TM2(e) board which support is currently ongoing.
 
-> > +&cooling_map5 {
-> > +	cooling-device = <&cpu0 3 7>;
-> > +};
-> > +
-> > +&cooling_map6 {
-> > +	cooling-device = <&cpu4 3 11>;
-> > +};
-> > +
-> >  &pwm {
-> >  	/*
-> >  	 * PWM 0 -- fan
-> > Index: b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> > ===================================================================
-> > --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
-> > +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
-> > @@ -146,6 +146,10 @@
-> >  	vdd-supply = <&ldo9_reg>;
-> >  };
-> >  
-> > +&cluster_a7_opp_table {
-> > +	/delete-property/opp@1400000000;
-> > +};
-> > +
-> >  &cpu0 {
-> >  	cpu-supply = <&buck2_reg>;
-> >  };
-> > Index: b/arch/arm/boot/dts/exynos5800.dtsi
-> > ===================================================================
-> > --- a/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
-> > +++ b/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
-> > @@ -24,6 +24,16 @@
-> >  };
-> >  
-> >  &cluster_a15_opp_table {
-> > +	opp@2000000000 {
-> > +		opp-hz = /bits/ 64 <2000000000>;
-> > +		opp-microvolt = <1250000>;
-> > +		clock-latency-ns = <140000>;
-> > +	};
-> > +	opp@1900000000 {
-> > +		opp-hz = /bits/ 64 <1900000000>;
-> > +		opp-microvolt = <1250000>;
-> > +		clock-latency-ns = <140000>;
-> > +	};
-> >  	opp@1700000000 {
-> >  		opp-microvolt = <1250000>;
-> >  	};
-> > @@ -85,6 +95,11 @@
-> >  };
-> >
-> 
-> AFAIK Thomas restricted the maximum OPP, because for A15 freqs > 1.8GHz the
-> INT rail would need to be scaled up as well since there's a maximum voltage
-> difference between the ARM and INT rails before the system becomes unstable:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/276766.html
-> https://lkml.org/lkml/2014/5/2/419
-> 
-> The ChromiumOS vendor tree uses a virtual regulator driver that makes sure
-> the maximum voltage skew is between a limit. But that never made to mainline:
-> 
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/boot/dts/exynos5420-peach-pit.dtsi#90
-> https://lkml.org/lkml/2014/4/29/28
-> 
-> Did that change and there's infrastructure in mainline now to cope with that?
-> If that's the case, I think it would be good to mention in the commit message.
+The last patch adds support for an IR transmitter driven by
+the MOSI line of an SPI controller, it's the case of the Samsung
+TM2(e) board which support is currently ongoing.
 
-I was not aware of this limitation and AFAIK mainline has currently
-no code to handle it.  I also cannot find any code to handle this in
-Hardkernel's vendor kernel for Odroid-XU3 board.
+Thanks,
+Andi
 
-Do you know whether this problem exists also on Exynos5422/5800
-SoCs or only on Exynos5420 one?  I see that ChromiumOS uses virtual
-regulator code also on Exynos5800 SoC based Peach Pi board but was
-the problem actually present on this board?
+Changelog from version 1:
+-------------------------
+The RFC is now PATCH. The main difference is that this version
+doesn't try to add the any bit streaming protocol and doesn't
+modify any LIRC interface specification.
 
-[ I added Arjun to Cc:, maybe he can help in explaining this issue
-  (unfortunately Inderpal's email is no longer working). ]
+patch 1: updates all the drivers using rc_allocate_device
+patch 2: fixed errors and warning reported from the kbuild test
+         robot
+patch 5: this patch has been dropped and replaced with a new one
+         which avoids waiting for transmitters.
+patch 6: added new properties to the dts specification
+patch 7: the driver uses the pulse/space input and converts it to
+         a bit stream.
 
-Please also note that on Exynos5422/5800 SoCs the same ARM rail
-voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
-IOW if the problem exists it is already present in the mainline
-kernel.
 
-Best regards,
+Changelog from version 2:
+-------------------------
+The original patch number 5 has been abandoned because it was not
+bringing much benenfit.
+
+patch 1: rebased on the new kernel.
+patch 3: removed the sysfs attribute protocol for transmitters
+patch 5: the binding has been moved to the leds section instead
+         of the media. Fixed all the comments from Rob
+patch 6: fixed all the comments from Sean added also Sean's
+         review.
+
+Changelog from version 3:
+-------------------------
+Added the patches Sean's review.
+
+patch 1: commit ddbf7d5a has introduced the devm_* managed version
+	 of rc_allocate_device and rc_register_device, this patch
+	 has been rebased on top of it and adds the driver type
+	 as a parameter of the devm_rc_allocate_device.
+patch 3: fixes a warning from the kbuild test robot
+patch 5: after a discussion with Rob, despite mine, Jacek's and
+	 Mauro's objections [*] the binding has been placed under
+	 leds/irled/spi-ir-led.txt
+patch 6: uses the new devm_* allocation and registration rc
+	 functions
+
+[*] https://www.spinics.net/lists/linux-leds/msg07062.html
+    https://www.spinics.net/lists/linux-leds/msg07164.html
+    https://www.spinics.net/lists/linux-leds/msg07167.html
+
+Andi Shyti (6):
+  [media] rc-main: assign driver type during allocation
+  [media] rc-main: split setup and unregister functions
+  [media] rc-core: add support for IR raw transmitters
+  [media] rc-ir-raw: do not generate any receiving thread for raw
+    transmitters
+  Documentation: bindings: add documentation for ir-spi device driver
+  [media] rc: add support for IR LEDs driven through SPI
+
+ .../devicetree/bindings/leds/irled/spi-ir-led.txt  |  29 +++
+ drivers/hid/hid-picolcd_cir.c                      |   3 +-
+ drivers/media/cec/cec-core.c                       |   3 +-
+ drivers/media/common/siano/smsir.c                 |   3 +-
+ drivers/media/i2c/ir-kbd-i2c.c                     |   2 +-
+ drivers/media/pci/bt8xx/bttv-input.c               |   2 +-
+ drivers/media/pci/cx23885/cx23885-input.c          |  11 +-
+ drivers/media/pci/cx88/cx88-input.c                |   3 +-
+ drivers/media/pci/dm1105/dm1105.c                  |   3 +-
+ drivers/media/pci/mantis/mantis_input.c            |   2 +-
+ drivers/media/pci/saa7134/saa7134-input.c          |   2 +-
+ drivers/media/pci/smipcie/smipcie-ir.c             |   3 +-
+ drivers/media/pci/ttpci/budget-ci.c                |   2 +-
+ drivers/media/rc/Kconfig                           |   9 +
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/ati_remote.c                      |   3 +-
+ drivers/media/rc/ene_ir.c                          |   3 +-
+ drivers/media/rc/fintek-cir.c                      |   3 +-
+ drivers/media/rc/gpio-ir-recv.c                    |   3 +-
+ drivers/media/rc/igorplugusb.c                     |   3 +-
+ drivers/media/rc/iguanair.c                        |   3 +-
+ drivers/media/rc/img-ir/img-ir-hw.c                |   2 +-
+ drivers/media/rc/img-ir/img-ir-raw.c               |   3 +-
+ drivers/media/rc/imon.c                            |   3 +-
+ drivers/media/rc/ir-hix5hd2.c                      |   3 +-
+ drivers/media/rc/ir-spi.c                          | 199 +++++++++++++++++++++
+ drivers/media/rc/ite-cir.c                         |   3 +-
+ drivers/media/rc/mceusb.c                          |   3 +-
+ drivers/media/rc/meson-ir.c                        |   3 +-
+ drivers/media/rc/nuvoton-cir.c                     |   3 +-
+ drivers/media/rc/rc-ir-raw.c                       |  17 +-
+ drivers/media/rc/rc-loopback.c                     |   3 +-
+ drivers/media/rc/rc-main.c                         | 186 +++++++++++--------
+ drivers/media/rc/redrat3.c                         |   3 +-
+ drivers/media/rc/serial_ir.c                       |   3 +-
+ drivers/media/rc/st_rc.c                           |   3 +-
+ drivers/media/rc/streamzap.c                       |   3 +-
+ drivers/media/rc/sunxi-cir.c                       |   3 +-
+ drivers/media/rc/ttusbir.c                         |   3 +-
+ drivers/media/rc/winbond-cir.c                     |   3 +-
+ drivers/media/usb/au0828/au0828-input.c            |   3 +-
+ drivers/media/usb/cx231xx/cx231xx-input.c          |   2 +-
+ drivers/media/usb/dvb-usb-v2/dvb_usb_core.c        |   3 +-
+ drivers/media/usb/dvb-usb/dvb-usb-remote.c         |   3 +-
+ drivers/media/usb/em28xx/em28xx-input.c            |   2 +-
+ drivers/media/usb/tm6000/tm6000-input.c            |   3 +-
+ include/media/rc-core.h                            |  15 +-
+ 47 files changed, 408 insertions(+), 168 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
+ create mode 100644 drivers/media/rc/ir-spi.c
+
+-- 
+2.10.2
+
 --
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
