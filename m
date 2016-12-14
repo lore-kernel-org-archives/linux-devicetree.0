@@ -1,119 +1,110 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
- usable memory range
-Date: Wed, 14 Dec 2016 10:52:42 +0100
-Message-ID: <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
-References: <20161212101801.28491-1-narmstrong@baylibre.com>
- <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v7 4/5] ARM: dts: da850-lcdk: add the vga-bridge node
+Date: Wed, 14 Dec 2016 11:54:28 +0200
+Message-ID: <0ad07b84-7f5a-6467-e310-52c3efc66d3d@ti.com>
+References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481623759-12786-5-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>, khilman@baylibre.com, carlo@caione.org
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1664783192=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1481623759-12786-5-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2016 10:22 PM, Heinrich Schuchardt wrote:
-> On 12/12/2016 11:18 AM, Neil Armstrong wrote:
->> The Amlogic Meson GXBB secure monitor uses part of the memory space, this
->> patch adds these reserved zones and redefines the usable memory range for
->> each boards.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 21 +++++++++++++++++++++
->>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi    |  2 +-
->>  .../boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts   |  2 +-
->>  .../boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts    |  2 +-
->>  .../boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts  |  2 +-
->>  .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts      |  2 +-
->>  .../arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 +-
->>  11 files changed, 31 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->> index 7a078be..ac40b2d 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->> @@ -56,7 +56,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		reg = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  
->>  	vddio_boot: regulator-vddio_boot {
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index fc033c0..e085588 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -55,6 +55,27 @@
->>  	#address-cells = <2>;
->>  	#size-cells = <2>;
->>  
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		secos: secos {
->> +			reg = <0x0 0x05300000 0x0 0x2000000>;
->> +			no-map;
->> +		};
-> 
-> Hello Neil,
-> 
-> In
-> https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/meson64_odroidc2.dts
-> the secos region does not exist. In linux-next I find no reference to
-> the secos label. Where is the consumer of the region defined?
-> 
->> +
->> +		pstore: pstore {
->> +			reg = <0x0 0x07300000 0x0 0x100000>;
->> +			no-map;
->> +		};
-> 
-> In
-> https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/amlogic/gxbb_skt.dts
-> and other files pstore uses a different position
-> (reg = <0x0 0x20000000 0x0 0x100000>;).
-> Why are we moving this?
-> Should this region be marked
-> compatible = "ramoops"; ?
-> Cf. Documentation/devicetree/bindings/reserved-memory/ramoops.txt.
-> 
-> It would be nice if you could add a short description of each reserved
-> area to the commit message.
-> 
-> Regards
-> 
-> Heinrich Schuchardt
-> 
->> +
->> +		secmon: secmon {
->> +			reg = <0x0 0x10000000 0x0 0x200000>;
->> +			no-map;
->> +		};
->> +	};
->> +
->>  	cpus {
->>  		#address-cells = <0x2>;
->>  		#size-cells = <0x0>;
-> 
-> 
+--===============1664783192==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="niInBlBSvM7J14CFtCaBnS3LvGIf477KA"
 
-Hi Heinrich,
+--niInBlBSvM7J14CFtCaBnS3LvGIf477KA
+Content-Type: multipart/mixed; boundary="XfTbmt9bTWBDmel5aGqtePpHpJJu4cp3p";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King
+ <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>
+Message-ID: <0ad07b84-7f5a-6467-e310-52c3efc66d3d@ti.com>
+Subject: Re: [PATCH v7 4/5] ARM: dts: da850-lcdk: add the vga-bridge node
+References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481623759-12786-5-git-send-email-bgolaszewski@baylibre.com>
+In-Reply-To: <1481623759-12786-5-git-send-email-bgolaszewski@baylibre.com>
 
-Thanks for testing and for the report,
-we are still struggling into finding what are these zones and how to label them correctly.
+--XfTbmt9bTWBDmel5aGqtePpHpJJu4cp3p
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-We need to identify the zones on all boards, the patch I provided works on a non-odroid-c2 and gxm and gxl boards.
+On 13/12/16 12:09, Bartosz Golaszewski wrote:
+> Add the vga-bridge node to the board DT together with corresponding
+> ports and vga connector. This allows to retrieve the edid info from
+> the display automatically.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  arch/arm/boot/dts/da850-lcdk.dts | 51 ++++++++++++++++++++++++++++++++=
+++++++++
+>  1 file changed, 51 insertions(+)
 
-Neil
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+
+ Tomi
+
+
+--XfTbmt9bTWBDmel5aGqtePpHpJJu4cp3p--
+
+--niInBlBSvM7J14CFtCaBnS3LvGIf477KA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYURbUAAoJEPo9qoy8lh71hTEP/jepqoFAEghVDYtVFbjvWAlo
+Tw9UXf2muaykrIyVF+idJh3RS4eYWkyge+Wa5DP6O1z/PEJJH1RWazDYELIlKk+M
+GgEri6d4KxwtHmgTGVvqThJamqlQAazYWzYmu409p01UW1bFb8BFqQwdegLTX5s+
+GofU8Bkj1zbrS1YCzBtIToHIaJvBPMQJzJ/uvNNvEybwurpgFESDvAhvCJ1um4oO
+k0W0LsDdGhe8XJT18wmH1jLc4i1rTwXl32Bxo8rJ+41HKcnfhysHzzLS3xO7x+22
+7Jr/RUZroSxiaJ8iHwenLBsyDA9lnrEA5Qk/QzxWINdUuNGk69TPcrxLHHoI+3b4
+gWVLLQqEYtJ4IoVCM6V6ygwywNMCU9ZowJdfVk1maqChNHvq7a5TWMmLyaL/PrkI
+diFcSVKtAQfy4VfzX05VPftV5Emh/4XJve/it3TVl5zTQRhsQxUi3CUSZTA2KvvI
+EiSmiPWEC6KqjoRiXphmlGosIJJIJuwkt73nu0IZ/K8gx5eiezfF1tvYYOPuXx9m
+tAAwwAwUpPK4+nfZWZNCR+87CPniPjSIjDVjntpixIXNgBUfx4wYV09KipsGN2mr
+zS/ZQfwM4Sa9b+3g9NNuLjJgL1tJ9qOAIVDZk3P65o8IAE8G1+woQnL1z9afiMBs
+eMDLW0U/Y1L8MExRQ/wQ
+=/DA5
+-----END PGP SIGNATURE-----
+
+--niInBlBSvM7J14CFtCaBnS3LvGIf477KA--
+
+--===============1664783192==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1664783192==--
