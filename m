@@ -1,64 +1,75 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] iio: adc: hx711: Add DT binding for avia,hx711
-Date: Wed, 14 Dec 2016 11:34:55 +0100
-Message-ID: <20161214103455.GA27362@andreas>
-References: <20161214095945.GA26511@andreas>
- <470f0017-2607-d5bd-bcd3-69f892cdc88b@metafoo.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] ARM: dts: dra72-evm-tps65917: Add voltage supplies to
+ usb_phy, mmc, dss
+Date: Wed, 14 Dec 2016 13:00:50 +0200
+Message-ID: <2bb73170-dbb5-01a3-5b3a-4d5d9414e3a9@ti.com>
+References: <20161214085703.506-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <470f0017-2607-d5bd-bcd3-69f892cdc88b-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161214085703.506-1-lokeshvutla@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Carlos Hernandez <ceh@ti.com>, Tero Kristo <t-kristo@ti.com>, robh+dt@kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars-Peter,
+Lokesh,
 
-Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> schrieb am Wed, 14. Dec 11:11:
-> On 12/14/2016 10:59 AM, Andreas Klinger wrote:
-> > Add DT bindings for avia,hx711
-> > Add vendor avia to vendor list
-> > 
-> > Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/iio/adc/avia-hx711.txt      | 21 +++++++++++++++++++++
-> >  .../devicetree/bindings/vendor-prefixes.txt         |  1 +
-> >  2 files changed, 22 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> > new file mode 100644
-> > index 000000000000..6a4659fc7a4f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> > @@ -0,0 +1,21 @@
-> > +* AVIA HX711 ADC chip for weight cells
-> > +  Bit-banging driver
-> > +
-> > +Required properties:
-> > + - compatible: Should be "avia,hx711"
-> > + - sck-gpios:	Definition of the GPIO for the clock
-> > + - dout-gpios:	Definition of the GPIO for data-out
-> > +		See Documentation/devicetree/bindings/gpio/gpio.txt
-> > +
-> > +Recommended properties:
-> > + - gain:	Gain select, can be 32, 64 or 128
-> > +		default is 128
+On 14/12/16 10:57, Lokesh Vutla wrote:
+> Commit 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
+> added a separate dtsi for dra72-evm-tps65917 moving all the voltage supplies
+> to this file. But it missed adding voltage supplies to usb_phy, mmc,
+> dss and deleted from dra72-evm-common.dtsi. Adding the voltage supply
+> phandles to these nodes in dra72-evm-tps65917.dtsi
 > 
-> If the gain is software programmable it should be exposed by the driver
-> allowing the application to change it rather than putting it in the devicetree.
+> Fixes: 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
+> Reported-by: Carlos Hernandez <ceh@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> Logs:
+> - DRA72-evm revC: http://pastebin.ubuntu.com/23627665/ 
+> - DRA72-evm revB: http://pastebin.ubuntu.com/23627658/
+>  arch/arm/boot/dts/dra72-evm-tps65917.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-There is also a hardware dependency in terms of where to connect the input
-channel to:
-- gain 64 and gain 128 are available only on input channel A
-- gain 32 is only available on input channel B
+> diff --git a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
+> index ee6dac44edf1..e6df676886c0 100644
+> --- a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
+> +++ b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
+> @@ -132,3 +132,19 @@
+>  		ti,palmas-long-press-seconds = <6>;
+>  	};
+>  };
+> +
+> +&usb2_phy1 {
+> +	phy-supply = <&ldo4_reg>;
+> +};
+> +
+> +&usb2_phy2 {
+> +	phy-supply = <&ldo4_reg>;
+> +};
+> +
+> +&dss {
+> +	vdda_video-supply = <&ldo5_reg>;
+> +};
+> +
+> +&mmc1 {
+> +	vmmc_aux-supply = <&ldo1_reg>;
+> +};
+> 
 
-Do you still think, it should be removed from the devicetree?
+Are you sure that all future users of dra72-evm-tps65917.dtsi will use this same configuration?
+If not I'd rather put this in the board dts files.
 
-Andreas
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
