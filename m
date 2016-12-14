@@ -1,266 +1,306 @@
-From: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-Subject: [PATCH linux v1 3/4] drivers: misc: Platform driver for seven segment display support
-Date: Tue, 13 Dec 2016 23:55:03 -0800
-Message-ID: <1481702104-8617-4-git-send-email-jaghu@google.com>
+From: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH linux v1 2/4] drivers: misc: Character device driver for seven segment display
+Date: Tue, 13 Dec 2016 23:55:02 -0800
+Message-ID: <1481702104-8617-3-git-send-email-jaghu@google.com>
 References: <1481702104-8617-1-git-send-email-jaghu@google.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481702104-8617-1-git-send-email-jaghu@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481702104-8617-1-git-send-email-jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Platform device driver which provides an API for displaying on two
-7-segment displays, and implements the required bit-banging.
-The hardware assumed is 74HC164 wired to two 7-segment displays.
+Character device driver which implements the user-space
+API for letting a user write to two 7-segment displays including
+any conversion methods necessary to map the user input
+to two 7-segment displays.
 
-Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 ---
  drivers/misc/Kconfig          |   8 ++
  drivers/misc/Makefile         |   1 +
- drivers/misc/seven_seg_gpio.c | 206 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 215 insertions(+)
- create mode 100644 drivers/misc/seven_seg_gpio.c
+ drivers/misc/seven_seg_disp.c | 197 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/misc/seven_seg_disp.h |  34 ++++++++
+ 4 files changed, 240 insertions(+)
+ create mode 100644 drivers/misc/seven_seg_disp.c
+ create mode 100644 drivers/misc/seven_seg_disp.h
 
 diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index a21aec1..6508108 100644
+index a216b46..a21aec1 100644
 --- a/drivers/misc/Kconfig
 +++ b/drivers/misc/Kconfig
-@@ -812,6 +812,14 @@ config PANEL_BOOT_MESSAGE
- 	  An empty message will only clear the display at driver init time. Any other
- 	  printf()-formatted message is valid with newline and escape codes.
+@@ -791,6 +791,14 @@ config PANEL_CHANGE_MESSAGE
+ 	  If you say 'Y' here, you'll be able to choose a message yourself. Otherwise,
+ 	  say 'N' and keep the default message with the version.
 
-+config SEVEN_SEGMENT_GPIO
-+	tristate "Platform driver to update seven segment display"
-+	depends on SEVEN_SEGMENT_DISPLAY
++config SEVEN_SEGMENT_DISPLAY
++	tristate "Character driver for seven segment display support"
 +	help
-+	  Platform device driver which provides an API for displaying on two
-+	  7-segment displays, and implements the required bit-banging.
-+	  The hardware assumed is 74HC164 wired to two 7-segment displays.
++	  Character device driver which implements the user-space
++	  API for letting a user write to two 7-segment displays including
++	  any conversion methods necessary to map the user input
++	  to two 7-segment displays.
 +
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
+ config PANEL_BOOT_MESSAGE
+ 	depends on PANEL && PANEL_CHANGE_MESSAGE="y"
+ 	string "New initialization message"
 diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index c2defbd..d9c0d20 100644
+index b2fb6dbf..c2defbd 100644
 --- a/drivers/misc/Makefile
 +++ b/drivers/misc/Makefile
-@@ -58,3 +58,4 @@ obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
+@@ -56,4 +56,5 @@ obj-$(CONFIG_GENWQE)		+= genwqe/
+ obj-$(CONFIG_ECHO)		+= echo/
+ obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
  obj-$(CONFIG_CXL_BASE)		+= cxl/
- obj-$(CONFIG_SEVEN_SEGMENT_DISPLAY)	+= seven_seg_disp.o
++obj-$(CONFIG_SEVEN_SEGMENT_DISPLAY)	+= seven_seg_disp.o
  obj-$(CONFIG_PANEL)             += panel.o
-+obj-$(CONFIG_SEVEN_SEGMENT_GPIO)	+= seven_seg_gpio.o
-diff --git a/drivers/misc/seven_seg_gpio.c b/drivers/misc/seven_seg_gpio.c
+diff --git a/drivers/misc/seven_seg_disp.c b/drivers/misc/seven_seg_disp.c
 new file mode 100644
-index 0000000..3dcb903
+index 0000000..4daeac5
 --- /dev/null
-+++ b/drivers/misc/seven_seg_gpio.c
-@@ -0,0 +1,206 @@
++++ b/drivers/misc/seven_seg_disp.c
+@@ -0,0 +1,197 @@
 +/*
-+ * Copyright (C) 2016 Google, Inc
++ * Copyright (c) 2016 Google, Inc
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 or later as
 + * published by the Free Software Foundation.
 + */
 +
-+#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/timer.h>
-+#include <linux/jiffies.h>
-+#include <linux/sizes.h>
-+#include <linux/io.h>
-+#include <linux/delay.h>
++#include <linux/version.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/kdev_t.h>
++#include <linux/fs.h>
 +#include <linux/uaccess.h>
-+#include <linux/mutex.h>
-+#include <linux/of_platform.h>
-+#include <linux/gpio/consumer.h>
++#include <linux/ctype.h>
++#include <linux/of.h>
++#include <linux/io.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
 +
 +#include "seven_seg_disp.h"
 +
-+#define DELAY_INTVL_US 1
++#define LED_DOT 0x01
 +
-+#define CLOCK_GPIO_NAME "clock"
-+#define DATA_GPIO_NAME "data"
-+#define CLEAR_GPIO_NAME "clear"
++/*
++ * 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
++ *  _       _   _       _   _   _   _   _   _       _       _   _
++ * | |   |  _|  _| |_| |_  |_    | |_| |_| |_| |_  |    _| |_  |_
++ * |_|   | |_   _|   |  _| |_|   | |_|   | | | |_| |_  |_| |_  |
++ *
++ * data[7:1] = led[a:g]
++ */
++const u8 seven_seg_bits[] = {
++	0xFC, 0x60, 0xDA, 0xF2, 0x66, 0xB6, 0xBE, 0xE0,
++	0xFE, 0xF6, 0xEE, 0x3E, 0x9C, 0x7A, 0x9E, 0x8E
++	};
 +
-+struct seven_seg_gpio_info {
-+	u16 curr_disp_value;
-+	u16 refresh_interval;
-+	struct timer_list update_timer;
-+	struct gpio_desc *clock_gpio;
-+	struct gpio_desc *data_gpio;
-+	struct gpio_desc *clear_gpio;
-+};
++/*
++ * 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
++ *      _       _   _                              _            _
++ *     |   |_  |_| |_  _   _   _   _   _   _   _  |_    _|  _| | |
++ *     |_  |_  |   |                               _|  |_| |_| | |
++ *
++ * data[7:1] = led[a:g]
++ */
++const u8 special_seven_seg_bits[] = {
++	0x00, 0x9C, 0x1E, 0xCE, 0x8E, 0x02, 0x02, 0x02,
++	0x02, 0x02, 0x02, 0x02, 0xB6, 0x7A, 0x7A, 0xEC
++	};
 +
-+static void update_seven_seg_gpio_data(struct device *dev, u16 data)
++static dev_t seven_seg_devno;
++static struct class *seven_seg_disp_class;
++
++static int seven_seg_disp_open(struct inode *inode, struct file *filp)
 +{
-+	struct platform_device *pdev;
-+	struct seven_seg_gpio_info *gpio_info;
-+
-+	pdev = container_of(dev, struct platform_device, dev);
-+	if (pdev == NULL) {
-+		pr_err("invalid NULL platform_device\n");
-+		return;
-+	}
-+
-+	gpio_info = platform_get_drvdata(pdev);
-+	if (gpio_info == NULL) {
-+		pr_err("invalid NULL gpio_info\n");
-+		return;
-+	}
-+
-+	gpio_info->curr_disp_value = data;
-+}
-+
-+static void clear_seven_seg_gpio_data(struct device *dev, u16 data)
-+{
-+	struct platform_device *pdev;
-+	struct seven_seg_gpio_info *gpio_info;
-+
-+	pdev = container_of(dev, struct platform_device, dev);
-+	if (pdev == NULL) {
-+		pr_err("invalid NULL platform_device\n");
-+		return;
-+	}
-+
-+	gpio_info = platform_get_drvdata(pdev);
-+	if (gpio_info == NULL) {
-+		pr_err("invalid NULL gpio_info\n");
-+		return;
-+	}
-+
-+	gpio_info->curr_disp_value = 0;
-+}
-+
-+static void send_seven_seg_gpio_data(u16 disp_data,
-+		struct seven_seg_gpio_info *gpio_info)
-+{
-+	int i;
-+
-+	gpiod_set_value(gpio_info->clear_gpio, 0);
-+	udelay(DELAY_INTVL_US);
-+	gpiod_set_value(gpio_info->clear_gpio, 1);
-+	udelay(DELAY_INTVL_US);
-+
-+	for (i = 0; i < 16; i++) {
-+		if (disp_data & 0x01)
-+			gpiod_set_value(gpio_info->data_gpio, 1);
-+		else
-+			gpiod_set_value(gpio_info->data_gpio, 0);
-+
-+		udelay(DELAY_INTVL_US);
-+
-+		gpiod_set_value(gpio_info->clock_gpio, 0);
-+		udelay(DELAY_INTVL_US);
-+		gpiod_set_value(gpio_info->clock_gpio, 1);
-+		udelay(DELAY_INTVL_US);
-+
-+		disp_data >>= 1;
-+	}
-+}
-+
-+static void disp_refresh_timer_handler(unsigned long data)
-+{
-+	u16 disp_data;
-+	struct seven_seg_gpio_info *gpio_info =
-+		(struct seven_seg_gpio_info *)data;
-+	disp_data = gpio_info->curr_disp_value;
-+
-+	send_seven_seg_gpio_data(disp_data, gpio_info);
-+	mod_timer(&gpio_info->update_timer,
-+		jiffies + msecs_to_jiffies(gpio_info->refresh_interval));
-+}
-+
-+static const struct of_device_id of_seven_seg_gpio_match[] = {
-+		{ .compatible = "seven-seg-gpio-dev" },
-+		{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_seven_seg_gpio_match);
-+
-+static int seven_seg_gpio_probe(struct platform_device *pdev)
-+{
-+	u16 interval;
-+	int result;
-+	struct seven_seg_gpio_info *gpio_info;
-+	struct device *dev = &pdev->dev;
 +	struct seven_seg_disp_dev *disp_dev;
 +
-+	gpio_info = devm_kzalloc(dev,
-+			sizeof(struct seven_seg_gpio_info),
-+			GFP_KERNEL);
-+	if (gpio_info == NULL)
-+		return -ENOMEM;
-+
-+	/* Requesting the clock gpio */
-+	gpio_info->clock_gpio = devm_gpiod_get(dev, CLOCK_GPIO_NAME,
-+		GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpio_info->clock_gpio))
-+		return PTR_ERR(gpio_info->clock_gpio);
-+
-+	/* Requesting the data gpio */
-+	gpio_info->data_gpio = devm_gpiod_get(dev, DATA_GPIO_NAME,
-+		GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpio_info->data_gpio))
-+		return PTR_ERR(gpio_info->data_gpio);
-+
-+	/* Requesting the clear gpio */
-+	gpio_info->clear_gpio = devm_gpiod_get(dev, CLEAR_GPIO_NAME,
-+		GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpio_info->clear_gpio))
-+		return PTR_ERR(gpio_info->clear_gpio);
-+
-+	result = of_property_read_u16(pdev->dev.of_node,
-+		"refresh-interval-ms", &interval);
-+	gpio_info->refresh_interval = result ? DEFAULT_REFRESH_INTERVAL_MS :
-+		interval;
-+
-+	/* Start timer to update seven segment display every second */
-+	setup_timer(&gpio_info->update_timer, disp_refresh_timer_handler,
-+			(unsigned long)gpio_info);
-+	result = mod_timer(&gpio_info->update_timer,
-+			jiffies +
-+			msecs_to_jiffies(gpio_info->refresh_interval));
-+	if (result)
-+		return result;
-+
-+	gpio_info->curr_disp_value = 0;
-+
-+	platform_set_drvdata(pdev, gpio_info);
-+
-+	disp_dev = devm_kzalloc(dev, sizeof(struct seven_seg_disp_dev),
-+				GFP_KERNEL);
-+	disp_dev->parent = *dev;
-+	seven_seg_setup_cdev(disp_dev, &update_seven_seg_gpio_data);
++	disp_dev = container_of(inode->i_cdev,
++				 struct seven_seg_disp_dev, cdev);
++	filp->private_data = disp_dev;
 +	return 0;
 +}
 +
-+static int seven_seg_gpio_remove(struct platform_device *pdev)
++static int seven_seg_disp_close(struct inode *inode, struct file *filp)
 +{
-+	struct seven_seg_gpio_info *gpio_info = platform_get_drvdata(pdev);
-+	struct seven_seg_disp_dev *disp_dev =
-+				container_of(&pdev->dev,
-+				struct seven_seg_disp_dev, parent);
-+	seven_seg_rem_cdev(disp_dev);
-+	del_timer_sync(&gpio_info->update_timer);
-+	platform_set_drvdata(pdev, NULL);
++	filp->private_data = NULL;
 +	return 0;
 +}
 +
-+static struct platform_driver seven_seg_gpio_driver = {
-+	.probe		= seven_seg_gpio_probe,
-+	.remove		= seven_seg_gpio_remove,
-+	.driver		= {
-+		.name	= "seven-seg-gpio",
-+		.of_match_table = of_seven_seg_gpio_match,
-+	},
++static ssize_t seven_seg_disp_read(struct file *filp, char __user *buf, size_t
++				len, loff_t *off)
++{
++	struct seven_seg_disp_dev *disp_dev = filp->private_data;
++
++	if (disp_dev->disp_data_valid)
++		return -EINVAL;
++
++	if (copy_to_user(buf, disp_dev->seven_seg_disp_data_array,
++				MAX_DISP_CHAR_SIZE) != 0) {
++		return -EFAULT;
++	}
++
++	return 0;
++}
++
++static u16 convert_to_disp_data(char *buf)
++{
++	u8 low_display;
++	u8 high_display;
++	u16 led_value;
++
++	low_display = seven_seg_bits[hex_to_bin(buf[2])];
++
++	high_display = (buf[0] == '1') ?
++	special_seven_seg_bits[hex_to_bin(buf[1])] :
++	seven_seg_bits[hex_to_bin(buf[1])];
++
++	led_value = low_display | (high_display << 8);
++	if (buf[0] == '1')
++		led_value |= LED_DOT | (LED_DOT << 8);
++
++	return led_value;
++}
++
++static ssize_t seven_seg_disp_write(struct file *filp, const char __user *buf,
++				size_t len, loff_t *off)
++{
++	int length = len - 1;
++	int i;
++
++	struct seven_seg_disp_dev *disp_dev = filp->private_data;
++
++	if (length != MAX_DISP_CHAR_SIZE)
++		return -EINVAL;
++
++	if (copy_from_user(disp_dev->seven_seg_disp_data_array,
++				buf, length) != 0) {
++		return -EFAULT;
++	}
++
++	for (i = 0; i < MAX_DISP_CHAR_SIZE; i++) {
++		if (!isxdigit(disp_dev->seven_seg_disp_data_array[i]))
++			return -EINVAL;
++	}
++
++	disp_dev->current_seven_seg_disp_data = convert_to_disp_data(
++			disp_dev->seven_seg_disp_data_array);
++	disp_dev->disp_data_valid = true;
++	disp_dev->update_seven_seg_data(&disp_dev->parent,
++			disp_dev->current_seven_seg_disp_data);
++
++	return len;
++}
++
++static const struct file_operations seven_seg_disp_fops = {
++
++	.owner = THIS_MODULE,
++	.open = seven_seg_disp_open,
++	.release = seven_seg_disp_close,
++	.read = seven_seg_disp_read,
++	.write = seven_seg_disp_write
 +};
 +
-+module_platform_driver(seven_seg_gpio_driver);
++void seven_seg_rem_cdev(struct seven_seg_disp_dev *disp_dev)
++{
++	cdev_del(&disp_dev->cdev);
++	device_destroy(seven_seg_disp_class, seven_seg_devno);
++}
 +
++int seven_seg_setup_cdev(struct seven_seg_disp_dev *disp_dev,
++	void (*update_disp_data)(struct device *, u16 data))
++{
++	struct device *dev;
++	int err;
++
++	dev = device_create(seven_seg_disp_class, &disp_dev->parent,
++			seven_seg_devno,
++			NULL, "seven_seg_disp_val");
++	if (dev == NULL)
++		return -1;
++	disp_dev->dev = dev;
++	disp_dev->update_seven_seg_data = update_disp_data;
++	disp_dev->disp_data_valid = false;
++
++	cdev_init(&disp_dev->cdev, &seven_seg_disp_fops);
++	err = cdev_add(&disp_dev->cdev, seven_seg_devno, 1);
++	if (err)
++		device_destroy(seven_seg_disp_class, seven_seg_devno);
++	return err;
++}
++
++static int __init seven_seg_disp_init(void)
++{
++	if (alloc_chrdev_region(&seven_seg_devno, 0, 1, "disp_state") < 0)
++		return -1;
++
++	seven_seg_disp_class = class_create(THIS_MODULE, "disp_state");
++	if (seven_seg_disp_class == NULL)
++		goto unreg_chrdev;
++
++unreg_chrdev:
++	unregister_chrdev_region(seven_seg_devno, 1);
++	return -1;
++}
++
++static void __exit seven_seg_disp_exit(void)
++{
++	class_destroy(seven_seg_disp_class);
++	unregister_chrdev_region(seven_seg_devno, 1);
++}
++
++module_init(seven_seg_disp_init);
++module_exit(seven_seg_disp_exit);
 +MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>");
-+MODULE_DESCRIPTION("Seven segment display driver using GPIO config");
++MODULE_AUTHOR("Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("Seven segment display character driver");
+diff --git a/drivers/misc/seven_seg_disp.h b/drivers/misc/seven_seg_disp.h
+new file mode 100644
+index 0000000..b0f93c5
+--- /dev/null
++++ b/drivers/misc/seven_seg_disp.h
+@@ -0,0 +1,34 @@
++/*
++ * Copyright (c) 2016 Google, Inc
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 or later as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef SEVEN_SEG_DISP_H
++#define SEVEN_SEG_DISP_H
++
++#include <linux/device.h>
++#include <linux/cdev.h>
++
++#define MAX_DISP_CHAR_SIZE 3
++
++#define DEFAULT_REFRESH_INTERVAL_MS 1000
++
++struct seven_seg_disp_dev {
++	bool disp_data_valid;
++	u16 current_seven_seg_disp_data;
++	char seven_seg_disp_data_array[MAX_DISP_CHAR_SIZE];
++	struct device parent;
++	struct device *dev;
++	struct cdev cdev;
++	void (*update_seven_seg_data)(struct device *, u16 data);
++};
++
++int seven_seg_setup_cdev(struct seven_seg_disp_dev *disp_dev,
++	void (*update_disp_data)(struct device *, u16 data));
++
++void seven_seg_rem_cdev(struct seven_seg_disp_dev *disp_dev);
++
++#endif
 --
 2.8.0.rc3.226.g39d4020
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
