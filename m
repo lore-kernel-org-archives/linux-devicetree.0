@@ -1,52 +1,147 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] of/platform: depopulate devices in the reverse order of
- creation
-Date: Wed, 14 Dec 2016 14:40:12 -0700
-Message-ID: <20161214214012.GB6947@obsidianresearch.com>
-References: <20161212183905.GA30702@obsidianresearch.com>
- <CAL_Jsq+JdmKj88Tp=N+V781qj+muEB6nuGpjDCgiPsrzB9tWMg@mail.gmail.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: Re: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
+ usable memory range
+Date: Wed, 14 Dec 2016 22:44:43 +0100
+Message-ID: <5c06db98-f773-d84e-f2b4-828c9a615ee8@gmx.de>
+References: <20161212101801.28491-1-narmstrong@baylibre.com>
+ <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
+ <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+JdmKj88Tp=N+V781qj+muEB6nuGpjDCgiPsrzB9tWMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, carlo@caione.org
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 02:54:02PM -0600, Rob Herring wrote:
-> On Mon, Dec 12, 2016 at 12:39 PM, Jason Gunthorpe
-> <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
-> > If the DT has inter-dependencies, then the devices need to be removed
-> > in the right order to avoid removal problems.
-> >
-> > Assuming the DT is constructed so that EPROBE_DEFER doesn't happen
-> > during creating then a good way to avoid removal problems is reversing
-> > the order during depopulation.
+On 12/14/2016 10:52 AM, Neil Armstrong wrote:
+> On 12/12/2016 10:22 PM, Heinrich Schuchardt wrote:
+>> On 12/12/2016 11:18 AM, Neil Armstrong wrote:
+>>> The Amlogic Meson GXBB secure monitor uses part of the memory space, this
+>>> patch adds these reserved zones and redefines the usable memory range for
+>>> each boards.
+>>>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> ---
+>>>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  2 +-
+>>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 21 +++++++++++++++++++++
+>>>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     |  2 +-
+>>>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  2 +-
+>>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi    |  2 +-
+>>>  .../boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts   |  2 +-
+>>>  .../boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts    |  2 +-
+>>>  .../boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts  |  2 +-
+>>>  .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts      |  2 +-
+>>>  .../arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts |  2 +-
+>>>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 +-
+>>>  11 files changed, 31 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+>>> index 7a078be..ac40b2d 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+>>> @@ -56,7 +56,7 @@
+>>>  
+>>>  	memory@0 {
+>>>  		device_type = "memory";
+>>> -		reg = <0x0 0x0 0x0 0x80000000>;
+>>> +		reg = <0x0 0x1000000 0x0 0x7f000000>;
+>>>  	};
+>>>  
+>>>  	vddio_boot: regulator-vddio_boot {
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>>> index fc033c0..e085588 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>>> @@ -55,6 +55,27 @@
+>>>  	#address-cells = <2>;
+>>>  	#size-cells = <2>;
+>>>  
+>>> +	reserved-memory {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <2>;
+>>> +		ranges;
+>>> +
+>>> +		secos: secos {
+>>> +			reg = <0x0 0x05300000 0x0 0x2000000>;
+>>> +			no-map;
+>>> +		};
+>>
+>> Hello Neil,
+>>
+>> In
+>> https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/meson64_odroidc2.dts
+>> the secos region does not exist. In linux-next I find no reference to
+>> the secos label. Where is the consumer of the region defined?
+>>
+>>> +
+>>> +		pstore: pstore {
+>>> +			reg = <0x0 0x07300000 0x0 0x100000>;
+>>> +			no-map;
+>>> +		};
+>>
+>> In
+>> https://github.com/hardkernel/linux/blob/odroidc2-3.14.y/arch/arm64/boot/dts/amlogic/gxbb_skt.dts
+>> and other files pstore uses a different position
+>> (reg = <0x0 0x20000000 0x0 0x100000>;).
+>> Why are we moving this?
+>> Should this region be marked
+>> compatible = "ramoops"; ?
+>> Cf. Documentation/devicetree/bindings/reserved-memory/ramoops.txt.
+>>
+>> It would be nice if you could add a short description of each reserved
+>> area to the commit message.
+>>
+>> Regards
+>>
+>> Heinrich Schuchardt
+>>
+>>> +
+>>> +		secmon: secmon {
+>>> +			reg = <0x0 0x10000000 0x0 0x200000>;
+>>> +			no-map;
+>>> +		};
+>>> +	};
+>>> +
+>>>  	cpus {
+>>>  		#address-cells = <0x2>;
+>>>  		#size-cells = <0x0>;
+>>
+>>
 > 
-> I assume you mean by sorting the nodes to get lucky with the init
-> order.
-
-Not quite, the init order doesn't matter, just that the device list/DT
-is ordered topologically. The driver bind order can still be
-randomized. No luck needed.
-
-> > In my specific case I have a gpio driver, followed by a i2c bitbang
-> > using that driver. So gpiolib prints an error if it the gpio driver is
-> > removed before the gpio client..
+> Hi Heinrich,
 > 
-> Good news, functional dependencies are going into 4.10. Let's fix GPIO
-> and use that.
+> Thanks for testing and for the report,
+> we are still struggling into finding what are these zones and how to label them correctly.
+> 
+> We need to identify the zones on all boards, the patch I provided works on a non-odroid-c2 and gxm and gxl boards.
+> 
+> Neil
+> 
 
-Sure, but it will be some time until that is used everwhere..
+Hi Neil,
 
-You don't think there is some value in 'hiding' the problem with
-ordering until that work is done? IIRC that was essentially how
-EPROBE_DEFER was introduced?
+the 3.14 Ubuntu kernel provided by Hardkernel for Odroid C2 has no fixed
+address reserved-memory inside the first 2GB and does not show the
+problem I have been observing with the linux-next kernel.
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Many zones for interfacing different peripherals are defined but these
+are all above 2GB.
+
+For small loads I never saw any oops. So I recommend that on the boards
+which you think are working, make a full linux-next git checkout and try
+to build the kernel natively for the respective board.
+
+Best regards
+
+Heinrich Schuchardt
