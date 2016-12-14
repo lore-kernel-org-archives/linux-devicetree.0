@@ -1,109 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] xilinx_dma: Add reset support
-Date: Wed, 14 Dec 2016 22:16:07 +0200
-Message-ID: <5658430.jXmKZEXWrS@avalon>
-References: <cover.1481735244.git.roliveir@synopsys.com> <4220c66c29d83bec1ded798ee383b5460c162cfc.1481735244.git.roliveir@synopsys.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] power: supply: bq24735-charger: allow chargers to
+ share the ac-detect gpio
+Date: Wed, 14 Dec 2016 18:41:00 +0100
+Message-ID: <e1667d9d-17bf-2fe5-8a65-af73b6507cbd@axentia.se>
+References: <1481673405-4547-1-git-send-email-peda@axentia.se>
+ <1481673405-4547-4-git-send-email-peda@axentia.se>
+ <20161214165921.jsatcznbljd7anqi@earth>
+ <20161214170114.ckozfple475kqajh@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4220c66c29d83bec1ded798ee383b5460c162cfc.1481735244.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appana.durga.rao@xilinx.com, anuragku@xilinx.com, dan.j.williams@intel.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161214170114.ckozfple475kqajh@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
-
-Thank you for the patch.
-
-On Wednesday 14 Dec 2016 17:18:24 Ramiro Oliveira wrote:
-> Add a DT property to control an optional external reset line
+On 2016-12-14 18:01, Sebastian Reichel wrote:
+> [of course I forgot to actually add gpio people, let's try again]
 > 
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> b/drivers/dma/xilinx/xilinx_dma.c index 5c9f11b..b845224 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -46,6 +46,7 @@
->  #include <linux/slab.h>
->  #include <linux/clk.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/reset.h>
+> On Wed, Dec 14, 2016 at 05:59:21PM +0100, Sebastian Reichel wrote:
+>> Hi,
+>>
+>> On Wed, Dec 14, 2016 at 12:56:45AM +0100, Peter Rosin wrote:
+>>> If several parallel bq24735 chargers have their ac-detect gpios wired
+>>> together (or if only one of the parallel bq24735 chargers have its
+>>> ac-detect pin wired to a gpio, and the others are assumed to react the
+>>> same), then all driver instances need to check the same gpio. But the
+>>> gpio subsystem does not allow sharing gpios, so handle that locally.
+>>
+>> Adding GPIO subsystem people to see if they can come up with
+>> something in the gpiod API for this usecase.
 
-I had neatly sorted the header alphabetically until someone added clk.h and 
-io-64-nonatomic-lo-hi.h :-( Could you please move reset.h just before slab.h ?
+Right, I don't like how my new code steps away from gpio descriptors.
 
-> 
->  #include "../dmaengine.h"
-> 
-> @@ -409,6 +410,7 @@ struct xilinx_dma_device {
->  	struct clk *rxs_clk;
->  	u32 nr_channels;
->  	u32 chan_id;
-> +	struct reset_control *rst;
->  };
-> 
->  /* Macros */
-> @@ -2543,6 +2545,27 @@ static int xilinx_dma_probe(struct platform_device
-> *pdev) if (IS_ERR(xdev->regs))
->  		return PTR_ERR(xdev->regs);
-> 
-> +	xdev->rst = devm_reset_control_get_optional(&pdev->dev, "reset");
+>>> However, only do this for the polling case, sharing is not supported if
+>>> the ac detection is handled with interrupts.
+>>
+>> Why? I guess you only added the gpio polling stuff for the shared
+>> gpio feature, so we can skip the gpio polling if we add shared irq
+>> support instead?
 
-devm_reset_control_get_optional() is deprecated as explained in linux/reset.h, 
-you should use devm_reset_control_get_optional_exclusive() or 
-devm_reset_control_get_optional_shared() instead, as applicable.
+Nope, the hw really can't do interrupts on the gpio, it's just not wired
+up for that. The gpio is on an expander, and the irq line from the expander
+top the cpu is not there (due to a desire to minimize the number of
+connections between two parts of the system). So I need both polling and
+sharing.
 
-This being said, I'm wondering why the optional versions of those functions 
-exist, as they do exactly the same as the non-optional versions. The API feels 
-wrong, it should have been modelled like the GPIO API. Feel free to fix it if 
-you want :-) But that's out of scope for this patch.
+Cheers,
+peda
 
-> +	if (IS_ERR(xdev->rst)) {
-> +		err = PTR_ERR(xdev->rst);
-> +		switch (err) {
-> +		case -ENOENT:
-
-If you drop the name as proposed in the review of patch 1/2 you don't have to 
-check for -ENOENT.
-
-> +		case -ENOTSUPP:
-> +			xdev->rst = NULL;
-> +		break;
-
-Wrong indentation.
-
-You need to handle -EPROBE_DEFER and defer probing of the xilinx_dma device.
-
-> +		default:
-> +			dev_err(xdev->dev, "error getting reset %d\n", err);
-> +		return err;
-
-Wrong indentation.
-
-> +		}
-> +	} else {
-> +		err = reset_control_deassert(xdev->rst);
-> +		if (err) {
-> +			dev_err(xdev->dev, "failed to deassert reset: %d\n",
-> +					err);
-
-Wrong indentation.
-
-> +			return err;
-> +		}
-> +	}
-> +
->  	/* Retrieve the DMA engine properties from the device tree */
->  	xdev->has_sg = of_property_read_bool(node, "xlnx,include-sg");
->  	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA)
-
--- 
-Regards,
-
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
