@@ -1,89 +1,69 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH linux v1 0/4] Seven segment display support
-Date: Wed, 14 Dec 2016 14:12:41 +0100
-Message-ID: <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
-References: <1481702104-8617-1-git-send-email-jaghu@google.com>
- <20161214134530.2bd54a4e@free-electrons.com>
- <20161214125641.GA5379@kroah.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Wed, 14 Dec 2016 13:21:08 +0000
+Message-ID: <20161214132108.3d36vuxpcrc2b7v2@sirena.org.uk>
+References: <20160915143945.GJ27974@sirena.org.uk>
+ <20160915180223.GE62872@google.com>
+ <20160916163253.GA10189@sirena.org.uk>
+ <CAD=FV=U2bi7GEA3Tq4vpzqF8J2hpgN-Vq4Jv=PnaGYhA3Z6vGg@mail.gmail.com>
+ <20160924184133.seh6v6eayt7hwgue@sirena.org.uk>
+ <CAD=FV=V_ncaKDzwEyCrZNqicoE+dGXN8CJ8dDuvxQ6XP8uxsDg@mail.gmail.com>
+ <20161028181521.ywzmow6bgndfotq3@sirena.org.uk>
+ <20161212211502.GA96889@google.com>
+ <20161213171904.ohsxc3xhscdinctt@sirena.org.uk>
+ <CAD=FV=WhUVeq5GZ5-ae4SxypHGB9jWqgvkO02S=G6Zz6cexRzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161214125641.GA5379@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: mark.rutland@arm.com, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, arnd@arndb.de, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ilxnpwozouoj7lua"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WhUVeq5GZ5-ae4SxypHGB9jWqgvkO02S=G6Zz6cexRzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2016 01:56 PM, Greg KH wrote:
-> On Wed, Dec 14, 2016 at 01:45:30PM +0100, Thomas Petazzoni wrote:
->> Hello,
->>
->> On Tue, 13 Dec 2016 23:55:00 -0800, Jaghathiswari Rankappagounder
->> Natarajan wrote:
->>
->>> Documentation for the binding which provides an interface for adding clock,
->>> data and clear signal GPIO lines to control seven segment display.
->>>
->>> The platform device driver provides an API for displaying on two 7-segment
->>> displays, and implements the required bit-banging. The hardware assumed is
->>> 74HC164 wired to two 7-segment displays.
->>>
->>> The character device driver implements the user-space API for letting a user
->>> write to two 7-segment displays including any conversion methods necessary
->>> to map the user input to two 7-segment displays.
->>>
->>> Adding clock, data and clear signal GPIO lines in the devicetree to control
->>> seven segment display on zaius platform.
->>>
->>> The platform driver matches on the device tree node; the platform driver also
->>> initializes the character device.
->>>
->>> Tested that the seven segment display works properly by writing to the
->>> character device file on a EVB AST2500 board which also has 74HC164 wired
->>> to two 7-segment displays.
->>
->> FWIW, I proposed a driver for seven segment displays back in 2013:
->>
->>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139986.html
->>
->> And the feedback from Greg KH was: we don't need a driver for that, do
->> it from userspace. See:
->>
->>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139992.html
->>
->> So: good luck :-)
-> 
-> Did anyone ever write a library for this type of thing?
-> 
-> Again, I don't want to see one-off drivers for random devices like this
-> that should be able to all be controlled from userspace in a common
-> manner.  Much like we did for fingerprint readers a long long time
-> ago...
-> 
-> thanks,
-> 
-> greg k-h
 
-Hi Greg,
+--ilxnpwozouoj7lua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Actually, it's more than a random interface, a lot of SoCs and boards actually have such displays
-and it's a pity to use UIO, sysfs gpio bitbanging and all sort of ugly stuff to only print a few
-characters a simple and clean driver could achieve.
-Some very well known SoCs even have integrated registers to lower the BOM and bypass the need for
-a 74HC164 like component and avoid gpio bit banging.
+On Tue, Dec 13, 2016 at 12:00:32PM -0800, Doug Anderson wrote:
+> On Tue, Dec 13, 2016 at 9:19 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-My personal concern is that you could also need to drive more segments, thus 7-segments
-is too restrictive.
+> > No, not unless the prior descriptions of the hardware have been wildly
+> > inaccurate - my understanding had been that the DCDC was a normal DCDC
+> > with an analogue input intended to be biased to set the output voltage
+> > (presumably in terms of a full rail supply) and that the PWM had been
+> > connected to this analogue input.  If the PWM is supplying the DCDC then
+> > the hardware design just seems bizzare, I can't see how this would even
+> > work.
 
-But this driver is well structured, the gpio-bitbanging sub-driver is welcome.
+> As you can see from the datasheet ("Adjusting the Output Voltage"
+> section), it is intended that you stuff a resistor to make a voltage
+> divider and that's how you select the output voltage.  In our case the
 
-Neil
+OK, that's what I thought was happening.  That's definitely something
+that should *not* end up in ->supply, that should hold the parent supply
+that the DCDC is regulating down to the target voltage.
+
+--ilxnpwozouoj7lua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhRR0MACgkQJNaLcl1U
+h9AVAAf/Umm5lv/6aFHU+qrSgt2HEatXnEesu2gXcbFCRSYPPaFaIYdNmP0wuaU3
+hdtIW0Ay1QtmFT4u7+lfQkI3jo4Df68ZhNdhOiYJ5YNKY92kJZxGRemX1niaIEgx
+8ojPMg0zbsjWT/6noiCj2iqHRQfMV3vGNgzU8qVphDW53d67TJZkk1fev4W2sJX/
+bls1imiRaV7XNdDv2m7y1DwGS/giZ1usKQL5EMyw8LybcWTDDMrTJ8HBSChmSlzu
+1uNYRI2Qfl3XHenM6MUjOnNi9qDf8pmzC/uPD27uMPawRHm8jpgQoSMSEjnatbRI
+9iw937/zJ5Ber0OEgVzq7hDAFwd7mw==
+=kA9n
+-----END PGP SIGNATURE-----
+
+--ilxnpwozouoj7lua--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
