@@ -1,65 +1,28 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH] ARM: dts: dra72-evm-tps65917: Add voltage supplies to usb_phy, mmc,
- dss
-Date: Wed, 14 Dec 2016 14:27:03 +0530
-Message-ID: <20161214085703.506-1-lokeshvutla@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH linux v1 4/4] arm: dts: Add dt-binding to support seven segment display on zaius
+Date: Wed, 14 Dec 2016 10:00:46 +0100
+Message-ID: <10697525.O7CkPN6Gfl@wuerfel>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com> <1481702104-8617-5-git-send-email-jaghu@google.com> <3917905.e4iOqADnVQ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-Cc: devicetree@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Sekhar Nori <nsekhar@ti.com>, Carlos Hernandez <ceh@ti.com>, Tero Kristo <t-kristo@ti.com>, robh+dt@kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3917905.e4iOqADnVQ@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, joel@jms.id.au, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
-added a separate dtsi for dra72-evm-tps65917 moving all the voltage supplies
-to this file. But it missed adding voltage supplies to usb_phy, mmc,
-dss and deleted from dra72-evm-common.dtsi. Adding the voltage supply
-phandles to these nodes in dra72-evm-tps65917.dtsi
+On Wednesday, December 14, 2016 9:55:47 AM CET Arnd Bergmann wrote:
+> According to your introductory mail, the interface is assumed to be
+> a 74HC164. Should we use that ID in the compatible string?
+> 
+> We can always add other strings later if we want to support multiple
+> wire formats.
 
-Fixes: 5d080aa30681 ("ARM: dts: dra72: Add separate dtsi for tps65917")
-Reported-by: Carlos Hernandez <ceh@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-Logs:
-- DRA72-evm revC: http://pastebin.ubuntu.com/23627665/ 
-- DRA72-evm revB: http://pastebin.ubuntu.com/23627658/
- arch/arm/boot/dts/dra72-evm-tps65917.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Actually, looking up 74hc164, that seems to be a gpio expander,
+so maybe a more flexible way to do the same is to put a driver
+for the expander into drivers/gpio/ and have the main driver
+access the outputs of that using the gpiolib interface.
 
-diff --git a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
-index ee6dac44edf1..e6df676886c0 100644
---- a/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
-+++ b/arch/arm/boot/dts/dra72-evm-tps65917.dtsi
-@@ -132,3 +132,19 @@
- 		ti,palmas-long-press-seconds = <6>;
- 	};
- };
-+
-+&usb2_phy1 {
-+	phy-supply = <&ldo4_reg>;
-+};
-+
-+&usb2_phy2 {
-+	phy-supply = <&ldo4_reg>;
-+};
-+
-+&dss {
-+	vdda_video-supply = <&ldo5_reg>;
-+};
-+
-+&mmc1 {
-+	vmmc_aux-supply = <&ldo1_reg>;
-+};
--- 
-2.11.0
+	Arnd
