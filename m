@@ -1,44 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: depopulate devices in the reverse order of creation
-Date: Wed, 14 Dec 2016 14:54:02 -0600
-Message-ID: <CAL_Jsq+JdmKj88Tp=N+V781qj+muEB6nuGpjDCgiPsrzB9tWMg@mail.gmail.com>
-References: <20161212183905.GA30702@obsidianresearch.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH] ARM: dts: n900: Mark eMMC slot with no-sdio and no-sd flags
+Date: Wed, 14 Dec 2016 22:29:44 +0100
+Message-ID: <1481750984-11239-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161212183905.GA30702-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Aaro Koskinen <aaro.koskinen@iki.fi>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek <pavel@ucw.cz>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 12:39 PM, Jason Gunthorpe
-<jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
-> If the DT has inter-dependencies, then the devices need to be removed
-> in the right order to avoid removal problems.
->
-> Assuming the DT is constructed so that EPROBE_DEFER doesn't happen
-> during creating then a good way to avoid removal problems is reversing
-> the order during depopulation.
+Trying to initialize eMMC slot as SDIO or SD cause failure in n900 port of
+qemu. eMMC itself is not detected and is not working.
 
-I assume you mean by sorting the nodes to get lucky with the init
-order. Not sure I want any patches that help that. I'm tempted to
-randomize the device creation order instead.
+Real Nokia N900 harware does not have this problem. As eMMC is really not
+SDIO or SD based such change is harmless and will fix support for qemu.
 
-> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> ---
->  drivers/of/platform.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> In my specific case I have a gpio driver, followed by a i2c bitbang
-> using that driver. So gpiolib prints an error if it the gpio driver is
-> removed before the gpio client..
+Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+---
+ arch/arm/boot/dts/omap3-n900.dts |    2 ++
+ 1 file changed, 2 insertions(+)
 
-Good news, functional dependencies are going into 4.10. Let's fix GPIO
-and use that.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index bc8d6be..345a940 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -770,6 +770,8 @@
+ 	vmmc_aux-supply = <&vsim>;
+ 	bus-width = <8>;
+ 	non-removable;
++	no-sdio;
++	no-sd;
+ };
+ 
+ &mmc3 {
+-- 
+1.7.9.5
