@@ -1,243 +1,81 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
-Date: Wed, 14 Dec 2016 11:06:45 -0300
-Message-ID: <a3179721-3a0e-651b-f422-c08463aae7e6@osg.samsung.com>
-References: <5220084.l31t5oJbsy@amdc3058>
- <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
- <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
- <2340115.HEG9AYUCMD@amdc3058>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Change node name for pwrseq pin on
+ Olinuxino-lime2-emmc
+Date: Wed, 14 Dec 2016 15:09:34 +0100
+Message-ID: <20161214140934.zdztogdjjis23raw@lukather>
+References: <20161214100856.23735-1-manu@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2340115.HEG9AYUCMD@amdc3058>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Arjun K V <arjun.kv@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Doug Anderson <dianders@chromium.org>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="s4e7ovwn6was2fd3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161214100856.23735-1-manu@bidouilliste.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emmanuel Vadot <manu@bidouilliste.com>
+Cc: robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-Hello Bartlomiej,
+--s4e7ovwn6was2fd3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 12/14/2016 10:28 AM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> On Tuesday, December 13, 2016 04:18:05 PM Javier Martinez Canillas wrote:
->> Hello Bartlomiej,
-> 
-> Hi,
-> 
->> On 12/13/2016 01:52 PM, Bartlomiej Zolnierkiewicz wrote:
->>> Add missing 2000MHz & 1900MHz OPPs (for A15 cores) and 1400MHz OPP
->>> (for A7 cores).  Also update common Odroid-XU3 Lite/XU3/XU4 thermal
->>> cooling maps to account for new OPPs.
->>>
->>> Since new OPPs are not available on all Exynos5422/5800 boards modify
->>> dts files for Odroid-XU3 Lite (limited to 1.8 GHz / 1.3 GHz) & Peach
->>> Pi (limited to 2.0 GHz / 1.3 GHz) accordingly.
->>>
->>> Tested on Odroid-XU3 and XU3 Lite.
->>>
->>> Cc: Doug Anderson <dianders@chromium.org>
->>> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
->>> Cc: Andreas Faerber <afaerber@suse.de>
->>> Cc: Thomas Abraham <thomas.ab@samsung.com>
->>> Cc: Ben Gamari <ben@smart-cactus.org>
->>> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->>> ---
->>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   14 +++++++-------
->>>  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |   17 +++++++++++++++++
->>>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 ++++
->>>  arch/arm/boot/dts/exynos5800.dtsi                  |   15 +++++++++++++++
->>>  4 files changed, 43 insertions(+), 7 deletions(-)
->>>
->>> Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> ===================================================================
->>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.779763261 +0100
->>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.775763261 +0100
->>> @@ -118,7 +118,7 @@
->>>  				/*
->>>  				 * When reaching cpu_alert3, reduce CPU
->>>  				 * by 2 steps. On Exynos5422/5800 that would
->>> -				 * be: 1600 MHz and 1100 MHz.
->>> +				 * (usually) be: 1800 MHz and 1200 MHz.
->>>  				 */
->>>  				map3 {
->>>  					trip = <&cpu_alert3>;
->>> @@ -131,16 +131,16 @@
->>>  
->>>  				/*
->>>  				 * When reaching cpu_alert4, reduce CPU
->>> -				 * further, down to 600 MHz (11 steps for big,
->>> -				 * 7 steps for LITTLE).
->>> +				 * further, down to 600 MHz (13 steps for big,
->>> +				 * 8 steps for LITTLE).
->>>  				 */
->>> -				map5 {
->>> +				cooling_map5: map5 {
->>>  					trip = <&cpu_alert4>;
->>> -					cooling-device = <&cpu0 3 7>;
->>> +					cooling-device = <&cpu0 3 8>;
->>>  				};
->>> -				map6 {
->>> +				cooling_map6: map6 {
->>>  					trip = <&cpu_alert4>;
->>> -					cooling-device = <&cpu4 3 11>;
->>> +					cooling-device = <&cpu4 3 13>;
->>>  				};
->>>  			};
->>>  		};
->>> Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
->>> ===================================================================
->>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.779763261 +0100
->>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.775763261 +0100
->>> @@ -21,6 +21,23 @@
->>>  	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
->>>  };
->>>  
->>> +&cluster_a15_opp_table {
->>> +	/delete-node/opp@2000000000;
->>> +	/delete-node/opp@1900000000;
->>> +};
->>> +
->>> +&cluster_a7_opp_table {
->>> +	/delete-node/opp@1400000000;
->>> +};
->>> +
->>
->> I think that a comment in the DTS why these operating points aren't available
->> in this board will make more clear why the nodes are being deleted.
-> 
-> Ok, I will add these comments in the next patch revision.
-> 
->>> +&cooling_map5 {
->>> +	cooling-device = <&cpu0 3 7>;
->>> +};
->>> +
->>> +&cooling_map6 {
->>> +	cooling-device = <&cpu4 3 11>;
->>> +};
->>> +
->>>  &pwm {
->>>  	/*
->>>  	 * PWM 0 -- fan
->>> Index: b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> ===================================================================
->>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
->>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
->>> @@ -146,6 +146,10 @@
->>>  	vdd-supply = <&ldo9_reg>;
->>>  };
->>>  
->>> +&cluster_a7_opp_table {
->>> +	/delete-property/opp@1400000000;
->>> +};
->>> +
->>>  &cpu0 {
->>>  	cpu-supply = <&buck2_reg>;
->>>  };
->>> Index: b/arch/arm/boot/dts/exynos5800.dtsi
->>> ===================================================================
->>> --- a/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
->>> +++ b/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
->>> @@ -24,6 +24,16 @@
->>>  };
->>>  
->>>  &cluster_a15_opp_table {
->>> +	opp@2000000000 {
->>> +		opp-hz = /bits/ 64 <2000000000>;
->>> +		opp-microvolt = <1250000>;
->>> +		clock-latency-ns = <140000>;
->>> +	};
->>> +	opp@1900000000 {
->>> +		opp-hz = /bits/ 64 <1900000000>;
->>> +		opp-microvolt = <1250000>;
->>> +		clock-latency-ns = <140000>;
->>> +	};
->>>  	opp@1700000000 {
->>>  		opp-microvolt = <1250000>;
->>>  	};
->>> @@ -85,6 +95,11 @@
->>>  };
->>>
->>
->> AFAIK Thomas restricted the maximum OPP, because for A15 freqs > 1.8GHz the
->> INT rail would need to be scaled up as well since there's a maximum voltage
->> difference between the ARM and INT rails before the system becomes unstable:
->>
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/276766.html
->> https://lkml.org/lkml/2014/5/2/419
->>
->> The ChromiumOS vendor tree uses a virtual regulator driver that makes sure
->> the maximum voltage skew is between a limit. But that never made to mainline:
->>
->> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/boot/dts/exynos5420-peach-pit.dtsi#90
->> https://lkml.org/lkml/2014/4/29/28
->>
->> Did that change and there's infrastructure in mainline now to cope with that?
->> If that's the case, I think it would be good to mention in the commit message.
-> 
-> I was not aware of this limitation and AFAIK mainline has currently
-> no code to handle it.  I also cannot find any code to handle this in
+Hi Emmanuel,
 
-Yes, that's what I thought as well but maybe I was missing something.
+On Wed, Dec 14, 2016 at 11:08:56AM +0100, Emmanuel Vadot wrote:
+> The node name for the power seq pin is mmc2@0 like the mmc2_pins_a one.
+> This makes the original node (mmc2_pins_a) scrapped out of the dtb and
+> result in a unusable eMMC if U-Boot didn't configured the pins to the
+> correct functions.
+>=20
+> Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts b/arch/=
+arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+> index 5ea4915..68cb1b5 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+> @@ -56,7 +56,7 @@
+>  };
+> =20
+>  &pio {
+> -	mmc2_pins_nrst: mmc2@0 {
+> +	mmc2_pins_nrst: mmc2@1 {
 
-> Hardkernel's vendor kernel for Odroid-XU3 board.
-> 
-> Do you know whether this problem exists also on Exynos5422/5800
-> SoCs or only on Exynos5420 one?  I see that ChromiumOS uses virtual
-> regulator code also on Exynos5800 SoC based Peach Pi board but was
-> the problem actually present on this board?
->
+That would be even better if you renamed it to something like
+mmc2-rst-pin to avoid all future conflicts (for example if we ever add
+a second mmc pins groups.
 
-My understanding is that this problem is present in 5420/5422/5800
-but I have no way to confirm this. I'm just guessing from the info
-in the ChromiumOS vendor tree.
+Thanks!
+Maxime
 
-If you look at the commit that added the regulator-locker driver,
-the test says to be done in a Peach Pi so it seems the problem is
-not restricted to only Exynos5420:
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ba63620feace4eaed5572ac2e77d8d61754af704
- 
-> [ I added Arjun to Cc:, maybe he can help in explaining this issue
->   (unfortunately Inderpal's email is no longer working). ]
->
+--s4e7ovwn6was2fd3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Added Abhilash to cc list as well since he was involved in the Exynos ChromeOS tree.
+-----BEGIN PGP SIGNATURE-----
 
-> Please also note that on Exynos5422/5800 SoCs the same ARM rail
-> voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
-> IOW if the problem exists it is already present in the mainline
-> kernel.
->
+iQIcBAEBCAAGBQJYUVKaAAoJEBx+YmzsjxAgJY4QAIwZ9sJfboUOWfDbFPASTr+3
+bIi70ihr9ZPgNYhn58j95zyIyvOdQGKVAY+G9i6qGlROluoge8yx3sZFqNHzRCZ0
+5+9vbaX/FWDcXRQt9iFAXBcC2dreHQGMe9nMU3IXB+/IqdT6huKrIlmlbfDwQL8F
+oloqgv+5OmLYxeCxR+n4EVex4aKWTpuKefDNrIAMs+nWfikIucU9GOQEgzPS7LKU
+PZPAK2dtBZ4m/7PL5q7TqdOm6jBV6asKiuTpggocTv0sxSreD6UtaoATdtTjG0Y8
+o+VYNPWwEfGhj+FkOSGZ/BRprVZ6CQGJ9tu1gLhMP27nWS8gxgds6+ye/YEkVEF+
+ueOtMezEX7znOlRgVklnQn1g9aaMoSclUwBu5BZID2ukbF/9OB3/VeFvkdhnggCH
+4nLqWDWxSSvbLRNPmqhKG8y1pyC4SJvcnCYc4fqi3Qf0GkrGy3YVjl9mWh6+2pBC
+Lxcxwv2VPQmnviZcfOSdDh3wm1gpMrQqvn2HjXX0lIYs2e39zG/A98fBHhMGXRen
+ehBWL1LHAXOEmStStkYH2mlzn1qj45Aj8hxxWRgcMDZjZIB4OIC85eg7mrw7u/IA
+Tu5b+naWuoBzkn5dwxelB5DSANVpN17M107kM/wd7xRTBK4KiXrlOtgMnPEaRR1x
+bYVZEgAq7rH5OKL8RU1o
+=hH9q
+-----END PGP SIGNATURE-----
 
-Ah, I only looked at your patch and I didn't compare the voltage levels
-in your 1.9 GHz and 2.0 GHz OPPs with the current 1.8 GHz in mainline.
-
-I wonder if the voltage levels in your patch are correct then, since the
-ChromiumOS tree uses a higher voltages for the 1.9 GHz and 2.0 GHz OPPs:
-
-/*
- * Default ASV table
- */
-static const unsigned int asv_voltage_5420[CPUFREQ_NUM_LEVELS] = {
-	1362500,	/* L0  2100 */
-	1312500,	/* L1  2000 */
-	1275000,	/* L2  1900 */
-	1225000,	/* L3  1800 */
-	1200000,	/* L4  1700 */
-
-This is from https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/cpufreq/exynos5420-cpufreq.c#175
-
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+--s4e7ovwn6was2fd3--
