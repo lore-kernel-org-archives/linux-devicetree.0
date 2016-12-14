@@ -1,229 +1,243 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v4 2/6] [media] rc-main: split setup and unregister functions
-Date: Wed, 14 Dec 2016 23:00:26 +0900
-Message-ID: <20161214140030.28537-3-andi.shyti@samsung.com>
-References: <20161214140030.28537-1-andi.shyti@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20161214140030.28537-1-andi.shyti@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
+Date: Wed, 14 Dec 2016 11:06:45 -0300
+Message-ID: <a3179721-3a0e-651b-f422-c08463aae7e6@osg.samsung.com>
+References: <5220084.l31t5oJbsy@amdc3058>
+ <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
+ <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
+ <2340115.HEG9AYUCMD@amdc3058>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2340115.HEG9AYUCMD@amdc3058>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Arjun K V <arjun.kv@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Doug Anderson <dianders@chromium.org>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Move the input device allocation, map and protocol handling to
-different functions.
 
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-Reviewed-by: Sean Young <sean@mess.org>
----
- drivers/media/rc/rc-main.c | 143 +++++++++++++++++++++++++--------------------
- 1 file changed, 81 insertions(+), 62 deletions(-)
+Hello Bartlomiej,
 
-diff --git a/drivers/media/rc/rc-main.c b/drivers/media/rc/rc-main.c
-index a6bbceb..59fac96 100644
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1436,16 +1436,12 @@ struct rc_dev *devm_rc_allocate_device(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_rc_allocate_device);
+On 12/14/2016 10:28 AM, Bartlomiej Zolnierkiewicz wrote:
+> 
+> On Tuesday, December 13, 2016 04:18:05 PM Javier Martinez Canillas wrote:
+>> Hello Bartlomiej,
+> 
+> Hi,
+> 
+>> On 12/13/2016 01:52 PM, Bartlomiej Zolnierkiewicz wrote:
+>>> Add missing 2000MHz & 1900MHz OPPs (for A15 cores) and 1400MHz OPP
+>>> (for A7 cores).  Also update common Odroid-XU3 Lite/XU3/XU4 thermal
+>>> cooling maps to account for new OPPs.
+>>>
+>>> Since new OPPs are not available on all Exynos5422/5800 boards modify
+>>> dts files for Odroid-XU3 Lite (limited to 1.8 GHz / 1.3 GHz) & Peach
+>>> Pi (limited to 2.0 GHz / 1.3 GHz) accordingly.
+>>>
+>>> Tested on Odroid-XU3 and XU3 Lite.
+>>>
+>>> Cc: Doug Anderson <dianders@chromium.org>
+>>> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+>>> Cc: Andreas Faerber <afaerber@suse.de>
+>>> Cc: Thomas Abraham <thomas.ab@samsung.com>
+>>> Cc: Ben Gamari <ben@smart-cactus.org>
+>>> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   14 +++++++-------
+>>>  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |   17 +++++++++++++++++
+>>>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 ++++
+>>>  arch/arm/boot/dts/exynos5800.dtsi                  |   15 +++++++++++++++
+>>>  4 files changed, 43 insertions(+), 7 deletions(-)
+>>>
+>>> Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>> ===================================================================
+>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.779763261 +0100
+>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2016-12-13 15:59:33.775763261 +0100
+>>> @@ -118,7 +118,7 @@
+>>>  				/*
+>>>  				 * When reaching cpu_alert3, reduce CPU
+>>>  				 * by 2 steps. On Exynos5422/5800 that would
+>>> -				 * be: 1600 MHz and 1100 MHz.
+>>> +				 * (usually) be: 1800 MHz and 1200 MHz.
+>>>  				 */
+>>>  				map3 {
+>>>  					trip = <&cpu_alert3>;
+>>> @@ -131,16 +131,16 @@
+>>>  
+>>>  				/*
+>>>  				 * When reaching cpu_alert4, reduce CPU
+>>> -				 * further, down to 600 MHz (11 steps for big,
+>>> -				 * 7 steps for LITTLE).
+>>> +				 * further, down to 600 MHz (13 steps for big,
+>>> +				 * 8 steps for LITTLE).
+>>>  				 */
+>>> -				map5 {
+>>> +				cooling_map5: map5 {
+>>>  					trip = <&cpu_alert4>;
+>>> -					cooling-device = <&cpu0 3 7>;
+>>> +					cooling-device = <&cpu0 3 8>;
+>>>  				};
+>>> -				map6 {
+>>> +				cooling_map6: map6 {
+>>>  					trip = <&cpu_alert4>;
+>>> -					cooling-device = <&cpu4 3 11>;
+>>> +					cooling-device = <&cpu4 3 13>;
+>>>  				};
+>>>  			};
+>>>  		};
+>>> Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+>>> ===================================================================
+>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.779763261 +0100
+>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts	2016-12-13 15:59:33.775763261 +0100
+>>> @@ -21,6 +21,23 @@
+>>>  	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
+>>>  };
+>>>  
+>>> +&cluster_a15_opp_table {
+>>> +	/delete-node/opp@2000000000;
+>>> +	/delete-node/opp@1900000000;
+>>> +};
+>>> +
+>>> +&cluster_a7_opp_table {
+>>> +	/delete-node/opp@1400000000;
+>>> +};
+>>> +
+>>
+>> I think that a comment in the DTS why these operating points aren't available
+>> in this board will make more clear why the nodes are being deleted.
+> 
+> Ok, I will add these comments in the next patch revision.
+> 
+>>> +&cooling_map5 {
+>>> +	cooling-device = <&cpu0 3 7>;
+>>> +};
+>>> +
+>>> +&cooling_map6 {
+>>> +	cooling-device = <&cpu4 3 11>;
+>>> +};
+>>> +
+>>>  &pwm {
+>>>  	/*
+>>>  	 * PWM 0 -- fan
+>>> Index: b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> ===================================================================
+>>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
+>>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts	2016-12-13 15:59:33.779763261 +0100
+>>> @@ -146,6 +146,10 @@
+>>>  	vdd-supply = <&ldo9_reg>;
+>>>  };
+>>>  
+>>> +&cluster_a7_opp_table {
+>>> +	/delete-property/opp@1400000000;
+>>> +};
+>>> +
+>>>  &cpu0 {
+>>>  	cpu-supply = <&buck2_reg>;
+>>>  };
+>>> Index: b/arch/arm/boot/dts/exynos5800.dtsi
+>>> ===================================================================
+>>> --- a/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
+>>> +++ b/arch/arm/boot/dts/exynos5800.dtsi	2016-12-13 15:59:33.779763261 +0100
+>>> @@ -24,6 +24,16 @@
+>>>  };
+>>>  
+>>>  &cluster_a15_opp_table {
+>>> +	opp@2000000000 {
+>>> +		opp-hz = /bits/ 64 <2000000000>;
+>>> +		opp-microvolt = <1250000>;
+>>> +		clock-latency-ns = <140000>;
+>>> +	};
+>>> +	opp@1900000000 {
+>>> +		opp-hz = /bits/ 64 <1900000000>;
+>>> +		opp-microvolt = <1250000>;
+>>> +		clock-latency-ns = <140000>;
+>>> +	};
+>>>  	opp@1700000000 {
+>>>  		opp-microvolt = <1250000>;
+>>>  	};
+>>> @@ -85,6 +95,11 @@
+>>>  };
+>>>
+>>
+>> AFAIK Thomas restricted the maximum OPP, because for A15 freqs > 1.8GHz the
+>> INT rail would need to be scaled up as well since there's a maximum voltage
+>> difference between the ARM and INT rails before the system becomes unstable:
+>>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/276766.html
+>> https://lkml.org/lkml/2014/5/2/419
+>>
+>> The ChromiumOS vendor tree uses a virtual regulator driver that makes sure
+>> the maximum voltage skew is between a limit. But that never made to mainline:
+>>
+>> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/boot/dts/exynos5420-peach-pit.dtsi#90
+>> https://lkml.org/lkml/2014/4/29/28
+>>
+>> Did that change and there's infrastructure in mainline now to cope with that?
+>> If that's the case, I think it would be good to mention in the commit message.
+> 
+> I was not aware of this limitation and AFAIK mainline has currently
+> no code to handle it.  I also cannot find any code to handle this in
+
+Yes, that's what I thought as well but maybe I was missing something.
+
+> Hardkernel's vendor kernel for Odroid-XU3 board.
+> 
+> Do you know whether this problem exists also on Exynos5422/5800
+> SoCs or only on Exynos5420 one?  I see that ChromiumOS uses virtual
+> regulator code also on Exynos5800 SoC based Peach Pi board but was
+> the problem actually present on this board?
+>
+
+My understanding is that this problem is present in 5420/5422/5800
+but I have no way to confirm this. I'm just guessing from the info
+in the ChromiumOS vendor tree.
+
+If you look at the commit that added the regulator-locker driver,
+the test says to be done in a Peach Pi so it seems the problem is
+not restricted to only Exynos5420:
+
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ba63620feace4eaed5572ac2e77d8d61754af704
  
--int rc_register_device(struct rc_dev *dev)
-+static int rc_setup_rx_device(struct rc_dev *dev)
- {
--	static bool raw_init = false; /* raw decoders loaded? */
--	struct rc_map *rc_map;
--	const char *path;
--	int attr = 0;
--	int minor;
- 	int rc;
-+	struct rc_map *rc_map;
- 
--	if (!dev || !dev->map_name)
-+	if (!dev->map_name)
- 		return -EINVAL;
- 
- 	rc_map = rc_map_get(dev->map_name);
-@@ -1454,6 +1450,19 @@ int rc_register_device(struct rc_dev *dev)
- 	if (!rc_map || !rc_map->scan || rc_map->size == 0)
- 		return -EINVAL;
- 
-+	rc = ir_setkeytable(dev, rc_map);
-+	if (rc)
-+		return rc;
-+
-+	if (dev->change_protocol) {
-+		u64 rc_type = (1ll << rc_map->rc_type);
-+
-+		rc = dev->change_protocol(dev, &rc_type);
-+		if (rc < 0)
-+			goto out_table;
-+		dev->enabled_protocols = rc_type;
-+	}
-+
- 	set_bit(EV_KEY, dev->input_dev->evbit);
- 	set_bit(EV_REP, dev->input_dev->evbit);
- 	set_bit(EV_MSC, dev->input_dev->evbit);
-@@ -1463,6 +1472,61 @@ int rc_register_device(struct rc_dev *dev)
- 	if (dev->close)
- 		dev->input_dev->close = ir_close;
- 
-+	/*
-+	 * Default delay of 250ms is too short for some protocols, especially
-+	 * since the timeout is currently set to 250ms. Increase it to 500ms,
-+	 * to avoid wrong repetition of the keycodes. Note that this must be
-+	 * set after the call to input_register_device().
-+	 */
-+	dev->input_dev->rep[REP_DELAY] = 500;
-+
-+	/*
-+	 * As a repeat event on protocols like RC-5 and NEC take as long as
-+	 * 110/114ms, using 33ms as a repeat period is not the right thing
-+	 * to do.
-+	 */
-+	dev->input_dev->rep[REP_PERIOD] = 125;
-+
-+	/* rc_open will be called here */
-+	rc = input_register_device(dev->input_dev);
-+	if (rc)
-+		goto out_table;
-+
-+	dev->input_dev->dev.parent = &dev->dev;
-+	memcpy(&dev->input_dev->id, &dev->input_id, sizeof(dev->input_id));
-+	dev->input_dev->phys = dev->input_phys;
-+	dev->input_dev->name = dev->input_name;
-+
-+	return 0;
-+
-+out_table:
-+	ir_free_table(&dev->rc_map);
-+
-+	return rc;
-+}
-+
-+static void rc_free_rx_device(struct rc_dev *dev)
-+{
-+	if (!dev)
-+		return;
-+
-+	ir_free_table(&dev->rc_map);
-+
-+	input_unregister_device(dev->input_dev);
-+	dev->input_dev = NULL;
-+}
-+
-+int rc_register_device(struct rc_dev *dev)
-+{
-+	static bool raw_init = false; /* raw decoders loaded? */
-+	const char *path;
-+	int attr = 0;
-+	int minor;
-+	int rc;
-+
-+	if (!dev)
-+		return -EINVAL;
-+
- 	minor = ida_simple_get(&rc_ida, 0, RC_DEV_MAX, GFP_KERNEL);
- 	if (minor < 0)
- 		return minor;
-@@ -1486,39 +1550,15 @@ int rc_register_device(struct rc_dev *dev)
- 	if (rc)
- 		goto out_unlock;
- 
--	rc = ir_setkeytable(dev, rc_map);
--	if (rc)
--		goto out_dev;
--
--	dev->input_dev->dev.parent = &dev->dev;
--	memcpy(&dev->input_dev->id, &dev->input_id, sizeof(dev->input_id));
--	dev->input_dev->phys = dev->input_phys;
--	dev->input_dev->name = dev->input_name;
--
--	rc = input_register_device(dev->input_dev);
--	if (rc)
--		goto out_table;
--
--	/*
--	 * Default delay of 250ms is too short for some protocols, especially
--	 * since the timeout is currently set to 250ms. Increase it to 500ms,
--	 * to avoid wrong repetition of the keycodes. Note that this must be
--	 * set after the call to input_register_device().
--	 */
--	dev->input_dev->rep[REP_DELAY] = 500;
--
--	/*
--	 * As a repeat event on protocols like RC-5 and NEC take as long as
--	 * 110/114ms, using 33ms as a repeat period is not the right thing
--	 * to do.
--	 */
--	dev->input_dev->rep[REP_PERIOD] = 125;
--
- 	path = kobject_get_path(&dev->dev.kobj, GFP_KERNEL);
- 	dev_info(&dev->dev, "%s as %s\n",
- 		dev->input_name ?: "Unspecified device", path ?: "N/A");
- 	kfree(path);
- 
-+	rc = rc_setup_rx_device(dev);
-+	if (rc)
-+		goto out_dev;
-+
- 	if (dev->driver_type == RC_DRIVER_IR_RAW) {
- 		if (!raw_init) {
- 			request_module_nowait("ir-lirc-codec");
-@@ -1526,36 +1566,20 @@ int rc_register_device(struct rc_dev *dev)
- 		}
- 		rc = ir_raw_event_register(dev);
- 		if (rc < 0)
--			goto out_input;
--	}
--
--	if (dev->change_protocol) {
--		u64 rc_type = (1ll << rc_map->rc_type);
--		rc = dev->change_protocol(dev, &rc_type);
--		if (rc < 0)
--			goto out_raw;
--		dev->enabled_protocols = rc_type;
-+			goto out_rx;
- 	}
- 
- 	/* Allow the RC sysfs nodes to be accessible */
- 	atomic_set(&dev->initialized, 1);
- 
--	IR_dprintk(1, "Registered rc%u (driver: %s, remote: %s, mode %s)\n",
-+	IR_dprintk(1, "Registered rc%u (driver: %s)\n",
- 		   dev->minor,
--		   dev->driver_name ? dev->driver_name : "unknown",
--		   rc_map->name ? rc_map->name : "unknown",
--		   dev->driver_type == RC_DRIVER_IR_RAW ? "raw" : "cooked");
-+		   dev->driver_name ? dev->driver_name : "unknown");
- 
- 	return 0;
- 
--out_raw:
--	if (dev->driver_type == RC_DRIVER_IR_RAW)
--		ir_raw_event_unregister(dev);
--out_input:
--	input_unregister_device(dev->input_dev);
--	dev->input_dev = NULL;
--out_table:
--	ir_free_table(&dev->rc_map);
-+out_rx:
-+	rc_free_rx_device(dev);
- out_dev:
- 	device_del(&dev->dev);
- out_unlock:
-@@ -1601,12 +1625,7 @@ void rc_unregister_device(struct rc_dev *dev)
- 	if (dev->driver_type == RC_DRIVER_IR_RAW)
- 		ir_raw_event_unregister(dev);
- 
--	/* Freeing the table should also call the stop callback */
--	ir_free_table(&dev->rc_map);
--	IR_dprintk(1, "Freed keycode table\n");
--
--	input_unregister_device(dev->input_dev);
--	dev->input_dev = NULL;
-+	rc_free_rx_device(dev);
- 
- 	device_del(&dev->dev);
- 
+> [ I added Arjun to Cc:, maybe he can help in explaining this issue
+>   (unfortunately Inderpal's email is no longer working). ]
+>
+
+Added Abhilash to cc list as well since he was involved in the Exynos ChromeOS tree.
+
+> Please also note that on Exynos5422/5800 SoCs the same ARM rail
+> voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
+> IOW if the problem exists it is already present in the mainline
+> kernel.
+>
+
+Ah, I only looked at your patch and I didn't compare the voltage levels
+in your 1.9 GHz and 2.0 GHz OPPs with the current 1.8 GHz in mainline.
+
+I wonder if the voltage levels in your patch are correct then, since the
+ChromiumOS tree uses a higher voltages for the 1.9 GHz and 2.0 GHz OPPs:
+
+/*
+ * Default ASV table
+ */
+static const unsigned int asv_voltage_5420[CPUFREQ_NUM_LEVELS] = {
+	1362500,	/* L0  2100 */
+	1312500,	/* L1  2000 */
+	1275000,	/* L2  1900 */
+	1225000,	/* L3  1800 */
+	1200000,	/* L4  1700 */
+
+This is from https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/cpufreq/exynos5420-cpufreq.c#175
+
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+
+Best regards,
 -- 
-2.10.2
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
