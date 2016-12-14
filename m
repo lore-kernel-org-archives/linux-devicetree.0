@@ -1,43 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] MIPS: NI 169445 board support
-Date: Wed, 14 Dec 2016 10:48:58 -0600
-Message-ID: <CAL_JsqJPkVBbvTonOADsu-uaH0bxtNDBJ3OrzE=7vP5pc92H=Q@mail.gmail.com>
-References: <1480693329-22265-1-git-send-email-nathan.sullivan@ni.com>
- <20161209211828.dykl2l4kmthqgq6e@rob-hp-laptop> <20161214163253.GA25341@nathan3500-linux-VM>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH linux v1 0/4] Seven segment display support
+Date: Wed, 14 Dec 2016 08:50:19 -0800
+Message-ID: <20161214165019.GC14275@kroah.com>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com>
+ <20161214134530.2bd54a4e@free-electrons.com>
+ <20161214125641.GA5379@kroah.com>
+ <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161214163253.GA25341@nathan3500-linux-VM>
+Content-Disposition: inline
+In-Reply-To: <ac324946-41da-c090-a0ca-78155611bb7e@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nathan Sullivan <nathan.sullivan@ni.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, mark.rutland@arm.com, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, arnd@arndb.de, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 10:32 AM, Nathan Sullivan
-<nathan.sullivan@ni.com> wrote:
-> On Fri, Dec 09, 2016 at 03:18:28PM -0600, Rob Herring wrote:
->> On Fri, Dec 02, 2016 at 09:42:09AM -0600, Nathan Sullivan wrote:
->> > Support the National Instruments 169445 board.
->> >
->> > Signed-off-by: Nathan Sullivan <nathan.sullivan@ni.com>
->> > ---
->> > "gpio: mmio: add support for NI 169445 NAND GPIO" and
->> > "devicetree: add vendor prefix for National Instruments" are required for the
->> > NAND on this board to work.
+On Wed, Dec 14, 2016 at 02:12:41PM +0100, Neil Armstrong wrote:
+> On 12/14/2016 01:56 PM, Greg KH wrote:
+> > On Wed, Dec 14, 2016 at 01:45:30PM +0100, Thomas Petazzoni wrote:
+> >> Hello,
+> >>
+> >> On Tue, 13 Dec 2016 23:55:00 -0800, Jaghathiswari Rankappagounder
+> >> Natarajan wrote:
+> >>
+> >>> Documentation for the binding which provides an interface for adding clock,
+> >>> data and clear signal GPIO lines to control seven segment display.
+> >>>
+> >>> The platform device driver provides an API for displaying on two 7-segment
+> >>> displays, and implements the required bit-banging. The hardware assumed is
+> >>> 74HC164 wired to two 7-segment displays.
+> >>>
+> >>> The character device driver implements the user-space API for letting a user
+> >>> write to two 7-segment displays including any conversion methods necessary
+> >>> to map the user input to two 7-segment displays.
+> >>>
+> >>> Adding clock, data and clear signal GPIO lines in the devicetree to control
+> >>> seven segment display on zaius platform.
+> >>>
+> >>> The platform driver matches on the device tree node; the platform driver also
+> >>> initializes the character device.
+> >>>
+> >>> Tested that the seven segment display works properly by writing to the
+> >>> character device file on a EVB AST2500 board which also has 74HC164 wired
+> >>> to two 7-segment displays.
+> >>
+> >> FWIW, I proposed a driver for seven segment displays back in 2013:
+> >>
+> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139986.html
+> >>
+> >> And the feedback from Greg KH was: we don't need a driver for that, do
+> >> it from userspace. See:
+> >>
+> >>    http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/139992.html
+> >>
+> >> So: good luck :-)
+> > 
+> > Did anyone ever write a library for this type of thing?
+> > 
+> > Again, I don't want to see one-off drivers for random devices like this
+> > that should be able to all be controlled from userspace in a common
+> > manner.  Much like we did for fingerprint readers a long long time
+> > ago...
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Hi Greg,
+> 
+> Actually, it's more than a random interface, a lot of SoCs and boards actually have such displays
+> and it's a pity to use UIO, sysfs gpio bitbanging and all sort of ugly stuff to only print a few
+> characters a simple and clean driver could achieve.
 
->> > +   ahb@0 {
->> > +           compatible = "simple-bus";
->> > +           #address-cells = <1>;
->> > +           #size-cells = <1>;
->> > +           ranges;
->>
->> If everything is under 0x1f3xxxxx, then add in the ranges here (and the
->> unit address).
->>
->
-> I noticed that some systems call out their axi/ahb busses, some do not.  Would
-> you prefer that I remove the bus entirely?
+Great, then let's make an API that all devices of this type could use,
+and not just take individual drivers that all have a custom char or
+sysfs interface which requires custom userspace code to be able to drive
+all of the different devices in a common way (i.e. a library would have
+to be written anyways...)
 
-Definitely not. IMO, not having a bus node is an error.
+thanks,
 
-Rob
+greg k-h
