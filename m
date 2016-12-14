@@ -1,67 +1,63 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 2/3] power: supply: bq24735-charger: optionally poll
- the ac-detect gpio
-Date: Wed, 14 Dec 2016 16:10:27 +0100
-Message-ID: <20161214151026.5q6goxlfscv53tol@earth>
-References: <1481673405-4547-1-git-send-email-peda@axentia.se>
- <1481673405-4547-3-git-send-email-peda@axentia.se>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Change node name for pwrseq pin on
+ Olinuxino-lime2-emmc
+Date: Wed, 14 Dec 2016 16:30:13 +0100
+Message-ID: <20161214153013.bkdm3pu3osepfnn2@lukather>
+References: <20161214145724.42745-1-manu@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="htebv6msr22h7zh6"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4jrqq6x2mmf5ugo7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481673405-4547-3-git-send-email-peda@axentia.se>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20161214145724.42745-1-manu@bidouilliste.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emmanuel Vadot <manu@bidouilliste.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---htebv6msr22h7zh6
+--4jrqq6x2mmf5ugo7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Dec 14, 2016 at 12:56:44AM +0100, Peter Rosin wrote:
-> If the ac-detect gpio does not support interrupts, provide a fallback
-> to poll the gpio at a configurable interval.
+On Wed, Dec 14, 2016 at 03:57:24PM +0100, Emmanuel Vadot wrote:
+> The node name for the power seq pin is mmc2@0 like the mmc2_pins_a one.
+> This makes the original node (mmc2_pins_a) scrapped out of the dtb and
+> result in a unusable eMMC if U-Boot didn't configured the pins to the
+> correct functions.
 >=20
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->
-> [...]
->
-> +	} else if (charger->status_gpio) {
-> +		ret =3D of_property_read_u32(client->dev.of_node,
-> +					   "poll-interval",
-> +					   &charger->poll_interval);
+> Changes since v1:
+>  * Rename the node mmc2-rst-pin
 
-Please use device_property_read_u32() instead.
+That changelog should be after the ---. Removed it and applied.
 
-> [...]
+Thanks!
+Maxime
 
--- Sebastian
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---htebv6msr22h7zh6
+--4jrqq6x2mmf5ugo7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhRYOAACgkQ2O7X88g7
-+pornw/+Ox8mn0XdhkzmTfKAzGdg+vj5IV2C0qlbOs4kHSVwk14ecdlA8YgJICds
-d2EQkrbSGfz6m5ooSQG485Mpajg3bXs6zEtmDbmCvKZnNYAOxLoo65iFJctRv+Pr
-x/+mLY6Vm+t7ir1KzvdbZTdiYtby+t3kVemuIsr+GWGGtATPRxlWfb2WJQoQHaVh
-CjygyYdi/IjTaUT/+gqNKvlUe4qHkRuEjctUJVdl0Be49mdlLN0pifn4NmV9/sh5
-Zos/ntyWG6JytqDKVWRgdj925JRPjb3BI+s7PeuWBY+l9dxThkqC5IZLLkKaQQsS
-L9LbvlL5+zjp0xGKHck77z1FS4W7XV3A6Wn7CEyyG4OwWrtmGVhYWZlFdJ2TP6Cd
-KGwWBQi8N3zASJbh76ivYl0WtUCrq783Ir/nXnDdMuoNBivzKFy5rWDiam1PKAKF
-KawcXGDhOHeRfMdDa+FJ52KU6hVZYn0CTLtL2YrZyZrOaFEvDhsBGHTfSBNCTnLc
-SzRFO5YnGSrFq1LDNQkvGXkylyYu9s+QNi1lcLM31hUuWui/Vfm/HBc49b/S57p1
-k6S0QpN8b/Lju/O5sAVuAbX8o3Q9WsVRXHy4OAZcyC/y9Hu2zjGZFZvUEzAjJqnV
-sFfRrA+R6liT/8+t3hIsMOmZtQClD5TYP5A0EUKc/vELcA9KbjY=
-=1k0H
+iQIcBAEBCAAGBQJYUWWCAAoJEBx+YmzsjxAgqu0P/RpmCYo56YQ1Bvk6W1UHsxul
+o+Cahf+hopfeOZbQDgUJlElxcfVphKm29f/EedSe1+6c83IeSvCihH6jimC1ZBBH
+hlJxiPsPIqA9VLRCjdI8rWr3ZMadQJhmUraFbxfPitFBaekf7N80ylkxv3OhOyAc
+n55pl+QScXj45C4fNRL3J77xthNNtyiJMo4OED9affzdsFWUk1GAIVRiu9wPNmEi
+aRDtKfHS4QmC89Uvk/wMIPuvlN6IfGmln3TdzDmalKFFCaCDvgSskx6uY0xP0kK2
+RmVTb4pQD+yDVknbhxp26Hw689LP6aCb13StEhii5JtJE49C5kHmfsomLgcagD1j
+Mzi9QjMMi7nOjPfl7Cp+BYq7v8MX4gsccIUIbnczOLIQ/noGNL2ymt9HaXuf/ZmH
+FLFJiZzeuyZfrI2oun29q9l0OG9fkOmP680OsmKVMWrZOYW4P+Rtyd3DHg++lTZa
+3l+m0ZKKyX5SrFd4IwAz6C7bT6k2runqv9yCoZTmqYlNRKMixmVoeKXkEzOzNxCW
+qPEjQ9yzjj267ih4FXsFB+dNZBKrgscKgNyEOlW+m8j2PuQ9NSOi8d2L2a4+NPAC
+fOT4RUpGjnj+eWl5JtyPows6viZeoQCJ+0SjF0zRzzLdODUz0hU2XfZuh8bE/rU1
+18JYzefVzvGkwYqRXgtA
+=1XeH
 -----END PGP SIGNATURE-----
 
---htebv6msr22h7zh6--
+--4jrqq6x2mmf5ugo7--
