@@ -1,135 +1,43 @@
-From: Ricky Liang <jcliang@chromium.org>
-Subject: Re: [PATCH v8 2/4] vcodec: mediatek: Add Mediatek JPEG Decoder Driver
-Date: Wed, 14 Dec 2016 15:29:00 +0800
-Message-ID: <CAAJzSMca41ExE+k924D6M-1=t8v+aduTC2FwfqdpF4R32kBuGQ@mail.gmail.com>
-References: <1480475340-21893-1-git-send-email-rick.chang@mediatek.com>
- <1480475340-21893-3-git-send-email-rick.chang@mediatek.com>
- <CAAJzSMfNyMiia==mXKo6aBw1VxMBxGE20LB870Zm1u9mCoioyQ@mail.gmail.com> <1481533621.13825.2.camel@mtksdaap41>
+From: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 5/5] Documentation: fsl-quadspi: Add fsl, ls1012a-qspi
+ compatible string
+Date: Wed, 14 Dec 2016 07:52:07 +0000
+Message-ID: <AM5PR0402MB2900DCF4C944648A9E50535C899A0@AM5PR0402MB2900.eurprd04.prod.outlook.com>
+References: <1481188984-43683-1-git-send-email-yao.yuan@freescale.com>
+ <1481188984-43683-6-git-send-email-yao.yuan@freescale.com>
+ <20161212170948.fq7v5lva4kgt6hly@rob-hp-laptop>
+ <DB6PR0402MB2902DADEB4E6D06418AD311F899B0@DB6PR0402MB2902.eurprd04.prod.outlook.com>
+ <CAL_Jsq+jp_2m7D=Hv6TRa+1nQZhPis-0MPK5kOAWge_7RvN4Qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481533621.13825.2.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rick Chang <rick.chang@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, "moderated list:ARM/Mediatek SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Bin Liu <bin.liu@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+jp_2m7D=Hv6TRa+1nQZhPis-0MPK5kOAWge_7RvN4Qg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rick,
-
-Can you upload patchset v9 to address the issue? Thanks!
-
-On Mon, Dec 12, 2016 at 5:07 PM, Rick Chang <rick.chang@mediatek.com> wrote:
-> Hi Ricky,
->
-> Thanks for your feedback. We will fix the problem in another patch.
->
-> On Mon, 2016-12-12 at 12:34 +0800, Ricky Liang wrote:
->> Hi Rick,
->>
->> On Wed, Nov 30, 2016 at 11:08 AM, Rick Chang <rick.chang@mediatek.com> wrote:
->> > Add v4l2 driver for Mediatek JPEG Decoder
->> >
->> > Signed-off-by: Rick Chang <rick.chang@mediatek.com>
->> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
->>
->> <snip...>
->>
->> > +static bool mtk_jpeg_check_resolution_change(struct mtk_jpeg_ctx *ctx,
->> > +                                            struct mtk_jpeg_dec_param *param)
->> > +{
->> > +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->> > +       struct mtk_jpeg_q_data *q_data;
->> > +
->> > +       q_data = &ctx->out_q;
->> > +       if (q_data->w != param->pic_w || q_data->h != param->pic_h) {
->> > +               v4l2_dbg(1, debug, &jpeg->v4l2_dev, "Picture size change\n");
->> > +               return true;
->> > +       }
->> > +
->> > +       q_data = &ctx->cap_q;
->> > +       if (q_data->fmt != mtk_jpeg_find_format(ctx, param->dst_fourcc,
->> > +                                               MTK_JPEG_FMT_TYPE_CAPTURE)) {
->> > +               v4l2_dbg(1, debug, &jpeg->v4l2_dev, "format change\n");
->> > +               return true;
->> > +       }
->> > +       return false;
->>
->> <snip...>
->>
->> > +static void mtk_jpeg_device_run(void *priv)
->> > +{
->> > +       struct mtk_jpeg_ctx *ctx = priv;
->> > +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->> > +       struct vb2_buffer *src_buf, *dst_buf;
->> > +       enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
->> > +       unsigned long flags;
->> > +       struct mtk_jpeg_src_buf *jpeg_src_buf;
->> > +       struct mtk_jpeg_bs bs;
->> > +       struct mtk_jpeg_fb fb;
->> > +       int i;
->> > +
->> > +       src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
->> > +       dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
->> > +       jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
->> > +
->> > +       if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
->> > +               for (i = 0; i < dst_buf->num_planes; i++)
->> > +                       vb2_set_plane_payload(dst_buf, i, 0);
->> > +               buf_state = VB2_BUF_STATE_DONE;
->> > +               goto dec_end;
->> > +       }
->> > +
->> > +       if (mtk_jpeg_check_resolution_change(ctx, &jpeg_src_buf->dec_param)) {
->> > +               mtk_jpeg_queue_src_chg_event(ctx);
->> > +               ctx->state = MTK_JPEG_SOURCE_CHANGE;
->> > +               v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
->> > +               return;
->> > +       }
->>
->> This only detects source change if multiple OUPUT buffers are queued.
->> It does not catch the source change in the following scenario:
->>
->> - OUPUT buffers for jpeg1 enqueued
->> - OUTPUT queue STREAMON
->> - userspace creates CAPTURE buffers
->> - CAPTURE buffers enqueued
->> - CAPTURE queue STREAMON
->> - decode
->> - OUTPUT queue STREAMOFF
->> - userspace recreates OUTPUT buffers for jpeg2
->> - OUTPUT buffers for jpeg2 enqueued
->> - OUTPUT queue STREAMON
->>
->> In the above sequence if jpeg2's decoded size is larger than jpeg1 the
->> function fails to detect that the existing CAPTURE buffers are not big
->> enough to hold the decoded data.
->>
->> A possible fix is to pass *dst_buf to
->> mtk_jpeg_check_resolution_change(), and check in the function that all
->> the dst_buf planes are large enough to hold the decoded data.
->>
->> > +
->> > +       mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
->> > +       if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
->> > +               goto dec_end;
->> > +
->> > +       spin_lock_irqsave(&jpeg->hw_lock, flags);
->> > +       mtk_jpeg_dec_reset(jpeg->dec_reg_base);
->> > +       mtk_jpeg_dec_set_config(jpeg->dec_reg_base,
->> > +                               &jpeg_src_buf->dec_param, &bs, &fb);
->> > +
->> > +       mtk_jpeg_dec_start(jpeg->dec_reg_base);
->> > +       spin_unlock_irqrestore(&jpeg->hw_lock, flags);
->> > +       return;
->> > +
->> > +dec_end:
->> > +       v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
->> > +       v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
->> > +       v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
->> > +       v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
->> > +       v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
->> > +}
->>
->> <snip...>
->
->
+T24gVGh1LCBEZWMgMTQsIDIwMTYgYXQgMDU6MjM6MDJQTSArMDgwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6DQo+IE9uIE1vbiwgRGVjIDEyLCAyMDE2IGF0IDg6NDcgUE0sIFlhbyBZdWFuIDx5YW8ueXVh
+bkBueHAuY29tPiB3cm90ZToNCj4gPiBPbiBUaHUsIERlYyAxMywgMjAxNiBhdCAwNToyMzowMlBN
+ICswODAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPj4gT24gVGh1LCBEZWMgMDgsIDIwMTYgYXQg
+MDU6MjM6MDRQTSArMDgwMCwgWXVhbiBZYW8gd3JvdGU6DQo+ID4+ID4gRnJvbTogWXVhbiBZYW8g
+PHlhby55dWFuQG54cC5jb20+DQo+ID4+DQo+ID4+IFNhbWUgcHJvYmxlbSBpbiB0aGlzIHN1Ympl
+Y3QgdG9vLg0KPiA+Pg0KPiA+PiA+DQo+ID4+ID4gbmV3IGNvbXBhdGlibGUgc3RyaW5nOiAiZnNs
+LGxzMTAxMmEtcXNwaSIuDQo+ID4+ID4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBZdWFuIFlhbyA8
+eWFvLnl1YW5AbnhwLmNvbT4NCj4gPj4gPiAtLS0NCj4gPj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL210ZC9mc2wtcXVhZHNwaS50eHQgfCAxICsNCj4gPj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4+DQo+ID4+IEFja2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPg0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIHJldmlldy4NCj4g
+PiBBbmQgZG8geW91IGhhdmUgYW55IHN1Z2dlc3Rpb24gZm9yIHRoaXMgc3ViamVjdD8NCj4gDQo+
+IFRoZSBwcm9ibGVtIGlzIHlvdSBoYXZlIGEgc3BhY2UgaW4gdGhlIGNvbXBhdGlibGUgc3RyaW5n
+OiAiZnNsLCBsczEwMTJhLXFzcGkiDQo+IHJhdGhlciB0aGFuICJmc2wsbHMxMDEyYS1xc3BpIg0K
+PiANCj4gQWxzbywgSSBwcmVmZXIgImR0L2JpbmRpbmdzOiAiIGFzIHRoZSBiZWdpbm5pbmcgb2Yg
+YmluZGluZyBwYXRjaCBzdWJqZWN0cy4NCj4gDQoNCk9rLCBHZXQgaXQuDQoNClRoYW5rcyBmb3Ig
+eW91ciBjb21tZW50cy4NCkkgd2lsbCBzZW5kIHYyIHNvb24uDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
