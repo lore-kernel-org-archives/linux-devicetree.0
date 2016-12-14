@@ -1,80 +1,191 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] irqchip/renesas-intc-irqpin: Add R-Car Gen1 fallback
- binding
-Date: Wed, 14 Dec 2016 09:03:18 +0100
-Message-ID: <20161214080318.GA32481@verge.net.au>
-References: <1481280650-9258-1-git-send-email-horms+renesas@verge.net.au>
- <1481280650-9258-3-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdX_Cg6T10pMXe420kOwQn27_PRm-osNb7L4_M==fJnE_Q@mail.gmail.com>
- <20161212184311.2gciuj5lgkp5x7st@rob-hp-laptop>
+From: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v9 0/4] Add Mediatek JPEG Decoder
+Date: Wed, 14 Dec 2016 16:04:46 +0800
+Message-ID: <1481702690-10476-1-git-send-email-rick.chang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161212184311.2gciuj5lgkp5x7st@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bin Liu <bin.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 12:43:11PM -0600, Rob Herring wrote:
-> On Fri, Dec 09, 2016 at 01:52:20PM +0100, Geert Uytterhoeven wrote:
-> > Hi Simon,
-> > 
-> > On Fri, Dec 9, 2016 at 11:50 AM, Simon Horman
-> > <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > > In the case of Renesas R-Car hardware we know that there are generations of
-> > > SoCs, e.g. Gen 1, Gen 2 and Gen 3. But beyond that its not clear what the
-> > 
-> > it's
-> > 
-> > > relationship between IP blocks might be. For example, I believe that
-> > > r8a7779 is older than r8a7778 but that doesn't imply that the latter is a
-> > > descendant of the former or vice versa.
-> > >
-> > > We can, however, by examining the documentation and behaviour of the
-> > > hardware at run-time observe that the current driver implementation appears
-> > > to be compatible with the IP blocks on SoCs within a given generation.
-> > >
-> > > For the above reasons and convenience when enabling new SoCs a
-> > > per-generation fallback compatibility string scheme being adopted for
-> > > drivers for Renesas SoCs.
-> > >
-> > > Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> > > ---
-> > >  .../interrupt-controller/renesas,intc-irqpin.txt   | 44 ++++++++++++----------
-> > >  drivers/irqchip/irq-renesas-intc-irqpin.c          |  2 +
-> > >  2 files changed, 26 insertions(+), 20 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> > > index 772c550d3b4b..e5a5251be9f5 100644
-> > > --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> > > @@ -2,13 +2,19 @@ DT bindings for the R-/SH-Mobile irqpin controller
-> > >
-> > >  Required properties:
-> > >
-> > > -- compatible: has to be "renesas,intc-irqpin-<soctype>", "renesas,intc-irqpin"
-> > > -  as fallback.
-> > > -  Examples with soctypes are:
-> > > +- compatible:
-> > >      - "renesas,intc-irqpin-r8a7740" (R-Mobile A1)
-> > >      - "renesas,intc-irqpin-r8a7778" (R-Car M1A)
-> > >      - "renesas,intc-irqpin-r8a7779" (R-Car H1)
-> > >      - "renesas,intc-irqpin-sh73a0" (SH-Mobile AG5)
-> > > +    - "renesas,rcar-gen1-intc-irqpin" (generic R-Car Gen1 compatible device)
-> > 
-> > Does it make sense to add a new family-specific compatible value to a driver
-> > that's unlikely to receive more users in the future? More recent SoCs use
-> > renesas,irqc.
-> 
-> If that's the case, then no. Please don't go crazy with your generic 
-> strings. I don't mind them, but I don't know that I'd call it best 
-> practice.
+This series of patches provide a v4l2 driver to control Mediatek JPEG decoder
+for decoding JPEG image and Motion JPEG bitstream.
 
-Understood. I do not see any new users of this driver on the horizon
-and given the above I withdraw this patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+changes since v8:
+- Fix state error in first bit stream when capture buffer has been stream on.
+  This will trigger device run inadvertently.
+
+changes since v7:
+- Update MAINTAINERS
+
+changes since v6:
+- fix kbuild test fail
+- Add patch for MAINTAINERS
+
+changes since v5:
+- remove redundant name from struct mtk_jpeg_fmt
+- Set state of all buffers to VB2_BUF_STATE_QUEUED if fail in start streaming
+- Remove VB2_USERPTR
+- Add check for buffer index
+
+changes since v4:
+- Change file name of binding documentation
+- Revise DT binding documentation
+- Revise compatible string
+
+changes since v3:
+- Revise DT binding documentation
+- Revise compatible string
+
+changes since v2:
+- Revise DT binding documentation 
+
+changes since v1:
+- Rebase for v4.9-rc1.
+- Update Compliance test version and result
+- Remove redundant path in Makefile
+- Fix potential build error without CONFIG_PM_RUNTIME and CONFIG_PM_SLEEP
+- Fix warnings from patch check and smatch check
+
+* Dependency
+The patch "arm: dts: mt2701: Add node for JPEG decoder" depends on: 
+  CCF "Add clock support for Mediatek MT2701"[1]
+  iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+[2] https://patchwork.kernel.org/patch/9164013/
+
+* Compliance test
+v4l2-compliance SHA   : 4ad7174b908a36c4f315e3fe2efa7e2f8a6f375a
+
+Driver Info:
+        Driver name   : mtk-jpeg decode
+        Card type     : mtk-jpeg decoder
+        Bus info      : platform:15004000.jpegdec
+        Driver version: 4.9.0
+        Capabilities  : 0x84204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video3 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK
+                test Scaling: OK
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+
+Rick Chang (4):
+  dt-bindings: mediatek: Add a binding for Mediatek JPEG Decoder
+  vcodec: mediatek: Add Mediatek JPEG Decoder Driver
+  arm: dts: mt2701: Add node for Mediatek JPEG Decoder
+  vcodec: mediatek: Add Maintainers entry for Mediatek JPEG driver
+
+ .../bindings/media/mediatek-jpeg-decoder.txt       |   37 +
+ MAINTAINERS                                        |    7 +
+ arch/arm/boot/dts/mt2701.dtsi                      |   14 +
+ drivers/media/platform/Kconfig                     |   15 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/mtk-jpeg/Makefile           |    2 +
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 1306 ++++++++++++++++++++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  139 +++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c      |  417 +++++++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h      |   91 ++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c   |  160 +++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h   |   25 +
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h     |   58 +
+ 13 files changed, 2273 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
+ create mode 100644 drivers/media/platform/mtk-jpeg/Makefile
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+
+-- 
+1.9.1
