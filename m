@@ -1,118 +1,129 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] pinctrl: aspeed: Read and write bits in LPC and
- GFX controllers
-Date: Thu, 15 Dec 2016 10:30:43 +1030
-Message-ID: <1481760043.3112.60.camel@aj.id.au>
-References: <20161206031152.3004-1-andrew@aj.id.au>
-         <20161206031152.3004-2-andrew@aj.id.au>
-         <20161212162712.u2uypxkqhh6cinsp@rob-hp-laptop>
-         <1481609543.3112.34.camel@aj.id.au>
-         <CAL_JsqJvhxDSVqpAFCberferxCjvLPRTFXcgTafaPf1DwOa2Xw@mail.gmail.com>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci
+ of rk3399
+Date: Wed, 14 Dec 2016 16:10:38 -0800
+Message-ID: <CAD=FV=UU4JdRjRgEvc_wxprvi6bo46+jd=x2m2QzOe4uJmuRPA@mail.gmail.com>
+References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com> <1481710301-1454-4-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-vaNGXmR19JSZRtUNO7V3"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJvhxDSVqpAFCberferxCjvLPRTFXcgTafaPf1DwOa2Xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1481710301-1454-4-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torok>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---=-vaNGXmR19JSZRtUNO7V3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, Dec 14, 2016 at 2:11 AM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> From: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> We found that the suspend process was blocked when it run into
+> ehci/ohci module due to clk-480m of usb2-phy was disabled.
+>
+> The root cause is that usb2-phy suspended earlier than ehci/ohci
+> (usb2-phy will be auto suspended if no devices plug-in).
 
-On Wed, 2016-12-14 at 10:46 -0600, Rob Herring wrote:
-> >> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "aspeed,g5-pinctr=
-l";
-> >>
-> >> There's no register range for pinctrl?
-> >
-> > This may be a mistake on my part; when I wrote this I had no experience
-> > with writing devicetree bindings (and still don't have a lot).
-> >
-> > The SCU does have register regions for pinctrl but on reflection I feel
-> > neither the mfd nor syscon bindings describe how children's resources
-> > should be treated in general. The example in the mfd bindings is for
-> > hardware that is register-bit-led,compatible, whose bindings use the
-> > 'offset' property rather than 'reg', which still describes where, but
-> > not using the reg property. Given my uncertainty with reg in an mfd
-> > child, I wrote the pinctrl/pinmux driver using offsets from the base of
-> > the SCU's syscon rather than describing the exact region(s) of the
-> > syscon that should be used.
-> >
-> > The issue you raise here occurred to me when writing the LPC Host
-> > Controller bindings, but there I wasn't convinced using the ranges
-> > property to give offsets was the right thing to do either.
-> >
-> > Regardless, whilst there are two dedicated regions of pinmux registers,
-> > the mux state also depends on bits in SCU registers outside of these
-> > regions. Assuming we define an appropriate ranges property for the SCU
-> > syscon the pinctrl reg property would look like:
-> >
-> >=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x2c 0x1>, <0x3c 0x1>, <0x48 0x1>, <0x=
-70 0x1>, <0x7c 0x1>, <0x80 0x18>, <0xa0 0x10>, <0xd0 0x1>;
-> >
-> > This is the list of registers affecting the mux taken from the pinctrl-
-> > aspeed.h.
->=20
-> With other registers in the holes, right?=20
+This is really weird, but I can confirm it is true on my system too
+(kernel-4.4 based).  At least I see:
 
-Yes.
+[  208.012065] calling  usb1+ @ 4984, parent: fe380000.usb, cb: usb_dev_suspend
+[  208.569112] calling  ff770000.syscon:usb2-phy@e450+ @ 4983, parent:
+ff770000.syscon, cb: platform_pm_suspend
+[  208.569113] call ff770000.syscon:usb2-phy@e450+ returned 0 after 0 usecs
+[  208.569439] calling  fe380000.usb+ @ 4983, parent: platform, cb:
+platform_pm_suspend
+[  208.569444] call fe380000.usb+ returned 0 after 4 usecs
 
-> If it is sparse like that,
-> then yes you probably just want to have reg in the parent for the
-> whole block.
 
-Alright, we will leave it as-is.
+In general I thought that suspend order was supposed to be related to
+probe order.  So if your probe order is A, B, C then your suspend
+order would be C, B, A.  ...and we know for sure that the USB PHY
+needs to probe _before_ the main USB controller.  If it didn't then
+you'd get an EPROBE_DEFER in the USB controller, right?  So that means
+that the USB controller should be suspending before its PHY.
 
->=20
-> > What action do you recommend here? The pinctrl dts patches for the
-> > Aspeed SoCs are yet to be applied, so changing the bindings to require
-> > a reg property can't break any existing in-tree users as there are
-> > none. The pinctrl driver can be patched to respect the reg property
-> > after the fact, though actually using the region descriptions might be
-> > interesting.
-> >
-> >>
-> >> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 aspeed,external-nodes =3D <&gfx,=
- &lpchc>;
-> >
-> > Did you have feedback on this approach? I queried you about it in the
-> > previous revision, but never received a reply:
->=20
-> It seems okay. At least, I don't have a better suggestion.
+Any chance this is somehow related to async probe?  I'm not a huge
+expert on async probe but I guess I could imagine things getting
+confused if you had a sequence like this:
 
-Thanks.
+1. Start USB probe (async)
+2. Start PHY probe
+3. Finish PHY probe
+4. In USB probe, ask for PHY--no problems since PHY probe finished
+5. Finish USB probe
 
-Andrew
---=-vaNGXmR19JSZRtUNO7V3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+The probe order would be USB before PHY even though the USB probe
+_depended_ on the PHY probe being finished...  :-/  Anyway, probably
+I'm just misunderstanding something and someone can tell me how dumb I
+am...
 
------BEGIN PGP SIGNATURE-----
+I also notice that the ehci_platform_power_off() function we're
+actually making PHY commands right before the same commands that turn
+off our clocks.  Presumably those commands aren't really so good to do
+if the PHY has already been suspended?
 
-iQIcBAABCgAGBQJYUd0rAAoJEJ0dnzgO5LT5sYMP/Ah3bgthVkeJdw21tTdy6V07
-v3Fdj6C7nIzom4CqbdvbwC7snwUuuxi5cjSWpsEjEY6Zblsg4Bn06C+KMSggD2Yb
-N+8xGFVRVmgBqaXtpIv9mEL1BF15yYJMf2QVpOac2rRt2mYKZicuR7A6ErrSD87w
-uDlwrTv3rAnDezqT5hIFLsHagOM4IDrgLa4jTvZDk8RLaqGC40gyvVNVSBhd2SEj
-pTWtRhJUcKm84LwyJG8rJiptamx+ykK5gA3do0ZenvoQisaMpqJRM8cKdUzpkxeA
-VMIY/We4j6cjOjDOf8j/sc5i4weIZ5DhklbkYUaQs7GgbJUeIViMfagjZmLLMig5
-fCKulaN7/bEvJ+A0R8kQU05dS8DKSZn+EApuymdoEAwmtM385pjAyXitQPPW0wR4
-6FuiSeT+lPxhnX0PUH18TIVzac/nEuxKaKbhtFy0qbt8gWg4GoSak1Cw7lBmuTTJ
-nbVuvKocA3oPePMLvsaWIs5sFnE24Q2rcE17XKL6cWpVPriyML5H6PWf/L1V9bON
-dWnIqYODU1rzJSCM5n+tunOiiOCyG3KGnesXz3RSlIY2N+ghCBHJjk/pDeGD52fW
-LKjNiyFGE5eWC7EQd3W+7onFXBdrNCnpSsvbNL3+gnvNfeuq1soIFDZP49PG6N1Q
-xXzdmFBs7AHhlwoeX6kt
-=UzIO
------END PGP SIGNATURE-----
+Actually, does the PHY suspend from platform_pm_suspend() actually
+even do anything?  It doesn't look like it.  It looks as if all the
+PHY cares about is init/exit and on/off...  ...and it looks as if the
+PHY should be turned off by the EHCI controller at about the same time
+it turns off its clocks...
 
---=-vaNGXmR19JSZRtUNO7V3--
+I haven't fully dug, but is there any chance that things are getting
+confused between the OTG PHY and the Host PHY?  Maybe when we turn off
+the OTG PHY it turns off something that the host PHY needs?
 
+
+> and the
+> clk-480m provided by it was disabled if no module used. However,
+> some suspend process related ehci/ohci are base on this clock,
+> so we should refer it into ehci/ohci driver to prevent this case.
+
+Though I don't actually have details about the internals of the chip,
+it does seem highly likely that the USB block actually uses this clock
+for some things, so it doesn't seem insane (to me) to have the USB
+controller request that the clock be on.  So, in general, I don't have
+lots of objections to including the USB PHY Clock here.
+
+...but I think you have the wrong clock (please correct me if I'm
+wrong).  I think you really wanted your input clock to be
+"clk_usbphy0_480m", not "clk_usbphy0_480m_src".  Specifically I
+believe there is a gate between the clock outputted by the PHY and the
+USB Controller itself.  I'm guessing that the gate is only there
+between the PHY and the "clk_usbphy_480m" MUX.
+
+As evidence, I have a totally functioning system right now where
+"clk_usbphy0_480m_src" is currently gated.
+
+That means really you should be changing your clocks to this (untested):
+
+               clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+                        <&u2phy0>;
+
+...and then you could drop the other two patches in this series.
+
+===
+
+OK, I actually briefly tested my proposed change and it at least seems
+to build and boot OK.  You'd have to test it to make sure it makes
+your tests pass...
+
+===
+
+So I guess to summarize all the above:
+
+* It seems to me like there's some deeper root cause and your patch
+will at most put a band-aid on it.  Seems like digging out the root
+cause is a good idea.
+
+* Though I don't believe it solves the root problem, the idea of the
+USB Controller holding onto the PHY clock doesn't seem wrong.
+
+* You're holding onto the wrong clock in your patch--you want the one
+before the gate (I think).
+
+
+-Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
