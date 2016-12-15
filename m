@@ -1,139 +1,189 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 00/26] drm/omap: Convert to use videomode from
- omap_video_timings
-Date: Thu, 15 Dec 2016 10:12:12 +0200
-Message-ID: <f69f31dd-9e7e-c585-f470-2a552f869e75@ti.com>
-References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
- <3115831.KSyLVyBdAU@avalon>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] Bluetooth: btusb: Configure Marvel to use one of the pins for oob wakeup
+Date: Thu, 15 Dec 2016 09:29:49 +0100
+Message-ID: <87shppk32a.fsf@free-electrons.com>
+References: <1481742779-15105-1-git-send-email-rajatja@google.com>
+        <1481742779-15105-3-git-send-email-rajatja@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3115831.KSyLVyBdAU@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
-Cc: thierry.reding@gmail.com, airlied@linux.ie, tomi.valkeinen@ti.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481742779-15105-3-git-send-email-rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> (Rajat
+        Jain's message of "Wed, 14 Dec 2016 11:12:59 -0800")
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rajat,
+ 
+ On mer., d√©c. 14 2016, Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
 
+In your title unless you speak about the comic books you should do a
+s/Marvel/Marvell/ :)
 
-On 12/14/2016 11:32 PM, Laurent Pinchart wrote:
-> Hi Peter,
-> 
-> On Thursday 01 Sep 2016 14:22:54 Peter Ujfalusi wrote:
->> Hi,
->>
->> The following series will convert the omapdrm stack to use the generic
->> videmode instead of the private omap_video_timings struct for the panel
->> information.
->>
->> Since we have several panels under omapdrm/displays/ where the data drive
->> edge is set to be different then the sync drive edge, the first three patch
->> will add support to select the sync drive edge via DT.
->> I was not able to locate the datasheet for all the panels and because the
->> different edge was used in omapdrm and omapfb for a long time without
->> complains from users - and they were written this way - I think it is a
->> valid that we can have panels requiring different edge for data and sync to
->> be driven.
-> 
-> That's very peculiar. Have you been able to locate at least one panel 
-> datasheet that documents this requirement ?
+Gregory
 
-No, not really. patch 23-26 adds comments to panel drivers where the
-existing implementation contradicts the information in the panel's
-documentation. I was not able to locate any document for the Sony
-acx565akm panel.
-
-I opted to not change the behavior of the panel drivers regarding to
-this since I don't have access to neither of the boards with the given
-displays and this was the configuration they were using and I assume
-they were/are working fine.
-
->> The rest of the patches are most mechanical ones. I have decided to split it
->> up to small chunks and did one change at the time to finally remove the
->> omap_video_timings from omapdrm.
->>
->>
->> CC: Rob Herring <robh+dt@kernel.org>
->> CC: Mark Rutland <mark.rutland@arm.com>
->> CC: devicetree@vger.kernel.org
->>
->> Regards,
->> Peter
->> ---
->> Peter Ujfalusi (26):
->>   dt-bindings: display: display-timing: Add property to configure sync
->>     drive edge
->>   video: display_timing: Add flags to select the edge when the sync is
->>     driven
->>   video: of: display_timing: Add support for syncclk-active property
->>   drm/omap: omap_display_timings: rename x_res to hactive
->>   drm/omap: omap_display_timings: rename y_res to vactive
->>   drm/omap: omap_display_timings: rename hsw to hsync_len
->>   drm/omap: omap_display_timings: rename hfp to hfront_porch
->>   drm/omap: omap_display_timings: rename hbp to hback_porch
->>   drm/omap: omap_display_timings: rename vsw to vsync_len
->>   drm/omap: omap_display_timings: rename vfp to vfront_porch
->>   drm/omap: omap_display_timings: rename vbp to vback_porch
->>   drm/omap: HDMI5: Use pointer to cfg->v_fc_config.timings in
->>     hdmi_core_video_config
->>   drm/omap: omap_display_timings: Use display_flags for interlace mode
->>   drm/omap: dispc: Simplify _dispc_mgr_set_lcd_timings() parameters
->>   drm/omap: omap_display_timings: Use display_flags for h/vsync level
->>   drm/omap: omap_display_timings: Use display_flags for DE level
->>   drm/omap: omap_display_timings: Use display_flags for double_pixel
->>     mode
->>   drm/omap: omap_display_timings: Use display_flags for pixel data edge
->>   drm/omap: omap_display_timings: Use display_flags for sync edge
->>   drm/omap: Change the types of struct omap_video_timings members
->>   drm/omap: Replace struct omap_video_timings with videomode
->>   drm/omap: Use consistent name for struct videomode
->>   drm/omap: panel-tpo-td043mtea1: Add note for incorrect sync drive edge
->>   drm/omap: panel-tpo-td028ttec1: Add note for incorrect sync drive edge
->>   drm/omap: panel-sharp-ls037v7dw01: Add note for incorrect data drive
->>     edge
->>   drm/omap: panel-lgphilips-lb035q02: Add note for incorrect data drive
->>     edge and DE level
->>
->>  .../bindings/display/panel/display-timing.txt      |   6 +
->>  .../gpu/drm/omapdrm/displays/connector-analog-tv.c |  47 ++---
->>  drivers/gpu/drm/omapdrm/displays/connector-dvi.c   |  50 +++--
->>  drivers/gpu/drm/omapdrm/displays/connector-hdmi.c  |  49 +++--
->>  drivers/gpu/drm/omapdrm/displays/encoder-opa362.c  |  20 +-
->>  drivers/gpu/drm/omapdrm/displays/encoder-tfp410.c  |  31 ++-
->>  .../gpu/drm/omapdrm/displays/encoder-tpd12s015.c   |  20 +-
->>  drivers/gpu/drm/omapdrm/displays/panel-dpi.c       |  30 ++-
->>  drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c    |  25 ++-
->>  .../omapdrm/displays/panel-lgphilips-lb035q02.c    |  59 +++---
->>  .../drm/omapdrm/displays/panel-nec-nl8048hl11.c    |  52 +++--
->>  .../drm/omapdrm/displays/panel-sharp-ls037v7dw01.c |  58 +++---
->>  .../drm/omapdrm/displays/panel-sony-acx565akm.c    |  53 +++--
->>  .../drm/omapdrm/displays/panel-tpo-td028ttec1.c    |  57 +++---
->>  .../drm/omapdrm/displays/panel-tpo-td043mtea1.c    |  54 ++---
->>  drivers/gpu/drm/omapdrm/dss/dispc.c                | 222 ++++++++----------
->>  drivers/gpu/drm/omapdrm/dss/display.c              |  78 +-------
->>  drivers/gpu/drm/omapdrm/dss/dpi.c                  |  40 ++--
->>  drivers/gpu/drm/omapdrm/dss/dsi.c                  | 156 ++++++++-------
->>  drivers/gpu/drm/omapdrm/dss/dss.h                  |   5 +-
->>  drivers/gpu/drm/omapdrm/dss/hdmi.h                 |   8 +-
->>  drivers/gpu/drm/omapdrm/dss/hdmi4.c                |  31 +--
->>  drivers/gpu/drm/omapdrm/dss/hdmi4_core.c           |   8 +-
->>  drivers/gpu/drm/omapdrm/dss/hdmi5.c                |  31 +--
->>  drivers/gpu/drm/omapdrm/dss/hdmi5_core.c           |  85 ++++----
->>  drivers/gpu/drm/omapdrm/dss/hdmi_wp.c              |  73 ++++---
->>  drivers/gpu/drm/omapdrm/dss/omapdss.h              |  98 +++------
->>  drivers/gpu/drm/omapdrm/dss/output.c               |   5 +-
->>  drivers/gpu/drm/omapdrm/dss/rfbi.c                 |  49 +++--
->>  drivers/gpu/drm/omapdrm/dss/sdi.c                  |  33 ++-
->>  drivers/gpu/drm/omapdrm/dss/venc.c                 |  97 +++++----
->>  drivers/gpu/drm/omapdrm/omap_connector.c           |  87 +-------
->>  drivers/gpu/drm/omapdrm/omap_crtc.c                |  17 +-
->>  drivers/gpu/drm/omapdrm/omap_drv.h                 |   7 +-
->>  drivers/gpu/drm/omapdrm/omap_encoder.c             |  10 +-
->>  drivers/video/of_display_timing.c                  |   9 +
->>  include/video/display_timing.h                     |   4 +
->>  37 files changed, 778 insertions(+), 986 deletions(-)
-> 
+> The Marvell devices may have many gpio pins, and hence for wakeup
+> on these out-of-band pins, the chip needs to be told which pin is
+> to be used for wakeup, using an hci command.
+>
+> Thus, we read the pin number etc from the device tree node and send
+> a command to the chip.
+>
+> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Note that while I would have liked to name the compatible string as more
+> like "marvell, usb8997-bt", the devicetrees/bindings/usb/usb-device.txt
+> requires the compatible property to be of the form "usbVID,PID".
+>
+>  .../{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} | 25 ++++++++-
+>  drivers/bluetooth/btusb.c                          | 59 ++++++++++++++++++++++
+>  2 files changed, 82 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/net/{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} (76%)
+>
+> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+> similarity index 76%
+> rename from Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> rename to Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+> index 6a9a63c..471bef8 100644
+> --- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> +++ b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+> @@ -1,4 +1,4 @@
+> -Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
+> +Marvell 8897/8997 (sd8897/sd8997) bluetooth devices (SDIO or USB based)
+>  ------
+>  
+>  Required properties:
+> @@ -6,11 +6,13 @@ Required properties:
+>    - compatible : should be one of the following:
+>  	* "marvell,sd8897-bt"
+>  	* "marvell,sd8997-bt"
+> +	* "usb1286,204e"
+>  
+>  Optional properties:
+>  
+>    - marvell,cal-data: Calibration data downloaded to the device during
+>  		      initialization. This is an array of 28 values(u8).
+> +		      This is only applicable to SDIO devices.
+>  
+>    - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth chip.
+>  		        firmware will use the pin to wakeup host system (u16).
+> @@ -29,7 +31,9 @@ Example:
+>  IRQ pin 119 is used as system wakeup source interrupt.
+>  wakeup pin 13 and gap 100ms are configured so that firmware can wakeup host
+>  using this device side pin and wakeup latency.
+> -calibration data is also available in below example.
+> +
+> +Example for SDIO device follows (calibration data is also available in
+> +below example).
+>  
+>  &mmc3 {
+>  	status = "okay";
+> @@ -54,3 +58,20 @@ calibration data is also available in below example.
+>  		marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
+>  	};
+>  };
+> +
+> +Example for USB device:
+> +
+> +&usb_host1_ohci {
+> +    status = "okay";
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
+> +
+> +    mvl_bt1: bt@1 {
+> +	compatible = "usb1286,204e";
+> +	reg = <1>;
+> +	interrupt-parent = <&gpio0>;
+> +	interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
+> +	marvell,wakeup-pin = /bits/ 16 <0x0d>;
+> +	marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
+> +    };
+> +};
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 32a6f22..99d7f6d 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -2343,6 +2343,58 @@ static int btusb_shutdown_intel(struct hci_dev *hdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PM
+> +static const struct of_device_id mvl_oob_wake_match_table[] = {
+> +	{ .compatible = "usb1286,204e" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mvl_oob_wake_match_table);
+> +
+> +/* Configure an out-of-band gpio as wake-up pin, if specified in device tree */
+> +static int marvell_config_oob_wake(struct hci_dev *hdev)
+> +{
+> +	struct sk_buff *skb;
+> +	struct btusb_data *data = hci_get_drvdata(hdev);
+> +	struct device *dev = &data->udev->dev;
+> +	u16 pin, gap, opcode;
+> +	int ret;
+> +	u8 cmd[5];
+> +
+> +	if (!of_match_device(mvl_oob_wake_match_table, dev))
+> +		return 0;
+> +
+> +	if (of_property_read_u16(dev->of_node, "marvell,wakeup-pin", &pin) ||
+> +	    of_property_read_u16(dev->of_node, "marvell,wakeup-gap-ms", &gap))
+> +		return -EINVAL;
+> +
+> +	/* Vendor specific command to configure a GPIO as wake-up pin */
+> +	opcode = hci_opcode_pack(0x3F, 0x59);
+> +	cmd[0] = opcode & 0xFF;
+> +	cmd[1] = opcode >> 8;
+> +	cmd[2] = 2; /* length of parameters that follow */
+> +	cmd[3] = pin;
+> +	cmd[4] = gap; /* time in ms, for which wakeup pin should be asserted */
+> +
+> +	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
+> +	if (!skb) {
+> +		bt_dev_err(hdev, "%s: No memory\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	memcpy(skb_put(skb, sizeof(cmd)), cmd, sizeof(cmd));
+> +	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
+> +
+> +	ret = btusb_send_frame(hdev, skb);
+> +	if (ret) {
+> +		bt_dev_err(hdev, "%s: configuration failed\n", __func__);
+> +		kfree_skb(skb);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int btusb_set_bdaddr_marvell(struct hci_dev *hdev,
+>  				    const bdaddr_t *bdaddr)
+>  {
+> @@ -2917,6 +2969,13 @@ static int btusb_probe(struct usb_interface *intf,
+>  	err = btusb_config_oob_wake(hdev);
+>  	if (err)
+>  		goto out_free_dev;
+> +
+> +	/* Marvel devices may need a specific chip configuration */
+> +	if (id->driver_info & BTUSB_MARVELL && data->oob_wake_irq) {
+> +		err = marvell_config_oob_wake(hdev);
+> +		if (err)
+> +			goto out_free_dev;
+> +	}
+>  #endif
+>  	if (id->driver_info & BTUSB_CW6622)
+>  		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
+> -- 
+> 2.8.0.rc3.226.g39d4020
+>
 
 -- 
-PÈter
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
