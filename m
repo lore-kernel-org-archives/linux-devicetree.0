@@ -1,199 +1,48 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3 v2] iio: adc: add device tree bindings for Qualcomm PM8xxx ADCs
-Date: Thu, 15 Dec 2016 23:48:09 +0100
-Message-ID: <1481842089-13999-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T . Ivanov" <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH linux v1 4/4] arm: dts: Add dt-binding to support seven
+ segment display on zaius
+Date: Fri, 16 Dec 2016 00:07:36 +0100
+Message-ID: <CACRpkdaqKDJstfypP0EL9e=TA-atiJmK9zwrBHfLmEVV8SLuAQ@mail.gmail.com>
+References: <1481702104-8617-1-git-send-email-jaghu@google.com>
+ <1481702104-8617-5-git-send-email-jaghu@google.com> <3917905.e4iOqADnVQ@wuerfel>
+ <10697525.O7CkPN6Gfl@wuerfel> <20161214110635.GB14217@n2100.armlinux.org.uk> <20161214114051.GC14217@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161214114051.GC14217@n2100.armlinux.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Qualcomm PM8xxx
-ADCs. This is based on the existing DT bindings for the
-SPMI ADC so there are hopefully no controversial features.
+On Wed, Dec 14, 2016 at 12:40 PM, Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ivan T. Ivanov <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Spelling fixes
----
- .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 160 +++++++++++++++++++++
- 1 file changed, 160 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> Looking at this more, it's a SPI driver, presumably because the first
+> case where it appeared was on a SPI bus.
+>
+> However, it's not a SPI device as such, it's a piece of standard,
+> general purpose logic that's been around for many years, pre-dating
+> the SPI bus.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-new file mode 100644
-index 000000000000..3c6bca5b4edf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-@@ -0,0 +1,160 @@
-+Qualcomm's PM8xxx voltage XOADC
-+
-+The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Crystal
-+oscillator ADC) encompassing PM8018, PM8038, PM8058, PM8917 and PM8921.
-+
-+Required properties:
-+
-+- compatible: should be one of:
-+  "qcom,pm8018-adc"
-+  "qcom,pm8038-adc"
-+  "qcom,pm8058-adc"
-+  "qcom,pm8917-adc"
-+  "qcom,pm8921-adc"
-+
-+- reg: should contain the ADC base address in the PMIC, typically
-+  0x197.
-+
-+The following required properties are standard for IO channels, see
-+iio-bindings.txt for more details:
-+
-+- #address-cells: should be set to <1>
-+
-+- #size-cells: should be set to <0>
-+
-+- #io-channel-cells: should be set to <1>
-+
-+- interrupts: should refer to the parent PMIC interrupt controller
-+  and reference the proper ADC interrupt.
-+
-+Required subnodes:
-+
-+The ADC channels are configured as subnodes of the ADC. Since some of
-+them are used for calibrating the ADC, these nodes are compulsory:
-+
-+ref_625mv {
-+	reg = <0x0c>;
-+};
-+
-+ref_1250mv {
-+	reg = <0x0d>;
-+};
-+
-+ref_muxoff {
-+	reg = <0x0f>;
-+};
-+
-+These three nodes are used for absolute and ratiometric calibration
-+and only need to have these reg values: they are by hardware definition
-+1:1 ratio converters that sample 625, 1250 and 0 milliV and create
-+an interpolation calibration for all other ADCs.
-+
-+Optional subnodes: any channels other than channel 0x0c, 0x0d and
-+0x0f are optional.
-+
-+Required channel node properties:
-+
-+- reg: should contain the hardware channel number in the range
-+  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-+
-+Optional channel node properties:
-+
-+- qcom,decimation:
-+  Value type: <u32>
-+  Definition: This parameter is used to decrease the ADC sampling rate.
-+          Quicker measurements can be made by reducing the decimation ratio.
-+          Valid values are 512, 1024, 2048, 4096.
-+          If the property is not found, a default value of 512 will be used.
-+
-+- qcom,ratiometric:
-+  Value type: <empty>
-+  Definition: Channel calibration type. If this property is specified
-+          VADC will use the VDD reference (1.8V) and GND for channel
-+          calibration. If the property is not found, the channel will be
-+          calibrated with the 0.625V and 1.25V reference channels, also
-+          known as an absolute calibration.
-+
-+- qcom,ratiometric-ref:
-+  Value type: <u32>
-+  Definition: The reference voltage pair when using ratiometric
-+          calibration:
-+	  0 = XO_IN/XOADC_GND
-+	  1 = PMIC_IN/XOADC_GND
-+	  2 = PMIC_IN/BMS_CSP
-+	  3 (invalid)
-+	  4 = XOADC_GND/XOADC_GND
-+	  5 = XOADC_VREF/XOADC_GND
-+
-+Example:
-+
-+xoadc: xoadc@197 {
-+	compatible = "qcom,pm8058-adc";
-+	reg = <0x197>;
-+	interrupt-parent = <&pm8058>;
-+	interrupts = <76 1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	#io-channel-cells = <1>;
-+
-+	vcoin {
-+		reg = <0x00>;
-+	};
-+	vbat {
-+		reg = <0x01>;
-+	};
-+	dcin {
-+		reg = <0x02>;
-+	};
-+	ichg {
-+		reg = <0x03>;
-+	};
-+	vph_pwr {
-+		reg = <0x04>;
-+	};
-+	mpp5 {
-+		reg = <0x05>;
-+	};
-+	mpp6 {
-+		reg = <0x06>;
-+	};
-+	mpp7 {
-+		reg = <0x07>;
-+	};
-+	mpp8 {
-+		reg = <0x08>;
-+	};
-+	mpp9 {
-+		reg = <0x09>;
-+	};
-+	usb_vbus {
-+		reg = <0x0a>;
-+	};
-+	die_temp {
-+		reg = <0x0b>;
-+	};
-+	ref_625mv {
-+		reg = <0x0c>;
-+	};
-+	ref_1250mv {
-+		reg = <0x0d>;
-+	};
-+	ref_325mv {
-+		reg = <0x0e>;
-+	};
-+	ref_muxoff {
-+		reg = <0x0f>;
-+	};
-+};
-+
-+
-+/* IIO client node */
-+iio-hwmon {
-+	compatible = "iio-hwmon";
-+	io-channels = <&xoadc 0x01>, /* Battery */
-+		    <&xoadc 0x02>, /* DC in (charger) */
-+		    <&xoadc 0x04>, /* VPH the main system voltage */
-+		    <&xoadc 0x0b>, /* Die temperature */
-+		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
-+		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
-+		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-+};
--- 
-2.7.4
+Indeed.
+
+> I think a much more sensible approach would be to turn the GPIO side
+> of the 74x164 driver into a library, which can be re-used by multiple
+> bus-specific drivers - one for SPI which allows it to be used in its
+> current form, one for our platform bus which takes the GPIO lines for
+> the data, clock and clear signals.
+>
+> I also don't see why they shouldn't use the same compatible - they're
+> the same _device_ at the end of the day, just wired up differently.
+> It makes the binding documentation a little fun wrt what are required
+> and optional properties, but nothing that shouldn't be too difficult.
+
+I agree on both accounts.
+
+Sorry for not seeing this in the first place, I was well aware that this
+is a standard component and may be connected in a myriad of ways,
+so I should have known better :(
+
+Yours,
+Linus Walleij
