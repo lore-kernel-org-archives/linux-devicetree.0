@@ -1,182 +1,131 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci
- of rk3399
-Date: Thu, 15 Dec 2016 14:41:17 +0800
-Message-ID: <991221a4-3962-1bcb-7863-72f5553eba40@rock-chips.com>
-References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com>
- <1481710301-1454-4-git-send-email-zhengxing@rock-chips.com>
- <CAD=FV=UU4JdRjRgEvc_wxprvi6bo46+jd=x2m2QzOe4uJmuRPA@mail.gmail.com>
- <5ce521da-119a-2de8-026c-5992fedfef43@rock-chips.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 00/26] drm/omap: Convert to use videomode from
+ omap_video_timings
+Date: Thu, 15 Dec 2016 09:56:28 +0200
+Message-ID: <69c8e84f-d615-c0a7-a089-aadc42ba6fd9@ti.com>
+References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
+ <3115831.KSyLVyBdAU@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ce521da-119a-2de8-026c-5992fedfef43@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xing Zheng <zhengxing@rock-chips.com>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@chromium.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: William wu <wulf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tao Huang <huangtao@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "'daniel.meng'" <daniel.meng@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, frank.wang@rock-chips.com
+Content-Type: multipart/mixed; boundary="===============0998696433=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3115831.KSyLVyBdAU@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brain, Doug and Heiko,
+--===============0998696433==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="5VvmAbKJp2Ig75mqxOOkDJ8bxwJ8bRsK0"
 
-I would like to summarize why this story was constructed.
+--5VvmAbKJp2Ig75mqxOOkDJ8bxwJ8bRsK0
+Content-Type: multipart/mixed; boundary="L9soOHTVTXs0wmPABiQBVNoOipD1qvVwB";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ dri-devel@lists.freedesktop.org
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, thierry.reding@gmail.com,
+ airlied@linux.ie, Mark Rutland <mark.rutland@arm.com>,
+ devicetree@vger.kernel.org, daniel.vetter@ffwll.ch,
+ linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Message-ID: <69c8e84f-d615-c0a7-a089-aadc42ba6fd9@ti.com>
+Subject: Re: [PATCH 00/26] drm/omap: Convert to use videomode from
+ omap_video_timings
+References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
+ <3115831.KSyLVyBdAU@avalon>
+In-Reply-To: <3115831.KSyLVyBdAU@avalon>
 
-The ehci/ohci-platform suspend process are blocked due to UTMI clock 
-which directly output from usb-phy has been disabled, and why the UTMI 
-clock was disabled?
+--L9soOHTVTXs0wmPABiQBVNoOipD1qvVwB
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-UTMI clock and 480m clock all output from the same internal PLL of 
-usb-phy, and there is only one bit can use to control this PLL on or 
-off, which we named "otg_commononn"(GRF, offset 0x0e450/0x0e460 bit4 ) 
-in RK3399 TRM.
-
-When system boot up, ehci/ohci-platform probe function invoke 
-phy_power_on(), further invoke rockchip_usb2phy_power_on() to enable 
-480m clock, actually, it sets the otg_commononn bit on, and then usb-phy 
-will go to (auto)suspend if there is no devices plug-in after 1 minute, 
-the rockchip_usb2phy_power_off() will be invoked and the 480m clock may 
-be disabled in the (auto)suspend process. As a result, the otg_commononn 
-bit may be turned off, and all output clock of usb-phy will be disabled. 
-However, ehci/ohci-platform PM suspend operation (read/write controller 
-register) are based on the UTMI clock.
-
-So we introduced "clk_usbphy0_480m_src"/"clk_usbphy1_480m_src" as one 
-input clock for ehci/ohci-platform, in this way, the otg_commononn bit 
-is not turned off until ehci/ohci-platform go to PM suspend.
-
-
-BR.
-Frank
-
-On 2016/12/15 10:41, Xing Zheng wrote:
-> // Frank
->
-> Hi Doug,  Brain,
->     Thanks for the reply.
->     Sorry I forgot these patches have been sent earlier, and Frank 
-> have some explained and discussed with Heiko.
-> Please see https://patchwork.kernel.org/patch/9255245/
->     Perhaps we can move to that patch tree to continue the discussion.
->
->     I think Frank and William will help us to continue checking these.
->
-> Thanks
->
-> 在 2016年12月15日 08:10, Doug Anderson 写道:
+On 14/12/16 23:32, Laurent Pinchart wrote:
+> Hi Peter,
+>=20
+> On Thursday 01 Sep 2016 14:22:54 Peter Ujfalusi wrote:
 >> Hi,
 >>
->> On Wed, Dec 14, 2016 at 2:11 AM, Xing Zheng 
->> <zhengxing@rock-chips.com> wrote:
->>> From: William wu <wulf@rock-chips.com>
->>>
->>> We found that the suspend process was blocked when it run into
->>> ehci/ohci module due to clk-480m of usb2-phy was disabled.
->>>
->>> The root cause is that usb2-phy suspended earlier than ehci/ohci
->>> (usb2-phy will be auto suspended if no devices plug-in).
->> This is really weird, but I can confirm it is true on my system too
->> (kernel-4.4 based).  At least I see:
+>> The following series will convert the omapdrm stack to use the generic=
+
+>> videmode instead of the private omap_video_timings struct for the pane=
+l
+>> information.
 >>
->> [  208.012065] calling  usb1+ @ 4984, parent: fe380000.usb, cb: 
->> usb_dev_suspend
->> [  208.569112] calling  ff770000.syscon:usb2-phy@e450+ @ 4983, parent:
->> ff770000.syscon, cb: platform_pm_suspend
->> [  208.569113] call ff770000.syscon:usb2-phy@e450+ returned 0 after 0 
->> usecs
->> [  208.569439] calling  fe380000.usb+ @ 4983, parent: platform, cb:
->> platform_pm_suspend
->> [  208.569444] call fe380000.usb+ returned 0 after 4 usecs
->>
->>
->> In general I thought that suspend order was supposed to be related to
->> probe order.  So if your probe order is A, B, C then your suspend
->> order would be C, B, A.  ...and we know for sure that the USB PHY
->> needs to probe _before_ the main USB controller.  If it didn't then
->> you'd get an EPROBE_DEFER in the USB controller, right?  So that means
->> that the USB controller should be suspending before its PHY.
->>
->> Any chance this is somehow related to async probe?  I'm not a huge
->> expert on async probe but I guess I could imagine things getting
->> confused if you had a sequence like this:
->>
->> 1. Start USB probe (async)
->> 2. Start PHY probe
->> 3. Finish PHY probe
->> 4. In USB probe, ask for PHY--no problems since PHY probe finished
->> 5. Finish USB probe
->>
->> The probe order would be USB before PHY even though the USB probe
->> _depended_ on the PHY probe being finished...  :-/  Anyway, probably
->> I'm just misunderstanding something and someone can tell me how dumb I
->> am...
->>
->> I also notice that the ehci_platform_power_off() function we're
->> actually making PHY commands right before the same commands that turn
->> off our clocks.  Presumably those commands aren't really so good to do
->> if the PHY has already been suspended?
->>
->> Actually, does the PHY suspend from platform_pm_suspend() actually
->> even do anything?  It doesn't look like it.  It looks as if all the
->> PHY cares about is init/exit and on/off...  ...and it looks as if the
->> PHY should be turned off by the EHCI controller at about the same time
->> it turns off its clocks...
->>
->> I haven't fully dug, but is there any chance that things are getting
->> confused between the OTG PHY and the Host PHY?  Maybe when we turn off
->> the OTG PHY it turns off something that the host PHY needs?
->>
->>
->>> and the
->>> clk-480m provided by it was disabled if no module used. However,
->>> some suspend process related ehci/ohci are base on this clock,
->>> so we should refer it into ehci/ohci driver to prevent this case.
->> Though I don't actually have details about the internals of the chip,
->> it does seem highly likely that the USB block actually uses this clock
->> for some things, so it doesn't seem insane (to me) to have the USB
->> controller request that the clock be on.  So, in general, I don't have
->> lots of objections to including the USB PHY Clock here.
->>
->> ...but I think you have the wrong clock (please correct me if I'm
->> wrong).  I think you really wanted your input clock to be
->> "clk_usbphy0_480m", not "clk_usbphy0_480m_src".  Specifically I
->> believe there is a gate between the clock outputted by the PHY and the
->> USB Controller itself.  I'm guessing that the gate is only there
->> between the PHY and the "clk_usbphy_480m" MUX.
->>
->> As evidence, I have a totally functioning system right now where
->> "clk_usbphy0_480m_src" is currently gated.
->>
->> That means really you should be changing your clocks to this (untested):
->>
->>                 clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
->>                          <&u2phy0>;
->>
->> ...and then you could drop the other two patches in this series.
->>
->> ===
->>
->> OK, I actually briefly tested my proposed change and it at least seems
->> to build and boot OK.  You'd have to test it to make sure it makes
->> your tests pass...
->>
->> ===
->>
->> So I guess to summarize all the above:
->>
->> * It seems to me like there's some deeper root cause and your patch
->> will at most put a band-aid on it.  Seems like digging out the root
->> cause is a good idea.
->>
->> * Though I don't believe it solves the root problem, the idea of the
->> USB Controller holding onto the PHY clock doesn't seem wrong.
->>
->> * You're holding onto the wrong clock in your patch--you want the one
->> before the gate (I think).
->>
->>
->> -Doug
->>
->>
->>
->
->
+>> Since we have several panels under omapdrm/displays/ where the data dr=
+ive
+>> edge is set to be different then the sync drive edge, the first three =
+patch
+>> will add support to select the sync drive edge via DT.
+>> I was not able to locate the datasheet for all the panels and because =
+the
+>> different edge was used in omapdrm and omapfb for a long time without
+>> complains from users - and they were written this way - I think it is =
+a
+>> valid that we can have panels requiring different edge for data and sy=
+nc to
+>> be driven.
+>=20
+> That's very peculiar. Have you been able to locate at least one panel=20
+> datasheet that documents this requirement ?
+
+I think I remember seeing some panel or encoder asking for different
+edges. But it's rather vague memory =3D).
+
+Interestingly, the default behavior of OMAP DSS is to have data and sync
+at different edges. I don't know what was the rationale for that design.
+
+Another, slightly related, interesting thing is that only from OMAP4
+forward we have had the possibility to have hsync and vsync happen at
+the same time. Earlier hsync came first, followed by vsync. This old
+behavior caused problems at least on one encoder I worked on.
+
+ Tomi
+
+
+--L9soOHTVTXs0wmPABiQBVNoOipD1qvVwB--
+
+--5VvmAbKJp2Ig75mqxOOkDJ8bxwJ8bRsK0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYUkywAAoJEPo9qoy8lh71tisP/iwIezkXFhIY3jKKR+XQens+
+hV30ineOrS71LUGA/VLTV52pYOBwUEW3YGtIOEwOWR+UxH1baWFdmVuamX/llWQ0
+aFR8CGckgoutOYKkEbv4Dbo0pLNKbpkSvvneUYAA3OY7tmR0ovE8mpYKXivHCiA0
+iytIzF+Bj3hgNNd5Rn+sEtGiYumTptq/qxl4bZTG4KD2j4uumRA3r840QDHTmO0r
+SD8nhamem6c4wnAeWNaY918SDNFGv/1y2D0A/PUmYnFI9WTgoQS8ERwmN3+32B/t
+F2p8/qa+AqanAOe9hEALP79g5xl9OjQBJNhZGEXlSdPv5jILF+2yhmTSSP+aBcWI
+TdTRY8rYNFCVgbaK5XxBEsyvbjqPs8nLdZCFhQIxTHXlIZofyjaQJaImh2oMKg1u
+mXoc2gSHkmhiY8BXMTImfzhs0JVdmWCdFTXDfQW/sUvG9q2V2YVPZftNhf7wOb90
+se4IBYlZP/RhtFUlz6l+UjPZB7qL63ZsOARqhN8i0eJM88VuinudHBlUbu1Foj7Y
+wJDA9YZYSEE82mUzrTFWK365xAaNAU0XT70kba2qS6JDi/L8fycYrH4AXp3bYmw2
+Hzu7XmwD9FhhJK8bFYQPIp8a8BaMzuP39B60eoHE+e1OasaBNimXdUZAXIncdxQ+
+W5GeFqj3uUo01HdIX5SJ
+=YO9v
+-----END PGP SIGNATURE-----
+
+--5VvmAbKJp2Ig75mqxOOkDJ8bxwJ8bRsK0--
+
+--===============0998696433==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0998696433==--
