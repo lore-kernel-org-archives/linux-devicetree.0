@@ -1,97 +1,141 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
-Date: Thu, 15 Dec 2016 14:26:00 -0800
-Message-ID: <20161215222600.GR3439@tuxbot>
-References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
- <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
- <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Geoff Lansberry <geoff@kuvee.com>
+Subject: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Date: Thu, 15 Dec 2016 17:30:42 -0500
+Message-ID: <1481841044-4314-1-git-send-email-glansberry@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-wireless@vger.kernel.org
+Cc: lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mgreer@animalcreek.com, justin@kuvee.com, Geoff Lansberry <geoff@kuvee.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 15 Nov 00:23 PST 2016, Geert Uytterhoeven wrote:
+From: Geoff Lansberry <geoff@kuvee.com>
 
-> +cc linux-pm
-> 
-> On Mon, Nov 14, 2016 at 11:14 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > [+cc Geert, Kevin, Simon]
-> >
-> > On Mon, Nov 14, 2016 at 11:15:53AM +0000, Srinivas Kandagatla wrote:
-> >> This patch adds support to pm clocks via device tree, so that the clocks
-> >> can be turned on and off during runtime pm. This patch is required for
-> >> Qualcomm msm8996 pcie controller which sits on a bus with its own
-> >> power-domain and clocks.
-> >>
-> >> Without this patch the clock associated with the bus are never turned on.
-> >>
-> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > I don't see a formal maintainer for drivers/bus/simple-pm-bus.c, but I'd
-> > like an ack or at least a review from Geert or Simon.
-> 
-> Thanks for letting me know!
-> 
-> >> ---
-> >>  drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
-> >>  1 file changed, 12 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-> >> index c5eb46c..63b7e8c 100644
-> >> --- a/drivers/bus/simple-pm-bus.c
-> >> +++ b/drivers/bus/simple-pm-bus.c
-> >> @@ -11,6 +11,7 @@
-> >>  #include <linux/module.h>
-> >>  #include <linux/of_platform.h>
-> >>  #include <linux/platform_device.h>
-> >> +#include <linux/pm_clock.h>
-> >>  #include <linux/pm_runtime.h>
-> >>
-> >>
-> >> @@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
-> >>
-> >>       pm_runtime_enable(&pdev->dev);
-> >>
-> >> -     if (np)
-> >> +     if (np) {
-> >> +             of_pm_clk_add_clks(&pdev->dev);
-> 
-> This should work out-of-the-box (that's the actual purpose of this driver),
-> if the platform code that registers your PM Domain would take care
-> of registering the clocks needed for PM management of the bus.
-> 
+---
+ .../devicetree/bindings/net/nfc/trf7970a.txt       |  3 ++
+ drivers/nfc/trf7970a.c                             | 42 ++++++++++++++++------
+ 2 files changed, 34 insertions(+), 11 deletions(-)
 
-Hi Geert,
-
-I'm having problems finding any code that would make this work
-"out-of-the-box".  The DT binding documents a clocks property but I
-can't find any code referencing this in the kernel.
-
-I see that Srinivas interpreted your response as that we should fold the
-clocks in behind the power-domain, rather than referencing them from the
-bus - but this seems awkward and would indicate the DT binding being
-wrong. Perhaps I'm just misunderstanding the design here?
-
-Which "platform code" do you refer to, can you help me by pointing me to
-the code that handles the zb_clk in the Renesas case?
-
-> Adding of_pm_clk_add_clks() here will start managing all clocks of the bus,
-> which may not be wanted on all platforms.
-> 
-
-It would not be strange to do so in the "simple" implementation for the
-bus, allowing custom behavior to be implemented in a more specific
-driver for a platform with custom needs.
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+index 32b35a0..9dda879 100644
+--- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
++++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+@@ -21,6 +21,8 @@ Optional SoC Specific Properties:
+ - t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
+   where an extra byte is returned by Read Multiple Block commands issued
+   to Type 5 tags.
++- crystal_27mhz: Set to specify that the input frequency to the trf7970a is 27.12MHz
++
+ 
+ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+ 
+@@ -43,6 +45,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+ 		irq-status-read-quirk;
+ 		en2-rf-quirk;
+ 		t5t-rmb-extra-byte-quirk;
++		crystal_27mhz;
+ 		status = "okay";
+ 	};
+ };
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index 26c9dbb..2d2a077 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -1056,12 +1056,11 @@ static int trf7970a_init(struct trf7970a *trf)
+ 
+ 	trf->chip_status_ctrl &= ~TRF7970A_CHIP_STATUS_RF_ON;
+ 
+-	ret = trf7970a_write(trf, TRF7970A_MODULATOR_SYS_CLK_CTRL, 0);
++	ret = trf7970a_write(trf, TRF7970A_MODULATOR_SYS_CLK_CTRL,
++			trf->modulator_sys_clk_ctrl);
+ 	if (ret)
+ 		goto err_out;
+ 
+-	trf->modulator_sys_clk_ctrl = 0;
+-
+ 	ret = trf7970a_write(trf, TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS,
+ 			TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS_WLH_96 |
+ 			TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS_WLL_32);
+@@ -1181,27 +1180,37 @@ static int trf7970a_in_config_rf_tech(struct trf7970a *trf, int tech)
+ 	switch (tech) {
+ 	case NFC_DIGITAL_RF_TECH_106A:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_14443A_106;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_OOK;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCA;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_106B:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_14443B_106;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCB;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_212F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_FELICA_212;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCF;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_424F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_FELICA_424;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCF;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_ISO15693:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_15693_SGL_1OF4_2648;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_OOK;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_15693;
+ 		break;
+ 	default:
+@@ -1571,17 +1580,23 @@ static int trf7970a_tg_config_rf_tech(struct trf7970a *trf, int tech)
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+ 			TRF7970A_ISO_CTRL_NFC_CE |
+ 			TRF7970A_ISO_CTRL_NFC_CE_14443A;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_OOK;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_212F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+ 			TRF7970A_ISO_CTRL_NFC_NFCF_212;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_424F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+ 			TRF7970A_ISO_CTRL_NFC_NFCF_424;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xF8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		break;
+ 	default:
+ 		dev_dbg(trf->dev, "Unsupported rf technology: %d\n", tech);
+@@ -2043,6 +2058,11 @@ static int trf7970a_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
++	if (of_property_read_bool(np, "crystal_27mhz")) {
++		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
++		dev_dbg(trf->dev, "trf7970a configure crystal_27mhz\n");
++	}
++
+ 	if (of_property_read_bool(np, "en2-rf-quirk"))
+ 		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+ 
+-- 
+Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
