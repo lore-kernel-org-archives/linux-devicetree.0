@@ -1,31 +1,99 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2] i2c: designware: Cleaning and comment style fixes.
-Date: Thu, 15 Dec 2016 16:17:05 +0100
-Message-ID: <f11794ec-439b-5fcd-65f4-c14c319cd627@axentia.se>
-References: <d7b5a22ce09539c2af343c21ca69675bef6a0a10.1481812563.git.lolivei@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <d7b5a22ce09539c2af343c21ca69675bef6a0a10.1481812563.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v5 2/9] doc: DT: venus: binding document for Qualcomm video driver
+Date: Thu, 15 Dec 2016 19:22:17 +0200
+Message-ID: <1481822544-29900-3-git-send-email-stanimir.varbanov@linaro.org>
+References: <1481822544-29900-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481822544-29900-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-12-15 15:38, Luis Oliveira wrote:
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index 26250b425e2f..3cb81fca7738 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -36,7 +36,7 @@
->  #define DW_IC_CON_SPEED_FAST		0x4
->  #define DW_IC_CON_SPEED_HIGH		0x6
->  #define DW_IC_CON_SPEED_MASK		0x6
-> -#define DW_IC_CON_10BITADDR_MASTER	0x10
-> +#define DW_IC_CON_10BITADDR_MASTER		0x10
+Add binding document for Venus video encoder/decoder driver
 
-How is this an improvement?
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ .../devicetree/bindings/media/qcom,venus.txt       | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
 
-Cheers,
-peda
+diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+new file mode 100644
+index 000000000000..7b77dff52b0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+@@ -0,0 +1,68 @@
++* Qualcomm Venus video encode/decode accelerator
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain one of:
++		- "qcom,msm8916-venus"
++		- "qcom,msm8996-venus"
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register base address and length of the register map.
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Should contain interrupt line number.
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A List of phandle and clock specifier pairs as listed
++		    in clock-names property.
++- clock-names:
++	Usage: required for msm8916
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Core video accelerator clock
++		- "iface"	Video accelerator AHB clock
++		- "bus"		Video accelerator AXI clock
++- clock-names:
++	Usage: required for msm8996
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Core video accelerator clock
++		- "iface"	Video accelerator AHB clock
++		- "bus"		Video accelerator AXI clock
++		- "subcore0"	Subcore0 (decoder) video accelerator clock
++		- "subcore1"	Subcore1 (encoder) video accelerator clock
++		- "mbus"	Video MAXI clock
++- power-domains:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A phandle and power domain specifier pairs to the
++		    power domain which is responsible for collapsing
++		    and restoring power to the peripheral.
++- rproc:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A phandle to remote processor responsible for
++		    firmware loading and processor booting.
++
++- iommus:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A list of phandle and IOMMU specifier pairs.
++
++* An Example
++	video-codec@1d00000 {
++		compatible = "qcom,msm8916-venus";
++		reg = <0x01d00000 0xff000>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
++			 <&gcc GCC_VENUS0_AHB_CLK>,
++			 <&gcc GCC_VENUS0_AXI_CLK>;
++		clock-names = "core", "iface", "bus";
++		power-domains = <&gcc VENUS_GDSC>;
++		rproc = <&venus_rproc>;
++		iommus = <&apps_iommu 5>;
++	};
+-- 
+2.7.4
