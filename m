@@ -1,129 +1,83 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V5 2/8] Documentation: devicetree: thermal: da9062/61 TJUNC
- temperature binding
-Date: Thu, 15 Dec 2016 19:08:39 +0000
-Message-ID: <ae903f7c3c6325420b90c7f691655d902d137d1f.1481828921.git.stwiss.opensource@diasemi.com>
-References: <cover.1481828921.git.stwiss.opensource@diasemi.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v6 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 15 Dec 2016 20:40:02 +0100
+Message-ID: <20161215194001.GA1741@katana>
+References: <1481559342-6106-1-git-send-email-cedric.madianga@gmail.com>
+ <1481559342-6106-3-git-send-email-cedric.madianga@gmail.com>
+ <20161213092031.d2ax2pnpzzicriel@pengutronix.de>
+ <CAOAejn0Ej90amOZUC2wGNBsTAZVmcqEaViV1-TeoaspiADBkkg@mail.gmail.com>
+ <20161215193307.436sggu4zy4zezoe@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <cover.1481828921.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: DEVICETREE <devicetree@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Lukasz Luba <lukasz.luba@arm.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+Content-Type: multipart/mixed; boundary="===============2878745824930186740=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161215193307.436sggu4zy4zezoe@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, linux@armlinux.org.uk, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Device tree binding information for DA9062 and DA9061 thermal junction
-temperature monitor.
-
-Binding descriptions for the DA9061 and DA9062 thermal TJUNC supervisor
-device driver, using a single THERMAL_TRIP_HOT trip-wire and allowing for
-a configurable polling period for over-temperature polling.
-
-This patch also adds two examples, one for DA9062 and one for DA9061. The 
-DA9061 example uses a fall-back compatible string for the DA9062.
-
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-
----
-This patch applies against linux-next and v4.9
-
-v4 -> v5
- - Rebased from v4.8 to v4.9
- - Updates from comments by Eduardo Valentin
- - Replace vendor defined dlg,tjunc-temp-polling-period-ms with standard
-   thermal core polling-delay-passive as part of the device tree
-   initialisation
- - Remove Acked-by Rob Herring
-
-v3 -> v4
- - NO CODE CHANGE
- - Patch renamed from [PATCH V3 3/9] to [PATCH V4 2/8]
- - Added Acked-by Rob Herring
-
-v2 -> v3
- - Patch renamed from [PATCH V2 03/10] to [PATCH V3 3/9]
- - Changes suggested from other component reviews by Rob Herring:
- - Each compatible line should be a valid combination of compatible
-   strings: alter DA9061 line to include the fall back compatible string
-   and update the commit message accordingly
- - Add e-mail information about associated patches from this set without
-   describing them as being explicitly dependent on this binding
-
-v1 -> v2
- - Patch renamed from [PATCH V1 08/10] to [PATCH V2 03/10] -- these
-   changes were made to fix checkpatch warnings caused by the patch
-   set dependency order
- - A second example for DA9061 is provided to highlight the use of a
-   fall-back compatible option for the DA9062
-
-Hi,
-
-Updates for PATCH V5: the binding has been altered to remove the proposed
-dlg,tjunc-temp-polling-period-ms and replaced with the standard thermal
-core polling-delay-passive instead. This was in response to a request
-from Eduardo Valentin as part of a driver change.
-
-I have also removed a previous Ack by Rob Herring which was valid for
-PATCH V3
-
-As previously:
-The device driver from this patch set (associated with this binding) is:
-  [PATCH V5 7/8] thermal: da9061: TJUNC temperature driver 
-
-Regards,
-Steve Twiss, Dialog Semiconductor Ltd.
+--===============2878745824930186740==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Disposition: inline
 
 
- .../devicetree/bindings/thermal/da9062-thermal.txt | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/da9062-thermal.txt
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/thermal/da9062-thermal.txt b/Documentation/devicetree/bindings/thermal/da9062-thermal.txt
-new file mode 100644
-index 0000000..08cc72e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/da9062-thermal.txt
-@@ -0,0 +1,37 @@
-+* Dialog DA9062/61 TJUNC Thermal Module
-+
-+This module is part of the DA9061/DA9062. For more details about entire
-+DA9062 and DA9061 chips see Documentation/devicetree/bindings/mfd/da9062.txt
-+
-+Junction temperature thermal module uses an interrupt signal to identify
-+high THERMAL_TRIP_HOT temperatures for the PMIC device.
-+
-+Required properties:
-+
-+- compatible: should be one of the following valid compatible string lines:
-+        "dlg,da9061-thermal", "dlg,da9062-thermal"
-+        "dlg,da9062-thermal"
-+
-+Optional properties:
-+
-+- polling-delay-passive : Specify the polling period, measured in
-+    milliseconds, between thermal zone device update checks.
-+
-+Example: DA9062
-+
-+	pmic0: da9062@58 {
-+		thermal {
-+			compatible = "dlg,da9062-thermal";
-+			polling-delay-passive = <3000>;
-+		};
-+	};
-+
-+Example: DA9061 using a fall-back compatible for the DA9062 onkey driver
-+
-+	pmic0: da9061@58 {
-+		thermal {
-+			compatible = "dlg,da9061-thermal", "dlg,da9062-thermal";
-+			polling-delay-passive = <3000>;
-+		};
-+	};
-+
--- 
-end-of-patch for PATCH V5
 
+> I thought (but I could be wrong) that if the driver is called
+> "stm32f4-i2c", it is used to match "st,stm32f4-i2c" even without
+> .of_match_table. If this doesn't work, please disregard my question.
+
+This currently works only for *i2c client drivers*, it never did for i2c
+adapters. And even for clients, this behaviour is going to be deprecated
+somewhen. There are people working on it...
+
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYUvGRAAoJEBQN5MwUoCm2F7QP/i9S8lZVcOruG/o817+e7Di5
+votDjs/c8i8KpNBsI1bfBFCrC7MA2QMepuwWifC++2azgsokBTpYqLu6htZuj2Ro
+hC12YeZvxVnkOyH4mV3xMAoYjcOdvAozxaw48vWvuhrfQzTqleBuGden8ndOP8AT
+v4T1nqorv6BmmHNLWE4NWbNUXCdVlRkVzh7pfBFSbYSSekoOPO8mTgBYHPNL17nL
+WCRsQGNzQFFyyIYlDdcG7LzLyFasonNELHaTqNOKvO3G+AH3+xXLyXTCXo2nBDRN
+hstwywYC5G1E5Btcv27G0C+rG+/ZeehwzJz7sLzR3jbX8EI64Y00XbSAJA1+ZjYS
+yL70l6FT97zkTs+gGGDVMl+3pSvStDNBYP2KX6fkVNnP4WOwrKP+nCrEtcnk3Maq
+cVjznyJiT3pUsj9g/j7GhrSOaT8bTwFeg9ak5BeeYMQ9n6F45AX4oAFxZJBxcrA0
+Z/ER10lUagPCiB7nShRYH8D+Htx/DTKmBwDEHifF6uo98yeIaesgyz0IMV6SG11c
+MW7X3rz9BzrPu67TcfLzwMYNI9ToWXd0nerlvq5SBmxOA10J433oGr/z8ROuO2k4
+1HxwgZuCcHQQTxar/oPtFvWl5CKUQVc07pPclMrhLPKSd1j2Sh1wW2Mx7Sa67yEj
+I5zEIHXkU4JLffgmXVUu
+=qHZZ
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
+
+
+--===============2878745824930186740==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2878745824930186740==--
