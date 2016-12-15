@@ -1,41 +1,115 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: of_reserved_mem: Ensure cma reserved region not
- cross the low/high memory
-Date: Thu, 15 Dec 2016 07:54:17 -0600
-Message-ID: <CAL_JsqJygJK_VmXKad8n63-jLH+G_xQ=NwX8JVmE=xSuYMof=Q@mail.gmail.com>
-References: <1479901021-25064-1-git-send-email-jason.hui.liu@nxp.com>
- <CAL_JsqLHh96D0VULuYfYC1P5K_Bbz6iRjizuYP3Mb6bdERbDnA@mail.gmail.com> <833f99b1-d10b-27ba-e0f9-a7c6398fb63d@redhat.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 2/2] xilinx_dma: Add reset support
+Date: Thu, 15 Dec 2016 15:56:34 +0200
+Message-ID: <4539024.0pO4eXcfb0@avalon>
+References: <cover.1481735244.git.roliveir@synopsys.com> <5658430.jXmKZEXWrS@avalon> <380d1b11-814d-0164-3d49-e976f2deb3f9@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <833f99b1-d10b-27ba-e0f9-a7c6398fb63d-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <380d1b11-814d-0164-3d49-e976f2deb3f9-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 4:21 PM, Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On 12/14/2016 12:45 PM, Rob Herring wrote:
->> On Wed, Nov 23, 2016 at 5:37 AM, Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org> wrote:
->>> Need ensure the cma reserved region not cross the low/high memory boundary
->>> when using the dynamic allocation methond through device-tree, otherwise,
->>> kernel will fail to boot up when cma reserved region cross how/high mem.
->>
->> The kernel command line code setting CMA already deals with this. Why
->> don't we just call the CMA code (cma_declare_contiguous) to deal with
->> this?
->>
->> Rob
->>
+Hi Ramiro,
+
+(CC'ing Philipp Zabel)
+
+On Thursday 15 Dec 2016 11:26:54 Ramiro Oliveira wrote:
+> On 12/14/2016 8:16 PM, Laurent Pinchart wrote:
+> > Hi Ramiro,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Wednesday 14 Dec 2016 17:18:24 Ramiro Oliveira wrote:
+> >> Add a DT property to control an optional external reset line
+> >> 
+> >> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >> 
+> >>  drivers/dma/xilinx/xilinx_dma.c | 23 +++++++++++++++++++++++
+> >>  1 file changed, 23 insertions(+)
+> >> 
+> >> diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> >> b/drivers/dma/xilinx/xilinx_dma.c index 5c9f11b..b845224 100644
+> >> --- a/drivers/dma/xilinx/xilinx_dma.c
+> >> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> >> @@ -46,6 +46,7 @@
+> >>  #include <linux/slab.h>
+> >>  #include <linux/clk.h>
+> >>  #include <linux/io-64-nonatomic-lo-hi.h>
+> >> +#include <linux/reset.h>
+> > 
+> > I had neatly sorted the header alphabetically until someone added clk.h
+> > and io-64-nonatomic-lo-hi.h :-( Could you please move reset.h just before
+> > slab.h ?
 >
-> That was proposed in the first version[1] but I think this is a generic
-> problem not specific to CMA. Even non-CMA reservations trying to span
-> zones could cause problems so the devicetree allocation code should
-> restrict reservations to a single zone.
+> Sure. Actually I was tempted to reorder it, but I decided not to do it. I'll
+> do it now
 
-Fair enough, but that's not what this patch does. It's only for CMA.
+Yeah, I'll sleep better tonight :-D
 
-Rob
+> >>  #include "../dmaengine.h"
+> >> 
+> >> @@ -409,6 +410,7 @@ struct xilinx_dma_device {
+> >>  	struct clk *rxs_clk;
+> >>  	u32 nr_channels;
+> >>  	u32 chan_id;
+> >> +	struct reset_control *rst;
+> >>  };
+> >>  
+> >>  /* Macros */
+> >> @@ -2543,6 +2545,27 @@ static int xilinx_dma_probe(struct platform_device
+> >> *pdev) if (IS_ERR(xdev->regs))
+> >>  		return PTR_ERR(xdev->regs);
+> >> 
+> >> +	xdev->rst = devm_reset_control_get_optional(&pdev->dev, "reset");
+> > 
+> > devm_reset_control_get_optional() is deprecated as explained in
+> > linux/reset.h, you should use devm_reset_control_get_optional_exclusive()
+> > or devm_reset_control_get_optional_shared() instead, as applicable.
+> > 
+> > This being said, I'm wondering why the optional versions of those
+> > functions exist, as they do exactly the same as the non-optional versions.
+> > The API feels wrong, it should have been modelled like the GPIO API. Feel
+> > free to fix it if you want :-) But that's out of scope for this patch.
+> 
+> I missed the comment stating that devm_reset_control_get_optional() was
+> deprecated.
+> 
+> I could fix it. Your sugestion is modelling these functions like the GPIO
+> API?
+
+I think it would be better for driver if the _get_optional functions would 
+return an ERR_PTR() for errors and NULL when reset control is not available, 
+and then have the rest of the reset controller API accept NULL as a no-op. 
+Your implementation would then be
+
+	xdev->rst = devm_reset_control_get_optional_exclusive(&pdev->dev,
+							      "reset");
+	if (IS_ERR(xdev->rst)) {
+		err = PTR_ERR(xdev->rst);
+		if (err != -EPROBE_DEFER)
+			dev_err(xdev->dev, "error getting reset %d\n", err);
+		return err;
+	}
+
+	err = reset_control_deassert(xdev->rst);
+	if (err) {
+		dev_err(xdev->dev, "failed to deassert reset: %d\n", err);
+		return err;
+	}
+
+That requires modifying the reset controller API, so it's a bit out-of-scope, 
+but if you could give it a go, it would be great.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
