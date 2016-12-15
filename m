@@ -1,99 +1,53 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v5 2/9] doc: DT: venus: binding document for Qualcomm video driver
-Date: Thu, 15 Dec 2016 19:22:17 +0200
-Message-ID: <1481822544-29900-3-git-send-email-stanimir.varbanov@linaro.org>
-References: <1481822544-29900-1-git-send-email-stanimir.varbanov@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] dt-bindings: power: supply: bq24735: reverse the
+ polarity of ac-detect
+Date: Thu, 15 Dec 2016 10:32:22 -0700
+Message-ID: <5f5fe01a-7c7a-58f7-2171-5f6879392ea7@wwwdotorg.org>
+References: <1481804479-8711-1-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481822544-29900-1-git-send-email-stanimir.varbanov@linaro.org>
+In-Reply-To: <1481804479-8711-1-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for Venus video encoder/decoder driver
+On 12/15/2016 05:21 AM, Peter Rosin wrote:
+> The ACOK pin on the bq24735 is active-high, of course meaning that when
+> AC is OK the pin is high. However, all Tegra dts files have incorrectly
+> specified active-high even though the signal is inverted on the Tegra
+> boards. This has worked since the Linux driver has also inverted the
+> meaning of the GPIO. Fix this situation by simply specifying in the
+> bindings what everybody else agrees on; that the ti,ac-detect-gpios is
+> active on AC adapter absence.
+>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>
+> Hi!
+>
+> This patch is the result of this discussion:
+> http://marc.info/?t=148152531800002
+>
+> I don't like how it changes the one thing that is seems correct, but
+> what to do?
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- .../devicetree/bindings/media/qcom,venus.txt       | 68 ++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+I haven't followed this thread so hopefully what I say is relevant. My 
+take is:
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-new file mode 100644
-index 000000000000..7b77dff52b0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-@@ -0,0 +1,68 @@
-+* Qualcomm Venus video encode/decode accelerator
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain one of:
-+		- "qcom,msm8916-venus"
-+		- "qcom,msm8996-venus"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register base address and length of the register map.
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Should contain interrupt line number.
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A List of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required for msm8916
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+- clock-names:
-+	Usage: required for msm8996
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+		- "subcore0"	Subcore0 (decoder) video accelerator clock
-+		- "subcore1"	Subcore1 (encoder) video accelerator clock
-+		- "mbus"	Video MAXI clock
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral.
-+- rproc:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle to remote processor responsible for
-+		    firmware loading and processor booting.
-+
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
-+* An Example
-+	video-codec@1d00000 {
-+		compatible = "qcom,msm8916-venus";
-+		reg = <0x01d00000 0xff000>;
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+			 <&gcc GCC_VENUS0_AHB_CLK>,
-+			 <&gcc GCC_VENUS0_AXI_CLK>;
-+		clock-names = "core", "iface", "bus";
-+		power-domains = <&gcc VENUS_GDSC>;
-+		rproc = <&venus_rproc>;
-+		iommus = <&apps_iommu 5>;
-+	};
--- 
-2.7.4
+If the DT binding is correct or reasonable, keep it.
+
+If the Tegra DTs contain incorrect content, and never worked correctly 
+in this aspect, then fix them. We do need to maintain DT 
+ABI/compatibility, but I believe only with stuff that actually worked 
+correctly. If the DT has a bug, just fix it.
+
+That said, if ti,ac-detect-gpios is describing a host GPIO, then it's 
+entirely arbitrary which polarity it should have, i.e. the polarity is 
+not something specified by the bq24735 HW. In that case, feel free to 
+change either the binding to match the DT or the DT to match the 
+binding. Changing the DT to match the binding might still be better 
+since there could be other users you're not aware of, and they might 
+have written their DT correctly, and you don't want to break them.
