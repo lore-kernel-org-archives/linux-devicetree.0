@@ -1,50 +1,46 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [RESEND PATCHv3 1/2] regulator: fixed: dt: Allow an optional over current pin
-Date: Thu, 15 Dec 2016 12:28:55 +0100
-Message-ID: <20161215112856.9541-2-ahaslam@baylibre.com>
-References: <20161215112856.9541-1-ahaslam@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161215112856.9541-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Change node name for pwrseq pin on
+ Olinuxino-lime2-emmc
+Date: Thu, 15 Dec 2016 12:35:33 +0100
+Message-ID: <20161215123533.f7e2373d2a9eb113ee7b0600@bidouilliste.com>
+References: <20161214145724.42745-1-manu@bidouilliste.com>
+        <20161214153013.bkdm3pu3osepfnn2@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161214153013.bkdm3pu3osepfnn2@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for an optional over current input pin which
-can be used to send an over current event to the regulator
-consumer.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ Hi Maxime,
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 4fae41d..b145abb 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -11,6 +11,7 @@ If this property is missing, the default assumed is Active low.
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
- -vin-supply: Input supply name.
-+- over-current-gpios: Input gpio that signal an over current condition.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-@@ -26,6 +27,7 @@ Example:
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		gpio = <&gpio1 16 0>;
-+		over-current-gpios = <&gpio1 18 0>;
- 		startup-delay-us = <70000>;
- 		enable-active-high;
- 		regulator-boot-on;
+On Wed, 14 Dec 2016 16:30:13 +0100
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+
+> On Wed, Dec 14, 2016 at 03:57:24PM +0100, Emmanuel Vadot wrote:
+> > The node name for the power seq pin is mmc2@0 like the mmc2_pins_a one.
+> > This makes the original node (mmc2_pins_a) scrapped out of the dtb and
+> > result in a unusable eMMC if U-Boot didn't configured the pins to the
+> > correct functions.
+> > 
+> > Changes since v1:
+> >  * Rename the node mmc2-rst-pin
+> 
+> That changelog should be after the ---. Removed it and applied.
+> 
+> Thanks!
+> Maxime
+
+ Sorry, still kinda new at doing patches for Linux, will be more
+carefull next time.
+ Quick question, when you say applied, applied where exactly ? I had a
+quick look at your branches on git.kernel.org didn't find anything.
+
+ Thanks.
+
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
