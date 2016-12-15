@@ -1,38 +1,50 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH v4 2/6] [media] rc-main: split setup and unregister
- functions
-Date: Fri, 16 Dec 2016 01:01:18 +0900
-Message-ID: <20161215160118.77hz5kuqjmxuotry@jack.zhora.eu>
-References: <20161214140030.28537-1-andi.shyti@samsung.com>
- <20161214140030.28537-3-andi.shyti@samsung.com>
- <20161215155049.GA23320@gofer.mess.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161215155049.GA23320@gofer.mess.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCHv4 1/2] regulator: fixed: dt: Allow an optional over current pin
+Date: Thu, 15 Dec 2016 17:29:54 +0100
+Message-ID: <20161215162955.3940-2-ahaslam@baylibre.com>
+References: <20161215162955.3940-1-ahaslam@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161215162955.3940-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > +	/* rc_open will be called here */
-> > +	rc = input_register_device(dev->input_dev);
-> > +	if (rc)
-> > +		goto out_table;
-> > +
-> > +	dev->input_dev->dev.parent = &dev->dev;
-> > +	memcpy(&dev->input_dev->id, &dev->input_id, sizeof(dev->input_id));
-> > +	dev->input_dev->phys = dev->input_phys;
-> > +	dev->input_dev->name = dev->input_name;
-> 
-> I was testing your changes, and with this patch none of my rc devices
-> have input devices associated with them. The problem is that you've changed
-> the order: input_register_device() should happen AFTER the preceding
-> 4 lines.
+Add support for an optional over current input pin which
+can be used to send an over current event to the regulator
+consumer.
 
-This must have been a copy paste error and I don't have
-transmitters to test it. Thanks for testing it. I will send it
-again.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Andi
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 4fae41d..b145abb 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -11,6 +11,7 @@ If this property is missing, the default assumed is Active low.
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+ -vin-supply: Input supply name.
++- over-current-gpios: Input gpio that signal an over current condition.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+@@ -26,6 +27,7 @@ Example:
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 		gpio = <&gpio1 16 0>;
++		over-current-gpios = <&gpio1 18 0>;
+ 		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 		regulator-boot-on;
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
