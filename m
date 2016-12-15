@@ -1,30 +1,38 @@
-From: yegorslists@googlemail.com
-Subject: [PATCH 2/2] Documentation: ehci-omap: remove the unnecessary newline
-Date: Thu, 15 Dec 2016 16:56:10 +0100
-Message-ID: <1481817370-28242-2-git-send-email-yegorslists@googlemail.com>
-References: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Yegor Yefremov <yegorslists@googlemail.com>
+From: Andi Shyti <andi@etezian.org>
+Subject: Re: [PATCH v4 2/6] [media] rc-main: split setup and unregister
+ functions
+Date: Fri, 16 Dec 2016 01:01:18 +0900
+Message-ID: <20161215160118.77hz5kuqjmxuotry@jack.zhora.eu>
+References: <20161214140030.28537-1-andi.shyti@samsung.com>
+ <20161214140030.28537-3-andi.shyti@samsung.com>
+ <20161215155049.GA23320@gofer.mess.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161215155049.GA23320@gofer.mess.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+> > +	/* rc_open will be called here */
+> > +	rc = input_register_device(dev->input_dev);
+> > +	if (rc)
+> > +		goto out_table;
+> > +
+> > +	dev->input_dev->dev.parent = &dev->dev;
+> > +	memcpy(&dev->input_dev->id, &dev->input_id, sizeof(dev->input_id));
+> > +	dev->input_dev->phys = dev->input_phys;
+> > +	dev->input_dev->name = dev->input_name;
+> 
+> I was testing your changes, and with this patch none of my rc devices
+> have input devices associated with them. The problem is that you've changed
+> the order: input_register_device() should happen AFTER the preceding
+> 4 lines.
 
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
----
- Documentation/devicetree/bindings/usb/ehci-omap.txt | 1 -
- 1 file changed, 1 deletion(-)
+This must have been a copy paste error and I don't have
+transmitters to test it. Thanks for testing it. I will send it
+again.
 
-diff --git a/Documentation/devicetree/bindings/usb/ehci-omap.txt b/Documentation/devicetree/bindings/usb/ehci-omap.txt
-index 3dc231c..d77e11a 100644
---- a/Documentation/devicetree/bindings/usb/ehci-omap.txt
-+++ b/Documentation/devicetree/bindings/usb/ehci-omap.txt
-@@ -29,4 +29,3 @@ usbhsehci: ehci@4a064c00 {
- &usbhsehci {
- 	phys = <&hsusb1_phy 0 &hsusb3_phy>;
- };
--
--- 
-2.1.4
+Andi
