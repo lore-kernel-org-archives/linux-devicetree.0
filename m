@@ -1,189 +1,113 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] Bluetooth: btusb: Configure Marvel to use one of the pins for oob wakeup
-Date: Thu, 15 Dec 2016 09:29:49 +0100
-Message-ID: <87shppk32a.fsf@free-electrons.com>
-References: <1481742779-15105-1-git-send-email-rajatja@google.com>
-        <1481742779-15105-3-git-send-email-rajatja@google.com>
+From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
+Date: Thu, 15 Dec 2016 08:34:37 +0000
+Message-ID: <871sx9wpyb.fsf@kamboji.qca.qualcomm.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+        <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481742779-15105-3-git-send-email-rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> (Rajat
-        Jain's message of "Wed, 14 Dec 2016 11:12:59 -0800")
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161002222913.12223-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Mon, 3 Oct 2016 00:29:06 +0200")
+Content-Language: en-US
+Content-ID: <809E903D7A02CF43A9997298213E59F4-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rajat,
- 
- On mer., déc. 14 2016, Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-In your title unless you speak about the comic books you should do a
-s/Marvel/Marvell/ :)
+> There are two types of swapping the EEPROM data in the ath9k driver.
+> Before this series one type of swapping could not be used without the
+> other.
+>
+> The first type of swapping looks at the "magic bytes" at the start of
+> the EEPROM data and performs swab16 on the EEPROM contents if needed.
+> The second type of swapping is EEPROM format specific and swaps
+> specific fields within the EEPROM itself (swab16, swab32 - depends on
+> the EEPROM format).
+>
+> With this series the second part now looks at the EEPMISC register
+> inside the EEPROM, which uses a bit to indicate if the EEPROM data
+> is Big Endian (this is also done by the FreeBSD kernel).
+> This has a nice advantage: currently there are some out-of-tree hacks
+> (in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
+> Big Endian system (=3D no swab16 is performed) but the EEPROM itself
+> indicates that it's data is Little Endian. Until now the out-of-tree
+> code simply did a swab16 before passing the data to ath9k, so ath9k
+> first did the swab16 - this also enabled the format specific swapping.
+> These out-of-tree hacks are still working with the new logic, but it
+> is recommended to remove them. This implementation is based on a
+> discussion with Arnd Bergmann who raised concerns about the
+> robustness and portability of the swapping logic in the original OF
+> support patch review, see [0].
+>
+> After a second round of patches (=3D v1 of this series) neither Arnd
+> Bergmann nor I were really happy with the complexity of the EEPROM
+> swapping logic. Based on a discussion (see [1] and [2]) we decided
+> that ath9k should use a defined format (specifying the endianness
+> of the data - I went with __le16 and __le32) when accessing the
+> EEPROM fields. A benefit of this is that we enable the EEPMISC based
+> swapping logic by default, just like the FreeBSD driver, see [3]. On
+> the devices which I have tested (see below) ath9k now works without
+> having to specify the "endian_check" field in ath9k_platform_data (or
+> a similar logic which could provide this via devicetree) as ath9k now
+> detects the endianness automatically. Only EEPROMs which are mangled
+> by some out-of-tree code still need the endian_check flag (or one can
+> simply remove that mangling from the out-of-tree code).
+>
+> Testing:
+> - tested by myself on AR9287 with Big Endian EEPROM
+> - tested by myself on AR9227 with Little Endian EEPROM
+> - tested by myself on AR9381 (using the ar9003_eeprom implementation,
+>   which did not suffer from this whole problem)
+> - how do we proceed with testing? maybe we could keep this in a
+>   feature-branch and add these patches to LEDE once we have an ACK to
+>   get more people to test this
+>
+> This series depends on my other series (v7):
+> "add devicetree support to ath9k" - see [4]
+>
+> Changes since v1:
+> - reworked description in the cover-letter to describe the reasons
+>   behind the new patch 7
+> - reworked patch "Set the "big endian" bit of the AR9003 EEPROM
+>   templates" as ar9003_eeprom.c sets all values as Little Endian, thus
+>   the Big Endian bit should never be set (the new patch makes this
+>   clear)
+> - dropped "ath9k: Make EEPROM endianness swapping configurable via
+>   devicetree" as it is not needed anymore with the new logic from
+>   patch 7
+> - added patches 4 and 5 as small cleanup (this made it easier to
+>   implement the le{16,32}_to_cpu() changes where needed)
+>
+>
+> [0] http://www.spinics.net/lists/linux-wireless/msg152634.html
+> [1] https://marc.info/?l=3Dlinux-wireless&m=3D147250597503174&w=3D2
+> [2] https://marc.info/?l=3Dlinux-wireless&m=3D147254388611344&w=3D2
+> [3] https://github.com/freebsd/freebsd/blob/50719b56d9ce8d7d4beb53b16e9ed=
+b2e9a4a7a18/sys/dev/ath/ath_hal/ah_eeprom_9287.c#L351
+> [4] https://marc.info/?l=3Dlinux-wireless&m=3D147544488619822&w=3D2
+>
+> Martin Blumenstingl (7):
+>   ath9k: Add a #define for the EEPROM "eepmisc" endianness bit
+>   ath9k: indicate that the AR9003 EEPROM template values are little
+>     endian
+>   ath9k: Add an eeprom_ops callback for retrieving the eepmisc value
+>   ath9k: replace eeprom_param EEP_MINOR_REV with get_eeprom_rev
+>   ath9k: consistently use get_eeprom_rev(ah)
+>   ath9k: Make the EEPROM swapping check use the eepmisc register
+>   ath9k: define all EEPROM fields in Little Endian format
 
-Gregory
+Applied to ath-next on ath.git, thanks.
 
-> The Marvell devices may have many gpio pins, and hence for wakeup
-> on these out-of-band pins, the chip needs to be told which pin is
-> to be used for wakeup, using an hci command.
->
-> Thus, we read the pin number etc from the device tree node and send
-> a command to the chip.
->
-> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Note that while I would have liked to name the compatible string as more
-> like "marvell, usb8997-bt", the devicetrees/bindings/usb/usb-device.txt
-> requires the compatible property to be of the form "usbVID,PID".
->
->  .../{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} | 25 ++++++++-
->  drivers/bluetooth/btusb.c                          | 59 ++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 2 deletions(-)
->  rename Documentation/devicetree/bindings/net/{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} (76%)
->
-> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-> similarity index 76%
-> rename from Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> rename to Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-> index 6a9a63c..471bef8 100644
-> --- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> +++ b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-> @@ -1,4 +1,4 @@
-> -Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
-> +Marvell 8897/8997 (sd8897/sd8997) bluetooth devices (SDIO or USB based)
->  ------
->  
->  Required properties:
-> @@ -6,11 +6,13 @@ Required properties:
->    - compatible : should be one of the following:
->  	* "marvell,sd8897-bt"
->  	* "marvell,sd8997-bt"
-> +	* "usb1286,204e"
->  
->  Optional properties:
->  
->    - marvell,cal-data: Calibration data downloaded to the device during
->  		      initialization. This is an array of 28 values(u8).
-> +		      This is only applicable to SDIO devices.
->  
->    - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth chip.
->  		        firmware will use the pin to wakeup host system (u16).
-> @@ -29,7 +31,9 @@ Example:
->  IRQ pin 119 is used as system wakeup source interrupt.
->  wakeup pin 13 and gap 100ms are configured so that firmware can wakeup host
->  using this device side pin and wakeup latency.
-> -calibration data is also available in below example.
-> +
-> +Example for SDIO device follows (calibration data is also available in
-> +below example).
->  
->  &mmc3 {
->  	status = "okay";
-> @@ -54,3 +58,20 @@ calibration data is also available in below example.
->  		marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
->  	};
->  };
-> +
-> +Example for USB device:
-> +
-> +&usb_host1_ohci {
-> +    status = "okay";
-> +    #address-cells = <1>;
-> +    #size-cells = <0>;
-> +
-> +    mvl_bt1: bt@1 {
-> +	compatible = "usb1286,204e";
-> +	reg = <1>;
-> +	interrupt-parent = <&gpio0>;
-> +	interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
-> +	marvell,wakeup-pin = /bits/ 16 <0x0d>;
-> +	marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
-> +    };
-> +};
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 32a6f22..99d7f6d 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -2343,6 +2343,58 @@ static int btusb_shutdown_intel(struct hci_dev *hdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PM
-> +static const struct of_device_id mvl_oob_wake_match_table[] = {
-> +	{ .compatible = "usb1286,204e" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mvl_oob_wake_match_table);
-> +
-> +/* Configure an out-of-band gpio as wake-up pin, if specified in device tree */
-> +static int marvell_config_oob_wake(struct hci_dev *hdev)
-> +{
-> +	struct sk_buff *skb;
-> +	struct btusb_data *data = hci_get_drvdata(hdev);
-> +	struct device *dev = &data->udev->dev;
-> +	u16 pin, gap, opcode;
-> +	int ret;
-> +	u8 cmd[5];
-> +
-> +	if (!of_match_device(mvl_oob_wake_match_table, dev))
-> +		return 0;
-> +
-> +	if (of_property_read_u16(dev->of_node, "marvell,wakeup-pin", &pin) ||
-> +	    of_property_read_u16(dev->of_node, "marvell,wakeup-gap-ms", &gap))
-> +		return -EINVAL;
-> +
-> +	/* Vendor specific command to configure a GPIO as wake-up pin */
-> +	opcode = hci_opcode_pack(0x3F, 0x59);
-> +	cmd[0] = opcode & 0xFF;
-> +	cmd[1] = opcode >> 8;
-> +	cmd[2] = 2; /* length of parameters that follow */
-> +	cmd[3] = pin;
-> +	cmd[4] = gap; /* time in ms, for which wakeup pin should be asserted */
-> +
-> +	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
-> +	if (!skb) {
-> +		bt_dev_err(hdev, "%s: No memory\n", __func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	memcpy(skb_put(skb, sizeof(cmd)), cmd, sizeof(cmd));
-> +	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
-> +
-> +	ret = btusb_send_frame(hdev, skb);
-> +	if (ret) {
-> +		bt_dev_err(hdev, "%s: configuration failed\n", __func__);
-> +		kfree_skb(skb);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int btusb_set_bdaddr_marvell(struct hci_dev *hdev,
->  				    const bdaddr_t *bdaddr)
->  {
-> @@ -2917,6 +2969,13 @@ static int btusb_probe(struct usb_interface *intf,
->  	err = btusb_config_oob_wake(hdev);
->  	if (err)
->  		goto out_free_dev;
-> +
-> +	/* Marvel devices may need a specific chip configuration */
-> +	if (id->driver_info & BTUSB_MARVELL && data->oob_wake_irq) {
-> +		err = marvell_config_oob_wake(hdev);
-> +		if (err)
-> +			goto out_free_dev;
-> +	}
->  #endif
->  	if (id->driver_info & BTUSB_CW6622)
->  		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
-> -- 
-> 2.8.0.rc3.226.g39d4020
->
+(My automatic "accepted" email failed, so had to send this manually.)
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--=20
+Kalle Valo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
