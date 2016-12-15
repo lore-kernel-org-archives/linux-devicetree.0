@@ -1,84 +1,31 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 1/5] clk: samsung: exynos5433: Set NoC (Network On Chip)
- clocks as critical
-Date: Thu, 15 Dec 2016 13:33:19 +0900
-Message-ID: <58521D0F.5040704@samsung.com>
-References: <1481173091-9728-1-git-send-email-cw00.choi@samsung.com>
- <CGME20161208050020epcas2p444709cd01b75a3e49ca60ae41338e017@epcas2p4.samsung.com>
- <1481173091-9728-2-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1481173091-9728-2-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, robh+dt@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/2] add clk-hi3660
+Date: Thu, 15 Dec 2016 13:58:11 +0800
+Message-ID: <1481781493-6188-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sylwester,
+Zhangfei Gao (2):
+  dt-bindings: Document the hi3660 clock bindings
+  clk: hi3660: Clock driver support for Hisilicon hi3660 SoC
 
-Could you please review this patch?
+ .../devicetree/bindings/clock/hi3660-clock.txt     |  25 +
+ drivers/clk/hisilicon/Kconfig                      |   7 +
+ drivers/clk/hisilicon/Makefile                     |   1 +
+ drivers/clk/hisilicon/clk-hi3660.c                 | 601 +++++++++++++++++++++
+ include/dt-bindings/clock/hi3660-clock.h           | 194 +++++++
+ 5 files changed, 828 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/hi3660-clock.txt
+ create mode 100644 drivers/clk/hisilicon/clk-hi3660.c
+ create mode 100644 include/dt-bindings/clock/hi3660-clock.h
 
 -- 
-Regards,
-Chanwoo Choi
+2.7.4
 
-On 2016년 12월 08일 13:58, Chanwoo Choi wrote:
-> The ACLK_BUS0/1/2 are used for NoC (Network on Chip). If NoC's clocks are
-> disabled, the system halt happen. Following clock must be always enabled.
-> - CLK_ACLK_BUS0_400 : NoC's bus clock for PERIC/PERIS/FSYS/MSCL
-> - CLK_ACLK_BUS1_400 : NoC's bus clock for MFC/HEVC/G3D
-> - CLK_ACLK_BUS2_400 : NoC's bus clock for GSCL/DISP/G2D/CAM0/CAM1/ISP
-> 
-> Also, this patch adds the CLK_SET_RATE_PARENT flag to the CLK_SCLK_JPEG_MSCL
-> because this clock should be used for bus frequency scaling. This clock need to
-> be changed on the fly with CLK_SET_RATE_PARENT flag.
-> 
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc:linux-clk@vger.kernel.org
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5433.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-> index f096bd7df40c..0db5204c307c 100644
-> --- a/drivers/clk/samsung/clk-exynos5433.c
-> +++ b/drivers/clk/samsung/clk-exynos5433.c
-> @@ -549,10 +549,10 @@
->  			29, CLK_IGNORE_UNUSED, 0),
->  	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
->  			ENABLE_ACLK_TOP, 26,
-> -			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-> +			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
->  	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
->  			ENABLE_ACLK_TOP, 25,
-> -			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-> +			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
->  	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
->  			ENABLE_ACLK_TOP, 24,
->  			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
-> @@ -616,7 +616,7 @@
->  
->  	/* ENABLE_SCLK_TOP_MSCL */
->  	GATE(CLK_SCLK_JPEG_MSCL, "sclk_jpeg_mscl", "div_sclk_jpeg",
-> -			ENABLE_SCLK_TOP_MSCL, 0, 0, 0),
-> +			ENABLE_SCLK_TOP_MSCL, 0, CLK_SET_RATE_PARENT, 0),
->  
->  	/* ENABLE_SCLK_TOP_CAM1 */
->  	GATE(CLK_SCLK_ISP_SENSOR2, "sclk_isp_sensor2", "div_sclk_isp_sensor2_b",
-> @@ -1382,7 +1382,7 @@ static void __init exynos5433_cmu_cpif_init(struct device_node *np)
->  	/* ENABLE_ACLK_MIF3 */
->  	GATE(CLK_ACLK_BUS2_400, "aclk_bus2_400", "div_aclk_bus2_400",
->  			ENABLE_ACLK_MIF3, 4,
-> -			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-> +			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
->  	GATE(CLK_ACLK_DISP_333, "aclk_disp_333", "div_aclk_disp_333",
->  			ENABLE_ACLK_MIF3, 1,
->  			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
