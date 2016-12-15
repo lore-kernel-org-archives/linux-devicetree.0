@@ -1,130 +1,41 @@
-From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci
- of rk3399
-Date: Wed, 14 Dec 2016 16:10:38 -0800
-Message-ID: <CAD=FV=UU4JdRjRgEvc_wxprvi6bo46+jd=x2m2QzOe4uJmuRPA@mail.gmail.com>
-References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com> <1481710301-1454-4-git-send-email-zhengxing@rock-chips.com>
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH 1/3] clk: rockchip: rk3399: add USBPHYx_480M_SRC clock IDs
+Date: Wed, 14 Dec 2016 16:27:49 -0800
+Message-ID: <CAD=FV=WTS5C1voL5UDwR7xUb5+rJwHOuE3KnqAiQPa_f9AeRFw@mail.gmail.com>
+References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com> <1481710301-1454-2-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481710301-1454-4-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torok>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481710301-1454-2-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xing Zheng <zhengxing@rock-chips.com>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lin Huang <hl@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Wed, Dec 14, 2016 at 2:11 AM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> From: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Wed, Dec 14, 2016 at 2:11 AM, Xing Zheng <zhengxing@rock-chips.com> wrote:
+> This patch add two clock IDs for the usb phy 480m source clocks.
 >
-> We found that the suspend process was blocked when it run into
-> ehci/ohci module due to clk-480m of usb2-phy was disabled.
+> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+> ---
 >
-> The root cause is that usb2-phy suspended earlier than ehci/ohci
-> (usb2-phy will be auto suspended if no devices plug-in).
+>  include/dt-bindings/clock/rk3399-cru.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/include/dt-bindings/clock/rk3399-cru.h b/include/dt-bindings/clock/rk3399-cru.h
+> index 220a60f..224daf7 100644
+> --- a/include/dt-bindings/clock/rk3399-cru.h
+> +++ b/include/dt-bindings/clock/rk3399-cru.h
+> @@ -132,6 +132,8 @@
+>  #define SCLK_RMII_SRC                  166
+>  #define SCLK_PCIEPHY_REF100M           167
+>  #define SCLK_DDRC                      168
+> +#define SCLK_USBPHY0_480M_SRC          169
+> +#define SCLK_USBPHY1_480M_SRC          170
 
-This is really weird, but I can confirm it is true on my system too
-(kernel-4.4 based).  At least I see:
-
-[  208.012065] calling  usb1+ @ 4984, parent: fe380000.usb, cb: usb_dev_suspend
-[  208.569112] calling  ff770000.syscon:usb2-phy@e450+ @ 4983, parent:
-ff770000.syscon, cb: platform_pm_suspend
-[  208.569113] call ff770000.syscon:usb2-phy@e450+ returned 0 after 0 usecs
-[  208.569439] calling  fe380000.usb+ @ 4983, parent: platform, cb:
-platform_pm_suspend
-[  208.569444] call fe380000.usb+ returned 0 after 4 usecs
-
-
-In general I thought that suspend order was supposed to be related to
-probe order.  So if your probe order is A, B, C then your suspend
-order would be C, B, A.  ...and we know for sure that the USB PHY
-needs to probe _before_ the main USB controller.  If it didn't then
-you'd get an EPROBE_DEFER in the USB controller, right?  So that means
-that the USB controller should be suspending before its PHY.
-
-Any chance this is somehow related to async probe?  I'm not a huge
-expert on async probe but I guess I could imagine things getting
-confused if you had a sequence like this:
-
-1. Start USB probe (async)
-2. Start PHY probe
-3. Finish PHY probe
-4. In USB probe, ask for PHY--no problems since PHY probe finished
-5. Finish USB probe
-
-The probe order would be USB before PHY even though the USB probe
-_depended_ on the PHY probe being finished...  :-/  Anyway, probably
-I'm just misunderstanding something and someone can tell me how dumb I
-am...
-
-I also notice that the ehci_platform_power_off() function we're
-actually making PHY commands right before the same commands that turn
-off our clocks.  Presumably those commands aren't really so good to do
-if the PHY has already been suspended?
-
-Actually, does the PHY suspend from platform_pm_suspend() actually
-even do anything?  It doesn't look like it.  It looks as if all the
-PHY cares about is init/exit and on/off...  ...and it looks as if the
-PHY should be turned off by the EHCI controller at about the same time
-it turns off its clocks...
-
-I haven't fully dug, but is there any chance that things are getting
-confused between the OTG PHY and the Host PHY?  Maybe when we turn off
-the OTG PHY it turns off something that the host PHY needs?
-
-
-> and the
-> clk-480m provided by it was disabled if no module used. However,
-> some suspend process related ehci/ohci are base on this clock,
-> so we should refer it into ehci/ohci driver to prevent this case.
-
-Though I don't actually have details about the internals of the chip,
-it does seem highly likely that the USB block actually uses this clock
-for some things, so it doesn't seem insane (to me) to have the USB
-controller request that the clock be on.  So, in general, I don't have
-lots of objections to including the USB PHY Clock here.
-
-...but I think you have the wrong clock (please correct me if I'm
-wrong).  I think you really wanted your input clock to be
-"clk_usbphy0_480m", not "clk_usbphy0_480m_src".  Specifically I
-believe there is a gate between the clock outputted by the PHY and the
-USB Controller itself.  I'm guessing that the gate is only there
-between the PHY and the "clk_usbphy_480m" MUX.
-
-As evidence, I have a totally functioning system right now where
-"clk_usbphy0_480m_src" is currently gated.
-
-That means really you should be changing your clocks to this (untested):
-
-               clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
-                        <&u2phy0>;
-
-...and then you could drop the other two patches in this series.
-
-===
-
-OK, I actually briefly tested my proposed change and it at least seems
-to build and boot OK.  You'd have to test it to make sure it makes
-your tests pass...
-
-===
-
-So I guess to summarize all the above:
-
-* It seems to me like there's some deeper root cause and your patch
-will at most put a band-aid on it.  Seems like digging out the root
-cause is a good idea.
-
-* Though I don't believe it solves the root problem, the idea of the
-USB Controller holding onto the PHY clock doesn't seem wrong.
-
-* You're holding onto the wrong clock in your patch--you want the one
-before the gate (I think).
-
+As mentioned in the dts patch, I don't think you need these since I'm
+under the impression that nobody gets this clock.  I think the USB
+Controller get the ungated version of this clock.
 
 -Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
