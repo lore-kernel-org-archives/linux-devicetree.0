@@ -1,47 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/3] clkdev: add devm_get_clk_from_child()
-Date: Thu, 15 Dec 2016 12:21:15 +0000
-Message-ID: <20161215122115.zpxawc2xdc45rczf@sirena.org.uk>
-References: <874m2jvtmw.wl%kuninori.morimoto.gx@renesas.com>
- <20161208220824.GM5423@codeaurora.org>
- <8737hyymo9.wl%kuninori.morimoto.gx@renesas.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v3] dt-bindings: power: supply: bq24735: reverse the polarity of ac-detect
+Date: Thu, 15 Dec 2016 13:21:19 +0100
+Message-ID: <1481804479-8711-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eoumllemmyfv2hgm"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8737hyymo9.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-DT <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux-Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux-ARM <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+The ACOK pin on the bq24735 is active-high, of course meaning that when
+AC is OK the pin is high. However, all Tegra dts files have incorrectly
+specified active-high even though the signal is inverted on the Tegra
+boards. This has worked since the Linux driver has also inverted the
+meaning of the GPIO. Fix this situation by simply specifying in the
+bindings what everybody else agrees on; that the ti,ac-detect-gpios is
+active on AC adapter absence.
 
---eoumllemmyfv2hgm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
 
-On Fri, Dec 09, 2016 at 12:25:48AM +0000, Kuninori Morimoto wrote:
+Hi!
 
-> Mark, I think I should re-post 2nd patch (3rd will be dropped) after
-> merge window ? There will be no branch dependency
+This patch is the result of this discussion:
+http://marc.info/?t=148152531800002
 
-Should be fine without but obviously if it looks like it's gone AWOL
-then reposting would be good.
+I don't like how it changes the one thing that is seems correct, but
+what to do?
 
---eoumllemmyfv2hgm
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
+Peter
 
------BEGIN PGP SIGNATURE-----
+ Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhSirsACgkQJNaLcl1U
-h9DJ2Qf+PnRfUeFgE7kn755ufmOqtC1Hwq+qO1h+5mCNU57wBZJhx7Way15NSKn2
-p9pUUuDf7CK2GeOLicbHEDHW7Wxow96+gfD+CjSPFutpiU9KB1re6HwXB6a6l1YZ
-dYity7pJc1G3AtWOJSD9LqIuu9TsxbqXW81323lO0Kk8opXEzthTQIVeYK9Wl0r+
-1RbnW/N5iVqxnByjmE678pk7jxO7W5Guaz3ytpyDInvoksjL3Xf0GN3kWrKCr6Zs
-qoU/2dErHcSo4yjrZ2clCcU7rkIZXPf8OV2JTxGK7XQDvDd06Ik5esiLQnElkM3M
-lDSeZYl7KJPccMUia+3jGxZLPf/4Bg==
-=LWmD
------END PGP SIGNATURE-----
-
---eoumllemmyfv2hgm--
+diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+index 3bf55757ceec..43d56c49455b 100644
+--- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
++++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+@@ -8,8 +8,9 @@ Optional properties :
+  - interrupts : Specify the interrupt to be used to trigger when the AC
+    adapter is either plugged in or removed.
+  - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
+-   presence. This is a Host GPIO that is configured as an input and
+-   connected to the bq24735.
++   status. This is a Host GPIO that is configured as an input and
++   connected to the bq24735, typically the ACOK pin (note: the GPIO should
++   be active on AC adapter absence).
+  - ti,charge-current : Used to control and set the charging current. This value
+    must be between 128mA and 8.128A with a 64mA step resolution. The POR value
+    is 0x0000h. This number is in mA (e.g. 8192), see spec for more information
+-- 
+2.1.4
