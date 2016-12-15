@@ -1,91 +1,59 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Change node name for pwrseq pin on
- Olinuxino-lime2-emmc
-Date: Thu, 15 Dec 2016 13:17:26 +0100
-Message-ID: <20161215121726.hfrjk5kfgaifnkgq@lukather>
-References: <20161214145724.42745-1-manu@bidouilliste.com>
- <20161214153013.bkdm3pu3osepfnn2@lukather>
- <20161215123533.f7e2373d2a9eb113ee7b0600@bidouilliste.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCHv3 2/2] regulator: fixed: Handle optional
+ overcurrent pin
+Date: Thu, 15 Dec 2016 12:19:58 +0000
+Message-ID: <20161215121958.klssvbtbuhsz3pga@sirena.org.uk>
+References: <20161215112856.9541-3-ahaslam@baylibre.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vqahxu7gll2earpj"
+        protocol="application/pgp-signature"; boundary="v5s3voismrjid7xi"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161215123533.f7e2373d2a9eb113ee7b0600-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+In-Reply-To: <20161215112856.9541-3-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---vqahxu7gll2earpj
+--v5s3voismrjid7xi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 15, 2016 at 12:35:33PM +0100, Emmanuel Vadot wrote:
->=20
->  Hi Maxime,
->=20
-> On Wed, 14 Dec 2016 16:30:13 +0100
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->=20
-> > On Wed, Dec 14, 2016 at 03:57:24PM +0100, Emmanuel Vadot wrote:
-> > > The node name for the power seq pin is mmc2@0 like the mmc2_pins_a on=
-e.
-> > > This makes the original node (mmc2_pins_a) scrapped out of the dtb and
-> > > result in a unusable eMMC if U-Boot didn't configured the pins to the
-> > > correct functions.
-> > >=20
-> > > Changes since v1:
-> > >  * Rename the node mmc2-rst-pin
-> >=20
-> > That changelog should be after the ---. Removed it and applied.
-> >=20
-> > Thanks!
-> > Maxime
->=20
->  Sorry, still kinda new at doing patches for Linux, will be more
-> carefull next time.
->  Quick question, when you say applied, applied where exactly ? I had a
-> quick look at your branches on git.kernel.org didn't find anything.
+On Thu, Dec 15, 2016 at 12:28:56PM +0100, Axel Haslam wrote:
 
-In general, my tree on kernel.org.
+> +		ret = devm_request_threaded_irq(&pdev->dev,
+> +				gpiod_to_irq(drvdata->oc_gpio), NULL,
+> +				reg_fixed_overcurrent_irq, irqflags,
+> +				"over_current", drvdata);
 
-In this case, my local tree for now. We're right in the middle of the
-merge window for 4.10, so in order not to pollute next and not to
-confuse everyone (or rebasing a branch at some point), I just gather
-the patches here. I'll publish a branch based on 4.10 as soon as
-4.10-rc1 is released.
+>  	drvdata->dev = devm_regulator_register(&pdev->dev, &drvdata->desc,
+>  					       &cfg);
 
-Maxime
+We are registering a managed interrupt for the interrupt handler and we
+are registering it before we register the regulator.  This means that
+the interrupt may fire in both probe and remove paths without the
+regulator which it will then try to use in the interrupt handler,
+potentially crashing the system.  It's better to register the interrupt
+after the regulator (which will make the managed bit OK) to avoid this
+possibility.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---vqahxu7gll2earpj
+--v5s3voismrjid7xi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYUonRAAoJEBx+YmzsjxAgZz4P/1WBSQulhzOwpbEV7eQJidfa
-Xe4rfUTIXA0bSUGxH2VP6xIDLOF4/tbWHPDCu4mErEqlJeV0UGmc3sF4hmpIi7L4
-OA4fMeujgbIgb0AounEZJy+M37RUw+whC1m0e9XkC2ioA0UR4Rw4RUpJdGGtkJ8U
-+p1GlXqn/eYsqR2XQP5BIfFQlSzKwxAcM5mCx0+3LpS3OiulC/ZoKlFh0dKhNdHO
-ZQF3RdgKt+3hyxf3aDmi3W8V6SbGwec9HwmEtrkWqVdw2VcifjvNxz5qQWI8nPTx
-N/VL5T3Vy1TLxyx8Ut11AJ9GXjUhIhsCGsR2+NFit/sYGIdyjij5oR4laTkHy4Qa
-SAXDxbOnbklhxNagdXRBjgMWxWIYubFZp7r94T0RIC3WVQ/ubvR2LubgRfP5NROl
-onBGDmaKu9rwv1sl0Tv402awd7yUXhujwDiCl0R7nU5313Zxvoslk33xY6sCvG9c
-1ZH587M2t7yZw7niL3WZ/8KjrMtXOA7B4yyRqBDZwmD5rr6PioVrHqdFMhTOwn4t
-gOq8ky/m4Y2P64Oj3A8/O2awLzVsBEE0jFffurW4epsC7yPzLcGMFmh4jBsnu2iN
-Fsri7RefqO4qjn1PXQBem8N+vEPjga6S4hXnunh4ExVQxHJ59UGo6Q76Ebv4hkZr
-i2mmSrGi4Zy+q0I5R/X1
-=PLhR
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhSim0ACgkQJNaLcl1U
+h9CXVwf5ATLIQAY6fwKQg524qUryAGYxQYiwCavk3zbpuX8qjJhZKqwg2BTv7alj
+0ECtQaEzTzsEhzLRWV+8L+VLrXwUobtb9wdLABXLGmf3ZdkA9CQTj9ZHDD+jvrE5
+PY/5XIgE1sBd1zI4TaEHKBP1aAS2snp4OdW25RLtNyKQa6HNhAycIinebgsACSJo
+SbTpOQgKr4Tm57Jpo6LCpoZvrBnA8TLYDPFXjA3lCRTy7AB5hWrXLpW4KHRJnbe5
+fleVA72JwElfYmxVVXWC7B3J/EKPzLj2BJwZp8XsJUQU+vxFzz864lHgwPc4sXn2
+2iKrVTOErSP0SMjkghR6f/xMmWJV0A==
+=hbws
 -----END PGP SIGNATURE-----
 
---vqahxu7gll2earpj--
+--v5s3voismrjid7xi--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
