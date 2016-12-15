@@ -1,41 +1,41 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCHv3 2/2] regulator: fixed: Handle optional
- overcurrent pin
-Date: Thu, 15 Dec 2016 14:03:40 +0100
-Message-ID: <CAKXjFTOSRm=EJLB2pokQW=ZeqJzN1KUG4Eti6LEoGPZMmRj2mg@mail.gmail.com>
-References: <20161215112856.9541-3-ahaslam@baylibre.com> <20161215121958.klssvbtbuhsz3pga@sirena.org.uk>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: of_reserved_mem: Ensure cma reserved region not
+ cross the low/high memory
+Date: Thu, 15 Dec 2016 07:54:17 -0600
+Message-ID: <CAL_JsqJygJK_VmXKad8n63-jLH+G_xQ=NwX8JVmE=xSuYMof=Q@mail.gmail.com>
+References: <1479901021-25064-1-git-send-email-jason.hui.liu@nxp.com>
+ <CAL_JsqLHh96D0VULuYfYC1P5K_Bbz6iRjizuYP3Mb6bdERbDnA@mail.gmail.com> <833f99b1-d10b-27ba-e0f9-a7c6398fb63d@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161215121958.klssvbtbuhsz3pga-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <833f99b1-d10b-27ba-e0f9-a7c6398fb63d-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 1:19 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Dec 15, 2016 at 12:28:56PM +0100, Axel Haslam wrote:
+On Wed, Dec 14, 2016 at 4:21 PM, Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> On 12/14/2016 12:45 PM, Rob Herring wrote:
+>> On Wed, Nov 23, 2016 at 5:37 AM, Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org> wrote:
+>>> Need ensure the cma reserved region not cross the low/high memory boundary
+>>> when using the dynamic allocation methond through device-tree, otherwise,
+>>> kernel will fail to boot up when cma reserved region cross how/high mem.
+>>
+>> The kernel command line code setting CMA already deals with this. Why
+>> don't we just call the CMA code (cma_declare_contiguous) to deal with
+>> this?
+>>
+>> Rob
+>>
 >
->> +             ret = devm_request_threaded_irq(&pdev->dev,
->> +                             gpiod_to_irq(drvdata->oc_gpio), NULL,
->> +                             reg_fixed_overcurrent_irq, irqflags,
->> +                             "over_current", drvdata);
->
->>       drvdata->dev = devm_regulator_register(&pdev->dev, &drvdata->desc,
->>                                              &cfg);
->
-> We are registering a managed interrupt for the interrupt handler and we
-> are registering it before we register the regulator.  This means that
-> the interrupt may fire in both probe and remove paths without the
-> regulator which it will then try to use in the interrupt handler,
-> potentially crashing the system.  It's better to register the interrupt
-> after the regulator (which will make the managed bit OK) to avoid this
-> possibility.
+> That was proposed in the first version[1] but I think this is a generic
+> problem not specific to CMA. Even non-CMA reservations trying to span
+> zones could cause problems so the devicetree allocation code should
+> restrict reservations to a single zone.
 
-will fix, and send v4.
+Fair enough, but that's not what this patch does. It's only for CMA.
 
-Regards,
-Axel.
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
