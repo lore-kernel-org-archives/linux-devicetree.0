@@ -1,113 +1,137 @@
-From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
-Date: Thu, 15 Dec 2016 08:34:37 +0000
-Message-ID: <871sx9wpyb.fsf@kamboji.qca.qualcomm.com>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
-        <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC] New Device Tree property - "bonding"
+Date: Thu, 15 Dec 2016 10:07:13 +0100
+Message-ID: <CAMuHMdXtbXQaCdozF3xxej3b1wQLRh25SFzyh0=Wu=Ah75frCw@mail.gmail.com>
+References: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
+ <2054258.NRXTrTF0Rj@avalon> <CAL_JsqJw-KVZswBruG42MUdkmVSEb0L8OWCXbid7b41Ft4EpPQ@mail.gmail.com>
+ <10679912.HCjz6JNtZJ@avalon> <SG2PR06MB1038A0DADECF2EB7795A487AC3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <CAL_JsqKJcEmNUzOm-3j3FODkN1faXMAMmURRxfRpHfiGs_a+qA@mail.gmail.com> <SG2PR06MB1038FDD0F2C70D6CB0AED298C3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161002222913.12223-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Mon, 3 Oct 2016 00:29:06 +0200")
-Content-Language: en-US
-Content-ID: <809E903D7A02CF43A9997298213E59F4-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1038FDD0F2C70D6CB0AED298C3820@SG2PR06MB1038.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+On Tue, Dec 6, 2016 at 6:45 PM, Ramesh Shanmugasundaram
+<ramesh.shanmugasundaram@bp.renesas.com> wrote:
+>> >> On Monday 05 Dec 2016 09:57:32 Rob Herring wrote:
+>> >> > On Mon, Dec 5, 2016 at 8:40 AM, Laurent Pinchart wrote:
+>> >> > > On Monday 05 Dec 2016 08:18:34 Rob Herring wrote:
+>> >> > >> On Fri, Nov 25, 2016 at 10:55 AM, Ramesh Shanmugasundaram wrote:
+>> >> > >>> Hello DT maintainers,
+>> >> > >>>
+>> >> > >>> In one of the Renesas SoCs we have a device called DRIF
+>> >> > >>> (Digital Radio
+>> >> > >>> Interface) controller. A DRIF channel contains 4 external pins
+>> >> > >>> - SCK, SYNC, Data pins D0 & D1.
+>> >> > >>>
+>> >> > >>> Internally a DRIF channel is made up of two SPI slave devices
+>> >> > >>> (also called sub-channels here) that share common CLK & SYNC
+>> >> > >>> signals but have their own resource set. The DRIF channel can
+>> >> > >>> have either one of the sub-channel active at a time or both.
+>> >> > >>> When both sub-channels are active, they need to be managed
+>> >> > >>> together as one device as they share same CLK & SYNC. We plan
+>> >> > >>> to tie these two sub-channels together with a new property called
+>> "renesas,bonding".
+>> >> > >>
+>> >> > >> Is there no need to describe the master device? No GPIOs,
+>> >> > >> regulators or other sideband controls needed? If that's never
+>> >> > >> needed (which seems doubtful), then I would do something
+>> >> > >> different here probably with the master device as a child of one
+>> >> > >> DRIF and then phandles to master from the other DRIFs.
+>> >> > >> Otherwise, this looks
+>> >> fine to me.
+>> >> > >
+>> >> > > Here's a bit of background.
+>> >> > >
+>> >> > > The DRIF is an SPI receiver. It has three input pins, a clock
+>> >> > > line, a data line and a sync signal. The device is designed to be
+>> >> > > connected to a variety of data sources, usually plain SPI (1 data
+>> >> > > line), IIS (1 data
+>> >> > > line) but also radio tuners that output I/Q data
+>> >> > > (http://www.ni.com/tutorial/4805/en/) over two data lines.
+>> >> > >
+>> >> > > In the case of IQ each data sample is split in two I and Q values
+>> >> > > (typically 16 to 20 bits each in this case), and the values are
+>> >> > > transmitted serially over one data line each. The synchronization
+>> >> > > and clock signals are common to both data lines. The DRIF is
+>> >> > > optimized for this use case as the DRIF instances in the SoC
+>> >> > > (each of them having independent clocks, interrupts and control
+>> >> > > registers) are grouped by two, and the two instances in a group
+>> >> > > handle a single data line each but share the same clock and sync
+>> input.
+>> >> > >
+>> >> > > On the software side we need to group the I and Q values, which
+>> >> > > are DMA'ed to memory by the two DRIF instances, and make them
+>> >> > > available to userspace. The V4L2 API used here in SDR (Software
+>> >> > > Defined Radio) mode supports such use cases and exposes a single
+>> >> > > device node to userspace that allows control of the two DRIF
+>> >> > > instances as a single device. To be able to implement this we
+>> >> > > need kernel code to be aware of DRIF groups and, while binding to
+>> >> > > the DRIF instances separately, expose only one V4L2 device to
+>> userspace for each group.
+>> >> > >
+>> >> > > There's no master or slave instance from a hardware point of
+>> >> > > view, but the two instances are not interchangeable as they carry
+>> >> > > separate
+>> >> information.
+>> >> > > They must thus be identified at the driver level.
+>> >> >
+>> >> > By master, I meant the external master device that generates the IQ
+>> >> > data, not which of the internal DRIF blocks is a master of the other.
+>> >> > So back to my question, does the external master device need to be
+>> >> > described? I worry the answer now for a simple case is no, but then
+>> >> > later people are going to have cases needing to describe more. We
+>> >> > need to answer this question first before we can decide what this
+>> >> > binding should look like.
+>> >>
+>> >> Oh yes the external device certainly needs to be described. As it is
+>> >> controlled through a separate, general-purpose I2C or SPI controller,
+>> >> it should be a child node of that controller. The DRIF handles the
+>> >> data interface only, not the control interface of the external device.
+>> >
+>> > Yes, as Laurent mentioned, the external master will be described
+>> separately. The data interface with the master is described through port
+>> nodes. E.g.
+>> >
+>> >         port {
+>> >                 drif0_ep: endpoint {
+>> >                      remote-endpoint = <&tuner_ep>;
+>> >                 };
+>> >         };
+>> >
+>> > Do we agree on this model please?
+>>
+>> Well, that's not complete as you should have both DRIF0 and DRIF1 having
+>> connections to the tuner. Then you can walk the graph and find everything,
+>> and you then don't need the bonding property.
+>
+> Assuming the third party tuner exposes it's two data lines as two endpoints, it seems possible with of_graph.h apis to walk through tuner end points and get the phandle of the other DRIF device. However, there are couple of points coming to mind.
+>
+> - The ctrl pins shared between two DRIFs needs to be enabled in one of the DRIF device. Do we choose this device arbitrarily? Do we expose the CTRL signal properties (msb/lsb first, polarity etc) on both DRIF devices? Should we think about scalability?
+>
+> - It mandates the third party tuner device to expose it's two data lines as two endpoints. It assumes that a single third party master device controls both the data lines coming to each DRIF device.
+>
+> The bonding property looks a bit cleaner on these aspects because it describes only the DRIF device.
 
-> There are two types of swapping the EEPROM data in the ath9k driver.
-> Before this series one type of swapping could not be used without the
-> other.
->
-> The first type of swapping looks at the "magic bytes" at the start of
-> the EEPROM data and performs swab16 on the EEPROM contents if needed.
-> The second type of swapping is EEPROM format specific and swaps
-> specific fields within the EEPROM itself (swab16, swab32 - depends on
-> the EEPROM format).
->
-> With this series the second part now looks at the EEPMISC register
-> inside the EEPROM, which uses a bit to indicate if the EEPROM data
-> is Big Endian (this is also done by the FreeBSD kernel).
-> This has a nice advantage: currently there are some out-of-tree hacks
-> (in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
-> Big Endian system (=3D no swab16 is performed) but the EEPROM itself
-> indicates that it's data is Little Endian. Until now the out-of-tree
-> code simply did a swab16 before passing the data to ath9k, so ath9k
-> first did the swab16 - this also enabled the format specific swapping.
-> These out-of-tree hacks are still working with the new logic, but it
-> is recommended to remove them. This implementation is based on a
-> discussion with Arnd Bergmann who raised concerns about the
-> robustness and portability of the swapping logic in the original OF
-> support patch review, see [0].
->
-> After a second round of patches (=3D v1 of this series) neither Arnd
-> Bergmann nor I were really happy with the complexity of the EEPROM
-> swapping logic. Based on a discussion (see [1] and [2]) we decided
-> that ath9k should use a defined format (specifying the endianness
-> of the data - I went with __le16 and __le32) when accessing the
-> EEPROM fields. A benefit of this is that we enable the EEPMISC based
-> swapping logic by default, just like the FreeBSD driver, see [3]. On
-> the devices which I have tested (see below) ath9k now works without
-> having to specify the "endian_check" field in ath9k_platform_data (or
-> a similar logic which could provide this via devicetree) as ath9k now
-> detects the endianness automatically. Only EEPROMs which are mangled
-> by some out-of-tree code still need the endian_check flag (or one can
-> simply remove that mangling from the out-of-tree code).
->
-> Testing:
-> - tested by myself on AR9287 with Big Endian EEPROM
-> - tested by myself on AR9227 with Little Endian EEPROM
-> - tested by myself on AR9381 (using the ar9003_eeprom implementation,
->   which did not suffer from this whole problem)
-> - how do we proceed with testing? maybe we could keep this in a
->   feature-branch and add these patches to LEDE once we have an ACK to
->   get more people to test this
->
-> This series depends on my other series (v7):
-> "add devicetree support to ath9k" - see [4]
->
-> Changes since v1:
-> - reworked description in the cover-letter to describe the reasons
->   behind the new patch 7
-> - reworked patch "Set the "big endian" bit of the AR9003 EEPROM
->   templates" as ar9003_eeprom.c sets all values as Little Endian, thus
->   the Big Endian bit should never be set (the new patch makes this
->   clear)
-> - dropped "ath9k: Make EEPROM endianness swapping configurable via
->   devicetree" as it is not needed anymore with the new logic from
->   patch 7
-> - added patches 4 and 5 as small cleanup (this made it easier to
->   implement the le{16,32}_to_cpu() changes where needed)
->
->
-> [0] http://www.spinics.net/lists/linux-wireless/msg152634.html
-> [1] https://marc.info/?l=3Dlinux-wireless&m=3D147250597503174&w=3D2
-> [2] https://marc.info/?l=3Dlinux-wireless&m=3D147254388611344&w=3D2
-> [3] https://github.com/freebsd/freebsd/blob/50719b56d9ce8d7d4beb53b16e9ed=
-b2e9a4a7a18/sys/dev/ath/ath_hal/ah_eeprom_9287.c#L351
-> [4] https://marc.info/?l=3Dlinux-wireless&m=3D147544488619822&w=3D2
->
-> Martin Blumenstingl (7):
->   ath9k: Add a #define for the EEPROM "eepmisc" endianness bit
->   ath9k: indicate that the AR9003 EEPROM template values are little
->     endian
->   ath9k: Add an eeprom_ops callback for retrieving the eepmisc value
->   ath9k: replace eeprom_param EEP_MINOR_REV with get_eeprom_rev
->   ath9k: consistently use get_eeprom_rev(ah)
->   ath9k: Make the EEPROM swapping check use the eepmisc register
->   ath9k: define all EEPROM fields in Little Endian format
+Does of_graph and endpoints need to be mandatory?
 
-Applied to ath-next on ath.git, thanks.
+I can easily imagine using a single DRIF device as a receive-only MSIOF SPI
+slave, without a tuner connected.
 
-(My automatic "accepted" email failed, so had to send this manually.)
+Cfr. spi-slave-system-control from my SPI skave mode support series
+(https://lwn.net/Articles/700433/).
 
---=20
-Kalle Valo=
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
