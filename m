@@ -1,55 +1,42 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v3] dt-bindings: power: supply: bq24735: reverse the polarity of ac-detect
-Date: Thu, 15 Dec 2016 13:21:19 +0100
-Message-ID: <1481804479-8711-1-git-send-email-peda@axentia.se>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCHv3 2/2] regulator: fixed: Handle optional
+ overcurrent pin
+Date: Thu, 15 Dec 2016 14:03:40 +0100
+Message-ID: <CAKXjFTOSRm=EJLB2pokQW=ZeqJzN1KUG4Eti6LEoGPZMmRj2mg@mail.gmail.com>
+References: <20161215112856.9541-3-ahaslam@baylibre.com> <20161215121958.klssvbtbuhsz3pga@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161215121958.klssvbtbuhsz3pga-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ACOK pin on the bq24735 is active-high, of course meaning that when
-AC is OK the pin is high. However, all Tegra dts files have incorrectly
-specified active-high even though the signal is inverted on the Tegra
-boards. This has worked since the Linux driver has also inverted the
-meaning of the GPIO. Fix this situation by simply specifying in the
-bindings what everybody else agrees on; that the ti,ac-detect-gpios is
-active on AC adapter absence.
+On Thu, Dec 15, 2016 at 1:19 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Dec 15, 2016 at 12:28:56PM +0100, Axel Haslam wrote:
+>
+>> +             ret = devm_request_threaded_irq(&pdev->dev,
+>> +                             gpiod_to_irq(drvdata->oc_gpio), NULL,
+>> +                             reg_fixed_overcurrent_irq, irqflags,
+>> +                             "over_current", drvdata);
+>
+>>       drvdata->dev = devm_regulator_register(&pdev->dev, &drvdata->desc,
+>>                                              &cfg);
+>
+> We are registering a managed interrupt for the interrupt handler and we
+> are registering it before we register the regulator.  This means that
+> the interrupt may fire in both probe and remove paths without the
+> regulator which it will then try to use in the interrupt handler,
+> potentially crashing the system.  It's better to register the interrupt
+> after the regulator (which will make the managed bit OK) to avoid this
+> possibility.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
+will fix, and send v4.
 
-Hi!
-
-This patch is the result of this discussion:
-http://marc.info/?t=148152531800002
-
-I don't like how it changes the one thing that is seems correct, but
-what to do?
-
-Cheers,
-Peter
-
- Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-index 3bf55757ceec..43d56c49455b 100644
---- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-@@ -8,8 +8,9 @@ Optional properties :
-  - interrupts : Specify the interrupt to be used to trigger when the AC
-    adapter is either plugged in or removed.
-  - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
--   presence. This is a Host GPIO that is configured as an input and
--   connected to the bq24735.
-+   status. This is a Host GPIO that is configured as an input and
-+   connected to the bq24735, typically the ACOK pin (note: the GPIO should
-+   be active on AC adapter absence).
-  - ti,charge-current : Used to control and set the charging current. This value
-    must be between 128mA and 8.128A with a 64mA step resolution. The POR value
-    is 0x0000h. This number is in mA (e.g. 8192), see spec for more information
--- 
-2.1.4
+Regards,
+Axel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
