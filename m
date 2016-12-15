@@ -1,69 +1,44 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3] dt-bindings: power: supply: bq24735: reverse the
- polarity of ac-detect
-Date: Thu, 15 Dec 2016 18:50:06 +0100
-Message-ID: <c3e87e2b-5d0d-c1ff-8edf-f4a77de31c1e@axentia.se>
-References: <1481804479-8711-1-git-send-email-peda@axentia.se>
- <5f5fe01a-7c7a-58f7-2171-5f6879392ea7@wwwdotorg.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v6 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 15 Dec 2016 20:33:07 +0100
+Message-ID: <20161215193307.436sggu4zy4zezoe@pengutronix.de>
+References: <1481559342-6106-1-git-send-email-cedric.madianga@gmail.com>
+ <1481559342-6106-3-git-send-email-cedric.madianga@gmail.com>
+ <20161213092031.d2ax2pnpzzicriel@pengutronix.de>
+ <CAOAejn0Ej90amOZUC2wGNBsTAZVmcqEaViV1-TeoaspiADBkkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5f5fe01a-7c7a-58f7-2171-5f6879392ea7@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOAejn0Ej90amOZUC2wGNBsTAZVmcqEaViV1-TeoaspiADBkkg@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-12-15 18:32, Stephen Warren wrote:
-> On 12/15/2016 05:21 AM, Peter Rosin wrote:
->> The ACOK pin on the bq24735 is active-high, of course meaning that when
->> AC is OK the pin is high. However, all Tegra dts files have incorrectly
->> specified active-high even though the signal is inverted on the Tegra
->> boards. This has worked since the Linux driver has also inverted the
->> meaning of the GPIO. Fix this situation by simply specifying in the
->> bindings what everybody else agrees on; that the ti,ac-detect-gpios is
->> active on AC adapter absence.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>
->> Hi!
->>
->> This patch is the result of this discussion:
->> http://marc.info/?t=148152531800002
->>
->> I don't like how it changes the one thing that is seems correct, but
->> what to do?
-> 
-> I haven't followed this thread so hopefully what I say is relevant. My 
-> take is:
-> 
-> If the DT binding is correct or reasonable, keep it.
-> 
-> If the Tegra DTs contain incorrect content, and never worked correctly 
-> in this aspect, then fix them. We do need to maintain DT 
-> ABI/compatibility, but I believe only with stuff that actually worked 
-> correctly. If the DT has a bug, just fix it.
-> 
-> That said, if ti,ac-detect-gpios is describing a host GPIO, then it's 
-> entirely arbitrary which polarity it should have, i.e. the polarity is 
-> not something specified by the bq24735 HW. In that case, feel free to 
-> change either the binding to match the DT or the DT to match the 
-> binding. Changing the DT to match the binding might still be better 
-> since there could be other users you're not aware of, and they might 
-> have written their DT correctly, and you don't want to break them.
+Hello Cedric,
 
-The bindings are fine.
+On Thu, Dec 15, 2016 at 04:26:25PM +0100, M'boumba Cedric Madianga wrote:
+> >> +static struct platform_driver stm32f4_i2c_driver = {
+> >> +     .driver = {
+> >> +             .name = "stm32f4-i2c",
+> >> +             .of_match_table = stm32f4_i2c_match,
+> >
+> > Is this needed?
+> Without of_match_table, I could not match an I2C device instance from
+> DT with this driver.
+> So maybe, there is a misunderstanding.
+> Could you please clarify your question ?
 
-The Tegra dts files are buggy, but the driver is also buggy, so those
-two bugs cancel each other. So, the option is to either introduce
-regressions by fixing the two bugs thus creating a flag day where
-the kernel and dt needs to match. Or, just document what is going on
-and change the bindings even if they are not wrong.
+I thought (but I could be wrong) that if the driver is called
+"stm32f4-i2c", it is used to match "st,stm32f4-i2c" even without
+.of_match_table. If this doesn't work, please disregard my question.
 
-I suggest you read the discussion. We covered all this already, and it
-is also in the commit message.
+Best regards
+Uwe
 
-Cheers,
-peda
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
