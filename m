@@ -1,77 +1,128 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 1/2] devicetree: power: add bindings for GPIO-driven power switches
-Date: Thu, 15 Dec 2016 11:57:18 +0100
-Message-ID: <CAMpxmJVwgHGrywDFnE9dNfB9UL89hLyiRO2He7uyiRgBpEfjkg@mail.gmail.com>
-References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
- <1481494905-18037-2-git-send-email-bgolaszewski@baylibre.com>
- <20161213192712.gbaw4t4awayybnta@rob-hp-laptop> <CAMpxmJWw3wCE4ch8TVik+2b3BC8Lvxbi13HGd9GxruSRLu95Mg@mail.gmail.com>
- <54679B04-3A57-4F0E-8EE6-BB37785F8E10@jic23.retrosnub.co.uk>
+From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] xilinx_dma: Add reset support
+Date: Thu, 15 Dec 2016 11:26:54 +0000
+Message-ID: <380d1b11-814d-0164-3d49-e976f2deb3f9@synopsys.com>
+References: <cover.1481735244.git.roliveir@synopsys.com>
+ <4220c66c29d83bec1ded798ee383b5460c162cfc.1481735244.git.roliveir@synopsys.com>
+ <5658430.jXmKZEXWrS@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54679B04-3A57-4F0E-8EE6-BB37785F8E10@jic23.retrosnub.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio <linux-gpio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-pm <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5658430.jXmKZEXWrS@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2016-12-14 18:36 GMT+01:00 Jonathan Cameron <jic23@jic23.retrosnub.co.uk>:
->
->
-> On 14 December 2016 16:58:21 GMT+00:00, Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
->>2016-12-13 20:27 GMT+01:00 Rob Herring <robh@kernel.org>:
->>> On Sun, Dec 11, 2016 at 11:21:44PM +0100, Bartosz Golaszewski wrote:
->>>> Some boards are equipped with simple, GPIO-driven power load
->>switches.
->>>> An example of such ICs is the TI tps229* series.
->>>
->>> How is this different than a GPIO regulator? The input and output
->>> voltages just happen to be the same. I could be convinced this is
->>> different enough to have a different compatible, but it somewhat
->>seems
->>> you want to use this for IIO, so you are creating a different binding
->>> for that usecase.
->>>
+Hi Laurent,
+
+Thank you for your feedback.
+
+On 12/14/2016 8:16 PM, Laurent Pinchart wrote:
+> Hi Ramiro,
+> 
+> Thank you for the patch.
+> 
+> On Wednesday 14 Dec 2016 17:18:24 Ramiro Oliveira wrote:
+>> Add a DT property to control an optional external reset line
 >>
->>It's more of a fixed regulator I suppose. Do you mean adding a new
->>compatible to the fixed-regulator binding (e.g. "gpio-power-switch" or
->>"simple-power-switch") and then providing an iio driver for toggling
->>the switch?
->
-> I am rather torn on whether the IIO interface makes any sense beyond that of
-> convenience.
->
+>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/dma/xilinx/xilinx_dma.c | 23 +++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>
+>> diff --git a/drivers/dma/xilinx/xilinx_dma.c
+>> b/drivers/dma/xilinx/xilinx_dma.c index 5c9f11b..b845224 100644
+>> --- a/drivers/dma/xilinx/xilinx_dma.c
+>> +++ b/drivers/dma/xilinx/xilinx_dma.c
+>> @@ -46,6 +46,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/clk.h>
+>>  #include <linux/io-64-nonatomic-lo-hi.h>
+>> +#include <linux/reset.h>
+> 
+> I had neatly sorted the header alphabetically until someone added clk.h and 
+> io-64-nonatomic-lo-hi.h :-( Could you please move reset.h just before slab.h ?
+> 
 
-The question is: will the iio maintainers be ok with adding support
-for interfaces different than iio (I guess so since Lars already
-mentioned wanting to support the GPIO chardev)? If so, I'm ok with not
-using the iio framework in the kernel.
+Sure. Actually I was tempted to reorder it, but I decided not to do it. I'll do
+it now
 
-> A bridge to a regulator in general might make sense to cover the case of a
-> reg effectively
-> acting as a DAC at the edge of the known hardware.
->
-> Lars' point about perhaps adding support for the new gpio userspace stuff to
-> libiio would in
-> this case also be rather papering over the issue.
-> There is known hardware there so we should describe it!
->
-> I think we should be considering this as the general case of the Linux
-> controlled power supply.
-> How do we want to represent that?
-> Ultimately does a general regulator userspace interface make sense?
->
-> Classic case of people cutting our hardware in half and making boundaries
-> beyond which lie dragons.
->
-> I would love to see the general case covered.
->
+>>
+>>  #include "../dmaengine.h"
+>>
+>> @@ -409,6 +410,7 @@ struct xilinx_dma_device {
+>>  	struct clk *rxs_clk;
+>>  	u32 nr_channels;
+>>  	u32 chan_id;
+>> +	struct reset_control *rst;
+>>  };
+>>
+>>  /* Macros */
+>> @@ -2543,6 +2545,27 @@ static int xilinx_dma_probe(struct platform_device
+>> *pdev) if (IS_ERR(xdev->regs))
+>>  		return PTR_ERR(xdev->regs);
+>>
+>> +	xdev->rst = devm_reset_control_get_optional(&pdev->dev, "reset");
+> 
+> devm_reset_control_get_optional() is deprecated as explained in linux/reset.h, 
+> you should use devm_reset_control_get_optional_exclusive() or 
+> devm_reset_control_get_optional_shared() instead, as applicable.
+> 
+> This being said, I'm wondering why the optional versions of those functions 
+> exist, as they do exactly the same as the non-optional versions. The API feels 
+> wrong, it should have been modelled like the GPIO API. Feel free to fix it if 
+> you want :-) But that's out of scope for this patch.
+> 
 
-It seems as if this is already covered by the userspace-consumer
-regulator driver, but it doesn't speak device tree yet. I guess we
-could reuse it by merging the proposed gpio-power-switch binding and
-extending it to parse DT.
+I missed the comment stating that devm_reset_control_get_optional() was deprecated.
 
-Best regards,
-Bartosz Golaszewski
+I could fix it. Your sugestion is modelling these functions like the GPIO API?
+
+>> +	if (IS_ERR(xdev->rst)) {
+>> +		err = PTR_ERR(xdev->rst);
+>> +		switch (err) {
+>> +		case -ENOENT:
+> 
+> If you drop the name as proposed in the review of patch 1/2 you don't have to 
+> check for -ENOENT.
+> 
+
+I'll do that.
+
+>> +		case -ENOTSUPP:
+>> +			xdev->rst = NULL;
+>> +		break;
+> 
+> Wrong indentation.
+> 
+> You need to handle -EPROBE_DEFER and defer probing of the xilinx_dma device.
+> 
+>> +		default:
+>> +			dev_err(xdev->dev, "error getting reset %d\n", err);
+>> +		return err;
+> 
+> Wrong indentation.
+> 
+>> +		}
+>> +	} else {
+>> +		err = reset_control_deassert(xdev->rst);
+>> +		if (err) {
+>> +			dev_err(xdev->dev, "failed to deassert reset: %d\n",
+>> +					err);
+> 
+> Wrong indentation.
+> 
+>> +			return err;
+>> +		}
+>> +	}
+>> +
+>>  	/* Retrieve the DMA engine properties from the device tree */
+>>  	xdev->has_sg = of_property_read_bool(node, "xlnx,include-sg");
+>>  	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA)
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
