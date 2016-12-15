@@ -1,50 +1,73 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCHv4 1/2] regulator: fixed: dt: Allow an optional over current pin
-Date: Thu, 15 Dec 2016 17:29:54 +0100
-Message-ID: <20161215162955.3940-2-ahaslam@baylibre.com>
-References: <20161215162955.3940-1-ahaslam@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161215162955.3940-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci
+ of rk3399
+Date: Thu, 15 Dec 2016 08:34:09 -0800
+Message-ID: <CAD=FV=XKQaqRS4jUM7NpN2KEV8USj_cVWbh7q4274n3jBtwORg@mail.gmail.com>
+References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com>
+ <1481710301-1454-4-git-send-email-zhengxing@rock-chips.com>
+ <CAD=FV=UU4JdRjRgEvc_wxprvi6bo46+jd=x2m2QzOe4uJmuRPA@mail.gmail.com>
+ <5ce521da-119a-2de8-026c-5992fedfef43@rock-chips.com>
+ <991221a4-3962-1bcb-7863-72f5553eba40@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <991221a4-3962-1bcb-7863-72f5553eba40-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "daniel.meng" <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for an optional over current input pin which
-can be used to send an over current event to the regulator
-consumer.
+Hi,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed, Dec 14, 2016 at 10:41 PM, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Hi Brain, Doug and Heiko,
+>
+> I would like to summarize why this story was constructed.
+>
+> The ehci/ohci-platform suspend process are blocked due to UTMI clock which
+> directly output from usb-phy has been disabled, and why the UTMI clock was
+> disabled?
+>
+> UTMI clock and 480m clock all output from the same internal PLL of usb-phy,
+> and there is only one bit can use to control this PLL on or off, which we
+> named "otg_commononn"(GRF, offset 0x0e450/0x0e460 bit4 ) in RK3399 TRM.
+>
+> When system boot up, ehci/ohci-platform probe function invoke
+> phy_power_on(), further invoke rockchip_usb2phy_power_on() to enable 480m
+> clock, actually, it sets the otg_commononn bit on, and then usb-phy will go
+> to (auto)suspend if there is no devices plug-in after 1 minute, the
+> rockchip_usb2phy_power_off() will be invoked and the 480m clock may be
+> disabled in the (auto)suspend process. As a result, the otg_commononn bit
+> may be turned off, and all output clock of usb-phy will be disabled.
+> However, ehci/ohci-platform PM suspend operation (read/write controller
+> register) are based on the UTMI clock.
+>
+> So we introduced "clk_usbphy0_480m_src"/"clk_usbphy1_480m_src" as one input
+> clock for ehci/ohci-platform, in this way, the otg_commononn bit is not
+> turned off until ehci/ohci-platform go to PM suspend.
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 4fae41d..b145abb 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -11,6 +11,7 @@ If this property is missing, the default assumed is Active low.
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
- -vin-supply: Input supply name.
-+- over-current-gpios: Input gpio that signal an over current condition.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-@@ -26,6 +27,7 @@ Example:
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		gpio = <&gpio1 16 0>;
-+		over-current-gpios = <&gpio1 18 0>;
- 		startup-delay-us = <70000>;
- 		enable-active-high;
- 		regulator-boot-on;
--- 
-2.9.3
+I still need to digest all of the things that were added to this
+thread overnight, but nothing I've seen so far indicates that you need
+the post-gated clock.  AKA I still think you need to redo your patch
+to replace:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+              clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+                       <&cru SCLK_USBPHY0_480M_SRC>;
+
+with:
+
+              clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+                        <&u2phy0>;
+
+Can you please comment on that?
+
+-Doug
