@@ -1,43 +1,30 @@
-From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Subject: [PATCH 1/2] Documentation: omap-usb-host: fix OMAP OHCI/EHCI file names
-Date: Thu, 15 Dec 2016 16:56:09 +0100
-Message-ID: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: yegorslists@googlemail.com
+Subject: [PATCH 2/2] Documentation: ehci-omap: remove the unnecessary newline
+Date: Thu, 15 Dec 2016 16:56:10 +0100
+Message-ID: <1481817370-28242-2-git-send-email-yegorslists@googlemail.com>
+References: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Yegor Yefremov <yegorslists@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Yegor Yefremov <yegorslists@googlemail.com>
 
-OMAP related files are actually named ehci-omap.txt and ohci-omap3.txt.
-
-Also add full path to ohci-omap3.txt.
-
-Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
 ---
- Documentation/devicetree/bindings/mfd/omap-usb-host.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/usb/ehci-omap.txt | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
-index 4721b2d..aa1eaa5 100644
---- a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
-+++ b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
-@@ -64,8 +64,8 @@ Required properties if child node exists:
- Properties for children:
- 
- The OMAP HS USB Host subsystem contains EHCI and OHCI controllers.
--See Documentation/devicetree/bindings/usb/omap-ehci.txt and
--omap3-ohci.txt
-+See Documentation/devicetree/bindings/usb/ehci-omap.txt and
-+Documentation/devicetree/bindings/usb/ohci-omap3.txt.
- 
- Example for OMAP4:
- 
+diff --git a/Documentation/devicetree/bindings/usb/ehci-omap.txt b/Documentation/devicetree/bindings/usb/ehci-omap.txt
+index 3dc231c..d77e11a 100644
+--- a/Documentation/devicetree/bindings/usb/ehci-omap.txt
++++ b/Documentation/devicetree/bindings/usb/ehci-omap.txt
+@@ -29,4 +29,3 @@ usbhsehci: ehci@4a064c00 {
+ &usbhsehci {
+ 	phys = <&hsusb1_phy 0 &hsusb3_phy>;
+ };
+-
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
