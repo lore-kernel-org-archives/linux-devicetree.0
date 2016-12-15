@@ -1,42 +1,41 @@
-From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: designware: Cleaning and comment style fixes.
-Date: Thu, 15 Dec 2016 15:53:07 +0000
-Message-ID: <6fc278a6-dc22-37f8-0868-9f4359cfecf8@synopsys.com>
-References: <d7b5a22ce09539c2af343c21ca69675bef6a0a10.1481812563.git.lolivei@synopsys.com>
- <f11794ec-439b-5fcd-65f4-c14c319cd627@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH 1/2] Documentation: omap-usb-host: fix OMAP OHCI/EHCI file names
+Date: Thu, 15 Dec 2016 16:56:09 +0100
+Message-ID: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f11794ec-439b-5fcd-65f4-c14c319cd627-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15-Dec-16 15:17, Peter Rosin wrote:
-> On 2016-12-15 15:38, Luis Oliveira wrote:
->> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
->> index 26250b425e2f..3cb81fca7738 100644
->> --- a/drivers/i2c/busses/i2c-designware-core.h
->> +++ b/drivers/i2c/busses/i2c-designware-core.h
->> @@ -36,7 +36,7 @@
->>  #define DW_IC_CON_SPEED_FAST		0x4
->>  #define DW_IC_CON_SPEED_HIGH		0x6
->>  #define DW_IC_CON_SPEED_MASK		0x6
->> -#define DW_IC_CON_10BITADDR_MASTER	0x10
->> +#define DW_IC_CON_10BITADDR_MASTER		0x10
-> 
-> How is this an improvement?
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-It is not, I will fix it.
+OMAP related files are actually named ehci-omap.txt and ohci-omap3.txt.
 
-Thanks,
-Luis
-> 
-> Cheers,
-> peda
-> 
+Also add full path to ohci-omap3.txt.
+
+Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/omap-usb-host.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+index 4721b2d..aa1eaa5 100644
+--- a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
++++ b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+@@ -64,8 +64,8 @@ Required properties if child node exists:
+ Properties for children:
+ 
+ The OMAP HS USB Host subsystem contains EHCI and OHCI controllers.
+-See Documentation/devicetree/bindings/usb/omap-ehci.txt and
+-omap3-ohci.txt
++See Documentation/devicetree/bindings/usb/ehci-omap.txt and
++Documentation/devicetree/bindings/usb/ohci-omap3.txt.
+ 
+ Example for OMAP4:
+ 
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
