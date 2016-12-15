@@ -1,60 +1,96 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 15 Dec 2016 20:42:07 +0100
-Message-ID: <20161215194207.GB1741@katana>
-References: <1481559342-6106-1-git-send-email-cedric.madianga@gmail.com>
- <1481559342-6106-3-git-send-email-cedric.madianga@gmail.com>
- <20161213092031.d2ax2pnpzzicriel@pengutronix.de>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
+Date: Thu, 15 Dec 2016 14:26:00 -0800
+Message-ID: <20161215222600.GR3439@tuxbot>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
+ <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161213092031.d2ax2pnpzzicriel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue 15 Nov 00:23 PST 2016, Geert Uytterhoeven wrote:
 
---IiVenqGWf+H9Y6IX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +cc linux-pm
+> 
+> On Mon, Nov 14, 2016 at 11:14 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > [+cc Geert, Kevin, Simon]
+> >
+> > On Mon, Nov 14, 2016 at 11:15:53AM +0000, Srinivas Kandagatla wrote:
+> >> This patch adds support to pm clocks via device tree, so that the clocks
+> >> can be turned on and off during runtime pm. This patch is required for
+> >> Qualcomm msm8996 pcie controller which sits on a bus with its own
+> >> power-domain and clocks.
+> >>
+> >> Without this patch the clock associated with the bus are never turned on.
+> >>
+> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> > I don't see a formal maintainer for drivers/bus/simple-pm-bus.c, but I'd
+> > like an ack or at least a review from Geert or Simon.
+> 
+> Thanks for letting me know!
+> 
+> >> ---
+> >>  drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
+> >>  1 file changed, 12 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+> >> index c5eb46c..63b7e8c 100644
+> >> --- a/drivers/bus/simple-pm-bus.c
+> >> +++ b/drivers/bus/simple-pm-bus.c
+> >> @@ -11,6 +11,7 @@
+> >>  #include <linux/module.h>
+> >>  #include <linux/of_platform.h>
+> >>  #include <linux/platform_device.h>
+> >> +#include <linux/pm_clock.h>
+> >>  #include <linux/pm_runtime.h>
+> >>
+> >>
+> >> @@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
+> >>
+> >>       pm_runtime_enable(&pdev->dev);
+> >>
+> >> -     if (np)
+> >> +     if (np) {
+> >> +             of_pm_clk_add_clks(&pdev->dev);
+> 
+> This should work out-of-the-box (that's the actual purpose of this driver),
+> if the platform code that registers your PM Domain would take care
+> of registering the clocks needed for PM management of the bus.
+> 
 
+Hi Geert,
 
-> > +	if (ret) {
-> > +		dev_err(i2c_dev->dev, "bus not free\n");
-> > +		ret =3D -EBUSY;
->=20
-> I'm not sure if "bus not free" deserves an error message. Wolfram?
+I'm having problems finding any code that would make this work
+"out-of-the-box".  The DT binding documents a clocks property but I
+can't find any code referencing this in the kernel.
 
-I tend to agree. But I never enforced it up to now, never found the time
-to double check if I could/should enforce it.
+I see that Srinivas interpreted your response as that we should fold the
+clocks in behind the power-domain, rather than referencing them from the
+bus - but this seems awkward and would indicate the DT binding being
+wrong. Perhaps I'm just misunderstanding the design here?
 
+Which "platform code" do you refer to, can you help me by pointing me to
+the code that handles the zb_clk in the Renesas case?
 
---IiVenqGWf+H9Y6IX
-Content-Type: application/pgp-signature; name="signature.asc"
+> Adding of_pm_clk_add_clks() here will start managing all clocks of the bus,
+> which may not be wanted on all platforms.
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+It would not be strange to do so in the "simple" implementation for the
+bus, allowing custom behavior to be implemented in a more specific
+driver for a platform with custom needs.
 
-iQIcBAEBAgAGBQJYUvIOAAoJEBQN5MwUoCm2U94P/jlXNnsX4eT1aH2J13k73rEP
-nLMb9iHyoo51sJ8Nu8Hhq8ILFp46ROl9z5ZH7EmPrTeWBosu07RBAYxQxo4X/ufB
-vsqxM/GKy7Z+wDSxWOzQKlgbgyO4zj6H/s1p+CsPidRvNoZ3D5D2PXWd6h5EvAId
-8OGHhbACigdY6wMiv5iZQoZbtgCsxf37hhwz/zJBz4bK2owriAnYcnguTcaIKaeQ
-AgwffZv8dkwF4Rubmc0H2MYETGtUP6t+Sr4GTx3mTx1IrRLT3Q2j28XoA8IkbSLD
-u1CUYUyA+ukucPRWdN7b6up01djvtS63NWZhke1/QQWApasdjjEy4R52B+fqDE+a
-Xg9zI2Xu0nG2NhoYFxxs1/LgVCGnoR2JPntkf6woqGJ0SFocR37SfFPk+My56H5z
-VK6+RAX7inRpRGX/XI0/q2Q9NSWS/tm07I15TguehWWdPG8IonCehEK5oLOR8r0/
-9iW12I06l3W865R428VkiZXeW23kOd/qlVHTsnodD9zXLfZeeaekH8XwSfZxVzZG
-9KQ8a//lXdorTSLwNsJd/9Zg1rbctMnGhUMMkpL1HYDeSMqcOfu64zag3l8EOhIa
-RGKrYb7K4rxzG8NaV1HLHw8pu9041rnZMXB88+YppBWUbceLZ4kPmv7esSLa6CHd
-TcBA5U1AH8guhVYIkUzl
-=aABL
------END PGP SIGNATURE-----
-
---IiVenqGWf+H9Y6IX--
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
