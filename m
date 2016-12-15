@@ -1,119 +1,43 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci
  of rk3399
-Date: Thu, 15 Dec 2016 10:41:04 +0800
-Message-ID: <5ce521da-119a-2de8-026c-5992fedfef43@rock-chips.com>
+Date: Wed, 14 Dec 2016 19:20:53 -0800
+Message-ID: <20161215032052.GA116728@google.com>
 References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com>
  <1481710301-1454-4-git-send-email-zhengxing@rock-chips.com>
  <CAD=FV=UU4JdRjRgEvc_wxprvi6bo46+jd=x2m2QzOe4uJmuRPA@mail.gmail.com>
+ <5ce521da-119a-2de8-026c-5992fedfef43@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAD=FV=UU4JdRjRgEvc_wxprvi6bo46+jd=x2m2QzOe4uJmuRPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5ce521da-119a-2de8-026c-5992fedfef43-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmit
 List-Id: devicetree@vger.kernel.org
 
-Ly8gRnJhbmsKCkhpIERvdWcsICBCcmFpbiwKICAgICBUaGFua3MgZm9yIHRoZSByZXBseS4KICAg
-ICBTb3JyeSBJIGZvcmdvdCB0aGVzZSBwYXRjaGVzIGhhdmUgYmVlbiBzZW50IGVhcmxpZXIsIGFu
-ZCBGcmFuayBoYXZlIApzb21lIGV4cGxhaW5lZCBhbmQgZGlzY3Vzc2VkIHdpdGggSGVpa28uClBs
-ZWFzZSBzZWUgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MjU1MjQ1LwogICAg
-IFBlcmhhcHMgd2UgY2FuIG1vdmUgdG8gdGhhdCBwYXRjaCB0cmVlIHRvIGNvbnRpbnVlIHRoZSBk
-aXNjdXNzaW9uLgoKICAgICBJIHRoaW5rIEZyYW5rIGFuZCBXaWxsaWFtIHdpbGwgaGVscCB1cyB0
-byBjb250aW51ZSBjaGVja2luZyB0aGVzZS4KClRoYW5rcwoK5ZyoIDIwMTblubQxMuaciDE15pel
-IDA4OjEwLCBEb3VnIEFuZGVyc29uIOWGmemBkzoKPiBIaSwKPgo+IE9uIFdlZCwgRGVjIDE0LCAy
-MDE2IGF0IDI6MTEgQU0sIFhpbmcgWmhlbmcgPHpoZW5neGluZ0Byb2NrLWNoaXBzLmNvbT4gd3Jv
-dGU6Cj4+IEZyb206IFdpbGxpYW0gd3UgPHd1bGZAcm9jay1jaGlwcy5jb20+Cj4+Cj4+IFdlIGZv
-dW5kIHRoYXQgdGhlIHN1c3BlbmQgcHJvY2VzcyB3YXMgYmxvY2tlZCB3aGVuIGl0IHJ1biBpbnRv
-Cj4+IGVoY2kvb2hjaSBtb2R1bGUgZHVlIHRvIGNsay00ODBtIG9mIHVzYjItcGh5IHdhcyBkaXNh
-YmxlZC4KPj4KPj4gVGhlIHJvb3QgY2F1c2UgaXMgdGhhdCB1c2IyLXBoeSBzdXNwZW5kZWQgZWFy
-bGllciB0aGFuIGVoY2kvb2hjaQo+PiAodXNiMi1waHkgd2lsbCBiZSBhdXRvIHN1c3BlbmRlZCBp
-ZiBubyBkZXZpY2VzIHBsdWctaW4pLgo+IFRoaXMgaXMgcmVhbGx5IHdlaXJkLCBidXQgSSBjYW4g
-Y29uZmlybSBpdCBpcyB0cnVlIG9uIG15IHN5c3RlbSB0b28KPiAoa2VybmVsLTQuNCBiYXNlZCku
-ICBBdCBsZWFzdCBJIHNlZToKPgo+IFsgIDIwOC4wMTIwNjVdIGNhbGxpbmcgIHVzYjErIEAgNDk4
-NCwgcGFyZW50OiBmZTM4MDAwMC51c2IsIGNiOiB1c2JfZGV2X3N1c3BlbmQKPiBbICAyMDguNTY5
-MTEyXSBjYWxsaW5nICBmZjc3MDAwMC5zeXNjb246dXNiMi1waHlAZTQ1MCsgQCA0OTgzLCBwYXJl
-bnQ6Cj4gZmY3NzAwMDAuc3lzY29uLCBjYjogcGxhdGZvcm1fcG1fc3VzcGVuZAo+IFsgIDIwOC41
-NjkxMTNdIGNhbGwgZmY3NzAwMDAuc3lzY29uOnVzYjItcGh5QGU0NTArIHJldHVybmVkIDAgYWZ0
-ZXIgMCB1c2Vjcwo+IFsgIDIwOC41Njk0MzldIGNhbGxpbmcgIGZlMzgwMDAwLnVzYisgQCA0OTgz
-LCBwYXJlbnQ6IHBsYXRmb3JtLCBjYjoKPiBwbGF0Zm9ybV9wbV9zdXNwZW5kCj4gWyAgMjA4LjU2
-OTQ0NF0gY2FsbCBmZTM4MDAwMC51c2IrIHJldHVybmVkIDAgYWZ0ZXIgNCB1c2Vjcwo+Cj4KPiBJ
-biBnZW5lcmFsIEkgdGhvdWdodCB0aGF0IHN1c3BlbmQgb3JkZXIgd2FzIHN1cHBvc2VkIHRvIGJl
-IHJlbGF0ZWQgdG8KPiBwcm9iZSBvcmRlci4gIFNvIGlmIHlvdXIgcHJvYmUgb3JkZXIgaXMgQSwg
-QiwgQyB0aGVuIHlvdXIgc3VzcGVuZAo+IG9yZGVyIHdvdWxkIGJlIEMsIEIsIEEuICAuLi5hbmQg
-d2Uga25vdyBmb3Igc3VyZSB0aGF0IHRoZSBVU0IgUEhZCj4gbmVlZHMgdG8gcHJvYmUgX2JlZm9y
-ZV8gdGhlIG1haW4gVVNCIGNvbnRyb2xsZXIuICBJZiBpdCBkaWRuJ3QgdGhlbgo+IHlvdSdkIGdl
-dCBhbiBFUFJPQkVfREVGRVIgaW4gdGhlIFVTQiBjb250cm9sbGVyLCByaWdodD8gIFNvIHRoYXQg
-bWVhbnMKPiB0aGF0IHRoZSBVU0IgY29udHJvbGxlciBzaG91bGQgYmUgc3VzcGVuZGluZyBiZWZv
-cmUgaXRzIFBIWS4KPgo+IEFueSBjaGFuY2UgdGhpcyBpcyBzb21laG93IHJlbGF0ZWQgdG8gYXN5
-bmMgcHJvYmU/ICBJJ20gbm90IGEgaHVnZQo+IGV4cGVydCBvbiBhc3luYyBwcm9iZSBidXQgSSBn
-dWVzcyBJIGNvdWxkIGltYWdpbmUgdGhpbmdzIGdldHRpbmcKPiBjb25mdXNlZCBpZiB5b3UgaGFk
-IGEgc2VxdWVuY2UgbGlrZSB0aGlzOgo+Cj4gMS4gU3RhcnQgVVNCIHByb2JlIChhc3luYykKPiAy
-LiBTdGFydCBQSFkgcHJvYmUKPiAzLiBGaW5pc2ggUEhZIHByb2JlCj4gNC4gSW4gVVNCIHByb2Jl
-LCBhc2sgZm9yIFBIWS0tbm8gcHJvYmxlbXMgc2luY2UgUEhZIHByb2JlIGZpbmlzaGVkCj4gNS4g
-RmluaXNoIFVTQiBwcm9iZQo+Cj4gVGhlIHByb2JlIG9yZGVyIHdvdWxkIGJlIFVTQiBiZWZvcmUg
-UEhZIGV2ZW4gdGhvdWdoIHRoZSBVU0IgcHJvYmUKPiBfZGVwZW5kZWRfIG9uIHRoZSBQSFkgcHJv
-YmUgYmVpbmcgZmluaXNoZWQuLi4gIDotLyAgQW55d2F5LCBwcm9iYWJseQo+IEknbSBqdXN0IG1p
-c3VuZGVyc3RhbmRpbmcgc29tZXRoaW5nIGFuZCBzb21lb25lIGNhbiB0ZWxsIG1lIGhvdyBkdW1i
-IEkKPiBhbS4uLgo+Cj4gSSBhbHNvIG5vdGljZSB0aGF0IHRoZSBlaGNpX3BsYXRmb3JtX3Bvd2Vy
-X29mZigpIGZ1bmN0aW9uIHdlJ3JlCj4gYWN0dWFsbHkgbWFraW5nIFBIWSBjb21tYW5kcyByaWdo
-dCBiZWZvcmUgdGhlIHNhbWUgY29tbWFuZHMgdGhhdCB0dXJuCj4gb2ZmIG91ciBjbG9ja3MuICBQ
-cmVzdW1hYmx5IHRob3NlIGNvbW1hbmRzIGFyZW4ndCByZWFsbHkgc28gZ29vZCB0byBkbwo+IGlm
-IHRoZSBQSFkgaGFzIGFscmVhZHkgYmVlbiBzdXNwZW5kZWQ/Cj4KPiBBY3R1YWxseSwgZG9lcyB0
-aGUgUEhZIHN1c3BlbmQgZnJvbSBwbGF0Zm9ybV9wbV9zdXNwZW5kKCkgYWN0dWFsbHkKPiBldmVu
-IGRvIGFueXRoaW5nPyAgSXQgZG9lc24ndCBsb29rIGxpa2UgaXQuICBJdCBsb29rcyBhcyBpZiBh
-bGwgdGhlCj4gUEhZIGNhcmVzIGFib3V0IGlzIGluaXQvZXhpdCBhbmQgb24vb2ZmLi4uICAuLi5h
-bmQgaXQgbG9va3MgYXMgaWYgdGhlCj4gUEhZIHNob3VsZCBiZSB0dXJuZWQgb2ZmIGJ5IHRoZSBF
-SENJIGNvbnRyb2xsZXIgYXQgYWJvdXQgdGhlIHNhbWUgdGltZQo+IGl0IHR1cm5zIG9mZiBpdHMg
-Y2xvY2tzLi4uCj4KPiBJIGhhdmVuJ3QgZnVsbHkgZHVnLCBidXQgaXMgdGhlcmUgYW55IGNoYW5j
-ZSB0aGF0IHRoaW5ncyBhcmUgZ2V0dGluZwo+IGNvbmZ1c2VkIGJldHdlZW4gdGhlIE9URyBQSFkg
-YW5kIHRoZSBIb3N0IFBIWT8gIE1heWJlIHdoZW4gd2UgdHVybiBvZmYKPiB0aGUgT1RHIFBIWSBp
-dCB0dXJucyBvZmYgc29tZXRoaW5nIHRoYXQgdGhlIGhvc3QgUEhZIG5lZWRzPwo+Cj4KPj4gYW5k
-IHRoZQo+PiBjbGstNDgwbSBwcm92aWRlZCBieSBpdCB3YXMgZGlzYWJsZWQgaWYgbm8gbW9kdWxl
-IHVzZWQuIEhvd2V2ZXIsCj4+IHNvbWUgc3VzcGVuZCBwcm9jZXNzIHJlbGF0ZWQgZWhjaS9vaGNp
-IGFyZSBiYXNlIG9uIHRoaXMgY2xvY2ssCj4+IHNvIHdlIHNob3VsZCByZWZlciBpdCBpbnRvIGVo
-Y2kvb2hjaSBkcml2ZXIgdG8gcHJldmVudCB0aGlzIGNhc2UuCj4gVGhvdWdoIEkgZG9uJ3QgYWN0
-dWFsbHkgaGF2ZSBkZXRhaWxzIGFib3V0IHRoZSBpbnRlcm5hbHMgb2YgdGhlIGNoaXAsCj4gaXQg
-ZG9lcyBzZWVtIGhpZ2hseSBsaWtlbHkgdGhhdCB0aGUgVVNCIGJsb2NrIGFjdHVhbGx5IHVzZXMg
-dGhpcyBjbG9jawo+IGZvciBzb21lIHRoaW5ncywgc28gaXQgZG9lc24ndCBzZWVtIGluc2FuZSAo
-dG8gbWUpIHRvIGhhdmUgdGhlIFVTQgo+IGNvbnRyb2xsZXIgcmVxdWVzdCB0aGF0IHRoZSBjbG9j
-ayBiZSBvbi4gIFNvLCBpbiBnZW5lcmFsLCBJIGRvbid0IGhhdmUKPiBsb3RzIG9mIG9iamVjdGlv
-bnMgdG8gaW5jbHVkaW5nIHRoZSBVU0IgUEhZIENsb2NrIGhlcmUuCj4KPiAuLi5idXQgSSB0aGlu
-ayB5b3UgaGF2ZSB0aGUgd3JvbmcgY2xvY2sgKHBsZWFzZSBjb3JyZWN0IG1lIGlmIEknbQo+IHdy
-b25nKS4gIEkgdGhpbmsgeW91IHJlYWxseSB3YW50ZWQgeW91ciBpbnB1dCBjbG9jayB0byBiZQo+
-ICJjbGtfdXNicGh5MF80ODBtIiwgbm90ICJjbGtfdXNicGh5MF80ODBtX3NyYyIuICBTcGVjaWZp
-Y2FsbHkgSQo+IGJlbGlldmUgdGhlcmUgaXMgYSBnYXRlIGJldHdlZW4gdGhlIGNsb2NrIG91dHB1
-dHRlZCBieSB0aGUgUEhZIGFuZCB0aGUKPiBVU0IgQ29udHJvbGxlciBpdHNlbGYuICBJJ20gZ3Vl
-c3NpbmcgdGhhdCB0aGUgZ2F0ZSBpcyBvbmx5IHRoZXJlCj4gYmV0d2VlbiB0aGUgUEhZIGFuZCB0
-aGUgImNsa191c2JwaHlfNDgwbSIgTVVYLgo+Cj4gQXMgZXZpZGVuY2UsIEkgaGF2ZSBhIHRvdGFs
-bHkgZnVuY3Rpb25pbmcgc3lzdGVtIHJpZ2h0IG5vdyB3aGVyZQo+ICJjbGtfdXNicGh5MF80ODBt
-X3NyYyIgaXMgY3VycmVudGx5IGdhdGVkLgo+Cj4gVGhhdCBtZWFucyByZWFsbHkgeW91IHNob3Vs
-ZCBiZSBjaGFuZ2luZyB5b3VyIGNsb2NrcyB0byB0aGlzICh1bnRlc3RlZCk6Cj4KPiAgICAgICAg
-ICAgICAgICAgY2xvY2tzID0gPCZjcnUgSENMS19IT1NUMD4sIDwmY3J1IEhDTEtfSE9TVDBfQVJC
-PiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgPCZ1MnBoeTA+Owo+Cj4gLi4uYW5kIHRoZW4g
-eW91IGNvdWxkIGRyb3AgdGhlIG90aGVyIHR3byBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLgo+Cj4g
-PT09Cj4KPiBPSywgSSBhY3R1YWxseSBicmllZmx5IHRlc3RlZCBteSBwcm9wb3NlZCBjaGFuZ2Ug
-YW5kIGl0IGF0IGxlYXN0IHNlZW1zCj4gdG8gYnVpbGQgYW5kIGJvb3QgT0suICBZb3UnZCBoYXZl
-IHRvIHRlc3QgaXQgdG8gbWFrZSBzdXJlIGl0IG1ha2VzCj4geW91ciB0ZXN0cyBwYXNzLi4uCj4K
-PiA9PT0KPgo+IFNvIEkgZ3Vlc3MgdG8gc3VtbWFyaXplIGFsbCB0aGUgYWJvdmU6Cj4KPiAqIEl0
-IHNlZW1zIHRvIG1lIGxpa2UgdGhlcmUncyBzb21lIGRlZXBlciByb290IGNhdXNlIGFuZCB5b3Vy
-IHBhdGNoCj4gd2lsbCBhdCBtb3N0IHB1dCBhIGJhbmQtYWlkIG9uIGl0LiAgU2VlbXMgbGlrZSBk
-aWdnaW5nIG91dCB0aGUgcm9vdAo+IGNhdXNlIGlzIGEgZ29vZCBpZGVhLgo+Cj4gKiBUaG91Z2gg
-SSBkb24ndCBiZWxpZXZlIGl0IHNvbHZlcyB0aGUgcm9vdCBwcm9ibGVtLCB0aGUgaWRlYSBvZiB0
-aGUKPiBVU0IgQ29udHJvbGxlciBob2xkaW5nIG9udG8gdGhlIFBIWSBjbG9jayBkb2Vzbid0IHNl
-ZW0gd3JvbmcuCj4KPiAqIFlvdSdyZSBob2xkaW5nIG9udG8gdGhlIHdyb25nIGNsb2NrIGluIHlv
-dXIgcGF0Y2gtLXlvdSB3YW50IHRoZSBvbmUKPiBiZWZvcmUgdGhlIGdhdGUgKEkgdGhpbmspLgo+
-Cj4KPiAtRG91Zwo+Cj4KPgoKCi0tIAotIFhpbmcgWmhlbmcKCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0
-CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+On Thu, Dec 15, 2016 at 10:41:04AM +0800, Xing Zheng wrote:
+> // Frank
+> 
+> Hi Doug,  Brain,
+>     Thanks for the reply.
+>     Sorry I forgot these patches have been sent earlier, and Frank
+> have some explained and discussed with Heiko.
+> Please see https://patchwork.kernel.org/patch/9255245/
+>     Perhaps we can move to that patch tree to continue the discussion.
+> 
+>     I think Frank and William will help us to continue checking these.
+
+I only briefly read that discussion, but AFAICT it doesn't actually
+address all the comments/quetions we had here. For instance, the
+power_off() vs. delayed-work race in your USB2 PHY driver (is that
+intentional?). Also, the question of why PHY (auto?)suspend is relevant.
+
+I'll check again tomorrow.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
