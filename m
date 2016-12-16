@@ -1,63 +1,66 @@
-From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] Docs: dt: Be explicit and consistent in reference to
-	IOMMU specifiers
-Date: Fri, 16 Dec 2016 14:08:09 +0000
-Message-ID: <VI1PR0401MB263816D0AA09CF94E2B5C7E58D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-References: <1481847373-2602-1-git-send-email-stuart.yoder@nxp.com>
-	<20161216113317.GB20265@leverpostej>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC bindings
+ as unstable
+Date: Fri, 16 Dec 2016 15:14:36 +0100
+Message-ID: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20161216113317.GB20265@leverpostej>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Samsung Exynos SoCs and boards related bindings evolved since the initial
+introduction, but initially the bindings were minimal and a bit incomplete
+(they never described all the hardware modules available in the SoCs).
+Since then some significant (not fully compatible) changes have been
+already committed a few times (like gpio replaced by pinctrl, display ddc,
+mfc reserved memory, some core clocks added to various hardware modules,
+added more required nodes).
 
+On the other side there are no boards which have device tree embedded in
+the bootloader. Device tree blob is always compiled from the kernel tree
+and updated together with the kernel image.
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> Sent: Friday, December 16, 2016 5:33 AM
-> To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org;
-> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org
-> Subject: Re: [PATCH] Docs: dt: Be explicit and consistent in reference to IOMMU specifiers
-> 
-> Hi Stuart,
-> 
-> On Thu, Dec 15, 2016 at 06:16:13PM -0600, Stuart Yoder wrote:
-> > The generic IOMMU binding says that the meaning of an 'IOMMU specifier'
-> > is defined by the binding of a specific SMMU.  The ARM SMMU binding
-> > never explicitly uses the term 'specifier' at all.  Update implicit
-> > references to use the explicit term.
-> >
-> > In the iommu-map binding change references to iommu-specifier to
-> > "IOMMU specifier" so we are 100% consistent everywhere with terminology
-> > and capitalization.
-> 
-> Elsewhere, we always use lower case "xxx-specifier" or "xxx specifier",
-> e.g. Documentation/devicetree/bindings/gpio/gpio.txt defines
-> "gpio-specifier", ePAPR defines "interrupt specifier".
-> 
-> Given we're morstly consistent on "iommu-specifier" today,could we
-> please jsut update the ARM SMMU binding to match that? If we're going to
-> fix the dash mismatch, that's a more general, cross-binding thing.
+Thus to avoid further adding a bunch of workarounds for old/missing
+bindings and allow to make cleanup of the existing code and device tree
+files, lets mark Samsung Exynos SoC platform bindings as unstable. This
+means that bindings can may change at any time and users should use the
+dtb file compiled from the same kernel source tree as the kernel image.
 
-The notable place where we don't use "iommu-specifier" in in the generic
-IOMMU binding itself where we use "IOMMU specifier".  You're suggesting
-using "iommu-specifier" everywhere including the generic binding?  Sounds
-fine to me.  It's a nit but would like to see it consistent everywhere.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ Documentation/devicetree/bindings/arm/samsung/exynos.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos.txt
 
-Thanks,
-Stuart
+diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos.txt b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
+new file mode 100644
+index 000000000000..0c606f4c6e85
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
+@@ -0,0 +1,12 @@
++Samsung Exynos SoC Family Device Tree Bindings
++---------------------------------------------------------------
++
++Work in progress statement:
++
++Device tree files and bindings applying to Samsung Exynos SoCs and boards are
++considered "unstable". Any Samsung Exynos device tree binding may change at any
++time. Be sure to use a device tree binary and a kernel image generated from the
++same source tree.
++
++Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
++stable binding/ABI.
+-- 
+1.9.1
