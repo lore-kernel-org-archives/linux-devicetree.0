@@ -1,12 +1,13 @@
 From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCHv2 5/8] ARM: dts: stm32: enable RTC on stm32f429-disco
-Date: Fri, 16 Dec 2016 09:50:54 +0100
-Message-ID: <1481878257-29163-6-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCHv2 8/8] ARM: configs: stm32: Add RTC support in
+ STM32 defconfig
+Date: Fri, 16 Dec 2016 09:50:57 +0100
+Message-ID: <1481878257-29163-9-git-send-email-amelie.delaunay@st.com>
 References: <1481878257-29163-1-git-send-email-amelie.delaunay@st.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBAABBDOWZ3BAKGQEMI3BSLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBAABBEGWZ3BAKGQEIMRIRNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1481878257-29163-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,31 +20,26 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables RTC on stm32f429-disco with LSI as clock source because
-X2 crystal for LSE is not fitted by default.
+This patch adds STM32 RTC support in stm32_defconfig file.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/boot/dts/stm32f429-disco.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/configs/stm32_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index b6e63d8..49eddf6 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -94,6 +94,12 @@
- 	clock-frequency = <8000000>;
- };
- 
-+&rtc {
-+	assigned-clocks = <&rcc 1 CLK_RTC>;
-+	assigned-clock-parents = <&rcc 1 CLK_LSI>;
-+	status = "okay";
-+};
-+
- &usart1 {
- 	pinctrl-0 = <&usart1_pins_a>;
- 	pinctrl-names = "default";
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index be19e09..0acff9e 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -57,6 +57,8 @@ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_STM32=y
+ CONFIG_DMADEVICES=y
+ CONFIG_STM32_DMA=y
+ # CONFIG_FILE_LOCKING is not set
 -- 
 1.9.1
 
