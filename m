@@ -1,54 +1,93 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v5 4/6] [media] rc-ir-raw: do not generate any receiving thread
- for raw transmitters
-Date: Fri, 16 Dec 2016 15:12:16 +0900
-Message-ID: <20161216061218.5906-5-andi.shyti@samsung.com>
-References: <20161216061218.5906-1-andi.shyti@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20161216061218.5906-1-andi.shyti@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/2] clk: zte: add audio clocks for zx296718
+Date: Fri, 16 Dec 2016 14:40:41 +0800
+Message-ID: <20161216064039.GB8787@dragon>
+References: <1481189157-8995-1-git-send-email-shawnguo@kernel.org>
+ <1481189157-8995-2-git-send-email-shawnguo@kernel.org>
+ <20161208210453.GH5423@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161208210453.GH5423@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baoyou Xie <xie.baoyou@zte.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Raw IR transmitters do not need any thread listening for
-occurring events. Check the driver type before running the
-thread.
+On Thu, Dec 08, 2016 at 01:04:53PM -0800, Stephen Boyd wrote:
+> > +	if (of_clk_add_hw_provider(np, of_clk_hw_onecell_get, &audio_hw_onecell_data))
+> > +		panic("could not register clk provider\n");
+> 
+> Why don't we return error? We returned errors before if we
+> couldn't map the ioregion.
 
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-Reviewed-by: Sean Young <sean@mess.org>
----
- drivers/media/rc/rc-ir-raw.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Yes.  Rather than panic, we should check return and give an error
+message in case of failure.
 
-diff --git a/drivers/media/rc/rc-ir-raw.c b/drivers/media/rc/rc-ir-raw.c
-index 1c42a9f..9938e42 100644
---- a/drivers/media/rc/rc-ir-raw.c
-+++ b/drivers/media/rc/rc-ir-raw.c
-@@ -270,12 +270,19 @@ int ir_raw_event_register(struct rc_dev *dev)
- 	INIT_KFIFO(dev->raw->kfifo);
- 
- 	spin_lock_init(&dev->raw->lock);
--	dev->raw->thread = kthread_run(ir_raw_event_thread, dev->raw,
--				       "rc%u", dev->minor);
- 
--	if (IS_ERR(dev->raw->thread)) {
--		rc = PTR_ERR(dev->raw->thread);
--		goto out;
-+	/*
-+	 * raw transmitters do not need any event registration
-+	 * because the event is coming from userspace
-+	 */
-+	if (dev->driver_type != RC_DRIVER_IR_RAW_TX) {
-+		dev->raw->thread = kthread_run(ir_raw_event_thread, dev->raw,
-+					       "rc%u", dev->minor);
-+
-+		if (IS_ERR(dev->raw->thread)) {
-+			rc = PTR_ERR(dev->raw->thread);
-+			goto out;
-+		}
- 	}
- 
- 	mutex_lock(&ir_raw_handler_lock);
--- 
-2.10.2
+> 
+> > +	pr_info("audio-clk init over, nr:%d\n", AUDIO_NR_CLKS);
+> 
+> debug noise?
+
+Agreed.  I will just clean it up.
+
+<snip>
+
+> > +static unsigned long audio_calc_rate(struct clk_zx_audio_divider *audio_div,
+> > +				     u32 reg_frac, u32 reg_int,
+> > +				     unsigned long parent_rate)
+> > +{
+> > +	unsigned long rate, m, n;
+> > +
+> > +	if (audio_div->table) {
+> > +		const struct zx_clk_audio_div_table *divt = audio_div->table;
+> > +
+> > +		for (; divt->rate; divt++) {
+> > +			if ((divt->int_reg == reg_int) && (divt->frac_reg == reg_frac))
+> 
+> Please remove extra parenthesis here.
+
+The whole hunk of the code will be dropped, since the divider lookup
+table is not actually used.
+
+> 
+> > +				return divt->rate;
+> > +		}
+> > +	}
+> > +	if (audio_div->table)
+> > +		pr_warn("cannot found the config(int_reg:0x%x, frac_reg:0x%x) in table, we will caculate it\n",
+> > +			reg_int, reg_frac);
+
+<snip>
+
+> > +	div_table->rate = (ulong)(parent_rate * n) / ((ulong)reg_int * n + m);
+> 
+> Please don't use ulong, use unsigned long. Also consider using
+> local variables so the line isn't overly long.
+
+It seems to me that none of the type casts is really necessary.  So I
+will just drop them.
+
+> 
+> > +	div_table->int_reg = reg_int;
+> > +	div_table->frac_reg = reg_frac;
+> > +}
+> [...]
+> > +
+> > +static int zx_audio_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +				    unsigned long parent_rate)
+> > +{
+> > +	struct clk_zx_audio_divider *zx_audio_div = to_clk_zx_audio_div(hw);
+> > +	struct zx_clk_audio_div_table divt;
+> > +	unsigned int val;
+> > +
+> > +	audio_calc_reg(zx_audio_div, &divt, rate, parent_rate);
+> > +	if (divt.rate != rate)
+> > +		pr_info("the real rate is:%ld", divt.rate);
+> 
+> Debug noise?
+
+I will change it to pr_debug.
+
+Shawn
