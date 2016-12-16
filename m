@@ -1,51 +1,88 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC
- bindings as unstable
-Date: Fri, 16 Dec 2016 11:18:12 -0300
-Message-ID: <136c527a-a491-8a45-9ae9-3a2adfc59ab4@osg.samsung.com>
-References: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: RFC: extend iommu-map binding to support #iommu-cells > 1
+Date: Fri, 16 Dec 2016 14:21:14 +0000
+Message-ID: <VI1PR0401MB26387C2712FC4BF74B4B96028D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+References: <VI1PR0401MB2638DE2D30F8423F6F8C7A6E8D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+	<20161216113914.GC20265@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481897676-13578-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20161216113914.GC20265@leverpostej>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
 
-On 12/16/2016 11:14 AM, Marek Szyprowski wrote:
-> Samsung Exynos SoCs and boards related bindings evolved since the initial
-> introduction, but initially the bindings were minimal and a bit incomplete
-> (they never described all the hardware modules available in the SoCs).
-> Since then some significant (not fully compatible) changes have been
-> already committed a few times (like gpio replaced by pinctrl, display ddc,
-> mfc reserved memory, some core clocks added to various hardware modules,
-> added more required nodes).
-> 
-> On the other side there are no boards which have device tree embedded in
-> the bootloader. Device tree blob is always compiled from the kernel tree
-> and updated together with the kernel image.
-> 
-> Thus to avoid further adding a bunch of workarounds for old/missing
-> bindings and allow to make cleanup of the existing code and device tree
-> files, lets mark Samsung Exynos SoC platform bindings as unstable. This
-> means that bindings can may change at any time and users should use the
-> dtb file compiled from the same kernel source tree as the kernel image.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
 
-I completely agree with you on this.
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> Sent: Friday, December 16, 2016 5:39 AM
+> To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Bharat Bhushan
+> <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>; Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>; Diana Madalina Craciun
+> <diana.craciun-3arQi8VN3Tc@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> Subject: Re: RFC: extend iommu-map binding to support #iommu-cells > 1
+> 
+> On Fri, Dec 16, 2016 at 02:36:57AM +0000, Stuart Yoder wrote:
+> > For context, please see the thread:
+> > https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.spinics.net%2Flists%2Farm-
+> kernel%2Fmsg539066.html&data=01%7C01%7Cstuart.yoder%40nxp.com%7C0464e12bddfd42e0f0a508d425a847cb%7C686ea
+> 1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=KnzeOlbts271GwD1cpx2FLMsKnxw%2FOdiGVTp6%2BKFrbM%3D&reserved=0
+> >
+> > The existing iommu-map binding did not account for the situation where
+> > #iommu-cells == 2, as permitted in the ARM SMMU binding.  The 2nd cell
+> > of the IOMMU specifier being the SMR mask.  The existing binding defines
+> > the mapping as:
+> >    Any RID r in the interval [rid-base, rid-base + length) is associated with
+> >    the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
+> >
+> > ...and that does not work if iommu-base is 2 cells, the second being the
+> > SMR mask.
+> >
+> > While this can be worked around by always having length=1, it seems we
+> > can get this cleaned up by updating the binding definition for iommu-map.
+> 
+> To reiterate, I'm very much not keen on the pci-iommu binding having
+> knowledge of the decomposition of iommu-specifiers from other bindings.
 
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With the current definition of iommu-map we already have baked in an
+assumption that an iommu-specifier is a value that can be incremented
+by 1 to get to the next sequential specifier.  So the binding already
+has "knowledge" that applies in most, but not all cases.
+
+The generic iommu binding also defines a case where #iommu-cells=4
+for some IOMMUs.
+
+Since the ARM SMMU is a special case, perhaps the intepretation
+of an iommu-specifier in the context of iommu-map should be moved
+into the SMMU binding.
+
+> As mentioned previously, there's an intended interpretation [1] that we
+> need to fix up the pci-iommu binding with. With that, I don't think it's
+> even necessary to bodge iommu-cells = <1> AFAICT.
+
+You had said in the previous thread:
+
+  > I had intended that the offset was added to the final cell of the
+  > iommu-specifier (i.e. that the iommu-specifier was treated as a large
+  > number).
+
+  > You can handle this case by adding additional entries in the map table,
+  > with a single entry length.
+
+I understand that, and it works, but I don't see why the definition has
+to be that the offset is added to the "final cell".  Why can't it be
+an iommu specific definition that makes sense for a given IOMMU?
+
+Stuart
