@@ -1,253 +1,154 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v5 2/6] [media] rc-main: split setup and unregister
- functions
-Date: Fri, 16 Dec 2016 12:10:26 +0000
-Message-ID: <20161216121026.GA31618@gofer.mess.org>
-References: <20161216061218.5906-1-andi.shyti@samsung.com>
- <20161216061218.5906-3-andi.shyti@samsung.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
+Date: Fri, 16 Dec 2016 13:47:48 +0100
+Message-ID: <20161216124748.rkvnnlo4x5onzpvk@lukather>
+References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161216061218.5906-3-andi.shyti@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: multipart/mixed; boundary="===============7057722624371078287=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andi,
 
-Sorry to add to your woes, but there are some checkpatch warnings and
-errors. Please can you correct these. One is below.
+--===============7057722624371078287==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="raogyjplz5y4bidw"
+Content-Disposition: inline
 
-Thanks
-Sean
 
-On Fri, Dec 16, 2016 at 03:12:14PM +0900, Andi Shyti wrote:
-> Move the input device allocation, map and protocol handling to
-> different functions.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> Reviewed-by: Sean Young <sean@mess.org>
-> ---
->  drivers/media/rc/rc-main.c | 143 +++++++++++++++++++++++++--------------------
->  1 file changed, 81 insertions(+), 62 deletions(-)
-> 
-> diff --git a/drivers/media/rc/rc-main.c b/drivers/media/rc/rc-main.c
-> index a6bbceb..7cc700d 100644
-> --- a/drivers/media/rc/rc-main.c
-> +++ b/drivers/media/rc/rc-main.c
-> @@ -1436,16 +1436,12 @@ struct rc_dev *devm_rc_allocate_device(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(devm_rc_allocate_device);
->  
-> -int rc_register_device(struct rc_dev *dev)
-> +static int rc_setup_rx_device(struct rc_dev *dev)
->  {
-> -	static bool raw_init = false; /* raw decoders loaded? */
-> -	struct rc_map *rc_map;
-> -	const char *path;
-> -	int attr = 0;
-> -	int minor;
->  	int rc;
-> +	struct rc_map *rc_map;
->  
-> -	if (!dev || !dev->map_name)
-> +	if (!dev->map_name)
->  		return -EINVAL;
->  
->  	rc_map = rc_map_get(dev->map_name);
-> @@ -1454,6 +1450,19 @@ int rc_register_device(struct rc_dev *dev)
->  	if (!rc_map || !rc_map->scan || rc_map->size == 0)
->  		return -EINVAL;
->  
-> +	rc = ir_setkeytable(dev, rc_map);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (dev->change_protocol) {
-> +		u64 rc_type = (1ll << rc_map->rc_type);
-> +
-> +		rc = dev->change_protocol(dev, &rc_type);
-> +		if (rc < 0)
-> +			goto out_table;
-> +		dev->enabled_protocols = rc_type;
-> +	}
-> +
->  	set_bit(EV_KEY, dev->input_dev->evbit);
->  	set_bit(EV_REP, dev->input_dev->evbit);
->  	set_bit(EV_MSC, dev->input_dev->evbit);
-> @@ -1463,6 +1472,61 @@ int rc_register_device(struct rc_dev *dev)
->  	if (dev->close)
->  		dev->input_dev->close = ir_close;
->  
-> +	/*
-> +	 * Default delay of 250ms is too short for some protocols, especially
-> +	 * since the timeout is currently set to 250ms. Increase it to 500ms,
-> +	 * to avoid wrong repetition of the keycodes. Note that this must be
-> +	 * set after the call to input_register_device().
-> +	 */
-> +	dev->input_dev->rep[REP_DELAY] = 500;
-> +
-> +	/*
-> +	 * As a repeat event on protocols like RC-5 and NEC take as long as
-> +	 * 110/114ms, using 33ms as a repeat period is not the right thing
-> +	 * to do.
-> +	 */
-> +	dev->input_dev->rep[REP_PERIOD] = 125;
-> +
-> +	dev->input_dev->dev.parent = &dev->dev;
-> +	memcpy(&dev->input_dev->id, &dev->input_id, sizeof(dev->input_id));
-> +	dev->input_dev->phys = dev->input_phys;
-> +	dev->input_dev->name = dev->input_name;
-> +
-> +	/* rc_open will be called here */
-> +	rc = input_register_device(dev->input_dev);
-> +	if (rc)
-> +		goto out_table;
-> +
-> +	return 0;
-> +
-> +out_table:
-> +	ir_free_table(&dev->rc_map);
-> +
-> +	return rc;
-> +}
-> +
-> +static void rc_free_rx_device(struct rc_dev *dev)
-> +{
-> +	if (!dev)
-> +		return;
-> +
-> +	ir_free_table(&dev->rc_map);
-> +
-> +	input_unregister_device(dev->input_dev);
-> +	dev->input_dev = NULL;
-> +}
-> +
-> +int rc_register_device(struct rc_dev *dev)
-> +{
-> +	static bool raw_init = false; /* raw decoders loaded? */
+--raogyjplz5y4bidw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ERROR: do not initialise statics to false
-#110: FILE: drivers/media/rc/rc-main.c:1741:
-+	static bool raw_init = false; /* raw decoders loaded? */
+On Fri, Dec 09, 2016 at 07:49:00PM +0800, Icenowy Zheng wrote:
+>=20
+> 2016=E5=B9=B412=E6=9C=889=E6=97=A5 =E4=B8=8B=E5=8D=884:07=E4=BA=8E Maxime=
+ Ripard <maxime.ripard@free-electrons.com>=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > On Tue, Dec 06, 2016 at 04:08:38PM +0800, Icenowy Zheng wrote:=20
+> > > Some SDIO Wi-Fi chips (such as RTL8703AS) have a UART bluetooth, whic=
+h=20
+> > > has a dedicated enable pin (PL8 in the reference design).=20
+> > >=20
+> > > Enable the pin in the same way as the WLAN enable pins.=20
+> > >=20
+> > > Tested on an A33 Q8 tablet with RTL8703AS.=20
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>=20
+> > > ---=20
+> > >=20
+> > > This patch should be coupled with the uart1 node patch I send before:=
+=20
+> > > http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/4=
+71997.html=20
+> > >=20
+> > > For RTL8703AS, the rtl8723bs bluetooth code is used, which can be ret=
+rieve from:=20
+> > > https://github.com/lwfinger/rtl8723bs_bt=20
+> > >=20
+> > >=C2=A0 arch/arm/boot/dts/sun8i-q8-common.dtsi | 2 +-=20
+> > >=C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)=20
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/d=
+ts/sun8i-q8-common.dtsi=20
+> > > index c676940..4aeb5bb 100644=20
+> > > --- a/arch/arm/boot/dts/sun8i-q8-common.dtsi=20
+> > > +++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi=20
+> > > @@ -88,7 +88,7 @@=20
+> > >=C2=A0=20
+> > >=C2=A0 &r_pio {=20
+> > >=C2=A0 wifi_pwrseq_pin_q8: wifi_pwrseq_pin@0 {=20
+> > > - pins =3D "PL6", "PL7", "PL11";=20
+> > > + pins =3D "PL6", "PL7", "PL8", "PL11";=20
+> > >=C2=A0 function =3D "gpio_in";=20
+> > >=C2=A0 bias-pull-up;=20
+> > >=C2=A0 };=20
+> >
+> > There's several things wrong here. The first one is that you rely=20
+> > solely on the pinctrl state to maintain a reset line. This is very=20
+> > fragile (especially since the GPIO pinctrl state are likely to go away=
+=20
+> > at some point), but it also means that if your driver wants to recover=
+=20
+> > from that situation at some point, it won't work.=20
+> >
+> > The other one is that the bluetooth and wifi chips are two devices in=
+=20
+> > linux, and you assign that pin to the wrong device (wifi).=20
+> >
+> > rfkill-gpio is made just for that, so please use it.=20
+>=20
+> The GPIO is not for the radio, but for the full Bluetooth part.
 
-> +	const char *path;
-> +	int attr = 0;
-> +	int minor;
-> +	int rc;
-> +
-> +	if (!dev)
-> +		return -EINVAL;
-> +
->  	minor = ida_simple_get(&rc_ida, 0, RC_DEV_MAX, GFP_KERNEL);
->  	if (minor < 0)
->  		return minor;
-> @@ -1486,39 +1550,15 @@ int rc_register_device(struct rc_dev *dev)
->  	if (rc)
->  		goto out_unlock;
->  
-> -	rc = ir_setkeytable(dev, rc_map);
-> -	if (rc)
-> -		goto out_dev;
-> -
-> -	dev->input_dev->dev.parent = &dev->dev;
-> -	memcpy(&dev->input_dev->id, &dev->input_id, sizeof(dev->input_id));
-> -	dev->input_dev->phys = dev->input_phys;
-> -	dev->input_dev->name = dev->input_name;
-> -
-> -	rc = input_register_device(dev->input_dev);
-> -	if (rc)
-> -		goto out_table;
-> -
-> -	/*
-> -	 * Default delay of 250ms is too short for some protocols, especially
-> -	 * since the timeout is currently set to 250ms. Increase it to 500ms,
-> -	 * to avoid wrong repetition of the keycodes. Note that this must be
-> -	 * set after the call to input_register_device().
-> -	 */
-> -	dev->input_dev->rep[REP_DELAY] = 500;
-> -
-> -	/*
-> -	 * As a repeat event on protocols like RC-5 and NEC take as long as
-> -	 * 110/114ms, using 33ms as a repeat period is not the right thing
-> -	 * to do.
-> -	 */
-> -	dev->input_dev->rep[REP_PERIOD] = 125;
-> -
->  	path = kobject_get_path(&dev->dev.kobj, GFP_KERNEL);
->  	dev_info(&dev->dev, "%s as %s\n",
->  		dev->input_name ?: "Unspecified device", path ?: "N/A");
->  	kfree(path);
->  
-> +	rc = rc_setup_rx_device(dev);
-> +	if (rc)
-> +		goto out_dev;
-> +
->  	if (dev->driver_type == RC_DRIVER_IR_RAW) {
->  		if (!raw_init) {
->  			request_module_nowait("ir-lirc-codec");
-> @@ -1526,36 +1566,20 @@ int rc_register_device(struct rc_dev *dev)
->  		}
->  		rc = ir_raw_event_register(dev);
->  		if (rc < 0)
-> -			goto out_input;
-> -	}
-> -
-> -	if (dev->change_protocol) {
-> -		u64 rc_type = (1ll << rc_map->rc_type);
-> -		rc = dev->change_protocol(dev, &rc_type);
-> -		if (rc < 0)
-> -			goto out_raw;
-> -		dev->enabled_protocols = rc_type;
-> +			goto out_rx;
->  	}
->  
->  	/* Allow the RC sysfs nodes to be accessible */
->  	atomic_set(&dev->initialized, 1);
->  
-> -	IR_dprintk(1, "Registered rc%u (driver: %s, remote: %s, mode %s)\n",
-> +	IR_dprintk(1, "Registered rc%u (driver: %s)\n",
->  		   dev->minor,
-> -		   dev->driver_name ? dev->driver_name : "unknown",
-> -		   rc_map->name ? rc_map->name : "unknown",
-> -		   dev->driver_type == RC_DRIVER_IR_RAW ? "raw" : "cooked");
-> +		   dev->driver_name ? dev->driver_name : "unknown");
->  
->  	return 0;
->  
-> -out_raw:
-> -	if (dev->driver_type == RC_DRIVER_IR_RAW)
-> -		ir_raw_event_unregister(dev);
-> -out_input:
-> -	input_unregister_device(dev->input_dev);
-> -	dev->input_dev = NULL;
-> -out_table:
-> -	ir_free_table(&dev->rc_map);
-> +out_rx:
-> +	rc_free_rx_device(dev);
->  out_dev:
->  	device_del(&dev->dev);
->  out_unlock:
-> @@ -1601,12 +1625,7 @@ void rc_unregister_device(struct rc_dev *dev)
->  	if (dev->driver_type == RC_DRIVER_IR_RAW)
->  		ir_raw_event_unregister(dev);
->  
-> -	/* Freeing the table should also call the stop callback */
-> -	ir_free_table(&dev->rc_map);
-> -	IR_dprintk(1, "Freed keycode table\n");
-> -
-> -	input_unregister_device(dev->input_dev);
-> -	dev->input_dev = NULL;
-> +	rc_free_rx_device(dev);
->  
->  	device_del(&dev->dev);
->  
-> -- 
-> 2.10.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I know.
+
+> If it's set to 0, then the bluetooth part will reset, and the
+> hciattach will fail.
+
+Both rfkill-gpio and rfkill-regulator will shutdown when called
+(either by poking the reset pin or shutting down the regulator), so
+that definitely seems like an expected behavior to put the device in
+reset.
+
+> The BSP uses this as a rfkill, and the result is that the bluetooth
+> on/off switch do not work properly.
+
+Then rfkill needs fixing, but working around it by hoping that the
+core will probe an entirely different device, and enforcing a default
+that the rest of the kernel might or might not change is both fragile
+and wrong.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--raogyjplz5y4bidw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYU+JwAAoJEBx+YmzsjxAgrwkP/AxNGzR+GatHqHJzHC3OaY7V
+NdBxT42Xv0Qfjg2h2vP+014Lk1kqU9OYljee7df7uiFKKi5DLROpwu8RcHmIdTsA
+dM693VuaBwkPQPHBV078LBtnZa+v8xTG2sw0e1OPbh7Epj4PDkla409l8IEZbO0w
+6uF3wi5YYT9DfDmLyjGT7Nhvg1Gw0Trbi1I7tUQMWtJTzxe1qPCeHoaSxvUQZUnS
+lp+QvruVb79asrBy0e0dtKp2EmFRqOjIxIDUHGHO9quE6xp9fuOkdEWJ660hBZsV
+qGpUVnZJ85lzUm/4sgJq8sELliz/tP+w2RaOuJXcCDdiGBzfp/QI5axQyZ/sCbS9
+laAc3SXdUNM5Oav4egMd8HPgTpIma/jo1XcRxS9joxmpR1sPgut5V584HZzw6cJt
+2ZwkWl5euKPaGvR7j4bj0YLbkUQevcz9WX9ux6kPE9plNOtHDEuOkMAqD2l5d1LO
+xepCVVE0y1T1m62kPHaYlhAsfu138c6rbQ1PwZ05JbAhru/R+YAgXVXJAwhUcsWX
+7Xd8TEHO6kCwqzjmfi6qCC53wvLij++cl2rZB8lGX4U94VCIn/KrO/2bOOaV9vTR
+PPhdrWQwSG2+xrJH4uddnQEm3ZJTh0JlCLo1BMnmuJuQF7hec8B6scGxBwU4zdLS
+00RO867AMDgY+3a0le/l
+=RhRt
+-----END PGP SIGNATURE-----
+
+--raogyjplz5y4bidw--
+
+
+--===============7057722624371078287==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7057722624371078287==--
