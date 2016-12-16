@@ -1,74 +1,40 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v4] dt-bindings: power: supply: bq24735: reverse the
- polarity of ac-detect
-Date: Fri, 16 Dec 2016 10:55:27 +0000
-Message-ID: <68dfd1ae-ab31-c063-5bd6-bc16a62a6dcd@nvidia.com>
-References: <1481881440-13464-1-git-send-email-peda@axentia.se>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
+Date: Fri, 16 Dec 2016 12:07:42 +0100
+Message-ID: <CAPDyKFqmTP1+pe7UNavOAZA0QWFOu8M4FcQOpGkqZj=nnpP9qA@mail.gmail.com>
+References: <1481201455-3483-1-git-send-email-yamada.masahiro@socionext.com>
+ <1481201455-3483-3-git-send-email-yamada.masahiro@socionext.com>
+ <20161212171408.2yf4jauz7czv44fy@rob-hp-laptop> <CAK7LNATO+vpxmDV-XEupjeXXhPNdrXHNwfwWcAVWLdbJi+37QA@mail.gmail.com>
+ <CAPDyKFrejOSGVWb=gsuCixxj_OXfLfo22VwLDC_Y4scw+Se8FQ@mail.gmail.com> <CAK7LNASaKpGyE_qpQGyqxeVRSkqwj6Rm4WKNq2Zs4Woj4MY01A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1481881440-13464-1-git-send-email-peda@axentia.se>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNASaKpGyE_qpQGyqxeVRSkqwj6Rm4WKNq2Zs4Woj4MY01A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
-On 16/12/16 09:44, Peter Rosin wrote:
-> The ACOK pin on the bq24735 is active-high, of course meaning that when
-> AC is OK the pin is high. However, all Tegra dts files have incorrectly
-> specified active-high even though the signal is inverted on the Tegra
-> boards. This has worked since the Linux driver has also inverted the
-> meaning of the GPIO. Fix this situation by simply specifying in the
-> bindings what everybody else agrees on; that the ti,ac-detect-gpios is
-> active on AC adapter absence.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> Hi!
-> 
-> v3 -> v4 changes:
-> - improve the bindings text in the spirit of remarks from Jon Hunter
-> 
-> (There were no v1 nor v2, I made a mistake and started from v3 this time.)
-> 
-> This patch is the result of this discussion:
-> http://marc.info/?t=148152531800002
-> 
-> I don't like how it changes the one thing that is seems correct, but
-> what to do?
-> 
-> Cheers,
-> peda
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-> index 3bf55757ceec..c95e16e2dc56 100644
-> --- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-> @@ -8,8 +8,10 @@ Optional properties :
->   - interrupts : Specify the interrupt to be used to trigger when the AC
->     adapter is either plugged in or removed.
->   - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
-> -   presence. This is a Host GPIO that is configured as an input and
-> -   connected to the bq24735.
-> +   status. This is a Host GPIO that is configured as an input and connected
-> +   to the ACOK pin on the bq24735. Note: for backwards compatibility reasons,
-> +   the GPIO must be active on AC adapter absence despite ACOK being active
-> +   (high) on AC adapter presence.
->   - ti,charge-current : Used to control and set the charging current. This value
->     must be between 128mA and 8.128A with a 64mA step resolution. The POR value
->     is 0x0000h. This number is in mA (e.g. 8192), see spec for more information
+>>
+>> I think a better approach is to use the new sdhci-caps* bindings to
+>> mask those caps that can't be trusted. And then use the generic mmc
+>> bindings for speed modes instead.
+>>
+>> That should be a safer approach, right!?
+>
+> Right.
+>
+> But, if I know the caps register bits 63-32 are all zero,
+> I need not explicitly specify sdhci-caps-mask, right?
 
-Thanks.
+Maybe not. I don't have a strong opinion here, so l am fine with
+whatever you choose.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
