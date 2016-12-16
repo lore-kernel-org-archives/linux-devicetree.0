@@ -1,7 +1,7 @@
 From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 1/5] lib: add bitrev8x4()
-Date: Fri, 16 Dec 2016 15:17:50 -0800
-Message-ID: <3d70fb271f0d2ab2bfbbc60281913bdb3c5f0fb7.1481918884.git.stillcompiling@gmail.com>
+Subject: [PATCH v6 3/5] doc: dt: add cyclone-ps-spi binding document
+Date: Fri, 16 Dec 2016 15:17:52 -0800
+Message-ID: <526ee1b336cf2ab9473041762cf55018b6156dd4.1481918884.git.stillcompiling@gmail.com>
 References: <cover.1481918884.git.stillcompiling@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1481918884.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,66 +12,46 @@ To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz 
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a function to reverse bytes within a 32 bit word.
-Operate on a u32 rather than individual bytes.
-ARCH specific versions require substantially fewer instructions than
-working a byte at a time.
+Describe a cyclone-ps-spi devicetree entry, required features
 
 Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- include/linux/bitrev.h | 25 +++++++++++++++++++++++++
+ .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      | 25 ++++++++++++++++++++++
  1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
 
-diff --git a/include/linux/bitrev.h b/include/linux/bitrev.h
-index fb790b8..868dcb6 100644
---- a/include/linux/bitrev.h
-+++ b/include/linux/bitrev.h
-@@ -27,6 +27,14 @@ static inline u32 __bitrev32(u32 x)
- 	return (__bitrev16(x & 0xffff) << 16) | __bitrev16(x >> 16);
- }
- 
-+static inline u32 __bitrev8x4(u32 x)
-+{
-+	return(__bitrev8(x & 0xff) |
-+	       (__bitrev8((x >> 8)  & 0xff) << 8) |
-+	       (__bitrev8((x >> 16)  & 0xff) << 16) |
-+	       (__bitrev8((x >> 24)  & 0xff) << 24));
-+}
+diff --git a/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+new file mode 100644
+index 0000000..3f515c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+@@ -0,0 +1,25 @@
++Altera Cyclone Passive Serial SPI FPGA Manager
 +
- #endif /* CONFIG_HAVE_ARCH_BITREVERSE */
- 
- #define __constant_bitrev32(x)	\
-@@ -50,6 +58,15 @@ static inline u32 __bitrev32(u32 x)
- 	__x;								\
- })
- 
-+#define __constant_bitrev8x4(x) \
-+({			\
-+	u32 __x = x;	\
-+	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
-+	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
-+	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
-+	__x;								\
-+})
++Altera Cyclone FPGAs support a method of loading the bitstream over what is
++referred to as "passive serial".
++The passive serial link is not technically spi, and might require extra
++circuits in order to play nicely with other spi slaves on the same bus.
 +
- #define __constant_bitrev8(x)	\
- ({					\
- 	u8 __x = x;			\
-@@ -75,6 +92,14 @@ static inline u32 __bitrev32(u32 x)
- 	__bitrev16(__x);				\
-  })
- 
-+#define bitrev8x4(x) \
-+({			\
-+	u32 __x = x;	\
-+	__builtin_constant_p(__x) ?	\
-+	__constant_bitrev8x4(__x) :			\
-+	__bitrev8x4(__x);				\
-+})
++See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
 +
- #define bitrev8(x) \
- ({			\
- 	u8 __x = x;	\
++Required properties:
++- compatible  : should contain "altr,cyclone-ps-spi-fpga-mgr"
++- reg         : spi slave id of the fpga
++- config-gpios : config pin (referred to as nCONFIG in the cyclone manual)
++- status-gpios : status pin (referred to as nSTATUS in the cyclone manual)
++
++both gpios pins are normally active low open drain.
++
++Example:
++	fpga_spi: evi-fpga-spi@0 {
++		compatible = "altr,cyclone-ps-spi-fpga-mgr";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		config-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
++		status-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
++	};
 -- 
 2.9.3
 
