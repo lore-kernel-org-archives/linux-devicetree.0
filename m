@@ -1,85 +1,74 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: Re: [PATCH v7 1/2] mtd: nand: add tango NFC dt bindings doc
-Date: Fri, 16 Dec 2016 11:56:38 +0100
-Message-ID: <d3cbfda6-23bf-4ad1-b1ce-c179b765272f@sigmadesigns.com>
-References: <580F5AD2.9020909@sigmadesigns.com>
- <580F5B06.6030608@sigmadesigns.com> <1978954.SRtJpfOGp1@wuerfel>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v4] dt-bindings: power: supply: bq24735: reverse the
+ polarity of ac-detect
+Date: Fri, 16 Dec 2016 10:55:27 +0000
+Message-ID: <68dfd1ae-ab31-c063-5bd6-bc16a62a6dcd@nvidia.com>
+References: <1481881440-13464-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1978954.SRtJpfOGp1@wuerfel>
-Content-Language: 
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Mason <slash.tmp@free.fr>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Sebastian Frias <sf84@laposte.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1481881440-13464-1-git-send-email-peda@axentia.se>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2016 10:18, Arnd Bergmann wrote:
-> On Tuesday, October 25, 2016 3:15:50 PM CET Marc Gonzalez wrote:
->> Add the tango NAND Flash Controller dt bindings documentation.
->>
->> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
->> ---
->>  Documentation/devicetree/bindings/mtd/tango-nand.txt | 38 ++++++++++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
->> new file mode 100644
->> index 000000000000..3cbf95d6595a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
->> @@ -0,0 +1,38 @@
->> +Sigma Designs Tango4 NAND Flash Controller (NFC)
->> +
->> +Required properties:
->> +
->> +- compatible: "sigma,smp8758-nand"
->> +- reg: address/size of nfc_reg, nfc_mem, and pbus_reg
->> +- dmas: reference to the DMA channel used by the controller
->> +- dma-names: "nfc_sbox"
+
+On 16/12/16 09:44, Peter Rosin wrote:
+> The ACOK pin on the bq24735 is active-high, of course meaning that when
+> AC is OK the pin is high. However, all Tegra dts files have incorrectly
+> specified active-high even though the signal is inverted on the Tegra
+> boards. This has worked since the Linux driver has also inverted the
+> meaning of the GPIO. Fix this situation by simply specifying in the
+> bindings what everybody else agrees on; that the ti,ac-detect-gpios is
+> active on AC adapter absence.
 > 
-> Drop the "nfc_" prefix here, it seems redundant.
-
-I took a closer look at Documentation/devicetree/bindings and
-arch/arm/boot/dts and it seems the overwhelming nomenclature
-is "rx", "tx" (with variants around these two).
-
-Should I just use "rxtx" for my driver?
-
->> +- clocks: reference to the system clock
->> +- #address-cells: <1>
->> +- #size-cells: <0>
->> +
->> +Children nodes represent the available NAND chips.
->> +See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
->> +
->> +Example:
->> +
->> +	nand: nand@2c000 {
->> +		compatible = "sigma,smp8758-nand";
->> +		reg = <0x2c000 0x30 0x2d000 0x800 0x20000 0x1000>;
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> It would be nicer to write this as
+> Hi!
 > 
-> 	reg = <0x2c000 0x30>, <0x2d000 0x800>, <0x20000 0x1000>;
+> v3 -> v4 changes:
+> - improve the bindings text in the spirit of remarks from Jon Hunter
 > 
-> which is identical in binary format.
+> (There were no v1 nor v2, I made a mistake and started from v3 this time.)
+> 
+> This patch is the result of this discussion:
+> http://marc.info/?t=148152531800002
+> 
+> I don't like how it changes the one thing that is seems correct, but
+> what to do?
+> 
+> Cheers,
+> peda
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+> index 3bf55757ceec..c95e16e2dc56 100644
+> --- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+> @@ -8,8 +8,10 @@ Optional properties :
+>   - interrupts : Specify the interrupt to be used to trigger when the AC
+>     adapter is either plugged in or removed.
+>   - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
+> -   presence. This is a Host GPIO that is configured as an input and
+> -   connected to the bq24735.
+> +   status. This is a Host GPIO that is configured as an input and connected
+> +   to the ACOK pin on the bq24735. Note: for backwards compatibility reasons,
+> +   the GPIO must be active on AC adapter absence despite ACOK being active
+> +   (high) on AC adapter presence.
+>   - ti,charge-current : Used to control and set the charging current. This value
+>     must be between 128mA and 8.128A with a 64mA step resolution. The POR value
+>     is 0x0000h. This number is in mA (e.g. 8192), see spec for more information
 
-This is indeed a marked improvement. Boris, if I fix these two nits,
-can I submit a single patch, or do you want them split?
+Thanks.
 
-Regards.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
+Cheers
+Jon
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+nvpublic
