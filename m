@@ -1,12 +1,15 @@
 From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCHv2 0/8] Add support for STM32 RTC
-Date: Fri, 16 Dec 2016 09:50:49 +0100
-Message-ID: <1481878257-29163-1-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCHv2 1/8] ARM: dts: stm32: set HSE_RTC clock
+ frequency to 1 MHz on stm32f429
+Date: Fri, 16 Dec 2016 09:50:50 +0100
+Message-ID: <1481878257-29163-2-git-send-email-amelie.delaunay@st.com>
+References: <1481878257-29163-1-git-send-email-amelie.delaunay@st.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <rtc-linux+bncBAABBCGWZ3BAKGQE5QAU5BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1481878257-29163-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -17,44 +20,27 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-v2:
-- remove clock-names and interrupt-names from bindings
-- remove unuseful headers
-- clean stm32_rtc structure
-- replace stm32_rtc_readl/_writel by readl/writel_relaxed
-- use threaded IRQ
-- rework set_alarm
-- add various comments
-- select COMPILE_TEST and REGMAP_MMIO
+This patch set HSE_RTC clock frequency to 1 MHz, as the clock supplied to
+the RTC must be 1 MHz.
 
-This patchset adds support for the STM32 Real-Time Clock.
-This RTC is an independent BCD timer/counter and provides a time-of-day
-clock/calendar with programmable alarm interrupt.
-RTC calendar can be driven by three clock sources LSE, LSI or HSE.
+Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Amelie Delaunay (8):
-  ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz on stm32f429
-  dt-bindings: document the STM32 RTC bindings
-  rtc: add STM32 RTC driver
-  ARM: dts: stm32: Add RTC support for STM32F429 MCU
-  ARM: dts: stm32: enable RTC on stm32f429-disco
-  ARM: dts: stm32: enable RTC on stm32f469-disco
-  ARM: dts: stm32: enable RTC on stm32429i-eval
-  ARM: configs: stm32: Add RTC support in STM32 defconfig
-
- .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  27 +
- arch/arm/boot/dts/stm32429i-eval.dts               |   4 +
- arch/arm/boot/dts/stm32f429-disco.dts              |   6 +
- arch/arm/boot/dts/stm32f429.dtsi                   |  16 +
- arch/arm/boot/dts/stm32f469-disco.dts              |   4 +
- arch/arm/configs/stm32_defconfig                   |   2 +
- drivers/rtc/Kconfig                                |  11 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-stm32.c                            | 776 +++++++++++++++++++++
- 9 files changed, 847 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
- create mode 100644 drivers/rtc/rtc-stm32.c
-
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index b077f99..d195ccf 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -371,6 +371,8 @@
+ 			reg = <0x40023800 0x400>;
+ 			clocks = <&clk_hse>, <&clk_i2s_ckin>;
+ 			st,syscfg = <&pwrcfg>;
++			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
++			assigned-clock-rates = <1000000>;
+ 		};
+ 
+ 		dma1: dma-controller@40026000 {
 -- 
 1.9.1
 
