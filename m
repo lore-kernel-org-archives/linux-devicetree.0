@@ -1,93 +1,69 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] clk: zte: add audio clocks for zx296718
-Date: Fri, 16 Dec 2016 14:40:41 +0800
-Message-ID: <20161216064039.GB8787@dragon>
-References: <1481189157-8995-1-git-send-email-shawnguo@kernel.org>
- <1481189157-8995-2-git-send-email-shawnguo@kernel.org>
- <20161208210453.GH5423@codeaurora.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
+Date: Fri, 16 Dec 2016 09:37:20 +0200
+Message-ID: <20161216073720.GA3489@kozik-lap>
+References: <5220084.l31t5oJbsy@amdc3058>
+ <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
+ <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
+ <2340115.HEG9AYUCMD@amdc3058>
+ <CAD=FV=W6R8cNuR+gTnNRF6d-TNgzUeYTwuCp27efoMsd0YOH3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161208210453.GH5423@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baoyou Xie <xie.baoyou@zte.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
+In-Reply-To: <CAD=FV=W6R8cNuR+gTnNRF6d-TNgzUeYTwuCp27efoMsd0YOH3g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Arjun K V <arjun.kv@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alim <alim.akhtar@s>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 08, 2016 at 01:04:53PM -0800, Stephen Boyd wrote:
-> > +	if (of_clk_add_hw_provider(np, of_clk_hw_onecell_get, &audio_hw_onecell_data))
-> > +		panic("could not register clk provider\n");
+On Thu, Dec 15, 2016 at 04:52:58PM -0800, Doug Anderson wrote:
+> > [ I added Arjun to Cc:, maybe he can help in explaining this issue
+> >   (unfortunately Inderpal's email is no longer working). ]
+> >
+> > Please also note that on Exynos5422/5800 SoCs the same ARM rail
+> > voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
+> > IOW if the problem exists it is already present in the mainline
+> > kernel.
 > 
-> Why don't we return error? We returned errors before if we
-> couldn't map the ioregion.
-
-Yes.  Rather than panic, we should check return and give an error
-message in case of failure.
-
+> Interesting.  In the ChromeOS tree I see significantly higher voltages
+> needed...  Note that one might naively look at
+> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/cpufreq/exynos5420-cpufreq.c#178>.
 > 
-> > +	pr_info("audio-clk init over, nr:%d\n", AUDIO_NR_CLKS);
+> 1362500, /* L0  2100 */
+> 1312500, /* L1  2000 */
 > 
-> debug noise?
-
-Agreed.  I will just clean it up.
-
-<snip>
-
-> > +static unsigned long audio_calc_rate(struct clk_zx_audio_divider *audio_div,
-> > +				     u32 reg_frac, u32 reg_int,
-> > +				     unsigned long parent_rate)
-> > +{
-> > +	unsigned long rate, m, n;
-> > +
-> > +	if (audio_div->table) {
-> > +		const struct zx_clk_audio_div_table *divt = audio_div->table;
-> > +
-> > +		for (; divt->rate; divt++) {
-> > +			if ((divt->int_reg == reg_int) && (divt->frac_reg == reg_frac))
+> ..but, amazingly enough those voltages aren't used at all.  Surprise!
 > 
-> Please remove extra parenthesis here.
-
-The whole hunk of the code will be dropped, since the divider lookup
-table is not actually used.
-
+> I believe that the above numbers are actually not used and the ASV
+> numbers are used instead.  See
+> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/mach-exynos/include/mach/asv-exynos542x.h#452>
 > 
-> > +				return divt->rate;
-> > +		}
-> > +	}
-> > +	if (audio_div->table)
-> > +		pr_warn("cannot found the config(int_reg:0x%x, frac_reg:0x%x) in table, we will caculate it\n",
-> > +			reg_int, reg_frac);
-
-<snip>
-
-> > +	div_table->rate = (ulong)(parent_rate * n) / ((ulong)reg_int * n + m);
+> { 2100000,
+> 1350000, 1350000, 1350000, 1350000, 1350000,
+> 1337500, 1325000, 1312500, 1300000, 1287500,
+> 1275000, 1262500, 1250000, 1237500 },
 > 
-> Please don't use ulong, use unsigned long. Also consider using
-> local variables so the line isn't overly long.
+> I believe that interpretation there is: some bins of the CPU can run
+> at 2.1 GHz just fine at 1.25 V but others need up to 1.35V.
 
-It seems to me that none of the type casts is really necessary.  So I
-will just drop them.
+That is definitely the case. One could just look at vendors ASV table
+(for 1.9 GHz):
+{ 1900000, 1300000, 1287500, 1262500, 1237500, 1225000, 1212500,
+                    1200000, 1187500, 1175000, 1162500, 1150000,
+		             1137500, 1125000, 1112500, 1112500},
 
-> 
-> > +	div_table->int_reg = reg_int;
-> > +	div_table->frac_reg = reg_frac;
-> > +}
-> [...]
-> > +
-> > +static int zx_audio_div_set_rate(struct clk_hw *hw, unsigned long rate,
-> > +				    unsigned long parent_rate)
-> > +{
-> > +	struct clk_zx_audio_divider *zx_audio_div = to_clk_zx_audio_div(hw);
-> > +	struct zx_clk_audio_div_table divt;
-> > +	unsigned int val;
-> > +
-> > +	audio_calc_reg(zx_audio_div, &divt, rate, parent_rate);
-> > +	if (divt.rate != rate)
-> > +		pr_info("the real rate is:%ld", divt.rate);
-> 
-> Debug noise?
+The theoretical difference is up to 1.875V! From my experiments I saw
+BIN1 chips which should be the same... but some working on 1.2V, some on
+1.225V (@1.9 GHz). I didn't see any requiring higher voltages but that
+does not mean that there aren't such...
 
-I will change it to pr_debug.
+> ...so if you're running at 2.1 GHz at 1.25V then perhaps you're just
+> running on a CPU from a nice bin?
 
-Shawn
+Would be nice to see a dump of PKG_ID and AUX_INFO chipid registers
+along with name of tested board. Because the "Tested on XU3" is not
+sufficient.
+
+Best regards,
+Krzysztof
