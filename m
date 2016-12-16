@@ -1,60 +1,109 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4] dt-bindings: power: supply: bq24735: reverse the polarity of ac-detect
-Date: Fri, 16 Dec 2016 10:44:00 +0100
-Message-ID: <1481881440-13464-1-git-send-email-peda@axentia.se>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add clk-480m for ehci and ohci
+ of rk3399
+Date: Fri, 16 Dec 2016 09:28:21 -0800
+Message-ID: <CAD=FV=W1BW6FSZ6MSxR6RhvtZyGsdQbz9vU_QshaQ5A65ENMCg@mail.gmail.com>
+References: <1481710301-1454-1-git-send-email-zhengxing@rock-chips.com>
+ <991221a4-3962-1bcb-7863-72f5553eba40@rock-chips.com> <CAD=FV=XKQaqRS4jUM7NpN2KEV8USj_cVWbh7q4274n3jBtwORg@mail.gmail.com>
+ <2526685.VC5cUs58On@phil> <5853903D.8030605@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5853903D.8030605-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ACOK pin on the bq24735 is active-high, of course meaning that when
-AC is OK the pin is high. However, all Tegra dts files have incorrectly
-specified active-high even though the signal is inverted on the Tegra
-boards. This has worked since the Linux driver has also inverted the
-meaning of the GPIO. Fix this situation by simply specifying in the
-bindings what everybody else agrees on; that the ti,ac-detect-gpios is
-active on AC adapter absence.
+Hi,
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Thu, Dec 15, 2016 at 10:57 PM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wro=
+te:
+> Hi Heiko, Doug,
+>
+> On 2016=E5=B9=B412=E6=9C=8816=E6=97=A5 02:18, Heiko Stuebner wrote:
+>
+> Am Donnerstag, 15. Dezember 2016, 08:34:09 CET schrieb Doug Anderson:
+>
+>
+> I still need to digest all of the things that were added to this
+> thread overnight, but nothing I've seen so far indicates that you need
+> the post-gated clock.  AKA I still think you need to redo your patch
+> to replace:
+>
+>               clocks =3D <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+>                        <&cru SCLK_USBPHY0_480M_SRC>;
+>
+> with:
+>
+>               clocks =3D <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+>                         <&u2phy0>;
+>
+> Can you please comment on that?
+>
+> Also, with the change, the ehci will keep the clock (and thus the phy)
+> always
+> on. Does the phy-autosuspend even save anything now?
+>
+> In any case, could we make the clock-names entry sound nicer than
+> usbphy0_480m
+> please? bindings/usb/atmel-usb.txt calls its UTMI clock simply "usb_clk",
+> but
+> something like "utmi" should also work.
+> While at it you could also fix up the other clock names to something like
+> "host" and "arbiter" or so?.
+>
+>
+> Heiko
+>
+>
+> The usbphy related clock tress like this:
+>
+>
+> Actually, at drivers/phy/phy-rockchip-inno-usb2.c, we can only
+> enable/disable the master gate via GRF is PHY_PLL, not UTMI_CLK.
+>
+> And the naming style of the "hclk_host0" keep the name "hclk_host0" on th=
+e
+> clcok tree diagram:
+>
+>
+> Therefore, could we rename the clock name like this:
+> ----
+> for usb_host0_ehci and usb_host0_ohci:
+>         clocks =3D <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+>              <&cru SCLK_U2PHY0>;
+>         clock-names =3D "hclk_host0", "hclk_host0_arb",
+>                   "sclk_u2phy0";
+>
+> for usb_host1_ehci and usb_host1_ohci:
+>         clocks =3D <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>,
+>              <&cru SCLK_U2PHY1>;
+>         clock-names =3D "hclk_host1", "hclk_host1_arb",
+>                   "sclk_u2phy1";
+> ----
+>
+> BTW, the "arb" is an abbreviation for arbiter.
 
-Hi!
+You don't specify what this new "SCLK_U2PHY0" ID is, so it's a little
+hard for me to know what you're intending.
 
-v3 -> v4 changes:
-- improve the bindings text in the spirit of remarks from Jon Hunter
+...however, I still don't see any reason why you can't just use the
+solution I proposed.  Specifying the clock as "<&u2phy0>" is the
+correct thing to do.  The input clock to the EHCI driver is exactly
+the clock provided by the USB PHY with no gate in between (just as I
+said).  There is no reason to somehow buffer it by the cru.  The cru
+doesn't see this clock and has no reason to be involved.
 
-(There were no v1 nor v2, I made a mistake and started from v3 this time.)
 
-This patch is the result of this discussion:
-http://marc.info/?t=148152531800002
+> Thanks.
 
-I don't like how it changes the one thing that is seems correct, but
-what to do?
+Note that there were many other comments on this thread besides mine.
+Are you planning to address any of them?
 
-Cheers,
-peda
-
-diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-index 3bf55757ceec..c95e16e2dc56 100644
---- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
-@@ -8,8 +8,10 @@ Optional properties :
-  - interrupts : Specify the interrupt to be used to trigger when the AC
-    adapter is either plugged in or removed.
-  - ti,ac-detect-gpios : This GPIO is optionally used to read the AC adapter
--   presence. This is a Host GPIO that is configured as an input and
--   connected to the bq24735.
-+   status. This is a Host GPIO that is configured as an input and connected
-+   to the ACOK pin on the bq24735. Note: for backwards compatibility reasons,
-+   the GPIO must be active on AC adapter absence despite ACOK being active
-+   (high) on AC adapter presence.
-  - ti,charge-current : Used to control and set the charging current. This value
-    must be between 128mA and 8.128A with a 64mA step resolution. The POR value
-    is 0x0000h. This number is in mA (e.g. 8192), see spec for more information
--- 
-2.1.4
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
