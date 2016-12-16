@@ -1,99 +1,103 @@
-From: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: RFC: extend iommu-map binding to support #iommu-cells > 1
-Date: Fri, 16 Dec 2016 03:46:01 +0000
-Message-ID: <AM5PR0401MB25455AE3850ED6E724B025EF9A9C0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-References: <VI1PR0401MB2638DE2D30F8423F6F8C7A6E8D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+From: =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin@gmail.com>
+Subject: Re: [PATCH v3 2/2] drm/panel: simple: Add support BOE nv101wxmn51
+Date: Thu, 15 Dec 2016 21:22:16 -0800
+Message-ID: <CACP_E+J1tYqQV5eDAuvNXMTwqP0JNLedEX8mcvupamO3AsP1Yw@mail.gmail.com>
+References: <1481685596-15608-1-git-send-email-wxt@rock-chips.com>
+ <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <VI1PR0401MB2638DE2D30F8423F6F8C7A6E8D9C0-9IDQY6o3qQjcXZ0H4ZLnAo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: devicetree@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Stuart Yoder
-> Sent: Friday, December 16, 2016 8:07 AM
-> To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; robin.murphy-5wv7dgnIgG8@public.gmane.org;
-> will.deacon-5wv7dgnIgG8@public.gmane.org
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>;
-> Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>; Diana Madalina Craciun
-> <diana.craciun-3arQi8VN3Tc@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org
-> Subject: RFC: extend iommu-map binding to support #iommu-cells > 1
-> 
-> For context, please see the thread:
-> https://www.spinics.net/lists/arm-kernel/msg539066.html
-> 
-> The existing iommu-map binding did not account for the situation where
-> #iommu-cells == 2, as permitted in the ARM SMMU binding.  The 2nd cell of
-> the IOMMU specifier being the SMR mask.  The existing binding defines the
-> mapping as:
->    Any RID r in the interval [rid-base, rid-base + length) is associated with
->    the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
-> 
-> ...and that does not work if iommu-base is 2 cells, the second being the SMR
-> mask.
-> 
-> While this can be worked around by always having length=1, it seems we can
-> get this cleaned up by updating the binding definition for iommu-map.
-> 
-> See patch below.  Thoughts?
-> 
-> Thanks,
-> Stuart
-> 
-> -------------------------------------------------------------------------
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt
-> b/Documentation/devicetree/bindings/pci/pci-iommu.txt
-> index 56c8296..e81b461 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-iommu.txt
-> @@ -38,8 +38,20 @@ Optional properties
->    The property is an arbitrary number of tuples of
->    (rid-base,iommu,iommu-base,length).
-> 
-> -  Any RID r in the interval [rid-base, rid-base + length) is associated with
-> -  the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
-> +  If the associated IOMMU has an #iommu-cells value of 1, any RID r in
-> + the  interval [rid-base, rid-base + length) is associated with the
-> + listed IOMMU,  with the iommu-specifier (r - rid-base + iommu-base).
-> +
-> +  ARM SMMU Note:
-> +    The ARM SMMU binding permits an #iommu-cells value of 2 and in this
-> +    case defines an IOMMU specifier to be: (stream-id,smr-mask)
-> +
-> +    In an iommu-map this means the iommu-base consists of 2 cells:
-> +        (rid-base,iommu,[stream-id,smr-mask],length).
-> +
-> +    In this case the RID to IOMMU specifier mapping is defined to be:
-> +    any RID r in the interval [rid-base, rid-base + length) is associated
-> +    with the listed IOMMU, with the iommu-specifier (r - rid-base + stream-
-> id).
-
-Should not this be (r - rid-base + (stream-id & smr-mask)) ?
-
-So basically stream-id ranges from (stream-id & smr-mask) - (stream-id & smr-mask + (length - 1) )
-
-Thanks
--Bharat
-> 
->  - iommu-map-mask: A mask to be applied to each Requester ID prior to
-> being
->    mapped to an iommu-specifier per the iommu-map property.
-> 
-> 
+UmV2aWV3ZWQtYnk6IFN0w6lwaGFuZSBNYXJjaGVzaW4gPG1hcmNoZXVAY2hyb21pdW0ub3JnPgoK
+Ck9uIFR1ZSwgRGVjIDEzLCAyMDE2IGF0IDc6MTkgUE0sIENhZXNhciBXYW5nIDx3eHRAcm9jay1j
+aGlwcy5jb20+IHdyb3RlOgo+IDEwLjFXWEdBIGlzIGEgY29sb3IgYWN0aXZlIG1hdHJpeCBURlQg
+TENEIG1vZHVsZSB1c2luZyBhbW9ycGhvdXMgc2lsaWNvbgo+IFRGVCdzIGFzIGFuIGFjdGl2ZSBz
+d2l0Y2hpbmcgZGV2aWNlcy4gSXQgY2FuIGJlIHN1cHBvcnRlZCBieSB0aGUKPiBzaW1wbGUtcGFu
+ZWwgZHJpdmVyLgo+Cj4gUmVhZCB0aGUgcGFuZWwgZGVmYXVsdCBlZGlkIGluZm9ybWF0aW9uOgo+
+Cj4gRURJRCBNT0RFIERFVEFJTFMKPiAgICAgICAgICAgICAgICAgbmFtZSA9IDxOVUxMPgo+ICAg
+ICAgICAgICAgICAgICBwaXhlbF9jbG9jayA9IDcxOTAwCj4gICAgICAgICAgICAgICAgIGx2ZHNf
+ZHVhbF9jaGFubmVsID0gMAo+ICAgICAgICAgICAgICAgICByZWZyZXNoID0gMAo+ICAgICAgICAg
+ICAgICAgICBoYSA9IDEyODAKPiAgICAgICAgICAgICAgICAgaGJsID0gMTYwCj4gICAgICAgICAg
+ICAgICAgIGhzbyA9IDQ4Cj4gICAgICAgICAgICAgICAgIGhzcHcgPSAzMgo+ICAgICAgICAgICAg
+ICAgICBoYm9yZGVyID0gMAo+ICAgICAgICAgICAgICAgICB2YSA9IDgwMAo+ICAgICAgICAgICAg
+ICAgICB2YmwgPSAzMgo+ICAgICAgICAgICAgICAgICB2c28gPSAzCj4gICAgICAgICAgICAgICAg
+IHZzcHcgPSA1Cj4gICAgICAgICAgICAgICAgIHZib3JkZXIgPSAwCj4gICAgICAgICAgICAgICAg
+IHBoc3luYyA9ICsKPiAgICAgICAgICAgICAgICAgcHZzeW5jID0gLQo+ICAgICAgICAgICAgICAg
+ICB4X21tID0gMAo+ICAgICAgICAgICAgICAgICB5X21tID0gMAo+IGRybV9kaXNwbGF5X21vZGUK
+PiAgICAgICAgICAgICAgICAgLmhkaXNwbGF5ID0gMTI4MAo+ICAgICAgICAgICAgICAgICAuaHN5
+bmNfc3RhcnQgPSAxMzI4Cj4gICAgICAgICAgICAgICAgIC5oc3luY19lbmQgPSAxMzYwCj4gICAg
+ICAgICAgICAgICAgIC5odG90YWwgPSAxNDQwCj4gICAgICAgICAgICAgICAgIC52ZGlzcGxheSA9
+IDgwMAo+ICAgICAgICAgICAgICAgICAudnN5bmNfc3RhcnQgPSA4MDMKPiAgICAgICAgICAgICAg
+ICAgLnZzeW5jX2VuZCA9IDgwOAo+ICAgICAgICAgICAgICAgICAudnRvdGFsID0gODMyCj4KPiBU
+aGVyZSBhcmUgdHdvIG1vZGVzIGluIHRoZSBlZGlkOgo+IERldGFpbGVkIG1vZGUxOiBDbG9jayA3
+MS45MDAgTUh6LCAyMTYgbW0geCAxMzUgbW0KPiAgICAgICAgICAgICAgICAxMjgwIDEzMjggMTM2
+MCAxNDQwIGhib3JkZXIgMAo+ICAgICAgICAgICAgICAgICA4MDAgIDgwMyAgODA4ICA4MzIgdmJv
+cmRlciAwCj4gICAgICAgICAgICAgICAgK2hzeW5jIC12c3luYwo+IERldGFpbGVkIG1vZGUyOiBD
+bG9jayA1Ny41MDAgTUh6LCAyMTYgbW0geCAxMzUgbW0KPiAgICAgICAgICAgICAgICAxMjgwIDEz
+MjggMTM2MCAxNDQwIGhib3JkZXIgMAo+ICAgICAgICAgICAgICAgICA4MDAgIDgwMyAgODA4ICA4
+MzIgdmJvcmRlciAwCj4gICAgICAgICAgICAgICAgK2hzeW5jIC12c3luYwo+Cj4gQWRkIHRoZSBi
+b3RoIGVkaWQgdG8gc3VwcG9ydCBtb3JlIG1vZGVzIGZvciBCT0UgbnYxMDF3eG1uNTEuCj4KPiBT
+aWduZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgo+IC0tLQo+Cj4g
+Q2hhbmdlcyBpbiB2MzoKPiAtIEFzIFN0w6lwaGFuZSBjb21tZW50ZWQgb24gaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC85NDY1OTExLAo+ICAgYWRkIGRvd25jbG9jayBtb2RlIGZv
+ciBlZGlkLgo+Cj4gQ2hhbmdlcyBpbiB2MjoKPiAtIGZpeCB0aGUgdnN5bmNfc3RhcnQgYW5kIHZz
+eW5jX2VuZCBmcm9tIHRoZSBlZGlkLgo+IC0gY2hhbmdlIHRoZSBjb21taXQuCj4KPiAgZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgNDUgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspCj4KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggMDZhYWY3OS4uMWNlMjViNSAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiArKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBAQCAtNjY4LDYgKzY2OCw0
+OCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXZpY190bTA3MGRkaDAzID0gewo+
+ICAgICAgICAgfSwKPiAgfTsKPgo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21v
+ZGUgYm9lX252MTAxd3htbjUxX21vZGVzW10gPSB7Cj4gKyAgICAgICB7Cj4gKyAgICAgICAgICAg
+ICAgIC5jbG9jayA9IDcxOTAwLAo+ICsgICAgICAgICAgICAgICAuaGRpc3BsYXkgPSAxMjgwLAo+
+ICsgICAgICAgICAgICAgICAuaHN5bmNfc3RhcnQgPSAxMjgwICsgNDgsCj4gKyAgICAgICAgICAg
+ICAgIC5oc3luY19lbmQgPSAxMjgwICsgNDggKyAzMiwKPiArICAgICAgICAgICAgICAgLmh0b3Rh
+bCA9IDEyODAgKyA0OCArIDMyICsgODAsCj4gKyAgICAgICAgICAgICAgIC52ZGlzcGxheSA9IDgw
+MCwKPiArICAgICAgICAgICAgICAgLnZzeW5jX3N0YXJ0ID0gODAwICsgMywKPiArICAgICAgICAg
+ICAgICAgLnZzeW5jX2VuZCA9IDgwMCArIDMgKyA1LAo+ICsgICAgICAgICAgICAgICAudnRvdGFs
+ID0gODAwICsgMyArIDUgKyAyNCwKPiArICAgICAgICAgICAgICAgLnZyZWZyZXNoID0gNjAsCj4g
+KyAgICAgICB9LAo+ICsgICAgICAgewo+ICsgICAgICAgICAgICAgICAuY2xvY2sgPSA1NzUwMCwK
+PiArICAgICAgICAgICAgICAgLmhkaXNwbGF5ID0gMTI4MCwKPiArICAgICAgICAgICAgICAgLmhz
+eW5jX3N0YXJ0ID0gMTI4MCArIDQ4LAo+ICsgICAgICAgICAgICAgICAuaHN5bmNfZW5kID0gMTI4
+MCArIDQ4ICsgMzIsCj4gKyAgICAgICAgICAgICAgIC5odG90YWwgPSAxMjgwICsgNDggKyAzMiAr
+IDgwLAo+ICsgICAgICAgICAgICAgICAudmRpc3BsYXkgPSA4MDAsCj4gKyAgICAgICAgICAgICAg
+IC52c3luY19zdGFydCA9IDgwMCArIDMsCj4gKyAgICAgICAgICAgICAgIC52c3luY19lbmQgPSA4
+MDAgKyAzICsgNSwKPiArICAgICAgICAgICAgICAgLnZ0b3RhbCA9IDgwMCArIDMgKyA1ICsgMjQs
+Cj4gKyAgICAgICAgICAgICAgIC52cmVmcmVzaCA9IDQ4LAo+ICsgICAgICAgfSwKPiArfTsKPiAr
+Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBib2VfbnYxMDF3eG1uNTEgPSB7Cj4g
+KyAgICAgICAubW9kZXMgPSBib2VfbnYxMDF3eG1uNTFfbW9kZXMsCj4gKyAgICAgICAubnVtX21v
+ZGVzID0gQVJSQVlfU0laRShib2VfbnYxMDF3eG1uNTFfbW9kZXMpLAo+ICsgICAgICAgLmJwYyA9
+IDgsCj4gKyAgICAgICAuc2l6ZSA9IHsKPiArICAgICAgICAgICAgICAgLndpZHRoID0gMjE3LAo+
+ICsgICAgICAgICAgICAgICAuaGVpZ2h0ID0gMTM2LAo+ICsgICAgICAgfSwKPiArICAgICAgIC5k
+ZWxheSA9IHsKPiArICAgICAgICAgICAgICAgLnByZXBhcmUgPSAyMTAsCj4gKyAgICAgICAgICAg
+ICAgIC5lbmFibGUgPSA1MCwKPiArICAgICAgICAgICAgICAgLnVucHJlcGFyZSA9IDE2MCwKPiAr
+ICAgICAgIH0sCj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21v
+ZGUgY2h1bmdod2FfY2xhYTA3MHdwMDN4Z19tb2RlID0gewo+ICAgICAgICAgLmNsb2NrID0gNjY3
+NzAsCj4gICAgICAgICAuaGRpc3BsYXkgPSA4MDAsCj4gQEAgLTE3NDgsNiArMTc5MCw5IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7Cj4g
+ICAgICAgICAgICAgICAgIC5jb21wYXRpYmxlID0gImF2aWMsdG0wNzBkZGgwMyIsCj4gICAgICAg
+ICAgICAgICAgIC5kYXRhID0gJmF2aWNfdG0wNzBkZGgwMywKPiAgICAgICAgIH0sIHsKPiArICAg
+ICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAiYm9lLG52MTAxd3htbjUxIiwKPiArICAgICAgICAg
+ICAgICAgLmRhdGEgPSAmYm9lX252MTAxd3htbjUxLAo+ICsgICAgICAgfSwgewo+ICAgICAgICAg
+ICAgICAgICAuY29tcGF0aWJsZSA9ICJjaHVuZ2h3YSxjbGFhMDcwd3AwM3hnIiwKPiAgICAgICAg
+ICAgICAgICAgLmRhdGEgPSAmY2h1bmdod2FfY2xhYTA3MHdwMDN4ZywKPiAgICAgICAgIH0sIHsK
+PiAtLQo+IDIuNy40Cj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
