@@ -1,40 +1,72 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: [PATCH 3/3] nfc: trf7970a: Prevent repeated polling from
- crashing the kernel
-Date: Thu, 15 Dec 2016 18:18:23 -0700
-Message-ID: <20161216011823.GC25227@animalcreek.com>
-References: <1481841044-4314-1-git-send-email-glansberry@gmail.com>
- <1481841044-4314-3-git-send-email-glansberry@gmail.com>
+From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Subject: RFC: extend iommu-map binding to support #iommu-cells > 1
+Date: Fri, 16 Dec 2016 02:36:57 +0000
+Message-ID: <VI1PR0401MB2638DE2D30F8423F6F8C7A6E8D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1481841044-4314-3-git-send-email-glansberry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 05:30:44PM -0500, Geoff Lansberry wrote:
-> From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-> 
-> Repeated polling attempts cause a NULL dereference error to occur.
-> This is because the curent state of the trf7970a is reading but
-> a request has been made to send a command.
-> 
-> The solution is to properly kill the waiting reading (workqueue)
-> before failing on the send.
+For context, please see the thread:
+https://www.spinics.net/lists/arm-kernel/msg539066.html
 
-Maybe its just me but I find this description a little hard to grok.
-Mind reworking it?
+The existing iommu-map binding did not account for the situation where
+#iommu-cells == 2, as permitted in the ARM SMMU binding.  The 2nd cell
+of the IOMMU specifier being the SMR mask.  The existing binding defines
+the mapping as:
+   Any RID r in the interval [rid-base, rid-base + length) is associated with
+   the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
 
-The patch itself looks fine.
+...and that does not work if iommu-base is 2 cells, the second being the
+SMR mask.
+
+While this can be worked around by always having length=1, it seems we
+can get this cleaned up by updating the binding definition for iommu-map.
+
+See patch below.  Thoughts?
 
 Thanks,
+Stuart
 
-Mark
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-------------------------------------------------------------------------
+
+diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt b/Documentation/devicetree/bindings/pci/pci-iommu.txt
+index 56c8296..e81b461 100644
+--- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
++++ b/Documentation/devicetree/bindings/pci/pci-iommu.txt
+@@ -38,8 +38,20 @@ Optional properties
+   The property is an arbitrary number of tuples of
+   (rid-base,iommu,iommu-base,length).
+
+-  Any RID r in the interval [rid-base, rid-base + length) is associated with
+-  the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
++  If the associated IOMMU has an #iommu-cells value of 1, any RID r in the
++  interval [rid-base, rid-base + length) is associated with the listed IOMMU,
++  with the iommu-specifier (r - rid-base + iommu-base).
++
++  ARM SMMU Note:
++    The ARM SMMU binding permits an #iommu-cells value of 2 and in this
++    case defines an IOMMU specifier to be: (stream-id,smr-mask)
++
++    In an iommu-map this means the iommu-base consists of 2 cells:
++        (rid-base,iommu,[stream-id,smr-mask],length).
++
++    In this case the RID to IOMMU specifier mapping is defined to be:
++    any RID r in the interval [rid-base, rid-base + length) is associated
++    with the listed IOMMU, with the iommu-specifier (r - rid-base + stream-id).
+
+ - iommu-map-mask: A mask to be applied to each Requester ID prior to being
+   mapped to an iommu-specifier per the iommu-map property.
