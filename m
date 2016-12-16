@@ -1,66 +1,29 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC bindings
- as unstable
-Date: Fri, 16 Dec 2016 15:14:36 +0100
-Message-ID: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v5 2/6] [media] rc-main: split setup and unregister
+ functions
+Date: Fri, 16 Dec 2016 14:16:30 +0000
+Message-ID: <20161216141629.GA32757@gofer.mess.org>
+References: <20161216061218.5906-1-andi.shyti@samsung.com>
+ <20161216061218.5906-3-andi.shyti@samsung.com>
+ <20161216121026.GA31618@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161216121026.GA31618@gofer.mess.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-Samsung Exynos SoCs and boards related bindings evolved since the initial
-introduction, but initially the bindings were minimal and a bit incomplete
-(they never described all the hardware modules available in the SoCs).
-Since then some significant (not fully compatible) changes have been
-already committed a few times (like gpio replaced by pinctrl, display ddc,
-mfc reserved memory, some core clocks added to various hardware modules,
-added more required nodes).
+Hi Andi,
 
-On the other side there are no boards which have device tree embedded in
-the bootloader. Device tree blob is always compiled from the kernel tree
-and updated together with the kernel image.
+On Fri, Dec 16, 2016 at 12:10:26PM +0000, Sean Young wrote:
+> Sorry to add to your woes, but there are some checkpatch warnings and
+> errors. Please can you correct these. One is below.
 
-Thus to avoid further adding a bunch of workarounds for old/missing
-bindings and allow to make cleanup of the existing code and device tree
-files, lets mark Samsung Exynos SoC platform bindings as unstable. This
-means that bindings can may change at any time and users should use the
-dtb file compiled from the same kernel source tree as the kernel image.
+Actually, the changes are pretty minor, I can fix them up before sending
+them to Mauro. Sorry for bothering you.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- Documentation/devicetree/bindings/arm/samsung/exynos.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos.txt b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-new file mode 100644
-index 000000000000..0c606f4c6e85
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-@@ -0,0 +1,12 @@
-+Samsung Exynos SoC Family Device Tree Bindings
-+---------------------------------------------------------------
-+
-+Work in progress statement:
-+
-+Device tree files and bindings applying to Samsung Exynos SoCs and boards are
-+considered "unstable". Any Samsung Exynos device tree binding may change at any
-+time. Be sure to use a device tree binary and a kernel image generated from the
-+same source tree.
-+
-+Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
-+stable binding/ABI.
--- 
-1.9.1
+Sean
