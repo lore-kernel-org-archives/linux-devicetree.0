@@ -1,85 +1,107 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
-Date: Fri, 16 Dec 2016 22:40:00 +0800
-Message-ID: <4720181481899200@web7g.yandex.ru>
-References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
- <20161216124748.rkvnnlo4x5onzpvk@lukather>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: RFC: extend iommu-map binding to support #iommu-cells > 1
+Date: Fri, 16 Dec 2016 14:50:43 +0000
+Message-ID: <07c70fde-2bce-a517-0f5f-a2405049c87c@arm.com>
+References: <VI1PR0401MB2638DE2D30F8423F6F8C7A6E8D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+	<20161216113914.GC20265@leverpostej>
+	<VI1PR0401MB26387C2712FC4BF74B4B96028D9C0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161216124748.rkvnnlo4x5onzpvk@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <VI1PR0401MB26387C2712FC4BF74B4B96028D9C0-9IDQY6o3qQjcXZ0H4ZLnAo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoxNi4xMi4yMDE2LCAyMDo0NywgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gRnJpLCBEZWMgMDksIDIwMTYgYXQgMDc6NDk6MDBQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAyMDE25bm0MTLmnIg55pelIOS4i+WNiDQ6MDfk
-uo4gTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT
-77yaCj4+IMKgPgo+PiDCoD4gT24gVHVlLCBEZWMgMDYsIDIwMTYgYXQgMDQ6MDg6MzhQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqA+ID4gU29tZSBTRElPIFdpLUZpIGNoaXBzIChz
-dWNoIGFzIFJUTDg3MDNBUykgaGF2ZSBhIFVBUlQgYmx1ZXRvb3RoLCB3aGljaAo+PiDCoD4gPiBo
-YXMgYSBkZWRpY2F0ZWQgZW5hYmxlIHBpbiAoUEw4IGluIHRoZSByZWZlcmVuY2UgZGVzaWduKS4K
-Pj4gwqA+ID4KPj4gwqA+ID4gRW5hYmxlIHRoZSBwaW4gaW4gdGhlIHNhbWUgd2F5IGFzIHRoZSBX
-TEFOIGVuYWJsZSBwaW5zLgo+PiDCoD4gPgo+PiDCoD4gPiBUZXN0ZWQgb24gYW4gQTMzIFE4IHRh
-YmxldCB3aXRoIFJUTDg3MDNBUy4KPj4gwqA+ID4KPj4gwqA+ID4gU2lnbmVkLW9mZi1ieTogSWNl
-bm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPj4gwqA+ID4gLS0tCj4+IMKgPiA+Cj4+IMKg
-PiA+IFRoaXMgcGF0Y2ggc2hvdWxkIGJlIGNvdXBsZWQgd2l0aCB0aGUgdWFydDEgbm9kZSBwYXRj
-aCBJIHNlbmQgYmVmb3JlOgo+PiDCoD4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBl
-cm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE2LURlY2VtYmVyLzQ3MTk5Ny5odG1sCj4+IMKgPiA+
-Cj4+IMKgPiA+IEZvciBSVEw4NzAzQVMsIHRoZSBydGw4NzIzYnMgYmx1ZXRvb3RoIGNvZGUgaXMg
-dXNlZCwgd2hpY2ggY2FuIGJlIHJldHJpZXZlIGZyb206Cj4+IMKgPiA+IGh0dHBzOi8vZ2l0aHVi
-LmNvbS9sd2Zpbmdlci9ydGw4NzIzYnNfYnQKPj4gwqA+ID4KPj4gwqA+ID7CoCBhcmNoL2FybS9i
-b290L2R0cy9zdW44aS1xOC1jb21tb24uZHRzaSB8IDIgKy0KPj4gwqA+ID7CoCAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4gwqA+ID4KPj4gwqA+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLXE4LWNvbW1vbi5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuOGktcTgtY29tbW9uLmR0c2kKPj4gwqA+ID4gaW5kZXggYzY3Njk0MC4u
-NGFlYjViYiAxMDA2NDQKPj4gwqA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcTgt
-Y29tbW9uLmR0c2kKPj4gwqA+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcTgtY29t
-bW9uLmR0c2kKPj4gwqA+ID4gQEAgLTg4LDcgKzg4LDcgQEAKPj4gwqA+ID4KPj4gwqA+ID7CoCAm
-cl9waW8gewo+PiDCoD4gPsKgIHdpZmlfcHdyc2VxX3Bpbl9xODogd2lmaV9wd3JzZXFfcGluQDAg
-ewo+PiDCoD4gPiAtIHBpbnMgPSAiUEw2IiwgIlBMNyIsICJQTDExIjsKPj4gwqA+ID4gKyBwaW5z
-ID0gIlBMNiIsICJQTDciLCAiUEw4IiwgIlBMMTEiOwo+PiDCoD4gPsKgIGZ1bmN0aW9uID0gImdw
-aW9faW4iOwo+PiDCoD4gPsKgIGJpYXMtcHVsbC11cDsKPj4gwqA+ID7CoCB9Owo+PiDCoD4KPj4g
-wqA+IFRoZXJlJ3Mgc2V2ZXJhbCB0aGluZ3Mgd3JvbmcgaGVyZS4gVGhlIGZpcnN0IG9uZSBpcyB0
-aGF0IHlvdSByZWx5Cj4+IMKgPiBzb2xlbHkgb24gdGhlIHBpbmN0cmwgc3RhdGUgdG8gbWFpbnRh
-aW4gYSByZXNldCBsaW5lLiBUaGlzIGlzIHZlcnkKPj4gwqA+IGZyYWdpbGUgKGVzcGVjaWFsbHkg
-c2luY2UgdGhlIEdQSU8gcGluY3RybCBzdGF0ZSBhcmUgbGlrZWx5IHRvIGdvIGF3YXkKPj4gwqA+
-IGF0IHNvbWUgcG9pbnQpLCBidXQgaXQgYWxzbyBtZWFucyB0aGF0IGlmIHlvdXIgZHJpdmVyIHdh
-bnRzIHRvIHJlY292ZXIKPj4gwqA+IGZyb20gdGhhdCBzaXR1YXRpb24gYXQgc29tZSBwb2ludCwg
-aXQgd29uJ3Qgd29yay4KPj4gwqA+Cj4+IMKgPiBUaGUgb3RoZXIgb25lIGlzIHRoYXQgdGhlIGJs
-dWV0b290aCBhbmQgd2lmaSBjaGlwcyBhcmUgdHdvIGRldmljZXMgaW4KPj4gwqA+IGxpbnV4LCBh
-bmQgeW91IGFzc2lnbiB0aGF0IHBpbiB0byB0aGUgd3JvbmcgZGV2aWNlICh3aWZpKS4KPj4gwqA+
-Cj4+IMKgPiByZmtpbGwtZ3BpbyBpcyBtYWRlIGp1c3QgZm9yIHRoYXQsIHNvIHBsZWFzZSB1c2Ug
-aXQuCj4+Cj4+IMKgVGhlIEdQSU8gaXMgbm90IGZvciB0aGUgcmFkaW8sIGJ1dCBmb3IgdGhlIGZ1
-bGwgQmx1ZXRvb3RoIHBhcnQuCj4KPiBJIGtub3cuCj4KPj4gwqBJZiBpdCdzIHNldCB0byAwLCB0
-aGVuIHRoZSBibHVldG9vdGggcGFydCB3aWxsIHJlc2V0LCBhbmQgdGhlCj4+IMKgaGNpYXR0YWNo
-IHdpbGwgZmFpbC4KPgo+IEJvdGggcmZraWxsLWdwaW8gYW5kIHJma2lsbC1yZWd1bGF0b3Igd2ls
-bCBzaHV0ZG93biB3aGVuIGNhbGxlZAo+IChlaXRoZXIgYnkgcG9raW5nIHRoZSByZXNldCBwaW4g
-b3Igc2h1dHRpbmcgZG93biB0aGUgcmVndWxhdG9yKSwgc28KPiB0aGF0IGRlZmluaXRlbHkgc2Vl
-bXMgbGlrZSBhbiBleHBlY3RlZCBiZWhhdmlvciB0byBwdXQgdGhlIGRldmljZSBpbgo+IHJlc2V0
-Lgo+Cj4+IMKgVGhlIEJTUCB1c2VzIHRoaXMgYXMgYSByZmtpbGwsIGFuZCB0aGUgcmVzdWx0IGlz
-IHRoYXQgdGhlIGJsdWV0b290aAo+PiDCoG9uL29mZiBzd2l0Y2ggZG8gbm90IHdvcmsgcHJvcGVy
-bHkuCj4KPiBUaGVuIHJma2lsbCBuZWVkcyBmaXhpbmcsIGJ1dCB3b3JraW5nIGFyb3VuZCBpdCBi
-eSBob3BpbmcgdGhhdCB0aGUKPiBjb3JlIHdpbGwgcHJvYmUgYW4gZW50aXJlbHkgZGlmZmVyZW50
-IGRldmljZSwgYW5kIGVuZm9yY2luZyBhIGRlZmF1bHQKPiB0aGF0IHRoZSByZXN0IG9mIHRoZSBr
-ZXJuZWwgbWlnaHQgb3IgbWlnaHQgbm90IGNoYW5nZSBpcyBib3RoIGZyYWdpbGUKPiBhbmQgd3Jv
-bmcuCgpJIHRoaW5rIGEgcmZraWxsLWdwaW8gaGVyZSB3b3JrcyBqdXN0IGxpa2UgdGhlIEJTUCBy
-ZmtpbGwuLi4KClRoZSByZWFsIHByb2JsZW0gaXMgdGhhdCB0aGUgUmVhbHRlayBVQVJUIGJsdWV0
-b290aCBkcml2ZXIgaXMgYSB1c2Vyc3BhY2UKcHJvZ3JhbSAoYSBtb2RpZmllZCBoY2lhdHRhY2gp
-LCB3aGljaCBpcyBub3QgY2FwYWJsZSBvZiB0aGUgR1BJTyByZXNldC4uLgoKPgo+IE1heGltZQo+
-Cj4gLS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVkZGVkIExpbnV4IGFu
-ZCBLZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 16/12/16 14:21, Stuart Yoder wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+>> Sent: Friday, December 16, 2016 5:39 AM
+>> To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+>> Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Bharat Bhushan
+>> <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>; Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>; Diana Madalina Craciun
+>> <diana.craciun-3arQi8VN3Tc@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+>> Subject: Re: RFC: extend iommu-map binding to support #iommu-cells > 1
+>>
+>> On Fri, Dec 16, 2016 at 02:36:57AM +0000, Stuart Yoder wrote:
+>>> For context, please see the thread:
+>>> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.spinics.net%2Flists%2Farm-
+>> kernel%2Fmsg539066.html&data=01%7C01%7Cstuart.yoder%40nxp.com%7C0464e12bddfd42e0f0a508d425a847cb%7C686ea
+>> 1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=KnzeOlbts271GwD1cpx2FLMsKnxw%2FOdiGVTp6%2BKFrbM%3D&reserved=0
+>>>
+>>> The existing iommu-map binding did not account for the situation where
+>>> #iommu-cells == 2, as permitted in the ARM SMMU binding.  The 2nd cell
+>>> of the IOMMU specifier being the SMR mask.  The existing binding defines
+>>> the mapping as:
+>>>    Any RID r in the interval [rid-base, rid-base + length) is associated with
+>>>    the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
+>>>
+>>> ...and that does not work if iommu-base is 2 cells, the second being the
+>>> SMR mask.
+>>>
+>>> While this can be worked around by always having length=1, it seems we
+>>> can get this cleaned up by updating the binding definition for iommu-map.
+>>
+>> To reiterate, I'm very much not keen on the pci-iommu binding having
+>> knowledge of the decomposition of iommu-specifiers from other bindings.
+> 
+> With the current definition of iommu-map we already have baked in an
+> assumption that an iommu-specifier is a value that can be incremented
+> by 1 to get to the next sequential specifier.  So the binding already
+> has "knowledge" that applies in most, but not all cases.
+> 
+> The generic iommu binding also defines a case where #iommu-cells=4
+> for some IOMMUs.
+> 
+> Since the ARM SMMU is a special case, perhaps the intepretation
+> of an iommu-specifier in the context of iommu-map should be moved
+> into the SMMU binding.
+> 
+>> As mentioned previously, there's an intended interpretation [1] that we
+>> need to fix up the pci-iommu binding with. With that, I don't think it's
+>> even necessary to bodge iommu-cells = <1> AFAICT.
+> 
+> You had said in the previous thread:
+> 
+>   > I had intended that the offset was added to the final cell of the
+>   > iommu-specifier (i.e. that the iommu-specifier was treated as a large
+>   > number).
+> 
+>   > You can handle this case by adding additional entries in the map table,
+>   > with a single entry length.
+> 
+> I understand that, and it works, but I don't see why the definition has
+> to be that the offset is added to the "final cell".
+
+Because the cells of a specifier form a single opaque big-endian value.
+Were DT little-endian it would be the "first cell". To be pedantic, both
+of those descriptions are technically wrong because they fail to account
+for overflow and carry up into the next cell (in whichever direction).
+
+>  Why can't it be
+> an iommu specific definition that makes sense for a given IOMMU?
+
+Because the implementation would then become a nightmarish rabbit-warren
+of special-cases, largely defeating the point of a *generic* binding. At
+the very least it'd have to chase every phandle and determine its
+compatible just to work out what to do with any given specifier - merely
+thinking about the complexity of the error handling for the number of
+additional failure modes that introduces is enough to put me off.
+
+Robin.
+
+> 
+> Stuart
+> 
