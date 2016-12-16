@@ -1,55 +1,53 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] regulator: add support for user space controlled
- regulators
-Date: Fri, 16 Dec 2016 18:10:44 +0000
-Message-ID: <20161216181044.75vshyk4cth45vxz@sirena.org.uk>
+Subject: Re: [PATCH 3/3] regulator: fixed: add support for gpio power switches
+Date: Fri, 16 Dec 2016 18:12:45 +0000
+Message-ID: <20161216181245.274imcqn5irfqseq@sirena.org.uk>
 References: <1481903550-3582-1-git-send-email-bgolaszewski@baylibre.com>
- <1481903550-3582-2-git-send-email-bgolaszewski@baylibre.com>
+ <1481903550-3582-4-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nn6ol2kjpti7rrsl"
+        protocol="application/pgp-signature"; boundary="orgrmsuxr2d35bvt"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481903550-3582-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1481903550-3582-4-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---nn6ol2kjpti7rrsl
+--orgrmsuxr2d35bvt
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Dec 16, 2016 at 04:52:28PM +0100, Bartosz Golaszewski wrote:
+On Fri, Dec 16, 2016 at 04:52:30PM +0100, Bartosz Golaszewski wrote:
 
-> Add a new flag to struct regulator_desc indicating whether a regulator
-> can be controlled from user space and implement a routine in regulator
-> core allowing to toggle the regulator state via the sysfs 'state'
-> attribute.
+> The difference between a regular fixed regulator and a GPIO power load
+> switch is the fact that the latter may be controlled from user space.
 
-No, we've been through this repeatedly before - search the archives.
-Write a driver for your hardware which exposes a control for bouncing
-the power if that's something that makes sense in your application.
-Doing this at the regulator level is just far too likely to result in
-poorly integrated systems.
+This is not something I would understand or expect from the naming here.
+I would expect the difference between a regulator and a switch to be
+that the switch does no regulation, such things are fairly common in
+system design for example as part of the logic that switches between the
+different input power supplies available to the system to provide the
+root system power rail.
 
---nn6ol2kjpti7rrsl
+--orgrmsuxr2d35bvt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhULiMACgkQJNaLcl1U
-h9BeZAf/eTJpUVBOXzUG3mThA/hLPyOnF8EuIEg0HJfWqia22l+O/iGnAIlXBbZF
-0G55mSFN6jisoyF89VSbN6xKjHMWV8Ieugjji/Ku8SyevekiK3IDyvHFPLZEfHWV
-1uNAUimE4TOczV63kllIHp6nPOAhd4xu7JEF1ZET3wJ76oTWUJ/nJ8ri+RL6rrlP
-uCfME7R5KgSHqmP+n3Bf5SYUcoOdDvA7fw0rUVFm3CbM2i7DQQaPMWxDaTw4UBVj
-7Yk53xw9ajwtYdVoXkCySbw/kMNYhreIA4603sNyu7xm501thgR3FEGUdBz6W+6Z
-dqev0jV8hebIZzS44k97/fuVhoTQ+g==
-=U7oL
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhULpwACgkQJNaLcl1U
+h9AnWwf/XX5h03CDR4edqlk3mhAIljuoQQTtyfkCJN+eRLOVsgVrkLnp9Lz8KaEW
+Qk9iIvTCeRtPySnGlV3+gi0eqhu9ko6BBj1zWtfJXRwSTwD1/4IAAMBLScHXPHMR
+Vw3B4jc+SZugiawCoRCRKlBjmPAZTmtE2zV7qxbKJBH05tDOvP9CaOH+uTSaO7z/
+RnobzeludzQsqJcRQ59vwBzaukW7pFaMs11ITONJUdU8pOaKp78rcA/I5lJVuEZs
+Kgbm36AjUNXqyPDhrNzai/IECvYkeSpOtQ1Pw83S3MhF+t0yHc7A5myaPSveVp15
+i2gt9p0KP5rNJhSefIVr7PM+hajcXw==
+=I63a
 -----END PGP SIGNATURE-----
 
---nn6ol2kjpti7rrsl--
+--orgrmsuxr2d35bvt--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
