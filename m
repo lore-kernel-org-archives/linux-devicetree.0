@@ -1,103 +1,139 @@
-From: =?UTF-8?Q?St=C3=A9phane_Marchesin?= <stephane.marchesin@gmail.com>
-Subject: Re: [PATCH v3 2/2] drm/panel: simple: Add support BOE nv101wxmn51
-Date: Thu, 15 Dec 2016 21:22:16 -0800
-Message-ID: <CACP_E+J1tYqQV5eDAuvNXMTwqP0JNLedEX8mcvupamO3AsP1Yw@mail.gmail.com>
-References: <1481685596-15608-1-git-send-email-wxt@rock-chips.com>
- <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1481685596-15608-2-git-send-email-wxt@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH v5 0/6] Add support for IR transmitters
+Date: Fri, 16 Dec 2016 15:12:12 +0900
+Message-ID: <20161216061218.5906-1-andi.shyti@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IFN0w6lwaGFuZSBNYXJjaGVzaW4gPG1hcmNoZXVAY2hyb21pdW0ub3JnPgoK
-Ck9uIFR1ZSwgRGVjIDEzLCAyMDE2IGF0IDc6MTkgUE0sIENhZXNhciBXYW5nIDx3eHRAcm9jay1j
-aGlwcy5jb20+IHdyb3RlOgo+IDEwLjFXWEdBIGlzIGEgY29sb3IgYWN0aXZlIG1hdHJpeCBURlQg
-TENEIG1vZHVsZSB1c2luZyBhbW9ycGhvdXMgc2lsaWNvbgo+IFRGVCdzIGFzIGFuIGFjdGl2ZSBz
-d2l0Y2hpbmcgZGV2aWNlcy4gSXQgY2FuIGJlIHN1cHBvcnRlZCBieSB0aGUKPiBzaW1wbGUtcGFu
-ZWwgZHJpdmVyLgo+Cj4gUmVhZCB0aGUgcGFuZWwgZGVmYXVsdCBlZGlkIGluZm9ybWF0aW9uOgo+
-Cj4gRURJRCBNT0RFIERFVEFJTFMKPiAgICAgICAgICAgICAgICAgbmFtZSA9IDxOVUxMPgo+ICAg
-ICAgICAgICAgICAgICBwaXhlbF9jbG9jayA9IDcxOTAwCj4gICAgICAgICAgICAgICAgIGx2ZHNf
-ZHVhbF9jaGFubmVsID0gMAo+ICAgICAgICAgICAgICAgICByZWZyZXNoID0gMAo+ICAgICAgICAg
-ICAgICAgICBoYSA9IDEyODAKPiAgICAgICAgICAgICAgICAgaGJsID0gMTYwCj4gICAgICAgICAg
-ICAgICAgIGhzbyA9IDQ4Cj4gICAgICAgICAgICAgICAgIGhzcHcgPSAzMgo+ICAgICAgICAgICAg
-ICAgICBoYm9yZGVyID0gMAo+ICAgICAgICAgICAgICAgICB2YSA9IDgwMAo+ICAgICAgICAgICAg
-ICAgICB2YmwgPSAzMgo+ICAgICAgICAgICAgICAgICB2c28gPSAzCj4gICAgICAgICAgICAgICAg
-IHZzcHcgPSA1Cj4gICAgICAgICAgICAgICAgIHZib3JkZXIgPSAwCj4gICAgICAgICAgICAgICAg
-IHBoc3luYyA9ICsKPiAgICAgICAgICAgICAgICAgcHZzeW5jID0gLQo+ICAgICAgICAgICAgICAg
-ICB4X21tID0gMAo+ICAgICAgICAgICAgICAgICB5X21tID0gMAo+IGRybV9kaXNwbGF5X21vZGUK
-PiAgICAgICAgICAgICAgICAgLmhkaXNwbGF5ID0gMTI4MAo+ICAgICAgICAgICAgICAgICAuaHN5
-bmNfc3RhcnQgPSAxMzI4Cj4gICAgICAgICAgICAgICAgIC5oc3luY19lbmQgPSAxMzYwCj4gICAg
-ICAgICAgICAgICAgIC5odG90YWwgPSAxNDQwCj4gICAgICAgICAgICAgICAgIC52ZGlzcGxheSA9
-IDgwMAo+ICAgICAgICAgICAgICAgICAudnN5bmNfc3RhcnQgPSA4MDMKPiAgICAgICAgICAgICAg
-ICAgLnZzeW5jX2VuZCA9IDgwOAo+ICAgICAgICAgICAgICAgICAudnRvdGFsID0gODMyCj4KPiBU
-aGVyZSBhcmUgdHdvIG1vZGVzIGluIHRoZSBlZGlkOgo+IERldGFpbGVkIG1vZGUxOiBDbG9jayA3
-MS45MDAgTUh6LCAyMTYgbW0geCAxMzUgbW0KPiAgICAgICAgICAgICAgICAxMjgwIDEzMjggMTM2
-MCAxNDQwIGhib3JkZXIgMAo+ICAgICAgICAgICAgICAgICA4MDAgIDgwMyAgODA4ICA4MzIgdmJv
-cmRlciAwCj4gICAgICAgICAgICAgICAgK2hzeW5jIC12c3luYwo+IERldGFpbGVkIG1vZGUyOiBD
-bG9jayA1Ny41MDAgTUh6LCAyMTYgbW0geCAxMzUgbW0KPiAgICAgICAgICAgICAgICAxMjgwIDEz
-MjggMTM2MCAxNDQwIGhib3JkZXIgMAo+ICAgICAgICAgICAgICAgICA4MDAgIDgwMyAgODA4ICA4
-MzIgdmJvcmRlciAwCj4gICAgICAgICAgICAgICAgK2hzeW5jIC12c3luYwo+Cj4gQWRkIHRoZSBi
-b3RoIGVkaWQgdG8gc3VwcG9ydCBtb3JlIG1vZGVzIGZvciBCT0UgbnYxMDF3eG1uNTEuCj4KPiBT
-aWduZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgo+IC0tLQo+Cj4g
-Q2hhbmdlcyBpbiB2MzoKPiAtIEFzIFN0w6lwaGFuZSBjb21tZW50ZWQgb24gaHR0cHM6Ly9wYXRj
-aHdvcmsua2VybmVsLm9yZy9wYXRjaC85NDY1OTExLAo+ICAgYWRkIGRvd25jbG9jayBtb2RlIGZv
-ciBlZGlkLgo+Cj4gQ2hhbmdlcyBpbiB2MjoKPiAtIGZpeCB0aGUgdnN5bmNfc3RhcnQgYW5kIHZz
-eW5jX2VuZCBmcm9tIHRoZSBlZGlkLgo+IC0gY2hhbmdlIHRoZSBjb21taXQuCj4KPiAgZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgNDUgKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspCj4KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggMDZhYWY3OS4uMWNlMjViNSAx
-MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBAQCAtNjY4LDYgKzY2OCw0
-OCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXZpY190bTA3MGRkaDAzID0gewo+
-ICAgICAgICAgfSwKPiAgfTsKPgo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21v
-ZGUgYm9lX252MTAxd3htbjUxX21vZGVzW10gPSB7Cj4gKyAgICAgICB7Cj4gKyAgICAgICAgICAg
-ICAgIC5jbG9jayA9IDcxOTAwLAo+ICsgICAgICAgICAgICAgICAuaGRpc3BsYXkgPSAxMjgwLAo+
-ICsgICAgICAgICAgICAgICAuaHN5bmNfc3RhcnQgPSAxMjgwICsgNDgsCj4gKyAgICAgICAgICAg
-ICAgIC5oc3luY19lbmQgPSAxMjgwICsgNDggKyAzMiwKPiArICAgICAgICAgICAgICAgLmh0b3Rh
-bCA9IDEyODAgKyA0OCArIDMyICsgODAsCj4gKyAgICAgICAgICAgICAgIC52ZGlzcGxheSA9IDgw
-MCwKPiArICAgICAgICAgICAgICAgLnZzeW5jX3N0YXJ0ID0gODAwICsgMywKPiArICAgICAgICAg
-ICAgICAgLnZzeW5jX2VuZCA9IDgwMCArIDMgKyA1LAo+ICsgICAgICAgICAgICAgICAudnRvdGFs
-ID0gODAwICsgMyArIDUgKyAyNCwKPiArICAgICAgICAgICAgICAgLnZyZWZyZXNoID0gNjAsCj4g
-KyAgICAgICB9LAo+ICsgICAgICAgewo+ICsgICAgICAgICAgICAgICAuY2xvY2sgPSA1NzUwMCwK
-PiArICAgICAgICAgICAgICAgLmhkaXNwbGF5ID0gMTI4MCwKPiArICAgICAgICAgICAgICAgLmhz
-eW5jX3N0YXJ0ID0gMTI4MCArIDQ4LAo+ICsgICAgICAgICAgICAgICAuaHN5bmNfZW5kID0gMTI4
-MCArIDQ4ICsgMzIsCj4gKyAgICAgICAgICAgICAgIC5odG90YWwgPSAxMjgwICsgNDggKyAzMiAr
-IDgwLAo+ICsgICAgICAgICAgICAgICAudmRpc3BsYXkgPSA4MDAsCj4gKyAgICAgICAgICAgICAg
-IC52c3luY19zdGFydCA9IDgwMCArIDMsCj4gKyAgICAgICAgICAgICAgIC52c3luY19lbmQgPSA4
-MDAgKyAzICsgNSwKPiArICAgICAgICAgICAgICAgLnZ0b3RhbCA9IDgwMCArIDMgKyA1ICsgMjQs
-Cj4gKyAgICAgICAgICAgICAgIC52cmVmcmVzaCA9IDQ4LAo+ICsgICAgICAgfSwKPiArfTsKPiAr
-Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBib2VfbnYxMDF3eG1uNTEgPSB7Cj4g
-KyAgICAgICAubW9kZXMgPSBib2VfbnYxMDF3eG1uNTFfbW9kZXMsCj4gKyAgICAgICAubnVtX21v
-ZGVzID0gQVJSQVlfU0laRShib2VfbnYxMDF3eG1uNTFfbW9kZXMpLAo+ICsgICAgICAgLmJwYyA9
-IDgsCj4gKyAgICAgICAuc2l6ZSA9IHsKPiArICAgICAgICAgICAgICAgLndpZHRoID0gMjE3LAo+
-ICsgICAgICAgICAgICAgICAuaGVpZ2h0ID0gMTM2LAo+ICsgICAgICAgfSwKPiArICAgICAgIC5k
-ZWxheSA9IHsKPiArICAgICAgICAgICAgICAgLnByZXBhcmUgPSAyMTAsCj4gKyAgICAgICAgICAg
-ICAgIC5lbmFibGUgPSA1MCwKPiArICAgICAgICAgICAgICAgLnVucHJlcGFyZSA9IDE2MCwKPiAr
-ICAgICAgIH0sCj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21v
-ZGUgY2h1bmdod2FfY2xhYTA3MHdwMDN4Z19tb2RlID0gewo+ICAgICAgICAgLmNsb2NrID0gNjY3
-NzAsCj4gICAgICAgICAuaGRpc3BsYXkgPSA4MDAsCj4gQEAgLTE3NDgsNiArMTc5MCw5IEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7Cj4g
-ICAgICAgICAgICAgICAgIC5jb21wYXRpYmxlID0gImF2aWMsdG0wNzBkZGgwMyIsCj4gICAgICAg
-ICAgICAgICAgIC5kYXRhID0gJmF2aWNfdG0wNzBkZGgwMywKPiAgICAgICAgIH0sIHsKPiArICAg
-ICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAiYm9lLG52MTAxd3htbjUxIiwKPiArICAgICAgICAg
-ICAgICAgLmRhdGEgPSAmYm9lX252MTAxd3htbjUxLAo+ICsgICAgICAgfSwgewo+ICAgICAgICAg
-ICAgICAgICAuY29tcGF0aWJsZSA9ICJjaHVuZ2h3YSxjbGFhMDcwd3AwM3hnIiwKPiAgICAgICAg
-ICAgICAgICAgLmRhdGEgPSAmY2h1bmdod2FfY2xhYTA3MHdwMDN4ZywKPiAgICAgICAgIH0sIHsK
-PiAtLQo+IDIuNy40Cj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Hi,
+
+The main goal is to add support in the rc framework for IR
+transmitters, which currently is only supported by lirc but that
+is not the preferred way.
+
+The last patch adds support for an IR transmitter driven by
+the MOSI line of an SPI controller, it's the case of the Samsung
+TM2(e) board which support is currently ongoing.
+
+The last patch adds support for an IR transmitter driven by
+the MOSI line of an SPI controller, it's the case of the Samsung
+TM2(e) board which support is currently ongoing.
+
+Thanks,
+Andi
+
+Changelog from version 4:
+-------------------------
+patch 2: fixed a slip on a copy/paste. Thanks again Sean!
+
+Changelog from version 3:
+-------------------------
+Added the patches Sean's review.
+
+patch 1: commit ddbf7d5a has introduced the devm_* managed version
+	 of rc_allocate_device and rc_register_device, this patch
+	 has been rebased on top of it and adds the driver type
+	 as a parameter of the devm_rc_allocate_device.
+patch 3: fixes a warning from the kbuild test robot
+patch 5: after a discussion with Rob, despite mine, Jacek's and
+	 Mauro's objections [*] the binding has been placed under
+	 leds/irled/spi-ir-led.txt
+patch 6: uses the new devm_* allocation and registration rc
+	 functions
+
+[*] https://www.spinics.net/lists/linux-leds/msg07062.html
+    https://www.spinics.net/lists/linux-leds/msg07164.html
+    https://www.spinics.net/lists/linux-leds/msg07167.html
+
+Changelog from version 2:
+-------------------------
+The original patch number 5 has been abandoned because it was not
+bringing much benenfit.
+
+patch 1: rebased on the new kernel.
+patch 3: removed the sysfs attribute protocol for transmitters
+patch 5: the binding has been moved to the leds section instead
+         of the media. Fixed all the comments from Rob
+patch 6: fixed all the comments from Sean added also Sean's
+         review.
+
+Changelog from version 1:
+-------------------------
+The RFC is now PATCH. The main difference is that this version
+doesn't try to add the any bit streaming protocol and doesn't
+modify any LIRC interface specification.
+
+patch 1: updates all the drivers using rc_allocate_device
+patch 2: fixed errors and warning reported from the kbuild test
+         robot
+patch 5: this patch has been dropped and replaced with a new one
+         which avoids waiting for transmitters.
+patch 6: added new properties to the dts specification
+patch 7: the driver uses the pulse/space input and converts it to
+         a bit stream.
+
+Andi Shyti (6):
+  [media] rc-main: assign driver type during allocation
+  [media] rc-main: split setup and unregister functions
+  [media] rc-core: add support for IR raw transmitters
+  [media] rc-ir-raw: do not generate any receiving thread for raw
+    transmitters
+  Documentation: bindings: add documentation for ir-spi device driver
+  [media] rc: add support for IR LEDs driven through SPI
+
+ .../devicetree/bindings/leds/irled/spi-ir-led.txt  |  29 +++
+ drivers/hid/hid-picolcd_cir.c                      |   3 +-
+ drivers/media/cec/cec-core.c                       |   4 +-
+ drivers/media/common/siano/smsir.c                 |   3 +-
+ drivers/media/i2c/ir-kbd-i2c.c                     |   2 +-
+ drivers/media/pci/bt8xx/bttv-input.c               |   2 +-
+ drivers/media/pci/cx23885/cx23885-input.c          |  11 +-
+ drivers/media/pci/cx88/cx88-input.c                |   3 +-
+ drivers/media/pci/dm1105/dm1105.c                  |   3 +-
+ drivers/media/pci/mantis/mantis_input.c            |   2 +-
+ drivers/media/pci/saa7134/saa7134-input.c          |   2 +-
+ drivers/media/pci/smipcie/smipcie-ir.c             |   3 +-
+ drivers/media/pci/ttpci/budget-ci.c                |   2 +-
+ drivers/media/rc/Kconfig                           |   9 +
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/ati_remote.c                      |   3 +-
+ drivers/media/rc/ene_ir.c                          |   3 +-
+ drivers/media/rc/fintek-cir.c                      |   3 +-
+ drivers/media/rc/gpio-ir-recv.c                    |   3 +-
+ drivers/media/rc/igorplugusb.c                     |   3 +-
+ drivers/media/rc/iguanair.c                        |   3 +-
+ drivers/media/rc/img-ir/img-ir-hw.c                |   2 +-
+ drivers/media/rc/img-ir/img-ir-raw.c               |   3 +-
+ drivers/media/rc/imon.c                            |   3 +-
+ drivers/media/rc/ir-hix5hd2.c                      |   3 +-
+ drivers/media/rc/ir-spi.c                          | 199 +++++++++++++++++++++
+ drivers/media/rc/ite-cir.c                         |   3 +-
+ drivers/media/rc/mceusb.c                          |   3 +-
+ drivers/media/rc/meson-ir.c                        |   3 +-
+ drivers/media/rc/nuvoton-cir.c                     |   3 +-
+ drivers/media/rc/rc-ir-raw.c                       |  17 +-
+ drivers/media/rc/rc-loopback.c                     |   3 +-
+ drivers/media/rc/rc-main.c                         | 186 +++++++++++--------
+ drivers/media/rc/redrat3.c                         |   3 +-
+ drivers/media/rc/serial_ir.c                       |   3 +-
+ drivers/media/rc/st_rc.c                           |   3 +-
+ drivers/media/rc/streamzap.c                       |   3 +-
+ drivers/media/rc/sunxi-cir.c                       |   3 +-
+ drivers/media/rc/ttusbir.c                         |   3 +-
+ drivers/media/rc/winbond-cir.c                     |   3 +-
+ drivers/media/usb/au0828/au0828-input.c            |   3 +-
+ drivers/media/usb/cx231xx/cx231xx-input.c          |   2 +-
+ drivers/media/usb/dvb-usb-v2/dvb_usb_core.c        |   3 +-
+ drivers/media/usb/dvb-usb/dvb-usb-remote.c         |   3 +-
+ drivers/media/usb/em28xx/em28xx-input.c            |   2 +-
+ drivers/media/usb/tm6000/tm6000-input.c            |   3 +-
+ include/media/rc-core.h                            |  15 +-
+ 47 files changed, 409 insertions(+), 168 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
+ create mode 100644 drivers/media/rc/ir-spi.c
+
+-- 
+2.10.2
