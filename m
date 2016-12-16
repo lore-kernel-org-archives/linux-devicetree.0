@@ -1,74 +1,85 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC
- bindings as unstable
-Date: Fri, 16 Dec 2016 15:27:13 +0100
-Message-ID: <2984700.McujOSQ7LH@amdc3058>
-References: <CGME20161216141453epcas1p28d5ebc9d62f5a704bb9bc64ca68abcdf@epcas1p2.samsung.com>
- <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
+Date: Fri, 16 Dec 2016 22:40:00 +0800
+Message-ID: <4720181481899200@web7g.yandex.ru>
+References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
+ <20161216124748.rkvnnlo4x5onzpvk@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161216124748.rkvnnlo4x5onzpvk@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Friday, December 16, 2016 03:14:36 PM Marek Szyprowski wrote:
-> Samsung Exynos SoCs and boards related bindings evolved since the initial
-> introduction, but initially the bindings were minimal and a bit incomplete
-> (they never described all the hardware modules available in the SoCs).
-> Since then some significant (not fully compatible) changes have been
-> already committed a few times (like gpio replaced by pinctrl, display ddc,
-> mfc reserved memory, some core clocks added to various hardware modules,
-> added more required nodes).
-> 
-> On the other side there are no boards which have device tree embedded in
-> the bootloader. Device tree blob is always compiled from the kernel tree
-> and updated together with the kernel image.
-> 
-> Thus to avoid further adding a bunch of workarounds for old/missing
-> bindings and allow to make cleanup of the existing code and device tree
-> files, lets mark Samsung Exynos SoC platform bindings as unstable. This
-> means that bindings can may change at any time and users should use the
-> dtb file compiled from the same kernel source tree as the kernel image.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-This change is long overdue..
-
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-> ---
->  Documentation/devicetree/bindings/arm/samsung/exynos.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos.txt b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-> new file mode 100644
-> index 000000000000..0c606f4c6e85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-> @@ -0,0 +1,12 @@
-> +Samsung Exynos SoC Family Device Tree Bindings
-> +---------------------------------------------------------------
-> +
-> +Work in progress statement:
-> +
-> +Device tree files and bindings applying to Samsung Exynos SoCs and boards are
-> +considered "unstable". Any Samsung Exynos device tree binding may change at any
-> +time. Be sure to use a device tree binary and a kernel image generated from the
-> +same source tree.
-> +
-> +Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
-> +stable binding/ABI.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+CgoxNi4xMi4yMDE2LCAyMDo0NywgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gRnJpLCBEZWMgMDksIDIwMTYgYXQgMDc6NDk6MDBQTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAyMDE25bm0MTLmnIg55pelIOS4i+WNiDQ6MDfk
+uo4gTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT
+77yaCj4+IMKgPgo+PiDCoD4gT24gVHVlLCBEZWMgMDYsIDIwMTYgYXQgMDQ6MDg6MzhQTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqA+ID4gU29tZSBTRElPIFdpLUZpIGNoaXBzIChz
+dWNoIGFzIFJUTDg3MDNBUykgaGF2ZSBhIFVBUlQgYmx1ZXRvb3RoLCB3aGljaAo+PiDCoD4gPiBo
+YXMgYSBkZWRpY2F0ZWQgZW5hYmxlIHBpbiAoUEw4IGluIHRoZSByZWZlcmVuY2UgZGVzaWduKS4K
+Pj4gwqA+ID4KPj4gwqA+ID4gRW5hYmxlIHRoZSBwaW4gaW4gdGhlIHNhbWUgd2F5IGFzIHRoZSBX
+TEFOIGVuYWJsZSBwaW5zLgo+PiDCoD4gPgo+PiDCoD4gPiBUZXN0ZWQgb24gYW4gQTMzIFE4IHRh
+YmxldCB3aXRoIFJUTDg3MDNBUy4KPj4gwqA+ID4KPj4gwqA+ID4gU2lnbmVkLW9mZi1ieTogSWNl
+bm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPj4gwqA+ID4gLS0tCj4+IMKgPiA+Cj4+IMKg
+PiA+IFRoaXMgcGF0Y2ggc2hvdWxkIGJlIGNvdXBsZWQgd2l0aCB0aGUgdWFydDEgbm9kZSBwYXRj
+aCBJIHNlbmQgYmVmb3JlOgo+PiDCoD4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBl
+cm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE2LURlY2VtYmVyLzQ3MTk5Ny5odG1sCj4+IMKgPiA+
+Cj4+IMKgPiA+IEZvciBSVEw4NzAzQVMsIHRoZSBydGw4NzIzYnMgYmx1ZXRvb3RoIGNvZGUgaXMg
+dXNlZCwgd2hpY2ggY2FuIGJlIHJldHJpZXZlIGZyb206Cj4+IMKgPiA+IGh0dHBzOi8vZ2l0aHVi
+LmNvbS9sd2Zpbmdlci9ydGw4NzIzYnNfYnQKPj4gwqA+ID4KPj4gwqA+ID7CoCBhcmNoL2FybS9i
+b290L2R0cy9zdW44aS1xOC1jb21tb24uZHRzaSB8IDIgKy0KPj4gwqA+ID7CoCAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4gwqA+ID4KPj4gwqA+ID4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLXE4LWNvbW1vbi5kdHNpIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuOGktcTgtY29tbW9uLmR0c2kKPj4gwqA+ID4gaW5kZXggYzY3Njk0MC4u
+NGFlYjViYiAxMDA2NDQKPj4gwqA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcTgt
+Y29tbW9uLmR0c2kKPj4gwqA+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcTgtY29t
+bW9uLmR0c2kKPj4gwqA+ID4gQEAgLTg4LDcgKzg4LDcgQEAKPj4gwqA+ID4KPj4gwqA+ID7CoCAm
+cl9waW8gewo+PiDCoD4gPsKgIHdpZmlfcHdyc2VxX3Bpbl9xODogd2lmaV9wd3JzZXFfcGluQDAg
+ewo+PiDCoD4gPiAtIHBpbnMgPSAiUEw2IiwgIlBMNyIsICJQTDExIjsKPj4gwqA+ID4gKyBwaW5z
+ID0gIlBMNiIsICJQTDciLCAiUEw4IiwgIlBMMTEiOwo+PiDCoD4gPsKgIGZ1bmN0aW9uID0gImdw
+aW9faW4iOwo+PiDCoD4gPsKgIGJpYXMtcHVsbC11cDsKPj4gwqA+ID7CoCB9Owo+PiDCoD4KPj4g
+wqA+IFRoZXJlJ3Mgc2V2ZXJhbCB0aGluZ3Mgd3JvbmcgaGVyZS4gVGhlIGZpcnN0IG9uZSBpcyB0
+aGF0IHlvdSByZWx5Cj4+IMKgPiBzb2xlbHkgb24gdGhlIHBpbmN0cmwgc3RhdGUgdG8gbWFpbnRh
+aW4gYSByZXNldCBsaW5lLiBUaGlzIGlzIHZlcnkKPj4gwqA+IGZyYWdpbGUgKGVzcGVjaWFsbHkg
+c2luY2UgdGhlIEdQSU8gcGluY3RybCBzdGF0ZSBhcmUgbGlrZWx5IHRvIGdvIGF3YXkKPj4gwqA+
+IGF0IHNvbWUgcG9pbnQpLCBidXQgaXQgYWxzbyBtZWFucyB0aGF0IGlmIHlvdXIgZHJpdmVyIHdh
+bnRzIHRvIHJlY292ZXIKPj4gwqA+IGZyb20gdGhhdCBzaXR1YXRpb24gYXQgc29tZSBwb2ludCwg
+aXQgd29uJ3Qgd29yay4KPj4gwqA+Cj4+IMKgPiBUaGUgb3RoZXIgb25lIGlzIHRoYXQgdGhlIGJs
+dWV0b290aCBhbmQgd2lmaSBjaGlwcyBhcmUgdHdvIGRldmljZXMgaW4KPj4gwqA+IGxpbnV4LCBh
+bmQgeW91IGFzc2lnbiB0aGF0IHBpbiB0byB0aGUgd3JvbmcgZGV2aWNlICh3aWZpKS4KPj4gwqA+
+Cj4+IMKgPiByZmtpbGwtZ3BpbyBpcyBtYWRlIGp1c3QgZm9yIHRoYXQsIHNvIHBsZWFzZSB1c2Ug
+aXQuCj4+Cj4+IMKgVGhlIEdQSU8gaXMgbm90IGZvciB0aGUgcmFkaW8sIGJ1dCBmb3IgdGhlIGZ1
+bGwgQmx1ZXRvb3RoIHBhcnQuCj4KPiBJIGtub3cuCj4KPj4gwqBJZiBpdCdzIHNldCB0byAwLCB0
+aGVuIHRoZSBibHVldG9vdGggcGFydCB3aWxsIHJlc2V0LCBhbmQgdGhlCj4+IMKgaGNpYXR0YWNo
+IHdpbGwgZmFpbC4KPgo+IEJvdGggcmZraWxsLWdwaW8gYW5kIHJma2lsbC1yZWd1bGF0b3Igd2ls
+bCBzaHV0ZG93biB3aGVuIGNhbGxlZAo+IChlaXRoZXIgYnkgcG9raW5nIHRoZSByZXNldCBwaW4g
+b3Igc2h1dHRpbmcgZG93biB0aGUgcmVndWxhdG9yKSwgc28KPiB0aGF0IGRlZmluaXRlbHkgc2Vl
+bXMgbGlrZSBhbiBleHBlY3RlZCBiZWhhdmlvciB0byBwdXQgdGhlIGRldmljZSBpbgo+IHJlc2V0
+Lgo+Cj4+IMKgVGhlIEJTUCB1c2VzIHRoaXMgYXMgYSByZmtpbGwsIGFuZCB0aGUgcmVzdWx0IGlz
+IHRoYXQgdGhlIGJsdWV0b290aAo+PiDCoG9uL29mZiBzd2l0Y2ggZG8gbm90IHdvcmsgcHJvcGVy
+bHkuCj4KPiBUaGVuIHJma2lsbCBuZWVkcyBmaXhpbmcsIGJ1dCB3b3JraW5nIGFyb3VuZCBpdCBi
+eSBob3BpbmcgdGhhdCB0aGUKPiBjb3JlIHdpbGwgcHJvYmUgYW4gZW50aXJlbHkgZGlmZmVyZW50
+IGRldmljZSwgYW5kIGVuZm9yY2luZyBhIGRlZmF1bHQKPiB0aGF0IHRoZSByZXN0IG9mIHRoZSBr
+ZXJuZWwgbWlnaHQgb3IgbWlnaHQgbm90IGNoYW5nZSBpcyBib3RoIGZyYWdpbGUKPiBhbmQgd3Jv
+bmcuCgpJIHRoaW5rIGEgcmZraWxsLWdwaW8gaGVyZSB3b3JrcyBqdXN0IGxpa2UgdGhlIEJTUCBy
+ZmtpbGwuLi4KClRoZSByZWFsIHByb2JsZW0gaXMgdGhhdCB0aGUgUmVhbHRlayBVQVJUIGJsdWV0
+b290aCBkcml2ZXIgaXMgYSB1c2Vyc3BhY2UKcHJvZ3JhbSAoYSBtb2RpZmllZCBoY2lhdHRhY2gp
+LCB3aGljaCBpcyBub3QgY2FwYWJsZSBvZiB0aGUgR1BJTyByZXNldC4uLgoKPgo+IE1heGltZQo+
+Cj4gLS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVkZGVkIExpbnV4IGFu
+ZCBLZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
