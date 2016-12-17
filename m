@@ -1,73 +1,68 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
-Date: Sat, 17 Dec 2016 15:40:07 +0100
-Message-ID: <CAFBinCCmTSAQwZ1Gff=NVuGc5s4_i7k9oqBfB6XnQae_zeJ9gg@mail.gmail.com>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
- <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
- <87insxg0yc.fsf@kamboji.qca.qualcomm.com> <871sxza9al.fsf@kamboji.qca.qualcomm.com>
- <CAFBinCC6JWBhZwma=66fBi3_to2SaHOMNDQS23jHNhcc+RUcYQ@mail.gmail.com> <CAJ-Vmo=3zox7QkFUA-3yxtvSTzPT4GiFkoOUU3cPTXSN4xV8vQ@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v4] dt-bindings: power: supply: bq24735: reverse the
+ polarity of ac-detect
+Date: Sat, 17 Dec 2016 15:50:51 +0100
+Message-ID: <20161217145050.5w7fkumgjipqdmbn@earth>
+References: <1481881440-13464-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ-Vmo=3zox7QkFUA-3yxtvSTzPT4GiFkoOUU3cPTXSN4xV8vQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Cc: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6pyfoagjgcpud5dn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1481881440-13464-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
 
-On Wed, Dec 14, 2016 at 7:45 AM, Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org> wrote:
-> hi,
->
-> On 12 December 2016 at 12:05, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->
->>
->> It seems that there are a few devices out there where the whole EEPROM
->> is swab16'ed which switches the position of the 1-byte fields
->> opCapFlags and eepMisc.
->> those still work fine with the new code, however I had a second patch
->> in LEDE [0] which results in ath9k_platform_data.endian_check NOT
->> being set anymore.
->> that endian_check flag was used before to swab16 the whole EEPROM, to
->> correct the position of the 1-byte fields again.
->> Currently we are fixing this in the firmware hotplug script: [1]
->> This is definitely not a blocker for this series though (if we want to
->> have a devicetree replacement for "ath9k_platform_data.endian_check"
->> then I'd work on that within a separate series, but I somewhat
->> consider these EEPROMs as "broken" so fixing them in
->> userspace/firmware hotplug script is fine for me)
->
-> As a reference - the reference driver has been doign this for a while.
-> It attempts to detect the endianness by looking at the 0xa55a
-> signature endian and figuring out which endian the actual contents are
-> in.
->
-> So just FYI yeah, this is a "thing" for reasons I don't quite know.
-on all devices I have seen so far (all customer devices, no
-development boards) these two magic bytes *can* be used to detect the
-endianness of the data that is written to the PCI memory (and thus
-whether swapping of that data is required or not).
-however, there are many devices (roughly 50% of the ones I've seen)
-where the magic bytes cannot be used to swap the actual EEPROM (=
-calibration) data because they are "inverted". reading the eepMisc
-byte works fine on all devices I've seen so far *if* the manufacturer
-did not swab16 all data (PCI memory and EEPROM data).
+--6pyfoagjgcpud5dn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-on the other hand you are right: all four devices which were broken
-had the correct magic bytes at the start, but as long as this is not
-the case for all devices we cannot use it without some feature-flag.
+Hi,
 
-as an (unrelated) side-note: I've also some EEPROMs where the length
-matches neither the "magic bytes endianness" nor the "eepMisc
-endianness". I consider these broken as well, but fortunately ath9k
-has a fallback for this issue.
+On Fri, Dec 16, 2016 at 10:44:00AM +0100, Peter Rosin wrote:
+> The ACOK pin on the bq24735 is active-high, of course meaning that when
+> AC is OK the pin is high. However, all Tegra dts files have incorrectly
+> specified active-high even though the signal is inverted on the Tegra
+> boards. This has worked since the Linux driver has also inverted the
+> meaning of the GPIO. Fix this situation by simply specifying in the
+> bindings what everybody else agrees on; that the ti,ac-detect-gpios is
+> active on AC adapter absence.
+>=20
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 
+Thanks for your patch. We are currently in the merge
+window and your patch will appear in linux-next once
+4.10-rc1 has been tagged by Linus Torvalds.
 
-Regards,
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Until then I queued it into this branch:
+
+https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git/log=
+/?h=3Dfor-next-next
+
+-- Sebastian
+
+--6pyfoagjgcpud5dn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhVUMcACgkQ2O7X88g7
++prBLQ/9FamJiewo5l1chf3Cng/EqtbI5AtxAWwhlDneB1Iwl3+3fAK50Np9bjZp
+usFVevkf9bycdRnOitenjJvcwGEl+hwL6yw+FLsGQH6nCBNEf5huk37Fxkfbu70s
+j3irNao5OkJOagVF/wW82Hwp6b2/CkUuwqCaP1mKv5WJa6Kc1+1n+75A76y0Dmje
+tbEMFDTzma6hh5/579cuebeWUCwuW1rzRlETjGx893IOA2VYHsJtHbeGNCUUckf/
+YDwP9F2A+ZSAJnSiexVCvwx7h02q1680/siynlp+5KwXLvaekmN30U7yjdlVhHMw
+ObGSMo1Zt8Qu82XL7LiBeUShUScgmksQXJF3f1kBYovXGMowObvCuboqkJq/AEZB
+aw0JaLmdG+nrSwumJQu7/YvziyNccCDy3ZC5i5pGD+bCX8NhETc1EWlr5TFV1sWT
+AUDcYWvd5K8Z3CSwe399w3zPcXt0BUIIGW/3Kxs6JaQfAnBbhXvOWxRedvP8ljZC
+DudrKjBoef9dAyWD0ugGkkO/02+Y6pdtkfkcRA9MxnCdUuS9O/8kxO0icMiXXDx0
+Kpd042fIFnTeBfvjbbPS1nklMkNLQRAXNkxlPzPMRgyacEiQE5Gf5i7jidFzbF2v
+gAja+Z7lJSzSqcOApq2NSeZPCsFLA6IT6/Eq5D7MGIFPyTk8A14=
+=T56F
+-----END PGP SIGNATURE-----
+
+--6pyfoagjgcpud5dn--
