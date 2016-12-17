@@ -1,100 +1,110 @@
 From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 00/11] add support for VBUS max current and min
- voltage limits AXP20X and AXP22X PMICs
-Date: Sat, 17 Dec 2016 16:54:31 +0100
-Message-ID: <20161217155431.jlkxxdgxzu5aiuke@earth>
-References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: power: add bindings for sbs-charger
+Date: Sat, 17 Dec 2016 17:32:12 +0100
+Message-ID: <20161217163212.bwjxxeiqw5eklhoc@earth>
+References: <1479990823-25841-1-git-send-email-nicolas.saenz@prodys.net>
+ <1479990823-25841-3-git-send-email-nicolas.saenz@prodys.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="d7wkknmodmutt4up"
+        protocol="application/pgp-signature"; boundary="v54ueoboizpug7ie"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161209110419.28981-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1479990823-25841-3-git-send-email-nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---d7wkknmodmutt4up
+--v54ueoboizpug7ie
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Quentin,
+Hi,
 
-On Fri, Dec 09, 2016 at 12:04:08PM +0100, Quentin Schulz wrote:
-> The X-Powers AXP209 and AXP20X PMICs are able to set a limit for the
-> VBUS power supply for both max current and min voltage supplied. This
-> series of patch adds the possibility to set these limits from sysfs.
+On Thu, Nov 24, 2016 at 01:33:43PM +0100, Nicolas Saenz Julienne wrote:
+> Adds device tree documentation for SBS charger compilant devices as defin=
+ed
+> here: http://sbs-forum.org/specs/sbc110.pdf
 >=20
-> Also, the AXP223 PMIC shares most of its behaviour with the AXP221 but
-> the former can set the VBUS power supply max current to 100mA, unlike
-> the latter. The AXP223 VBUS power supply driver used to probe on the
-> AXP221 compatible. This series of patch introduces a new compatible for
-> the AXP223 to be able to set the current max limit to 100mA.
+> Signed-off-by: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
+> ---
+> v2 -> v3:
+> - add part number as compatible
 >=20
-> With that new compatible, boards having the AXP223 see their DT updated
-> to use the VBUS power supply driver with the correct compatible.
+>  .../bindings/power/supply/sbs_sbs-charger.txt      | 24 ++++++++++++++++=
+++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sb=
+s-charger.txt
 >=20
-> This series of patch also migrates from of_device_is_compatible function
-> to the data field of of_device_id to identify the compatible used to
-> probe. This improves the code readability.
->=20
-> Mostly cosmetic changes in v2 and adding volatile and writeable regs to
-> AXP20X and AXP22X MFD cells for the VBUS power supply driver.
->=20
-> Quentin Schulz (11):
->   power: supply: axp20x_usb_power: use of_device_id data field instead
->     of device_is_compatible
->   mfd: axp20x: add volatile and writeable reg ranges for VBUS power
->     supply driver
->   power: supply: axp20x_usb_power: set min voltage and max current from
->     sysfs
->   Documentation: DT: binding: axp20x_usb_power: add axp223 compatible
->   power: supply: axp20x_usb_power: add 100mA max current limit for
->     AXP223
->   mfd: axp20x: add separate MFD cell for AXP223
->   ARM: dtsi: add DTSI for AXP223
->   ARM: dts: sun8i-a33-olinuxino: use AXP223 DTSI
->   ARM: dts: sun8i-a33-sinlinx-sina33: use AXP223 DTSI
->   ARM: dts: sun8i-r16-parrot: use AXP223 DTSI
->   ARM: dtsi: sun8i-reference-design-tablet: use AXP223 DTSI
+> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-charg=
+er.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+> new file mode 100644
+> index 0000000..f6b6027
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+> @@ -0,0 +1,24 @@
+> +SBS sbs-charger
+> +~~~~~~~~~~
+> +
+> +Required properties:
+> + - compatible: should contain one of the following:
+> +	- "lltc,ltc4100"
+> +	- "sbs,sbs-charger"
 
-Thanks for your patchset. We are currently in the merge
-window and patches 1 & 3-5 will appear in linux-next once
-4.10-rc1 has been tagged by Linus Torvalds.
+That's not what I meant. The idea is to specify "lltc,ltc4100" with
+"sbs,sbs-charger" as fallback. Then the driver for now only handles
+"sbs,sbs-charger", but if any vendor registers need to be supported
+we have a more specific compatible value in DT, that can be used to
+identify the device.
 
-Until then I queued them into this branch:
+> +Optional properties:
+> +- interrupt-parent: Should be the phandle for the interrupt controller. =
+Use in
+> +    conjunction with "interrupts".
+> +- interrupts: Interrupt mapping for GPIO IRQ. Use in conjunction with
+> +    "interrupt-parent". If an interrupt is not provided the driver will =
+switch
+> +    automatically to polling.
+> +
+> +Example:
+> +
+> +	ltc4100@9 {
+> +		compatible =3D "sbs,sbs-charger";
+> +		reg =3D <0x9>;
+> +		interrupt-parent =3D <&gpio6>;
+> +		interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
 
-https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git/log=
-/?h=3Dfor-next-next
+So the example would look like
+
+compatible =3D "lltc,ltc4100", "sbs,sbs-charger";
 
 -- Sebastian
 
--- Sebastian
-
---d7wkknmodmutt4up
+--v54ueoboizpug7ie
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhVX7QACgkQ2O7X88g7
-+pppjA/+JxL7PUScCRUohft1CvgxMqJFpuVYaJ4H5F0BKkYmOHJg6FQNLSryGffK
-VXaGNQ2f20NY5H4gWHUndnp7PssqOXrULkLL3VS5UCYbPkmqeOYrmnRKpuyGWVJy
-PEvsYW6MFwQ96D57CJspQifYMJfxZm4gq4SAlpurwgc4WhbNe9wg+d9nDss8rkgI
-SNDU7fxkpzfSA+vG8aL6h1JBQbzLTls1zqoSUqzBalgkZNXTMEeoltIdH5zHmIqx
-IQ3qunxTAUVNxeugiJAuEktwdTKkDgztvD+SQNJmbJCGlyc/P3gPkgGkv7O1CY0E
-U9CI0CEiBgTQ/CW8a+HI9WakU3NxwFL/KFlLcIWUqxyTrj5jtdR/5tSIeNU60q4u
-6wA8/DT/yc07vRhIF7Cr1nHKva88i+hnkIdEpaqlHuy0xqx2BShKfFsza08Xr6gX
-FFjc5lCcG3FTf73Mp2wJ4wujAFcShIKBaCLFPUv6QGHpqHIEOgg96SxJ6B/llGsy
-92ACA1UREHoO/3w/eZPNe7tFJGTUYxYZZkD2niFIKJ0xcrn9YMRrGRzJJ6lE9Z1e
-leTi5W/Zh5pPncd+7D3/LVGV+v7jmR8K2ALtl6Q2ThUm33TKiVP3FXPFx1gL/LuT
-FFWlFURolO9Ilt/wM/Y7mnB3aPGV9cmCZMS9LTHNJ/fX59et0MM=
-=ResL
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhVaIwACgkQ2O7X88g7
++poPnQ/+PNRw3DO1VQPAWQWafN0s2sAFiEOtlyvs8cnXRdoL71bBJ3i+o85Ad+wS
+nyySEH+vnllK47/Z3CrtDBGbGMqazzJ/72Cx5hCOnz9QG3WC7b6c0InIhnWS7BiF
+OuIRMJHZN7KhNSqYgj77+csUn6tSsZkGqDAL/efIeODsAI7Ng+0eH7VQAsssAfiS
+xhZ8OF4IWQMLK+jnp+Qyl+R44WbuyIgza0KHgPlgQ4rDW7hFtMOc6hbdS6f+HTdn
+MV8gBHCkJp6lq/LjlSJWkFvNVHqCcFOcJE/B1F4NEdiBaNZEta3JVWjvSTFFOABl
+1LCtTMTOFRSc+cH++AMnIxBScLX6YFihC6c9DzfRhnPtFHOlpfBD8bH452eVX5mB
++d19POriwX6U3PIp+CtFDsqkuFDXMylYyYUw6MD1wQpYT7sFdnSMGEDhVXxo+PMC
+Kwu1fKMjYU8AOuaMUvTIY2MqT1B0uriFHocErYuPVBPfTMg3/KDHsNv0sF5RcCON
+7tDJbup00secMKuoh/KOXUIDFw/5sYFdEowAdvcY7s/9vyJZZX7HjpWHTpRUWHHx
+6fyHKmdVjmx+yUL1jDcPu811Ns4QY5QnB2yRDorM/LfLqeqPfnH4pQi/3gNjwKBJ
+h8RGiCbST1C9N2KNOd11lTH6366MumE9FJ8ss2YAxJDmizsAfxE=
+=bLUR
 -----END PGP SIGNATURE-----
 
---d7wkknmodmutt4up--
+--v54ueoboizpug7ie--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
