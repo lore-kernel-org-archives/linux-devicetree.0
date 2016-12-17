@@ -1,50 +1,33 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC
- bindings as unstable
-Date: Sat, 17 Dec 2016 09:01:06 +0530
-Message-ID: <CAGcde9EAQk9H0Ske9DTyQZWTCUSG5d2nUooYwBJXJhYgWYMA4w@mail.gmail.com>
-References: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] spi: rockchip: support "sleep" pin configuration
+Date: Fri, 16 Dec 2016 22:03:26 -0800
+Message-ID: <CAD=FV=U=ypp0BD1azPx54J4PyNp4wfHiNgTA5XN9YrEbQ4dn-w@mail.gmail.com>
+References: <1481936356-76161-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481936356-76161-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Hi,
 
-On 16 December 2016 at 19:44, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Samsung Exynos SoCs and boards related bindings evolved since the initial
-> introduction, but initially the bindings were minimal and a bit incomplete
-> (they never described all the hardware modules available in the SoCs).
-> Since then some significant (not fully compatible) changes have been
-> already committed a few times (like gpio replaced by pinctrl, display ddc,
-> mfc reserved memory, some core clocks added to various hardware modules,
-> added more required nodes).
+On Fri, Dec 16, 2016 at 4:59 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> In the pattern of many other devices, support a system-sleep pin
+> configuration.
 >
-> On the other side there are no boards which have device tree embedded in
-> the bootloader. Device tree blob is always compiled from the kernel tree
-> and updated together with the kernel image.
->
-> Thus to avoid further adding a bunch of workarounds for old/missing
-> bindings and allow to make cleanup of the existing code and device tree
-> files, lets mark Samsung Exynos SoC platform bindings as unstable. This
-> means that bindings can may change at any time and users should use the
-> dtb file compiled from the same kernel source tree as the kernel image.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/spi/spi-rockchip.txt | 7 +++++++
+>  drivers/spi/spi-rockchip.c                             | 5 +++++
+>  2 files changed, 12 insertions(+)
 
-I agree with you. This is very much required. It's not only about new
-bindings, we are facing problems in adopting existing bindings as well
-(e.g scu), to make exynos support completely DT based and simplify our
-code base.
+FWIW
 
-I expect and foresee requirements of many more such changes in very near future.
-
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-
-Thanks,
-Pankaj Dubey
+Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
