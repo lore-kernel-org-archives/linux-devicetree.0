@@ -1,40 +1,50 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC
- bindings as unstable
-Date: Sat, 17 Dec 2016 21:37:46 +0200
-Message-ID: <20161217193746.GA8980@kozik-lap>
-References: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Sat, 17 Dec 2016 21:36:55 +0100
+Message-ID: <CAFBinCDpBew7wreNPn6=J3jKsw_Ok=Ed9_+Gxsefb661RvUdrA@mail.gmail.com>
+References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161202234739.22929-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 16, 2016 at 03:14:36PM +0100, Marek Szyprowski wrote:
-> Samsung Exynos SoCs and boards related bindings evolved since the initial
-> introduction, but initially the bindings were minimal and a bit incomplete
-> (they never described all the hardware modules available in the SoCs).
-> Since then some significant (not fully compatible) changes have been
-> already committed a few times (like gpio replaced by pinctrl, display ddc,
-> mfc reserved memory, some core clocks added to various hardware modules,
-> added more required nodes).
-> 
-> On the other side there are no boards which have device tree embedded in
-> the bootloader. Device tree blob is always compiled from the kernel tree
-> and updated together with the kernel image.
-> 
-> Thus to avoid further adding a bunch of workarounds for old/missing
-> bindings and allow to make cleanup of the existing code and device tree
-> files, lets mark Samsung Exynos SoC platform bindings as unstable. This
-> means that bindings can may change at any time and users should use the
-> dtb file compiled from the same kernel source tree as the kernel image.
+Hi Kevin,
 
-I agree but please re-send it after merge window. This is not the best
-time to start discussions about it.
+On Sat, Dec 3, 2016 at 12:47 AM, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> This partially fixes the 1000Mbit/s ethernet TX throughput issues (on
+> networks which are not affected by the EEE problem, as reported here:
+> [1]).
+> The actual problem for the TX throughput issues was that the TX delay
+> was applied twice:
+> - once "accidentally" by the PHY (this was fixed with [2])
+> - once by the MAC because there was a hardcoded TX delay (of 2ns),
+>   this will be configurable with the changes from [0]
+>
+> These are the dts changes which belong to my other series (in v2
+> these patches were part of the other series, upon request of the
+> net maintainers I have split the .dts changes into their own series so
+> we are able to take both through different trees):
+> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
+> RGMII TX delay": [0].
+> Thus this series depends on the ACK for the binding changes in the
+> other series!
+>
+> I based these changes on my other series "[PATCH v2 0/2] GXL and GXM
+> SCPI improvements": [3]
+the DT binding changes for the meson8b-dwmac driver were ACK'ed by Rob
+Herring, so you can proceed with this series once you applied the SCPI
+patches.
 
-Best regards,
-Krzysztof
+
+Thank you!
+Regards,
+Martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
