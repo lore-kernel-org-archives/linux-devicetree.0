@@ -1,94 +1,40 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH net-next v4 2/2] net: stmmac: dwmac-meson8b: make the RGMII TX delay configurable
-Date: Sat, 17 Dec 2016 19:21:19 +0100
-Message-ID: <20161217182119.4037-3-martin.blumenstingl@googlemail.com>
-References: <20161202233238.17561-1-martin.blumenstingl@googlemail.com>
- <20161217182119.4037-1-martin.blumenstingl@googlemail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161217182119.4037-1-martin.blumenstingl@googlemail.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com
-Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC
+ bindings as unstable
+Date: Sat, 17 Dec 2016 21:37:46 +0200
+Message-ID: <20161217193746.GA8980@kozik-lap>
+References: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Prior to this patch we were using a hardcoded RGMII TX clock delay of
-2ns (= 1/4 cycle of the 125MHz RGMII TX clock). This value works for
-many boards, but unfortunately not for all (due to the way the actual
-circuit is designed, sometimes because the TX delay is enabled in the
-PHY, etc.). Making the TX delay on the MAC side configurable allows us
-to support all possible hardware combinations.
+On Fri, Dec 16, 2016 at 03:14:36PM +0100, Marek Szyprowski wrote:
+> Samsung Exynos SoCs and boards related bindings evolved since the initial
+> introduction, but initially the bindings were minimal and a bit incomplete
+> (they never described all the hardware modules available in the SoCs).
+> Since then some significant (not fully compatible) changes have been
+> already committed a few times (like gpio replaced by pinctrl, display ddc,
+> mfc reserved memory, some core clocks added to various hardware modules,
+> added more required nodes).
+> 
+> On the other side there are no boards which have device tree embedded in
+> the bootloader. Device tree blob is always compiled from the kernel tree
+> and updated together with the kernel image.
+> 
+> Thus to avoid further adding a bunch of workarounds for old/missing
+> bindings and allow to make cleanup of the existing code and device tree
+> files, lets mark Samsung Exynos SoC platform bindings as unstable. This
+> means that bindings can may change at any time and users should use the
+> dtb file compiled from the same kernel source tree as the kernel image.
 
-This allows fixing a compatibility issue on some boards, where the
-RTL8211F PHY is configured to generate the TX delay. We can now turn
-off the TX delay in the MAC, because otherwise we would be applying the
-delay twice (which results in non-working TX traffic).
+I agree but please re-send it after merge window. This is not the best
+time to start discussions about it.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index ffaed1f35efe..db970cd6600f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -35,10 +35,6 @@
- 
- #define PRG_ETH0_TXDLY_SHIFT		5
- #define PRG_ETH0_TXDLY_MASK		GENMASK(6, 5)
--#define PRG_ETH0_TXDLY_OFF		(0x0 << PRG_ETH0_TXDLY_SHIFT)
--#define PRG_ETH0_TXDLY_QUARTER		(0x1 << PRG_ETH0_TXDLY_SHIFT)
--#define PRG_ETH0_TXDLY_HALF		(0x2 << PRG_ETH0_TXDLY_SHIFT)
--#define PRG_ETH0_TXDLY_THREE_QUARTERS	(0x3 << PRG_ETH0_TXDLY_SHIFT)
- 
- /* divider for the result of m250_sel */
- #define PRG_ETH0_CLK_M250_DIV_SHIFT	7
-@@ -69,6 +65,8 @@ struct meson8b_dwmac {
- 
- 	struct clk_divider	m25_div;
- 	struct clk		*m25_div_clk;
-+
-+	u32			tx_delay_ns;
- };
- 
- static void meson8b_dwmac_mask_bits(struct meson8b_dwmac *dwmac, u32 reg,
-@@ -179,6 +177,7 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- {
- 	int ret;
- 	unsigned long clk_rate;
-+	u8 tx_dly_val;
- 
- 	switch (dwmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
-@@ -196,9 +195,13 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
- 					PRG_ETH0_INVERTED_RMII_CLK, 0);
- 
--		/* TX clock delay - all known boards use a 1/4 cycle delay */
-+		/* TX clock delay in ns = "8ns / 4 * tx_dly_val" (where
-+		 * 8ns are exactly one cycle of the 125MHz RGMII TX clock):
-+		 * 0ns = 0x0, 2ns = 0x1, 4ns = 0x2, 6ns = 0x3
-+		 */
-+		tx_dly_val = dwmac->tx_delay_ns >> 1;
- 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
--					PRG_ETH0_TXDLY_QUARTER);
-+					tx_dly_val << PRG_ETH0_TXDLY_SHIFT);
- 		break;
- 
- 	case PHY_INTERFACE_MODE_RMII:
-@@ -282,6 +285,12 @@ static int meson8b_dwmac_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "missing phy-mode property\n");
- 		ret = -EINVAL;
- 		goto err_remove_config_dt;
-+	} else if (dwmac->phy_mode != PHY_INTERFACE_MODE_RMII) {
-+		/* ignore errors as this is an optional property - by default
-+		 * we assume a TX delay of 0ns.
-+		 */
-+		of_property_read_u32(pdev->dev.of_node, "amlogic,tx-delay-ns",
-+				     &dwmac->tx_delay_ns);
- 	}
- 
- 	ret = meson8b_init_clk(dwmac);
--- 
-2.11.0
+Best regards,
+Krzysztof
