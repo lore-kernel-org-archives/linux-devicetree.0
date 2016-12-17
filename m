@@ -1,50 +1,107 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Sat, 17 Dec 2016 21:36:55 +0100
-Message-ID: <CAFBinCDpBew7wreNPn6=J3jKsw_Ok=Ed9_+Gxsefb661RvUdrA@mail.gmail.com>
-References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+Date: Sat, 17 Dec 2016 21:06:40 +0000
+Message-ID: <DB6PR0402MB2694957C2D7C648CC342627FE69F0@DB6PR0402MB2694.eurprd04.prod.outlook.com>
+References: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161202234739.22929-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
-
-On Sat, Dec 3, 2016 at 12:47 AM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> This partially fixes the 1000Mbit/s ethernet TX throughput issues (on
-> networks which are not affected by the EEE problem, as reported here:
-> [1]).
-> The actual problem for the TX throughput issues was that the TX delay
-> was applied twice:
-> - once "accidentally" by the PHY (this was fixed with [2])
-> - once by the MAC because there was a hardcoded TX delay (of 2ns),
->   this will be configurable with the changes from [0]
->
-> These are the dts changes which belong to my other series (in v2
-> these patches were part of the other series, upon request of the
-> net maintainers I have split the .dts changes into their own series so
-> we are able to take both through different trees):
-> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
-> RGMII TX delay": [0].
-> Thus this series depends on the ACK for the binding changes in the
-> other series!
->
-> I based these changes on my other series "[PATCH v2 0/2] GXL and GXM
-> SCPI improvements": [3]
-the DT binding changes for the meson8b-dwmac driver were ACK'ed by Rob
-Herring, so you can proceed with this series once you applied the SCPI
-patches.
 
 
-Thank you!
-Regards,
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Robin Murphy
+> Sent: Friday, December 16, 2016 18:49
+> To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
+> <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> Subject: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+> 
+> The current SMR masking support using a 2-cell iommu-specifier is
+> primarily intended to handle individual masters with large and/or
+> complex Stream ID assignments; it quickly gets a bit clunky in other SMR
+> use-cases where we just want to consistently mask out the same part of
+> every Stream ID (e.g. for MMU-500 configurations where the appended TBU
+> number gets in the way unnecessarily). Let's add a new property to allow
+> a single global mask value to better fit the latter situation.
+> 
+> CC: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+
+Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+> 
+> Compile-tested only...
+> 
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 8 ++++++++
+>  drivers/iommu/arm-smmu.c                             | 4 +++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index e862d1485205..98f5cbe5fdb4 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -60,6 +60,14 @@ conditions.
+>                    aliases of secure registers have to be used during
+>                    SMMU configuration.
+> 
+> +- stream-match-mask : Specifies a fixed SMR mask value to combine with
+> +                  the Stream ID value from every iommu-specifier. This
+> +                  may be used instead of an "#iommu-cells" value of 2
+> +                  when there is no need for per-master SMR masks, but
+> +                  it is still desired to mask some portion of every
+> +                  Stream ID (e.g. for certain MMU-500 configurations
+> +                  given globally unique external IDs).
+> +
+>  ** Deprecated properties:
+> 
+>  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 8f7281444551..f1abcb7dde36 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1534,13 +1534,15 @@ static int arm_smmu_domain_set_attr(struct
+> iommu_domain *domain,
+> 
+>  static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
+>  {
+> -	u32 fwid = 0;
+> +	u32 mask, fwid = 0;
+> 
+>  	if (args->args_count > 0)
+>  		fwid |= (u16)args->args[0];
+> 
+>  	if (args->args_count > 1)
+>  		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
+> +	else if (!of_property_read_u32(args->np, "stream-match-mask",
+> &mask))
+> +		fwid |= (u16)mask << SMR_MASK_SHIFT;
+> 
+>  	return iommu_fwspec_add_ids(dev, &fwid, 1);
+>  }
+> --
+> 2.10.2.dirty
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
