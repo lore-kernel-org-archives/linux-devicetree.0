@@ -1,34 +1,87 @@
-From: Ricky Liang <jcliang@chromium.org>
-Subject: Re: [PATCH v9 2/4] vcodec: mediatek: Add Mediatek JPEG Decoder Driver
-Date: Sun, 18 Dec 2016 14:53:20 +0800
-Message-ID: <CAAJzSMfb=_Td+_f-q0mOTX5dGFC1Roxxm7+-yjavKFo3DO8YUw@mail.gmail.com>
-References: <1481702690-10476-1-git-send-email-rick.chang@mediatek.com> <1481702690-10476-3-git-send-email-rick.chang@mediatek.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] spi: rockchip: support "sleep" pin configuration
+Date: Sun, 18 Dec 2016 15:41:16 +0800
+Message-ID: <aa90bd62-747b-d666-910e-5f9842106f1d@rock-chips.com>
+References: <1481936356-76161-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481702690-10476-3-git-send-email-rick.chang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rick Chang <rick.chang@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Bin Liu <bin.liu@mediatek.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, "moderated list:ARM/Mediatek SoC..." <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481936356-76161-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 4:04 PM, Rick Chang <rick.chang@mediatek.com> wrote:
-> Add v4l2 driver for Mediatek JPEG Decoder
+在 2016年12月17日 08:59, Brian Norris 写道:
+> In the pattern of many other devices, support a system-sleep pin
+> configuration.
 >
-> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
-> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> ---
->  drivers/media/platform/Kconfig                   |   15 +
->  drivers/media/platform/Makefile                  |    2 +
->  drivers/media/platform/mtk-jpeg/Makefile         |    2 +
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c  | 1306 ++++++++++++++++++++++
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h  |  139 +++
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c    |  417 +++++++
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h    |   91 ++
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c |  160 +++
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h |   25 +
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h   |   58 +
->  10 files changed, 2215 insertions(+)
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Reviewed-by: Ricky Liang <jcliang@chromium.org>
-Tested-by: Ricky Liang <jcliang@chromium.org>
+Tested-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+> ---
+>   Documentation/devicetree/bindings/spi/spi-rockchip.txt | 7 +++++++
+>   drivers/spi/spi-rockchip.c                             | 5 +++++
+>   2 files changed, 12 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> index d2ca153614f9..83da4931d832 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> @@ -31,6 +31,10 @@ Optional Properties:
+>   - rx-sample-delay-ns: nanoseconds to delay after the SCLK edge before sampling
+>   		Rx data (may need to be fine tuned for high capacitance lines).
+>   		No delay (0) by default.
+> +- pinctrl-names: Names for the pin configuration(s); may be "default" or
+> +		"sleep", where the "sleep" configuration may describe the state
+> +		the pins should be in during system suspend. See also
+> +		pinctrl/pinctrl-bindings.txt.
+>   
+>   
+>   Example:
+> @@ -46,4 +50,7 @@ Example:
+>   		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+>   		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
+>   		clock-names = "spiclk", "apb_pclk";
+> +		pinctrl-0 = <&spi1_pins>;
+> +		pinctrl-1 = <&spi1_sleep>;
+> +		pinctrl-names = "default", "sleep";
+>   	};
+> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+> index 0f89c2169c24..acf31f36b898 100644
+> --- a/drivers/spi/spi-rockchip.c
+> +++ b/drivers/spi/spi-rockchip.c
+> @@ -17,6 +17,7 @@
+>   #include <linux/dmaengine.h>
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+> +#include <linux/pinctrl/consumer.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/spi/spi.h>
+>   #include <linux/pm_runtime.h>
+> @@ -843,6 +844,8 @@ static int rockchip_spi_suspend(struct device *dev)
+>   		clk_disable_unprepare(rs->apb_pclk);
+>   	}
+>   
+> +	pinctrl_pm_select_sleep_state(dev);
+> +
+>   	return ret;
+>   }
+>   
+> @@ -852,6 +855,8 @@ static int rockchip_spi_resume(struct device *dev)
+>   	struct spi_master *master = dev_get_drvdata(dev);
+>   	struct rockchip_spi *rs = spi_master_get_devdata(master);
+>   
+> +	pinctrl_pm_select_default_state(dev);
+> +
+>   	if (!pm_runtime_suspended(dev)) {
+>   		ret = clk_prepare_enable(rs->apb_pclk);
+>   		if (ret < 0)
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
