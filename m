@@ -1,60 +1,56 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v6 5/6] Documentation: bindings: add documentation for ir-spi
- device driver
-Date: Sun, 18 Dec 2016 20:11:37 +0900
-Message-ID: <20161218111138.12831-6-andi.shyti@samsung.com>
-References: <20161218111138.12831-1-andi.shyti@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20161218111138.12831-1-andi.shyti@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Sun, 18 Dec 2016 16:47:04 +0530
+Message-ID: <247f085c-965c-d9c9-70c9-4109c4c1bd35@codeaurora.org>
+References: <1480399662-8858-1-git-send-email-architt@codeaurora.org>
+ <1480924435-20882-1-git-send-email-architt@codeaurora.org>
+ <1480924435-20882-2-git-send-email-architt@codeaurora.org>
+ <20161209221124.rkntcdbgj36hlgul@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161209221124.rkntcdbgj36hlgul@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: laurent.pinchart@ideasonboard.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the ir-spi driver's binding which is a IR led driven
-through the SPI line.
 
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-Reviewed-by: Sean Young <sean@mess.org>
----
- .../devicetree/bindings/leds/irled/spi-ir-led.txt  | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
 
-diff --git a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
-new file mode 100644
-index 000000000000..896b6997cf30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
-@@ -0,0 +1,29 @@
-+Device tree bindings for IR LED connected through SPI bus which is used as
-+remote controller.
-+
-+The IR LED switch is connected to the MOSI line of the SPI device and the data
-+are delivered thourgh that.
-+
-+Required properties:
-+	- compatible: should be "ir-spi-led".
-+
-+Optional properties:
-+	- duty-cycle: 8 bit balue that represents the percentage of one period
-+	  in which the signal is active.  It can be 50, 60, 70, 75, 80 or 90.
-+	- led-active-low: boolean value that specifies whether the output is
-+	  negated with a NOT gate.
-+	- power-supply: specifies the power source. It can either be a regulator
-+	  or a gpio which enables a regulator, i.e. a regulator-fixed as
-+	  described in
-+	  Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+
-+Example:
-+
-+	irled@0 {
-+		compatible = "ir-spi-led";
-+		reg = <0x0>;
-+		spi-max-frequency = <5000000>;
-+		power-supply = <&vdd_led>;
-+		led-active-low;
-+		duty-cycle = /bits/ 8 <60>;
-+	};
+On 12/10/2016 3:41 AM, Rob Herring wrote:
+> On Mon, Dec 05, 2016 at 01:23:54PM +0530, Archit Taneja wrote:
+>> Add the regulator supply properties needed by ADV7511 and ADV7533.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>
+> Didn't I ack this already? Anyway,
+
+You had Acked it before. This set moved the regulator bindings from
+optional to mandatory, so I thought it may need you review again.
+
+Mark Brown insisted that we have a regulator supply per pin even if
+the chip's specs recommend using a common supply for them, so I'm
+going to bring that back again. I'll keep your Ack for the next
+revision since that's something you'd originally recommended.
+
+Thanks,
+Archit
+
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
 -- 
-2.11.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
