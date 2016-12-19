@@ -1,130 +1,76 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: add opp-v2 table for A33
-Date: Mon, 19 Dec 2016 22:06:46 +0800
-Message-ID: <11975791482156406@web2g.yandex.ru>
-References: <20161215182754.33921-1-icenowy@aosc.xyz> <20161219084652.kiqdkiewu5tujlyd@lukather> <CAGb2v65YWntCrFHtSbxhtTWkt+UwkW3xoY-ae26MpH+-ULLXSQ@mail.gmail.com>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
+Date: Mon, 19 Dec 2016 22:08:32 +0800
+Message-ID: <11985541482156512@web2g.yandex.ru>
+References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
+ <20161216124748.rkvnnlo4x5onzpvk@lukather>
+ <4720181481899200@web7g.yandex.ru> <20161219100952.bspym36nsehda3za@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB6GS37BAKGQEUEVP72Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v65YWntCrFHtSbxhtTWkt+UwkW3xoY-ae26MpH+-ULLXSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161219100952.bspym36nsehda3za@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-19.12.2016, 16:54, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
-> On Mon, Dec 19, 2016 at 4:46 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> =C2=A0On Fri, Dec 16, 2016 at 02:27:54AM +0800, Icenowy Zheng wrote:
->>> =C2=A0An operating point table is needed for the cpu frequency adjustin=
-g to
->>> =C2=A0work.
->>>
->>> =C2=A0The operating point table is converted from the common value in
->>> =C2=A0extracted script.fex from many A33 board/tablets.
->>>
->>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>> =C2=A0---
->>> =C2=A0Changes since v1:
->>> =C2=A0- Fix format problem (blank lines).
->>> =C2=A0- Removed the 1.344GHz operating point, as it's overvoltage and o=
-verclocked.
->>>
->>> =C2=A0This patch depends on the following patchset:
->>>
->>> =C2=A0http://lists.infradead.org/pipermail/linux-arm-kernel/2016-Decemb=
-er/473962.html
->>>
->>> =C2=A0It's the v2 of the [PATCH 4/6] in this patchset.
->>>
->>> =C2=A0I think this operating point table may also apply to A23, as ther=
-e's no
->>> =C2=A0difference except the points over 1.2GHz between A23 and A33's st=
-ock dvfs table.
->>>
->>> =C2=A0But as A23 CCU may not have the necessary fixes, I won't add the =
-table to A23
->>> =C2=A0now.
->>>
->>> =C2=A0Chen-Yu, could you test the CCU fixes I described in the patchset=
- above on A23,
->>> =C2=A0then test this operating points table?
->>>
->>> =C2=A0If it's necessary, you can send out the CCU fixes and add one mor=
-e patch that
->>> =C2=A0moves this opp-v2 table to sun8i-a23-a33.dtsi .
->>>
->>> =C2=A0=C2=A0arch/arm/boot/dts/sun8i-a33.dtsi | 35 +++++++++++++++++++++=
-++++++++++++++
->>> =C2=A0=C2=A01 file changed, 35 insertions(+)
->>>
->>> =C2=A0diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts=
-/sun8i-a33.dtsi
->>> =C2=A0index 504996cbee29..0f5b2af72981 100644
->>> =C2=A0--- a/arch/arm/boot/dts/sun8i-a33.dtsi
->>> =C2=A0+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
->>> =C2=A0@@ -46,7 +46,42 @@
->>> =C2=A0=C2=A0#include <dt-bindings/dma/sun4i-a10.h>
->>>
->>> =C2=A0=C2=A0/ {
->>> =C2=A0+ cpu0_opp_table: opp_table0 {
->>> =C2=A0+ compatible =3D "operating-points-v2";
->>> =C2=A0+ opp-shared;
->>> =C2=A0+
->>> =C2=A0+ opp@648000000 {
->>> =C2=A0+ opp-hz =3D /bits/ 64 <648000000>;
->>> =C2=A0+ opp-microvolt =3D <1040000>;
->>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
->>> =C2=A0+ };
->>> =C2=A0+
->>> =C2=A0+ opp@816000000 {
->>> =C2=A0+ opp-hz =3D /bits/ 64 <816000000>;
->>> =C2=A0+ opp-microvolt =3D <1100000>;
->>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
->>> =C2=A0+ };
->>> =C2=A0+
->>> =C2=A0+ opp@1008000000 {
->>> =C2=A0+ opp-hz =3D /bits/ 64 <1008000000>;
->>> =C2=A0+ opp-microvolt =3D <1200000>;
->>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
->>> =C2=A0+ };
->>> =C2=A0+
->>> =C2=A0+ opp@1200000000 {
->>> =C2=A0+ opp-hz =3D /bits/ 64 <1200000000>;
->>> =C2=A0+ opp-microvolt =3D <1320000>;
->>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
->>> =C2=A0+ };
->>> =C2=A0+ };
->>> =C2=A0+
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cpus {
->>> =C2=A0+ cpu0: cpu@0 {
->>
->> =C2=A0There's no need to duplicate the label here. I removed it and appl=
-ied.
->
-> I think using the label to directly reference cpu0 would be better,
-> instead of duplicating the cpu@0 block.
-
-After proper testing of A23 ccu, the operating points can also apply to A23=
-.
-(According to A23 devices' fex)
-
->
-> ChenYu
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+CgoxOS4xMi4yMDE2LCAxODowOSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gRnJpLCBEZWMgMTYsIDIwMTYgYXQgMTA6NDA6MDBQTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqA+PiDCoD4gPsKgICZyX3BpbyB7Cj4+IMKgPj4g
+wqA+ID7CoCB3aWZpX3B3cnNlcV9waW5fcTg6IHdpZmlfcHdyc2VxX3BpbkAwIHsKPj4gwqA+PiDC
+oD4gPiAtIHBpbnMgPSAiUEw2IiwgIlBMNyIsICJQTDExIjsKPj4gwqA+PiDCoD4gPiArIHBpbnMg
+PSAiUEw2IiwgIlBMNyIsICJQTDgiLCAiUEwxMSI7Cj4+IMKgPj4gwqA+ID7CoCBmdW5jdGlvbiA9
+ICJncGlvX2luIjsKPj4gwqA+PiDCoD4gPsKgIGJpYXMtcHVsbC11cDsKPj4gwqA+PiDCoD4gPsKg
+IH07Cj4+IMKgPj4gwqA+Cj4+IMKgPj4gwqA+IFRoZXJlJ3Mgc2V2ZXJhbCB0aGluZ3Mgd3Jvbmcg
+aGVyZS4gVGhlIGZpcnN0IG9uZSBpcyB0aGF0IHlvdSByZWx5Cj4+IMKgPj4gwqA+IHNvbGVseSBv
+biB0aGUgcGluY3RybCBzdGF0ZSB0byBtYWludGFpbiBhIHJlc2V0IGxpbmUuIFRoaXMgaXMgdmVy
+eQo+PiDCoD4+IMKgPiBmcmFnaWxlIChlc3BlY2lhbGx5IHNpbmNlIHRoZSBHUElPIHBpbmN0cmwg
+c3RhdGUgYXJlIGxpa2VseSB0byBnbyBhd2F5Cj4+IMKgPj4gwqA+IGF0IHNvbWUgcG9pbnQpLCBi
+dXQgaXQgYWxzbyBtZWFucyB0aGF0IGlmIHlvdXIgZHJpdmVyIHdhbnRzIHRvIHJlY292ZXIKPj4g
+wqA+PiDCoD4gZnJvbSB0aGF0IHNpdHVhdGlvbiBhdCBzb21lIHBvaW50LCBpdCB3b24ndCB3b3Jr
+Lgo+PiDCoD4+IMKgPgo+PiDCoD4+IMKgPiBUaGUgb3RoZXIgb25lIGlzIHRoYXQgdGhlIGJsdWV0
+b290aCBhbmQgd2lmaSBjaGlwcyBhcmUgdHdvIGRldmljZXMgaW4KPj4gwqA+PiDCoD4gbGludXgs
+IGFuZCB5b3UgYXNzaWduIHRoYXQgcGluIHRvIHRoZSB3cm9uZyBkZXZpY2UgKHdpZmkpLgo+PiDC
+oD4+IMKgPgo+PiDCoD4+IMKgPiByZmtpbGwtZ3BpbyBpcyBtYWRlIGp1c3QgZm9yIHRoYXQsIHNv
+IHBsZWFzZSB1c2UgaXQuCj4+IMKgPj4KPj4gwqA+PiDCoFRoZSBHUElPIGlzIG5vdCBmb3IgdGhl
+IHJhZGlvLCBidXQgZm9yIHRoZSBmdWxsIEJsdWV0b290aCBwYXJ0Lgo+PiDCoD4KPj4gwqA+IEkg
+a25vdy4KPj4gwqA+Cj4+IMKgPj4gwqBJZiBpdCdzIHNldCB0byAwLCB0aGVuIHRoZSBibHVldG9v
+dGggcGFydCB3aWxsIHJlc2V0LCBhbmQgdGhlCj4+IMKgPj4gwqBoY2lhdHRhY2ggd2lsbCBmYWls
+Lgo+PiDCoD4KPj4gwqA+IEJvdGggcmZraWxsLWdwaW8gYW5kIHJma2lsbC1yZWd1bGF0b3Igd2ls
+bCBzaHV0ZG93biB3aGVuIGNhbGxlZAo+PiDCoD4gKGVpdGhlciBieSBwb2tpbmcgdGhlIHJlc2V0
+IHBpbiBvciBzaHV0dGluZyBkb3duIHRoZSByZWd1bGF0b3IpLCBzbwo+PiDCoD4gdGhhdCBkZWZp
+bml0ZWx5IHNlZW1zIGxpa2UgYW4gZXhwZWN0ZWQgYmVoYXZpb3IgdG8gcHV0IHRoZSBkZXZpY2Ug
+aW4KPj4gwqA+IHJlc2V0Lgo+PiDCoD4KPj4gwqA+PiDCoFRoZSBCU1AgdXNlcyB0aGlzIGFzIGEg
+cmZraWxsLCBhbmQgdGhlIHJlc3VsdCBpcyB0aGF0IHRoZSBibHVldG9vdGgKPj4gwqA+PiDCoG9u
+L29mZiBzd2l0Y2ggZG8gbm90IHdvcmsgcHJvcGVybHkuCj4+IMKgPgo+PiDCoD4gVGhlbiByZmtp
+bGwgbmVlZHMgZml4aW5nLCBidXQgd29ya2luZyBhcm91bmQgaXQgYnkgaG9waW5nIHRoYXQgdGhl
+Cj4+IMKgPiBjb3JlIHdpbGwgcHJvYmUgYW4gZW50aXJlbHkgZGlmZmVyZW50IGRldmljZSwgYW5k
+IGVuZm9yY2luZyBhIGRlZmF1bHQKPj4gwqA+IHRoYXQgdGhlIHJlc3Qgb2YgdGhlIGtlcm5lbCBt
+aWdodCBvciBtaWdodCBub3QgY2hhbmdlIGlzIGJvdGggZnJhZ2lsZQo+PiDCoD4gYW5kIHdyb25n
+Lgo+Pgo+PiDCoEkgdGhpbmsgYSByZmtpbGwtZ3BpbyBoZXJlIHdvcmtzIGp1c3QgbGlrZSB0aGUg
+QlNQIHJma2lsbC4uLgo+Pgo+PiDCoFRoZSByZWFsIHByb2JsZW0gaXMgdGhhdCB0aGUgUmVhbHRl
+ayBVQVJUIGJsdWV0b290aCBkcml2ZXIgaXMgYSB1c2Vyc3BhY2UKPj4gwqBwcm9ncmFtIChhIG1v
+ZGlmaWVkIGhjaWF0dGFjaCksIHdoaWNoIGlzIG5vdCBjYXBhYmxlIG9mIHRoZSBHUElPIHJlc2V0
+Li4uCj4KPiBDYW4ndCB5b3UgcnVuIHJma2lsbCBiZWZvcmUgYXR0YWNoaW5nPyBXaGF0IGlzIHRo
+ZSBwcm9ibGVtIGV4YWN0bHk/Cj4gSXQncyBub3QgaW4gcmVzZXQgZm9yIGxvbmcgZW5vdWdoPwo+
+Cj4gVGhpcyBzZWVtcyBtb3JlIGFuZCBtb3JlIGxpa2UgYW4gaXNzdWUgaW4gdGhlIEJUIHN0YWNr
+IHlvdSdyZQo+IHVzaW5nLiBXZSBtaWdodCBjb25zaWRlciB3b3JrYXJvdW5kcyBpbiB0aGUga2Vy
+bmVsLCBidXQgdGhleSBoYXZlIHRvCj4gYmUgY29ycmVjdC4KCk9uZSBtb3JlIHJma2lsbCBpbnRl
+cmZhY2Ugd2lsbCBiZSBnZW5lcmF0ZWQgZm9yIGhjaTAgYWZ0ZXIgaGNpYXR0YWNoLCB3aGljaCBj
+YW4KYmUgc2FmZWx5IHRvZ2dsZWQgYmxvY2sgYW5kIHVuYmxvY2suCgpIb3dldmVyLCBpZiB0aGUg
+R1BJTyBpcyB0b2dnbGVkIGRvd24sIHRoZSBoY2lhdHRhY2ggcHJvZ3JhbSB3aWxsIGRpZS4KClRo
+ZSBibHVldG9vdGggc3RhY2sgSSB1c2VkIGlzIGZkLm8ncyBCbHVlWi4KCj4KPiBNYXhpbWUKPgo+
+IC0tCj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQg
+S2VybmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
