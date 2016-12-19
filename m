@@ -1,115 +1,186 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 03/21] MIPS memblock: Alter traditional add_memory_region() method
-Date: Mon, 19 Dec 2016 05:07:28 +0300
-Message-ID: <1482113266-13207-4-git-send-email-fancer.lancer@gmail.com>
+Subject: [PATCH 09/21] MIPS memblock: Move kernel memory reservation to individual method
+Date: Mon, 19 Dec 2016 05:07:34 +0300
+Message-ID: <1482113266-13207-10-git-send-email-fancer.lancer@gmail.com>
 References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
 Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-There is no safe and fast way to get rid of boot_mem_map usage in
-the wide set of platform code. But it's luck, that the architecture
-specific code doesn't make any direct changes in the boot_mem_map
-structure. Additionally the platform specific code registers the
-available memory using traditional add_memory_region() method.
-It's obvious, that one needs to be modified adding regions to both
-new memblock allocator and old boot_mem_map subsystem. In this way
-most of architecture specific code won't be broken.
+The whole kernel text/data/bss must be reserved to prevent sudden
+kernel crashes, for instance, due to unexpected non-zero default static
+variables initializations.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/kernel/setup.c | 51 ++++++++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 3 deletions(-)
+ arch/mips/kernel/setup.c | 117 +++++++++++++++--------------
+ 1 file changed, 59 insertions(+), 58 deletions(-)
 
 diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 084ba6c..9da6f8a 100644
+index 9c1a60d..e746793 100644
 --- a/arch/mips/kernel/setup.c
 +++ b/arch/mips/kernel/setup.c
-@@ -82,10 +82,19 @@ static struct resource data_resource = { .name = "Kernel data", };
+@@ -472,6 +472,62 @@ static void __init mips_reserve_initrd_mem(void) { }
+ #endif
  
- static void *detect_magic __initdata = detect_memory_region;
- 
-+/*
-+ * General method to add RAM regions to the system
-+ *
-+ * NOTE Historically this method has been used to register memory blocks within
-+ *      MIPS kernel code in the boot_mem_map array. So we need to support it
-+ * up until it's discarded from platform-depended code.
-+ * On the other hand it might be good to have it, since we can check regions
-+ * before actually adding them
+ /*
++ * Reserve kernel code and data within memblock allocator
 + */
- void __init add_memory_region(phys_addr_t start, phys_addr_t size, long type)
- {
- 	int x = boot_mem_map.nr_map;
--	int i;
-+	int ret, i;
- 
- 	/*
- 	 * If the region reaches the top of the physical address space, adjust
-@@ -94,15 +103,51 @@ void __init add_memory_region(phys_addr_t start, phys_addr_t size, long type)
- 	if (start + size - 1 == (phys_addr_t)ULLONG_MAX)
- 		--size;
- 
--	/* Sanity check */
-+	/* Sanity check the region */
- 	if (start + size < start) {
- 		pr_warn("Trying to add an invalid memory region, skipped\n");
- 		return;
- 	}
- 
-+	/* Make sure the type is supported */
-+	if (type != BOOT_MEM_RAM && type != BOOT_MEM_INIT_RAM &&
-+	    type != BOOT_MEM_ROM_DATA && type != BOOT_MEM_RESERVED) {
-+		pr_warn("Invalid type of memory region, skipped\n");
-+		return;
-+	}
-+
- 	/*
--	 * Try to merge with existing entry, if any.
-+	 * According to the request_resource logic RAM, INIT and ROM shouldn't
-+	 * intersect each other but being subset of one memory space
- 	 */
-+	if (type != BOOT_MEM_RESERVED && memblock_is_memory(start)) {
-+		pr_warn("Drop already added memory region %08zx @ %pa\n",
-+			(size_t)size, &start);
-+		return;
-+	}
++static void __init mips_reserve_kernel_mem(void)
++{
++	phys_addr_t start, size;
 +
 +	/*
-+	 * Add the region to the memblock allocator. Reserved regions should be
-+	 * in the memory as well to be actually reserved.
++	 * Add kernel _text, _data, _bss, __init*, upto __end sections to
++	 * boot_mem_map and memblock. We must reserve all of them!
 +	 */
-+	ret = memblock_add_node(start, size, 0);
-+	if (ret < 0) {
-+		pr_err("Could't add memblock %08zx @ %pa\n",
-+			(size_t)size, &start);
-+		return;
-+	}
++	start = __pa_symbol(&_text);
++	size = __pa_symbol(&_end) - start;
++	add_memory_region(start, size, BOOT_MEM_RAM);
++	/*
++	 * It needs to be reserved within memblock as well. It's ok if memory
++	 * has already been reserved with previous method
++	 */
++	memblock_reserve(start, size);
 +
-+	/* Reserve memory region passed with the corresponding flags */
-+	if (type != BOOT_MEM_RAM) {
-+		ret = memblock_reserve(start, size);
-+		if (ret < 0) {
-+			pr_err("Could't reserve memblock %08zx @ %pa\n",
-+				(size_t)size, &start);
-+			return;
-+		}
-+	}
++	/* Reserve nosave region for hibernation */
++	start = __pa_symbol(&__nosave_begin);
++	size = __pa_symbol(&__nosave_end) - start;
++	add_memory_region(start, size, BOOT_MEM_RAM);
++	memblock_reserve(start, size);
 +
-+	/* Try to combine with existing entry, if any. */
- 	for (i = 0; i < boot_mem_map.nr_map; i++) {
- 		struct boot_mem_map_entry *entry = boot_mem_map.map + i;
- 		unsigned long top;
++	/* Initialize some init_mm fieldis. We may not need this? */
++	init_mm.start_code = (unsigned long)&_text;
++	init_mm.end_code = (unsigned long)&_etext;
++	init_mm.end_data = (unsigned long)&_edata;
++	init_mm.brk = (unsigned long)&_end;
++
++	/*
++	 * The kernel reserves all memory below its _end symbol as bootmem,
++	 * but the kernel may now be at a much higher address. The memory
++	 * between the original and new locations may be returned to the system.
++	 */
++#ifdef CONFIG_RELOCATABLE
++	if (__pa_symbol(&_text) > __pa_symbol(VMLINUX_LOAD_ADDRESS)) {
++		phys_addr_t offset;
++		extern void show_kernel_relocation(const char *level);
++
++		offset = __pa_symbol(_text) - __pa_symbol(VMLINUX_LOAD_ADDRESS);
++		memblock_free(__pa_symbol(VMLINUX_LOAD_ADDRESS), offset);
++
++#if defined(CONFIG_DEBUG_KERNEL) && defined(CONFIG_DEBUG_INFO)
++		/*
++		 * This information is necessary when debugging the kernel
++		 * But is a security vulnerability otherwise!
++		 */
++		show_kernel_relocation(KERN_INFO);
++#endif
++	}
++#endif
++}
++
++/*
+  * Reserve memory occupied by elfcorehdr
+  */
+ static void __init mips_reserve_elfcorehdr(void)
+@@ -590,6 +646,9 @@ static void __init bootmem_init(void)
+ 	unsigned long bootmap_size;
+ 	int i;
+ 
++	/* Reserve kernel code/data memory */
++	mips_reserve_kernel_mem();
++
+ 	/* Check and reserve memory occupied by initrd */
+ 	mips_reserve_initrd_mem();
+ 
+@@ -766,29 +825,6 @@ static void __init bootmem_init(void)
+ 	 * Reserve the bootmap memory.
+ 	 */
+ 	reserve_bootmem(PFN_PHYS(mapstart), bootmap_size, BOOTMEM_DEFAULT);
+-
+-#ifdef CONFIG_RELOCATABLE
+-	/*
+-	 * The kernel reserves all memory below its _end symbol as bootmem,
+-	 * but the kernel may now be at a much higher address. The memory
+-	 * between the original and new locations may be returned to the system.
+-	 */
+-	if (__pa_symbol(_text) > __pa_symbol(VMLINUX_LOAD_ADDRESS)) {
+-		unsigned long offset;
+-		extern void show_kernel_relocation(const char *level);
+-
+-		offset = __pa_symbol(_text) - __pa_symbol(VMLINUX_LOAD_ADDRESS);
+-		free_bootmem(__pa_symbol(VMLINUX_LOAD_ADDRESS), offset);
+-
+-#if defined(CONFIG_DEBUG_KERNEL) && defined(CONFIG_DEBUG_INFO)
+-		/*
+-		 * This information is necessary when debugging the kernel
+-		 * But is a security vulnerability otherwise!
+-		 */
+-		show_kernel_relocation(KERN_INFO);
+-#endif
+-	}
+-#endif
+ }
+ 
+ #endif	/* CONFIG_SGI_IP27 */
+@@ -816,25 +852,6 @@ static void __init bootmem_init(void)
+  * initialization hook for anything else was introduced.
+  */
+ 
+-static void __init arch_mem_addpart(phys_addr_t mem, phys_addr_t end, int type)
+-{
+-	phys_addr_t size;
+-	int i;
+-
+-	size = end - mem;
+-	if (!size)
+-		return;
+-
+-	/* Make sure it is in the boot_mem_map */
+-	for (i = 0; i < boot_mem_map.nr_map; i++) {
+-		if (mem >= boot_mem_map.map[i].addr &&
+-		    mem < (boot_mem_map.map[i].addr +
+-			   boot_mem_map.map[i].size))
+-			return;
+-	}
+-	add_memory_region(mem, size, type);
+-}
+-
+ static void __init arch_mem_init(char **cmdline_p)
+ {
+ 	struct memblock_region *reg;
+@@ -846,19 +863,6 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	/* Parse passed parameters */
+ 	mips_parse_param(cmdline_p);
+ 
+-	/*
+-	 * Make sure all kernel memory is in the maps.  The "UP" and
+-	 * "DOWN" are opposite for initdata since if it crosses over
+-	 * into another memory section you don't want that to be
+-	 * freed when the initdata is freed.
+-	 */
+-	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
+-			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
+-			 BOOT_MEM_RAM);
+-	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
+-			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
+-			 BOOT_MEM_INIT_RAM);
+-
+ 	pr_info("Determined physical RAM map:\n");
+ 	print_memory_map();
+ 
+@@ -873,9 +877,6 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	for_each_memblock(reserved, reg)
+ 		if (reg->size != 0)
+ 			reserve_bootmem(reg->base, reg->size, BOOTMEM_DEFAULT);
+-
+-	reserve_bootmem_region(__pa_symbol(&__nosave_begin),
+-			__pa_symbol(&__nosave_end)); /* Reserve for hibernation */
+ }
+ 
+ static void __init resource_init(void)
 -- 
 2.6.6
