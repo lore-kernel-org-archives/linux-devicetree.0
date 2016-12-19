@@ -1,150 +1,75 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 08/21] MIPS memblock: Move kernel parameters parser into individual method
-Date: Mon, 19 Dec 2016 05:07:33 +0300
-Message-ID: <1482113266-13207-9-git-send-email-fancer.lancer@gmail.com>
+Subject: [PATCH 18/21] MIPS memblock: Slightly improve buddy allocator init method
+Date: Mon, 19 Dec 2016 05:07:43 +0300
+Message-ID: <1482113266-13207-19-git-send-email-fancer.lancer@gmail.com>
 References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
 Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Main memory initialization method looks messy with cmd line parser
-built-in. So it's better for readability to put it into a separated
-method.
+Just add some minor changes into buddy allocator initialization.
+After all the alterations it shall work just fine from now.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/kernel/setup.c | 87 ++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 39 deletions(-)
+ arch/mips/mm/init.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 52205fb..9c1a60d 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -231,6 +231,51 @@ static void __init print_memory_map(void)
- }
- 
- /*
-+ * Parse passed cmdline
-+ */
-+#define USE_PROM_CMDLINE	IS_ENABLED(CONFIG_MIPS_CMDLINE_FROM_BOOTLOADER)
-+#define USE_DTB_CMDLINE		IS_ENABLED(CONFIG_MIPS_CMDLINE_FROM_DTB)
-+#define EXTEND_WITH_PROM	IS_ENABLED(CONFIG_MIPS_CMDLINE_EXTEND)
-+#define BUILTIN_EXTEND_WITH_PROM	\
-+	IS_ENABLED(CONFIG_MIPS_CMDLINE_BUILTIN_EXTEND)
-+
-+static void __init mips_parse_param(char **cmdline_p)
-+{
-+#if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
-+	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-+#else
-+	if ((USE_PROM_CMDLINE && arcs_cmdline[0]) ||
-+	    (USE_DTB_CMDLINE && !boot_command_line[0]))
-+		strlcpy(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
-+
-+	if (EXTEND_WITH_PROM && arcs_cmdline[0]) {
-+		if (boot_command_line[0])
-+			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
-+	}
-+
-+#if defined(CONFIG_CMDLINE_BOOL)
-+	if (builtin_cmdline[0]) {
-+		if (boot_command_line[0])
-+			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-+	}
-+
-+	if (BUILTIN_EXTEND_WITH_PROM && arcs_cmdline[0]) {
-+		if (boot_command_line[0])
-+			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
-+	}
-+#endif
-+#endif
-+	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
-+
-+	*cmdline_p = command_line;
-+
-+	parse_early_param();
-+}
-+
-+/*
-  * Parse "mem=size@start" parameter rewriting a defined memory map
-  * We look for mem=size@start, where start and size are "value[KkMm]"
+diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
+index 98680fb..13a032f 100644
+--- a/arch/mips/mm/init.c
++++ b/arch/mips/mm/init.c
+@@ -7,6 +7,7 @@
+  * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
+  * Kevin D. Kissell, kevink@mips.com and Carsten Langgaard, carstenl@mips.com
+  * Copyright (C) 2000 MIPS Technologies, Inc.  All rights reserved.
++ * Copyright (C) 2016 T-Platforms. All Rights Reserved.
   */
-@@ -790,12 +835,6 @@ static void __init arch_mem_addpart(phys_addr_t mem, phys_addr_t end, int type)
- 	add_memory_region(mem, size, type);
+ #include <linux/bug.h>
+ #include <linux/init.h>
+@@ -462,22 +463,36 @@ static inline void mem_init_free_highmem(void)
+ #endif
  }
  
--#define USE_PROM_CMDLINE	IS_ENABLED(CONFIG_MIPS_CMDLINE_FROM_BOOTLOADER)
--#define USE_DTB_CMDLINE		IS_ENABLED(CONFIG_MIPS_CMDLINE_FROM_DTB)
--#define EXTEND_WITH_PROM	IS_ENABLED(CONFIG_MIPS_CMDLINE_DTB_EXTEND)
--#define BUILTIN_EXTEND_WITH_PROM	\
--	IS_ENABLED(CONFIG_MIPS_CMDLINE_BUILTIN_EXTEND)
--
- static void __init arch_mem_init(char **cmdline_p)
++/*
++ * Let buddy allocator run
++ */
+ void __init mem_init(void)
  {
- 	struct memblock_region *reg;
-@@ -804,6 +843,9 @@ static void __init arch_mem_init(char **cmdline_p)
- 	/* call board setup routine */
- 	plat_mem_setup();
++	/* Setup maximum number of pages of memory map array */
+ #ifdef CONFIG_HIGHMEM
+ #ifdef CONFIG_DISCONTIGMEM
+ #error "CONFIG_HIGHMEM and CONFIG_DISCONTIGMEM dont work together yet"
+ #endif
+-	max_mapnr = highend_pfn ? highend_pfn : max_low_pfn;
++	set_max_mapnr(highend_pfn);
+ #else
+-	max_mapnr = max_low_pfn;
++	set_max_mapnr(max_low_pfn);
+ #endif
+-	high_memory = (void *) __va(max_low_pfn << PAGE_SHIFT);
++	/* Highmem starts right after lowmem */
++	high_memory = __va(PFN_PHYS(max_low_pfn));
  
-+	/* Parse passed parameters */
-+	mips_parse_param(cmdline_p);
++	/* Initialize speculative access registers - MAAR */
+ 	maar_init();
 +
- 	/*
- 	 * Make sure all kernel memory is in the maps.  The "UP" and
- 	 * "DOWN" are opposite for initdata since if it crosses over
-@@ -820,39 +862,6 @@ static void __init arch_mem_init(char **cmdline_p)
- 	pr_info("Determined physical RAM map:\n");
- 	print_memory_map();
++	/* Free low memory registered within memblock allocator */
+ 	free_all_bootmem();
+-	setup_zero_pages();	/* Setup zeroed pages.  */
++
++	/* Allocate zeroed pages */
++	setup_zero_pages();
++
++	/* Free highmemory registered in memblocks */
+ 	mem_init_free_highmem();
++
++	/* Print out memory areas statistics */
+ 	mem_init_print_info(NULL);
  
--#if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
--	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
--#else
--	if ((USE_PROM_CMDLINE && arcs_cmdline[0]) ||
--	    (USE_DTB_CMDLINE && !boot_command_line[0]))
--		strlcpy(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
--
--	if (EXTEND_WITH_PROM && arcs_cmdline[0]) {
--		if (boot_command_line[0])
--			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
--		strlcat(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
--	}
--
--#if defined(CONFIG_CMDLINE_BOOL)
--	if (builtin_cmdline[0]) {
--		if (boot_command_line[0])
--			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
--		strlcat(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
--	}
--
--	if (BUILTIN_EXTEND_WITH_PROM && arcs_cmdline[0]) {
--		if (boot_command_line[0])
--			strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
--		strlcat(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
--	}
--#endif
--#endif
--	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
--
--	*cmdline_p = command_line;
--
--	parse_early_param();
--
- 	bootmem_init();
- 
- 	device_tree_init();
+ #ifdef CONFIG_64BIT
 -- 
 2.6.6
