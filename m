@@ -1,86 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document the hi3660 clock bindings
-Date: Mon, 19 Dec 2016 16:15:08 -0600
-Message-ID: <20161219221508.jxgmv36hib3ekanf@rob-hp-laptop>
-References: <1481781493-6188-1-git-send-email-zhangfei.gao@linaro.org>
- <1481781493-6188-2-git-send-email-zhangfei.gao@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] Documentation: omap-usb-host: fix OMAP OHCI/EHCI
+ file names
+Date: Mon, 19 Dec 2016 16:19:53 -0600
+Message-ID: <20161219221953.ysphbd6v7zxsczf5@rob-hp-laptop>
+References: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481781493-6188-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1481817370-28242-1-git-send-email-yegorslists@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yegorslists@googlemail.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 01:58:12PM +0800, Zhangfei Gao wrote:
-> Add DT bindings documentation for hi3660 SoC clock.
+On Thu, Dec 15, 2016 at 04:56:09PM +0100, yegorslists@googlemail.com wrote:
+> From: Yegor Yefremov <yegorslists@googlemail.com>
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> OMAP related files are actually named ehci-omap.txt and ohci-omap3.txt.
+> 
+> Also add full path to ohci-omap3.txt.
+> 
+> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
 > ---
->  .../devicetree/bindings/clock/hi3660-clock.txt     | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3660-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/hi3660-clock.txt b/Documentation/devicetree/bindings/clock/hi3660-clock.txt
-> new file mode 100644
-> index 0000000..7296fd7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/hi3660-clock.txt
-> @@ -0,0 +1,42 @@
-> +* Hisilicon Hi3660 Clock Controller
-> +
-> +The Hi3660 clock controller generates and supplies clock to various
-> +controllers within the Hi3660 SoC.
-> +
-> +Required Properties:
-> +
-> +- compatible: the compatible should be one of the following strings to
-> +	indicate the clock controller functionality.
-> +
-> +	- "hisilicon,hi3660-crgctrl"
-> +	- "hisilicon,hi3660-pctrl"
-> +	- "hisilicon,hi3660-pmuctrl"
-> +	- "hisilicon,hi3660-sctrl"
-> +	- "hisilicon,hi3660-iomcu"
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
-> +
-> +Each clock is assigned an identifier and client nodes use this identifier
-> +to specify the clock which they consume.
-> +
-> +All these identifier could be found in <dt-bindings/clock/hi3660-clock.h>.
-> +
-> +Examples:
-> +	crg_ctrl: crg_ctrl@fff35000 {
+>  Documentation/devicetree/bindings/mfd/omap-usb-host.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-clock-controller@...
+Applied, thanks.
 
-> +		compatible = "hisilicon,hi3660-crgctrl", "syscon";
-> +		reg = <0x0 0xfff35000 0x0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	uart0: uart@fdf02000 {
-
-serial@...
-
-> +		compatible = "arm,pl011", "arm,primecell";
-> +		reg = <0x0 0xfdf02000 0x0 0x1000>;
-> +		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&crg_ctrl HI3660_CLK_MUX_UART0>,
-> +			 <&crg_ctrl HI3660_PCLK>;
-> +		clock-names = "uartclk", "apb_pclk";
-> +		status = "disabled";
-> +	};
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
