@@ -1,101 +1,112 @@
-From: Dongpo Li <lidongpo@hisilicon.com>
-Subject: Re: [PATCH v2 1/4] net: hix5hd2_gmac: add generic compatible string
-Date: Mon, 19 Dec 2016 16:14:14 +0800
-Message-ID: <585796D6.1080407@hisilicon.com>
-References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
- <1480944481-118803-2-git-send-email-lidongpo@hisilicon.com>
- <20161209223521.5dnj7l44e663sntl@rob-hp-laptop>
- <584E871D.7060200@hisilicon.com>
- <CAL_Jsq+d5xHsxMKxbWSYy3cDXnC+HQj3=wun1zxf5PZ_BYrD-Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: add opp-v2 table for A33
+Date: Mon, 19 Dec 2016 09:46:52 +0100
+Message-ID: <20161219084652.kiqdkiewu5tujlyd@lukather>
+References: <20161215182754.33921-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+d5xHsxMKxbWSYy3cDXnC+HQj3=wun1zxf5PZ_BYrD-Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, salil.mehta@huawei.com, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Jiancheng Xue <xuejiancheng@hisilicon.com>, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oyrqlppj6omlvwzf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7V433BAKGQELHFRHHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161215182754.33921-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob and David,
 
-On 2016/12/12 22:21, Rob Herring wrote:
-> On Mon, Dec 12, 2016 at 5:16 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
->> Hi Rob,
->>
->> On 2016/12/10 6:35, Rob Herring wrote:
->>> On Mon, Dec 05, 2016 at 09:27:58PM +0800, Dongpo Li wrote:
->>>> The "hix5hd2" is SoC name, add the generic ethernet driver name.
->>>> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
->>>> the SG/TXCSUM/TSO/UFO features.
->>>>
->>>> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
->>>> ---
->>>>  .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt    |  9 +++++++--
->>>>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c             | 15 +++++++++++----
->>>>  2 files changed, 18 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>>> index 75d398b..75920f0 100644
->>>> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>>> @@ -1,7 +1,12 @@
->>>>  Hisilicon hix5hd2 gmac controller
->>>>
->>>>  Required properties:
->>>> -- compatible: should be "hisilicon,hix5hd2-gmac".
->>>> +- compatible: should contain one of the following SoC strings:
->>>> +    * "hisilicon,hix5hd2-gemac"
->>>> +    * "hisilicon,hi3798cv200-gemac"
->>>> +    and one of the following version string:
->>>> +    * "hisilicon,hisi-gemac-v1"
->>>> +    * "hisilicon,hisi-gemac-v2"
->>>
->>> What combinations are valid? I assume both chips don't have both v1 and
->>> v2. 2 SoCs and 2 versions so far, I don't think there is much point to
->>> have the v1 and v2 compatible strings.
->>>
->> The v1 and v2 are generic MAC compatible strings, many HiSilicon SoCs may
->> use the same MAC version. For example,
->> hix5hd2, hi3716cv200 SoCs use the v1 MAC version,
->> hi3798cv200, hi3516a SoCs use the v2 MAC version,
->> and there may be more SoCs added in future.
->> So I think the generic compatible strings are okay here.
->> Should I add the hi3716cv200, hi3516a SoCs compatible here?
+--oyrqlppj6omlvwzf
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Fri, Dec 16, 2016 at 02:27:54AM +0800, Icenowy Zheng wrote:
+> An operating point table is needed for the cpu frequency adjusting to
+> work.
 > 
-> Yes.
+> The operating point table is converted from the common value in
+> extracted script.fex from many A33 board/tablets.
 > 
->> Do you have any good advice?
->>
->>>>  - reg: specifies base physical address(s) and size of the device registers.
->>>>    The first region is the MAC register base and size.
->>>>    The second region is external interface control register.
->>>> @@ -20,7 +25,7 @@ Required properties:
->>>>
->>>>  Example:
->>>>      gmac0: ethernet@f9840000 {
->>>> -            compatible = "hisilicon,hix5hd2-gmac";
->>>> +            compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
->>>
->>> You can't just change compatible strings.
->>>
->> Okay, maybe I should name all the compatible string with the suffix "-gmac" instead of
->> "-gemac". This can keep the compatible strings with the same suffix. Is this okay?
->> Can I just add the generic compatible string without changing the SoCs compatible string?
->> Like following:
->>         gmac0: ethernet@f9840000 {
->>  -              compatible = "hisilicon,hix5hd2-gmac";
->>  +              compatible = "hisilicon,hix5hd2-gmac", "hisilicon,hisi-gmac-v1";
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+> Changes since v1:
+> - Fix format problem (blank lines).
+> - Removed the 1.344GHz operating point, as it's overvoltage and overclocked.
 > 
-> Yes, this is fine.
+> This patch depends on the following patchset:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/473962.html
+> 
+> It's the v2 of the [PATCH 4/6] in this patchset.
+> 
+> I think this operating point table may also apply to A23, as there's no
+> difference except the points over 1.2GHz between A23 and A33's stock dvfs table.
+> 
+> But as A23 CCU may not have the necessary fixes, I won't add the table to A23
+> now.
+> 
+> Chen-Yu, could you test the CCU fixes I described in the patchset above on A23,
+> then test this operating points table?
+> 
+> If it's necessary, you can send out the CCU fixes and add one more patch that
+> moves this opp-v2 table to sun8i-a23-a33.dtsi .
+> 
+>  arch/arm/boot/dts/sun8i-a33.dtsi | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+> index 504996cbee29..0f5b2af72981 100644
+> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+> @@ -46,7 +46,42 @@
+>  #include <dt-bindings/dma/sun4i-a10.h>
+>  
+>  / {
+> +	cpu0_opp_table: opp_table0 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp@648000000 {
+> +			opp-hz = /bits/ 64 <648000000>;
+> +			opp-microvolt = <1040000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@816000000 {
+> +			opp-hz = /bits/ 64 <816000000>;
+> +			opp-microvolt = <1100000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1008000000 {
+> +			opp-hz = /bits/ 64 <1008000000>;
+> +			opp-microvolt = <1200000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			opp-microvolt = <1320000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +	};
+> +
+>  	cpus {
+> +		cpu0: cpu@0 {
 
-As the patch series have been applied to net-next branch,
-in which way should I commit this compatible fix?
-Should I send a new patch fixing this compatible string error with "Fixes: xxx"?
-Looking forward to your reply!
+There's no need to duplicate the label here. I removed it and applied.
 
+Thanks!
+Maxime
 
-    Regards,
-    Dongpo
-
-.
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--oyrqlppj6omlvwzf--
