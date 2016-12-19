@@ -1,37 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/6] watchdog: ts4600: add driver for TS-4600 watchdog
-Date: Mon, 19 Dec 2016 16:13:36 -0600
-Message-ID: <20161219221336.cnvcxin34hdasndp@rob-hp-laptop>
-References: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
- <20161214231237.17496-7-sebastien.bourdelin@savoirfairelinux.com>
+Subject: Re: [PATCH v3] power: supply: bq24735-charger: optionally poll the
+ ac-detect gpio
+Date: Mon, 19 Dec 2016 16:16:04 -0600
+Message-ID: <20161219221604.zkwxoodte4tp7u6q@rob-hp-laptop>
+References: <20161214151026.5q6goxlfscv53tol@earth>
+ <1481794126-5670-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161214231237.17496-7-sebastien.bourdelin@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@savoirfairelinux.com, mark@embeddedarm.com, kris@embeddedarm.com, horms+renesas@verge.net.au, treding@nvidia.com, jonathanh@nvidia.com, f.fainelli@gmail.com, fabio.estevam@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, linux@armlinux.org.uk, linux@roeck-us.net, wim@iguana.be, mark.rutland@arm.com, damien.riegel@savoirfairelinux.com, lucile.quirion@savoirfairelinux.com, olof@lixom.net, arnd@arndb.de, suzuki.poulose@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, yamada.masahiro@socionext.com
+In-Reply-To: <1481794126-5670-1-git-send-email-peda@axentia.se>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 06:12:36PM -0500, Sebastien Bourdelin wrote:
-> This watchdog is instantiated in a FPGA and can only be access using a
-> GPIOs bit-banged bus, called the NBUS by Technologic Systems.
-> The watchdog is made of only one register, called the feed register.
-> Writing to this register will re-arm the watchdog for a given time (and
-> enable it if it was disable). It can be disabled by writing a special
-> value into it.
+On Thu, Dec 15, 2016 at 10:28:46AM +0100, Peter Rosin wrote:
+> If the ac-detect gpio does not support interrupts, provide a fallback
+> to poll the gpio at a configurable interval.
 > 
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
->  .../devicetree/bindings/watchdog/ts4600-wdt.txt    |  16 ++
->  arch/arm/boot/dts/imx28-ts4600-common.dtsi         |   5 +
+> 
+> v2 -> v3 changes:
+> - use device_property_read_u32 instead of of_property_read_u32
+> 
+> v1 -> v2 changes:
+> - use poll-interval instead of ti,poll-interval-ms in the bindings
+> 
+> Cheers,
+> peda
+> 
+>  .../bindings/power/supply/ti,bq24735.txt           |  2 +
 
 Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/watchdog/Kconfig                           |  10 +
->  drivers/watchdog/Makefile                          |   1 +
->  drivers/watchdog/ts4600_wdt.c                      | 213 +++++++++++++++++++++
->  5 files changed, 245 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
->  create mode 100644 drivers/watchdog/ts4600_wdt.c
+>  drivers/power/supply/bq24735-charger.c             | 49 +++++++++++++++++++---
+>  2 files changed, 46 insertions(+), 5 deletions(-)
