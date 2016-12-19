@@ -1,43 +1,273 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 2/8] dt-bindings: document the STM32 RTC bindings
-Date: Mon, 19 Dec 2016 17:10:12 -0600
-Message-ID: <20161219231012.qkdtgfdshlpvjzli@rob-hp-laptop>
-References: <1481878257-29163-1-git-send-email-amelie.delaunay@st.com>
- <1481878257-29163-3-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2 2/3] Bluetooth: btusb: Add out-of-band wakeup support
+Date: Mon, 19 Dec 2016 15:10:21 -0800
+Message-ID: <20161219231021.GA142074@google.com>
+References: <1481916604-114279-1-git-send-email-rajatja@google.com>
+ <1481916604-114279-2-git-send-email-rajatja@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDJIP47K7MERBVWR4HBAKGQEMMTGDZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481878257-29163-3-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1481916604-114279-2-git-send-email-rajatja@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajat Jain <rajatja@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, rajatxjain@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 16, 2016 at 09:50:51AM +0100, Amelie Delaunay wrote:
-> This patch adds documentation of device tree bindings for the STM32 RTC.
+Hi Rajat,
+
+On Fri, Dec 16, 2016 at 11:30:03AM -0800, Rajat Jain wrote:
+> Some onboard BT chips (e.g. Marvell 8997) contain a wakeup pin that
+> can be connected to a gpio on the CPU side, and can be used to wakeup
+> the host out-of-band. This can be useful in situations where the
+> in-band wakeup is not possible or not preferable (e.g. the in-band
+> wakeup may require the USB host controller to remain active, and
+> hence consuming more system power during system sleep).
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+> The oob gpio interrupt to be used for wakeup on the CPU side, is
+> read from the device tree node, (using standard interrupt descriptors).
+> A devcie tree binding document is also added for the driver. The
+> compatible string is in compliance with
+> Documentation/devicetree/bindings/usb/usb-device.txt
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+
+A few small comments below, but other than those, for the whole series:
+
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+
 > ---
->  .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> v2: * Use interrupt-names ("wakeup") instead of assuming first interrupt.
+>     * Leave it on device tree to specify IRQ flags (level /edge triggered)
+>     * Mark the device as non wakeable on exit.
+> 
+>  Documentation/devicetree/bindings/net/btusb.txt | 40 ++++++++++++
+>  drivers/bluetooth/btusb.c                       | 84 +++++++++++++++++++++++++
+>  2 files changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/btusb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
+> new file mode 100644
+> index 0000000..2c0355c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/btusb.txt
+> @@ -0,0 +1,40 @@
+> +Generic Bluetooth controller over USB (btusb driver)
+> +---------------------------------------------------
+> +
+> +Required properties:
+> +
+> +  - compatible : should comply with the format "usbVID,PID" specified in
+> +		 Documentation/devicetree/bindings/usb/usb-device.txt
+> +		 At the time of writing, the only OF supported devices
+> +		 (more may be added later) are:
+> +
+> +		  "usb1286,204e" (Marvell 8997)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I don't know if anyone cares about these sort of organizational aspects,
+but in patch 3 you're extending this binding with device-specific
+Marvell bindings. Seems like it'd be good to have some clear way to
+correlate those 2. e.g., add a reference to marvell-bt-sd8xxx.txt (or
+marvell-bt-8xxx.txt, once you rename it) in patch 3.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> +
+> +Optional properties:
+> +
+> +  - interrupt-parent: phandle of the parent interrupt controller
+> +  - interrupt-names: (see below)
+> +  - interrupts : The interrupt specified by the name "wakeup" is the interrupt
+> +		 that shall be used for out-of-band wake-on-bt. Driver will
+> +		 request this interrupt for wakeup. During system suspend, the
+> +		 irq will be enabled so that the bluetooth chip can wakeup host
+> +		 platform out of band. During system resume, the irq will be
+> +		 disabled to make sure unnecessary interrupt is not received.
+> +
+> +Example:
+> +
+> +Following example uses irq pin number 3 of gpio0 for out of band wake-on-bt:
+> +
+> +&usb_host1_ehci {
+> +    status = "okay";
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
+> +
+> +    mvl_bt1: bt@1 {
+> +	compatible = "usb1286,204e";
+> +	reg = <1>;
+> +	interrupt-parent = <&gpio0>;
+> +	interrupt-name = "wakeup";
+> +	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> +    };
+> +};
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index ce22cef..beca4e9 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/module.h>
+>  #include <linux/usb.h>
+>  #include <linux/firmware.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <asm/unaligned.h>
+>  
+>  #include <net/bluetooth/bluetooth.h>
+> @@ -369,6 +371,7 @@ static const struct usb_device_id blacklist_table[] = {
+>  #define BTUSB_BOOTING		9
+>  #define BTUSB_RESET_RESUME	10
+>  #define BTUSB_DIAG_RUNNING	11
+> +#define BTUSB_OOB_WAKE_DISABLED	12
+>  
+>  struct btusb_data {
+>  	struct hci_dev       *hdev;
+> @@ -416,6 +419,8 @@ struct btusb_data {
+>  	int (*recv_bulk)(struct btusb_data *data, void *buffer, int count);
+>  
+>  	int (*setup_on_usb)(struct hci_dev *hdev);
+> +
+> +	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+>  };
+>  
+>  static inline void btusb_free_frags(struct btusb_data *data)
+> @@ -2728,6 +2733,65 @@ static int btusb_bcm_set_diag(struct hci_dev *hdev, bool enable)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_PM
+> +static irqreturn_t btusb_oob_wake_handler(int irq, void *priv)
+> +{
+> +	struct btusb_data *data = priv;
+> +
+> +	/* Disable only if not already disabled (keep it balanced) */
+> +	if (!test_and_set_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags)) {
+> +		disable_irq_nosync(irq);
+> +		disable_irq_wake(irq);
+> +	}
+> +	pm_wakeup_event(&data->udev->dev, 0);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct of_device_id btusb_match_table[] = {
+> +	{ .compatible = "usb1286,204e" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, btusb_match_table);
+
+You define a match table here, but you also define essentially same
+table for Marvell-specific additions in patch 3. It looks like maybe
+it's legal to have more than one OF table in a module? But it seems like
+it would get confusing, besides being somewhat strange to maintain. It
+might also produce duplicate 'modinfo' output.
+
+If you really want to independently opt into device-tree-specified
+interrupts vs. Marvell-specific interrrupt configuration, then you
+should probably just merge the latter into the former table, and
+implement a Marvell/GPIO flag to stick in the .data field of this table.
+
+Or it might be fine to drop one or both "match" checks. Particularly for
+the Marvell-specific stuff, it's probably fair just to check if it has
+an ->of_node and if 'id->driver_info & BTUSB_MARVELL'. Any other Marvell
+device-specific quirks could probably be keyed off of the
+(weirdly-named?) blacklist_table[], which already matches PID/VID.
+
+> +
+> +/* Use an oob wakeup pin? */
+> +static int btusb_config_oob_wake(struct hci_dev *hdev)
+> +{
+> +	struct btusb_data *data = hci_get_drvdata(hdev);
+> +	struct device *dev = &data->udev->dev;
+> +	int irq, ret;
+> +
+> +	if (!of_match_device(btusb_match_table, dev))
+> +		return 0;
+> +
+> +	/* Move on if no IRQ specified */
+> +	irq = of_irq_get_byname(dev->of_node, "wakeup");
+> +	if (irq <= 0) {
+> +		bt_dev_dbg(hdev, "%s: no OOB Wakeup IRQ in DT", __func__);
+> +		return 0;
+> +	}
+> +
+> +	set_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags);
+> +
+> +	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
+> +			       0, "OOB Wake-on-BT", data);
+> +	if (ret) {
+> +		bt_dev_err(hdev, "%s: IRQ request failed", __func__);
+> +		return ret;
+> +	}
+> +
+> +	ret = device_init_wakeup(dev, true);
+> +	if (ret) {
+> +		bt_dev_err(hdev, "%s: failed to init_wakeup\n", __func__);
+> +		return ret;
+> +	}
+> +
+> +	data->oob_wake_irq = irq;
+> +	disable_irq(irq);
+> +	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u\n", irq);
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int btusb_probe(struct usb_interface *intf,
+>  		       const struct usb_device_id *id)
+>  {
+> @@ -2849,6 +2913,11 @@ static int btusb_probe(struct usb_interface *intf,
+>  	hdev->send   = btusb_send_frame;
+>  	hdev->notify = btusb_notify;
+>  
+> +#ifdef CONFIG_PM
+> +	err = btusb_config_oob_wake(hdev);
+> +	if (err)
+> +		goto out_free_dev;
+> +#endif
+>  	if (id->driver_info & BTUSB_CW6622)
+>  		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
+>  
+> @@ -3061,6 +3130,9 @@ static void btusb_disconnect(struct usb_interface *intf)
+>  			usb_driver_release_interface(&btusb_driver, data->isoc);
+>  	}
+>  
+> +	if (data->oob_wake_irq)
+> +		device_init_wakeup(&data->udev->dev, false);
+> +
+>  	hci_free_dev(hdev);
+>  }
+>  
+> @@ -3089,6 +3161,12 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
+>  	btusb_stop_traffic(data);
+>  	usb_kill_anchored_urbs(&data->tx_anchor);
+>  
+> +	if (data->oob_wake_irq && device_may_wakeup(&data->udev->dev)) {
+> +		clear_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags);
+> +		enable_irq_wake(data->oob_wake_irq);
+> +		enable_irq(data->oob_wake_irq);
+> +	}
+> +
+>  	/* Optionally request a device reset on resume, but only when
+>  	 * wakeups are disabled. If wakeups are enabled we assume the
+>  	 * device will stay powered up throughout suspend.
+> @@ -3126,6 +3204,12 @@ static int btusb_resume(struct usb_interface *intf)
+>  	if (--data->suspend_count)
+
+Not related to your patch exactly, but isn't this 'suspend_count' stuff
+useless? I'd send a patch, but it might conflict with yours. Just wanted
+to note it and see if I'm crazy...
+
+Brian
+
+>  		return 0;
+>  
+> +	/* Disable only if not already disabled (keep it balanced) */
+> +	if (!test_and_set_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags)) {
+> +		disable_irq(data->oob_wake_irq);
+> +		disable_irq_wake(data->oob_wake_irq);
+> +	}
+> +
+>  	if (!test_bit(HCI_RUNNING, &hdev->flags))
+>  		goto done;
+>  
+> -- 
+> 2.8.0.rc3.226.g39d4020
+> 
