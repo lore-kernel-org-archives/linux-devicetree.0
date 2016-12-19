@@ -1,94 +1,108 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 19/21] MIPS memblock: Add print out method of kernel virtual memory layout
-Date: Mon, 19 Dec 2016 05:07:44 +0300
-Message-ID: <1482113266-13207-20-git-send-email-fancer.lancer@gmail.com>
-References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH v6 0/5] Altera Cyclone Passive Serial SPI FPGA Manager
+Date: Sun, 18 Dec 2016 20:14:19 -0600 (CST)
+Message-ID: <alpine.DEB.2.10.1612182012440.2528@atull-730U3E-740U3E>
+References: <cover.1481918884.git.stillcompiling@gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+In-Reply-To: <cover.1481918884.git.stillcompiling@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Anatolij Gustschin <agust@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-It's useful to have some printed map of the kernel virtual memory,
-at least for debugging purpose.
+On Fri, 16 Dec 2016, Joshua Clayton wrote:
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- arch/mips/mm/init.c | 47 +++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+> This series adds an FPGA manager for Altera cyclone FPGAs
+> that can program them using an spi port and a couple of gpios, using
+> Alteras passive serial protocol.
+> 
+> Need ACKs from ARCH maintainers for ARCH specific implementations of
+> __arch_bitrev8x4(), and I've added more ARCHes, so will need more ACKS, 
+> but the generic code will work without that patch, so if there is a holdup
+> the rest of the series can go in without patch 2
 
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index 13a032f..35e7ba8 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -32,6 +32,7 @@
- #include <linux/hardirq.h>
- #include <linux/gfp.h>
- #include <linux/kcore.h>
-+#include <linux/sizes.h>
- 
- #include <asm/asm-offsets.h>
- #include <asm/bootinfo.h>
-@@ -106,6 +107,49 @@ static void __init zone_sizes_init(void)
- }
- 
- /*
-+ * Print out kernel memory layout
-+ */
-+#define MLK(b, t) b, t, ((t) - (b)) >> 10
-+#define MLM(b, t) b, t, ((t) - (b)) >> 20
-+#define MLK_ROUNDUP(b, t) b, t, DIV_ROUND_UP(((t) - (b)), SZ_1K)
-+static void __init mem_print_kmap_info(void)
-+{
-+	pr_notice("Virtual kernel memory layout:\n"
-+		  "    lowmem  : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-+		  "    vmalloc : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-+#ifdef CONFIG_HIGHMEM
-+		  "    pkmap   : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-+#endif
-+		  "    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-+		  "      .text : 0x%p" " - 0x%p" "   (%4td kB)\n"
-+		  "      .data : 0x%p" " - 0x%p" "   (%4td kB)\n"
-+		  "      .init : 0x%p" " - 0x%p" "   (%4td kB)\n",
-+		MLM(PAGE_OFFSET, (unsigned long)high_memory),
-+		MLM(VMALLOC_START, VMALLOC_END),
-+#ifdef CONFIG_HIGHMEM
-+		MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE)),
-+#endif
-+		MLK(FIXADDR_START, FIXADDR_TOP),
-+		MLK_ROUNDUP(_text, _etext),
-+		MLK_ROUNDUP(_sdata, _edata),
-+		MLK_ROUNDUP(__init_begin, __init_end));
-+
-+	/* Check some fundamental inconsistencies. May add something else? */
-+#ifdef CONFIG_HIGHMEM
-+	BUILD_BUG_ON(VMALLOC_END < PAGE_OFFSET);
-+	BUG_ON(VMALLOC_END < (unsigned long)high_memory);
-+#endif
-+	BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-+	BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) <
-+					(unsigned long)high_memory);
-+	BUILD_BUG_ON(FIXADDR_TOP < PAGE_OFFSET);
-+	BUG_ON(FIXADDR_TOP < (unsigned long)high_memory);
-+}
-+#undef MLK
-+#undef MLM
-+#undef MLK_ROUNDUP
-+
-+/*
-  * Not static inline because used by IP27 special magic initialization code
-  */
- void setup_zero_pages(void)
-@@ -492,6 +536,9 @@ void __init mem_init(void)
- 	/* Free highmemory registered in memblocks */
- 	mem_init_free_highmem();
- 
-+	/* Print out kernel memory layout */
-+	mem_print_kmap_info();
-+
- 	/* Print out memory areas statistics */
- 	mem_init_print_info(NULL);
- 
--- 
-2.6.6
+Hi Joshua,
+
+We still need Russell to ACK or take patch 1.  It's the merge window
+so he may be busy.
+
+Alan
+
+> 
+> Changes from v5:
+> - Rebased on next-20161214xi
+> - Corrected for FPGA Mgr API change in  write_init() and write_complete()
+> - Better describe the device cyclone-ps-spi runs on in the file header.
+> - Split the bitrev8x4 patch into generic and arch specific patches...
+> - Added AARCH64 and MIPS implementations of bitrev8x4()... they all have to 
+>   have an implementation for it to compile cleanly across platforms
+> - Added the changes to imx6q-evi.dts to the patch set.
+> 
+> Changes from v4:
+> - Added the needed return statement to __arch_bitrev8x4()
+> - Added Rob Herrings ACK for and fix a typo in the commit log of patch 2
+> 
+> Changes from v3:
+> - Fixed up the state() function to return the state of the status pin
+>   reqested by Alan Tull
+> - Switched the pin to ACTIVE_LOW and coresponding logic level, and updated
+>   the corresponding documentation. Thanks Rob Herring for pointing out my
+>   mistake.
+> - Per Rob Herring, switched from "gpio" to "gpios" in dts
+> 
+> Changes from v2:
+> - Merged patch 3 and 4 as suggested in review by Moritz Fischer
+> - Changed FPGA_MIN_DELAY from 250 to 50 ms is the time advertized by
+>   Altera. This now works, as we don't assume it is done
+> 
+> Changes from v1:
+> - Changed the name from cyclone-spi-fpga-mgr to cyclone-ps-spi-fpga-mgr
+>   This name change was requested by Alan Tull, to be specific about which
+>   programming method is being employed on the fpga.
+> - Changed the name of the reset-gpio to config-gpio to closer match the
+>   way the pins are described in the Altera manual
+> - Moved MODULE_LICENCE, _AUTHOR, and _DESCRIPTION to the bottom
+> 
+> - Added a bitrev8x4() function to the bitrev headers and implemented ARM
+>  const, runtime, and ARM specific faster versions (This may end up
+>  needing to be a standalone patch)
+> 
+> - Moved the bitswapping into cyclonespi_write(), as requested.
+>   This falls short of my desired generic lsb first spi support, but is a step
+>   in that direction.
+> 
+> - Fixed whitespace problems introduced during refactoring
+> 
+> - Replaced magic number for initial delay with a descriptive macro
+> - Poll the fpga to see when it is ready rather than a fixed 1 ms sleep
+> 
+> Joshua Clayton (5):
+>   lib: add bitrev8x4()
+>   lib: implement __arch_bitrev8x4()
+>   doc: dt: add cyclone-ps-spi binding document
+>   fpga manager: Add cyclone-ps-spi driver for Altera FPGAs
+>   ARM: dts: imx6q-evi: support cyclone-ps-spi
+> 
+>  .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      |  25 +++
+>  arch/arm/boot/dts/imx6q-evi.dts                    |  16 ++
+>  arch/arm/include/asm/bitrev.h                      |   6 +
+>  arch/arm64/include/asm/bitrev.h                    |   6 +
+>  arch/mips/include/asm/bitrev.h                     |   6 +
+>  drivers/fpga/Kconfig                               |   7 +
+>  drivers/fpga/Makefile                              |   1 +
+>  drivers/fpga/cyclone-ps-spi.c                      | 186 +++++++++++++++++++++
+>  include/linux/bitrev.h                             |  26 +++
+>  9 files changed, 279 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+>  create mode 100644 drivers/fpga/cyclone-ps-spi.c
+> 
+> -- 
+> 2.9.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
