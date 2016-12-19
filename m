@@ -1,88 +1,130 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
-Date: Mon, 19 Dec 2016 19:05:27 +0530
-Message-ID: <5857E21F.2080903@samsung.com>
-References: <5220084.l31t5oJbsy@amdc3058>
- <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
- <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
- <2340115.HEG9AYUCMD@amdc3058>
- <CAD=FV=W6R8cNuR+gTnNRF6d-TNgzUeYTwuCp27efoMsd0YOH3g@mail.gmail.com>
- <20161216073720.GA3489@kozik-lap>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: add opp-v2 table for A33
+Date: Mon, 19 Dec 2016 22:06:46 +0800
+Message-ID: <11975791482156406@web2g.yandex.ru>
+References: <20161215182754.33921-1-icenowy@aosc.xyz> <20161219084652.kiqdkiewu5tujlyd@lukather> <CAGb2v65YWntCrFHtSbxhtTWkt+UwkW3xoY-ae26MpH+-ULLXSQ@mail.gmail.com>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20161216073720.GA3489@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Doug Anderson <dianders@chromium.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Arjun K V <arjun.kv@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB6GS37BAKGQEUEVP72Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65YWntCrFHtSbxhtTWkt+UwkW3xoY-ae26MpH+-ULLXSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 12/16/2016 01:07 PM, Krzysztof Kozlowski wrote:
-> On Thu, Dec 15, 2016 at 04:52:58PM -0800, Doug Anderson wrote:
->>> [ I added Arjun to Cc:, maybe he can help in explaining this issue
->>>    (unfortunately Inderpal's email is no longer working). ]
+
+19.12.2016, 16:54, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
+> On Mon, Dec 19, 2016 at 4:46 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> =C2=A0On Fri, Dec 16, 2016 at 02:27:54AM +0800, Icenowy Zheng wrote:
+>>> =C2=A0An operating point table is needed for the cpu frequency adjustin=
+g to
+>>> =C2=A0work.
 >>>
->>> Please also note that on Exynos5422/5800 SoCs the same ARM rail
->>> voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
->>> IOW if the problem exists it is already present in the mainline
->>> kernel.
+>>> =C2=A0The operating point table is converted from the common value in
+>>> =C2=A0extracted script.fex from many A33 board/tablets.
+>>>
+>>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>> =C2=A0---
+>>> =C2=A0Changes since v1:
+>>> =C2=A0- Fix format problem (blank lines).
+>>> =C2=A0- Removed the 1.344GHz operating point, as it's overvoltage and o=
+verclocked.
+>>>
+>>> =C2=A0This patch depends on the following patchset:
+>>>
+>>> =C2=A0http://lists.infradead.org/pipermail/linux-arm-kernel/2016-Decemb=
+er/473962.html
+>>>
+>>> =C2=A0It's the v2 of the [PATCH 4/6] in this patchset.
+>>>
+>>> =C2=A0I think this operating point table may also apply to A23, as ther=
+e's no
+>>> =C2=A0difference except the points over 1.2GHz between A23 and A33's st=
+ock dvfs table.
+>>>
+>>> =C2=A0But as A23 CCU may not have the necessary fixes, I won't add the =
+table to A23
+>>> =C2=A0now.
+>>>
+>>> =C2=A0Chen-Yu, could you test the CCU fixes I described in the patchset=
+ above on A23,
+>>> =C2=A0then test this operating points table?
+>>>
+>>> =C2=A0If it's necessary, you can send out the CCU fixes and add one mor=
+e patch that
+>>> =C2=A0moves this opp-v2 table to sun8i-a23-a33.dtsi .
+>>>
+>>> =C2=A0=C2=A0arch/arm/boot/dts/sun8i-a33.dtsi | 35 +++++++++++++++++++++=
+++++++++++++++
+>>> =C2=A0=C2=A01 file changed, 35 insertions(+)
+>>>
+>>> =C2=A0diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts=
+/sun8i-a33.dtsi
+>>> =C2=A0index 504996cbee29..0f5b2af72981 100644
+>>> =C2=A0--- a/arch/arm/boot/dts/sun8i-a33.dtsi
+>>> =C2=A0+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+>>> =C2=A0@@ -46,7 +46,42 @@
+>>> =C2=A0=C2=A0#include <dt-bindings/dma/sun4i-a10.h>
+>>>
+>>> =C2=A0=C2=A0/ {
+>>> =C2=A0+ cpu0_opp_table: opp_table0 {
+>>> =C2=A0+ compatible =3D "operating-points-v2";
+>>> =C2=A0+ opp-shared;
+>>> =C2=A0+
+>>> =C2=A0+ opp@648000000 {
+>>> =C2=A0+ opp-hz =3D /bits/ 64 <648000000>;
+>>> =C2=A0+ opp-microvolt =3D <1040000>;
+>>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
+>>> =C2=A0+ };
+>>> =C2=A0+
+>>> =C2=A0+ opp@816000000 {
+>>> =C2=A0+ opp-hz =3D /bits/ 64 <816000000>;
+>>> =C2=A0+ opp-microvolt =3D <1100000>;
+>>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
+>>> =C2=A0+ };
+>>> =C2=A0+
+>>> =C2=A0+ opp@1008000000 {
+>>> =C2=A0+ opp-hz =3D /bits/ 64 <1008000000>;
+>>> =C2=A0+ opp-microvolt =3D <1200000>;
+>>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
+>>> =C2=A0+ };
+>>> =C2=A0+
+>>> =C2=A0+ opp@1200000000 {
+>>> =C2=A0+ opp-hz =3D /bits/ 64 <1200000000>;
+>>> =C2=A0+ opp-microvolt =3D <1320000>;
+>>> =C2=A0+ clock-latency-ns =3D <244144>; /* 8 32k periods */
+>>> =C2=A0+ };
+>>> =C2=A0+ };
+>>> =C2=A0+
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cpus {
+>>> =C2=A0+ cpu0: cpu@0 {
 >>
->> Interesting.  In the ChromeOS tree I see significantly higher voltages
->> needed...  Note that one might naively look at
->> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/cpufreq/exynos5420-cpufreq.c#178>.
->>
->> 1362500, /* L0  2100 */
->> 1312500, /* L1  2000 */
->>
->> ..but, amazingly enough those voltages aren't used at all.  Surprise!
->>
->> I believe that the above numbers are actually not used and the ASV
->> numbers are used instead.  See
->> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/mach-exynos/include/mach/asv-exynos542x.h#452>
->>
->> { 2100000,
->> 1350000, 1350000, 1350000, 1350000, 1350000,
->> 1337500, 1325000, 1312500, 1300000, 1287500,
->> 1275000, 1262500, 1250000, 1237500 },
->>
->> I believe that interpretation there is: some bins of the CPU can run
->> at 2.1 GHz just fine at 1.25 V but others need up to 1.35V.
+>> =C2=A0There's no need to duplicate the label here. I removed it and appl=
+ied.
 >
-> That is definitely the case. One could just look at vendors ASV table
-> (for 1.9 GHz):
-> { 1900000, 1300000, 1287500, 1262500, 1237500, 1225000, 1212500,
->                      1200000, 1187500, 1175000, 1162500, 1150000,
-> 		             1137500, 1125000, 1112500, 1112500},
->
-> The theoretical difference is up to 1.875V! From my experiments I saw
-> BIN1 chips which should be the same... but some working on 1.2V, some on
-> 1.225V (@1.9 GHz). I didn't see any requiring higher voltages but that
-> does not mean that there aren't such...
->
->> ...so if you're running at 2.1 GHz at 1.25V then perhaps you're just
->> running on a CPU from a nice bin?
->
-> Would be nice to see a dump of PKG_ID and AUX_INFO chipid registers
-> along with name of tested board. Because the "Tested on XU3" is not
-> sufficient.
->
-I agree, we should be dumping PKG_ID and other chip info to know on 
-which BIN sample this patch is tested on...
-As far as Peach-{pit/pi} boards are concerns, this is what I can remember:
-1> 5420 (PIT) -> max recommended target frequency is 1800 MHz for A15
-2> 5800 (PI)-> max recommended target frequency can go upto 2000 MHz, 
-with INT rail locking.
-INT rail locking schemes never made to mainline, so to be safer side 
-instead of bumping the clock and voltages better to keep it at safer 
-range for pit and pi, probably thats why it was kept at 1800MHz.
-I am not sure if the same limitation applies to Odroid-XU3 samples.
+> I think using the label to directly reference cpu0 would be better,
+> instead of duplicating the cpu@0 block.
 
+After proper testing of A23 ccu, the operating points can also apply to A23=
+.
+(According to A23 devices' fex)
 
-> Best regards,
-> Krzysztof
 >
->
->
+> ChenYu
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
