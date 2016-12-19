@@ -1,202 +1,99 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3 v2] iio: adc: add device tree bindings for Qualcomm
- PM8xxx ADCs
-Date: Mon, 19 Dec 2016 16:50:38 -0600
-Message-ID: <20161219225038.zxetthv3svlyk6gc@rob-hp-laptop>
-References: <1481842089-13999-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH] Docs: dt: Be explicit and consistent in reference to
+	IOMMU specifiers
+Date: Mon, 19 Dec 2016 17:06:12 -0600
+Message-ID: <20161219230612.6msig5uctfp3zrkc@rob-hp-laptop>
+References: <1481847373-2602-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481842089-13999-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T . Ivanov" <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1481847373-2602-1-git-send-email-stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 11:48:09PM +0100, Linus Walleij wrote:
-> This adds the device tree bindings for the Qualcomm PM8xxx
-> ADCs. This is based on the existing DT bindings for the
-> SPMI ADC so there are hopefully no controversial features.
+On Thu, Dec 15, 2016 at 06:16:13PM -0600, Stuart Yoder wrote:
+> The generic IOMMU binding says that the meaning of an 'IOMMU specifier'
+> is defined by the binding of a specific SMMU.  The ARM SMMU binding
+> never explicitly uses the term 'specifier' at all.  Update implicit
+> references to use the explicit term.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Ivan T. Ivanov <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
-> - Spelling fixes
-> ---
->  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 160 +++++++++++++++++++++
->  1 file changed, 160 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+> In the iommu-map binding change references to iommu-specifier to
+> "IOMMU specifier" so we are 100% consistent everywhere with terminology
+> and capitalization.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> new file mode 100644
-> index 000000000000..3c6bca5b4edf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-> @@ -0,0 +1,160 @@
-> +Qualcomm's PM8xxx voltage XOADC
-> +
-> +The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Crystal
-> +oscillator ADC) encompassing PM8018, PM8038, PM8058, PM8917 and PM8921.
-> +
-> +Required properties:
-> +
-> +- compatible: should be one of:
-> +  "qcom,pm8018-adc"
-> +  "qcom,pm8038-adc"
-> +  "qcom,pm8058-adc"
-> +  "qcom,pm8917-adc"
-> +  "qcom,pm8921-adc"
-> +
-> +- reg: should contain the ADC base address in the PMIC, typically
-> +  0x197.
-> +
-> +The following required properties are standard for IO channels, see
-> +iio-bindings.txt for more details:
-> +
-> +- #address-cells: should be set to <1>
-> +
-> +- #size-cells: should be set to <0>
-> +
-> +- #io-channel-cells: should be set to <1>
-> +
-> +- interrupts: should refer to the parent PMIC interrupt controller
-> +  and reference the proper ADC interrupt.
-> +
-> +Required subnodes:
-> +
-> +The ADC channels are configured as subnodes of the ADC. Since some of
-> +them are used for calibrating the ADC, these nodes are compulsory:
-> +
-> +ref_625mv {
+> Signed-off-by: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 10 +++++-----
+>  Documentation/devicetree/bindings/pci/pci-iommu.txt  |  6 +++---
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 
-ref@c
+Applied, thanks.
 
-> +	reg = <0x0c>;
-> +};
-> +
-> +ref_1250mv {
-> +	reg = <0x0d>;
-> +};
-> +
-> +ref_muxoff {
-> +	reg = <0x0f>;
-> +};
-> +
-> +These three nodes are used for absolute and ratiometric calibration
-> +and only need to have these reg values: they are by hardware definition
-> +1:1 ratio converters that sample 625, 1250 and 0 milliV and create
-> +an interpolation calibration for all other ADCs.
-> +
-> +Optional subnodes: any channels other than channel 0x0c, 0x0d and
-> +0x0f are optional.
-> +
-> +Required channel node properties:
-> +
-> +- reg: should contain the hardware channel number in the range
-> +  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-> +
-> +Optional channel node properties:
-> +
-> +- qcom,decimation:
-> +  Value type: <u32>
-> +  Definition: This parameter is used to decrease the ADC sampling rate.
-> +          Quicker measurements can be made by reducing the decimation ratio.
-> +          Valid values are 512, 1024, 2048, 4096.
-> +          If the property is not found, a default value of 512 will be used.
-> +
-> +- qcom,ratiometric:
-> +  Value type: <empty>
-> +  Definition: Channel calibration type. If this property is specified
-> +          VADC will use the VDD reference (1.8V) and GND for channel
-> +          calibration. If the property is not found, the channel will be
-> +          calibrated with the 0.625V and 1.25V reference channels, also
-> +          known as an absolute calibration.
-> +
-> +- qcom,ratiometric-ref:
-> +  Value type: <u32>
-> +  Definition: The reference voltage pair when using ratiometric
-> +          calibration:
-> +	  0 = XO_IN/XOADC_GND
-> +	  1 = PMIC_IN/XOADC_GND
-> +	  2 = PMIC_IN/BMS_CSP
-> +	  3 (invalid)
-> +	  4 = XOADC_GND/XOADC_GND
-> +	  5 = XOADC_VREF/XOADC_GND
-> +
-> +Example:
-> +
-> +xoadc: xoadc@197 {
-> +	compatible = "qcom,pm8058-adc";
-> +	reg = <0x197>;
-> +	interrupt-parent = <&pm8058>;
-> +	interrupts = <76 1>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	#io-channel-cells = <1>;
-> +
-> +	vcoin {
-> +		reg = <0x00>;
+Rob
 
-If you have a reg property, then you should have a unit address on all 
-of these.
-
-These should really all be something like adc-channel@... Not sure if we 
-have a standard node name for ADC channels. Or don't put any of this in 
-DT.
-
-> +	};
-> +	vbat {
-> +		reg = <0x01>;
-> +	};
-> +	dcin {
-> +		reg = <0x02>;
-> +	};
-> +	ichg {
-> +		reg = <0x03>;
-> +	};
-> +	vph_pwr {
-> +		reg = <0x04>;
-> +	};
-> +	mpp5 {
-> +		reg = <0x05>;
-> +	};
-> +	mpp6 {
-> +		reg = <0x06>;
-> +	};
-> +	mpp7 {
-> +		reg = <0x07>;
-> +	};
-> +	mpp8 {
-> +		reg = <0x08>;
-> +	};
-> +	mpp9 {
-> +		reg = <0x09>;
-> +	};
-> +	usb_vbus {
-> +		reg = <0x0a>;
-> +	};
-> +	die_temp {
-> +		reg = <0x0b>;
-> +	};
-> +	ref_625mv {
-> +		reg = <0x0c>;
-> +	};
-> +	ref_1250mv {
-> +		reg = <0x0d>;
-> +	};
-> +	ref_325mv {
-> +		reg = <0x0e>;
-> +	};
-> +	ref_muxoff {
-> +		reg = <0x0f>;
-> +	};
-> +};
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index e862d148..6cdf32d 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -36,15 +36,15 @@ conditions.
+>                    combined interrupt, it must be listed multiple times.
+>  
+>  - #iommu-cells  : See Documentation/devicetree/bindings/iommu/iommu.txt
+> -                  for details. With a value of 1, each "iommus" entry
+> +                  for details. With a value of 1, each IOMMU specifier
+>                    represents a distinct stream ID emitted by that device
+>                    into the relevant SMMU.
+>  
+>                    SMMUs with stream matching support and complex masters
+> -                  may use a value of 2, where the second cell represents
+> -                  an SMR mask to combine with the ID in the first cell.
+> -                  Care must be taken to ensure the set of matched IDs
+> -                  does not result in conflicts.
+> +                  may use a value of 2, where the second cell of the
+> +                  IOMMU specifier represents an SMR mask to combine with
+> +                  the ID in the first cell.  Care must be taken to ensure
+> +                  the set of matched IDs does not result in conflicts.
+>  
+>  ** System MMU optional properties:
+>  
+> diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt b/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> index 56c8296..0def586 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> @@ -32,17 +32,17 @@ PCI root complex
+>  Optional properties
+>  -------------------
+>  
+> -- iommu-map: Maps a Requester ID to an IOMMU and associated iommu-specifier
+> +- iommu-map: Maps a Requester ID to an IOMMU and associated IOMMU specifier
+>    data.
+>  
+>    The property is an arbitrary number of tuples of
+>    (rid-base,iommu,iommu-base,length).
+>  
+>    Any RID r in the interval [rid-base, rid-base + length) is associated with
+> -  the listed IOMMU, with the iommu-specifier (r - rid-base + iommu-base).
+> +  the listed IOMMU, with the IOMMU specifier (r - rid-base + iommu-base).
+>  
+>  - iommu-map-mask: A mask to be applied to each Requester ID prior to being
+> -  mapped to an iommu-specifier per the iommu-map property.
+> +  mapped to an IOMMU specifier per the iommu-map property.
+>  
+>  
+>  Example (1)
+> -- 
+> 1.9.0
+> 
