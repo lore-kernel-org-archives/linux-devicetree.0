@@ -1,154 +1,380 @@
-From: Markus Reichl <m.reichl@fivetechno.de>
-Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
-Date: Mon, 19 Dec 2016 10:14:04 +0100
-Message-ID: <027dfa2d-487a-e360-6e4a-4fc44f6622fa@fivetechno.de>
-References: <5220084.l31t5oJbsy@amdc3058>
- <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
- <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
- <2340115.HEG9AYUCMD@amdc3058>
- <CAD=FV=W6R8cNuR+gTnNRF6d-TNgzUeYTwuCp27efoMsd0YOH3g@mail.gmail.com>
- <20161216073720.GA3489@kozik-lap>
- <1b6e8d3a-ec7a-db5d-dd0e-ef9d1480f80a@fivetechno.de>
- <f4f0dd96-abf1-d1ba-86a6-99f216b5175b@osg.samsung.com>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: hx711: Add IIO driver for AVIA HX711
+Date: Mon, 19 Dec 2016 10:26:33 +0100
+Message-ID: <20161219092633.GA6103@andreas>
+References: <20161213180254.GA3185@andreas>
+ <CAJCx=g=--vuGHRi1HUjJgzV_Hwj0-6bO+oakCNN_LZQVbwn5_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f4f0dd96-abf1-d1ba-86a6-99f216b5175b@osg.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ben Gamari <ben@smart-cactus.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Alim <alim.akhtar@samsung.com>, Arjun K V <arjun.kv@samsung.com>, Andreas Faerber <afaerber@suse.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJCx=g=--vuGHRi1HUjJgzV_Hwj0-6bO+oakCNN_LZQVbwn5_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Hello Matt,
 
-Am 16.12.2016 um 17:22 schrieb Javier Martinez Canillas:
-> Hello Markus,
-> 
-> On 12/16/2016 06:08 AM, Markus Reichl wrote:
->> Am 16.12.2016 um 08:37 schrieb Krzysztof Kozlowski:
->>> On Thu, Dec 15, 2016 at 04:52:58PM -0800, Doug Anderson wrote:
->>>>> [ I added Arjun to Cc:, maybe he can help in explaining this issue
->>>>>   (unfortunately Inderpal's email is no longer working). ]
->>>>>
->>>>> Please also note that on Exynos5422/5800 SoCs the same ARM rail
->>>>> voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
->>>>> IOW if the problem exists it is already present in the mainline
->>>>> kernel.
->>>>
->>>> Interesting.  In the ChromeOS tree I see significantly higher voltages
->>>> needed...  Note that one might naively look at
->>>> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/cpufreq/exynos5420-cpufreq.c#178>.
->>>>
->>>> 1362500, /* L0  2100 */
->>>> 1312500, /* L1  2000 */
->>>>
->>>> ..but, amazingly enough those voltages aren't used at all.  Surprise!
->>>>
->>>> I believe that the above numbers are actually not used and the ASV
->>>> numbers are used instead.  See
->>>> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/mach-exynos/include/mach/asv-exynos542x.h#452>
->>>>
->>>> { 2100000,
->>>> 1350000, 1350000, 1350000, 1350000, 1350000,
->>>> 1337500, 1325000, 1312500, 1300000, 1287500,
->>>> 1275000, 1262500, 1250000, 1237500 },
->>>>
->>>> I believe that interpretation there is: some bins of the CPU can run
->>>> at 2.1 GHz just fine at 1.25 V but others need up to 1.35V.
->>>
->>> That is definitely the case. One could just look at vendors ASV table
->>> (for 1.9 GHz):
->>> { 1900000, 1300000, 1287500, 1262500, 1237500, 1225000, 1212500,
->>>                     1200000, 1187500, 1175000, 1162500, 1150000,
->>> 		             1137500, 1125000, 1112500, 1112500},
->>>
->>> The theoretical difference is up to 1.875V! From my experiments I saw
->>> BIN1 chips which should be the same... but some working on 1.2V, some on
->>> 1.225V (@1.9 GHz). I didn't see any requiring higher voltages but that
->>> does not mean that there aren't such...
->>>
->>>> ...so if you're running at 2.1 GHz at 1.25V then perhaps you're just
->>>> running on a CPU from a nice bin?
->>
->> I've been running the proposed frequency/voltage combinations without any
->> stability problems on my XU4, XU3 and even XU3-lite ( I did not delete the
->> nodes on XU3-lite dts) with make -j8 kernel and ssvb-cpuburn.
->> The chips are poorly cooled, especially the XU4 and quickly step down.
->>
->>>
->>> Would be nice to see a dump of PKG_ID and AUX_INFO chipid registers
->>> along with name of tested board. Because the "Tested on XU3" is not
->>> sufficient.
->>
->> If you point me to how to read these values out, I will publish them.
->>
-> 
-> You can use the exynos-chipid driver posted by Pankaj. Apply patches 1 and
-> 2 from this series (http://www.spinics.net/lists/arm-kernel/msg548384.html)
-> and then this diff to get the values of the registers that Krzysztof asked:
-> 
-Thanks for the code.
+thank you for your suggestions. See below.
 
-XU4:	 [    0.080039] Exynos: CPU[EXYNOS5800] CPU_REV[0x1] PKG_ID[0x1c04832a] AUX_INFO[0x43] 
-XU3:	 [    0.080034] Exynos: CPU[EXYNOS5800] CPU_REV[0x1] PKG_ID[0x1604832a] AUX_INFO[0x43] 
-XU3-lite:[    0.080033] Exynos: CPU[EXYNOS5800] CPU_REV[0x1] PKG_ID[0x5a12832a] AUX_INFO[0x13000054] 
 
-Servus,
---
-Markus Reichl
+Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> schrieb am Sat, 17. Dec 00:53:
+> On Tue, Dec 13, 2016 at 10:02 AM, Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org> wrote:
+> > This is the IIO driver for AVIA HX711 ADC which ist mostly used in weighting
+> > cells.
+> 
+> First off cool that this is finally getting a driver... I'll have to
+> get the SparkFun breakout and really cheap scale to test :).
+> 
+> >
+> > The protocol is quite simple and using GPIO's:
+> > One GPIO is used as clock (SCK) while another GPIO is read (DOUT)
+> >
+> > Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> > ---
+> >  drivers/iio/adc/Kconfig  |  13 +++
+> >  drivers/iio/adc/Makefile |   1 +
+> >  drivers/iio/adc/hx711.c  | 269 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 283 insertions(+)
+> >  create mode 100644 drivers/iio/adc/hx711.c
+> >
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index 932de1f9d1e7..7902b50fcf32 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -205,6 +205,19 @@ config HI8435
+> >           This driver can also be built as a module. If so, the module will be
+> >           called hi8435.
+> >
+> > +config HX711
+> > +       tristate "AVIA HX711 ADC for weight cells"
+> > +       depends on GPIOLIB
+> > +       help
+> > +         If you say yes here you get support for AVIA HX711 ADC which is used
+> > +         for weight cells
+> > +
+> > +         This driver uses two GPIO's, one for setting the clock and the other
+> > +         one for getting the data
+> > +
+> > +         This driver can also be built as a module. If so, the module will be
+> > +         called hx711.
+> > +
+> >  config INA2XX_ADC
+> >         tristate "Texas Instruments INA2xx Power Monitors IIO driver"
+> >         depends on I2C && !SENSORS_INA2XX
+> > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > index b1aa456e6af3..d46e289900ef 100644
+> > --- a/drivers/iio/adc/Makefile
+> > +++ b/drivers/iio/adc/Makefile
+> > @@ -21,6 +21,7 @@ obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+> >  obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
+> >  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+> >  obj-$(CONFIG_HI8435) += hi8435.o
+> > +obj-$(CONFIG_HX711) += hx711.o
+> >  obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
+> >  obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
+> >  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+> > diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
+> > new file mode 100644
+> > index 000000000000..cbc89e467985
+> > --- /dev/null
+> > +++ b/drivers/iio/adc/hx711.c
+> > @@ -0,0 +1,269 @@
+> > +/*
+> > + * HX711: analog to digital converter for weight sensor module
+> > + *
+> > + * Copyright (c) Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + */
+> > +#include <linux/err.h>
+> > +#include <linux/gpio.h>
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/property.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/sched.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/iio/iio.h>
+> > +
+> > +#define HX711_GAIN_32          2       /* gain = 32 for channel B  */
+> > +#define HX711_GAIN_64          3       /* gain = 64 for channel A  */
+> > +#define HX711_GAIN_128         1       /* gain = 128 for channel A */
+> > +
+> > +
+> > +struct hx711_data {
+> > +       struct device           *dev;
+> > +       dev_t                   devt;
+> > +       struct gpio_desc        *gpiod_sck;
+> > +       struct gpio_desc        *gpiod_dout;
+> > +       int                     gain_pulse;
+> > +       struct mutex            lock;
+> > +};
+> > +
+> > +static void hx711_reset(struct hx711_data *hx711_data)
+> > +{
+> > +       int val;
+> > +       int i;
+> > +
+> > +       val = gpiod_get_value(hx711_data->gpiod_dout);
+> 
+> could move the val assignment here to the initialization don't think
+> it will hit 80 chars
+> 
 
-> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> index cf0128b18ee2..49fa76ec6d49 100644
-> --- a/drivers/soc/samsung/exynos-chipid.c
-> +++ b/drivers/soc/samsung/exynos-chipid.c
-> @@ -22,6 +22,9 @@
->  #define EXYNOS_MAINREV_MASK	(0xF << 0)
->  #define EXYNOS_REV_MASK		(EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
->  
-> +#define EXYNOS_PKG_ID		0x04
-> +#define EXYNOS_AUX_INFO		0x1C
-> +
->  static const struct exynos_soc_id {
->  	const char *name;
->  	unsigned int id;
-> @@ -71,6 +74,8 @@ int __init exynos_chipid_early_init(void)
->  	const struct of_device_id *match;
->  	u32 product_id;
->  	u32 revision;
-> +	u32 pkg_id;
-> +	u32 aux_info;
->  
->  	np = of_find_matching_node_and_match(NULL,
->  			of_exynos_chipid_ids, &match);
-> @@ -84,6 +89,8 @@ int __init exynos_chipid_early_init(void)
->  
->  	product_id  = readl_relaxed(exynos_chipid_base);
->  	revision = product_id & EXYNOS_REV_MASK;
-> +	pkg_id = readl_relaxed(exynos_chipid_base + EXYNOS_PKG_ID);
-> +	aux_info = readl_relaxed(exynos_chipid_base + EXYNOS_AUX_INFO);
->  	iounmap(exynos_chipid_base);
->  
->  	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> @@ -100,8 +107,8 @@ int __init exynos_chipid_early_init(void)
->  	soc_dev_attr->soc_id = product_id_to_soc_id(product_id);
->  
->  
-> -	pr_info("Exynos: CPU[%s] CPU_REV[0x%x] Detected\n",
-> -			product_id_to_soc_id(product_id), revision);
-> +	pr_info("Exynos: CPU[%s] CPU_REV[0x%x] PKG_ID[0x%x] AUX_INFO[0x%x] \n",
-> +		product_id_to_soc_id(product_id), revision, pkg_id, aux_info);
->  
->  	soc_dev = soc_device_register(soc_dev_attr);
->  	if (IS_ERR(soc_dev)) {
+I'll change this.
+
+> > +       if (val) {
 > 
-> Best regards,
+> move "int i" here to avoid compiler initialization warnings
 > 
+> > +               dev_warn(hx711_data->dev, "RESET-HX711\n");
+> > +
+> > +               gpiod_set_value(hx711_data->gpiod_sck, 1);
+> > +               udelay(80);
+> 
+> IIRC this chip has quite a bit of latency thresholds, can't use
+> usleep_range? Single core embedded systems could have an issue with
+> continuous  polling.
+>
+
+That's a good suggestion. We don't need udelay so i'll change to usleep_range
+for the next version
+
+> > +               gpiod_set_value(hx711_data->gpiod_sck, 0);
+> > +
+> > +               for (i = 0; i < 1000; i++) {
+> > +                       val = gpiod_get_value(hx711_data->gpiod_dout);
+> > +                       if (!val)
+> > +                               break;
+> > +                       /* sleep at least 1 ms*/
+> > +                       msleep(1);
+> > +               }
+> > +       }
+> > +}
+> > +
+> > +static int hx711_cycle(struct hx711_data *hx711_data)
+> > +{
+> > +       int val;
+> > +
+> > +       /* if preempted for more then 60us while SCK is high:
+> > +        * hx711 is going in reset
+> > +        * ==> measuring is false
+> > +        */
+> > +       preempt_disable();
+> > +       gpiod_set_value(hx711_data->gpiod_sck, 1);
+> > +       val = gpiod_get_value(hx711_data->gpiod_dout);
+> > +       gpiod_set_value(hx711_data->gpiod_sck, 0);
+> > +       preempt_enable();
+> > +
+> > +       return val;
+> > +}
+> > +
+> > +static unsigned int hx711_read(struct hx711_data *hx711_data)
+> > +{
+> > +       int i;
+> > +       int ret;
+> > +       int wert = 0;
+> > +
+> > +       hx711_reset(hx711_data);
+> > +
+> > +       for (i = 0; i < 24; i++) {
+> > +               wert <<= 1;
+> > +               ret = hx711_cycle(hx711_data);
+> > +               if (ret)
+> > +                       wert++;
+> > +       }
+> > +
+> > +       wert ^= 0x800000;
+> > +
+> > +       for (i = 0; i < hx711_data->gain_pulse; i++)
+> > +               ret = hx711_cycle(hx711_data);
+> 
+> What is ret used for here?
+> > +
+> > +       return wert;
+> > +}
+> > +
+> > +
+> > +static int hx711_read_raw(struct iio_dev *iio_dev,
+> > +                               const struct iio_chan_spec *chan,
+> > +                               int *val, int *val2, long mask)
+> > +{
+> > +       struct hx711_data *hx711_data = iio_priv(iio_dev);
+> > +       int ret;
+> > +
+> > +       switch (mask) {
+> > +       case IIO_CHAN_INFO_RAW:
+> > +               switch (chan->type) {
+> > +               case IIO_VOLTAGE:
+> > +                       mutex_lock(&hx711_data->lock);
+> > +                       *val = (int)hx711_read(hx711_data);
+> > +                       mutex_unlock(&hx711_data->lock);
+> > +                       ret = IIO_VAL_INT;
+> > +                       break;
+> > +               default:
+> > +                       return -EINVAL;
+> > +               }
+> > +               return ret;
+> > +       default:
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static const struct iio_info hx711_iio_info = {
+> > +       .driver_module          = THIS_MODULE,
+> > +       .read_raw               = hx711_read_raw,
+> > +};
+> > +
+> > +static const struct iio_chan_spec hx711_chan_spec[] = {
+> > +       { .type = IIO_VOLTAGE,
+> > +               .channel = 0,
+> > +               .info_mask_separate =
+> > +                       BIT(IIO_CHAN_INFO_RAW),
+> > +               .scan_type = {
+> > +                       .sign = 'u',
+> > +                       .realbits = 24,
+> > +                       .storagebits = 32,
+> > +                       .shift = 0,
+> > +               }
+> > +       },
+> > +};
+> > +
+> > +static int hx711_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device *dev = &pdev->dev;
+> > +       struct device_node *node = dev->of_node;
+> > +       struct hx711_data *hx711_data = NULL;
+> > +       struct iio_dev *iio;
+> > +       int ret = 0, ival;
+> > +
+> > +       iio = devm_iio_device_alloc(dev, sizeof(struct hx711_data));
+> > +       if (!iio) {
+> > +               dev_err(dev, "failed to allocate IIO device\n");
+> > +               return -ENOMEM;
+> > +       }
+> > +
+> > +       hx711_data = iio_priv(iio);
+> > +       hx711_data->dev = dev;
+> > +
+> > +       mutex_init(&hx711_data->lock);
+> > +
+> > +       hx711_data->gpiod_sck = devm_gpiod_get(dev, "sck", GPIOD_OUT_HIGH);
+> > +       if (IS_ERR(hx711_data->gpiod_sck)) {
+> > +               ret = PTR_ERR(hx711_data->gpiod_sck);
+> > +               goto err;
+> > +       }
+> > +
+> > +       hx711_data->gpiod_dout = devm_gpiod_get(dev, "dout", GPIOD_OUT_HIGH);
+> > +       if (IS_ERR(hx711_data->gpiod_dout)) {
+> > +               ret = PTR_ERR(hx711_data->gpiod_dout);
+> > +               goto err;
+> > +       }
+> > +
+> > +       ret = of_property_read_u32 (node, "gain", &ival);
+> > +       if (!ret) {
+> > +               switch (ival) {
+> > +               case 32:
+> > +                       hx711_data->gain_pulse = HX711_GAIN_32;
+> > +                       break;
+> > +               case 64:
+> > +                       hx711_data->gain_pulse = HX711_GAIN_64;
+> > +                       break;
+> > +               case 128:
+> > +                       hx711_data->gain_pulse = HX711_GAIN_128;
+> > +                       break;
+> > +               default:
+> > +                       hx711_data->gain_pulse = HX711_GAIN_128;
+> > +               }
+> > +       } else
+> > +               hx711_data->gain_pulse = HX711_GAIN_128;
+> > +       dev_dbg(hx711_data->dev, "gain: %d\n", hx711_data->gain_pulse);
+> > +
+> > +       ret = gpiod_direction_input(hx711_data->gpiod_dout);
+> > +       if (ret < 0) {
+> > +               dev_err(hx711_data->dev, "gpiod_direction_input: %d\n", ret);
+> > +               goto err;
+> > +       }
+> > +
+> > +       ret = gpiod_direction_output(hx711_data->gpiod_sck, 0);
+> > +       if (ret < 0) {
+> > +               dev_err(hx711_data->dev, "gpiod_direction_output: %d\n", ret);
+> > +               goto err;
+> > +       }
+> > +
+> > +       platform_set_drvdata(pdev, iio);
+> > +
+> > +       iio->name = pdev->name;
+> > +       iio->dev.parent = &pdev->dev;
+> > +       iio->info = &hx711_iio_info;
+> > +       iio->modes = INDIO_DIRECT_MODE;
+> > +       iio->channels = hx711_chan_spec;
+> > +       iio->num_channels = ARRAY_SIZE(hx711_chan_spec);
+> > +
+> > +       dev_err(hx711_data->dev, "initialized\n");
+> > +
+> > +       return devm_iio_device_register(dev, iio);
+> > +
+> > +err:
+> > +       return ret;
+> > +}
+> > +
+> > +
+> > +static int hx711_suspend(struct device *dev)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static int hx711_resume(struct device *dev)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(hx711_pm_ops, hx711_suspend, hx711_resume);
+> > +
+> > +
+> > +static const struct of_device_id of_hx711_match[] = {
+> > +       { .compatible = "avia,hx711", },
+> > +       {},
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, of_hx711_match);
+> > +
+> > +static struct platform_driver hx711_driver = {
+> > +       .probe          = hx711_probe,
+> > +       .driver         = {
+> > +               .name           = "hx711-gpio",
+> > +               .pm             = &hx711_pm_ops,
+> > +               .of_match_table = of_hx711_match,
+> > +       },
+> > +};
+> > +
+> > +module_platform_driver(hx711_driver);
+> > +
+> > +MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
+> > +MODULE_DESCRIPTION("HX711 bitbanging driver - ADC for weight cells");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("platform:hx711-gpio");
+> > +
+> > --
+> > 2.1.4
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
