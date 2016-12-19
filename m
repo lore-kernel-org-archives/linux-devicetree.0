@@ -1,110 +1,106 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common panel properties
-Date: Mon, 19 Dec 2016 18:54:51 +0200
-Message-ID: <2477026.2bVvJoQSTE@avalon>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2900223.pppRAbRhe6@avalon> <CAL_JsqKBoAJFiOqNhMPzF5VXjdXT2jbWHV0zxfX0gdSz0yGZLQ@mail.gmail.com>
+From: Roger Shimizu <rogershimizu@gmail.com>
+Subject: Re: [PATCH v2] power: reset: add linkstation-reset driver
+Date: Tue, 20 Dec 2016 02:37:39 +0900
+Message-ID: <CAEQ9gEnQEHdcA4ox3teOXKcrdf2AAqUMp=A6W6c7nXhk4VrKiw@mail.gmail.com>
+References: <20161207172415.9776-1-rogershimizu@gmail.com> <20161216100501.18173-1-rogershimizu@gmail.com>
+ <20161219153802.vhcish35qyjbpevj@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKBoAJFiOqNhMPzF5VXjdXT2jbWHV0zxfX0gdSz0yGZLQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161219153802.vhcish35qyjbpevj@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Ryan Tandy <ryan@nardis.ca>, Martin Michlmayr <tbm@cyrius.com>, Sylver Bruneau <sylver.bruneau@googlemail.com>, Herbert Valerio Riedel <hvr@gnu.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Dear Sebastian,
 
-On Monday 19 Dec 2016 09:38:49 Rob Herring wrote:
-> On Sun, Dec 18, 2016 at 2:54 PM, Laurent Pinchart wrote:
-> > On Tuesday 29 Nov 2016 20:23:41 Laurent Pinchart wrote:
-> >> On Tuesday 29 Nov 2016 09:14:09 Rob Herring wrote:
-> >>> On Tue, Nov 29, 2016 at 2:27 AM, Laurent Pinchart wrote:
-> >>>> On Tuesday 22 Nov 2016 11:36:55 Laurent Pinchart wrote:
-> >>>>> On Monday 21 Nov 2016 10:48:15 Rob Herring wrote:
-> >>>>>> On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
-> >>>>>>> Document properties common to several display panels in a central
-> >>>>>>> location that can be referenced by the panel device tree bindings.
-> >>>>>> 
-> >>>>>> Looks good. Just one comment...
-> >>>>>> 
-> >>>>>> [...]
-> >>>>>> 
-> >>>>>>> +Connectivity
-> >>>>>>> +------------
-> >>>>>>> +
-> >>>>>>> +- ports: Panels receive video data through one or multiple
-> >>>>>>> connections. While
-> >>>>>>> +  the nature of those connections is specific to the panel type,
-> >>>>>>> the
-> >>>>>>> +  connectivity is expressed in a standard fashion using ports as
-> >>>>>>> specified in
-> >>>>>>> +  the device graph bindings defined in
-> >>>>>>> +  Documentation/devicetree/bindings/graph.txt.
-> >>>>>> 
-> >>>>>> We allow panels to either use graph binding or be a child of the
-> >>>>>> display controller.
-> >>>>> 
-> >>>>> I knew that some display controllers use a phandle to the panel (see
-> >>>>> the fsl,panel and nvidia,panel properties), but I didn't know we had
-> >>>>> panels as children of display controller nodes. I don't think we
-> >>>>> should allow that for anything but DSI panels, as the DT hierarchy is
-> >>>>> based on control buses. Are you sure we have other panels instantiated
-> >>>>> through that mechanism ?
-> >>> 
-> >>> Some panels have no control bus, so were do we place them?
-> >> 
-> >> I'd say under the root node, like all similar control-less devices.
-> >> 
-> >>> I would say the hierarchy is based on buses with a preference for the
-> >>> control bus when there are multiple buses. I'm not a fan of just
-> >>> sticking things are the top level.
-> >> 
-> >> OK, so much for my comment a few lines up :-)
-> >> 
-> >> The problem with placing non-DSI panels as children of the display
-> >> controller and not using OF graph is that the panel bindings become
-> >> dependent of the display controller being used. A display controller
-> >> using OF graph would require the panel to do the same, while a display
-> >> controller expecting a panel child node (with a specific name) would
-> >> require DT properties for the panel node.
-> 
-> Not sure I follow.
+Thanks for your review!
 
-Sorry, I meant "would not requite DT properties".
+On Tue, Dec 20, 2016 at 12:38 AM, Sebastian Reichel <sre@kernel.org> wrote:
+>>
+>>  .../bindings/power/reset/linkstation-reset.txt     |  26 ++++
+>>  drivers/power/reset/Kconfig                        |  10 ++
+>>  drivers/power/reset/Makefile                       |   1 +
+>>  drivers/power/reset/linkstation-common.c           | 124 +++++++++++++++
+>>  drivers/power/reset/linkstation-common.h           |   8 +
+>>  drivers/power/reset/linkstation-reset.c            | 172 +++++++++++++++++++++
+>>  6 files changed, 341 insertions(+)
+>
+> With this being its own driver please merge linkstation-common and
+> linkstation-reset. The common part is only used by linkstation-reset
+> anyways.
 
-> They become dependent on the controller driver to probe the panel, but the
-> contents of the panel node would not be controller dependent.
+I'll add them into To/Cc list.
 
-If a display controller uses OF graph then the panel DT node has to declare 
-ports. If the display controller doesn't use OF graph but instead expects the 
-panel to be a direct subnode, or points to the panel using a property such as 
-fsl,panel, then the panel DT node will not have ports.
+>> +/* 4-byte magic hello command to UART1-attached microcontroller */
+>> +static const unsigned char linkstation_micon_magic[] = {
+>> +     0x1b,
+>> +     0x00,
+>> +     0x07,
+>> +     0x00
+>> +};
+>
+> 4-byte magic hello command? Those are used as uart configuration as
+> far as I can see. Just move this directly into reset_cfg:
+>
+> struct reset_cfg {
+>     u32 baud;
+>     u8 lcr;
+>     u8 ier;
+>     u8 fcr;
+>     u8 mcr;
+>     const unsigned char (*cmd)[MICON_CMD_SIZE];
+> };
+>
 
-> >> I'm also not sure the complexity of OF graph is really that prohibitive
-> >> if you compare it to panels as child nodes. To get the panel driver to
-> >> bind to the panel DT node the display controller driver would need to
-> >> create a platform device for the panel and register it. That's not very
-> >> difficult, but parsing a single port and endpoint isn't either (and we
-> >> could even provide a helper function for that, a version of
-> >> of_drm_find_panel() that would take as an argument the display controller
-> >> device node instead of the panel device node).
-> > 
-> > Ping ?
-> > 
-> > I'd like to standardize on one model for panel DT bindings, but I'm not
-> > sure that can be achieved given that we already have multiple competing
-> > models. In any case, is that blocking to merge this patch ? I only
-> > describe one connectivity model here as that's what my panel driver
-> > needs, but I have no issue adding more models later when needed. I
-> > believe this patch is a good step forward already.
-> 
-> It is an improvement which I appreciate, so yes I guess we can address
-> it later when needed.
+>> +static void linkstation_reset(void)
+>> +{
+>> +     const unsigned divisor = ((tclk + (8 * cfg->baud)) / (16 * cfg->baud));
+>> +
+>> +     pr_err("%s: triggering power-off...\n", __func__);
+>> +
+>> +     /* hijack UART1 and reset into sane state */
+>> +     writel(0x83, UART1_REG(LCR));
+>> +     writel(divisor & 0xff, UART1_REG(DLL));
+>> +     writel((divisor >> 8) & 0xff, UART1_REG(DLM));
+>> +     writel(cfg->magic[0], UART1_REG(LCR));
+>> +     writel(cfg->magic[1], UART1_REG(IER));
+>> +     writel(cfg->magic[2], UART1_REG(FCR));
+>> +     writel(cfg->magic[3], UART1_REG(MCR));
+>> +
+>> +     /* send the power-off command to PIC */
+>> +     if(cfg->cmd[0][0] == 1 && cfg->cmd[1][0] == 0) {
+>> +             /* if it's simply one-byte command, send it directly */
+>> +             writel(cfg->cmd[0][1], UART1_REG(TX));
+>> +     }
+>
+> I guess this optimization can be dropped and you can directly
+> call the for loop with uart1_micon_send().
 
-Thank you. Can I get your ack then ? :-)
+Same response regarding above two comments.
+The code is extensible because I want to extend in the future.
 
+Current implementation is just for Linkstation Pro / KuroBox Pro to be
+able to power-off.
+But for some other model of Linkstation, restart also need similar
+command via UART1.
+
+Just one example, Linkstation Pro is ARM based, but it was PowerPC based before.
+And the device support still exists in kernel tree:
+  arch/powerpc/platforms/embedded6xx/linkstation.c
+  arch/powerpc/platforms/embedded6xx/ls_uart.c
+It shows sending "C" to restart and sending "E" to power-off for
+PowerPC based Linkstation.
+
+I'm not actually interested in PowerPC based Linkstation, it's just an
+example to show the reason to be flexible.
+
+If other part is fine, may I send the v3 patch after merging
+linkstation-common.c into linkstation-reset.c?
+Thank you!
+
+Cheers,
 -- 
-Regards,
-
-Laurent Pinchart
+Roger Shimizu, GMT +9 Tokyo
+PGP/GPG: 4096R/6C6ACD6417B3ACB1
