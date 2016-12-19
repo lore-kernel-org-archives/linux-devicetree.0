@@ -1,54 +1,83 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 8/9] ARM: dts: dm816x: Add an empty chosen node to top level
- DTSI
-Date: Mon, 19 Dec 2016 11:44:40 -0300
-Message-ID: <1482158681-4530-9-git-send-email-javier@osg.samsung.com>
-References: <1482158681-4530-1-git-send-email-javier@osg.samsung.com>
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
+Date: Mon, 19 Dec 2016 15:49:32 +0100
+Message-ID: <19255165.1fIP7jmgm1@debian64>
+References: <cover.1479339900.git.johnyoun@synopsys.com> <1495076.fZ1uLW9fli@debian64> <dab2e32a-1bd0-2aa5-5a7a-61f2201786b4@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1482158681-4530-1-git-send-email-javier@osg.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Pali Rohar <pali.rohar@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dab2e32a-1bd0-2aa5-5a7a-61f2201786b4-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 06bfb9c19957 ("ARM: dts: dm816x: Remove skeleton.dtsi usage")
-removed the skeleton.dtsi usage since we want to get rid of it.
+Hello John, hello Felipe
 
-But this can cause issues when booting a kernel with a boot-loader
-that doesn't create a chosen node if this isn't present in the DTB
-since the decompressor relies on a pre-existing chosen node to be
-available to insert the command line and merge other ATAGS info.
+On Monday, November 28, 2016 7:32:20 PM CET John Youn wrote:
+> On 11/22/2016 12:51 PM, Christian Lamparter wrote:
+> > On Monday, November 21, 2016 7:32:30 PM CET John Youn wrote:
+> >> On 11/21/2016 1:10 PM, Christian Lamparter wrote:
+> >>> On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
+> >>>> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
+> >>>>> On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
+> >>>>>> Also, perhaps you should allow that the compatible string can define the 
+> >>>>>> default.
+> >>>>>>
+> >>>>> I hoped you would say that :).
+> >>>>>
+> >>>>> I've attached a patch (on top of John Youn changes) [...]
+> >>>>> ---
+> >>>>> Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
+> >>>>> [...]
+> >>>>> @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
+> >>>>> +/* [...] */
+> >>>>> +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
+> >>>>> +	{
+> >>>>> +		.compatible = "amcc,dwc-otg",
+> >>>>> +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
+> >>>>> +	},
+> >>>>> +};
+> >> [...]
+> >>>>>> @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
+> >>>>>  	ret = device_property_read_string(hsotg->dev, "snps,ahb-burst", &str);
+> >>>>>  	if (ret < 0) {
+> >>>>> +		const struct of_device_id *match;
+> >>>>> +
+> >>>>> +		match = of_match_node(dwc2_compat_ahb_bursts, node);
+> >>>>> +		if (match)
+> >>>>> +			ret = (int)match->data;
+> >>>>> +
+> >> [...]
+> >>>> I'd prefer if you use the binding which requires no extra code in
+> >>>> dwc2.
+> >>> I'm fine with either option. However it think that this would require
+> >>> that either Mark or Rob would allow an exception to the "keep existing
+> >>> dts the way they are) and ack the following change to the canyonlands.dts. 
+> >> [...]
+>
+> Ok thanks for clearing that up. I understand.
+> 
+> For now we can just set the property to "INCR16" based on the
+> compatible string. Perhaps in the future do this from a glue-layer
+> driver which binds to all compatible strings other than "snps,dwc2".
+> 
+> I won't be able to do anything with this until next week though.
+Ok, I think enough time has passed. I would like to see this
+patch series (v3 [0]) being queued for 4.11+ together with
+"usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg" [1].
 
-Fixes: 06bfb9c19957 ("ARM: dts: dm816x: Remove skeleton.dtsi usage")
-Reported-by: Pali Rohar <pali.rohar@gmail.com>
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
+Felipe, if you want I can resend the series and add the
+"amcc,dwc-otg" patch to it as well. Just let me know what you
+prefer here.
 
- arch/arm/boot/dts/dm816x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
+Christian
 
-diff --git a/arch/arm/boot/dts/dm816x.dtsi b/arch/arm/boot/dts/dm816x.dtsi
-index 61dd2f6b02bc..6db652ae9bd5 100644
---- a/arch/arm/boot/dts/dm816x.dtsi
-+++ b/arch/arm/boot/dts/dm816x.dtsi
-@@ -12,6 +12,7 @@
- 	interrupt-parent = <&intc>;
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen { };
- 
- 	aliases {
- 		i2c0 = &i2c1;
--- 
-2.7.4
+[0] <https://www.mail-archive.com/linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg83401.html>
+[1] <https://www.spinics.net/lists/linux-usb/msg149663.html>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
