@@ -1,123 +1,69 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 04/21] MIPS memblock: Alter user-defined memory parameter parser
-Date: Mon, 19 Dec 2016 05:07:29 +0300
-Message-ID: <1482113266-13207-5-git-send-email-fancer.lancer@gmail.com>
+Subject: [PATCH 12/21] MIPS memblock: Add memblock print outs in debug
+Date: Mon, 19 Dec 2016 05:07:37 +0300
+Message-ID: <1482113266-13207-13-git-send-email-fancer.lancer@gmail.com>
 References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
 Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Both new memblock and boot_mem_map subsystems need to be fully
-cleared before a new memory region is added. So the early parser is
-correspondingly modified.
+When debugging it is useful to have a list of all memory regions
+added and reserved in the system. Ones are printed right from
+memblock if memblock_debug is enabled.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/kernel/setup.c | 67 +++++++++++++++++-------------
- 1 file changed, 37 insertions(+), 30 deletions(-)
+ arch/mips/kernel/setup.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 9da6f8a..789aafe 100644
+index d2f410d..409d23d 100644
 --- a/arch/mips/kernel/setup.c
 +++ b/arch/mips/kernel/setup.c
-@@ -229,6 +229,43 @@ static void __init print_memory_map(void)
+@@ -200,11 +200,16 @@ void __init detect_memory_region(phys_addr_t start, phys_addr_t sz_min, phys_add
+ 	add_memory_region(start, size, BOOT_MEM_RAM);
+ }
+ 
++/*
++ * Print declared memory layout
++ */
+ static void __init print_memory_map(void)
+ {
+ 	int i;
+ 	const int field = 2 * sizeof(unsigned long);
+ 
++	/* Print the added memory map  */
++	pr_info("Determined physical RAM map:\n");
+ 	for (i = 0; i < boot_mem_map.nr_map; i++) {
+ 		printk(KERN_INFO " memory: %0*Lx @ %0*Lx ",
+ 		       field, (unsigned long long) boot_mem_map.map[i].size,
+@@ -228,6 +233,9 @@ static void __init print_memory_map(void)
+ 			break;
+ 		}
+ 	}
++
++	/* Print memblocks if memblock_debug is set */
++	memblock_dump_all();
  }
  
  /*
-+ * Parse "mem=size@start" parameter rewriting a defined memory map
-+ * We look for mem=size@start, where start and size are "value[KkMm]"
-+ */
-+static int __init early_parse_mem(char *p)
-+{
-+	static int usermem;
-+	phys_addr_t start, size;
-+
-+	start = PHYS_OFFSET;
-+	size = memparse(p, &p);
-+	if (*p == '@')
-+		start = memparse(p + 1, &p);
-+
-+	/*
-+	 * If a user specifies memory size, we blow away any automatically
-+	 * generated regions.
-+	 */
-+	if (usermem == 0) {
-+		phys_addr_t ram_start = memblock_start_of_DRAM();
-+		phys_addr_t ram_end = memblock_end_of_DRAM() - ram_start;
-+
-+		pr_notice("Discard memory layout %pa - %pa",
-+			  &ram_start, &ram_end);
-+
-+		memblock_remove(ram_start, ram_end - ram_start);
-+		boot_mem_map.nr_map = 0;
-+		usermem = 1;
-+	}
-+	pr_notice("Add userdefined memory region %08zx @ %pa",
-+		  (size_t)size, &start);
-+
-+	add_memory_region(start, size, BOOT_MEM_RAM);
-+	return 0;
-+}
-+early_param("mem", early_parse_mem);
-+
-+/*
-  * Manage initrd
-  */
- #ifdef CONFIG_BLK_DEV_INITRD
-@@ -613,31 +650,6 @@ static void __init bootmem_init(void)
-  * initialization hook for anything else was introduced.
-  */
+@@ -795,11 +803,11 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	/* Sanity check the specified memory */
+ 	sanity_check_meminfo();
  
--static int usermem __initdata;
--
--static int __init early_parse_mem(char *p)
--{
--	phys_addr_t start, size;
--
--	/*
--	 * If a user specifies memory size, we
--	 * blow away any automatically generated
--	 * size.
--	 */
--	if (usermem == 0) {
--		boot_mem_map.nr_map = 0;
--		usermem = 1;
--	}
--	start = 0;
--	size = memparse(p, &p);
--	if (*p == '@')
--		start = memparse(p + 1, &p);
--
--	add_memory_region(start, size, BOOT_MEM_RAM);
--	return 0;
--}
--early_param("mem", early_parse_mem);
--
- #ifdef CONFIG_PROC_VMCORE
- unsigned long setup_elfcorehdr, setup_elfcorehdr_size;
- static int __init early_parse_elfcorehdr(char *p)
-@@ -797,11 +809,6 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	parse_early_param();
- 
--	if (usermem) {
--		pr_info("User-defined physical RAM map:\n");
--		print_memory_map();
--	}
+-	pr_info("Determined physical RAM map:\n");
+-	print_memory_map();
 -
  	bootmem_init();
- #ifdef CONFIG_PROC_VMCORE
- 	if (setup_elfcorehdr && setup_elfcorehdr_size) {
+ 
++	/* Print memory map initialized by arch-specific code and params */
++	print_memory_map();
++
+ 	device_tree_init();
+ 	sparse_init();
+ 	plat_swiotlb_setup();
 -- 
 2.6.6
