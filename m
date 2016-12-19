@@ -1,321 +1,1214 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 05/21] MIPS memblock: Alter initrd memory reservation
- method
-Date: Mon, 19 Dec 2016 13:08:29 +0800
-Message-ID: <201612191233.VherMMf4%fengguang.wu@intel.com>
-References: <1482113266-13207-6-git-send-email-fancer.lancer@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="cWoXeonUoKmBZSoM"
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v4 2/3] ARM: dts: vf610-zii-dev: Add .dts file for rev. C
+Date: Sun, 18 Dec 2016 23:17:56 -0800
+Message-ID: <1482131877-6097-2-git-send-email-andrew.smirnov@gmail.com>
+References: <1482131877-6097-1-git-send-email-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482113266-13207-6-git-send-email-fancer.lancer@gmail.com>
+In-Reply-To: <1482131877-6097-1-git-send-email-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com, Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, cphealy@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Add .dts file for rev. C of the board by factoring out commonalities
+into a shared include file (vf610-zii-dev-rev-b-c.dtsi) and deriving
+revision specific file from it (vf610-zii-dev-rev-b.dts and
+vf610-zii-dev-reb-c.dts).
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Serge,
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v4.9 next-20161216]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Serge-Semin/MIPS-memblock-Remove-bootmem-code-and-switch-to-NO_BOOTMEM/20161219-105045
-config: mips-jazz_defconfig (attached as .config)
-compiler: mipsel-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-reproduce:
-        wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        make.cross ARCH=mips 
-
-All errors (new ones prefixed by >>):
-
->> arch/mips/kernel/setup.c:273:20: error: 'is_lowmem_and_valid' defined but not used [-Werror=unused-function]
-    static bool __init is_lowmem_and_valid(const char *name, phys_addr_t base,
-                       ^~~~~~~~~~~~~~~~~~~
-   cc1: all warnings being treated as errors
-
-vim +/is_lowmem_and_valid +273 arch/mips/kernel/setup.c
-
-   267	}
-   268	early_param("mem", early_parse_mem);
-   269	
-   270	/*
-   271	 * Helper method checking whether passed lowmem region is valid
-   272	 */
- > 273	static bool __init is_lowmem_and_valid(const char *name, phys_addr_t base,
-   274					       phys_addr_t size)
-   275	{
-   276		phys_addr_t end = base + size;
-
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---cWoXeonUoKmBZSoM
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+Changes since v3:
 
-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
+	- Added node for AT86RF233 chip on SPI0
 
---cWoXeonUoKmBZSoM--
+ arch/arm/boot/dts/Makefile                |   3 +-
+ arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 300 +---------------------
+ arch/arm/boot/dts/vf610-zii-dev-rev-c.dts | 413 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/vf610-zii-dev.dtsi      | 383 +++++++++++++++++++++++++++
+ 4 files changed, 799 insertions(+), 300 deletions(-)
+ create mode 100644 arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+ create mode 100644 arch/arm/boot/dts/vf610-zii-dev.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index befcd26..9f0d2a1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -442,7 +442,8 @@ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf610-cosmic.dtb \
+ 	vf610m4-cosmic.dtb \
+ 	vf610-twr.dtb \
+-	vf610-zii-dev-rev-b.dtb
++	vf610-zii-dev-rev-b.dtb \
++	vf610-zii-dev-rev-c.dtb
+ dtb-$(CONFIG_ARCH_MXS) += \
+ 	imx23-evk.dtb \
+ 	imx23-olinuxino.dtb \
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+index 2210811..c0fc3f2 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+@@ -43,32 +43,12 @@
+  */
+ 
+ /dts-v1/;
+-#include "vf610.dtsi"
++#include "vf610-zii-dev.dtsi"
+ 
+ / {
+ 	model = "ZII VF610 Development Board, Rev B";
+ 	compatible = "zii,vf610dev-b", "zii,vf610dev", "fsl,vf610";
+ 
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+-	memory {
+-		reg = <0x80000000 0x20000000>;
+-	};
+-
+-	gpio-leds {
+-		compatible = "gpio-leds";
+-		pinctrl-0 = <&pinctrl_leds_debug>;
+-		pinctrl-names = "default";
+-
+-		debug {
+-			label = "zii:green:debug1";
+-			gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "heartbeat";
+-		};
+-	};
+-
+ 	mdio-mux {
+ 		compatible = "mdio-mux-gpio";
+ 		pinctrl-0 = <&pinctrl_mdio_mux>;
+@@ -281,25 +261,6 @@
+ 		};
+ 	};
+ 
+-	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc_3v3_mcu";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-
+-	usb0_vbus: regulator-usb0-vbus {
+-		compatible = "regulator-fixed";
+-		pinctrl-0 = <&pinctrl_usb_vbus>;
+-		regulator-name = "usb_vbus";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		enable-active-high;
+-		regulator-always-on;
+-		regulator-boot-on;
+-		gpio = <&gpio0 6 0>;
+-	};
+-
+ 	spi0 {
+ 		compatible = "spi-gpio";
+ 		pinctrl-0 = <&pinctrl_gpio_spi0>;
+@@ -336,49 +297,6 @@
+ 	};
+ };
+ 
+-&adc0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_adc0_ad5>;
+-	vref-supply = <&reg_vcc_3v3_mcu>;
+-	status = "okay";
+-};
+-
+-&edma0 {
+-	status = "okay";
+-};
+-
+-&esdhc1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_esdhc1>;
+-	bus-width = <4>;
+-	status = "okay";
+-};
+-
+-&fec0 {
+-	phy-mode = "rmii";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_fec0>;
+-	status = "okay";
+-};
+-
+-&fec1 {
+-	phy-mode = "rmii";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_fec1>;
+-	status = "okay";
+-
+-	fixed-link {
+-		   speed = <100>;
+-		   full-duplex;
+-	};
+-
+-	mdio1: mdio {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		status = "okay";
+-	};
+-};
+-
+ &i2c0 {
+ 	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+@@ -403,33 +321,6 @@
+ 		interrupt-parent = <&gpio2>;
+ 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 	};
+-
+-	lm75@48 {
+-		compatible = "national,lm75";
+-		reg = <0x48>;
+-	};
+-
+-	at24c04@50 {
+-		compatible = "atmel,24c04";
+-		reg = <0x50>;
+-	};
+-
+-	at24c04@52 {
+-		compatible = "atmel,24c04";
+-		reg = <0x52>;
+-	};
+-
+-	ds1682@6b {
+-		compatible = "dallas,ds1682";
+-		reg = <0x6b>;
+-	};
+-};
+-
+-&i2c1 {
+-	clock-frequency = <100000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_i2c1>;
+-	status = "okay";
+ };
+ 
+ &i2c2 {
+@@ -499,120 +390,8 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_uart0>;
+-	status = "okay";
+-};
+-
+-&uart1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_uart1>;
+-	status = "okay";
+-};
+-
+-&uart2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_uart2>;
+-	status = "okay";
+-};
+-
+-&usbdev0 {
+-	disable-over-current;
+-	vbus-supply = <&usb0_vbus>;
+-	dr_mode = "host";
+-	status = "okay";
+-};
+-
+-&usbh1 {
+-	disable-over-current;
+-	status = "okay";
+-};
+-
+-&usbmisc0 {
+-	status = "okay";
+-};
+-
+-&usbmisc1 {
+-	status = "okay";
+-};
+-
+-&usbphy0 {
+-	status = "okay";
+-};
+-
+-&usbphy1 {
+-	status = "okay";
+-};
+ 
+ &iomuxc {
+-	pinctrl_adc0_ad5: adc0ad5grp {
+-		fsl,pins = <
+-			VF610_PAD_PTC30__ADC0_SE5	0x00a1
+-		>;
+-	};
+-
+-	pinctrl_dspi0: dspi0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB18__DSPI0_CS1	0x1182
+-			VF610_PAD_PTB19__DSPI0_CS0	0x1182
+-			VF610_PAD_PTB20__DSPI0_SIN	0x1181
+-			VF610_PAD_PTB21__DSPI0_SOUT	0x1182
+-			VF610_PAD_PTB22__DSPI0_SCK	0x1182
+-		>;
+-	};
+-
+-	pinctrl_dspi2: dspi2grp {
+-		fsl,pins = <
+-			VF610_PAD_PTD31__DSPI2_CS1	0x1182
+-			VF610_PAD_PTD30__DSPI2_CS0	0x1182
+-			VF610_PAD_PTD29__DSPI2_SIN	0x1181
+-			VF610_PAD_PTD28__DSPI2_SOUT	0x1182
+-			VF610_PAD_PTD27__DSPI2_SCK	0x1182
+-		>;
+-	};
+-
+-	pinctrl_esdhc1: esdhc1grp {
+-		fsl,pins = <
+-			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
+-			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
+-			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
+-			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
+-			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
+-			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
+-			VF610_PAD_PTA7__GPIO_134	0x219d
+-		>;
+-	};
+-
+-	pinctrl_fec0: fec0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTC0__ENET_RMII0_MDC	0x30d2
+-			VF610_PAD_PTC1__ENET_RMII0_MDIO	0x30d3
+-			VF610_PAD_PTC2__ENET_RMII0_CRS	0x30d1
+-			VF610_PAD_PTC3__ENET_RMII0_RXD1	0x30d1
+-			VF610_PAD_PTC4__ENET_RMII0_RXD0	0x30d1
+-			VF610_PAD_PTC5__ENET_RMII0_RXER	0x30d1
+-			VF610_PAD_PTC6__ENET_RMII0_TXD1	0x30d2
+-			VF610_PAD_PTC7__ENET_RMII0_TXD0	0x30d2
+-			VF610_PAD_PTC8__ENET_RMII0_TXEN	0x30d2
+-		>;
+-	};
+-
+-	pinctrl_fec1: fec1grp {
+-		fsl,pins = <
+-			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
+-			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
+-			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
+-			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
+-			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
+-			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
+-			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
+-			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
+-			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
+-			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
+-		>;
+-	};
+-
+ 	pinctrl_gpio_e6185_eeprom_sel: pinctrl-gpio-e6185-eeprom-spi0 {
+ 		fsl,pins = <
+ 			VF610_PAD_PTE27__GPIO_132	0x33e2
+@@ -629,39 +408,6 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_i2c_mux_reset: pinctrl-i2c-mux-reset {
+-		fsl,pins = <
+-			 VF610_PAD_PTE14__GPIO_119	0x31c2
+-			 >;
+-	};
+-
+-	pinctrl_i2c0: i2c0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB14__I2C0_SCL	0x37ff
+-			VF610_PAD_PTB15__I2C0_SDA	0x37ff
+-		>;
+-	};
+-
+-	pinctrl_i2c1: i2c1grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB16__I2C1_SCL	0x37ff
+-			VF610_PAD_PTB17__I2C1_SDA	0x37ff
+-		>;
+-	};
+-
+-	pinctrl_i2c2: i2c2grp {
+-		fsl,pins = <
+-			VF610_PAD_PTA22__I2C2_SCL	0x37ff
+-			VF610_PAD_PTA23__I2C2_SDA	0x37ff
+-		>;
+-	};
+-
+-	pinctrl_leds_debug: pinctrl-leds-debug {
+-		fsl,pins = <
+-			 VF610_PAD_PTD20__GPIO_74	0x31c2
+-			 >;
+-	};
+-
+ 	pinctrl_mdio_mux: pinctrl-mdio-mux {
+ 		fsl,pins = <
+ 			VF610_PAD_PTA18__GPIO_8		0x31c2
+@@ -676,48 +422,4 @@
+ 			VF610_PAD_PTB28__GPIO_98	0x219d
+ 		>;
+ 	};
+-
+-	pinctrl_qspi0: qspi0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
+-			VF610_PAD_PTD8__QSPI0_B_CS0	0x31ff
+-			VF610_PAD_PTD9__QSPI0_B_DATA3	0x31c3
+-			VF610_PAD_PTD10__QSPI0_B_DATA2	0x31c3
+-			VF610_PAD_PTD11__QSPI0_B_DATA1	0x31c3
+-			VF610_PAD_PTD12__QSPI0_B_DATA0	0x31c3
+-		>;
+-	};
+-
+-	pinctrl_uart0: uart0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB10__UART0_TX	0x21a2
+-			VF610_PAD_PTB11__UART0_RX	0x21a1
+-		>;
+-	};
+-
+-	pinctrl_uart1: uart1grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB23__UART1_TX	0x21a2
+-			VF610_PAD_PTB24__UART1_RX	0x21a1
+-		>;
+-	};
+-
+-	pinctrl_uart2: uart2grp {
+-		fsl,pins = <
+-			VF610_PAD_PTD0__UART2_TX	0x21a2
+-			VF610_PAD_PTD1__UART2_RX	0x21a1
+-		>;
+-	};
+-
+-	pinctrl_usb_vbus: pinctrl-usb-vbus {
+-		fsl,pins = <
+-			VF610_PAD_PTA16__GPIO_6	0x31c2
+-		>;
+-	};
+-
+-	pinctrl_usb0_host: usb0-host-grp {
+-		fsl,pins = <
+-			VF610_PAD_PTD6__GPIO_85		0x0062
+-		>;
+-	};
+ };
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+new file mode 100644
+index 0000000..e270763
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+@@ -0,0 +1,413 @@
++/*
++ * Copyright (C) 2015, 2016 Zodiac Inflight Innovations
++ *
++ * Based on an original 'vf610-twr.dts' which is Copyright 2015,
++ * Freescale Semiconductor, Inc.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "vf610-zii-dev.dtsi"
++
++/ {
++	model = "ZII VF610 Development Board, Rev C";
++	compatible = "zii,vf610dev-c", "zii,vf610dev", "fsl,vf610";
++
++	mdio-mux {
++		compatible = "mdio-mux-gpio";
++		pinctrl-0 = <&pinctrl_mdio_mux>;
++		pinctrl-names = "default";
++		gpios = <&gpio0 8  GPIO_ACTIVE_HIGH
++			 &gpio0 9  GPIO_ACTIVE_HIGH
++			 &gpio0 25 GPIO_ACTIVE_HIGH>;
++		mdio-parent-bus = <&mdio1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mdio_mux_1: mdio@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			switch0: switch0@0 {
++				compatible = "marvell,mv88e6190";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++				dsa,member = <0 0>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						label = "cpu";
++						ethernet = <&fec1>;
++						fixed-link {
++							speed = <100>;
++							full-duplex;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						label = "lan1";
++					};
++
++					port@2 {
++						reg = <2>;
++						label = "lan2";
++					};
++
++					port@3 {
++						reg = <3>;
++						label = "lan3";
++					};
++
++					port@4 {
++						reg = <4>;
++						label = "lan4";
++					};
++
++					switch0port10: port@10 {
++						reg = <10>;
++						label = "dsa";
++						phy-mode = "xgmii";
++						link = <&switch1port10>;
++					};
++				};
++			};
++		};
++
++		mdio_mux_2: mdio@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			switch1: switch1@0 {
++				compatible = "marvell,mv88e6190";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++				dsa,member = <0 1>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@1 {
++						reg = <1>;
++						label = "lan5";
++					};
++
++					port@2 {
++						reg = <2>;
++						label = "lan6";
++					};
++
++					port@3 {
++						reg = <3>;
++						label = "lan7";
++					};
++
++					port@4 {
++						reg = <4>;
++						label = "lan8";
++					};
++
++
++					switch1port10: port@10 {
++						reg = <10>;
++						label = "dsa";
++						phy-mode = "xgmii";
++						link = <&switch0port10>;
++					};
++				};
++			};
++		};
++
++		mdio_mux_4: mdio@4 {
++			reg = <4>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++};
++
++&dspi0 {
++	bus-num = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dspi0>;
++	status = "okay";
++	spi-num-chipselects = <2>;
++
++	m25p128@0 {
++		compatible = "m25p128", "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
++
++	atzb-rf-233@1 {
++		compatible = "atmel,at86rf233";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctr_atzb_rf_233>;
++
++		spi-max-frequency = <7500000>;
++		reg = <1>;
++		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-parent = <&gpio3>;
++		xtal-trim = /bits/ 8 <0x06>;
++
++		sleep-gpio = <&gpio0 24 GPIO_ACTIVE_HIGH>;
++		reset-gpio = <&gpio6 10 GPIO_ACTIVE_HIGH>;
++
++		fsl,spi-cs-sck-delay = <180>;
++		fsl,spi-sck-cs-delay = <250>;
++	};
++};
++
++&i2c0 {
++	/*
++	 * U712
++	 *
++	 * Exposed signals:
++	 *    P1 - WE2_CMD
++	 *    P2 - WE2_CLK
++	 */
++	gpio5: pca9557@18 {
++		compatible = "nxp,pca9557";
++		reg = <0x18>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	/*
++	 * U121
++	 *
++	 * Exposed signals:
++	 *    I/O0  - ENET_SWR_EN
++	 *    I/O1  - ESW1_RESETn
++	 *    I/O2  - ARINC_RESET
++	 *    I/O3  - DD1_IO_RESET
++	 *    I/O4  - ESW2_RESETn
++	 *    I/O5  - ESW3_RESETn
++	 *    I/O6  - ESW4_RESETn
++	 *    I/O8  - TP909
++	 *    I/O9  - FEM_SEL
++	 *    I/O10 - WIFI_RESETn
++	 *    I/O11 - PHY_RSTn
++	 *    I/O12 - OPT1_SD
++	 *    I/O13 - OPT2_SD
++	 *    I/O14 - OPT1_TX_DIS
++	 *    I/O15 - OPT2_TX_DIS
++	 */
++	gpio6: sx1503@20 {
++		compatible = "semtech,sx1503q";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_sx1503_20>;
++		#gpio-cells = <2>;
++		#interrupt-cells = <2>;
++		reg = <0x20>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
++		gpio-controller;
++		interrupt-controller;
++
++		enet_swr_en {
++			gpio-hog;
++			gpios = <0 GPIO_ACTIVE_HIGH>;
++			output-high;
++			line-name = "enet-swr-en";
++		};
++	};
++
++	/*
++	 * U715
++	 *
++	 * Exposed signals:
++	 *     IO0 - WE1_CLK
++	 *     IO1 - WE1_CMD
++	 */
++	gpio7: pca9554@22 {
++		compatible = "nxp,pca9554";
++		reg = <0x22>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++	};
++};
++
++&i2c1 {
++	at24mac602@00 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		read-only;
++	};
++};
++
++&i2c2 {
++	tca9548@70 {
++		compatible = "nxp,pca9548";
++		pinctrl-0 = <&pinctrl_i2c_mux_reset>;
++		pinctrl-names = "default";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++		reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			sfp2: at24c04@50 {
++				compatible = "atmel,24c02";
++				reg = <0x50>;
++			};
++		};
++
++		i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++
++			sfp3: at24c04@50 {
++				compatible = "atmel,24c02";
++				reg = <0x50>;
++			};
++		};
++
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&gpio0 {
++	eth0_intrp {
++		gpio-hog;
++		gpios = <23 GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "sx1503-irq";
++	};
++};
++
++&gpio3 {
++	eth0_intrp {
++		gpio-hog;
++		gpios = <2 GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "eth0-intrp";
++	};
++};
++
++&fec0 {
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_fec0_phy_int>;
++
++			interrupt-parent = <&gpio3>;
++			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++			reg = <0>;
++		};
++	};
++};
++
++&iomuxc {
++	pinctr_atzb_rf_233: pinctrl-atzb-rf-233 {
++		fsl,pins = <
++			VF610_PAD_PTB2__GPIO_24		0x31c2
++			VF610_PAD_PTE27__GPIO_132	0x33e2
++		>;
++	};
++
++
++	pinctrl_sx1503_20: pinctrl-sx1503-20 {
++		fsl,pins = <
++			VF610_PAD_PTB1__GPIO_23		0x219d
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			VF610_PAD_PTA20__UART3_TX	0x21a2
++			VF610_PAD_PTA21__UART3_RX	0x21a1
++		>;
++	};
++
++	pinctrl_mdio_mux: pinctrl-mdio-mux {
++		fsl,pins = <
++			VF610_PAD_PTA18__GPIO_8		0x31c2
++			VF610_PAD_PTA19__GPIO_9		0x31c2
++			VF610_PAD_PTB3__GPIO_25		0x31c2
++		>;
++	};
++
++	pinctrl_fec0_phy_int: pinctrl-fec0-phy-int {
++		fsl,pins = <
++			VF610_PAD_PTB28__GPIO_98	0x219d
++		>;
++	};
++};
+diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+new file mode 100644
+index 0000000..9f5e2e7
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+@@ -0,0 +1,383 @@
++/*
++ * Copyright (C) 2015, 2016 Zodiac Inflight Innovations
++ *
++ * Based on an original 'vf610-twr.dts' which is Copyright 2015,
++ * Freescale Semiconductor, Inc.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++n *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "vf610.dtsi"
++
++/ {
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&pinctrl_leds_debug>;
++		pinctrl-names = "default";
++
++		debug {
++			label = "zii:green:debug1";
++			gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3_mcu";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	usb0_vbus: regulator-usb0-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-0 = <&pinctrl_usb_vbus>;
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		regulator-always-on;
++		regulator-boot-on;
++		gpio = <&gpio0 6 0>;
++	};
++};
++
++&adc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_ad5>;
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&edma0 {
++	status = "okay";
++};
++
++&esdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc1>;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&fec0 {
++	phy-mode = "rmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec0>;
++	status = "okay";
++};
++
++&fec1 {
++	phy-mode = "rmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	status = "okay";
++
++	fixed-link {
++		   speed = <100>;
++		   full-duplex;
++	};
++
++	mdio1: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++	};
++};
++
++&i2c0 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default", "gpio";
++	pinctrl-0 = <&pinctrl_i2c0>;
++	pinctrl-1 = <&pinctrl_i2c0_gpio>;
++	scl-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
++	sda-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	lm75@48 {
++		compatible = "national,lm75";
++		reg = <0x48>;
++	};
++
++	at24c04@50 {
++		compatible = "atmel,24c04";
++		reg = <0x50>;
++	};
++
++	at24c04@52 {
++		compatible = "atmel,24c04";
++		reg = <0x52>;
++	};
++
++	ds1682@6b {
++		compatible = "dallas,ds1682";
++		reg = <0x6b>;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart0>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usbdev0 {
++	disable-over-current;
++	vbus-supply = <&usb0_vbus>;
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbh1 {
++	disable-over-current;
++	status = "okay";
++};
++
++&usbmisc0 {
++	status = "okay";
++};
++
++&usbmisc1 {
++	status = "okay";
++};
++
++&usbphy0 {
++	status = "okay";
++};
++
++&usbphy1 {
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_adc0_ad5: adc0ad5grp {
++		fsl,pins = <
++			VF610_PAD_PTC30__ADC0_SE5	0x00a1
++		>;
++	};
++
++	pinctrl_dspi0: dspi0grp {
++		fsl,pins = <
++			VF610_PAD_PTB18__DSPI0_CS1	0x1182
++			VF610_PAD_PTB19__DSPI0_CS0	0x1182
++			VF610_PAD_PTB20__DSPI0_SIN	0x1181
++			VF610_PAD_PTB21__DSPI0_SOUT	0x1182
++			VF610_PAD_PTB22__DSPI0_SCK	0x1182
++		>;
++	};
++
++	pinctrl_dspi2: dspi2grp {
++		fsl,pins = <
++			VF610_PAD_PTD31__DSPI2_CS1	0x1182
++			VF610_PAD_PTD30__DSPI2_CS0	0x1182
++			VF610_PAD_PTD29__DSPI2_SIN	0x1181
++			VF610_PAD_PTD28__DSPI2_SOUT	0x1182
++			VF610_PAD_PTD27__DSPI2_SCK	0x1182
++		>;
++	};
++
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
++			VF610_PAD_PTA7__GPIO_134	0x219d
++		>;
++	};
++
++	pinctrl_fec0: fec0grp {
++		fsl,pins = <
++			VF610_PAD_PTC0__ENET_RMII0_MDC	0x30d2
++			VF610_PAD_PTC1__ENET_RMII0_MDIO	0x30d3
++			VF610_PAD_PTC2__ENET_RMII0_CRS	0x30d1
++			VF610_PAD_PTC3__ENET_RMII0_RXD1	0x30d1
++			VF610_PAD_PTC4__ENET_RMII0_RXD0	0x30d1
++			VF610_PAD_PTC5__ENET_RMII0_RXER	0x30d1
++			VF610_PAD_PTC6__ENET_RMII0_TXD1	0x30d2
++			VF610_PAD_PTC7__ENET_RMII0_TXD0	0x30d2
++			VF610_PAD_PTC8__ENET_RMII0_TXEN	0x30d2
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++		>;
++	};
++
++	pinctrl_gpio_spi0: pinctrl-gpio-spi0 {
++		fsl,pins = <
++			VF610_PAD_PTB22__GPIO_44	0x33e2
++			VF610_PAD_PTB21__GPIO_43	0x33e2
++			VF610_PAD_PTB20__GPIO_42	0x33e1
++			VF610_PAD_PTB19__GPIO_41	0x33e2
++			VF610_PAD_PTB18__GPIO_40	0x33e2
++		>;
++	};
++
++	pinctrl_i2c_mux_reset: pinctrl-i2c-mux-reset {
++		fsl,pins = <
++			 VF610_PAD_PTE14__GPIO_119	0x31c2
++			 >;
++	};
++
++	pinctrl_i2c0: i2c0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__I2C0_SCL	0x37ff
++			VF610_PAD_PTB15__I2C0_SDA	0x37ff
++		>;
++	};
++
++	pinctrl_i2c0_gpio: i2c0grp-gpio {
++		fsl,pins = <
++			VF610_PAD_PTB14__GPIO_36	0x31c2
++			VF610_PAD_PTB15__GPIO_37	0x31c2
++		>;
++	};
++
++	
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			VF610_PAD_PTB16__I2C1_SCL	0x37ff
++			VF610_PAD_PTB17__I2C1_SDA	0x37ff
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			VF610_PAD_PTA22__I2C2_SCL	0x37ff
++			VF610_PAD_PTA23__I2C2_SDA	0x37ff
++		>;
++	};
++
++	pinctrl_leds_debug: pinctrl-leds-debug {
++		fsl,pins = <
++			 VF610_PAD_PTD20__GPIO_74	0x31c2
++			 >;
++	};
++
++	pinctrl_qspi0: qspi0grp {
++		fsl,pins = <
++			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
++			VF610_PAD_PTD8__QSPI0_B_CS0	0x31ff
++			VF610_PAD_PTD9__QSPI0_B_DATA3	0x31c3
++			VF610_PAD_PTD10__QSPI0_B_DATA2	0x31c3
++			VF610_PAD_PTD11__QSPI0_B_DATA1	0x31c3
++			VF610_PAD_PTD12__QSPI0_B_DATA0	0x31c3
++		>;
++	};
++
++	pinctrl_uart0: uart0grp {
++		fsl,pins = <
++			VF610_PAD_PTB10__UART0_TX	0x21a2
++			VF610_PAD_PTB11__UART0_RX	0x21a1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			VF610_PAD_PTB23__UART1_TX	0x21a2
++			VF610_PAD_PTB24__UART1_RX	0x21a1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			VF610_PAD_PTD0__UART2_TX	0x21a2
++			VF610_PAD_PTD1__UART2_RX	0x21a1
++		>;
++	};
++
++	pinctrl_usb_vbus: pinctrl-usb-vbus {
++		fsl,pins = <
++			VF610_PAD_PTA16__GPIO_6	0x31c2
++		>;
++	};
++
++	pinctrl_usb0_host: usb0-host-grp {
++		fsl,pins = <
++			VF610_PAD_PTD6__GPIO_85		0x0062
++		>;
++	};
++};
+-- 
+2.5.5
