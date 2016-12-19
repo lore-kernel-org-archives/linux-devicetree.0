@@ -1,38 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] Bluetooth: btusb: Configure Marvel to use one of the
- pins for oob wakeup
-Date: Mon, 19 Dec 2016 16:04:28 -0600
-Message-ID: <20161219220428.sn7pspjlss2w2rqb@rob-hp-laptop>
-References: <1481742779-15105-1-git-send-email-rajatja@google.com>
- <1481742779-15105-3-git-send-email-rajatja@google.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] of: documentation: add bindings documentation for
+ TS-4600
+Date: Mon, 19 Dec 2016 16:05:07 -0600
+Message-ID: <20161219220507.qwmqy3at532ykyng@rob-hp-laptop>
+References: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20161214231237.17496-2-sebastien.bourdelin@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481742779-15105-3-git-send-email-rajatja@google.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rajat Jain <rajatja@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Brian Norris <briannorris@google.com>, rajatxjain@gmail.com
+In-Reply-To: <20161214231237.17496-2-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, lucile.quirion-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 11:12:59AM -0800, Rajat Jain wrote:
-> The Marvell devices may have many gpio pins, and hence for wakeup
-> on these out-of-band pins, the chip needs to be told which pin is
-> to be used for wakeup, using an hci command.
+On Wed, Dec 14, 2016 at 06:12:31PM -0500, Sebastien Bourdelin wrote:
+> This adds the documentation for the TS-4600 by Technologic Systems.
 > 
-> Thus, we read the pin number etc from the device tree node and send
-> a command to the chip.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 > ---
-> Note that while I would have liked to name the compatible string as more
-> like "marvell, usb8997-bt", the devicetrees/bindings/usb/usb-device.txt
-> requires the compatible property to be of the form "usbVID,PID".
-> 
->  .../{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} | 25 ++++++++-
+>  Documentation/devicetree/bindings/arm/technologic.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/bluetooth/btusb.c                          | 59 ++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 2 deletions(-)
->  rename Documentation/devicetree/bindings/net/{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} (76%)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
