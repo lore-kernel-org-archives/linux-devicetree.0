@@ -1,44 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 2/8] Documentation: devicetree: thermal: da9062/61
- TJUNC temperature binding
-Date: Mon, 19 Dec 2016 16:28:46 -0600
-Message-ID: <20161219222846.wkj2tshtxfnwqref@rob-hp-laptop>
-References: <cover.1481828921.git.stwiss.opensource@diasemi.com>
- <ae903f7c3c6325420b90c7f691655d902d137d1f.1481828921.git.stwiss.opensource@diasemi.com>
+Subject: Re: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Date: Mon, 19 Dec 2016 16:31:11 -0600
+Message-ID: <20161219223111.itu77g7wsqtj6cvs@rob-hp-laptop>
+References: <1481841044-4314-1-git-send-email-glansberry@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ae903f7c3c6325420b90c7f691655d902d137d1f.1481828921.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Lukasz Luba <lukasz.luba@arm.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+In-Reply-To: <1481841044-4314-1-git-send-email-glansberry@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geoff Lansberry <geoff@kuvee.com>
+Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mgreer@animalcreek.com, justin@kuvee.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 07:08:39PM +0000, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> Device tree binding information for DA9062 and DA9061 thermal junction
-> temperature monitor.
-> 
-> Binding descriptions for the DA9061 and DA9062 thermal TJUNC supervisor
-> device driver, using a single THERMAL_TRIP_HOT trip-wire and allowing for
-> a configurable polling period for over-temperature polling.
-> 
-> This patch also adds two examples, one for DA9062 and one for DA9061. The 
-> DA9061 example uses a fall-back compatible string for the DA9062.
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+On Thu, Dec 15, 2016 at 05:30:42PM -0500, Geoff Lansberry wrote:
+> From: Geoff Lansberry <geoff@kuvee.com>
 > 
 > ---
-> This patch applies against linux-next and v4.9
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  3 ++
+>  drivers/nfc/trf7970a.c                             | 42 ++++++++++++++++------
+>  2 files changed, 34 insertions(+), 11 deletions(-)
 > 
-> v4 -> v5
->  - Rebased from v4.8 to v4.9
->  - Updates from comments by Eduardo Valentin
->  - Replace vendor defined dlg,tjunc-temp-polling-period-ms with standard
->    thermal core polling-delay-passive as part of the device tree
->    initialisation
->  - Remove Acked-by Rob Herring
+> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> index 32b35a0..9dda879 100644
+> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> @@ -21,6 +21,8 @@ Optional SoC Specific Properties:
+>  - t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
+>    where an extra byte is returned by Read Multiple Block commands issued
+>    to Type 5 tags.
+> +- crystal_27mhz: Set to specify that the input frequency to the trf7970a is 27.12MHz
+> +
 
-Acked-by: Rob Herring <robh@kernel.org>
+Can't you use 'clock-frequency = "27000000";'?
+
+>  
+>  Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+>  
+> @@ -43,6 +45,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+>  		irq-status-read-quirk;
+>  		en2-rf-quirk;
+>  		t5t-rmb-extra-byte-quirk;
+> +		crystal_27mhz;
+>  		status = "okay";
+>  	};
+>  };
