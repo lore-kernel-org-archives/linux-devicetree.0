@@ -1,184 +1,110 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/10] dt-bindings: perf: hisi: Add Devicetree
- bindings for Hisilicon SoC PMU
-Date: Mon, 19 Dec 2016 10:37:02 -0600
-Message-ID: <20161219163702.c7wvqsaa4jcztthh@rob-hp-laptop>
-References: <1481129759-159533-1-git-send-email-anurup.m@huawei.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common panel properties
+Date: Mon, 19 Dec 2016 18:54:51 +0200
+Message-ID: <2477026.2bVvJoQSTE@avalon>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2900223.pppRAbRhe6@avalon> <CAL_JsqKBoAJFiOqNhMPzF5VXjdXT2jbWHV0zxfX0gdSz0yGZLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1481129759-159533-1-git-send-email-anurup.m@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anurup M <anurupvasu@gmail.com>
-Cc: mark.rutland@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKBoAJFiOqNhMPzF5VXjdXT2jbWHV0zxfX0gdSz0yGZLQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 07, 2016 at 11:55:59AM -0500, Anurup M wrote:
-> 1) Device tree bindings for Hisilicon SoC PMU.
-> 2) Add example for Hisilicon L3 cache and MN PMU.
-> 3) Add child nodes of L3C and MN in djtag bindings example.
+Hi Rob,
+
+On Monday 19 Dec 2016 09:38:49 Rob Herring wrote:
+> On Sun, Dec 18, 2016 at 2:54 PM, Laurent Pinchart wrote:
+> > On Tuesday 29 Nov 2016 20:23:41 Laurent Pinchart wrote:
+> >> On Tuesday 29 Nov 2016 09:14:09 Rob Herring wrote:
+> >>> On Tue, Nov 29, 2016 at 2:27 AM, Laurent Pinchart wrote:
+> >>>> On Tuesday 22 Nov 2016 11:36:55 Laurent Pinchart wrote:
+> >>>>> On Monday 21 Nov 2016 10:48:15 Rob Herring wrote:
+> >>>>>> On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
+> >>>>>>> Document properties common to several display panels in a central
+> >>>>>>> location that can be referenced by the panel device tree bindings.
+> >>>>>> 
+> >>>>>> Looks good. Just one comment...
+> >>>>>> 
+> >>>>>> [...]
+> >>>>>> 
+> >>>>>>> +Connectivity
+> >>>>>>> +------------
+> >>>>>>> +
+> >>>>>>> +- ports: Panels receive video data through one or multiple
+> >>>>>>> connections. While
+> >>>>>>> +  the nature of those connections is specific to the panel type,
+> >>>>>>> the
+> >>>>>>> +  connectivity is expressed in a standard fashion using ports as
+> >>>>>>> specified in
+> >>>>>>> +  the device graph bindings defined in
+> >>>>>>> +  Documentation/devicetree/bindings/graph.txt.
+> >>>>>> 
+> >>>>>> We allow panels to either use graph binding or be a child of the
+> >>>>>> display controller.
+> >>>>> 
+> >>>>> I knew that some display controllers use a phandle to the panel (see
+> >>>>> the fsl,panel and nvidia,panel properties), but I didn't know we had
+> >>>>> panels as children of display controller nodes. I don't think we
+> >>>>> should allow that for anything but DSI panels, as the DT hierarchy is
+> >>>>> based on control buses. Are you sure we have other panels instantiated
+> >>>>> through that mechanism ?
+> >>> 
+> >>> Some panels have no control bus, so were do we place them?
+> >> 
+> >> I'd say under the root node, like all similar control-less devices.
+> >> 
+> >>> I would say the hierarchy is based on buses with a preference for the
+> >>> control bus when there are multiple buses. I'm not a fan of just
+> >>> sticking things are the top level.
+> >> 
+> >> OK, so much for my comment a few lines up :-)
+> >> 
+> >> The problem with placing non-DSI panels as children of the display
+> >> controller and not using OF graph is that the panel bindings become
+> >> dependent of the display controller being used. A display controller
+> >> using OF graph would require the panel to do the same, while a display
+> >> controller expecting a panel child node (with a specific name) would
+> >> require DT properties for the panel node.
 > 
-> Signed-off-by: Anurup M <anurup.m@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> ---
->  .../devicetree/bindings/arm/hisilicon/djtag.txt    | 25 ++++++
->  .../devicetree/bindings/arm/hisilicon/pmu.txt      | 98 ++++++++++++++++++++++
->  2 files changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> Not sure I follow.
+
+Sorry, I meant "would not requite DT properties".
+
+> They become dependent on the controller driver to probe the panel, but the
+> contents of the panel node would not be controller dependent.
+
+If a display controller uses OF graph then the panel DT node has to declare 
+ports. If the display controller doesn't use OF graph but instead expects the 
+panel to be a direct subnode, or points to the panel using a property such as 
+fsl,panel, then the panel DT node will not have ports.
+
+> >> I'm also not sure the complexity of OF graph is really that prohibitive
+> >> if you compare it to panels as child nodes. To get the panel driver to
+> >> bind to the panel DT node the display controller driver would need to
+> >> create a platform device for the panel and register it. That's not very
+> >> difficult, but parsing a single port and endpoint isn't either (and we
+> >> could even provide a helper function for that, a version of
+> >> of_drm_find_panel() that would take as an argument the display controller
+> >> device node instead of the panel device node).
+> > 
+> > Ping ?
+> > 
+> > I'd like to standardize on one model for panel DT bindings, but I'm not
+> > sure that can be achieved given that we already have multiple competing
+> > models. In any case, is that blocking to merge this patch ? I only
+> > describe one connectivity model here as that's what my panel driver
+> > needs, but I have no issue adding more models later when needed. I
+> > believe this patch is a good step forward already.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> index 733498e..c885507 100644
-> --- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> @@ -27,6 +27,31 @@ Example 1: Djtag for CPU die
->  		scl-id = <0x02>;
->  
->  		/* All connecting components will appear as child nodes */
-> +
-> +		pmul3c0 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x02>;
-> +		};
-> +
-> +		pmul3c1 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x04>;
-> +		};
-> +
-> +		pmul3c2 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x01>;
-> +		};
-> +
-> +		pmul3c3 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x08>;
-> +		};
-> +
-> +		pmumn0 {
-> +			compatible = "hisilicon,hisi-pmu-mn-v1";
-> +			module-id = <0x0b>;
-> +		};
->  	};
->  
->  Example 2: Djtag for IO die
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-> new file mode 100644
-> index 0000000..e2160ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-> @@ -0,0 +1,98 @@
-> +Hisilicon SoC HiP05/06/07 ARMv8 PMU
-> +===================================
-> +
-> +The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
-> +system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
-> +PMU devices are independent and have hardware logic to gather statistics and
-> +performance information.
-> +
-> +HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
-> +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
-> +in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
-> +4 cpu-cores each.
-> +e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
-> +The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
-> +
-> +The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
-> +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
-> +the parent node will be the djtag node of the corresponding CPU die (SCCL).
-> +
-> +L3 cache
-> +---------
-> +The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
-> +L3 cache banks. Each L3 cache bank have separate DT nodes.
-> +
-> +Required properties:
-> +
-> +	- compatible : This value should be as follows
-> +		(a) "hisilicon,hisi-pmu-l3c-v1" for v1 hw in HiP05/06 chips
-> +		(b) "hisilicon,hisi-pmu-l3c-v2" for v2 hw in HiP07 chip
+> It is an improvement which I appreciate, so yes I guess we can address
+> it later when needed.
 
-Use SoC specific compatible strings.
+Thank you. Can I get your ack then ? :-)
 
-> +
-> +	- module-id : This property is a combination of two values in the below order.
-> +		      a) Module ID: The module identifier for djtag.
-> +		      b) Instance or Bank ID: This will identify the L3 cache bank
-> +			 or instance.
+-- 
+Regards,
 
-Needs a vendor prefix.
-
-> +
-> +Optional properties:
-> +
-> +	- interrupt-parent : A phandle indicating which interrupt controller
-> +		this PMU signals interrupts to.
-> +
-> +	- interrupts : Interrupt lines used by this L3 cache bank.
-
-How many interrupts and what are they?
-
-> +
-> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
-> +
-> +Miscellaneous Node
-> +------------------
-> +The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
-> +for each SCCL.
-
-Similar comments here.
-
-> +
-> +Required properties:
-> +
-> +	- compatible : This value should be as follows
-> +		(a) "hisilicon,hisi-pmu-mn-v1" for v1 hw in HiP05/06 chips
-> +		(b) "hisilicon,hisi-pmu-mn-v2" for v2 hw in HiP07 chip
-> +
-> +	- module-id : Module ID to input for djtag.
-> +
-> +Optional properties:
-> +
-> +	- interrupt-parent : A phandle indicating which interrupt controller
-> +		this PMU signals interrupts to.
-> +
-> +	- interrupts : Interrupt lines used by this PMU.
-> +
-> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
-> +
-> +Example:
-> +
-> +	djtag0: djtag@80010000 {
-> +		compatible = "hisilicon,hisi-djtag-v1";
-> +		reg = <0x0 0x80010000 0x0 0x10000>;
-> +		scl-id = <0x02>;
-> +
-> +		pmul3c0 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x02>;
-> +		};
-> +
-> +		pmul3c1 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x04>;
-> +		};
-> +
-> +		pmul3c2 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x01>;
-> +		};
-> +
-> +		pmul3c3 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			module-id = <0x04 0x08>;
-> +		};
-> +
-> +		pmumn0 {
-> +			compatible = "hisilicon,hisi-pmu-mn-v1";
-> +			module-id = <0x0b>;
-> +		};
-> +	};
-> -- 
-> 2.1.4
-> 
+Laurent Pinchart
