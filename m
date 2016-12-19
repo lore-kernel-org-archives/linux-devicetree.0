@@ -1,126 +1,72 @@
-From: Changming Huang <jerry.huang@nxp.com>
-Subject: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Mon, 19 Dec 2016 17:25:53 +0800
-Message-ID: <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH pci/next] PCI: rcar: Add compatible string for r8a7796
+Date: Mon, 19 Dec 2016 10:49:28 +0100
+Message-ID: <CAMuHMdVOUUM3hZ0sfTcs5PFqfvrYR9Sk3egibpuxb-4a80U02A@mail.gmail.com>
+References: <1482064022-8998-1-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Changming Huang <jerry.huang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1482064022-8998-1-git-send-email-ykaneko0929@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-New property "snps,incr-burst-type-adjustment = <x>, <y>" for USB3.0 DWC3.
-Field "x": 1/0 - undefined length INCR burst type enable or not;
-Field "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst type.
+Hi Kaneko-san,
 
-While enabling undefined length INCR burst type and INCR16 burst type,
-get better write performance on NXP Layerscape platform:
-around 3% improvement (from 364MB/s to 375MB/s).
+On Sun, Dec 18, 2016 at 1:27 PM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
+> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+>
+> This patch adds support for r8a7796.
+>
+> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+> ---
+>
+> This patch is based on the next branch of the pci tree.
+>
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  drivers/pci/host/pcie-rcar.c                       | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index eee518d..34712d6 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -6,6 +6,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
+>             "renesas,pcie-r8a7791" for the R8A7791 SoC;
+>             "renesas,pcie-r8a7793" for the R8A7793 SoC;
+>             "renesas,pcie-r8a7795" for the R8A7795 SoC;
+> +           "renesas,pcie-r8a7796" for the R8A7796 SoC;
+>             "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
+>             "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+>
+> diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+> index aca85be..02e5777 100644
+> --- a/drivers/pci/host/pcie-rcar.c
+> +++ b/drivers/pci/host/pcie-rcar.c
+> @@ -1078,6 +1078,7 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
+>         { .compatible = "renesas,pcie-rcar-gen2",
+>           .data = rcar_pcie_hw_init_gen2 },
+>         { .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
+> +       { .compatible = "renesas,pcie-r8a7796", .data = rcar_pcie_hw_init },
+>         { .compatible = "renesas,pcie-rcar-gen3", .data = rcar_pcie_hw_init },
+>         {},
 
-Signed-off-by: Changming Huang <jerry.huang@nxp.com>
----
-Changes in v3:
-  - add new property for INCR burst in usb node.
+Given the driver already matches against "renesas,pcie-rcar-gen3",
+and mainline arch/arm64/boot/dts/renesas/r8a7796.dtsi doesn't have pcie
+nodes yet, I think there's no need to update the driver, only the bindings.
 
- Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
- arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
- 4 files changed, 11 insertions(+)
+Hence if you drop the last chunk, you can add my
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index e3e6983..8c405a3 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -55,6 +55,10 @@ Optional properties:
- 	fladj_30mhz_sdbnd signal is invalid or incorrect.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-+ - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-+	register, undefined length INCR burst type enable and INCRx type.
-+	First field is for undefined length INCR burst type enable or not.
-+	Second field is for largest INCRx type enabled.
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
-@@ -63,4 +67,5 @@ dwc3@4a030000 {
- 	reg = <0x4a030000 0xcfff>;
- 	interrupts = <0 92 4>
- 	usb-phy = <&usb2_phy>, <&usb3,phy>;
-+	snps,incr-burst-type-adjustment = <0x1>, <16>;
- };
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 368e219..2999edb 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -627,6 +627,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <0x1>, <16>;
- 		};
- 
- 		pcie@3400000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 97d331e..64828ce 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -482,6 +482,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <0x1>, <16>;
- 		};
- 
- 		usb1: usb3@3000000 {
-@@ -491,6 +492,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <0x1>, <16>;
- 		};
- 
- 		usb2: usb3@3100000 {
-@@ -500,6 +502,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <0x1>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index d058e56..414af27 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -710,6 +710,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <0x1>, <16>;
- 		};
- 
- 		usb1: usb3@3110000 {
-@@ -720,6 +721,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <0x1>, <16>;
- 		};
- 
- 		ccn@4000000 {
--- 
-1.7.9.5
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
