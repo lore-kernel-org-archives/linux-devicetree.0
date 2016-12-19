@@ -1,60 +1,72 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH/RFC v2 3/7] spi: core: Add support for registering SPI
- slave controllers
-Date: Mon, 19 Dec 2016 11:02:07 +0100
-Message-ID: <CAMuHMdXJu0-iTFu3KMWXbbgidB63Mxy0oAWmTKKt0UUKuPbprA@mail.gmail.com>
-References: <1473713446-30366-1-git-send-email-geert+renesas@glider.be>
- <1473713446-30366-4-git-send-email-geert+renesas@glider.be> <20161215175326.tbblqe7kto2qgxwz@sirena.org.uk>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v6 2/5] lib: implement __arch_bitrev8x4()
+Date: Mon, 19 Dec 2016 10:06:15 +0000
+Message-ID: <20161219100614.GC4508@arm.com>
+References: <cover.1481918884.git.stillcompiling@gmail.com>
+ <6c1c052d3c1d0c02a791aaaf8e114360ab1cb4e7.1481918884.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161215175326.tbblqe7kto2qgxwz-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6c1c052d3c1d0c02a791aaaf8e114360ab1cb4e7.1481918884.git.stillcompiling@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Anatolij Gustschin <agust@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Fri, Dec 16, 2016 at 03:17:51PM -0800, Joshua Clayton wrote:
+> Implement faster bitrev8x4() for arm, arm64 and mips, all the platforms
+> with CONFIG_HAVE_ARCH_BITREVERSE.
+> ARM platforms just need a byteswap added to the existing __arch_bitrev32()
+> Amusingly, the mips implementation is exactly the opposite, requiring
+> removal of the byteswap from its __arch_bitrev32()
+> 
+> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+> ---
+>  arch/arm/include/asm/bitrev.h   | 6 ++++++
+>  arch/arm64/include/asm/bitrev.h | 6 ++++++
+>  arch/mips/include/asm/bitrev.h  | 6 ++++++
+>  include/linux/bitrev.h          | 1 +
+>  4 files changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/include/asm/bitrev.h b/arch/arm/include/asm/bitrev.h
+> index ec291c3..9482f78 100644
+> --- a/arch/arm/include/asm/bitrev.h
+> +++ b/arch/arm/include/asm/bitrev.h
+> @@ -17,4 +17,10 @@ static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
+>  	return __arch_bitrev32((u32)x) >> 24;
+>  }
+>  
+> +static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
+> +{
+> +	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
+> +	return x;
+> +}
+> +
+>  #endif
+> diff --git a/arch/arm64/include/asm/bitrev.h b/arch/arm64/include/asm/bitrev.h
+> index a5a0c36..1801078 100644
+> --- a/arch/arm64/include/asm/bitrev.h
+> +++ b/arch/arm64/include/asm/bitrev.h
+> @@ -16,4 +16,10 @@ static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
+>  	return __arch_bitrev32((u32)x) >> 24;
+>  }
+>  
+> +static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
+> +{
+> +	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
 
-On Thu, Dec 15, 2016 at 6:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Sep 12, 2016 at 10:50:42PM +0200, Geert Uytterhoeven wrote:
->> TBD:
->>   - s/spi_master/spi_controller/ where appropriate,
->>   - Provide wrappers (e.g. "#define spi_master spi_controller" until all
->>     SPI drivers have been converted),
->>   - Do we want a separate spi_register_slave() instead?
->
-> This basically looks fine to me - there's these TBDs so I might be
-> missing things and we probably need some GPIO chip select handling but
+This is broken -- you're operating on 64-bit registers. I only noticed
+because if you write:
 
-Given the hard real-time requirements of SPI slave, supporting GPIO chip
-select may not be feasible.
+  swab32(bitrev32(x))
 
-> that's a separate thing.  Sorry it took me so long to review this.
+then GCC generates:
 
-Thanks for the review!
+  rbit	w0, w0
+  rev	w0, w0
 
-As I managed to fix the issue with spi_slave_abort() on MSIOF, I think
-the remaining
-obstacle is the DT binding.  Do you have any feedback or other
-suggestions in that area?
+so perhaps we should just implement the asm-generic version like that
+and not bother with the arch-specific stuff?
 
-IMHO having the ability to bind to an SPI slave handler either from DT or
-by using the sysfs virtual file is useful to have.
-
-Thanks again!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
