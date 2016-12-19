@@ -1,55 +1,60 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] ARM: dts: da850-lcdk: add gpio-keys
-Date: Mon, 19 Dec 2016 10:53:54 +0100
-Message-ID: <1482141234-11546-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH/RFC v2 3/7] spi: core: Add support for registering SPI
+ slave controllers
+Date: Mon, 19 Dec 2016 11:02:07 +0100
+Message-ID: <CAMuHMdXJu0-iTFu3KMWXbbgidB63Mxy0oAWmTKKt0UUKuPbprA@mail.gmail.com>
+References: <1473713446-30366-1-git-send-email-geert+renesas@glider.be>
+ <1473713446-30366-4-git-send-email-geert+renesas@glider.be> <20161215175326.tbblqe7kto2qgxwz@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161215175326.tbblqe7kto2qgxwz-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a gpio-keys node for two user buttons present on the board.
+Hi Mark,
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/boot/dts/da850-lcdk.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Thu, Dec 15, 2016 at 6:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Sep 12, 2016 at 10:50:42PM +0200, Geert Uytterhoeven wrote:
+>> TBD:
+>>   - s/spi_master/spi_controller/ where appropriate,
+>>   - Provide wrappers (e.g. "#define spi_master spi_controller" until all
+>>     SPI drivers have been converted),
+>>   - Do we want a separate spi_register_slave() instead?
+>
+> This basically looks fine to me - there's these TBDs so I might be
+> missing things and we probably need some GPIO chip select handling but
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 397c77a..628f4de 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- #include "da850.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "DA850/AM1808/OMAP-L138 LCDK";
-@@ -90,6 +91,23 @@
- 			};
- 		};
- 	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		user1 {
-+			label = "GPIO Key USER1";
-+			linux,code = <BTN_0>;
-+			gpios = <&gpio 36 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		user2 {
-+			label = "GPIO Key USER2";
-+			linux,code = <BTN_1>;
-+			gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
- 
- &pmx_core {
--- 
-2.9.3
+Given the hard real-time requirements of SPI slave, supporting GPIO chip
+select may not be feasible.
+
+> that's a separate thing.  Sorry it took me so long to review this.
+
+Thanks for the review!
+
+As I managed to fix the issue with spi_slave_abort() on MSIOF, I think
+the remaining
+obstacle is the DT binding.  Do you have any feedback or other
+suggestions in that area?
+
+IMHO having the ability to bind to an SPI slave handler either from DT or
+by using the sysfs virtual file is useful to have.
+
+Thanks again!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
