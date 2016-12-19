@@ -1,7 +1,7 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 15/21] MIPS memblock: Alter weakened MAAR initialization method
-Date: Mon, 19 Dec 2016 05:07:40 +0300
-Message-ID: <1482113266-13207-16-git-send-email-fancer.lancer@gmail.com>
+Subject: [PATCH 17/21] MIPS memblock: Alter high memory freeing method
+Date: Mon, 19 Dec 2016 05:07:42 +0300
+Message-ID: <1482113266-13207-18-git-send-email-fancer.lancer@gmail.com>
 References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
@@ -10,66 +10,90 @@ To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@
 Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-MAAR initialization method can be slightly simplified, since
-memblock allocator is fully available.
+Memblock regions are used to find all available high memory
+and to set it free into buddy allocator.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/mm/init.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ arch/mips/mm/init.c | 54 ++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 33 deletions(-)
 
 diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index a4f49c7..49db909 100644
+index 6f186c7..98680fb 100644
 --- a/arch/mips/mm/init.c
 +++ b/arch/mips/mm/init.c
-@@ -22,6 +22,7 @@
- #include <linux/ptrace.h>
- #include <linux/mman.h>
- #include <linux/mm.h>
-+#include <linux/memblock.h>
- #include <linux/bootmem.h>
- #include <linux/highmem.h>
- #include <linux/swap.h>
-@@ -245,28 +246,26 @@ void __init fixrange_init(unsigned long start, unsigned long end,
- #endif
+@@ -404,32 +404,6 @@ void maar_init(void)
  }
  
--unsigned __weak platform_maar_init(unsigned num_pairs)
-+/*
-+ * Platform-specific method of MAAR registers initialization
-+ */
-+unsigned int __weak platform_maar_init(unsigned int num_pairs)
- {
- 	struct maar_config cfg[BOOT_MEM_MAP_MAX];
--	unsigned i, num_configured, num_cfg = 0;
-+	struct memblock_region *reg;
-+	unsigned int num_configured, num_cfg = 0;
- 
+ #ifndef CONFIG_NEED_MULTIPLE_NODES
+-int page_is_ram(unsigned long pagenr)
+-{
+-	int i;
+-
 -	for (i = 0; i < boot_mem_map.nr_map; i++) {
+-		unsigned long addr, end;
+-
 -		switch (boot_mem_map.map[i].type) {
 -		case BOOT_MEM_RAM:
 -		case BOOT_MEM_INIT_RAM:
-+	/* Collect RAM regions within MAAR config array */
-+	for_each_memblock(memory, reg) {
-+		if (num_cfg >= BOOT_MEM_MAP_MAX) {
-+			pr_info("Too many memory regions to init MAARs");
- 			break;
+-			break;
 -		default:
+-			/* not usable memory */
 -			continue;
- 		}
+-		}
 -
- 		/* Round lower up */
--		cfg[num_cfg].lower = boot_mem_map.map[i].addr;
--		cfg[num_cfg].lower = (cfg[num_cfg].lower + 0xffff) & ~0xffff;
-+		cfg[num_cfg].lower = (reg->base + 0xffff) & ~0xffff;
+-		addr = PFN_UP(boot_mem_map.map[i].addr);
+-		end = PFN_DOWN(boot_mem_map.map[i].addr +
+-			       boot_mem_map.map[i].size);
+-
+-		if (pagenr >= addr && pagenr < end)
+-			return 1;
+-	}
+-
+-	return 0;
+-}
  
- 		/* Round upper down */
--		cfg[num_cfg].upper = boot_mem_map.map[i].addr +
--					boot_mem_map.map[i].size;
--		cfg[num_cfg].upper = (cfg[num_cfg].upper & ~0xffff) - 1;
-+		cfg[num_cfg].upper = ((reg->base + reg->size) & ~0xffff) - 1;
+ void __init paging_init(void)
+ {
+@@ -458,18 +432,32 @@ static struct kcore_list kcore_kseg0;
+ static inline void mem_init_free_highmem(void)
+ {
+ #ifdef CONFIG_HIGHMEM
+-	unsigned long tmp;
++	struct memblock_region *reg;
++	unsigned long pfn;
  
- 		cfg[num_cfg].attrs = MIPS_MAAR_S;
- 		num_cfg++;
+ 	if (cpu_has_dc_aliases)
+ 		return;
+ 
+-	for (tmp = highstart_pfn; tmp < highend_pfn; tmp++) {
+-		struct page *page = pfn_to_page(tmp);
++	/* Walk through all memory regions freeing highmem pages only */
++	for_each_memblock(memory, reg) {
++		unsigned long start = memblock_region_memory_base_pfn(reg);
++		unsigned long end = memblock_region_memory_end_pfn(reg);
++
++		/* Ignore complete lowmem entries */
++		if (end <= max_low_pfn)
++			continue;
+ 
+-		if (!page_is_ram(tmp))
+-			SetPageReserved(page);
+-		else
+-			free_highmem_page(page);
++		/* Truncate partial highmem entries */
++		if (start < max_low_pfn)
++			start = max_low_pfn;
++
++		/*
++		 * MIPS memblock allocator doesn't allocate regions from high
++		 * memory (see mips_lowmem_limit variable initialization), so
++		 * just set corresponding pages free
++		 */
++		for (pfn = start; pfn < end; pfn++)
++			free_highmem_page(pfn_to_page(pfn));
+ 	}
+ #endif
+ }
 -- 
 2.6.6
