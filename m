@@ -1,39 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] power: supply: bq24735-charger: optionally poll the
- ac-detect gpio
-Date: Mon, 19 Dec 2016 16:16:04 -0600
-Message-ID: <20161219221604.zkwxoodte4tp7u6q@rob-hp-laptop>
-References: <20161214151026.5q6goxlfscv53tol@earth>
- <1481794126-5670-1-git-send-email-peda@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document the hi3660 clock bindings
+Date: Mon, 19 Dec 2016 16:15:08 -0600
+Message-ID: <20161219221508.jxgmv36hib3ekanf@rob-hp-laptop>
+References: <1481781493-6188-1-git-send-email-zhangfei.gao@linaro.org>
+ <1481781493-6188-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481794126-5670-1-git-send-email-peda@axentia.se>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1481781493-6188-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 10:28:46AM +0100, Peter Rosin wrote:
-> If the ac-detect gpio does not support interrupts, provide a fallback
-> to poll the gpio at a configurable interval.
+On Thu, Dec 15, 2016 at 01:58:12PM +0800, Zhangfei Gao wrote:
+> Add DT bindings documentation for hi3660 SoC clock.
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
+>  .../devicetree/bindings/clock/hi3660-clock.txt     | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hi3660-clock.txt
 > 
-> v2 -> v3 changes:
-> - use device_property_read_u32 instead of of_property_read_u32
-> 
-> v1 -> v2 changes:
-> - use poll-interval instead of ti,poll-interval-ms in the bindings
-> 
-> Cheers,
-> peda
-> 
->  .../bindings/power/supply/ti,bq24735.txt           |  2 +
+> diff --git a/Documentation/devicetree/bindings/clock/hi3660-clock.txt b/Documentation/devicetree/bindings/clock/hi3660-clock.txt
+> new file mode 100644
+> index 0000000..7296fd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/hi3660-clock.txt
+> @@ -0,0 +1,42 @@
+> +* Hisilicon Hi3660 Clock Controller
+> +
+> +The Hi3660 clock controller generates and supplies clock to various
+> +controllers within the Hi3660 SoC.
+> +
+> +Required Properties:
+> +
+> +- compatible: the compatible should be one of the following strings to
+> +	indicate the clock controller functionality.
+> +
+> +	- "hisilicon,hi3660-crgctrl"
+> +	- "hisilicon,hi3660-pctrl"
+> +	- "hisilicon,hi3660-pmuctrl"
+> +	- "hisilicon,hi3660-sctrl"
+> +	- "hisilicon,hi3660-iomcu"
+> +
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +- #clock-cells: should be 1.
+> +
+> +Each clock is assigned an identifier and client nodes use this identifier
+> +to specify the clock which they consume.
+> +
+> +All these identifier could be found in <dt-bindings/clock/hi3660-clock.h>.
+> +
+> +Examples:
+> +	crg_ctrl: crg_ctrl@fff35000 {
 
-Acked-by: Rob Herring <robh@kernel.org>
+clock-controller@...
 
->  drivers/power/supply/bq24735-charger.c             | 49 +++++++++++++++++++---
->  2 files changed, 46 insertions(+), 5 deletions(-)
+> +		compatible = "hisilicon,hi3660-crgctrl", "syscon";
+> +		reg = <0x0 0xfff35000 0x0 0x1000>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	uart0: uart@fdf02000 {
+
+serial@...
+
+> +		compatible = "arm,pl011", "arm,primecell";
+> +		reg = <0x0 0xfdf02000 0x0 0x1000>;
+> +		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&crg_ctrl HI3660_CLK_MUX_UART0>,
+> +			 <&crg_ctrl HI3660_PCLK>;
+> +		clock-names = "uartclk", "apb_pclk";
+> +		status = "disabled";
+> +	};
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
