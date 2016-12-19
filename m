@@ -1,97 +1,65 @@
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 2/4] dt-bindings: add bindings for rk3328 clock controller
-Date: Mon, 19 Dec 2016 09:56:11 +0800
-Message-ID: <1482112573-11613-3-git-send-email-zhangqing@rock-chips.com>
-References: <1482112573-11613-1-git-send-email-zhangqing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1482112573-11613-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to NO_BOOTMEM
+Date: Mon, 19 Dec 2016 05:07:25 +0300
+Message-ID: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
+Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings for Rockchip cru which found on
-Rockchip SoCs.
+Most of the modern platforms supported by linux kernel have already
+been cleaned up of old bootmem allocator by moving to nobootmem
+interface wrapping up the memblock. This patchset is the first
+attempt to do the similar improvement for MIPS for UMA systems
+only.
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../bindings/clock/rockchip,rk3328-cru.txt         | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
+Even though the porting was performed as much careful as possible
+there still might be problem with support of some platforms,
+especially Loonson3 or SGI IP27, which perform early memory manager
+initialization by their self.
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-new file mode 100644
-index 000000000000..20053494d49f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-@@ -0,0 +1,57 @@
-+* Rockchip RK3328 Clock and Reset Unit
-+
-+The RK3328 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: should be "rockchip,rk3328-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3328-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "clkin_i2s" - external I2S clock - optional,
-+ - "gmac_clkin" - external GMAC clock - optional
-+ - "phy_50m_out" - output clock of the pll in the mac phy
-+
-+Example: Clock controller node:
-+
-+	cru: clock-controller@ff440000 {
-+		compatible = "rockchip,rk3328-cru", "rockchip,cru", "syscon";
-+		reg = <0x0 0xff440000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@ff120000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0xff120000 0x100>;
-+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clocks = <&cru SCLK_UART0>;
-+	};
+The patchset is split so individual patch being consistent in
+functional and buildable ways. But the MIPS early memory manager
+will work correctly only either with or without the whole set being
+applied. For the same reason a reviewer should not pay much attention
+to methods bootmem_init(), arch_mem_init(), paging_init() and
+mem_init() until they are fully refactored.
+
+The patchset is applied on top of kernel v4.9.
+
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+
+Serge Semin (21):
+  MIPS memblock: Unpin dts memblock sanity check method
+  MIPS memblock: Add dts mem and reserved-mem callbacks
+  MIPS memblock: Alter traditional add_memory_region() method
+  MIPS memblock: Alter user-defined memory parameter parser
+  MIPS memblock: Alter initrd memory reservation method
+  MIPS memblock: Alter kexec-crashkernel parameters parser
+  MIPS memblock: Alter elfcorehdr parameters parser
+  MIPS memblock: Move kernel parameters parser into individual method
+  MIPS memblock: Move kernel memory reservation to individual method
+  MIPS memblock: Discard bootmem allocator initialization
+  MIPS memblock: Add memblock sanity check method
+  MIPS memblock: Add memblock print outs in debug
+  MIPS memblock: Add memblock allocator initialization
+  MIPS memblock: Alter IO resources initialization method
+  MIPS memblock: Alter weakened MAAR initialization method
+  MIPS memblock: Alter paging initialization method
+  MIPS memblock: Alter high memory freeing method
+  MIPS memblock: Slightly improve buddy allocator init method
+  MIPS memblock: Add print out method of kernel virtual memory layout
+  MIPS memblock: Add free low memory test method call
+  MIPS memblock: Deactivate old bootmem allocator
+
+ arch/mips/Kconfig        |   2 +-
+ arch/mips/kernel/prom.c  |  32 +-
+ arch/mips/kernel/setup.c | 958 +++++++++++++++--------------
+ arch/mips/mm/init.c      | 234 ++++---
+ drivers/of/fdt.c         |  47 +-
+ include/linux/of_fdt.h   |   1 +
+ 6 files changed, 739 insertions(+), 535 deletions(-)
+
 -- 
-1.9.1
+2.6.6
