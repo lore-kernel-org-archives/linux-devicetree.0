@@ -1,63 +1,101 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: Re: [PATCH 2/3] of/overlay: sysfs based ABI for dt overlays
-Date: Mon, 19 Dec 2016 09:03:13 +0100
-Message-ID: <a4bee009-4dc7-e8cc-e3ae-bca8042132dd@gmx.de>
-References: <201612191008.JibpO0Px%fengguang.wu@intel.com>
+From: Dongpo Li <lidongpo@hisilicon.com>
+Subject: Re: [PATCH v2 1/4] net: hix5hd2_gmac: add generic compatible string
+Date: Mon, 19 Dec 2016 16:14:14 +0800
+Message-ID: <585796D6.1080407@hisilicon.com>
+References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
+ <1480944481-118803-2-git-send-email-lidongpo@hisilicon.com>
+ <20161209223521.5dnj7l44e663sntl@rob-hp-laptop>
+ <584E871D.7060200@hisilicon.com>
+ <CAL_Jsq+d5xHsxMKxbWSYy3cDXnC+HQj3=wun1zxf5PZ_BYrD-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201612191008.JibpO0Px%fengguang.wu@intel.com>
+In-Reply-To: <CAL_Jsq+d5xHsxMKxbWSYy3cDXnC+HQj3=wun1zxf5PZ_BYrD-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, salil.mehta@huawei.com, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Jiancheng Xue <xuejiancheng@hisilicon.com>, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/19/2016 03:34 AM, kbuild test robot wrote:
-> Hi Heinrich,
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on next-20161216]
-> [cannot apply to glikely/devicetree/next robh/for-next v4.9]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Heinrich-Schuchardt/of-overlay-sysfs-based-ABI-for-dt-overlays/20161219-093606
-> config: i386-randconfig-r0-12190124 (attached as .config)
-> compiler: gcc-5 (Debian 5.4.1-2) 5.4.1 20160904
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386 
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    drivers/of/ov_sysfs.c: In function 'of_create_overlay_from_file':
->    drivers/of/ov_sysfs.c:69:12: error: implicit declaration of function 'of_fdt_unflatten_tree' [-Werror=implicit-function-declaration]
+Hi Rob and David,
 
-select OF_EARLY_FLATTREE
-is missing in Kconfig. It is automatically selected on ARM64 but not on
-other architectures.
+On 2016/12/12 22:21, Rob Herring wrote:
+> On Mon, Dec 12, 2016 at 5:16 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
+>> Hi Rob,
+>>
+>> On 2016/12/10 6:35, Rob Herring wrote:
+>>> On Mon, Dec 05, 2016 at 09:27:58PM +0800, Dongpo Li wrote:
+>>>> The "hix5hd2" is SoC name, add the generic ethernet driver name.
+>>>> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
+>>>> the SG/TXCSUM/TSO/UFO features.
+>>>>
+>>>> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
+>>>> ---
+>>>>  .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt    |  9 +++++++--
+>>>>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c             | 15 +++++++++++----
+>>>>  2 files changed, 18 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>>> index 75d398b..75920f0 100644
+>>>> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>>> @@ -1,7 +1,12 @@
+>>>>  Hisilicon hix5hd2 gmac controller
+>>>>
+>>>>  Required properties:
+>>>> -- compatible: should be "hisilicon,hix5hd2-gmac".
+>>>> +- compatible: should contain one of the following SoC strings:
+>>>> +    * "hisilicon,hix5hd2-gemac"
+>>>> +    * "hisilicon,hi3798cv200-gemac"
+>>>> +    and one of the following version string:
+>>>> +    * "hisilicon,hisi-gemac-v1"
+>>>> +    * "hisilicon,hisi-gemac-v2"
+>>>
+>>> What combinations are valid? I assume both chips don't have both v1 and
+>>> v2. 2 SoCs and 2 versions so far, I don't think there is much point to
+>>> have the v1 and v2 compatible strings.
+>>>
+>> The v1 and v2 are generic MAC compatible strings, many HiSilicon SoCs may
+>> use the same MAC version. For example,
+>> hix5hd2, hi3716cv200 SoCs use the v1 MAC version,
+>> hi3798cv200, hi3516a SoCs use the v2 MAC version,
+>> and there may be more SoCs added in future.
+>> So I think the generic compatible strings are okay here.
+>> Should I add the hi3716cv200, hi3516a SoCs compatible here?
+> 
+> Yes.
+> 
+>> Do you have any good advice?
+>>
+>>>>  - reg: specifies base physical address(s) and size of the device registers.
+>>>>    The first region is the MAC register base and size.
+>>>>    The second region is external interface control register.
+>>>> @@ -20,7 +25,7 @@ Required properties:
+>>>>
+>>>>  Example:
+>>>>      gmac0: ethernet@f9840000 {
+>>>> -            compatible = "hisilicon,hix5hd2-gmac";
+>>>> +            compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
+>>>
+>>> You can't just change compatible strings.
+>>>
+>> Okay, maybe I should name all the compatible string with the suffix "-gmac" instead of
+>> "-gemac". This can keep the compatible strings with the same suffix. Is this okay?
+>> Can I just add the generic compatible string without changing the SoCs compatible string?
+>> Like following:
+>>         gmac0: ethernet@f9840000 {
+>>  -              compatible = "hisilicon,hix5hd2-gmac";
+>>  +              compatible = "hisilicon,hix5hd2-gmac", "hisilicon,hisi-gmac-v1";
+> 
+> Yes, this is fine.
 
->      overlay = of_fdt_unflatten_tree((unsigned long *) buffer, NULL, NULL);
->                ^
->>> drivers/of/ov_sysfs.c:69:10: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
->      overlay = of_fdt_unflatten_tree((unsigned long *) buffer, NULL, NULL);
->              ^
->    cc1: some warnings being treated as errors
-> 
-> vim +/of_fdt_unflatten_tree +69 drivers/of/ov_sysfs.c
-> 
->     63		    offset < fdt_totalsize(buffer)) {
->     64			pr_err("OF: Size of %s does not match header information\n",
->     65			       path);
->     66			ret = -EINVAL;
->     67			goto err_file_read;
->     68		}
->   > 69		overlay = of_fdt_unflatten_tree((unsigned long *) buffer, NULL, NULL);
->     70		if (overlay == NULL) {
->     71			pr_err("OF: Cannot unflatten %s\n", path);
->     72			ret = -EINVAL;
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+As the patch series have been applied to net-next branch,
+in which way should I commit this compatible fix?
+Should I send a new patch fixing this compatible string error with "Fixes: xxx"?
+Looking forward to your reply!
+
+
+    Regards,
+    Dongpo
+
+.
