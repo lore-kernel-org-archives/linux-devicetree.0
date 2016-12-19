@@ -1,128 +1,74 @@
 From: Changming Huang <jerry.huang@nxp.com>
-Subject: [PATCH v3 3/3] USB3/DWC3: Enable undefined length INCR burst type
-Date: Mon, 19 Dec 2016 17:25:54 +0800
-Message-ID: <1482139554-13618-3-git-send-email-jerry.huang@nxp.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+Subject: [PATCH v3 1/3] USB3/DWC3: Add definition for global soc bus
+ configuration register
+Date: Mon, 19 Dec 2016 17:25:52 +0800
+Message-ID: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: balbi@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux@armlinux.org.uk
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Changming Huang <jerry.huang@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Changming Huang <jerry.huang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the undefined length INCR burst type and set INCRx.
-Different platform may has the different burst size type.
-In order to get best performance, we need to tune the burst size to
-one special value, instead of the default value.
+Add the macro definition for global soc bus configuration register 0/1
 
 Signed-off-by: Changming Huang <jerry.huang@nxp.com>
-Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
 ---
 Changes in v3:
-  - add new property for INCR burst in usb node to reset GSBUSCFG0.
+  - no change
 Changes in v2:
-  - split patch
-  - create one new function to handle soc bus configuration register.
+  - split the patch
+  - add more macro definition for soc bus configuration register
 
- drivers/usb/dwc3/core.c |   51 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/usb/dwc3/core.h |    7 +++++++
- 2 files changed, 58 insertions(+)
+ drivers/usb/dwc3/core.h |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 369bab1..404d7e9 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -650,6 +650,55 @@ static void dwc3_core_setup_global_control(struct dwc3 *dwc)
- 	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
- }
- 
-+/* set global soc bus configuration registers */
-+static void dwc3_set_soc_bus_cfg(struct dwc3 *dwc)
-+{
-+	struct device *dev = dwc->dev;
-+	u32 cfg;
-+	int ret;
-+
-+	cfg = dwc3_readl(dwc->regs, DWC3_GSBUSCFG0);
-+
-+	/* Get INCR burst type, if return !NULL, not to change this type */
-+	ret = device_property_read_u32_array(dev,
-+			"snps,incr-burst-type-adjustment",
-+			dwc->incr_burst_type, 2);
-+	if (!ret) {
-+		/* Enable Undefined Length INCR Burst and Enable INCRx Burst */
-+		cfg &= ~DWC3_GSBUSCFG0_INCRBRST_MASK;
-+		if (*dwc->incr_burst_type)
-+			cfg |= DWC3_GSBUSCFG0_INCRBRSTENA;
-+		switch (*(dwc->incr_burst_type + 1)) {
-+		case 256:
-+			cfg |= DWC3_GSBUSCFG0_INCR256BRSTENA;
-+			break;
-+		case 128:
-+			cfg |= DWC3_GSBUSCFG0_INCR128BRSTENA;
-+			break;
-+		case 64:
-+			cfg |= DWC3_GSBUSCFG0_INCR64BRSTENA;
-+			break;
-+		case 32:
-+			cfg |= DWC3_GSBUSCFG0_INCR32BRSTENA;
-+			break;
-+		case 16:
-+			cfg |= DWC3_GSBUSCFG0_INCR16BRSTENA;
-+			break;
-+		case 8:
-+			cfg |= DWC3_GSBUSCFG0_INCR8BRSTENA;
-+			break;
-+		case 4:
-+			cfg |= DWC3_GSBUSCFG0_INCR4BRSTENA;
-+			break;
-+		default:
-+			dev_err(dev, "Invalid property\n");
-+			break;
-+		}
-+	}
-+
-+	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg);
-+}
-+
- /**
-  * dwc3_core_init - Low-level initialization of DWC3 Core
-  * @dwc: Pointer to our controller context structure
-@@ -698,6 +747,8 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 	/* Adjust Frame Length */
- 	dwc3_frame_length_adjustment(dwc);
- 
-+	dwc3_set_soc_bus_cfg(dwc);
-+
- 	usb_phy_set_suspend(dwc->usb2_phy, 0);
- 	usb_phy_set_suspend(dwc->usb3_phy, 0);
- 	ret = phy_power_on(dwc->usb2_generic_phy);
 diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 065aa6f..cfe389b 100644
+index de5a857..065aa6f 100644
 --- a/drivers/usb/dwc3/core.h
 +++ b/drivers/usb/dwc3/core.h
-@@ -805,6 +805,7 @@ struct dwc3_scratchpad_array {
-  * @regs: base address for our registers
-  * @regs_size: address space size
-  * @fladj: frame length adjustment
-+ * @incr_burst_type: INCR burst type adjustment
-  * @irq_gadget: peripheral controller's IRQ number
-  * @nr_scratch: number of scratch buffers
-  * @u1u2: only used on revisions <1.83a for workaround
-@@ -928,6 +929,12 @@ struct dwc3 {
- 	enum usb_phy_interface	hsphy_mode;
+@@ -161,6 +161,32 @@
  
- 	u32			fladj;
-+	/*
-+	 * For INCR burst type.
-+	 * First field: for undefined length INCR burst type enable.
-+	 * Second field: for INCRx burst type enable
-+	 */
-+	u32			incr_burst_type[2];
- 	u32			irq_gadget;
- 	u32			nr_scratch;
- 	u32			u1u2;
+ /* Bit fields */
+ 
++/* Global SoC Bus Configuration Register 0 */
++#define AXI3_CACHE_TYPE_AW		0x8 /* write allocate */
++#define AXI3_CACHE_TYPE_AR		0x4 /* read allocate */
++#define AXI3_CACHE_TYPE_SNP		0x2 /* cacheable */
++#define AXI3_CACHE_TYPE_BUF		0x1 /* bufferable */
++#define DWC3_GSBUSCFG0_DATARD_SHIFT	28
++#define DWC3_GSBUSCFG0_DESCRD_SHIFT	24
++#define DWC3_GSBUSCFG0_DATAWR_SHIFT	20
++#define DWC3_GSBUSCFG0_DESCWR_SHIFT	16
++#define DWC3_GSBUSCFG0_SNP_MASK		0xffff0000
++#define DWC3_GSBUSCFG0_DATABIGEND	(1 << 11)
++#define DWC3_GSBUSCFG0_DESCBIGEND	(1 << 10)
++#define DWC3_GSBUSCFG0_INCR256BRSTENA	(1 << 7) /* INCR256 burst */
++#define DWC3_GSBUSCFG0_INCR128BRSTENA	(1 << 6) /* INCR128 burst */
++#define DWC3_GSBUSCFG0_INCR64BRSTENA	(1 << 5) /* INCR64 burst */
++#define DWC3_GSBUSCFG0_INCR32BRSTENA	(1 << 4) /* INCR32 burst */
++#define DWC3_GSBUSCFG0_INCR16BRSTENA	(1 << 3) /* INCR16 burst */
++#define DWC3_GSBUSCFG0_INCR8BRSTENA	(1 << 2) /* INCR8 burst */
++#define DWC3_GSBUSCFG0_INCR4BRSTENA	(1 << 1) /* INCR4 burst */
++#define DWC3_GSBUSCFG0_INCRBRSTENA	(1 << 0) /* undefined length enable */
++#define DWC3_GSBUSCFG0_INCRBRST_MASK	0xff
++
++/* Global SoC Bus Configuration Register 1 */
++#define DWC3_GSBUSCFG1_1KPAGEENA	(1 << 12) /* 1K page boundary enable */
++#define DWC3_GSBUSCFG1_PTRANSLIMIT_MASK	0xf00
++
+ /* Global Debug Queue/FIFO Space Available Register */
+ #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+ #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
 -- 
 1.7.9.5
