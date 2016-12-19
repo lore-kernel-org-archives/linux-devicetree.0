@@ -1,76 +1,51 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
-Date: Mon, 19 Dec 2016 22:08:32 +0800
-Message-ID: <11985541482156512@web2g.yandex.ru>
-References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
- <20161216124748.rkvnnlo4x5onzpvk@lukather>
- <4720181481899200@web7g.yandex.ru> <20161219100952.bspym36nsehda3za@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161219100952.bspym36nsehda3za@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Romain Perier <romain.perier@free-electrons.com>
+Subject: [PATCH 2/4] net: dsa: mv88e6xxx: Don't forbid MDIO I/Os for PHY addr >= num_of_ports
+Date: Mon, 19 Dec 2016 15:16:07 +0100
+Message-ID: <20161219141610.30934-3-romain.perier@free-electrons.com>
+References: <20161219141610.30934-1-romain.perier@free-electrons.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20161219141610.30934-1-romain.perier@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Romain Perier <romain.perier@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-CgoxOS4xMi4yMDE2LCAxODowOSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gRnJpLCBEZWMgMTYsIDIwMTYgYXQgMTA6NDA6MDBQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqA+PiDCoD4gPsKgICZyX3BpbyB7Cj4+IMKgPj4g
-wqA+ID7CoCB3aWZpX3B3cnNlcV9waW5fcTg6IHdpZmlfcHdyc2VxX3BpbkAwIHsKPj4gwqA+PiDC
-oD4gPiAtIHBpbnMgPSAiUEw2IiwgIlBMNyIsICJQTDExIjsKPj4gwqA+PiDCoD4gPiArIHBpbnMg
-PSAiUEw2IiwgIlBMNyIsICJQTDgiLCAiUEwxMSI7Cj4+IMKgPj4gwqA+ID7CoCBmdW5jdGlvbiA9
-ICJncGlvX2luIjsKPj4gwqA+PiDCoD4gPsKgIGJpYXMtcHVsbC11cDsKPj4gwqA+PiDCoD4gPsKg
-IH07Cj4+IMKgPj4gwqA+Cj4+IMKgPj4gwqA+IFRoZXJlJ3Mgc2V2ZXJhbCB0aGluZ3Mgd3Jvbmcg
-aGVyZS4gVGhlIGZpcnN0IG9uZSBpcyB0aGF0IHlvdSByZWx5Cj4+IMKgPj4gwqA+IHNvbGVseSBv
-biB0aGUgcGluY3RybCBzdGF0ZSB0byBtYWludGFpbiBhIHJlc2V0IGxpbmUuIFRoaXMgaXMgdmVy
-eQo+PiDCoD4+IMKgPiBmcmFnaWxlIChlc3BlY2lhbGx5IHNpbmNlIHRoZSBHUElPIHBpbmN0cmwg
-c3RhdGUgYXJlIGxpa2VseSB0byBnbyBhd2F5Cj4+IMKgPj4gwqA+IGF0IHNvbWUgcG9pbnQpLCBi
-dXQgaXQgYWxzbyBtZWFucyB0aGF0IGlmIHlvdXIgZHJpdmVyIHdhbnRzIHRvIHJlY292ZXIKPj4g
-wqA+PiDCoD4gZnJvbSB0aGF0IHNpdHVhdGlvbiBhdCBzb21lIHBvaW50LCBpdCB3b24ndCB3b3Jr
-Lgo+PiDCoD4+IMKgPgo+PiDCoD4+IMKgPiBUaGUgb3RoZXIgb25lIGlzIHRoYXQgdGhlIGJsdWV0
-b290aCBhbmQgd2lmaSBjaGlwcyBhcmUgdHdvIGRldmljZXMgaW4KPj4gwqA+PiDCoD4gbGludXgs
-IGFuZCB5b3UgYXNzaWduIHRoYXQgcGluIHRvIHRoZSB3cm9uZyBkZXZpY2UgKHdpZmkpLgo+PiDC
-oD4+IMKgPgo+PiDCoD4+IMKgPiByZmtpbGwtZ3BpbyBpcyBtYWRlIGp1c3QgZm9yIHRoYXQsIHNv
-IHBsZWFzZSB1c2UgaXQuCj4+IMKgPj4KPj4gwqA+PiDCoFRoZSBHUElPIGlzIG5vdCBmb3IgdGhl
-IHJhZGlvLCBidXQgZm9yIHRoZSBmdWxsIEJsdWV0b290aCBwYXJ0Lgo+PiDCoD4KPj4gwqA+IEkg
-a25vdy4KPj4gwqA+Cj4+IMKgPj4gwqBJZiBpdCdzIHNldCB0byAwLCB0aGVuIHRoZSBibHVldG9v
-dGggcGFydCB3aWxsIHJlc2V0LCBhbmQgdGhlCj4+IMKgPj4gwqBoY2lhdHRhY2ggd2lsbCBmYWls
-Lgo+PiDCoD4KPj4gwqA+IEJvdGggcmZraWxsLWdwaW8gYW5kIHJma2lsbC1yZWd1bGF0b3Igd2ls
-bCBzaHV0ZG93biB3aGVuIGNhbGxlZAo+PiDCoD4gKGVpdGhlciBieSBwb2tpbmcgdGhlIHJlc2V0
-IHBpbiBvciBzaHV0dGluZyBkb3duIHRoZSByZWd1bGF0b3IpLCBzbwo+PiDCoD4gdGhhdCBkZWZp
-bml0ZWx5IHNlZW1zIGxpa2UgYW4gZXhwZWN0ZWQgYmVoYXZpb3IgdG8gcHV0IHRoZSBkZXZpY2Ug
-aW4KPj4gwqA+IHJlc2V0Lgo+PiDCoD4KPj4gwqA+PiDCoFRoZSBCU1AgdXNlcyB0aGlzIGFzIGEg
-cmZraWxsLCBhbmQgdGhlIHJlc3VsdCBpcyB0aGF0IHRoZSBibHVldG9vdGgKPj4gwqA+PiDCoG9u
-L29mZiBzd2l0Y2ggZG8gbm90IHdvcmsgcHJvcGVybHkuCj4+IMKgPgo+PiDCoD4gVGhlbiByZmtp
-bGwgbmVlZHMgZml4aW5nLCBidXQgd29ya2luZyBhcm91bmQgaXQgYnkgaG9waW5nIHRoYXQgdGhl
-Cj4+IMKgPiBjb3JlIHdpbGwgcHJvYmUgYW4gZW50aXJlbHkgZGlmZmVyZW50IGRldmljZSwgYW5k
-IGVuZm9yY2luZyBhIGRlZmF1bHQKPj4gwqA+IHRoYXQgdGhlIHJlc3Qgb2YgdGhlIGtlcm5lbCBt
-aWdodCBvciBtaWdodCBub3QgY2hhbmdlIGlzIGJvdGggZnJhZ2lsZQo+PiDCoD4gYW5kIHdyb25n
-Lgo+Pgo+PiDCoEkgdGhpbmsgYSByZmtpbGwtZ3BpbyBoZXJlIHdvcmtzIGp1c3QgbGlrZSB0aGUg
-QlNQIHJma2lsbC4uLgo+Pgo+PiDCoFRoZSByZWFsIHByb2JsZW0gaXMgdGhhdCB0aGUgUmVhbHRl
-ayBVQVJUIGJsdWV0b290aCBkcml2ZXIgaXMgYSB1c2Vyc3BhY2UKPj4gwqBwcm9ncmFtIChhIG1v
-ZGlmaWVkIGhjaWF0dGFjaCksIHdoaWNoIGlzIG5vdCBjYXBhYmxlIG9mIHRoZSBHUElPIHJlc2V0
-Li4uCj4KPiBDYW4ndCB5b3UgcnVuIHJma2lsbCBiZWZvcmUgYXR0YWNoaW5nPyBXaGF0IGlzIHRo
-ZSBwcm9ibGVtIGV4YWN0bHk/Cj4gSXQncyBub3QgaW4gcmVzZXQgZm9yIGxvbmcgZW5vdWdoPwo+
-Cj4gVGhpcyBzZWVtcyBtb3JlIGFuZCBtb3JlIGxpa2UgYW4gaXNzdWUgaW4gdGhlIEJUIHN0YWNr
-IHlvdSdyZQo+IHVzaW5nLiBXZSBtaWdodCBjb25zaWRlciB3b3JrYXJvdW5kcyBpbiB0aGUga2Vy
-bmVsLCBidXQgdGhleSBoYXZlIHRvCj4gYmUgY29ycmVjdC4KCk9uZSBtb3JlIHJma2lsbCBpbnRl
-cmZhY2Ugd2lsbCBiZSBnZW5lcmF0ZWQgZm9yIGhjaTAgYWZ0ZXIgaGNpYXR0YWNoLCB3aGljaCBj
-YW4KYmUgc2FmZWx5IHRvZ2dsZWQgYmxvY2sgYW5kIHVuYmxvY2suCgpIb3dldmVyLCBpZiB0aGUg
-R1BJTyBpcyB0b2dnbGVkIGRvd24sIHRoZSBoY2lhdHRhY2ggcHJvZ3JhbSB3aWxsIGRpZS4KClRo
-ZSBibHVldG9vdGggc3RhY2sgSSB1c2VkIGlzIGZkLm8ncyBCbHVlWi4KCj4KPiBNYXhpbWUKPgo+
-IC0tCj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQg
-S2VybmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Some Marvell ethernet switches have internal ethernet transceivers with
+hardcoded phy addresses. These addresses can be grearer than the number
+of ports or its value might be different than the associated port number.
+This is for example the case for MV88E6341 that has 6 ports and internal
+Port 1 to Port4 PHYs mapped at SMI addresses from 0x11 to 0x14.
+
+This commits fixes the issue by removing the condition in MDIO callbacks.
+
+Signed-off-by: Romain Perier <romain.perier@free-electrons.com>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index b5f0e1e..76d944e 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -2881,9 +2881,6 @@ static int mv88e6xxx_mdio_read(struct mii_bus *bus, int phy, int reg)
+ 	u16 val;
+ 	int err;
+ 
+-	if (phy >= mv88e6xxx_num_ports(chip))
+-		return 0xffff;
+-
+ 	mutex_lock(&chip->reg_lock);
+ 	err = mv88e6xxx_phy_read(chip, phy, reg, &val);
+ 	mutex_unlock(&chip->reg_lock);
+@@ -2896,9 +2893,6 @@ static int mv88e6xxx_mdio_write(struct mii_bus *bus, int phy, int reg, u16 val)
+ 	struct mv88e6xxx_chip *chip = bus->priv;
+ 	int err;
+ 
+-	if (phy >= mv88e6xxx_num_ports(chip))
+-		return 0xffff;
+-
+ 	mutex_lock(&chip->reg_lock);
+ 	err = mv88e6xxx_phy_write(chip, phy, reg, val);
+ 	mutex_unlock(&chip->reg_lock);
+-- 
+2.9.3
