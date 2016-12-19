@@ -1,75 +1,113 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2 v2] iio: light: add DT bindings for Capella CM3605
-Date: Sun, 18 Dec 2016 22:55:55 +0100
-Message-ID: <1482098155-16148-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
+Date: Sun, 18 Dec 2016 16:01:14 -0800
+Message-ID: <CAJ_EiSRAQefYj+B3AKLb1EWXQUGccV=Z4op0T5sAdo3-vDVOhg@mail.gmail.com>
+References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
+ <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
+ <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
+ <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
+ <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
+ <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
+ <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop> <CAPDyKFp2L7x=dV6O5XrA53-OOXE0sf+P3tNH93XGyzNheX9vjQ@mail.gmail.com>
+ <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Breck <liam@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Capella Microsystems CM3605
-ambient light sensor and short range proximity sensor.
+On Wed, Dec 14, 2016 at 5:46 PM, Matt Ranostay <matt@ranostay.consulting> wrote:
+> On Tue, Dec 13, 2016 at 12:01 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> On 9 December 2016 at 19:09, Rob Herring <robh@kernel.org> wrote:
+>>> On Fri, Dec 02, 2016 at 01:06:47AM -0800, Matt Ranostay wrote:
+>>>> On Fri, Dec 2, 2016 at 12:28 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>> > On 2 December 2016 at 08:22, Matt Ranostay <matt@ranostay.consulting> wrote:
+>>>> >>
+>>>> >>
+>>>> >>> On Dec 1, 2016, at 23:13, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>> >>>
+>>>> >>>> On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wrote:
+>>>> >>>> Add optional device-post-power-on parameters to disable post_power_on
+>>>> >>>> function from being called since this breaks some device.
+>>>> >>>>
+>>>> >>>> Cc: Tony Lindgren <tony@atomide.com>
+>>>> >>>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+>>>> >>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>>>> >>>> ---
+>>>> >>>> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+>>>> >>>> drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
+>>>> >>>> 2 files changed, 9 insertions(+)
+>>>> >>>>
+>>>> >>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>>>> >>>> index bea306d772d1..09fa153f743e 100644
+>>>> >>>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>>>> >>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>>>> >>>> @@ -24,6 +24,8 @@ Optional properties:
+>>>> >>>>        de-asserting the reset-gpios (if any)
+>>>> >>>> - invert-off-state: Invert the power down state for the reset-gpios (if any)
+>>>> >>>>        and pwrdn-gpios (if any)
+>>>> >>>> +- disable-post-power-on : Avoid post_power_on function from being called since
+>>>> >>>> +       this breaks some devices
+>>>> >>>
+>>>> >>> This is a bit weird. I would like to avoid this, if possible.
+>>>> >>>
+>>>> >>> Perhaps if you simply describe the sequence in detail for your device
+>>>> >>> we can figure out the best option together.
+>>>> >>
+>>>> >> Yeah I know it is a bit weird but we need to keep that reset pin high for at least some time after pre power on.   So any case it would be another property
+>>>> >
+>>>> > This went offlist, please resend.
+>>>> >
+>>>> > Moreover, please try to describe the sequence you need in detail
+>>>> > according to your HW spec.
+>>>> >
+>>>>
+>>>> Yeah oops....
+>>>>
+>>>> So basically we need to drive the reset and powerdown lines high with
+>>>> a 300 milliseconds delay between both...
+>>>> can't have the reset line low with post power on (pretty sure but
+>>>> would need a delay anyway), and we need both reset + powerdown line
+>>>> set low on powerdown.
+>>>>
+>>>> So the power down sequence would need to be reversed for this
+>>>> application in pwrseq-simple.
+>>>
+>>> This sounds like you need a device specific sequence to me. Otherwise,
+>>> write a language to describe any power control waveforms rather than
+>>> trying to bolt on more and more properties. (Don't really go write a
+>>> language.)
+>>
+>> Actually this isn't so device specific. The cw1200 wifi chip which is
+>> being used with ux500 SoCs has a very similar sequence. Allow me to
+>> check the details and get back.
+>
+> Ok. It would be good to have something common than a bunch of one-off
+> solutions for sure.
+>
+>>
+>> Anyway, my point is that I think we can figure out a common sequence
+>> to support these kind required sequences. That is to me preferred over
+>> adding a new (two to support cw1200) device specific pwrseq driver.
+>>
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Rename aset-resistance to aset-resistance-ohms
----
- .../devicetree/bindings/iio/light/cm3605.txt       | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/cm3605.txt
+So briefly looked at the cw1200 driver (I'm guessing the datasheet is
+NDA since I couldn't find it) and it seems like it would be a good fit
+to have a common pwrseq driver.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/cm3605.txt b/Documentation/devicetree/bindings/iio/light/cm3605.txt
-new file mode 100644
-index 000000000000..56331a79f9ab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/cm3605.txt
-@@ -0,0 +1,41 @@
-+Capella Microsystems CM3605
-+Ambient Light and Short Distance Proximity Sensor
-+
-+The CM3605 is an entirely analog part which however require quite a bit of
-+software logic to interface a host operating system.
-+
-+This ALS and proximity sensor was one of the very first deployed in mobile
-+handsets, notably it is used in the very first Nexus One Android phone from
-+2010.
-+
-+Required properties:
-+- compatible: must be: "capella,cm3605"
-+- aset-gpios: GPIO line controlling the ASET line (drive low
-+  to activate the ALS, should be flagged GPIO_ACTIVE_LOW)
-+- interrupts: the IRQ line (such as a GPIO) that is connected to
-+  the POUT (proximity sensor out) line. The edge detection must
-+  be set to IRQ_TYPE_EDGE_BOTH so as to detect movements toward
-+  and away from the proximity sensor.
-+- io-channels: the ADC channel used for converting the voltage from
-+  AOUT to a digital representation.
-+- io-channel-names: must be "aout"
-+
-+Optional properties:
-+- vdd-supply: regulator supplying VDD power to the component.
-+- capella,aset-resistance-ohms: the sensitivity calibration resistance,
-+  in Ohms. Valid values are: 50000, 100000, 300000 and 600000,
-+  as these are the resistance values that we are supplied with
-+  calibration curves for. If not supplied, 100 kOhm will be assumed
-+  but it is strongly recommended to supply this.
-+
-+Example:
-+
-+cm3605 {
-+	compatible = "capella,cm3605";
-+	vdd-supply = <&foo_reg>;
-+	aset-gpios = <&foo_gpio 1 GPIO_ACTIVE_LOW>;
-+	capella,aset-resistance-ohms = <100000>;
-+	interrupts = <1 IRQ_TYPE_EDGE_BOTH>;
-+	io-channels = <&adc 0x01>;
-+	io-channel-names = "aout";
-+};
--- 
-2.7.4
+So minor things I noticed that the cw1200 device has different from
+our SD8787 chipset.
+
+* SD8787 has a "powerdown" line, and CW1200 has a "powerup" line.. I
+know this is a simple logic inversion.
+* CW1200 has a clock control line, that seems to be asserted between
+the powerup/reset steps.
+
+Would there need to be some per driver functions that could be
+registered for edge cases like this?
+
+>> Kind regards
+>> Uffe
