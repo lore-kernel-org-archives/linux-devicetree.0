@@ -1,113 +1,57 @@
-From: Matt Ranostay <matt@ranostay.consulting>
-Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
-Date: Sun, 18 Dec 2016 16:01:14 -0800
-Message-ID: <CAJ_EiSRAQefYj+B3AKLb1EWXQUGccV=Z4op0T5sAdo3-vDVOhg@mail.gmail.com>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
- <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
- <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
- <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
- <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
- <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
- <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop> <CAPDyKFp2L7x=dV6O5XrA53-OOXE0sf+P3tNH93XGyzNheX9vjQ@mail.gmail.com>
- <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] rtc: pcf8563: Do not disable clk out by default
+Date: Mon, 19 Dec 2016 01:25:13 +0100
+Message-ID: <20161219002513.gxoe5csrzzvr6t7u@piout.net>
+References: <1481295829-21974-1-git-send-email-volodymyr.bendiuga@westermo.se>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Breck <liam@networkimprov.net>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBB2WR3TBAKGQES6I7TXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1481295829-21974-1-git-send-email-volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Volodymyr Bendiuga <volodymyr.bendiuga-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, volodymyr.bendiuga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mattias =?iso-8859-1?Q?Walstr=F6m?= <mattias.walstrom-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2016 at 5:46 PM, Matt Ranostay <matt@ranostay.consulting> wrote:
-> On Tue, Dec 13, 2016 at 12:01 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> On 9 December 2016 at 19:09, Rob Herring <robh@kernel.org> wrote:
->>> On Fri, Dec 02, 2016 at 01:06:47AM -0800, Matt Ranostay wrote:
->>>> On Fri, Dec 2, 2016 at 12:28 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>> > On 2 December 2016 at 08:22, Matt Ranostay <matt@ranostay.consulting> wrote:
->>>> >>
->>>> >>
->>>> >>> On Dec 1, 2016, at 23:13, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>> >>>
->>>> >>>> On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wrote:
->>>> >>>> Add optional device-post-power-on parameters to disable post_power_on
->>>> >>>> function from being called since this breaks some device.
->>>> >>>>
->>>> >>>> Cc: Tony Lindgren <tony@atomide.com>
->>>> >>>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
->>>> >>>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->>>> >>>> ---
->>>> >>>> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
->>>> >>>> drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
->>>> >>>> 2 files changed, 9 insertions(+)
->>>> >>>>
->>>> >>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->>>> >>>> index bea306d772d1..09fa153f743e 100644
->>>> >>>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->>>> >>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->>>> >>>> @@ -24,6 +24,8 @@ Optional properties:
->>>> >>>>        de-asserting the reset-gpios (if any)
->>>> >>>> - invert-off-state: Invert the power down state for the reset-gpios (if any)
->>>> >>>>        and pwrdn-gpios (if any)
->>>> >>>> +- disable-post-power-on : Avoid post_power_on function from being called since
->>>> >>>> +       this breaks some devices
->>>> >>>
->>>> >>> This is a bit weird. I would like to avoid this, if possible.
->>>> >>>
->>>> >>> Perhaps if you simply describe the sequence in detail for your device
->>>> >>> we can figure out the best option together.
->>>> >>
->>>> >> Yeah I know it is a bit weird but we need to keep that reset pin high for at least some time after pre power on.   So any case it would be another property
->>>> >
->>>> > This went offlist, please resend.
->>>> >
->>>> > Moreover, please try to describe the sequence you need in detail
->>>> > according to your HW spec.
->>>> >
->>>>
->>>> Yeah oops....
->>>>
->>>> So basically we need to drive the reset and powerdown lines high with
->>>> a 300 milliseconds delay between both...
->>>> can't have the reset line low with post power on (pretty sure but
->>>> would need a delay anyway), and we need both reset + powerdown line
->>>> set low on powerdown.
->>>>
->>>> So the power down sequence would need to be reversed for this
->>>> application in pwrseq-simple.
->>>
->>> This sounds like you need a device specific sequence to me. Otherwise,
->>> write a language to describe any power control waveforms rather than
->>> trying to bolt on more and more properties. (Don't really go write a
->>> language.)
->>
->> Actually this isn't so device specific. The cw1200 wifi chip which is
->> being used with ux500 SoCs has a very similar sequence. Allow me to
->> check the details and get back.
->
-> Ok. It would be good to have something common than a bunch of one-off
-> solutions for sure.
->
->>
->> Anyway, my point is that I think we can figure out a common sequence
->> to support these kind required sequences. That is to me preferred over
->> adding a new (two to support cw1200) device specific pwrseq driver.
->>
+On 09/12/2016 at 16:03:49 +0100, Volodymyr Bendiuga wrote :
+> From: Mattias Walstr=C3=B6m <mattias.walstrom-qeDNsGSBLoYwFerOooGFRg@public.gmane.org>
+>=20
+> Commit a39a6405d5f949bc651694028a disables CLKOUT of
+> the rtc after power-up to improve power consumption.
+> This is very useful, but some designs do require to
+> have the rtc on all the time, otherwise devices will
+> be bricked. Therefore this patch is a compromise that
+> works for both cases, where the default case is when
+> CLKOUT is on. If one wants to disable the CLKOUT,
+> clkout-allow-disable can be added to devicetree's rtc node.
+>=20
 
-So briefly looked at the cw1200 driver (I'm guessing the datasheet is
-NDA since I couldn't find it) and it seems like it would be a good fit
-to have a common pwrseq driver.
+Actually, the commit description is misleading. The CCF is the one
+disabling the clock if it is not used. If any user of the clock is
+declared, it will not be disabled so it already works in both cases
+(provided you have a proper driver getting the clock).
 
-So minor things I noticed that the cw1200 device has different from
-our SD8787 chipset.
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-* SD8787 has a "powerdown" line, and CW1200 has a "powerup" line.. I
-know this is a simple logic inversion.
-* CW1200 has a clock control line, that seems to be asserted between
-the powerup/reset steps.
-
-Would there need to be some per driver functions that could be
-registered for edge cases like this?
-
->> Kind regards
->> Uffe
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
