@@ -1,16 +1,15 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: add opp-v2 table for A33
-Date: Mon, 19 Dec 2016 15:18:03 +0100
-Message-ID: <8af4327f-b779-9d97-347f-bfe4b8303a60@free-electrons.com>
-References: <20161215182754.33921-1-icenowy@aosc.xyz>
- <20161219084652.kiqdkiewu5tujlyd@lukather>
- <CAGb2v65YWntCrFHtSbxhtTWkt+UwkW3xoY-ae26MpH+-ULLXSQ@mail.gmail.com>
- <11975791482156406@web2g.yandex.ru>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
+Date: Mon, 19 Dec 2016 22:24:44 +0800
+Message-ID: <CAGb2v67wU+Hw-6oa9FxzB33sZY8Up-59HZ_mneFBdcRhXbU1pA@mail.gmail.com>
+References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
+ <20161216124748.rkvnnlo4x5onzpvk@lukather> <4720181481899200@web7g.yandex.ru>
+ <20161219100952.bspym36nsehda3za@lukather> <11985541482156512@web2g.yandex.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <11975791482156406@web2g.yandex.ru>
+In-Reply-To: <11985541482156512@web2g.yandex.ru>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,35 +19,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Dec 19, 2016 at 10:08 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+>
+>
+> 19.12.2016, 18:09, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
+>> On Fri, Dec 16, 2016 at 10:40:00PM +0800, Icenowy Zheng wrote:
+>>>  >>  > >  &r_pio {
+>>>  >>  > >  wifi_pwrseq_pin_q8: wifi_pwrseq_pin@0 {
+>>>  >>  > > - pins = "PL6", "PL7", "PL11";
+>>>  >>  > > + pins = "PL6", "PL7", "PL8", "PL11";
+>>>  >>  > >  function = "gpio_in";
+>>>  >>  > >  bias-pull-up;
+>>>  >>  > >  };
+>>>  >>  >
+>>>  >>  > There's several things wrong here. The first one is that you rely
+>>>  >>  > solely on the pinctrl state to maintain a reset line. This is very
+>>>  >>  > fragile (especially since the GPIO pinctrl state are likely to go away
+>>>  >>  > at some point), but it also means that if your driver wants to recover
+>>>  >>  > from that situation at some point, it won't work.
+>>>  >>  >
+>>>  >>  > The other one is that the bluetooth and wifi chips are two devices in
+>>>  >>  > linux, and you assign that pin to the wrong device (wifi).
+>>>  >>  >
+>>>  >>  > rfkill-gpio is made just for that, so please use it.
+>>>  >>
+>>>  >>  The GPIO is not for the radio, but for the full Bluetooth part.
+>>>  >
+>>>  > I know.
+>>>  >
+>>>  >>  If it's set to 0, then the bluetooth part will reset, and the
+>>>  >>  hciattach will fail.
+>>>  >
+>>>  > Both rfkill-gpio and rfkill-regulator will shutdown when called
+>>>  > (either by poking the reset pin or shutting down the regulator), so
+>>>  > that definitely seems like an expected behavior to put the device in
+>>>  > reset.
+>>>  >
+>>>  >>  The BSP uses this as a rfkill, and the result is that the bluetooth
+>>>  >>  on/off switch do not work properly.
+>>>  >
+>>>  > Then rfkill needs fixing, but working around it by hoping that the
+>>>  > core will probe an entirely different device, and enforcing a default
+>>>  > that the rest of the kernel might or might not change is both fragile
+>>>  > and wrong.
+>>>
+>>>  I think a rfkill-gpio here works just like the BSP rfkill...
+>>>
+>>>  The real problem is that the Realtek UART bluetooth driver is a userspace
+>>>  program (a modified hciattach), which is not capable of the GPIO reset...
+>>
+>> Can't you run rfkill before attaching? What is the problem exactly?
+>> It's not in reset for long enough?
+>>
+>> This seems more and more like an issue in the BT stack you're
+>> using. We might consider workarounds in the kernel, but they have to
+>> be correct.
+>
+> One more rfkill interface will be generated for hci0 after hciattach, which can
+> be safely toggled block and unblock.
+>
+> However, if the GPIO is toggled down, the hciattach program will die.
+>
+> The bluetooth stack I used is fd.o's BlueZ.
 
-On 19/12/2016 15:06, Icenowy Zheng wrote:
-> 
-> After proper testing of A23 ccu, the operating points can also apply to A23.
-> (According to A23 devices' fex)
-> 
+I think the bigger issue is that the tty/serial subsystem does not have
+power sequencing support. Here we're trying to use rfkill to do that,
+but that doesn't seem to be what it was intended for. It might work with
+standalone USB bluetooth controllers that don't need any special setup,
+since the device will just appear and get registered. But it might not
+work so well with UART based adapters that need userspace fiddling with
+firmware and hciattach.
 
-I disagree. I've looked into using the same operating points for A23 and
-A33 for CPUfreq and I came to the conclusion that not all A23-based
-boards share the same operating points. You can find the fex files for
-the different boards here:
-https://github.com/linux-sunxi/sunxi-boards/tree/master/sys_config/a23
+And like Icenowy mentioned, the bluetooth stack registers another rfkill
+control, which presumable just blocks transmissions.
 
-After gathering all supported frequencies/voltages for each A23-based
-boards, I found that only the following frequencies and voltages are
-supported by all A23-based boards:
+Regards
+ChenYu
 
- - 1008 MHz, 1220 mV
- - 816 MHz, 1120 mV
- - 600 MHz, 1040 mV
-
-Quentin
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+>
+>>
+>> Maxime
+>>
+>> --
+>> Maxime Ripard, Free Electrons
+>> Embedded Linux and Kernel engineering
+>> http://free-electrons.com
