@@ -1,90 +1,77 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH 19/21] MIPS memblock: Add print out method of kernel
- virtual memory layout
-Date: Mon, 19 Dec 2016 16:15:39 +0300
-Message-ID: <20161219131539.GA2101@mobilestation>
-References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
- <1482113266-13207-20-git-send-email-fancer.lancer@gmail.com>
- <db27f41e-4121-bb83-6533-6727c26b9c5b@imgtec.com>
- <20161219130236.GJ27950@jhogan-linux.le.imgtec.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC v2 3/7] spi: core: Add support for registering SPI
+ slave controllers
+Date: Mon, 19 Dec 2016 13:28:42 +0000
+Message-ID: <20161219132842.h5ntmtqujdvfdjqt@sirena.org.uk>
+References: <1473713446-30366-1-git-send-email-geert+renesas@glider.be>
+ <1473713446-30366-4-git-send-email-geert+renesas@glider.be>
+ <20161215175326.tbblqe7kto2qgxwz@sirena.org.uk>
+ <CAMuHMdXJu0-iTFu3KMWXbbgidB63Mxy0oAWmTKKt0UUKuPbprA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="azqdxjhbxgra4ak6"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161219130236.GJ27950@jhogan-linux.le.imgtec.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: Matt Redfearn <matt.redfearn@imgtec.com>, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com, Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAMuHMdXJu0-iTFu3KMWXbbgidB63Mxy0oAWmTKKt0UUKuPbprA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 01:02:37PM +0000, James Hogan <james.hogan@imgtec.com> wrote:
-> Hi Matt,
-> 
-> On Mon, Dec 19, 2016 at 12:04:54PM +0000, Matt Redfearn wrote:
-> > On 19/12/16 02:07, Serge Semin wrote:
-> > > It's useful to have some printed map of the kernel virtual memory,
-> > > at least for debugging purpose.
-> > >
-> > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> > > ---
-> 
-> > > @@ -106,6 +107,49 @@ static void __init zone_sizes_init(void)
-> > >   }
-> > >   
-> > >   /*
-> > > + * Print out kernel memory layout
-> > > + */
-> > > +#define MLK(b, t) b, t, ((t) - (b)) >> 10
-> > > +#define MLM(b, t) b, t, ((t) - (b)) >> 20
-> > > +#define MLK_ROUNDUP(b, t) b, t, DIV_ROUND_UP(((t) - (b)), SZ_1K)
-> > > +static void __init mem_print_kmap_info(void)
-> > > +{
-> > > +	pr_notice("Virtual kernel memory layout:\n"
-> > > +		  "    lowmem  : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-> > > +		  "    vmalloc : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-> > > +#ifdef CONFIG_HIGHMEM
-> > > +		  "    pkmap   : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-> > > +#endif
-> > > +		  "    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-> > > +		  "      .text : 0x%p" " - 0x%p" "   (%4td kB)\n"
-> > > +		  "      .data : 0x%p" " - 0x%p" "   (%4td kB)\n"
-> > > +		  "      .init : 0x%p" " - 0x%p" "   (%4td kB)\n",
-> > > +		MLM(PAGE_OFFSET, (unsigned long)high_memory),
-> > > +		MLM(VMALLOC_START, VMALLOC_END),
-> > > +#ifdef CONFIG_HIGHMEM
-> > > +		MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE)),
-> > > +#endif
-> > > +		MLK(FIXADDR_START, FIXADDR_TOP),
-> > > +		MLK_ROUNDUP(_text, _etext),
-> > > +		MLK_ROUNDUP(_sdata, _edata),
-> > > +		MLK_ROUNDUP(__init_begin, __init_end));
-> > 
-> > Please drop printing the kernel addresses, or at least only do it if 
-> > KASLR is not turned on, otherwise you're removing the advantage of 
-> > KASLR, that critical kernel addresses cannot be determined easily from 
-> > userspace.
-> 
-> According to Documentation/printk-formats.txt, this is what %pK is for.
-> Better to use that instead?
-> 
-> Cheers
-> James
-> 
 
-The function is called from the kernel directly, which is privileged
-enough to do the printing. So I suppose Matt is right, to hide this
-prints out unless debug is enabled.
+--azqdxjhbxgra4ak6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
--Sergey
+On Mon, Dec 19, 2016 at 11:02:07AM +0100, Geert Uytterhoeven wrote:
+> On Thu, Dec 15, 2016 at 6:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Mon, Sep 12, 2016 at 10:50:42PM +0200, Geert Uytterhoeven wrote:
+> >> TBD:
+> >>   - s/spi_master/spi_controller/ where appropriate,
+> >>   - Provide wrappers (e.g. "#define spi_master spi_controller" until a=
+ll
+> >>     SPI drivers have been converted),
+> >>   - Do we want a separate spi_register_slave() instead?
 
-> > 
-> > It may be better to merge the functionality of show_kernel_relocation
-> > http://lxr.free-electrons.com/source/arch/mips/kernel/relocate.c#L354
-> > into this function, but only print it under the same conditions as 
-> > currently, i.e.
-> > #if defined(CONFIG_DEBUG_KERNEL) && defined(CONFIG_DEBUG_INFO)
-> > http://lxr.free-electrons.com/source/arch/mips/kernel/setup.c#L530
-> > 
-> > Thanks,
-> > Matt
+> > This basically looks fine to me - there's these TBDs so I might be
+> > missing things and we probably need some GPIO chip select handling but
+
+> Given the hard real-time requirements of SPI slave, supporting GPIO chip
+> select may not be feasible.
+
+It's not unknown for SPI devices to have some minimum time requirement
+=66rom chip select to first clock so it's workable and probably something
+people will want at some point.  It can always be done later though.
+
+> As I managed to fix the issue with spi_slave_abort() on MSIOF, I think
+> the remaining
+> obstacle is the DT binding.  Do you have any feedback or other
+> suggestions in that area?
+
+> IMHO having the ability to bind to an SPI slave handler either from DT or
+> by using the sysfs virtual file is useful to have.
+
+I think it'd be useful to have DT support but really I think the DT
+maintainers are going to have more opinions on this than me.
+
+--azqdxjhbxgra4ak6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhX4IkACgkQJNaLcl1U
+h9Akvwf+NBsS5T4h4HdkTOhpY9TEPyMCKaYEVs1TQa/ukf+31EpAsX82pyVYDgaQ
+ajuXyjoBSZeyfLUql8RnUTUhScLQEb7LAOhPNPhmxj8Lw6yoqrcKZ4d4BNlRpEsZ
+/kRI9Ww3IqaODc6r6DNHBBnjAB1y0d9wvUo/aqSrR6d20Aiv/vu3K3UVcFs/Y4y2
+ZwtGstAVqMgtTt3hOEM8npyYLB4RyqaZ2dD7zWyonWoHsCPLzMICSpH9/g8ZyeA0
+D4ePUepukzVrxfYVZKmu0aFzXOXfo80RYn/jWq4tQ0plFJxw+7YtCNUjmpk0UX3b
+FFhlSc8I7zdfsr0g1h/0KcPfYBuTPg==
+=IJBs
+-----END PGP SIGNATURE-----
+
+--azqdxjhbxgra4ak6--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
