@@ -1,72 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH pci/next] PCI: rcar: Add compatible string for r8a7796
-Date: Mon, 19 Dec 2016 10:49:28 +0100
-Message-ID: <CAMuHMdVOUUM3hZ0sfTcs5PFqfvrYR9Sk3egibpuxb-4a80U02A@mail.gmail.com>
-References: <1482064022-8998-1-git-send-email-ykaneko0929@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1482064022-8998-1-git-send-email-ykaneko0929@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] ARM: dts: da850-lcdk: add gpio-keys
+Date: Mon, 19 Dec 2016 10:53:54 +0100
+Message-ID: <1482141234-11546-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kaneko-san,
+Add a gpio-keys node for two user buttons present on the board.
 
-On Sun, Dec 18, 2016 at 1:27 PM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
-> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
->
-> This patch adds support for r8a7796.
->
-> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> ---
->
-> This patch is based on the next branch of the pci tree.
->
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->  drivers/pci/host/pcie-rcar.c                       | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index eee518d..34712d6 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -6,6 +6,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
->             "renesas,pcie-r8a7791" for the R8A7791 SoC;
->             "renesas,pcie-r8a7793" for the R8A7793 SoC;
->             "renesas,pcie-r8a7795" for the R8A7795 SoC;
-> +           "renesas,pcie-r8a7796" for the R8A7796 SoC;
->             "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
->             "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
->
-> diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-> index aca85be..02e5777 100644
-> --- a/drivers/pci/host/pcie-rcar.c
-> +++ b/drivers/pci/host/pcie-rcar.c
-> @@ -1078,6 +1078,7 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
->         { .compatible = "renesas,pcie-rcar-gen2",
->           .data = rcar_pcie_hw_init_gen2 },
->         { .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
-> +       { .compatible = "renesas,pcie-r8a7796", .data = rcar_pcie_hw_init },
->         { .compatible = "renesas,pcie-rcar-gen3", .data = rcar_pcie_hw_init },
->         {},
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/boot/dts/da850-lcdk.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Given the driver already matches against "renesas,pcie-rcar-gen3",
-and mainline arch/arm64/boot/dts/renesas/r8a7796.dtsi doesn't have pcie
-nodes yet, I think there's no need to update the driver, only the bindings.
-
-Hence if you drop the last chunk, you can add my
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 397c77a..628f4de 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ #include "da850.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "DA850/AM1808/OMAP-L138 LCDK";
+@@ -90,6 +91,23 @@
+ 			};
+ 		};
+ 	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++
++		user1 {
++			label = "GPIO Key USER1";
++			linux,code = <BTN_0>;
++			gpios = <&gpio 36 GPIO_ACTIVE_LOW>;
++		};
++
++		user2 {
++			label = "GPIO Key USER2";
++			linux,code = <BTN_1>;
++			gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
++		};
++	};
+ };
+ 
+ &pmx_core {
+-- 
+2.9.3
