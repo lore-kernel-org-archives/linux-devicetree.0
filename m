@@ -1,132 +1,245 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 16/21] MIPS memblock: Alter paging initialization method
-Date: Mon, 19 Dec 2016 05:07:41 +0300
-Message-ID: <1482113266-13207-17-git-send-email-fancer.lancer@gmail.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 10/21] MIPS memblock: Discard bootmem allocator initialization
+Date: Mon, 19 Dec 2016 05:07:35 +0300
+Message-ID: <1482113266-13207-11-git-send-email-fancer.lancer@gmail.com>
 References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, rabinv-VrBV9hrLPhE@public.gmane.org, matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
+Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Apart from the actions it did before, it initializes sparsemem
-if one activated. Memory zones size calculation is moved into an
-individual method.
+Bootmem allocator initialization needs to be discarded.
+PFN limit constants are still in use by some subsystems, so they
+need to be properly initialized. The initialization is moved into
+a separate method and performed with help of commonly used
+platform-specific constants. It might me too simplified, but most
+of the kernel platforms do it the same way. Moreover it's much
+easier to debug it, when it's not that complicated.
 
-Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/mm/init.c | 79 +++++++++++++++++++++++++----------
- 1 file changed, 56 insertions(+), 23 deletions(-)
+ arch/mips/kernel/setup.c | 193 ++++-------------------------
+ 1 file changed, 21 insertions(+), 172 deletions(-)
 
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index 49db909..6f186c7 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -58,6 +58,53 @@ EXPORT_SYMBOL_GPL(empty_zero_page);
- EXPORT_SYMBOL(zero_page_mask);
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index e746793..6562f55 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -626,6 +626,25 @@ static void __init request_crashkernel(struct resource *res) { }
+ #endif /* !CONFIG_KEXEC */
  
  /*
-+ * Initialize sparse memory sections setting node ids and indexes
++ * Calcualte PFN limits with respect to the defined memory layout
 + */
-+static void __init mips_memory_present(void)
++static void __init find_pfn_limits(void)
 +{
-+#ifdef CONFIG_SPARSEMEM
-+	struct memblock_region *reg;
++	phys_addr_t ram_end = memblock_end_of_DRAM();
 +
-+	for_each_memblock(memory, reg)
-+		memory_present(0, memblock_region_memory_base_pfn(reg),
-+			memblock_region_memory_end_pfn(reg));
-+#endif /* CONFIG_SPARSEMEM */
-+}
-+
-+/*
-+ * Setup nodes zone areas
-+ */
-+static void __init zone_sizes_init(void)
-+{
-+	unsigned long max_zone_pfns[MAX_NR_ZONES];
-+
-+	/* Clean zone boundaries array */
-+	memset(max_zone_pfns, 0, sizeof(max_zone_pfns));
-+
-+	/* Setup determined boundaries */
-+#ifdef CONFIG_ZONE_DMA
-+	max_zone_pfns[ZONE_DMA] = MAX_DMA_PFN;
-+#endif
-+#ifdef CONFIG_ZONE_DMA32
-+	max_zone_pfns[ZONE_DMA32] = MAX_DMA32_PFN;
-+#endif
-+	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
++	min_low_pfn = ARCH_PFN_OFFSET;
++	max_low_pfn = PFN_UP(HIGHMEM_START);
++	max_pfn = PFN_UP(ram_end);
 +#ifdef CONFIG_HIGHMEM
-+	max_zone_pfns[ZONE_HIGHMEM] = highend_pfn;
-+
-+	/* Make sure the processor supports highmem */
-+	if (cpu_has_dc_aliases && max_low_pfn != highend_pfn) {
-+		pr_warn("CPU doesn't support highmem. %ldk highmem ignored\n",
-+			(highend_pfn - max_low_pfn) << (PAGE_SHIFT - 10));
-+		max_zone_pfns[ZONE_HIGHMEM] = max_low_pfn;
-+	}
++	highstart_pfn = max_low_pfn;
++	highend_pfn = max_pfn <= highstart_pfn ? highstart_pfn : max_pfn;
 +#endif
-+
-+	/* Finally initialize nodes and page maps using memblock info */
-+	free_area_init_nodes(max_zone_pfns);
++	pr_info("PFNs: low min %lu, low max %lu, high start %lu, high end %lu,"
++		"max %lu\n",
++		min_low_pfn, max_low_pfn, highstart_pfn, highend_pfn, max_pfn);
 +}
 +
 +/*
-  * Not static inline because used by IP27 special magic initialization code
+  * Initialize the bootmem allocator. It also setup initrd related data
+  * if needed.
   */
- void setup_zero_pages(void)
-@@ -386,36 +433,22 @@ int page_is_ram(unsigned long pagenr)
+@@ -641,11 +660,6 @@ static void __init bootmem_init(void)
  
- void __init paging_init(void)
+ static void __init bootmem_init(void)
  {
--	unsigned long max_zone_pfns[MAX_NR_ZONES];
--	unsigned long lastpfn __maybe_unused;
+-	unsigned long reserved_end;
+-	unsigned long mapstart = ~0UL;
+-	unsigned long bootmap_size;
+-	int i;
 -
-+	/* Initialize page tables */
- 	pagetable_init();
+ 	/* Reserve kernel code/data memory */
+ 	mips_reserve_kernel_mem();
  
-+	/* Initialize highmem mapping */
- #ifdef CONFIG_HIGHMEM
- 	kmap_init();
- #endif
--#ifdef CONFIG_ZONE_DMA
--	max_zone_pfns[ZONE_DMA] = MAX_DMA_PFN;
--#endif
--#ifdef CONFIG_ZONE_DMA32
--	max_zone_pfns[ZONE_DMA32] = MAX_DMA32_PFN;
--#endif
--	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
--	lastpfn = max_low_pfn;
--#ifdef CONFIG_HIGHMEM
--	max_zone_pfns[ZONE_HIGHMEM] = highend_pfn;
--	lastpfn = highend_pfn;
+@@ -658,173 +672,8 @@ static void __init bootmem_init(void)
+ 	/* Parse crashkernel parameter */
+ 	mips_parse_crashkernel();
  
--	if (cpu_has_dc_aliases && max_low_pfn != highend_pfn) {
--		printk(KERN_WARNING "This processor doesn't support highmem."
--		       " %ldk highmem ignored\n",
--		       (highend_pfn - max_low_pfn) << (PAGE_SHIFT - 10));
--		max_zone_pfns[ZONE_HIGHMEM] = max_low_pfn;
--		lastpfn = max_low_pfn;
+-	reserved_end = (unsigned long) PFN_UP(__pa_symbol(&_end));
+-
+-	/*
+-	 * max_low_pfn is not a number of pages. The number of pages
+-	 * of the system is given by 'max_low_pfn - min_low_pfn'.
+-	 */
+-	min_low_pfn = ~0UL;
+-	max_low_pfn = 0;
+-
+-	/*
+-	 * Find the highest page frame number we have available.
+-	 */
+-	for (i = 0; i < boot_mem_map.nr_map; i++) {
+-		unsigned long start, end;
+-
+-		if (boot_mem_map.map[i].type != BOOT_MEM_RAM)
+-			continue;
+-
+-		start = PFN_UP(boot_mem_map.map[i].addr);
+-		end = PFN_DOWN(boot_mem_map.map[i].addr
+-				+ boot_mem_map.map[i].size);
+-
+-#ifndef CONFIG_HIGHMEM
+-		/*
+-		 * Skip highmem here so we get an accurate max_low_pfn if low
+-		 * memory stops short of high memory.
+-		 * If the region overlaps HIGHMEM_START, end is clipped so
+-		 * max_pfn excludes the highmem portion.
+-		 */
+-		if (start >= PFN_DOWN(HIGHMEM_START))
+-			continue;
+-		if (end > PFN_DOWN(HIGHMEM_START))
+-			end = PFN_DOWN(HIGHMEM_START);
+-#endif
+-
+-		if (end > max_low_pfn)
+-			max_low_pfn = end;
+-		if (start < min_low_pfn)
+-			min_low_pfn = start;
+-		if (end <= reserved_end)
+-			continue;
+-#ifdef CONFIG_BLK_DEV_INITRD
+-		/* Skip zones before initrd and initrd itself */
+-		if (initrd_end && end <= (unsigned long)PFN_UP(__pa(initrd_end)))
+-			continue;
+-#endif
+-		if (start >= mapstart)
+-			continue;
+-		mapstart = max(reserved_end, start);
 -	}
+-
+-	if (min_low_pfn >= max_low_pfn)
+-		panic("Incorrect memory mapping !!!");
+-	if (min_low_pfn > ARCH_PFN_OFFSET) {
+-		pr_info("Wasting %lu bytes for tracking %lu unused pages\n",
+-			(min_low_pfn - ARCH_PFN_OFFSET) * sizeof(struct page),
+-			min_low_pfn - ARCH_PFN_OFFSET);
+-	} else if (min_low_pfn < ARCH_PFN_OFFSET) {
+-		pr_info("%lu free pages won't be used\n",
+-			ARCH_PFN_OFFSET - min_low_pfn);
+-	}
+-	min_low_pfn = ARCH_PFN_OFFSET;
+-
+-	/*
+-	 * Determine low and high memory ranges
+-	 */
+-	max_pfn = max_low_pfn;
+-	if (max_low_pfn > PFN_DOWN(HIGHMEM_START)) {
+-#ifdef CONFIG_HIGHMEM
+-		highstart_pfn = PFN_DOWN(HIGHMEM_START);
+-		highend_pfn = max_low_pfn;
 -#endif
-+	/* Mark present RAM memory */
-+	mips_memory_present();
- 
--	free_area_init_nodes(max_zone_pfns);
-+	/* Initialize memory maps within sparse memory sections */
-+	sparse_init();
-+
-+	/* Initialize free areas of nodes */
-+	zone_sizes_init();
+-		max_low_pfn = PFN_DOWN(HIGHMEM_START);
+-	}
+-
+-#ifdef CONFIG_BLK_DEV_INITRD
+-	/*
+-	 * mapstart should be after initrd_end
+-	 */
+-	if (initrd_end)
+-		mapstart = max(mapstart, (unsigned long)PFN_UP(__pa(initrd_end)));
+-#endif
+-
+-	/*
+-	 * Initialize the boot-time allocator with low memory only.
+-	 */
+-	bootmap_size = init_bootmem_node(NODE_DATA(0), mapstart,
+-					 min_low_pfn, max_low_pfn);
+-
+-
+-	for (i = 0; i < boot_mem_map.nr_map; i++) {
+-		unsigned long start, end;
+-
+-		start = PFN_UP(boot_mem_map.map[i].addr);
+-		end = PFN_DOWN(boot_mem_map.map[i].addr
+-				+ boot_mem_map.map[i].size);
+-
+-		if (start <= min_low_pfn)
+-			start = min_low_pfn;
+-		if (start >= end)
+-			continue;
+-
+-#ifndef CONFIG_HIGHMEM
+-		if (end > max_low_pfn)
+-			end = max_low_pfn;
+-
+-		/*
+-		 * ... finally, is the area going away?
+-		 */
+-		if (end <= start)
+-			continue;
+-#endif
+-
+-		memblock_add_node(PFN_PHYS(start), PFN_PHYS(end - start), 0);
+-	}
+-
+-	/*
+-	 * Register fully available low RAM pages with the bootmem allocator.
+-	 */
+-	for (i = 0; i < boot_mem_map.nr_map; i++) {
+-		unsigned long start, end, size;
+-
+-		start = PFN_UP(boot_mem_map.map[i].addr);
+-		end   = PFN_DOWN(boot_mem_map.map[i].addr
+-				    + boot_mem_map.map[i].size);
+-
+-		/*
+-		 * Reserve usable memory.
+-		 */
+-		switch (boot_mem_map.map[i].type) {
+-		case BOOT_MEM_RAM:
+-			break;
+-		case BOOT_MEM_INIT_RAM:
+-			memory_present(0, start, end);
+-			continue;
+-		default:
+-			/* Not usable memory */
+-			continue;
+-		}
+-
+-		/*
+-		 * We are rounding up the start address of usable memory
+-		 * and at the end of the usable range downwards.
+-		 */
+-		if (start >= max_low_pfn)
+-			continue;
+-		if (start < reserved_end)
+-			start = reserved_end;
+-		if (end > max_low_pfn)
+-			end = max_low_pfn;
+-
+-		/*
+-		 * ... finally, is the area going away?
+-		 */
+-		if (end <= start)
+-			continue;
+-		size = end - start;
+-
+-		/* Register lowmem ranges */
+-		free_bootmem(PFN_PHYS(start), size << PAGE_SHIFT);
+-		memory_present(0, start, end);
+-	}
+-
+-	/*
+-	 * Reserve the bootmap memory.
+-	 */
+-	reserve_bootmem(PFN_PHYS(mapstart), bootmap_size, BOOTMEM_DEFAULT);
++	/* Find memory PFN limits */
++	find_pfn_limits();
  }
  
- #ifdef CONFIG_64BIT
+ #endif	/* CONFIG_SGI_IP27 */
 -- 
 2.6.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
