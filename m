@@ -1,99 +1,157 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 17/21] MIPS memblock: Alter high memory freeing method
-Date: Mon, 19 Dec 2016 05:07:42 +0300
-Message-ID: <1482113266-13207-18-git-send-email-fancer.lancer@gmail.com>
+Subject: [PATCH 07/21] MIPS memblock: Alter elfcorehdr parameters parser
+Date: Mon, 19 Dec 2016 05:07:32 +0300
+Message-ID: <1482113266-13207-8-git-send-email-fancer.lancer@gmail.com>
 References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
 Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Memblock regions are used to find all available high memory
-and to set it free into buddy allocator.
+Memblock API can be successfully used to verify whether elfcorehdr
+memory region belongs to lowmemory, then it can be reserved within
+memblock allocator. There is also available default method for
+early parameters parser in kernel/crash_dump.c: setup_elfcorehdr(),
+so it's wise to use one instead of creating our own doing actually
+the same thing.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/mm/init.c | 54 ++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 33 deletions(-)
+ arch/mips/kernel/setup.c | 91 +++++++++++++++++-------------
+ 1 file changed, 52 insertions(+), 39 deletions(-)
 
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index 6f186c7..98680fb 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -404,32 +404,6 @@ void maar_init(void)
- }
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index cc6d06b..52205fb 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -426,6 +426,55 @@ static void __init mips_reserve_initrd_mem(void) { }
  
- #ifndef CONFIG_NEED_MULTIPLE_NODES
--int page_is_ram(unsigned long pagenr)
+ #endif
+ 
++/*
++ * Reserve memory occupied by elfcorehdr
++ */
++static void __init mips_reserve_elfcorehdr(void)
++{
++#ifdef CONFIG_PROC_VMCORE
++	/*
++	 * Don't reserve anything if kernel isn't booting after a panic and
++	 * vmcore is usable (see linux/crash_dump.h for details)
++	 */
++	if (!is_vmcore_usable())
++		return;
++
++	/* Check whether the passed address belongs to low memory */
++	if (elfcorehdr_addr + elfcorehdr_size >= mips_lowmem_limit) {
++		pr_err("Elfcorehdr %08zx @ %pa doesn't belong to low memory",
++			(size_t)elfcorehdr_size, &elfcorehdr_addr);
++		return;
++	}
++
++	/*
++	 * If elfcorehdr_size hasn't been specified, then try to reserve upto
++	 * low memory limit
++	 */
++	if (!elfcorehdr_size)
++		elfcorehdr_size = mips_lowmem_limit - elfcorehdr_addr;
++
++	/* Check the region belongs to actual memory (size can be zero) */
++	if (!memblock_is_region_memory(elfcorehdr_addr, elfcorehdr_size)) {
++		pr_err("Elfcorehdr %08zx @ %pa is not a memory region",
++			(size_t)elfcorehdr_size, &elfcorehdr_addr);
++		return;
++	}
++
++	/* Check whether elfcorehdr region is free */
++	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
++		pr_err("Elfcorehdr %08zx @ %pa overlaps in-use memory",
++			(size_t)elfcorehdr_size, &elfcorehdr_addr);
++		return;
++	}
++
++	/* Reserve elfcorehdr within memblock */
++	memblock_reserve(elfcorehdr_addr, PAGE_ALIGN(elfcorehdr_size));
++
++	pr_info("Reserved memory for kdump at %08zx @ %pa\n",
++		(size_t)elfcorehdr_size, &elfcorehdr_addr);
++#endif /* CONFIG_PROC_VMCORE */
++}
++
+ #ifdef CONFIG_KEXEC
+ /*
+  * Parse passed crashkernel parameter and reserve corresponding memory
+@@ -499,6 +548,9 @@ static void __init bootmem_init(void)
+ 	/* Check and reserve memory occupied by initrd */
+ 	mips_reserve_initrd_mem();
+ 
++	/* Reserve memory for elfcorehdr */
++	mips_reserve_elfcorehdr();
++
+ 	/* Parse crashkernel parameter */
+ 	mips_parse_crashkernel();
+ 
+@@ -719,37 +771,6 @@ static void __init bootmem_init(void)
+  * initialization hook for anything else was introduced.
+  */
+ 
+-#ifdef CONFIG_PROC_VMCORE
+-unsigned long setup_elfcorehdr, setup_elfcorehdr_size;
+-static int __init early_parse_elfcorehdr(char *p)
 -{
 -	int i;
 -
+-	setup_elfcorehdr = memparse(p, &p);
+-
 -	for (i = 0; i < boot_mem_map.nr_map; i++) {
--		unsigned long addr, end;
--
--		switch (boot_mem_map.map[i].type) {
--		case BOOT_MEM_RAM:
--		case BOOT_MEM_INIT_RAM:
+-		unsigned long start = boot_mem_map.map[i].addr;
+-		unsigned long end = (boot_mem_map.map[i].addr +
+-				     boot_mem_map.map[i].size);
+-		if (setup_elfcorehdr >= start && setup_elfcorehdr < end) {
+-			/*
+-			 * Reserve from the elf core header to the end of
+-			 * the memory segment, that should all be kdump
+-			 * reserved memory.
+-			 */
+-			setup_elfcorehdr_size = end - setup_elfcorehdr;
 -			break;
--		default:
--			/* not usable memory */
--			continue;
 -		}
--
--		addr = PFN_UP(boot_mem_map.map[i].addr);
--		end = PFN_DOWN(boot_mem_map.map[i].addr +
--			       boot_mem_map.map[i].size);
--
--		if (pagenr >= addr && pagenr < end)
--			return 1;
 -	}
--
+-	/*
+-	 * If we don't find it in the memory map, then we shouldn't
+-	 * have to worry about it, as the new kernel won't use it.
+-	 */
 -	return 0;
 -}
- 
- void __init paging_init(void)
+-early_param("elfcorehdr", early_parse_elfcorehdr);
+-#endif
+-
+ static void __init arch_mem_addpart(phys_addr_t mem, phys_addr_t end, int type)
  {
-@@ -458,18 +432,32 @@ static struct kcore_list kcore_kseg0;
- static inline void mem_init_free_highmem(void)
- {
- #ifdef CONFIG_HIGHMEM
--	unsigned long tmp;
-+	struct memblock_region *reg;
-+	unsigned long pfn;
+ 	phys_addr_t size;
+@@ -833,14 +854,6 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	parse_early_param();
  
- 	if (cpu_has_dc_aliases)
- 		return;
+ 	bootmem_init();
+-#ifdef CONFIG_PROC_VMCORE
+-	if (setup_elfcorehdr && setup_elfcorehdr_size) {
+-		printk(KERN_INFO "kdump reserved memory at %lx-%lx\n",
+-		       setup_elfcorehdr, setup_elfcorehdr_size);
+-		reserve_bootmem(setup_elfcorehdr, setup_elfcorehdr_size,
+-				BOOTMEM_DEFAULT);
+-	}
+-#endif
  
--	for (tmp = highstart_pfn; tmp < highend_pfn; tmp++) {
--		struct page *page = pfn_to_page(tmp);
-+	/* Walk through all memory regions freeing highmem pages only */
-+	for_each_memblock(memory, reg) {
-+		unsigned long start = memblock_region_memory_base_pfn(reg);
-+		unsigned long end = memblock_region_memory_end_pfn(reg);
-+
-+		/* Ignore complete lowmem entries */
-+		if (end <= max_low_pfn)
-+			continue;
- 
--		if (!page_is_ram(tmp))
--			SetPageReserved(page);
--		else
--			free_highmem_page(page);
-+		/* Truncate partial highmem entries */
-+		if (start < max_low_pfn)
-+			start = max_low_pfn;
-+
-+		/*
-+		 * MIPS memblock allocator doesn't allocate regions from high
-+		 * memory (see mips_lowmem_limit variable initialization), so
-+		 * just set corresponding pages free
-+		 */
-+		for (pfn = start; pfn < end; pfn++)
-+			free_highmem_page(pfn_to_page(pfn));
- 	}
- #endif
- }
+ 	device_tree_init();
+ 	sparse_init();
 -- 
 2.6.6
