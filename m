@@ -1,86 +1,28 @@
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: Re: [PATCH pci/next] PCI: rcar: Add compatible string for r8a7796
-Date: Tue, 20 Dec 2016 04:27:17 +0900
-Message-ID: <CAH1o70JybP7FR-vC5oCPXqDXygt7G-C9w3bO9JhVQwTQGvEJXQ@mail.gmail.com>
-References: <1482064022-8998-1-git-send-email-ykaneko0929@gmail.com> <CAMuHMdVOUUM3hZ0sfTcs5PFqfvrYR9Sk3egibpuxb-4a80U02A@mail.gmail.com>
+From: Pierre-Hugues Husson <phh@phh.me>
+Subject: Re: [PATCH 2/2] regulator: rn5t618: add RC5T619 PMIC support
+Date: Mon, 19 Dec 2016 21:06:42 +0100
+Message-ID: <CAJ-oXjR71j8SExr21ZwFr3VAfaboZJB9L9OmX8fytH7My05wEA@mail.gmail.com>
+References: <20161105161925.14910-1-phh@phh.me> <20161105161925.14910-3-phh@phh.me>
+ <20161109140258.25miftfbklwo3apz@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVOUUM3hZ0sfTcs5PFqfvrYR9Sk3egibpuxb-4a80U02A@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161109140258.25miftfbklwo3apz@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert-san,
+Hi all,
 
-Thanks for your review.
-
-2016-12-19 18:49 GMT+09:00 Geert Uytterhoeven <geert@linux-m68k.org>:
-> Hi Kaneko-san,
->
-> On Sun, Dec 18, 2016 at 1:27 PM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
->> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
->>
->> This patch adds support for r8a7796.
->>
->> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
->> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
->> ---
->>
->> This patch is based on the next branch of the pci tree.
->>
->>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->>  drivers/pci/host/pcie-rcar.c                       | 1 +
->>  2 files changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
->> index eee518d..34712d6 100644
->> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
->> @@ -6,6 +6,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
->>             "renesas,pcie-r8a7791" for the R8A7791 SoC;
->>             "renesas,pcie-r8a7793" for the R8A7793 SoC;
->>             "renesas,pcie-r8a7795" for the R8A7795 SoC;
->> +           "renesas,pcie-r8a7796" for the R8A7796 SoC;
->>             "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
->>             "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
->>
->> diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
->> index aca85be..02e5777 100644
->> --- a/drivers/pci/host/pcie-rcar.c
->> +++ b/drivers/pci/host/pcie-rcar.c
->> @@ -1078,6 +1078,7 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
->>         { .compatible = "renesas,pcie-rcar-gen2",
->>           .data = rcar_pcie_hw_init_gen2 },
->>         { .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
->> +       { .compatible = "renesas,pcie-r8a7796", .data = rcar_pcie_hw_init },
->>         { .compatible = "renesas,pcie-rcar-gen3", .data = rcar_pcie_hw_init },
->>         {},
->
-> Given the driver already matches against "renesas,pcie-rcar-gen3",
-> and mainline arch/arm64/boot/dts/renesas/r8a7796.dtsi doesn't have pcie
-> nodes yet, I think there's no need to update the driver, only the bindings.
-
-I agree with you.
-
->
-> Hence if you drop the last chunk, you can add my
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-I will do it.
+I believe this hasn't been merged.
+Is there anything preventing the merge of this patch?
 
 Thanks,
-kaneko
 
+2016-11-09 15:02 GMT+01:00 Mark Brown <broonie@kernel.org>:
+> On Sat, Nov 05, 2016 at 05:19:25PM +0100, Pierre-Hugues Husson wrote:
+>> Extend the driver to support Ricoh RC5T619.
+>> Support the additional regulators and slightly different voltage ranges.
 >
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> Acked-by: Mark Brown <broonie@kernel.org>
