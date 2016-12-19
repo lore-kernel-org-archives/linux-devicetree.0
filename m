@@ -1,20 +1,19 @@
 From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 19/21] MIPS memblock: Add print out method of kernel
- virtual memory layout
-Date: Mon, 19 Dec 2016 11:52:19 +0800
-Message-ID: <201612191100.CgTXQXAU%fengguang.wu@intel.com>
-References: <1482113266-13207-20-git-send-email-fancer.lancer@gmail.com>
+Subject: Re: [PATCH 07/21] MIPS memblock: Alter elfcorehdr parameters parser
+Date: Mon, 19 Dec 2016 12:09:36 +0800
+Message-ID: <201612191208.H6zS6YI3%fengguang.wu@intel.com>
+References: <1482113266-13207-8-git-send-email-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="pWyiEgJYm5f9v55/"
+Content-Type: multipart/mixed; boundary="uAKRQypu60I7Lcqm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1482113266-13207-20-git-send-email-fancer.lancer@gmail.com>
+In-Reply-To: <1482113266-13207-8-git-send-email-fancer.lancer@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Cc: kbuild-all@01.org, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com, Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
---pWyiEgJYm5f9v55/
+--uAKRQypu60I7Lcqm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -33,203 +32,48 @@ reproduce:
         # save the attached .config to linux build tree
         make.cross ARCH=mips 
 
-All error/warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   In file included from arch/mips/include/asm/bug.h:4:0,
-                    from include/linux/bug.h:4,
-                    from arch/mips/mm/init.c:12:
-   arch/mips/mm/init.c: In function 'mem_print_kmap_info':
->> arch/mips/mm/init.c:143:31: error: 'LAST_PKMAP' undeclared (first use in this function)
-     BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-                                  ^
-   include/linux/compiler.h:498:19: note: in definition of macro '__compiletime_assert'
-      bool __cond = !(condition);    \
-                      ^~~~~~~~~
-   include/linux/compiler.h:518:2: note: in expansion of macro '_compiletime_assert'
-     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-     ^~~~~~~~~~~~~~~~~~~
-   include/linux/bug.h:54:37: note: in expansion of macro 'compiletime_assert'
-    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                        ^~~~~~~~~~~~~~~~~~
-   include/linux/bug.h:78:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-     BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-     ^~~~~~~~~~~~~~~~
->> arch/mips/mm/init.c:143:2: note: in expansion of macro 'BUILD_BUG_ON'
-     BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-     ^~~~~~~~~~~~
-   arch/mips/mm/init.c:143:31: note: each undeclared identifier is reported only once for each function it appears in
-     BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-                                  ^
-   include/linux/compiler.h:498:19: note: in definition of macro '__compiletime_assert'
-      bool __cond = !(condition);    \
-                      ^~~~~~~~~
-   include/linux/compiler.h:518:2: note: in expansion of macro '_compiletime_assert'
-     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-     ^~~~~~~~~~~~~~~~~~~
-   include/linux/bug.h:54:37: note: in expansion of macro 'compiletime_assert'
-    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                        ^~~~~~~~~~~~~~~~~~
-   include/linux/bug.h:78:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-     BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-     ^~~~~~~~~~~~~~~~
->> arch/mips/mm/init.c:143:2: note: in expansion of macro 'BUILD_BUG_ON'
-     BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-     ^~~~~~~~~~~~
+   arch/mips/kernel/setup.c: In function 'mips_reserve_elfcorehdr':
+>> arch/mips/kernel/setup.c:439:7: error: implicit declaration of function 'is_vmcore_usable' [-Werror=implicit-function-declaration]
+     if (!is_vmcore_usable())
+          ^~~~~~~~~~~~~~~~
+>> arch/mips/kernel/setup.c:443:6: error: 'elfcorehdr_addr' undeclared (first use in this function)
+     if (elfcorehdr_addr + elfcorehdr_size >= mips_lowmem_limit) {
+         ^~~~~~~~~~~~~~~
+   arch/mips/kernel/setup.c:443:6: note: each undeclared identifier is reported only once for each function it appears in
+>> arch/mips/kernel/setup.c:443:24: error: 'elfcorehdr_size' undeclared (first use in this function)
+     if (elfcorehdr_addr + elfcorehdr_size >= mips_lowmem_limit) {
+                           ^~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-vim +/LAST_PKMAP +143 arch/mips/mm/init.c
+vim +/is_vmcore_usable +439 arch/mips/kernel/setup.c
 
-     6	 * Copyright (C) 1994 - 2000 Ralf Baechle
-     7	 * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
-     8	 * Kevin D. Kissell, kevink@mips.com and Carsten Langgaard, carstenl@mips.com
-     9	 * Copyright (C) 2000 MIPS Technologies, Inc.  All rights reserved.
-    10	 * Copyright (C) 2016 T-Platforms. All Rights Reserved.
-    11	 */
-  > 12	#include <linux/bug.h>
-    13	#include <linux/init.h>
-    14	#include <linux/export.h>
-    15	#include <linux/signal.h>
-    16	#include <linux/sched.h>
-    17	#include <linux/smp.h>
-    18	#include <linux/kernel.h>
-    19	#include <linux/errno.h>
-    20	#include <linux/string.h>
-    21	#include <linux/types.h>
-    22	#include <linux/pagemap.h>
-    23	#include <linux/ptrace.h>
-    24	#include <linux/mman.h>
-    25	#include <linux/mm.h>
-    26	#include <linux/memblock.h>
-    27	#include <linux/bootmem.h>
-    28	#include <linux/highmem.h>
-    29	#include <linux/swap.h>
-    30	#include <linux/proc_fs.h>
-    31	#include <linux/pfn.h>
-    32	#include <linux/hardirq.h>
-    33	#include <linux/gfp.h>
-    34	#include <linux/kcore.h>
-    35	#include <linux/sizes.h>
-    36	
-    37	#include <asm/asm-offsets.h>
-    38	#include <asm/bootinfo.h>
-    39	#include <asm/cachectl.h>
-    40	#include <asm/cpu.h>
-    41	#include <asm/dma.h>
-    42	#include <asm/kmap_types.h>
-    43	#include <asm/maar.h>
-    44	#include <asm/mmu_context.h>
-    45	#include <asm/sections.h>
-    46	#include <asm/pgtable.h>
-    47	#include <asm/pgalloc.h>
-    48	#include <asm/tlb.h>
-    49	#include <asm/fixmap.h>
-    50	#include <asm/maar.h>
-    51	
-    52	/*
-    53	 * We have up to 8 empty zeroed pages so we can map one of the right colour
-    54	 * when needed.	 This is necessary only on R4000 / R4400 SC and MC versions
-    55	 * where we have to avoid VCED / VECI exceptions for good performance at
-    56	 * any price.  Since page is never written to after the initialization we
-    57	 * don't have to care about aliases on other CPUs.
-    58	 */
-    59	unsigned long empty_zero_page, zero_page_mask;
-    60	EXPORT_SYMBOL_GPL(empty_zero_page);
-    61	EXPORT_SYMBOL(zero_page_mask);
-    62	
-    63	/*
-    64	 * Initialize sparse memory sections setting node ids and indexes
-    65	 */
-    66	static void __init mips_memory_present(void)
-    67	{
-    68	#ifdef CONFIG_SPARSEMEM
-    69		struct memblock_region *reg;
-    70	
-    71		for_each_memblock(memory, reg)
-    72			memory_present(0, memblock_region_memory_base_pfn(reg),
-    73				memblock_region_memory_end_pfn(reg));
-    74	#endif /* CONFIG_SPARSEMEM */
-    75	}
-    76	
-    77	/*
-    78	 * Setup nodes zone areas
-    79	 */
-    80	static void __init zone_sizes_init(void)
-    81	{
-    82		unsigned long max_zone_pfns[MAX_NR_ZONES];
-    83	
-    84		/* Clean zone boundaries array */
-    85		memset(max_zone_pfns, 0, sizeof(max_zone_pfns));
-    86	
-    87		/* Setup determined boundaries */
-    88	#ifdef CONFIG_ZONE_DMA
-    89		max_zone_pfns[ZONE_DMA] = MAX_DMA_PFN;
-    90	#endif
-    91	#ifdef CONFIG_ZONE_DMA32
-    92		max_zone_pfns[ZONE_DMA32] = MAX_DMA32_PFN;
-    93	#endif
-    94		max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-    95	#ifdef CONFIG_HIGHMEM
-    96		max_zone_pfns[ZONE_HIGHMEM] = highend_pfn;
-    97	
-    98		/* Make sure the processor supports highmem */
-    99		if (cpu_has_dc_aliases && max_low_pfn != highend_pfn) {
-   100			pr_warn("CPU doesn't support highmem. %ldk highmem ignored\n",
-   101				(highend_pfn - max_low_pfn) << (PAGE_SHIFT - 10));
-   102			max_zone_pfns[ZONE_HIGHMEM] = max_low_pfn;
-   103		}
-   104	#endif
-   105	
-   106		/* Finally initialize nodes and page maps using memblock info */
-   107		free_area_init_nodes(max_zone_pfns);
-   108	}
-   109	
-   110	/*
-   111	 * Print out kernel memory layout
-   112	 */
-   113	#define MLK(b, t) b, t, ((t) - (b)) >> 10
-   114	#define MLM(b, t) b, t, ((t) - (b)) >> 20
-   115	#define MLK_ROUNDUP(b, t) b, t, DIV_ROUND_UP(((t) - (b)), SZ_1K)
-   116	static void __init mem_print_kmap_info(void)
-   117	{
-   118		pr_notice("Virtual kernel memory layout:\n"
-   119			  "    lowmem  : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-   120			  "    vmalloc : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-   121	#ifdef CONFIG_HIGHMEM
-   122			  "    pkmap   : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-   123	#endif
-   124			  "    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-   125			  "      .text : 0x%p" " - 0x%p" "   (%4td kB)\n"
-   126			  "      .data : 0x%p" " - 0x%p" "   (%4td kB)\n"
-   127			  "      .init : 0x%p" " - 0x%p" "   (%4td kB)\n",
-   128			MLM(PAGE_OFFSET, (unsigned long)high_memory),
-   129			MLM(VMALLOC_START, VMALLOC_END),
-   130	#ifdef CONFIG_HIGHMEM
-   131			MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE)),
-   132	#endif
-   133			MLK(FIXADDR_START, FIXADDR_TOP),
-   134			MLK_ROUNDUP(_text, _etext),
-   135			MLK_ROUNDUP(_sdata, _edata),
-   136			MLK_ROUNDUP(__init_begin, __init_end));
-   137	
-   138		/* Check some fundamental inconsistencies. May add something else? */
-   139	#ifdef CONFIG_HIGHMEM
-   140		BUILD_BUG_ON(VMALLOC_END < PAGE_OFFSET);
-   141		BUG_ON(VMALLOC_END < (unsigned long)high_memory);
-   142	#endif
- > 143		BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-   144		BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) <
-   145						(unsigned long)high_memory);
-   146		BUILD_BUG_ON(FIXADDR_TOP < PAGE_OFFSET);
+   433	{
+   434	#ifdef CONFIG_PROC_VMCORE
+   435		/*
+   436		 * Don't reserve anything if kernel isn't booting after a panic and
+   437		 * vmcore is usable (see linux/crash_dump.h for details)
+   438		 */
+ > 439		if (!is_vmcore_usable())
+   440			return;
+   441	
+   442		/* Check whether the passed address belongs to low memory */
+ > 443		if (elfcorehdr_addr + elfcorehdr_size >= mips_lowmem_limit) {
+   444			pr_err("Elfcorehdr %08zx @ %pa doesn't belong to low memory",
+   445				(size_t)elfcorehdr_size, &elfcorehdr_addr);
+   446			return;
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---pWyiEgJYm5f9v55/
+--uAKRQypu60I7Lcqm
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICE9WV1gAAy5jb25maWcAlFxbd9u2sn7vr9BKz8Pea3UntuwoyTnLDyAJSqhIggFASfYL
+H4sICLNZV1gAAy5jb25maWcAlFxbd9u2sn7vr9BKz8Pea3UntuwoyTnLDyAJSqhIggFASfYL
 l+IoqVcd29uWu9vz688MeMONVE8f2nK+wW0wmBsg//zTzzPyenz8sT/e3e7v7/+afT88HJ73
 x8PX2be7+8P/zBI+K7ia0YSpt8Cc3T28/vnux93Ty+zy7ae3Z7P14fnhcD+LHx++3X1/hZZ3
 jw8//fxTzIuULeuclfLqr5+A8PMs39/+dvdwmL0c7g+3LdvPM4OxXtKCChbP7l5mD49HYDw6
@@ -1059,4 +903,4 @@ X+Lek9QwzkIe1sP+IqBvfWrDGPo6nGhR0hPpbZqUDjOvlJkFaabVj5WF0KGkocUP6jisoeUP
 3GIAh1WBg0mFyZAtlx9k1DCikBYsqHxWKgpvRESE4z6FCZjQqGQGwkgBvV2IwY4FMyXUoPwd
 htkvmggpTYQEYPn/UwLNDK7HAgA=
 
---pWyiEgJYm5f9v55/--
+--uAKRQypu60I7Lcqm--
