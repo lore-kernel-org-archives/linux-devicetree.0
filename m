@@ -1,98 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
- panel properties
-Date: Mon, 19 Dec 2016 09:38:49 -0600
-Message-ID: <CAL_JsqKBoAJFiOqNhMPzF5VXjdXT2jbWHV0zxfX0gdSz0yGZLQ@mail.gmail.com>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <CAL_JsqL0+4--nE1UDHWzqS-s18A+q2i76S8=woCb5huV3jUMew@mail.gmail.com>
- <2064799.n5laApbQHL@avalon> <2900223.pppRAbRhe6@avalon>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2] power: reset: add linkstation-reset driver
+Date: Mon, 19 Dec 2016 17:03:45 +0100
+Message-ID: <20161219160345.GB16612@lunn.ch>
+References: <20161207172415.9776-1-rogershimizu@gmail.com>
+ <20161216100501.18173-1-rogershimizu@gmail.com>
+ <20161219153802.vhcish35qyjbpevj@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2900223.pppRAbRhe6@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161219153802.vhcish35qyjbpevj@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Roger Shimizu <rogershimizu@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, Ryan Tandy <ryan@nardis.ca>, Martin Michlmayr <tbm@cyrius.com>, Sylver Bruneau <sylver.bruneau@googlemail.com>, Herbert Valerio Riedel <hvr@gnu.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 18, 2016 at 2:54 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Rob,
->
-> On Tuesday 29 Nov 2016 20:23:41 Laurent Pinchart wrote:
->> On Tuesday 29 Nov 2016 09:14:09 Rob Herring wrote:
->> > On Tue, Nov 29, 2016 at 2:27 AM, Laurent Pinchart wrote:
->> >> On Tuesday 22 Nov 2016 11:36:55 Laurent Pinchart wrote:
->> >>> On Monday 21 Nov 2016 10:48:15 Rob Herring wrote:
->> >>>> On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
->> >>>>> Document properties common to several display panels in a central
->> >>>>> location that can be referenced by the panel device tree bindings.
->> >>>>
->> >>>> Looks good. Just one comment...
->> >>>>
->> >>>> [...]
->> >>>>
->> >>>>> +Connectivity
->> >>>>> +------------
->> >>>>> +
->> >>>>> +- ports: Panels receive video data through one or multiple
->> >>>>> connections. While
->> >>>>> +  the nature of those connections is specific to the panel type, the
->> >>>>> +  connectivity is expressed in a standard fashion using ports as
->> >>>>> specified in
->> >>>>> +  the device graph bindings defined in
->> >>>>> +  Documentation/devicetree/bindings/graph.txt.
->> >>>>
->> >>>> We allow panels to either use graph binding or be a child of the
->> >>>> display controller.
->> >>>
->> >>> I knew that some display controllers use a phandle to the panel (see
->> >>> the fsl,panel and nvidia,panel properties), but I didn't know we had
->> >>> panels as children of display controller nodes. I don't think we should
->> >>> allow that for anything but DSI panels, as the DT hierarchy is based on
->> >>> control buses. Are you sure we have other panels instantiated through
->> >>> that mechanism ?
->> >
->> > Some panels have no control bus, so were do we place them?
->>
->> I'd say under the root node, like all similar control-less devices.
->>
->> > I would say the hierarchy is based on buses with a preference for the
->> > control bus when there are multiple buses. I'm not a fan of just sticking
->> > things are the top level.
->>
->> OK, so much for my comment a few lines up :-)
->>
->> The problem with placing non-DSI panels as children of the display
->> controller and not using OF graph is that the panel bindings become
->> dependent of the display controller being used. A display controller using
->> OF graph would require the panel to do the same, while a display controller
->> expecting a panel child node (with a specific name) would require DT
->> properties for the panel node.
+> > +	reset {
+> > +		compatible = "linkstation,power-off";
+> > +		reg = <0x12100 0x100>;
+> > +		clocks = <&core_clk 0>;
+> > +	};
+> 
+> This might be another user for UART slave device [0].
+> [0] https://lkml.org/lkml/2016/8/24/769
+> 
+> Is the UART port used for anything else besides the reset
+> controller?
 
-Not sure I follow. They become dependent on the controller driver to
-probe the panel, but the contents of the panel node would not be
-controller dependent.
+I don't know much about these specific devices, but the qnap
+equivalent, there is a user space daemon which also talks to the
+microcontroller, for things like a temperature sensor, buzzer, etc.
 
->> I'm also not sure the complexity of OF graph is really that prohibitive if
->> you compare it to panels as child nodes. To get the panel driver to bind to
->> the panel DT node the display controller driver would need to create a
->> platform device for the panel and register it. That's not very difficult,
->> but parsing a single port and endpoint isn't either (and we could even
->> provide a helper function for that, a version of of_drm_find_panel() that
->> would take as an argument the display controller device node instead of the
->> panel device node).
->
-> Ping ?
->
-> I'd like to standardize on one model for panel DT bindings, but I'm not sure
-> that can be achieved given that we already have multiple competing models. In
-> any case, is that blocking to merge this patch ? I only describe one
-> connectivity model here as that's what my panel driver needs, but I have no
-> issue adding more models later when needed. I believe this patch is a good
-> step forward already.
+https://www.hellion.org.uk/qcontrol/
 
-It is an improvement which I appreciate, so yes I guess we can address
-it later when needed.
+So the UART can be in a messed up state, which is why the QNAP driver,
+which this code is modelled on, reset it back to a good state.
 
-Rob
+      Andrew
