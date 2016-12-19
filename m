@@ -1,92 +1,78 @@
-From: Jan Glauber <jglauber@cavium.com>
-Subject: [PATCH v10 8/8] dt-bindings: mmc: Add Cavium SOCs MMC bindings
-Date: Mon, 19 Dec 2016 13:15:52 +0100
-Message-ID: <20161219121552.18316-9-jglauber@cavium.com>
-References: <20161219121552.18316-1-jglauber@cavium.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161219121552.18316-1-jglauber@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <ddaney@caviumnetworks.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, Jan Glauber <jglauber@cavium.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v2 02/11] mfd: axp20x: add volatile and writeable reg
+ ranges for VBUS power supply driver
+Date: Mon, 19 Dec 2016 13:28:11 +0100
+Message-ID: <98fa2460-b7fe-3a0b-5b93-7a2e4e6e83ce@free-electrons.com>
+References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
+ <20161209110419.28981-3-quentin.schulz@free-electrons.com>
+ <CAGb2v66jDsU2rt4d-0ydWR926y-hHTfOBJQmyYVdKd7rcm1WWQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v66jDsU2rt4d-0ydWR926y-hHTfOBJQmyYVdKd7rcm1WWQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add description of Cavium Octeon and ThunderX SOC device tree bindings.
+Hi Chen-Yu,
 
-CC: Ulf Hansson <ulf.hansson@linaro.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
+On 14/12/2016 16:43, Chen-Yu Tsai wrote:
+> On Fri, Dec 9, 2016 at 7:04 PM, Quentin Schulz
+> <quentin.schulz@free-electrons.com> wrote:
+>> The X-Powers AXP20X and AXP22X PMICs allow to choose the maximum voltage
+>> and minimum current delivered by the VBUS power supply.
+>>
+>> This adds the register used by the VBUS power supply driver to the range
+>> of volatile and writeable regs ranges.
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>> ---
+>>
+>> added in v2
+>>
+>>  drivers/mfd/axp20x.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> index ba130be..6ee2cc6 100644
+>> --- a/drivers/mfd/axp20x.c
+>> +++ b/drivers/mfd/axp20x.c
+>> @@ -65,12 +65,14 @@ static const struct regmap_access_table axp152_volatile_table = {
+>>
+>>  static const struct regmap_range axp20x_writeable_ranges[] = {
+>>         regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+>> +       regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+> 
+> This is already covered by the previous entry.
+> 
+>>         regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
+>>         regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(AXP20X_OCV_MAX)),
+>>  };
+>>
+>>  static const struct regmap_range axp20x_volatile_ranges[] = {
+>>         regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_USB_OTG_STATUS),
+>> +       regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+> 
+> And I'm not sure why you specify it as volatile? The PMIC doesn't change any
+> of the bits in this register on its own.
+> 
 
-Signed-off-by: Jan Glauber <jglauber@cavium.com>
----
- .../devicetree/bindings/mmc/octeon-mmc.txt         | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+I got things mixed up between the work on the battery driver I'll soon
+send (which actually needs updated reg ranges) and this VBUS driver.
+Sorry for that.
 
-diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
-new file mode 100644
-index 0000000..aad02eb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
-@@ -0,0 +1,59 @@
-+* Cavium Octeon & ThunderX MMC controller
-+
-+The highspeed MMC host controller on Caviums SoCs provides an interface
-+for MMC and SD types of memory cards.
-+
-+Supported maximum speeds are the ones of the eMMC standard 4.41 as well
-+as the speed of SD standard 4.0. Only 3.3 Volt is supported.
-+
-+Required properties:
-+ - compatible : should be one of:
-+   * "cavium,octeon-6130-mmc"
-+   * "cavium,octeon-6130-mmc-slot"
-+   * "cavium,octeon-7890-mmc"
-+   * "cavium,octeon-7890-mmc-slot"
-+   * "cavium,thunder-8190-mmc"
-+   * "cavium,thunder-8190-mmc-slot"
-+   * "cavium,thunder-8390-mmc"
-+   * "cavium,thunder-8390-mmc-slot"
-+ - reg : mmc controller base registers
-+ - clocks : phandle
-+
-+Optional properties:
-+ - for cd, bus-width and additional generic mmc parameters
-+   please refer to mmc.txt within this directory
-+ - "cavium,cmd-clk-skew" : number of coprocessor clocks before sampling command
-+ - "cavium,dat-clk-skew" : number of coprocessor clocks before sampling data
-+
-+Deprecated properties:
-+- spi-max-frequency : use max-frequency instead
-+- "cavium,bus-max-width" : use bus-width instead
-+
-+Examples:
-+	- Within .dtsi:
-+	mmc_1_4: mmc@1,4 {
-+		compatible = "cavium,thunder-8390-mmc";
-+		reg = <0x0c00 0 0 0 0>;	/* DEVFN = 0x0c (1:4) */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&sclk>;
-+	};
-+
-+	- Within dts:
-+	mmc-slot@0 {
-+		compatible = "cavium,thunder-8390-mmc-slot";
-+		reg = <0>;
-+		voltage-ranges = <3300 3300>;
-+		max-frequency = <42000000>;
-+		bus-width = <4>;
-+		cap-sd-highspeed;
-+	};
-+	mmc-slot@1 {
-+		compatible = "cavium,thunder-8390-mmc-slot";
-+		reg = <1>;
-+		voltage-ranges = <3300 3300>;
-+		max-frequency = <42000000>;
-+		bus-width = <8>;
-+		cap-mmc-highspeed;
-+		non-removable;
-+	};
+> Same for the AXP22x bits. So basically I think you don't need this patch.
+> 
+
+Indeed. Should I send a v3 to remove this patch or is it fine for you to
+ignore this one?
+
+Thanks!
+Quentin
+
 -- 
-2.9.0.rc0.21.g7777322
+Quentin Schulz, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
