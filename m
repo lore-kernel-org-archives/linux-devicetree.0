@@ -1,103 +1,154 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: add opp-v2 table for A33
-Date: Mon, 19 Dec 2016 16:53:23 +0800
-Message-ID: <CAGb2v65YWntCrFHtSbxhtTWkt+UwkW3xoY-ae26MpH+-ULLXSQ@mail.gmail.com>
-References: <20161215182754.33921-1-icenowy@aosc.xyz> <20161219084652.kiqdkiewu5tujlyd@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Markus Reichl <m.reichl@fivetechno.de>
+Subject: Re: [PATCH] ARM: dts: Add missing CPU frequencies for Exynos5422/5800
+Date: Mon, 19 Dec 2016 10:14:04 +0100
+Message-ID: <027dfa2d-487a-e360-6e4a-4fc44f6622fa@fivetechno.de>
+References: <5220084.l31t5oJbsy@amdc3058>
+ <CGME20161213191823epcas5p346582b73ad9b401d9e773a1b076f1f61@epcas5p3.samsung.com>
+ <26ffeee4-ff43-b3d3-3267-5fcbc50e2974@osg.samsung.com>
+ <2340115.HEG9AYUCMD@amdc3058>
+ <CAD=FV=W6R8cNuR+gTnNRF6d-TNgzUeYTwuCp27efoMsd0YOH3g@mail.gmail.com>
+ <20161216073720.GA3489@kozik-lap>
+ <1b6e8d3a-ec7a-db5d-dd0e-ef9d1480f80a@fivetechno.de>
+ <f4f0dd96-abf1-d1ba-86a6-99f216b5175b@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBG6A33BAKGQEKRUZ43A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161219084652.kiqdkiewu5tujlyd@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f4f0dd96-abf1-d1ba-86a6-99f216b5175b@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ben Gamari <ben@smart-cactus.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Alim <alim.akhtar@samsung.com>, Arjun K V <arjun.kv@samsung.com>, Andreas Faerber <afaerber@suse.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 4:46 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Dec 16, 2016 at 02:27:54AM +0800, Icenowy Zheng wrote:
->> An operating point table is needed for the cpu frequency adjusting to
->> work.
->>
->> The operating point table is converted from the common value in
->> extracted script.fex from many A33 board/tablets.
->>
->> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> ---
->> Changes since v1:
->> - Fix format problem (blank lines).
->> - Removed the 1.344GHz operating point, as it's overvoltage and overclocked.
->>
->> This patch depends on the following patchset:
->>
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/473962.html
->>
->> It's the v2 of the [PATCH 4/6] in this patchset.
->>
->> I think this operating point table may also apply to A23, as there's no
->> difference except the points over 1.2GHz between A23 and A33's stock dvfs table.
->>
->> But as A23 CCU may not have the necessary fixes, I won't add the table to A23
->> now.
->>
->> Chen-Yu, could you test the CCU fixes I described in the patchset above on A23,
->> then test this operating points table?
->>
->> If it's necessary, you can send out the CCU fixes and add one more patch that
->> moves this opp-v2 table to sun8i-a23-a33.dtsi .
->>
->>  arch/arm/boot/dts/sun8i-a33.dtsi | 35 +++++++++++++++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
->> index 504996cbee29..0f5b2af72981 100644
->> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
->> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
->> @@ -46,7 +46,42 @@
->>  #include <dt-bindings/dma/sun4i-a10.h>
->>
->>  / {
->> +     cpu0_opp_table: opp_table0 {
->> +             compatible = "operating-points-v2";
->> +             opp-shared;
->> +
->> +             opp@648000000 {
->> +                     opp-hz = /bits/ 64 <648000000>;
->> +                     opp-microvolt = <1040000>;
->> +                     clock-latency-ns = <244144>; /* 8 32k periods */
->> +             };
->> +
->> +             opp@816000000 {
->> +                     opp-hz = /bits/ 64 <816000000>;
->> +                     opp-microvolt = <1100000>;
->> +                     clock-latency-ns = <244144>; /* 8 32k periods */
->> +             };
->> +
->> +             opp@1008000000 {
->> +                     opp-hz = /bits/ 64 <1008000000>;
->> +                     opp-microvolt = <1200000>;
->> +                     clock-latency-ns = <244144>; /* 8 32k periods */
->> +             };
->> +
->> +             opp@1200000000 {
->> +                     opp-hz = /bits/ 64 <1200000000>;
->> +                     opp-microvolt = <1320000>;
->> +                     clock-latency-ns = <244144>; /* 8 32k periods */
->> +             };
->> +     };
->> +
->>       cpus {
->> +             cpu0: cpu@0 {
->
-> There's no need to duplicate the label here. I removed it and applied.
+Hi Javier,
 
-I think using the label to directly reference cpu0 would be better,
-instead of duplicating the cpu@0 block.
+Am 16.12.2016 um 17:22 schrieb Javier Martinez Canillas:
+> Hello Markus,
+> 
+> On 12/16/2016 06:08 AM, Markus Reichl wrote:
+>> Am 16.12.2016 um 08:37 schrieb Krzysztof Kozlowski:
+>>> On Thu, Dec 15, 2016 at 04:52:58PM -0800, Doug Anderson wrote:
+>>>>> [ I added Arjun to Cc:, maybe he can help in explaining this issue
+>>>>>   (unfortunately Inderpal's email is no longer working). ]
+>>>>>
+>>>>> Please also note that on Exynos5422/5800 SoCs the same ARM rail
+>>>>> voltage is used for 1.9 GHz & 2.0 GHz OPPs as for the 1.8 GHz one.
+>>>>> IOW if the problem exists it is already present in the mainline
+>>>>> kernel.
+>>>>
+>>>> Interesting.  In the ChromeOS tree I see significantly higher voltages
+>>>> needed...  Note that one might naively look at
+>>>> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/cpufreq/exynos5420-cpufreq.c#178>.
+>>>>
+>>>> 1362500, /* L0  2100 */
+>>>> 1312500, /* L1  2000 */
+>>>>
+>>>> ..but, amazingly enough those voltages aren't used at all.  Surprise!
+>>>>
+>>>> I believe that the above numbers are actually not used and the ASV
+>>>> numbers are used instead.  See
+>>>> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/arch/arm/mach-exynos/include/mach/asv-exynos542x.h#452>
+>>>>
+>>>> { 2100000,
+>>>> 1350000, 1350000, 1350000, 1350000, 1350000,
+>>>> 1337500, 1325000, 1312500, 1300000, 1287500,
+>>>> 1275000, 1262500, 1250000, 1237500 },
+>>>>
+>>>> I believe that interpretation there is: some bins of the CPU can run
+>>>> at 2.1 GHz just fine at 1.25 V but others need up to 1.35V.
+>>>
+>>> That is definitely the case. One could just look at vendors ASV table
+>>> (for 1.9 GHz):
+>>> { 1900000, 1300000, 1287500, 1262500, 1237500, 1225000, 1212500,
+>>>                     1200000, 1187500, 1175000, 1162500, 1150000,
+>>> 		             1137500, 1125000, 1112500, 1112500},
+>>>
+>>> The theoretical difference is up to 1.875V! From my experiments I saw
+>>> BIN1 chips which should be the same... but some working on 1.2V, some on
+>>> 1.225V (@1.9 GHz). I didn't see any requiring higher voltages but that
+>>> does not mean that there aren't such...
+>>>
+>>>> ...so if you're running at 2.1 GHz at 1.25V then perhaps you're just
+>>>> running on a CPU from a nice bin?
+>>
+>> I've been running the proposed frequency/voltage combinations without any
+>> stability problems on my XU4, XU3 and even XU3-lite ( I did not delete the
+>> nodes on XU3-lite dts) with make -j8 kernel and ssvb-cpuburn.
+>> The chips are poorly cooled, especially the XU4 and quickly step down.
+>>
+>>>
+>>> Would be nice to see a dump of PKG_ID and AUX_INFO chipid registers
+>>> along with name of tested board. Because the "Tested on XU3" is not
+>>> sufficient.
+>>
+>> If you point me to how to read these values out, I will publish them.
+>>
+> 
+> You can use the exynos-chipid driver posted by Pankaj. Apply patches 1 and
+> 2 from this series (http://www.spinics.net/lists/arm-kernel/msg548384.html)
+> and then this diff to get the values of the registers that Krzysztof asked:
+> 
+Thanks for the code.
 
-ChenYu
+XU4:	 [    0.080039] Exynos: CPU[EXYNOS5800] CPU_REV[0x1] PKG_ID[0x1c04832a] AUX_INFO[0x43] 
+XU3:	 [    0.080034] Exynos: CPU[EXYNOS5800] CPU_REV[0x1] PKG_ID[0x1604832a] AUX_INFO[0x43] 
+XU3-lite:[    0.080033] Exynos: CPU[EXYNOS5800] CPU_REV[0x1] PKG_ID[0x5a12832a] AUX_INFO[0x13000054] 
+
+Servus,
+--
+Markus Reichl
+
+> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+> index cf0128b18ee2..49fa76ec6d49 100644
+> --- a/drivers/soc/samsung/exynos-chipid.c
+> +++ b/drivers/soc/samsung/exynos-chipid.c
+> @@ -22,6 +22,9 @@
+>  #define EXYNOS_MAINREV_MASK	(0xF << 0)
+>  #define EXYNOS_REV_MASK		(EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
+>  
+> +#define EXYNOS_PKG_ID		0x04
+> +#define EXYNOS_AUX_INFO		0x1C
+> +
+>  static const struct exynos_soc_id {
+>  	const char *name;
+>  	unsigned int id;
+> @@ -71,6 +74,8 @@ int __init exynos_chipid_early_init(void)
+>  	const struct of_device_id *match;
+>  	u32 product_id;
+>  	u32 revision;
+> +	u32 pkg_id;
+> +	u32 aux_info;
+>  
+>  	np = of_find_matching_node_and_match(NULL,
+>  			of_exynos_chipid_ids, &match);
+> @@ -84,6 +89,8 @@ int __init exynos_chipid_early_init(void)
+>  
+>  	product_id  = readl_relaxed(exynos_chipid_base);
+>  	revision = product_id & EXYNOS_REV_MASK;
+> +	pkg_id = readl_relaxed(exynos_chipid_base + EXYNOS_PKG_ID);
+> +	aux_info = readl_relaxed(exynos_chipid_base + EXYNOS_AUX_INFO);
+>  	iounmap(exynos_chipid_base);
+>  
+>  	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> @@ -100,8 +107,8 @@ int __init exynos_chipid_early_init(void)
+>  	soc_dev_attr->soc_id = product_id_to_soc_id(product_id);
+>  
+>  
+> -	pr_info("Exynos: CPU[%s] CPU_REV[0x%x] Detected\n",
+> -			product_id_to_soc_id(product_id), revision);
+> +	pr_info("Exynos: CPU[%s] CPU_REV[0x%x] PKG_ID[0x%x] AUX_INFO[0x%x] \n",
+> +		product_id_to_soc_id(product_id), revision, pkg_id, aux_info);
+>  
+>  	soc_dev = soc_device_register(soc_dev_attr);
+>  	if (IS_ERR(soc_dev)) {
+> 
+> Best regards,
+> 
