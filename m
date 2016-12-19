@@ -1,104 +1,81 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/8] PWM: add pwm-stm32 DT bindings
-Date: Mon, 19 Dec 2016 12:55:52 +0000
-Message-ID: <20161219125552.GD23486@dell>
-References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
- <1481292919-26587-4-git-send-email-benjamin.gaignard@st.com>
- <20161212190205.b5t3x6i2o7igldlo@rob-hp-laptop>
- <20161213111137.GW3625@dell.home>
- <CAL_JsqL8pJSFb8LbABAYJOQ0URaMpyupbFryk_mS2ToN1kStdA@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: nand: add tango NFC dt bindings doc
+Date: Mon, 19 Dec 2016 13:59:16 +0100
+Message-ID: <20161219135916.4fd5e546@bbrezillon>
+References: <580F5AD2.9020909@sigmadesigns.com>
+        <580F5B06.6030608@sigmadesigns.com>
+        <1978954.SRtJpfOGp1@wuerfel>
+        <d3cbfda6-23bf-4ad1-b1ce-c179b765272f@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL8pJSFb8LbABAYJOQ0URaMpyupbFryk_mS2ToN1kStdA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>Linus Walleij <l>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d3cbfda6-23bf-4ad1-b1ce-c179b765272f-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Dec 2016, Rob Herring wrote:
-> On Tue, Dec 13, 2016 at 5:11 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Mon, 12 Dec 2016, Rob Herring wrote:
-> >
-> >> On Fri, Dec 09, 2016 at 03:15:14PM +0100, Benjamin Gaignard wrote:
-> >> > Define bindings for pwm-stm32
-> >> >
-> >> > version 6:
-> >> > - change st,breakinput parameter format to make it usuable on stm32f7 too.
-> >> >
-> >> > version 2:
-> >> > - use parameters instead of compatible of handle the hardware configuration
-> >> >
-> >> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> >> > ---
-> >> >  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++++++++
-> >> >  1 file changed, 33 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> >> > new file mode 100644
-> >> > index 0000000..866f222
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> >> > @@ -0,0 +1,33 @@
-> >> > +STMicroelectronics STM32 Timers PWM bindings
-> >> > +
-> >> > +Must be a sub-node of an STM32 Timers device tree node.
-> >> > +See ../mfd/stm32-timers.txt for details about the parent node.
-> >> > +
-> >> > +Required parameters:
-> >> > +- compatible:              Must be "st,stm32-pwm".
-> >> > +- pinctrl-names:   Set to "default".
-> >> > +- pinctrl-0:               List of phandles pointing to pin configuration nodes for PWM module.
-> >> > +                   For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
-> >> > +
-> >> > +Optional parameters:
-> >> > +- st,breakinput:   Arrays of three u32 <index level filter> to describe break input configurations.
-> >> > +                   "index" indicates on which break input the configuration should be applied.
-> >> > +                   "level" gives the active level (0=low or 1=high) for this configuration.
-> >> > +                   "filter" gives the filtering value to be applied.
-> >> > +
-> >> > +Example:
-> >> > +   timers@40010000 {
+On Fri, 16 Dec 2016 11:56:38 +0100
+Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org> wrote:
+
+> On 07/11/2016 10:18, Arnd Bergmann wrote:
+> > On Tuesday, October 25, 2016 3:15:50 PM CET Marc Gonzalez wrote:  
+> >> Add the tango NAND Flash Controller dt bindings documentation.
 > >>
-> >> timer@...
-> >
-> > No, it should be timers.
+> >> Signed-off-by: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/mtd/tango-nand.txt | 38 ++++++++++++++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+> >> new file mode 100644
+> >> index 000000000000..3cbf95d6595a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+> >> @@ -0,0 +1,38 @@
+> >> +Sigma Designs Tango4 NAND Flash Controller (NFC)
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- compatible: "sigma,smp8758-nand"
+> >> +- reg: address/size of nfc_reg, nfc_mem, and pbus_reg
+> >> +- dmas: reference to the DMA channel used by the controller
+> >> +- dma-names: "nfc_sbox"  
+> > 
+> > Drop the "nfc_" prefix here, it seems redundant.  
 > 
-> Read the spec. "timer" is a generic node name. "timers" is not. How
-> many is not relevant.
+> I took a closer look at Documentation/devicetree/bindings and
+> arch/arm/boot/dts and it seems the overwhelming nomenclature
+> is "rx", "tx" (with variants around these two).
+> 
+> Should I just use "rxtx" for my driver?
+> 
+> >> +- clocks: reference to the system clock
+> >> +- #address-cells: <1>
+> >> +- #size-cells: <0>
+> >> +
+> >> +Children nodes represent the available NAND chips.
+> >> +See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
+> >> +
+> >> +Example:
+> >> +
+> >> +	nand: nand@2c000 {
+> >> +		compatible = "sigma,smp8758-nand";
+> >> +		reg = <0x2c000 0x30 0x2d000 0x800 0x20000 0x1000>;  
+> > 
+> > It would be nicer to write this as
+> > 
+> > 	reg = <0x2c000 0x30>, <0x2d000 0x800>, <0x20000 0x1000>;
+> > 
+> > which is identical in binary format.  
+> 
+> This is indeed a marked improvement. Boris, if I fix these two nits,
+> can I submit a single patch, or do you want them split?
 
-It's not the amount of timers that there are, it's the different types
-of timers which this one IP contains.
-
-In MFD we usually list the part number or IP name, however in this
-case its difficult because the same IP doesn't have a specific name
-listed, and provides; advanced, general purpose and basic timers, as
-well as PWM functionality.
-
-This IP is not a timer (although one of its children is one).  It's
-the parent device of many different types of timer.
-
-timer {
-      timer {
-      };
-
-      pwm {
-      };
-};
-
-... looks weird.
-
-"timer" is not right for the parent IP.  Happy for you to provide an
-alternative to "timers" though?
-
-> > The 's' is intentional, since this parent (MFD) device houses 3
-> > different types of timers.  The "timer" node is a child of this one.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Sure, just describe the different binding changes in your commit
+message.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
