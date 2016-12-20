@@ -1,101 +1,168 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v6] media: et8ek8: add device tree binding documentation
-Date: Tue, 20 Dec 2016 15:05:39 +0200
-Message-ID: <20161220130538.GD16630@valkosipuli.retiisi.org.uk>
-References: <20161023191706.GA25754@amd>
- <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
- <20161107104648.GB5326@amd>
- <20161114183040.GB28778@amd>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: enable bluetooth on SDIO Wi-Fi
+Date: Tue, 20 Dec 2016 14:50:11 +0100
+Message-ID: <20161220135011.2rk7v6tjujhivcy6@lukather>
+References: <20161213233658.atGuNCNY@smtp1h.mail.yandex.net>
+ <20161216124748.rkvnnlo4x5onzpvk@lukather>
+ <4720181481899200@web7g.yandex.ru>
+ <20161219100952.bspym36nsehda3za@lukather>
+ <11985541482156512@web2g.yandex.ru>
+ <CAGb2v67wU+Hw-6oa9FxzB33sZY8Up-59HZ_mneFBdcRhXbU1pA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161114183040.GB28778@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh@kernel.org>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============9222354197327695686=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v67wU+Hw-6oa9FxzB33sZY8Up-59HZ_mneFBdcRhXbU1pA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On Mon, Nov 14, 2016 at 07:30:40PM +0100, Pavel Machek wrote:
-> Add device tree binding documentation for toshiba et8ek8 sensor.
-> 
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> ---
-> 
-> v6: added missing article, fixed signal polarity.
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-> new file mode 100644
-> index 0000000..b03b21d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-> @@ -0,0 +1,53 @@
-> +Toshiba et8ek8 5MP sensor
-> +
-> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
-> +
-> +More detailed documentation can be found in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt .
-> +
-> +
-> +Mandatory properties
-> +--------------------
-> +
-> +- compatible: "toshiba,et8ek8"
-> +- reg: I2C address (0x3e, or an alternative address)
-> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
-> +- clocks: External clock to the sensor
-> +- clock-frequency: Frequency of the external clock to the sensor. Camera
-> +  driver will set this frequency on the external clock. The clock frequency is
-> +  a pre-determined frequency known to be suitable to the board.
-> +- reset-gpios: XSHUTDOWN GPIO. The XSHUTDOWN signal is active low. The sensor
-> +  is in hardware standby mode when the signal is in the low state.
-> +
-> +
-> +Endpoint node mandatory properties
-> +----------------------------------
-> +
-> +- remote-endpoint: A phandle to the bus receiver's endpoint node.
-> +
-> +Endpoint node optional properties
-> +----------------------------------
-> +
-> +- clock-lanes: <0>
-> +- data-lanes: <1..n>
+--===============9222354197327695686==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="v36fa2dt3b67j6jc"
+Content-Disposition: inline
 
-The driver makes no use of them and CCP2 only supports a single lane. I'll
-just remove these and apply it to my tree. Let's continue discussing the
-driver patch in the other thread.
 
-> +
-> +Example
-> +-------
-> +
-> +&i2c3 {
-> +	clock-frequency = <400000>;
-> +
-> +	cam1: camera@3e {
-> +		compatible = "toshiba,et8ek8";
-> +		reg = <0x3e>;
-> +		vana-supply = <&vaux4>;
-> +		clocks = <&isp 0>;
-> +		clock-frequency = <9600000>;
-> +		reset-gpio = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 */
-> +		port {
-> +			csi_cam1: endpoint {
-> +				remote-endpoint = <&csi_out1>;
-> +			};
-> +		};
-> +	};
-> +};
-> 
+--v36fa2dt3b67j6jc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Regards,
+On Mon, Dec 19, 2016 at 10:24:44PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Dec 19, 2016 at 10:08 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+> >
+> >
+> > 19.12.2016, 18:09, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
+> >> On Fri, Dec 16, 2016 at 10:40:00PM +0800, Icenowy Zheng wrote:
+> >>>  >>  > >  &r_pio {
+> >>>  >>  > >  wifi_pwrseq_pin_q8: wifi_pwrseq_pin@0 {
+> >>>  >>  > > - pins =3D "PL6", "PL7", "PL11";
+> >>>  >>  > > + pins =3D "PL6", "PL7", "PL8", "PL11";
+> >>>  >>  > >  function =3D "gpio_in";
+> >>>  >>  > >  bias-pull-up;
+> >>>  >>  > >  };
+> >>>  >>  >
+> >>>  >>  > There's several things wrong here. The first one is that you r=
+ely
+> >>>  >>  > solely on the pinctrl state to maintain a reset line. This is =
+very
+> >>>  >>  > fragile (especially since the GPIO pinctrl state are likely to=
+ go away
+> >>>  >>  > at some point), but it also means that if your driver wants to=
+ recover
+> >>>  >>  > from that situation at some point, it won't work.
+> >>>  >>  >
+> >>>  >>  > The other one is that the bluetooth and wifi chips are two dev=
+ices in
+> >>>  >>  > linux, and you assign that pin to the wrong device (wifi).
+> >>>  >>  >
+> >>>  >>  > rfkill-gpio is made just for that, so please use it.
+> >>>  >>
+> >>>  >>  The GPIO is not for the radio, but for the full Bluetooth part.
+> >>>  >
+> >>>  > I know.
+> >>>  >
+> >>>  >>  If it's set to 0, then the bluetooth part will reset, and the
+> >>>  >>  hciattach will fail.
+> >>>  >
+> >>>  > Both rfkill-gpio and rfkill-regulator will shutdown when called
+> >>>  > (either by poking the reset pin or shutting down the regulator), so
+> >>>  > that definitely seems like an expected behavior to put the device =
+in
+> >>>  > reset.
+> >>>  >
+> >>>  >>  The BSP uses this as a rfkill, and the result is that the blueto=
+oth
+> >>>  >>  on/off switch do not work properly.
+> >>>  >
+> >>>  > Then rfkill needs fixing, but working around it by hoping that the
+> >>>  > core will probe an entirely different device, and enforcing a defa=
+ult
+> >>>  > that the rest of the kernel might or might not change is both frag=
+ile
+> >>>  > and wrong.
+> >>>
+> >>>  I think a rfkill-gpio here works just like the BSP rfkill...
+> >>>
+> >>>  The real problem is that the Realtek UART bluetooth driver is a user=
+space
+> >>>  program (a modified hciattach), which is not capable of the GPIO res=
+et...
+> >>
+> >> Can't you run rfkill before attaching? What is the problem exactly?
+> >> It's not in reset for long enough?
+> >>
+> >> This seems more and more like an issue in the BT stack you're
+> >> using. We might consider workarounds in the kernel, but they have to
+> >> be correct.
+> >
+> > One more rfkill interface will be generated for hci0 after hciattach, w=
+hich can
+> > be safely toggled block and unblock.
+> >
+> > However, if the GPIO is toggled down, the hciattach program will die.
+> >
+> > The bluetooth stack I used is fd.o's BlueZ.
+>=20
+> I think the bigger issue is that the tty/serial subsystem does not have
+> power sequencing support. Here we're trying to use rfkill to do that,
+> but that doesn't seem to be what it was intended for. It might work with
+> standalone USB bluetooth controllers that don't need any special setup,
+> since the device will just appear and get registered. But it might not
+> work so well with UART based adapters that need userspace fiddling with
+> firmware and hciattach.
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Then you can also have a look at the generic power sequence patches
+that are floating around.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--v36fa2dt3b67j6jc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYWTcTAAoJEBx+YmzsjxAgMqIP/2OWXIch9qzVX90jPtRBIP1M
+wFGyUu/ZaYis5g55bAJNwwqFg8oeiZgbf0fpRAimOq8F9eeVfWNq0IywjudOlhGl
+J0n35jR/GjHH8g9R9zkYDC3nnIjDgIhm813BFuTuJa6rrPTeT3mw68kClq1CwUz6
+pY3acmP8cql1xPrGZ9d45eBYxAyE3DBQQSucOqF2GCyAxYCwAaZwlv+H6WHzGsEQ
+uC0J1N4tjdnd9dFKv0yqtnuzpQAbcpILYHSTCUE8twXXnFLo6/TcpTutJld3LHMU
+1o27o+Lvve6VhtxNPLImIA2yTdWI3eiS5Dr6Oicb8OXCjHUt0Eo+H9CC83mNuKMy
+6W2bczUXdyqrRCbU9sgp6kei+/VTi25Tgdnqxm0pGj5h53ep3DpoZADUtIsLJsGF
++kUinhaTM2ZjlUqEap2czORDD39k/vu/gl9dFBlqgZUXECwoDXPScE7T6Cjxzy6I
+hpVoZMXmCAAMN88WcWo/zT0GRdfXCKD28SjV/Rj782wu2h0//0Zj9c2nttIyZtJ8
+wMqz4KeNqPwLD+wBUpJpIQ1d2pyZTNxIa3HKlUz2CjcKa0iEebAb5hR6OpPMAFnJ
+GvNJl9/H++AcQOq7mw0aatWFpN7EDtSh7Vwk5ekJDj0oPZH3dFGSNdf6B1CKMrYB
+6zA9Bs6nXaon6b/K7ENg
+=TuFA
+-----END PGP SIGNATURE-----
+
+--v36fa2dt3b67j6jc--
+
+
+--===============9222354197327695686==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============9222354197327695686==--
