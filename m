@@ -1,86 +1,185 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] lib: implement __arch_bitrev8x4()
-Date: Tue, 20 Dec 2016 09:22:11 -0800
-Message-ID: <70fd505b-5a53-c380-8b9e-341f2be84e2d@gmail.com>
-References: <cover.1481918884.git.stillcompiling@gmail.com>
- <6c1c052d3c1d0c02a791aaaf8e114360ab1cb4e7.1481918884.git.stillcompiling@gmail.com>
- <20161219100614.GC4508@arm.com>
+From: Jones Desougi <jones.desougi-LdkkVD/qVyw@public.gmane.org>
+Subject: Re: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Date: Tue, 20 Dec 2016 18:58:58 +0100
+Message-ID: <d498d00a-8966-e282-08a0-e9c554fad66b@27m.se>
+References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161219100614.GC4508-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1482250592-4268-1-git-send-email-glansberry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Will,
+On 2016-12-20 17:16, Geoff Lansberry wrote:
+> From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+> 
+> The TRF7970A has configuration options to support hardware designs
+> which use a 27.12MHz clock. This commit adds a device tree option
+> 'clock-frequency' to support configuring the this chip for default
+> 13.56MHz clock or the optional 27.12MHz clock.
+> ---
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++
+>  drivers/nfc/trf7970a.c                             | 50 +++++++++++++++++-----
+>  2 files changed, 43 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> index 32b35a0..e262ac1 100644
+> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> @@ -21,6 +21,8 @@ Optional SoC Specific Properties:
+>  - t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
+>    where an extra byte is returned by Read Multiple Block commands issued
+>    to Type 5 tags.
+> +- clock-frequency: Set to specify that the input frequency to the trf7970a is 13560000Hz or 27120000Hz
+> +
+You're adding an empty line here that is removed in the next patch.
 
+>  
+>  Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+>  
+> @@ -43,6 +45,8 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+>  		irq-status-read-quirk;
+>  		en2-rf-quirk;
+>  		t5t-rmb-extra-byte-quirk;
+> +		vdd_io_1v8;
+This does not belong here, and so no need to remove in the next patch.
 
-On 12/19/2016 02:06 AM, Will Deacon wrote:
-> On Fri, Dec 16, 2016 at 03:17:51PM -0800, Joshua Clayton wrote:
->> Implement faster bitrev8x4() for arm, arm64 and mips, all the platforms
->> with CONFIG_HAVE_ARCH_BITREVERSE.
->> ARM platforms just need a byteswap added to the existing __arch_bitrev32()
->> Amusingly, the mips implementation is exactly the opposite, requiring
->> removal of the byteswap from its __arch_bitrev32()
->>
->> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/include/asm/bitrev.h   | 6 ++++++
->>  arch/arm64/include/asm/bitrev.h | 6 ++++++
->>  arch/mips/include/asm/bitrev.h  | 6 ++++++
->>  include/linux/bitrev.h          | 1 +
->>  4 files changed, 19 insertions(+)
->>
->> diff --git a/arch/arm/include/asm/bitrev.h b/arch/arm/include/asm/bitrev.h
->> index ec291c3..9482f78 100644
->> --- a/arch/arm/include/asm/bitrev.h
->> +++ b/arch/arm/include/asm/bitrev.h
->> @@ -17,4 +17,10 @@ static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
->>  	return __arch_bitrev32((u32)x) >> 24;
->>  }
->>  
->> +static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
->> +{
->> +	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
->> +	return x;
->> +}
->> +
->>  #endif
->> diff --git a/arch/arm64/include/asm/bitrev.h b/arch/arm64/include/asm/bitrev.h
->> index a5a0c36..1801078 100644
->> --- a/arch/arm64/include/asm/bitrev.h
->> +++ b/arch/arm64/include/asm/bitrev.h
->> @@ -16,4 +16,10 @@ static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
->>  	return __arch_bitrev32((u32)x) >> 24;
->>  }
->>  
->> +static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
->> +{
->> +	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
-> This is broken -- you're operating on 64-bit registers. I only noticed
-> because if you write:
-Ugh. mea culpa. I squinted at the AARCH64 asm and erroneously
-believed it to be the same as arm.
->   swab32(bitrev32(x))
->
-> then GCC generates:
->
->   rbit	w0, w0
->   rev	w0, w0
->
-> so perhaps we should just implement the asm-generic version like that
-> and not bother with the arch-specific stuff?
->
-> Will
-You are so right.
-That is exactly what I will do.
+> +		clock-frequency = <27120000>;
+>  		status = "okay";
+>  	};
+>  };
+> diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+> index 26c9dbb..4e051e9 100644
+> --- a/drivers/nfc/trf7970a.c
+> +++ b/drivers/nfc/trf7970a.c
+> @@ -124,6 +124,9 @@
+>  		 NFC_PROTO_ISO15693_MASK | NFC_PROTO_NFC_DEP_MASK)
+>  
+>  #define TRF7970A_AUTOSUSPEND_DELAY		30000 /* 30 seconds */
+> +#define TRF7970A_13MHZ_CLOCK_FREQUENCY		13560000
+> +#define TRF7970A_27MHZ_CLOCK_FREQUENCY		27120000
+> +
+>  
+>  #define TRF7970A_RX_SKB_ALLOC_SIZE		256
+>  
+> @@ -1056,12 +1059,11 @@ static int trf7970a_init(struct trf7970a *trf)
+>  
+>  	trf->chip_status_ctrl &= ~TRF7970A_CHIP_STATUS_RF_ON;
+>  
+> -	ret = trf7970a_write(trf, TRF7970A_MODULATOR_SYS_CLK_CTRL, 0);
+> +	ret = trf7970a_write(trf, TRF7970A_MODULATOR_SYS_CLK_CTRL,
+> +			trf->modulator_sys_clk_ctrl);
+>  	if (ret)
+>  		goto err_out;
+>  
+> -	trf->modulator_sys_clk_ctrl = 0;
+> -
+>  	ret = trf7970a_write(trf, TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS,
+>  			TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS_WLH_96 |
+>  			TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS_WLL_32);
+> @@ -1181,27 +1183,37 @@ static int trf7970a_in_config_rf_tech(struct trf7970a *trf, int tech)
+>  	switch (tech) {
+>  	case NFC_DIGITAL_RF_TECH_106A:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_14443A_106;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_OOK;
+>  		trf->guard_time = TRF7970A_GUARD_TIME_NFCA;
+>  		break;
+>  	case NFC_DIGITAL_RF_TECH_106B:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_14443B_106;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_ASK10;
+>  		trf->guard_time = TRF7970A_GUARD_TIME_NFCB;
+>  		break;
+>  	case NFC_DIGITAL_RF_TECH_212F:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_FELICA_212;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_ASK10;
+>  		trf->guard_time = TRF7970A_GUARD_TIME_NFCF;
+>  		break;
+>  	case NFC_DIGITAL_RF_TECH_424F:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_FELICA_424;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_ASK10;
+>  		trf->guard_time = TRF7970A_GUARD_TIME_NFCF;
+>  		break;
+>  	case NFC_DIGITAL_RF_TECH_ISO15693:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_15693_SGL_1OF4_2648;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_OOK;
+>  		trf->guard_time = TRF7970A_GUARD_TIME_15693;
+>  		break;
+>  	default:
+> @@ -1571,17 +1583,23 @@ static int trf7970a_tg_config_rf_tech(struct trf7970a *trf, int tech)
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+>  			TRF7970A_ISO_CTRL_NFC_CE |
+>  			TRF7970A_ISO_CTRL_NFC_CE_14443A;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_OOK;
+>  		break;
+>  	case NFC_DIGITAL_RF_TECH_212F:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+>  			TRF7970A_ISO_CTRL_NFC_NFCF_212;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_ASK10;
+>  		break;
+>  	case NFC_DIGITAL_RF_TECH_424F:
+>  		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+>  			TRF7970A_ISO_CTRL_NFC_NFCF_424;
+> -		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
+> +		trf->modulator_sys_clk_ctrl =
+> +			(trf->modulator_sys_clk_ctrl & 0xF8) |
+> +			TRF7970A_MODULATOR_DEPTH_ASK10;
+>  		break;
+>  	default:
+>  		dev_dbg(trf->dev, "Unsupported rf technology: %d\n", tech);
+> @@ -1987,6 +2005,7 @@ static int trf7970a_probe(struct spi_device *spi)
+>  	struct device_node *np = spi->dev.of_node;
+>  	struct trf7970a *trf;
+>  	int uvolts, autosuspend_delay, ret;
+> +	u32 clk_freq = 13560000;
+Use TRF7970A_13MHZ_CLOCK_FREQUENCY here?
 
-Thanks,
+>  
+>  	if (!np) {
+>  		dev_err(&spi->dev, "No Device Tree entry\n");
+> @@ -2043,6 +2062,15 @@ static int trf7970a_probe(struct spi_device *spi)
+>  		return ret;
+>  	}
+>  
+> +	of_property_read_u32(np, "clock-frequency", &clk_freq);
+> +	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
+> +		(clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY)) {
+Two comparisons with 27MHz, missing 13MHz.
 
-Joshua
+> +		dev_err(trf->dev,
+> +			"clock-frequency (%u Hz) unsupported\n",
+> +			clk_freq);
+> +		return -EINVAL;
+> +	}
+> +
+>  	if (of_property_read_bool(np, "en2-rf-quirk"))
+>  		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+>  
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
