@@ -1,43 +1,24 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH 6/7] NFC: trf7970a: Enable pins are active high not active low
-Date: Tue, 20 Dec 2016 11:06:07 -0700
-Message-ID: <20161220180608.29997-7-mgreer@animalcreek.com>
-References: <20161220180608.29997-1-mgreer@animalcreek.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161220180608.29997-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+From: Mark Greer <mgreer@animalcreek.com>
+Subject: Re: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Date: Tue, 20 Dec 2016 11:11:57 -0700
+Message-ID: <20161220181157.GB30273@animalcreek.com>
+References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geoff Lansberry <geoff@kuvee.com>
+Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin@kuvee.com
 List-Id: devicetree@vger.kernel.org
 
-The example DTS code for the trf7970a sets the GPIOs for the EN
-and EN2 pins to active low when they are really active high so
-correct the error.
+Hi Geoff.
 
-Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
----
- Documentation/devicetree/bindings/net/nfc/trf7970a.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please put the version in your subjects when submitting anything but the
+initial version of a patch (e.g., [PATCH v2 1/3]).
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-index 32b35a07abe4..10672649a59e 100644
---- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-@@ -35,8 +35,8 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 		spi-max-frequency = <2000000>;
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <14 0>;
--		ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>,
--				  <&gpio2 5 GPIO_ACTIVE_LOW>;
-+		ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>,
-+				  <&gpio2 5 GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&ldo3_reg>;
- 		vin-voltage-override = <5000000>;
- 		autosuspend-delay = <30000>;
--- 
-2.11.0
+Which series do you want reviewed?
 
+Mark
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
