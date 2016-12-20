@@ -1,45 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: Mele I7: Enable internal
- audio codec
-Date: Tue, 20 Dec 2016 20:06:06 +0100
-Message-ID: <20161220190606.awxrftsc4ov476im@lukather>
-References: <20161220102344.2519-1-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wjaog6yxv4fipofb"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKMC43BAKGQEYIT7MOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161220102344.2519-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 3/4 v2] of/overlay: documentation for sysfs ABI
+Date: Tue, 20 Dec 2016 20:04:54 +0100
+Message-ID: <20161220190455.25115-4-xypron.glpk@gmx.de>
+References: <20161220190455.25115-1-xypron.glpk@gmx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161220190455.25115-1-xypron.glpk@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
+The sysfs filesystem ABI to load and unload device tree
+overlays is decribed.
 
---wjaog6yxv4fipofb
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+---
 
-1;4600;0c
-On Tue, Dec 20, 2016 at 11:23:44AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The Mele I7 has an audio jack for the SoC's internal codec.
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+v2:
+	Change sysfs path to
+	/sys/firmware/devicetree/overlays
 
-Applied, thanks!
-Maxime
+ .../ABI/testing/sysfs-firmware-devicetree-overlays | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
 
+diff --git a/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+new file mode 100644
+index 0000000..bda0001
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
+@@ -0,0 +1,24 @@
++What:		/sys/firmware/devicetree/overlays
++Date:		Dec 2016
++KernelVersion:	4.11
++Contact:	Heinrich Schuchardt <xypron.glpk@gmx.de>
++Description:	Devicetree overlays can be used to update the devicetree
++		while the system is running. For details see
++		Documentation/devicetree/overlay-notes.txt.
++
++		The following attributes are provided:
++
++		load:	This is a write only file.
++			A string written to it is interpreted as the path to a
++			flattened device tree overlay file. It is used to create
++			and apply the contained overlays.
++
++		loaded: This is a read only file.
++			It provides the count of loaded overlays as a decimal
++			number.
++
++		unload: This is a write only file.
++		        If a positive number n is wrtten to this file the n
++			most recent overlays are destroyed.
++			If a negative number is written to this file all
++			overlays are destroyed.
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---wjaog6yxv4fipofb--
+2.10.2
