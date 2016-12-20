@@ -1,98 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun6i: Add the SPDIF block to
- the A31
-Date: Tue, 20 Dec 2016 20:11:01 +0100
-Message-ID: <20161220191101.plp3lsgsse4wvkaq@lukather>
-References: <20161220104038.22532-1-codekipper@gmail.com>
- <20161220104038.22532-3-codekipper@gmail.com>
- <20161220140709.pxvzcm3osmbromfh@lukather>
- <CAEKpxBn4J0sXVx6b0d_v3LivnNS5WENp9DD6fFE9N6u=J=n7ww@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Justin Bronder <justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Subject: Re: nfc: trf7970a: Prevent repeated polling from crashing the kernel
+Date: Tue, 20 Dec 2016 14:13:52 -0500
+Message-ID: <20161220191352.GB23496@lasswell.members.linode.com>
+References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
+ <1482250592-4268-3-git-send-email-glansberry@gmail.com>
+ <20161220185905.GA5867@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y4y2e2tmeyeuswnf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUEE43BAKGQE3YY4W6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAEKpxBn4J0sXVx6b0d_v3LivnNS5WENp9DD6fFE9N6u=J=n7ww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20161220185905.GA5867-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Cc: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 20/12/16 11:59 -0700, Mark Greer wrote:
+> On Tue, Dec 20, 2016 at 11:16:32AM -0500, Geoff Lansberry wrote:
+> > From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Repeated polling attempts cause a NULL dereference error to occur.
+> > This is because the state of the trf7970a is currently reading but
+> > another request has been made to send a command before it has finished.
+> 
+> How is this happening?  Was trf7970a_abort_cmd() called and it didn't
+> work right?  Was it not called at all and there is a bug in the digital
+> layer?  More details please.
+> 
+> > The solution is to properly kill the waiting reading (workqueue)
+> > before failing on the send.
+> 
+> If the bug is in the calling code, then that is what should get fixed.
+> This seems to be a hack to work-around a digital layer bug.
 
---y4y2e2tmeyeuswnf
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+One of our uses of NFC is to begin polling to read a tag and then stop polling
+(in order to save power) until we know via user interaction that we need to poll
+again.  This is typically many minutes later so the power saving is pretty
+significant.  However, it's possible that a user will remove the tag before
+reading has completed.  We also detect this case and stop polling.  I can go
+more into this if necessary but that is what exposed a panic.
 
-On Tue, Dec 20, 2016 at 03:34:10PM +0100, Code Kipper wrote:
-> On 20 December 2016 at 15:07, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Tue, Dec 20, 2016 at 11:40:37AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>
-> >> Add the SPDIF transceiver controller block to the A31 dtsi.
-> >>
-> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 14 ++++++++++++++
-> >>  1 file changed, 14 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> index 7370ba6c9993..559c53efa7e6 100644
-> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> @@ -613,6 +613,20 @@
-> >>                       reg = <0x01c20ca0 0x20>;
-> >>               };
-> >>
-> >> +             spdif: spdif@01c21000 {
-> >> +                     #sound-dai-cells = <0>;
-> >> +                     compatible = "allwinner,sun6i-a31-spdif";
-> >> +                     reg = <0x01c21000 0x400>;
-> >> +                     interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                     clocks = <&ccu CLK_APB1_SPDIF>, <&ccu CLK_SPDIF>;
-> >> +                     resets = <&ccu RST_APB1_SPDIF>;
-> >> +                     clock-names = "apb", "spdif";
-> >> +                     dmas = <&dma 2>, <&dma 2>;
-> >> +                     dma-names = "rx", "tx";
-> >> +                     spdif-out = "disabled";
-> >
-> > That property isn't documented anywhere, and doesn't seem to be used
-> > in your driver either.
->
-> Ooops....do you want me to respin a new patch or will you do your
-> magic with 'dd'?
+You can reproduce using neard and python, in our testing it was very likely to
+occur in 10-100 iterations of the following.:
 
-Sorry, it's C-w for me :)
+    #!/usr/bin/python
+    import time
 
-> It fell through the cracks as it was cherry picked from my dev
-> branch where I was at one time playing with spdif-in. This has
-> pretty much been relegated to the bottom of my todo/finish list.
+    import dbus
 
-I fixed and applied.
+    bus = dbus.SystemBus()
+    nfc0 = bus.get_object('org.neard', '/org/neard/nfc0')
+    props = dbus.Interface(nfc0, 'org.freedesktop.DBus.Properties')
 
-> > On a separate topic, is the channel inversion bug also found on the
-> > A31?
->
-> I have seen this and I'm sure that was also on my A31 hardware but
-> I've just fired her up and the speaker test worked as expected. I also
-> repeated the test on my A10 device and didn't hear the issue.
+    try:
+        props.Set('org.neard.Adapter', 'Powered', dbus.Boolean(1))
+    except:
+        pass
 
-Ok.
+    adapter = dbus.Interface(nfc0, 'org.neard.Adapter')
 
-Thanks!
-Maxime
+    for i in range(1000):
+        adapter.StartPollLoop('Initiator')
+        time.sleep(0.1)
+        adapter.StopPollLoop()
+        print(i)
+
+I believe the last time we tested this was around the 4.1 release.
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---y4y2e2tmeyeuswnf--
+Justin Bronder
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
