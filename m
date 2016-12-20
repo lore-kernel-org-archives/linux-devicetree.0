@@ -1,7 +1,7 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v4 4/5] mfd: dt: Add bindings for the Aspeed LPC Host Controller (LHC)
-Date: Tue, 20 Dec 2016 17:45:34 +1030
-Message-ID: <20161220071535.27542-5-andrew@aj.id.au>
+Subject: [PATCH v4 5/5] mfd: dt: Add bindings for the Aspeed SoC Display Controller (GFX)
+Date: Tue, 20 Dec 2016 17:45:35 +1030
+Message-ID: <20161220071535.27542-6-andrew@aj.id.au>
 References: <20161220071535.27542-1-andrew@aj.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20161220071535.27542-1-andrew@aj.id.au>
@@ -10,57 +10,40 @@ To: Lee Jones <lee.jones@linaro.org>
 Cc: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LPC bus pinmux configuration on fifth generation Aspeed SoCs depends
-on bits in both the System Control Unit and the LPC Host Controller.
-
-The Aspeed LPC Host Controller is described as a child node of the
-LPC host-range syscon device for arbitration of access by the host
-controller and pinmux drivers.
+The Aspeed SoC Display Controller is presented as a syscon device to
+arbitrate access by display and pinmux drivers. Video pinmux
+configuration on fifth generation SoCs depends on bits in both the
+System Control Unit and the Display Controller.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
+ Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
 
-Linus: I've retained your r-b tag I don't think the addition of the ast2400
-compatible string will fuss you. Please let me know if you feel this is
-inappropriate.
-
- .../devicetree/bindings/mfd/aspeed-lpc.txt         | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-index a97131aba446..514d82ced95b 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-@@ -109,3 +109,29 @@ lpc: lpc@1e789000 {
- 	};
- };
- 
-+Host Node Children
-+==================
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+new file mode 100644
+index 000000000000..aea5370efd97
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+@@ -0,0 +1,17 @@
++* Device tree bindings for Aspeed SoC Display Controller (GFX)
 +
-+LPC Host Controller
-+-------------------
-+
-+The Aspeed LPC Host Controller configures the Low Pin Count (LPC) bus behaviour
-+between the host and the baseboard management controller. The registers exist
-+in the "host" portion of the Aspeed LPC controller, which must be the parent of
-+the LPC host controller node.
++The Aspeed SoC Display Controller primarily does as its name suggests, but also
++participates in pinmux requests on the g5 SoCs. It is therefore considered a
++syscon device.
 +
 +Required properties:
-+
-+- compatible:	One of:
-+		"aspeed,ast2400-lhc";
-+		"aspeed,ast2500-lhc";
-+
-+- reg:		contains offset/length values of the LHC memory regions. In the
-+		AST2400 and AST2500 there are two regions.
++- compatible:		"aspeed,ast2500-gfx", "syscon"
++- reg:			contains offset/length value of the GFX memory
++			region.
 +
 +Example:
 +
-+lhc: lhc@20 {
-+	compatible = "aspeed,ast2500-lhc";
-+	reg = <0x20 0x24 0x48 0x8>;
++gfx: display@1e6e6000 {
++	compatible = "aspeed,ast2500-gfx", "syscon";
++	reg = <0x1e6e6000 0x1000>;
 +};
 -- 
 2.9.3
