@@ -1,30 +1,28 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/7] Documentation: DT: bindings: iio: adc: add
- documentation for Allwinner SoCs' GPADC driver
-Date: Tue, 20 Dec 2016 15:25:54 +0100
-Message-ID: <20161220142554.rcocnculfehiwhpn@lukather>
+Subject: Re: [PATCH 2/7] Documentation: DT: bindings: mfd: add documentation
+ for Allwinner SoCs' GPADC MFD driver
+Date: Tue, 20 Dec 2016 15:26:50 +0100
+Message-ID: <20161220142650.voojrp3vpoa7vzjn@lukather>
 References: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
- <20161220102709.9504-2-quentin.schulz@free-electrons.com>
+ <20161220102709.9504-3-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gnfzxbx72j2i2qmt"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="xmj3o7epfxnbflo7"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161220102709.9504-2-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161220102709.9504-3-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---gnfzxbx72j2i2qmt
+--xmj3o7epfxnbflo7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Dec 20, 2016 at 11:27:03AM +0100, Quentin Schulz wrote:
+On Tue, Dec 20, 2016 at 11:27:04AM +0100, Quentin Schulz wrote:
 > The Allwinner SoCs all have an ADC that can also act as a thermal sensor
 > and sometimes as a touchscreen controller. If there is a touchscreen
 > controller, the first four channels can be used either for the ADC or
@@ -32,24 +30,30 @@ On Tue, Dec 20, 2016 at 11:27:03AM +0100, Quentin Schulz wrote:
 > If there is not a touchscreen controller, the one and only channel is
 > used for the thermal sensor.
 >=20
-> This patch adds the documentation for the driver of the Allwinner SoCs'
-> GPADC.
+> The Allwinner SoCs already have an existing DT binding for the
+> touchscreen controller and thermal sensor for the sun4i-ts input driver
+> which does let the user use the ADC. To keep backward compatibility,
+> this MFD driver re-uses the same bindings as the sun4i-ts input driver
+> and will probe the required drivers to make the ADC and thermal sensor
+> work.
+>=20
+> This patch adds the binding documentation for the MFD driver of the
+> Allwinner SoCs' GPADC.
 >=20
 > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../bindings/iio/adc/sun4i-gpadc-iio.txt           | 57 ++++++++++++++++=
+>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 47 ++++++++++++++++=
 ++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/sun4i-gpadc=
--iio.txt
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
 >=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sun4i-gpadc-iio.tx=
-t b/Documentation/devicetree/bindings/iio/adc/sun4i-gpadc-iio.txt
+> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Docu=
+mentation/devicetree/bindings/mfd/sun4i-gpadc.txt
 > new file mode 100644
-> index 0000000..aab768d
+> index 0000000..bc4b4f6
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/sun4i-gpadc-iio.txt
-> @@ -0,0 +1,57 @@
+> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> @@ -0,0 +1,47 @@
 > +Allwinner SoCs' GPADC Device Tree bindings
 > +------------------------------------------
 > +
@@ -71,45 +75,25 @@ ADC
 driver.
 > +
 > +The Allwinner A10, A13 and A31 SoCs already have a DT binding for the
-> +aforementioned input driver, thus an MFD driver matches the existing DT =
-binding
-> +(mfd/sun4i-gpadc.c) and replaces the input driver. No DT binding is requ=
-ired for
-> +these SoCs' ADC, everything is handled by the MFD which is matching the =
-existing
-> +DT binding for input/touchscreen/sun4i-ts.c.
+> +aforementioned input driver, thus this MFD driver matches the existing DT
+> +binding (mfd/sun4i-gpadc.c).
+> +To keep DT binding compatibility, the MFD replaces the sun4i-ts input dr=
+iver and
+> +probes required drivers (IIO GPADC driver (iio/adc/sun4i-gpadc-iio.c),
+> +iio-hwmon and soon the touchscreen driver) without the need for a DT bin=
+ding for
+> +each driver.
 > +
-> +The Allwinner A33 GPADC only have a thermal sensor and have a proper DT =
-binding
-> +for this driver unlike the previously mentioned SoCs.
-
-The DT bindings should be agnostic from the OS. You can remove all
-mention of the implementations details in Linux.
-
-(and you should wrap at 72 characters).
-
-But we already have a binding document for that controller, so you
-shouldn't create a new one, reuse the old one that is already there.
-
 > +Required properties:
-> + - compatible: "allwinner,sun8i-a33-gpadc-iio"
+> + - compatible: one of:
+> +	- "allwinner,sun4i-a10-ts",
+> +	- "allwinner,sun5i-a13-ts",
+> +	- "allwinner,sun6i-a31-ts"
+> + - #thermal-sensor-cells =3D <0>;
 
-IIO is an implementation detail. The IP is called GPADC.
-You're also missing reg.
+Same thing here, we already have such a document, please amend it if
+needed.
 
-> +
-> +Optional properties:
-> +(for use with thermal framework for CPU thermal throttling for example, =
-and/or
-> + IIO consumers)
-> + - #thermal-sensor-cells =3D <0>; (see
-> +Documentation/devicetree/bindings/thermal/thermal.txt)
-> + - #io-channel-cells =3D <0>; (see
-> +Documentation/devicetree/bindings/iio/iio-bindings.txt)
-
-I wouldn't list that as optional.
-
-Thanks,
 Maxime
 
 --=20
@@ -117,24 +101,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---gnfzxbx72j2i2qmt
+--xmj3o7epfxnbflo7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYWT9uAAoJEBx+YmzsjxAg+tQP/3e2k/BlVCL9/mkVYNlQULjK
-XphCMh005NeFjmXDKAwFZNpOT4zGI5466rmtJRRbbb0TKG4VzRYeSZJGSprTnFuu
-CTCxLE2bbrKIKhMzeV+JyUmMfyCvVrBbbuE0mt3muvbr9sFru5sx6rC07u79ciMA
-jzHo5naLVNoAL5O/KG9Sh1qGRTH60r0RiTckbBsbHcEz4WMxcqnqlPuiPIwGeLxI
-A9TMONWWMZOoOnp9UuPrELT8olMTHs779M3lXLmHtXRrZP2kt0Gyo2CUM3zASnL4
-3U+KLD5Pf8ABaC/epObua5KbC3WXkHKv8KsfCnkZh4VVW0gU+GvohinJW5UkXlO6
-so+t36LDK7Kx9LC4akL443j3i1PpcKistpqTfyi5OYgT/HCozf/kVjy+T6DYccS9
-URmgP5pyYjbcIn5gZrkjdiU5/uZuKvkJRSiudmoaBokXilDJ6mZ/lkL3NRMOwkZs
-C/0hjG2xz6WLp3Qf5N0mr2LBZiw3ING10yK4v+4/9aGdMobUTW7hudASi6eVCtWw
-PGzK9sRqlnJ6D93LGN7Dj5eNjK4WpgBxz7ZbeRPVl4Fzl5gG729uTMf0Ls5HTw6M
-6FySqbQlhJRYv4JwHEjpERihwvslvISQemOJsE+4v08kEiSKCXWVdEBBzDlJnDEK
-B6lfFcPuTxPJMH7byBo5
-=32I7
+iQIcBAEBCAAGBQJYWT+qAAoJEBx+YmzsjxAg0LQQAJH3PkkPfddS43dE4Vqk+4CG
+mVmo8FE1UhKwi1F3rJT1TrKRsMAc8ZS7/oAh8gi8JBi9ajfo7+zvRMsGbzOHkYQ4
+AhU57/nI+fwLkuX+HoucFGnk1Qf5fPJOL66ruW/WZImtHavIKtVXXLGxYb55mNVG
+bq9a71o8XDwtvz3uNHKk8VFFIvOb3OEg2QUHPLs0641BlreoHor++dQGZljfZ414
+WlHYOk7AVO8i4hi3bBFVJmJsBgWR5OWVy+EyjsJ90Vt5uf6d3qqipSx7MHsZWYBU
+YZcAwRE+Qv2Lwy+RNyJH3MEMP8WnmQqr9ogUfPK39uqRu31JpSjn4ELm6qLfAkNT
+hmhIScUVzukZV+u1Zd36aFt9+Xl7q72Dy13D/5+VGpHdtEyATT8fm4f91hVjpOUj
+ZTSYhZeIpowo/O/fqXcoUGTplfFbypNwD7/yp51RcliAtHDB48ImA9EATCJplQWo
+hG7q+s48V/L+xVKGUSYLdk1HxUWBVHb9jiGrlVus72zo0sAZWzPqCsJPfhJKeGM8
+tr1kQfY4ukGvKaBjpDZuh52x3xzUsOWuNgEXuEh2ZELgaqxtaytt2dh5g/NpPTVE
+SuseoVd+aJGqYqiA7idYUQ2lSXK0/ivfk5Abm3j34O2O6PuvyscSmdVeckb78eNf
+vq9ikxK8NV2MrM1Ci8i1
+=S5C8
 -----END PGP SIGNATURE-----
 
---gnfzxbx72j2i2qmt--
+--xmj3o7epfxnbflo7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
