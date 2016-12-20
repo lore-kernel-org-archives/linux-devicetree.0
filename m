@@ -1,44 +1,98 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sun6i: Add SPDIF TX pin to the A31
-Date: Tue, 20 Dec 2016 20:07:43 +0100
-Message-ID: <20161220190743.sab2kdbuppc7vwkx@lukather>
+Subject: Re: [PATCH 2/3] ARM: dts: sun6i: Add the SPDIF block to
+ the A31
+Date: Tue, 20 Dec 2016 20:11:01 +0100
+Message-ID: <20161220191101.plp3lsgsse4wvkaq@lukather>
 References: <20161220104038.22532-1-codekipper@gmail.com>
- <20161220104038.22532-2-codekipper@gmail.com>
+ <20161220104038.22532-3-codekipper@gmail.com>
+ <20161220140709.pxvzcm3osmbromfh@lukather>
+ <CAEKpxBn4J0sXVx6b0d_v3LivnNS5WENp9DD6fFE9N6u=J=n7ww@mail.gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hlj3o2vraz6povmq"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBD4D43BAKGQEOQQJWGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="y4y2e2tmeyeuswnf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUEE43BAKGQE3YY4W6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20161220104038.22532-2-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAEKpxBn4J0sXVx6b0d_v3LivnNS5WENp9DD6fFE9N6u=J=n7ww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hlj3o2vraz6povmq
+--y4y2e2tmeyeuswnf
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Tue, Dec 20, 2016 at 11:40:36AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Add the SPDIF TX pin to the A31 dtsi.
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Dec 20, 2016 at 03:34:10PM +0100, Code Kipper wrote:
+> On 20 December 2016 at 15:07, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Tue, Dec 20, 2016 at 11:40:37AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >> Add the SPDIF transceiver controller block to the A31 dtsi.
+> >>
+> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 14 ++++++++++++++
+> >>  1 file changed, 14 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> index 7370ba6c9993..559c53efa7e6 100644
+> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> @@ -613,6 +613,20 @@
+> >>                       reg = <0x01c20ca0 0x20>;
+> >>               };
+> >>
+> >> +             spdif: spdif@01c21000 {
+> >> +                     #sound-dai-cells = <0>;
+> >> +                     compatible = "allwinner,sun6i-a31-spdif";
+> >> +                     reg = <0x01c21000 0x400>;
+> >> +                     interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                     clocks = <&ccu CLK_APB1_SPDIF>, <&ccu CLK_SPDIF>;
+> >> +                     resets = <&ccu RST_APB1_SPDIF>;
+> >> +                     clock-names = "apb", "spdif";
+> >> +                     dmas = <&dma 2>, <&dma 2>;
+> >> +                     dma-names = "rx", "tx";
+> >> +                     spdif-out = "disabled";
+> >
+> > That property isn't documented anywhere, and doesn't seem to be used
+> > in your driver either.
+>
+> Ooops....do you want me to respin a new patch or will you do your
+> magic with 'dd'?
 
-Applied, thanks!
+Sorry, it's C-w for me :)
+
+> It fell through the cracks as it was cherry picked from my dev
+> branch where I was at one time playing with spdif-in. This has
+> pretty much been relegated to the bottom of my todo/finish list.
+
+I fixed and applied.
+
+> > On a separate topic, is the channel inversion bug also found on the
+> > A31?
+>
+> I have seen this and I'm sure that was also on my A31 hardware but
+> I've just fired her up and the speaker test worked as expected. I also
+> repeated the test on my A10 device and didn't hear the issue.
+
+Ok.
+
+Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---hlj3o2vraz6povmq--
+--y4y2e2tmeyeuswnf--
