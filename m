@@ -1,46 +1,40 @@
 From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH v2 0/7] NFC: trf7970a: Fixups & convert to desc-based GPIO
-Date: Tue, 20 Dec 2016 11:32:37 -0700
-Message-ID: <20161220183244.5171-1-mgreer@animalcreek.com>
+Subject: [PATCH v2 7/7] MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+Date: Tue, 20 Dec 2016 11:32:44 -0700
+Message-ID: <20161220183244.5171-8-mgreer@animalcreek.com>
+References: <20161220183244.5171-1-mgreer@animalcreek.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161220183244.5171-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These trf7970a driver patches do the following things:
- - a couple minor fixups
- - allow EN2 to not be managed by the driver (e.g., when its tied low by
-   hardware
- - convert the driver to use the descriptor-based GPIO interface
- - fix up coding style issues
- - change the DTS example to indicate that EN and EN2 are active high GPIOs
- - Add Mark Greer as the maintainer of the trf7970a driver
+Add Mark Greer as the maintainer of the trf7970a NFC driver.
 
-Samuel, these will likely conflict with patches from Geoff Lansberry
-so let me know if you want me to rebase on top of his patches.
+Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Based on e93b1cc8a896 (Merge branch 'for_linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs)
-
-v1->v2:
- - Commit description fixups only; no functional changes.
-
-Mark Greer (7):
-  NFC: trf7970a: Don't de-assert EN2 unless it was asserted
-  NFC: trf7970a: Don't manage EN2 when not specified in DT
-  NFC: trf7970a: Convert to descriptor based GPIO interface
-  NFC: trf7970a: Remove useless comment
-  NFC: trf7970a: Clean up coding style issues
-  NFC: trf7970a: Enable pins are active high not active low
-  MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
-
- .../devicetree/bindings/net/nfc/trf7970a.txt       |   4 +-
- MAINTAINERS                                        |   7 +
- drivers/nfc/Kconfig                                |   2 +-
- drivers/nfc/trf7970a.c                             | 311 ++++++++++-----------
- 4 files changed, 165 insertions(+), 159 deletions(-)
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f6eb97b35e0f..3a9420055bd7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10871,6 +10871,13 @@ F:	include/linux/power/bq27xxx_battery.h
+ F:	drivers/power/supply/bq27xxx_battery.c
+ F:	drivers/power/supply/bq27xxx_battery_i2c.c
+ 
++TI TRF7970A NFC DRIVER
++M:	Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
++L:	linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org (moderated for non-subscribers)
++S:	Supported
++F:	drivers/nfc/trf7970a.c
++F:	Documentation/devicetree/bindings/net/nfc/trf7970a.txt
++
+ TIMEKEEPING, CLOCKSOURCE CORE, NTP, ALARMTIMER
+ M:	John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+ M:	Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 -- 
 2.11.0
 
