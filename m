@@ -1,90 +1,74 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/7] Documentation: DT: bindings: mfd: add documentation for Allwinner SoCs' GPADC MFD driver
-Date: Tue, 20 Dec 2016 11:27:04 +0100
-Message-ID: <20161220102709.9504-3-quentin.schulz@free-electrons.com>
-References: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161220102709.9504-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 0/7] add CPU thermal throttling to Allwinner A33 SoC
+Date: Tue, 20 Dec 2016 11:27:02 +0100
+Message-ID: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner SoCs all have an ADC that can also act as a thermal sensor
-and sometimes as a touchscreen controller. If there is a touchscreen
-controller, the first four channels can be used either for the ADC or
-the touchscreen and the fifth channel is used for the thermal sensor.
-If there is not a touchscreen controller, the one and only channel is
-used for the thermal sensor.
+The Allwinner SoCs all have an ADC that can also act as a touchscreen
+controller and a thermal sensor. The first four channels can be used
+either for the ADC or the touchscreen and the fifth channel is used for
+the thermal sensor. We currently have a driver for the two latter
+functions in drivers/input/touchscreen/sun4i-ts.c but we don't have
+access to the ADC feature at all. It is meant to replace the current
+driver by using MFD and subdrivers.
 
-The Allwinner SoCs already have an existing DT binding for the
-touchscreen controller and thermal sensor for the sun4i-ts input driver
-which does let the user use the ADC. To keep backward compatibility,
-this MFD driver re-uses the same bindings as the sun4i-ts input driver
-and will probe the required drivers to make the ADC and thermal sensor
-work.
+The Allwinner A33 only has a thermal sensor present in the GPADC. In
+addition, there is not an existing DT binding for the GPADC. Thus, we do
+not need the sun4i-gpadc MFD driver which was made to keep DT compatibility
+and probe subdrivers without the need to add DT subnodes.
 
-This patch adds the binding documentation for the MFD driver of the
-Allwinner SoCs' GPADC.
+This series of patch adds the CPU thermal sensor for the A33 and CPU thermal
+throttling. It also adds DT binding documentation for the IIO and MFD GPADC
+drivers. Finally, it adds the cpu-supply property to the CPU node needed by
+the Sinlinx SinA33 and Olinuxino A33 to adapt their CPU regulator voltage
+depending on the currently used OPP. The other A33 boards all have their
+cpu-supply property set.
 
-Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+This patch *HAS NOT* been tested on the Olinuxino A33.
+ @Stefan (or anyone owning an Olinuxino A33), could you test this patch
+ series on your board, test CPUfreq and tell us if it works in a stable
+ manner? Thanks!
+
+This series of patch is based on this[1] and this[2][3] series of patch.
+
+[1] https://lkml.org/lkml/2016/12/13/298 : "[PATCH v9] add support for Allwinner
+SoCs ADC"
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/473962.html
+: "[PATCH] Allwinner A33 CPU frequency scaling support" without PATCH 4/6
+[3] https://lkml.org/lkml/2016/12/19/72 : "[PATCH v2] ARM: dts: sun8i: add
+opp-v2 table for A33"
+
+Quentin Schulz (7):
+  Documentation: DT: bindings: iio: adc: add documentation for Allwinner
+    SoCs' GPADC driver
+  Documentation: DT: bindings: mfd: add documentation for Allwinner
+    SoCs' GPADC MFD driver
+  iio: adc: sun4i-gpadc-iio: add support for A33 thermal sensor
+  ARM: dts: sun8i-a33-sinlinx-sina33: add cpu-supply
+  ARM: dts: sun8i-a33-olinuxino: add cpu-supply
+  ARM: dtsi: sun8i-a33: add A33 thermal sensor
+  ARM: dtsi: sun8i-a33: add CPU thermal throttling
+
+ .../bindings/iio/adc/sun4i-gpadc-iio.txt           |  57 ++++++
+ .../devicetree/bindings/mfd/sun4i-gpadc.txt        |  47 +++++
+ arch/arm/boot/dts/sun8i-a33-olinuxino.dts          |   4 +
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
+ arch/arm/boot/dts/sun8i-a33.dtsi                   |  59 ++++++
+ drivers/iio/adc/Kconfig                            |  21 ++-
+ drivers/iio/adc/sun4i-gpadc-iio.c                  | 204 ++++++++++++++++-----
+ include/linux/mfd/sun4i-gpadc.h                    |   4 +
+ 8 files changed, 343 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/sun4i-gpadc-iio.txt
  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-new file mode 100644
-index 0000000..bc4b4f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-@@ -0,0 +1,47 @@
-+Allwinner SoCs' GPADC Device Tree bindings
-+------------------------------------------
-+
-+The Allwinner SoCs all have an ADC that can also act as a thermal sensor and
-+sometimes as a touchscreen controller. If there is a touchscreen controller, the
-+first four channels can be used either for the ADC or the touchscreen and the
-+fifth channel is used for the thermal sensor.
-+If there is not a touchscreen controller, the one and only channel is used for
-+the thermal sensor.
-+
-+Currently, the touchscreen controller does not have a driver using this ADC
-+driver. The touchscreen controller is currently driven only by
-+input/touchscreen/sun4i-ts.c which is absolutely incompatible with this driver.
-+
-+The Allwinner A10, A13 and A31 SoCs already have a DT binding for the
-+aforementioned input driver, thus this MFD driver matches the existing DT
-+binding (mfd/sun4i-gpadc.c).
-+To keep DT binding compatibility, the MFD replaces the sun4i-ts input driver and
-+probes required drivers (IIO GPADC driver (iio/adc/sun4i-gpadc-iio.c),
-+iio-hwmon and soon the touchscreen driver) without the need for a DT binding for
-+each driver.
-+
-+Required properties:
-+ - compatible: one of:
-+	- "allwinner,sun4i-a10-ts",
-+	- "allwinner,sun5i-a13-ts",
-+	- "allwinner,sun6i-a31-ts"
-+ - #thermal-sensor-cells = <0>;
-+
-+Example:
-+
-+thermal-zones {
-+	cpu_thermal {
-+		thermal-sensors = <&rtp>;
-+		[...]
-+	};
-+};
-+
-+soc@01c00000 {
-+	[...]
-+	rtp: rtp@01c25000 {
-+		compatible = "allwinner,sun6i-a31-ts";
-+		reg = <0x01c25000 0x100>;
-+		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+		#thermal-sensor-cells = <0>;
-+	};
-+};
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
