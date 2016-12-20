@@ -1,70 +1,71 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 2/3] Bluetooth: btusb: Add out-of-band wakeup support
-Date: Mon, 19 Dec 2016 19:41:23 -0800
-Message-ID: <20161220034122.GA40060@google.com>
-References: <1481916604-114279-1-git-send-email-rajatja@google.com>
- <1481916604-114279-2-git-send-email-rajatja@google.com>
- <20161219231021.GA142074@google.com>
- <CACK8Z6FteRYmrNq5Oq9LpHOUOYg49XrL0WsxD8G45pTw_cwaSg@mail.gmail.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v10 0/8] power: add power sequence library
+Date: Tue, 20 Dec 2016 12:31:12 +0800
+Message-ID: <20161220043112.GA10071@b29397-desktop>
+References: <1479087359-7547-1-git-send-email-peter.chen@nxp.com>
+ <20161219191504.GA18988@kozik-lap>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACK8Z6FteRYmrNq5Oq9LpHOUOYg49XrL0WsxD8G45pTw_cwaSg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajat Jain <rajatja@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, Rajat Jain <rajatxjain@gmail.com>
+In-Reply-To: <20161219191504.GA18988@kozik-lap>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Peter Chen <peter.chen@nxp.com>, mark.rutland@arm.com, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, linux-kernel@vger.kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rjw@rjwysocki.net, sre@kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 05:46:19PM -0800, Rajat Jain wrote:
-> On Mon, Dec 19, 2016 at 3:10 PM, Brian Norris <briannorris@chromium.org> wrote:
-> > On Fri, Dec 16, 2016 at 11:30:03AM -0800, Rajat Jain wrote:
-> >> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> >> index ce22cef..beca4e9 100644
-> >> --- a/drivers/bluetooth/btusb.c
-> >> +++ b/drivers/bluetooth/btusb.c
-
-> >> +static const struct of_device_id btusb_match_table[] = {
-> >> +     { .compatible = "usb1286,204e" },
-> >> +     { }
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, btusb_match_table);
-> >
-> > You define a match table here, but you also define essentially same
-> > table for Marvell-specific additions in patch 3. It looks like maybe
-> > it's legal to have more than one OF table in a module? But it seems like
-> > it would get confusing, besides being somewhat strange to maintain. It
-> > might also produce duplicate 'modinfo' output.
-> >
-> > If you really want to independently opt into device-tree-specified
-> > interrupts vs. Marvell-specific interrrupt configuration, then you
-> > should probably just merge the latter into the former table, and
-> > implement a Marvell/GPIO flag to stick in the .data field of this table.
+On Mon, Dec 19, 2016 at 09:15:04PM +0200, Krzysztof Kozlowski wrote:
+> On Mon, Nov 14, 2016 at 09:35:51AM +0800, Peter Chen wrote:
+> > Hi all,
+> > 
+> > This is a follow-up for my last power sequence framework patch set [1].
+> > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> > power sequence instances will be added at postcore_initcall, the match
+> > criteria is compatible string first, if the compatible string is not
+> > matched between dts and library, it will try to use generic power sequence.
+> > 	 
+> > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > if only one power sequence instance is needed, for more power sequences
+> > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
+> > 
+> > In future, if there are special power sequence requirements, the special
+> > power sequence library can be created.
+> > 
+> > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> > two hot-plug devices to simulate this use case, the related binding
+> > change is updated at patch [1/6], The udoo board changes were tested
+> > using my last power sequence patch set.[3]
+> > 
+> > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> > need to power on itself before it can be found by ULPI bus.
+> > 
+> > [1] http://www.spinics.net/lists/linux-usb/msg142755.html
+> > [2] http://www.spinics.net/lists/linux-usb/msg143106.html
+> > [3] http://www.spinics.net/lists/linux-usb/msg142815.html
+> > 
+> > Changes for v10:
+> > - Improve the kernel-doc for power sequence core, including exported APIs and
+> >   main structure. [Patch 2/8]
+> > - Change Kconfig, and let the user choose power sequence. [Patch 2/8]
+> > - Delete EXPORT_SYMBOL and change related APIs as local, these APIs do not
+> >   be intended to export currently. [Patch 2/8]
+> > - Selete POWER_SEQUENCE at USB core's Kconfig. [Patch 4/8]
 > 
-> The data we want to stick (The pin number on the chip) is board
-> specific rather than being chip specific, and hence .data may not be
-> useful here.
-
-I just meant that if you conceptually wanted Marvell devices to "opt in"
-to this, then you could turn the .data field into some kind of flag or
-struct for describing capabilities (e.g., MARVELL_GPIO_WAKE or similar),
-effectively merging the two tables instead of having two
-mostly-overlapping tables.
-
-But you could do the same by putting such flag(s) in the
-{btusb,blacklist}_table[], or add such flag(s) later whenever there's a
-Marvell device that doesn't support this feature.
-
-> > Or it might be fine to drop one or both "match" checks. Particularly for
-> > the Marvell-specific stuff, it's probably fair just to check if it has
-> > an ->of_node and if 'id->driver_info & BTUSB_MARVELL'. Any other Marvell
-> > device-specific quirks could probably be keyed off of the
-> > (weirdly-named?) blacklist_table[], which already matches PID/VID.
+> Hi Peter,
 > 
-> Yup, I think I can remove the compatible string checks.
+> It is great that you continued the work on this.
 > 
-> I'll be sending a V3.
+> I saw (in some previous mails) your repo mentioned:
+> https://git.kernel.org/cgit/linux/kernel/git/peter.chen/usb.git/
+> Does it contain the recent version of this patchset?
+> 
+> I want to build on top of it fixes for usb3503 on Odroid U3 board.
 
-Great!
+Krzysztof, I put v10 patch set at branch: pwrseq-lib. 
+It seems there are no more comments I will send my v11 patch set
+after new year holiday.
 
-Brian
+-- 
+
+Best Regards,
+Peter Chen
