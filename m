@@ -1,7 +1,7 @@
 From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH v2 7/7] MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
-Date: Tue, 20 Dec 2016 11:32:44 -0700
-Message-ID: <20161220183244.5171-8-mgreer@animalcreek.com>
+Subject: [PATCH v2 6/7] NFC: trf7970a: Enable pins are active high not active low
+Date: Tue, 20 Dec 2016 11:32:43 -0700
+Message-ID: <20161220183244.5171-7-mgreer@animalcreek.com>
 References: <20161220183244.5171-1-mgreer@animalcreek.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161220183244.5171-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
@@ -10,31 +10,30 @@ To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Ve
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Mark Greer as the maintainer of the trf7970a NFC driver.
+The example DTS code for the trf7970a sets the GPIOs for the EN
+and EN2 pins to active low when they are really active high so
+correct the error.
 
 Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/net/nfc/trf7970a.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f6eb97b35e0f..3a9420055bd7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10871,6 +10871,13 @@ F:	include/linux/power/bq27xxx_battery.h
- F:	drivers/power/supply/bq27xxx_battery.c
- F:	drivers/power/supply/bq27xxx_battery_i2c.c
- 
-+TI TRF7970A NFC DRIVER
-+M:	Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-+L:	linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org (moderated for non-subscribers)
-+S:	Supported
-+F:	drivers/nfc/trf7970a.c
-+F:	Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+
- TIMEKEEPING, CLOCKSOURCE CORE, NTP, ALARMTIMER
- M:	John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
- M:	Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+index 32b35a07abe4..10672649a59e 100644
+--- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
++++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+@@ -35,8 +35,8 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+ 		spi-max-frequency = <2000000>;
+ 		interrupt-parent = <&gpio2>;
+ 		interrupts = <14 0>;
+-		ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>,
+-				  <&gpio2 5 GPIO_ACTIVE_LOW>;
++		ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>,
++				  <&gpio2 5 GPIO_ACTIVE_HIGH>;
+ 		vin-supply = <&ldo3_reg>;
+ 		vin-voltage-override = <5000000>;
+ 		autosuspend-delay = <30000>;
 -- 
 2.11.0
 
