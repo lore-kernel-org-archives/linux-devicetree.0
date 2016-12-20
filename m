@@ -1,78 +1,101 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2] mmc: sdhci-cadence: add Socionext UniPhier specific
- compatible string
-Date: Tue, 20 Dec 2016 11:50:01 +0100
-Message-ID: <CAPDyKFom4s4kx+vgE3+9zvSG3Pso4Pcd+Zrc6fRdivyLzwHhsA@mail.gmail.com>
-References: <1481681446-29832-1-git-send-email-yamada.masahiro@socionext.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6] media: et8ek8: add device tree binding documentation
+Date: Tue, 20 Dec 2016 15:05:39 +0200
+Message-ID: <20161220130538.GD16630@valkosipuli.retiisi.org.uk>
+References: <20161023191706.GA25754@amd>
+ <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+ <20161107104648.GB5326@amd>
+ <20161114183040.GB28778@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1481681446-29832-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161114183040.GB28778@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Rob Herring <robh@kernel.org>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 December 2016 at 03:10, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Add a Socionext SoC specific compatible (suggested by Rob Herring).
->
-> No SoC specific data are associated with the compatible strings for
-> now, but other SoC vendors may use this IP and want to differentiate
-> IP variants in the future.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hi Pavel,
 
-Thanks, applied for fixes!
-
-Kind regards
-Uffe
-
+On Mon, Nov 14, 2016 at 07:30:40PM +0100, Pavel Machek wrote:
+> Add device tree binding documentation for toshiba et8ek8 sensor.
+> 
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> 
 > ---
->
-> Changes in v2:
->   - Add "uniphier" to the compatible to make it more SoC-specific
->
->  Documentation/devicetree/bindings/mmc/sdhci-cadence.txt | 6 ++++--
->  drivers/mmc/host/sdhci-cadence.c                        | 1 +
->  2 files changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-> index 750374f..c0f37cb 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-> @@ -1,7 +1,9 @@
->  * Cadence SD/SDIO/eMMC Host Controller
->
->  Required properties:
-> -- compatible: should be "cdns,sd4hc".
-> +- compatible: should be one of the following:
-> +    "cdns,sd4hc"               - default of the IP
-> +    "socionext,uniphier-sd4hc" - for Socionext UniPhier SoCs
->  - reg: offset and length of the register set for the device.
->  - interrupts: a single interrupt specifier.
->  - clocks: phandle to the input clock.
-> @@ -19,7 +21,7 @@ if supported.  See mmc.txt for details.
->
->  Example:
->         emmc: sdhci@5a000000 {
-> -               compatible = "cdns,sd4hc";
-> +               compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
->                 reg = <0x5a000000 0x400>;
->                 interrupts = <0 78 4>;
->                 clocks = <&clk 4>;
-> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-> index 1501cfd..4b0ecb9 100644
-> --- a/drivers/mmc/host/sdhci-cadence.c
-> +++ b/drivers/mmc/host/sdhci-cadence.c
-> @@ -262,6 +262,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->  }
->
->  static const struct of_device_id sdhci_cdns_match[] = {
-> +       { .compatible = "socionext,uniphier-sd4hc" },
->         { .compatible = "cdns,sd4hc" },
->         { /* sentinel */ }
->  };
-> --
-> 2.7.4
->
+> 
+> v6: added missing article, fixed signal polarity.
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> new file mode 100644
+> index 0000000..b03b21d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> @@ -0,0 +1,53 @@
+> +Toshiba et8ek8 5MP sensor
+> +
+> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
+> +
+> +More detailed documentation can be found in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt .
+> +
+> +
+> +Mandatory properties
+> +--------------------
+> +
+> +- compatible: "toshiba,et8ek8"
+> +- reg: I2C address (0x3e, or an alternative address)
+> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> +- clocks: External clock to the sensor
+> +- clock-frequency: Frequency of the external clock to the sensor. Camera
+> +  driver will set this frequency on the external clock. The clock frequency is
+> +  a pre-determined frequency known to be suitable to the board.
+> +- reset-gpios: XSHUTDOWN GPIO. The XSHUTDOWN signal is active low. The sensor
+> +  is in hardware standby mode when the signal is in the low state.
+> +
+> +
+> +Endpoint node mandatory properties
+> +----------------------------------
+> +
+> +- remote-endpoint: A phandle to the bus receiver's endpoint node.
+> +
+> +Endpoint node optional properties
+> +----------------------------------
+> +
+> +- clock-lanes: <0>
+> +- data-lanes: <1..n>
+
+The driver makes no use of them and CCP2 only supports a single lane. I'll
+just remove these and apply it to my tree. Let's continue discussing the
+driver patch in the other thread.
+
+> +
+> +Example
+> +-------
+> +
+> +&i2c3 {
+> +	clock-frequency = <400000>;
+> +
+> +	cam1: camera@3e {
+> +		compatible = "toshiba,et8ek8";
+> +		reg = <0x3e>;
+> +		vana-supply = <&vaux4>;
+> +		clocks = <&isp 0>;
+> +		clock-frequency = <9600000>;
+> +		reset-gpio = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 */
+> +		port {
+> +			csi_cam1: endpoint {
+> +				remote-endpoint = <&csi_out1>;
+> +			};
+> +		};
+> +	};
+> +};
+> 
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
