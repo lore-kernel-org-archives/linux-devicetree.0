@@ -1,74 +1,161 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 4/4 v2] of/overlay: test count and destroy_last
-Date: Tue, 20 Dec 2016 20:04:55 +0100
-Message-ID: <20161220190455.25115-5-xypron.glpk@gmx.de>
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH 1/4 v2] of/overlay: add API function to count and pop last
+Date: Tue, 20 Dec 2016 20:04:52 +0100
+Message-ID: <20161220190455.25115-2-xypron.glpk@gmx.de>
 References: <20161220190455.25115-1-xypron.glpk@gmx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161220190455.25115-1-xypron.glpk@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161220190455.25115-1-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In the unit tests check that the functions
-of_overlay_destroy_last() and of_overlay_count()
-work as expected.
+To allow building interfaces which are not id based
+two new functions are added to the device tree
+overlay API:
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+of_overlay_count        - counts the loaded overlays
+of_overlay_destroy_last - removes the last overlay loaded
+
+Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 ---
 
 v2:
-	Added this patch
+	Add missing inline attribute for ov_overlay_count.
 
- drivers/of/unittest.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ Documentation/devicetree/overlay-notes.txt |  7 +++--
+ drivers/of/overlay.c                       | 50 ++++++++++++++++++++++++++++++
+ include/linux/of.h                         | 12 +++++++
+ 3 files changed, 67 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 53c83d6..e3fbf0b 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1466,6 +1466,7 @@ static void of_unittest_overlay_8(void)
- 	struct device_node *np;
- 	int ret, i, ov_id[2];
- 	int overlay_nr = 8, unittest_nr = 8;
-+	int count_before = of_overlay_count();
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index d418a6c..7c8099c 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -89,17 +89,20 @@ Overlay in-kernel API
  
- 	/* we don't care about device state in this test */
+ The API is quite easy to use.
  
-@@ -1485,6 +1486,12 @@ static void of_unittest_overlay_8(void)
- 					overlay_path(overlay_nr + i));
- 			return;
- 		}
-+
-+		if (count_before + i + 1 != of_overlay_count()) {
-+			unittest(0, "count does not increment by 1\n");
-+			return;
-+		}
-+
- 		ov_id[i] = ret;
- 		of_unittest_track_overlay(ov_id[i]);
- 	}
-@@ -1501,7 +1508,7 @@ static void of_unittest_overlay_8(void)
+-1. Call of_overlay_create() to create and apply an overlay. The return value
++Call of_overlay_create() to create and apply an overlay. The return value
+ is a cookie identifying this overlay.
  
- 	/* removing them in order should work */
- 	for (i = 1; i >= 0; i--) {
--		ret = of_overlay_destroy(ov_id[i]);
-+		ret = of_overlay_destroy_last();
- 		if (ret != 0) {
- 			unittest(0, "overlay @\"%s\" not destroyed @\"%s\"\n",
- 					overlay_path(overlay_nr + i),
-@@ -1509,6 +1516,12 @@ static void of_unittest_overlay_8(void)
- 						PDEV_OVERLAY));
- 			return;
- 		}
-+
-+		if (count_before + i != of_overlay_count()) {
-+			unittest(0, "count does not decrement by 1\n");
-+			return;
-+		}
-+
- 		of_unittest_untrack_overlay(ov_id[i]);
- 	}
+-2. Call of_overlay_destroy() to remove and cleanup the overlay previously
++Call of_overlay_destroy() to remove and cleanup the overlay previously
+ created via the call to of_overlay_create(). Removal of an overlay that
+ is stacked by another will not be permitted.
++Or call of_overlay_destroy_last() to remove the most recent overlay.
  
+ Finally, if you need to remove all overlays in one-go, just call
+ of_overlay_destroy_all() which will remove every single one in the correct
+ order.
+ 
++Call of_overlay_count() to determine the number of loaded overlays.
++
+ Overlay DTS Format
+ ------------------
+ 
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 0d4cda7..bd30253 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -587,3 +587,53 @@ int of_overlay_destroy_all(void)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(of_overlay_destroy_all);
++
++/**
++ * of_overlay_destroy_last() - Removes the last overlay from the system
++ *
++ * It is allways possible to delete the last overlay.
++ *
++ * Returns 0 on success, or a negative error number
++ */
++int of_overlay_destroy_last(void)
++{
++	struct of_overlay *ov, *ovn;
++	int id;
++
++	mutex_lock(&of_mutex);
++
++	list_for_each_entry_safe_reverse(ov, ovn, &ov_list, node) {
++		id = ov->id;
++		mutex_unlock(&of_mutex);
++		return of_overlay_destroy(id);
++	}
++
++	mutex_unlock(&of_mutex);
++
++	pr_info("destroy: No overlay to destroy");
++
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(of_overlay_destroy_last);
++
++/**
++ * of_overlay_count - Counts number of loaded overlays
++ *
++ * Returns number of loaded overlays
++ */
++int of_overlay_count(void)
++{
++	struct of_overlay *ov, *ovn;
++	int count = 0;
++
++	mutex_lock(&of_mutex);
++
++	list_for_each_entry_safe(ov, ovn, &ov_list, node) {
++		++count;
++	}
++
++	mutex_unlock(&of_mutex);
++
++	return count;
++}
++EXPORT_SYMBOL_GPL(of_overlay_count);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d72f010..5ca3523 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1281,15 +1281,22 @@ struct of_overlay_notify_data {
+ #ifdef CONFIG_OF_OVERLAY
+ 
+ /* ID based overlays; the API for external users */
++int of_overlay_count(void);
+ int of_overlay_create(struct device_node *tree);
+ int of_overlay_destroy(int id);
+ int of_overlay_destroy_all(void);
++int of_overlay_destroy_last(void);
+ 
+ int of_overlay_notifier_register(struct notifier_block *nb);
+ int of_overlay_notifier_unregister(struct notifier_block *nb);
+ 
+ #else
+ 
++static inline int of_overlay_count(void)
++{
++	return -ENOTSUPP;
++}
++
+ static inline int of_overlay_create(struct device_node *tree)
+ {
+ 	return -ENOTSUPP;
+@@ -1305,6 +1312,11 @@ static inline int of_overlay_destroy_all(void)
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int of_overlay_destroy_last(void)
++{
++	return -ENOTSUPP;
++}
++
+ static inline int of_overlay_notifier_register(struct notifier_block *nb)
+ {
+ 	return 0;
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
