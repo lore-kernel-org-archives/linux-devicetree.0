@@ -1,61 +1,67 @@
-From: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] power: supply: add sbs-charger driver
-Date: Tue, 20 Dec 2016 22:24:52 +0530
-Message-ID: <CAKDJKT7WWFd2FSAZ6erXF=t1aaCyR0F5px54TiHw7C4PrnKXSQ@mail.gmail.com>
-References: <1482247874-28713-1-git-send-email-nicolas.saenz@prodys.net> <1482247874-28713-2-git-send-email-nicolas.saenz@prodys.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
+Date: Tue, 20 Dec 2016 22:33:47 +0530
+Message-ID: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482247874-28713-2-git-send-email-nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicola
+This patch series adds couple of PHY drivers for Qualcomm chipsets.
+a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
+b) qcom-qmp phy driver: that is a combo phy providing support for
+   USB3, PCIe, UFS and few other controllers.
 
-On Tue, Dec 20, 2016 at 9:01 PM, Nicolas Saenz Julienne
-<nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org> wrote:
-> This adds support for sbs-charger compilant chips as defined here:
-> http://sbs-forum.org/specs/sbc110.pdf
->
-> This was tested on a arm board connected to an LTC4100 battery charger
-> chip.
->
-> Signed-off-by: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
-> ---
->  v3 -> v4
->  - drop "lltc,ltc4100" compatible string for now
->
->  v2 -> v3:
->  - add readable_reg() function to regmap config
->  - update compatible strings with part number
->
->  v1 -> v2:
->  - add spec link in header
->  - use proper gpio/interrupt interface
->  - update regmap configuration (max register & endianness)
->  - dropped oldschool .supplied_to assignments
->  - use devm_* APIs
->  drivers/power/supply/Kconfig       |   6 +
->  drivers/power/supply/Makefile      |   1 +
->  drivers/power/supply/sbs-charger.c | 274 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 281 insertions(+)
->  create mode 100644 drivers/power/supply/sbs-charger.c
+The patches are based on next branch of linux-phy tree.
 
+These have been tested on Dragon board db820c hardware with
+required set of patches on integration tree maintained by
+Linaro landing team for Qualcomm [1].
 
-Just some general comment, Can you add some more properties here to
-know voltage and current?
-Also, can you add other properties present in charging status register
-like POWER_FAIL, VOLTAGE_OR,
-CURRENT_OR etc.
+Couple of other patches [2,3] for nvmem are also pulled in for testing.
 
-Don't know weather it is feasible to add or not and Also, let me know,
-if it is already been covered in
-some part of the code.
+Changes since v2:
+ - Addressed review comments given by Rob and Stephen for bindings.
+ - Addressed the review comments given by Stephen for the qusb2 and qmp
+   phy drivers.
+   Please see individual patches for detailed changelogs.
 
-Thanks
-Manish Badarkhe
+Changes since v1:
+ - Moved device tree binding documentation to separate patches, as suggested
+   by Rob.
+ - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
+   given by Rob.
+ - Addressed review comments from Kishon.
+ - Addressed review comments from Srinivas for QMP phy driver.
+ - Addressed kbuild warning.
+
+[1] https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/log/?h=integration-linux-qcomlt
+[2] https://lkml.org/lkml/2016/11/17/21
+[3] https://lkml.org/lkml/2016/12/19/18
+
+Vivek Gautam (4):
+  dt-bindings: phy: Add support for QUSB2 phy
+  phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+  dt-bindings: phy: Add support for QMP phy
+  phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   71 ++
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   53 +
+ drivers/phy/Kconfig                                |   18 +
+ drivers/phy/Makefile                               |    2 +
+ drivers/phy/phy-qcom-qmp.c                         | 1191 ++++++++++++++++++++
+ drivers/phy/phy-qcom-qusb2.c                       |  540 +++++++++
+ 6 files changed, 1875 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+ create mode 100644 drivers/phy/phy-qcom-qmp.c
+ create mode 100644 drivers/phy/phy-qcom-qusb2.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
