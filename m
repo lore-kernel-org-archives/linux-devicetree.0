@@ -1,27 +1,33 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v4 1/5] pinctrl: aspeed: dt: Fix compatibles for the
- System Control Unit
-Date: Tue, 20 Dec 2016 18:26:22 +1030
-Message-ID: <CACPK8Xd2VtZVPE0S5M1+ubvhNMvPe8dZKYU_GeyL=aShM0CaOg@mail.gmail.com>
-References: <20161220073551.28522-1-andrew@aj.id.au> <20161220073551.28522-2-andrew@aj.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161220073551.28522-2-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/3] Add support for the ethernet switch on the ESPRESSObin
+Date: Tue, 20 Dec 2016 09:51:35 +0100
+Message-ID: <20161220085138.3998-1-romain.perier@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2016 at 6:05 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
-> Reference the SoC-specific compatible string in the examples as
-> required.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Acked-by: Joel Stanley <joel@jms.id.au>
+This set of patches adds support for the Marvell ethernet switch 88E6341.
+It also add the devicetree definition of this switch to the DT board.
 
+Romain Perier (3):
+  net: dsa: mv88e6xxx: Don't forbid MDIO I/Os for PHY addr >=
+    num_of_ports
+  net: dsa: mv88e6xxx: Add support for ethernet switch 88E6341/88E6141
+  arm64: dts: marvell: Add ethernet switch definition for the
+    ESPRESSObin
 
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+ .../boot/dts/marvell/armada-3720-espressobin.dts   | 67 ++++++++++++++++++++++
+ drivers/net/dsa/mv88e6xxx/chip.c                   | 48 ++++++++++++++--
+ drivers/net/dsa/mv88e6xxx/mv88e6xxx.h              |  4 +-
+ 3 files changed, 112 insertions(+), 7 deletions(-)
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
