@@ -1,78 +1,70 @@
-From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
-Date: Mon, 19 Dec 2016 18:23:00 -0500
-Message-ID: <CAO7Z3WKmEbJCN_=srxTVKXvtz84vHGi41RS+9T7fmkmhRB6nEw@mail.gmail.com>
-References: <1481841044-4314-1-git-send-email-glansberry@gmail.com> <20161219223111.itu77g7wsqtj6cvs@rob-hp-laptop>
+From: Dongpo Li <lidongpo@hisilicon.com>
+Subject: Re: [PATCH v2 1/4] net: hix5hd2_gmac: add generic compatible string
+Date: Tue, 20 Dec 2016 09:35:36 +0800
+Message-ID: <58588AE8.4040901@hisilicon.com>
+References: <1480944481-118803-1-git-send-email-lidongpo@hisilicon.com>
+ <1480944481-118803-2-git-send-email-lidongpo@hisilicon.com>
+ <20161209223521.5dnj7l44e663sntl@rob-hp-laptop>
+ <584E871D.7060200@hisilicon.com>
+ <CAL_Jsq+d5xHsxMKxbWSYy3cDXnC+HQj3=wun1zxf5PZ_BYrD-Q@mail.gmail.com>
+ <585796D6.1080407@hisilicon.com>
+ <CAL_Jsq+Su84DonQbh2KZ2o8JQ0Mqarag60Oq=Dby3y8Doyozxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161219223111.itu77g7wsqtj6cvs@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>, Justin Bronder <justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+Su84DonQbh2KZ2o8JQ0Mqarag60Oq=Dby3y8Doyozxg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, salil.mehta@huawei.com, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Jiancheng Xue <xuejiancheng@hisilicon.com>, benjamin.chenhao@hisilicon.com, caizhiyong@hisilicon.com, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-I can make that change, however, I worry that it may be a bit
-misleading, since there are only two supported clock frequencies, but
-a number like that to me implies that it could be set to any number
-you want.   I'm new at this, and so I'll go ahead and change it as you
-request, but I'd like to hear your thoughts on my concern.
-
-Thanks
-Geoff
-Geoff Lansberry
 
 
-Engineering Guy
-Kuv=C3=A9e, Inc
-125 Kingston St., 3rd Floor
-Boston, MA 02111
-1-617-290-1118 (m)
-geoff.lansberry (skype)
-http://www.kuvee.com
-
-
-
-On Mon, Dec 19, 2016 at 5:31 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Dec 15, 2016 at 05:30:42PM -0500, Geoff Lansberry wrote:
->> From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+On 2016/12/20 0:04, Rob Herring wrote:
+> On Mon, Dec 19, 2016 at 2:14 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
+>> Hi Rob and David,
 >>
->> ---
->>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  3 ++
->>  drivers/nfc/trf7970a.c                             | 42 +++++++++++++++=
-+------
->>  2 files changed, 34 insertions(+), 11 deletions(-)
+>> On 2016/12/12 22:21, Rob Herring wrote:
+>>> On Mon, Dec 12, 2016 at 5:16 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On 2016/12/10 6:35, Rob Herring wrote:
+>>>>> On Mon, Dec 05, 2016 at 09:27:58PM +0800, Dongpo Li wrote:
+> 
+> [...]
+> 
+>>>>>> @@ -20,7 +25,7 @@ Required properties:
+>>>>>>
+>>>>>>  Example:
+>>>>>>      gmac0: ethernet@f9840000 {
+>>>>>> -            compatible = "hisilicon,hix5hd2-gmac";
+>>>>>> +            compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
+>>>>>
+>>>>> You can't just change compatible strings.
+>>>>>
+>>>> Okay, maybe I should name all the compatible string with the suffix "-gmac" instead of
+>>>> "-gemac". This can keep the compatible strings with the same suffix. Is this okay?
+>>>> Can I just add the generic compatible string without changing the SoCs compatible string?
+>>>> Like following:
+>>>>         gmac0: ethernet@f9840000 {
+>>>>  -              compatible = "hisilicon,hix5hd2-gmac";
+>>>>  +              compatible = "hisilicon,hix5hd2-gmac", "hisilicon,hisi-gmac-v1";
+>>>
+>>> Yes, this is fine.
 >>
->> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Do=
-cumentation/devicetree/bindings/net/nfc/trf7970a.txt
->> index 32b35a0..9dda879 100644
->> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->> @@ -21,6 +21,8 @@ Optional SoC Specific Properties:
->>  - t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
->>    where an extra byte is returned by Read Multiple Block commands issue=
-d
->>    to Type 5 tags.
->> +- crystal_27mhz: Set to specify that the input frequency to the trf7970=
-a is 27.12MHz
->> +
->
-> Can't you use 'clock-frequency =3D "27000000";'?
->
->>
->>  Example (for ARM-based BeagleBone with TRF7970A on SPI1):
->>
->> @@ -43,6 +45,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI=
-1):
->>               irq-status-read-quirk;
->>               en2-rf-quirk;
->>               t5t-rmb-extra-byte-quirk;
->> +             crystal_27mhz;
->>               status =3D "okay";
->>       };
->>  };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> As the patch series have been applied to net-next branch,
+>> in which way should I commit this compatible fix?
+>> Should I send a new patch fixing this compatible string error with "Fixes: xxx"?
+>> Looking forward to your reply!
+> 
+> Yes to both.
+
+Okay, thanks for your reply!
+I will send the fix patch series as soon as possible.
+
+
+    Regards,
+    Dongpo
+
+.
