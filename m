@@ -1,426 +1,253 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH 3/7] iio: adc: sun4i-gpadc-iio: add support for A33 thermal
- sensor
-Date: Tue, 20 Dec 2016 11:27:05 +0100
-Message-ID: <20161220102709.9504-4-quentin.schulz@free-electrons.com>
-References: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] iio: adc: hx711: Add IIO driver for AVIA HX711
+Date: Tue, 20 Dec 2016 11:33:47 +0100
+Message-ID: <20161220103346.GA1318@imap.1und1.de>
+References: <20161214161740.GA13896@andreas>
+ <78dfc4c0-f792-12b4-ca07-0242e95f7ee5@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, lee.jones@linaro.org, linux@armlinux.org.uk, stefan.mavrodiev@gmail.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <78dfc4c0-f792-12b4-ca07-0242e95f7ee5-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Allwinner A33 thermal sensor.
+Hello Lars,
 
-Unlike the A10, A13 and A31, the Allwinner A33 only has one channel
-which is dedicated to the thermal sensor. Moreover, its thermal sensor
-does not generate interruptions, thus we only need to directly read the
-register storing the temperature value.
+thank you for the thorough review.
 
-The MFD used by the A10, A13 and A31, was created to avoid breaking the
-DT binding, but since the nodes for the ADC weren't there for the A33,
-it is not needed.
+I have some questions. See below.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
----
- drivers/iio/adc/Kconfig           |  21 ++--
- drivers/iio/adc/sun4i-gpadc-iio.c | 204 ++++++++++++++++++++++++++++----------
- include/linux/mfd/sun4i-gpadc.h   |   4 +
- 3 files changed, 172 insertions(+), 57 deletions(-)
+Thanks,
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 6a6d369..06041ff 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -437,17 +437,24 @@ config STX104
- config SUN4I_GPADC
- 	tristate "Support for the Allwinner SoCs GPADC"
- 	depends on IIO
--	depends on MFD_SUN4I_GPADC
--	help
--	  Say yes here to build support for Allwinner (A10, A13 and A31) SoCs
--	  GPADC. This ADC provides 4 channels which can be used as an ADC or as
--	  a touchscreen input and one channel for thermal sensor.
--
--	  The thermal sensor slows down ADC readings and can be disabled by
-+# MFD_SUN4I_GPADC is needed for sun4i, sun5i and sun6i but not for sun8i
-+	select MFD_SUN4I_GPADC if MACH_SUN4I || MACH_SUN5I || MACH_SUN6I
-+# THERMAL_OF can be disabled on sun4i, sun5i and sun6i to quicken ADC readings
-+	depends on THERMAL_OF || MACH_SUN4I || MACH_SUN5I || MACH_SUN6I
-+	depends on !TOUCHSCREEN_SUN4I
-+	help
-+	  Say yes here to build support for Allwinner (A10, A13, A31 and A33)
-+	  SoCs GPADC.
-+
-+	  The ADC on A10, A13 and A31 provides 4 channels which can be used as
-+	  an ADC or as a touchscreen input and one channel for thermal sensor.
-+	  Their thermal sensor slows down ADC readings and can be disabled by
- 	  disabling CONFIG_THERMAL_OF. However, the thermal sensor should be
- 	  enabled by default since the SoC temperature is usually more critical
- 	  than ADC readings.
- 
-+	  The ADC on A33 provides one channel for thermal sensor.
-+
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called sun4i-gpadc-iio.
- 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index a8e134f..8be694e 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -1,4 +1,4 @@
--/* ADC driver for sunxi platforms' (A10, A13 and A31) GPADC
-+/* ADC driver for sunxi platforms' (A10, A13, A31 and A33) GPADC
-  *
-  * Copyright (c) 2016 Quentin Schulz <quentin.schulz@free-electrons.com>
-  *
-@@ -85,6 +85,12 @@ static const struct gpadc_data sun6i_gpadc_data = {
- 	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
- };
- 
-+static const struct gpadc_data sun8i_gpadc_data = {
-+	.temp_offset = -1662,
-+	.temp_scale = 162,
-+	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
-+};
-+
- struct sun4i_gpadc_iio {
- 	struct iio_dev			*indio_dev;
- 	struct completion		completion;
-@@ -96,6 +102,7 @@ struct sun4i_gpadc_iio {
- 	unsigned int			temp_data_irq;
- 	atomic_t			ignore_temp_data_irq;
- 	const struct gpadc_data		*data;
-+	bool				use_dt;
- 	/* prevents concurrent reads of temperature and ADC */
- 	struct mutex			mutex;
- };
-@@ -138,6 +145,23 @@ static const struct iio_chan_spec sun4i_gpadc_channels_no_temp[] = {
- 	SUN4I_GPADC_ADC_CHANNEL(3, "adc_chan3"),
- };
- 
-+static const struct iio_chan_spec sun8i_gpadc_channels[] = {
-+	{
-+		.type = IIO_TEMP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_OFFSET),
-+		.datasheet_name = "temp_adc",
-+	},
-+};
-+
-+static const struct regmap_config sun4i_gpadc_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.fast_io = true,
-+};
-+
- static int sun4i_prepare_for_irq(struct iio_dev *indio_dev, int channel,
- 				 unsigned int irq)
- {
-@@ -231,7 +255,6 @@ static int sun4i_gpadc_read(struct iio_dev *indio_dev, int channel, int *val,
- err:
- 	pm_runtime_put_autosuspend(indio_dev->dev.parent);
- 	mutex_unlock(&info->mutex);
--
- 	return ret;
- }
- 
-@@ -246,6 +269,19 @@ static int sun4i_gpadc_adc_read(struct iio_dev *indio_dev, int channel,
- static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
- {
- 	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (info->use_dt) {
-+		pm_runtime_get_sync(indio_dev->dev.parent);
-+
-+		ret = regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
-+		if (!ret)
-+			pm_runtime_mark_last_busy(indio_dev->dev.parent);
-+
-+		pm_runtime_put_autosuspend(indio_dev->dev.parent);
-+
-+		return 0;
-+	}
- 
- 	return sun4i_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
- }
-@@ -410,7 +446,7 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
- 			  unsigned int *irq, atomic_t *atomic)
- {
- 	int ret;
--	struct sun4i_gpadc_dev *mfd_dev = dev_get_drvdata(pdev->dev.parent);
-+	struct sun4i_gpadc_dev *mfd_dev;
- 	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(&pdev->dev));
- 
- 	/*
-@@ -427,6 +463,8 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
- 	 */
- 	atomic_set(atomic, 1);
- 
-+	mfd_dev = dev_get_drvdata(pdev->dev.parent);
-+
- 	ret = platform_get_irq_byname(pdev, name);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "no %s interrupt registered\n", name);
-@@ -454,31 +492,68 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
- 	return 0;
- }
- 
--static int sun4i_gpadc_probe(struct platform_device *pdev)
-+static const struct of_device_id sun4i_gpadc_of_id[] = {
-+	{
-+		.compatible = "allwinner,sun8i-a33-gpadc-iio",
-+		.data = &sun8i_gpadc_data,
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
-+				struct iio_dev *indio_dev)
- {
--	struct sun4i_gpadc_iio *info;
--	struct iio_dev *indio_dev;
-+	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-+	const struct of_device_id *of_dev;
-+	struct thermal_zone_device *tzd;
-+	struct resource *mem;
-+	void __iomem *base;
- 	int ret;
--	struct sun4i_gpadc_dev *sun4i_gpadc_dev;
- 
--	sun4i_gpadc_dev = dev_get_drvdata(pdev->dev.parent);
-+	of_dev = of_match_device(sun4i_gpadc_of_id, &pdev->dev);
-+	if (!of_dev)
-+		return -ENODEV;
-+
-+	info->use_dt = true;
-+	info->data = (struct gpadc_data *)of_dev->data;
-+	indio_dev->num_channels = ARRAY_SIZE(sun8i_gpadc_channels);
-+	indio_dev->channels = sun8i_gpadc_channels;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+					     &sun4i_gpadc_regmap_config);
-+	if (IS_ERR(info->regmap)) {
-+		ret = PTR_ERR(info->regmap);
-+		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
-+		return ret;
-+	}
- 
--	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
--	if (!indio_dev)
--		return -ENOMEM;
-+	tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, info,
-+						   &sun4i_ts_tz_ops);
-+	if (IS_ERR(tzd)) {
-+		dev_err(&pdev->dev, "could not register thermal sensor: %ld\n",
-+			PTR_ERR(tzd));
-+		return PTR_ERR(tzd);
-+	}
- 
--	info = iio_priv(indio_dev);
--	platform_set_drvdata(pdev, indio_dev);
-+	return 0;
-+}
- 
--	mutex_init(&info->mutex);
-+static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
-+				 struct iio_dev *indio_dev)
-+{
-+	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-+	struct sun4i_gpadc_dev *sun4i_gpadc_dev;
-+	int ret;
-+
-+	info->use_dt = false;
-+	sun4i_gpadc_dev = dev_get_drvdata(pdev->dev.parent);
- 	info->regmap = sun4i_gpadc_dev->regmap;
--	info->indio_dev = indio_dev;
--	init_completion(&info->completion);
--	indio_dev->name = dev_name(&pdev->dev);
--	indio_dev->dev.parent = &pdev->dev;
--	indio_dev->dev.of_node = pdev->dev.of_node;
--	indio_dev->info = &sun4i_gpadc_iio_info;
--	indio_dev->modes = INDIO_DIRECT_MODE;
-+
- 	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
- 	indio_dev->channels = sun4i_gpadc_channels;
- 
-@@ -494,7 +569,6 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 	 * register the sensor if that option is enabled, eventually leaving
- 	 * that choice to the user.
- 	 */
--
- 	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
- 		/*
- 		 * This driver is a child of an MFD which has a node in the DT
-@@ -519,8 +593,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev,
- 				"could not register thermal sensor: %ld\n",
- 				PTR_ERR(tzd));
--			ret = PTR_ERR(tzd);
--			goto err;
-+			return PTR_ERR(tzd);
- 		}
- 	} else {
- 		indio_dev->num_channels =
-@@ -528,49 +601,78 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 		indio_dev->channels = sun4i_gpadc_channels_no_temp;
- 	}
- 
--	pm_runtime_set_autosuspend_delay(&pdev->dev,
--					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
--	pm_runtime_use_autosuspend(&pdev->dev);
--	pm_runtime_set_suspended(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--
- 	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
- 		ret = sun4i_irq_init(pdev, "TEMP_DATA_PENDING",
- 				     sun4i_gpadc_temp_data_irq_handler,
- 				     "temp_data", &info->temp_data_irq,
- 				     &info->ignore_temp_data_irq);
- 		if (ret < 0)
--			goto err;
--	}
-+			return ret;
- 
--	ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
--			     sun4i_gpadc_fifo_data_irq_handler, "fifo_data",
--			     &info->fifo_data_irq, &info->ignore_fifo_data_irq);
--	if (ret < 0)
--		goto err;
-+		ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
-+				     sun4i_gpadc_fifo_data_irq_handler,
-+				     "fifo_data", &info->fifo_data_irq,
-+				     &info->ignore_fifo_data_irq);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
--	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
--		ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
--		if (ret < 0) {
--			dev_err(&pdev->dev,
--				"failed to register iio map array\n");
--			goto err;
--		}
-+	ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to register iio map array\n");
-+		return ret;
- 	}
- 
-+	return 0;
-+}
-+
-+static int sun4i_gpadc_probe(struct platform_device *pdev)
-+{
-+	struct sun4i_gpadc_iio *info;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	info = iio_priv(indio_dev);
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	mutex_init(&info->mutex);
-+	info->indio_dev = indio_dev;
-+	init_completion(&info->completion);
-+	indio_dev->name = dev_name(&pdev->dev);
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->dev.of_node = pdev->dev.of_node;
-+	indio_dev->info = &sun4i_gpadc_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	if (pdev->dev.of_node)
-+		ret = sun4i_gpadc_probe_dt(pdev, indio_dev);
-+	else
-+		ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-+
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_set_autosuspend_delay(&pdev->dev,
-+					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_set_suspended(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = devm_iio_device_register(&pdev->dev, indio_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "could not register the device\n");
--		goto err_map;
-+		goto err;
- 	}
- 
- 	return 0;
- 
--err_map:
--	if (IS_ENABLED(CONFIG_THERMAL_OF))
--		iio_map_array_unregister(indio_dev);
--
- err:
-+	if (!info->use_dt && IS_ENABLED(CONFIG_THERMAL_OF))
-+		iio_map_array_unregister(indio_dev);
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 
-@@ -580,10 +682,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- static int sun4i_gpadc_remove(struct platform_device *pdev)
- {
- 	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
- 
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--	if (IS_ENABLED(CONFIG_THERMAL_OF))
-+	if (!info->use_dt && IS_ENABLED(CONFIG_THERMAL_OF))
- 		iio_map_array_unregister(indio_dev);
- 
- 	return 0;
-@@ -599,6 +702,7 @@ static const struct platform_device_id sun4i_gpadc_id[] = {
- static struct platform_driver sun4i_gpadc_driver = {
- 	.driver = {
- 		.name = "sun4i-gpadc-iio",
-+		.of_match_table = sun4i_gpadc_of_id,
- 		.pm = &sun4i_gpadc_pm_ops,
- 	},
- 	.id_table = sun4i_gpadc_id,
-diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-index 509e736..139872c 100644
---- a/include/linux/mfd/sun4i-gpadc.h
-+++ b/include/linux/mfd/sun4i-gpadc.h
-@@ -38,6 +38,10 @@
- #define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x)		(GENMASK(3, 0) & BIT(x))
- #define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK			GENMASK(3, 0)
- 
-+/* TP_CTRL1 bits for sun8i SoCs */
-+#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN			BIT(8)
-+#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN			BIT(7)
-+
- #define SUN4I_GPADC_CTRL2				0x08
- 
- #define SUN4I_GPADC_CTRL2_TP_SENSITIVE_ADJUST(x)	((GENMASK(3, 0) & (x)) << 28)
--- 
-2.9.3
+Andreas
+
+
+Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> schrieb am Mon, 19. Dec 17:28:
+> On 12/14/2016 05:17 PM, Andreas Klinger wrote:
+> [...]
+> > +#include <linux/err.h>
+> > +#include <linux/gpio.h>
+> 
+> Since you used the consumer API linux/gpio.h is not needed.
+> 
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/property.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/sched.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/iio/sysfs.h>
+> > +
+> > +#define HX711_GAIN_32		2	/* gain = 32 for channel B  */
+> > +#define HX711_GAIN_64		3	/* gain = 64 for channel A  */
+> > +#define HX711_GAIN_128		1	/* gain = 128 for channel A */
+> > +
+> > +struct hx711_data {
+> > +	struct device		*dev;
+> > +	struct gpio_desc	*gpiod_sck;
+> > +	struct gpio_desc	*gpiod_dout;
+> > +	int			gain_pulse;
+> > +	struct mutex		lock;
+> > +};
+> > +
+> > +static int hx711_read(struct hx711_data *hx711_data)
+> > +{
+> > +	int i, ret;
+> > +	int value = 0;
+> > +
+> > +	mutex_lock(&hx711_data->lock);
+> > +
+> > +	if (hx711_reset(hx711_data)) {
+> 
+> If you reset the device before each conversion wont this clear the channel
+> and gain selection? Wouldn't the driver always read from channel A at 128
+> gain regardless of what has been selected?
+>
+
+This is a bug, i need to fix. Thank you.
+
+> > +		dev_err(hx711_data->dev, "reset failed!");
+> > +		mutex_unlock(&hx711_data->lock);
+> > +		return -1;
+> 
+> If there is an error it should be propagated to the higher layers. At the
+> moment you only return a bogus conversion value.
+> 
+> > +	}
+> > +
+> > +	for (i = 0; i < 24; i++) {
+> > +		value <<= 1;
+> > +		ret = hx711_cycle(hx711_data);
+> > +		if (ret)
+> > +			value++;
+> > +	}
+> > +
+> > +	value ^= 0x800000;
+> > +
+> > +	for (i = 0; i < hx711_data->gain_pulse; i++)
+> > +		ret = hx711_cycle(hx711_data);
+> > +
+> > +	mutex_unlock(&hx711_data->lock);
+> > +
+> > +	return value;
+> > +}
+> > +
+> > +static int hx711_read_raw(struct iio_dev *iio_dev,
+> > +				const struct iio_chan_spec *chan,
+> > +				int *val, int *val2, long mask)
+> > +{
+> > +	struct hx711_data *hx711_data = iio_priv(iio_dev);
+> > +
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		switch (chan->type) {
+> > +		case IIO_VOLTAGE:
+> > +			*val = hx711_read(hx711_data);
+> > +			return IIO_VAL_INT;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> [...]
+> > +static struct attribute *hx711_attributes[] = {
+> > +	&iio_dev_attr_gain.dev_attr.attr,
+> 
+> For IIO devices the gain is typically expressed through the scale attribute.
+> Which is kind of the inverse of gain. It would be good if this driver
+> follows this standard notation. The scale is the value of 1LSB in mV. So
+> this includes the resolution of the ADC, the reference voltage and any gain
+> that is applied to the input signal.
+> 
+> The possible values can be listed in the scale_available attribute.
+> 
+
+The reference voltage is in the hardware. 
+Should i use a DT entry for the reference voltage? 
+Or is it better to use a buildin scale and make it changeable?
+
+
+> > +	NULL,
+> > +};
+> > +
+> > +static struct attribute_group hx711_attribute_group = {
+> > +	.attrs = hx711_attributes,
+> > +};
+> > +
+> > +static const struct iio_info hx711_iio_info = {
+> > +	.driver_module		= THIS_MODULE,
+> > +	.read_raw		= hx711_read_raw,
+> > +	.attrs			= &hx711_attribute_group,
+> > +};
+> > +
+> > +static const struct iio_chan_spec hx711_chan_spec[] = {
+> > +	{ .type = IIO_VOLTAGE,
+> > +		.info_mask_separate =
+> > +			BIT(IIO_CHAN_INFO_RAW),
+> 
+> Given that there are two separate physical input channels this should be
+> expressed here and there should be two IIO channels for the device.
+> 
+
+One who is toggling between channel A and B will cause a dummy read
+additional to every normal read. 
+
+Should i offer a "toggling mode" which means that after reading
+channel A the channel B is selected for the next read and after
+reading channel B channel A is selected? Simply expecting the channel
+is toggled on every read. If it's not toggled there need to be a dummy 
+read, of course. This should be an attribute, right?
+
+
+> > +	},
+> > +};
+> > +
+> > +static int hx711_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct hx711_data *hx711_data = NULL;
+> 
+> The = NULL is not needed as it is overwritten a few lines below.
+> 
+> > +	struct iio_dev *iio;
+> > +	int ret = 0;
+> 
+> Again = 0 no needed.
+> 
+> > +
+> > +	iio = devm_iio_device_alloc(dev, sizeof(struct hx711_data));
+> > +	if (!iio) {
+> > +		dev_err(dev, "failed to allocate IIO device\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	hx711_data = iio_priv(iio);
+> > +	hx711_data->dev = dev;
+> > +
+> > +	mutex_init(&hx711_data->lock);
+> > +
+> > +	hx711_data->gpiod_sck = devm_gpiod_get(dev, "sck", GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(hx711_data->gpiod_sck)) {
+> > +		dev_err(dev, "failed to get sck-gpiod: err=%ld\n",
+> > +					PTR_ERR(hx711_data->gpiod_sck));
+> > +		return PTR_ERR(hx711_data->gpiod_sck);
+> > +	}
+> > +
+> > +	hx711_data->gpiod_dout = devm_gpiod_get(dev, "dout", GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(hx711_data->gpiod_dout)) {
+> > +		dev_err(dev, "failed to get dout-gpiod: err=%ld\n",
+> > +					PTR_ERR(hx711_data->gpiod_dout));
+> > +		return PTR_ERR(hx711_data->gpiod_dout);
+> > +	}
+> > +
+> > +	ret = gpiod_direction_input(hx711_data->gpiod_dout);
+> 
+> If dout is used as a input GPIO you should request it with GPIOD_IN. In that
+> case you can remove the gpiod_direction_input() call.
+> 
+> > +	if (ret < 0) {
+> > +		dev_err(hx711_data->dev, "gpiod_direction_input: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = gpiod_direction_output(hx711_data->gpiod_sck, 0);
+> 
+> Similar to above. If you want this to be a output GPIO with the default
+> value of 0 request it with GPIOD_OUT_LOW.
+> 
+> > +	if (ret < 0) {
+> > +		dev_err(hx711_data->dev, "gpiod_direction_output: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, iio);
+> 
+> There is no matching platform_get_drvdata() so this can probably be removed.
+> 
+> > +
+> > +	iio->name = pdev->name;
+> 
+> This should be the part name. E.g. "hx711" in this case.
+> 
+> > +	iio->dev.parent = &pdev->dev;
+> > +	iio->info = &hx711_iio_info;
+> > +	iio->modes = INDIO_DIRECT_MODE;
+> > +	iio->channels = hx711_chan_spec;
+> > +	iio->num_channels = ARRAY_SIZE(hx711_chan_spec);
+> > +
+> > +	return devm_iio_device_register(dev, iio);
+> > +}
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
