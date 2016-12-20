@@ -1,42 +1,36 @@
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH v2 pci/next] PCI: rcar: Add compatible string for r8a7796
-Date: Wed, 21 Dec 2016 03:37:06 +0900
-Message-ID: <1482259026-7180-1-git-send-email-ykaneko0929@gmail.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net 0/3] Fix integration of eee-broken-modes
+Date: Tue, 20 Dec 2016 13:51:20 -0500 (EST)
+Message-ID: <20161220.135120.552249230607699619.davem@davemloft.net>
+References: <1482159938-13239-1-git-send-email-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1482159938-13239-1-git-send-email-jbrunet@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
+To: jbrunet@baylibre.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, carlo@caione.org, khilman@baylibre.com, martin.blumenstingl@googlemail.com, neolynx@gmail.com, andrew@lunn.ch, narmstrong@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, julia.lawall@lip6.fr, yegorslists@googlemail.com, afaerber@suse.de
 List-Id: devicetree@vger.kernel.org
 
-From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Mon, 19 Dec 2016 16:05:35 +0100
 
-This patch adds support for r8a7796.
+> The purpose of this series is to fix the integration of the ethernet phy
+> property "eee-broken-modes" [0]
+> 
+> The v3 of this series has been merged, missing a fix (error reported by
+> kbuild robot) available in the v4 [1]
+> 
+> More importantly, Florian opposed adding a DT property mapping a device
+> register this directly [2]. The concern was that the property could be
+> abused to implement platform configuration policy. After discussing it,
+> I think we agreed that such information about the HW (defect) should appear
+> in the platform DT. However, the preferred way is to add a boolean property
+> for each EEE broken mode.
+> 
+> [0]: http://lkml.kernel.org/r/1480326409-25419-1-git-send-email-jbrunet@baylibre.com
+> [1]: http://lkml.kernel.org/r/1480348229-25672-1-git-send-email-jbrunet@baylibre.com
+> [2]: http://lkml.kernel.org/r/e14a3b0c-dc34-be14-48b3-518a0ad0c080@gmail.com
 
-Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-
-This patch is based on the next branch of the pci tree.
-
-v2 [Yoshihiro Kaneko]
-* As suggested by Geert Uytterhoeven
-  Dropped the update of the driver.
-
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-index eee518d..34712d6 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -6,6 +6,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
- 	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
- 	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
- 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
-+	    "renesas,pcie-r8a7796" for the R8A7796 SoC;
- 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
- 	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
- 
--- 
-1.9.1
+Series applied, thank you.
