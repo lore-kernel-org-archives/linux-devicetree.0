@@ -1,128 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/7] Documentation: DT: bindings: mfd: add documentation
- for Allwinner SoCs' GPADC MFD driver
-Date: Tue, 20 Dec 2016 15:26:50 +0100
-Message-ID: <20161220142650.voojrp3vpoa7vzjn@lukather>
-References: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
- <20161220102709.9504-3-quentin.schulz@free-electrons.com>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sun6i: Add the SPDIF block to
+ the A31
+Date: Tue, 20 Dec 2016 15:34:10 +0100
+Message-ID: <CAEKpxBn4J0sXVx6b0d_v3LivnNS5WENp9DD6fFE9N6u=J=n7ww@mail.gmail.com>
+References: <20161220104038.22532-1-codekipper@gmail.com> <20161220104038.22532-3-codekipper@gmail.com>
+ <20161220140709.pxvzcm3osmbromfh@lukather>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xmj3o7epfxnbflo7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161220102709.9504-3-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBYUC4XBAKGQENVF6BHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161220140709.pxvzcm3osmbromfh@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---xmj3o7epfxnbflo7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 20, 2016 at 11:27:04AM +0100, Quentin Schulz wrote:
-> The Allwinner SoCs all have an ADC that can also act as a thermal sensor
-> and sometimes as a touchscreen controller. If there is a touchscreen
-> controller, the first four channels can be used either for the ADC or
-> the touchscreen and the fifth channel is used for the thermal sensor.
-> If there is not a touchscreen controller, the one and only channel is
-> used for the thermal sensor.
->=20
-> The Allwinner SoCs already have an existing DT binding for the
-> touchscreen controller and thermal sensor for the sun4i-ts input driver
-> which does let the user use the ADC. To keep backward compatibility,
-> this MFD driver re-uses the same bindings as the sun4i-ts input driver
-> and will probe the required drivers to make the ADC and thermal sensor
-> work.
->=20
-> This patch adds the binding documentation for the MFD driver of the
-> Allwinner SoCs' GPADC.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 47 ++++++++++++++++=
-++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Docu=
-mentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> new file mode 100644
-> index 0000000..bc4b4f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> @@ -0,0 +1,47 @@
-> +Allwinner SoCs' GPADC Device Tree bindings
-> +------------------------------------------
-> +
-> +The Allwinner SoCs all have an ADC that can also act as a thermal sensor=
- and
-> +sometimes as a touchscreen controller. If there is a touchscreen control=
-ler, the
-> +first four channels can be used either for the ADC or the touchscreen an=
-d the
-> +fifth channel is used for the thermal sensor.
-> +If there is not a touchscreen controller, the one and only channel is us=
-ed for
-> +the thermal sensor.
-> +
-> +Currently, the touchscreen controller does not have a driver using this =
-ADC
-> +driver. The touchscreen controller is currently driven only by
-> +input/touchscreen/sun4i-ts.c which is absolutely incompatible with this =
-driver.
-> +
-> +The Allwinner A10, A13 and A31 SoCs already have a DT binding for the
-> +aforementioned input driver, thus this MFD driver matches the existing DT
-> +binding (mfd/sun4i-gpadc.c).
-> +To keep DT binding compatibility, the MFD replaces the sun4i-ts input dr=
-iver and
-> +probes required drivers (IIO GPADC driver (iio/adc/sun4i-gpadc-iio.c),
-> +iio-hwmon and soon the touchscreen driver) without the need for a DT bin=
-ding for
-> +each driver.
-> +
-> +Required properties:
-> + - compatible: one of:
-> +	- "allwinner,sun4i-a10-ts",
-> +	- "allwinner,sun5i-a13-ts",
-> +	- "allwinner,sun6i-a31-ts"
-> + - #thermal-sensor-cells =3D <0>;
-
-Same thing here, we already have such a document, please amend it if
-needed.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---xmj3o7epfxnbflo7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYWT+qAAoJEBx+YmzsjxAg0LQQAJH3PkkPfddS43dE4Vqk+4CG
-mVmo8FE1UhKwi1F3rJT1TrKRsMAc8ZS7/oAh8gi8JBi9ajfo7+zvRMsGbzOHkYQ4
-AhU57/nI+fwLkuX+HoucFGnk1Qf5fPJOL66ruW/WZImtHavIKtVXXLGxYb55mNVG
-bq9a71o8XDwtvz3uNHKk8VFFIvOb3OEg2QUHPLs0641BlreoHor++dQGZljfZ414
-WlHYOk7AVO8i4hi3bBFVJmJsBgWR5OWVy+EyjsJ90Vt5uf6d3qqipSx7MHsZWYBU
-YZcAwRE+Qv2Lwy+RNyJH3MEMP8WnmQqr9ogUfPK39uqRu31JpSjn4ELm6qLfAkNT
-hmhIScUVzukZV+u1Zd36aFt9+Xl7q72Dy13D/5+VGpHdtEyATT8fm4f91hVjpOUj
-ZTSYhZeIpowo/O/fqXcoUGTplfFbypNwD7/yp51RcliAtHDB48ImA9EATCJplQWo
-hG7q+s48V/L+xVKGUSYLdk1HxUWBVHb9jiGrlVus72zo0sAZWzPqCsJPfhJKeGM8
-tr1kQfY4ukGvKaBjpDZuh52x3xzUsOWuNgEXuEh2ZELgaqxtaytt2dh5g/NpPTVE
-SuseoVd+aJGqYqiA7idYUQ2lSXK0/ivfk5Abm3j34O2O6PuvyscSmdVeckb78eNf
-vq9ikxK8NV2MrM1Ci8i1
-=S5C8
------END PGP SIGNATURE-----
-
---xmj3o7epfxnbflo7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 20 December 2016 at 15:07, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Dec 20, 2016 at 11:40:37AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Add the SPDIF transceiver controller block to the A31 dtsi.
+>>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index 7370ba6c9993..559c53efa7e6 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -613,6 +613,20 @@
+>>                       reg = <0x01c20ca0 0x20>;
+>>               };
+>>
+>> +             spdif: spdif@01c21000 {
+>> +                     #sound-dai-cells = <0>;
+>> +                     compatible = "allwinner,sun6i-a31-spdif";
+>> +                     reg = <0x01c21000 0x400>;
+>> +                     interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     clocks = <&ccu CLK_APB1_SPDIF>, <&ccu CLK_SPDIF>;
+>> +                     resets = <&ccu RST_APB1_SPDIF>;
+>> +                     clock-names = "apb", "spdif";
+>> +                     dmas = <&dma 2>, <&dma 2>;
+>> +                     dma-names = "rx", "tx";
+>> +                     spdif-out = "disabled";
+>
+> That property isn't documented anywhere, and doesn't seem to be used
+> in your driver either.
+Ooops....do you want me to respin a new patch or will you do your
+magic with 'dd'? It fell through the cracks as it was cherry picked
+from my dev branch where I was at one time playing with spdif-in. This
+has pretty much been relegated to the bottom of my todo/finish list.
+>
+> On a separate topic, is the channel inversion bug also found on the
+> A31?
+I have seen this and I'm sure that was also on my A31 hardware but
+I've just fired her up and the speaker test worked as expected. I also
+repeated the test on my A10 device and didn't hear the issue.
+CK
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
