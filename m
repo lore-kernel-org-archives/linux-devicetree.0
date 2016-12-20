@@ -1,68 +1,118 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 0/4] phy: USB and PCIe phy drivers for Qcom chipsets
-Date: Tue, 20 Dec 2016 22:33:47 +0530
-Message-ID: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v3 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Tue, 20 Dec 2016 22:33:50 +0530
+Message-ID: <1482253431-23160-4-git-send-email-vivek.gautam@codeaurora.org>
+References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, kishon@ti.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds couple of PHY drivers for Qualcomm chipsets.
-a) qcom-qusb2 phy driver: that provides High Speed USB functionality.
-b) qcom-qmp phy driver: that is a combo phy providing support for
-   USB3, PCIe, UFS and few other controllers.
+Qualcomm chipsets have QMP phy controller that provides
+support to a number of controller, viz. PCIe, UFS, and USB.
+Adding dt binding information for the same.
 
-The patches are based on next branch of linux-phy tree.
-
-These have been tested on Dragon board db820c hardware with
-required set of patches on integration tree maintained by
-Linaro landing team for Qualcomm [1].
-
-Couple of other patches [2,3] for nvmem are also pulled in for testing.
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
 Changes since v2:
- - Addressed review comments given by Rob and Stephen for bindings.
- - Addressed the review comments given by Stephen for the qusb2 and qmp
-   phy drivers.
-   Please see individual patches for detailed changelogs.
+ - Removed binding for "ref_clk_src" since we don't request this
+   clock in the driver.
+ - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
+ - Using 'phy' for the node name.
 
 Changes since v1:
- - Moved device tree binding documentation to separate patches, as suggested
-   by Rob.
- - Addressed review comment regarding qfprom accesses by qusb2 phy driver,
-   given by Rob.
- - Addressed review comments from Kishon.
- - Addressed review comments from Srinivas for QMP phy driver.
- - Addressed kbuild warning.
+ - New patch, forked out of the original driver patch:
+   "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
+ - updated bindings to include mem resource as a list of
+   offset - length pair for serdes block and for each lane.
+ - added a new binding for 'lane-offsets' that contains offsets
+   to tx, rx and pcs blocks from each lane base address.
 
-[1] https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/log/?h=integration-linux-qcomlt
-[2] https://lkml.org/lkml/2016/11/17/21
-[3] https://lkml.org/lkml/2016/12/19/18
-
-Vivek Gautam (4):
-  dt-bindings: phy: Add support for QUSB2 phy
-  phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
-  dt-bindings: phy: Add support for QMP phy
-  phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   71 ++
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   53 +
- drivers/phy/Kconfig                                |   18 +
- drivers/phy/Makefile                               |    2 +
- drivers/phy/phy-qcom-qmp.c                         | 1191 ++++++++++++++++++++
- drivers/phy/phy-qcom-qusb2.c                       |  540 +++++++++
- 6 files changed, 1875 insertions(+)
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
- create mode 100644 drivers/phy/phy-qcom-qmp.c
- create mode 100644 drivers/phy/phy-qcom-qusb2.c
 
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+new file mode 100644
+index 000000000000..af9ada87a4e9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -0,0 +1,71 @@
++Qualcomm QMP PHY controller
++===========================
++
++QMP phy controller supports physical layer functionality for a number of
++controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
++
++Required properties:
++ - compatible: compatible list, contains:
++	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
++	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
++ - reg: list of offset and length pair of the PHY register sets.
++	at index 0: offset and length of register set for PHY common
++		    serdes block.
++	from index 1 - N: offset and length of register set for each lane,
++			  for N number of phy lanes (ports).
++ - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
++ - #phy-cells: must be 1
++    - Cell after phy phandle should be the port (lane) number.
++ - clocks: a list of phandles and clock-specifier pairs,
++	   one for each entry in clock-names.
++ - clock-names: must be "cfg_ahb" for phy config clock,
++			"aux" for phy aux clock,
++			"ref" for 19.2 MHz ref clk,
++			"pipe<port-number>" for pipe clock specific to
++			each port/lane (Optional).
++ - resets: a list of phandles and reset controller specifier pairs,
++	   one for each entry in reset-names.
++ - reset-names: must be "phy" for reset of phy block,
++			"common" for phy common block reset,
++			"cfg" for phy's ahb cfg block reset (Optional).
++			"port<port-number>" for reset specific to
++			each port/lane (Optional).
++ - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
++ - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
++
++Optional properties:
++ - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
++			pll block.
++
++Example:
++	pcie_phy: phy@34000 {
++		compatible = "qcom,msm8996-qmp-pcie-phy";
++		reg = <0x034000 0x48f>,
++			<0x035000 0x5bf>,
++			<0x036000 0x5bf>,
++			<0x037000 0x5bf>;
++				/* tx, rx, pcs */
++		lane-offsets = <0x0 0x200 0x400>;
++		#phy-cells = <1>;
++
++		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
++			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
++			<&gcc GCC_PCIE_CLKREF_CLK>,
++			<&gcc GCC_PCIE_0_PIPE_CLK>,
++			<&gcc GCC_PCIE_1_PIPE_CLK>,
++			<&gcc GCC_PCIE_2_PIPE_CLK>;
++		clock-names = "aux", "cfg_ahb", "ref",
++				"pipe0", "pipe1", "pipe2";
++
++		vdda-phy-supply = <&pm8994_l28>;
++		vdda-pll-supply = <&pm8994_l12>;
++
++		resets = <&gcc GCC_PCIE_PHY_BCR>,
++			<&gcc GCC_PCIE_PHY_COM_BCR>,
++			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>,
++			<&gcc GCC_PCIE_0_PHY_BCR>,
++			<&gcc GCC_PCIE_1_PHY_BCR>,
++			<&gcc GCC_PCIE_2_PHY_BCR>;
++		reset-names = "phy", "common", "cfg",
++				"lane0", "lane1", "lane2";
++	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
