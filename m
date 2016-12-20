@@ -1,36 +1,81 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net 0/3] Fix integration of eee-broken-modes
-Date: Tue, 20 Dec 2016 13:51:20 -0500 (EST)
-Message-ID: <20161220.135120.552249230607699619.davem@davemloft.net>
-References: <1482159938-13239-1-git-send-email-jbrunet@baylibre.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3 2/2] iio: adc: hx711: Add IIO driver for AVIA HX711
+Date: Tue, 20 Dec 2016 19:55:39 +0100
+Message-ID: <603f00cf-2c96-53bc-8e5c-a8d881d08a2e@metafoo.de>
+References: <20161214161740.GA13896@andreas>
+ <78dfc4c0-f792-12b4-ca07-0242e95f7ee5@metafoo.de>
+ <20161220103346.GA1318@imap.1und1.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1482159938-13239-1-git-send-email-jbrunet@baylibre.com>
-Sender: netdev-owner@vger.kernel.org
-To: jbrunet@baylibre.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, carlo@caione.org, khilman@baylibre.com, martin.blumenstingl@googlemail.com, neolynx@gmail.com, andrew@lunn.ch, narmstrong@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, julia.lawall@lip6.fr, yegorslists@googlemail.com, afaerber@suse.de
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161220103346.GA1318@imap.1und1.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 19 Dec 2016 16:05:35 +0100
+On 12/20/2016 11:33 AM, Andreas Klinger wrote:
+>>> +static struct attribute *hx711_attributes[] = {
+>>> +	&iio_dev_attr_gain.dev_attr.attr,
+>>
+>> For IIO devices the gain is typically expressed through the scale attribute.
+>> Which is kind of the inverse of gain. It would be good if this driver
+>> follows this standard notation. The scale is the value of 1LSB in mV. So
+>> this includes the resolution of the ADC, the reference voltage and any gain
+>> that is applied to the input signal.
+>>
+>> The possible values can be listed in the scale_available attribute.
+>>
+> 
+> The reference voltage is in the hardware. 
+> Should i use a DT entry for the reference voltage? 
+> Or is it better to use a buildin scale and make it changeable?
 
-> The purpose of this series is to fix the integration of the ethernet phy
-> property "eee-broken-modes" [0]
-> 
-> The v3 of this series has been merged, missing a fix (error reported by
-> kbuild robot) available in the v4 [1]
-> 
-> More importantly, Florian opposed adding a DT property mapping a device
-> register this directly [2]. The concern was that the property could be
-> abused to implement platform configuration policy. After discussing it,
-> I think we agreed that such information about the HW (defect) should appear
-> in the platform DT. However, the preferred way is to add a boolean property
-> for each EEE broken mode.
-> 
-> [0]: http://lkml.kernel.org/r/1480326409-25419-1-git-send-email-jbrunet@baylibre.com
-> [1]: http://lkml.kernel.org/r/1480348229-25672-1-git-send-email-jbrunet@baylibre.com
-> [2]: http://lkml.kernel.org/r/e14a3b0c-dc34-be14-48b3-518a0ad0c080@gmail.com
+Typically the reference voltage is specified through the devicetree using a
+regulator. Have a look at e.g. ad7291.c.
 
-Series applied, thank you.
+> 
+> 
+>>> +	NULL,
+>>> +};
+>>> +
+>>> +static struct attribute_group hx711_attribute_group = {
+>>> +	.attrs = hx711_attributes,
+>>> +};
+>>> +
+>>> +static const struct iio_info hx711_iio_info = {
+>>> +	.driver_module		= THIS_MODULE,
+>>> +	.read_raw		= hx711_read_raw,
+>>> +	.attrs			= &hx711_attribute_group,
+>>> +};
+>>> +
+>>> +static const struct iio_chan_spec hx711_chan_spec[] = {
+>>> +	{ .type = IIO_VOLTAGE,
+>>> +		.info_mask_separate =
+>>> +			BIT(IIO_CHAN_INFO_RAW),
+>>
+>> Given that there are two separate physical input channels this should be
+>> expressed here and there should be two IIO channels for the device.
+>>
+> 
+> One who is toggling between channel A and B will cause a dummy read
+> additional to every normal read. 
+> 
+> Should i offer a "toggling mode" which means that after reading
+> channel A the channel B is selected for the next read and after
+> reading channel B channel A is selected? Simply expecting the channel
+> is toggled on every read. If it's not toggled there need to be a dummy 
+> read, of course. This should be an attribute, right?
+
+I don't think that is necessary. On one hand when doing these kind of single
+shot conversions there is often not a predictable pattern on the other hand
+such custom device specific attributes are difficult to handle in a generic
+framework. We try to establish standard semantics so a generic application
+is able to talk to a wide range of devices. When a device implements custom
+attributes that becomes more difficult.
+
+And there is also buffered mode. In buffered mode the application can select
+the channels which the converter should cycle through and connect a trigger
+like a timer to schedule the conversions. If switching between A and B in a
+circular way is required I'd recommend to implement this by using buffered mode.
