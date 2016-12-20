@@ -1,83 +1,33 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: nfc: trf7970a: Prevent repeated polling from crashing the kernel
-Date: Tue, 20 Dec 2016 12:56:21 -0700
-Message-ID: <20161220195621.GA6400@animalcreek.com>
-References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
- <1482250592-4268-3-git-send-email-glansberry@gmail.com>
- <20161220185905.GA5867@animalcreek.com>
- <20161220191352.GB23496@lasswell.members.linode.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH 0/3] TI DA8xx/OMAPL13x/AM17xx/AM18xx UART
+Date: Tue, 20 Dec 2016 14:23:01 -0600
+Message-ID: <1482265384-715-1-git-send-email-david@lechnology.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161220191352.GB23496-WrO9gjaJVAZ9BIO3fBtL+FdjMaeQq/Z1QQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Justin Bronder <justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Cc: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2016 at 02:13:52PM -0500, Justin Bronder wrote:
-> On 20/12/16 11:59 -0700, Mark Greer wrote:
-> > On Tue, Dec 20, 2016 at 11:16:32AM -0500, Geoff Lansberry wrote:
-> > > From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-> > > 
-> > > Repeated polling attempts cause a NULL dereference error to occur.
-> > > This is because the state of the trf7970a is currently reading but
-> > > another request has been made to send a command before it has finished.
-> > 
-> > How is this happening?  Was trf7970a_abort_cmd() called and it didn't
-> > work right?  Was it not called at all and there is a bug in the digital
-> > layer?  More details please.
-> > 
-> > > The solution is to properly kill the waiting reading (workqueue)
-> > > before failing on the send.
-> > 
-> > If the bug is in the calling code, then that is what should get fixed.
-> > This seems to be a hack to work-around a digital layer bug.
-> 
-> One of our uses of NFC is to begin polling to read a tag and then stop polling
-> (in order to save power) until we know via user interaction that we need to poll
-> again.  This is typically many minutes later so the power saving is pretty
-> significant.  However, it's possible that a user will remove the tag before
-> reading has completed.  We also detect this case and stop polling.  I can go
-> more into this if necessary but that is what exposed a panic.
-> 
-> You can reproduce using neard and python, in our testing it was very likely to
-> occur in 10-100 iterations of the following.:
-> 
->     #!/usr/bin/python
->     import time
-> 
->     import dbus
-> 
->     bus = dbus.SystemBus()
->     nfc0 = bus.get_object('org.neard', '/org/neard/nfc0')
->     props = dbus.Interface(nfc0, 'org.freedesktop.DBus.Properties')
-> 
->     try:
->         props.Set('org.neard.Adapter', 'Powered', dbus.Boolean(1))
->     except:
->         pass
-> 
->     adapter = dbus.Interface(nfc0, 'org.neard.Adapter')
-> 
->     for i in range(1000):
->         adapter.StartPollLoop('Initiator')
->         time.sleep(0.1)
->         adapter.StopPollLoop()
->         print(i)
-> 
-> I believe the last time we tested this was around the 4.1 release.
+This series adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx UART.
+This SoCs have a non-standard register for UART power management that needs
+special handling in the UART driver.
 
-Thanks for the info, Justin, but I was also seeking more information
-at the kernel NFC subsystem and trf7970a driver level.  This patch
-adds code inside an 'if' in the driver whose condition should never
-be evaluate to true but apparently it did.  How?
+David Lechner (3):
+  doc: DT: Add ti,da830-uart to serial/8250 bindings
+  serial: 8250: Add new port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx
+  ARM: da850: Add ti,da830-uart compatible for serial ports
 
-Thanks,
+ Documentation/devicetree/bindings/serial/8250.txt |  1 +
+ arch/arm/boot/dts/da850.dtsi                      |  9 ++++++---
+ drivers/tty/serial/8250/8250_of.c                 |  1 +
+ drivers/tty/serial/8250/8250_port.c               | 22 ++++++++++++++++++++++
+ include/uapi/linux/serial_core.h                  |  3 ++-
+ include/uapi/linux/serial_reg.h                   |  8 ++++++++
+ 6 files changed, 40 insertions(+), 4 deletions(-)
 
-Mark
---
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
