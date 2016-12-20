@@ -1,42 +1,76 @@
-From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Add support for the ethernet switch on the
- ESPRESSObin
-Date: Tue, 20 Dec 2016 09:53:29 +0100
-Message-ID: <1fa806aa-1c8f-64c5-8b86-13dc4fd2d1ee@free-electrons.com>
-References: <20161220085138.3998-1-romain.perier@free-electrons.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] ARM: dts: sun4i: A1000: add axp209 regulator nodes
+Date: Tue, 20 Dec 2016 11:22:42 +0100
+Message-ID: <20161220102242.2423-1-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161220085138.3998-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB5EM4TBAKGQEQDKBUKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Le 20/12/2016 à 09:51, Romain Perier a écrit :
-> This set of patches adds support for the Marvell ethernet switch 88E6341.
-> It also add the devicetree definition of this switch to the DT board.
->
-> Romain Perier (3):
->   net: dsa: mv88e6xxx: Don't forbid MDIO I/Os for PHY addr >=
->     num_of_ports
->   net: dsa: mv88e6xxx: Add support for ethernet switch 88E6341/88E6141
->   arm64: dts: marvell: Add ethernet switch definition for the
->     ESPRESSObin
->
->  .../boot/dts/marvell/armada-3720-espressobin.dts   | 67 ++++++++++++++++++++++
->  drivers/net/dsa/mv88e6xxx/chip.c                   | 48 ++++++++++++++--
->  drivers/net/dsa/mv88e6xxx/mv88e6xxx.h              |  4 +-
->  3 files changed, 112 insertions(+), 7 deletions(-)
->
+This patch adds the regulator nodes for the axp209 by including
+the axp209 dtsi.
 
-Oh and I rebased the whole series onto net-next.
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10-a1000.dts | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Romain
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+index 68c6bdb2cf7c..e7394d701856 100644
+--- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
++++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+@@ -196,6 +196,40 @@
+ 	};
+ };
+ 
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1250000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_ldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-wifi";
++};
++
+ &reg_usb1_vbus {
+ 	status = "okay";
+ };
+-- 
+2.11.0
