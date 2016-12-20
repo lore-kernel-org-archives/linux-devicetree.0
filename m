@@ -1,24 +1,24 @@
-From: Mark Greer <mgreer@animalcreek.com>
-Subject: Re: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
-Date: Tue, 20 Dec 2016 11:11:57 -0700
-Message-ID: <20161220181157.GB30273@animalcreek.com>
-References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
+From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: Re: [PATCH 0/7] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Tue, 20 Dec 2016 11:11:24 -0700
+Message-ID: <20161220181124.GA30273@animalcreek.com>
+References: <20161220180608.29997-1-mgreer@animalcreek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geoff Lansberry <geoff@kuvee.com>
-Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin@kuvee.com
+In-Reply-To: <20161220180608.29997-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geoff.
 
-Please put the version in your subjects when submitting anything but the
-initial version of a patch (e.g., [PATCH v2 1/3]).
-
-Which series do you want reviewed?
+Bah.  I noticed a couple minor nits.  I'll fix and resubmit.
 
 Mark
 --
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
