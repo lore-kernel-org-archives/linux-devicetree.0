@@ -1,74 +1,49 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/7] add CPU thermal throttling to Allwinner A33 SoC
-Date: Tue, 20 Dec 2016 11:27:02 +0100
-Message-ID: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH 4/7] ARM: dts: sun8i-a33-sinlinx-sina33: add cpu-supply
+Date: Tue, 20 Dec 2016 11:27:06 +0100
+Message-ID: <20161220102709.9504-5-quentin.schulz@free-electrons.com>
+References: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, lee.jones@linaro.org, linux@armlinux.org.uk, stefan.mavrodiev@gmail.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner SoCs all have an ADC that can also act as a touchscreen
-controller and a thermal sensor. The first four channels can be used
-either for the ADC or the touchscreen and the fifth channel is used for
-the thermal sensor. We currently have a driver for the two latter
-functions in drivers/input/touchscreen/sun4i-ts.c but we don't have
-access to the ADC feature at all. It is meant to replace the current
-driver by using MFD and subdrivers.
+This adds the cpu-supply DT property to the cpu0 DT node needed by
+the board to adapt the regulator voltage depending on the currently used
+OPP.
 
-The Allwinner A33 only has a thermal sensor present in the GPADC. In
-addition, there is not an existing DT binding for the GPADC. Thus, we do
-not need the sun4i-gpadc MFD driver which was made to keep DT compatibility
-and probe subdrivers without the need to add DT subnodes.
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+---
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-This series of patch adds the CPU thermal sensor for the A33 and CPU thermal
-throttling. It also adds DT binding documentation for the IIO and MFD GPADC
-drivers. Finally, it adds the cpu-supply property to the CPU node needed by
-the Sinlinx SinA33 and Olinuxino A33 to adapt their CPU regulator voltage
-depending on the currently used OPP. The other A33 boards all have their
-cpu-supply property set.
-
-This patch *HAS NOT* been tested on the Olinuxino A33.
- @Stefan (or anyone owning an Olinuxino A33), could you test this patch
- series on your board, test CPUfreq and tell us if it works in a stable
- manner? Thanks!
-
-This series of patch is based on this[1] and this[2][3] series of patch.
-
-[1] https://lkml.org/lkml/2016/12/13/298 : "[PATCH v9] add support for Allwinner
-SoCs ADC"
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/473962.html
-: "[PATCH] Allwinner A33 CPU frequency scaling support" without PATCH 4/6
-[3] https://lkml.org/lkml/2016/12/19/72 : "[PATCH v2] ARM: dts: sun8i: add
-opp-v2 table for A33"
-
-Quentin Schulz (7):
-  Documentation: DT: bindings: iio: adc: add documentation for Allwinner
-    SoCs' GPADC driver
-  Documentation: DT: bindings: mfd: add documentation for Allwinner
-    SoCs' GPADC MFD driver
-  iio: adc: sun4i-gpadc-iio: add support for A33 thermal sensor
-  ARM: dts: sun8i-a33-sinlinx-sina33: add cpu-supply
-  ARM: dts: sun8i-a33-olinuxino: add cpu-supply
-  ARM: dtsi: sun8i-a33: add A33 thermal sensor
-  ARM: dtsi: sun8i-a33: add CPU thermal throttling
-
- .../bindings/iio/adc/sun4i-gpadc-iio.txt           |  57 ++++++
- .../devicetree/bindings/mfd/sun4i-gpadc.txt        |  47 +++++
- arch/arm/boot/dts/sun8i-a33-olinuxino.dts          |   4 +
- arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
- arch/arm/boot/dts/sun8i-a33.dtsi                   |  59 ++++++
- drivers/iio/adc/Kconfig                            |  21 ++-
- drivers/iio/adc/sun4i-gpadc-iio.c                  | 204 ++++++++++++++++-----
- include/linux/mfd/sun4i-gpadc.h                    |   4 +
- 8 files changed, 343 insertions(+), 57 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/sun4i-gpadc-iio.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-
+diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+index fef6abc..0901c57 100644
+--- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
++++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+@@ -63,6 +63,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_dcdc3>;
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
