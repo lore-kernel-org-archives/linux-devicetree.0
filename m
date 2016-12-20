@@ -1,36 +1,74 @@
-From: Mark Greer <mgreer@animalcreek.com>
-Subject: Re: [PATCH 3/3] nfc: trf7970a: Prevent repeated polling from
- crashing the kernel
-Date: Tue, 20 Dec 2016 11:59:05 -0700
-Message-ID: <20161220185905.GA5867@animalcreek.com>
-References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
- <1482250592-4268-3-git-send-email-glansberry@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 4/4 v2] of/overlay: test count and destroy_last
+Date: Tue, 20 Dec 2016 20:04:55 +0100
+Message-ID: <20161220190455.25115-5-xypron.glpk@gmx.de>
+References: <20161220190455.25115-1-xypron.glpk@gmx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482250592-4268-3-git-send-email-glansberry@gmail.com>
+In-Reply-To: <20161220190455.25115-1-xypron.glpk@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geoff Lansberry <geoff@kuvee.com>
-Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin@kuvee.com, Jaret Cantu <jaret.cantu@timesys.com>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2016 at 11:16:32AM -0500, Geoff Lansberry wrote:
-> From: Jaret Cantu <jaret.cantu@timesys.com>
-> 
-> Repeated polling attempts cause a NULL dereference error to occur.
-> This is because the state of the trf7970a is currently reading but
-> another request has been made to send a command before it has finished.
+In the unit tests check that the functions
+of_overlay_destroy_last() and of_overlay_count()
+work as expected.
 
-How is this happening?  Was trf7970a_abort_cmd() called and it didn't
-work right?  Was it not called at all and there is a bug in the digital
-layer?  More details please.
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+---
 
-> The solution is to properly kill the waiting reading (workqueue)
-> before failing on the send.
+v2:
+	Added this patch
 
-If the bug is in the calling code, then that is what should get fixed.
-This seems to be a hack to work-around a digital layer bug.
+ drivers/of/unittest.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Mark
---
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 53c83d6..e3fbf0b 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1466,6 +1466,7 @@ static void of_unittest_overlay_8(void)
+ 	struct device_node *np;
+ 	int ret, i, ov_id[2];
+ 	int overlay_nr = 8, unittest_nr = 8;
++	int count_before = of_overlay_count();
+ 
+ 	/* we don't care about device state in this test */
+ 
+@@ -1485,6 +1486,12 @@ static void of_unittest_overlay_8(void)
+ 					overlay_path(overlay_nr + i));
+ 			return;
+ 		}
++
++		if (count_before + i + 1 != of_overlay_count()) {
++			unittest(0, "count does not increment by 1\n");
++			return;
++		}
++
+ 		ov_id[i] = ret;
+ 		of_unittest_track_overlay(ov_id[i]);
+ 	}
+@@ -1501,7 +1508,7 @@ static void of_unittest_overlay_8(void)
+ 
+ 	/* removing them in order should work */
+ 	for (i = 1; i >= 0; i--) {
+-		ret = of_overlay_destroy(ov_id[i]);
++		ret = of_overlay_destroy_last();
+ 		if (ret != 0) {
+ 			unittest(0, "overlay @\"%s\" not destroyed @\"%s\"\n",
+ 					overlay_path(overlay_nr + i),
+@@ -1509,6 +1516,12 @@ static void of_unittest_overlay_8(void)
+ 						PDEV_OVERLAY));
+ 			return;
+ 		}
++
++		if (count_before + i != of_overlay_count()) {
++			unittest(0, "count does not decrement by 1\n");
++			return;
++		}
++
+ 		of_unittest_untrack_overlay(ov_id[i]);
+ 	}
+ 
+-- 
+2.10.2
