@@ -1,37 +1,41 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 3/3] arm64: dts: marvell: Add ethernet switch
- definition for the ESPRESSObin
-Date: Tue, 20 Dec 2016 17:17:14 +0100
-Message-ID: <20161220161714.GD30952@lunn.ch>
-References: <20161220085138.3998-1-romain.perier@free-electrons.com>
- <20161220085138.3998-4-romain.perier@free-electrons.com>
- <20161220154234.GC30952@lunn.ch>
- <c27998fd-3807-5c99-382b-b8d0d0f06526@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Geoff Lansberry <geoff@kuvee.com>
+Subject: [PATCH 3/3] nfc: trf7970a: Prevent repeated polling from crashing the kernel
+Date: Tue, 20 Dec 2016 11:16:32 -0500
+Message-ID: <1482250592-4268-3-git-send-email-glansberry@gmail.com>
+References: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
 Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c27998fd-3807-5c99-382b-b8d0d0f06526@free-electrons.com>
+In-Reply-To: <1482250592-4268-1-git-send-email-glansberry@gmail.com>
 Sender: netdev-owner@vger.kernel.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>
+To: linux-wireless@vger.kernel.org
+Cc: lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mgreer@animalcreek.com, justin@kuvee.com, Jaret Cantu <jaret.cantu@timesys.com>, Geoff Lansberry <geoff@kuvee.com>
 List-Id: devicetree@vger.kernel.org
 
-> >>+		mdio {
-> >>+			#address-cells = <1>;
-> >>+			#size-cells = <0>;
-> >>+			reg = <1>;
-> >
-> >what is this reg value for?
-> >
-> >     Andrew
-> >
-> 
-> It was required to avoid a warning thrown by the mdio subsystem
+From: Jaret Cantu <jaret.cantu@timesys.com>
 
-Do you remember what the warning was?
+Repeated polling attempts cause a NULL dereference error to occur.
+This is because the state of the trf7970a is currently reading but
+another request has been made to send a command before it has finished.
 
-This seems odd to me. I don't see why a reg is needed here.
+The solution is to properly kill the waiting reading (workqueue)
+before failing on the send.
+---
+ drivers/nfc/trf7970a.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks
-	Andrew
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index 8a88195..5916737 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -1496,6 +1496,10 @@ static int trf7970a_send_cmd(struct nfc_digital_dev *ddev,
+ 			(trf->state != TRF7970A_ST_IDLE_RX_BLOCKED)) {
+ 		dev_err(trf->dev, "%s - Bogus state: %d\n", __func__,
+ 				trf->state);
++		if (trf->state == TRF7970A_ST_WAIT_FOR_RX_DATA ||
++		    trf->state == TRF7970A_ST_WAIT_FOR_RX_DATA_CONT)
++			trf->ignore_timeout =
++				!cancel_delayed_work(&trf->timeout_work);
+ 		ret = -EIO;
+ 		goto out_err;
+ 	}
+-- 
+Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
