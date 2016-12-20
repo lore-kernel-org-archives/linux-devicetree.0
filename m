@@ -1,161 +1,45 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH 1/4 v2] of/overlay: add API function to count and pop last
-Date: Tue, 20 Dec 2016 20:04:52 +0100
-Message-ID: <20161220190455.25115-2-xypron.glpk@gmx.de>
-References: <20161220190455.25115-1-xypron.glpk@gmx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161220190455.25115-1-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun6i: Mele I7: Enable internal
+ audio codec
+Date: Tue, 20 Dec 2016 20:06:06 +0100
+Message-ID: <20161220190606.awxrftsc4ov476im@lukather>
+References: <20161220102344.2519-1-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wjaog6yxv4fipofb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKMC43BAKGQEYIT7MOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161220102344.2519-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To allow building interfaces which are not id based
-two new functions are added to the device tree
-overlay API:
 
-of_overlay_count        - counts the loaded overlays
-of_overlay_destroy_last - removes the last overlay loaded
+--wjaog6yxv4fipofb
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
----
+1;4600;0c
+On Tue, Dec 20, 2016 at 11:23:44AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> The Mele I7 has an audio jack for the SoC's internal codec.
+> 
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-v2:
-	Add missing inline attribute for ov_overlay_count.
+Applied, thanks!
+Maxime
 
- Documentation/devicetree/overlay-notes.txt |  7 +++--
- drivers/of/overlay.c                       | 50 ++++++++++++++++++++++++++++++
- include/linux/of.h                         | 12 +++++++
- 3 files changed, 67 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-index d418a6c..7c8099c 100644
---- a/Documentation/devicetree/overlay-notes.txt
-+++ b/Documentation/devicetree/overlay-notes.txt
-@@ -89,17 +89,20 @@ Overlay in-kernel API
- 
- The API is quite easy to use.
- 
--1. Call of_overlay_create() to create and apply an overlay. The return value
-+Call of_overlay_create() to create and apply an overlay. The return value
- is a cookie identifying this overlay.
- 
--2. Call of_overlay_destroy() to remove and cleanup the overlay previously
-+Call of_overlay_destroy() to remove and cleanup the overlay previously
- created via the call to of_overlay_create(). Removal of an overlay that
- is stacked by another will not be permitted.
-+Or call of_overlay_destroy_last() to remove the most recent overlay.
- 
- Finally, if you need to remove all overlays in one-go, just call
- of_overlay_destroy_all() which will remove every single one in the correct
- order.
- 
-+Call of_overlay_count() to determine the number of loaded overlays.
-+
- Overlay DTS Format
- ------------------
- 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 0d4cda7..bd30253 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -587,3 +587,53 @@ int of_overlay_destroy_all(void)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_overlay_destroy_all);
-+
-+/**
-+ * of_overlay_destroy_last() - Removes the last overlay from the system
-+ *
-+ * It is allways possible to delete the last overlay.
-+ *
-+ * Returns 0 on success, or a negative error number
-+ */
-+int of_overlay_destroy_last(void)
-+{
-+	struct of_overlay *ov, *ovn;
-+	int id;
-+
-+	mutex_lock(&of_mutex);
-+
-+	list_for_each_entry_safe_reverse(ov, ovn, &ov_list, node) {
-+		id = ov->id;
-+		mutex_unlock(&of_mutex);
-+		return of_overlay_destroy(id);
-+	}
-+
-+	mutex_unlock(&of_mutex);
-+
-+	pr_info("destroy: No overlay to destroy");
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_destroy_last);
-+
-+/**
-+ * of_overlay_count - Counts number of loaded overlays
-+ *
-+ * Returns number of loaded overlays
-+ */
-+int of_overlay_count(void)
-+{
-+	struct of_overlay *ov, *ovn;
-+	int count = 0;
-+
-+	mutex_lock(&of_mutex);
-+
-+	list_for_each_entry_safe(ov, ovn, &ov_list, node) {
-+		++count;
-+	}
-+
-+	mutex_unlock(&of_mutex);
-+
-+	return count;
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_count);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d72f010..5ca3523 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1281,15 +1281,22 @@ struct of_overlay_notify_data {
- #ifdef CONFIG_OF_OVERLAY
- 
- /* ID based overlays; the API for external users */
-+int of_overlay_count(void);
- int of_overlay_create(struct device_node *tree);
- int of_overlay_destroy(int id);
- int of_overlay_destroy_all(void);
-+int of_overlay_destroy_last(void);
- 
- int of_overlay_notifier_register(struct notifier_block *nb);
- int of_overlay_notifier_unregister(struct notifier_block *nb);
- 
- #else
- 
-+static inline int of_overlay_count(void)
-+{
-+	return -ENOTSUPP;
-+}
-+
- static inline int of_overlay_create(struct device_node *tree)
- {
- 	return -ENOTSUPP;
-@@ -1305,6 +1312,11 @@ static inline int of_overlay_destroy_all(void)
- 	return -ENOTSUPP;
- }
- 
-+static inline int of_overlay_destroy_last(void)
-+{
-+	return -ENOTSUPP;
-+}
-+
- static inline int of_overlay_notifier_register(struct notifier_block *nb)
- {
- 	return 0;
 -- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--wjaog6yxv4fipofb--
