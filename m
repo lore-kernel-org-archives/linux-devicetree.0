@@ -1,30 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi: rockchip: support "sleep" pin configuration
-Date: Tue, 20 Dec 2016 22:04:14 -0600
-Message-ID: <20161221040414.ogs2hj6gum772tuq@rob-hp-laptop>
-References: <1481936356-76161-1-git-send-email-briannorris@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1481936356-76161-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] of: reserved_mem: set dma_ops for devices using reserved mem
+Date: Wed, 21 Dec 2016 11:14:31 +0530
+Message-ID: <1482299071-22637-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 16, 2016 at 04:59:16PM -0800, Brian Norris wrote:
-> In the pattern of many other devices, support a system-sleep pin
-> configuration.
-> 
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/spi/spi-rockchip.txt | 7 +++++++
->  drivers/spi/spi-rockchip.c                             | 5 +++++
->  2 files changed, 12 insertions(+)
+From: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+For some IPs, there may be virtual child devices created and for them its
+necessary to set the dma_ops if it's using reserved memory else it will call
+the dummy dma_ops during buffer operations for the child devices which will
+lead to memory mapping failure.
+
+Signed-off-by: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/of/of_reserved_mem.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 366d8c3..d507c35 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -354,6 +354,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
+ 		mutex_lock(&of_rmem_assigned_device_mutex);
+ 		list_add(&rd->list, &of_rmem_assigned_device_list);
+ 		mutex_unlock(&of_rmem_assigned_device_mutex);
++		/* ensure that dma_ops is set for virtual devices
++		 * using reserved memory
++		 */
++		of_dma_configure(dev, np);
+ 
+ 		dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
+ 	} else {
+-- 
+2.7.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
