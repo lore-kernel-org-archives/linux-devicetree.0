@@ -1,45 +1,189 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] of: reserved_mem: set dma_ops for devices using reserved mem
-Date: Wed, 21 Dec 2016 11:14:31 +0530
-Message-ID: <1482299071-22637-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v2 0/7] Add V4L2 SDR (DRIF & MAX2175) driver
+Date: Wed, 21 Dec 2016 08:10:31 +0000
+Message-ID: <1482307838-47415-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+This patch set contains two drivers
+ - Renesas R-Car Digital Radio Interface (DRIF) driver
+ - Maxim's MAX2175 RF to Bits tuner driver
 
-For some IPs, there may be virtual child devices created and for them its
-necessary to set the dma_ops if it's using reserved memory else it will call
-the dummy dma_ops during buffer operations for the child devices which will
-lead to memory mapping failure.
+These patches were based on top of media-next repo
+commit: 65390ea01ce678379da32b01f39fcfac4903f256
 
-Signed-off-by: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/of/of_reserved_mem.c | 4 ++++
- 1 file changed, 4 insertions(+)
+These two drivers combined together expose a V4L2 SDR device that is compliant
+with the V4L2 framework [1]. Agreed review comments are incorporated in this
+series.
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 366d8c3..d507c35 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -354,6 +354,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
- 		mutex_lock(&of_rmem_assigned_device_mutex);
- 		list_add(&rd->list, &of_rmem_assigned_device_list);
- 		mutex_unlock(&of_rmem_assigned_device_mutex);
-+		/* ensure that dma_ops is set for virtual devices
-+		 * using reserved memory
-+		 */
-+		of_dma_configure(dev, np);
- 
- 		dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
- 	} else {
+The rcar_drif device is modelled using "renesas,bonding" property. The
+discussion on this property is available here [2].
+
+Change history:
+
+v1 -> v2:
+ - SDR formats renamed as "planar" instead of sliced (Hans)
+ - Documentation formatting correction (Laurent)
+
+ rcar_drif:
+ - DT model using "bonding" property
+ - Addressed Laurent's coments on bindings - DT optional parameters rename & rework
+ - Addressed Han's comments on driver
+ - Addressed Geert's comments on DT
+
+ max2175:
+ - Avoided scaling using method proposed by Antti. Thanks
+ - Bindings is a separate patch (Rob)
+ - Addressed Rob's comment on bindings
+ - Added Custom controls documentation (Laurent)
+
+Ramesh Shanmugasundaram (7):
+  media: v4l2-ctrls: Reserve controls for MAX217X
+  dt-bindings: media: Add MAX2175 binding description
+  media: i2c: max2175: Add MAX2175 support
+  media: Add new SDR formats PC16, PC18 & PC20
+  doc_rst: media: New SDR formats PC16, PC18 & PC20
+  dt-bindings: media: Add Renesas R-Car DRIF binding
+  media: platform: rcar_drif: Add DRIF support
+
+[1] v4l2-compliance report:
+
+root@salvator-x:~# v4l2-compliance -S /dev/swradio0
+v4l2-compliance SHA   : 188e604d57bec065078ff772c802b93ddb6def4b
+
+Driver Info:
+        Driver name   : rcar_drif
+        Card type     : R-Car DRIF
+        Bus info      : platform:R-Car DRIF
+        Driver version: 4.9.0
+        Capabilities  : 0x85310000
+                SDR Capture
+                Tuner
+                Read/Write
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x05310000
+                SDR Capture
+                Tuner
+                Read/Write
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/swradio0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second sdr open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK
+        test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
+        test VIDIOC_G/S_FREQUENCY: OK
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 1
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+                test VIDIOC_QUERYCTRL: OK
+                test VIDIOC_G/S_CTRL: OK
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 5 Private Controls: 3
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK (Not Supported)
+
+Test input 0:
+
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+root@salvator-x:~#
+
+[2] "bonding" DT property discussion (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg09415.html)
+
+ .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
+ .../devicetree/bindings/media/renesas,drif.txt     |  202 +++
+ .../devicetree/bindings/property-units.txt         |    1 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          |   55 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          |   55 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          |   55 +
+ Documentation/media/uapi/v4l/sdr-formats.rst       |    3 +
+ Documentation/media/v4l-drivers/index.rst          |    1 +
+ Documentation/media/v4l-drivers/max2175.rst        |   60 +
+ drivers/media/i2c/Kconfig                          |    4 +
+ drivers/media/i2c/Makefile                         |    2 +
+ drivers/media/i2c/max2175/Kconfig                  |    8 +
+ drivers/media/i2c/max2175/Makefile                 |    4 +
+ drivers/media/i2c/max2175/max2175.c                | 1438 ++++++++++++++++++
+ drivers/media/i2c/max2175/max2175.h                |  108 ++
+ drivers/media/platform/Kconfig                     |   25 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/rcar_drif.c                 | 1593 ++++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    3 +
+ include/uapi/linux/v4l2-controls.h                 |    5 +
+ include/uapi/linux/videodev2.h                     |    3 +
+ 21 files changed, 3687 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
+ create mode 100644 Documentation/media/v4l-drivers/max2175.rst
+ create mode 100644 drivers/media/i2c/max2175/Kconfig
+ create mode 100644 drivers/media/i2c/max2175/Makefile
+ create mode 100644 drivers/media/i2c/max2175/max2175.c
+ create mode 100644 drivers/media/i2c/max2175/max2175.h
+ create mode 100644 drivers/media/platform/rcar_drif.c
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
