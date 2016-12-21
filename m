@@ -1,136 +1,58 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 net-next 3/3] arm64: dts: marvell: Add ethernet switch definition for the ESPRESSObin
-Date: Wed, 21 Dec 2016 10:41:09 +0100
-Message-ID: <87lgv9ipqi.fsf@free-electrons.com>
-References: <20161221090045.474-1-romain.perier@free-electrons.com>
-        <20161221090045.474-4-romain.perier@free-electrons.com>
+From: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] power: supply: add sbs-charger driver
+Date: Wed, 21 Dec 2016 15:39:46 +0530
+Message-ID: <CAKDJKT4zFB-Q6x5davDYpzgGfkRfoFqTOaL24MQjm_=b2B-Z5Q@mail.gmail.com>
+References: <1482247874-28713-1-git-send-email-nicolas.saenz@prodys.net>
+ <1482247874-28713-2-git-send-email-nicolas.saenz@prodys.net>
+ <CAKDJKT7WWFd2FSAZ6erXF=t1aaCyR0F5px54TiHw7C4PrnKXSQ@mail.gmail.com> <72292f5b-3f81-f097-a87e-56b58098ff2b@prodys.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161221090045.474-4-romain.perier@free-electrons.com> (Romain
-        Perier's message of "Wed, 21 Dec 2016 10:00:45 +0100")
-Sender: netdev-owner@vger.kernel.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <72292f5b-3f81-f097-a87e-56b58098ff2b-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
- 
- On mer., déc. 21 2016, Romain Perier <romain.perier@free-electrons.com> wrote:
+Hi Nicolas
 
-> This defines and enables the Marvell ethernet switch MVE886341 on the
-> Marvell ESPRESSObin board.
-
-This patch looks OK now.
-
-Applied on mvebu/dt64-4.11
-
-So you can remove it from you next version because I don't want this
-patch will be applied through the netdev branch. Indeed I expect more
-changes in this file for v4.11 and it will be easier to have the change
-in a single branch to avoid the merge conflict.
-
-Thanks,
-
-Gregory
-
-
+On Wed, Dec 21, 2016 at 3:00 PM, Nicolas Saenz Julienne
+<nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org> wrote:
+> Hi Manish, thanks for the interest.
 >
-> Signed-off-by: Romain Perier <romain.perier@free-electrons.com>
-> ---
+> On 20/12/16 17:54, Manish Badarkhe wrote:
+>> Hi Nicola
+>>
+> [...]
+>>
+>> Just some general comment, Can you add some more properties here to
+>> know voltage and current?
 >
-> Changes in v3:
->  - Changed the node switch0 to be at 1
->  - Removed reg=<1> from the mdio node, finally that's not required
->
-> Changes in v2:
->  - EXPRESSObin -> ESPRESSObin
->  - phy nodes definition must contain the internal bus address after the @
->
->  .../boot/dts/marvell/armada-3720-espressobin.dts   | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> index 83178d9..12d9f65 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -80,3 +80,69 @@
->  &usb3 {
->  	status = "okay";
->  };
-> +
-> +&mdio {
-> +	switch0: switch0@1 {
-> +		compatible = "marvell,mv88e6085";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <1>;
-> +
-> +		dsa,member = <0 0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				label = "cpu";
-> +				ethernet = <&eth0>;
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				label = "wan";
-> +				phy-handle = <&switch0phy0>;
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				label = "lan0";
-> +				phy-handle = <&switch0phy1>;
-> +			};
-> +
-> +			port@3 {
-> +				reg = <3>;
-> +				label = "lan1";
-> +				phy-handle = <&switch0phy2>;
-> +			};
-> +
-> +		};
-> +
-> +		mdio {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			switch0phy0: switch0phy0@11 {
-> +				reg = <0x11>;
-> +			};
-> +			switch0phy1: switch0phy1@12 {
-> +				reg = <0x12>;
-> +			};
-> +			switch0phy2: switch0phy2@13 {
-> +				reg = <0x13>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&eth0 {
-> +	phy-mode = "rgmii-id";
-> +	status = "okay";
-> +
-> +	fixed-link {
-> +		speed = <1000>;
-> +		full-duplex;
-> +	};
-> +};
-> -- 
-> 2.9.3
->
+> I assume you are mentioning reading current and voltage values. These
+> properties are not supported by the sbs-charger standard. All you can do
+> is set (write only) the charging current and charging voltage values.
+> Yet in all the boards I've worked with it's the sbs-battery compliant
+> chip that takes care of it.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+thanks for clarifying me.
+
+
+>> Also, can you add other properties present in charging status register
+>> like POWER_FAIL, VOLTAGE_OR,
+>> CURRENT_OR etc.
+>
+> CURRENT_OR and VOLTAGE_OR relate to wrong values in the charging
+> voltage/current registers. Since the sbs-battery chip takes care of it I
+> don't see any use for it.
+> POWER_FAIL marks there is not enough voltage to charge the battery. I
+> don't need that information so I did nothing to integrate it. Having a
+> quick look at the power supply defines I don't see were it could easily fit.
+
+thanks for clarifying me.
+
+Regards
+Manish Badarkhe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
