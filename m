@@ -1,69 +1,41 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v6] media: et8ek8: add device tree binding documentation
-Date: Wed, 21 Dec 2016 14:20:49 +0100
-Message-ID: <20161221132049.GB13449@amd>
-References: <20161023191706.GA25754@amd>
- <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
- <20161107104648.GB5326@amd>
- <20161114183040.GB28778@amd>
- <20161220130538.GD16630@valkosipuli.retiisi.org.uk>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [v4, 3/3] ARM: dts: vf610-zii-dev-rev-b: Remove 'fixed-link'
+ from DSA ports
+Date: Wed, 21 Dec 2016 14:25:19 +0100
+Message-ID: <20161221132519.bkkqyfk3beow7nc5@pengutronix.de>
+References: <1482131877-6097-3-git-send-email-andrew.smirnov@gmail.com>
+ <1482325125-15725-1-git-send-email-nikita.yoush@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161220130538.GD16630-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+In-Reply-To: <1482325125-15725-1-git-send-email-nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 21, 2016 at 03:58:45PM +0300, Nikita Yushchenko wrote:
+> > Remove 'fixed-link' nodes from DSA ports since they are not needed (they
+> > are not limiting link's speed and the ports will be configured to their
+> > maximux speed as a default)
+> >
+> > Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> With this patch, ports connected to revB's second switch stop working.
 
---wq9mPyueHGvFACwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is probably because without a fixed-link node the phy-mode setting
+isn't applied by the driver.
 
-On Tue 2016-12-20 15:05:39, Sakari Ailus wrote:
-> Hi Pavel,
->=20
-> > +Endpoint node mandatory properties
-> > +----------------------------------
-> > +
-> > +- remote-endpoint: A phandle to the bus receiver's endpoint node.
-> > +
-> > +Endpoint node optional properties
-> > +----------------------------------
-> > +
-> > +- clock-lanes: <0>
-> > +- data-lanes: <1..n>
->=20
-> The driver makes no use of them and CCP2 only supports a single lane. I'll
-> just remove these and apply it to my tree. Let's continue discussing the
-> driver patch in the other thread.
+Best regards
+Uwe
 
-Ok, thanks!
-
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---wq9mPyueHGvFACwf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlhagbEACgkQMOfwapXb+vKWTgCfRILgBRcYTm/bCz2FfQPJY8+X
-/r4AnjDZM1xrC1opcDAxBDRfr9YtSQZD
-=isP0
------END PGP SIGNATURE-----
-
---wq9mPyueHGvFACwf--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
