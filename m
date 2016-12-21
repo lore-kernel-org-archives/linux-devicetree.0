@@ -1,133 +1,78 @@
-From: Geoff Lansberry <geoff@kuvee.com>
-Subject: Re: [PATCH 2/3] NFC: trf7970a: Add device tree option of 1.8 Volt IO voltage
-Date: Wed, 21 Dec 2016 06:47:36 -0500
-Message-ID: <32FAB08E-BE8E-4127-80A6-013300B43BD0@kuvee.com>
-References: <1482250592-4268-1-git-send-email-glansberry@gmail.com> <1482250592-4268-2-git-send-email-glansberry@gmail.com> <20161221022347.GB5444@animalcreek.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161221022347.GB5444@animalcreek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Greer <mgreer@animalcreek.com>
-Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin@kuvee.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/7] Documentation: DT: bindings: iio: adc: add
+ documentation for Allwinner SoCs' GPADC driver
+Date: Wed, 21 Dec 2016 13:20:09 +0100
+Message-ID: <20161221122009.2gcidvhnmomsiagc@lukather>
+References: <20161220102709.9504-1-quentin.schulz@free-electrons.com>
+ <20161220102709.9504-2-quentin.schulz@free-electrons.com>
+ <20161220142554.rcocnculfehiwhpn@lukather>
+ <61dc140a-5ef1-f55d-e749-cb816a014705@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wkx6ljrqmdcah546"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <61dc140a-5ef1-f55d-e749-cb816a014705-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Mark.   Should I resubmit patches with the requested edits today, or w=
-ait a bit for more comments?  What is the desired etiquette?
 
-> On Dec 20, 2016, at 9:23 PM, Mark Greer <mgreer@animalcreek.com> wrote:
+--wkx6ljrqmdcah546
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Dec 20, 2016 at 04:43:58PM +0100, Quentin Schulz wrote:
+> >> +
+> >> +Optional properties:
+> >> +(for use with thermal framework for CPU thermal throttling for exampl=
+e, and/or
+> >> + IIO consumers)
+> >> + - #thermal-sensor-cells =3D <0>; (see
+> >> +Documentation/devicetree/bindings/thermal/thermal.txt)
+> >> + - #io-channel-cells =3D <0>; (see
+> >> +Documentation/devicetree/bindings/iio/iio-bindings.txt)
+> >=20
+> > I wouldn't list that as optional.
 >=20
->> On Tue, Dec 20, 2016 at 11:16:31AM -0500, Geoff Lansberry wrote:
->> From: Geoff Lansberry <geoff@kuvee.com>
->>=20
->> The TRF7970A has configuration options for supporting hardware designs
->> with 1.8 Volt or 3.3 Volt IO.   This commit adds a device tree option,
->> using a fixed regulator binding, for setting the io voltage to match
->> the hardware configuration. If no option is supplied it defaults to
->> 3.3 volt configuration.
->=20
-> Sign-off ??  Same comment for you other patches.
->=20
-> <time passes>
->=20
-> Okay I see you have it at the end of the patch.  It should be here.
-> 'git commit -s' is your friend.
->=20
->> ---
->> .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
->> drivers/nfc/trf7970a.c                             | 28 +++++++++++++++++=
-++++-
->> 2 files changed, 29 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Doc=
-umentation/devicetree/bindings/net/nfc/trf7970a.txt
->> index e262ac1..b5777d8 100644
->> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->> @@ -21,9 +21,9 @@ Optional SoC Specific Properties:
->> - t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
->>   where an extra byte is returned by Read Multiple Block commands issued
->>   to Type 5 tags.
->> +- vdd-io-supply: Regulator specifying voltage for vdd-io
->> - clock-frequency: Set to specify that the input frequency to the trf7970=
-a is 13560000Hz or 27120000Hz
->>=20
->> -
->> Example (for ARM-based BeagleBone with TRF7970A on SPI1):
->>=20
->> &spi1 {
->> @@ -41,11 +41,11 @@ Example (for ARM-based BeagleBone with TRF7970A on SP=
-I1):
->>                  <&gpio2 5 GPIO_ACTIVE_LOW>;
->>        vin-supply =3D <&ldo3_reg>;
->>        vin-voltage-override =3D <5000000>;
->> +        vdd-io-supply =3D <&ldo2_reg>;
->>        autosuspend-delay =3D <30000>;
->>        irq-status-read-quirk;
->>        en2-rf-quirk;
->>        t5t-rmb-extra-byte-quirk;
->> -        vdd_io_1v8;
->=20
-> It was already mentioned but this shouldn't have been added in the
-> previous patch so it shouldn't be here now.
->=20
->>        clock-frequency =3D <27120000>;
->>        status =3D "okay";
->>    };
->> diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
->> index 4e051e9..8a88195 100644
->> --- a/drivers/nfc/trf7970a.c
->> +++ b/drivers/nfc/trf7970a.c
->=20
->> @@ -2062,6 +2068,7 @@ static int trf7970a_probe(struct spi_device *spi)
->>        return ret;
->>    }
->>=20
->> +
->=20
-> Please don't add an extra blank line.
->=20
->>    of_property_read_u32(np, "clock-frequency", &clk_freq);
->>    if ((clk_freq !=3D TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
->>        (clk_freq !=3D TRF7970A_27MHZ_CLOCK_FREQUENCY)) {
->> @@ -2105,6 +2112,25 @@ static int trf7970a_probe(struct spi_device *spi)
->>    if (uvolts > 4000000)
->>        trf->chip_status_ctrl =3D TRF7970A_CHIP_STATUS_VRS5_3;
->>=20
->> +    trf->regulator =3D devm_regulator_get(&spi->dev, "vdd-io");
->> +    if (IS_ERR(trf->regulator)) {
->> +        ret =3D PTR_ERR(trf->regulator);
->> +        dev_err(trf->dev, "Can't get VDD_IO regulator: %d\n", ret);
->> +        goto err_destroy_lock;
->> +    }
->> +
->> +    ret =3D regulator_enable(trf->regulator);
->> +    if (ret) {
->> +        dev_err(trf->dev, "Can't enable VDD_IO: %d\n", ret);
->> +        goto err_destroy_lock;
->> +    }
->> +
->> +
->=20
-> Please don't add an extra blank line.
->=20
->> +    if (regulator_get_voltage(trf->regulator) =3D=3D 1800000) {
->> +        trf->io_ctrl =3D TRF7970A_REG_IO_CTRL_IO_LOW;
->> +        dev_dbg(trf->dev, "trf7970a config vdd_io to 1.8V\n");
->> +    }
->> +
->>    trf->ddev =3D nfc_digital_allocate_device(&trf7970a_nfc_ops,
->>            TRF7970A_SUPPORTED_PROTOCOLS,
->>            NFC_DIGITAL_DRV_CAPS_IN_CRC |
->> --=20
->> Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
->=20
-> Your 'Signed-off-by:' goes at the end of the commit description not here.
->=20
-> Overall, I think you did the right thing (unless someone disagrees).
-> Just some minor issues.
->=20
-> Mark
-> --
+> In what sense? Do you mean you wouldn't put them here at all or you
+> would require them?
+
+I would require them.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--wkx6ljrqmdcah546
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYWnN1AAoJEBx+YmzsjxAgxloP/3SLcMQYmhgpvsPH/8Ec47ry
+gc3WnVanuSAdN6Bl/ul9tYFiRivRAOGL5ablSPquMfGXCiLO+L1Euy/mGvDQ1Ryc
+RgG+Djl1w5783nQBPFmnywg/w1ah60+LKi5uiJTJ+jFKvHmZTVHhLk92oLAnAItA
+ircElhr1Xr0+0R/njW1HRWy3cXHXPOApGghao1lsGcVrUkJTEJqfIhy3ERG/BoQk
+dOF+z5QXicaC0lXGd8ginsXGE1/Uo3svPR5F9Aa+55IVk8+r1RcpJPLYR7JstA9d
+1o2kgGU2yddWzL0/lQ5U5PESUWRuXhytCcCjM2xO7PznZN5zpB5prro2QvilYWzh
+5YHAn7STCZtft1W/F50+zA1DeNSGtbgIPRnILF5Mk2czE/713WBTR7He5u8Q7oYz
+jV/jbWiygcq56ISpJFcSnxKF0j9aLgbZB/VY5udcXD0GT0KAo/4sFFipV7rGqLWw
+ASUCUyQ/s9JgYiip0dQ+JqknsdZT8/SDfUtHrO+C/1PM3oBeJw8/M8PajKiBxMR6
+h3yRPrhlBuMOOmQk0xaVJ57hQO7jsUG+bkRbGXodx2JBcBdSYfz+/SIfrUPAXG+o
+yFtdntczufEaiPCFvRhdHqWrP8Ci5Rfqe9/ZgrCv4U3g2DutfgTMUvu3FZDo6YLD
+rt5cqfqe5Z+bzUCm6gpQ
+=6z6F
+-----END PGP SIGNATURE-----
+
+--wkx6ljrqmdcah546--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
