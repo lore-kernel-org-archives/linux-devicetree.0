@@ -1,62 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
-Date: Tue, 20 Dec 2016 21:29:21 -0600
-Message-ID: <20161221032921.hdcnyiq6m224ejlv@rob-hp-laptop>
-References: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy@arm.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/3] dt: pwm: lpc32xx: add description of clocks and
+ #pwm-cells properties
+Date: Wed, 21 Dec 2016 05:30:21 +0200
+Message-ID: <5a865e27-e673-2f45-6c71-ca1e7d92a346@mleia.com>
+References: <20161205014237.1689-1-vz@mleia.com>
+ <20161205014237.1689-2-vz@mleia.com>
+ <20161209214137.2hdugl5rmnwjrus4@rob-hp-laptop>
+ <015305d5-c22f-52da-9605-f2c19e3108b1@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <015305d5-c22f-52da-9605-f2c19e3108b1@mleia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 16, 2016 at 01:19:29PM +0000, Robin Murphy wrote:
-> The current SMR masking support using a 2-cell iommu-specifier is
-> primarily intended to handle individual masters with large and/or
-> complex Stream ID assignments; it quickly gets a bit clunky in other SMR
-> use-cases where we just want to consistently mask out the same part of
-> every Stream ID (e.g. for MMU-500 configurations where the appended TBU
-> number gets in the way unnecessarily). Let's add a new property to allow
-> a single global mask value to better fit the latter situation.
+On 12/10/2016 01:51 AM, Vladimir Zapolskiy wrote:
+> Hi Rob,
 > 
-> CC: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
+> On 12/09/2016 11:41 PM, Rob Herring wrote:
+>> On Mon, Dec 05, 2016 at 03:42:37AM +0200, Vladimir Zapolskiy wrote:
+>>> NXP LPC32xx SoCs have two simple independent PWM controllers with a single
+>>> output each, in this case there is no need to specify PWM channel argument
+>>> on client side, one cell for setting PWM output frequency is sufficient.
+>>>
+>>> Another added to the description property 'clocks' has a standard meaning
+>>> of a controller supply clock, in the LPC32xx User's Manual the clock is
+>>> denoted as PWM1_CLK or PWM2_CLK clock.
+>>>
+>>> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>>> index 74b5bc5..523d796 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>>> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+>>> @@ -3,15 +3,22 @@ LPC32XX PWM controller
+>>>  Required properties:
+>>>  - compatible: should be "nxp,lpc3220-pwm"
+>>>  - reg: physical base address and length of the controller's registers
+>>> +- clocks: clock phandle and clock specifier pair
+>>> +- #pwm-cells: should be 1, the cell is used to specify the period in
+>>> +  nanoseconds.
+>>
+>> This use of the cell is a bit odd as the period is s/w config and this 
+>> would typically be a channel selection or such.
 > 
-> Compile-tested only...
+> this is a classic PWM channel configuration property for PWM consumers
+> described in DT, for instance PWM frequency for display panel backlight
+> on boot.
 > 
->  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 8 ++++++++
->  drivers/iommu/arm-smmu.c                             | 4 +++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
+> I think >90% of PWM controllers with device tree bindings have this
+> argument in #pwm-cells, from bindings/pwm/pwm.txt :
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index e862d1485205..98f5cbe5fdb4 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -60,6 +60,14 @@ conditions.
->                    aliases of secure registers have to be used during
->                    SMMU configuration.
->  
-> +- stream-match-mask : Specifies a fixed SMR mask value to combine with
+>     pwm-specifier typically encodes the chip-relative PWM number and
+>     the PWM period in nanoseconds.
+> 
+> You also may skim through phandle arguments of 'pwms' property,
+> commonly the second argument is the requested frequency.
+> 
+> In this particular case I just drop PWM channel number, because
+> the LPC32xx PWM controller has a single output channel.
+> 
+>> What if I want user specified/changed periods?
+>>
+> 
+> The preset period still can be changed over sysfs in runtime.
 
-Needs a vendor prefix.
+Rob, have I managed to answer your questions?
 
-Otherwise looks fine.
+If you accept my clarification, could you please ack the change?
 
-> +                  the Stream ID value from every iommu-specifier. This
-> +                  may be used instead of an "#iommu-cells" value of 2
-> +                  when there is no need for per-master SMR masks, but
-> +                  it is still desired to mask some portion of every
-> +                  Stream ID (e.g. for certain MMU-500 configurations
-> +                  given globally unique external IDs).
-> +
->  ** Deprecated properties:
->  
->  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
