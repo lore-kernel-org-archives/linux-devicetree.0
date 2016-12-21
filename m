@@ -1,43 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Documentation: dt: Explicitly mark Samsung Exynos SoC
- bindings as unstable
-Date: Tue, 20 Dec 2016 21:36:29 -0600
-Message-ID: <20161221033629.xny3xnwhvkgcdlv7@rob-hp-laptop>
-References: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
+Subject: Re: [PATCH 2/3] doc: DT: add new compatible to fixed regulator's
+ binding
+Date: Tue, 20 Dec 2016 21:40:22 -0600
+Message-ID: <20161221034022.henwykufq3c7nax3@rob-hp-laptop>
+References: <1481903550-3582-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481903550-3582-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1481897676-13578-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+In-Reply-To: <1481903550-3582-3-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 16, 2016 at 03:14:36PM +0100, Marek Szyprowski wrote:
-> Samsung Exynos SoCs and boards related bindings evolved since the initial
-> introduction, but initially the bindings were minimal and a bit incomplete
-> (they never described all the hardware modules available in the SoCs).
-> Since then some significant (not fully compatible) changes have been
-> already committed a few times (like gpio replaced by pinctrl, display ddc,
-> mfc reserved memory, some core clocks added to various hardware modules,
-> added more required nodes).
+On Fri, Dec 16, 2016 at 04:52:29PM +0100, Bartosz Golaszewski wrote:
+> Extend the fixed regulator's device tree bindings with a new
+> compatible describing GPIO-driven power load switches.
 > 
-> On the other side there are no boards which have device tree embedded in
-> the bootloader. Device tree blob is always compiled from the kernel tree
-> and updated together with the kernel image.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Thus to avoid further adding a bunch of workarounds for old/missing
-> bindings and allow to make cleanup of the existing code and device tree
-> files, lets mark Samsung Exynos SoC platform bindings as unstable. This
-> means that bindings can may change at any time and users should use the
-> dtb file compiled from the same kernel source tree as the kernel image.
+> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> index 4fae41d..306931c 100644
+> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> @@ -1,7 +1,9 @@
+>  Fixed Voltage regulators
+>  
+>  Required properties:
+> -- compatible: Must be "regulator-fixed";
+> +- compatible:
+> +	"regulator-fixed" for regular fixed-regulators
+> +	"gpio-power-switch" for gpio-driven power load switches
 
-I'd like this to be more explicit about which bindings in particular are 
-not considered stable (or which ones are). "exynos" covers lots of 
-things.
+Probably add "... which do no regulation" along the lines of Mark's 
+comment.
 
-I'll still complain if commit messages don't say explicitly that the 
-commit breaks compatibility and why that is okay.
-
-Rob
+>  
+>  Optional properties:
+>  - gpio: gpio to use for enable control
+> -- 
+> 2.9.3
+> 
