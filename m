@@ -1,44 +1,84 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [v4, 3/3] ARM: dts: vf610-zii-dev-rev-b: Remove 'fixed-link'
- from DSA ports
-Date: Wed, 21 Dec 2016 16:22:30 +0100
-Message-ID: <20161221152230.GK30952@lunn.ch>
-References: <1482131877-6097-3-git-send-email-andrew.smirnov@gmail.com>
- <1482325125-15725-1-git-send-email-nikita.yoush@cogentembedded.com>
- <20161221132519.bkkqyfk3beow7nc5@pengutronix.de>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: [PATCH v4 0/2] iio: adc: hx711: Add IIO driver for AVIA HX711 ADC
+Date: Wed, 21 Dec 2016 16:24:14 +0100
+Message-ID: <20161221152414.GA14532@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161221132519.bkkqyfk3beow7nc5-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, ak-n176/SwNRljddJNmlsFzeA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 02:25:19PM +0100, Uwe Kleine-König wrote:
-> On Wed, Dec 21, 2016 at 03:58:45PM +0300, Nikita Yushchenko wrote:
-> > > Remove 'fixed-link' nodes from DSA ports since they are not needed (they
-> > > are not limiting link's speed and the ports will be configured to their
-> > > maximux speed as a default)
-> > >
-> > > Suggested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > With this patch, ports connected to revB's second switch stop working.
-> 
-> This is probably because without a fixed-link node the phy-mode setting
-> isn't applied by the driver.
+This series adds IIO driver support for the AVIA HX711 ADC which is 
+mostly used in weighting cells.
 
-Yep, bad suggestion from me. If the phy-mode was not needed, then you
-can drop the fixed-link. With the phy-mode, you also need the fixed
-link.
+The first patch adds the new DT binding for which a new vendor avia
+was also added.
 
-Sorry for the wasted time,
+The second patch is the simple IIO driver implemented as ADC.
+The protocol is specific to this device and implemented using GPIOs.
 
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Documentation of the chip can be found here:
+
+https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf
+
+Changes in v4:
+Thanks to the thorough reviews and suggestions of Jonathan and Lars-Peter
+the driver was reworked to better meet the standard ABI of IIO. 
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - added attribute for regulator
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - two read channels for physical channels A and B
+  - remove gain attribute and use scale as read raw
+  - offer scale_available attribute
+  - introduced regulator as analog supply; mainly needed for calculating
+    the scale
+  - simplyfied use of GPIOs
+  - measuring input and output with oszilloscope and revised timing behavior
+  - many minor changes
+
+Changes in v3:
+moved gain from devicetree to sysfs, according to comment of Lars-Peter
+Thanks for reviewing and giving suggestions
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - removed property gain
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - removed property gain from devicetree
+  - added device attribute (rw) for gain
+  - support reading from both channels now
+
+Changes in v2:
+Lots of updates thanks to Peters review.
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - typo
+  - removed unneded section
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - updated help text in Kconfig
+  - removed dead code
+  - removed unused power management
+  - reduced channel spec to what is actually used
+  - added error handling in case reset of chip not possible
+
+Andreas Klinger (2):
+  iio: adc: hx711: Add DT binding for avia,hx711
+  iio: adc: hx711: Add IIO driver for AVIA HX711
+
+ .../devicetree/bindings/iio/adc/avia-hx711.txt     |  18 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/adc/Kconfig                            |  19 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/hx711.c                            | 466 +++++++++++++++++++++
+ 5 files changed, 505 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+ create mode 100644 drivers/iio/adc/hx711.c
+
+-- 
+2.1.4
