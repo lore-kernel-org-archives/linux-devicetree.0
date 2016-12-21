@@ -1,67 +1,35 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Subject: [PATCH v5 3/3] mtd: spi-nor: bindings for the Aspeed memory
- controllers
-Date: Wed, 21 Dec 2016 17:57:19 +0100
-Message-ID: <1482339439-26402-4-git-send-email-clg@kaod.org>
-References: <1482339439-26402-1-git-send-email-clg@kaod.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1482339439-26402-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 1/5] ARM: dts: qcom: apq8064: Add missing scm clock
+Date: Wed, 21 Dec 2016 03:49:35 -0800
+Message-ID: <20161221114939.19973-1-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9kLm9yZz4KQWNrZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL2FzcGVlZC1zbWMudHh0ICAgICAgICAgfCA1MSArKysrKysrKysrKysrKysrKysrKysr
-CiAxIGZpbGUgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvYXNwZWVkLXNtYy50eHQKCmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2FzcGVlZC1zbWMu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9hc3BlZWQtc21jLnR4
-dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjQ5ZjY1MjhlZjU0Nwot
-LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
-YXNwZWVkLXNtYy50eHQKQEAgLTAsMCArMSw1MSBAQAorKiBBc3BlZWQgRmlybXdhcmUgTWVtb3J5
-IGNvbnRyb2xsZXIKKyogQXNwZWVkIFNQSSBGbGFzaCBNZW1vcnkgQ29udHJvbGxlcgorCitUaGUg
-RmlybXdhcmUgTWVtb3J5IENvbnRyb2xsZXIgaW4gdGhlIEFzcGVlZCBBU1QyNTAwIFNvQyBzdXBw
-b3J0cwordGhyZWUgY2hpcCBzZWxlY3RzLCB0d28gb2Ygd2hpY2ggYXJlIGFsd2F5cyBvZiBTUEkg
-dHlwZSBhbmQgdGhlIHRoaXJkCitjYW4gYmUgU1BJIG9yIE5PUiB0eXBlIGZsYXNoLiBUaGVzZSBi
-aW5kaW5ncyBvbmx5IGRlc2NyaWJlIFNQSS4KKworVGhlIHR3byBTUEkgZmxhc2ggbWVtb3J5IGNv
-bnRyb2xsZXJzIGluIHRoZSBBU1QyNTAwIGVhY2ggc3VwcG9ydCB0d28KK2NoaXAgc2VsZWN0cy4K
-KworUmVxdWlyZWQgcHJvcGVydGllczoKKyAgLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlIG9uZSBv
-ZgorCSJhc3BlZWQsYXN0MjQwMC1mbWMiIGZvciB0aGUgQVNUMjQwMCBGaXJtd2FyZSBNZW1vcnkg
-Q29udHJvbGxlcgorCSJhc3BlZWQsYXN0MjQwMC1zcGkiIGZvciB0aGUgQVNUMjQwMCBTUEkgRmxh
-c2ggbWVtb3J5IENvbnRyb2xsZXIKKwkiYXNwZWVkLGFzdDI1MDAtZm1jIiBmb3IgdGhlIEFTVDI1
-MDAgRmlybXdhcmUgTWVtb3J5IENvbnRyb2xsZXIKKwkiYXNwZWVkLGFzdDI1MDAtc3BpIiBmb3Ig
-dGhlIEFTVDI1MDAgU1BJIGZsYXNoIG1lbW9yeSBjb250cm9sbGVycworCisgIC0gcmVnIDogdGhl
-IGZpcnN0IGNvbnRhaW5zIHRoZSBjb250cm9sIHJlZ2lzdGVyIGxvY2F0aW9uIGFuZCBsZW5ndGgs
-CisgICAgICAgICAgdGhlIHNlY29uZCBjb250YWlucyB0aGUgbWVtb3J5IHdpbmRvdyBtYXBwaW5n
-IGFkZHJlc3MgYW5kIGxlbmd0aAorICAtICNhZGRyZXNzLWNlbGxzIDogbXVzdCBiZSAxIGNvcnJl
-c3BvbmRpbmcgdG8gY2hpcCBzZWxlY3QgY2hpbGQgYmluZGluZworICAtICNzaXplLWNlbGxzIDog
-bXVzdCBiZSAwIGNvcnJlc3BvbmRpbmcgdG8gY2hpcCBzZWxlY3QgY2hpbGQgYmluZGluZworCitP
-cHRpb25hbCBwcm9wZXJ0aWVzOgorICAtIGludGVycnVwdHMgOiBTaG91bGQgY29udGFpbiB0aGUg
-aW50ZXJydXB0IGZvciB0aGUgZG1hIGRldmljZSBpZiBhbgorICAgIEZNQworCitUaGUgY2hpbGQg
-bm9kZXMgYXJlIHRoZSBTUEkgZmxhc2ggbW9kdWxlcyB3aGljaCBtdXN0IGhhdmUgYSBjb21wYXRp
-YmxlCitwcm9wZXJ0eSBhcyBzcGVjaWZpZWQgaW4gYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3Iu
-dHh0CisKK09wdGlvbmFsbHksIHRoZSBjaGlsZCBub2RlIGNhbiBjb250YWluIHByb3BlcnRpZXMg
-Zm9yIFNQSSBtb2RlIChtYXkgYmUKK2lnbm9yZWQpOgorICAtIHNwaS1tYXgtZnJlcXVlbmN5IC0g
-bWF4IGZyZXF1ZW5jeSBvZiBzcGkgYnVzCisKKworRXhhbXBsZToKK2ZtYzogZm1jQDFlNjIwMDAw
-IHsKKwljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWZtYyI7CisJcmVnID0gPCAweDFlNjIw
-MDAwIDB4OTQKKwkJMHgyMDAwMDAwMCAweDAyMDAwMDAwID47CisJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47CisJI3NpemUtY2VsbHMgPSA8MD47CisJaW50ZXJydXB0cyA9IDwxOT47CisJZmxhc2hAMCB7
-CisJCXJlZyA9IDwgMCA+OworCQljb21wYXRpYmxlID0gImplZGVjLHNwaS1ub3IiOworCQkvKiBz
-cGktbWF4LWZyZXF1ZW5jeSA9IDw+OyAqLworCQkvKiBtMjVwLGZhc3QtcmVhZDsgKi8KKwkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDE+OworCX07Cit9OwotLSAKMi43
-LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+As per the device tree binding the apq8064 scm node requires the core
+clock to be specified, so add this.
+
+Cc: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 268bd470c865..78bf155a52f3 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -303,6 +303,9 @@
+ 	firmware {
+ 		scm {
+ 			compatible = "qcom,scm-apq8064";
++
++			clocks = <&gcc CE3_CORE_CLK>;
++			clock-names = "core";
+ 		};
+ 	};
+ 
+-- 
+2.11.0
