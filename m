@@ -1,40 +1,54 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 1/6] clk: qcom: ipq4019: remove fixed clocks and add
- pll clocks
-Date: Wed, 21 Dec 2016 15:57:44 -0800
-Message-ID: <20161221235744.GJ8288@codeaurora.org>
-References: <1480088493-4590-1-git-send-email-absahu@codeaurora.org>
- <1480088493-4590-2-git-send-email-absahu@codeaurora.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 1/2] power: supply: bq24735: allow polling even if there is no ac-detect gpio
+Date: Wed, 21 Dec 2016 22:29:52 +0100
+Message-ID: <1482355793-16190-2-git-send-email-peda@axentia.se>
+References: <1482355793-16190-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480088493-4590-2-git-send-email-absahu@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, varada@codeaurora.org, pradeepb@codeaurora.org, snlakshm@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1482355793-16190-1-git-send-email-peda@axentia.se>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/25, Abhishek Sahu wrote:
-> The current ipq4019 clock driver registered the PLL clocks and
-> dividers as fixed clock. These fixed clock needs to be removed
-> from driver probe function and same need to be registered with
-> clock framework. These PLL clocks should be programmed only
-> once and the same are being programmed already by the boot
-> loader so the set rate operation is not required for these
-> clocks. Only the rate can be calculated by clock operations
-> in clock driver file so this patch adds the same.
-> 
-> The PLL takes the reference clock from XO and generates the
-> intermediate VCO frequency. This VCO frequency will be divided
-> down by different PLL internal dividers. Some of the PLL
-> internal dividers are fixed while other are programmable.
-> 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> ---
+It is possible to verify AC adapter presence via a register read, without
+any physical connection to the ACOK pin on the charger. Allow this.
 
-Applied to clk-ipq4019 and merged into clk-next.
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 4 ++--
+ drivers/power/supply/bq24735-charger.c                        | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+index efc2c6a78661..de45e1a2a4d9 100644
+--- a/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
++++ b/Documentation/devicetree/bindings/power/supply/ti,bq24735.txt
+@@ -27,8 +27,8 @@ Optional properties :
+  - ti,external-control : Indicates that the charger is configured externally
+    and that the host should not attempt to enable/disable charging or set the
+    charge voltage/current.
+- - poll-interval : In case 'interrupts' is not specified, poll AC presence
+-   on the ti,ac-detect-gpios GPIO with this interval (milliseconds).
++ - poll-interval : In case 'interrupts' is not specified, poll AC adapter
++   presence with this interval (milliseconds).
+ 
+ Example:
+ 
+diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
+index 4f6275e5cf1c..d8be81203837 100644
+--- a/drivers/power/supply/bq24735-charger.c
++++ b/drivers/power/supply/bq24735-charger.c
+@@ -468,7 +468,7 @@ static int bq24735_charger_probe(struct i2c_client *client,
+ 				client->irq, ret);
+ 			return ret;
+ 		}
+-	} else if (charger->status_gpio) {
++	} else {
+ 		ret = device_property_read_u32(&client->dev, "poll-interval",
+ 					       &charger->poll_interval);
+ 		if (ret)
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.1.4
+
