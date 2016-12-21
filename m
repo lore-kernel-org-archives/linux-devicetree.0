@@ -1,13 +1,16 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 3/3] ARM: dts: sun5i: add support for Lichee Pi One board
-Date: Wed, 21 Dec 2016 23:41:59 +0100
-Message-ID: <20161221224159.wnziqeanjkp63y4o@lukather>
-References: <20161221200235.11617-1-icenowy@aosc.xyz>
- <20161221200235.11617-3-icenowy@aosc.xyz>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/2] clk: hi3660: Clock driver support for Hisilicon
+ hi3660 SoC
+Date: Wed, 21 Dec 2016 15:25:51 -0800
+Message-ID: <20161221232551.GB8288@codeaurora.org>
+References: <1481781493-6188-1-git-send-email-zhangfei.gao@linaro.org>
+ <1481781493-6188-3-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4904229187366011485=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161221200235.11617-3-icenowy@aosc.xyz>
+Content-Disposition: inline
+In-Reply-To: <1481781493-6188-3-git-send-email-zhangfei.gao@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,75 +20,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, Zepan <715805855@qq.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, guodong Xu <guodong.xu@linaro.org>, devicetree@vger.kernel.org, haojian.zhuang@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/15, Zhangfei Gao wrote:
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 
---===============4904229187366011485==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mlbrfyawxey7cjdy"
-Content-Disposition: inline
+Add some commit text here?
+
+> diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
+> new file mode 100644
+> index 0000000..42ca47d
+> --- /dev/null
+> +++ b/drivers/clk/hisilicon/clk-hi3660.c
+> @@ -0,0 +1,601 @@
+> +/*
+> + * Copyright (c) 2016-2017 Linaro Ltd.
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <dt-bindings/clock/hi3660-clock.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+
+This isn't needed.
+
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include "clk.h"
+> +
+[...]
+> +
+> +static int hi3660_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const struct of_device_id *of_id;
+> +	enum hi3660_clk_type type;
+> +
+> +	of_id = of_match_device(hi3660_clk_match_table, dev);
+> +	if (!of_id)
+> +		return -EINVAL;
+> +
+> +	type = (enum hi3660_clk_type)of_id->data;
+
+Use of_device_get_match_data() instead please.
+
+> +
+> +	switch (type) {
+> +	case HI3660_CRGCTRL:
+> +		hi3660_clk_crgctrl_init(np);
+> +		break;
+> +	case HI3660_PCTRL:
+> +		hi3660_clk_pctrl_init(np);
+> +		break;
+> +	case HI3660_PMUCTRL:
+> +		hi3660_clk_pmuctrl_init(np);
+> +		break;
+> +	case HI3660_SCTRL:
+> +		hi3660_clk_sctrl_init(np);
+> +		break;
+> +	case HI3660_IOMCU:
+> +		hi3660_clk_iomcu_init(np);
+> +		break;
+
+This "multi-device" driver design is sort of odd. Why not have
+different files and struct drivers for the different devices in
+the system that are clock controllers? I don't really understand
+why we're controlling the devices with one struct driver
+instance. Is something shared between the devices?
+
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
+> +}
+[...]
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:hi3660-clk");
+> +MODULE_DESCRIPTION("HiSilicon Hi3660 Clock Driver");
 
 
---mlbrfyawxey7cjdy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You can drop these MODULE_* things as they're not going to be
+used in builtin only code.
 
-On Thu, Dec 22, 2016 at 04:02:35AM +0800, Icenowy Zheng wrote:
-> Lichee Pi One is a low-cost Allwinner A13-based development board, with
-> an AXP209 PMU, a USB2.0 OTG port, a USB2.0 host port (or an onboard
-> RTL8723BU Wi-Fi card), optional headers for LCD and CSI, two GPIO
-> headers and two MicroSD card slots (connected to mmc0 and mmc2, both
-> bootable).
->=20
-> Add support for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---mlbrfyawxey7cjdy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYWwU3AAoJEBx+YmzsjxAgJKwQAIdjGyOfP6VzXM7XjO3IDNIH
-aAguMRMfUX8ZsFlwRezHPgbSdkMEVF4ArP/Cm+gGhaelbk9jrEigH5AXr/ELRJQU
-DFdDOZjkAj59VG4kd77vWK+g6q/E6PXIjN7QKBwd6FDWICQb3iE9ea/UgrfDnN9t
-N6tRujlIMTMF3s/+G1FzlRjWii1YTSw57/ivf2yQKt1tRyYqNQYv3IaE3mO/lHIN
-Dw6XSv917CiwCHv+y6QDBWpgepvUlJytC/9EO3qMlzxMoq9Wokg2hatmGLvLR/7r
-EesU8HuuTpxXQ2n4m9M7S4o7gdzn28cj9ziNMyswIugLbRsVSIwbNt/HCUBSfSGI
-t01I05cnYLTXSzM7l40Vd4xflzMcDUeawrepcUs4eZwK3oL4JZodNsVuo8jTHxw1
-1InbUaTmfYSmOGiYkVeAXQDAv5Tro0Pj5bt1KTgjW1GVHDkYQMZCCd4WCe3GtJ5E
-ZyWrw9HsndB+c+s5+VwVLXGCiJUUFrAWt6FNNdO/YUZZ0a9OsG1NYIISs5eLcPBG
-5ydZu1K76H/L8Bs0IimNPQmZBvm35Z14g9RmdOrt7tiqsXIPs5pdFIERwRn3bitR
-klWtE5UTpDWDm8a1yX+uyUza81JjCIC3AzebShw+BwJUHtQ4ztgi0TtFrk1nPjIX
-34eD+ybMY/y9fgVtUE8G
-=H1P1
------END PGP SIGNATURE-----
-
---mlbrfyawxey7cjdy--
-
-
---===============4904229187366011485==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4904229187366011485==--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
