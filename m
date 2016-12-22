@@ -1,98 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: add bindings for rk3328 clock
- controller
-Date: Thu, 22 Dec 2016 12:39:08 -0600
-Message-ID: <20161222183908.gjrajbfxgrwwb4vn@rob-hp-laptop>
-References: <1482112573-11613-1-git-send-email-zhangqing@rock-chips.com>
- <1482112573-11613-3-git-send-email-zhangqing@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] crypto: mediatek - add DT bindings documentation
+Date: Thu, 22 Dec 2016 12:41:12 -0600
+Message-ID: <20161222184112.efnwchefnipqyf2i@rob-hp-laptop>
+References: <1482114045-18716-1-git-send-email-ryder.lee@mediatek.com>
+ <1482114045-18716-3-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1482112573-11613-3-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: heiko@sntech.de, mturquette@baylibre.com, sboyd@codeaurora.org, xf@rock-chips.com, mark.rutland@arm.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1482114045-18716-3-git-send-email-ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Luo <cheng-hao.luo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 09:56:11AM +0800, Elaine Zhang wrote:
-> Add devicetree bindings for Rockchip cru which found on
-> Rockchip SoCs.
+On Mon, Dec 19, 2016 at 10:20:45AM +0800, Ryder Lee wrote:
+> Add DT bindings documentation for the crypto driver
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  .../bindings/clock/rockchip,rk3328-cru.txt         | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-> new file mode 100644
-> index 000000000000..20053494d49f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-> @@ -0,0 +1,57 @@
-> +* Rockchip RK3328 Clock and Reset Unit
-> +
-> +The RK3328 clock controller generates and supplies clock to various
-> +controllers within the SoC and also implements a reset controller for SoC
-> +peripherals.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be "rockchip,rk3328-cru"
+>  .../devicetree/bindings/crypto/mediatek-crypto.txt | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
 
-The example shows other compatibles. IMO, I would drop them rather than 
-add them here.
-
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- #clock-cells: should be 1.
-> +- #reset-cells: should be 1.
-> +
-> +Optional Properties:
-> +
-> +- rockchip,grf: phandle to the syscon managing the "general register files"
-> +  If missing pll rates are not changeable, due to the missing pll lock status.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. All available clocks are defined as
-> +preprocessor macros in the dt-bindings/clock/rk3328-cru.h headers and can be
-> +used in device tree sources. Similar macros exist for the reset sources in
-> +these files.
-> +
-> +External clocks:
-> +
-> +There are several clocks that are generated outside the SoC. It is expected
-> +that they are defined using standard clock bindings with following
-> +clock-output-names:
-> + - "xin24m" - crystal input - required,
-> + - "clkin_i2s" - external I2S clock - optional,
-> + - "gmac_clkin" - external GMAC clock - optional
-> + - "phy_50m_out" - output clock of the pll in the mac phy
-> +
-> +Example: Clock controller node:
-> +
-> +	cru: clock-controller@ff440000 {
-> +		compatible = "rockchip,rk3328-cru", "rockchip,cru", "syscon";
-> +		reg = <0x0 0xff440000 0x0 0x1000>;
-> +		rockchip,grf = <&grf>;
-> +
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +Example: UART controller node that consumes the clock generated by the clock
-> +  controller:
-> +
-> +	uart0: serial@ff120000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0xff120000 0x100>;
-> +		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clocks = <&cru SCLK_UART0>;
-> +	};
-> -- 
-> 1.9.1
-> 
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
