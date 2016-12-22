@@ -1,7 +1,7 @@
 From: Jun Nie <jun.nie@linaro.org>
-Subject: [PATCH v8 3/5] mmc: dw: Add fifo watermark alignment property
-Date: Thu, 22 Dec 2016 12:57:35 +0800
-Message-ID: <1482382657-16681-4-git-send-email-jun.nie@linaro.org>
+Subject: [PATCH v8 4/5] mmc: dt-bindings: add ZTE ZX296718 MMC bindings
+Date: Thu, 22 Dec 2016 12:57:36 +0800
+Message-ID: <1482382657-16681-5-git-send-email-jun.nie@linaro.org>
 References: <1482382657-16681-1-git-send-email-jun.nie@linaro.org>
 Return-path: <linux-mmc-owner@vger.kernel.org>
 In-Reply-To: <1482382657-16681-1-git-send-email-jun.nie@linaro.org>
@@ -10,73 +10,54 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawn.guo@linaro.org, xie.baoyou@z
 Cc: ulf.hansson@linaro.org, jh80.chung@samsung.com, jason.liu@linaro.org, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc@vger.kernel.org, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Data done irq is expected if data length is less than
-watermark in PIO mode. But fifo watermark is requested
-to be aligned with data length in some SoC so that TX/RX
-irq can be generated with data done irq. Add the
-watermark alignment to mark this requirement and force
-fifo watermark setting accordingly.
+Document the device-tree binding of ZTE MMC host on
+ZX296718 SoC.
 
 Signed-off-by: Jun Nie <jun.nie@linaro.org>
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
- drivers/mmc/host/dw_mmc.c  | 11 +++++++++--
- include/linux/mmc/dw_mmc.h |  3 +++
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/mmc/zx-dw-mshc.txt         | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index b600170..e890a45 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1113,11 +1113,15 @@ static void dw_mci_submit_data(struct dw_mci *host, struct mmc_data *data)
- 		mci_writel(host, CTRL, temp);
- 
- 		/*
--		 * Use the initial fifoth_val for PIO mode.
-+		 * Use the initial fifoth_val for PIO mode. If wm_algined
-+		 * is set, we set watermark same as data size.
- 		 * If next issued data may be transfered by DMA mode,
- 		 * prev_blksz should be invalidated.
- 		 */
--		mci_writel(host, FIFOTH, host->fifoth_val);
-+		if (host->wm_aligned)
-+			dw_mci_adjust_fifoth(host, data);
-+		else
-+			mci_writel(host, FIFOTH, host->fifoth_val);
- 		host->prev_blksz = 0;
- 	} else {
- 		/*
-@@ -2979,6 +2983,9 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
- 
- 	of_property_read_u32(np, "data-addr", &host->data_addr_override);
- 
-+	if (of_get_property(np, "fifo-watermark-aligned", NULL))
-+		host->wm_aligned = true;
+diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+new file mode 100644
+index 0000000..eaade0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+@@ -0,0 +1,33 @@
++* ZTE specific extensions to the Synopsys Designware Mobile Storage
++  Host Controller
 +
- 	if (!of_property_read_u32(np, "clock-frequency", &clock_frequency))
- 		pdata->bus_hz = clock_frequency;
- 
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 1c09cca..cc7da85 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -114,6 +114,8 @@ struct dw_mci_dma_slave {
-  * @slot: Slots sharing this MMC controller.
-  * @fifo_depth: depth of FIFO.
-  * @data_addr_override: override fifo reg offset with this value.
-+ * @wm_aligned: force fifo watermark equal with data length in PIO mode.
-+ *	Set as true if alignment is needed.
-  * @data_shift: log2 of FIFO item size.
-  * @part_buf_start: Start index in part_buf.
-  * @part_buf_count: Bytes of partial data in part_buf.
-@@ -162,6 +164,7 @@ struct dw_mci {
- 	void __iomem		*regs;
- 	void __iomem		*fifo_reg;
- 	u32			data_addr_override;
-+	bool			wm_aligned;
- 
- 	struct scatterlist	*sg;
- 	struct sg_mapping_iter	sg_miter;
++The Synopsys designware mobile storage host controller is used to interface
++a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
++differences between the core Synopsys dw mshc controller properties described
++by synopsys-dw-mshc.txt and the properties used by the ZTE specific
++extensions to the Synopsys Designware Mobile Storage Host Controller.
++
++Required Properties:
++
++* compatible: should be
++	- "zte,zx296718-dw-mshc": for ZX SoCs
++
++Example:
++
++	mmc1: mmc@1110000 {
++		compatible = "zte,zx296718-dw-mshc";
++		reg = <0x01110000 0x1000>;
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++		fifo-depth = <32>;
++		data-addr = <0x200>;
++		fifo-watermark-aligned;
++		bus-width = <4>;
++		clock-frequency = <50000000>;
++		clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
++		clock-names = "biu", "ciu";
++		num-slots = <1>;
++		max-frequency = <50000000>;
++		cap-sdio-irq;
++		cap-sd-highspeed;
++		status = "disabled";
++	};
 -- 
 1.9.1
 
