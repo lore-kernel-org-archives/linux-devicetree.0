@@ -1,45 +1,158 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv2 2/3] clk: mvebu: adjust clock handling for the CP110
- system controller
-Date: Wed, 21 Dec 2016 16:14:56 -0800
-Message-ID: <20161222001456.GX8288@codeaurora.org>
-References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482316017-22154-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESEND PATCH v2] arm64: dts: rockchip: add u2phy clock for ehci
+ and ohci of rk3399
+Date: Wed, 21 Dec 2016 16:47:26 -0800
+Message-ID: <CAD=FV=WFFGSc7yBeaE+++VAuRKwMixpGUwA9bCCro4TCe0+GAA@mail.gmail.com>
+References: <1482316182-2305-1-git-send-email-zhengxing@rock-chips.com>
+ <1482316865-2769-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1482316017-22154-3-git-send-email-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Hanna Hawa <hannah@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1482316865-2769-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/21, Thomas Petazzoni wrote:
-> This commit:
-> 
->  - makes the GOP_DP (bit 9) gatable clock a child clock of the
->    SD_MMC_GOP (bit 18) clock, as it should have been. The clock for bit
->    18 was just named SD_MMC, but since it also covers the GOP block, it
->    is renamed SD_MMC_GOP.
-> 
->  - makes the MG (bit 5) gatable clock a child clock of the MG_CORE
->    clock (bit 6)
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Hi,
+
+On Wed, Dec 21, 2016 at 2:41 AM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> From: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> We found that the suspend process was blocked when it run into
+> ehci/ohci module due to clk-480m of usb2-phy was disabled.
+>
+> The root cause is that usb2-phy suspended earlier than ehci/ohci
+> (usb2-phy will be auto suspended if no devices plug-in). and the
+> clk-480m provided by it was disabled if no module used. However,
+> some suspend process related ehci/ohci are base on this clock,
+> so we should refer it into ehci/ohci driver to prevent this case.
+>
+> The u2phy clock flow like this:
+> ===
+>       u2phy ________________
+>            |                |    |-----> UTMI_CLK ---------> | EHCI |
+> OSC_24M ---|---> PHY_PLL----|----|
+>            |________^_______|    |-----> 480M_CLK ---|G|---> | USBPHY_480M_SRC| ----> USBPHY_480M for SoC
+>                     |
+>                     |
+>                    GRF
+> ===
+>
+> Signed-off-by: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
+>
+> Changes in v2:
+> - update the commit message
+> - remove patches whic add and export the USBPHYx_480M_SRC clock IDs
+>
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index b65c193..2ad9255 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -315,8 +315,10 @@
+>                 compatible = "generic-ehci";
+>                 reg = <0x0 0xfe380000 0x0 0x20000>;
+>                 interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>;
+> -               clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+> -               clock-names = "hclk_host0", "hclk_host0_arb";
+> +               clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+> +                        <&u2phy0>;
+> +               clock-names = "usbhost", "arbiter",
+> +                             "utmi";
+>                 phys = <&u2phy0_host>;
+>                 phy-names = "usb";
+>                 status = "disabled";
+> @@ -326,8 +328,12 @@
+>                 compatible = "generic-ohci";
+>                 reg = <0x0 0xfe3a0000 0x0 0x20000>;
+>                 interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>;
+> -               clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+> -               clock-names = "hclk_host0", "hclk_host0_arb";
+> +               clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>,
+> +                        <&u2phy0>;
+> +               clock-names = "usbhost", "arbiter",
+> +                             "utmi";
+> +               phys = <&u2phy0_host>;
+> +               phy-names = "usb";
+>                 status = "disabled";
+>         };
+>
+> @@ -335,8 +341,10 @@
+>                 compatible = "generic-ehci";
+>                 reg = <0x0 0xfe3c0000 0x0 0x20000>;
+>                 interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>;
+> -               clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+> -               clock-names = "hclk_host1", "hclk_host1_arb";
+> +               clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>,
+> +                        <&u2phy1>;
+> +               clock-names = "usbhost", "arbiter",
+> +                             "utmi";
+>                 phys = <&u2phy1_host>;
+>                 phy-names = "usb";
+>                 status = "disabled";
+> @@ -346,8 +354,12 @@
+>                 compatible = "generic-ohci";
+>                 reg = <0x0 0xfe3e0000 0x0 0x20000>;
+>                 interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH 0>;
+> -               clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+> -               clock-names = "hclk_host1", "hclk_host1_arb";
+> +               clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>,
+> +                        <&u2phy1>;
+> +               clock-names = "usbhost", "arbiter",
+> +                             "utmi";
+> +               phys = <&u2phy1_host>;
+> +               phy-names = "usb";
 
-Applied to clk-next
+This all looks better to me.  From a device tree point of view it
+makes lots of sense to expose this PHY clock to the controller.  Thus:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+
+I can't say that I understand all the interactions between the PHY
+code and the USB driver, but presumably others have reviewed that
+more?  Offline Heiko pointed me at rockchip_usb2phy_otg_sm_work()
+which apparently calls rockchip_usb2phy_power_off() and
+rockchip_usb2phy_power_on() directly sometimes behind the back of the
+PHY framework.  Very strange.
+
+
+I will also say that there were still some unanswered questions from
+the previous thread, namely:
+
+A) Heiko: Also, with the change, the ehci will keep the clock (and
+thus the phy) always on. Does the phy-autosuspend even save anything
+now?
+
+B) Brian: Is thre a race between power_off() and the delayed work in
+your USB2 PHY driver?
+
+
+IMHO neither of those two questions affect the correctness of this
+patch: that this clock ought to be provided to the USB Controller.
+...but they both are important questions that should be answered.
+
+One other last note is that we probably should be specifying a more
+specific compatible string, like:
+
+  "rk3399-ehci", "generic-ehci"
+
+That will allow us later to use these same device tree files and
+perhaps deal with the clocks / PHYs in a more efficient way.
+
+
+-Doug
