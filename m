@@ -1,110 +1,126 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
-Date: Thu, 22 Dec 2016 14:59:07 +0000
-Message-ID: <3ef11852-8dc5-dbb3-7dc3-1ec8f4fc58da@synopsys.com>
-References: <cover.1481131072.git.lolivei@synopsys.com>
- <5173a9456c423025d8f15baafa2499440cbe1b51.1481131072.git.lolivei@synopsys.com>
- <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
- <BCF0D4927F9C694C9AEA8827D4A9C7C897CE12@de02wembxa.internal.synopsys.com>
- <CAL_JsqJwjX1Y=bDD-hKcXqa1aBKjVhXjEZm6j2tMAQszyv-QhA@mail.gmail.com>
- <BCF0D4927F9C694C9AEA8827D4A9C7C897CEDB@de02wembxa.internal.synopsys.com>
- <CAL_Jsq+DDx460jcLj34_X9MdtCqyc4izwc=3ThnFri+NjBaGUA@mail.gmail.com>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: Re: [2/3] serial: 8250: Add new port type for TI
+ DA8xx/OMAPL13x/AM17xx/AM18xx
+Date: Thu, 22 Dec 2016 09:21:34 -0600
+Message-ID: <306c9ce3-4003-84b9-fd0f-34232399f1aa@ti.com>
+References: <1482265384-715-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+DDx460jcLj34_X9MdtCqyc4izwc=3ThnFri+NjBaGUA@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Ramiro.Oliveira@synopsys.com" <Ramiro.Oliveira@synopsys.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482265384-715-3-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 13-Dec-16 14:11, Rob Herring wrote:
-> Again, please don't top post. And your line wrapping is messed up.
-> IOW, you can't use Outlook.
+
+
+On 12/20/2016 02:23 PM, David Lechner wrote:
+> This adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx. These
+> SoCs have standard 8250 registers plus some extra non-standard registers.
 > 
-> On Tue, Dec 13, 2016 at 4:50 AM, Luis de Oliveira
-> <Luis.Oliveira@synopsys.com> wrote:
->> The controller for i2c-designware cannot be slave/master at the same time and it has to be enabled knowing beforehand if we want it to be slave or master by something outside of the controller itself.
->>
->> I as looking and I see the use of this I2C_OWN_SLAVE_ADDRESS with the "linux,slave-24c02" slave interface  but I am not seeing how it will help me identify a selected i2c-designware block as a "slave" device before instantiation. I'm sorry if I'm not understanding properly.
->> I use the "linux,slave-24c02" to instantiate the i2c-designware as a slave with an address so I can do write/read operations, it is how I tested it.
+> The UART will not function unless the non-standard Power and Emulation
+> Management Register (PWREMU_MGMT) is configured correctly. This is
+> currently handled in arch/arm/mach-davinci/serial.c for non-device-tree
+> boards. Making this part of the UART driver will allow UART to work on
+> device-tree boards as well and the mach code can eventually be removed.
 > 
-> Something like this:
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+>  drivers/tty/serial/8250/8250_of.c   |  1 +
+>  drivers/tty/serial/8250/8250_port.c | 22 ++++++++++++++++++++++
+>  include/uapi/linux/serial_core.h    |  3 ++-
+>  include/uapi/linux/serial_reg.h     |  8 ++++++++
+>  4 files changed, 33 insertions(+), 1 deletion(-)
 > 
-> of_for_each_child_node(child) {
->   of_property_read_u32(child, "reg", &reg);
->   if (reg & I2C_OWN_SLAVE_ADDRESS))
->     im_a_slave = true;
-> }
+> diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+> index d25ab1c..5281252 100644
+> --- a/drivers/tty/serial/8250/8250_of.c
+> +++ b/drivers/tty/serial/8250/8250_of.c
+> @@ -332,6 +332,7 @@ static const struct of_device_id of_platform_serial_table[] = {
+>  		.data = (void *)PORT_ALTR_16550_F128, },
+>  	{ .compatible = "mrvl,mmp-uart",
+>  		.data = (void *)PORT_XSCALE, },
+> +	{ .compatible = "ti,da830-uart", .data = (void *)PORT_DA830, },
+>  	{ /* end of list */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, of_platform_serial_table);
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index fe4399b..ea854054 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -273,6 +273,15 @@ static const struct serial8250_config uart_config[] = {
+>  		.rxtrig_bytes	= {1, 4, 8, 14},
+>  		.flags		= UART_CAP_FIFO,
+>  	},
+> +	[PORT_DA830] = {
+> +		.name		= "TI DA8xx/OMAPL13x/AM17xx/AM18xx",
+> +		.fifo_size	= 16,
+> +		.tx_loadsz	= 16,
+> +		.fcr		= UART_FCR_DMA_SELECT | UART_FCR_ENABLE_FIFO |
+> +				  UART_FCR_R_TRIG_10,
+> +		.rxtrig_bytes	= {1, 4, 8, 14},
+> +		.flags		= UART_CAP_FIFO | UART_CAP_AFE,
+> +	},
+>  };
+
+
+Any reason why the fcr and flags fields are changed when compared
+against PORT_16550A?
+>  
+>  /* Uart divisor latch read */
+> @@ -2118,6 +2127,19 @@ int serial8250_do_startup(struct uart_port *port)
+>  		serial_port_out(port, UART_LCR, 0);
+>  	}
+>  
+> +	if (port->type == PORT_DA830) {
+> +		/* Reset the port */
+> +		serial_port_out(port, UART_IER, 0);
+> +		serial_port_out(port, UART_DA830_PWREMU_MGMT, 0);
+> +		mdelay(10);
+> +
+> +		/* Enable Tx, Rx and free run mode */
+> +		serial_port_out(port, UART_DA830_PWREMU_MGMT,
+> +				UART_DA830_PWREMU_MGMT_UTRST |
+> +				UART_DA830_PWREMU_MGMT_URRST |
+> +				UART_DA830_PWREMU_MGMT_FREE);
+> +	}
+> +
+>  #ifdef CONFIG_SERIAL_8250_RSA
+>  	/*
+>  	 * If this is an RSA port, see if we can kick it up to the
+> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
+> index 99dbed8..a126d05 100644
+> --- a/include/uapi/linux/serial_core.h
+> +++ b/include/uapi/linux/serial_core.h
+> @@ -56,7 +56,8 @@
+>  #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs */
+>  #define PORT_RT2880	29	/* Ralink RT2880 internal UART */
+>  #define PORT_16550A_FSL64 30	/* Freescale 16550 UART with 64 FIFOs */
+> -#define PORT_MAX_8250	30	/* max port ID */
+> +#define PORT_DA830	31	/* TI DA8xx/OMAP13x/AM17xx/AM18xx */
+> +#define PORT_MAX_8250	31	/* max port ID */
+>  
+>  /*
+>   * ARM specific type numbers.  These are not currently guaranteed
+> diff --git a/include/uapi/linux/serial_reg.h b/include/uapi/linux/serial_reg.h
+> index b4c0484..0e72eeb 100644
+> --- a/include/uapi/linux/serial_reg.h
+> +++ b/include/uapi/linux/serial_reg.h
+> @@ -327,6 +327,14 @@
+>  #define SERIAL_RSA_BAUD_BASE (921600)
+>  #define SERIAL_RSA_BAUD_BASE_LO (SERIAL_RSA_BAUD_BASE / 8)
+>  
+> +/* Extra registers for TI DA8xx/OMAP13x/AM17xx/AM18xx */
+> +#define UART_DA830_PWREMU_MGMT	12
+> +
+> +/* PWREMU_MGMT register bits */
+> +#define UART_DA830_PWREMU_MGMT_FREE	(1 << 0)  /* Free-running mode */
+> +#define UART_DA830_PWREMU_MGMT_URRST	(1 << 13) /* Receiver reset/enable */
+> +#define UART_DA830_PWREMU_MGMT_UTRST	(1 << 14) /* Transmitter reset/enable */
+> +
+>  /*
+>   * Extra serial register definitions for the internal UARTs
+>   * in TI OMAP processors.
 > 
-> ...rather than testing "mode" is equal to "slave".
-> 
-> Rob
-> 
-
-Hi Rob, Andy,
-
-I'm struggling to implement your suggestion @Rob. I checked the
-tegra124-jetson-tk1.dts that uses that approach but I have some doubts.
-
-My DT is as follows
-
-	i2c@0x2000 {
-                        compatible = "snps,designware-i2c";
-                        reg = <0x2000 0x100>;
-                        clock-frequency = <400000>;
-                        clocks = <&i2cclk>;
-                        interrupts = <0>;
-
-I could add something like this:
-
-			eeprom@64 {
-				compatible = "linux,slave-24c02";
-				reg = <(I2C_OWN_SLAVE_ADDRESS | 0x64)>;
-			}
-
-But I think this is different form what I was doing before. I have two questions:
-
-- This way the I2C controller is identified as a slave controller or just the
-subnode eeprom?
-- This way looks like my slave address will be fixed
-
-In the previous Patch v3 submission @Andy suggested a property that selects mode
-that I did and it's working. And you @Rob suggested to do it a common property.
-It is implemented in the DT like:
-
-			mode = "slave";
-
-So before I do this changes can you please agree both if you still think this is
-the best approach?
-
-
-Thank you both for your time,
-Luis
-
->>
->> Luis
->>
->> -----Original Message-----
->> From: Rob Herring [mailto:robh@kernel.org]
->> Sent: Monday, December 12, 2016 23:16
->> To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
->> Cc: wsa@the-dreams.de; mark.rutland@arm.com; jarkko.nikula@linux.intel.com; andriy.shevchenko@linux.intel.com; mika.westerberg@linux.intel.com; linux-i2c@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Ramiro.Oliveira@synopsys.com; Joao.Pinto@synopsys.com; CARLOS.PALMINHA@synopsys.com
->> Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
->>
->> On Mon, Dec 12, 2016 at 12:35 PM, Luis de Oliveira <Luis.Oliveira@synopsys.com> wrote:
->>> Hi all,
->>
->> Please don't top post.
->>
->>>
->>> The slave address could be set by the I2C slave backend so I can't use it to setup the controller.
->>> A boolean property was my initial approach then Andy and Wolfram Sang suggested the use of compatible strings and later It was suggested to use a property to select mode but I can do it again if it's the best way.
->>> Can you please tell me where should it be documented?
->>
->> bindings/i2c/i2c.txt.
->>
->> Actually, looking at this some more, we already have a way to describe the controller being a slave device with the I2C_OWN_SLAVE_ADDRESS flag in the reg property. We should just need a helper to read reg property of each child and check for the bit set.
->>
->> Rob
