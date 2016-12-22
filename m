@@ -1,93 +1,110 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] power: reset: add linkstation-reset driver
-Date: Thu, 22 Dec 2016 15:49:24 +0100
-Message-ID: <20161222144924.gidgzk2ujpvlti3t@earth>
-References: <20161207172415.9776-1-rogershimizu@gmail.com>
- <20161216100501.18173-1-rogershimizu@gmail.com>
- <20161219153802.vhcish35qyjbpevj@earth>
- <CAEQ9gEnQEHdcA4ox3teOXKcrdf2AAqUMp=A6W6c7nXhk4VrKiw@mail.gmail.com>
- <20161221155929.o4ihvqezbuqx2stl@earth>
- <20161221164136.GM30952@lunn.ch>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
+Date: Thu, 22 Dec 2016 14:59:07 +0000
+Message-ID: <3ef11852-8dc5-dbb3-7dc3-1ec8f4fc58da@synopsys.com>
+References: <cover.1481131072.git.lolivei@synopsys.com>
+ <5173a9456c423025d8f15baafa2499440cbe1b51.1481131072.git.lolivei@synopsys.com>
+ <20161212170214.4cydp256jsp7srar@rob-hp-laptop>
+ <BCF0D4927F9C694C9AEA8827D4A9C7C897CE12@de02wembxa.internal.synopsys.com>
+ <CAL_JsqJwjX1Y=bDD-hKcXqa1aBKjVhXjEZm6j2tMAQszyv-QhA@mail.gmail.com>
+ <BCF0D4927F9C694C9AEA8827D4A9C7C897CEDB@de02wembxa.internal.synopsys.com>
+ <CAL_Jsq+DDx460jcLj34_X9MdtCqyc4izwc=3ThnFri+NjBaGUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7xihjzukwrsipi7j"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161221164136.GM30952-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryan Tandy <ryan-pRYBVO4bdZ33fQ9qLvQP4Q@public.gmane.org>, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, Sylver Bruneau <sylver.bruneau-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Herbert Valerio Riedel <hvr-mXXj517/zsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+DDx460jcLj34_X9MdtCqyc4izwc=3ThnFri+NjBaGUA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Ramiro.Oliveira@synopsys.com" <Ramiro.Oliveira@synopsys.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
+On 13-Dec-16 14:11, Rob Herring wrote:
+> Again, please don't top post. And your line wrapping is messed up.
+> IOW, you can't use Outlook.
+> 
+> On Tue, Dec 13, 2016 at 4:50 AM, Luis de Oliveira
+> <Luis.Oliveira@synopsys.com> wrote:
+>> The controller for i2c-designware cannot be slave/master at the same time and it has to be enabled knowing beforehand if we want it to be slave or master by something outside of the controller itself.
+>>
+>> I as looking and I see the use of this I2C_OWN_SLAVE_ADDRESS with the "linux,slave-24c02" slave interface  but I am not seeing how it will help me identify a selected i2c-designware block as a "slave" device before instantiation. I'm sorry if I'm not understanding properly.
+>> I use the "linux,slave-24c02" to instantiate the i2c-designware as a slave with an address so I can do write/read operations, it is how I tested it.
+> 
+> Something like this:
+> 
+> of_for_each_child_node(child) {
+>   of_property_read_u32(child, "reg", &reg);
+>   if (reg & I2C_OWN_SLAVE_ADDRESS))
+>     im_a_slave = true;
+> }
+> 
+> ...rather than testing "mode" is equal to "slave".
+> 
+> Rob
+> 
 
---7xihjzukwrsipi7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Rob, Andy,
 
-Hi Andrew,
+I'm struggling to implement your suggestion @Rob. I checked the
+tegra124-jetson-tk1.dts that uses that approach but I have some doubts.
 
-On Wed, Dec 21, 2016 at 05:41:36PM +0100, Andrew Lunn wrote:
-> > These models can just be added to qnap-poweroff, which handles
-> > exactly this special case as far as I can see.
->=20
-> Nope, qnap is much, much simpler. The configuration of the serial port
-> is simpler, and it only needs to send a single byte. Here we have all
-> sorts of checksums to calculate, stuff coming back from the
-> microcontroller, etc. The complexity is much higher.
->=20
-> V1 of this patchset did extend the qnap driver. But in fact, very
-> little of the original code was left afterwards, and lots of new code
-> was added. So i requested a new driver be written, rather than extend
-> my qnap driver.
->=20
-> I would not like to see the nice and simple qnap driver get all this
-> code added to it, making it much harder to maintain, for very little
-> gain.
+My DT is as follows
 
-I'm talking about the special case, where it also sends only a
-single byte:
+	i2c@0x2000 {
+                        compatible = "snps,designware-i2c";
+                        reg = <0x2000 0x100>;
+                        clock-frequency = <400000>;
+                        clocks = <&i2cclk>;
+                        interrupts = <0>;
 
-> +     /* send the power-off command to PIC */
-> +     if(cfg->cmd[0][0] =3D=3D 1 && cfg->cmd[1][0] =3D=3D 0) {
-> +             /* if it's simply one-byte command, send it directly */
-> +             writel(cfg->cmd[0][1], UART1_REG(TX));
-> +     }
+I could add something like this:
 
-The configuration is different, but
+			eeprom@64 {
+				compatible = "linux,slave-24c02";
+				reg = <(I2C_OWN_SLAVE_ADDRESS | 0x64)>;
+			}
 
-a) probably it can just use the config from the qnap driver, since
-   it just sends a single byte.
-b) making the 4 config registers configurable in the qnap driver does
-   not add much complexity.
+But I think this is different form what I was doing before. I have two questions:
 
-So this case should be removed from the linkstation-reset driver. If
-any board needs it, it should use the qnap-poweroff driver instead.
+- This way the I2C controller is identified as a slave controller or just the
+subnode eeprom?
+- This way looks like my slave address will be fixed
 
--- Sebastian
+In the previous Patch v3 submission @Andy suggested a property that selects mode
+that I did and it's working. And you @Rob suggested to do it a common property.
+It is implemented in the DT like:
 
---7xihjzukwrsipi7j
-Content-Type: application/pgp-signature; name="signature.asc"
+			mode = "slave";
 
------BEGIN PGP SIGNATURE-----
+So before I do this changes can you please agree both if you still think this is
+the best approach?
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhb5/EACgkQ2O7X88g7
-+ppFSA/6AqEACcYm11SCQZ1b0wi7YK54i8yiZes2kRNN5d9ehekA77cMO1IF1o+K
-+SSAsQRmW97wJsw3LewX/Br7hIl7aC0hYhYvgcsl0sd/CxyIAvpF4WtRCQPRCMzv
-uZX8n7g70x4PiDQfmGHrOz2nehjPJzhm8bZIabPWIdf4WvJxPurkNmkOoOhZBDIS
-4WpdQxEg/6+nd2wjKFgWw2En4XM16YZTFX/wH+LBEVy++jmOQVWk1xPS3qoc/Kge
-Z+T4VdaIzXd0AuXWGdJA1yw0d9CYuUvP6ZBdZCAVyik3UjwrdOQbEjnJqEzaEkWr
-/EWf2YWaBAc+7frO3vBXtdFgZUoafSTfYx6Lp5fswajxoqNUMJzIPHSCb+5vG+P5
-k85WoixXIvsvzcjPXcZY5OTwkdaxFm+mUcqTABLX5pTQKev7Sw+qfGz/KVzSZ4iP
-VXtgk/Twyp+HloZqGrEEJdnfhReblCbPiPYWXCpaaF5bqtdDqC2ePToDhD+Coaq4
-FEgY6DA6YOs3+u8RH1GsnnM+YNpBxyQg+Ba21LT6PUAtCvLY5lI21zqS5t1ixTty
-KedQT0nlCeUdWT1jj5Lnu8jT9BD13gKIQX/hFJiWxW4yyyZMtRZNdFjP4DcNfHEc
-b63nfhOzzQXVQgPQeszhD9XtOu3o86kT0GwQi9RNYfbAS9V8qPE=
-=0jPP
------END PGP SIGNATURE-----
 
---7xihjzukwrsipi7j--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you both for your time,
+Luis
+
+>>
+>> Luis
+>>
+>> -----Original Message-----
+>> From: Rob Herring [mailto:robh@kernel.org]
+>> Sent: Monday, December 12, 2016 23:16
+>> To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+>> Cc: wsa@the-dreams.de; mark.rutland@arm.com; jarkko.nikula@linux.intel.com; andriy.shevchenko@linux.intel.com; mika.westerberg@linux.intel.com; linux-i2c@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Ramiro.Oliveira@synopsys.com; Joao.Pinto@synopsys.com; CARLOS.PALMINHA@synopsys.com
+>> Subject: Re: [PATCH v4 3/5] i2c: designware: Add slave definitions
+>>
+>> On Mon, Dec 12, 2016 at 12:35 PM, Luis de Oliveira <Luis.Oliveira@synopsys.com> wrote:
+>>> Hi all,
+>>
+>> Please don't top post.
+>>
+>>>
+>>> The slave address could be set by the I2C slave backend so I can't use it to setup the controller.
+>>> A boolean property was my initial approach then Andy and Wolfram Sang suggested the use of compatible strings and later It was suggested to use a property to select mode but I can do it again if it's the best way.
+>>> Can you please tell me where should it be documented?
+>>
+>> bindings/i2c/i2c.txt.
+>>
+>> Actually, looking at this some more, we already have a way to describe the controller being a slave device with the I2C_OWN_SLAVE_ADDRESS flag in the reg property. We should just need a helper to read reg property of each child and check for the bit set.
+>>
+>> Rob
