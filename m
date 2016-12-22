@@ -1,274 +1,171 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Thu, 22 Dec 2016 17:13:26 +1300
-Message-ID: <20161222041328.3303-4-chris.packham@alliedtelesis.co.nz>
-References: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, devicetree@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Laxman Dewangan <ldewangan@nvidia.com>
+From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Date: Wed, 21 Dec 2016 23:18:32 -0500
+Message-ID: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+The TRF7970A has configuration options to support hardware designs
+which use a 27.12MHz clock. This commit adds a device tree option
+'clock-frequency' to support configuring the this chip for default
+13.56MHz clock or the optional 27.12MHz clock.
 
-This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
-from Marvell.
-
-Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
 ---
- .../pinctrl/marvell,armada-98dx3236-pinctrl.txt    |  46 +++++++
- drivers/pinctrl/mvebu/pinctrl-armada-xp.c          | 145 +++++++++++++++++++++
- 2 files changed, 191 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+ .../devicetree/bindings/net/nfc/trf7970a.txt       |  2 +
+ drivers/nfc/trf7970a.c                             | 50 +++++++++++++++++-----
+ 2 files changed, 41 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-new file mode 100644
-index 000000000000..34c1e380adaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-@@ -0,0 +1,46 @@
-+* Marvell 98dx3236 pinctrl driver for mpp
-+
-+Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
-+part and usage
-+
-+Required properties:
-+- compatible: "marvell,98dx3236-pinctrl"
-+- reg: register specifier of MPP registers
-+
-+This driver supports all 98dx3236, 98dx3336 and 98dx4251 variants
-+
-+name          pins     functions
-+================================================================================
-+mpp0          0        gpio, spi0(mosi), dev(ad8)
-+mpp1          1        gpio, spi0(miso), dev(ad9)
-+mpp2          2        gpio, spi0(sck), dev(ad10)
-+mpp3          3        gpio, spi0(cs0), dev(ad11)
-+mpp4          4        gpio, spi0(cs1), smi(mdc), dev(cs0)
-+mpp5          5        gpio, pex(rsto), dev(bootcs)
-+mpp6          6        gpio, dev(a2)
-+mpp7          7        gpio, dev(ale0)
-+mpp8          8        gpio, dev(ale1)
-+mpp9          9        gpio, dev(ready0)
-+mpp10         10       gpio, dev(ad12)
-+mpp11         11       gpio, uart1(rxd), uart0(cts), dev(ad13)
-+mpp12         12       gpio, uart1(txd), uart0(rts), dev(ad14)
-+mpp13         13       gpio, intr(out), dev(ad15)
-+mpp14         14       gpio, i2c0(sck)
-+mpp15         15       gpio, i2c0(sda)
-+mpp16         16       gpio, dev(oe)
-+mpp17         17       gpio, dev(clk)
-+mpp18         18       gpio, uart1(txd)
-+mpp19         19       gpio, uart1(rxd), dev(rb)
-+mpp20         20       gpio, dev(we)
-+mpp21         21       gpio, dev(ad0)
-+mpp22         22       gpio, dev(ad1)
-+mpp23         23       gpio, dev(ad2)
-+mpp24         24       gpio, dev(ad3)
-+mpp25         25       gpio, dev(ad4)
-+mpp26         26       gpio, dev(ad5)
-+mpp27         27       gpio, dev(ad6)
-+mpp28         28       gpio, dev(ad7)
-+mpp29         29       gpio, dev(a0)
-+mpp30         30       gpio, dev(a1)
-+mpp31         31       gpio, slv_smi(mdc), smi(mdc), dev(we1)
-+mpp32         32       gpio, slv_smi(mdio), smi(mdio), dev(cs1)
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-index e4ea71a9d985..2586903c59f0 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-@@ -49,6 +49,10 @@ enum armada_xp_variant {
- 	V_MV78460	= BIT(2),
- 	V_MV78230_PLUS	= (V_MV78230 | V_MV78260 | V_MV78460),
- 	V_MV78260_PLUS	= (V_MV78260 | V_MV78460),
-+	V_98DX3236	= BIT(3),
-+	V_98DX3336	= BIT(4),
-+	V_98DX4251	= BIT(5),
-+	V_98DX3236_PLUS	= (V_98DX3236 | V_98DX3336 | V_98DX4251),
+diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+index 32b35a0..8b01fc81 100644
+--- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
++++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+@@ -21,6 +21,7 @@ Optional SoC Specific Properties:
+ - t5t-rmb-extra-byte-quirk: Specify that the trf7970a has the erratum
+   where an extra byte is returned by Read Multiple Block commands issued
+   to Type 5 tags.
++- clock-frequency: Set to specify that the input frequency to the trf7970a is 13560000Hz or 27120000Hz
+ 
+ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+ 
+@@ -43,6 +44,7 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
+ 		irq-status-read-quirk;
+ 		en2-rf-quirk;
+ 		t5t-rmb-extra-byte-quirk;
++		clock-frequency = <27120000>;
+ 		status = "okay";
+ 	};
  };
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index 26c9dbb..b1cd4ef 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -124,6 +124,9 @@
+ 		 NFC_PROTO_ISO15693_MASK | NFC_PROTO_NFC_DEP_MASK)
  
- static struct mvebu_mpp_mode armada_xp_mpp_modes[] = {
-@@ -360,6 +364,124 @@ static struct mvebu_mpp_mode armada_xp_mpp_modes[] = {
- 		 MPP_VAR_FUNCTION(0x1, "dev", "ad31",       V_MV78260_PLUS)),
- };
- 
-+static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
-+	MPP_MODE(0,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "spi0", "mosi",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad8",         V_98DX3236_PLUS)),
-+	MPP_MODE(1,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "spi0", "miso",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad9",         V_98DX3236_PLUS)),
-+	MPP_MODE(2,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "spi0", "csk",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad10",        V_98DX3236_PLUS)),
-+	MPP_MODE(3,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "spi0", "cs0",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad11",        V_98DX3236_PLUS)),
-+	MPP_MODE(4,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "spi0", "cs1",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "smi", "mdc",         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "cs0",         V_98DX3236_PLUS)),
-+	MPP_MODE(5,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "pex", "rsto",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "bootcs0",     V_98DX3236_PLUS)),
-+	MPP_MODE(6,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "a2",          V_98DX3236_PLUS)),
-+	MPP_MODE(7,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ale0",        V_98DX3236_PLUS)),
-+	MPP_MODE(8,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ale1",        V_98DX3236_PLUS)),
-+	MPP_MODE(9,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ready0",      V_98DX3236_PLUS)),
-+	MPP_MODE(10,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad12",        V_98DX3236_PLUS)),
-+	MPP_MODE(11,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "uart1", "rxd",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "uart0", "cts",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad13",        V_98DX3236_PLUS)),
-+	MPP_MODE(12,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "uart1", "txd",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "uart0", "rts",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad14",        V_98DX3236_PLUS)),
-+	MPP_MODE(13,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "intr", "out",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "ad15",        V_98DX3236_PLUS)),
-+	MPP_MODE(14,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "i2c0", "sck",        V_98DX3236_PLUS)),
-+	MPP_MODE(15,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "i2c0", "sda",        V_98DX3236_PLUS)),
-+	MPP_MODE(16,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "oe",          V_98DX3236_PLUS)),
-+	MPP_MODE(17,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "clkout",      V_98DX3236_PLUS)),
-+	MPP_MODE(18,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "uart1", "txd",       V_98DX3236_PLUS)),
-+	MPP_MODE(19,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "uart1", "rxd",       V_98DX3236_PLUS)),
-+	MPP_MODE(20,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "we0",         V_98DX3236_PLUS)),
-+	MPP_MODE(21,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad0",         V_98DX3236_PLUS)),
-+	MPP_MODE(22,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad1",         V_98DX3236_PLUS)),
-+	MPP_MODE(23,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad2",         V_98DX3236_PLUS)),
-+	MPP_MODE(24,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad3",         V_98DX3236_PLUS)),
-+	MPP_MODE(25,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad4",         V_98DX3236_PLUS)),
-+	MPP_MODE(26,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad5",         V_98DX3236_PLUS)),
-+	MPP_MODE(27,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad6",         V_98DX3236_PLUS)),
-+	MPP_MODE(28,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "ad7",         V_98DX3236_PLUS)),
-+	MPP_MODE(29,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "a0",          V_98DX3236_PLUS)),
-+	MPP_MODE(30,
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "dev", "a1",          V_98DX3236_PLUS)),
-+	MPP_MODE(31,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "slv_smi", "mdc",     V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "smi", "mdc",         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "we1",         V_98DX3236_PLUS)),
-+	MPP_MODE(32,
-+		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x1, "slv_smi", "mdio",    V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x3, "smi", "mdio",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "cs1",         V_98DX3236_PLUS)),
-+};
+ #define TRF7970A_AUTOSUSPEND_DELAY		30000 /* 30 seconds */
++#define TRF7970A_13MHZ_CLOCK_FREQUENCY		13560000
++#define TRF7970A_27MHZ_CLOCK_FREQUENCY		27120000
 +
- static struct mvebu_pinctrl_soc_info armada_xp_pinctrl_info;
  
- static const struct of_device_id armada_xp_pinctrl_of_match[] = {
-@@ -375,6 +497,10 @@ static const struct of_device_id armada_xp_pinctrl_of_match[] = {
- 		.compatible = "marvell,mv78460-pinctrl",
- 		.data       = (void *) V_MV78460,
- 	},
-+	{
-+		.compatible = "marvell,98dx3236-pinctrl",
-+		.data       = (void *) V_98DX3236,
-+	},
- 	{ },
- };
+ #define TRF7970A_RX_SKB_ALLOC_SIZE		256
  
-@@ -407,6 +533,14 @@ static struct pinctrl_gpio_range mv78460_mpp_gpio_ranges[] = {
- 	MPP_GPIO_RANGE(2,  64, 64,  3),
- };
+@@ -1056,12 +1059,11 @@ static int trf7970a_init(struct trf7970a *trf)
  
-+static struct mvebu_mpp_ctrl mv98dx3236_mpp_controls[] = {
-+	MPP_FUNC_CTRL(0, 32, NULL, armada_xp_mpp_ctrl),
-+};
-+
-+static struct pinctrl_gpio_range mv98dx3236_mpp_gpio_ranges[] = {
-+	MPP_GPIO_RANGE(0,   0,  0, 32),
-+};
-+
- static int armada_xp_pinctrl_suspend(struct platform_device *pdev,
- 				     pm_message_t state)
- {
-@@ -488,6 +622,17 @@ static int armada_xp_pinctrl_probe(struct platform_device *pdev)
- 		soc->gpioranges = mv78460_mpp_gpio_ranges;
- 		soc->ngpioranges = ARRAY_SIZE(mv78460_mpp_gpio_ranges);
+ 	trf->chip_status_ctrl &= ~TRF7970A_CHIP_STATUS_RF_ON;
+ 
+-	ret = trf7970a_write(trf, TRF7970A_MODULATOR_SYS_CLK_CTRL, 0);
++	ret = trf7970a_write(trf, TRF7970A_MODULATOR_SYS_CLK_CTRL,
++			trf->modulator_sys_clk_ctrl);
+ 	if (ret)
+ 		goto err_out;
+ 
+-	trf->modulator_sys_clk_ctrl = 0;
+-
+ 	ret = trf7970a_write(trf, TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS,
+ 			TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS_WLH_96 |
+ 			TRF7970A_ADJUTABLE_FIFO_IRQ_LEVELS_WLL_32);
+@@ -1181,27 +1183,37 @@ static int trf7970a_in_config_rf_tech(struct trf7970a *trf, int tech)
+ 	switch (tech) {
+ 	case NFC_DIGITAL_RF_TECH_106A:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_14443A_106;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_OOK;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCA;
  		break;
-+	case V_98DX3236:
-+	case V_98DX3336:
-+	case V_98DX4251:
-+		/* fall-through */
-+		soc->controls = mv98dx3236_mpp_controls;
-+		soc->ncontrols = ARRAY_SIZE(mv98dx3236_mpp_controls);
-+		soc->modes = mv98dx3236_mpp_modes;
-+		soc->nmodes = mv98dx3236_mpp_controls[0].npins;
-+		soc->gpioranges = mv98dx3236_mpp_gpio_ranges;
-+		soc->ngpioranges = ARRAY_SIZE(mv98dx3236_mpp_gpio_ranges);
-+		break;
+ 	case NFC_DIGITAL_RF_TECH_106B:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_14443B_106;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCB;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_212F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_FELICA_212;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCF;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_424F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_FELICA_424;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_NFCF;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_ISO15693:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_15693_SGL_1OF4_2648;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_OOK;
+ 		trf->guard_time = TRF7970A_GUARD_TIME_15693;
+ 		break;
+ 	default:
+@@ -1571,17 +1583,23 @@ static int trf7970a_tg_config_rf_tech(struct trf7970a *trf, int tech)
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+ 			TRF7970A_ISO_CTRL_NFC_CE |
+ 			TRF7970A_ISO_CTRL_NFC_CE_14443A;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_OOK;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_OOK;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_212F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+ 			TRF7970A_ISO_CTRL_NFC_NFCF_212;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		break;
+ 	case NFC_DIGITAL_RF_TECH_424F:
+ 		trf->iso_ctrl_tech = TRF7970A_ISO_CTRL_NFC_NFC_CE_MODE |
+ 			TRF7970A_ISO_CTRL_NFC_NFCF_424;
+-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_DEPTH_ASK10;
++		trf->modulator_sys_clk_ctrl =
++			(trf->modulator_sys_clk_ctrl & 0xf8) |
++			TRF7970A_MODULATOR_DEPTH_ASK10;
+ 		break;
+ 	default:
+ 		dev_dbg(trf->dev, "Unsupported rf technology: %d\n", tech);
+@@ -1987,6 +2005,7 @@ static int trf7970a_probe(struct spi_device *spi)
+ 	struct device_node *np = spi->dev.of_node;
+ 	struct trf7970a *trf;
+ 	int uvolts, autosuspend_delay, ret;
++	u32 clk_freq = TRF7970A_13MHZ_CLOCK_FREQUENCY;
+ 
+ 	if (!np) {
+ 		dev_err(&spi->dev, "No Device Tree entry\n");
+@@ -2043,6 +2062,15 @@ static int trf7970a_probe(struct spi_device *spi)
+ 		return ret;
  	}
  
- 	nregs = DIV_ROUND_UP(soc->nmodes, MVEBU_MPPS_PER_REG);
++	of_property_read_u32(np, "clock-frequency", &clk_freq);
++	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
++		(clk_freq != TRF7970A_13MHZ_CLOCK_FREQUENCY)) {
++		dev_err(trf->dev,
++			"clock-frequency (%u Hz) unsupported\n",
++			clk_freq);
++		return -EINVAL;
++	}
++
+ 	if (of_property_read_bool(np, "en2-rf-quirk"))
+ 		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+ 
 -- 
-2.11.0.24.ge6920cf
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
