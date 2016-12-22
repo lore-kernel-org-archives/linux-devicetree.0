@@ -1,107 +1,81 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4 v2] of/overlay: sysfs based ABI for dt overlays
-Date: Thu, 22 Dec 2016 11:00:11 -0800
-Message-ID: <585C22BB.3080403@gmail.com>
-References: <20161220190455.25115-1-xypron.glpk@gmx.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
+Date: Thu, 22 Dec 2016 20:05:05 +0100
+Message-ID: <CAMuHMdXj-xBrnBXfYu6BeXr7Gfv4wogH4z610Ddq-BSyVS=-8Q@mail.gmail.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1482307838-47415-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1482307838-47415-7-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <11494368.ZdobxT7gGY@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161220190455.25115-1-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <11494368.ZdobxT7gGY@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Palosaari <crope@iki.fi>, Chris Paterson <chris.paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heinrich,
+Hi Laurent,
 
-On 12/20/16 11:04, Heinrich Schuchardt wrote:
-> Currently the kernel only supplies an internal API for creating
-> and destroying device tree overlays.
-> 
-> For some boards vendor specific kernel modules exist for
-> managing device tree overlays but they have not been
-> upstreamed or upstreaming stalled.
-> https://lkml.org/lkml/2015/6/12/624
-> https://lkml.org/lkml/2013/1/7/366
-> 
-> This patch series provides a sysfs based ABI for creation and
-> destruction of dt overlays in /sys/firmware/devicetree/overlays.
-> 
-> The following files are provided:
-> 
-> load:   This is a write only file.
->         A string written to it is interpreted as the path to a
->         flattened device tree overlay file. It is used to create
->         and apply the contained overlays.
-> 
-> loaded: This is a read only file.
->         It provides the count of loaded overlays as a decimal
->         number.
-> 
-> unload: This is a write only file.
->         If a positive number n is wrtten to this file the n
->         most recent overlays are destroyed.
->         If a negative number is written to this file all
->         overlays are destroyed.
+On Thu, Dec 22, 2016 at 6:05 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
+>> Add binding documentation for Renesas R-Car Digital Radio Interface
+>> (DRIF) controller.
+>>
+>> Signed-off-by: Ramesh Shanmugasundaram
+>> <ramesh.shanmugasundaram@bp.renesas.com> ---
+>>  .../devicetree/bindings/media/renesas,drif.txt     | 202 ++++++++++++++++++
+>>  1 file changed, 202 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
+>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new file mode
+>> 100644
+>> index 0000000..1f3feaf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
 
-This patch series follows a _somewhat_ similar approach to what
-was first proposed two years ago, and does not address the
-issues that were brought up at that time.  See:
+>> +Optional properties of an internal channel when:
+>> +     - It is the only enabled channel of the bond (or)
+>> +     - If it acts as primary among enabled bonds
+>> +--------------------------------------------------------
+>> +- renesas,syncmd       : sync mode
+>> +                      0 (Frame start sync pulse mode. 1-bit width pulse
+>> +                         indicates start of a frame)
+>> +                      1 (L/R sync or I2S mode) (default)
+>> +- renesas,lsb-first    : empty property indicates lsb bit is received
+>> first.
+>> +                      When not defined msb bit is received first (default)
+>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1 for low/high
+>> +                      respectively. The default is 1 (active high)
+>> +- renesas,dtdl         : delay between sync signal and start of reception.
+>> +                      The possible values are represented in 0.5 clock
+>> +                      cycle units and the range is 0 to 4. The default
+>> +                      value is 2 (i.e.) 1 clock cycle delay.
+>> +- renesas,syncdl       : delay between end of reception and sync signal
+>> edge.
+>> +                      The possible values are represented in 0.5 clock
+>> +                      cycle units and the range is 0 to 4 & 6. The default
+>> +                      value is 0 (i.e.) no delay.
+>
+> Most of these properties are pretty similar to the video bus properties
+> defined at the endpoint level in
+> Documentation/devicetree/bindings/media/video-interfaces.txt. I believe it
+> would make sense to use OF graph and try to standardize these properties
+> similarly.
 
-  From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-  Date: Wed,  3 Dec 2014 13:23:28 +0200
-  Subject: [PATCH] OF: DT-Overlay configfs interface (v3)
+Note that the last two properties match the those in
+Documentation/devicetree/bindings/spi/sh-msiof.txt.
+We may want to use one DRIF channel as a plain SPI slave with the
+(modified) MSIOF driver in the future.
 
-But just responding directly to the two year old issues would not
-be a productive approach, since there has been a lot of subsequent
-discussion on how to load overlays (you point to two of the many
-threads above).  The latest discussions are based on the concept
-of describing the overlay attachment points as connectors.
+Gr{oetje,eeting}s,
 
-Please join in pushing the connectors discussion along to make
-sure that it meets your needs.
-
--Frank
-
-
-> 
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-> 
-> version 2:
-> 	change sysfs path to
-> 	/sys/firmware/devicetree/overlays
-> 
-> 	Fix errors indicated by kbuild robot:
-> 	Add missing inline attribute to of_overlay_count
-> 	in patch 1.
-> 	Add 'select CONFIG_OF_EARLY_FLATTREE' to Kconfig
-> 	in patch 2.
-> 
-> 	Change unit test cases to check new functions
-> 	of_overlay_count and of_overlay_destroy_last.
-> 
-> Heinrich Schuchardt (4):
->   of/overlay: add API function to count and pop last
->   of/overlay: sysfs based ABI for dt overlays
->   of/overlay: documentation for sysfs ABI 
->   of/overlay: test count and destroy_last
-> 
->  .../ABI/testing/sysfs-firmware-devicetree-overlays |  24 +++ 
->  Documentation/devicetree/overlay-notes.txt         |   7 +-
->  drivers/of/Kconfig                                 |  15 ++
->  drivers/of/Makefile                                |   2 + 
->  drivers/of/base.c                                  |   1 + 
->  drivers/of/ov_sysfs.c                              | 223 +++++++++++++++++++++
->  drivers/of/overlay.c                               |  50 +++++
->  drivers/of/unittest.c                              |  15 +-
->  include/linux/of.h                                 |  12 ++
->  9 files changed, 346 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
->  create mode 100644 drivers/of/ov_sysfs.c
-> 
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
