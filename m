@@ -1,69 +1,70 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: hi3660: Clock driver support for Hisilicon
- hi3660 SoC
-Date: Thu, 22 Dec 2016 12:51:12 -0800
-Message-ID: <20161222205112.GD8288@codeaurora.org>
-References: <1481781493-6188-1-git-send-email-zhangfei.gao@linaro.org>
- <1481781493-6188-3-git-send-email-zhangfei.gao@linaro.org>
- <20161221232551.GB8288@codeaurora.org>
- <fc7bebd2-ad03-6479-d6e7-42f5d724216c@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/21] MIPS memblock: Unpin dts memblock sanity check method
+Date: Thu, 22 Dec 2016 14:57:07 -0600
+Message-ID: <CAL_JsqKNZRXzYKVFWRJraEZMvZ0Oj8CBoVFSAy+EWTi5Uavesw@mail.gmail.com>
+References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com> <1482113266-13207-2-git-send-email-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fc7bebd2-ad03-6479-d6e7-42f5d724216c-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1482113266-13207-2-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, rabinv-VrBV9hrLPhE@public.gmane.org, matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/22, zhangfei wrote:
-> On 2016年12月22日 07:25, Stephen Boyd wrote:
-> >On 12/15, Zhangfei Gao wrote:
-> >>Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> >>+
-> >>+	switch (type) {
-> >>+	case HI3660_CRGCTRL:
-> >>+		hi3660_clk_crgctrl_init(np);
-> >>+		break;
-> >>+	case HI3660_PCTRL:
-> >>+		hi3660_clk_pctrl_init(np);
-> >>+		break;
-> >>+	case HI3660_PMUCTRL:
-> >>+		hi3660_clk_pmuctrl_init(np);
-> >>+		break;
-> >>+	case HI3660_SCTRL:
-> >>+		hi3660_clk_sctrl_init(np);
-> >>+		break;
-> >>+	case HI3660_IOMCU:
-> >>+		hi3660_clk_iomcu_init(np);
-> >>+		break;
-> >This "multi-device" driver design is sort of odd. Why not have
-> >different files and struct drivers for the different devices in
-> >the system that are clock controllers? I don't really understand
-> >why we're controlling the devices with one struct driver
-> >instance. Is something shared between the devices?
-> Do you mean put in different .c / drivers?
+On Sun, Dec 18, 2016 at 8:07 PM, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> It's necessary to check whether retrieved from dts memory regions
+> fits to page alignment and limits restrictions. Sometimes it is
+> necessary to perform the same checks, but ito add the memory regions
 
-Yes.
+s/ito/to/
 
-> They have to be put in the same file, since the parent / child
-> relate to each other.
+> into a different subsystem. MIPS is going to be that case.
+>
+> Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/fdt.c       | 47 +++++++++++++++++++++++---------
+>  include/linux/of_fdt.h |  1 +
+>  2 files changed, 35 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 1f98156..1ee958f 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -983,44 +983,65 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>  #define MAX_MEMBLOCK_ADDR      ((phys_addr_t)~0)
+>  #endif
+>
+> -void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+> +int __init sanity_check_dt_memory(phys_addr_t *out_base,
+> +                                 phys_addr_t *out_size)
 
-We handle clk parent/child relationships through strings. So why
-does that mean we need to put these in the same file with the
-same struct driver?
+As kbuild robot found, you don't want to use phys_addr_t here.
+phys_addr_t varies with kernel config such as LPAE on ARM and the DT
+does not.
 
-> They are for the same chip, but some put in different region for
-> privilege control.
+>  {
+> +       phys_addr_t base = *out_base, size = *out_size;
+>         const u64 phys_offset = MIN_MEMBLOCK_ADDR;
+>
+>         if (!PAGE_ALIGNED(base)) {
+>                 if (size < PAGE_SIZE - (base & ~PAGE_MASK)) {
+> -                       pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+> +                       pr_err("Memblock 0x%llx - 0x%llx isn't page aligned\n",
 
-Ok.
+These are not errors. The page alignment is an OS restriction. h/w
+(which the DT describes) generally has little concept of page size
+outside the MMUs.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Too many unrelated changes in this patch. Add the error return only
+and make anything else a separate patch (though I would just drop
+everything else).
+
+I've not looked at the rest of the series, but why can't MIPS migrate
+to using memblock directly and using the default DT functions using
+memblock?
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
