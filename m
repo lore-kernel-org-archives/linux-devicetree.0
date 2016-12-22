@@ -1,32 +1,35 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] NFC: trf7970a: Enable pins are active high not
- active low
-Date: Thu, 22 Dec 2016 15:17:36 -0600
-Message-ID: <20161222211736.kjso2yuah44lh4wa@rob-hp-laptop>
-References: <20161220183244.5171-1-mgreer@animalcreek.com>
- <20161220183244.5171-7-mgreer@animalcreek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 pci/next] PCI: rcar: Add compatible string for r8a7796
+Date: Thu, 22 Dec 2016 15:18:08 -0600
+Message-ID: <20161222211808.gn6z47ezhx2gapck@rob-hp-laptop>
+References: <1482259026-7180-1-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161220183244.5171-7-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <1482259026-7180-1-git-send-email-ykaneko0929@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2016 at 11:32:43AM -0700, Mark Greer wrote:
-> The example DTS code for the trf7970a sets the GPIOs for the EN
-> and EN2 pins to active low when they are really active high so
-> correct the error.
+On Wed, Dec 21, 2016 at 03:37:06AM +0900, Yoshihiro Kaneko wrote:
+> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
 > 
-> Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+> This patch adds support for r8a7796.
+> 
+> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/net/nfc/trf7970a.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> This patch is based on the next branch of the pci tree.
+> 
+> v2 [Yoshihiro Kaneko]
+> * As suggested by Geert Uytterhoeven
+>   Dropped the update of the driver.
+> 
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
