@@ -1,94 +1,117 @@
-From: Zoran Markovic <zmarkovic@sierrawireless.com>
-Subject: [RFC PATCH 4/4] dt-bindings: wp8548: Add on-board NAND flash
-Date: Thu, 22 Dec 2016 12:05:39 -0800
-Message-ID: <1482437139-29329-5-git-send-email-zmarkovic@sierrawireless.com>
-References: <1482437139-29329-1-git-send-email-zmarkovic@sierrawireless.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 8/8] dt-bindings: mmc: Add Cavium SOCs MMC bindings
+Date: Thu, 22 Dec 2016 14:32:42 -0600
+Message-ID: <20161222203242.nxnmqyldtvdxkqhc@rob-hp-laptop>
+References: <20161219121552.18316-1-jglauber@cavium.com>
+ <20161219121552.18316-9-jglauber@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1482437139-29329-1-git-send-email-zmarkovic@sierrawireless.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Zoran Markovic <zmarkovic@sierrawireless.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161219121552.18316-9-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "Steven J . Hill" <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add description of NAND flash on Sierra Wireless WP8548 module
-(and MangOH board).
+On Mon, Dec 19, 2016 at 01:15:52PM +0100, Jan Glauber wrote:
+> Add description of Cavium Octeon and ThunderX SOC device tree bindings.
+> 
+> CC: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mmc/octeon-mmc.txt         | 59 ++++++++++++++++++++++
 
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Zoran Markovic <zmarkovic@sierrawireless.com>
----
- arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi |   50 ++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Perhaps cavium-mmc.txt would be more appropriate now.
 
-diff --git a/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi b/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi
-index 7869898..a4d1158 100644
---- a/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi
-+++ b/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi
-@@ -54,6 +54,56 @@
- 	};
- };
- 
-+&nand0 {
-+	nandcs@0 {
-+		compatible = "qcom,nandcs";
-+		reg = <0>;
-+
-+		linux,mtd-name = "micron,mt29f4g08";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootloader@0x051c0000 {
-+				reg = <0x51c0000 0x100000>;
-+				read-only;
-+			};
-+
-+			kernel@0x052c0000 {
-+				reg = <0x52c0000 0x1400000>;
-+				read-only;
-+			};
-+
-+			rootfs@0x066c0000 {
-+				reg = <0x66c0000 0x3140000>;
-+				read-only;
-+			};
-+
-+			user0@0x09800000 {
-+				reg = <0x9800000 0x2780000>;
-+			};
-+
-+			user1@0x0bf80000 {
-+				reg = <0xbf80000 0x8B80000>;
-+			};
-+
-+			user2@0x14b00000 {
-+				reg = <0x14b00000 0x500000>;
-+			};
-+
-+			user3@0x15000000 {
-+				reg = <0x15000000 0x200000>;
-+			};
-+		};
-+	};
-+};
-+
- &msmgpio {
- 	pinctrl-0 = <&reset_out_pins>;
- 	pinctrl-names = "default";
--- 
-1.7.9.5
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+> new file mode 100644
+> index 0000000..aad02eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+> @@ -0,0 +1,59 @@
+> +* Cavium Octeon & ThunderX MMC controller
+> +
+> +The highspeed MMC host controller on Caviums SoCs provides an interface
+> +for MMC and SD types of memory cards.
+> +
+> +Supported maximum speeds are the ones of the eMMC standard 4.41 as well
+> +as the speed of SD standard 4.0. Only 3.3 Volt is supported.
+> +
+> +Required properties:
+> + - compatible : should be one of:
+> +   * "cavium,octeon-6130-mmc"
+> +   * "cavium,octeon-6130-mmc-slot"
+> +   * "cavium,octeon-7890-mmc"
+> +   * "cavium,octeon-7890-mmc-slot"
+> +   * "cavium,thunder-8190-mmc"
+> +   * "cavium,thunder-8190-mmc-slot"
+> +   * "cavium,thunder-8390-mmc"
+> +   * "cavium,thunder-8390-mmc-slot"
+> + - reg : mmc controller base registers
+
+Following PCI addressing?
+
+> + - clocks : phandle
+> +
+> +Optional properties:
+> + - for cd, bus-width and additional generic mmc parameters
+> +   please refer to mmc.txt within this directory
+> + - "cavium,cmd-clk-skew" : number of coprocessor clocks before sampling command
+> + - "cavium,dat-clk-skew" : number of coprocessor clocks before sampling data
+> +
+> +Deprecated properties:
+> +- spi-max-frequency : use max-frequency instead
+> +- "cavium,bus-max-width" : use bus-width instead
+
+Drop the quotes.
+
+> +
+> +Examples:
+> +	- Within .dtsi:
+
+Don't show the division between files in the example.
+
+> +	mmc_1_4: mmc@1,4 {
+> +		compatible = "cavium,thunder-8390-mmc";
+> +		reg = <0x0c00 0 0 0 0>;	/* DEVFN = 0x0c (1:4) */
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clocks = <&sclk>;
+> +	};
+> +
+> +	- Within dts:
+> +	mmc-slot@0 {
+
+Need to show this is a child node.
+
+> +		compatible = "cavium,thunder-8390-mmc-slot";
+> +		reg = <0>;
+> +		voltage-ranges = <3300 3300>;
+> +		max-frequency = <42000000>;
+> +		bus-width = <4>;
+> +		cap-sd-highspeed;
+> +	};
+> +	mmc-slot@1 {
+> +		compatible = "cavium,thunder-8390-mmc-slot";
+> +		reg = <1>;
+> +		voltage-ranges = <3300 3300>;
+> +		max-frequency = <42000000>;
+> +		bus-width = <8>;
+> +		cap-mmc-highspeed;
+> +		non-removable;
+> +	};
+> -- 
+> 2.9.0.rc0.21.g7777322
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
