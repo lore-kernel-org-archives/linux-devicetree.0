@@ -1,118 +1,205 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: hi3660: Clock driver support for Hisilicon
- hi3660 SoC
-Date: Thu, 22 Dec 2016 10:01:05 +0800
-Message-ID: <fc7bebd2-ad03-6479-d6e7-42f5d724216c@linaro.org>
-References: <1481781493-6188-1-git-send-email-zhangfei.gao@linaro.org>
- <1481781493-6188-3-git-send-email-zhangfei.gao@linaro.org>
- <20161221232551.GB8288@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161221232551.GB8288-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
+Date: Thu, 22 Dec 2016 17:13:25 +1300
+Message-ID: <20161222041328.3303-3-chris.packham@alliedtelesis.co.nz>
+References: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stephen
+Compared to the armada-xp the 98DX3336 uses different registers to set
+the boot address for the secondary CPU so a new enable-method is needed.
+This will only work if the machine definition doesn't define an overall
+smp_ops because there is not currently a way of overriding this from the
+device tree if it is set in the machine definition.
 
-Thanks for the suggestion.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  | 18 ++++++
+ arch/arm/mach-mvebu/Makefile                       |  1 +
+ arch/arm/mach-mvebu/common.h                       |  1 +
+ arch/arm/mach-mvebu/platsmp.c                      | 43 ++++++++++++++
+ arch/arm/mach-mvebu/pmsu-98dx3236.c                | 69 ++++++++++++++++++++++
+ 5 files changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+ create mode 100644 arch/arm/mach-mvebu/pmsu-98dx3236.c
 
-On 2016年12月22日 07:25, Stephen Boyd wrote:
-> On 12/15, Zhangfei Gao wrote:
->> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Add some commit text here?
-OK
->
->> diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
->> new file mode 100644
->> index 0000000..42ca47d
->> --- /dev/null
->> +++ b/drivers/clk/hisilicon/clk-hi3660.c
->> @@ -0,0 +1,601 @@
->> +/*
->> + * Copyright (c) 2016-2017 Linaro Ltd.
->> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +
->> +#include <dt-bindings/clock/hi3660-clock.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/module.h>
-> This isn't needed.
->
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include "clk.h"
->> +
-> [...]
->> +
->> +static int hi3660_clk_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	const struct of_device_id *of_id;
->> +	enum hi3660_clk_type type;
->> +
->> +	of_id = of_match_device(hi3660_clk_match_table, dev);
->> +	if (!of_id)
->> +		return -EINVAL;
->> +
->> +	type = (enum hi3660_clk_type)of_id->data;
-> Use of_device_get_match_data() instead please.
-Yes, this is simpler.
->
->> +
->> +	switch (type) {
->> +	case HI3660_CRGCTRL:
->> +		hi3660_clk_crgctrl_init(np);
->> +		break;
->> +	case HI3660_PCTRL:
->> +		hi3660_clk_pctrl_init(np);
->> +		break;
->> +	case HI3660_PMUCTRL:
->> +		hi3660_clk_pmuctrl_init(np);
->> +		break;
->> +	case HI3660_SCTRL:
->> +		hi3660_clk_sctrl_init(np);
->> +		break;
->> +	case HI3660_IOMCU:
->> +		hi3660_clk_iomcu_init(np);
->> +		break;
-> This "multi-device" driver design is sort of odd. Why not have
-> different files and struct drivers for the different devices in
-> the system that are clock controllers? I don't really understand
-> why we're controlling the devices with one struct driver
-> instance. Is something shared between the devices?
-Do you mean put in different .c / drivers?
-They have to be put in the same file, since the parent / child relate to 
-each other.
-They are for the same chip, but some put in different region for 
-privilege control.
->
->> +	default:
->> +		break;
->> +	}
->> +	return 0;
->> +}
-> [...]
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:hi3660-clk");
->> +MODULE_DESCRIPTION("HiSilicon Hi3660 Clock Driver");
->
-> You can drop these MODULE_* things as they're not going to be
-> used in builtin only code.
-ok, got it.
-
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+new file mode 100644
+index 000000000000..8082ba872edd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+@@ -0,0 +1,18 @@
++Resume Control
++--------------
++Available on Marvell SOCs: 98DX3336 and 98DX4251
++
++Required properties:
++
++- compatible: must be "marvell,98dx3336-resume-ctrl"
++
++- reg: Should contain resume control registers location and length
++
++Example:
++
++resume@20980 {
++	compatible = "marvell,98dx3336-resume-ctrl";
++	reg = <0x20980 0x10>;
++};
++
++
+diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
+index 6c6497e80a7b..2a2dd8324fb8 100644
+--- a/arch/arm/mach-mvebu/Makefile
++++ b/arch/arm/mach-mvebu/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_MACH_MVEBU_ANY)	 += system-controller.o mvebu-soc-id.o
+ 
+ ifeq ($(CONFIG_MACH_MVEBU_V7),y)
+ obj-y				 += cpu-reset.o board-v7.o coherency.o coherency_ll.o pmsu.o pmsu_ll.o
++obj-y				 += pmsu-98dx3236.o
+ 
+ obj-$(CONFIG_PM)		 += pm.o pm-board.o
+ obj-$(CONFIG_SMP)		 += platsmp.o headsmp.o platsmp-a9.o headsmp-a9.o
+diff --git a/arch/arm/mach-mvebu/common.h b/arch/arm/mach-mvebu/common.h
+index 6b775492cfad..099dabf23461 100644
+--- a/arch/arm/mach-mvebu/common.h
++++ b/arch/arm/mach-mvebu/common.h
+@@ -27,4 +27,5 @@ void __iomem *mvebu_get_scu_base(void);
+ 
+ int mvebu_pm_suspend_init(void (*board_pm_enter)(void __iomem *sdram_reg,
+ 							u32 srcmd));
++void mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr);
+ #endif
+diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+index 46c742d3bd41..3c9ab9a008ad 100644
+--- a/arch/arm/mach-mvebu/platsmp.c
++++ b/arch/arm/mach-mvebu/platsmp.c
+@@ -182,5 +182,48 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
+ #endif
+ };
+ 
++static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
++{
++	int ret, hw_cpu;
++
++	pr_info("Booting CPU %d\n", cpu);
++
++	hw_cpu = cpu_logical_map(cpu);
++	set_secondary_cpu_clock(hw_cpu);
++	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
++					    armada_xp_secondary_startup);
++
++	/*
++	 * This is needed to wake up CPUs in the offline state after
++	 * using CPU hotplug.
++	 */
++	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
++
++	/*
++	 * This is needed to take secondary CPUs out of reset on the
++	 * initial boot.
++	 */
++	ret = mvebu_cpu_reset_deassert(hw_cpu);
++	if (ret) {
++		pr_warn("unable to boot CPU: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++struct smp_operations mv98dx3236_smp_ops __initdata = {
++	.smp_init_cpus		= armada_xp_smp_init_cpus,
++	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
++	.smp_boot_secondary	= mv98dx3236_boot_secondary,
++	.smp_secondary_init     = armada_xp_secondary_init,
++#ifdef CONFIG_HOTPLUG_CPU
++	.cpu_die		= armada_xp_cpu_die,
++	.cpu_kill               = armada_xp_cpu_kill,
++#endif
++};
++
+ CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
+ 		      &armada_xp_smp_ops);
++CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
++		      &mv98dx3236_smp_ops);
+diff --git a/arch/arm/mach-mvebu/pmsu-98dx3236.c b/arch/arm/mach-mvebu/pmsu-98dx3236.c
+new file mode 100644
+index 000000000000..fadc81d0c051
+--- /dev/null
++++ b/arch/arm/mach-mvebu/pmsu-98dx3236.c
+@@ -0,0 +1,69 @@
++/**
++ * CPU resume support for 98DX4521 internal CPU (a.k.a. MSYS).
++ */
++
++#define pr_fmt(fmt) "mv98dx3236-resume: " fmt
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/of_address.h>
++#include <linux/io.h>
++#include "common.h"
++
++static void __iomem *mv98dx3236_resume_base;
++#define MV98DX3236_CPU_RESUME_CTRL_OFFSET	0x08
++#define MV98DX3236_CPU_RESUME_ADDR_OFFSET	0x04
++
++static const struct of_device_id of_mv98dx3236_resume_table[] = {
++	{.compatible = "marvell,98dx3336-resume-ctrl",},
++	{ /* end of list */ },
++};
++
++void mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
++{
++	WARN_ON(hw_cpu != 1);
++
++	writel(0, mv98dx3236_resume_base + MV98DX3236_CPU_RESUME_CTRL_OFFSET);
++	writel(virt_to_phys(boot_addr), mv98dx3236_resume_base +
++	       MV98DX3236_CPU_RESUME_ADDR_OFFSET);
++}
++
++static int __init mv98dx3236_resume_init(void)
++{
++	struct device_node *np;
++	struct resource res;
++	int ret = 0;
++
++	np = of_find_matching_node(NULL, of_mv98dx3236_resume_table);
++	if (!np)
++		return 0;
++
++	pr_info("Initializing 98DX4521 Resume\n");
++
++	if (of_address_to_resource(np, 0, &res)) {
++		pr_err("unable to get resource\n");
++		ret = -ENOENT;
++		goto out;
++	}
++
++	if (!request_mem_region(res.start, resource_size(&res),
++				np->full_name)) {
++		pr_err("unable to request region\n");
++		ret = -EBUSY;
++		goto out;
++	}
++
++	mv98dx3236_resume_base = ioremap(res.start, resource_size(&res));
++	if (!mv98dx3236_resume_base) {
++		pr_err("unable to map registers\n");
++		release_mem_region(res.start, resource_size(&res));
++		ret = -ENOMEM;
++		goto out;
++	}
++
++out:
++	of_node_put(np);
++	return ret;
++}
++
++early_initcall(mv98dx3236_resume_init);
+-- 
+2.11.0.24.ge6920cf
