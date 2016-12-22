@@ -1,81 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
-Date: Thu, 22 Dec 2016 20:05:05 +0100
-Message-ID: <CAMuHMdXj-xBrnBXfYu6BeXr7Gfv4wogH4z610Ddq-BSyVS=-8Q@mail.gmail.com>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1482307838-47415-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1482307838-47415-7-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <11494368.ZdobxT7gGY@avalon>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v7 3/5] ARM: dts: stm32: Add I2C1 support for STM32F429
+ SoC
+Date: Thu, 22 Dec 2016 20:11:04 +0100
+Message-ID: <20161222191103.vzmfhnrtrzw2ivwa@pengutronix.de>
+References: <1482413704-17531-1-git-send-email-cedric.madianga@gmail.com>
+ <1482413704-17531-4-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <11494368.ZdobxT7gGY@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Palosaari <crope@iki.fi>, Chris Paterson <chris.paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1482413704-17531-4-git-send-email-cedric.madianga@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hello,
 
-On Thu, Dec 22, 2016 at 6:05 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
->> Add binding documentation for Renesas R-Car Digital Radio Interface
->> (DRIF) controller.
->>
->> Signed-off-by: Ramesh Shanmugasundaram
->> <ramesh.shanmugasundaram@bp.renesas.com> ---
->>  .../devicetree/bindings/media/renesas,drif.txt     | 202 ++++++++++++++++++
->>  1 file changed, 202 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
->> b/Documentation/devicetree/bindings/media/renesas,drif.txt new file mode
->> 100644
->> index 0000000..1f3feaf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+On Thu, Dec 22, 2016 at 02:35:02PM +0100, M'boumba Cedric Madianga wrote:
+> @@ -337,6 +350,16 @@
+>  					slew-rate = <2>;
+>  				};
+>  			};
+> +
+> +			i2c1_pins_b: i2c1@0 {
+> +				pins1 {
+> +					pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>;
+> +					drive-open-drain;
+> +				};
+> +				pins2 {
+> +					pinmux = <STM32F429_PB6_FUNC_I2C1_SCL>;
+> +				};
 
->> +Optional properties of an internal channel when:
->> +     - It is the only enabled channel of the bond (or)
->> +     - If it acts as primary among enabled bonds
->> +--------------------------------------------------------
->> +- renesas,syncmd       : sync mode
->> +                      0 (Frame start sync pulse mode. 1-bit width pulse
->> +                         indicates start of a frame)
->> +                      1 (L/R sync or I2S mode) (default)
->> +- renesas,lsb-first    : empty property indicates lsb bit is received
->> first.
->> +                      When not defined msb bit is received first (default)
->> +- renesas,syncac-active: Indicates sync signal polarity, 0/1 for low/high
->> +                      respectively. The default is 1 (active high)
->> +- renesas,dtdl         : delay between sync signal and start of reception.
->> +                      The possible values are represented in 0.5 clock
->> +                      cycle units and the range is 0 to 4. The default
->> +                      value is 2 (i.e.) 1 clock cycle delay.
->> +- renesas,syncdl       : delay between end of reception and sync signal
->> edge.
->> +                      The possible values are represented in 0.5 clock
->> +                      cycle units and the range is 0 to 4 & 6. The default
->> +                      value is 0 (i.e.) no delay.
->
-> Most of these properties are pretty similar to the video bus properties
-> defined at the endpoint level in
-> Documentation/devicetree/bindings/media/video-interfaces.txt. I believe it
-> would make sense to use OF graph and try to standardize these properties
-> similarly.
+the second doesn't need the open-drain property? Why?
 
-Note that the last two properties match the those in
-Documentation/devicetree/bindings/spi/sh-msiof.txt.
-We may want to use one DRIF channel as a plain SPI slave with the
-(modified) MSIOF driver in the future.
+> +			};
+>  		};
 
-Gr{oetje,eeting}s,
+Best regards
+Uwe
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
