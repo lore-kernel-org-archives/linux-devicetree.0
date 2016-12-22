@@ -1,47 +1,65 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v7 3/5] ARM: dts: stm32: Add I2C1 support for STM32F429
- SoC
-Date: Thu, 22 Dec 2016 20:11:04 +0100
-Message-ID: <20161222191103.vzmfhnrtrzw2ivwa@pengutronix.de>
-References: <1482413704-17531-1-git-send-email-cedric.madianga@gmail.com>
- <1482413704-17531-4-git-send-email-cedric.madianga@gmail.com>
+From: Zoran Markovic <zmarkovic@sierrawireless.com>
+Subject: [RFC PATCH 1/4] dt-bindings: mdm9615: Add ADM DMA engine
+Date: Thu, 22 Dec 2016 12:05:36 -0800
+Message-ID: <1482437139-29329-2-git-send-email-zmarkovic@sierrawireless.com>
+References: <1482437139-29329-1-git-send-email-zmarkovic@sierrawireless.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482413704-17531-4-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1482437139-29329-1-git-send-email-zmarkovic@sierrawireless.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Zoran Markovic <zmarkovic@sierrawireless.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add configuration for ADM DMA engine on MDM9615, used by the EBI2
+NAND controller. This commit requires the ADM DMA patches from
+Andy Gross:
+https://lkml.org/lkml/2015/3/17/19
 
-On Thu, Dec 22, 2016 at 02:35:02PM +0100, M'boumba Cedric Madianga wrote:
-> @@ -337,6 +350,16 @@
->  					slew-rate = <2>;
->  				};
->  			};
-> +
-> +			i2c1_pins_b: i2c1@0 {
-> +				pins1 {
-> +					pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>;
-> +					drive-open-drain;
-> +				};
-> +				pins2 {
-> +					pinmux = <STM32F429_PB6_FUNC_I2C1_SCL>;
-> +				};
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Zoran Markovic <zmarkovic@sierrawireless.com>
+---
+ arch/arm/boot/dts/qcom-mdm9615.dtsi |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-the second doesn't need the open-drain property? Why?
-
-> +			};
->  		};
-
-Best regards
-Uwe
-
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index 5ae4ec5..fbc7d68 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -336,7 +336,24 @@
+ 			};
+ 		};
+ 
+-		sdcc1bam: dma@12182000{
++		adm_dma: dma@18300000 {
++			compatible = "qcom,adm";
++			reg = <0x18300000 0x100000>;
++			interrupts = <0 170 0>;
++			#dma-cells = <1>;
++
++			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
++			clock-names = "core", "iface";
++
++			resets = <&gcc ADM0_RESET>,
++				 <&gcc ADM0_C0_RESET>,
++				 <&gcc ADM0_C1_RESET>,
++				 <&gcc ADM0_C2_RESET>;
++			reset-names = "clk", "c0", "c1", "c2";
++			qcom,ee = <0>;
++		};
++
++		sdcc1bam:dma@12182000{
+ 			compatible = "qcom,bam-v1.3.0";
+ 			reg = <0x12182000 0x8000>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+1.7.9.5
