@@ -1,35 +1,48 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] of/fdt: failed to mark hotplug range message
-Date: Thu, 22 Dec 2016 06:34:05 +0100
-Message-ID: <20161222053405.27190-1-xypron.glpk@gmx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCH] ARM64: zynqmp: Fix i2c node's compatible string
+Date: Wed, 21 Dec 2016 21:49:48 -0800
+Message-ID: <1482385788-7187-1-git-send-email-moritz.fischer@ettus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, U-Boot List <u-boot@lists.denx.de>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-If marking a hotplug range fails a message
-"failed to mark hotplug range" is written.
-
-The end address is base + size - 1.
-
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c9b5cac03b36..fd129b6e5396 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1057,7 +1057,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 
- 		if (early_init_dt_mark_hotplug_memory_arch(base, size))
- 			pr_warn("failed to mark hotplug range 0x%llx - 0x%llx\n",
--				base, base + size);
-+				base, base + size - 1);
- 	}
- 
- 	return 0;
--- 
-2.11.0
+RnJvbTogTW9yaXR6IEZpc2NoZXIgPG1kZkBrZXJuZWwub3JnPgoKVGhlIFp5bnEgVWx0cmFzY2Fs
+ZSBNUCB1c2VzIHZlcnNpb24gMS40IG9mIHRoZSBDYWRlbmNlIElQIGNvcmUKd2hpY2ggZml4ZXMg
+c29tZSBzaWxpY29uIGJ1Z3MgdGhhdCBuZWVkZWQgc29mdHdhcmUgd29ya2Fyb3VuZHMKaW4gVmVy
+c2lvbiAxLjAgdGhhdCB3YXMgdXNlZCBvbiBaeW5xIHN5c3RlbXMuCgpTaWduZWQtb2ZmLWJ5OiBN
+b3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+CkNjOiBNaWNoYWwgU2ltZWsgPG1pY2hhbC5z
+aW1la0B4aWxpbnguY29tPgpDYzogU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmttYW5uQHhp
+bGlueC5jb20+CkNjOiBVLUJvb3QgTGlzdCA8dS1ib290QGxpc3RzLmRlbnguZGU+CkNjOiBSb2Ig
+SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgotLS0KCkhpIE1pY2hhbCwKCkkgdGhpbmsgdGhp
+cyBpcyBhIHNsaXAgdXAgYW5kIHNob3VsZCBiZSByMXAxNCBmb3IKVWx0cmFzY2FsZSBaeW5xTVAu
+IGRyaXZlcnMvaTJjL2kyYy1jYWRlbmNlLmMgYWxyZWFkeSB1c2VzIHRoaXMuCkkgQ2MnZCB0aGUg
+dS1ib290IGxpc3QsIGJlY2F1c2UgdGhlIHNhbWUgY2hhbmdlIHdvdWxkIGJlIHJlcXVpcmVkIHRo
+ZXJlLgoKQ2hlZXJzLAoKTW9yaXR6CgotLS0KIGFyY2gvYXJtNjQvYm9vdC9kdHMveGlsaW54L3p5
+bnFtcC5kdHNpIHwgNCArKy0tCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
+bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMveGlsaW54L3p5bnFt
+cC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy94aWxpbngvenlucW1wLmR0c2kKaW5kZXggNjhh
+OTA4MzMuLmE1YTVmOTEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMveGlsaW54L3p5
+bnFtcC5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMveGlsaW54L3p5bnFtcC5kdHNpCkBA
+IC0xNzUsNyArMTc1LDcgQEAKIAkJfTsKIAogCQlpMmMwOiBpMmNAZmYwMjAwMDAgewotCQkJY29t
+cGF0aWJsZSA9ICJjZG5zLGkyYy1yMXAxMCI7CisJCQljb21wYXRpYmxlID0gImNkbnMsaTJjLXIx
+cDE0IjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZn
+aWM+OwogCQkJaW50ZXJydXB0cyA9IDwwIDE3IDQ+OwpAQCAtMTg1LDcgKzE4NSw3IEBACiAJCX07
+CiAKIAkJaTJjMTogaTJjQGZmMDMwMDAwIHsKLQkJCWNvbXBhdGlibGUgPSAiY2RucyxpMmMtcjFw
+MTAiOworCQkJY29tcGF0aWJsZSA9ICJjZG5zLGkyYy1yMXAxNCI7CiAJCQlzdGF0dXMgPSAiZGlz
+YWJsZWQiOwogCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsKIAkJCWludGVycnVwdHMgPSA8
+MCAxOCA0PjsKLS0gCjIuNC4xMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KVS1Cb290IG1haWxpbmcgbGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRw
+Oi8vbGlzdHMuZGVueC5kZS9tYWlsbWFuL2xpc3RpbmZvL3UtYm9vdAo=
