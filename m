@@ -1,42 +1,33 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 3/3] ARM: dts: sun5i: add support for Lichee Pi One board
-Date: Thu, 22 Dec 2016 08:07:11 +0800
-Message-ID: <718681482365231@web25g.yandex.ru>
-References: <20161221200235.11617-1-icenowy@aosc.xyz>
- <20161221200235.11617-3-icenowy@aosc.xyz>
- <20161221224159.wnziqeanjkp63y4o@lukather>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 1/9] clk: stm32f4: Update DT bindings documentation
+Date: Wed, 21 Dec 2016 16:10:51 -0800
+Message-ID: <20161222001051.GP8288@codeaurora.org>
+References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
+ <1481638820-29324-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161221224159.wnziqeanjkp63y4o@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zepan <715805855@qq.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1481638820-29324-2-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: gabriel.fernandez@st.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-CgoyMi4xMi4yMDE2LCAwNjo0MiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gVGh1LCBEZWMgMjIsIDIwMTYgYXQgMDQ6MDI6MzVBTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqBMaWNoZWUgUGkgT25lIGlzIGEgbG93LWNvc3Qg
-QWxsd2lubmVyIEExMy1iYXNlZCBkZXZlbG9wbWVudCBib2FyZCwgd2l0aAo+PiDCoGFuIEFYUDIw
-OSBQTVUsIGEgVVNCMi4wIE9URyBwb3J0LCBhIFVTQjIuMCBob3N0IHBvcnQgKG9yIGFuIG9uYm9h
-cmQKPj4gwqBSVEw4NzIzQlUgV2ktRmkgY2FyZCksIG9wdGlvbmFsIGhlYWRlcnMgZm9yIExDRCBh
-bmQgQ1NJLCB0d28gR1BJTwo+PiDCoGhlYWRlcnMgYW5kIHR3byBNaWNyb1NEIGNhcmQgc2xvdHMg
-KGNvbm5lY3RlZCB0byBtbWMwIGFuZCBtbWMyLCBib3RoCj4+IMKgYm9vdGFibGUpLgo+Pgo+PiDC
-oEFkZCBzdXBwb3J0IGZvciBpdC4KPj4KPj4gwqBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5n
-IDxpY2Vub3d5QGFvc2MueHl6Pgo+Cj4gQWNrZWQtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5y
-aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgoKRXhjdXNlIG1lLiBXaG8gc2hvdWxkIGFwcGx5IGl0
-PwoKPgo+IFRoYW5rcyEKPiBNYXhpbWUKPgo+IC0tCj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVj
-dHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2Zy
-ZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 12/13, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> Creation of dt include file for specific stm32f4 clocks.
+> These specific clocks are not derived from system clock (SYSCLOCK)
+> We should use index 1 to use these clocks in DT.
+> e.g. <&rcc 1 CLK_LSI>
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+
+Applied to clk-stm32f4 and merged into clk-next.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
