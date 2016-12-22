@@ -1,47 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] Bluetooth: btusb: Add out-of-band wakeup support
-Date: Thu, 22 Dec 2016 16:39:46 -0600
-Message-ID: <20161222223946.ylywkzd7abl55y4l@rob-hp-laptop>
-References: <1482352432-38302-1-git-send-email-rajatja@google.com>
- <1482352432-38302-2-git-send-email-rajatja@google.com>
+Subject: Re: [PATCH 1/2] power: supply: bq24735: allow polling even if there
+ is no ac-detect gpio
+Date: Thu, 22 Dec 2016 16:42:00 -0600
+Message-ID: <20161222224200.cwlz5ecjsfgowea7@rob-hp-laptop>
+References: <1482355793-16190-1-git-send-email-peda@axentia.se>
+ <1482355793-16190-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1482352432-38302-2-git-send-email-rajatja@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajat Jain <rajatja@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Brian Norris <briannorris@google.com>, linux-kernel@vger.kernel.org, rajatxjain@gmail.com
+In-Reply-To: <1482355793-16190-2-git-send-email-peda@axentia.se>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 12:33:51PM -0800, Rajat Jain wrote:
-> Some onboard BT chips (e.g. Marvell 8997) contain a wakeup pin that
-> can be connected to a gpio on the CPU side, and can be used to wakeup
-> the host out-of-band. This can be useful in situations where the
-> in-band wakeup is not possible or not preferable (e.g. the in-band
-> wakeup may require the USB host controller to remain active, and
-> hence consuming more system power during system sleep).
+On Wed, Dec 21, 2016 at 10:29:52PM +0100, Peter Rosin wrote:
+> It is possible to verify AC adapter presence via a register read, without
+> any physical connection to the ACOK pin on the charger. Allow this.
 > 
-> The oob gpio interrupt to be used for wakeup on the CPU side, is
-> read from the device tree node, (using standard interrupt descriptors).
-> A devcie tree binding document is also added for the driver. The
-> compatible string is in compliance with
-> Documentation/devicetree/bindings/usb/usb-device.txt
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
-> v4: Move the set_bit(BTUSB_OOB_WAKE_DISABLED,..) call to the beginning of
->     btusb_config_oob_wake() - caught by Brian.
-> v3: Add Brian's "Reviewed-by"
-> v2: * Use interrupt-names ("wakeup") instead of assuming first interrupt.
->     * Leave it on device tree to specify IRQ flags (level /edge triggered)
->     * Mark the device as non wakeable on exit.
-> 
->  Documentation/devicetree/bindings/net/btusb.txt | 40 ++++++++++++
+>  Documentation/devicetree/bindings/power/supply/ti,bq24735.txt | 4 ++--
+>  drivers/power/supply/bq24735-charger.c                        | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/bluetooth/btusb.c                       | 84 +++++++++++++++++++++++++
->  2 files changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/btusb.txt
