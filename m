@@ -1,54 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Thu, 22 Dec 2016 12:45:14 -0600
-Message-ID: <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
- <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Date: Thu, 22 Dec 2016 12:48:27 -0600
+Message-ID: <CAL_JsqL4TMDaMQZM3h5gRBEiAa7-ApUWj4GgS_BPG6qpoLxv6g@mail.gmail.com>
+References: <1481841044-4314-1-git-send-email-glansberry@gmail.com>
+ <20161219223111.itu77g7wsqtj6cvs@rob-hp-laptop> <CAO7Z3WKmEbJCN_=srxTVKXvtz84vHGi41RS+9T7fmkmhRB6nEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Changming Huang <jerry.huang@nxp.com>
-Cc: balbi@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAO7Z3WKmEbJCN_=srxTVKXvtz84vHGi41RS+9T7fmkmhRB6nEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Cc: linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>, Justin Bronder <justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
-> New property "snps,incr-burst-type-adjustment = <x>, <y>" for USB3.0 DWC3.
-> Field "x": 1/0 - undefined length INCR burst type enable or not;
-> Field "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst type.
-> 
-> While enabling undefined length INCR burst type and INCR16 burst type,
-> get better write performance on NXP Layerscape platform:
-> around 3% improvement (from 364MB/s to 375MB/s).
-> 
-> Signed-off-by: Changming Huang <jerry.huang@nxp.com>
-> ---
-> Changes in v3:
->   - add new property for INCR burst in usb node.
-> 
->  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
->  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
->  4 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index e3e6983..8c405a3 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -55,6 +55,10 @@ Optional properties:
->  	fladj_30mhz_sdbnd signal is invalid or incorrect.
->  
->   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-> + - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-> +	register, undefined length INCR burst type enable and INCRx type.
-> +	First field is for undefined length INCR burst type enable or not.
-> +	Second field is for largest INCRx type enabled.
+On Mon, Dec 19, 2016 at 5:23 PM, Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org> wrote:
+> I can make that change, however, I worry that it may be a bit
+> misleading, since there are only two supported clock frequencies, but
+> a number like that to me implies that it could be set to any number
+> you want.   I'm new at this, and so I'll go ahead and change it as you
+> request, but I'd like to hear your thoughts on my concern.
 
-Why do you need the first field? Is the 2nd field used if the 1st is 0? 
-If not, then just use the presence of the property to enable or not.
+Then the binding doc just needs to state what are the 2 valid frequencies.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
