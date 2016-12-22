@@ -1,76 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] iio: adc: hx711: Add DT binding for avia,hx711
-Date: Thu, 22 Dec 2016 16:38:12 -0600
-Message-ID: <20161222223812.65oqqmvfcpsrcgsn@rob-hp-laptop>
-References: <20161221152442.GA14543@andreas>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/3] Bluetooth: btusb: Add out-of-band wakeup support
+Date: Thu, 22 Dec 2016 16:39:46 -0600
+Message-ID: <20161222223946.ylywkzd7abl55y4l@rob-hp-laptop>
+References: <1482352432-38302-1-git-send-email-rajatja@google.com>
+ <1482352432-38302-2-git-send-email-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161221152442.GA14543@andreas>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+In-Reply-To: <1482352432-38302-2-git-send-email-rajatja@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajat Jain <rajatja@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Brian Norris <briannorris@google.com>, linux-kernel@vger.kernel.org, rajatxjain@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 04:24:42PM +0100, Andreas Klinger wrote:
-> Add DT bindings for avia,hx711
-> Add vendor avia to vendor list
+On Wed, Dec 21, 2016 at 12:33:51PM -0800, Rajat Jain wrote:
+> Some onboard BT chips (e.g. Marvell 8997) contain a wakeup pin that
+> can be connected to a gpio on the CPU side, and can be used to wakeup
+> the host out-of-band. This can be useful in situations where the
+> in-band wakeup is not possible or not preferable (e.g. the in-band
+> wakeup may require the USB host controller to remain active, and
+> hence consuming more system power during system sleep).
 > 
-> [PATCH v3 1/2] of this patch was Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Sorry, but i had to add the regulator (avdd-supply) and therefore it 
-> needs to be acked once again.
-
-This should go after the '---', but otherwise you can keep my ack.
-
+> The oob gpio interrupt to be used for wakeup on the CPU side, is
+> read from the device tree node, (using standard interrupt descriptors).
+> A devcie tree binding document is also added for the driver. The
+> compatible string is in compliance with
+> Documentation/devicetree/bindings/usb/usb-device.txt
 > 
-> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
 > ---
->  .../devicetree/bindings/iio/adc/avia-hx711.txt         | 18 ++++++++++++++++++
->  Documentation/devicetree/bindings/vendor-prefixes.txt  |  1 +
->  2 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> v4: Move the set_bit(BTUSB_OOB_WAKE_DISABLED,..) call to the beginning of
+>     btusb_config_oob_wake() - caught by Brian.
+> v3: Add Brian's "Reviewed-by"
+> v2: * Use interrupt-names ("wakeup") instead of assuming first interrupt.
+>     * Leave it on device tree to specify IRQ flags (level /edge triggered)
+>     * Mark the device as non wakeable on exit.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> new file mode 100644
-> index 000000000000..b3629405f568
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> @@ -0,0 +1,18 @@
-> +* AVIA HX711 ADC chip for weight cells
-> +  Bit-banging driver
-> +
-> +Required properties:
-> + - compatible:	Should be "avia,hx711"
-> + - sck-gpios:	Definition of the GPIO for the clock
-> + - dout-gpios:	Definition of the GPIO for data-out
-> +		See Documentation/devicetree/bindings/gpio/gpio.txt
-> + - avdd-supply:	Definition of the regulator used as analog supply
-> +
-> +Example:
-> +weight@0 {
-> +	compatible = "avia,hx711";
-> +	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-> +	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> +	avdd-suppy = <&avdd>;
-> +};
-> +
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 44ddc980b085..4696bb5c2198 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -32,6 +32,7 @@ atlas	Atlas Scientific LLC
->  atmel	Atmel Corporation
->  auo	AU Optronics Corporation
->  avago	Avago Technologies
-> +avia	avia semiconductor
->  avic	Shanghai AVIC Optoelectronics Co., Ltd.
->  axis	Axis Communications AB
->  boe	BOE Technology Group Co., Ltd.
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Documentation/devicetree/bindings/net/btusb.txt | 40 ++++++++++++
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/bluetooth/btusb.c                       | 84 +++++++++++++++++++++++++
+>  2 files changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/btusb.txt
