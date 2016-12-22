@@ -1,35 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 pci/next] PCI: rcar: Add compatible string for r8a7796
-Date: Thu, 22 Dec 2016 15:18:08 -0600
-Message-ID: <20161222211808.gn6z47ezhx2gapck@rob-hp-laptop>
-References: <1482259026-7180-1-git-send-email-ykaneko0929@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] doc: DT: Add ti,da830-uart to serial/8250 bindings
+Date: Thu, 22 Dec 2016 15:18:52 -0600
+Message-ID: <20161222211852.4r6cpi5tzoc2qbyt@rob-hp-laptop>
+References: <1482265384-715-1-git-send-email-david@lechnology.com>
+ <1482265384-715-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1482259026-7180-1-git-send-email-ykaneko0929@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1482265384-715-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 03:37:06AM +0900, Yoshihiro Kaneko wrote:
-> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+On Tue, Dec 20, 2016 at 02:23:02PM -0600, David Lechner wrote:
+> This adds the ti,da830-uart compatible string to serial 8250 UART bindings.
 > 
-> This patch adds support for r8a7796.
-> 
-> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 > ---
-> 
-> This patch is based on the next branch of the pci tree.
-> 
-> v2 [Yoshihiro Kaneko]
-> * As suggested by Geert Uytterhoeven
->   Dropped the update of the driver.
-> 
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  Documentation/devicetree/bindings/serial/8250.txt | 1 +
 >  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
