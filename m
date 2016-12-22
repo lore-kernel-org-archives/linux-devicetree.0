@@ -1,351 +1,274 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 5/5] arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
-Date: Thu, 22 Dec 2016 17:13:28 +1300
-Message-ID: <20161222041328.3303-6-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Thu, 22 Dec 2016 17:13:26 +1300
+Message-ID: <20161222041328.3303-4-chris.packham@alliedtelesis.co.nz>
 References: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, devicetree@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-These boards are Marvell's evaluation boards for the 98DX4251 and
-98DX3336 SoCs.
+From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
 
+This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
+from Marvell.
+
+Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- arch/arm/boot/dts/db-dxbc2.dts      | 159 ++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/db-xc3-24g4xg.dts | 155 +++++++++++++++++++++++++++++++++++
- 2 files changed, 314 insertions(+)
- create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
- create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
+ .../pinctrl/marvell,armada-98dx3236-pinctrl.txt    |  46 +++++++
+ drivers/pinctrl/mvebu/pinctrl-armada-xp.c          | 145 +++++++++++++++++++++
+ 2 files changed, 191 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
 
-diff --git a/arch/arm/boot/dts/db-dxbc2.dts b/arch/arm/boot/dts/db-dxbc2.dts
+diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
 new file mode 100644
-index 000000000000..f56786cea5f8
+index 000000000000..34c1e380adaa
 --- /dev/null
-+++ b/arch/arm/boot/dts/db-dxbc2.dts
-@@ -0,0 +1,159 @@
-+/*
-+ * Device Tree file for DB-DXBC2 board
-+ *
-+ * Copyright (C) 2016 Allied Telesis Labs
-+ *
-+ * Based on armada-xp-db.dts
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the default
-+ * 0xd0000000). The 0xf1000000 is the default used by the recent,
-+ * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-+ * boards were delivered with an older version of the bootloader that
-+ * left internal registers mapped at 0xd0000000. If you are in this
-+ * situation, you should either update your bootloader (preferred
-+ * solution) or the below Device Tree should be adjusted.
-+ */
++++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+@@ -0,0 +1,46 @@
++* Marvell 98dx3236 pinctrl driver for mpp
 +
-+/dts-v1/;
-+#include "armada-xp-98dx4251.dtsi"
++Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
++part and usage
 +
-+/ {
-+	model = "Marvell Bobcat2 Evaluation Board";
-+	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armadaxp", "marvell,armada-370-xp";
++Required properties:
++- compatible: "marvell,98dx3236-pinctrl"
++- reg: register specifier of MPP registers
 +
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
++This driver supports all 98dx3236, 98dx3336 and 98dx4251 variants
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
-+			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
-+			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
-+
-+		devbus-bootcs {
-+			status = "okay";
-+
-+			/* Device Bus parameters are required */
-+
-+			/* Read parameters */
-+			devbus,bus-width    = <16>;
-+			devbus,turn-off-ps  = <60000>;
-+			devbus,badr-skew-ps = <0>;
-+			devbus,acc-first-ps = <124000>;
-+			devbus,acc-next-ps  = <248000>;
-+			devbus,rd-setup-ps  = <0>;
-+			devbus,rd-hold-ps   = <0>;
-+
-+			/* Write parameters */
-+			devbus,sync-enable = <0>;
-+			devbus,wr-high-ps  = <60000>;
-+			devbus,wr-low-ps   = <60000>;
-+			devbus,ale-wr-ps   = <60000>;
-+		};
-+
-+		internal-regs {
-+			serial@12000 {
-+				status = "okay";
-+			};
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				clock-frequency = <100000>;
-+				status = "okay";
-+			};
-+
-+			mvsdio@d4000 {
-+				pinctrl-0 = <&sdio_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				/* No CD or WP GPIOs */
-+				broken-cd;
-+			};
-+
-+			nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+				nand-ecc-strength = <4>;
-+				nand-ecc-step-size = <512>;
-+			};
-+		};
-+	};
++name          pins     functions
++================================================================================
++mpp0          0        gpio, spi0(mosi), dev(ad8)
++mpp1          1        gpio, spi0(miso), dev(ad9)
++mpp2          2        gpio, spi0(sck), dev(ad10)
++mpp3          3        gpio, spi0(cs0), dev(ad11)
++mpp4          4        gpio, spi0(cs1), smi(mdc), dev(cs0)
++mpp5          5        gpio, pex(rsto), dev(bootcs)
++mpp6          6        gpio, dev(a2)
++mpp7          7        gpio, dev(ale0)
++mpp8          8        gpio, dev(ale1)
++mpp9          9        gpio, dev(ready0)
++mpp10         10       gpio, dev(ad12)
++mpp11         11       gpio, uart1(rxd), uart0(cts), dev(ad13)
++mpp12         12       gpio, uart1(txd), uart0(rts), dev(ad14)
++mpp13         13       gpio, intr(out), dev(ad15)
++mpp14         14       gpio, i2c0(sck)
++mpp15         15       gpio, i2c0(sda)
++mpp16         16       gpio, dev(oe)
++mpp17         17       gpio, dev(clk)
++mpp18         18       gpio, uart1(txd)
++mpp19         19       gpio, uart1(rxd), dev(rb)
++mpp20         20       gpio, dev(we)
++mpp21         21       gpio, dev(ad0)
++mpp22         22       gpio, dev(ad1)
++mpp23         23       gpio, dev(ad2)
++mpp24         24       gpio, dev(ad3)
++mpp25         25       gpio, dev(ad4)
++mpp26         26       gpio, dev(ad5)
++mpp27         27       gpio, dev(ad6)
++mpp28         28       gpio, dev(ad7)
++mpp29         29       gpio, dev(a0)
++mpp30         30       gpio, dev(a1)
++mpp31         31       gpio, slv_smi(mdc), smi(mdc), dev(we1)
++mpp32         32       gpio, slv_smi(mdio), smi(mdio), dev(cs1)
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+index e4ea71a9d985..2586903c59f0 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+@@ -49,6 +49,10 @@ enum armada_xp_variant {
+ 	V_MV78460	= BIT(2),
+ 	V_MV78230_PLUS	= (V_MV78230 | V_MV78260 | V_MV78460),
+ 	V_MV78260_PLUS	= (V_MV78260 | V_MV78460),
++	V_98DX3236	= BIT(3),
++	V_98DX3336	= BIT(4),
++	V_98DX4251	= BIT(5),
++	V_98DX3236_PLUS	= (V_98DX3236 | V_98DX3336 | V_98DX4251),
+ };
+ 
+ static struct mvebu_mpp_mode armada_xp_mpp_modes[] = {
+@@ -360,6 +364,124 @@ static struct mvebu_mpp_mode armada_xp_mpp_modes[] = {
+ 		 MPP_VAR_FUNCTION(0x1, "dev", "ad31",       V_MV78260_PLUS)),
+ };
+ 
++static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
++	MPP_MODE(0,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "spi0", "mosi",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad8",         V_98DX3236_PLUS)),
++	MPP_MODE(1,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "spi0", "miso",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad9",         V_98DX3236_PLUS)),
++	MPP_MODE(2,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "spi0", "csk",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad10",        V_98DX3236_PLUS)),
++	MPP_MODE(3,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "spi0", "cs0",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad11",        V_98DX3236_PLUS)),
++	MPP_MODE(4,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "spi0", "cs1",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "smi", "mdc",         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "cs0",         V_98DX3236_PLUS)),
++	MPP_MODE(5,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "pex", "rsto",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "bootcs0",     V_98DX3236_PLUS)),
++	MPP_MODE(6,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "a2",          V_98DX3236_PLUS)),
++	MPP_MODE(7,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ale0",        V_98DX3236_PLUS)),
++	MPP_MODE(8,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ale1",        V_98DX3236_PLUS)),
++	MPP_MODE(9,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ready0",      V_98DX3236_PLUS)),
++	MPP_MODE(10,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad12",        V_98DX3236_PLUS)),
++	MPP_MODE(11,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "uart1", "rxd",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "uart0", "cts",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad13",        V_98DX3236_PLUS)),
++	MPP_MODE(12,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "uart1", "txd",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "uart0", "rts",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad14",        V_98DX3236_PLUS)),
++	MPP_MODE(13,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "intr", "out",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "ad15",        V_98DX3236_PLUS)),
++	MPP_MODE(14,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "i2c0", "sck",        V_98DX3236_PLUS)),
++	MPP_MODE(15,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "i2c0", "sda",        V_98DX3236_PLUS)),
++	MPP_MODE(16,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "oe",          V_98DX3236_PLUS)),
++	MPP_MODE(17,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "clkout",      V_98DX3236_PLUS)),
++	MPP_MODE(18,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "uart1", "txd",       V_98DX3236_PLUS)),
++	MPP_MODE(19,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "uart1", "rxd",       V_98DX3236_PLUS)),
++	MPP_MODE(20,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "we0",         V_98DX3236_PLUS)),
++	MPP_MODE(21,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad0",         V_98DX3236_PLUS)),
++	MPP_MODE(22,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad1",         V_98DX3236_PLUS)),
++	MPP_MODE(23,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad2",         V_98DX3236_PLUS)),
++	MPP_MODE(24,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad3",         V_98DX3236_PLUS)),
++	MPP_MODE(25,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad4",         V_98DX3236_PLUS)),
++	MPP_MODE(26,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad5",         V_98DX3236_PLUS)),
++	MPP_MODE(27,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad6",         V_98DX3236_PLUS)),
++	MPP_MODE(28,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "ad7",         V_98DX3236_PLUS)),
++	MPP_MODE(29,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "a0",          V_98DX3236_PLUS)),
++	MPP_MODE(30,
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "dev", "a1",          V_98DX3236_PLUS)),
++	MPP_MODE(31,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "slv_smi", "mdc",     V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "smi", "mdc",         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "we1",         V_98DX3236_PLUS)),
++	MPP_MODE(32,
++		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x1, "slv_smi", "mdio",    V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x3, "smi", "mdio",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "cs1",         V_98DX3236_PLUS)),
 +};
 +
-+&spi0 {
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p64";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <20000000>;
-+		m25p,fast-read;
-+
-+		partition@u-boot {
-+			reg = <0x00000000 0x00100000>;
-+			label = "u-boot";
-+		};
-+		partition@u-boot-env {
-+			reg = <0x00100000 0x00040000>;
-+			label = "u-boot-env";
-+		};
-+		partition@unused {
-+			reg = <0x00140000 0x00ec0000>;
-+			label = "unused";
-+		};
-+
-+	};
-+};
-diff --git a/arch/arm/boot/dts/db-xc3-24g4xg.dts b/arch/arm/boot/dts/db-xc3-24g4xg.dts
-new file mode 100644
-index 000000000000..5eb89ffb9a7d
---- /dev/null
-+++ b/arch/arm/boot/dts/db-xc3-24g4xg.dts
-@@ -0,0 +1,155 @@
-+/*
-+ * Device Tree file for DB-XC3-24G4XG board
-+ *
-+ * Copyright (C) 2016 Allied Telesis Labs
-+ *
-+ * Based on armada-xp-db.dts
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the default
-+ * 0xd0000000). The 0xf1000000 is the default used by the recent,
-+ * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-+ * boards were delivered with an older version of the bootloader that
-+ * left internal registers mapped at 0xd0000000. If you are in this
-+ * situation, you should either update your bootloader (preferred
-+ * solution) or the below Device Tree should be adjusted.
-+ */
-+
-+/dts-v1/;
-+#include "armada-xp-98dx3336.dtsi"
-+
-+/ {
-+	model = "DB-XC3-24G4XG";
-+	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x40000000>; /* 1 GB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
-+			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
-+			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
-+
-+		devbus-bootcs {
-+			status = "okay";
-+
-+			/* Device Bus parameters are required */
-+
-+			/* Read parameters */
-+			devbus,bus-width    = <16>;
-+			devbus,turn-off-ps  = <60000>;
-+			devbus,badr-skew-ps = <0>;
-+			devbus,acc-first-ps = <124000>;
-+			devbus,acc-next-ps  = <248000>;
-+			devbus,rd-setup-ps  = <0>;
-+			devbus,rd-hold-ps   = <0>;
-+
-+			/* Write parameters */
-+			devbus,sync-enable = <0>;
-+			devbus,wr-high-ps  = <60000>;
-+			devbus,wr-low-ps   = <60000>;
-+			devbus,ale-wr-ps   = <60000>;
-+		};
-+
-+		internal-regs {
-+			serial@12000 {
-+				status = "okay";
-+			};
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				clock-frequency = <100000>;
-+				status = "okay";
-+			};
-+
-+			mvsdio@d4000 {
-+				status = "disabled";
-+			};
-+
-+			nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+				nand-ecc-strength = <4>;
-+				nand-ecc-step-size = <512>;
-+			};
-+		};
-+	};
+ static struct mvebu_pinctrl_soc_info armada_xp_pinctrl_info;
+ 
+ static const struct of_device_id armada_xp_pinctrl_of_match[] = {
+@@ -375,6 +497,10 @@ static const struct of_device_id armada_xp_pinctrl_of_match[] = {
+ 		.compatible = "marvell,mv78460-pinctrl",
+ 		.data       = (void *) V_MV78460,
+ 	},
++	{
++		.compatible = "marvell,98dx3236-pinctrl",
++		.data       = (void *) V_98DX3236,
++	},
+ 	{ },
+ };
+ 
+@@ -407,6 +533,14 @@ static struct pinctrl_gpio_range mv78460_mpp_gpio_ranges[] = {
+ 	MPP_GPIO_RANGE(2,  64, 64,  3),
+ };
+ 
++static struct mvebu_mpp_ctrl mv98dx3236_mpp_controls[] = {
++	MPP_FUNC_CTRL(0, 32, NULL, armada_xp_mpp_ctrl),
 +};
 +
-+&spi0 {
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p64";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <20000000>;
-+		m25p,fast-read;
-+
-+		partition@u-boot {
-+			reg = <0x00000000 0x00100000>;
-+			label = "u-boot";
-+		};
-+		partition@u-boot-env {
-+			reg = <0x00100000 0x00040000>;
-+			label = "u-boot-env";
-+		};
-+		partition@unused {
-+			reg = <0x00140000 0x00ec0000>;
-+			label = "unused";
-+		};
-+
-+	};
++static struct pinctrl_gpio_range mv98dx3236_mpp_gpio_ranges[] = {
++	MPP_GPIO_RANGE(0,   0,  0, 32),
 +};
++
+ static int armada_xp_pinctrl_suspend(struct platform_device *pdev,
+ 				     pm_message_t state)
+ {
+@@ -488,6 +622,17 @@ static int armada_xp_pinctrl_probe(struct platform_device *pdev)
+ 		soc->gpioranges = mv78460_mpp_gpio_ranges;
+ 		soc->ngpioranges = ARRAY_SIZE(mv78460_mpp_gpio_ranges);
+ 		break;
++	case V_98DX3236:
++	case V_98DX3336:
++	case V_98DX4251:
++		/* fall-through */
++		soc->controls = mv98dx3236_mpp_controls;
++		soc->ncontrols = ARRAY_SIZE(mv98dx3236_mpp_controls);
++		soc->modes = mv98dx3236_mpp_modes;
++		soc->nmodes = mv98dx3236_mpp_controls[0].npins;
++		soc->gpioranges = mv98dx3236_mpp_gpio_ranges;
++		soc->ngpioranges = ARRAY_SIZE(mv98dx3236_mpp_gpio_ranges);
++		break;
+ 	}
+ 
+ 	nregs = DIV_ROUND_UP(soc->nmodes, MVEBU_MPPS_PER_REG);
 -- 
 2.11.0.24.ge6920cf
