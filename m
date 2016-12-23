@@ -1,93 +1,78 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] Static memory controllers for the Aspeed SoC
-Date: Fri, 23 Dec 2016 12:22:43 +0100
-Message-ID: <cabe37bd-29af-5256-2349-bdc666f0d489@atmel.com>
-References: <1482339439-26402-1-git-send-email-clg@kaod.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] iio: misc: add a generic regulator driver
+Date: Fri, 23 Dec 2016 12:35:08 +0100
+Message-ID: <9609b56b-194c-9899-1142-ff2ee285c6bd@metafoo.de>
+References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
+ <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de>
+ <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
+ <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de>
+ <bf3dde7e-cee8-c54c-db93-447ffa063116@kernel.org>
+ <CAMpxmJVJ+y9tRbRBsVg+i0EJO_6EFuvrypwC=ETnBWbMnxRFyg@mail.gmail.com>
+ <c670d597-46b6-235f-545f-7136a3abff7f@metafoo.de>
+ <CAMuHMdX3u4cb2Yq2+VV_eDUaw2EqiOjN2TorW+F5-39Mm=mXmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482339439-26402-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+In-Reply-To: <CAMuHMdX3u4cb2Yq2+VV_eDUaw2EqiOjN2TorW+F5-39Mm=mXmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 21/12/2016 à 17:57, Cédric Le Goater a écrit :
-> Hello,
+On 12/23/2016 11:00 AM, Geert Uytterhoeven wrote:
+> Hi Lars,
 > 
-> Here is a series introducing a new driver for the different memory
-> controllers of the Aspeed AST2500 and AST2400 SoCs. Each SoC has at
-> least a memory controller for the BMC firmware and another one for the
-> host firmware. The register set are mostly compatible but there are
-> some slight differences on the AST2400.
+> On Mon, Dec 12, 2016 at 6:15 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>> On 12/06/2016 12:12 PM, Bartosz Golaszewski wrote:
+>>> We're already using libiio to read the measured data from the power
+>>> monitor, that's why we'd like to use the iio framework for
+>>> power-cycling the devices as well. My question is: would bridging the
+>>> regulator framework be the right solution? Should we look for
+>>> something else? Bridge the GPIO framework instead?
+>>
+>> I wouldn't necessaries create bridge, but instead just use the GPIO
+>> framework directly.
+>>
+>> We now have the GPIO chardev interface which meant to be used to support
+>> application specific logic that control the GPIOs, but where you don't want
+>> to write a kernel driver.
+>>
+>> My idea was to add GPIOs and GPIO chips as high level object inside libiio
+>> that can be accessed through the same context as the IIO devices. Similar to
+>> the current IIO API you have a API for gpios that allows to enumerate the
+>> GPIO devices and their pins as well as modify the pin state.
 > 
-> The driver only supports SPI type flash.
-> 
-> Tested on:
-> 
->  * OpenPOWER Palmetto (AST2400) with
->  	FMC controller : n25q256a
-> 	SPI controller : mx25l25635e and n25q512ax3
-> 
->  * Evaluation board (AST2500) with
->  	FMC controller : w25q256 
-> 	SPI controller : w25q256
-> 
->  * OpenPOWER Witherspoon (AST2500) with
->  	FMC controller : mx25l25635e * 2
-> 	SPI controller : mx66l1g45g
-> 
-> Changes since v4:
->  - improved IO routines with Cyrille's suggestions
->  - added dummy bytes hanling for fast read commands
->  - removed the 'label' property from jedec,spi-nor. Needs more
->    discussion.
-> 
-> Changes since v3:
->  - reworked IO routines to use io{read,write}32_rep
->  - changed config option to SPI_ASPEED_SMC
->  - fixed aspeed_smc_chip_setup_init() returned value
-> 
-> Changes since v2:
->  - splitted patch to distinguish AST2400 and AST2500 controllers
->  - fixed controller names
->  - introduced prepare/unprepare ops
->  - introduced a aspeed_smc_setup_flash() routine
->  - various cleanups
-> 
-> Changes since v1:
->  - added a set4b ops to handle difference in the controllers
->  - simplified the IO routines
->  - prepared for fast read using dummy cycles
-> 
-> Work in progress:
->  - read optimization using higher SPI clock frequencies
->  - command mode to direct reads from AHB
->  - DMA support
-> 
-> Thanks,
-> 
-> C.
-> 
-> Cédric Le Goater (3):
->   mtd: spi-nor: add memory controllers for the Aspeed AST2500 SoC
->   mtd: aspeed: add memory controllers for the Aspeed AST2400 SoC
->   mtd: spi-nor: bindings for the Aspeed memory controllers
-> 
->  .../devicetree/bindings/mtd/aspeed-smc.txt         |  51 ++
->  drivers/mtd/spi-nor/Kconfig                        |  10 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/aspeed-smc.c                   | 759 +++++++++++++++++++++
->  4 files changed, 821 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/aspeed-smc.txt
->  create mode 100644 drivers/mtd/spi-nor/aspeed-smc.c
-> 
+> That would mean libiio has access to all GPIOs, allowing a remote person
+> to not only control through iiod the GPIOs for industrial control, but also the
+> GPIOs not intended for export, right?
 
-Applied to git://github.com/spi-nor/linux.git
+Well, it is a policy question. Who gets access to what. Right now it is all
+or nothing, a privileged application gets access to all devices/GPIOs, a
+unprivileged application gets access to nothing. Same for GPIOs as well as
+IIO devices.
 
-Thanks!
+iiod at the moment does not have any access control at all, which in itself
+is a problem. We need to add support for that at some point. I don't see an
+issue with implementing a finer grained access scheme when we do so. E.g.
+unprivileged applications only get access to certain pins.
 
+> Having a separate GPIO switch driver avoids that, as DT (or some other means)
+> can be used to specify and label the GPIOs for IIO use.
+
+Sure, functionally this would be equivalent, but we have to ask whether this
+is the right way to use the DT. Is access policy specification part of the
+hardware description? In my opinion the answer is no. At the hardware
+description level there is no operating system, there is no userspace or
+kernelspace, there is are no access levels. Putting the distinction between
+a switch/regulator that can be controlled from userspace or can only be
+controlled from kernel space into the DT would be a layering violation. It
+is analogous to why we don't have spidev DT bindings. This is an issue that
+needs to be solved at a higher level. In my opinion this level is a
+cooperation between kernel- and userspace. Kernelspace offering an interface
+to export a device for userspace access and userspace making use of that
+interface to request access to a device. In a similar way to how vfio is
+structured.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
