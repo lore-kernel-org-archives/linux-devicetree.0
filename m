@@ -1,32 +1,62 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] mtd: spi-nor: add rockchip serial flash controller
- driver
-Date: Fri, 23 Dec 2016 20:00:05 +0100
-Message-ID: <51e11f71-dcbd-44b1-299e-0d213a9cb3c9@gmail.com>
-References: <1481794068-241619-1-git-send-email-shawn.lin@rock-chips.com>
- <1481794068-241619-3-git-send-email-shawn.lin@rock-chips.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM64: dts: meson-gxbb-odroidc2: linux,usable-memory
+Date: Fri, 23 Dec 2016 20:48:42 +0100
+Message-ID: <585D7F9A.6030203@baylibre.com>
+References: <20161223125213.5461-1-xypron.glpk@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481794068-241619-3-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20161223125213.5461-1-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2016 10:27 AM, Shawn Lin wrote:
-> Add rockchip serial flash controller driver
+Le 23/12/2016 13:52, Heinrich Schuchardt a écrit :
+> After reading the fdt u-boot overwrites the reg property of the
+> memory node with <0x0 0x0 0x0 0x78000000>.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> To override this setting we have to use the property
+> linux,usable-memory.
+> 
+> If the first 16MB of the 2GB physical memory are used by
+> the Linux kernel oops occur on the Odroid C2.
+> 
+> For the Odroid C2 this patch replaces
+> [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
+> usable memory range
+> https://lkml.org/lkml/2016/12/12/127
+> 
+> Fixes: 855960342d1e7 ARM64: dts: amlogic: add Hardkernel ODROID-C2
+> CC: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> CC: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> index 238fbeacd330..82ab94417940 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> @@ -61,7 +61,7 @@
+>  
+>  	memory@0 {
+>  		device_type = "memory";
+> -		reg = <0x0 0x0 0x0 0x80000000>;
+> +		linux,usable-memory = <0x0 0x01000000 0x0 0x7f000000>;
+>  	};
+>  
+>  	usb_otg_pwr: regulator-usb-pwrs {
+> 
 
-Acked-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Heinrich,
 
-Thanks !
+Thanks a lot for testing and pushing this patch, indeed I missed this point abou u-boot overwriting reg.
 
--- 
-Best regards,
-Marek Vasut
+I will test this next week, and hopefully get these merged.
+Neil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
