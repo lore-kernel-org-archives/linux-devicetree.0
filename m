@@ -1,63 +1,105 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM64: dts: meson-gxbb-odroidc2: linux,usable-memory
-Date: Fri, 23 Dec 2016 20:48:42 +0100
-Message-ID: <585D7F9A.6030203@baylibre.com>
-References: <20161223125213.5461-1-xypron.glpk@gmx.de>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RFC PATCHv2 2/4] clk: mdm9615: Add EBI2 clock
+Date: Fri, 23 Dec 2016 20:50:43 +0100
+Message-ID: <585D8013.50707@baylibre.com>
+References: <1482468884-31027-1-git-send-email-zmarkovic@sierrawireless.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161223125213.5461-1-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482468884-31027-1-git-send-email-zmarkovic@sierrawireless.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zoran Markovic <zmarkovic@sierrawireless.com>, linux-kernel@vger.kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 23/12/2016 13:52, Heinrich Schuchardt a écrit :
-> After reading the fdt u-boot overwrites the reg property of the
-> memory node with <0x0 0x0 0x0 0x78000000>.
+Le 23/12/2016 05:54, Zoran Markovic a écrit :
+> Add definition of EBI2 clock used by MDM9615 NAND controller.
 > 
-> To override this setting we have to use the property
-> linux,usable-memory.
-> 
-> If the first 16MB of the 2GB physical memory are used by
-> the Linux kernel oops occur on the Odroid C2.
-> 
-> For the Odroid C2 this patch replaces
-> [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
-> usable memory range
-> https://lkml.org/lkml/2016/12/12/127
-> 
-> Fixes: 855960342d1e7 ARM64: dts: amlogic: add Hardkernel ODROID-C2
-> CC: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> CC: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-soc@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Zoran Markovic <zmarkovic@sierrawireless.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/clk/qcom/gcc-mdm9615.c               |   30 ++++++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-mdm9615.h |    3 +++
+>  2 files changed, 33 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 238fbeacd330..82ab94417940 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -61,7 +61,7 @@
+> diff --git a/drivers/clk/qcom/gcc-mdm9615.c b/drivers/clk/qcom/gcc-mdm9615.c
+> index 581a17f..e9e98b1 100644
+> --- a/drivers/clk/qcom/gcc-mdm9615.c
+> +++ b/drivers/clk/qcom/gcc-mdm9615.c
+> @@ -1563,6 +1563,34 @@ enum {
+>  	},
+>  };
 >  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x01000000 0x0 0x7f000000>;
->  	};
+> +static struct clk_branch ebi2_clk = {
+> +	.hwcg_reg = 0x2664,
+> +	.hwcg_bit = 6,
+> +	.halt_reg = 0x2fcc,
+> +	.halt_bit = 23,
+> +	.clkr = {
+> +		.enable_reg = 0x2664,
+> +		.enable_mask = BIT(6) | BIT(4),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "ebi2_clk",
+> +			.ops = &clk_branch_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch ebi2_aon_clk = {
+> +	.halt_reg = 0x2fcc,
+> +	.halt_bit = 23,
+> +	.clkr = {
+> +		.enable_reg = 0x2664,
+> +		.enable_mask = BIT(8),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "ebi2_aon_clk",
+> +			.ops = &clk_branch_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_hw *gcc_mdm9615_hws[] = {
+>  	&cxo.hw,
+>  };
+> @@ -1637,6 +1665,8 @@ enum {
+>  	[PMIC_ARB1_H_CLK] = &pmic_arb1_h_clk.clkr,
+>  	[PMIC_SSBI2_CLK] = &pmic_ssbi2_clk.clkr,
+>  	[RPM_MSG_RAM_H_CLK] = &rpm_msg_ram_h_clk.clkr,
+> +	[EBI2_CLK] = &ebi2_clk.clkr,
+> +	[EBI2_AON_CLK] = &ebi2_aon_clk.clkr,
+>  };
 >  
->  	usb_otg_pwr: regulator-usb-pwrs {
+>  static const struct qcom_reset_map gcc_mdm9615_resets[] = {
+> diff --git a/include/dt-bindings/clock/qcom,gcc-mdm9615.h b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
+> index 9ab2c40..57cdca6 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-mdm9615.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
+> @@ -323,5 +323,8 @@
+>  #define CE3_H_CLK				305
+>  #define USB_HS1_SYSTEM_CLK_SRC			306
+>  #define USB_HS1_SYSTEM_CLK			307
+> +#define EBI2_CLK				308
+> +#define EBI2_AON_CLK				309
+> +
+>  
+>  #endif
 > 
 
-Hi Heinrich,
+Hi Zoran,
 
-Thanks a lot for testing and pushing this patch, indeed I missed this point abou u-boot overwriting reg.
+Thanks for this patch, we did not found the definition for these clocks at all !
 
-I will test this next week, and hopefully get these merged.
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+
 Neil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
