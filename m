@@ -1,29 +1,46 @@
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v1 0/3] soc: rockchip: power-domain: support RK3328 SoC
-Date: Fri, 23 Dec 2016 11:47:49 +0800
-Message-ID: <1482464872-12954-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v1 1/3] dt/bindings: power: add RK3328 SoCs header for idle-request
+Date: Fri, 23 Dec 2016 11:47:50 +0800
+Message-ID: <1482464872-12954-2-git-send-email-zhangqing@rock-chips.com>
+References: <1482464872-12954-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482464872-12954-1-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, xf@rock-chips.com, wxt@rock-chips.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, tomeu.vizoso@collabora.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Elaine Zhang (3):
-  dt/bindings: power: add RK3328 SoCs header for idle-request
-  dt-bindings: add binding for rk3328 power domains
-  soc: rockchip: power-domain: Modify power domain driver for rk3328
+According to a description from TRM, add all the idle request.
 
- .../bindings/soc/rockchip/power_domain.txt         |  3 ++
- drivers/soc/rockchip/pm_domains.c                  | 63 +++++++++++++++++++---
- include/dt-bindings/power/rk3328-power.h           | 18 +++++++
- 3 files changed, 78 insertions(+), 6 deletions(-)
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ include/dt-bindings/power/rk3328-power.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
  create mode 100644 include/dt-bindings/power/rk3328-power.h
 
+diff --git a/include/dt-bindings/power/rk3328-power.h b/include/dt-bindings/power/rk3328-power.h
+new file mode 100644
+index 000000000000..10c3c3715334
+--- /dev/null
++++ b/include/dt-bindings/power/rk3328-power.h
+@@ -0,0 +1,18 @@
++#ifndef __DT_BINDINGS_POWER_RK3328_POWER_H__
++#define __DT_BINDINGS_POWER_RK3328_POWER_H__
++
++/**
++ * RK3328 idle id Summary.
++ */
++#define RK3328_PD_CORE		0
++#define RK3328_PD_GPU		1
++#define RK3328_PD_BUS		2
++#define RK3328_PD_MSCH		3
++#define RK3328_PD_PERI		4
++#define RK3328_PD_VIDEO		5
++#define RK3328_PD_HEVC		6
++#define RK3328_PD_SYS		7
++#define RK3328_PD_VPU		8
++#define RK3328_PD_VIO		9
++
++#endif
 -- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
