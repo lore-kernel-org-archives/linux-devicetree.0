@@ -1,8 +1,8 @@
 From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: [PATCH v5 5/6] arm64: arch_timer: apci: Introduce a generic aquirk
- framework for erratum
-Date: Fri, 23 Dec 2016 15:04:28 +0800
-Message-ID: <1482476669-15596-6-git-send-email-dingtianhong@huawei.com>
+Subject: [PATCH v5 2/6] arm64: arch_timer: Introduce a generic erratum handing
+ mechanism for fsl-a008585
+Date: Fri, 23 Dec 2016 15:04:25 +0800
+Message-ID: <1482476669-15596-3-git-send-email-dingtianhong@huawei.com>
 References: <1482476669-15596-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,81 +19,258 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
-Cc: Hanjun Guo <hanjun.guo@linaro.org>, Ding Tianhong <dingtianhong@huawei.com>
+Cc: Ding Tianhong <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hanjun Guo <hanjun.guo@linaro.org>
+The workaround for hisilicon,161601 will check the return value of the system counter
+by different way, in order to distinguish with the fsl-a008585 workaround, introduce
+a new generic erratum handing mechanism for fsl-a008585 and rename some functions.
 
-Introduce a general quirk framework for each timer erratum in ACPI,
-which use the oem information in GTDT table for platform specific erratums.
-The struct gtdt_arch_timer_fixup is introduced to record the oem
-information to match the quirk and handle the erratum.
+v2: Introducing a new generic erratum handling mechanism for fsl erratum a008585.
 
-v3: Introduce a generic aquick framework for erratum in ACPI mode.
+v3: Introducing the erratum_workaround_set_sne generic function for fsl erratum a008585
+    and make the #define __fsl_a008585_read_reg to be private to the .c file instead of
+    being globally visible. After discussion with Marc and Will, a consensus decision was
+    made to remove the commandline parameter for enabling fsl,erratum-a008585 erratum,
+    and make some generic name more specific, export timer_unstable_counter_workaround
+    for module access.
 
-v4: rename the quirk handler parameter to make it more generic, and
-    avoid break loop when handling the quirk becasue it need to
-    support multi quirks handler.
+v5: Adapt the new documentation for kernel-parameters.txt.
 
-Signed-off-by: Hanjun Guo <hanjun.guo@linaro.org>
 Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
 ---
- drivers/clocksource/arm_arch_timer.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ Documentation/admin-guide/kernel-parameters.txt |  9 ---
+ arch/arm64/include/asm/arch_timer.h             | 36 ++++--------
+ drivers/clocksource/arm_arch_timer.c            | 78 +++++++++++++++----------
+ 3 files changed, 58 insertions(+), 65 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 21e2d88..76437ad 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -539,15 +539,6 @@
+ 			loops can be debugged more effectively on production
+ 			systems.
+ 
+-	clocksource.arm_arch_timer.fsl-a008585=
+-			[ARM64]
+-			Format: <bool>
+-			Enable/disable the workaround of Freescale/NXP
+-			erratum A-008585.  This can be useful for KVM
+-			guests, if the guest device tree doesn't show the
+-			erratum.  If unspecified, the workaround is
+-			enabled based on the device tree.
+-
+ 	clearcpuid=BITNUM [X86]
+ 			Disable CPUID feature X for the kernel. See
+ 			arch/x86/include/asm/cpufeatures.h for the valid bit
+diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+index eaa5bbe..f882c7c 100644
+--- a/arch/arm64/include/asm/arch_timer.h
++++ b/arch/arm64/include/asm/arch_timer.h
+@@ -31,39 +31,27 @@
+ 
+ #if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
+ extern struct static_key_false arch_timer_read_ool_enabled;
+-#define needs_fsl_a008585_workaround() \
++#define needs_unstable_timer_counter_workaround() \
+ 	static_branch_unlikely(&arch_timer_read_ool_enabled)
+ #else
+-#define needs_fsl_a008585_workaround()  false
++#define needs_unstable_timer_counter_workaround()  false
+ #endif
+ 
+-u32 __fsl_a008585_read_cntp_tval_el0(void);
+-u32 __fsl_a008585_read_cntv_tval_el0(void);
+-u64 __fsl_a008585_read_cntvct_el0(void);
+ 
+-/*
+- * The number of retries is an arbitrary value well beyond the highest number
+- * of iterations the loop has been observed to take.
+- */
+-#define __fsl_a008585_read_reg(reg) ({			\
+-	u64 _old, _new;					\
+-	int _retries = 200;				\
+-							\
+-	do {						\
+-		_old = read_sysreg(reg);		\
+-		_new = read_sysreg(reg);		\
+-		_retries--;				\
+-	} while (unlikely(_old != _new) && _retries);	\
+-							\
+-	WARN_ON_ONCE(!_retries);			\
+-	_new;						\
+-})
++struct arch_timer_erratum_workaround {
++	int erratum;		/* Indicate the Erratum ID */
++	u32 (*read_cntp_tval_el0)(void);
++	u32 (*read_cntv_tval_el0)(void);
++	u64 (*read_cntvct_el0)(void);
++};
++
++extern struct arch_timer_erratum_workaround *timer_unstable_counter_workaround;
+ 
+ #define arch_timer_reg_read_stable(reg) 		\
+ ({							\
+ 	u64 _val;					\
+-	if (needs_fsl_a008585_workaround())		\
+-		_val = __fsl_a008585_read_##reg();	\
++	if (needs_unstable_timer_counter_workaround())		\
++		_val = timer_unstable_counter_workaround->read_##reg();\
+ 	else						\
+ 		_val = read_sysreg(reg);		\
+ 	_val;						\
 diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 9a82496..212bfa5 100644
+index 02fef68..e7406ad 100644
 --- a/drivers/clocksource/arm_arch_timer.c
 +++ b/drivers/clocksource/arm_arch_timer.c
-@@ -1079,6 +1079,39 @@ static int __init arch_timer_mem_init(struct device_node *np)
- 		       arch_timer_mem_init);
+@@ -96,40 +96,53 @@ static int __init early_evtstrm_cfg(char *buf)
+  */
  
- #ifdef CONFIG_ACPI
-+struct gtdt_arch_timer_fixup {
-+	char oem_id[ACPI_OEM_ID_SIZE];
-+	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE];
-+	u32 oem_revision;
-+
-+	/* quirk handler for arch timer erratum */
-+	void (*handler)(void *context);
-+	void *context;
-+};
-+
-+/* note: this needs to be updated according to the doc of OEM ID
-+ * and TABLE ID for different board.
+ #ifdef CONFIG_FSL_ERRATUM_A008585
+-DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
+-EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
+-
+-static int fsl_a008585_enable = -1;
++struct arch_timer_erratum_workaround *timer_unstable_counter_workaround = NULL;
++EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
+ 
+-static int __init early_fsl_a008585_cfg(char *buf)
+-{
+-	int ret;
+-	bool val;
++#define        FSL_A008585	0x0001
+ 
+-	ret = strtobool(buf, &val);
+-	if (ret)
+-		return ret;
+-
+-	fsl_a008585_enable = val;
+-	return 0;
+-}
+-early_param("clocksource.arm_arch_timer.fsl-a008585", early_fsl_a008585_cfg);
++DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
++EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
+ 
+-u32 __fsl_a008585_read_cntp_tval_el0(void)
++/*
++ * The number of retries is an arbitrary value well beyond the highest number
++ * of iterations the loop has been observed to take.
 + */
-+struct gtdt_arch_timer_fixup arch_timer_quirks[] __initdata = {
-+};
++#define __fsl_a008585_read_reg(reg) ({			\
++	u64 _old, _new;					\
++	int _retries = 200;				\
++							\
++	do {						\
++		_old = read_sysreg(reg);		\
++		_new = read_sysreg(reg);		\
++		_retries--;				\
++	} while (unlikely(_old != _new) && _retries);	\
++							\
++	WARN_ON_ONCE(!_retries);			\
++	_new;						\
++})
 +
-+void __init arch_timer_acpi_quirks_handler(char *oem_id,
-+					   char *oem_table_id,
-+					   u32 oem_revision)
-+{
-+	struct gtdt_arch_timer_fixup *quirks = arch_timer_quirks;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(arch_timer_quirks); i++, quirks++) {
-+		if (!memcmp(quirks->oem_id, oem_id, ACPI_OEM_ID_SIZE) &&
-+		    !memcmp(quirks->oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
-+		    quirks->oem_revision == oem_revision) {
-+			if (quirks->handler && quirks->context)
-+				quirks->handler(quirks->context);
-+		}
-+	}
-+}
-+
- static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags)
++static u32 fsl_a008585_read_cntp_tval_el0(void)
  {
- 	int trigger, polarity;
-@@ -1105,6 +1138,9 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
- 		return -EINVAL;
- 	}
+ 	return __fsl_a008585_read_reg(cntp_tval_el0);
+ }
  
-+	arch_timer_acpi_quirks_handler(table->oem_id, table->oem_table_id,
-+				       table->oem_revision);
+-u32 __fsl_a008585_read_cntv_tval_el0(void)
++static  u32 fsl_a008585_read_cntv_tval_el0(void)
+ {
+ 	return __fsl_a008585_read_reg(cntv_tval_el0);
+ }
+ 
+-u64 __fsl_a008585_read_cntvct_el0(void)
++static u64 fsl_a008585_read_cntvct_el0(void)
+ {
+ 	return __fsl_a008585_read_reg(cntvct_el0);
+ }
+-EXPORT_SYMBOL(__fsl_a008585_read_cntvct_el0);
 +
- 	gtdt = container_of(table, struct acpi_table_gtdt, header);
++static struct arch_timer_erratum_workaround arch_timer_fsl_a008585 = {
++	.erratum = FSL_A008585,
++	.read_cntp_tval_el0 = fsl_a008585_read_cntp_tval_el0,
++	.read_cntv_tval_el0 = fsl_a008585_read_cntv_tval_el0,
++	.read_cntvct_el0 = fsl_a008585_read_cntvct_el0,
++};
+ #endif /* CONFIG_FSL_ERRATUM_A008585 */
  
- 	arch_timers_present |= ARCH_CP15_TIMER;
+ static __always_inline
+@@ -282,7 +295,7 @@ static __always_inline void set_next_event(const int access, unsigned long evt,
+ }
+ 
+ #ifdef CONFIG_FSL_ERRATUM_A008585
+-static __always_inline void fsl_a008585_set_next_event(const int access,
++static __always_inline void erratum_set_next_event_generic(const int access,
+ 		unsigned long evt, struct clock_event_device *clk)
+ {
+ 	unsigned long ctrl;
+@@ -300,17 +313,17 @@ static __always_inline void fsl_a008585_set_next_event(const int access,
+ 	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
+ }
+ 
+-static int fsl_a008585_set_next_event_virt(unsigned long evt,
++static int erratum_set_next_event_virt(unsigned long evt,
+ 					   struct clock_event_device *clk)
+ {
+-	fsl_a008585_set_next_event(ARCH_TIMER_VIRT_ACCESS, evt, clk);
++	erratum_set_next_event_generic(ARCH_TIMER_VIRT_ACCESS, evt, clk);
+ 	return 0;
+ }
+ 
+-static int fsl_a008585_set_next_event_phys(unsigned long evt,
++static int erratum_set_next_event_phys(unsigned long evt,
+ 					   struct clock_event_device *clk)
+ {
+-	fsl_a008585_set_next_event(ARCH_TIMER_PHYS_ACCESS, evt, clk);
++	erratum_set_next_event_generic(ARCH_TIMER_PHYS_ACCESS, evt, clk);
+ 	return 0;
+ }
+ #endif /* CONFIG_FSL_ERRATUM_A008585 */
+@@ -343,16 +356,16 @@ static int arch_timer_set_next_event_phys_mem(unsigned long evt,
+ 	return 0;
+ }
+ 
+-static void fsl_a008585_set_sne(struct clock_event_device *clk)
++static void erratum_workaround_set_sne(struct clock_event_device *clk)
+ {
+ #ifdef CONFIG_FSL_ERRATUM_A008585
+ 	if (!static_branch_unlikely(&arch_timer_read_ool_enabled))
+ 		return;
+ 
+ 	if (arch_timer_uses_ppi == VIRT_PPI)
+-		clk->set_next_event = fsl_a008585_set_next_event_virt;
++		clk->set_next_event = erratum_set_next_event_virt;
+ 	else
+-		clk->set_next_event = fsl_a008585_set_next_event_phys;
++		clk->set_next_event = erratum_set_next_event_phys;
+ #endif
+ }
+ 
+@@ -385,7 +398,7 @@ static void __arch_timer_setup(unsigned type,
+ 			BUG();
+ 		}
+ 
+-		fsl_a008585_set_sne(clk);
++		erratum_workaround_set_sne(clk);
+ 	} else {
+ 		clk->features |= CLOCK_EVT_FEAT_DYNIRQ;
+ 		clk->name = "arch_mem_timer";
+@@ -894,9 +907,10 @@ static int __init arch_timer_of_init(struct device_node *np)
+ 	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
+ 
+ #ifdef CONFIG_FSL_ERRATUM_A008585
+-	if (fsl_a008585_enable < 0)
+-		fsl_a008585_enable = of_property_read_bool(np, "fsl,erratum-a008585");
+-	if (fsl_a008585_enable) {
++	if (!timer_unstable_counter_workaround && of_property_read_bool(np, "fsl,erratum-a008585"))
++		timer_unstable_counter_workaround = &arch_timer_fsl_a008585;
++
++	if (timer_unstable_counter_workaround) {
+ 		static_branch_enable(&arch_timer_read_ool_enabled);
+ 		pr_info("Enabling workaround for FSL erratum A-008585\n");
+ 	}
 -- 
 1.9.0
