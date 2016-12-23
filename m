@@ -1,67 +1,129 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: power: add bindings for GPIO-driven power switches
-Date: Fri, 23 Dec 2016 10:07:16 +0100
-Message-ID: <CAMuHMdWfAwPE2N-_0WhW5+EEK3bqWoo9HpQZTgLzRRutCg++qg@mail.gmail.com>
-References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
- <1481494905-18037-2-git-send-email-bgolaszewski@baylibre.com>
- <20161213192712.gbaw4t4awayybnta@rob-hp-laptop> <CAMpxmJWw3wCE4ch8TVik+2b3BC8Lvxbi13HGd9GxruSRLu95Mg@mail.gmail.com>
- <CAL_JsqLwS51MhOJQb-Lmo=osHiYKcAcCJaxKJFdSvZBpafz7Gw@mail.gmail.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: Re: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
+ usable memory range
+Date: Fri, 23 Dec 2016 10:42:30 +0100
+Message-ID: <90d5b5a3-6dd8-aab2-8701-112a10e3364c@gmx.de>
+References: <20161212101801.28491-1-narmstrong@baylibre.com>
+ <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
+ <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
+ <2ac01237-a7f8-5b3b-0f97-dd49ce6623fb@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLwS51MhOJQb-Lmo=osHiYKcAcCJaxKJFdSvZBpafz7Gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood@>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2ac01237-a7f8-5b3b-0f97-dd49ce6623fb@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com
+Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 4:05 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Dec 14, 2016 at 10:58 AM, Bartosz Golaszewski
-> <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> 2016-12-13 20:27 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->>> On Sun, Dec 11, 2016 at 11:21:44PM +0100, Bartosz Golaszewski wrote:
->>>> Some boards are equipped with simple, GPIO-driven power load switches.
->>>> An example of such ICs is the TI tps229* series.
->>>
->>> How is this different than a GPIO regulator? The input and output
->>> voltages just happen to be the same. I could be convinced this is
->>> different enough to have a different compatible, but it somewhat seems
->>> you want to use this for IIO, so you are creating a different binding
->>> for that usecase.
+On 12/22/2016 11:02 AM, Heinrich Schuchardt wrote:
+> On 12/14/2016 10:52 AM, Neil Armstrong wrote:
+> 
+>> Hi Heinrich,
 >>
->> It's more of a fixed regulator I suppose. Do you mean adding a new
->> compatible to the fixed-regulator binding (e.g. "gpio-power-switch" or
->> "simple-power-switch") and then providing an iio driver for toggling
->> the switch?
->
-> Yes, at least the first part. I view the switch as just a more
-> specific subtype of a fixed-regulator. Whether an IIO driver is a
-> separate discussion which is happening.
+>> Thanks for testing and for the report,
+>> we are still struggling into finding what are these zones and how to label them correctly.
+>>
+>> We need to identify the zones on all boards, the patch I provided works on a non-odroid-c2 and gxm and gxl boards.
+>>
+>> Neil
+>>
+> Hello Neil,
+> 
+> the configuration below works for me on the Hardkernel Odroid C2.
+> 
+> ramoops is needed for CONFIG_PSTORE_RAM.
+> Debian Stretch has CONFIG_PSTORE_RAM=m. Same is true for Fedora.
+> I have chosen the address arbitrarily. To accommodate 512 MB boards we
+> would have to put it below 0x20000000.
+> The size parameters are the same as in hisilicon/hi6220-hikey.dts and
+> qcom-apq8064-asus-nexus7-flo.dts.
+> 
+> linux,cma is used for contiguous memory assignment. I have taken the
+> align parameter from arm-src-kernel-2016-08-18-26e194264c.tar.gz
+> provided by Amlogic at
+> http://openlinux.amlogic.com:8000/download/ARM/kernel/ .
+> See Documentation/DMA-API.txt for the usage of align.
+> They use the same value 0x400000 for all GXBB boards.
+> So we want to put this zone into meson-gxbb.dtsi.
+> 
+> secmon is used by drivers/firmware/meson/meson_sm.c.
+> Amlogic uses the same address range for all 64bit boards.
+> 
+> 	memory@0 {
+> 		device_type = "memory";
+> 		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+> 	};
+> 
+> 	reserved-memory {
+> 		#address-cells = <0x2>;
+> 		#size-cells = <0x2>;
+> 		ranges;
+> 
+> 		ramoops@0x23f00000 {
+> 			compatible = "ramoops";
+> 			reg = <0x0 0x23f00000 0x0 0x100000>;
+> 			record-size = <0x20000>;
+> 			console-size = <0x20000>;
+> 			ftrace-size = <0x20000>;
+> 		};
+> 
+> 		secmon: secmon {
+> 			compatible = "amlogic, aml_secmon_memory";
+> 			reg = <0x0 0x10000000 0x0 0x200000>;
+> 			no-map;
+> 		};
+> 
+> 		linux,cma {
+> 			compatible = "shared-dma-pool";
+> 			reusable;
+> 			size = <0x0 0xbc00000>;
+> 			alignment = <0x0 0x400000>;
+> 			linux,cma-default;
+> 		};
+> 	};
+> 
+> Best regards
+> 
+> Heinrich Schuchardt
+> 
 
-The switch could also be an opto-isolator (for which I could use gpio-leds,
-too, although also without libiio control ;-) or a relay.
+Hello Neil,
 
-While I agree a switch is a degenerate regulator, modelling it as a regulator
-feels a bit weird to me. Switches could be extended to e.g. double throw
-relays, or H-bridges using 4 GPIOs.
+it really makes a difference if we write
 
-BTW, I'm not an IIO expert, but from my limited knowledge, it looks like "O"
-support in IIO is limited to DACs?
+ 	memory@0 {
+ 		device_type = "memory";
+ 		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
 
-P.S. My motiviation is using libiio to control my board farm, which has a bank
-     of opto-isolators in addition to BayLibre's ACME.
+or
 
-Gr{oetje,eeting}s,
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
 
-                        Geert
+The second version leads to failure of the Odroid C2.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+When I looked at /sys/firmware/fdt I saw this difference:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--- fails
++++ works
+
+        memory@0 {
+-               device_type = "memory";
+                reg = <0x0 0x0 0x0 0x78000000>;
++               device_type = "memory";
++               linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+        };
+
+I found the following sentence in the NXP forum:
+In case you want to overwrite the memory usage passed from u-boot, you
+can use "linux,usable-memory".
+https://community.nxp.com/thread/382284
+
+Best regards
+
+Heinrich Schuchardt
