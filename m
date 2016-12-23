@@ -1,41 +1,72 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Fixed status entry in m_can documentation
-Date: Thu, 22 Dec 2016 17:14:08 -0600
-Message-ID: <20161222231408.drbakherghdegnam@rob-hp-laptop>
-References: <20161222104521.20683-1-uvv.mail@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC PATCH 2/4] clk: mdm9615: Add EBI2 clock
+Date: Thu, 22 Dec 2016 17:12:16 -0800
+Message-ID: <20161223011216.GE8288@codeaurora.org>
+References: <1482437139-29329-1-git-send-email-zmarkovic@sierrawireless.com>
+ <1482437139-29329-3-git-send-email-zmarkovic@sierrawireless.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161222104521.20683-1-uvv.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Vyacheslav V. Yurkov" <uvv.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1482437139-29329-3-git-send-email-zmarkovic@sierrawireless.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Zoran Markovic <zmarkovic@sierrawireless.com>
+Cc: linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 22, 2016 at 11:45:21AM +0100, Vyacheslav V. Yurkov wrote:
-> Use valid value for 'enabled' in status field
-> 
-> Signed-off-by: Vyacheslav V. Yurkov <uvv.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/can/m_can.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-> index 9e33177..5facaf5 100644
-> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> @@ -63,5 +63,5 @@ Board dts:
->  &m_can1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_m_can1>;
-> -	status = "enabled";
-> +	status = "okay";
+On 12/22, Zoran Markovic wrote:
+> +static struct clk_branch ebi2_clk = {
+> +	.hwcg_reg = 0x2664,
+> +	.hwcg_bit = 6,
+> +	.halt_reg = 0x2fcc,
+> +	.halt_bit = 23,
+> +	.clkr = {
+> +		.enable_reg = 0x2664,
+> +		.enable_mask = BIT(6)|BIT(4),
 
-Examples don't need to have status prop. Just remove.
+Some spaces here around | please.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "ebi2_clk",
+> +			.ops = &clk_branch_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch ebi2_aon_clk = {
+> +	.halt_reg = 0x2fcc,
+> +	.halt_bit = 23,
+> +	.clkr = {
+> +		.enable_reg = 0x2664,
+> +		.enable_mask = BIT(8),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "ebi2_always_on_clk",
+
+Maybe just ebi2_aon_clk to keep things simple.
+
+> +			.ops = &clk_branch_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct clk_hw *gcc_mdm9615_hws[] = {
+>  	&cxo.hw,
+>  };
+> diff --git a/include/dt-bindings/clock/qcom,gcc-mdm9615.h b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
+> index 9ab2c40..57cdca6 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-mdm9615.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
+> @@ -323,5 +323,8 @@
+>  #define CE3_H_CLK				305
+>  #define USB_HS1_SYSTEM_CLK_SRC			306
+>  #define USB_HS1_SYSTEM_CLK			307
+> +#define EBI2_CLK				309
+
+Why jump from 307 to 309?
+
+> +#define EBI2_AON_CLK				310
+> +
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
