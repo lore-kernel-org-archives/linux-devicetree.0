@@ -1,42 +1,32 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH] Documentation: devicetree: "linux,usable-memory" property
-Date: Fri, 23 Dec 2016 17:17:47 +0100
-Message-ID: <20161223161747.9986-1-xypron.glpk@gmx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+From: Jelle van der Waa <jelle@vdwaa.nl>
+Subject: [PATCH 2/2] devicetree: add vendor prefix for Zeitec
+Date: Fri, 23 Dec 2016 17:32:14 +0100
+Message-ID: <20161223163214.7716-2-jelle@vdwaa.nl>
+References: <20161223163214.7716-1-jelle@vdwaa.nl>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20161223163214.7716-1-jelle@vdwaa.nl>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Jelle van der Waa <jelle@vdwaa.nl>
 List-Id: devicetree@vger.kernel.org
 
-Memory nodes may have a "linux,usable-memory" property
-overriding the reg property.
-
-This patch adds the missing documentation.
-
-Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
 ---
- Documentation/devicetree/booting-without-of.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-index 280d283304bb..92712c5604b0 100644
---- a/Documentation/devicetree/booting-without-of.txt
-+++ b/Documentation/devicetree/booting-without-of.txt
-@@ -981,6 +981,10 @@ compatibility.
-       removed later. The kernel can take this into consideration when
-       doing nonmovable allocations and when laying out memory zones.
- 
-+    - linux,usable-memory : This property overrides the reg property.
-+      It can be used if the bootloader changes the reg property to
-+      improper values.
-+
-   e) The /chosen node
- 
-   This node is a bit "special". Normally, that's where Open Firmware
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 16d3b5e7f5d1..a3d7608a5cb3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -329,6 +329,7 @@ xes	Extreme Engineering Solutions (X-ES)
+ xillybus	Xillybus Ltd.
+ xlnx	Xilinx
+ zarlink	Zarlink Semiconductor
++zeitec  ZEITEC Semiconductor Co., LTD.
+ zii	Zodiac Inflight Innovations
+ zte	ZTE Corp.
+ zyxel	ZyXEL Communications Corp.
 -- 
 2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
