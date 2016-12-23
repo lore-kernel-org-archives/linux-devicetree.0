@@ -1,94 +1,93 @@
-From: Zoran Markovic <zmarkovic@sierrawireless.com>
-Subject: [RFC PATCHv2 2/4] clk: mdm9615: Add EBI2 clock
-Date: Thu, 22 Dec 2016 20:54:44 -0800
-Message-ID: <1482468884-31027-1-git-send-email-zmarkovic@sierrawireless.com>
+From: hoegeun kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH 1/2] drm/panel: Add support for S6E3HA2 panel driver on TM2
+ board
+Date: Fri, 23 Dec 2016 14:18:46 +0900
+Message-ID: <199a2789-bf1a-963e-bbe8-f242239dff70@samsung.com>
+References: <1481695445-13088-1-git-send-email-hoegeun.kwon@samsung.com>
+ <1481695445-13088-2-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20161219185609epcas1p474536f74eb9055ff06fa0de04efade26@epcas1p4.samsung.com>
+ <20161219185553.bxizmi2yegk5ca6b@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Zoran Markovic <zmarkovic@sierrawireless.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20161219185553.bxizmi2yegk5ca6b@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, krzk@kernel.org, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add definition of EBI2 clock used by MDM9615 NAND controller.
-
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Zoran Markovic <zmarkovic@sierrawireless.com>
----
- drivers/clk/qcom/gcc-mdm9615.c               |   30 ++++++++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-mdm9615.h |    3 +++
- 2 files changed, 33 insertions(+)
-
-diff --git a/drivers/clk/qcom/gcc-mdm9615.c b/drivers/clk/qcom/gcc-mdm9615.c
-index 581a17f..e9e98b1 100644
---- a/drivers/clk/qcom/gcc-mdm9615.c
-+++ b/drivers/clk/qcom/gcc-mdm9615.c
-@@ -1563,6 +1563,34 @@ enum {
- 	},
- };
- 
-+static struct clk_branch ebi2_clk = {
-+	.hwcg_reg = 0x2664,
-+	.hwcg_bit = 6,
-+	.halt_reg = 0x2fcc,
-+	.halt_bit = 23,
-+	.clkr = {
-+		.enable_reg = 0x2664,
-+		.enable_mask = BIT(6) | BIT(4),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "ebi2_clk",
-+			.ops = &clk_branch_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch ebi2_aon_clk = {
-+	.halt_reg = 0x2fcc,
-+	.halt_bit = 23,
-+	.clkr = {
-+		.enable_reg = 0x2664,
-+		.enable_mask = BIT(8),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "ebi2_aon_clk",
-+			.ops = &clk_branch_ops,
-+		},
-+	},
-+};
-+
- static struct clk_hw *gcc_mdm9615_hws[] = {
- 	&cxo.hw,
- };
-@@ -1637,6 +1665,8 @@ enum {
- 	[PMIC_ARB1_H_CLK] = &pmic_arb1_h_clk.clkr,
- 	[PMIC_SSBI2_CLK] = &pmic_ssbi2_clk.clkr,
- 	[RPM_MSG_RAM_H_CLK] = &rpm_msg_ram_h_clk.clkr,
-+	[EBI2_CLK] = &ebi2_clk.clkr,
-+	[EBI2_AON_CLK] = &ebi2_aon_clk.clkr,
- };
- 
- static const struct qcom_reset_map gcc_mdm9615_resets[] = {
-diff --git a/include/dt-bindings/clock/qcom,gcc-mdm9615.h b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
-index 9ab2c40..57cdca6 100644
---- a/include/dt-bindings/clock/qcom,gcc-mdm9615.h
-+++ b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
-@@ -323,5 +323,8 @@
- #define CE3_H_CLK				305
- #define USB_HS1_SYSTEM_CLK_SRC			306
- #define USB_HS1_SYSTEM_CLK			307
-+#define EBI2_CLK				308
-+#define EBI2_AON_CLK				309
-+
- 
- #endif
--- 
-1.7.9.5
+CgpPbiAxMi8yMC8yMDE2IDAzOjU1IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBXZWQsIERl
+YyAxNCwgMjAxNiBhdCAwMzowNDowNFBNICswOTAwLCBIb2VnZXVuIEt3b24gd3JvdGU6Cj4+IFRo
+aXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIE1JUEktRFNJIGJhc2VkIFM2RTNIQTIgQU1PTEVEIHBh
+bmVsCj4+IGRyaXZlci4gVGhpcyBwYW5lbCBoYXMgMTQ0MHgyNTYwIHJlc29sdXRpb24gaW4gNS43
+LWluY2ggcGh5c2ljYWwKPj4gcGFuZWwgaW4gdGhlIFRNMiBkZXZpY2UuCj4+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IERvbmdod2EgTGVlIDxkaDA5LmxlZUBzYW1zdW5nLmNvbT4KPj4gU2lnbmVkLW9mZi1i
+eTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1bmcuY29tPgo+PiBTaWduZWQtb2Zm
+LWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KPj4gLS0tCj4+ICAg
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEyLnR4dCAgICAgfCAgNTIg
+KysKPj4gICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgNiArCj4+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zYW1zdW5n
+LXM2ZTNoYTIuYyAgICAgIHwgNzU2ICsrKysrKysrKysrKysrKysrKysrKwo+PiAgIDQgZmlsZXMg
+Y2hhbmdlZCwgODE1IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEy
+LnR4dAo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwt
+c2Ftc3VuZy1zNmUzaGEyLmMKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIu
+dHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjFmNDFmMjQKPj4g
+LS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIudHh0Cj4+IEBAIC0wLDAgKzEsNTIgQEAKPj4g
+K1NhbXN1bmcgUzZFM0hBMiA1LjciIDE0NDB4MjU2MCBBTU9MRUQgcGFuZWwKPj4gKwo+PiArUmVx
+dWlyZWQgcHJvcGVydGllczoKPj4gKyAgLSBjb21wYXRpYmxlOiAic2Ftc3VuZyxzNmUzaGEyIgo+
+PiArICAtIHJlZzogdGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIgb2YgYSBEU0kgcGVyaXBoZXJh
+bAo+PiArICAtIHZkZDMtc3VwcGx5OiBjb3JlIHZvbHRhZ2Ugc3VwcGx5Cj4+ICsgIC0gdmNpLXN1
+cHBseTogdm9sdGFnZSBzdXBwbHkgZm9yIGFuYWxvZyBjaXJjdWl0cwo+PiArICAtIHJlc2V0LWdw
+aW9zOiBhIEdQSU8gc3BlYyBmb3IgdGhlIHJlc2V0IHBpbgo+PiArICAtIGVuYWJsZS1ncGlvczog
+YSBHUElPIHNwZWMgZm9yIHRoZSBwYW5lbCBlbmFibGUgcGluCj4+ICsgIC0gdGUtZ3Bpb3M6IGEg
+R1BJTyBzcGVjIGZvciB0aGUgdGVhcmluZyBlZmZlY3Qgc3luY2hyb25pemF0aW9uIHNpZ25hbCBn
+cGlvIHBpbgo+IE5lZWQgdG8gc3BlY2lmeSB0aGUgR1BJT3MgYXMgYWN0aXZlIGhpZ2ggb3IgbG93
+LgoKSGkgUm9iIEhlcnJpbmcsCgpUaGFua3MgZm9yIHBvaW50IG91dC4gSSB3aWxsIGFkZCAiKGFj
+dGl2ZSBoaWdoIG9yIGxvdykiIGFmdGVyIHRoZSAKZGVzY3JpcHRpb24gb2YgdGhlIEdQSU9zLgoK
+Pj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKyAgLSBkaXNwbGF5LXRpbWluZ3M6IHRp
+bWluZ3MgZm9yIHRoZSBjb25uZWN0ZWQgcGFuZWwgYXMgZGVzY3JpYmVkIGJ5IFsxXQo+PiArCj4+
+ICtUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGgg
+b25lIGNoaWxkCj4+ICsnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3Mg
+ZGVmaW5lZCBpbiBbMl0uIFRoaXMKPj4gK25vZGUgc2hvdWxkIGRlc2NyaWJlIHBhbmVsJ3Mgdmlk
+ZW8gYnVzLgo+PiArCj4+ICtbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL2Rpc3BsYXktdGltaW5nLnR4dAo+PiArWzJdOiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPj4gKwo+PiArRXhh
+bXBsZToKPj4gKwo+PiArCXBhbmVsQDAgewo+PiArCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZl
+M2hhMiI7Cj4+ICsJCXJlZyA9IDwwPjsKPiByZWcgZG9lc24ndCByZWFsbHkgd29yayBoZXJlIHVu
+bGVzcyB0aGlzIG5vZGUgaXMgYSBjaGlsZCBvZiB0aGUgRFNJCj4gY29udHJvbGxlciBub2RlLiBC
+dXQgaWYgaXQgaXMgYSBjaGlsZCBub2RlLCB0aGVuIHlvdSBkb24ndCBuZWVkIHRoZSBPRgo+IGdy
+YXBoLgoKVGhlIHJlZyB2YWx1ZSBpcyB1c2VkIGluIHZpcnR1YWwgY2hpbGQgcGFuZWwgbm9kZSBz
+byBJIHRoaW5rIHRoZSByZWcgCnZhbHVlIGlzIG5lZWRlZC4KUGxlYXNlIHJlZmVyIHRvIHRoZSBk
+b2N1bWVudCBiZWxvdy4KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bWlwaS1kc2ktYnVzLnR4dAoKQmVzdCBSZWdhcmRzLApIb2VnZXVuIEt3b24KCj4+ICsJCXZkZDMt
+c3VwcGx5ID0gPCZsZG8yN19yZWc+Owo+PiArCQl2Y2ktc3VwcGx5ID0gPCZsZG8yOF9yZWc+Owo+
+PiArCQlyZXNldC1ncGlvcyA9IDwmZ3BnMCAwIEdQSU9fQUNUSVZFX0hJR0g+Owo+PiArCQllbmFi
+bGUtZ3Bpb3MgPSA8JmdwZjEgNSBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwkJdGUtZ3Bpb3MgPSA8
+JmdwZjEgMyBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwo+PiArCQlkaXNwbGF5LXRpbWluZ3Mgewo+
+PiArCQkJdGltaW5nLTAgewo+PiArCQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwwPjsKPj4gKwkJCQlo
+YWN0aXZlID0gPDE0NDA+Owo+PiArCQkJCXZhY3RpdmUgPSA8MjU2MD47Cj4+ICsJCQkJaGZyb250
+LXBvcmNoID0gPDE+Owo+PiArCQkJCWhiYWNrLXBvcmNoID0gPDE+Owo+PiArCQkJCWhzeW5jLWxl
+biA9IDwxPjsKPj4gKwkJCQl2ZnJvbnQtcG9yY2ggPSA8MT47Cj4+ICsJCQkJdmJhY2stcG9yY2gg
+PSA8MTU+Owo+PiArCQkJCXZzeW5jLWxlbiA9IDwxPjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsK
+Pj4gKwkJcG9ydCB7Cj4+ICsJCQlkc2lfaW46IGVuZHBvaW50IHsKPj4gKwkJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JmRzaV9vdXQ+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9Owo+IF9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxp
+bmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
