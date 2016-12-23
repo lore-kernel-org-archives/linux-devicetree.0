@@ -1,57 +1,115 @@
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v1 2/3] dt-bindings: add binding for rk3328 power domains
-Date: Fri, 23 Dec 2016 11:47:51 +0800
-Message-ID: <1482464872-12954-3-git-send-email-zhangqing@rock-chips.com>
-References: <1482464872-12954-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482464872-12954-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: phy: Add support for QUSB2 phy
+Date: Fri, 23 Dec 2016 10:22:18 +0530
+Message-ID: <CAFp+6iESYfFrLpidhAXrPm7LQtYa6dV1xOL=AjdMfLXgL8Fv8g@mail.gmail.com>
+References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1482253431-23160-2-git-send-email-vivek.gautam@codeaurora.org> <20161222211633.ldk3ykqiat6peyw7@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161222211633.ldk3ykqiat6peyw7@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: kishon <kishon@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the power domains
-found on Rockchip RK3328 SoCs.
-But RK3328 SoC just support idle, not support pd.
+Hi Rob,
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-index f909ce06afc4..01bfb6745fbd 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-+++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-@@ -6,6 +6,7 @@ powered up/down by software based on different application scenes to save power.
- Required properties for power domain controller:
- - compatible: Should be one of the following.
- 	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
-+	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
- 	"rockchip,rk3368-power-controller" - for RK3368 SoCs.
- 	"rockchip,rk3399-power-controller" - for RK3399 SoCs.
- - #power-domain-cells: Number of cells in a power-domain specifier.
-@@ -16,6 +17,7 @@ Required properties for power domain controller:
- Required properties for power domain sub nodes:
- - reg: index of the power domain, should use macros in:
- 	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
-+	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
- 	"include/dt-bindings/power/rk3368-power.h" - for RK3368 type power domain.
- 	"include/dt-bindings/power/rk3399-power.h" - for RK3399 type power domain.
- - clocks (optional): phandles to clocks which need to be enabled while power domain
-@@ -90,6 +92,7 @@ containing a phandle to the power device node and an index specifying which
- power domain to use.
- The index should use macros in:
- 	"include/dt-bindings/power/rk3288-power.h" - for rk3288 type power domain.
-+	"include/dt-bindings/power/rk3328-power.h" - for rk3328 type power domain.
- 	"include/dt-bindings/power/rk3368-power.h" - for rk3368 type power domain.
- 	"include/dt-bindings/power/rk3399-power.h" - for rk3399 type power domain.
- 
+On Fri, Dec 23, 2016 at 2:46 AM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Dec 20, 2016 at 10:33:48PM +0530, Vivek Gautam wrote:
+>> Qualcomm chipsets have QUSB2 phy controller that provides
+>> HighSpeed functionality for DWC3 controller.
+>> Adding dt binding information for the same.
+>>
+>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> ---
+>>
+>> Changes since v2:
+>>  - Removed binding for "ref_clk_src" since we don't request this
+>>    clock in the driver.
+>>  - Addressed s/vdda-phy-dpdm/vdda-phy-dpdm-supply.
+>>  - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
+>>  - Addressed s/tune2_hstx_trim_efuse/tune2_hstx_trim. Don't need to add
+>>    'efuse' suffix to nvmem cell.
+>>  - Addressed s/qusb2phy/phy for the node name.
+>>
+>> Changes since v1:
+>>  - New patch, forked out of the original driver patch:
+>>    "phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips"
+>>  - Updated dt bindings to remove 'hstx-trim-bit-offset' and
+>>    'hstx-trim-bit-len' bindings.
+>>
+>>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     | 53 ++++++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>> new file mode 100644
+>> index 000000000000..594f2dcd12dd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>> @@ -0,0 +1,53 @@
+>> +Qualcomm QUSB2 phy controller
+>> +=============================
+>> +
+>> +QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+>> +
+>> +Required properties:
+>> + - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
+>> + - reg: offset and length of the PHY register set.
+>> + - #phy-cells: must be 0.
+>> +
+>> + - clocks: a list of phandles and clock-specifier pairs,
+>> +        one for each entry in clock-names.
+>> + - clock-names: must be "cfg_ahb" for phy config clock,
+>> +                     "ref" for 19.2 MHz ref clk,
+>> +                     "iface" for phy interface clock (Optional).
+>> +
+>> + - vdd-phy-supply: Phandle to a regulator supply to PHY core block.
+>> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+>> + - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
+>> +
+>> + - resets: a list of phandles and reset controller specifier pairs,
+>> +        one for each entry in reset-names.
+>> + - reset-names: must be "phy" for reset of phy block.
+>
+> -names is pointless when only one.
+
+Sure, will drop the -names property, and get the reset control by index.
+
+>
+>> +
+>> +Optional properties:
+>> + - nvmem-cells: a list of phandles to nvmem cells that contain fused
+>> +             tuning parameters for qusb2 phy, one for each entry
+>> +             in nvmem-cell-names.
+>> + - nvmem-cell-names: must be "tune2_hstx_trim" for cell containing
+>> +                  HS Tx trim value.
+>
+> ditto.
+
+nvmem doesn't allow, at this point, to get the cells by index.
+Its APIs take 'const char' cell id and get the cell.
+
+We should add this support to get the cell by index.
+Will create a patch for that, and drop the '-names' property from bindings.
+
+>
+> With those dropped,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Thanks for the Ack.
+
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
