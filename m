@@ -1,75 +1,317 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 0/2] power: supply: bq24735: poll register if no
- ac-detect gpio
-Date: Fri, 23 Dec 2016 02:38:48 +0100
-Message-ID: <20161223013848.oiuutehq6zcel4y4@earth>
-References: <1482355793-16190-1-git-send-email-peda@axentia.se>
+From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Fri, 23 Dec 2016 09:43:55 +0800
+Message-ID: <585C815B.4030000@hisilicon.com>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
+ <CACVXFVNS9n9_ty8y3CyqfRaLitqDKdk1mMOrQHM-enOgJtUBeQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mv23swo7d3vnlpk2"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482355793-16190-1-git-send-email-peda@axentia.se>
+In-Reply-To: <CACVXFVNS9n9_ty8y3CyqfRaLitqDKdk1mMOrQHM-enOgJtUBeQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Ming Lei <tom.leiming@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linuxarm@huawei.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-serial@vger.kernel.org, minyard@acm.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <liviu.dudau@arm.com>, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com
 List-Id: devicetree@vger.kernel.org
 
+Hi，Ming,
 
---mv23swo7d3vnlpk2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 2016/12/22 16:15, Ming Lei wrote:
+> Hi Guys,
+> 
+> On Tue, Nov 8, 2016 at 11:47 AM, zhichang.yuan
+> <yuanzhichang@hisilicon.com> wrote:
+>> For arm64, there is no I/O space as other architectural platforms, such as
+>> X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
+>> such as Hip06, when accessing some legacy ISA devices connected to LPC, those
+>> known port addresses are used to control the corresponding target devices, for
+>> example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
+>> normal MMIO mode in using.
+>>
+>> To drive these devices, this patch introduces a method named indirect-IO.
+>> In this method the in/out pair in arch/arm64/include/asm/io.h will be
+>> redefined. When upper layer drivers call in/out with those known legacy port
+>> addresses to access the peripherals, the hooking functions corrresponding to
+>> those target peripherals will be called. Through this way, those upper layer
+>> drivers which depend on in/out can run on Hip06 without any changes.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
+>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+>> ---
+>>  arch/arm64/Kconfig             |  6 +++
+>>  arch/arm64/include/asm/extio.h | 94 ++++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm64/include/asm/io.h    | 29 +++++++++++++
+>>  arch/arm64/kernel/Makefile     |  1 +
+>>  arch/arm64/kernel/extio.c      | 27 ++++++++++++
+>>  5 files changed, 157 insertions(+)
+> 
+> When I applied these three patches against current linus tree and
+> enable CONFIG_HISILICON_LPC, the following build failure[1] is
+> triggered when running 'make modules'.
+> 
 
-On Wed, Dec 21, 2016 at 10:29:51PM +0100, Peter Rosin wrote:
-> My patch [1] "power: supply: bq24735-charger: allow chargers to share the
-> ac-detect gpio" is perhaps a bit hard to digest. And while I still think
-> some way of sharing the ac-detect gpio is worthwhile, I thought of another
-> way to solve the problem at hand. Instead of polling a shared gpio, it's
-> as simple as polling the chip for what it is outputting on the ACOK pin.
-> And the code is already there! It just needs a tweak to allow this mode of
-> operation.
->=20
-> This appears to work just fine for me, and the difference is in the noise
-> since my shared gpio pin happens to be on an expander on the i2c bus, so
-> I end up with i2c traffic for each poll either way.
->=20
-> Cheers,
-> peda
->=20
-> [1] https://lkml.org/lkml/2016/12/13/786
+Thanks for your report!
 
-Thanks for your patchset. We are currently in the merge
-window and your patches will appear in linux-next once
-4.10-rc1 has been tagged by Linus Torvalds.
+This patch has compilation issue on some architectures, sorry for the inconvenience caused by this!
+The ongoing v6 will solve these issues.
+I will trace this failure and provide a fix if you can not wait for the next version.
 
-Until then I queued it into this branch:
+Could you send me your .config in private? I don't want to bother all the hacker in the mail-list.
 
-https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git/log=
-/?h=3Dfor-next-next
 
--- Sebastian
+Thanks,
+Zhichang
 
---mv23swo7d3vnlpk2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhcgCgACgkQ2O7X88g7
-+praEg//ZNclJCKKFHk23FWnCI9C2Y12dHWP4dabEzc1s10pt54DSqlrlH7hzbyo
-Qh46r87fOE/nPb24sbvsg2pSXFVSTT28FdZcphksC24Dwbn0imwKs6LI286qA8Xd
-9KD6Itrtse9n6GQu3gKkgUQYQ75QNCTgEy7H88FLa+8zfaADRjaICWrgMwWTpI6a
-wckGBPMwgrT63Y8fNMcvwmA+rlzmPqAXVpgiGBdw23eC+GJVD/gFzx1JyHPusP4l
-4pGst4GOndfqrGRIZNG4zrF64ZLaoZ8aAs6FgS/kwXLa1ENbvK1Gs1OltTIPwoKJ
-N7k9NY+pAqi8z1Dk2NHJO5Jf4VWJhNzvqy7PVi5Bpddwc96Qbb0Ct2mIFMSz/xwe
-GY4/UMlF6L4oGJBNoXded/LtvjiVPmduCDo+If/zYBWDQml1S0ALqfyBjSPt+dob
-5PJbkodZILwVUAynTRs28mpnZwFK2UzmB9E8gg1ofP6rsJ4MujKEzr8Xaofq092V
-+1KzumZk2Hppkv28732FJh3n8KPeYSKvJAhb33RQIgKneYUd0ioO8NwifIwezzL+
-pRBnutaVy5ZvFndzlyp7VPfIm0dGAj+KXqzrRapSTDiMC6ft2P1RTD0VmF4kTg+y
-FVK8qY4nF//5ZkAC1QqxC1xE8EO9Kd5aTp/vp+TAZU0+a7GaTvQ=
-=dJP2
------END PGP SIGNATURE-----
-
---mv23swo7d3vnlpk2--
+> 
+> Thanks,
+> Ming
+> 
+> [1] 'make modules' failure log
+> 
+>   Building modules, stage 2.
+>   MODPOST 2260 modules
+> ERROR: "inb" [drivers/watchdog/wdt_pci.ko] undefined!
+> ERROR: "outb" [drivers/watchdog/wdt_pci.ko] undefined!
+> ERROR: "outb" [drivers/watchdog/pcwd_pci.ko] undefined!
+> ERROR: "inb" [drivers/watchdog/pcwd_pci.ko] undefined!
+> ERROR: "outw" [drivers/video/vgastate.ko] undefined!
+> ERROR: "outb" [drivers/video/vgastate.ko] undefined!
+> ERROR: "inb" [drivers/video/vgastate.ko] undefined!
+> ERROR: "outw" [drivers/video/fbdev/vt8623fb.ko] undefined!
+> ERROR: "inb" [drivers/video/fbdev/vt8623fb.ko] undefined!
+> ERROR: "outb" [drivers/video/fbdev/vt8623fb.ko] undefined!
+> ERROR: "outw" [drivers/video/fbdev/tridentfb.ko] undefined!
+> ERROR: "inb" [drivers/video/fbdev/tridentfb.ko] undefined!
+> ERROR: "outb" [drivers/video/fbdev/tridentfb.ko] undefined!
+> ERROR: "inb" [drivers/video/fbdev/tdfxfb.ko] undefined!
+> .....
+> ERROR: "inb" [drivers/ata/pata_cmd64x.ko] undefined!
+> ERROR: "inb" [drivers/ata/pata_artop.ko] undefined!
+> scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+> make[1]: *** [__modpost] Error 1
+> Makefile:1196: recipe for target 'modules' failed
+> make: *** [modules] Error 2
+> 
+> 
+>>  create mode 100644 arch/arm64/include/asm/extio.h
+>>  create mode 100644 arch/arm64/kernel/extio.c
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 969ef88..b44070b 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -163,6 +163,12 @@ config ARCH_MMAP_RND_COMPAT_BITS_MIN
+>>  config ARCH_MMAP_RND_COMPAT_BITS_MAX
+>>         default 16
+>>
+>> +config ARM64_INDIRECT_PIO
+>> +       bool "access peripherals with legacy I/O port"
+>> +       help
+>> +         Support special accessors for ISA I/O devices. This is needed for
+>> +         SoCs that do not support standard read/write for the ISA range.
+>> +
+>>  config NO_IOPORT_MAP
+>>         def_bool y if !PCI
+>>
+>> diff --git a/arch/arm64/include/asm/extio.h b/arch/arm64/include/asm/extio.h
+>> new file mode 100644
+>> index 0000000..6ae0787
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/extio.h
+>> @@ -0,0 +1,94 @@
+>> +/*
+>> + * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
+>> + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef __LINUX_EXTIO_H
+>> +#define __LINUX_EXTIO_H
+>> +
+>> +struct extio_ops {
+>> +       unsigned long start;/* inclusive, sys io addr */
+>> +       unsigned long end;/* inclusive, sys io addr */
+>> +
+>> +       u64 (*pfin)(void *devobj, unsigned long ptaddr, size_t dlen);
+>> +       void (*pfout)(void *devobj, unsigned long ptaddr, u32 outval,
+>> +                                       size_t dlen);
+>> +       u64 (*pfins)(void *devobj, unsigned long ptaddr, void *inbuf,
+>> +                               size_t dlen, unsigned int count);
+>> +       void (*pfouts)(void *devobj, unsigned long ptaddr,
+>> +                               const void *outbuf, size_t dlen,
+>> +                               unsigned int count);
+>> +       void *devpara;
+>> +};
+>> +
+>> +extern struct extio_ops *arm64_extio_ops;
+>> +
+>> +#define DECLARE_EXTIO(bw, type)                                                \
+>> +extern type in##bw(unsigned long addr);                                        \
+>> +extern void out##bw(type value, unsigned long addr);                   \
+>> +extern void ins##bw(unsigned long addr, void *buffer, unsigned int count);\
+>> +extern void outs##bw(unsigned long addr, const void *buffer, unsigned int count);
+>> +
+>> +#define BUILD_EXTIO(bw, type)                                          \
+>> +type in##bw(unsigned long addr)                                                \
+>> +{                                                                      \
+>> +       if (!arm64_extio_ops || arm64_extio_ops->start > addr ||        \
+>> +                       arm64_extio_ops->end < addr)                    \
+>> +               return read##bw(PCI_IOBASE + addr);                     \
+>> +       return arm64_extio_ops->pfin ?                                  \
+>> +               arm64_extio_ops->pfin(arm64_extio_ops->devpara,         \
+>> +                       addr, sizeof(type)) : -1;                       \
+>> +}                                                                      \
+>> +                                                                       \
+>> +void out##bw(type value, unsigned long addr)                           \
+>> +{                                                                      \
+>> +       if (!arm64_extio_ops || arm64_extio_ops->start > addr ||        \
+>> +                       arm64_extio_ops->end < addr)                    \
+>> +               write##bw(value, PCI_IOBASE + addr);                    \
+>> +       else                                                            \
+>> +               if (arm64_extio_ops->pfout)                             \
+>> +                       arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
+>> +                               addr, value, sizeof(type));             \
+>> +}                                                                      \
+>> +                                                                       \
+>> +void ins##bw(unsigned long addr, void *buffer, unsigned int count)     \
+>> +{                                                                      \
+>> +       if (!arm64_extio_ops || arm64_extio_ops->start > addr ||        \
+>> +                       arm64_extio_ops->end < addr)                    \
+>> +               reads##bw(PCI_IOBASE + addr, buffer, count);            \
+>> +       else                                                            \
+>> +               if (arm64_extio_ops->pfins)                             \
+>> +                       arm64_extio_ops->pfins(arm64_extio_ops->devpara,\
+>> +                               addr, buffer, sizeof(type), count);     \
+>> +}                                                                      \
+>> +                                                                       \
+>> +void outs##bw(unsigned long addr, const void *buffer, unsigned int count)      \
+>> +{                                                                      \
+>> +       if (!arm64_extio_ops || arm64_extio_ops->start > addr ||        \
+>> +                       arm64_extio_ops->end < addr)                    \
+>> +               writes##bw(PCI_IOBASE + addr, buffer, count);           \
+>> +       else                                                            \
+>> +               if (arm64_extio_ops->pfouts)                            \
+>> +                       arm64_extio_ops->pfouts(arm64_extio_ops->devpara,\
+>> +                               addr, buffer, sizeof(type), count);     \
+>> +}
+>> +
+>> +static inline void arm64_set_extops(struct extio_ops *ops)
+>> +{
+>> +       if (ops)
+>> +               WRITE_ONCE(arm64_extio_ops, ops);
+>> +}
+>> +
+>> +#endif /* __LINUX_EXTIO_H*/
+>> diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
+>> index 0bba427..136735d 100644
+>> --- a/arch/arm64/include/asm/io.h
+>> +++ b/arch/arm64/include/asm/io.h
+>> @@ -31,6 +31,7 @@
+>>  #include <asm/early_ioremap.h>
+>>  #include <asm/alternative.h>
+>>  #include <asm/cpufeature.h>
+>> +#include <asm/extio.h>
+>>
+>>  #include <xen/xen.h>
+>>
+>> @@ -149,6 +150,34 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
+>>  #define IO_SPACE_LIMIT         (PCI_IO_SIZE - 1)
+>>  #define PCI_IOBASE             ((void __iomem *)PCI_IO_START)
+>>
+>> +
+>> +/*
+>> + * redefine the in(s)b/out(s)b for indirect-IO.
+>> + */
+>> +#ifdef CONFIG_ARM64_INDIRECT_PIO
+>> +#define inb inb
+>> +#define outb outb
+>> +#define insb insb
+>> +#define outsb outsb
+>> +/* external declaration */
+>> +DECLARE_EXTIO(b, u8)
+>> +
+>> +#define inw inw
+>> +#define outw outw
+>> +#define insw insw
+>> +#define outsw outsw
+>> +
+>> +DECLARE_EXTIO(w, u16)
+>> +
+>> +#define inl inl
+>> +#define outl outl
+>> +#define insl insl
+>> +#define outsl outsl
+>> +
+>> +DECLARE_EXTIO(l, u32)
+>> +#endif
+>> +
+>> +
+>>  /*
+>>   * String version of I/O memory access operations.
+>>   */
+>> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+>> index 7d66bba..60e0482 100644
+>> --- a/arch/arm64/kernel/Makefile
+>> +++ b/arch/arm64/kernel/Makefile
+>> @@ -31,6 +31,7 @@ arm64-obj-$(CONFIG_COMPAT)            += sys32.o kuser32.o signal32.o         \
+>>                                            sys_compat.o entry32.o
+>>  arm64-obj-$(CONFIG_FUNCTION_TRACER)    += ftrace.o entry-ftrace.o
+>>  arm64-obj-$(CONFIG_MODULES)            += arm64ksyms.o module.o
+>> +arm64-obj-$(CONFIG_ARM64_INDIRECT_PIO) += extio.o
+>>  arm64-obj-$(CONFIG_ARM64_MODULE_PLTS)  += module-plts.o
+>>  arm64-obj-$(CONFIG_PERF_EVENTS)                += perf_regs.o perf_callchain.o
+>>  arm64-obj-$(CONFIG_HW_PERF_EVENTS)     += perf_event.o
+>> diff --git a/arch/arm64/kernel/extio.c b/arch/arm64/kernel/extio.c
+>> new file mode 100644
+>> index 0000000..647b3fa
+>> --- /dev/null
+>> +++ b/arch/arm64/kernel/extio.c
+>> @@ -0,0 +1,27 @@
+>> +/*
+>> + * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
+>> + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +
+>> +struct extio_ops *arm64_extio_ops;
+>> +
+>> +
+>> +BUILD_EXTIO(b, u8)
+>> +
+>> +BUILD_EXTIO(w, u16)
+>> +
+>> +BUILD_EXTIO(l, u32)
+>> --
+>> 1.9.1
+>>
+> 
+> 
+> 
