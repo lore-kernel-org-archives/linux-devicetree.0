@@ -1,87 +1,27 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH] arm64: dts: uniphier: add eMMC controller node for LD11/LD20
-Date: Fri, 23 Dec 2016 12:18:23 +0900
-Message-ID: <1482463103-28692-1-git-send-email-yamada.masahiro@socionext.com>
+From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v1 0/3] soc: rockchip: power-domain: support RK3328 SoC
+Date: Fri, 23 Dec 2016 11:47:49 +0800
+Message-ID: <1482464872-12954-1-git-send-email-zhangqing@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Cadence's eMMC controller node for LD11/LD20.
+Elaine Zhang (3):
+  dt/bindings: power: add RK3328 SoCs header for idle-request
+  dt-bindings: add binding for rk3328 power domains
+  soc: rockchip: power-domain: Modify power domain driver for rk3328
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+ .../bindings/soc/rockchip/power_domain.txt         |  3 ++
+ drivers/soc/rockchip/pm_domains.c                  | 63 +++++++++++++++++++---
+ include/dt-bindings/power/rk3328-power.h           | 18 +++++++
+ 3 files changed, 78 insertions(+), 6 deletions(-)
+ create mode 100644 include/dt-bindings/power/rk3328-power.h
 
- arch/arm/boot/dts/uniphier-pinctrl.dtsi          |  5 +++++
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 12 ++++++++++++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 12 ++++++++++++
- 3 files changed, 29 insertions(+)
-
-diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-index 10a7110..be353af15 100644
---- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-@@ -43,6 +43,11 @@
-  */
- 
- &pinctrl {
-+	pinctrl_emmc: emmc_grp {
-+		groups = "emmc", "emmc_dat8";
-+		function = "emmc";
-+	};
-+
- 	pinctrl_i2c0: i2c0_grp {
- 		groups = "i2c0";
- 		function = "i2c0";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 43b6583..e1e45b4 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -300,6 +300,18 @@
- 			};
- 		};
- 
-+		emmc: sdhc@5a000000 {
-+			compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-+			reg = <0x5a000000 0x400>;
-+			interrupts = <0 78 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_emmc>;
-+			clocks = <&sys_clk 4>;
-+			bus-width = <8>;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
-+		};
-+
- 		usb0: usb@5a800100 {
- 			compatible = "socionext,uniphier-ehci", "generic-ehci";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index fcaecc6..1e61a04 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -374,6 +374,18 @@
- 			};
- 		};
- 
-+		emmc: sdhc@5a000000 {
-+			compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-+			reg = <0x5a000000 0x400>;
-+			interrupts = <0 78 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_emmc>;
-+			clocks = <&sys_clk 4>;
-+			bus-width = <8>;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
-+		};
-+
- 		soc-glue@5f800000 {
- 			compatible = "socionext,uniphier-ld20-soc-glue",
- 				     "simple-mfd", "syscon";
 -- 
-2.7.4
+1.9.1
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
