@@ -1,72 +1,75 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC PATCH 2/4] clk: mdm9615: Add EBI2 clock
-Date: Thu, 22 Dec 2016 17:12:16 -0800
-Message-ID: <20161223011216.GE8288@codeaurora.org>
-References: <1482437139-29329-1-git-send-email-zmarkovic@sierrawireless.com>
- <1482437139-29329-3-git-send-email-zmarkovic@sierrawireless.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 0/2] power: supply: bq24735: poll register if no
+ ac-detect gpio
+Date: Fri, 23 Dec 2016 02:38:48 +0100
+Message-ID: <20161223013848.oiuutehq6zcel4y4@earth>
+References: <1482355793-16190-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mv23swo7d3vnlpk2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1482437139-29329-3-git-send-email-zmarkovic@sierrawireless.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Zoran Markovic <zmarkovic@sierrawireless.com>
-Cc: linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1482355793-16190-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/22, Zoran Markovic wrote:
-> +static struct clk_branch ebi2_clk = {
-> +	.hwcg_reg = 0x2664,
-> +	.hwcg_bit = 6,
-> +	.halt_reg = 0x2fcc,
-> +	.halt_bit = 23,
-> +	.clkr = {
-> +		.enable_reg = 0x2664,
-> +		.enable_mask = BIT(6)|BIT(4),
 
-Some spaces here around | please.
+--mv23swo7d3vnlpk2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "ebi2_clk",
-> +			.ops = &clk_branch_ops,
-> +		},
-> +	},
-> +};
-> +
-> +static struct clk_branch ebi2_aon_clk = {
-> +	.halt_reg = 0x2fcc,
-> +	.halt_bit = 23,
-> +	.clkr = {
-> +		.enable_reg = 0x2664,
-> +		.enable_mask = BIT(8),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "ebi2_always_on_clk",
+Hi,
 
-Maybe just ebi2_aon_clk to keep things simple.
+On Wed, Dec 21, 2016 at 10:29:51PM +0100, Peter Rosin wrote:
+> My patch [1] "power: supply: bq24735-charger: allow chargers to share the
+> ac-detect gpio" is perhaps a bit hard to digest. And while I still think
+> some way of sharing the ac-detect gpio is worthwhile, I thought of another
+> way to solve the problem at hand. Instead of polling a shared gpio, it's
+> as simple as polling the chip for what it is outputting on the ACOK pin.
+> And the code is already there! It just needs a tweak to allow this mode of
+> operation.
+>=20
+> This appears to work just fine for me, and the difference is in the noise
+> since my shared gpio pin happens to be on an expander on the i2c bus, so
+> I end up with i2c traffic for each poll either way.
+>=20
+> Cheers,
+> peda
+>=20
+> [1] https://lkml.org/lkml/2016/12/13/786
 
-> +			.ops = &clk_branch_ops,
-> +		},
-> +	},
-> +};
-> +
->  static struct clk_hw *gcc_mdm9615_hws[] = {
->  	&cxo.hw,
->  };
-> diff --git a/include/dt-bindings/clock/qcom,gcc-mdm9615.h b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
-> index 9ab2c40..57cdca6 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-mdm9615.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-mdm9615.h
-> @@ -323,5 +323,8 @@
->  #define CE3_H_CLK				305
->  #define USB_HS1_SYSTEM_CLK_SRC			306
->  #define USB_HS1_SYSTEM_CLK			307
-> +#define EBI2_CLK				309
+Thanks for your patchset. We are currently in the merge
+window and your patches will appear in linux-next once
+4.10-rc1 has been tagged by Linus Torvalds.
 
-Why jump from 307 to 309?
+Until then I queued it into this branch:
 
-> +#define EBI2_AON_CLK				310
-> +
+https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git/log=
+/?h=3Dfor-next-next
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-- Sebastian
+
+--mv23swo7d3vnlpk2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhcgCgACgkQ2O7X88g7
++praEg//ZNclJCKKFHk23FWnCI9C2Y12dHWP4dabEzc1s10pt54DSqlrlH7hzbyo
+Qh46r87fOE/nPb24sbvsg2pSXFVSTT28FdZcphksC24Dwbn0imwKs6LI286qA8Xd
+9KD6Itrtse9n6GQu3gKkgUQYQ75QNCTgEy7H88FLa+8zfaADRjaICWrgMwWTpI6a
+wckGBPMwgrT63Y8fNMcvwmA+rlzmPqAXVpgiGBdw23eC+GJVD/gFzx1JyHPusP4l
+4pGst4GOndfqrGRIZNG4zrF64ZLaoZ8aAs6FgS/kwXLa1ENbvK1Gs1OltTIPwoKJ
+N7k9NY+pAqi8z1Dk2NHJO5Jf4VWJhNzvqy7PVi5Bpddwc96Qbb0Ct2mIFMSz/xwe
+GY4/UMlF6L4oGJBNoXded/LtvjiVPmduCDo+If/zYBWDQml1S0ALqfyBjSPt+dob
+5PJbkodZILwVUAynTRs28mpnZwFK2UzmB9E8gg1ofP6rsJ4MujKEzr8Xaofq092V
++1KzumZk2Hppkv28732FJh3n8KPeYSKvJAhb33RQIgKneYUd0ioO8NwifIwezzL+
+pRBnutaVy5ZvFndzlyp7VPfIm0dGAj+KXqzrRapSTDiMC6ft2P1RTD0VmF4kTg+y
+FVK8qY4nF//5ZkAC1QqxC1xE8EO9Kd5aTp/vp+TAZU0+a7GaTvQ=
+=dJP2
+-----END PGP SIGNATURE-----
+
+--mv23swo7d3vnlpk2--
