@@ -1,40 +1,42 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH 2/2] ARM: dts: imx6q-icore-rqs: Update model to support Dual SOM
-Date: Fri, 23 Dec 2016 17:02:15 +0100
-Message-ID: <1482508935-9414-2-git-send-email-jagan@openedev.com>
-References: <1482508935-9414-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1482508935-9414-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH] Documentation: devicetree: "linux,usable-memory" property
+Date: Fri, 23 Dec 2016 17:17:47 +0100
+Message-ID: <20161223161747.9986-1-xypron.glpk@gmx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+Memory nodes may have a "linux,usable-memory" property
+overriding the reg property.
 
-Engicam i.CoreM6 Dual and Quad SOM's use same dts file, hence
-update model name to add Dual and also added full mode decsription.
+This patch adds the missing documentation.
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6q-icore-rqs.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/booting-without-of.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-index 0053188..76757f8 100644
---- a/arch/arm/boot/dts/imx6q-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-@@ -45,7 +45,7 @@
- #include "imx6qdl-icore-rqs.dtsi"
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 280d283304bb..92712c5604b0 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -981,6 +981,10 @@ compatibility.
+       removed later. The kernel can take this into consideration when
+       doing nonmovable allocations and when laying out memory zones.
  
- / {
--	model = "Engicam i.CoreM6 Quad SOM";
-+	model = "Engicam i.CoreM6 Quad/Dual RQS Starter Kit";
- 	compatible = "engicam,imx6-icore-rqs", "fsl,imx6q";
++    - linux,usable-memory : This property overrides the reg property.
++      It can be used if the bootloader changes the reg property to
++      improper values.
++
+   e) The /chosen node
  
- 	sound {
+   This node is a bit "special". Normally, that's where Open Firmware
 -- 
-1.9.1
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
