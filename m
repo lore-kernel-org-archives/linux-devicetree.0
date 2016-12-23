@@ -1,103 +1,195 @@
-From: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] dt-bindings: hisi: Add Hisilicon HiP05/06/07
- Djtag dts bindings
-Date: Fri, 23 Dec 2016 15:47:55 +0530
-Message-ID: <585CF9D3.2010002@gmail.com>
-References: <1481129719-159487-1-git-send-email-anurup.m@huawei.com>
- <20161219163126.w6ibkd6ayvblkwqt@rob-hp-laptop>
+From: Anurup M <anurupvasu@gmail.com>
+Subject: Re: [PATCH v2 03/10] dt-bindings: perf: hisi: Add Devicetree bindings
+ for Hisilicon SoC PMU
+Date: Fri, 23 Dec 2016 15:53:19 +0530
+Message-ID: <585CFB17.1070407@gmail.com>
+References: <1481129759-159533-1-git-send-email-anurup.m@huawei.com>
+ <20161219163702.c7wvqsaa4jcztthh@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161219163126.w6ibkd6ayvblkwqt@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161219163702.c7wvqsaa4jcztthh@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Monday 19 December 2016 10:01 PM, Rob Herring wrote:
-> On Wed, Dec 07, 2016 at 11:55:19AM -0500, Anurup M wrote:
->> From: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On Monday 19 December 2016 10:07 PM, Rob Herring wrote:
+> On Wed, Dec 07, 2016 at 11:55:59AM -0500, Anurup M wrote:
+>> 1) Device tree bindings for Hisilicon SoC PMU.
+>> 2) Add example for Hisilicon L3 cache and MN PMU.
+>> 3) Add child nodes of L3C and MN in djtag bindings example.
 >>
->> Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
->>
->> Signed-off-by: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Anurup M <anurup.m@huawei.com>
+>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 >> ---
->>   .../devicetree/bindings/arm/hisilicon/djtag.txt    | 41 ++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+>>   .../devicetree/bindings/arm/hisilicon/djtag.txt    | 25 ++++++
+>>   .../devicetree/bindings/arm/hisilicon/pmu.txt      | 98 ++++++++++++++++++++++
+>>   2 files changed, 123 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
 >>
 >> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
->> new file mode 100644
->> index 0000000..733498e
->> --- /dev/null
+>> index 733498e..c885507 100644
+>> --- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
 >> +++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
->> @@ -0,0 +1,41 @@
->> +The Hisilicon Djtag is an independent component which connects with some other
->> +components in the SoC by Debug Bus. The djtag is available in CPU and IO dies
->> +in the chip. The djtag controls access to connecting modules of CPU and IO
->> +dies.
->> +The various connecting components in CPU die (like L3 cache, L3 cache PMU etc.)
->> +are accessed by djtag during real time debugging. In IO die there are connecting
->> +components like RSA. These components appear as devices atatched to djtag bus.
+>> @@ -27,6 +27,31 @@ Example 1: Djtag for CPU die
+>>   		scl-id = <0x02>;
+>>   
+>>   		/* All connecting components will appear as child nodes */
 >> +
->> +Hisilicon HiP05/06 djtag for CPU and HiP05 IO die
+>> +		pmul3c0 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x02>;
+>> +		};
+>> +
+>> +		pmul3c1 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x04>;
+>> +		};
+>> +
+>> +		pmul3c2 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x01>;
+>> +		};
+>> +
+>> +		pmul3c3 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x08>;
+>> +		};
+>> +
+>> +		pmumn0 {
+>> +			compatible = "hisilicon,hisi-pmu-mn-v1";
+>> +			module-id = <0x0b>;
+>> +		};
+>>   	};
+>>   
+>>   Example 2: Djtag for IO die
+>> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+>> new file mode 100644
+>> index 0000000..e2160ad
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+>> @@ -0,0 +1,98 @@
+>> +Hisilicon SoC HiP05/06/07 ARMv8 PMU
+>> +===================================
+>> +
+>> +The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
+>> +system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
+>> +PMU devices are independent and have hardware logic to gather statistics and
+>> +performance information.
+>> +
+>> +HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
+>> +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
+>> +in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
+>> +4 cpu-cores each.
+>> +e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
+>> +The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
+>> +
+>> +The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
+>> +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
+>> +the parent node will be the djtag node of the corresponding CPU die (SCCL).
+>> +
+>> +L3 cache
+>> +---------
+>> +The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
+>> +L3 cache banks. Each L3 cache bank have separate DT nodes.
+>> +
 >> +Required properties:
->> +  - compatible : "hisilicon,hisi-djtag-v1"
-> These need SoC specific compatible strings. They probably should
-> also include cpu or io in the compatible string. I would expect there
-> are things like events, triggers, or component connections for debug
-> that are SoC specifc.
+>> +
+>> +	- compatible : This value should be as follows
+>> +		(a) "hisilicon,hisi-pmu-l3c-v1" for v1 hw in HiP05/06 chips
+>> +		(b) "hisilicon,hisi-pmu-l3c-v2" for v2 hw in HiP07 chip
+> Use SoC specific compatible strings.
 
-Ok. Shall include SoC prefix in compatible string. e.g. 
-"hisilicon,hip06-djtag-v1".
-As the djtag driver handling is same for CPU and IO, I think I don't 
-need to include
-them in the compatible string. Please share your comment.
+Ok.
+
+>> +
+>> +	- module-id : This property is a combination of two values in the below order.
+>> +		      a) Module ID: The module identifier for djtag.
+>> +		      b) Instance or Bank ID: This will identify the L3 cache bank
+>> +			 or instance.
+> Needs a vendor prefix.
+
+Ok. Shall change to "hisi-module-id". Also modify for all vendor 
+specific properties.
+
+>> +
+>> +Optional properties:
+>> +
+>> +	- interrupt-parent : A phandle indicating which interrupt controller
+>> +		this PMU signals interrupts to.
+>> +
+>> +	- interrupts : Interrupt lines used by this L3 cache bank.
+> How many interrupts and what are they?
+
+A single interrupt. Shall modify as  "Interrupt line used by the L3 
+cache bank".
 
 Thanks,
 Anurup
 
->> +  - reg : Register address and size
->> +  - scl-id : The Super Cluster ID for CPU or IO die
 >> +
->> +Hisilicon HiP06 djtag for IO die and HiP07 djtag for CPU and IO die
->> +Required properties:
->> +  - compatible : "hisilicon,hisi-djtag-v2"
-> Same here.
+>> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
+>> +
+>> +Miscellaneous Node
+>> +------------------
+>> +The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
+>> +for each SCCL.
+> Similar comments here.
 >
->> +  - reg : Register address and size
->> +  - scl-id : The Super Cluster ID for CPU or IO die
 >> +
->> +Example 1: Djtag for CPU die
+>> +Required properties:
 >> +
->> +	/* for Hisilicon HiP05 djtag for CPU Die */
+>> +	- compatible : This value should be as follows
+>> +		(a) "hisilicon,hisi-pmu-mn-v1" for v1 hw in HiP05/06 chips
+>> +		(b) "hisilicon,hisi-pmu-mn-v2" for v2 hw in HiP07 chip
+>> +
+>> +	- module-id : Module ID to input for djtag.
+>> +
+>> +Optional properties:
+>> +
+>> +	- interrupt-parent : A phandle indicating which interrupt controller
+>> +		this PMU signals interrupts to.
+>> +
+>> +	- interrupts : Interrupt lines used by this PMU.
+>> +
+>> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
+>> +
+>> +Example:
+>> +
 >> +	djtag0: djtag@80010000 {
 >> +		compatible = "hisilicon,hisi-djtag-v1";
 >> +		reg = <0x0 0x80010000 0x0 0x10000>;
 >> +		scl-id = <0x02>;
 >> +
->> +		/* All connecting components will appear as child nodes */
->> +	};
+>> +		pmul3c0 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x02>;
+>> +		};
 >> +
->> +Example 2: Djtag for IO die
+>> +		pmul3c1 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x04>;
+>> +		};
 >> +
->> +	/* for Hisilicon HiP05 djtag for IO Die */
->> +	djtag1: djtag@d0000000 {
->> +		compatible = "hisilicon,hisi-djtag-v1";
->> +		reg = <0x0 0xd0000000 0x0 0x10000>;
->> +		scl-id = <0x01>;
+>> +		pmul3c2 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x01>;
+>> +		};
 >> +
->> +		/* All connecting components will appear as child nodes */
+>> +		pmul3c3 {
+>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+>> +			module-id = <0x04 0x08>;
+>> +		};
+>> +
+>> +		pmumn0 {
+>> +			compatible = "hisilicon,hisi-pmu-mn-v1";
+>> +			module-id = <0x0b>;
+>> +		};
 >> +	};
 >> -- 
 >> 2.1.4
 >>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
