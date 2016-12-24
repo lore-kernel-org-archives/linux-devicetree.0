@@ -1,50 +1,171 @@
-From: Mark Greer <mgreer@animalcreek.com>
-Subject: Re: [PATCH v3 3/3] nfc: trf7970a: Prevent repeated polling from
- crashing the kernel
-Date: Fri, 23 Dec 2016 23:01:41 -0700
-Message-ID: <20161224060141.GA9069@animalcreek.com>
-References: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
- <1482380314-16440-3-git-send-email-geoff@kuvee.com>
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 3/6] arm64: arch_timer: Work around Erratum
+ Hisilicon-161601
+Date: Sat, 24 Dec 2016 14:07:54 +0800
+Message-ID: <0d3cd010-bd70-dfb6-684a-f21019fde419@huawei.com>
+References: <1482476669-15596-1-git-send-email-dingtianhong@huawei.com>
+ <1482476669-15596-4-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482380314-16440-3-git-send-email-geoff@kuvee.com>
-Sender: netdev-owner@vger.kernel.org
-To: Geoff Lansberry <geoff@kuvee.com>
-Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin@kuvee.com, Jaret Cantu <jaret.cantu@timesys.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482476669-15596-4-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 11:18:34PM -0500, Geoff Lansberry wrote:
-> From: Jaret Cantu <jaret.cantu@timesys.com>
+
+
+On 2016/12/23 15:04, Ding Tianhong wrote:
+> Erratum Hisilicon-161601 says that the ARM generic timer counter "has the
+> potential to contain an erroneous value when the timer value changes".
+> Accesses to TVAL (both read and write) are also affected due to the implicit counter
+> read.  Accesses to CVAL are not affected.
 > 
-> Repeated polling attempts cause a NULL dereference error to occur.
-> This is because the state of the trf7970a is currently reading but
-> another request has been made to send a command before it has finished.
+> The workaround is to reread the system count registers until the value of the second
+> read is larger than the first one by less than 32, the system counter can be guaranteed
+> not to return wrong value twice by back-to-back read and the error value is always larger
+> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
 > 
-> The solution is to properly kill the waiting reading (workqueue)
-> before failing on the send.
+> The workaround is enabled if the hisilicon,erratum-161601 property is found in
+> the timer node in the device tree. This can be overridden with the
+> clocksource.arm_arch_timer.hisilicon-161601 boot parameter, which allows KVM
+> users to enable the workaround until a mechanism is implemented to
+> automatically communicate this information.
 > 
-> Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
+> Fix some description for fsl erratum a008585.
+> 
+> v2: Significant rework based on feedback, including seperate the fsl erratum a008585
+>     to another patch, update the erratum name and remove unwanted code.
+> 
+> v3: Significant rework based on feedback, including fix some alignment problem, make the
+>     #define __hisi_161601_read_reg to be private to the .c file instead of being globally
+>     visible, add more accurate annotation and modify a bit of logical format to enable
+>     arch_timer_read_ool_enabled, remove the kernel commandline parameter
+>     clocksource.arm_arch_timer.hisilicon-161601.
+> 
+> v5: Theoretically the erratum should not occur more than twice in succession when reading
+>     the system counter, but it is possible that some interrupts may lead to more than twice
+>     read errors, triggering the warning, so setting the number of retries to 50 which is far
+>     beyond the number of iterations the loop has been observed to take.
+> 
+> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
+>  Documentation/arm64/silicon-errata.txt |  1 +
+>  arch/arm64/include/asm/arch_timer.h    |  2 +-
+>  drivers/clocksource/Kconfig            |  9 +++++
+>  drivers/clocksource/arm_arch_timer.c   | 70 +++++++++++++++++++++++++++++++---
+>  4 files changed, 76 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
+> index 405da11..1c1a95f 100644
+> --- a/Documentation/arm64/silicon-errata.txt
+> +++ b/Documentation/arm64/silicon-errata.txt
+> @@ -63,3 +63,4 @@ stable kernels.
+>  | Cavium         | ThunderX SMMUv2 | #27704          | N/A		       |
+>  |                |                 |                 |                         |
+>  | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585     |
+> +| Hisilicon      | Hip0{5,6,7}     | #161601         | HISILICON_ERRATUM_161601|
+> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+> index f882c7c..ebf4cde 100644
+> --- a/arch/arm64/include/asm/arch_timer.h
+> +++ b/arch/arm64/include/asm/arch_timer.h
+> @@ -29,7 +29,7 @@
+>  
+>  #include <clocksource/arm_arch_timer.h>
+>  
+> -#if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
+> +#if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585) || IS_ENABLED(CONFIG_HISILICON_ERRATUM_161601)
+>  extern struct static_key_false arch_timer_read_ool_enabled;
+>  #define needs_unstable_timer_counter_workaround() \
+>  	static_branch_unlikely(&arch_timer_read_ool_enabled)
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 4866f7a..162d820 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -335,6 +335,15 @@ config FSL_ERRATUM_A008585
+>  	  value").  The workaround will only be active if the
+>  	  fsl,erratum-a008585 property is found in the timer node.
+>  
+> +config HISILICON_ERRATUM_161601
+> +	bool "Workaround for Hisilicon Erratum 161601"
+> +	default y
+> +	depends on ARM_ARCH_TIMER && ARM64
+> +	help
+> +	  This option enables a workaround for Hisilicon Erratum
+> +	  161601. The workaround will be active if the hisilicon,erratum-161601
+> +	  property is found in the timer node.
+> +
+>  config ARM_GLOBAL_TIMER
+>  	bool "Support for the ARM global timer" if COMPILE_TEST
+>  	select CLKSRC_OF if OF
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index e7406ad..9a82496 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -95,15 +95,18 @@ static int __init early_evtstrm_cfg(char *buf)
+>   * Architected system timer support.
+>   */
+>  
+> -#ifdef CONFIG_FSL_ERRATUM_A008585
+> +#if CONFIG_FSL_ERRATUM_A008585 || IS_ENABLED(CONFIG_HISILICON_ERRATUM_161601)
+>  struct arch_timer_erratum_workaround *timer_unstable_counter_workaround = NULL;
+>  EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
+>  
 
-You've still provided virtually no information on the actual problem(s)
-nor justified why you think this is the best solution.  You're adding
-code to a section of code that should _never_ be executed so the only
-reasonable things I can infer is that there are, at least, two problems:
 
-1) There is a bug causing execution to get into this block of code.
+>  #define        FSL_A008585	0x0001
+> +#define        HISILICON_161601	0x0002
 
-2) Once in this block of code, there is another bug.
+It looks like the DEFINE is useless，
 
-You seem to be attempting to fix 2) and completely ignoring 1).
-1) is the first bug that needs to be root-caused and fixed.
+> +
+> +static struct arch_timer_erratum_workaround arch_timer_hisi_161601 = {
+> +	.erratum = HISILICON_161601,
 
-Also, what exactly is the "NULL dereference error" you mention?
-Is this the neard crash you talked about in another thread or is
-this a kernel crash?  If it is the kernel crash, please post the
-relevant information.  If this is the neard crash - which seems
-unlikely - then how can changing a section of kernel code that
-shouldn't be executed in the first place fix that?
+Just a errata description, eg.
+	.desc	= "HISILICON ERRATUM 161601"
+then....
 
-Mark
+> +	.read_cntp_tval_el0 = hisi_161601_read_cntp_tval_el0,
+> +	.read_cntv_tval_el0 = hisi_161601_read_cntv_tval_el0,
+> +	.read_cntvct_el0 = hisi_161601_read_cntvct_el0,
+> +};
+> +#endif /* CONFIG_HISILICON_ERRATUM_161601 */
+[..]
+
+> -#ifdef CONFIG_FSL_ERRATUM_A008585
+> +#if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585) || IS_ENABLED(CONFIG_HISILICON_ERRATUM_161601)
+>  		/*
+>  		 * Don't use the vdso fastpath if errata require using
+>  		 * the out-of-line counter accessor.
+> @@ -909,10 +960,19 @@ static int __init arch_timer_of_init(struct device_node *np)
+>  #ifdef CONFIG_FSL_ERRATUM_A008585
+>  	if (!timer_unstable_counter_workaround && of_property_read_bool(np, "fsl,erratum-a008585"))
+>  		timer_unstable_counter_workaround = &arch_timer_fsl_a008585;
+> +#endif
+> +
+> +#ifdef CONFIG_HISILICON_ERRATUM_161601
+> +	if (!timer_unstable_counter_workaround && of_property_read_bool(np, "hisilicon,erratum-161601"))
+> +		timer_unstable_counter_workaround = &arch_timer_hisi_161601;
+> +#endif
+>  
+> +#if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585) || IS_ENABLED(CONFIG_HISILICON_ERRATUM_161601)
+>  	if (timer_unstable_counter_workaround) {
+>  		static_branch_enable(&arch_timer_read_ool_enabled);
+> -		pr_info("Enabling workaround for FSL erratum A-008585\n");
+> +		pr_info("Enabling workaround for %s\n",
+> +			timer_unstable_counter_workaround->erratum == FSL_A008585 ?
+> +			"FSL ERRATUM A-008585" : "HISILICON ERRATUM 161601");
+
+......>		pr_info("Enabling workaround for %s\n", timer_unstable_counter_workaround->desc)
+
+>  	}
+>  #endif
+>  
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
