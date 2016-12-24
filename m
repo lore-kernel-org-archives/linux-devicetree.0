@@ -1,455 +1,718 @@
-From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH] adc: add adc driver for Hisilicon BVT SOCs
-Date: Sat, 24 Dec 2016 10:31:47 +0800
-Message-ID: <ca1f0010-4ac7-9a0f-6fad-f1c55626400e@hisilicon.com>
-References: <1482544497-136656-1-git-send-email-liurenzhong@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482544497-136656-1-git-send-email-liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx: remove obsoleted property fsl,spi-num-chipselects
+Date: Sat, 24 Dec 2016 07:43:54 +0200
+Message-ID: <20161224054354.28289-1-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Since commit b36581df7e78 ("spi: imx: Using existing properties for
+chipselects") the device tree property 'fsl,spi-num-chipselects' is
+unused and it is already marked as obsolete in device tree binding
+documentation. Remove the property from the existing DTS files to
+avoid its reoccurence on copying.
 
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx1-ads.dts                         | 1 -
+ arch/arm/boot/dts/imx27-apf27dev.dts                   | 2 --
+ arch/arm/boot/dts/imx27-eukrea-mbimxsd27-baseboard.dts | 1 -
+ arch/arm/boot/dts/imx27-pdk.dts                        | 1 -
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi      | 1 -
+ arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts         | 1 -
+ arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi        | 1 -
+ arch/arm/boot/dts/imx50-evk.dts                        | 1 -
+ arch/arm/boot/dts/imx51-apf51dev.dts                   | 2 --
+ arch/arm/boot/dts/imx51-babbage.dts                    | 1 -
+ arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi      | 1 -
+ arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts | 1 -
+ arch/arm/boot/dts/imx53-smd.dts                        | 1 -
+ arch/arm/boot/dts/imx53-tqma53.dtsi                    | 2 --
+ arch/arm/boot/dts/imx53-tx53.dtsi                      | 1 -
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi            | 1 -
+ arch/arm/boot/dts/imx6dl-aristainetos_4.dts            | 1 -
+ arch/arm/boot/dts/imx6q-ba16.dtsi                      | 1 -
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi                    | 1 -
+ arch/arm/boot/dts/imx6q-cm-fx6.dts                     | 1 -
+ arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts                | 1 -
+ arch/arm/boot/dts/imx6q-evi.dts                        | 3 ---
+ arch/arm/boot/dts/imx6q-gw5400-a.dts                   | 1 -
+ arch/arm/boot/dts/imx6q-marsboard.dts                  | 1 -
+ arch/arm/boot/dts/imx6q-novena.dts                     | 1 -
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi                  | 2 --
+ arch/arm/boot/dts/imx6qdl-apf6dev.dtsi                 | 1 -
+ arch/arm/boot/dts/imx6qdl-aristainetos.dtsi            | 1 -
+ arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi           | 3 ---
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi                 | 1 -
+ arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi           | 1 -
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi                  | 1 -
+ arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi               | 1 -
+ arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi           | 1 -
+ arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi          | 1 -
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi              | 1 -
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi           | 1 -
+ arch/arm/boot/dts/imx6qdl-rex.dtsi                     | 2 --
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi               | 1 -
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi               | 1 -
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi                 | 1 -
+ arch/arm/boot/dts/imx6qdl-ts4900.dtsi                  | 2 --
+ arch/arm/boot/dts/imx6qdl-tx6.dtsi                     | 1 -
+ arch/arm/boot/dts/imx6sl-evk.dts                       | 1 -
+ arch/arm/boot/dts/imx6sx-nitrogen6sx.dts               | 1 -
+ arch/arm/boot/dts/imx6ul-tx6ul.dtsi                    | 1 -
+ arch/arm/boot/dts/imx7d-sdb.dts                        | 1 -
+ 47 files changed, 57 deletions(-)
 
-On 2016/12/24 9:54, Allen Liu wrote:
-> Add ADC driver for the ADC controller found on HiSilicon BVT SOCs, like Hi3516CV300, etc.
-> The ADC controller is primarily in charge of detecting voltage.
-> 
-> Reviewed-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Hi
+diff --git a/arch/arm/boot/dts/imx1-ads.dts b/arch/arm/boot/dts/imx1-ads.dts
+index f504986..5ea28ee 100644
+--- a/arch/arm/boot/dts/imx1-ads.dts
++++ b/arch/arm/boot/dts/imx1-ads.dts
+@@ -38,7 +38,6 @@
+ 
+ &cspi1 {
+ 	pinctrl-0 = <&pinctrl_cspi1>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 15 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+index bba3f41..5f84b59 100644
+--- a/arch/arm/boot/dts/imx27-apf27dev.dts
++++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+@@ -77,7 +77,6 @@
+ };
+ 
+ &cspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 28 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
+@@ -95,7 +94,6 @@
+ };
+ 
+ &cspi2 {
+-	fsl,spi-num-chipselects = <3>;
+ 	cs-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>,
+ 		   <&gpio4 27 GPIO_ACTIVE_LOW>,
+ 		   <&gpio2 17 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/imx27-eukrea-mbimxsd27-baseboard.dts b/arch/arm/boot/dts/imx27-eukrea-mbimxsd27-baseboard.dts
+index 27846ff..f565357 100644
+--- a/arch/arm/boot/dts/imx27-eukrea-mbimxsd27-baseboard.dts
++++ b/arch/arm/boot/dts/imx27-eukrea-mbimxsd27-baseboard.dts
+@@ -81,7 +81,6 @@
+ 
+ &cspi1 {
+ 	pinctrl-0 = <&pinctrl_cspi1>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 28 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx27-pdk.dts b/arch/arm/boot/dts/imx27-pdk.dts
+index d0ef496..96f442b 100644
+--- a/arch/arm/boot/dts/imx27-pdk.dts
++++ b/arch/arm/boot/dts/imx27-pdk.dts
+@@ -37,7 +37,6 @@
+ &cspi2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi2>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 21 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+index 1b62480..4f3e0f4 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+@@ -23,7 +23,6 @@
+ };
+ 
+ &cspi1 {
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>,
+ 		   <&gpio4 27 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
+index cf09e72..2a9198f 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
+@@ -69,7 +69,6 @@
+ 
+ &cspi1 {
+ 	pinctrl-0 = <&pinctrl_cspi1>, <&pinctrl_cspi1cs1>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>,
+ 		   <&gpio4 27 GPIO_ACTIVE_LOW>;
+ };
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+index b4e955e..82fec93 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+@@ -75,7 +75,6 @@
+ &cspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi1>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx50-evk.dts b/arch/arm/boot/dts/imx50-evk.dts
+index 27d763c..dba2d95 100644
+--- a/arch/arm/boot/dts/imx50-evk.dts
++++ b/arch/arm/boot/dts/imx50-evk.dts
+@@ -26,7 +26,6 @@
+ &cspi {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio4 11 0>, <&gpio4 13 0>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
+index 0f3fe29..a5e6091 100644
+--- a/arch/arm/boot/dts/imx51-apf51dev.dts
++++ b/arch/arm/boot/dts/imx51-apf51dev.dts
+@@ -80,7 +80,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>,
+ 		   <&gpio4 25 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+@@ -89,7 +88,6 @@
+ &ecspi2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio3 28 GPIO_ACTIVE_LOW>,
+ 		   <&gpio3 27 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+index f097b4f..873cf24 100644
+--- a/arch/arm/boot/dts/imx51-babbage.dts
++++ b/arch/arm/boot/dts/imx51-babbage.dts
+@@ -178,7 +178,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>,
+ 		   <&gpio4 25 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+index 16fc69c..b821066 100644
+--- a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
++++ b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+@@ -24,7 +24,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts b/arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts
+index 7282128..1305b05 100644
+--- a/arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts
++++ b/arch/arm/boot/dts/imx51-eukrea-mbimxsd51-baseboard.dts
+@@ -114,7 +114,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 24 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx53-smd.dts b/arch/arm/boot/dts/imx53-smd.dts
+index 9f51900..472f6f0 100644
+--- a/arch/arm/boot/dts/imx53-smd.dts
++++ b/arch/arm/boot/dts/imx53-smd.dts
+@@ -63,7 +63,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
+index 91a6a9f..85972f2 100644
+--- a/arch/arm/boot/dts/imx53-tqma53.dtsi
++++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
+@@ -55,7 +55,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <4>;
+ 	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>,
+ 		   <&gpio3 24 0>, <&gpio3 25 0>;
+ 	status = "disabled";
+@@ -249,7 +248,6 @@
+ &cspi {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi>;
+-	fsl,spi-num-chipselects = <3>;
+ 	cs-gpios = <&gpio1 18 0>, <&gpio1 19 0>,
+ 		   <&gpio1 21 0>;
+ 	status = "disabled";
+diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
+index 57e75f1..3a32201 100644
+--- a/arch/arm/boot/dts/imx53-tx53.dtsi
++++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+@@ -161,7 +161,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <2>;
+ 	status = "okay";
+ 
+ 	cs-gpios = <
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index ba689fb..524192c 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -129,7 +129,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <4>;
+ 	cs-gpios = <&gpio2 30 0>, <&gpio3 19 0>, <&gpio2 16 0>, <&gpio2 17 0>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
+index d4c4a22..32a812b 100644
+--- a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
++++ b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
+@@ -66,7 +66,6 @@
+ };
+ 
+ &ecspi2 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+diff --git a/arch/arm/boot/dts/imx6q-ba16.dtsi b/arch/arm/boot/dts/imx6q-ba16.dtsi
+index 308e11c..3577aa7 100644
+--- a/arch/arm/boot/dts/imx6q-ba16.dtsi
++++ b/arch/arm/boot/dts/imx6q-ba16.dtsi
+@@ -133,7 +133,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index e4a415f..b1be794 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -95,7 +95,6 @@
+ };
+ 
+ &ecspi5 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi5>;
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index a150bca..ae90d98 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -114,7 +114,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>, <&gpio3 19 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts b/arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts
+index 908dab6..f28883b 100644
+--- a/arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts
++++ b/arch/arm/boot/dts/imx6q-dmo-edmqmx6.dts
+@@ -104,7 +104,6 @@
+ &ecspi5 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi5>;
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio1 12 0>;
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+index 7c7c1a8..fd2220a 100644
+--- a/arch/arm/boot/dts/imx6q-evi.dts
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -90,7 +90,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 10 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
+@@ -98,7 +97,6 @@
+ };
+ 
+ &ecspi3 {
+-	fsl,spi-num-chipselects = <3>;
+ 	cs-gpios = <&gpio4 24 GPIO_ACTIVE_LOW>,
+ 		<&gpio4 25 GPIO_ACTIVE_LOW>,
+ 		<&gpio4 26 GPIO_ACTIVE_LOW>;
+@@ -108,7 +106,6 @@
+ };
+ 
+ &ecspi5 {
+-	fsl,spi-num-chipselects = <4>;
+ 	cs-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>,
+ 		<&gpio1 13 GPIO_ACTIVE_LOW>,
+ 		<&gpio1 12 GPIO_ACTIVE_LOW>,
+diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+index 747bc10..8e84713 100644
+--- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
++++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+@@ -138,7 +138,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+index f7995c5..51220a3 100644
+--- a/arch/arm/boot/dts/imx6q-marsboard.dts
++++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+@@ -97,7 +97,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+ 	cs-gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;
+-	fsl,spi-num-chipselects = <1>;
+ 	status = "okay";
+ 
+ 	m25p80@0 {
+diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
+index 758bca9..0fa32b2 100644
+--- a/arch/arm/boot/dts/imx6q-novena.dts
++++ b/arch/arm/boot/dts/imx6q-novena.dts
+@@ -210,7 +210,6 @@
+ &ecspi3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3_novena>;
+-	fsl,spi-num-chipselects = <3>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+index 8c8a049..82652c1 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -175,7 +175,6 @@
+ 
+ /* Apalis SPI1 */
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+@@ -184,7 +183,6 @@
+ 
+ /* Apalis SPI2 */
+ &ecspi2 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+diff --git a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
+index 5e7792d..550e100 100644
+--- a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
+@@ -176,7 +176,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <3>;
+ 	cs-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>,
+ 		   <&gpio4 10 GPIO_ACTIVE_LOW>,
+ 		   <&gpio4 11 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
+index 54f4f01..b2debc0 100644
+--- a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
+@@ -100,7 +100,6 @@
+ };
+ 
+ &ecspi4 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 20 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi4>;
+diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
+index 7fff02c..0d9e96d 100644
+--- a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
+@@ -114,7 +114,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <3>;
+ 	cs-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH
+ 		    &gpio4 10 GPIO_ACTIVE_HIGH
+ 		    &gpio4 11 GPIO_ACTIVE_HIGH>;
+@@ -124,7 +123,6 @@
+ };
+ 
+ &ecspi2 {
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH &gpio2 27 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+@@ -132,7 +130,6 @@
+ };
+ 
+ &ecspi4 {
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <&gpio3 29 GPIO_ACTIVE_HIGH &gpio5 2 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi4>;
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+index e6faa65..dbad481 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -138,7 +138,6 @@
+ 
+ /* Colibri SSP */
+ &ecspi4 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi4>;
+diff --git a/arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi b/arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi
+index b2c083d..d78312c 100644
+--- a/arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-dfi-fs700-m60.dtsi
+@@ -29,7 +29,6 @@
+ };
+ 
+ &ecspi3 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 24 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3>;
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index 54aca3a..ab34f15 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -159,7 +159,6 @@
+ };
+ 
+ &ecspi3 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3>;
+diff --git a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
+index 63acd54..e19f3c3 100644
+--- a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
+@@ -209,7 +209,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+index 34887a1..e46c914 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+@@ -353,7 +353,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
+index d80f21a..678ab19 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
+@@ -284,7 +284,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index e476d01..c4d28e9 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -255,7 +255,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+index e9801a2..6e5cb6a 100644
+--- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
+@@ -76,7 +76,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3>;
+ 	status = "okay";
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 24 0>;
+ 
+ 	flash@0 {
+diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+index 17704a5..5cf90c24 100644
+--- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+@@ -89,7 +89,6 @@
+ };
+ 
+ &ecspi2 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+@@ -97,7 +96,6 @@
+ };
+ 
+ &ecspi3 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3>;
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 52390ba..a2a714d 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -124,7 +124,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1_cs>;
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 1f9076e..b0fa0c8 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -241,7 +241,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index 55ef535..63bf95e 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -160,7 +160,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 9 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-ts4900.dtsi b/arch/arm/boot/dts/imx6qdl-ts4900.dtsi
+index 5c26b26..bf17ad5 100644
+--- a/arch/arm/boot/dts/imx6qdl-ts4900.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-ts4900.dtsi
+@@ -95,7 +95,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+@@ -109,7 +108,6 @@
+ };
+ 
+ &ecspi2 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio6 2 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
+index 2bf2e62..1691714 100644
+--- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
+@@ -221,7 +221,6 @@
+ &ecspi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <
+ 		&gpio2 30 GPIO_ACTIVE_HIGH
+ 		&gpio3 19 GPIO_ACTIVE_HIGH
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index be11882..0a90eea 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -117,7 +117,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio4 11 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+index 9b817f3..b54b40a 100644
+--- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
++++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+@@ -142,7 +142,6 @@
+ };
+ 
+ &ecspi1 {
+-	fsl,spi-num-chipselects = <1>;
+ 	cs-gpios = <&gpio2 16 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi1>;
+diff --git a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
+index 530e9ca..c784a0b 100644
+--- a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
+@@ -285,7 +285,6 @@
+ &ecspi2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi2>;
+-	fsl,spi-num-chipselects = <2>;
+ 	cs-gpios = <
+ 		&gpio1 29 GPIO_ACTIVE_HIGH
+ 		&gpio1 10 GPIO_ACTIVE_HIGH
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+index 2f33c46..9d15273 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -111,7 +111,6 @@
+ };
+ 
+ &ecspi3 {
+-	fsl,spi-num-chipselects = <1>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3>;
+ 	cs-gpios = <&gpio5 9 GPIO_ACTIVE_HIGH>;
+-- 
+2.10.2
 
-Sorry. I haven't reviewed this patch. Please remove this line. Thank you!
-
-Regards,
-Jiancheng
-
-> Signed-off-by: Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/hibvt-lsadc.txt    |  26 ++
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/hibvt_lsadc.c                      | 344 +++++++++++++++++++++
->  4 files changed, 381 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
->  create mode 100644 drivers/iio/adc/hibvt_lsadc.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt b/Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
-> new file mode 100644
-> index 0000000..63de46e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
-> @@ -0,0 +1,26 @@
-> +Hisilicon BVT Low Speed (LS) A/D Converter bindings
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,<name>-lsadc"
-> +   - "hisilicon,hibvt-lsadc": for hi3516cv300
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +       region.
-> +- interrupts: The interrupt number to the cpu. The interrupt specifier format
-> +              depends on the interrupt controller.
-> +- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-> +
-> +Optional properties:
-> +- resets: Must contain an entry for each entry in reset-names if need support
-> +	  this option. See ../reset/reset.txt for details.
-> +- reset-names: Must include the name "saradc-apb".
-> +
-> +Example:
-> +	lsadc: hibvt-lsadc@120e0000 {
-> +			compatible = "hisilicon,hibvt-lsadc";
-> +			reg = <0x120e0000 0x1000>;
-> +			interrupts = <19>;
-> +			resets = <&crg 0x7c 3>;
-> +			reset-names = "lsadc-crg";
-> +			status = "disabled";
-> +	};
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 99c0514..0443f51 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -225,6 +225,16 @@ config HI8435
->  	  This driver can also be built as a module. If so, the module will be
->  	  called hi8435.
->  
-> +config HIBVT_LSADC
-> +	tristate "HIBVT LSADC driver"
-> +	depends on ARCH_HISI || COMPILE_TEST
-> +	help
-> +	  Say yes here to build support for the LSADC found in SoCs from
-> +	  hisilicon BVT chip.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called hibvt_lsadc.
-> +
->  config INA2XX_ADC
->  	tristate "Texas Instruments INA2xx Power Monitors IIO driver"
->  	depends on I2C && !SENSORS_INA2XX
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 7a40c04..6554d92 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -23,6 +23,7 @@ obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
->  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
->  obj-$(CONFIG_FSL_MX25_ADC) += fsl-imx25-gcq.o
->  obj-$(CONFIG_HI8435) += hi8435.o
-> +obj-$(CONFIG_HIBVT_LSADC) += hibvt_lsadc.o
->  obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
->  obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
->  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
-> diff --git a/drivers/iio/adc/hibvt_lsadc.c b/drivers/iio/adc/hibvt_lsadc.c
-> new file mode 100644
-> index 0000000..a20afe8
-> --- /dev/null
-> +++ b/drivers/iio/adc/hibvt_lsadc.c
-> @@ -0,0 +1,344 @@
-> +/*
-> + * Hisilicon BVT Low Speed (LS) A/D Converter
-> + * Copyright (C) 2016 HiSilicon Technologies Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/reset.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/iio/iio.h>
-> +
-> +/* hisilicon bvt adc registers definitions */
-> +#define LSADC_CONFIG		0x00
-> +#define CONFIG_DEGLITCH		BIT(17)
-> +#define CONFIG_RESET		BIT(15)
-> +#define CONFIG_POWERDOWN	BIT(14)
-> +#define CONFIG_MODE			BIT(13)
-> +#define CONFIG_CHC_VALID	BIT(10)
-> +#define CONFIG_CHB_VALID	BIT(9)
-> +#define CONFIG_CHA_VALID	BIT(8)
-> +
-> +#define LSADC_TIMESCAN		0x08
-> +#define LSADC_INTEN			0x10
-> +#define LSADC_INTSTATUS		0x14
-> +#define LSADC_INTCLR		0x18
-> +#define LSADC_START			0x1C
-> +#define LSADC_STOP			0x20
-> +#define LSADC_ACTBIT		0x24
-> +#define LSADC_CHNDATA		0x2C
-> +
-> +#define ADC_CON_EN			(1u << 0)
-> +#define ADC_CON_DEN			(0u << 0)
-> +
-> +#define ADC_NUM_BITS		10
-> +
-> +/* fix clk:3000000, default tscan set 10ms */
-> +#define DEF_ADC_TSCAN_MS	(10*3000)
-> +
-> +#define LSADC_CHN_MASK		0x7
-> +
-> +#define LSADC_TIMEOUT		msecs_to_jiffies(100)
-> +
-> +/* default voltage scale for every channel <mv> */
-> +static int g_voltage[] = {
-> +	3300, 3300, 3300
-> +};
-> +
-> +struct hibvt_lsadc {
-> +	void __iomem		*regs;
-> +	struct completion	completion;
-> +	struct reset_control	*reset;
-> +	const struct hibvt_lsadc_data	*data;
-> +	unsigned int		cur_chn;
-> +	unsigned int		value;
-> +};
-> +
-> +struct hibvt_lsadc_data {
-> +	int				num_bits;
-> +	const struct iio_chan_spec	*channels;
-> +	int				num_channels;
-> +
-> +	void (*clear_irq)(struct hibvt_lsadc *info, int mask);
-> +	void (*start_conv)(struct hibvt_lsadc *info);
-> +	void (*stop_conv)(struct hibvt_lsadc *info);
-> +};
-> +
-> +static int hibvt_lsadc_read_raw(struct iio_dev *indio_dev,
-> +				    struct iio_chan_spec const *chan,
-> +				    int *val, int *val2, long mask)
-> +{
-> +	struct hibvt_lsadc *info = iio_priv(indio_dev);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&indio_dev->mlock);
-> +
-> +		reinit_completion(&info->completion);
-> +
-> +		/* Select the channel to be used */
-> +		info->cur_chn = chan->channel;
-> +
-> +		if (info->data->start_conv)
-> +			info->data->start_conv(info);
-> +
-> +		if (!wait_for_completion_timeout(&info->completion,
-> +							LSADC_TIMEOUT)) {
-> +			if (info->data->stop_conv)
-> +				info->data->stop_conv(info);
-> +			mutex_unlock(&indio_dev->mlock);
-> +			return -ETIMEDOUT;
-> +		}
-> +
-> +		*val = info->value;
-> +		mutex_unlock(&indio_dev->mlock);
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = g_voltage[chan->channel];
-> +		*val2 = info->data->num_bits;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static irqreturn_t hibvt_lsadc_isr(int irq, void *dev_id)
-> +{
-> +	struct hibvt_lsadc *info = (struct hibvt_lsadc *)dev_id;
-> +	int mask;
-> +
-> +	mask = readl(info->regs + LSADC_INTSTATUS);
-> +	mask &= LSADC_CHN_MASK;
-> +
-> +	/* Clear irq */
-> +	if (info->data->clear_irq)
-> +		info->data->clear_irq(info, mask);
-> +
-> +	/* Read value */
-> +	info->value = readl(info->regs + LSADC_CHNDATA + (info->cur_chn << 2));
-> +	info->value &= GENMASK(info->data->num_bits - 1, 0);
-> +
-> +	/* stop adc */
-> +	if (info->data->stop_conv)
-> +		info->data->stop_conv(info);
-> +
-> +	complete(&info->completion);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static const struct iio_info hibvt_lsadc_iio_info = {
-> +	.read_raw = hibvt_lsadc_read_raw,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +#define ADC_CHANNEL(_index, _id) {      \
-> +	.type = IIO_VOLTAGE,                \
-> +	.indexed = 1,						\
-> +	.channel = _index,					\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |  \
-> +			BIT(IIO_CHAN_INFO_SCALE),   \
-> +	.datasheet_name = _id,              \
-> +}
-> +
-> +static const struct iio_chan_spec hibvt_lsadc_iio_channels[] = {
-> +	ADC_CHANNEL(0, "adc0"),
-> +	ADC_CHANNEL(1, "adc1"),
-> +	ADC_CHANNEL(2, "adc2"),
-> +};
-> +
-> +static void hibvt_lsadc_clear_irq(struct hibvt_lsadc *info, int mask)
-> +{
-> +	writel(mask, info->regs + LSADC_INTCLR);
-> +}
-> +
-> +static void hibvt_lsadc_start_conv(struct hibvt_lsadc *info)
-> +{
-> +	unsigned int con;
-> +
-> +	/* set number bit */
-> +	con = GENMASK(info->data->num_bits - 1, 0);
-> +	writel(con, (info->regs + LSADC_ACTBIT));
-> +
-> +    /* config */
-> +	con = readl(info->regs + LSADC_CONFIG);
-> +	con &= ~CONFIG_RESET;
-> +	con |= (CONFIG_POWERDOWN | CONFIG_DEGLITCH | CONFIG_MODE);
-> +	con &= ~(CONFIG_CHA_VALID | CONFIG_CHB_VALID | CONFIG_CHC_VALID);
-> +	con |= (CONFIG_CHA_VALID << info->cur_chn);
-> +	writel(con, (info->regs + LSADC_CONFIG));
-> +
-> +	/* set timescan */
-> +	writel(DEF_ADC_TSCAN_MS, (info->regs + LSADC_TIMESCAN));
-> +
-> +	/* clear interrupt */
-> +	writel(LSADC_CHN_MASK, info->regs + LSADC_INTCLR);
-> +
-> +	/* enable interrupt */
-> +	writel(ADC_CON_EN, (info->regs + LSADC_INTEN));
-> +
-> +	/* start scan */
-> +	writel(ADC_CON_EN, (info->regs + LSADC_START));
-> +}
-> +
-> +static void hibvt_lsadc_stop_conv(struct hibvt_lsadc *info)
-> +{
-> +	/* reset the timescan */
-> +	writel(ADC_CON_DEN, (info->regs + LSADC_TIMESCAN));
-> +
-> +	/* disable interrupt */
-> +	writel(ADC_CON_DEN, (info->regs + LSADC_INTEN));
-> +
-> +	/* stop scan */
-> +	writel(ADC_CON_EN, (info->regs + LSADC_STOP));
-> +}
-> +
-> +static const struct hibvt_lsadc_data lsadc_data = {
-> +	.num_bits = ADC_NUM_BITS,
-> +	.channels = hibvt_lsadc_iio_channels,
-> +	.num_channels = ARRAY_SIZE(hibvt_lsadc_iio_channels),
-> +
-> +	.clear_irq	= hibvt_lsadc_clear_irq,
-> +	.start_conv	= hibvt_lsadc_start_conv,
-> +	.stop_conv = hibvt_lsadc_stop_conv,
-> +};
-> +
-> +static const struct of_device_id hibvt_lsadc_match[] = {
-> +	{
-> +		.compatible = "hisilicon,hibvt-lsadc",
-> +		.data = &lsadc_data,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hibvt_lsadc_match);
-> +
-> +/**
-> + * Reset LSADC Controller.
-> + */
-> +static void hibvt_lsadc_reset_controller(struct reset_control *reset)
-> +{
-> +	reset_control_assert(reset);
-> +	usleep_range(10, 20);
-> +	reset_control_deassert(reset);
-> +}
-> +
-> +static int hibvt_lsadc_probe(struct platform_device *pdev)
-> +{
-> +	struct hibvt_lsadc *info = NULL;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct iio_dev *indio_dev = NULL;
-> +	struct resource	*mem;
-> +	const struct of_device_id *match;
-> +	int ret;
-> +	int irq;
-> +
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> +	if (!indio_dev) {
-> +		dev_err(&pdev->dev, "failed allocating iio device\n");
-> +		return -ENOMEM;
-> +	}
-> +	info = iio_priv(indio_dev);
-> +
-> +	match = of_match_device(hibvt_lsadc_match, &pdev->dev);
-> +	info->data = match->data;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	info->regs = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(info->regs))
-> +		return PTR_ERR(info->regs);
-> +
-> +	/*
-> +	 * The reset should be an optional property, as it should work
-> +	 * with old devicetrees as well
-> +	 */
-> +	info->reset = devm_reset_control_get(&pdev->dev, "lsadc-crg");
-> +	if (IS_ERR(info->reset)) {
-> +		ret = PTR_ERR(info->reset);
-> +		if (ret != -ENOENT)
-> +			return ret;
-> +
-> +		dev_dbg(&pdev->dev, "no reset control found\n");
-> +		info->reset = NULL;
-> +	}
-> +
-> +	init_completion(&info->completion);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "no irq resource?\n");
-> +		return irq;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, irq, hibvt_lsadc_isr,
-> +			       0, dev_name(&pdev->dev), info);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed requesting irq %d\n", irq);
-> +		return ret;
-> +	}
-> +
-> +	if (info->reset)
-> +		hibvt_lsadc_reset_controller(info->reset);
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->info = &hibvt_lsadc_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	indio_dev->channels = info->data->channels;
-> +	indio_dev->num_channels = info->data->num_channels;
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed register iio device\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int hibvt_lsadc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver hibvt_lsadc_driver = {
-> +	.probe		= hibvt_lsadc_probe,
-> +	.remove		= hibvt_lsadc_remove,
-> +	.driver		= {
-> +		.name	= "hibvt-lsadc",
-> +		.of_match_table = hibvt_lsadc_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(hibvt_lsadc_driver);
-> +
-> +MODULE_AUTHOR("Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
-> +MODULE_DESCRIPTION("hisilicon BVT LSADC driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
