@@ -1,28 +1,57 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: remove obsoleted property fsl,spi-num-chipselects
-Date: Sat, 24 Dec 2016 10:47:24 -0200
-Message-ID: <CAOMZO5Cx3-OXyGohKE=QwFYWaLCx33NSxMsWjn=wbL3CGF2pmQ@mail.gmail.com>
-References: <20161224054354.28289-1-vz@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161224054354.28289-1-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH] of: drop duplicate headers
+Date: Sat, 24 Dec 2016 23:45:06 +0800
+Message-ID: <2dbc4a9165d0a1e1569dc3990cbe5567fb312c74.1482593743.git.geliangtang@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Geliang Tang <geliangtang@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 24, 2016 at 3:43 AM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
-> Since commit b36581df7e78 ("spi: imx: Using existing properties for
-> chipselects") the device tree property 'fsl,spi-num-chipselects' is
-> unused and it is already marked as obsolete in device tree binding
-> documentation. Remove the property from the existing DTS files to
-> avoid its reoccurence on copying.
->
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Drop duplicate headers string.h and of_platform.h.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ drivers/of/overlay.c  | 1 -
+ drivers/of/resolver.c | 1 -
+ drivers/of/unittest.c | 1 -
+ 3 files changed, 3 deletions(-)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 0d4cda7..d4e337e 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -18,7 +18,6 @@
+ #include <linux/string.h>
+ #include <linux/ctype.h>
+ #include <linux/errno.h>
+-#include <linux/string.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
+ #include <linux/idr.h>
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 8bf12e9..7ae9863 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -18,7 +18,6 @@
+ #include <linux/string.h>
+ #include <linux/ctype.h>
+ #include <linux/errno.h>
+-#include <linux/string.h>
+ #include <linux/slab.h>
+ 
+ /* illegal phandle value (set when unresolved) */
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 53c83d6..b4e8236 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -17,7 +17,6 @@
+ #include <linux/slab.h>
+ #include <linux/device.h>
+ #include <linux/platform_device.h>
+-#include <linux/of_platform.h>
+ 
+ #include <linux/i2c.h>
+ #include <linux/i2c-mux.h>
+-- 
+2.9.3
