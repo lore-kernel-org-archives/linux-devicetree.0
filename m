@@ -1,178 +1,484 @@
 From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH] iio: misc: add a generic regulator driver
-Date: Sat, 24 Dec 2016 10:43:13 +0000
-Message-ID: <C587B7CE-0F74-4C2C-BCD6-0A753CF853A0@jic23.retrosnub.co.uk>
-References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com> <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de> <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com> <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de> <bf3dde7e-cee8-c54c-db93-447ffa063116@kernel.org> <CAMpxmJVJ+y9tRbRBsVg+i0EJO_6EFuvrypwC=ETnBWbMnxRFyg@mail.gmail.com> <c670d597-46b6-235f-545f-7136a3abff7f@metafoo.de> <CAMuHMdX3u4cb2Yq2+VV_eDUaw2EqiOjN2TorW+F5-39Mm=mXmQ@mail.gmail.com> <9609b56b-194c-9899-1142-ff2ee285c6bd@metafoo.de> <CAMuHMdXnzDUYcr8qiUTwE2peBdjwuVWPRUkms2J8AHFaQ=SHHQ@mail.gmail.com>
+Subject: Re: [PATCH] adc: add adc driver for Hisilicon BVT SOCs
+Date: Sat, 24 Dec 2016 11:46:13 +0000
+Message-ID: <951BC246-0676-4DBF-856B-832E0F977ACB@jic23.retrosnub.co.uk>
+References: <1482544497-136656-1-git-send-email-liurenzhong@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXnzDUYcr8qiUTwE2peBdjwuVWPRUkms2J8AHFaQ=SHHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482544497-136656-1-git-send-email-liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 23 December 2016 12:56:11 GMT+00:00, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->Hi Lars,
+On 24 December 2016 01:54:57 GMT+00:00, Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+>Add ADC driver for the ADC controller found on HiSilicon BVT SOCs, like
+>Hi3516CV300, etc.
+>The ADC controller is primarily in charge of detecting voltage.
 >
->On Fri, Dec 23, 2016 at 12:35 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
->wrote:
->> On 12/23/2016 11:00 AM, Geert Uytterhoeven wrote:
->>> On Mon, Dec 12, 2016 at 6:15 PM, Lars-Peter Clausen
-><lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>>> On 12/06/2016 12:12 PM, Bartosz Golaszewski wrote:
->>>>> We're already using libiio to read the measured data from the
->power
->>>>> monitor, that's why we'd like to use the iio framework for
->>>>> power-cycling the devices as well. My question is: would bridging
->the
->>>>> regulator framework be the right solution? Should we look for
->>>>> something else? Bridge the GPIO framework instead?
->>>>
->>>> I wouldn't necessaries create bridge, but instead just use the GPIO
->>>> framework directly.
->>>>
->>>> We now have the GPIO chardev interface which meant to be used to
->support
->>>> application specific logic that control the GPIOs, but where you
->don't want
->>>> to write a kernel driver.
->>>>
->>>> My idea was to add GPIOs and GPIO chips as high level object inside
->libiio
->>>> that can be accessed through the same context as the IIO devices.
->Similar to
->>>> the current IIO API you have a API for gpios that allows to
->enumerate the
->>>> GPIO devices and their pins as well as modify the pin state.
->>>
->>> That would mean libiio has access to all GPIOs, allowing a remote
->person
->>> to not only control through iiod the GPIOs for industrial control,
->but also the
->>> GPIOs not intended for export, right?
->>
->> Well, it is a policy question. Who gets access to what. Right now it
->is all
->> or nothing, a privileged application gets access to all
->devices/GPIOs, a
->> unprivileged application gets access to nothing. Same for GPIOs as
->well as
->> IIO devices.
->>
->> iiod at the moment does not have any access control at all, which in
->itself
->> is a problem. We need to add support for that at some point. I don't
->see an
->> issue with implementing a finer grained access scheme when we do so.
->E.g.
->> unprivileged applications only get access to certain pins.
->
->OK, so that's WIP.
->
->>> Having a separate GPIO switch driver avoids that, as DT (or some
->other means)
->>> can be used to specify and label the GPIOs for IIO use.
->>
->> Sure, functionally this would be equivalent, but we have to ask
->whether this
->> is the right way to use the DT. Is access policy specification part
->of the
->> hardware description? In my opinion the answer is no. At the hardware
->> description level there is no operating system, there is no userspace
->or
->> kernelspace, there is are no access levels. Putting the distinction
->between
->> a switch/regulator that can be controlled from userspace or can only
->be
->> controlled from kernel space into the DT would be a layering
->violation. It
->> is analogous to why we don't have spidev DT bindings. This is an
->issue that
->> needs to be solved at a higher level. In my opinion this level is a
->> cooperation between kernel- and userspace. Kernelspace offering an
->interface
->> to export a device for userspace access and userspace making use of
->that
->> interface to request access to a device. In a similar way to how vfio
->is
->> structured.
->
->I'm not advocating using DT for policy, only for hardware description.
->
->We have means (bindings) to describe GPIOs connected to LEDs and
->switches
->(incl. their labels), while you can control LEDs through plain GPIO
->sysfs
->export or chardev, too. It's just more error prone to use the latter.
->
->We do not have bindings to describe GPIOs connected to e.g. relays.
-We should.
->
->Switching external devices (the internals of those devices not
->described
->itself in DT, like in an industrial context), sounds more like
->something to
->be handled by IIO, doesn't it?
+>Reviewed-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>Signed-off-by: Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Reading on phone so may not be that thorough!
 
-Certainly, if there is known hardware to describe, we should endeavour to describe it.
-Userspace interfaces are needed wherever we hit the boundary of what we can describe,
- whether because we are measuring things not in our control (e.g. what key is pressed on a
- keyboard) or because the next bit of hardware is interchangeable (e.g. your relay example, or
- this power switch).
+Looks pretty good. The device abstraction makes it slightly more complicated than it needs
+to be.  If you aren't going to follow up quickly with other device support please drop the
+ abstraction. It can be easily readded when needed. 
 
-The challenge is to structure the device model for the interchangeable edge case to be the
- same, more or less, as it would be if we knew what was hanging off the switch.
-Hence, we either cut out early (gpio) or we attempt to put an appropriate consumer in place
- for the gpio (or possibly the power switch if we describe that). No problem at all in doing that
- last chunk with IIO or GPIO userspace as appropriate...
+Various little things inline.
 
-The challenge is that we are representing the fact the hardware is unknown in device tree.
-Perhaps we need a way to make that explicit? Is there one already? Things like extcon do similar
- things I guess.
-Same is true for regulators, when they are at the edge of the device...
-
-On the binary channel types in IIO we have discussed this a fair bit in the past. There
-Is a non trivial amount of work needed to do triggered input (demuxing to multiple consumers
-In particular). 
-Sysfs stuff would be simple but then it would really be gpio interface wrapped up a bit.
-What IIO would bring to the mix ultimately is synchronized triggering of input and output.
-(Speaking of which, Lars any progress on output buffers? Perhaps if we post that someone else might pick it up and run with it?)
-
-One could argue the relay case is more of a mux than anything else so perhaps the ongoing
- generic mux subsystem discussion would be a good place to talk about that?
-
-Interesting discussion, sorry it took me until my Christmas train journey to join in).
-
-Linus, if you get a chance, you have probably thought more about gpio IIO interactions than I have!
+Thanks
 
 Jonathan
+>---
+> .../devicetree/bindings/iio/adc/hibvt-lsadc.txt    |  26 ++
+> drivers/iio/adc/Kconfig                            |  10 +
+> drivers/iio/adc/Makefile                           |   1 +
+>drivers/iio/adc/hibvt_lsadc.c                      | 344
+>+++++++++++++++++++++
+> 4 files changed, 381 insertions(+)
+>create mode 100644
+>Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
+> create mode 100644 drivers/iio/adc/hibvt_lsadc.c
 >
->Gr{oetje,eeting}s,
->
->                        Geert
->
->--
->Geert Uytterhoeven -- There's lots of Linux beyond ia32 --
->geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
->In personal conversations with technical people, I call myself a
->hacker. But
->when I'm talking to journalists I just say "programmer" or something
->like that.
->                                -- Linus Torvalds
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>diff --git a/Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
+>b/Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
+>new file mode 100644
+>index 0000000..63de46e
+>--- /dev/null
+>+++ b/Documentation/devicetree/bindings/iio/adc/hibvt-lsadc.txt
+>@@ -0,0 +1,26 @@
+>+Hisilicon BVT Low Speed (LS) A/D Converter bindings
+>+
+>+Required properties:
+>+- compatible: should be "hisilicon,<name>-lsadc"
+>+   - "hisilicon,hibvt-lsadc": for hi3516cv300
+>+
+>+- reg: physical base address of the controller and length of memory
+>mapped
+>+       region.
+>+- interrupts: The interrupt number to the cpu. The interrupt specifier
+>format
+>+              depends on the interrupt controller.
+A cross reference to the interrupt bindings doc always good to add.
+>+- #io-channel-cells: Should be 1, see ../iio-bindings.txt
+>+
+>+Optional properties:
+>+- resets: Must contain an entry for each entry in reset-names if need
+>support
+>+	  this option. See ../reset/reset.txt for details.
+>+- reset-names: Must include the name "saradc-apb".
+>+
+>+Example:
+>+	lsadc: hibvt-lsadc@120e0000 {
+>+			compatible = "hisilicon,hibvt-lsadc";
+>+			reg = <0x120e0000 0x1000>;
+>+			interrupts = <19>;
+>+			resets = <&crg 0x7c 3>;
+>+			reset-names = "lsadc-crg";
+Doesn't contain saradc-apb which docs say it must...
+>+			status = "disabled";
+Not documented...
+>+	};
+>diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>index 99c0514..0443f51 100644
+>--- a/drivers/iio/adc/Kconfig
+>+++ b/drivers/iio/adc/Kconfig
+>@@ -225,6 +225,16 @@ config HI8435
+>	  This driver can also be built as a module. If so, the module will be
+> 	  called hi8435.
+> 
+>+config HIBVT_LSADC
+>+	tristate "HIBVT LSADC driver"
+>+	depends on ARCH_HISI || COMPILE_TEST
+>+	help
+>+	  Say yes here to build support for the LSADC found in SoCs from
+>+	  hisilicon BVT chip.
+>+
+>+	  To compile this driver as a module, choose M here: the
+>+	  module will be called hibvt_lsadc.
+>+
+> config INA2XX_ADC
+> 	tristate "Texas Instruments INA2xx Power Monitors IIO driver"
+> 	depends on I2C && !SENSORS_INA2XX
+>diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>index 7a40c04..6554d92 100644
+>--- a/drivers/iio/adc/Makefile
+>+++ b/drivers/iio/adc/Makefile
+>@@ -23,6 +23,7 @@ obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
+> obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+> obj-$(CONFIG_FSL_MX25_ADC) += fsl-imx25-gcq.o
+> obj-$(CONFIG_HI8435) += hi8435.o
+>+obj-$(CONFIG_HIBVT_LSADC) += hibvt_lsadc.o
+> obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
+> obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
+> obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>diff --git a/drivers/iio/adc/hibvt_lsadc.c
+>b/drivers/iio/adc/hibvt_lsadc.c
+>new file mode 100644
+>index 0000000..a20afe8
+>--- /dev/null
+>+++ b/drivers/iio/adc/hibvt_lsadc.c
+>@@ -0,0 +1,344 @@
+>+/*
+>+ * Hisilicon BVT Low Speed (LS) A/D Converter
+>+ * Copyright (C) 2016 HiSilicon Technologies Co., Ltd.
+>+ *
+>+ * This program is free software; you can redistribute it and/or
+>modify
+>+ * it under the terms of the GNU General Public License as published
+>by
+>+ * the Free Software Foundation; either version 2 of the License, or
+>+ * (at your option) any later version.
+>+ *
+>+ * This program is distributed in the hope that it will be useful,
+>+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>+ * GNU General Public License for more details.
+>+ */
+>+
+>+#include <linux/module.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/interrupt.h>
+>+#include <linux/io.h>
+>+#include <linux/of.h>
+>+#include <linux/of_device.h>
+>+#include <linux/clk.h>
+>+#include <linux/completion.h>
+>+#include <linux/delay.h>
+>+#include <linux/reset.h>
+>+#include <linux/regulator/consumer.h>
+>+#include <linux/iio/iio.h>
+>+
+>+/* hisilicon bvt adc registers definitions */
+>+#define LSADC_CONFIG		0x00
+>+#define CONFIG_DEGLITCH		BIT(17)
+Please add a driver specific prefix to all defines to keep them in their own namespace.
+>+#define CONFIG_RESET		BIT(15)
+>+#define CONFIG_POWERDOWN	BIT(14)
+>+#define CONFIG_MODE			BIT(13)
+>+#define CONFIG_CHC_VALID	BIT(10)
+>+#define CONFIG_CHB_VALID	BIT(9)
+>+#define CONFIG_CHA_VALID	BIT(8)
+>+
+>+#define LSADC_TIMESCAN		0x08
+Lsadc is perhaps to generic a prefix. Clash chances are a bit high
+>+#define LSADC_INTEN			0x10
+>+#define LSADC_INTSTATUS		0x14
+>+#define LSADC_INTCLR		0x18
+>+#define LSADC_START			0x1C
+>+#define LSADC_STOP			0x20
+>+#define LSADC_ACTBIT		0x24
+>+#define LSADC_CHNDATA		0x2C
+>+
+>+#define ADC_CON_EN			(1u << 0)
+>+#define ADC_CON_DEN			(0u << 0)
+>+
+>+#define ADC_NUM_BITS		10
+>+
+>+/* fix clk:3000000, default tscan set 10ms */
+>+#define DEF_ADC_TSCAN_MS	(10*3000)
+>+
+>+#define LSADC_CHN_MASK		0x7
+>+
+>+#define LSADC_TIMEOUT		msecs_to_jiffies(100)
+>+
+>+/* default voltage scale for every channel <mv> */
+>+static int g_voltage[] = {
+>+	3300, 3300, 3300
+>+};
+Prefix these as well.
+>+
+>+struct hibvt_lsadc {
+>+	void __iomem		*regs;
+>+	struct completion	completion;
+>+	struct reset_control	*reset;
+>+	const struct hibvt_lsadc_data	*data;
+>+	unsigned int		cur_chn;
+>+	unsigned int		value;
+>+};
+>+
+>+struct hibvt_lsadc_data {
+>+	int				num_bits;
+>+	const struct iio_chan_spec	*channels;
+>+	int				num_channels;
+>+
+>+	void (*clear_irq)(struct hibvt_lsadc *info, int mask);
+>+	void (*start_conv)(struct hibvt_lsadc *info);
+>+	void (*stop_conv)(struct hibvt_lsadc *info);
+>+};
+>+
+>+static int hibvt_lsadc_read_raw(struct iio_dev *indio_dev,
+>+				    struct iio_chan_spec const *chan,
+>+				    int *val, int *val2, long mask)
+>+{
+>+	struct hibvt_lsadc *info = iio_priv(indio_dev);
+>+
+>+	switch (mask) {
+>+	case IIO_CHAN_INFO_RAW:
+>+		mutex_lock(&indio_dev->mlock);
+>+
+>+		reinit_completion(&info->completion);
+>+
+>+		/* Select the channel to be used */
+>+		info->cur_chn = chan->channel;
+>+
+>+		if (info->data->start_conv)
+>+			info->data->start_conv(info);
+>+
+>+		if (!wait_for_completion_timeout(&info->completion,
+>+							LSADC_TIMEOUT)) {
+>+			if (info->data->stop_conv)
+>+				info->data->stop_conv(info);
+>+			mutex_unlock(&indio_dev->mlock);
+>+			return -ETIMEDOUT;
+>+		}
+>+
+>+		*val = info->value;
+>+		mutex_unlock(&indio_dev->mlock);
+>+		return IIO_VAL_INT;
+>+	case IIO_CHAN_INFO_SCALE:
+>+		*val = g_voltage[chan->channel];
+>+		*val2 = info->data->num_bits;
+>+		return IIO_VAL_FRACTIONAL_LOG2;
+>+	default:
+>+		return -EINVAL;
+>+	}
+>+}
+>+
+>+static irqreturn_t hibvt_lsadc_isr(int irq, void *dev_id)
+>+{
+>+	struct hibvt_lsadc *info = (struct hibvt_lsadc *)dev_id;
+>+	int mask;
+>+
+>+	mask = readl(info->regs + LSADC_INTSTATUS);
+>+	mask &= LSADC_CHN_MASK;
+>+
+>+	/* Clear irq */
+>+	if (info->data->clear_irq)
+>+		info->data->clear_irq(info, mask);
+>+
+>+	/* Read value */
+>+	info->value = readl(info->regs + LSADC_CHNDATA + (info->cur_chn <<
+>2));
+>+	info->value &= GENMASK(info->data->num_bits - 1, 0);
+>+
+>+	/* stop adc */
+>+	if (info->data->stop_conv)
+>+		info->data->stop_conv(info);
+>+
+>+	complete(&info->completion);
+>+
+>+	return IRQ_HANDLED;
+>+}
+>+
+>+static const struct iio_info hibvt_lsadc_iio_info = {
+>+	.read_raw = hibvt_lsadc_read_raw,
+>+	.driver_module = THIS_MODULE,
+>+};
+>+
+>+#define ADC_CHANNEL(_index, _id) {      \
+Prefix this define. 
+>+	.type = IIO_VOLTAGE,                \
+>+	.indexed = 1,						\
+>+	.channel = _index,					\
+>+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |  \
+>+			BIT(IIO_CHAN_INFO_SCALE),   \
+>+	.datasheet_name = _id,              \
+>+}
+>+
+>+static const struct iio_chan_spec hibvt_lsadc_iio_channels[] = {
+>+	ADC_CHANNEL(0, "adc0"),
+>+	ADC_CHANNEL(1, "adc1"),
+>+	ADC_CHANNEL(2, "adc2"),
+>+};
+>+
+>+static void hibvt_lsadc_clear_irq(struct hibvt_lsadc *info, int mask)
+>+{
+>+	writel(mask, info->regs + LSADC_INTCLR);
+>+}
+>+
+>+static void hibvt_lsadc_start_conv(struct hibvt_lsadc *info)
+>+{
+>+	unsigned int con;
+>+
+>+	/* set number bit */
+>+	con = GENMASK(info->data->num_bits - 1, 0);
+>+	writel(con, (info->regs + LSADC_ACTBIT));
+>+
+>+    /* config */
+>+	con = readl(info->regs + LSADC_CONFIG);
+>+	con &= ~CONFIG_RESET;
+>+	con |= (CONFIG_POWERDOWN | CONFIG_DEGLITCH | CONFIG_MODE);
+>+	con &= ~(CONFIG_CHA_VALID | CONFIG_CHB_VALID | CONFIG_CHC_VALID);
+>+	con |= (CONFIG_CHA_VALID << info->cur_chn);
+>+	writel(con, (info->regs + LSADC_CONFIG));
+>+
+>+	/* set timescan */
+>+	writel(DEF_ADC_TSCAN_MS, (info->regs + LSADC_TIMESCAN));
+>+
+>+	/* clear interrupt */
+>+	writel(LSADC_CHN_MASK, info->regs + LSADC_INTCLR);
+>+
+>+	/* enable interrupt */
+>+	writel(ADC_CON_EN, (info->regs + LSADC_INTEN));
+>+
+>+	/* start scan */
+>+	writel(ADC_CON_EN, (info->regs + LSADC_START));
+>+}
+>+
+>+static void hibvt_lsadc_stop_conv(struct hibvt_lsadc *info)
+>+{
+>+	/* reset the timescan */
+>+	writel(ADC_CON_DEN, (info->regs + LSADC_TIMESCAN));
+>+
+>+	/* disable interrupt */
+>+	writel(ADC_CON_DEN, (info->regs + LSADC_INTEN));
+>+
+>+	/* stop scan */
+>+	writel(ADC_CON_EN, (info->regs + LSADC_STOP));
+>+}
+>+
+>+static const struct hibvt_lsadc_data lsadc_data = {
+>+	.num_bits = ADC_NUM_BITS,
+>+	.channels = hibvt_lsadc_iio_channels,
+>+	.num_channels = ARRAY_SIZE(hibvt_lsadc_iio_channels),
+>+
+>+	.clear_irq	= hibvt_lsadc_clear_irq,
+>+	.start_conv	= hibvt_lsadc_start_conv,
+>+	.stop_conv = hibvt_lsadc_stop_conv,
+>+};
+Usual convention is to only introduce a device type specific structure when more than one device is supported.  If you are going to follow up
+ shortly with more device support then leave it but add a note to the patch description. If not please drop this abstraction.
+>+
+>+static const struct of_device_id hibvt_lsadc_match[] = {
+>+	{
+>+		.compatible = "hisilicon,hibvt-lsadc",
+>+		.data = &lsadc_data,
+>+	},
+>+	{},
+>+};
+>+MODULE_DEVICE_TABLE(of, hibvt_lsadc_match);
+>+
+>+/**
+>+ * Reset LSADC Controller.
+Single line comment syntax please.
+>+ */
+>+static void hibvt_lsadc_reset_controller(struct reset_control *reset)
+>+{
+>+	reset_control_assert(reset);
+>+	usleep_range(10, 20);
+>+	reset_control_deassert(reset);
+>+}
+>+
+>+static int hibvt_lsadc_probe(struct platform_device *pdev)
+>+{
+>+	struct hibvt_lsadc *info = NULL;
+>+	struct device_node *np = pdev->dev.of_node;
+>+	struct iio_dev *indio_dev = NULL;
+>+	struct resource	*mem;
+>+	const struct of_device_id *match;
+>+	int ret;
+>+	int irq;
+>+
+>+	if (!np)
+>+		return -ENODEV;
+>+
+>+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+>+	if (!indio_dev) {
+>+		dev_err(&pdev->dev, "failed allocating iio device\n");
+>+		return -ENOMEM;
+>+	}
+>+	info = iio_priv(indio_dev);
+>+
+>+	match = of_match_device(hibvt_lsadc_match, &pdev->dev);
+>+	info->data = match->data;
+>+
+>+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>+	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+>+	if (IS_ERR(info->regs))
+>+		return PTR_ERR(info->regs);
+>+
+>+	/*
+>+	 * The reset should be an optional property, as it should work
+>+	 * with old devicetrees as well
+>+	 */
+>+	info->reset = devm_reset_control_get(&pdev->dev, "lsadc-crg");
+>+	if (IS_ERR(info->reset)) {
+>+		ret = PTR_ERR(info->reset);
+>+		if (ret != -ENOENT)
+>+			return ret;
+>+
+>+		dev_dbg(&pdev->dev, "no reset control found\n");
+>+		info->reset = NULL;
+>+	}
+>+
+>+	init_completion(&info->completion);
+>+
+>+	irq = platform_get_irq(pdev, 0);
+>+	if (irq < 0) {
+>+		dev_err(&pdev->dev, "no irq resource?\n");
+>+		return irq;
+>+	}
+>+
+>+	ret = devm_request_irq(&pdev->dev, irq, hibvt_lsadc_isr,
+>+			       0, dev_name(&pdev->dev), info);
+>+	if (ret < 0) {
+>+		dev_err(&pdev->dev, "failed requesting irq %d\n", irq);
+>+		return ret;
+>+	}
+>+
+>+	if (info->reset)
+>+		hibvt_lsadc_reset_controller(info->reset);
+>+
+>+	platform_set_drvdata(pdev, indio_dev);
+>+
+>+	indio_dev->name = dev_name(&pdev->dev);
+>+	indio_dev->dev.parent = &pdev->dev;
+>+	indio_dev->dev.of_node = pdev->dev.of_node;
+>+	indio_dev->info = &hibvt_lsadc_iio_info;
+>+	indio_dev->modes = INDIO_DIRECT_MODE;
+>+
+>+	indio_dev->channels = info->data->channels;
+>+	indio_dev->num_channels = info->data->num_channels;
+>+
+>+	ret = iio_device_register(indio_dev);
+>+	if (ret < 0) {
+>+		dev_err(&pdev->dev, "failed register iio device\n");
+>+		return ret;
+>+	}
+>+
+>+	return 0;
+>+}
+>+
+>+static int hibvt_lsadc_remove(struct platform_device *pdev)
+>+{
+>+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>+
+>+	iio_device_unregister(indio_dev);
+As nothing else here can use devm version of register and drop remove entirely.
+>+
+>+	return 0;
+>+}
+>+
+>+static struct platform_driver hibvt_lsadc_driver = {
+>+	.probe		= hibvt_lsadc_probe,
+>+	.remove		= hibvt_lsadc_remove,
+>+	.driver		= {
+>+		.name	= "hibvt-lsadc",
+>+		.of_match_table = hibvt_lsadc_match,
+>+	},
+>+};
+>+
+>+module_platform_driver(hibvt_lsadc_driver);
+>+
+>+MODULE_AUTHOR("Allen Liu <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
+>+MODULE_DESCRIPTION("hisilicon BVT LSADC driver");
+>+MODULE_LICENSE("GPL v2");
 
 -- 
 Sent from my Android device with K-9 Mail. Please excuse my brevity.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
