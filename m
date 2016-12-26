@@ -1,288 +1,424 @@
-From: liurenzhong <liurenzhong-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: RE:  [PATCH] adc: add adc driver for Hisilicon BVT SOCs
-Date: Mon, 26 Dec 2016 11:05:14 +0000
-Message-ID: <FF07FAC5C99FCA42AD8E3824334A86E0DC449E@DGGEMA503-MBS.china.huawei.com>
-References: <1482544497-136656-1-git-send-email-liurenzhong@hisilicon.com>
- <951BC246-0676-4DBF-856B-832E0F977ACB@jic23.retrosnub.co.uk>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 4/6] PCI: exynos5433: Add new exynos pci host
+ controller for Exynos5433
+Date: Mon, 26 Dec 2016 11:49:48 +0000
+Message-ID: <62af9734-4e16-d5e7-10f0-f4d2ac6fa9ff@synopsys.com>
+References: <20161226052029.10552-1-jh80.chung@samsung.com>
+ <CGME20161226052031epcas1p4d238d16e55984dcf905daf1ad132ccca@epcas1p4.samsung.com>
+ <20161226052029.10552-5-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <951BC246-0676-4DBF-856B-832E0F977ACB-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Content-Language: zh-CN
+In-Reply-To: <20161226052029.10552-5-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel@vger.
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9uYXRoYW4sDQoNClRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIgcmVwbHkgLCBpdCBnZXQg
-bWUgZ3JlYXQgY291cmFnZSB0byBjb250aW51ZSB0aGlzIHVwc3RyZWFtaW5nIC4gDQoNCndlIHdp
-bGwgbWFrZSBhIGNhcmVmdWwgYW5hbHlzaXMgb2YgeW91ciBzdWdnZXN0aW9uIGFuZCB1cGRhdGUg
-YSBuZXcgcGF0Y2ggYWZ0ZXIgYSBmZXcgZGF5cy4NCg0KQmVzdCByZWdhcmRzDQovQWxsZW4NCg0K
-Ly0tLS0tLS0tLS0tLS0tLS0tLS0tLS8NCkZyb206IEpvbmF0aGFuIENhbWVyb24gW21haWx0bzpq
-aWMyM0BqaWMyMy5yZXRyb3NudWIuY28udWtdIA0KU2VudDogMjQgRGVjZW1iZXIgMjAxNiAxOTo0
-Ng0KVG86IGxpdXJlbnpob25nOyBqaWMyM0BrZXJuZWwub3JnOyBrbmFhY2suaEBnbXguZGU7IGxh
-cnNAbWV0YWZvby5kZTsgcG1lZXJ3QHBtZWVydy5uZXQ7IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFy
-ay5ydXRsYW5kQGFybS5jb20NCkNjOiBha2lub2J1Lm1pdGFAZ21haWwuY29tOyBsdWRvdmljLmRl
-c3JvY2hlc0BhdG1lbC5jb207IGtyemtAa2VybmVsLm9yZzsgdmlsaGVsbS5ncmF5QGdtYWlsLmNv
-bTsga3NlbmlqYS5zdGFub2pldmljQGdtYWlsLmNvbTsgemhpeW9uZy50YW9AbWVkaWF0ZWsuY29t
-OyBkYW5pZWwuYmFsdXRhQGludGVsLmNvbTsgbGVvbmFyZC5jcmVzdGV6QGludGVsLmNvbTsgcmF5
-Lmp1aUBicm9hZGNvbS5jb207IHJhdmVlbmRyYS5wYWRhc2FsYWdpQGJyb2FkY29tLmNvbTsgbXJh
-bm9zdGF5QGdtYWlsLmNvbTsgYW1zZmllbGQyMkBnbWFpbC5jb207IGxpbnV4LWlpb0B2Z2VyLmtl
-cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBYdWVqaWFuY2hlbmc7IExpeHUgKGtldmluKQ0KU3ViamVjdDogUmU6IFtQQVRD
-SF0gYWRjOiBhZGQgYWRjIGRyaXZlciBmb3IgSGlzaWxpY29uIEJWVCBTT0NzDQoNCk9uIDI0IERl
-Y2VtYmVyIDIwMTYgMDE6NTQ6NTcgR01UKzAwOjAwLCBBbGxlbiBMaXUgPGxpdXJlbnpob25nQGhp
-c2lsaWNvbi5jb20+IHdyb3RlOg0KPkFkZCBBREMgZHJpdmVyIGZvciB0aGUgQURDIGNvbnRyb2xs
-ZXIgZm91bmQgb24gSGlTaWxpY29uIEJWVCBTT0NzLCBsaWtlIA0KPkhpMzUxNkNWMzAwLCBldGMu
-DQo+VGhlIEFEQyBjb250cm9sbGVyIGlzIHByaW1hcmlseSBpbiBjaGFyZ2Ugb2YgZGV0ZWN0aW5n
-IHZvbHRhZ2UuDQo+DQo+UmV2aWV3ZWQtYnk6IEppYW5jaGVuZyBYdWUgPHh1ZWppYW5jaGVuZ0Bo
-aXNpbGljb24uY29tPg0KPlNpZ25lZC1vZmYtYnk6IEFsbGVuIExpdSA8bGl1cmVuemhvbmdAaGlz
-aWxpY29uLmNvbT4NClJlYWRpbmcgb24gcGhvbmUgc28gbWF5IG5vdCBiZSB0aGF0IHRob3JvdWdo
-IQ0KDQpMb29rcyBwcmV0dHkgZ29vZC4gVGhlIGRldmljZSBhYnN0cmFjdGlvbiBtYWtlcyBpdCBz
-bGlnaHRseSBtb3JlIGNvbXBsaWNhdGVkIHRoYW4gaXQgbmVlZHMgdG8gYmUuICBJZiB5b3UgYXJl
-bid0IGdvaW5nIHRvIGZvbGxvdyB1cCBxdWlja2x5IHdpdGggb3RoZXIgZGV2aWNlIHN1cHBvcnQg
-cGxlYXNlIGRyb3AgdGhlICBhYnN0cmFjdGlvbi4gSXQgY2FuIGJlIGVhc2lseSByZWFkZGVkIHdo
-ZW4gbmVlZGVkLiANCg0KVmFyaW91cyBsaXR0bGUgdGhpbmdzIGlubGluZS4NCg0KVGhhbmtzDQoN
-CkpvbmF0aGFuDQo+LS0tDQo+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvaGlidnQt
-bHNhZGMudHh0ICAgIHwgIDI2ICsrDQo+IGRyaXZlcnMvaWlvL2FkYy9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDEwICsNCj4gZHJpdmVycy9paW8vYWRjL01ha2VmaWxlICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPmRyaXZlcnMvaWlvL2FkYy9oaWJ2dF9s
-c2FkYy5jICAgICAgICAgICAgICAgICAgICAgIHwgMzQ0DQo+KysrKysrKysrKysrKysrKysrKysr
-DQo+IDQgZmlsZXMgY2hhbmdlZCwgMzgxIGluc2VydGlvbnMoKykNCj5jcmVhdGUgbW9kZSAxMDA2
-NDQNCj5Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9oaWJ2dC1sc2Fk
-Yy50eHQNCj4gY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaWlvL2FkYy9oaWJ2dF9sc2FkYy5j
-DQo+DQo+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8v
-YWRjL2hpYnZ0LWxzYWRjLnR4dA0KPmIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lpby9hZGMvaGlidnQtbHNhZGMudHh0DQo+bmV3IGZpbGUgbW9kZSAxMDA2NDQNCj5pbmRleCAw
-MDAwMDAwLi42M2RlNDZlDQo+LS0tIC9kZXYvbnVsbA0KPisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2hpYnZ0LWxzYWRjLnR4dA0KPkBAIC0wLDAgKzEsMjYg
-QEANCj4rSGlzaWxpY29uIEJWVCBMb3cgU3BlZWQgKExTKSBBL0QgQ29udmVydGVyIGJpbmRpbmdz
-DQo+Kw0KPitSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
-aGlzaWxpY29uLDxuYW1lPi1sc2FkYyINCj4rICAgLSAiaGlzaWxpY29uLGhpYnZ0LWxzYWRjIjog
-Zm9yIGhpMzUxNmN2MzAwDQo+Kw0KPistIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRo
-ZSBjb250cm9sbGVyIGFuZCBsZW5ndGggb2YgbWVtb3J5DQo+bWFwcGVkDQo+KyAgICAgICByZWdp
-b24uDQo+Ky0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBudW1iZXIgdG8gdGhlIGNwdS4gVGhl
-IGludGVycnVwdCBzcGVjaWZpZXINCj5mb3JtYXQNCj4rICAgICAgICAgICAgICBkZXBlbmRzIG9u
-IHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlci4NCkEgY3Jvc3MgcmVmZXJlbmNlIHRvIHRoZSBpbnRl
-cnJ1cHQgYmluZGluZ3MgZG9jIGFsd2F5cyBnb29kIHRvIGFkZC4NCj4rLSAjaW8tY2hhbm5lbC1j
-ZWxsczogU2hvdWxkIGJlIDEsIHNlZSAuLi9paW8tYmluZGluZ3MudHh0DQo+Kw0KPitPcHRpb25h
-bCBwcm9wZXJ0aWVzOg0KPistIHJlc2V0czogTXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNo
-IGVudHJ5IGluIHJlc2V0LW5hbWVzIGlmIG5lZWQNCj5zdXBwb3J0DQo+KwkgIHRoaXMgb3B0aW9u
-LiBTZWUgLi4vcmVzZXQvcmVzZXQudHh0IGZvciBkZXRhaWxzLg0KPistIHJlc2V0LW5hbWVzOiBN
-dXN0IGluY2x1ZGUgdGhlIG5hbWUgInNhcmFkYy1hcGIiLg0KPisNCj4rRXhhbXBsZToNCj4rCWxz
-YWRjOiBoaWJ2dC1sc2FkY0AxMjBlMDAwMCB7DQo+KwkJCWNvbXBhdGlibGUgPSAiaGlzaWxpY29u
-LGhpYnZ0LWxzYWRjIjsNCj4rCQkJcmVnID0gPDB4MTIwZTAwMDAgMHgxMDAwPjsNCj4rCQkJaW50
-ZXJydXB0cyA9IDwxOT47DQo+KwkJCXJlc2V0cyA9IDwmY3JnIDB4N2MgMz47DQo+KwkJCXJlc2V0
-LW5hbWVzID0gImxzYWRjLWNyZyI7DQpEb2Vzbid0IGNvbnRhaW4gc2FyYWRjLWFwYiB3aGljaCBk
-b2NzIHNheSBpdCBtdXN0Li4uDQo+KwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQpOb3QgZG9jdW1l
-bnRlZC4uLg0KPisJfTsNCj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL0tjb25maWcgYi9k
-cml2ZXJzL2lpby9hZGMvS2NvbmZpZyBpbmRleCANCj45OWMwNTE0Li4wNDQzZjUxIDEwMDY0NA0K
-Pi0tLSBhL2RyaXZlcnMvaWlvL2FkYy9LY29uZmlnDQo+KysrIGIvZHJpdmVycy9paW8vYWRjL0tj
-b25maWcNCj5AQCAtMjI1LDYgKzIyNSwxNiBAQCBjb25maWcgSEk4NDM1DQo+CSAgVGhpcyBkcml2
-ZXIgY2FuIGFsc28gYmUgYnVpbHQgYXMgYSBtb2R1bGUuIElmIHNvLCB0aGUgbW9kdWxlIHdpbGwg
-YmUNCj4gCSAgY2FsbGVkIGhpODQzNS4NCj4gDQo+K2NvbmZpZyBISUJWVF9MU0FEQw0KPisJdHJp
-c3RhdGUgIkhJQlZUIExTQURDIGRyaXZlciINCj4rCWRlcGVuZHMgb24gQVJDSF9ISVNJIHx8IENP
-TVBJTEVfVEVTVA0KPisJaGVscA0KPisJICBTYXkgeWVzIGhlcmUgdG8gYnVpbGQgc3VwcG9ydCBm
-b3IgdGhlIExTQURDIGZvdW5kIGluIFNvQ3MgZnJvbQ0KPisJICBoaXNpbGljb24gQlZUIGNoaXAu
-DQo+Kw0KPisJICBUbyBjb21waWxlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBo
-ZXJlOiB0aGUNCj4rCSAgbW9kdWxlIHdpbGwgYmUgY2FsbGVkIGhpYnZ0X2xzYWRjLg0KPisNCj4g
-Y29uZmlnIElOQTJYWF9BREMNCj4gCXRyaXN0YXRlICJUZXhhcyBJbnN0cnVtZW50cyBJTkEyeHgg
-UG93ZXIgTW9uaXRvcnMgSUlPIGRyaXZlciINCj4gCWRlcGVuZHMgb24gSTJDICYmICFTRU5TT1JT
-X0lOQTJYWA0KPmRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvTWFrZWZpbGUgYi9kcml2ZXJz
-L2lpby9hZGMvTWFrZWZpbGUgaW5kZXggDQo+N2E0MGMwNC4uNjU1NGQ5MiAxMDA2NDQNCj4tLS0g
-YS9kcml2ZXJzL2lpby9hZGMvTWFrZWZpbGUNCj4rKysgYi9kcml2ZXJzL2lpby9hZGMvTWFrZWZp
-bGUNCj5AQCAtMjMsNiArMjMsNyBAQCBvYmotJChDT05GSUdfREE5MTUwX0dQQURDKSArPSBkYTkx
-NTAtZ3BhZGMubw0KPiBvYmotJChDT05GSUdfRVhZTk9TX0FEQykgKz0gZXh5bm9zX2FkYy5vDQo+
-IG9iai0kKENPTkZJR19GU0xfTVgyNV9BREMpICs9IGZzbC1pbXgyNS1nY3Eubw0KPiBvYmotJChD
-T05GSUdfSEk4NDM1KSArPSBoaTg0MzUubw0KPitvYmotJChDT05GSUdfSElCVlRfTFNBREMpICs9
-IGhpYnZ0X2xzYWRjLm8NCj4gb2JqLSQoQ09ORklHX0lNWDdEX0FEQykgKz0gaW14N2RfYWRjLm8N
-Cj4gb2JqLSQoQ09ORklHX0lOQTJYWF9BREMpICs9IGluYTJ4eC1hZGMubw0KPiBvYmotJChDT05G
-SUdfTFA4Nzg4X0FEQykgKz0gbHA4Nzg4X2FkYy5vIGRpZmYgLS1naXQgDQo+YS9kcml2ZXJzL2lp
-by9hZGMvaGlidnRfbHNhZGMuYyBiL2RyaXZlcnMvaWlvL2FkYy9oaWJ2dF9sc2FkYy5jIG5ldyAN
-Cj5maWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLmEyMGFmZTgNCj4tLS0gL2Rldi9udWxs
-DQo+KysrIGIvZHJpdmVycy9paW8vYWRjL2hpYnZ0X2xzYWRjLmMNCj5AQCAtMCwwICsxLDM0NCBA
-QA0KPisvKg0KPisgKiBIaXNpbGljb24gQlZUIExvdyBTcGVlZCAoTFMpIEEvRCBDb252ZXJ0ZXIN
-Cj4rICogQ29weXJpZ2h0IChDKSAyMDE2IEhpU2lsaWNvbiBUZWNobm9sb2dpZXMgQ28uLCBMdGQu
-DQo+KyAqDQo+KyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlz
-dHJpYnV0ZSBpdCBhbmQvb3INCj5tb2RpZnkNCj4rICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRo
-ZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQNCj5ieQ0KPisgKiB0aGUg
-RnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNl
-LCBvcg0KPisgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPisgKg0KPisg
-KiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJl
-IHVzZWZ1bCwNCj4rICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhl
-IGltcGxpZWQgd2FycmFudHkgb2YNCj4rICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9S
-IEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPisgKiBHTlUgR2VuZXJhbCBQdWJsaWMg
-TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLg0KPisgKi8NCj4rDQo+KyNpbmNsdWRlIDxsaW51eC9t
-b2R1bGUuaD4NCj4rI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPisjaW5jbHVk
-ZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+KyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPisjaW5jbHVk
-ZSA8bGludXgvb2YuaD4NCj4rI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPisjaW5jbHVk
-ZSA8bGludXgvY2xrLmg+DQo+KyNpbmNsdWRlIDxsaW51eC9jb21wbGV0aW9uLmg+DQo+KyNpbmNs
-dWRlIDxsaW51eC9kZWxheS5oPg0KPisjaW5jbHVkZSA8bGludXgvcmVzZXQuaD4NCj4rI2luY2x1
-ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPisjaW5jbHVkZSA8bGludXgvaWlvL2lp
-by5oPg0KPisNCj4rLyogaGlzaWxpY29uIGJ2dCBhZGMgcmVnaXN0ZXJzIGRlZmluaXRpb25zICov
-DQo+KyNkZWZpbmUgTFNBRENfQ09ORklHCQkweDAwDQo+KyNkZWZpbmUgQ09ORklHX0RFR0xJVENI
-CQlCSVQoMTcpDQpQbGVhc2UgYWRkIGEgZHJpdmVyIHNwZWNpZmljIHByZWZpeCB0byBhbGwgZGVm
-aW5lcyB0byBrZWVwIHRoZW0gaW4gdGhlaXIgb3duIG5hbWVzcGFjZS4NCj4rI2RlZmluZSBDT05G
-SUdfUkVTRVQJCUJJVCgxNSkNCj4rI2RlZmluZSBDT05GSUdfUE9XRVJET1dOCUJJVCgxNCkNCj4r
-I2RlZmluZSBDT05GSUdfTU9ERQkJCUJJVCgxMykNCj4rI2RlZmluZSBDT05GSUdfQ0hDX1ZBTElE
-CUJJVCgxMCkNCj4rI2RlZmluZSBDT05GSUdfQ0hCX1ZBTElECUJJVCg5KQ0KPisjZGVmaW5lIENP
-TkZJR19DSEFfVkFMSUQJQklUKDgpDQo+Kw0KPisjZGVmaW5lIExTQURDX1RJTUVTQ0FOCQkweDA4
-DQpMc2FkYyBpcyBwZXJoYXBzIHRvIGdlbmVyaWMgYSBwcmVmaXguIENsYXNoIGNoYW5jZXMgYXJl
-IGEgYml0IGhpZ2gNCj4rI2RlZmluZSBMU0FEQ19JTlRFTgkJCTB4MTANCj4rI2RlZmluZSBMU0FE
-Q19JTlRTVEFUVVMJCTB4MTQNCj4rI2RlZmluZSBMU0FEQ19JTlRDTFIJCTB4MTgNCj4rI2RlZmlu
-ZSBMU0FEQ19TVEFSVAkJCTB4MUMNCj4rI2RlZmluZSBMU0FEQ19TVE9QCQkJMHgyMA0KPisjZGVm
-aW5lIExTQURDX0FDVEJJVAkJMHgyNA0KPisjZGVmaW5lIExTQURDX0NITkRBVEEJCTB4MkMNCj4r
-DQo+KyNkZWZpbmUgQURDX0NPTl9FTgkJCSgxdSA8PCAwKQ0KPisjZGVmaW5lIEFEQ19DT05fREVO
-CQkJKDB1IDw8IDApDQo+Kw0KPisjZGVmaW5lIEFEQ19OVU1fQklUUwkJMTANCj4rDQo+Ky8qIGZp
-eCBjbGs6MzAwMDAwMCwgZGVmYXVsdCB0c2NhbiBzZXQgMTBtcyAqLw0KPisjZGVmaW5lIERFRl9B
-RENfVFNDQU5fTVMJKDEwKjMwMDApDQo+Kw0KPisjZGVmaW5lIExTQURDX0NITl9NQVNLCQkweDcN
-Cj4rDQo+KyNkZWZpbmUgTFNBRENfVElNRU9VVAkJbXNlY3NfdG9famlmZmllcygxMDApDQo+Kw0K
-PisvKiBkZWZhdWx0IHZvbHRhZ2Ugc2NhbGUgZm9yIGV2ZXJ5IGNoYW5uZWwgPG12PiAqLyBzdGF0
-aWMgaW50IA0KPitnX3ZvbHRhZ2VbXSA9IHsNCj4rCTMzMDAsIDMzMDAsIDMzMDANCj4rfTsNClBy
-ZWZpeCB0aGVzZSBhcyB3ZWxsLg0KPisNCj4rc3RydWN0IGhpYnZ0X2xzYWRjIHsNCj4rCXZvaWQg
-X19pb21lbQkJKnJlZ3M7DQo+KwlzdHJ1Y3QgY29tcGxldGlvbgljb21wbGV0aW9uOw0KPisJc3Ry
-dWN0IHJlc2V0X2NvbnRyb2wJKnJlc2V0Ow0KPisJY29uc3Qgc3RydWN0IGhpYnZ0X2xzYWRjX2Rh
-dGEJKmRhdGE7DQo+Kwl1bnNpZ25lZCBpbnQJCWN1cl9jaG47DQo+Kwl1bnNpZ25lZCBpbnQJCXZh
-bHVlOw0KPit9Ow0KPisNCj4rc3RydWN0IGhpYnZ0X2xzYWRjX2RhdGEgew0KPisJaW50CQkJCW51
-bV9iaXRzOw0KPisJY29uc3Qgc3RydWN0IGlpb19jaGFuX3NwZWMJKmNoYW5uZWxzOw0KPisJaW50
-CQkJCW51bV9jaGFubmVsczsNCj4rDQo+Kwl2b2lkICgqY2xlYXJfaXJxKShzdHJ1Y3QgaGlidnRf
-bHNhZGMgKmluZm8sIGludCBtYXNrKTsNCj4rCXZvaWQgKCpzdGFydF9jb252KShzdHJ1Y3QgaGli
-dnRfbHNhZGMgKmluZm8pOw0KPisJdm9pZCAoKnN0b3BfY29udikoc3RydWN0IGhpYnZ0X2xzYWRj
-ICppbmZvKTsgfTsNCj4rDQo+K3N0YXRpYyBpbnQgaGlidnRfbHNhZGNfcmVhZF9yYXcoc3RydWN0
-IGlpb19kZXYgKmluZGlvX2RldiwNCj4rCQkJCSAgICBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBjb25z
-dCAqY2hhbiwNCj4rCQkJCSAgICBpbnQgKnZhbCwgaW50ICp2YWwyLCBsb25nIG1hc2spIHsNCj4r
-CXN0cnVjdCBoaWJ2dF9sc2FkYyAqaW5mbyA9IGlpb19wcml2KGluZGlvX2Rldik7DQo+Kw0KPisJ
-c3dpdGNoIChtYXNrKSB7DQo+KwljYXNlIElJT19DSEFOX0lORk9fUkFXOg0KPisJCW11dGV4X2xv
-Y2soJmluZGlvX2Rldi0+bWxvY2spOw0KPisNCj4rCQlyZWluaXRfY29tcGxldGlvbigmaW5mby0+
-Y29tcGxldGlvbik7DQo+Kw0KPisJCS8qIFNlbGVjdCB0aGUgY2hhbm5lbCB0byBiZSB1c2VkICov
-DQo+KwkJaW5mby0+Y3VyX2NobiA9IGNoYW4tPmNoYW5uZWw7DQo+Kw0KPisJCWlmIChpbmZvLT5k
-YXRhLT5zdGFydF9jb252KQ0KPisJCQlpbmZvLT5kYXRhLT5zdGFydF9jb252KGluZm8pOw0KPisN
-Cj4rCQlpZiAoIXdhaXRfZm9yX2NvbXBsZXRpb25fdGltZW91dCgmaW5mby0+Y29tcGxldGlvbiwN
-Cj4rCQkJCQkJCUxTQURDX1RJTUVPVVQpKSB7DQo+KwkJCWlmIChpbmZvLT5kYXRhLT5zdG9wX2Nv
-bnYpDQo+KwkJCQlpbmZvLT5kYXRhLT5zdG9wX2NvbnYoaW5mbyk7DQo+KwkJCW11dGV4X3VubG9j
-aygmaW5kaW9fZGV2LT5tbG9jayk7DQo+KwkJCXJldHVybiAtRVRJTUVET1VUOw0KPisJCX0NCj4r
-DQo+KwkJKnZhbCA9IGluZm8tPnZhbHVlOw0KPisJCW11dGV4X3VubG9jaygmaW5kaW9fZGV2LT5t
-bG9jayk7DQo+KwkJcmV0dXJuIElJT19WQUxfSU5UOw0KPisJY2FzZSBJSU9fQ0hBTl9JTkZPX1ND
-QUxFOg0KPisJCSp2YWwgPSBnX3ZvbHRhZ2VbY2hhbi0+Y2hhbm5lbF07DQo+KwkJKnZhbDIgPSBp
-bmZvLT5kYXRhLT5udW1fYml0czsNCj4rCQlyZXR1cm4gSUlPX1ZBTF9GUkFDVElPTkFMX0xPRzI7
-DQo+KwlkZWZhdWx0Og0KPisJCXJldHVybiAtRUlOVkFMOw0KPisJfQ0KPit9DQo+Kw0KPitzdGF0
-aWMgaXJxcmV0dXJuX3QgaGlidnRfbHNhZGNfaXNyKGludCBpcnEsIHZvaWQgKmRldl9pZCkgew0K
-PisJc3RydWN0IGhpYnZ0X2xzYWRjICppbmZvID0gKHN0cnVjdCBoaWJ2dF9sc2FkYyAqKWRldl9p
-ZDsNCj4rCWludCBtYXNrOw0KPisNCj4rCW1hc2sgPSByZWFkbChpbmZvLT5yZWdzICsgTFNBRENf
-SU5UU1RBVFVTKTsNCj4rCW1hc2sgJj0gTFNBRENfQ0hOX01BU0s7DQo+Kw0KPisJLyogQ2xlYXIg
-aXJxICovDQo+KwlpZiAoaW5mby0+ZGF0YS0+Y2xlYXJfaXJxKQ0KPisJCWluZm8tPmRhdGEtPmNs
-ZWFyX2lycShpbmZvLCBtYXNrKTsNCj4rDQo+KwkvKiBSZWFkIHZhbHVlICovDQo+KwlpbmZvLT52
-YWx1ZSA9IHJlYWRsKGluZm8tPnJlZ3MgKyBMU0FEQ19DSE5EQVRBICsgKGluZm8tPmN1cl9jaG4g
-PDwNCj4yKSk7DQo+KwlpbmZvLT52YWx1ZSAmPSBHRU5NQVNLKGluZm8tPmRhdGEtPm51bV9iaXRz
-IC0gMSwgMCk7DQo+Kw0KPisJLyogc3RvcCBhZGMgKi8NCj4rCWlmIChpbmZvLT5kYXRhLT5zdG9w
-X2NvbnYpDQo+KwkJaW5mby0+ZGF0YS0+c3RvcF9jb252KGluZm8pOw0KPisNCj4rCWNvbXBsZXRl
-KCZpbmZvLT5jb21wbGV0aW9uKTsNCj4rDQo+KwlyZXR1cm4gSVJRX0hBTkRMRUQ7DQo+K30NCj4r
-DQo+K3N0YXRpYyBjb25zdCBzdHJ1Y3QgaWlvX2luZm8gaGlidnRfbHNhZGNfaWlvX2luZm8gPSB7
-DQo+KwkucmVhZF9yYXcgPSBoaWJ2dF9sc2FkY19yZWFkX3JhdywNCj4rCS5kcml2ZXJfbW9kdWxl
-ID0gVEhJU19NT0RVTEUsDQo+K307DQo+Kw0KPisjZGVmaW5lIEFEQ19DSEFOTkVMKF9pbmRleCwg
-X2lkKSB7ICAgICAgXA0KUHJlZml4IHRoaXMgZGVmaW5lLiANCj4rCS50eXBlID0gSUlPX1ZPTFRB
-R0UsICAgICAgICAgICAgICAgIFwNCj4rCS5pbmRleGVkID0gMSwJCQkJCQlcDQo+KwkuY2hhbm5l
-bCA9IF9pbmRleCwJCQkJCVwNCj4rCS5pbmZvX21hc2tfc2VwYXJhdGUgPSBCSVQoSUlPX0NIQU5f
-SU5GT19SQVcpIHwgIFwNCj4rCQkJQklUKElJT19DSEFOX0lORk9fU0NBTEUpLCAgIFwNCj4rCS5k
-YXRhc2hlZXRfbmFtZSA9IF9pZCwgICAgICAgICAgICAgIFwNCj4rfQ0KPisNCj4rc3RhdGljIGNv
-bnN0IHN0cnVjdCBpaW9fY2hhbl9zcGVjIGhpYnZ0X2xzYWRjX2lpb19jaGFubmVsc1tdID0gew0K
-PisJQURDX0NIQU5ORUwoMCwgImFkYzAiKSwNCj4rCUFEQ19DSEFOTkVMKDEsICJhZGMxIiksDQo+
-KwlBRENfQ0hBTk5FTCgyLCAiYWRjMiIpLA0KPit9Ow0KPisNCj4rc3RhdGljIHZvaWQgaGlidnRf
-bHNhZGNfY2xlYXJfaXJxKHN0cnVjdCBoaWJ2dF9sc2FkYyAqaW5mbywgaW50IG1hc2spIA0KPit7
-DQo+Kwl3cml0ZWwobWFzaywgaW5mby0+cmVncyArIExTQURDX0lOVENMUik7IH0NCj4rDQo+K3N0
-YXRpYyB2b2lkIGhpYnZ0X2xzYWRjX3N0YXJ0X2NvbnYoc3RydWN0IGhpYnZ0X2xzYWRjICppbmZv
-KSB7DQo+Kwl1bnNpZ25lZCBpbnQgY29uOw0KPisNCj4rCS8qIHNldCBudW1iZXIgYml0ICovDQo+
-Kwljb24gPSBHRU5NQVNLKGluZm8tPmRhdGEtPm51bV9iaXRzIC0gMSwgMCk7DQo+Kwl3cml0ZWwo
-Y29uLCAoaW5mby0+cmVncyArIExTQURDX0FDVEJJVCkpOw0KPisNCj4rICAgIC8qIGNvbmZpZyAq
-Lw0KPisJY29uID0gcmVhZGwoaW5mby0+cmVncyArIExTQURDX0NPTkZJRyk7DQo+Kwljb24gJj0g
-fkNPTkZJR19SRVNFVDsNCj4rCWNvbiB8PSAoQ09ORklHX1BPV0VSRE9XTiB8IENPTkZJR19ERUdM
-SVRDSCB8IENPTkZJR19NT0RFKTsNCj4rCWNvbiAmPSB+KENPTkZJR19DSEFfVkFMSUQgfCBDT05G
-SUdfQ0hCX1ZBTElEIHwgQ09ORklHX0NIQ19WQUxJRCk7DQo+Kwljb24gfD0gKENPTkZJR19DSEFf
-VkFMSUQgPDwgaW5mby0+Y3VyX2Nobik7DQo+Kwl3cml0ZWwoY29uLCAoaW5mby0+cmVncyArIExT
-QURDX0NPTkZJRykpOw0KPisNCj4rCS8qIHNldCB0aW1lc2NhbiAqLw0KPisJd3JpdGVsKERFRl9B
-RENfVFNDQU5fTVMsIChpbmZvLT5yZWdzICsgTFNBRENfVElNRVNDQU4pKTsNCj4rDQo+KwkvKiBj
-bGVhciBpbnRlcnJ1cHQgKi8NCj4rCXdyaXRlbChMU0FEQ19DSE5fTUFTSywgaW5mby0+cmVncyAr
-IExTQURDX0lOVENMUik7DQo+Kw0KPisJLyogZW5hYmxlIGludGVycnVwdCAqLw0KPisJd3JpdGVs
-KEFEQ19DT05fRU4sIChpbmZvLT5yZWdzICsgTFNBRENfSU5URU4pKTsNCj4rDQo+KwkvKiBzdGFy
-dCBzY2FuICovDQo+Kwl3cml0ZWwoQURDX0NPTl9FTiwgKGluZm8tPnJlZ3MgKyBMU0FEQ19TVEFS
-VCkpOyB9DQo+Kw0KPitzdGF0aWMgdm9pZCBoaWJ2dF9sc2FkY19zdG9wX2NvbnYoc3RydWN0IGhp
-YnZ0X2xzYWRjICppbmZvKSB7DQo+KwkvKiByZXNldCB0aGUgdGltZXNjYW4gKi8NCj4rCXdyaXRl
-bChBRENfQ09OX0RFTiwgKGluZm8tPnJlZ3MgKyBMU0FEQ19USU1FU0NBTikpOw0KPisNCj4rCS8q
-IGRpc2FibGUgaW50ZXJydXB0ICovDQo+Kwl3cml0ZWwoQURDX0NPTl9ERU4sIChpbmZvLT5yZWdz
-ICsgTFNBRENfSU5URU4pKTsNCj4rDQo+KwkvKiBzdG9wIHNjYW4gKi8NCj4rCXdyaXRlbChBRENf
-Q09OX0VOLCAoaW5mby0+cmVncyArIExTQURDX1NUT1ApKTsgfQ0KPisNCj4rc3RhdGljIGNvbnN0
-IHN0cnVjdCBoaWJ2dF9sc2FkY19kYXRhIGxzYWRjX2RhdGEgPSB7DQo+KwkubnVtX2JpdHMgPSBB
-RENfTlVNX0JJVFMsDQo+KwkuY2hhbm5lbHMgPSBoaWJ2dF9sc2FkY19paW9fY2hhbm5lbHMsDQo+
-KwkubnVtX2NoYW5uZWxzID0gQVJSQVlfU0laRShoaWJ2dF9sc2FkY19paW9fY2hhbm5lbHMpLA0K
-PisNCj4rCS5jbGVhcl9pcnEJPSBoaWJ2dF9sc2FkY19jbGVhcl9pcnEsDQo+Kwkuc3RhcnRfY29u
-dgk9IGhpYnZ0X2xzYWRjX3N0YXJ0X2NvbnYsDQo+Kwkuc3RvcF9jb252ID0gaGlidnRfbHNhZGNf
-c3RvcF9jb252LA0KPit9Ow0KVXN1YWwgY29udmVudGlvbiBpcyB0byBvbmx5IGludHJvZHVjZSBh
-IGRldmljZSB0eXBlIHNwZWNpZmljIHN0cnVjdHVyZSB3aGVuIG1vcmUgdGhhbiBvbmUgZGV2aWNl
-IGlzIHN1cHBvcnRlZC4gIElmIHlvdSBhcmUgZ29pbmcgdG8gZm9sbG93IHVwICBzaG9ydGx5IHdp
-dGggbW9yZSBkZXZpY2Ugc3VwcG9ydCB0aGVuIGxlYXZlIGl0IGJ1dCBhZGQgYSBub3RlIHRvIHRo
-ZSBwYXRjaCBkZXNjcmlwdGlvbi4gSWYgbm90IHBsZWFzZSBkcm9wIHRoaXMgYWJzdHJhY3Rpb24u
-DQo+Kw0KPitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBoaWJ2dF9sc2FkY19tYXRj
-aFtdID0gew0KPisJew0KPisJCS5jb21wYXRpYmxlID0gImhpc2lsaWNvbixoaWJ2dC1sc2FkYyIs
-DQo+KwkJLmRhdGEgPSAmbHNhZGNfZGF0YSwNCj4rCX0sDQo+Kwl7fSwNCj4rfTsNCj4rTU9EVUxF
-X0RFVklDRV9UQUJMRShvZiwgaGlidnRfbHNhZGNfbWF0Y2gpOw0KPisNCj4rLyoqDQo+KyAqIFJl
-c2V0IExTQURDIENvbnRyb2xsZXIuDQpTaW5nbGUgbGluZSBjb21tZW50IHN5bnRheCBwbGVhc2Uu
-DQo+KyAqLw0KPitzdGF0aWMgdm9pZCBoaWJ2dF9sc2FkY19yZXNldF9jb250cm9sbGVyKHN0cnVj
-dCByZXNldF9jb250cm9sICpyZXNldCkgDQo+K3sNCj4rCXJlc2V0X2NvbnRyb2xfYXNzZXJ0KHJl
-c2V0KTsNCj4rCXVzbGVlcF9yYW5nZSgxMCwgMjApOw0KPisJcmVzZXRfY29udHJvbF9kZWFzc2Vy
-dChyZXNldCk7DQo+K30NCj4rDQo+K3N0YXRpYyBpbnQgaGlidnRfbHNhZGNfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikgew0KPisJc3RydWN0IGhpYnZ0X2xzYWRjICppbmZvID0g
-TlVMTDsNCj4rCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4r
-CXN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYgPSBOVUxMOw0KPisJc3RydWN0IHJlc291cmNlCSpt
-ZW07DQo+Kwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaDsNCj4rCWludCByZXQ7DQo+
-KwlpbnQgaXJxOw0KPisNCj4rCWlmICghbnApDQo+KwkJcmV0dXJuIC1FTk9ERVY7DQo+Kw0KPisJ
-aW5kaW9fZGV2ID0gZGV2bV9paW9fZGV2aWNlX2FsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqaW5m
-bykpOw0KPisJaWYgKCFpbmRpb19kZXYpIHsNCj4rCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWls
-ZWQgYWxsb2NhdGluZyBpaW8gZGV2aWNlXG4iKTsNCj4rCQlyZXR1cm4gLUVOT01FTTsNCj4rCX0N
-Cj4rCWluZm8gPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPisNCj4rCW1hdGNoID0gb2ZfbWF0Y2hf
-ZGV2aWNlKGhpYnZ0X2xzYWRjX21hdGNoLCAmcGRldi0+ZGV2KTsNCj4rCWluZm8tPmRhdGEgPSBt
-YXRjaC0+ZGF0YTsNCj4rDQo+KwltZW0gPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9S
-RVNPVVJDRV9NRU0sIDApOw0KPisJaW5mby0+cmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgm
-cGRldi0+ZGV2LCBtZW0pOw0KPisJaWYgKElTX0VSUihpbmZvLT5yZWdzKSkNCj4rCQlyZXR1cm4g
-UFRSX0VSUihpbmZvLT5yZWdzKTsNCj4rDQo+KwkvKg0KPisJICogVGhlIHJlc2V0IHNob3VsZCBi
-ZSBhbiBvcHRpb25hbCBwcm9wZXJ0eSwgYXMgaXQgc2hvdWxkIHdvcmsNCj4rCSAqIHdpdGggb2xk
-IGRldmljZXRyZWVzIGFzIHdlbGwNCj4rCSAqLw0KPisJaW5mby0+cmVzZXQgPSBkZXZtX3Jlc2V0
-X2NvbnRyb2xfZ2V0KCZwZGV2LT5kZXYsICJsc2FkYy1jcmciKTsNCj4rCWlmIChJU19FUlIoaW5m
-by0+cmVzZXQpKSB7DQo+KwkJcmV0ID0gUFRSX0VSUihpbmZvLT5yZXNldCk7DQo+KwkJaWYgKHJl
-dCAhPSAtRU5PRU5UKQ0KPisJCQlyZXR1cm4gcmV0Ow0KPisNCj4rCQlkZXZfZGJnKCZwZGV2LT5k
-ZXYsICJubyByZXNldCBjb250cm9sIGZvdW5kXG4iKTsNCj4rCQlpbmZvLT5yZXNldCA9IE5VTEw7
-DQo+Kwl9DQo+Kw0KPisJaW5pdF9jb21wbGV0aW9uKCZpbmZvLT5jb21wbGV0aW9uKTsNCj4rDQo+
-KwlpcnEgPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPisJaWYgKGlycSA8IDApIHsNCj4r
-CQlkZXZfZXJyKCZwZGV2LT5kZXYsICJubyBpcnEgcmVzb3VyY2U/XG4iKTsNCj4rCQlyZXR1cm4g
-aXJxOw0KPisJfQ0KPisNCj4rCXJldCA9IGRldm1fcmVxdWVzdF9pcnEoJnBkZXYtPmRldiwgaXJx
-LCBoaWJ2dF9sc2FkY19pc3IsDQo+KwkJCSAgICAgICAwLCBkZXZfbmFtZSgmcGRldi0+ZGV2KSwg
-aW5mbyk7DQo+KwlpZiAocmV0IDwgMCkgew0KPisJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxl
-ZCByZXF1ZXN0aW5nIGlycSAlZFxuIiwgaXJxKTsNCj4rCQlyZXR1cm4gcmV0Ow0KPisJfQ0KPisN
-Cj4rCWlmIChpbmZvLT5yZXNldCkNCj4rCQloaWJ2dF9sc2FkY19yZXNldF9jb250cm9sbGVyKGlu
-Zm8tPnJlc2V0KTsNCj4rDQo+KwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBpbmRpb19kZXYp
-Ow0KPisNCj4rCWluZGlvX2Rldi0+bmFtZSA9IGRldl9uYW1lKCZwZGV2LT5kZXYpOw0KPisJaW5k
-aW9fZGV2LT5kZXYucGFyZW50ID0gJnBkZXYtPmRldjsNCj4rCWluZGlvX2Rldi0+ZGV2Lm9mX25v
-ZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4rCWluZGlvX2Rldi0+aW5mbyA9ICZoaWJ2dF9sc2Fk
-Y19paW9faW5mbzsNCj4rCWluZGlvX2Rldi0+bW9kZXMgPSBJTkRJT19ESVJFQ1RfTU9ERTsNCj4r
-DQo+KwlpbmRpb19kZXYtPmNoYW5uZWxzID0gaW5mby0+ZGF0YS0+Y2hhbm5lbHM7DQo+KwlpbmRp
-b19kZXYtPm51bV9jaGFubmVscyA9IGluZm8tPmRhdGEtPm51bV9jaGFubmVsczsNCj4rDQo+Kwly
-ZXQgPSBpaW9fZGV2aWNlX3JlZ2lzdGVyKGluZGlvX2Rldik7DQo+KwlpZiAocmV0IDwgMCkgew0K
-PisJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCByZWdpc3RlciBpaW8gZGV2aWNlXG4iKTsN
-Cj4rCQlyZXR1cm4gcmV0Ow0KPisJfQ0KPisNCj4rCXJldHVybiAwOw0KPit9DQo+Kw0KPitzdGF0
-aWMgaW50IGhpYnZ0X2xzYWRjX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7
-DQo+KwlzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRl
-dik7DQo+Kw0KPisJaWlvX2RldmljZV91bnJlZ2lzdGVyKGluZGlvX2Rldik7DQpBcyBub3RoaW5n
-IGVsc2UgaGVyZSBjYW4gdXNlIGRldm0gdmVyc2lvbiBvZiByZWdpc3RlciBhbmQgZHJvcCByZW1v
-dmUgZW50aXJlbHkuDQo+Kw0KPisJcmV0dXJuIDA7DQo+K30NCj4rDQo+K3N0YXRpYyBzdHJ1Y3Qg
-cGxhdGZvcm1fZHJpdmVyIGhpYnZ0X2xzYWRjX2RyaXZlciA9IHsNCj4rCS5wcm9iZQkJPSBoaWJ2
-dF9sc2FkY19wcm9iZSwNCj4rCS5yZW1vdmUJCT0gaGlidnRfbHNhZGNfcmVtb3ZlLA0KPisJLmRy
-aXZlcgkJPSB7DQo+KwkJLm5hbWUJPSAiaGlidnQtbHNhZGMiLA0KPisJCS5vZl9tYXRjaF90YWJs
-ZSA9IGhpYnZ0X2xzYWRjX21hdGNoLA0KPisJfSwNCj4rfTsNCj4rDQo+K21vZHVsZV9wbGF0Zm9y
-bV9kcml2ZXIoaGlidnRfbHNhZGNfZHJpdmVyKTsNCj4rDQo+K01PRFVMRV9BVVRIT1IoIkFsbGVu
-IExpdSA8bGl1cmVuemhvbmdAaGlzaWxpY29uLmNvbT4iKTsgDQo+K01PRFVMRV9ERVNDUklQVElP
-TigiaGlzaWxpY29uIEJWVCBMU0FEQyBkcml2ZXIiKTsgTU9EVUxFX0xJQ0VOU0UoIkdQTCANCj4r
-djIiKTsNCg0KLS0NClNlbnQgZnJvbSBteSBBbmRyb2lkIGRldmljZSB3aXRoIEstOSBNYWlsLiBQ
-bGVhc2UgZXhjdXNlIG15IGJyZXZpdHkuDQo=
+
+Hello Jaehoon,
+
+Às 5:20 AM de 12/26/2016, Jaehoon Chung escreveu:
+> Exynos5433 supports the PCIe.
+> This patch adds new pci-exynos5433.c file for Exynos ARM64.
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/pci/host/Kconfig          |   9 +
+>  drivers/pci/host/Makefile         |   1 +
+>  drivers/pci/host/pci-exynos5433.c | 338 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 348 insertions(+)
+>  create mode 100644 drivers/pci/host/pci-exynos5433.c
+> 
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index d7e7c0a..3d77d0b 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -60,6 +60,15 @@ config PCI_EXYNOS
+>  	select PCIEPORTBUS
+>  	select PCIE_DW
+>  
+> +config PCI_EXYNOS5433
+> +	bool "Samsung Exynos5433 PCIe controller"
+> +	depends on ARCH_EXYNOS && ARM64
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIEPORTBUS
+> +	select PCIE_DW
+> +	help
+> +	  If you want support for Exynos5433 PCIe host controller, say Y.
+> +
+>  config PCI_IMX6
+>  	bool "Freescale i.MX6 PCIe controller"
+>  	depends on SOC_IMX6Q
+> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+> index 084cb49..2168de2 100644
+> --- a/drivers/pci/host/Makefile
+> +++ b/drivers/pci/host/Makefile
+> @@ -2,6 +2,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>  obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+> +obj-$(CONFIG_PCI_EXYNOS5433) += pci-exynos5433.o
+>  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+> diff --git a/drivers/pci/host/pci-exynos5433.c b/drivers/pci/host/pci-exynos5433.c
+> new file mode 100644
+> index 0000000..ff254ca
+> --- /dev/null
+> +++ b/drivers/pci/host/pci-exynos5433.c
+> @@ -0,0 +1,338 @@
+> +/*
+> + * PCIe host controller driver for Samsung EXYNOS5433 SoCs
+> + *
+> + * Copyright (C) 2016 Samsung Electronics Co., Ltd.
+> + *		https://urldefense.proofpoint.com/v2/url?u=http-3A__www.samsung.com&d=DgIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=fUwnZks1U2AwaOxMkLdSnE700sfQXpB3WAg_EJw7NaE&s=IwRYD8maTuXG57Q0qlAmFNh3_TSfUTE27xq8p13FFKI&e= 
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/gpio.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/resource.h>
+> +#include <linux/signal.h>
+> +#include <linux/types.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/phy/phy.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define to_exynos_pcie(x)	container_of(x, struct exynos_pcie, pp)
+> +
+> +/* Pcie structure for Exynos specific data */
+> +struct exynos_pcie {
+> +	void __iomem		*elbi_base;
+> +	struct clk		*clk;
+> +	struct clk		*bus_clk;
+> +	struct pcie_port	pp;
+> +	struct phy		*phy;
+> +};
+> +
+> +/* PCIe ELBI registers */
+> +#define PCIE_IRQ_PULSE			0x000
+> +#define IRQ_INTA_ASSERT			BIT(0)
+> +#define IRQ_INTB_ASSERT			BIT(2)
+> +#define IRQ_INTC_ASSERT			BIT(4)
+> +#define IRQ_INTD_ASSERT			BIT(6)
+> +#define IRQ_INTX_ASSERT	(IRQ_INTA_ASSERT | IRQ_INTB_ASSERT | \
+> +			IRQ_INTC_ASSERT | IRQ_INTD_ASSERT)
+> +#define PCIE_IRQ_EN_PULSE		0x00c
+> +#define PCIE_IRQ_EN_LEVEL		0x010
+> +#define PCIE_SW_WAKE			0x018
+> +#define PCIE_BUS_EN			BIT(1)
+> +#define PCIE_APP_LTSSM_ENABLE		0x02c
+> +#define PCIE_ELBI_LTSSM_ENABLE		0x1
+> +#define PCIE_ELBI_DEBUG_L		0x074
+> +#define PCIE_ELBI_XMLH_LINK_UP		BIT(4)
+> +#define PCIE_ELBI_SLV_AWMISC		0x11c
+> +#define PCIE_ELBI_SLV_ARMISC		0x120
+> +#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
+> +
+> +/* DBI register */
+> +#define PCIE_MISC_CONTROL_1_OFF		0x8BC
+> +#define DBI_RO_WR_EN			BIT(0)
+> +
+> +static inline void exynos_pcie_writel(void __iomem *base, u32 val, u32 offset)
+> +{
+> +	writel(val, base + offset);
+> +}
+> +
+> +static inline u32 exynos_pcie_readl(void __iomem *base, u32 offset)
+> +{
+> +	return readl(base + offset);
+> +}
+> +
+> +static void exynos_pcie_clear_irq_pulse(struct exynos_pcie *ep)
+> +{
+> +	u32 val;
+> +
+> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_IRQ_PULSE);
+> +	val &= ~IRQ_INTX_ASSERT;
+> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_IRQ_PULSE);
+> +}
+> +
+> +static void exynos_pcie_enable_irq_pulse(struct exynos_pcie *ep)
+> +{
+> +	exynos_pcie_writel(ep->elbi_base, IRQ_INTX_ASSERT, PCIE_IRQ_EN_PULSE);
+> +
+> +	/* Clear PCIE_IRQ_EN_LEVEL register */
+> +	exynos_pcie_writel(ep->elbi_base, 0, PCIE_IRQ_EN_LEVEL);
+> +}
+> +
+> +static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
+> +{
+> +	struct pcie_port *pp = arg;
+> +	struct exynos_pcie *ep = to_exynos_pcie(pp);
+> +
+> +	exynos_pcie_clear_irq_pulse(ep);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void exynos_pcie_sideband_dbi_w_mode(struct exynos_pcie *ep, bool on)
+> +{
+> +	u32 val;
+> +
+> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_AWMISC);
+> +	if (on)
+> +		val |= PCIE_ELBI_SLV_DBI_ENABLE;
+> +	else
+> +		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_AWMISC);
+> +}
+> +
+> +static void exynos_pcie_sideband_dbi_r_mode(struct exynos_pcie *ep, bool on)
+> +{
+> +	u32 val;
+> +
+> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_ARMISC);
+> +	if (on)
+> +		val |= PCIE_ELBI_SLV_DBI_ENABLE;
+> +	else
+> +		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_ARMISC);
+> +}
+> +
+> +static int exynos_pcie_establish_link(struct exynos_pcie *ep)
+> +{
+> +	struct pcie_port *pp = &ep->pp;
+> +	u32 val;
+> +
+> +	if (dw_pcie_link_up(pp)) {
+> +		dev_info(pp->dev, "Link already up\n");
+> +		return 0;
+> +	}
+> +
+> +	phy_power_on(ep->phy);
+> +
+> +	/* Exynos Pcie assert PHY reset  and init */
+> +	phy_init(ep->phy);
+> +
+> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_SW_WAKE);
+> +	val &= ~PCIE_BUS_EN;
+> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_SW_WAKE);
+> +
+> +	/*
+> +	 * Enable DBI_RO_WR_EN bit.
+> +	 * - When set to 1, some RO and HWinit bits are wriatble from
+> +	 *   the local application through the DBI.
+> +	 */
+> +	dw_pcie_writel_rc(pp, PCIE_MISC_CONTROL_1_OFF, DBI_RO_WR_EN);
+> +
+> +	/* Setup root complex */
+> +	dw_pcie_setup_rc(pp);
+> +
+> +	/* assert LTSSM enable */
+> +	exynos_pcie_writel(ep->elbi_base, PCIE_ELBI_LTSSM_ENABLE,
+> +			PCIE_APP_LTSSM_ENABLE);
+> +
+> +	return dw_pcie_wait_for_link(pp);
+> +}
+> +
+> +
+> +static int exynos_pcie_link_up(struct pcie_port *pp)
+> +{
+> +	struct exynos_pcie *ep = to_exynos_pcie(pp);
+> +	u32 val;
+> +
+> +	/* Check the Receive Transaction Layer Handler */
+> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_DEBUG_L);
+> +
+> +	return (val & PCIE_ELBI_XMLH_LINK_UP);
+> +}
+> +
+> +static void exynos_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	struct exynos_pcie *ep = to_exynos_pcie(pp);
+> +
+> +	exynos_pcie_enable_irq_pulse(ep);
+> +	exynos_pcie_establish_link(ep);
+> +}
+
+Your *_host_init callback should return to pci-designware its error/success
+status. There is a recent patch that added this capability to all vendor
+specific drivers that use pcie-designware. Please check it out and follow the
+same approach:
+https://patchwork.kernel.org/patch/9464223/
+
+Thanks,
+Joao
+
+> +
+> +static u32 exynos_pcie_readl_rc(struct pcie_port *pp, u32 reg)
+> +{
+> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+> +	u32 val;
+> +
+> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, true);
+> +	val = readl(pp->dbi_base + reg);
+> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, false);
+> +	return val;
+> +}
+> +
+> +static void exynos_pcie_writel_rc(struct pcie_port *pp, u32 reg, u32 val)
+> +{
+> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+> +
+> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, true);
+> +	writel(val, pp->dbi_base + reg);
+> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, false);
+> +}
+> +
+> +static int exynos_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+> +				u32 *val)
+> +{
+> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+> +	int ret;
+> +
+> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, true);
+> +	ret = dw_pcie_cfg_read(pp->dbi_base + where, size, val);
+> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, false);
+> +	return ret;
+> +}
+> +
+> +static int exynos_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
+> +				u32 val)
+> +{
+> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+> +	int ret;
+> +
+> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, true);
+> +	ret = dw_pcie_cfg_write(pp->dbi_base + where, size, val);
+> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, false);
+> +	return ret;
+> +}
+> +
+> +static struct pcie_host_ops exynos_pcie_host_ops = {
+> +	.readl_rc = exynos_pcie_readl_rc,
+> +	.writel_rc = exynos_pcie_writel_rc,
+> +	.rd_own_conf = exynos_pcie_rd_own_conf,
+> +	.wr_own_conf = exynos_pcie_wr_own_conf,
+> +	.host_init = exynos_pcie_host_init,
+> +	.link_up = exynos_pcie_link_up,
+> +};
+> +
+> +static int __init exynos_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct exynos_pcie *exynos_pcie;
+> +	struct pcie_port *pp;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	exynos_pcie = devm_kzalloc(&pdev->dev, sizeof(*exynos_pcie),
+> +			GFP_KERNEL);
+> +	if (!exynos_pcie)
+> +		return -ENOMEM;
+> +
+> +	pp = &exynos_pcie->pp;
+> +	pp->dev = &pdev->dev;
+> +
+> +	exynos_pcie->clk = devm_clk_get(&pdev->dev, "pcie");
+> +	if (IS_ERR(exynos_pcie->clk)) {
+> +		dev_err(&pdev->dev, "Failed to get pcie rc clock\n");
+> +		return PTR_ERR(exynos_pcie->clk);
+> +	}
+> +	ret = clk_prepare_enable(exynos_pcie->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	exynos_pcie->bus_clk = devm_clk_get(&pdev->dev, "pcie_bus");
+> +	if (IS_ERR(exynos_pcie->bus_clk)) {
+> +		dev_err(&pdev->dev, "Failed to get pcie bus clock\n");
+> +		ret = PTR_ERR(exynos_pcie->bus_clk);
+> +		goto fail_clk;
+> +	}
+> +	ret = clk_prepare_enable(exynos_pcie->bus_clk);
+> +	if (ret)
+> +		goto fail_clk;
+> +
+> +	/* External Local Bus interface(ELBI) Register */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> +	exynos_pcie->elbi_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(exynos_pcie->elbi_base)) {
+> +		ret = PTR_ERR(exynos_pcie->elbi_base);
+> +		goto fail_bus_clk;
+> +	}
+> +
+> +	/* Data Bus Interface(DBI) Register */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	pp->dbi_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pp->dbi_base)) {
+> +		ret = PTR_ERR(pp->dbi_base);
+> +		goto fail_bus_clk;
+> +	}
+> +
+> +	exynos_pcie->phy = devm_phy_get(&pdev->dev, "pcie-phy");
+> +	if (IS_ERR(exynos_pcie->phy)) {
+> +		if (PTR_ERR(exynos_pcie->phy) != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Can't find the pcie-phy\n");
+> +		return PTR_ERR(exynos_pcie->phy);
+> +	}
+> +
+> +	pp->irq = platform_get_irq_byname(pdev, "intr");
+> +	if (!pp->irq) {
+> +		dev_err(&pdev->dev, "failed to get irq\n");
+> +		ret = -ENODEV;
+> +		goto fail_bus_clk;
+> +	}
+> +	ret = devm_request_irq(&pdev->dev, pp->irq, exynos_pcie_irq_handler,
+> +				IRQF_SHARED, "exynos-pcie", exynos_pcie);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to request irq\n");
+> +		goto fail_bus_clk;
+> +	}
+> +
+> +	pp->root_bus_nr = -1;
+> +	pp->ops = &exynos_pcie_host_ops;
+> +
+> +	ret = dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to initialize host\n");
+> +		goto fail_bus_clk;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, exynos_pcie);
+> +
+> +	return 0;
+> +
+> +fail_bus_clk:
+> +	clk_disable_unprepare(exynos_pcie->bus_clk);
+> +fail_clk:
+> +	clk_disable_unprepare(exynos_pcie->clk);
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id exynos_pcie_of_match[] = {
+> +	{ .compatible = "samsung,exynos5433-pcie", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_pcie_of_match);
+> +
+> +static struct platform_driver exynos_pcie_driver = {
+> +	.probe		= exynos_pcie_probe,
+> +	.driver		= {
+> +		.name		= "exynos5433-pcie",
+> +		.of_match_table = exynos_pcie_of_match,
+> +	},
+> +};
+> +builtin_platform_driver(exynos_pcie_driver);
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
