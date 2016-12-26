@@ -1,53 +1,35 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [RFC PATCH 2/6] Documetation: samsung-phy: add the exynos-pcie-phy
- binding
-Date: Mon, 26 Dec 2016 14:20:25 +0900
-Message-ID: <20161226052029.10552-3-jh80.chung@samsung.com>
-References: <20161226052029.10552-1-jh80.chung@samsung.com>
- <CGME20161226052030epcas1p40f87c865223a9ad8cd0cd1d6e4d54b32@epcas1p4.samsung.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <20161226052029.10552-1-jh80.chung@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, kishon@ti.com, will.deacon@arm.com, catalin.marinas@arm.com, cpgs@samsung.com, Jaehoon Chung <jh80.chung@samsung.com>
+From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Subject: [PATCH 0/3] power: bq27xxx: add support for NVRAM R/W access
+Date: Sun, 25 Dec 2016 21:44:39 -0800
+Message-ID: <20161226054442.23599-1-matt@ranostay.consulting>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds the exynos-pcie-phy binding for Exynos PCIe PHY.
-This is for using generic PHY framework.
+Enable access to the NVRAM for the bq27425 chipset which allows to
+update the battery metrics that are used in the state machine.
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- .../devicetree/bindings/phy/samsung-phy.txt         | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+This allows adjustments of a termination voltage, design energy, and
+design voltage.
 
-diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-index 9872ba8..eb1085e 100644
---- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-@@ -191,3 +191,24 @@ Example:
- 		usbdrdphy0 = &usb3_phy0;
- 		usbdrdphy1 = &usb3_phy1;
- 	};
-+
-+Samsung Exynos SoC series PCIe PHY controller
-+--------------------------------------------------
-+Required properties:
-+- compatible : Should be set to "samsung,exynos5433-pcie-phy"
-+- #phy-cells : must be zero
-+- reg : a list of registers usd by phy driver
-+
-+Optional properites:
-+-samsung,pmureg-phandle	- handle to syscon used to control PMU registers
-+-samsung,fsys-sysreg	- handle to syscon used to control the system registers
-+
-+Example:
-+	pcie_phy: pcie-phy@15680000 {
-+		#phy-cells = <0>;
-+		compatible = "samsung,exynos5433-pcie-phy";
-+		reg = <0x15680000 0x1000>;
-+		samsung,pmureg-phandle = <&pmu_system_controller>;
-+		samsung,fsys-sysreg = <&syscon_fsys>;
-+		status = "okay";
-+	};
+Matt Ranostay (3):
+  bq27xxx_battery: add BQ27425 chip id
+  devicetree: bq27425: add documentation for bq27425 fuel gauge
+  power: bq27xxx: add support for NVRAM R/W access
+
+ .../devicetree/bindings/power/bq27425.txt          |  25 ++
+ drivers/power/supply/bq27xxx_battery.c             |  24 +-
+ drivers/power/supply/bq27xxx_battery_i2c.c         | 336 ++++++++++++++++++++-
+ include/linux/power/bq27xxx_battery.h              |   7 +-
+ 4 files changed, 388 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/bq27425.txt
+
 -- 
-2.10.2
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
