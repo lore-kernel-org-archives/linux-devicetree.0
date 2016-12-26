@@ -1,111 +1,250 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: [PATCH 1/3] bq27xxx_battery: add BQ27425 chip id
-Date: Sun, 25 Dec 2016 21:44:40 -0800
-Message-ID: <20161226054442.23599-2-matt@ranostay.consulting>
-References: <20161226054442.23599-1-matt@ranostay.consulting>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161226054442.23599-1-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+From: Chen Feng <puck.chen@hisilicon.com>
+Subject: [RESEND 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
+Date: Mon, 26 Dec 2016 17:36:12 +0800
+Message-ID: <1482744972-56622-2-git-send-email-puck.chen@hisilicon.com>
+References: <1482744972-56622-1-git-send-email-puck.chen@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482744972-56622-1-git-send-email-puck.chen@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: puck.chen@hisilicon.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: suzhuangluan@hisilicon.com, xuyiping@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Add initial dtsi file to support Hisilicon Hi3660 SoC with
+support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
+
+Also add dts file to support HiKey960 development board which
+based on Hi3660 SoC.
+The output console is earlycon "earlycon=pl011,0xfdf05000".
+And the con_init uart5 with a fixed clock, which already
+configured at bootloader.
+
+When clock is available, the uart5 will be modified.
+
+Tested on HiKey960 Board.
+
+Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
 ---
- drivers/power/supply/bq27xxx_battery.c     | 24 ++++++++++++++++++++++--
- drivers/power/supply/bq27xxx_battery_i2c.c |  2 +-
- include/linux/power/bq27xxx_battery.h      |  3 ++-
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  34 +++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 156 ++++++++++++++++++++++
+ 3 files changed, 191 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 08c36b8e04bd..721cf6f67874 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -259,6 +259,25 @@ static u8 bq27xxx_regs[][BQ27XXX_REG_MAX] = {
- 		[BQ27XXX_REG_DCAP] = 0x3c,
- 		[BQ27XXX_REG_AP] = 0x18,
- 	},
-+	[BQ27425] = {
-+		[BQ27XXX_REG_CTRL] = 0x00,
-+		[BQ27XXX_REG_TEMP] = 0x02,
-+		[BQ27XXX_REG_INT_TEMP] = 0x1e,
-+		[BQ27XXX_REG_VOLT] = 0x04,
-+		[BQ27XXX_REG_AI] = 0x10,
-+		[BQ27XXX_REG_FLAGS] = 0x06,
-+		[BQ27XXX_REG_TTE] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTF] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_NAC] = 0x08,
-+		[BQ27XXX_REG_FCC] = 0x0e,
-+		[BQ27XXX_REG_CYCT] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_AE] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_SOC] = 0x1c,
-+		[BQ27XXX_REG_DCAP] = 0x3c,
-+		[BQ27XXX_REG_AP] = 0x18,
-+	},
- };
+diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+index d5f43a0..b633b5d 100644
+--- a/arch/arm64/boot/dts/hisilicon/Makefile
++++ b/arch/arm64/boot/dts/hisilicon/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
++dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
  
- static enum power_supply_property bq27000_battery_props[] = {
-@@ -427,6 +446,7 @@ static struct {
- 	BQ27XXX_PROP(BQ27541, bq27541_battery_props),
- 	BQ27XXX_PROP(BQ27545, bq27545_battery_props),
- 	BQ27XXX_PROP(BQ27421, bq27421_battery_props),
-+	BQ27XXX_PROP(BQ27425, bq27421_battery_props),
- };
- 
- static DEFINE_MUTEX(bq27xxx_list_lock);
-@@ -677,7 +697,7 @@ static bool bq27xxx_battery_overtemp(struct bq27xxx_device_info *di, u16 flags)
- 	if (di->chip == BQ27500 || di->chip == BQ27510 ||
- 	    di->chip == BQ27541 || di->chip == BQ27545)
- 		return flags & (BQ27XXX_FLAG_OTC | BQ27XXX_FLAG_OTD);
--	if (di->chip == BQ27530 || di->chip == BQ27421)
-+	if (di->chip == BQ27530 || di->chip == BQ27421 || di->chip == BQ27425)
- 		return flags & BQ27XXX_FLAG_OT;
- 
- 	return false;
-@@ -688,7 +708,7 @@ static bool bq27xxx_battery_overtemp(struct bq27xxx_device_info *di, u16 flags)
-  */
- static bool bq27xxx_battery_undertemp(struct bq27xxx_device_info *di, u16 flags)
- {
--	if (di->chip == BQ27530 || di->chip == BQ27421)
-+	if (di->chip == BQ27530 || di->chip == BQ27421 || di->chip == BQ27425)
- 		return flags & BQ27XXX_FLAG_UT;
- 
- 	return false;
-diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
-index 5c5c3a6f9923..27143230839a 100644
---- a/drivers/power/supply/bq27xxx_battery_i2c.c
-+++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-@@ -159,9 +159,9 @@ static const struct i2c_device_id bq27xxx_i2c_id_table[] = {
- 	{ "bq27742", BQ27541 },
- 	{ "bq27545", BQ27545 },
- 	{ "bq27421", BQ27421 },
--	{ "bq27425", BQ27421 },
- 	{ "bq27441", BQ27421 },
- 	{ "bq27621", BQ27421 },
-+	{ "bq27425", BQ27425 },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
-diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
-index bed9557b69e7..14ecac158150 100644
---- a/include/linux/power/bq27xxx_battery.h
-+++ b/include/linux/power/bq27xxx_battery.h
-@@ -9,7 +9,8 @@ enum bq27xxx_chip {
- 	BQ27530, /* bq27530, bq27531 */
- 	BQ27541, /* bq27541, bq27542, bq27546, bq27742 */
- 	BQ27545, /* bq27545 */
--	BQ27421, /* bq27421, bq27425, bq27441, bq27621 */
-+	BQ27421, /* bq27421, bq27441, bq27621 */
-+	BQ27425, /* bq27425 */
- };
- 
- /**
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+new file mode 100644
+index 0000000..3d7aead
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -0,0 +1,34 @@
++/*
++ * dts file for Hisilicon HiKey960 Development Board
++ *
++ * Copyright (C) 2016, Hisilicon Ltd.
++ *
++ */
++
++/dts-v1/;
++
++#include "hi3660.dtsi"
++
++/ {
++	model = "HiKey960";
++	compatible = "hisilicon,hi3660";
++
++	aliases {
++		serial5 = &uart5;       /* console UART */
++	};
++
++	chosen {
++		stdout-path = "serial5:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x00400000 0x0 0xBFE00000>;
++	};
++
++	soc {
++		uart5: uart@fdf05000 {
++			status = "ok";
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+new file mode 100644
+index 0000000..7f9805c
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -0,0 +1,156 @@
++/*
++ * dts file for Hisilicon Hi3660 SoC
++ *
++ * Copyright (C) 2016, Hisilicon Ltd.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "hisilicon,hi3660";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++				core1 {
++					cpu = <&cpu1>;
++				};
++				core2 {
++					cpu = <&cpu2>;
++				};
++				core3 {
++					cpu = <&cpu3>;
++				};
++			};
++			cluster1 {
++				core0 {
++					cpu = <&cpu4>;
++				};
++				core1 {
++					cpu = <&cpu5>;
++				};
++				core2 {
++					cpu = <&cpu6>;
++				};
++				core3 {
++					cpu = <&cpu7>;
++				};
++			};
++		};
++
++		cpu0: cpu@0 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++		};
++
++		cpu1: cpu@1 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x1>;
++			enable-method = "psci";
++		};
++
++		cpu2: cpu@2 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x2>;
++			enable-method = "psci";
++		};
++
++		cpu3: cpu@3 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x3>;
++			enable-method = "psci";
++		};
++
++		cpu4: cpu@100 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++		};
++
++		cpu5: cpu@101 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x101>;
++			enable-method = "psci";
++		};
++
++		cpu6: cpu@102 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x102>;
++			enable-method = "psci";
++		};
++
++		cpu7: cpu@103 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x103>;
++			enable-method = "psci";
++		};
++	};
++
++	gic: interrupt-controller@e82b0000 {
++		compatible = "arm,gic-400";
++		reg = <0x0 0xe82b1000 0 0x1000>, /* GICD */
++		      <0x0 0xe82b2000 0 0x2000>, /* GICC */
++		      <0x0 0xe82b4000 0 0x2000>, /* GICH */
++		      <0x0 0xe82b6000 0 0x2000>; /* GICV */
++		#address-cells = <0>;
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <1920000>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		fixed_uart5: fixed_19_2M {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <19200000>;
++			clock-output-names = "fixed:uart5";
++		};
++
++		uart5: uart@fdf05000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf05000 0x0 0x1000>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&fixed_uart5 &fixed_uart5>;
++			clock-names = "uartclk", "apb_pclk";
++			status = "ok";
++		};
++	};
++};
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
