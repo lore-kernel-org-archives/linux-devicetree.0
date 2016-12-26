@@ -1,36 +1,147 @@
-From: Chen Feng <puck.chen@hisilicon.com>
-Subject: [RESEND 1/2] document: dt: add binding for Hi3660 SoC
-Date: Mon, 26 Dec 2016 17:36:11 +0800
-Message-ID: <1482744972-56622-1-git-send-email-puck.chen@hisilicon.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFC PATCH v2 3/4] hwmon: adc128d818: Trivial code style fixup
+Date: Mon, 26 Dec 2016 02:47:08 -0800
+Message-ID: <650d2371-57da-2494-7628-5a8bc5b756bf@roeck-us.net>
+References: <20161223221205.8825-1-mail@alexanderkoch.net>
+ <20161223221205.8825-4-mail@alexanderkoch.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: puck.chen@hisilicon.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: suzhuangluan@hisilicon.com, xuyiping@hisilicon.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20161223221205.8825-4-mail@alexanderkoch.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Alexander Koch <mail@alexanderkoch.net>, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jiri Kosina <trivial@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for hisilicon Hi3660 SoC and HiKey960 Board.
+On 12/23/2016 02:12 PM, Alexander Koch wrote:
+> Replace sysfs symbolic file permissions, e.g. 'S_IRUGO', by octal
+> permissions. This fixes checkpatch.pl warnings.
+>
+> Signed-off-by: Alexander Koch <mail@alexanderkoch.net>
 
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
----
- Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Please do not bother with those warnings and ignore checkpatch.
+We are in the process of doing an automated conversion.
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index 3f81575..7cf2847 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -8,6 +8,10 @@ Hi6220 SoC
- Required root node properties:
- 	- compatible = "hisilicon,hi6220";
- 
-+Hi3660 SoC
-+Required root node properties:
-+	- compatible = "hisilicon,hi3660";
-+
- HiKey Board
- Required root node properties:
- 	- compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
--- 
-1.9.1
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/adc128d818.c | 99 ++++++++++++++++++----------------------------
+>  1 file changed, 39 insertions(+), 60 deletions(-)
+>
+> diff --git a/drivers/hwmon/adc128d818.c b/drivers/hwmon/adc128d818.c
+> index 8667f454ea11..cbb3bc5e5229 100644
+> --- a/drivers/hwmon/adc128d818.c
+> +++ b/drivers/hwmon/adc128d818.c
+> @@ -242,69 +242,48 @@ static ssize_t adc128_show_alarm(struct device *dev,
+>  	return sprintf(buf, "%u\n", !!(alarms & mask));
+>  }
+>
+> -static SENSOR_DEVICE_ATTR_2(in0_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 0, 0);
+> -static SENSOR_DEVICE_ATTR_2(in0_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 0, 1);
+> -static SENSOR_DEVICE_ATTR_2(in0_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 0, 2);
+> -
+> -static SENSOR_DEVICE_ATTR_2(in1_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 1, 0);
+> -static SENSOR_DEVICE_ATTR_2(in1_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 1, 1);
+> -static SENSOR_DEVICE_ATTR_2(in1_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 1, 2);
+> -
+> -static SENSOR_DEVICE_ATTR_2(in2_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 2, 0);
+> -static SENSOR_DEVICE_ATTR_2(in2_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 2, 1);
+> -static SENSOR_DEVICE_ATTR_2(in2_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 2, 2);
+> -
+> -static SENSOR_DEVICE_ATTR_2(in3_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 3, 0);
+> -static SENSOR_DEVICE_ATTR_2(in3_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 3, 1);
+> -static SENSOR_DEVICE_ATTR_2(in3_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 3, 2);
+> -
+> -static SENSOR_DEVICE_ATTR_2(in4_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 4, 0);
+> -static SENSOR_DEVICE_ATTR_2(in4_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 4, 1);
+> -static SENSOR_DEVICE_ATTR_2(in4_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 4, 2);
+> -
+> -static SENSOR_DEVICE_ATTR_2(in5_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 5, 0);
+> -static SENSOR_DEVICE_ATTR_2(in5_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 5, 1);
+> -static SENSOR_DEVICE_ATTR_2(in5_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 5, 2);
+> -
+> -static SENSOR_DEVICE_ATTR_2(in6_input, S_IRUGO,
+> -			    adc128_show_in, NULL, 6, 0);
+> -static SENSOR_DEVICE_ATTR_2(in6_min, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 6, 1);
+> -static SENSOR_DEVICE_ATTR_2(in6_max, S_IWUSR | S_IRUGO,
+> -			    adc128_show_in, adc128_set_in, 6, 2);
+> -
+> -static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, adc128_show_temp, NULL, 0);
+> -static SENSOR_DEVICE_ATTR(temp1_max, S_IWUSR | S_IRUGO,
+> +static SENSOR_DEVICE_ATTR_2(in0_input, 0444, adc128_show_in, NULL, 0, 0);
+> +static SENSOR_DEVICE_ATTR_2(in0_min, 0644, adc128_show_in, adc128_set_in, 0, 1);
+> +static SENSOR_DEVICE_ATTR_2(in0_max, 0644, adc128_show_in, adc128_set_in, 0, 2);
+> +
+> +static SENSOR_DEVICE_ATTR_2(in1_input, 0444, adc128_show_in, NULL, 1, 0);
+> +static SENSOR_DEVICE_ATTR_2(in1_min, 0644, adc128_show_in, adc128_set_in, 1, 1);
+> +static SENSOR_DEVICE_ATTR_2(in1_max, 0644, adc128_show_in, adc128_set_in, 1, 2);
+> +
+> +static SENSOR_DEVICE_ATTR_2(in2_input, 0444, adc128_show_in, NULL, 2, 0);
+> +static SENSOR_DEVICE_ATTR_2(in2_min, 0644, adc128_show_in, adc128_set_in, 2, 1);
+> +static SENSOR_DEVICE_ATTR_2(in2_max, 0644, adc128_show_in, adc128_set_in, 2, 2);
+> +
+> +static SENSOR_DEVICE_ATTR_2(in3_input, 0444, adc128_show_in, NULL, 3, 0);
+> +static SENSOR_DEVICE_ATTR_2(in3_min, 0644, adc128_show_in, adc128_set_in, 3, 1);
+> +static SENSOR_DEVICE_ATTR_2(in3_max, 0644, adc128_show_in, adc128_set_in, 3, 2);
+> +
+> +static SENSOR_DEVICE_ATTR_2(in4_input, 0444, adc128_show_in, NULL, 4, 0);
+> +static SENSOR_DEVICE_ATTR_2(in4_min, 0644, adc128_show_in, adc128_set_in, 4, 1);
+> +static SENSOR_DEVICE_ATTR_2(in4_max, 0644, adc128_show_in, adc128_set_in, 4, 2);
+> +
+> +static SENSOR_DEVICE_ATTR_2(in5_input, 0444, adc128_show_in, NULL, 5, 0);
+> +static SENSOR_DEVICE_ATTR_2(in5_min, 0644, adc128_show_in, adc128_set_in, 5, 1);
+> +static SENSOR_DEVICE_ATTR_2(in5_max, 0644, adc128_show_in, adc128_set_in, 5, 2);
+> +
+> +static SENSOR_DEVICE_ATTR_2(in6_input, 0444, adc128_show_in, NULL, 6, 0);
+> +static SENSOR_DEVICE_ATTR_2(in6_min, 0644, adc128_show_in, adc128_set_in, 6, 1);
+> +static SENSOR_DEVICE_ATTR_2(in6_max, 0644, adc128_show_in, adc128_set_in, 6, 2);
+> +
+> +static SENSOR_DEVICE_ATTR(temp1_input, 0444, adc128_show_temp, NULL, 0);
+> +static SENSOR_DEVICE_ATTR(temp1_max, 0644,
+>  			  adc128_show_temp, adc128_set_temp, 1);
+> -static SENSOR_DEVICE_ATTR(temp1_max_hyst, S_IWUSR | S_IRUGO,
+> +static SENSOR_DEVICE_ATTR(temp1_max_hyst, 0644,
+>  			  adc128_show_temp, adc128_set_temp, 2);
+>
+> -static SENSOR_DEVICE_ATTR(in0_alarm, S_IRUGO, adc128_show_alarm, NULL, 0);
+> -static SENSOR_DEVICE_ATTR(in1_alarm, S_IRUGO, adc128_show_alarm, NULL, 1);
+> -static SENSOR_DEVICE_ATTR(in2_alarm, S_IRUGO, adc128_show_alarm, NULL, 2);
+> -static SENSOR_DEVICE_ATTR(in3_alarm, S_IRUGO, adc128_show_alarm, NULL, 3);
+> -static SENSOR_DEVICE_ATTR(in4_alarm, S_IRUGO, adc128_show_alarm, NULL, 4);
+> -static SENSOR_DEVICE_ATTR(in5_alarm, S_IRUGO, adc128_show_alarm, NULL, 5);
+> -static SENSOR_DEVICE_ATTR(in6_alarm, S_IRUGO, adc128_show_alarm, NULL, 6);
+> -static SENSOR_DEVICE_ATTR(temp1_max_alarm, S_IRUGO, adc128_show_alarm, NULL, 7);
+> +static SENSOR_DEVICE_ATTR(in0_alarm, 0444, adc128_show_alarm, NULL, 0);
+> +static SENSOR_DEVICE_ATTR(in1_alarm, 0444, adc128_show_alarm, NULL, 1);
+> +static SENSOR_DEVICE_ATTR(in2_alarm, 0444, adc128_show_alarm, NULL, 2);
+> +static SENSOR_DEVICE_ATTR(in3_alarm, 0444, adc128_show_alarm, NULL, 3);
+> +static SENSOR_DEVICE_ATTR(in4_alarm, 0444, adc128_show_alarm, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(in5_alarm, 0444, adc128_show_alarm, NULL, 5);
+> +static SENSOR_DEVICE_ATTR(in6_alarm, 0444, adc128_show_alarm, NULL, 6);
+> +static SENSOR_DEVICE_ATTR(temp1_max_alarm, 0444, adc128_show_alarm, NULL, 7);
+>
+>  static struct attribute *adc128_attrs[] = {
+>  	&sensor_dev_attr_in0_min.dev_attr.attr,
+>
+
