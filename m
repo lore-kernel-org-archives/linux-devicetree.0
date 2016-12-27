@@ -1,802 +1,408 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: [PATCH v7 2/2] Add support for OV5647 sensor.
-Date: Tue, 27 Dec 2016 13:59:03 +0000
-Message-ID: <a8f4505f2a791331d36fbee74d3372b58c5cf014.1482846784.git.roliveir@synopsys.com>
-References: <cover.1482846784.git.roliveir@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1482846784.git.roliveir@synopsys.com>
-In-Reply-To: <cover.1482846784.git.roliveir@synopsys.com>
-References: <cover.1482846784.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, hverkuil@xs4all.nl, dheitmueller@kernellabs.com, slongerbeam@gmail.com, lars@metafoo.de, robert.jarzmik@free.fr, pavel@ucw.cz, pali.rohar@gmail.com, sakari.ailus@linux.intel.com, mark.rutland@arm.com, Ramiro.Oliveira@synopsys.com, CARLOS.PALMINHA@synopsys.com
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] clk: rockchip: add clock controller for rk3328
+Date: Tue, 27 Dec 2016 15:05:53 +0100
+Message-ID: <134827512.CtsoUKWxik@phil>
+References: <1482820373-10186-1-git-send-email-zhangqing@rock-chips.com>
+ <1482820373-10186-5-git-send-email-zhangqing@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1482820373-10186-5-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Modes supported:
- - 640x480 RAW 8
+Hi Elaine,
 
-Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
----
- MAINTAINERS                |   7 +
- drivers/media/i2c/Kconfig  |  12 +
- drivers/media/i2c/Makefile |   1 +
- drivers/media/i2c/ov5647.c | 718 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 738 insertions(+)
- create mode 100644 drivers/media/i2c/ov5647.c
+Am Dienstag, 27. Dezember 2016, 14:32:53 CET schrieb Elaine Zhang:
+> Add the clock tree definition for the new rk3328 SoC.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cfff2c9e3d94..346bd8d55703 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9095,6 +9095,13 @@ M:	Harald Welte <laforge@gnumonks.org>
- S:	Maintained
- F:	drivers/char/pcmcia/cm4040_cs.*
- 
-+OMNIVISION OV5647 SENSOR DRIVER
-+M:	Ramiro Oliveira <roliveir@synopsys.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/ov5647.c
-+
- OMNIVISION OV7670 SENSOR DRIVER
- M:	Jonathan Corbet <corbet@lwn.net>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index b979ea148251..155878b25566 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -531,6 +531,18 @@ config VIDEO_OV2659
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ov2659.
- 
-+config VIDEO_OV5647
-+	tristate "OmniVision OV5647 sensor support"
-+	depends on OF
-+	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-+	depends on MEDIA_CAMERA_SUPPORT
-+	---help---
-+	  This is a Video4Linux2 sensor-level driver for the OmniVision
-+	  OV5647 camera.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ov5647.
-+
- config VIDEO_OV7640
- 	tristate "OmniVision OV7640 sensor support"
- 	depends on I2C && VIDEO_V4L2
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 92773b2e6225..0d9014c7ab43 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -82,3 +82,4 @@ obj-$(CONFIG_VIDEO_IR_I2C)  += ir-kbd-i2c.o
- obj-$(CONFIG_VIDEO_ML86V7667)	+= ml86v7667.o
- obj-$(CONFIG_VIDEO_OV2659)	+= ov2659.o
- obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
-+obj-$(CONFIG_VIDEO_OV5647)	+= ov5647.o
-diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-new file mode 100644
-index 000000000000..c2828650d3a3
---- /dev/null
-+++ b/drivers/media/i2c/ov5647.c
-@@ -0,0 +1,718 @@
-+/*
-+ * A V4L2 driver for OmniVision OV5647 cameras.
-+ *
-+ * Based on Samsung S5K6AAFX SXGA 1/6" 1.3M CMOS Image Sensor driver
-+ * Copyright (C) 2011 Sylwester Nawrocki <s.nawrocki@samsung.com>
-+ *
-+ * Based on Omnivision OV7670 Camera Driver
-+ * Copyright (C) 2006-7 Jonathan Corbet <corbet@lwn.net>
-+ *
-+ * Copyright (C) 2016, Synopsys, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed .as is. WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/videodev2.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-image-sizes.h>
-+#include <media/v4l2-mediabus.h>
-+#include <media/v4l2-of.h>
-+
-+#define SENSOR_NAME "ov5647"
-+
-+#define OV5647_SW_RESET		0x1003
-+#define OV5647_REG_CHIPID_H	0x300A
-+#define OV5647_REG_CHIPID_L	0x300B
-+
-+#define REG_TERM 0xfffe
-+#define VAL_TERM 0xfe
-+#define REG_DLY  0xffff
-+
-+#define OV5647_ROW_START		0x01
-+#define OV5647_ROW_START_MIN		0
-+#define OV5647_ROW_START_MAX		2004
-+#define OV5647_ROW_START_DEF		54
-+
-+#define OV5647_COLUMN_START		0x02
-+#define OV5647_COLUMN_START_MIN		0
-+#define OV5647_COLUMN_START_MAX		2750
-+#define OV5647_COLUMN_START_DEF		16
-+
-+#define OV5647_WINDOW_HEIGHT		0x03
-+#define OV5647_WINDOW_HEIGHT_MIN	2
-+#define OV5647_WINDOW_HEIGHT_MAX	2006
-+#define OV5647_WINDOW_HEIGHT_DEF	1944
-+
-+#define OV5647_WINDOW_WIDTH		0x04
-+#define OV5647_WINDOW_WIDTH_MIN		2
-+#define OV5647_WINDOW_WIDTH_MAX		2752
-+#define OV5647_WINDOW_WIDTH_DEF		2592
-+
-+struct regval_list {
-+	u16 addr;
-+	u8 data;
-+};
-+
-+struct cfg_array {
-+	struct regval_list *regs;
-+	int size;
-+};
-+
-+struct ov5647 {
-+	struct device			*dev;
-+	struct v4l2_subdev		sd;
-+	struct media_pad		pad;
-+	struct mutex			lock;
-+	struct v4l2_mbus_framefmt	format;
-+	unsigned int			width;
-+	unsigned int			height;
-+	int				power_count;
-+	struct clk			*xclk;
-+	/* External clock frequency currently supported is 30MHz */
-+	u32				xclk_freq;
-+};
-+
-+static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct ov5647, sd);
-+}
-+
-+static struct regval_list sensor_oe_disable_regs[] = {
-+	{0x3000, 0x00},
-+	{0x3001, 0x00},
-+	{0x3002, 0x00},
-+};
-+
-+static struct regval_list sensor_oe_enable_regs[] = {
-+	{0x3000, 0x0f},
-+	{0x3001, 0xff},
-+	{0x3002, 0xe4},
-+};
-+
-+static struct regval_list ov5647_640x480[] = {
-+	{0x0100, 0x00},
-+	{0x0103, 0x01},
-+	{0x3034, 0x08},
-+	{0x3035, 0x21},
-+	{0x3036, 0x46},
-+	{0x303c, 0x11},
-+	{0x3106, 0xf5},
-+	{0x3821, 0x07},
-+	{0x3820, 0x41},
-+	{0x3827, 0xec},
-+	{0x370c, 0x0f},
-+	{0x3612, 0x59},
-+	{0x3618, 0x00},
-+	{0x5000, 0x06},
-+	{0x5001, 0x01},
-+	{0x5002, 0x41},
-+	{0x5003, 0x08},
-+	{0x5a00, 0x08},
-+	{0x3000, 0x00},
-+	{0x3001, 0x00},
-+	{0x3002, 0x00},
-+	{0x3016, 0x08},
-+	{0x3017, 0xe0},
-+	{0x3018, 0x44},
-+	{0x301c, 0xf8},
-+	{0x301d, 0xf0},
-+	{0x3a18, 0x00},
-+	{0x3a19, 0xf8},
-+	{0x3c01, 0x80},
-+	{0x3b07, 0x0c},
-+	{0x380c, 0x07},
-+	{0x380d, 0x68},
-+	{0x380e, 0x03},
-+	{0x380f, 0xd8},
-+	{0x3814, 0x31},
-+	{0x3815, 0x31},
-+	{0x3708, 0x64},
-+	{0x3709, 0x52},
-+	{0x3808, 0x02},
-+	{0x3809, 0x80},
-+	{0x380a, 0x01},
-+	{0x380b, 0xE0},
-+	{0x3801, 0x00},
-+	{0x3802, 0x00},
-+	{0x3803, 0x00},
-+	{0x3804, 0x0a},
-+	{0x3805, 0x3f},
-+	{0x3806, 0x07},
-+	{0x3807, 0xa1},
-+	{0x3811, 0x08},
-+	{0x3813, 0x02},
-+	{0x3630, 0x2e},
-+	{0x3632, 0xe2},
-+	{0x3633, 0x23},
-+	{0x3634, 0x44},
-+	{0x3636, 0x06},
-+	{0x3620, 0x64},
-+	{0x3621, 0xe0},
-+	{0x3600, 0x37},
-+	{0x3704, 0xa0},
-+	{0x3703, 0x5a},
-+	{0x3715, 0x78},
-+	{0x3717, 0x01},
-+	{0x3731, 0x02},
-+	{0x370b, 0x60},
-+	{0x3705, 0x1a},
-+	{0x3f05, 0x02},
-+	{0x3f06, 0x10},
-+	{0x3f01, 0x0a},
-+	{0x3a08, 0x01},
-+	{0x3a09, 0x27},
-+	{0x3a0a, 0x00},
-+	{0x3a0b, 0xf6},
-+	{0x3a0d, 0x04},
-+	{0x3a0e, 0x03},
-+	{0x3a0f, 0x58},
-+	{0x3a10, 0x50},
-+	{0x3a1b, 0x58},
-+	{0x3a1e, 0x50},
-+	{0x3a11, 0x60},
-+	{0x3a1f, 0x28},
-+	{0x4001, 0x02},
-+	{0x4004, 0x02},
-+	{0x4000, 0x09},
-+	{0x4837, 0x24},
-+	{0x4050, 0x6e},
-+	{0x4051, 0x8f},
-+	{0x0100, 0x01},
-+};
-+
-+/**
-+ * @short I2C Write operation
-+ * @param[in] i2c_client I2C client
-+ * @param[in] reg register address
-+ * @param[in] val value to write
-+ * @return Error code
-+ */
-+static int ov5647_write(struct v4l2_subdev *sd, u16 reg, u8 val)
-+{
-+	int ret;
-+	unsigned char data[3] = { reg >> 8, reg & 0xff, val};
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	ret = i2c_master_send(client, data, 3);
-+	if (ret != 3) {
-+		dev_dbg(&client->dev, "%s: i2c write error, reg: %x\n",
-+				__func__, reg);
-+		return ret < 0 ? ret : -EIO;
-+	}
-+	return 0;
-+}
-+
-+/**
-+ * @short I2C Read operation
-+ * @param[in] i2c_client I2C client
-+ * @param[in] reg register address
-+ * @param[out] val value read
-+ * @return Error code
-+ */
-+static int ov5647_read(struct v4l2_subdev *sd, u16 reg, u8 *val)
-+{
-+	int ret;
-+	unsigned char data_w[2] = { reg >> 8, reg & 0xff };
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+
-+	ret = i2c_master_send(client, data_w, 2);
-+
-+	if (ret < 2) {
-+		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
-+			__func__, reg);
-+		return ret < 0 ? ret : -EIO;
-+	}
-+
-+
-+	ret = i2c_master_recv(client, val, 1);
-+
-+	if (ret < 1) {
-+		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
-+				__func__, reg);
-+		return ret < 0 ? ret : -EIO;
-+	}
-+	return 0;
-+}
-+
-+static int ov5647_write_array(struct v4l2_subdev *sd,
-+				struct regval_list *regs, int array_size)
-+{
-+	int i = 0;
-+	int ret = 0;
-+
-+	if (!regs)
-+		return -EINVAL;
-+
-+	while (i < array_size) {
-+		ret = ov5647_write(sd, regs->addr, regs->data);
-+		if (ret < 0)
-+			return ret;
-+		i++;
-+		regs++;
-+	}
-+	return 0;
-+}
-+
-+static void ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
-+{
-+	u8 channel_id;
-+
-+	ov5647_read(sd, 0x4814, &channel_id);
-+	channel_id &= ~(3 << 6);
-+	ov5647_write(sd, 0x4814, channel_id | (channel << 6));
-+}
-+
-+void ov5647_stream_on(struct v4l2_subdev *sd)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	ov5647_write(sd, 0x4202, 0x00);
-+	dev_dbg(&client->dev, "Stream on");
-+	ov5647_write(sd, 0x300D, 0x00);
-+}
-+
-+void ov5647_stream_off(struct v4l2_subdev *sd)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	ov5647_write(sd, 0x4202, 0x0f);
-+	dev_dbg(&client->dev, "Stream off");
-+	ov5647_write(sd, 0x300D, 0x01);
-+}
-+
-+/**
-+ * @short Set SW standby
-+ * @param[in] sd v4l2 sd
-+ * @param[in] stanby standby mode status (on or off)
-+ * @return Error code
-+ */
-+static int set_sw_standby(struct v4l2_subdev *sd, bool standby)
-+{
-+	int ret;
-+	unsigned char rdval;
-+
-+	ret = ov5647_read(sd, 0x0100, &rdval);
-+	if (ret != 0)
-+		return ret;
-+
-+	if (standby)
-+		rdval &= 0xfe;
-+	else
-+		rdval |= 0x01;
-+
-+	ret = ov5647_write(sd, 0x0100, rdval);
-+
-+	return ret;
-+}
-+
-+/**
-+ * @short Initialize sensor
-+ * @param[in] sd v4l2 subdev
-+ * @param[in] val not used
-+ * @return Error code
-+ */
-+static int __sensor_init(struct v4l2_subdev *sd)
-+{
-+	int ret;
-+	u8 resetval;
-+	u8 rdval;
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	dev_dbg(&client->dev, "sensor init\n");
-+
-+	ret = ov5647_read(sd, 0x0100, &rdval);
-+	if (ret != 0)
-+		return ret;
-+
-+	ov5647_write(sd, 0x4800, 0x25);
-+	ov5647_stream_off(sd);
-+
-+	ret = ov5647_write_array(sd, ov5647_640x480,
-+					ARRAY_SIZE(ov5647_640x480));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "write sensor_default_regs error\n");
-+		return ret;
-+	}
-+
-+	ov5647_set_virtual_channel(sd, 0);
-+
-+	ov5647_read(sd, 0x0100, &resetval);
-+	if (!(resetval & 0x01)) {
-+		dev_err(&client->dev, "Device was in SW standby");
-+		ov5647_write(sd, 0x0100, 0x01);
-+	}
-+
-+	ov5647_write(sd, 0x4800, 0x04);
-+	ov5647_stream_on(sd);
-+
-+	return 0;
-+}
-+
-+/**
-+ * @short Control sensor power state
-+ * @param[in] sd v4l2 subdev
-+ * @param[in] on Sensor power
-+ * @return Error code
-+ */
-+static int sensor_power(struct v4l2_subdev *sd, int on)
-+{
-+	int ret;
-+	struct ov5647 *ov5647 = to_state(sd);
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	ret = 0;
-+	mutex_lock(&ov5647->lock);
-+
-+	if (on && !ov5647->power_count)	{
-+		dev_dbg(&client->dev, "OV5647 power on\n");
-+
-+		clk_set_rate(ov5647->xclk, ov5647->xclk_freq);
-+
-+		ret = clk_prepare_enable(ov5647->xclk);
-+		if (ret < 0) {
-+			dev_err(ov5647->dev, "clk prepare enable failed\n");
-+			goto out;
-+		}
-+
-+		ret = ov5647_write_array(sd, sensor_oe_enable_regs,
-+				ARRAY_SIZE(sensor_oe_enable_regs));
-+		if (ret < 0) {
-+			clk_disable_unprepare(ov5647->xclk);
-+			dev_err(&client->dev,
-+				"write sensor_oe_enable_regs error\n");
-+			goto out;
-+		}
-+
-+		ret = __sensor_init(sd);
-+		if (ret < 0) {
-+			clk_disable_unprepare(ov5647->xclk);
-+			dev_err(&client->dev,
-+				"Camera not available, check Power\n");
-+			goto out;
-+		}
-+	} else if (!on && ov5647->power_count == 1) {
-+		dev_dbg(&client->dev, "OV5647 power off\n");
-+
-+		dev_dbg(&client->dev, "disable oe\n");
-+		ret = ov5647_write_array(sd, sensor_oe_disable_regs,
-+				ARRAY_SIZE(sensor_oe_disable_regs));
-+
-+		if (ret < 0)
-+			dev_dbg(&client->dev, "disable oe failed\n");
-+
-+		ret = set_sw_standby(sd, true);
-+
-+		if (ret < 0)
-+			dev_dbg(&client->dev, "soft stby failed\n");
-+
-+		clk_disable_unprepare(ov5647->xclk);
-+	}
-+
-+	/* Update the power count. */
-+	ov5647->power_count += on ? 1 : -1;
-+	WARN_ON(ov5647->power_count < 0);
-+
-+out:
-+	mutex_unlock(&ov5647->lock);
-+
-+	return ret;
-+}
-+
-+#ifdef CONFIG_VIDEO_ADV_DEBUG
-+/**
-+ * @short Get register value
-+ * @param[in] sd v4l2 subdev
-+ * @param[in] reg register struct
-+ * @return Error code
-+ */
-+static int sensor_get_register(struct v4l2_subdev *sd,
-+				struct v4l2_dbg_register *reg)
-+{
-+	unsigned char val = 0;
-+	int ret;
-+
-+	ret = ov5647_read(sd, reg->reg & 0xff, &val);
-+	if (ret != 0)
-+		return ret;
-+
-+	reg->val = val;
-+	reg->size = 1;
-+
-+	return ret;
-+}
-+
-+/**
-+ * @short Set register value
-+ * @param[in] sd v4l2 subdev
-+ * @param[in] reg register struct
-+ * @return Error code
-+ */
-+static int sensor_set_register(struct v4l2_subdev *sd,
-+				const struct v4l2_dbg_register *reg)
-+{
-+	return ov5647_write(sd, reg->reg & 0xff, reg->val & 0xff);
-+}
-+#endif
-+
-+/**
-+ * @short Subdev core operations registration
-+ */
-+static const struct v4l2_subdev_core_ops sensor_core_ops = {
-+	.s_power		= sensor_power,
-+#ifdef CONFIG_VIDEO_ADV_DEBUG
-+	.g_register		= sensor_get_register,
-+	.s_register		= sensor_set_register,
-+#endif
-+};
-+
-+static int enum_mbus_code(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_pad_config *cfg,
-+				struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	if (code->index > 0)
-+		return -EINVAL;
-+
-+	code->code = MEDIA_BUS_FMT_SBGGR8_1X8;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_pad_ops subdev_pad_ops = {
-+	.enum_mbus_code = enum_mbus_code,
-+};
-+
-+
-+/**
-+ * @short Subdev operations registration
-+ *
-+ */
-+static const struct v4l2_subdev_ops subdev_ops = {
-+	.core		= &sensor_core_ops,
-+	.pad		= &subdev_pad_ops,
-+};
-+
-+/**
-+ * @short Detect camera version and model
-+ * @param[in] sd v4l2 subdev
-+ * @return Error code
-+ */
-+static int ov5647_detect(struct v4l2_subdev *sd)
-+{
-+	unsigned char v;
-+	int ret;
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+
-+	ret = ov5647_write(sd, OV5647_SW_RESET, 0x01);
-+	if (ret < 0)
-+		return ret;
-+	ret = ov5647_read(sd, OV5647_REG_CHIPID_H, &v);
-+	if (ret < 0)
-+		return ret;
-+	if (v != 0x56) {
-+		dev_err(&client->dev, "Wrong model version detected");
-+		return -ENODEV;
-+	}
-+	ret = ov5647_read(sd, OV5647_REG_CHIPID_L, &v);
-+	if (ret < 0)
-+		return ret;
-+	if (v != 0x47) {
-+		dev_err(&client->dev, "Wrong model version detected");
-+		return -ENODEV;
-+	}
-+
-+	ret = ov5647_write(sd, OV5647_SW_RESET, 0x00);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/**
-+ * @short Detect if camera is registered
-+ * @param[in] sd v4l2 subdev
-+ * @return Error code
-+ */
-+static int ov5647_registered(struct v4l2_subdev *sd)
-+{
-+	return 0;
-+}
-+
-+/**
-+ * @short Open device
-+ * @param[in] sd v4l2 subdev
-+ * @param[in] fh v4l2 file handler
-+ * @return Error code
-+ */
-+static int ov5647_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	struct v4l2_mbus_framefmt *format =
-+				v4l2_subdev_get_try_format(sd, fh->pad, 0);
-+	struct v4l2_rect *crop =
-+				v4l2_subdev_get_try_crop(sd, fh->pad, 0);
-+
-+	crop->left = OV5647_COLUMN_START_DEF;
-+	crop->top = OV5647_ROW_START_DEF;
-+	crop->width = OV5647_WINDOW_WIDTH_DEF;
-+	crop->height = OV5647_WINDOW_HEIGHT_DEF;
-+
-+	format->code = MEDIA_BUS_FMT_SBGGR8_1X8;
-+
-+	format->width = OV5647_WINDOW_WIDTH_DEF;
-+	format->height = OV5647_WINDOW_HEIGHT_DEF;
-+	format->field = V4L2_FIELD_NONE;
-+	format->colorspace = V4L2_COLORSPACE_SRGB;
-+
-+	return sensor_power(sd, true);
-+}
-+
-+/**
-+ * @short Open device
-+ * @param[in] sd v4l2 subdev
-+ * @param[in] fh v4l2 file handler
-+ * @return Error code
-+ */
-+static int ov5647_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	return sensor_power(sd, false);
-+}
-+
-+/**
-+ * @short Subdev internal operations registration
-+ *
-+ */
-+static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
-+	.registered = ov5647_registered,
-+	.open = ov5647_open,
-+	.close = ov5647_close,
-+};
-+
-+/**
-+ * @short Initialization routine - Entry point of the driver
-+ * @param[in] client pointer to the i2c client structure
-+ * @param[in] id pointer to the i2c device id structure
-+ * @return 0 on success and a negative number on failure
-+ */
-+static int ov5647_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct ov5647 *sensor;
-+	int ret;
-+	struct v4l2_subdev *sd;
-+
-+	dev_info(&client->dev, "Installing OmniVision OV5647 camera driver\n");
-+
-+	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
-+	if (sensor == NULL)
-+		return -ENOMEM;
-+
-+	/* get system clock (xclk) */
-+	sensor->xclk = devm_clk_get(dev, "xclk");
-+	if (IS_ERR(sensor->xclk)) {
-+		dev_err(dev, "could not get xclk");
-+		return PTR_ERR(sensor->xclk);
-+	}
-+
-+	ret = of_property_read_u32(dev->of_node, "clock-frequency",
-+				    &sensor->xclk_freq);
-+	if (ret) {
-+		dev_err(dev, "could not get xclk frequency\n");
-+		return ret;
-+	}
-+
-+	mutex_init(&sensor->lock);
-+	sensor->dev = dev;
-+
-+	sd = &sensor->sd;
-+	v4l2_i2c_subdev_init(sd, client, &subdev_ops);
-+	sensor->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+
-+	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
-+	ret = media_entity_pads_init(&sd->entity, 1, &sensor->pad);
-+	if (ret < 0)
-+		goto mutex_remove;
-+
-+	ret = ov5647_detect(sd);
-+	if (ret < 0)
-+		goto error;
-+
-+	ret = v4l2_async_register_subdev(sd);
-+	if (ret < 0)
-+		goto error;
-+
-+	return 0;
-+error:
-+	media_entity_cleanup(&sd->entity);
-+mutex_remove:
-+	mutex_destroy(&sensor->lock);
-+	return ret;
-+}
-+
-+/**
-+ * @short Exit routine - Exit point of the driver
-+ * @param[in] client pointer to the i2c client structure
-+ * @return 0 on success and a negative number on failure
-+ */
-+static int ov5647_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov5647 *ov5647 = to_state(sd);
-+
-+	v4l2_async_unregister_subdev(&ov5647->sd);
-+	media_entity_cleanup(&ov5647->sd.entity);
-+	v4l2_device_unregister_subdev(sd);
-+	mutex_destroy(&ov5647->lock);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ov5647_id[] = {
-+	{ "ov5647", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ov5647_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ov5647_of_match[] = {
-+	{ .compatible = "ovti,ov5647" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ov5647_of_match);
-+#endif
-+
-+/**
-+ * @short i2c driver structure
-+ */
-+static struct i2c_driver ov5647_driver = {
-+	.driver = {
-+		.of_match_table = of_match_ptr(ov5647_of_match),
-+		.owner	= THIS_MODULE,
-+		.name	= "ov5647",
-+	},
-+	.probe		= ov5647_probe,
-+	.remove		= ov5647_remove,
-+	.id_table	= ov5647_id,
-+};
-+
-+module_i2c_driver(ov5647_driver);
-+
-+MODULE_AUTHOR("Ramiro Oliveira <roliveir@synopsys.com>");
-+MODULE_DESCRIPTION("A low-level driver for OmniVision ov5647 sensors");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+looks good in general, I have some styling nitpicks below and would like
+the grf-clocks solved differently, also explained below:
+
+
+> diff --git a/drivers/clk/rockchip/clk-rk3328.c
+> b/drivers/clk/rockchip/clk-rk3328.c new file mode 100644
+> index 000000000000..9958ce7d0dcd
+> --- /dev/null
+> +++ b/drivers/clk/rockchip/clk-rk3328.c
+> +static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
+
+[...]
+
+> +	/*
+> +	 * Clock-Architecture Diagram 8
+> +	 */
+
+blank line between two comment blocks please.
+Same for similar setups in the code above.
+
+> +	/* PD_GMAC */
+> +
+> +	COMPOSITE(ACLK_GMAC, "aclk_gmac", mux_2plls_hdmiphy_p, 0,
+> +		  RK3328_CLKSEL_CON(35), 6, 2, MFLAGS, 0, 5, DFLAGS,
+> +		  RK3328_CLKGATE_CON(3), 2, GFLAGS),
+> +	COMPOSITE_NOMUX(PCLK_GMAC, "pclk_gmac", "aclk_gmac", 0,
+> +			RK3328_CLKSEL_CON(25), 8, 3, DFLAGS,
+> +			RK3328_CLKGATE_CON(9), 0, GFLAGS),
+> +
+> +	COMPOSITE(SCLK_MAC2IO_SRC, "clk_mac2io_src", mux_2plls_p, 0,
+> +		  RK3328_CLKSEL_CON(27), 7, 1, MFLAGS, 0, 5, DFLAGS,
+> +		  RK3328_CLKGATE_CON(3), 1, GFLAGS),
+> +	GATE(SCLK_MAC2IO_REF, "clk_mac2io_ref", "clk_mac2io", 0,
+> +	     RK3328_CLKGATE_CON(9), 7, GFLAGS),
+> +	GATE(SCLK_MAC2IO_RX, "clk_mac2io_rx", "clk_mac2io", 0,
+> +	     RK3328_CLKGATE_CON(9), 4, GFLAGS),
+> +	GATE(SCLK_MAC2IO_TX, "clk_mac2io_tx", "clk_mac2io", 0,
+> +	     RK3328_CLKGATE_CON(9), 5, GFLAGS),
+> +	GATE(SCLK_MAC2IO_REFOUT, "clk_mac2io_refout", "clk_mac2io", 0,
+> +	     RK3328_CLKGATE_CON(9), 6, GFLAGS),
+> +	COMPOSITE(SCLK_MAC2IO_OUT, "clk_mac2io_out", mux_2plls_p, 0,
+> +		  RK3328_CLKSEL_CON(27), 15, 1, MFLAGS, 8, 5, DFLAGS,
+> +		  RK3328_CLKGATE_CON(3), 5, GFLAGS),
+> +
+> +	COMPOSITE(SCLK_MAC2PHY_SRC, "clk_mac2phy_src", mux_2plls_p, 0,
+> +		  RK3328_CLKSEL_CON(26), 7, 1, MFLAGS, 0, 5, DFLAGS,
+> +		  RK3328_CLKGATE_CON(3), 0, GFLAGS),
+> +	GATE(SCLK_MAC2PHY_REF, "clk_mac2phy_ref", "clk_mac2phy", 0,
+> +	     RK3328_CLKGATE_CON(9), 3, GFLAGS),
+> +	GATE(SCLK_MAC2PHY_RXTX, "clk_mac2phy_rxtx", "clk_mac2phy", 0,
+> +	     RK3328_CLKGATE_CON(9), 1, GFLAGS),
+> +	COMPOSITE_NOMUX(SCLK_MAC2PHY_OUT, "clk_mac2phy_out", "clk_mac2phy", 0,
+> +			RK3328_CLKSEL_CON(26), 8, 2, DFLAGS,
+> +			RK3328_CLKGATE_CON(9), 2, GFLAGS),
+
+Please look at the other clock drivers for indentation. I.e. don't align with 
+the "(", but instead use the same indent everywhere.
+
+This makes things like the register address always sit in the same position
+and thus makes it easier to read the clock diagram.
+
+
+> +	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
+> +
+> +	/*
+> +	 * Clock-Architecture Diagram 9
+> +	 */
+> +
+
+For the following long list of gates, just make it one line per gate and do 
+not line-break them ... see other clock drivers for reference.
+
+This long gate list is very uniform (= only gates) and reducing the number
+of lines needed makes it easier to parse for those.
+
+> +	/* PD_VOP */
+> +	GATE(ACLK_RGA, "aclk_rga", "aclk_rga_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 10, GFLAGS),
+> +	GATE(0, "aclk_rga_niu", "aclk_rga_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(22), 3, GFLAGS),
+> +	GATE(ACLK_VOP, "aclk_vop", "aclk_vop_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 2, GFLAGS),
+> +	GATE(0, "aclk_vop_niu", "aclk_vop_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(21), 4, GFLAGS),
+> +
+> +	GATE(ACLK_IEP, "aclk_iep", "aclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 6, GFLAGS),
+> +	GATE(ACLK_CIF, "aclk_cif", "aclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 8, GFLAGS),
+> +	GATE(ACLK_HDCP, "aclk_hdcp", "aclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 15, GFLAGS),
+> +	GATE(0, "aclk_vio_niu", "aclk_vio_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(22), 2, GFLAGS),
+> +
+> +	GATE(HCLK_VOP, "hclk_vop", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 3, GFLAGS),
+> +	GATE(0, "hclk_vop_niu", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 5, GFLAGS),
+> +	GATE(HCLK_IEP, "hclk_iep", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 7, GFLAGS),
+> +	GATE(HCLK_CIF, "hclk_cif", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 9, GFLAGS),
+> +	GATE(HCLK_RGA, "hclk_rga", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(21), 11, GFLAGS),
+> +	GATE(0, "hclk_ahb1tom", "hclk_vio_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(21), 12, GFLAGS),
+> +	GATE(0, "pclk_vio_h2p", "hclk_vio_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(21), 13, GFLAGS),
+> +	GATE(0, "hclk_vio_h2p", "hclk_vio_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(21), 14, GFLAGS),
+> +	GATE(HCLK_HDCP, "hclk_hdcp", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(22), 0, GFLAGS),
+> +	GATE(HCLK_VIO, "hclk_vio", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(22), 1, GFLAGS),
+> +	GATE(PCLK_HDMI, "pclk_hdmi", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(22), 4, GFLAGS),
+> +	GATE(PCLK_HDCP, "pclk_hdcp", "hclk_vio_pre", 0,
+> +	     RK3328_CLKGATE_CON(22), 5, GFLAGS),
+> +
+> +	/* PD_PERI */
+> +	GATE(0, "aclk_peri_noc", "aclk_peri", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(19), 11, GFLAGS),
+> +	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 4, GFLAGS),
+> +
+> +	GATE(HCLK_SDMMC, "hclk_sdmmc", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 0, GFLAGS),
+> +	GATE(HCLK_SDIO, "hclk_sdio", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 1, GFLAGS),
+> +	GATE(HCLK_EMMC, "hclk_emmc", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 2, GFLAGS),
+> +	GATE(HCLK_SDMMC_EXT, "hclk_sdmmc_ext", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 15, GFLAGS),
+> +	GATE(HCLK_HOST0, "hclk_host0", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 6, GFLAGS),
+> +	GATE(HCLK_HOST0_ARB, "hclk_host0_arb", "hclk_peri", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(19), 7, GFLAGS),
+> +	GATE(HCLK_OTG, "hclk_otg", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 8, GFLAGS),
+> +	GATE(HCLK_OTG_PMU, "hclk_otg_pmu", "hclk_peri", 0,
+> +	     RK3328_CLKGATE_CON(19), 9, GFLAGS),
+> +	GATE(0, "hclk_peri_niu", "hclk_peri", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(19), 12, GFLAGS),
+> +	GATE(0, "pclk_peri_niu", "hclk_peri", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(19), 13, GFLAGS),
+> +
+> +	/* PD_GMAC */
+> +	GATE(ACLK_MAC2PHY, "aclk_mac2phy", "aclk_gmac", 0,
+> +	     RK3328_CLKGATE_CON(26), 0, GFLAGS),
+> +	GATE(ACLK_MAC2IO, "aclk_mac2io", "aclk_gmac", 0,
+> +	     RK3328_CLKGATE_CON(26), 2, GFLAGS),
+> +	GATE(0, "aclk_gmac_niu", "aclk_gmac", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(26), 4, GFLAGS),
+> +	GATE(PCLK_MAC2PHY, "pclk_mac2phy", "pclk_gmac", 0,
+> +	     RK3328_CLKGATE_CON(26), 1, GFLAGS),
+> +	GATE(PCLK_MAC2IO, "pclk_mac2io", "pclk_gmac", 0,
+> +	     RK3328_CLKGATE_CON(26), 3, GFLAGS),
+> +	GATE(0, "pclk_gmac_niu", "pclk_gmac", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(26), 5, GFLAGS),
+> +
+> +	/* PD_BUS */
+> +	GATE(0, "aclk_bus_niu", "aclk_bus_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 12, GFLAGS),
+> +	GATE(ACLK_DCF, "aclk_dcf", "aclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 11, GFLAGS),
+> +	GATE(ACLK_TSP, "aclk_tsp", "aclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(17), 12, GFLAGS),
+> +	GATE(0, "aclk_intmem", "aclk_bus_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 0, GFLAGS),
+> +	GATE(ACLK_DMAC, "aclk_dmac_bus", "aclk_bus_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 1, GFLAGS),
+> +
+> +	GATE(0, "hclk_rom", "hclk_bus_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 2, GFLAGS),
+> +	GATE(HCLK_I2S0_8CH, "hclk_i2s0_8ch", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 3, GFLAGS),
+> +	GATE(HCLK_I2S1_8CH, "hclk_i2s1_8ch", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 4, GFLAGS),
+> +	GATE(HCLK_I2S2_2CH, "hclk_i2s2_2ch", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 5, GFLAGS),
+> +	GATE(HCLK_SPDIF_8CH, "hclk_spdif_8ch", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 6, GFLAGS),
+> +	GATE(HCLK_TSP, "hclk_tsp", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(17), 11, GFLAGS),
+> +	GATE(HCLK_CRYPTO_MST, "hclk_crypto_mst", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 7, GFLAGS),
+> +	GATE(HCLK_CRYPTO_SLV, "hclk_crypto_slv", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(15), 8, GFLAGS),
+> +	GATE(0, "hclk_bus_niu", "hclk_bus_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 13, GFLAGS),
+> +	GATE(HCLK_PDM, "hclk_pdm", "hclk_bus_pre", 0,
+> +	     RK3328_CLKGATE_CON(28), 0, GFLAGS),
+> +
+> +	GATE(0, "pclk_bus_niu", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 14, GFLAGS),
+> +	GATE(0, "pclk_efuse", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 9, GFLAGS),
+> +	GATE(0, "pclk_otp", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(28), 4, GFLAGS),
+> +	GATE(PCLK_I2C0, "pclk_i2c0", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(15), 10, GFLAGS),
+> +	GATE(PCLK_I2C1, "pclk_i2c1", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 0, GFLAGS),
+> +	GATE(PCLK_I2C2, "pclk_i2c2", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 1, GFLAGS),
+> +	GATE(PCLK_I2C3, "pclk_i2c3", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 2, GFLAGS),
+> +	GATE(PCLK_TIMER, "pclk_timer0", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 3, GFLAGS),
+> +	GATE(0, "pclk_stimer", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 4, GFLAGS),
+> +	GATE(PCLK_SPI, "pclk_spi", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 5, GFLAGS),
+> +	GATE(PCLK_PWM, "pclk_rk_pwm", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 6, GFLAGS),
+> +	GATE(PCLK_GPIO0, "pclk_gpio0", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 7, GFLAGS),
+> +	GATE(PCLK_GPIO1, "pclk_gpio1", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 8, GFLAGS),
+> +	GATE(PCLK_GPIO2, "pclk_gpio2", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 9, GFLAGS),
+> +	GATE(PCLK_GPIO3, "pclk_gpio3", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 10, GFLAGS),
+> +	GATE(PCLK_UART0, "pclk_uart0", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 11, GFLAGS),
+> +	GATE(PCLK_UART1, "pclk_uart1", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 12, GFLAGS),
+> +	GATE(PCLK_UART2, "pclk_uart2", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 13, GFLAGS),
+> +	GATE(PCLK_TSADC, "pclk_tsadc", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 14, GFLAGS),
+> +	GATE(PCLK_DCF, "pclk_dcf", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(16), 15, GFLAGS),
+> +	GATE(PCLK_GRF, "pclk_grf", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 0, GFLAGS),
+> +	GATE(0, "pclk_cru", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 4, GFLAGS),
+> +	GATE(0, "pclk_sgrf", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 6, GFLAGS),
+> +	GATE(0, "pclk_sim", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 10, GFLAGS),
+> +	GATE(PCLK_SARADC, "pclk_saradc", "pclk_bus", 0,
+> +	     RK3328_CLKGATE_CON(17), 15, GFLAGS),
+> +	GATE(0, "pclk_pmu", "pclk_bus", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(28), 3, GFLAGS),
+> +
+> +	GATE(PCLK_USB3PHY_OTG, "pclk_usb3phy_otg", "pclk_phy_pre", 0,
+> +	     RK3328_CLKGATE_CON(28), 1, GFLAGS),
+> +	GATE(PCLK_USB3PHY_PIPE, "pclk_usb3phy_pipe", "pclk_phy_pre", 0,
+> +	     RK3328_CLKGATE_CON(28), 2, GFLAGS),
+> +	GATE(PCLK_USB3_GRF, "pclk_usb3_grf", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 2, GFLAGS),
+> +	GATE(PCLK_USB2_GRF, "pclk_usb2_grf", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 14, GFLAGS),
+> +	GATE(0, "pclk_ddrphy", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 13, GFLAGS),
+> +	GATE(0, "pclk_acodecphy", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 5, GFLAGS),
+> +	GATE(PCLK_HDMIPHY, "pclk_hdmiphy", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 7, GFLAGS),
+> +	GATE(0, "pclk_vdacphy", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(17), 8, GFLAGS),
+> +	GATE(0, "pclk_phy_niu", "pclk_phy_pre", CLK_IGNORE_UNUSED,
+> +	     RK3328_CLKGATE_CON(15), 15, GFLAGS),
+
+
+
+
+> +static void __init rk3328_clk_init(struct device_node *np)
+> +{
+> +	struct rockchip_clk_provider *ctx;
+> +	void __iomem *reg_base;
+> +
+> +	reg_base = of_iomap(np, 0);
+> +	if (!reg_base) {
+> +		pr_err("%s: could not map cru region\n", __func__);
+> +		return;
+> +	}
+> +
+> +	rk3328_cru_base = reg_base;
+> +
+> +	ctx = rockchip_clk_init(np, reg_base, CLK_NR_CLKS);
+> +	if (IS_ERR(ctx)) {
+> +		pr_err("%s: rockchip clk init failed\n", __func__);
+> +		iounmap(reg_base);
+> +		return;
+> +	}
+> +
+> +	rockchip_clk_register_plls(ctx, rk3328_pll_clks,
+> +				   ARRAY_SIZE(rk3328_pll_clks),
+> +				   RK3328_GRF_SOC_STATUS0);
+> +	rockchip_clk_register_branches(ctx, rk3328_clk_branches,
+> +				       ARRAY_SIZE(rk3328_clk_branches));
+> +	rockchip_clk_protect_critical(rk3328_critical_clocks,
+> +				      ARRAY_SIZE(rk3328_critical_clocks));
+> +
+> +	rockchip_clk_register_armclk(ctx, ARMCLK, "armclk",
+> +				     mux_armclk_p, ARRAY_SIZE(mux_armclk_p),
+> +				     &rk3328_cpuclk_data, rk3328_cpuclk_rates,
+> +				     ARRAY_SIZE(rk3328_cpuclk_rates));
+> +
+> +	rockchip_register_softrst(np, 11, reg_base + RK3328_SOFTRST_CON(0),
+> +				  ROCKCHIP_SOFTRST_HIWORD_MASK);
+> +
+> +	rockchip_register_restart_notifier(ctx, RK3328_GLB_SRST_FST, NULL);
+> +
+> +	rockchip_clk_of_add_provider(np, ctx);
+> +
+> +	atomic_notifier_chain_register(&panic_notifier_list,
+> +				       &rk3328_clk_panic_block);
+
+please drop this notifier and asorted code above for dumping cru registers.
+
+
+> +}
+> +
+> +CLK_OF_DECLARE(rk3328_cru, "rockchip,rk3328-cru", rk3328_clk_init);
+> +
+> +static void __init rk3328_grf_clk_init(struct device_node *np)
+> +{
+> +	struct rockchip_clk_provider *ctx;
+> +	void __iomem *reg_base;
+> +
+> +	reg_base = of_iomap(np, 0);
+> +	if (!reg_base) {
+> +		pr_err("%s: could not map cru pmu region\n", __func__);
+> +		return;
+> +	}
+> +
+> +	ctx = rockchip_clk_init(np, reg_base, CLKGRF_NR_CLKS);
+> +	if (IS_ERR(ctx)) {
+> +		pr_err("%s: rockchip pmu clk init failed\n", __func__);
+> +		return;
+> +	}
+> +
+> +	rockchip_clk_register_branches(ctx, rk3328_clk_grf_branches,
+> +				       ARRAY_SIZE(rk3328_clk_grf_branches));
+> +
+> +	rockchip_clk_of_add_provider(np, ctx);
+> +}
+
+We definitly don't want to bind against the regular GRF node. This causes a 
+double mapping of the region and in general this isn't the clock-controller 
+and just contains 2 clocks controls that somehow ended up in the GRF :-) .
+
+Instead please take a look at the muxgrf clock patches I Cc'ed you on some 
+minutes ago.
+
+
+> +CLK_OF_DECLARE(rk3328_cru_grf, "rockchip,rk3328-grf", rk3328_grf_clk_init);
+> diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h index
+> 06acb7e0911f..7225997f8d52 100644
+> --- a/drivers/clk/rockchip/clk.h
+> +++ b/drivers/clk/rockchip/clk.h
+> @@ -91,6 +91,28 @@
+>  #define RK3288_EMMC_CON0		0x218
+>  #define RK3288_EMMC_CON1		0x21c
+> 
+> +#define RK3328_PLL_CON(x)		RK2928_PLL_CON(x)
+> +#define RK3328_CLKSEL_CON(x)		((x) * 0x4 + 0x100)
+> +#define RK3328_CLKGATE_CON(x)		((x) * 0x4 + 0x200)
+> +#define RK3328_GRFCLKSEL_CON(x)		((x) * 0x4 + 0x100)
+> +#define RK3328_GLB_SRST_FST		0x9c
+> +#define RK3328_GLB_SRST_SND		0x98
+> +#define RK3328_SOFTRST_CON(x)		((x) * 0x4 + 0x300)
+> +#define RK3328_MODE_CON			0x80
+> +#define RK3328_MISC_CON			0x84
+-----
+> +#define RK3328_DIV_ACLKM_MASK		0x7
+> +#define RK3328_DIV_ACLKM_SHIFT		4
+> +#define RK3328_DIV_PCLK_DBG_MASK	0xf
+> +#define RK3328_DIV_PCLK_DBG_SHIFT	0
+-----
+please move these to the armclk defintion in the controller driver
+where already the other definitions are
+
+
+Thanks
+Heiko
