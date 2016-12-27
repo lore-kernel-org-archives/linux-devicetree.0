@@ -1,77 +1,53 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add num-cs for A20 spi nodes
-Date: Tue, 27 Dec 2016 10:11:34 +0800
-Message-ID: <CAGb2v665UkdGvV-PO_eKRdY78XzVeHSpmev2h+2umbEYUbZ3GQ@mail.gmail.com>
-References: <20161226174748.17544-1-manu@bidouilliste.com>
+From: HS Liao <hs.liao@mediatek.com>
+Subject: [PATCH v18 0/4] Mediatek MT8173 CMDQ support
+Date: Tue, 27 Dec 2016 11:39:17 +0800
+Message-ID: <1482809961-31930-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161226174748.17544-1-manu@bidouilliste.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@bidouilliste.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.co>
 List-Id: devicetree@vger.kernel.org
+
 
 Hi,
 
-On Tue, Dec 27, 2016 at 1:47 AM, Emmanuel Vadot <manu@bidouilliste.com> wrote:
-> The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
-> others three only have 1.
-> Add the num-cs property to each node.
-> The current driver doesn't read this property but this is useful for
-> downstream user of DTS (FreeBSD for example).
->
-> Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
-> ---
->
-> Changes in v2:
->  * Explain that driver doesn't support this but that it is useful
->  for downstream users of DTS.
->
->  arch/arm/boot/dts/sun7i-a20.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index 94cf5a1c7172..ed21982c81cb 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -871,6 +871,7 @@
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> +                       num-cs = 4;
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
 
-The numbers need to be enclosed in angle brackets.
+These patches have a build dependency on top of v4.10-rc1.
 
-ChenYu
+Changes since v17:
+ - rebase to v4.10-rc1
 
->                 };
->
->                 spi1: spi@01c06000 {
-> @@ -885,6 +886,7 @@
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> +                       num-cs = 1;
->                 };
->
->                 emac: ethernet@01c0b000 {
-> @@ -1037,6 +1039,7 @@
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> +                       num-cs = 1;
->                 };
->
->                 ahci: sata@01c18000 {
-> @@ -1079,6 +1082,7 @@
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> +                       num-cs = 1;
->                 };
->
->                 pio: pinctrl@01c20800 {
-> --
-> 2.11.0
->
+Best regards,
+HS Liao
+
+HS Liao (4):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  mailbox: mediatek: Add Mediatek CMDQ driver
+  arm64: dts: mt8173: Add GCE node
+  soc: mediatek: Add Mediatek CMDQ helper
+
+ .../devicetree/bindings/mailbox/mtk-gce.txt        |  43 ++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+ drivers/mailbox/Kconfig                            |  10 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mtk-cmdq-mailbox.c                 | 632 +++++++++++++++++++++
+ drivers/soc/mediatek/Kconfig                       |  11 +
+ drivers/soc/mediatek/Makefile                      |   1 +
+ drivers/soc/mediatek/mtk-cmdq-helper.c             | 310 ++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h           |  75 +++
+ include/linux/soc/mediatek/mtk-cmdq.h              | 174 ++++++
+ 10 files changed, 1268 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+ create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+ create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
+ create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+
+-- 
+1.9.1
