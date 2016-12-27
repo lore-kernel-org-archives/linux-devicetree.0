@@ -1,51 +1,47 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v2] arm64: dts: rockchip: add u2phy clock for ehci and ohci of rk3399
-Date: Tue, 27 Dec 2016 18:04:26 +0100
-Message-ID: <1731551.Q6cHK6n5ZM@phil>
-References: <1482316182-2305-1-git-send-email-zhengxing@rock-chips.com> <1482316865-2769-1-git-send-email-zhengxing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv2 0/5] Add generic pinctrl helpers for managing groups and function
+Date: Tue, 27 Dec 2016 09:19:58 -0800
+Message-ID: <20161227172003.6517-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482316865-2769-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 21. Dezember 2016, 18:41:05 CET schrieb Xing Zheng:
-> From: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> We found that the suspend process was blocked when it run into
-> ehci/ohci module due to clk-480m of usb2-phy was disabled.
-> 
-> The root cause is that usb2-phy suspended earlier than ehci/ohci
-> (usb2-phy will be auto suspended if no devices plug-in). and the
-> clk-480m provided by it was disabled if no module used. However,
-> some suspend process related ehci/ohci are base on this clock,
-> so we should refer it into ehci/ohci driver to prevent this case.
-> 
-> The u2phy clock flow like this:
-> ===
->       u2phy ________________
-> 
->            |                |    |-----> UTMI_CLK ---------> | EHCI |
-> 
-> OSC_24M ---|---> PHY_PLL----|----|
-> 
->            |________^_______|    |-----> 480M_CLK ---|G|---> |
->            |USBPHY_480M_SRC| ----> USBPHY_480M for SoC
->                    GRF
-> ===
-> 
-> Signed-off-by: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi all,
 
-applied for 4.11 with Doug's Review-tag
+Here are some changes to add generic helpers for managing pinctrl groups and
+functions.
 
+Regards,
 
-Thanks
-Heiko
+Tony
+
+Changes since v1:
+
+- Updates to the first patch in the series to use delayed work for pinctrl
+  hogs based on what was discussed on the mailing list, mostly to pass
+  pctldev to the parsers and add pinctrl_dt_has_hogs() check
+
+Tony Lindgren (5):
+  pinctrl: core: Use delayed work for hogs
+  pinctrl: core: Add generic pinctrl functions for managing groups
+  pinctrl: core: Add generic pinctrl functions for managing groups
+  pinctrl: single: Use generic pinctrl helpers for managing groups
+  pinctrl: single: Use generic pinmux helpers for managing functions
+
+ drivers/pinctrl/Kconfig          |  11 +-
+ drivers/pinctrl/core.c           | 270 +++++++++++++++++++++++++++++++-----
+ drivers/pinctrl/core.h           |  67 +++++++++
+ drivers/pinctrl/devicetree.c     |  28 +++-
+ drivers/pinctrl/devicetree.h     |  12 +-
+ drivers/pinctrl/pinctrl-single.c | 290 ++++-----------------------------------
+ drivers/pinctrl/pinmux.c         | 173 +++++++++++++++++++++++
+ drivers/pinctrl/pinmux.h         |  42 ++++++
+ 8 files changed, 591 insertions(+), 302 deletions(-)
+
+-- 
+2.11.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
