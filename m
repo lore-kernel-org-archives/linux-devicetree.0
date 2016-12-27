@@ -1,43 +1,40 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: Add am335x-boneblack-wireless
-Date: Tue, 27 Dec 2016 10:14:30 -0800
-Message-ID: <20161227181429.GY4920@atomide.com>
-References: <20161227175837.28970-1-robertcnelson@gmail.com>
- <20161227175837.28970-2-robertcnelson@gmail.com>
- <CAOCHtYjx+KD3iy1cssjCLN0xjXBGJFZ_e1Qw2zRGbV4=X0+bHg@mail.gmail.com>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v4 3/5] backlight: lm3533: Support initialization from Device Tree
+Date: Tue, 27 Dec 2016 13:23:35 -0500
+Message-ID: <002301d2606e$56f91840$04eb48c0$@gmail.com>
+References: <20161226181153.11271-1-bjorn.andersson@linaro.org> <20161226181153.11271-3-bjorn.andersson@linaro.org> <20161227104630.GA15452@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOCHtYjx+KD3iy1cssjCLN0xjXBGJFZ_e1Qw2zRGbV4=X0+bHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20161227104630.GA15452@amd>
+Content-Language: ko
+Sender: linux-leds-owner@vger.kernel.org
+To: 'Pavel Machek' <pavel@ucw.cz>, 'Bjorn Andersson' <bjorn.andersson@linaro.org>
+Cc: 'Lee Jones' <lee.jones@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, 'Jonathan Cameron' <jic23@kernel.org>, 'Hartmut Knaack' <knaack.h@gmx.de>, 'Lars-Peter Clausen' <lars@metafoo.de>, 'Peter Meerwald-Stadler' <pmeerw@pmeerw.net>, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jacek Anaszewski' <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, 'Bjorn Andersson' <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-* Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [161227 10:02]:
-> On Tue, Dec 27, 2016 at 11:58 AM, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > BeagleBone Black Wireless is clone of the BeagleBone Black (BBB) with the Ethernet
-> > replaced by a TI wl1835 wireless module.
-> >
-> > This board can be indentified by the BWAx value after A335BNLT (BBB) in the at24 eeprom:
-> > BWAx [aa 55 33 ee 41 33 33 35  42 4e 4c 54 42 57 41 35  |.U3.A335BNLTBWA5|]
-> >
-> > http://beagleboard.org/black-wireless
-> > https://github.com/beagleboard/beaglebone-black-wireless
-> >
-> > firmware: https://github.com/beagleboard/beaglebone-black-wireless/tree/master/firmware
+On Tuesday, December 27, 2016 5:47 AM, Pavel Machek wrote:
 > 
-> Tony, this firmware should be there shortly, i have a pull request
-> setup for Jason:
+> On Mon 2016-12-26 10:11:51, Bjorn Andersson wrote:
+> > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> >
+> > Implement support for initialization of the lm3533 backlight from Device
+> > Tree.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
-> https://github.com/beagleboard/beaglebone-black-wireless/pull/5
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-OK great, good to have these working out of the box with mainline
-kernel :)
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jingoo Han
+
+> 
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures)
+> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
