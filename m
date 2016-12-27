@@ -1,36 +1,51 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 6/6] ARM64: exynos: add the pcie node for TM2
-Date: Tue, 27 Dec 2016 18:33:28 +0200
-Message-ID: <CAJKOXPcx-epK2=ug_ZtOGx5w755CN1xe7A+SgyS+rVFxG5ggcg@mail.gmail.com>
-References: <20161226052029.10552-1-jh80.chung@samsung.com>
- <CGME20161226052031epcas1p43a300fe9e59c2af410c48861cd8554d1@epcas1p4.samsung.com>
- <20161226052029.10552-7-jh80.chung@samsung.com> <20161227163200.6noed454fmtgozrv@kozik-lap>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v2] arm64: dts: rockchip: add u2phy clock for ehci and ohci of rk3399
+Date: Tue, 27 Dec 2016 18:04:26 +0100
+Message-ID: <1731551.Q6cHK6n5ZM@phil>
+References: <1482316182-2305-1-git-send-email-zhengxing@rock-chips.com> <1482316865-2769-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161227163200.6noed454fmtgozrv@kozik-lap>
+In-Reply-To: <1482316865-2769-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, kishon-l0cyMroinI0@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2016 at 6:32 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Dec 26, 2016 at 02:20:29PM +0900, Jaehoon Chung wrote:
->> Add the Exxynos5433 pcie node for TM2.
->> This pcie device is used for supporting WiFi.
->>
->> And some gpios are already requested from pinctrl. so it doesn't need to
->> initialize.
->> GPJ2-0 is used for supplying to WiFi PCIe chip.
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
+Am Mittwoch, 21. Dezember 2016, 18:41:05 CET schrieb Xing Zheng:
+> From: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> We found that the suspend process was blocked when it run into
+> ehci/ohci module due to clk-480m of usb2-phy was disabled.
+> 
+> The root cause is that usb2-phy suspended earlier than ehci/ohci
+> (usb2-phy will be auto suspended if no devices plug-in). and the
+> clk-480m provided by it was disabled if no module used. However,
+> some suspend process related ehci/ohci are base on this clock,
+> so we should refer it into ehci/ohci driver to prevent this case.
+> 
+> The u2phy clock flow like this:
+> ===
+>       u2phy ________________
+> 
+>            |                |    |-----> UTMI_CLK ---------> | EHCI |
+> 
+> OSC_24M ---|---> PHY_PLL----|----|
+> 
+>            |________^_______|    |-----> 480M_CLK ---|G|---> |
+>            |USBPHY_480M_SRC| ----> USBPHY_480M for SoC
+>                    GRF
+> ===
+> 
+> Signed-off-by: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+applied for 4.11 with Doug's Review-tag
 
 
-Ahhh, and one more comment - please add missing 'dts' prefix in the subject.
-
-BR,
-Krzysztof
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
