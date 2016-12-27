@@ -1,31 +1,85 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 3/5] pinctrl: aspeed-g4: Add mux configuration for all pins
-Date: Tue, 27 Dec 2016 23:18:57 +0100
-Message-ID: <CACRpkdbZdi1s0anajbtRZMBwdE1c=k_MiUythuLpz1kixCU+FQ@mail.gmail.com>
-References: <20161220073551.28522-1-andrew@aj.id.au> <20161220073551.28522-4-andrew@aj.id.au>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [RFC PATCH 3/6] ARM64: dts: exynos5433: add the pcie_phy node for
+ PCIe
+Date: Wed, 28 Dec 2016 07:57:30 +0900
+Message-ID: <43872be0-191e-2b6d-adcc-3ce0b88b44c7@samsung.com>
+References: <20161226052029.10552-1-jh80.chung@samsung.com>
+ <CGME20161226052031epcas5p451b1352d6c8c5205a69246c2994b9506@epcas5p4.samsung.com>
+ <20161226052029.10552-4-jh80.chung@samsung.com>
+ <20161227161134.ds67t5byucphwkjg@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161220073551.28522-4-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Joel Stanley <joel@jms.id.au>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Timothy Pearson <tpearson@raptorengineering.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20161227161134.ds67t5byucphwkjg@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, javier@osg.samsung.com, kishon@ti.com, will.deacon@arm.com, catalin.marinas@arm.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2016 at 8:35 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+On 12/28/2016 01:11 AM, Krzysztof Kozlowski wrote:
+> On Mon, Dec 26, 2016 at 02:20:26PM +0900, Jaehoon Chung wrote:
+>> To use the generic PHY framework, adds the pcie_phy node.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>> index 64226d5..2a15f18 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+>> @@ -805,6 +805,11 @@
+>>  			reg = <0x145f0000 0x1038>;
+>>  		};
+>>  
+>> +		syscon_fsys: syscon@156f0000 {
+>> +			compatible = "syscon";
+>> +			reg = <0x156f0000 0x1044>;
+>> +		};
+>> +
+>>  		gsc_0: video-scaler@13C00000 {
+>>  			compatible = "samsung,exynos5433-gsc";
+>>  			reg = <0x13c00000 0x1000>;
+>> @@ -1443,6 +1448,15 @@
+>>  				status = "disabled";
+>>  			};
+>>  		};
+>> +
+>> +		pcie_phy: pcie-phy@15680000 {
+>> +			#phy-cells = <0>;
+>> +			compatible = "samsung,exynos5433-pcie-phy";
+> 
+> Mostly we use the convention of compatible being first property.
+> 
+>> +			reg = <0x15680000 0x1000>;
+>> +			samsung,pmureg-phandle = <&pmu_system_controller>;
+>> +			samsung,fsys-sysreg = <&syscon_fsys>;
+>> +			status = "okay";
+> 
+> Why do you need to put status=okay here?
 
-> The patch introducing the g4 pinctrl driver implemented a smattering of
-> pins to flesh out the implementation of the core and provide bare-bones
-> support for some OpenPOWER platforms. Now, update the bindings document
-> to reflect the complete functionality and implement the necessary pin
-> configuration tables in the driver.
->
-> Cc: Timothy Pearson <tpearson@raptorengineering.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Acked-by: Joel Stanley <joel@jms.id.au>
-> Acked-by: Rob Herring <robh@kernel.org>
+Not need. Will remove.
 
-Patch applied.
+Best Regards,
+Jaehoon Chung
 
-Yours,
-Linus Walleij
+> 
+> Best regards,
+> Krzysztof
+> 
+>> +		};
+>>  	};
+>>  
+>>  	timer: timer {
+>> -- 
+>> 2.10.2
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
