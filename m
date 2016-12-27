@@ -1,100 +1,66 @@
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 2/4] dt-bindings: add bindings for rk3328 clock controller
-Date: Tue, 27 Dec 2016 14:32:51 +0800
-Message-ID: <1482820373-10186-3-git-send-email-zhangqing@rock-chips.com>
-References: <1482820373-10186-1-git-send-email-zhangqing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1482820373-10186-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Roger Shimizu <rogershimizu@gmail.com>
+Subject: [PATCH v3 0/3] make kurobox-pro be able to shutdown after device-tree migration
+Date: Tue, 27 Dec 2016 16:06:08 +0900
+Message-ID: <20161227070611.14852-1-rogershimizu@gmail.com>
+References: <20161216100501.18173-1-rogershimizu@gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161216100501.18173-1-rogershimizu@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Roger Shimizu <rogershimizu@gmail.com>, Ryan Tandy <ryan@nardis.ca>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings for Rockchip cru which found on
-Rockchip SoCs.
+Dear Kernel Maintainers,
 
-Changes in v4:
-  dropping the "rockchip,cru" and "syscon" properties for bindings of rk3328
+Kurobox-Pro (and variants) need more commands sending to UART1 to shutdown.
+So here I make this patch series to let current qnap-poweroff implementation
+be able to handle such case.
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../bindings/clock/rockchip,rk3328-cru.txt         | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
+Here I give 3 patches, for 3 different kernel subsystems respectivelay:
+  - Patch 1/3: System reset/shutdown driver
+  - Patch 2/3: Open firmware and flattened device tree bindings
+  - Patch 3/3: ARM/Marvell Dove/MV78xx0/Orion SOC support
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-new file mode 100644
-index 000000000000..e71c675ba5da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3328-cru.txt
-@@ -0,0 +1,57 @@
-+* Rockchip RK3328 Clock and Reset Unit
-+
-+The RK3328 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: should be "rockchip,rk3328-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3328-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "clkin_i2s" - external I2S clock - optional,
-+ - "gmac_clkin" - external GMAC clock - optional
-+ - "phy_50m_out" - output clock of the pll in the mac phy
-+
-+Example: Clock controller node:
-+
-+	cru: clock-controller@ff440000 {
-+		compatible = "rockchip,rk3328-cru";
-+		reg = <0x0 0xff440000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@ff120000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0xff120000 0x100>;
-+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clocks = <&cru SCLK_UART0>;
-+	};
+Ryan Tandy, the issue reporter, and I have already tested those changes on
+Linkstation/KuroBoxPro devices, and confirmed it's working well.
+
+Merry Xmax and look forward to your feedback!
+
+Changes:
+  v0 => v1:
+  - Update 0003 to split kuroboxpro related code into kuroboxpro-common.c
+  v1 => v2:
+  - Split off linkstation/kuroboxpro related code to linkstation-reset.c
+    Because linkstation before kuroboxpro also need this driver to power
+    off properly. It's more proper to call it linkstation driver.
+  v2 => v3:
+  - Split off devicetree bindings doc into a separate patch.
+  - Add device-tree patch to make Linkstation LS-GL and KuroBox Pro to
+    use the newly created linkstation-reset driver.
+  - Remove the unused one-byte command sending case in linkstation-reset
+    driver.
+
+Cheers,
+Roger Shimizu, GMT +9 Tokyo
+PGP/GPG: 4096R/6C6ACD6417B3ACB1
+
+Roger Shimizu (3):
+  power: reset: add linkstation-reset driver
+  DT: bingdings: power: reset: add linkstation-reset doc
+  ARM: DT: add power-off support to linkstation lsgl and kuroboxpro
+
+ .../bindings/power/reset/linkstation-reset.txt     |  26 ++
+ arch/arm/boot/dts/orion5x-kuroboxpro.dts           |   8 +
+ arch/arm/boot/dts/orion5x-linkstation-lsgl.dts     |  10 +
+ arch/arm/boot/dts/orion5x-linkstation-lswtgl.dts   |   4 +
+ arch/arm/boot/dts/orion5x-linkstation.dtsi         |   4 -
+ drivers/power/reset/Kconfig                        |  10 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/linkstation-reset.c            | 269 +++++++++++++++++++++
+ 8 files changed, 328 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/linkstation-reset.txt
+ create mode 100644 drivers/power/reset/linkstation-reset.c
+
 -- 
-1.9.1
+2.11.0
+
