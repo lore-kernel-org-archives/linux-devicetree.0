@@ -1,117 +1,73 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 7/9] pinctrl: samsung: Add property to mark pad state as
- suitable for power down
-Date: Tue, 27 Dec 2016 17:33:31 +0200
-Message-ID: <20161227153331.jbh7ei6oh3obmnri@kozik-lap>
-References: <1482495889-6201-1-git-send-email-m.szyprowski@samsung.com>
- <CGME20161223122538epcas5p29515ceff21963ab035b3b32878830ce2@epcas5p2.samsung.com>
- <1482495889-6201-8-git-send-email-m.szyprowski@samsung.com>
- <20161225191914.5bzl6fso36ozuum6@kozik-lap>
- <bd48fe32-5296-fc23-dbb8-d212292d76cd@samsung.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] ARM, ARM64: dts: drop "arm,
+ amba-bus" in favor of "simple-bus" part 3
+Date: Wed, 28 Dec 2016 00:51:26 +0900
+Message-ID: <1482853886-7932-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bd48fe32-5296-fc23-dbb8-d212292d76cd@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2016 at 11:30:57AM +0100, Marek Szyprowski wrote:
-> Hi Krzysztof,
-> 
-> 
-> On 2016-12-25 20:19, Krzysztof Kozlowski wrote:
-> > On Fri, Dec 23, 2016 at 01:24:47PM +0100, Marek Szyprowski wrote:
-> > > Add support for special property "samsung,off-state", which indicates a special
-> > > state suitable for device's "sleep" state. Its pin values/properties should
-> > > match the configuration in power down mode. It indicates that pin controller
-> > > can notify runtime power management subsystem, that it is ready for runtime
-> > > suspend if its all pins are configured for such state. This in turn might
-> > > allow to turn respective power domain off to reduce power consumption.
-> > > 
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > ---
-> > >   Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt | 8 ++++++++
-> > >   drivers/pinctrl/samsung/pinctrl-samsung.c                     | 4 ++++
-> > >   drivers/pinctrl/samsung/pinctrl-samsung.h                     | 1 +
-> > >   3 files changed, 13 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > > index b7bd2e12a269..354eea0e7798 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > > @@ -105,6 +105,7 @@ Required Properties:
-> > >     - samsung,pin-drv: Drive strength configuration.
-> > >     - samsung,pin-pud-pdn: Pull up/down configuration in power down mode.
-> > >     - samsung,pin-drv-pdn: Drive strength configuration in power down mode.
-> > > +  - samsung,off-state: Mark this configuration as suitable for bank power off.
-> > >     The values specified by these config properties should be derived from the
-> > >     hardware manual and these values are programmed as-is into the pin
-> > > @@ -113,6 +114,13 @@ Required Properties:
-> > >     Note: A child should include atleast a pin function selection property or
-> > >     pin configuration property (one or more) or both.
-> > > +  Note: Special property "samsung,off-state" indicates that this state can
-> > > +  be used for device's "sleep" pins state. Its pin values/properties should
-> > > +  match the configuration in power down mode.
-> > Why power down values cannot be used for sleep state? Why you need
-> > separate pin control state? If pins values should match power down
-> > configuration, then they could just be added to default state, couldn't
-> > they?
-> 
-> Separate sleep state is needed because of the pin control bindings and
-> design.
-> 
-> A separate sleep state is required to let pin control client driver (in this
-> case
-> Exynos I2S driver) let to choose when it is okay to switch pads into sleep
-> state and I see no other way to achieve this.
+Tree-wide replacement was done by commit 2ef7d5f342c1 ("ARM, ARM64:
+dts: drop "arm,amba-bus" in favor of "simple-bus"), then the 2nd
+round by commit 15b7cc78f095 ("arm64: dts: drop "arm,amba-bus" in
+favor of "simple-bus" part 2").
 
-Maybe the pinctrl API should be extended for this? Doing this in DTS
-just for purpose of passing information between drivers (consumer and
-provider) looks odd.
+Here, some new users have appeared for Linux v4.10-rc1.  Eliminate
+them now.
 
-Anyway, you are proposing a new binding so please Cc devicetree mailing
-list and device tree maintainers.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> > In the patch 2/9, existing configuration:
-> > 716         i2s0_bus: i2s0-bus {
-> > (...)
-> > 719                 samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> > 720                 samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> > 721                 samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-> > 722         };
-> > 
-> > additional configuration:
-> > +       i2s0_bus_slp: i2s0-bus-slp {
-> > +               samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-> > +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> > +               samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-> > +               samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
-> > +               samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> > +               samsung,off-state;
-> > +       };
-> 
-> I agree that it would be possible to get rid of "samsung,off-state" property
-> and
-> just detect off state when func/pud pair matches power down func/pud.
-> 
-> > > It indicates that pin control
-> > > +  can notify runtime power management subsystem, that it is ready for runtime
-> > > +  suspend if its all pins are configured for such state. This in turn might
-> > > +  allow to turn respective power domain off to reduce power consumption.
-> > What do you mean by "notifying RPM subsystem"? Either this is
-> > description of hardware in certain mode (sleep state) or this is not
-> > device tree property.
-> 
-> Maybe I wrote the description with a view too limited to the kernel
-> operation
-> perspective, but if we remove the need to mark state as off, the above
-> description
-> will not be needed.
+Hi Arnd, Olof,
 
-But still it wouldn't be describing any hardware property, would it?
+Can you pick this up for v4.10 fixes?
 
-Best regards,
-Krzysztof
+If we carry arm,amba-bus until the release, we will need to
+take more time to deprecate it.
+
+
+ arch/arm/boot/dts/qcom-mdm9615.dtsi        | 2 +-
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index 5ae4ec5..c852b69 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -357,7 +357,7 @@
+ 		};
+ 
+ 		amba {
+-			compatible = "arm,amba-bus";
++			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 64226d5..135890c 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -1367,7 +1367,7 @@
+ 		};
+ 
+ 		amba {
+-			compatible = "arm,amba-bus";
++			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+-- 
+2.7.4
