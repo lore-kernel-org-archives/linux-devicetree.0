@@ -1,45 +1,73 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 06/12] driver: pinctrl: imx: Add pinctrl driver support
- for imx6sll
-Date: Tue, 27 Dec 2016 14:01:53 +0100
-Message-ID: <CACRpkdZYH-X=SG7AfCOgKA9U0WL9941e-zo_tgUF74mdns2_7Q@mail.gmail.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-7-git-send-email-ping.bai@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1482832070-22668-7-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bai Ping <ping.bai@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, jacky.baip@gmail.com, Fabio Estevam <fabio.estevam@nxp.com>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/2] Add support for Omnivision OV5647
+Date: Tue, 27 Dec 2016 13:59:01 +0000
+Message-ID: <cover.1482846784.git.roliveir@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2016 at 10:47 AM, Bai Ping <ping.bai@nxp.com> wrote:
+Hello,
 
-> Add pinctrl driver support for imx6sll.
->
-> Signed-off-by: Bai Ping <ping.bai@nxp.com>
-(...)
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -514,6 +514,7 @@ config SOC_IMX6SL
->
->  config SOC_IMX6SLL
->         bool "i.MX6 SoloLiteLite support"
-> +       select PINCTRL_IMX6SLL
+This patch adds support for the Omnivision OV5647 sensor.
 
-This needs to be separate so I can merge the pure pin control patch
-to my tree.
+At the moment it only supports 640x480 in Raw 8.
 
-Apart from that, look into using generic pinconf.
+This is the seventh version of the OV5647 camera driver patchset.
 
-Yours,
-Linus Walleij
+v7:
+ - Remove "0x" and leading 0 from DT documentation examples
+
+v6:
+ - Add example to DT documentation
+ - Remove data-lanes and clock-lane property from DT
+ - Add external clock property to DT
+ - Order includes
+ - Remove unused variables and functions
+ - Add external clock handling
+ - Add power on counter
+ - Change from g/s_parm to g/s_frame_interval
+
+v5:
+ - Refactor code 
+ - Change comments
+ - Add missing error handling in some functions
+
+v4: 
+ - Add correct license
+ - Revert debugging info to generic infrastructure
+ - Turn defines into enums
+ - Correct code style issues
+ - Remove unused defines
+ - Make sure all errors where being handled
+ - Rename some functions to make code more readable
+ - Add some debugging info
+
+v3: 
+ - No changes. Re-submitted due to lack of responses
+
+v2: 
+ - Corrections in DT documentation
+
+Ramiro Oliveira (2):
+  Add OV5647 device tree documentation
+  Add support for OV5647 sensor.
+
+ .../devicetree/bindings/media/i2c/ov5647.txt       |  35 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  12 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/ov5647.c                         | 718 +++++++++++++++++++++
+ 5 files changed, 773 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+ create mode 100644 drivers/media/i2c/ov5647.c
+
+-- 
+2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
