@@ -1,34 +1,30 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/9] ARM: omap: Add empty chosen node in SoCs top level
- DTSI
-Date: Tue, 27 Dec 2016 09:30:15 -0800
-Message-ID: <20161227173015.GP4920@atomide.com>
-References: <1482158681-4530-1-git-send-email-javier@osg.samsung.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] dt-bindings: mfd: Update TPS65217 interrupts
+Date: Tue, 27 Dec 2016 09:52:30 -0800
+Message-ID: <20161227175229.GU4920@atomide.com>
+References: <20161209062833.5768-1-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1482158681-4530-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Pali Rohar <pali.rohar@gmail.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161209062833.5768-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Javier Martinez Canillas <javier@osg.samsung.com> [161219 06:45]:
-> Hello Tony,
-> 
-> As discussed in [0], there's a regression when booting a kernel with a DTB
-> that doesn't have a pre-existing chosen node. This is usually not an issue
-> for most boards since u-boot creates an empty chosen node if isn't present
-> in the DTB.
-> 
-> But it can be an issue for others bootloaders as Pali pointed out with the
-> N9/900/950 phones and the Nokia Loader (NoLo).
-> 
-> This patch series add chosen nodes in the top level DTSI for all OMAP SoCs.
-> 
-> [0]: http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1294379.html
+* Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [161208 22:29]:
+> This patch-set fixes wrong property name and uses TPS65217 HW interrupt 
+> number from the datasheet instead of the DT ABI. DT bindings are also 
+> updated.
 
-Applying these into omap-for-v4.10/fixes thanks.
+Applying into omap-for-v4.10/fixes before this usage pops up on other
+am335x boards.
+
+Regards,
 
 Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
