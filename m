@@ -1,57 +1,73 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v2 2/2] arm64: dts: exynos: Add support for S6E3HA2 panel
- device on TM2 board
-Date: Tue, 27 Dec 2016 18:05:48 +0900
-Message-ID: <1482829548-20842-3-git-send-email-hoegeun.kwon@samsung.com>
-References: <1482829548-20842-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20161227090607epcas5p21735964568c072bbf862d7fd1b94b6f2@epcas5p2.samsung.com>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
+Subject: [PATCH 1/9] irqchip/ls-scfg-msi: fix typo of MSI compatible strings
+Date: Tue, 27 Dec 2016 17:12:57 +0800
+Message-ID: <1482829985-24421-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1482829548-20842-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1bmcuY29tPgoKVGhpcyBwYXRj
-aCBhZGQgdGhlIHBhbmVsIGRldmljZSB0cmVlIG5vZGUgZm9yIFM2RTNIQTIgZGlzcGxheQpjb250
-cm9sbGVyIHRvIFRNMiBkdHMuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4u
-aHdhbmdAc2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1
-bmcuY29tPgpTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5n
-LmNvbT4KLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMg
-fCAzMyArKysrKysrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzMyBpbnNl
-cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9z
-NTQzMy10bTIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTIu
-ZHRzCmluZGV4IGRiODc5ZjQuLjRhZDIzMzIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4
-eW5vcy9leHlub3M1NDMzLXRtMi5kdHMKQEAgLTI1MiwxMSArMjUyLDQ0IEBACiAJCQlyZWcgPSA8
-MT47CiAKIAkJCWRzaV9vdXQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRz
-aV9pbj47CiAJCQkJc2Ftc3VuZyxidXJzdC1jbG9jay1mcmVxdWVuY3kgPSA8NTEyMDAwMDAwPjsK
-IAkJCQlzYW1zdW5nLGVzYy1jbG9jay1mcmVxdWVuY3kgPSA8MTYwMDAwMDA+OwogCQkJfTsKIAkJ
-fTsKIAl9OworCisJcGFuZWxAMCB7CisJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxzNmUzaGEyIjsK
-KwkJcmVnID0gPDA+OworCQl2ZGQzLXN1cHBseSA9IDwmbGRvMjdfcmVnPjsKKwkJdmNpLXN1cHBs
-eSA9IDwmbGRvMjhfcmVnPjsKKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZzAgMCBHUElPX0FDVElWRV9I
-SUdIPjsKKwkJZW5hYmxlLWdwaW9zID0gPCZncGYxIDUgR1BJT19BQ1RJVkVfSElHSD47CisJCXRl
-LWdwaW9zID0gPCZncGYxIDMgR1BJT19BQ1RJVkVfSElHSD47CisJCXBvd2VyLW9uLWRlbGF5ID0g
-PDEyMD47CisJCXJlc2V0LWRlbGF5ID0gPDU+OworCisJCWRpc3BsYXktdGltaW5ncyB7CisJCQl0
-aW1pbmctMCB7CisJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDE0ODc0NDQ0PjsKKwkJCQloYWN0aXZl
-ID0gPDE0NDA+OworCQkJCXZhY3RpdmUgPSA8MjU2MD47CisJCQkJaGZyb250LXBvcmNoID0gPDE+
-OworCQkJCWhiYWNrLXBvcmNoID0gPDE+OworCQkJCWhzeW5jLWxlbiA9IDwxPjsKKwkJCQl2ZnJv
-bnQtcG9yY2ggPSA8MT47CisJCQkJdmJhY2stcG9yY2ggPSA8MTU+OworCQkJCXZzeW5jLWxlbiA9
-IDwxPjsKKwkJCX07CisJCX07CisKKwkJcG9ydCB7CisJCQlkc2lfaW46IGVuZHBvaW50IHsKKwkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXQ+OworCQkJfTsKKwkJfTsKKwl9OwogfTsKIAog
-JmhzaTJjXzAgewotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+The patch is to fix typo of the Layerscape SCFG MSI dts compatible
+strings. "1" is replaced by "l".
+
+Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+---
+ .../devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt    | 6 +++---
+ drivers/irqchip/irq-ls-scfg-msi.c                                   | 6 ++++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+index 9e38949..2755cd1 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+@@ -4,8 +4,8 @@ Required properties:
+ 
+ - compatible: should be "fsl,<soc-name>-msi" to identify
+ 	      Layerscape PCIe MSI controller block such as:
+-              "fsl,1s1021a-msi"
+-              "fsl,1s1043a-msi"
++              "fsl,ls1021a-msi"
++              "fsl,ls1043a-msi"
+ - msi-controller: indicates that this is a PCIe MSI controller node
+ - reg: physical base address of the controller and length of memory mapped.
+ - interrupts: an interrupt to the parent interrupt controller.
+@@ -23,7 +23,7 @@ MSI controller node
+ Examples:
+ 
+ 	msi1: msi-controller@1571000 {
+-		compatible = "fsl,1s1043a-msi";
++		compatible = "fsl,ls1043a-msi";
+ 		reg = <0x0 0x1571000 0x0 0x8>,
+ 		msi-controller;
+ 		interrupts = <0 116 0x4>;
+diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-scfg-msi.c
+index 02cca74c..cef67cc 100644
+--- a/drivers/irqchip/irq-ls-scfg-msi.c
++++ b/drivers/irqchip/irq-ls-scfg-msi.c
+@@ -219,8 +219,10 @@ static int ls_scfg_msi_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id ls_scfg_msi_id[] = {
+-	{ .compatible = "fsl,1s1021a-msi", },
+-	{ .compatible = "fsl,1s1043a-msi", },
++	{ .compatible = "fsl,1s1021a-msi", }, /* a typo */
++	{ .compatible = "fsl,1s1043a-msi", }, /* a typo */
++	{ .compatible = "fsl,ls1021a-msi", },
++	{ .compatible = "fsl,ls1043a-msi", },
+ 	{},
+ };
+ 
+-- 
+1.9.1
