@@ -1,13 +1,13 @@
-From: Minghuan Lian <Minghuan.Lian@nxp.com>
-Subject: [PATCH 6/9] arm64: dts: ls1046a: add MSI dts node
-Date: Tue, 27 Dec 2016 17:13:02 +0800
-Message-ID: <1482829985-24421-6-git-send-email-Minghuan.Lian@nxp.com>
-References: <1482829985-24421-1-git-send-email-Minghuan.Lian@nxp.com>
+From: Bai Ping <ping.bai@nxp.com>
+Subject: [PATCH v2 02/12] driver: clocksource: add gpt timer for imx6sll
+Date: Tue, 27 Dec 2016 17:47:40 +0800
+Message-ID: <1482832070-22668-3-git-send-email-ping.bai@nxp.com>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1482829985-24421-1-git-send-email-Minghuan.Lian@nxp.com>
+In-Reply-To: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,71 +17,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, daniel.lezcano@linaro.org, linux-gpio@vger.kernel.org, p.zabel@pengutronix.de, jacky.baip@gmail.com, fabio.estevam@nxp.com, tglx@linutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-LS1046a includes 3 MSI controllers.
-Each controller supports 128 interrupts.
+Add gpt timer support for i.MX6SLL.
 
-Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
 ---
- .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 31 ++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ drivers/clocksource/timer-imx-gpt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
-index 2755cd1..54597b0 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	      Layerscape PCIe MSI controller block such as:
-               "fsl,ls1021a-msi"
-               "fsl,ls1043a-msi"
-+	      "fsl,ls1046a-msi"
- - msi-controller: indicates that this is a PCIe MSI controller node
- - reg: physical base address of the controller and length of memory mapped.
- - interrupts: an interrupt to the parent interrupt controller.
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 38806ca..49dbafc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -511,5 +511,36 @@
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clockgen 4 1>;
- 		};
-+
-+		msi1: msi-controller@1580000 {
-+			compatible = "fsl,ls1046a-msi";
-+			msi-controller;
-+			reg = <0x0 0x1580000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		msi2: msi-controller@1590000 {
-+			compatible = "fsl,ls1046a-msi";
-+			msi-controller;
-+			reg = <0x0 0x1590000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		msi3: msi-controller@15a0000 {
-+			compatible = "fsl,ls1046a-msi";
-+			msi-controller;
-+			reg = <0x0 0x15a0000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 	};
- };
+diff --git a/drivers/clocksource/timer-imx-gpt.c b/drivers/clocksource/timer-imx-gpt.c
+index f595460..f71822d 100644
+--- a/drivers/clocksource/timer-imx-gpt.c
++++ b/drivers/clocksource/timer-imx-gpt.c
+@@ -556,4 +556,5 @@ static int __init imx6dl_timer_init_dt(struct device_node *np)
+ CLOCKSOURCE_OF_DECLARE(imx6q_timer, "fsl,imx6q-gpt", imx31_timer_init_dt);
+ CLOCKSOURCE_OF_DECLARE(imx6dl_timer, "fsl,imx6dl-gpt", imx6dl_timer_init_dt);
+ CLOCKSOURCE_OF_DECLARE(imx6sl_timer, "fsl,imx6sl-gpt", imx6dl_timer_init_dt);
++CLOCKSOURCE_OF_DECLARE(imx6sll_timer, "fsl,imx6sll-gpt", imx6dl_timer_init_dt);
+ CLOCKSOURCE_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
 -- 
 1.9.1
