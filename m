@@ -1,382 +1,436 @@
-From: Jian Yuan <yuanjian12@hisilicon.com>
-Subject: [RESEND PATCH v6] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Tue, 27 Dec 2016 09:31:00 +0800
-Message-ID: <1482802260-149950-1-git-send-email-yuanjian12@hisilicon.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [RFC PATCH 4/6] PCI: exynos5433: Add new exynos pci host
+ controller for Exynos5433
+Date: Tue, 27 Dec 2016 10:43:08 +0900
+Message-ID: <36428745-1880-b8fb-c718-530b6d3d3512@samsung.com>
+References: <20161226052029.10552-1-jh80.chung@samsung.com>
+ <CGME20161226052031epcas1p4d238d16e55984dcf905daf1ad132ccca@epcas1p4.samsung.com>
+ <20161226052029.10552-5-jh80.chung@samsung.com>
+ <62af9734-4e16-d5e7-10f0-f4d2ac6fa9ff@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com, yuanjian <yuanjian12@hisilicon.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <62af9734-4e16-d5e7-10f0-f4d2ac6fa9ff@synopsys.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, kishon@ti.com, will.deacon@arm.com, catalin.marinas@arm.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: yuanjian <yuanjian12@hisilicon.com>
+On 12/26/2016 08:49 PM, Joao Pinto wrote:
+> 
+> Hello Jaehoon,
+> 
+> Às 5:20 AM de 12/26/2016, Jaehoon Chung escreveu:
+>> Exynos5433 supports the PCIe.
+>> This patch adds new pci-exynos5433.c file for Exynos ARM64.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>>  drivers/pci/host/Kconfig          |   9 +
+>>  drivers/pci/host/Makefile         |   1 +
+>>  drivers/pci/host/pci-exynos5433.c | 338 ++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 348 insertions(+)
+>>  create mode 100644 drivers/pci/host/pci-exynos5433.c
+>>
+>> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+>> index d7e7c0a..3d77d0b 100644
+>> --- a/drivers/pci/host/Kconfig
+>> +++ b/drivers/pci/host/Kconfig
+>> @@ -60,6 +60,15 @@ config PCI_EXYNOS
+>>  	select PCIEPORTBUS
+>>  	select PCIE_DW
+>>  
+>> +config PCI_EXYNOS5433
+>> +	bool "Samsung Exynos5433 PCIe controller"
+>> +	depends on ARCH_EXYNOS && ARM64
+>> +	depends on PCI_MSI_IRQ_DOMAIN
+>> +	select PCIEPORTBUS
+>> +	select PCIE_DW
+>> +	help
+>> +	  If you want support for Exynos5433 PCIe host controller, say Y.
+>> +
+>>  config PCI_IMX6
+>>  	bool "Freescale i.MX6 PCIe controller"
+>>  	depends on SOC_IMX6Q
+>> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+>> index 084cb49..2168de2 100644
+>> --- a/drivers/pci/host/Makefile
+>> +++ b/drivers/pci/host/Makefile
+>> @@ -2,6 +2,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>>  obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>> +obj-$(CONFIG_PCI_EXYNOS5433) += pci-exynos5433.o
+>>  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>>  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+>>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>> diff --git a/drivers/pci/host/pci-exynos5433.c b/drivers/pci/host/pci-exynos5433.c
+>> new file mode 100644
+>> index 0000000..ff254ca
+>> --- /dev/null
+>> +++ b/drivers/pci/host/pci-exynos5433.c
+>> @@ -0,0 +1,338 @@
+>> +/*
+>> + * PCIe host controller driver for Samsung EXYNOS5433 SoCs
+>> + *
+>> + * Copyright (C) 2016 Samsung Electronics Co., Ltd.
+>> + *		https://urldefense.proofpoint.com/v2/url?u=http-3A__www.samsung.com&d=DgIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=fUwnZks1U2AwaOxMkLdSnE700sfQXpB3WAg_EJw7NaE&s=IwRYD8maTuXG57Q0qlAmFNh3_TSfUTE27xq8p13FFKI&e= 
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/resource.h>
+>> +#include <linux/signal.h>
+>> +#include <linux/types.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/phy/phy.h>
+>> +
+>> +#include "pcie-designware.h"
+>> +
+>> +#define to_exynos_pcie(x)	container_of(x, struct exynos_pcie, pp)
+>> +
+>> +/* Pcie structure for Exynos specific data */
+>> +struct exynos_pcie {
+>> +	void __iomem		*elbi_base;
+>> +	struct clk		*clk;
+>> +	struct clk		*bus_clk;
+>> +	struct pcie_port	pp;
+>> +	struct phy		*phy;
+>> +};
+>> +
+>> +/* PCIe ELBI registers */
+>> +#define PCIE_IRQ_PULSE			0x000
+>> +#define IRQ_INTA_ASSERT			BIT(0)
+>> +#define IRQ_INTB_ASSERT			BIT(2)
+>> +#define IRQ_INTC_ASSERT			BIT(4)
+>> +#define IRQ_INTD_ASSERT			BIT(6)
+>> +#define IRQ_INTX_ASSERT	(IRQ_INTA_ASSERT | IRQ_INTB_ASSERT | \
+>> +			IRQ_INTC_ASSERT | IRQ_INTD_ASSERT)
+>> +#define PCIE_IRQ_EN_PULSE		0x00c
+>> +#define PCIE_IRQ_EN_LEVEL		0x010
+>> +#define PCIE_SW_WAKE			0x018
+>> +#define PCIE_BUS_EN			BIT(1)
+>> +#define PCIE_APP_LTSSM_ENABLE		0x02c
+>> +#define PCIE_ELBI_LTSSM_ENABLE		0x1
+>> +#define PCIE_ELBI_DEBUG_L		0x074
+>> +#define PCIE_ELBI_XMLH_LINK_UP		BIT(4)
+>> +#define PCIE_ELBI_SLV_AWMISC		0x11c
+>> +#define PCIE_ELBI_SLV_ARMISC		0x120
+>> +#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
+>> +
+>> +/* DBI register */
+>> +#define PCIE_MISC_CONTROL_1_OFF		0x8BC
+>> +#define DBI_RO_WR_EN			BIT(0)
+>> +
+>> +static inline void exynos_pcie_writel(void __iomem *base, u32 val, u32 offset)
+>> +{
+>> +	writel(val, base + offset);
+>> +}
+>> +
+>> +static inline u32 exynos_pcie_readl(void __iomem *base, u32 offset)
+>> +{
+>> +	return readl(base + offset);
+>> +}
+>> +
+>> +static void exynos_pcie_clear_irq_pulse(struct exynos_pcie *ep)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_IRQ_PULSE);
+>> +	val &= ~IRQ_INTX_ASSERT;
+>> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_IRQ_PULSE);
+>> +}
+>> +
+>> +static void exynos_pcie_enable_irq_pulse(struct exynos_pcie *ep)
+>> +{
+>> +	exynos_pcie_writel(ep->elbi_base, IRQ_INTX_ASSERT, PCIE_IRQ_EN_PULSE);
+>> +
+>> +	/* Clear PCIE_IRQ_EN_LEVEL register */
+>> +	exynos_pcie_writel(ep->elbi_base, 0, PCIE_IRQ_EN_LEVEL);
+>> +}
+>> +
+>> +static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
+>> +{
+>> +	struct pcie_port *pp = arg;
+>> +	struct exynos_pcie *ep = to_exynos_pcie(pp);
+>> +
+>> +	exynos_pcie_clear_irq_pulse(ep);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static void exynos_pcie_sideband_dbi_w_mode(struct exynos_pcie *ep, bool on)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_AWMISC);
+>> +	if (on)
+>> +		val |= PCIE_ELBI_SLV_DBI_ENABLE;
+>> +	else
+>> +		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+>> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_AWMISC);
+>> +}
+>> +
+>> +static void exynos_pcie_sideband_dbi_r_mode(struct exynos_pcie *ep, bool on)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_ARMISC);
+>> +	if (on)
+>> +		val |= PCIE_ELBI_SLV_DBI_ENABLE;
+>> +	else
+>> +		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+>> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_ARMISC);
+>> +}
+>> +
+>> +static int exynos_pcie_establish_link(struct exynos_pcie *ep)
+>> +{
+>> +	struct pcie_port *pp = &ep->pp;
+>> +	u32 val;
+>> +
+>> +	if (dw_pcie_link_up(pp)) {
+>> +		dev_info(pp->dev, "Link already up\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	phy_power_on(ep->phy);
+>> +
+>> +	/* Exynos Pcie assert PHY reset  and init */
+>> +	phy_init(ep->phy);
+>> +
+>> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_SW_WAKE);
+>> +	val &= ~PCIE_BUS_EN;
+>> +	exynos_pcie_writel(ep->elbi_base, val, PCIE_SW_WAKE);
+>> +
+>> +	/*
+>> +	 * Enable DBI_RO_WR_EN bit.
+>> +	 * - When set to 1, some RO and HWinit bits are wriatble from
+>> +	 *   the local application through the DBI.
+>> +	 */
+>> +	dw_pcie_writel_rc(pp, PCIE_MISC_CONTROL_1_OFF, DBI_RO_WR_EN);
+>> +
+>> +	/* Setup root complex */
+>> +	dw_pcie_setup_rc(pp);
+>> +
+>> +	/* assert LTSSM enable */
+>> +	exynos_pcie_writel(ep->elbi_base, PCIE_ELBI_LTSSM_ENABLE,
+>> +			PCIE_APP_LTSSM_ENABLE);
+>> +
+>> +	return dw_pcie_wait_for_link(pp);
+>> +}
+>> +
+>> +
+>> +static int exynos_pcie_link_up(struct pcie_port *pp)
+>> +{
+>> +	struct exynos_pcie *ep = to_exynos_pcie(pp);
+>> +	u32 val;
+>> +
+>> +	/* Check the Receive Transaction Layer Handler */
+>> +	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_DEBUG_L);
+>> +
+>> +	return (val & PCIE_ELBI_XMLH_LINK_UP);
+>> +}
+>> +
+>> +static void exynos_pcie_host_init(struct pcie_port *pp)
+>> +{
+>> +	struct exynos_pcie *ep = to_exynos_pcie(pp);
+>> +
+>> +	exynos_pcie_enable_irq_pulse(ep);
+>> +	exynos_pcie_establish_link(ep);
+>> +}
+> 
+> Your *_host_init callback should return to pci-designware its error/success
+> status. There is a recent patch that added this capability to all vendor
+> specific drivers that use pcie-designware. Please check it out and follow the
+> same approach:
+> https://patchwork.kernel.org/patch/9464223/
 
-Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, like Hi3519V100, Hi3516CV300, etc.
-The PWM controller is primarily in charge of controlling P-Iris lens.
+Ok, I will check it. Thanks for noticing it.
 
-Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+Best Regards,
+Jaehoon Chung
 
-Change Log:
-v6:
-It supports polarity specified in DTB and #pwm-cells can be set to 3.
-v5:
-remove the generic compatible string "hisilicon, hibvt-pwm".
-v4:
-Add #pwm-cells in the bindings document.
-v3:
-fixed issues pointed by thierry.
-Add PWM compatible string for Hi3519V100.
-Implement .apply() function which support atomic, instead of .enable()/.disable()/.config().
-v2:
-The number of PWMs is change to be probeable based on the compatible string.
-
- .../devicetree/bindings/pwm/pwm-hibvt.txt          |  22 ++
- drivers/pwm/Kconfig                                |   9 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-hibvt.c                            | 271 +++++++++++++++++++++
- 4 files changed, 302 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
- create mode 100644 drivers/pwm/pwm-hibvt.c
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-new file mode 100644
-index 0000000..fa7849d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-@@ -0,0 +1,21 @@
-+Hisilicon PWM controller
-+
-+Required properties:
-+-compatible: should contain one SoC specific compatible string
-+ The SoC specific strings supported including:
-+	"hisilicon,hi3516cv300-pwm"
-+	"hisilicon,hi3519v100-pwm"
-+- reg: physical base address and length of the controller's registers.
-+- clocks: phandle and clock specifier of the PWM reference clock.
-+- resets: phandle and reset specifier for the PWM controller reset.
-+- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-+  the cells format.
-+
-+Example:
-+	pwm: pwm@12130000 {
-+		compatible = "hisilicon,hi3516cv300-pwm";
-+		reg = <0x12130000 0x10000>;
-+		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
-+		resets = <&crg_ctrl 0x38 0>;
-+		#pwm-cells = <3>;
-+	};
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index c182efc..b2d7408 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -158,6 +158,15 @@ config PWM_FSL_FTM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-fsl-ftm.
- 
-+config PWM_HIBVT
-+	tristate "HiSilicon BVT PWM support"
-+	depends on ARCH_HISI || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for HiSilicon BVT SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-hibvt.
-+
- config PWM_IMG
- 	tristate "Imagination Technologies PWM driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index dd35bc1..37ec39e 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
-+obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
- obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
-diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
-new file mode 100644
-index 0000000..d0e8f85
---- /dev/null
-+++ b/drivers/pwm/pwm-hibvt.c
-@@ -0,0 +1,271 @@
-+/*
-+ * PWM Controller Driver for HiSilicon BVT SoCs
-+ *
-+ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+
-+#define PWM_CFG0_ADDR(x)    (((x) * 0x20) + 0x0)
-+#define PWM_CFG1_ADDR(x)    (((x) * 0x20) + 0x4)
-+#define PWM_CFG2_ADDR(x)    (((x) * 0x20) + 0x8)
-+#define PWM_CTRL_ADDR(x)    (((x) * 0x20) + 0xC)
-+
-+#define PWM_ENABLE_SHIFT    0
-+#define PWM_ENABLE_MASK     BIT(0)
-+
-+#define PWM_POLARITY_SHIFT  1
-+#define PWM_POLARITY_MASK   BIT(1)
-+
-+#define PWM_KEEP_SHIFT      2
-+#define PWM_KEEP_MASK       BIT(2)
-+
-+#define PWM_PERIOD_MASK     GENMASK(31, 0)
-+#define PWM_DUTY_MASK       GENMASK(31, 0)
-+
-+struct hibvt_pwm_chip {
-+	struct pwm_chip	chip;
-+	struct clk *clk;
-+	void __iomem *base;
-+	struct reset_control *rstc;
-+};
-+
-+struct hibvt_pwm_soc {
-+	u32 num_pwms;
-+};
-+
-+static const struct hibvt_pwm_soc pwm_soc[2] = {
-+	{ .num_pwms = 4 },
-+	{ .num_pwms = 8 },
-+};
-+
-+static inline struct hibvt_pwm_chip *to_hibvt_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct hibvt_pwm_chip, chip);
-+}
-+
-+static void hibvt_pwm_set_bits(void __iomem *base, u32 offset,
-+					u32 mask, u32 data)
-+{
-+	void __iomem *address = base + offset;
-+	u32 value;
-+
-+	value = readl(address);
-+	value &= ~mask;
-+	value |= (data & mask);
-+	writel(value, address);
-+}
-+
-+static void hibvt_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-+
-+	hibvt_pwm_set_bits(hi_pwm_chip->base, PWM_CTRL_ADDR(pwm->hwpwm),
-+			PWM_ENABLE_MASK, 0x1);
-+}
-+
-+static void hibvt_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-+
-+	hibvt_pwm_set_bits(hi_pwm_chip->base, PWM_CTRL_ADDR(pwm->hwpwm),
-+			PWM_ENABLE_MASK, 0x0);
-+}
-+
-+static void hibvt_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+					int duty_cycle_ns, int period_ns)
-+{
-+	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-+	u32 freq, period, duty;
-+
-+	freq = div_u64(clk_get_rate(hi_pwm_chip->clk), 1000000);
-+
-+	period = div_u64(freq * period_ns, 1000);
-+	duty = div_u64(period * duty_cycle_ns, period_ns);
-+
-+	hibvt_pwm_set_bits(hi_pwm_chip->base, PWM_CFG0_ADDR(pwm->hwpwm),
-+			PWM_PERIOD_MASK, period);
-+
-+	hibvt_pwm_set_bits(hi_pwm_chip->base, PWM_CFG1_ADDR(pwm->hwpwm),
-+			PWM_DUTY_MASK, duty);
-+}
-+
-+static void hibvt_pwm_set_polarity(struct pwm_chip *chip,
-+					struct pwm_device *pwm,
-+					enum pwm_polarity polarity)
-+{
-+	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-+
-+	if (polarity == PWM_POLARITY_INVERSED)
-+		hibvt_pwm_set_bits(hi_pwm_chip->base, PWM_CTRL_ADDR(pwm->hwpwm),
-+				PWM_POLARITY_MASK, (0x1 << PWM_POLARITY_SHIFT));
-+	else
-+		hibvt_pwm_set_bits(hi_pwm_chip->base, PWM_CTRL_ADDR(pwm->hwpwm),
-+				PWM_POLARITY_MASK, (0x0 << PWM_POLARITY_SHIFT));
-+}
-+
-+static void hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
-+	void __iomem *base;
-+	u32 freq, value;
-+
-+	freq = div_u64(clk_get_rate(hi_pwm_chip->clk), 1000000);
-+	base = hi_pwm_chip->base;
-+
-+	value = readl(base + PWM_CFG0_ADDR(pwm->hwpwm));
-+	state->period = div_u64(value * 1000, freq);
-+
-+	value = readl(base + PWM_CFG1_ADDR(pwm->hwpwm));
-+	state->duty_cycle = div_u64(value * 1000, freq);
-+
-+	value = readl(base + PWM_CTRL_ADDR(pwm->hwpwm));
-+	state->enabled = (PWM_ENABLE_MASK & value);
-+}
-+
-+static int hibvt_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	if (state->polarity != pwm->state.polarity)
-+		hibvt_pwm_set_polarity(chip, pwm, state->polarity);
-+
-+	if (state->period != pwm->state.period ||
-+		state->duty_cycle != pwm->state.duty_cycle)
-+		hibvt_pwm_config(chip, pwm, state->duty_cycle, state->period);
-+
-+	if (state->enabled != pwm->state.enabled) {
-+		if (state->enabled)
-+			hibvt_pwm_enable(chip, pwm);
-+		else
-+			hibvt_pwm_disable(chip, pwm);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pwm_ops hibvt_pwm_ops = {
-+	.get_state = hibvt_pwm_get_state,
-+	.apply = hibvt_pwm_apply,
-+
-+	.owner = THIS_MODULE,
-+};
-+
-+static int hibvt_pwm_probe(struct platform_device *pdev)
-+{
-+	const struct hibvt_pwm_soc *soc =
-+				of_device_get_match_data(&pdev->dev);
-+	struct hibvt_pwm_chip *pwm_chip;
-+	struct resource *res;
-+	int ret;
-+	int i;
-+
-+	pwm_chip = devm_kzalloc(&pdev->dev, sizeof(*pwm_chip), GFP_KERNEL);
-+	if (pwm_chip == NULL)
-+		return -ENOMEM;
-+
-+	pwm_chip->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(pwm_chip->clk)) {
-+		dev_err(&pdev->dev, "getting clock failed with %ld\n",
-+				PTR_ERR(pwm_chip->clk));
-+		return PTR_ERR(pwm_chip->clk);
-+	}
-+
-+	pwm_chip->chip.ops = &hibvt_pwm_ops;
-+	pwm_chip->chip.dev = &pdev->dev;
-+	pwm_chip->chip.base = -1;
-+	pwm_chip->chip.npwm = soc->num_pwms;
-+	pwm_chip->chip.of_xlate = of_pwm_xlate_with_flags;
-+	pwm_chip->chip.of_pwm_n_cells = 3;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm_chip->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pwm_chip->base))
-+		return PTR_ERR(pwm_chip->base);
-+
-+	ret = clk_prepare_enable(pwm_chip->clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	pwm_chip->rstc = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(pwm_chip->rstc)) {
-+		clk_disable_unprepare(pwm_chip->clk);
-+		return PTR_ERR(pwm_chip->rstc);
-+	}
-+
-+	reset_control_assert(pwm_chip->rstc);
-+	msleep(30);
-+	reset_control_deassert(pwm_chip->rstc);
-+
-+	ret = pwmchip_add(&pwm_chip->chip);
-+	if (ret < 0) {
-+		clk_disable_unprepare(pwm_chip->clk);
-+		return ret;
-+	}
-+
-+	for (i = 0; i < pwm_chip->chip.npwm; i++) {
-+		hibvt_pwm_set_bits(pwm_chip->base, PWM_CTRL_ADDR(i),
-+				PWM_KEEP_MASK, (0x1 << PWM_KEEP_SHIFT));
-+	}
-+
-+	platform_set_drvdata(pdev, pwm_chip);
-+
-+	return 0;
-+}
-+
-+static int hibvt_pwm_remove(struct platform_device *pdev)
-+{
-+	struct hibvt_pwm_chip *pwm_chip;
-+
-+	pwm_chip = platform_get_drvdata(pdev);
-+
-+	reset_control_assert(pwm_chip->rstc);
-+	msleep(30);
-+	reset_control_deassert(pwm_chip->rstc);
-+
-+	clk_disable_unprepare(pwm_chip->clk);
-+
-+	return pwmchip_remove(&pwm_chip->chip);
-+}
-+
-+static const struct of_device_id hibvt_pwm_of_match[] = {
-+	{ .compatible = "hisilicon,hi3516cv300-pwm", .data = &pwm_soc[0] },
-+	{ .compatible = "hisilicon,hi3519v100-pwm", .data = &pwm_soc[1] },
-+	{  }
-+};
-+MODULE_DEVICE_TABLE(of, hibvt_pwm_of_match);
-+
-+static struct platform_driver hibvt_pwm_driver = {
-+	.driver = {
-+		.name = "hibvt-pwm",
-+		.of_match_table = hibvt_pwm_of_match,
-+	},
-+	.probe = hibvt_pwm_probe,
-+	.remove	= hibvt_pwm_remove,
-+};
-+module_platform_driver(hibvt_pwm_driver);
-+
-+MODULE_AUTHOR("Jian Yuan");
-+MODULE_DESCRIPTION("HiSilicon BVT SoCs PWM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.1.4
+> 
+> Thanks,
+> Joao
+> 
+>> +
+>> +static u32 exynos_pcie_readl_rc(struct pcie_port *pp, u32 reg)
+>> +{
+>> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+>> +	u32 val;
+>> +
+>> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, true);
+>> +	val = readl(pp->dbi_base + reg);
+>> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, false);
+>> +	return val;
+>> +}
+>> +
+>> +static void exynos_pcie_writel_rc(struct pcie_port *pp, u32 reg, u32 val)
+>> +{
+>> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+>> +
+>> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, true);
+>> +	writel(val, pp->dbi_base + reg);
+>> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, false);
+>> +}
+>> +
+>> +static int exynos_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+>> +				u32 *val)
+>> +{
+>> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+>> +	int ret;
+>> +
+>> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, true);
+>> +	ret = dw_pcie_cfg_read(pp->dbi_base + where, size, val);
+>> +	exynos_pcie_sideband_dbi_r_mode(exynos_pcie, false);
+>> +	return ret;
+>> +}
+>> +
+>> +static int exynos_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
+>> +				u32 val)
+>> +{
+>> +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+>> +	int ret;
+>> +
+>> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, true);
+>> +	ret = dw_pcie_cfg_write(pp->dbi_base + where, size, val);
+>> +	exynos_pcie_sideband_dbi_w_mode(exynos_pcie, false);
+>> +	return ret;
+>> +}
+>> +
+>> +static struct pcie_host_ops exynos_pcie_host_ops = {
+>> +	.readl_rc = exynos_pcie_readl_rc,
+>> +	.writel_rc = exynos_pcie_writel_rc,
+>> +	.rd_own_conf = exynos_pcie_rd_own_conf,
+>> +	.wr_own_conf = exynos_pcie_wr_own_conf,
+>> +	.host_init = exynos_pcie_host_init,
+>> +	.link_up = exynos_pcie_link_up,
+>> +};
+>> +
+>> +static int __init exynos_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct exynos_pcie *exynos_pcie;
+>> +	struct pcie_port *pp;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	exynos_pcie = devm_kzalloc(&pdev->dev, sizeof(*exynos_pcie),
+>> +			GFP_KERNEL);
+>> +	if (!exynos_pcie)
+>> +		return -ENOMEM;
+>> +
+>> +	pp = &exynos_pcie->pp;
+>> +	pp->dev = &pdev->dev;
+>> +
+>> +	exynos_pcie->clk = devm_clk_get(&pdev->dev, "pcie");
+>> +	if (IS_ERR(exynos_pcie->clk)) {
+>> +		dev_err(&pdev->dev, "Failed to get pcie rc clock\n");
+>> +		return PTR_ERR(exynos_pcie->clk);
+>> +	}
+>> +	ret = clk_prepare_enable(exynos_pcie->clk);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	exynos_pcie->bus_clk = devm_clk_get(&pdev->dev, "pcie_bus");
+>> +	if (IS_ERR(exynos_pcie->bus_clk)) {
+>> +		dev_err(&pdev->dev, "Failed to get pcie bus clock\n");
+>> +		ret = PTR_ERR(exynos_pcie->bus_clk);
+>> +		goto fail_clk;
+>> +	}
+>> +	ret = clk_prepare_enable(exynos_pcie->bus_clk);
+>> +	if (ret)
+>> +		goto fail_clk;
+>> +
+>> +	/* External Local Bus interface(ELBI) Register */
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+>> +	exynos_pcie->elbi_base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(exynos_pcie->elbi_base)) {
+>> +		ret = PTR_ERR(exynos_pcie->elbi_base);
+>> +		goto fail_bus_clk;
+>> +	}
+>> +
+>> +	/* Data Bus Interface(DBI) Register */
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>> +	pp->dbi_base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(pp->dbi_base)) {
+>> +		ret = PTR_ERR(pp->dbi_base);
+>> +		goto fail_bus_clk;
+>> +	}
+>> +
+>> +	exynos_pcie->phy = devm_phy_get(&pdev->dev, "pcie-phy");
+>> +	if (IS_ERR(exynos_pcie->phy)) {
+>> +		if (PTR_ERR(exynos_pcie->phy) != -EPROBE_DEFER)
+>> +			dev_err(&pdev->dev, "Can't find the pcie-phy\n");
+>> +		return PTR_ERR(exynos_pcie->phy);
+>> +	}
+>> +
+>> +	pp->irq = platform_get_irq_byname(pdev, "intr");
+>> +	if (!pp->irq) {
+>> +		dev_err(&pdev->dev, "failed to get irq\n");
+>> +		ret = -ENODEV;
+>> +		goto fail_bus_clk;
+>> +	}
+>> +	ret = devm_request_irq(&pdev->dev, pp->irq, exynos_pcie_irq_handler,
+>> +				IRQF_SHARED, "exynos-pcie", exynos_pcie);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "failed to request irq\n");
+>> +		goto fail_bus_clk;
+>> +	}
+>> +
+>> +	pp->root_bus_nr = -1;
+>> +	pp->ops = &exynos_pcie_host_ops;
+>> +
+>> +	ret = dw_pcie_host_init(pp);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "failed to initialize host\n");
+>> +		goto fail_bus_clk;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, exynos_pcie);
+>> +
+>> +	return 0;
+>> +
+>> +fail_bus_clk:
+>> +	clk_disable_unprepare(exynos_pcie->bus_clk);
+>> +fail_clk:
+>> +	clk_disable_unprepare(exynos_pcie->clk);
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct of_device_id exynos_pcie_of_match[] = {
+>> +	{ .compatible = "samsung,exynos5433-pcie", },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, exynos_pcie_of_match);
+>> +
+>> +static struct platform_driver exynos_pcie_driver = {
+>> +	.probe		= exynos_pcie_probe,
+>> +	.driver		= {
+>> +		.name		= "exynos5433-pcie",
+>> +		.of_match_table = exynos_pcie_of_match,
+>> +	},
+>> +};
+>> +builtin_platform_driver(exynos_pcie_driver);
+>>
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
