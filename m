@@ -1,52 +1,143 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 0/2] Add MediaTek crypto accelerator driver
-Date: Tue, 27 Dec 2016 18:06:13 +0800
-Message-ID: <20161227100613.GG10629@gondor.apana.org.au>
-References: <1482114045-18716-1-git-send-email-ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482114045-18716-1-git-send-email-ryder.lee@mediatek.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>
+From: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Subject: [PATCH] ARM: dts: sunxi: Use axp209.dtsi for Olinuxino Lime2
+Date: Tue, 27 Dec 2016 11:22:38 +0100
+Message-ID: <20161227102238.20110-1-manu@bidouilliste.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 10:20:43AM +0800, Ryder Lee wrote:
-> Hello,
-> 
-> This adds support for the MediaTek hardware accelerator on
-> some SoCs.
-> 
-> This driver currently implement: 
-> - SHA1 and SHA2 family(HMAC) hash algorithms.
-> - AES block cipher in CBC/ECB mode with 128/196/256 bits keys.
-> 
-> Chances since v3:
-> -remove unused structure member
-> -drop interrupt-parent from DT bindings documentation
-> 
-> Changes since v2:
-> - use byteorder conversion macros and type identifiers for descriptors
-> - revise register definition macros to make it more clear
-> - revise DT compatiable string
-> 
-> Changes since v1:
-> - remove EXPORT_SYMBOL
-> - remove unused PRNG setting
-> - sort headers in alphabetical order
-> - add a definition for IRQ unmber
-> - replace ambiguous definition
-> - add more annotation and function comment
-> - add COMPILE_TEST in Kconfig
-> 
-> Ryder Lee (2):
->   Add crypto driver support for some MediaTek chips
->   crypto: mediatek - add DT bindings documentation
+Use axp209.dtsi in sun7i-a20-olinuxino-lime2.dts and correct
+some regulators.
 
-All applied.  Thanks.
+DCDC2 is used for vdd-cpu so it should never be bellow 1V and above 1.4V
+DCDC3 is used for VDD_INT so same as above.
+LD01 is used for the RTC, and should have a typical value of 1.3V
+LD02 is used for AVCC and should have a typical value of 3.0V
+LD03/4 are used for Port-E/Port-G Power pin, and the schematics recommands
+to set them to 2.8V as they can be used for CSI0/1.
+
+Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 90 ++++++++++++-------------
+ 1 file changed, 42 insertions(+), 48 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+index d5c796c8d16f..5311dbce6fd9 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+@@ -112,57 +112,9 @@
+ 	status = "okay";
+ 
+ 	axp209: pmic@34 {
+-		compatible = "x-powers,axp209";
+ 		reg = <0x34>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-
+-		acin-supply = <&reg_axp_ipsout>;
+-		vin2-supply = <&reg_axp_ipsout>;
+-		vin3-supply = <&reg_axp_ipsout>;
+-		ldo24in-supply = <&reg_axp_ipsout>;
+-		ldo3in-supply = <&reg_axp_ipsout>;
+-
+-		regulators {
+-			vdd_rtc: ldo1 {
+-				regulator-min-microvolt = <1300000>;
+-				regulator-max-microvolt = <1300000>;
+-				regulator-always-on;
+-			};
+-
+-			avcc: ldo2 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vcc_csi0: ldo3 {
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <3500000>;
+-				regulator-always-on;
+-			};
+-
+-			vcc_csi1: ldo4 {
+-				regulator-min-microvolt = <1250000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vdd_cpu: dcdc2 {
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <2275000>;
+-				regulator-always-on;
+-			};
+-
+-			vdd_int: dcdc3 {
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <3500000>;
+-				regulator-always-on;
+-			};
+-		};
+ 	};
+ };
+ 
+@@ -243,6 +195,48 @@
+ 	status = "okay";
+ };
+ 
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <1300000>;
++	regulator-max-microvolt = <1300000>;
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_ldo3 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vddio-csi0";
++};
++
++&reg_ldo4 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vddio-csi1";
++};
++
+ &reg_usb0_vbus {
+ 	pinctrl-0 = <&usb0_vbus_pin_lime2>;
+ 	gpio = <&pio 2 17 GPIO_ACTIVE_HIGH>;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
