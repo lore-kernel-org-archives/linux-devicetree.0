@@ -1,73 +1,68 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 3/8] drivers:input:tsc2007: add iio interface to read
- external ADC input and temperature
-Date: Tue, 27 Dec 2016 13:54:16 -0800
-Message-ID: <20161227215416.GB28140@dtor-ws>
-References: <cover.1479823354.git.hns@goldelico.com>
- <cover.1479823354.git.hns@goldelico.com>
- <99f236df48b03b3188e12f94a20097f8440db7a5.1479823354.git.hns@goldelico.com>
- <E42B1EF7-222E-46D6-878B-30C789CFBBC5@jic23.retrosnub.co.uk>
- <811B6F6A-2E3D-45B4-A984-74ABE0E37192@goldelico.com>
- <8d3fc752-e69c-f568-4f71-4f1768a3fffe@kernel.org>
- <AC7B3C1C-C05B-45B5-8426-5225F151DC26@goldelico.com>
- <E4E31180-A686-4631-9713-519987C55F06@goldelico.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/2] MIPS: BMIPS: Add support SPI device nodes
+Date: Tue, 27 Dec 2016 14:12:12 -0800
+Message-ID: <0dffeca2-68bf-bacd-7eff-8b966c721dde@gmail.com>
+References: <20161227015923.882-1-jaedon.shin@gmail.com>
+ <20161227015923.882-3-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E4E31180-A686-4631-9713-519987C55F06-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20161227015923.882-3-jaedon.shin@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Jaedon Shin <jaedon.shin@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2016 at 10:21:25PM +0100, H. Nikolaus Schaller wrote:
-> Hi,
+On 12/26/2016 05:59 PM, Jaedon Shin wrote:
+> Adds SPI device nodes to BCM7xxx MIPS based SoCs.
 > 
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
+>  arch/mips/boot/dts/brcm/bcm7125.dtsi      | 55 +++++++++++++++++++++++++++++--
+>  arch/mips/boot/dts/brcm/bcm7346.dtsi      | 49 +++++++++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm7358.dtsi      | 49 +++++++++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm7360.dtsi      | 49 +++++++++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm7362.dtsi      | 49 +++++++++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm7420.dtsi      | 55 +++++++++++++++++++++++++++++--
+>  arch/mips/boot/dts/brcm/bcm7425.dtsi      | 49 +++++++++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm7435.dtsi      | 49 +++++++++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm97125cbmb.dts  |  4 +++
+>  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts |  4 +++
+>  arch/mips/boot/dts/brcm/bcm97358svmb.dts  | 36 ++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm97360svmb.dts  | 36 ++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm97362svmb.dts  |  4 +++
+>  arch/mips/boot/dts/brcm/bcm97420c.dts     |  4 +++
+>  arch/mips/boot/dts/brcm/bcm97425svmb.dts  | 36 ++++++++++++++++++++
+>  arch/mips/boot/dts/brcm/bcm97435svmb.dts  |  4 +++
+>  16 files changed, 526 insertions(+), 6 deletions(-)
 > 
-> > Am 27.11.2016 um 16:47 schrieb H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>:
-> > 
-> > Hi Jonathan,
-> > 
-> >> Am 27.11.2016 um 12:02 schrieb Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> >> 
-> >> On 24/11/16 18:05, H. Nikolaus Schaller wrote:
-> >>> 
-> >>>> Am 24.11.2016 um 18:38 schrieb Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>:
-> >>>> 
-> >>>> 
-> >>>> 
-> >>>> On 22 November 2016 14:02:30 GMT+00:00, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-> 
-> > 
-> >> - hence cc'd Yann and the Kbuild list
-> >> to see if they can offer some advices.
-> 
-> no response / advice so far.
+> diff --git a/arch/mips/boot/dts/brcm/bcm7125.dtsi b/arch/mips/boot/dts/brcm/bcm7125.dtsi
+> index bbd00f65ce39..c1e19e57f64a 100644
+> --- a/arch/mips/boot/dts/brcm/bcm7125.dtsi
+> +++ b/arch/mips/boot/dts/brcm/bcm7125.dtsi
+> @@ -46,6 +46,12 @@
+>  			#clock-cells = <0>;
+>  			clock-frequency = <27000000>;
+>  		};
+> +
+> +		spi_clk: spi_clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <27000000>;
+> +		};
 
-Since you are saying that IIO stuff is optional, add it to Kconfig
-explicitly:
+Nit, this should actually be upg_clk, since this is the clock that the
+SPI controller uses, and it is a fixed-clock with a 27Mhz frequency.
 
-config "TOUCHSCREEN_TSC2007_IIO"
-	bool "IIO interface for external ADC input and temperature"
-	depends on TOUCHSCREEN_TSC2007
-	depends on IIO=y || IIO=TOUCHSCREEN_TSC2007
-	help
-	  ...
-
-and use this symbols in makefile:
-
-and in Makefile:
-
-obj-$(CONFIG_TOUCHSCREEN_TSC2007) += tsc2007.o
-tsc2007-y := tsc2007-core.o ...
-tsc2007-$(CONFIG_TOUCHSCREEN_TSC2007_IIO) += tsc2007_iio.o
-
-Thanks.
-
+Other than that, the rest looks good to me, thanks!
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
