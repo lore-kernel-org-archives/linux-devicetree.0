@@ -1,68 +1,30 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/2] MIPS: BMIPS: Add support SPI device nodes
-Date: Tue, 27 Dec 2016 14:12:12 -0800
-Message-ID: <0dffeca2-68bf-bacd-7eff-8b966c721dde@gmail.com>
-References: <20161227015923.882-1-jaedon.shin@gmail.com>
- <20161227015923.882-3-jaedon.shin@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] pinctrl: aspeed: dt: Fix compatibles for the
+ System Control Unit
+Date: Tue, 27 Dec 2016 23:14:33 +0100
+Message-ID: <CACRpkdZdymbYG4sV8rwAn6p-4_Vdc_wXZTW+4zH3BmUE-ErACg@mail.gmail.com>
+References: <20161220073551.28522-1-andrew@aj.id.au> <20161220073551.28522-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20161227015923.882-3-jaedon.shin@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Jaedon Shin <jaedon.shin@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161220073551.28522-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/26/2016 05:59 PM, Jaedon Shin wrote:
-> Adds SPI device nodes to BCM7xxx MIPS based SoCs.
-> 
-> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
-> ---
->  arch/mips/boot/dts/brcm/bcm7125.dtsi      | 55 +++++++++++++++++++++++++++++--
->  arch/mips/boot/dts/brcm/bcm7346.dtsi      | 49 +++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7358.dtsi      | 49 +++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7360.dtsi      | 49 +++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7362.dtsi      | 49 +++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7420.dtsi      | 55 +++++++++++++++++++++++++++++--
->  arch/mips/boot/dts/brcm/bcm7425.dtsi      | 49 +++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7435.dtsi      | 49 +++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97125cbmb.dts  |  4 +++
->  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts |  4 +++
->  arch/mips/boot/dts/brcm/bcm97358svmb.dts  | 36 ++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97360svmb.dts  | 36 ++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97362svmb.dts  |  4 +++
->  arch/mips/boot/dts/brcm/bcm97420c.dts     |  4 +++
->  arch/mips/boot/dts/brcm/bcm97425svmb.dts  | 36 ++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97435svmb.dts  |  4 +++
->  16 files changed, 526 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/mips/boot/dts/brcm/bcm7125.dtsi b/arch/mips/boot/dts/brcm/bcm7125.dtsi
-> index bbd00f65ce39..c1e19e57f64a 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7125.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7125.dtsi
-> @@ -46,6 +46,12 @@
->  			#clock-cells = <0>;
->  			clock-frequency = <27000000>;
->  		};
-> +
-> +		spi_clk: spi_clk {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <27000000>;
-> +		};
+On Tue, Dec 20, 2016 at 8:35 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
 
-Nit, this should actually be upg_clk, since this is the clock that the
-SPI controller uses, and it is a fixed-clock with a 27Mhz frequency.
+> Reference the SoC-specific compatible string in the examples as
+> required.
+>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 
-Other than that, the rest looks good to me, thanks!
--- 
-Florian
+Patch applied with the ACKs.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
