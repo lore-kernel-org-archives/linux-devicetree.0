@@ -1,56 +1,96 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: misc: add a generic regulator driver
-Date: Wed, 28 Dec 2016 14:08:04 +0100
-Message-ID: <CACRpkdY11qxZuYsXXJJ5St7S_oYf_EUOzicm9vXoxYCHkVp4Lw@mail.gmail.com>
-References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
- <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de> <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
- <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de> <bf3dde7e-cee8-c54c-db93-447ffa063116@kernel.org>
- <CAMpxmJVJ+y9tRbRBsVg+i0EJO_6EFuvrypwC=ETnBWbMnxRFyg@mail.gmail.com>
- <c670d597-46b6-235f-545f-7136a3abff7f@metafoo.de> <CAMuHMdX3u4cb2Yq2+VV_eDUaw2EqiOjN2TorW+F5-39Mm=mXmQ@mail.gmail.com>
- <9609b56b-194c-9899-1142-ff2ee285c6bd@metafoo.de>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Wed, 28 Dec 2016 14:28:22 +0100
+Message-ID: <CACna6rzKc8kAnc2_Ca8pXtuu9Rw2mjqfV8VNumoF_E7GdvJx-g@mail.gmail.com>
+References: <20160905095128.80560-1-nbd@nbd.name> <201609301636.43363.arnd@arndb.de>
+ <557be2b8-5ff1-83ea-f6d1-6421c2465969@nbd.name> <201609301658.35039.arnd@arndb.de>
+ <87vax9r26s.fsf@kamboji.qca.qualcomm.com> <CACna6ryikdd0Yt2FWB_JT27N5uuh9XU+JUWNRjs4H5YcD5PVpw@mail.gmail.com>
+ <CAFBinCBzz0Jvk_jcWAJ1jEz17r-NYEE87xLUACTybRSHGE7uGA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9609b56b-194c-9899-1142-ff2ee285c6bd-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCBzz0Jvk_jcWAJ1jEz17r-NYEE87xLUACTybRSHGE7uGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 23, 2016 at 12:35 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
-> On 12/23/2016 11:00 AM, Geert Uytterhoeven wrote:
+On 28 December 2016 at 11:43, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> On Wed, Dec 28, 2016 at 11:08 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.c=
+om> wrote:
+>> On 3 October 2016 at 15:29, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+>>>
+>>>> On Friday 30 September 2016, Felix Fietkau wrote:
+>>>>> >> >> >> +                 device_type =3D "pci";
+>>>>> >> >> >> +                 mediatek,mtd-eeprom =3D <&factory 0x8000>;
+>>>>> >> >> >> +                 mediatek,2ghz =3D <0>;
+>>>>> >> >
+>>>>> >> > It's not clear what the possible values for the 2ghz property ar=
+e,
+>>>>> >> > can you be more verbose in the description? How is <0> different
+>>>>> >> > from no property?
+>>>>> >> 0 means disabled, no property means unchanged (compared to EEPROM)=
+.
+>>>>> >
+>>>>> > Maybe have a boolean property instead then to say "mediatek,2ghz-di=
+sabled" ?
+>>>>> >
+>>>>> > If zero is the only possible value, there is no need to put a numbe=
+r in there.
+>>>>> 1 is also possible, which will force-enable the capability.
+>>>>
+>>>> Ok, then both those values should be documented in the binding.
+>>>
+>>> Related to this, Martin sent patches which add generic bindings for
+>>> enabling 2 Ghz and 5 Ghz bands.
+>>>
+>>> [RFC,1/3] Documentation: dt-bindings: add IEEE 802.11 binding documenta=
+tion
+>>> https://patchwork.kernel.org/patch/9359833/
+>>>
+>>> [RFC,2/3] of: add IEEE 802.11 device configuration support code
+>>> https://patchwork.kernel.org/patch/9359837/
+>>
+>> I would prefer something more generic. Many tri-band routers split 5
+>> GHz band into 2 sets of channels and they have separated radios for
+>> them.
+>>
+>> E.g. Netgear R8000 has phy0 which should be used for higher part of 5
+>> GHz band (channels 149+) and phy2 which should be used for lower part
+>> of 5 GHz band (channels from 36 to 48 or 64).
+>>
+>> What do you think about some more flexible properties like:
+>> ieee80211-min-center-freq
+>> ieee80211-max-center-freq
+> what would happen if only one of these properties was given or would
+> we forbid that (because the .dts should always describe the hardware,
+> and if we describe a lower bound then we should also describe the
+> upper bound)?
 
-> Well, it is a policy question. Who gets access to what. Right now it is all
-> or nothing, a privileged application gets access to all devices/GPIOs, a
-> unprivileged application gets access to nothing. Same for GPIOs as well as
-> IIO devices.
->
-> iiod at the moment does not have any access control at all, which in itself
-> is a problem. We need to add support for that at some point. I don't see an
-> issue with implementing a finer grained access scheme when we do so. E.g.
-> unprivileged applications only get access to certain pins.
+I didn't think about requiring both properties to be set, but if this
+is more correct from DT point of view, we can always require that.
+Let's see if we get DT guys opinion.
 
-I don't know why this is percieved as such a big practical problem.
 
-It seems to me as more of a theoretical exploit path than a practical one.
-(Famous last words...)
+> the benefits of your solution are:
+> - this would allow *enabling* bands as well (my proposal allows this
+> as well, but the .dts is indeed a bit hard to read - unlike your
+> solution which looks nice to me)
+> - we could handle this within generic cfg80211/mac80211 code instead
+> of "duplicating" it per driver
 
-We have per-device and not per-line GPIO access restrictions.
-/dev/gpiochip0
-/dev/gpiochip1
-etc
-can all have per-device access restrictions.
+i'm happy to hear that :)
 
-This is no different from /dev/sda for example. You do not have
-per-sector control of the block device, because it doesn't make sense.
-Either you access all of the device, or nothing.
-The same goes for IIO devices.
 
-This pattern is very clear. You get access to a whole device or none
-of it.
+> should we describe the center freq in Hz or MHz (cfg80211's
+> ieee80211_channel uses the latter)?
 
-As with disks and IIO devices, if you want more granular access
-restrictions, that is policy, and should reside in userspace.
-
-Yours,
-Linus Walleij
+Is there any case that may require HZ accuracy? I was thinking about using =
+MHz.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
