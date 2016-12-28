@@ -1,54 +1,62 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: [PATCH v6 02/25] of: device: Export of_device_{get_modalias,
- uvent_modalias} to modules
-Date: Wed, 28 Dec 2016 14:56:48 -0800
-Message-ID: <20161228225711.698-3-stephen.boyd@linaro.org>
-References: <20161228225711.698-1-stephen.boyd@linaro.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Wed, 28 Dec 2016 15:01:50 -0800
+Message-ID: <20161228230150.GB17126@codeaurora.org>
+References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1482253431-23160-3-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161228225711.698-1-stephen.boyd@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-usb@vger.kernel.org
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1482253431-23160-3-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ULPI bus can be built as a module, and it will soon be
-calling these functions when it supports probing devices from DT.
-Export them so they can be used by the ULPI module.
+On 12/20, Vivek Gautam wrote:
+> PHY transceiver driver for QUSB2 phy controller that provides
+> HighSpeed functionality for DWC3 controller present on
+> Qualcomm chipsets.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
----
- drivers/of/device.c | 2 ++
- 1 file changed, 2 insertions(+)
+One comment below, but otherwise
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 8a22a253a830..b1e6bebda3f3 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- 
- 	return tsize;
- }
-+EXPORT_SYMBOL_GPL(of_device_get_modalias);
- 
- int of_device_request_module(struct device *dev)
- {
-@@ -310,3 +311,4 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+> +static void qusb2_phy_set_tune2_param(struct qusb2_phy *qphy)
+> +{
+> +	struct device *dev = &qphy->phy->dev;
+> +	u8 *val;
+> +
+> +	/*
+> +	 * Read efuse register having TUNE2 parameter's high nibble.
+> +	 * If efuse register shows value as 0x0, or if we fail to find
+> +	 * a valid efuse register settings, then use default value
+> +	 * as 0xB for high nibble that we have already set while
+> +	 * configuring phy.
+> +	 */
+> +	val = nvmem_cell_read(qphy->cell, NULL);
+> +	if (IS_ERR(val) || !val[0]) {
+> +		dev_dbg(dev, "failed to read a valid hs-tx trim value, %ld\n",
+> +								PTR_ERR(val));
+
+If val is 0 PTR_ERR(0) will be junk? I guess that's ok for debug
+print.
+
+> +		return;
+> +	}
+> +
+> +	/* Fused TUNE2 value is the higher nibble only */
+> +	qusb2_setbits(qphy->base + QUSB2PHY_PORT_TUNE2, val[0] << 0x4);
+> +}
+
 -- 
-2.10.0.297.gf6727b0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
