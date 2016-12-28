@@ -1,63 +1,58 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: phy: Add support for QUSB2 phy
-Date: Wed, 28 Dec 2016 11:10:02 +0530
-Message-ID: <CAFp+6iE+7ta4dwNBj59Nro+kGWHuERNEj0gwF9AkfFvcy7oxWQ@mail.gmail.com>
-References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
- <1482253431-23160-2-git-send-email-vivek.gautam@codeaurora.org>
- <20161222211633.ldk3ykqiat6peyw7@rob-hp-laptop> <CAFp+6iESYfFrLpidhAXrPm7LQtYa6dV1xOL=AjdMfLXgL8Fv8g@mail.gmail.com>
- <a4fc38f0-425d-5d4f-7fe9-8245b5b9c3af@codeaurora.org>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 3/3] arm: dts: mt2701: Add power domain controller device node
+Date: Wed, 28 Dec 2016 13:46:46 +0800
+Message-ID: <1482904006-44232-4-git-send-email-jamesjj.liao@mediatek.com>
+References: <1482904006-44232-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a4fc38f0-425d-5d4f-7fe9-8245b5b9c3af@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, kishon <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482904006-44232-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2016 at 6:43 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 12/22/2016 08:52 PM, Vivek Gautam wrote:
->>
->>>> +
->>>> +Optional properties:
->>>> + - nvmem-cells: a list of phandles to nvmem cells that contain fused
->>>> +             tuning parameters for qusb2 phy, one for each entry
->>>> +             in nvmem-cell-names.
->>>> + - nvmem-cell-names: must be "tune2_hstx_trim" for cell containing
->>>> +                  HS Tx trim value.
->>> ditto.
->> nvmem doesn't allow, at this point, to get the cells by index.
->> Its APIs take 'const char' cell id and get the cell.
->>
->> We should add this support to get the cell by index.
->> Will create a patch for that, and drop the '-names' property from bindings.
->>
->
-> If we introduce a cells based API just for this case of one phandle it
-> may make sense to allow the cell id to be NULL and default to whatever
-> cell is there without a names property. We do something similar with
-> clks where a NULL connection id defaults to the first phandle in the
-> list. Then we can avoid having a new set of DT specific APIs here. Of
-> course, documentation should be updated to indicate that a NULL cell_id
-> means use index 0 with DT.
+Add power domain controller node (scpsys) for MT2701.
 
-Right. This makes sense. I didn't notice that we do something
-similar in clocks.
-I will post a new change for this (which should be pretty small
-in comparison to earlier patchset that introduced new dt based APIs).
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/mt2701.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 150c48d..bdf8954 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -13,6 +13,7 @@
+  */
+ 
+ #include <dt-bindings/clock/mt2701-clk.h>
++#include <dt-bindings/power/mt2701-power.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/mt2701-resets.h>
+@@ -134,6 +135,17 @@
+ 		reg = <0 0x10005000 0 0x1000>;
+ 	};
+ 
++	scpsys: scpsys@10006000 {
++		compatible = "mediatek,mt2701-scpsys", "syscon";
++		#power-domain-cells = <1>;
++		reg = <0 0x10006000 0 0x1000>;
++		infracfg = <&infracfg>;
++		clocks = <&topckgen CLK_TOP_MM_SEL>,
++			 <&topckgen CLK_TOP_MFG_SEL>,
++			 <&topckgen CLK_TOP_ETHIF_SEL>;
++		clock-names = "mm", "mfg", "ethif";
++	};
++
+ 	watchdog: watchdog@10007000 {
+ 		compatible = "mediatek,mt2701-wdt",
+ 			     "mediatek,mt6589-wdt";
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
