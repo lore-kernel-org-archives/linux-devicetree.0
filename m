@@ -1,216 +1,204 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v7 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 28 Dec 2016 22:21:39 +0100
-Message-ID: <20161228212139.adkixdgvmtj2ukjs@pengutronix.de>
-References: <1482413704-17531-1-git-send-email-cedric.madianga@gmail.com>
- <1482413704-17531-3-git-send-email-cedric.madianga@gmail.com>
- <20161223090019.a3jkhpb3abgjqi55@pengutronix.de>
- <CAOAejn3sc1F8T_rbSTr6-wBNncNwObeK+c6=_Q0BMahDdHXxQA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+From: Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: dts: Add am335x-boneblack-wireless
+Date: Wed, 28 Dec 2016 15:26:32 -0600
+Message-ID: <CB5C8999-6CAE-41F6-85A6-D2A856BD8011@gmail.com>
+References: <20161227175837.28970-1-robertcnelson@gmail.com> <20161227175837.28970-2-robertcnelson@gmail.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+        charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn3sc1F8T_rbSTr6-wBNncNwObeK+c6=_Q0BMahDdHXxQA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, linux@armlinux.org.uk, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161227175837.28970-2-robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Cedric,
-
-On Fri, Dec 23, 2016 at 01:41:15PM +0100, M'boumba Cedric Madianga wrote:
-> > I don't understand why DUTY is required to reach 400 kHz. Given a parent
-> > freq of 30 MHz, with CCR =3D 25 and DUTY =3D 0 we have:
-> >
-> >         t_high =3D 25 * 33.333 ns =3D 833.333 ns
-> >         t_low =3D 2 * 25 * 33.333 ns =3D 1666.667 ns
-> >
-> > then t_high and t_low satisfy the i2c bus specification
-> > (t_low > 1300 ns, t_high > 600 ns) and we have t_low + t_high =3D 2500 =
-ns
-> > =3D 1 / 400 kHz.
-> >
-> > Where is the error?
-> Hum ok you are right. I was a bad interpretation of the datasheet.
-> So now it is clearer. Thanks for that.
-> I will correct and improve my comments in the V8.
-
-The benefit of DUTY=3D1 is (I think) that you can reach 400 kHz also with
-lower parent frequencies. And so it't probably sensible to make use of
-it unconditionally for fast mode.
-
-> >> + * So, in order to cover both SCL high/low with Duty =3D 1,
-> >> + * CCR =3D 16 * SCL period * I2C CLK frequency
-> >
-> > I don't get that. Actually you need to use low + high, so
-> > CCR =3D parentrate / (25 * 400 kHz), right?
-> With your new inputs above, I think I could use a simpler implementation:
-> CCR =3D scl_high_period * parent_rate
-> with scl_high_period =3D 5 =B5s in standard mode to reach 100khz
-> and scl_high_period =3D 1 =B5s in fast mode to reach 400khz with 1/2 or
-> 16/9 duty cycle.
-> So, I am wondering if I have to let the customer setting the duty
-> cycle in the DT for example with "st,duty=3D0" or "st,duty=3D1" property
-> (0 for 1/2 and 1 for 16/9).
-> Or perhaps the best option it to use a default value. What is your
-> feeling regarding this point ?
-
-No, don't add a property to the device tree. Just take pencil and paper
-and think a while about the right algorithm to choose the right register
-settings.
 
 
-> >> +     cr2 =3D readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
-> >> +     freq =3D cr2 & STM32F4_I2C_CR2_FREQ_MASK;
-> >> +
-> >> +     if (i2c_dev->speed =3D=3D STM32F4_I2C_SPEED_STANDARD)
-> >> +             trise =3D freq + 1;
-> >> +     else
-> >> +             trise =3D freq * 300 / 1000 + 1;
-> >
-> > if freq is big such that freq * 300 overflows does this result in a
-> > wrong result, or does the compiler optimize correctly?
-> For sure the compiler will never exceeds u32 max value
+> On Dec 27, 2016, at 11:58 AM, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+>=20
+> BeagleBone Black Wireless is clone of the BeagleBone Black (BBB) with the E=
+thernet
+> replaced by a TI wl1835 wireless module.
+>=20
+> This board can be indentified by the BWAx value after A335BNLT (BBB) in th=
+e at24 eeprom:
+> BWAx [aa 55 33 ee 41 33 33 35  42 4e 4c 54 42 57 41 35  |.U3.A335BNLTBWA5|=
+]
 
-If I compile
--------->8--------
-#include <stdio.h>
+I believe the correct statement is BWxx, but BWBx reserves the option to be s=
+oftware incompatible in some way. My preference is to have it boot anyway, b=
+ut I believe that is only dependent in the bootloader.=20
 
-void myfunc(unsigned freq)
-{
-	unsigned trise =3D freq * 300 / 1000 + 1;
-	printf("trise =3D %u", trise);
-}
+>=20
+> http://beagleboard.org/black-wireless
+> https://github.com/beagleboard/beaglebone-black-wireless
+>=20
+> firmware: https://github.com/beagleboard/beaglebone-black-wireless/tree/ma=
+ster/firmware
+> wl18xx mac address: /proc/device-tree/ocp/ethernet@4a100000/slave@4a100200=
+/mac-address
+>=20
+> Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> CC: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> CC: Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+> ---
+> arch/arm/boot/dts/Makefile                      |   1 +
+> arch/arm/boot/dts/am335x-boneblack-wireless.dts | 109 ++++++++++++++++++++=
+++++
+> 2 files changed, 110 insertions(+)
+> create mode 100644 arch/arm/boot/dts/am335x-boneblack-wireless.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index cccdbcb557b6..9415a49bd11b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -563,6 +563,7 @@ dtb-$(CONFIG_SOC_AM33XX) +=3D \
+>    am335x-base0033.dtb \
+>    am335x-bone.dtb \
+>    am335x-boneblack.dtb \
+> +    am335x-boneblack-wireless.dtb \
+>    am335x-bonegreen.dtb \
+>    am335x-chiliboard.dtb \
+>    am335x-cm-t335.dtb \
+> diff --git a/arch/arm/boot/dts/am335x-boneblack-wireless.dts b/arch/arm/bo=
+ot/dts/am335x-boneblack-wireless.dts
+> new file mode 100644
+> index 000000000000..105bd10655f7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+> @@ -0,0 +1,109 @@
+> +/*
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/=
 
--------->8--------
-
-for arm with -O3 I get:
-
-00000000 <myfunc>:
-   0:	e3a01f4b 	mov	r1, #300	; 0x12c
-   4:	e0010190 	mul	r1, r0, r1
-   8:	e59f3010 	ldr	r3, [pc, #16]	; 20 <myfunc+0x20>
-   c:	e59f0010 	ldr	r0, [pc, #16]	; 24 <myfunc+0x24>
-  10:	e0812193 	umull	r2, r1, r3, r1
-  14:	e1a01321 	lsr	r1, r1, #6
-  18:	e2811001 	add	r1, r1, #1
-  1c:	eafffffe 	b	0 <printf>
-  20:	10624dd3 	.word	0x10624dd3
-  24:	00000000 	.word	0x00000000
-
-The mul instruction at offset 4 writes the least significant 32 bits of
-300 * r0 to r1 and so doesn't handle overflow correctly.
-
-> > This is still not really understandable.
-> I have already added some comments from datasheet to explain the
-> different cases.
-> I don't see how I could be more understandable as it is clearly the
-> hardware way of working...
-
-You need to comment the check for the length, something like:
-
-	/*
-	 * To end the transfer correctly the foo bit has to be cleared
-	 * already on the last but one byte to be transferred.
-	 */
-
-and bonus points if you can shrink the number of functions that check
-for this stuff.
-
-> > Just do:
-> >
-> >         if (status & STM32F4_I2C_SR1_SB) {
-> >                 ...
-> >         }
-> >
-> >         if (status & ...) {
-> >
-> >         }
-> ok but I would prefer something like that:
-> flag =3D status & possible_status
-> if (flag & STM32F4_I2C_SR1_SB) {
-> ...
-> }
-> =
-
-> if (flag & ...) {
-> }
-
-Ok, if you really need possible_status.
-
-> > Then it's obvious by reading the code in which order they are handled
-> > without the need to check the definitions. Do you really need to jugle
-> > with possible_status?
-> I think I have to use possible_status as some events could occur
-> whereas the corresponding interrupt is disabled.
-> For example, for a 2 byte-reception, we don't have to take into accout
-> RXNE event so the corresponding interrupt is disabled.
-
-Is it possible to make it more obvious by doing:
-
-	status =3D read_from_status_register() & read_from_interrupt_enable_regist=
-er();
-
-at a single place?
-
-> >> +     /* Use __fls() to check error bits first */
-> >> +     flag =3D __fls(status & possible_status);
-> >> +
-> >> +     switch (1 << flag) {
-> >> +     case STM32F4_I2C_SR1_BERR:
-> >> +             reg =3D i2c_dev->base + STM32F4_I2C_SR1;
-> >> +             stm32f4_i2c_clr_bits(reg, STM32F4_I2C_SR1_BERR);
-> >> +             msg->result =3D -EIO;
-> >> +             break;
-> >> +
-> >> +     case STM32F4_I2C_SR1_ARLO:
-> >> +             reg =3D i2c_dev->base + STM32F4_I2C_SR1;
-> >> +             stm32f4_i2c_clr_bits(reg, STM32F4_I2C_SR1_ARLO);
-> >> +             msg->result =3D -EAGAIN;
-> >> +             break;
-> >> +
-> >> +     case STM32F4_I2C_SR1_AF:
-> >> +             reg =3D i2c_dev->base + STM32F4_I2C_CR1;
-> >> +             stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
-> >> +             msg->result =3D -EIO;
-> >> +             break;
-> >> +
-> >> +     default:
-> >> +             dev_err(i2c_dev->dev,
-> >> +                     "err it unhandled: status=3D0x%08x)\n", status);
-> >> +             return IRQ_NONE;
-> >> +     }
-> >
-> > You only check a single irq flag here.
-> Yes only the first error could be reported to the i2c clients via
-> msg->result that's why I don't check all errors.
-> Moreover, as soon as an error occurs, the I2C device is reset.
-
-The the "first" in the comment for __fls is misleading. Also do:
-
-	if (status & MOST_IMPORTANT_ERROR) {
-		...
-	}
-
-	if (status & SECOND_MOST_IMPORTANT_ERROR) {
-		...
-	}
-
-(if you need including possible_status stuff).
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +#include "am33xx.dtsi"
+> +#include "am335x-bone-common.dtsi"
+> +#include "am335x-boneblack-common.dtsi"
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/ {
+> +    model =3D "TI AM335x BeagleBone Black Wireless";
+> +    compatible =3D "ti,am335x-bone-black-wireless", "ti,am335x-bone-black=
+", "ti,am335x-bone", "ti,am33xx";
+> +
+> +    wlan_en_reg: fixedregulator@2 {
+> +        compatible =3D "regulator-fixed";
+> +        regulator-name =3D "wlan-en-regulator";
+> +        regulator-min-microvolt =3D <1800000>;
+> +        regulator-max-microvolt =3D <1800000>;
+> +        startup-delay-us=3D <70000>;
+> +
+> +        /* WL_EN */
+> +        gpio =3D <&gpio3 9 0>;
+> +        enable-active-high;
+> +    };
+> +};
+> +
+> +&am33xx_pinmux {
+> +    bt_pins: pinmux_bt_pins {
+> +        pinctrl-single,pins =3D <
+> +            AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLUP | MUX_MODE7)    /* gmii=
+1_txd0.gpio0_28 - BT_EN */
+> +        >;
+> +    };
+> +
+> +    mmc3_pins: pinmux_mmc3_pins {
+> +        pinctrl-single,pins =3D <
+> +            AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE6 ) /* (L15) g=
+mii1_rxd1.mmc2_clk */
+> +            AM33XX_IOPAD(0x914, PIN_INPUT_PULLUP | MUX_MODE6 ) /* (J16) g=
+mii1_txen.mmc2_cmd */
+> +            AM33XX_IOPAD(0x918, PIN_INPUT_PULLUP | MUX_MODE5 ) /* (J17) g=
+mii1_rxdv.mmc2_dat0 */
+> +            AM33XX_IOPAD(0x91c, PIN_INPUT_PULLUP | MUX_MODE5 ) /* (J18) g=
+mii1_txd3.mmc2_dat1 */
+> +            AM33XX_IOPAD(0x920, PIN_INPUT_PULLUP | MUX_MODE5 ) /* (K15) g=
+mii1_txd2.mmc2_dat2 */
+> +            AM33XX_IOPAD(0x908, PIN_INPUT_PULLUP | MUX_MODE5 ) /* (H16) g=
+mii1_col.mmc2_dat3 */
+> +        >;
+> +    };
+> +
+> +    uart3_pins: pinmux_uart3_pins {
+> +        pinctrl-single,pins =3D <
+> +            AM33XX_IOPAD(0x934, PIN_INPUT_PULLUP | MUX_MODE1)    /* gmii1=
+_rxd3.uart3_rxd */
+> +            AM33XX_IOPAD(0x938, PIN_OUTPUT_PULLDOWN | MUX_MODE1)    /* gm=
+ii1_rxd2.uart3_txd */
+> +            AM33XX_IOPAD(0x948, PIN_INPUT | MUX_MODE3)        /* mdio_dat=
+a.uart3_ctsn */
+> +            AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLDOWN | MUX_MODE3)    /* md=
+io_clk.uart3_rtsn */
+> +        >;
+> +    };
+> +
+> +    wl18xx_pins: pinmux_wl18xx_pins {
+> +        pinctrl-single,pins =3D <
+> +            AM33XX_IOPAD(0x92c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)    /* gm=
+ii1_txclk.gpio3_9 WL_EN */
+> +            AM33XX_IOPAD(0x944, PIN_INPUT_PULLDOWN | MUX_MODE7)    /* rmi=
+i1_refclk.gpio0_29 WL_IRQ */
+> +            AM33XX_IOPAD(0x930, PIN_OUTPUT_PULLUP | MUX_MODE7)    /* gmii=
+1_rxclk.gpio3_10 LS_BUF_EN */
+> +        >;
+> +    };
+> +};
+> +
+> +&mac {
+> +    status =3D "disabled";
+> +};
+> +
+> +&mmc3 {
+> +    dmas =3D <&edma_xbar 12 0 1
+> +        &edma_xbar 13 0 2>;
+> +    dma-names =3D "tx", "rx";
+> +    status =3D "okay";
+> +    vmmc-supply =3D <&wlan_en_reg>;
+> +    bus-width =3D <4>;
+> +    non-removable;
+> +    cap-power-off-card;
+> +    ti,needs-special-hs-handling;
+> +    keep-power-in-suspend;
+> +    pinctrl-names =3D "default";
+> +    pinctrl-0 =3D <&mmc3_pins &wl18xx_pins>;
+> +
+> +    #address-cells =3D <1>;
+> +    #size-cells =3D <0>;
+> +    wlcore: wlcore@2 {
+> +        compatible =3D "ti,wl1835";
+> +        reg =3D <2>;
+> +        interrupt-parent =3D <&gpio0>;
+> +        interrupts =3D <29 IRQ_TYPE_EDGE_RISING>;
+> +    };
+> +};
+> +
+> +&uart3 {
+> +    pinctrl-names =3D "default";
+> +    pinctrl-0 =3D <&uart3_pins &bt_pins>;
+> +    status =3D "okay";
+> +};
+> +
+> +&gpio3 {
+> +    ls_buf_en {
+> +        gpio-hog;
+> +        gpios =3D <10 GPIO_ACTIVE_HIGH>;
+> +        output-high;
+> +        line-name =3D "LS_BUF_EN";
+> +    };
+> +};
+> --=20
+> 2.11.0
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
