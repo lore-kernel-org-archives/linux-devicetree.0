@@ -1,61 +1,45 @@
-From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] cfg80211: reg: support
- ieee80211-(min|max)-center-freq DT properties
-Date: Wed, 28 Dec 2016 22:07:55 +0100
-Message-ID: <491a5af2-449d-4b2a-c4ed-af0e89b2ca78@broadcom.com>
-References: <20161228155955.25518-1-zajec5@gmail.com>
- <20161228155955.25518-2-zajec5@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 net-next 00/16] net: mvpp2: add basic support for
+ PPv2.2
+Date: Wed, 28 Dec 2016 22:08:43 +0100
+Message-ID: <20161228220843.6257cb52@free-electrons.com>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <20161228.120644.1166014191192724301.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161228155955.25518-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161228.120644.1166014191192724301.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28-12-16 16:59, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> They allow specifying hardware limitations of supported channels. This
-> may be useful for specifying single band devices or devices that support
-> only some part of the whole band.
-> E.g. some tri-band routers have separated radios for lower and higher
-> part of 5 GHz band.
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
->  net/wireless/reg.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-> index 5dbac37..35ba5c7 100644
-> --- a/net/wireless/reg.c
-> +++ b/net/wireless/reg.c
-> @@ -1123,6 +1123,26 @@ const char *reg_initiator_name(enum nl80211_reg_initiator initiator)
->  }
->  EXPORT_SYMBOL(reg_initiator_name);
->  
-> +static bool reg_center_freq_of_valid(struct wiphy *wiphy,
-> +				     struct ieee80211_channel *chan)
-> +{
-> +	struct device_node *np = wiphy_dev(wiphy)->of_node;
-> +	u32 val;
-> +
-> +	if (!np)
-> +		return true;
-> +
-> +	if (!of_property_read_u32(np, "ieee80211-min-center-freq", &val) &&
-> +	    chan->center_freq < KHZ_TO_MHZ(val))
-> +		return false;
-> +
-> +	if (!of_property_read_u32(np, "ieee80211-max-center-freq", &val) &&
-> +	    chan->center_freq > KHZ_TO_MHZ(val))
-> +		return false;
+Hello,
 
-I suspect these functions rely on CONFIG_OF. So might not build for
-!CONFIG_OF.
+On Wed, 28 Dec 2016 12:06:44 -0500 (EST), David Miller wrote:
 
-Regards,
-Arend
+> > This series depends on the series named "net: mvpp2: misc improvements
+> > and preparation patches".  
+> 
+> Please in the future only submit one patch series at a time.
+> 
+> If I've told you that a large patch series is hard to review and that
+> therefore one should keep each submitted series small and to a
+> reasonable size, that is completely undermined when you submit
+> multiple series to work around that request.
+
+Sure. I'll wait for the first patch series to be merged (potentially
+after several iterations) before resending the second patch series.
+
+Thanks for the feedback!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
