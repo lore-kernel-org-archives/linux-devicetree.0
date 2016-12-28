@@ -1,76 +1,82 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [RFC PATCH 3/5] overlay: a.dts, example of an old style dts file to be converted
-Date: Tue, 27 Dec 2016 23:20:15 -0800
-Message-ID: <1482909617-31950-4-git-send-email-frowand.list@gmail.com>
-References: <1482909617-31950-1-git-send-email-frowand.list@gmail.com>
+From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] MIPS: BMIPS: Add support SPI device nodes
+Date: Wed, 28 Dec 2016 16:39:20 +0900
+Message-ID: <8BB6A4C9-96EF-42E1-8144-808B9C70E8EE@gmail.com>
+References: <20161227015923.882-1-jaedon.shin@gmail.com>
+ <20161227015923.882-3-jaedon.shin@gmail.com>
+ <0dffeca2-68bf-bacd-7eff-8b966c721dde@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482909617-31950-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <0dffeca2-68bf-bacd-7eff-8b966c721dde-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, jdl-CYoMK+44s/E@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 
-Requires a dtc that supports the new syntactic sugar.
-One such version is commit: 6f4db2fc2354 DTBO magic and dtbo format options
-in url = https://github.com/pantoniou/dtc
+> On 28 Dec 2016, at 7:12 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>=20
+> On 12/26/2016 05:59 PM, Jaedon Shin wrote:
+>> Adds SPI device nodes to BCM7xxx MIPS based SoCs.
+>>=20
+>> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> arch/mips/boot/dts/brcm/bcm7125.dtsi      | 55 =
++++++++++++++++++++++++++++++--
+>> arch/mips/boot/dts/brcm/bcm7346.dtsi      | 49 =
++++++++++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm7358.dtsi      | 49 =
++++++++++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm7360.dtsi      | 49 =
++++++++++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm7362.dtsi      | 49 =
++++++++++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm7420.dtsi      | 55 =
++++++++++++++++++++++++++++++--
+>> arch/mips/boot/dts/brcm/bcm7425.dtsi      | 49 =
++++++++++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm7435.dtsi      | 49 =
++++++++++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm97125cbmb.dts  |  4 +++
+>> arch/mips/boot/dts/brcm/bcm97346dbsmb.dts |  4 +++
+>> arch/mips/boot/dts/brcm/bcm97358svmb.dts  | 36 ++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm97360svmb.dts  | 36 ++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm97362svmb.dts  |  4 +++
+>> arch/mips/boot/dts/brcm/bcm97420c.dts     |  4 +++
+>> arch/mips/boot/dts/brcm/bcm97425svmb.dts  | 36 ++++++++++++++++++++
+>> arch/mips/boot/dts/brcm/bcm97435svmb.dts  |  4 +++
+>> 16 files changed, 526 insertions(+), 6 deletions(-)
+>>=20
+>> diff --git a/arch/mips/boot/dts/brcm/bcm7125.dtsi =
+b/arch/mips/boot/dts/brcm/bcm7125.dtsi
+>> index bbd00f65ce39..c1e19e57f64a 100644
+>> --- a/arch/mips/boot/dts/brcm/bcm7125.dtsi
+>> +++ b/arch/mips/boot/dts/brcm/bcm7125.dtsi
+>> @@ -46,6 +46,12 @@
+>> 			#clock-cells =3D <0>;
+>> 			clock-frequency =3D <27000000>;
+>> 		};
+>> +
+>> +		spi_clk: spi_clk {
+>> +			compatible =3D "fixed-clock";
+>> +			#clock-cells =3D <0>;
+>> +			clock-frequency =3D <27000000>;
+>> +		};
+>=20
+> Nit, this should actually be upg_clk, since this is the clock that the
+> SPI controller uses, and it is a fixed-clock with a 27Mhz frequency.
+>=20
+> Other than that, the rest looks good to me, thanks!
+> --=20
+> Florian
 
-$ export PATH="$PATH:/path/dtc/"
-$ ./overlay_convert_old_to_new a.dts b.dts
+I will change the qspi uses upg_clk in v2.
 
-
-Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
----
- a.dts | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 a.dts
-
-diff --git a/a.dts b/a.dts
-new file mode 100644
-index 000000000000..ec21206a081f
---- /dev/null
-+++ b/a.dts
-@@ -0,0 +1,37 @@
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+	fragment@0 {
-+		target = <&am3353x_pinmux>;
-+
-+		__overlay__ {
-+
-+			i2c1_pins: pinmux_i2c1_pins {
-+				pinctrl-single,pins = <
-+					0x158 0x72
-+					0x15c 0x72
-+				>;
-+			};
-+		};
-+	};
-+
-+	fragment@1 {
-+		target = <&i2c1>;
-+
-+		__overlay__ {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins>;
-+			clock-frequency = <400000>;
-+			status = "okay";
-+
-+			at24@50 {
-+				compatible = "at,24c256";
-+				pagesize = <64>;
-+				reg = <0x50>;
-+			};
-+		};
-+	};
-+};
--- 
-1.9.1
+Thanks,
+Jaedon
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
