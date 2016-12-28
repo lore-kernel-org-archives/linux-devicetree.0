@@ -1,88 +1,34 @@
-From: Carlos Palminha <CARLOS.PALMINHA@synopsys.com>
-Subject: Re: [PATCH v5 6/7] i2c: designware: enable SLAVE in platform module
-Date: Wed, 28 Dec 2016 16:49:50 +0000
-Message-ID: <1859a4e9-b10f-4f0e-1ea7-660dea6bb7be@synopsys.com>
-References: <cover.1482934380.git.lolivei@synopsys.com>
- <ea8b611c3b7c2af8088e2dbc16554af5c8aed368.1482934380.git.lolivei@synopsys.com>
- <1482939844.9552.165.camel@linux.intel.com>
- <20e47113-efd7-787c-b2f8-39e9fd8b83d2@synopsys.com>
- <1482942696.9552.172.camel@linux.intel.com>
- <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCHv2 net-next 00/16] net: mvpp2: add basic support for
+ PPv2.2
+Date: Wed, 28 Dec 2016 12:06:44 -0500 (EST)
+Message-ID: <20161228.120644.1166014191192724301.davem@davemloft.net>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482943592-12556-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Date: Wed, 28 Dec 2016 17:46:16 +0100
 
+> This series depends on the series named "net: mvpp2: misc improvements
+> and preparation patches".
 
-On 28-12-2016 16:41, Luis Oliveira wrote:
-> On 28-Dec-16 16:31, Andy Shevchenko wrote:
->> On Wed, 2016-12-28 at 15:53 +0000, Luis Oliveira wrote:
->>> On 28-Dec-16 15:44, Andy Shevchenko wrote:
->>>> On Wed, 2016-12-28 at 14:43 +0000, Luis Oliveira wrote:
->>>>> - Slave mode selected in platform module (devicetree support only)
->>>>> - Check for ACPI - not supported in SLAVE mode:
->>>>>   - Changed the ifndef style to the use of ACPI_HANDLE that
->>>>> returns
->>>>> NULL
->>>>>     if the device was not enumerated from ACPI namespace.
->>>>
->>>> I'm not sure what is wrong with ACPI?
->>>
->>> I dont have a way to test it. Just that.
->>
->> Okay, can you provide an excerpt to see how it will look like in DTS?
-> 
-> Yes, it looks like this now:
-> 
-> 	i2c@0x2000 {
-> 			compatible = "snps,designware-i2c";
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			reg = <0x2000 0x100>;
-> 			clock-frequency = <400000>;
-> 			clocks = <&i2cclk>;
-> 			interrupts = <0>;
-> 
-> 			eeprom@64 {
-> 				compatible = "linux,slave-24c02";
-> 				reg = <0x40000064>;
-> 			};
-> 	};
+Please in the future only submit one patch series at a time.
 
-Probably this can be included as example in the device tree binding document.
+If I've told you that a large patch series is hard to review and that
+therefore one should keep each submitted series small and to a
+reasonable size, that is completely undermined when you submit
+multiple series to work around that request.
 
->>  
->>>>> -	dev->functionality = I2C_FUNC_10BIT_ADDR |
->>>>> DW_IC_DEFAULT_FUNCTIONALITY;
->>>>> -
->>>>> -	i2c_dw_configure_master(pdev);
->>>>> +	if (ACPI_HANDLE(&pdev->dev) == NULL) {
->>>>
->>>> I don't think you need this at all.
->>>
->>> This is to avoid the use of the "ifdef" style I used before.
->>
->> My point is to drop it completely.
->>
->>>>
->>>>> +		device_for_each_child_node(&pdev->dev, child) {
->>>>
->>>> This is resource agnostic.
->>>>
->>>>> +			fwnode_property_read_u32(child, "reg",
->>>>> &reg);
->>>>
->>>> This is as well.
->>>
->>> Are you suggesting I use of_ functions?
->>
->> Nope. See above.
->>
->>
-> 
+Thank you.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
