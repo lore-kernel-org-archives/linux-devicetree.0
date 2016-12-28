@@ -1,48 +1,88 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 0/4] PCI: exynos: use the PHY generic framework
-Date: Wed, 28 Dec 2016 19:34:50 +0900
-Message-ID: <20161228103454.26467-1-jh80.chung@samsung.com>
-References: <CGME20161228103455epcas1p1c762bc59add0011beff1d4ff697b5c8d@epcas1p1.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com, Jaehoon Chung <jh80.chung@samsung.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Wed, 28 Dec 2016 11:43:21 +0100
+Message-ID: <CAFBinCBzz0Jvk_jcWAJ1jEz17r-NYEE87xLUACTybRSHGE7uGA@mail.gmail.com>
+References: <20160905095128.80560-1-nbd@nbd.name> <201609301636.43363.arnd@arndb.de>
+ <557be2b8-5ff1-83ea-f6d1-6421c2465969@nbd.name> <201609301658.35039.arnd@arndb.de>
+ <87vax9r26s.fsf@kamboji.qca.qualcomm.com> <CACna6ryikdd0Yt2FWB_JT27N5uuh9XU+JUWNRjs4H5YcD5PVpw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6ryikdd0Yt2FWB_JT27N5uuh9XU+JUWNRjs4H5YcD5PVpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is for using PHY generic framework.
-When Exynos5440 had upstreamed, there was no PHY subsytem.
-Now the using PHY framework is mandantory.
-In future, Exynos variant should be supported in pci-exynos.c
+On Wed, Dec 28, 2016 at 11:08 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+> wrote:
+> On 3 October 2016 at 15:29, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+>>
+>>> On Friday 30 September 2016, Felix Fietkau wrote:
+>>>> >> >> >> +                 device_type =3D "pci";
+>>>> >> >> >> +                 mediatek,mtd-eeprom =3D <&factory 0x8000>;
+>>>> >> >> >> +                 mediatek,2ghz =3D <0>;
+>>>> >> >
+>>>> >> > It's not clear what the possible values for the 2ghz property are=
+,
+>>>> >> > can you be more verbose in the description? How is <0> different
+>>>> >> > from no property?
+>>>> >> 0 means disabled, no property means unchanged (compared to EEPROM).
+>>>> >
+>>>> > Maybe have a boolean property instead then to say "mediatek,2ghz-dis=
+abled" ?
+>>>> >
+>>>> > If zero is the only possible value, there is no need to put a number=
+ in there.
+>>>> 1 is also possible, which will force-enable the capability.
+>>>
+>>> Ok, then both those values should be documented in the binding.
+>>
+>> Related to this, Martin sent patches which add generic bindings for
+>> enabling 2 Ghz and 5 Ghz bands.
+>>
+>> [RFC,1/3] Documentation: dt-bindings: add IEEE 802.11 binding documentat=
+ion
+>> https://patchwork.kernel.org/patch/9359833/
+>>
+>> [RFC,2/3] of: add IEEE 802.11 device configuration support code
+>> https://patchwork.kernel.org/patch/9359837/
+>
+> I would prefer something more generic. Many tri-band routers split 5
+> GHz band into 2 sets of channels and they have separated radios for
+> them.
+>
+> E.g. Netgear R8000 has phy0 which should be used for higher part of 5
+> GHz band (channels 149+) and phy2 which should be used for lower part
+> of 5 GHz band (channels from 36 to 48 or 64).
+>
+> What do you think about some more flexible properties like:
+> ieee80211-min-center-freq
+> ieee80211-max-center-freq
+what would happen if only one of these properties was given or would
+we forbid that (because the .dts should always describe the hardware,
+and if we describe a lower bound then we should also describe the
+upper bound)?
+the benefits of your solution are:
+- this would allow *enabling* bands as well (my proposal allows this
+as well, but the .dts is indeed a bit hard to read - unlike your
+solution which looks nice to me)
+- we could handle this within generic cfg80211/mac80211 code instead
+of "duplicating" it per driver
 
-Theses pathces based on the below patches
+should we describe the center freq in Hz or MHz (cfg80211's
+ieee80211_channel uses the latter)?
 
-- Jaehoon's patches
-http://patchwork.ozlabs.org/patch/706998/
-http://patchwork.ozlabs.org/patch/706997/
-http://patchwork.ozlabs.org/patch/706995/
-http://patchwork.ozlabs.org/patch/706994/
+@Arnd: what do you think from devicetree perspective?
 
-- Srinivas's patch
-http://patchwork.ozlabs.org/patch/703530/
 
-- Pankaj's patch
-http://patchwork.ozlabs.org/patch/708414/
+Regards,
+Martin
 
-Jaehoon Chung (4):
-  phy: exynos-pcie: Add support for Exynos PCIe phy
-  Documetation: samsung-phy: add the exynos-pcie-phy binding
-  Documetation: binding: modify the exynos5440 pcie binding
-  ARM: dts: exynos5440: support the phy-pcie node for pcie
-
- .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 ++-
- .../devicetree/bindings/phy/samsung-phy.txt        |  23 ++
- arch/arm/boot/dts/exynos5440.dtsi                  |  44 +++-
- drivers/pci/host/pci-exynos.c                      | 198 ++------------
- drivers/phy/Kconfig                                |   9 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-exynos-pcie.c                      | 289 +++++++++++++++++++++
- 7 files changed, 395 insertions(+), 198 deletions(-)
- create mode 100644 drivers/phy/phy-exynos-pcie.c
-
--- 
-2.10.2
+[0] http://lxr.free-electrons.com/source/include/net/cfg80211.h#L130
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
