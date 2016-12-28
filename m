@@ -1,88 +1,61 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH] dt: bindings: Add support for CSI1 bus
-Date: Wed, 28 Dec 2016 19:30:36 +0100
-Message-ID: <20161228183036.GA13139@amd>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: document common IEEE 802.11 frequency
+ properties
+Date: Wed, 28 Dec 2016 21:05:03 +0100
+Message-ID: <f387d897-a1e9-c932-8317-41246be245b0@broadcom.com>
+References: <20161228155955.25518-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-media-owner@vger.kernel.org
-To: robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161228155955.25518-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-=46rom: Sakari Ailus <sakari.ailus@iki.fi>
+On 28-12-16 16:59, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> 
+> This new file should be used for properties handled at higher level and
+> so usable with all drivers.
+> 
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/wireless/ieee80211.txt       | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> new file mode 100644
+> index 0000000..c762769
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> @@ -0,0 +1,16 @@
+> +Common IEEE 802.11 properties
+> +
+> +This provides documentation of common properties that are handled by a proper
+> +net layer and don't require extra driver code.
 
-In the vast majority of cases the bus type is known to the driver(s)
-since a receiver or transmitter can only support a single one. There
-are cases however where different options are possible.
+Please do not make any assumptions on how DT properties are handled nor
+by what. Just state that these properties apply to all wireless devices
+and are applicable to device specific bindings.
 
-Document the CSI1/CCP2 properties strobe_clk_inv and strobe_clock
-properties. The former tells whether the strobe/clock signal is
-inverted, while the latter signifies the clock or strobe mode.
+> +Optional properties:
+> + - ieee80211-min-center-freq : minimal supported frequency in KHz
+> + - ieee80211-max-center-freq : maximal supported frequency in KHz
+> +
+> +Example:
+> +
+> +pcie@0,0 {
+> +	reg = <0x0000 0 0 0 0>;
+> +	ieee80211-min-center-freq = <2437000>;
+> +	ieee80211-max-center-freq = <2457000>;
+> +};
 
-Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Is this the proper level to define it. I was expecting a child node of
+the pci(e) controller. Maybe I am misreading the example.
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b=
-/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 9cd2a36..f0523f7 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -76,6 +76,10 @@ Optional endpoint properties
-   mode horizontal and vertical synchronization signals are provided to the
-   slave device (data source) by the master device (data sink). In the mast=
-er
-   mode the data source device is also the source of the synchronization si=
-gnals.
-+- bus-type: data bus type. Possible values are:
-+  0 - CSI2
-+  1 - parallel / Bt656
-+  2 - CCP2
- - bus-width: number of data lines actively used, valid for the parallel bu=
-sses.
- - data-shift: on the parallel data busses, if bus-width is used to specify=
- the
-   number of data lines, data-shift can be used to specify which data lines=
- are
-@@ -110,9 +114,10 @@ Optional endpoint properties
-   lane and followed by the data lanes in the same order as in data-lanes.
-   Valid values are 0 (normal) and 1 (inverted). The length of the array
-   should be the combined length of data-lanes and clock-lanes properties.
--  If the lane-polarities property is omitted, the value must be interpreted
--  as 0 (normal). This property is valid for serial busses only.
--
-+- clock-inv: Clock or strobe signal inversion.
-+  Possible values: 0 -- not inverted; 1 -- inverted
-+- strobe: Whether the clock signal is used as clock or strobe. Used
-+  with CCP2, for instance.
-=20
- Example
- -------
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlhkBMwACgkQMOfwapXb+vIeugCcDQbShBzmWUEpckTMNxoGKCqc
-pY0AoJalxbLyE/pMuLZG/PTDl6OVxj5g
-=+RWz
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+Regards,
