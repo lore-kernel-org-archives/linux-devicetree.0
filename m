@@ -1,62 +1,56 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] of: reserved_mem: set dma_ops for devices using reserved
- mem
-Date: Wed, 28 Dec 2016 11:55:05 +0100
-Message-ID: <bf678798-e0f2-7688-7759-6b853289f6af@samsung.com>
-References: <CGME20161221054333epcas5p1e27800790de041d997b4fb297cb759c3@epcas5p1.samsung.com>
- <1482299071-22637-1-git-send-email-pankaj.dubey@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1482299071-22637-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v2 1/8] PM / devfreq: exynos-bus: Add the detailed correlation
+ for Exynos5433
+Date: Wed, 28 Dec 2016 20:56:45 +0900
+Message-ID: <1482926212-19223-2-git-send-email-cw00.choi@samsung.com>
+References: <1482926212-19223-1-git-send-email-cw00.choi@samsung.com>
+ <CGME20161228115654epcas1p13fa3cb3615ddf89ebdf747c72b60d809@epcas1p1.samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1482926212-19223-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+Cc: chanwoo@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pankaj,
+This patch adds the detailed corrleation between sub-blocks and VDD_INT power
+line for Exynos5433. VDD_INT provided the power source to INT (Internal) block.
 
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-On 2016-12-21 06:44, Pankaj Dubey wrote:
-> From: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> For some IPs, there may be virtual child devices created and for them its
-> necessary to set the dma_ops if it's using reserved memory else it will call
-> the dummy dma_ops during buffer operations for the child devices which will
-> lead to memory mapping failure.
->
-> Signed-off-by: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-> ---
->   drivers/of/of_reserved_mem.c | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 366d8c3..d507c35 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -354,6 +354,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
->   		mutex_lock(&of_rmem_assigned_device_mutex);
->   		list_add(&rd->list, &of_rmem_assigned_device_list);
->   		mutex_unlock(&of_rmem_assigned_device_mutex);
-> +		/* ensure that dma_ops is set for virtual devices
-> +		 * using reserved memory
-> +		 */
-> +		of_dma_configure(dev, np);
->   
->   		dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
->   	} else {
-
-Best regards
+diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+index d3ec8e676b6b..d085ef90d27c 100644
+--- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
++++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+@@ -123,6 +123,20 @@ Detailed correlation between sub-blocks and power line according to Exynos SoC:
+ 		|--- FSYS
+ 		|--- FSYS2
+ 
++- In case of Exynos5433, there is VDD_INT power line as following:
++	VDD_INT |--- G2D (parent device)
++		|--- MSCL
++		|--- GSCL
++		|--- JPEG
++		|--- MFC
++		|--- HEVC
++		|--- BUS0
++		|--- BUS1
++		|--- BUS2
++		|--- PERIS (Fixed clock rate)
++		|--- PERIC (Fixed clock rate)
++		|--- FSYS  (Fixed clock rate)
++
+ Example1:
+ 	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
+ 	power line (regulator). The MIF (Memory Interface) AXI bus is used to
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
