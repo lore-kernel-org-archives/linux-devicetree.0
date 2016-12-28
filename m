@@ -1,134 +1,67 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [RFC PATCH 1/6] phy: exynos-pcie: Add support for Exynos PCIe phy
-Date: Wed, 28 Dec 2016 18:35:08 +0900
-Message-ID: <ebdb57b1-9a24-f83e-ac26-887f7a2263d3@samsung.com>
-References: <CGME20161226052030epcas5p4ea673fc4ee5c0b2664e80f53d4758553@epcas5p4.samsung.com>
- <20161226052029.10552-1-jh80.chung@samsung.com>
- <20161226052029.10552-2-jh80.chung@samsung.com>
- <CAFp+6iH0q9TNvPgv3_Nexm-vE6TBB_eQHXCwniO-Yn=fq+WWMg@mail.gmail.com>
- <21de9ca7-e586-e5c8-ecda-d30c18bb6e40@samsung.com>
- <CAFp+6iEOvdaRdvmz45ZVpqPrdSmeKk9je0bHg9FtNg8hE8YUxg@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Wed, 28 Dec 2016 11:08:11 +0100
+Message-ID: <CACna6ryikdd0Yt2FWB_JT27N5uuh9XU+JUWNRjs4H5YcD5PVpw@mail.gmail.com>
+References: <20160905095128.80560-1-nbd@nbd.name> <201609301636.43363.arnd@arndb.de>
+ <557be2b8-5ff1-83ea-f6d1-6421c2465969@nbd.name> <201609301658.35039.arnd@arndb.de>
+ <87vax9r26s.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iEOvdaRdvmz45ZVpqPrdSmeKk9je0bHg9FtNg8hE8YUxg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: linux-pci@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, krzk@kernel.org, javier@osg.samsung.com, kishon <kishon@ti.com>, Will Deacon <will.deacon@arm.com>, catalin.marinas@arm.com, CPGS <cpgs@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87vax9r26s.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
-
-On 12/28/2016 05:58 PM, Vivek Gautam wrote:
-> Hi Jaehoon,
-> 
-> On Wed, Dec 28, 2016 at 8:19 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->> Hi Vivek,
+On 3 October 2016 at 15:29, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+>
+>> On Friday 30 September 2016, Felix Fietkau wrote:
+>>> >> >> >> +                 device_type =3D "pci";
+>>> >> >> >> +                 mediatek,mtd-eeprom =3D <&factory 0x8000>;
+>>> >> >> >> +                 mediatek,2ghz =3D <0>;
+>>> >> >
+>>> >> > It's not clear what the possible values for the 2ghz property are,
+>>> >> > can you be more verbose in the description? How is <0> different
+>>> >> > from no property?
+>>> >> 0 means disabled, no property means unchanged (compared to EEPROM).
+>>> >
+>>> > Maybe have a boolean property instead then to say "mediatek,2ghz-disa=
+bled" ?
+>>> >
+>>> > If zero is the only possible value, there is no need to put a number =
+in there.
+>>> 1 is also possible, which will force-enable the capability.
 >>
->> On 12/27/2016 02:53 PM, Vivek Gautam wrote:
->>> Hi Jaehoon,
->>>
->>>
->>> On Mon, Dec 26, 2016 at 10:50 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->>>> This patch supports to use Generic Phy framework for Exynos PCIe phy.
->>>> When Exynos that supported the pcie want to use the PCIe,
->>>> it needs to control the phy resgister.
->>>> But it should be more complex to control in their own PCIe device drivers.
->>>>
->>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>>> ---
->>>>  drivers/phy/Kconfig           |   9 ++
->>>>  drivers/phy/Makefile          |   1 +
->>>>  drivers/phy/phy-exynos-pcie.c | 227 ++++++++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 237 insertions(+)
->>>>  create mode 100644 drivers/phy/phy-exynos-pcie.c
->>>>
->>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>>> index fe00f91..94b0433 100644
->>>> --- a/drivers/phy/Kconfig
->>>> +++ b/drivers/phy/Kconfig
->>>> @@ -341,6 +341,15 @@ config PHY_EXYNOS5_USBDRD
->>>>           This driver provides PHY interface for USB 3.0 DRD controller
->>>>           present on Exynos5 SoC series.
->>>>
->>>> +config PHY_EXYNOS_PCIE
->>>> +       bool "Exynos PCIe PHY driver"
->>>
->>> Is there a reason for this not being 'tristate' ?
->>
->> Will change.
-> 
-> I notice that PCI_EXYNOS5433 is bool as well.
-> If the host has to be 'bool' then it makes sense to have phy
-> also bool as well. But if PCI_EXYNOS5433 can be made
-> tristate, then this also changes to tristate.
+>> Ok, then both those values should be documented in the binding.
+>
+> Related to this, Martin sent patches which add generic bindings for
+> enabling 2 Ghz and 5 Ghz bands.
+>
+> [RFC,1/3] Documentation: dt-bindings: add IEEE 802.11 binding documentati=
+on
+> https://patchwork.kernel.org/patch/9359833/
+>
+> [RFC,2/3] of: add IEEE 802.11 device configuration support code
+> https://patchwork.kernel.org/patch/9359837/
 
-Right. I understood what you said.
+I would prefer something more generic. Many tri-band routers split 5
+GHz band into 2 sets of channels and they have separated radios for
+them.
 
-> 
->>
->>>
->>>> +       depends on ARCH_EXYNOS && OF
->>>> +       depends on PCI_EXYNOS5433
->>>> +       select GENERIC_PHY
->>>> +       help
->>>> +         Enable PCIe PHY support for Exynos SoC series.
->>>
->>> If this driver is for Exynos5433, then same should come in this help
->>> text as well.
->>
->> will support the other exynos series.
->> I'm working on refactoring exynos5440 with PHY generic Framework.
->> Then this drive is not for only Exnyos5433. how about?
-> 
-> Ok, it's good then. My only concern is 'depends on PCI_EXYNOS5433'
-> makes it look like it is for EXYNOS5433. I am fine if that changes as well.
+E.g. Netgear R8000 has phy0 which should be used for higher part of 5
+GHz band (channels 149+) and phy2 which should be used for lower part
+of 5 GHz band (channels from 36 to 48 or 64).
 
-I will not put PCI_EXYNOS5433, just will use the PCI_EXYNOS.
-Because it will be supported only one file as pci-exynos.c
+What do you think about some more flexible properties like:
+ieee80211-min-center-freq
+ieee80211-max-center-freq
 
-> 
-> [...]
-> 
->>>> +
->>>> +#define PCIE_EXYNOS5433_PMU_PHY_OFFSET         0x730
->>>> +#define PCIE_PHY_OFFSET(x)             ((x) * 0x4)
->>>> +
->>>> +/* Sysreg Fsys register offset and bit for Exynos5433 */
->>>> +#define PCIE_PHY_MAC_RESET             0x208
->>>> +#define PCIE_MAC_RESET_MASK            0xFF
->>>> +#define PCIE_MAC_RESET                 BIT(4)
->>>> +#define PCIE_L1SUB_CM_CON              0x1010
->>>> +#define PCIE_REFCLK_GATING_EN          BIT(0)
->>>> +#define PCIE_PHY_COMMON_RESET          0x1020
->>>> +#define PCIE_PHY_RESET                 BIT(0)
->>>> +#define PCIE_PHY_GLOBAL_RESET          0x1040
->>>> +#define PCIE_GLOBAL_RESET              BIT(0)
->>>> +#define PCIE_REFCLK                    BIT(1)
->>>> +#define PCIE_REFCLK_MASK               0x16
->>>> +#define PCIE_APP_REQ_EXIT_L1_MODE      BIT(5)
->>>> +
->>>> +enum exynos_pcie_phy_data_type {
->>>> +       PCIE_PHY_TYPE_EXYNOS5433,
->>>> +};
->>>> +
->>>> +struct exynos_pcie_phy_data {
->>>> +       enum exynos_pcie_phy_data_type  ctrl_type;
->>>
->>> Why do we need this controller type ?
->>> If there are changes in the IP between different version,
->>> then you can as well use different compatibles.
->>
->> Do you mean is the using "of_device_is_compatible()"?
-> 
-> I meant that multiple compatible strings can be added based on the
-> IP versions. And any IP specific data can be put in the .data field
-> of  'of_device_id' structure.
-> If there's more to differentiate between the IP versions at runtime,
-> you can use of_device_is_compatible().
-> 
-> [...]
-> 
-> 
-> 
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
