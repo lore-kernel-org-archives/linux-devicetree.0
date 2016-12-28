@@ -1,56 +1,39 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v2 1/8] PM / devfreq: exynos-bus: Add the detailed correlation
- for Exynos5433
-Date: Wed, 28 Dec 2016 20:56:45 +0900
-Message-ID: <1482926212-19223-2-git-send-email-cw00.choi@samsung.com>
-References: <1482926212-19223-1-git-send-email-cw00.choi@samsung.com>
- <CGME20161228115654epcas1p13fa3cb3615ddf89ebdf747c72b60d809@epcas1p1.samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1482926212-19223-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Cc: chanwoo@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] iio: misc: add support for GPIO power switches
+Date: Wed, 28 Dec 2016 13:50:17 +0100
+Message-ID: <CACRpkdZ7JrNfCKPuuCmkZd_7+NV0QLUN8ZMukFA0TcqS9SYXcQ@mail.gmail.com>
+References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com> <1481494905-18037-3-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1481494905-18037-3-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>Liam Girdwood <l>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the detailed corrleation between sub-blocks and VDD_INT power
-line for Exynos5433. VDD_INT provided the power source to INT (Internal) block.
+On Sun, Dec 11, 2016 at 11:21 PM, Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> Some power-measuring ADCs work together with power load switches which
+> allow to power-cycle measured devices.
+>
+> An example use case would be measuring the power consumption of a
+> development board during boot using a power monitor such as TI INA226
+> and power-cycling the board remotely using a TPS229* power switch.
+>
+> Add an iio driver for simple GPIO power switches and expose a sysfs
+> attribute allowing to toggle their state.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-index d3ec8e676b6b..d085ef90d27c 100644
---- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-+++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-@@ -123,6 +123,20 @@ Detailed correlation between sub-blocks and power line according to Exynos SoC:
- 		|--- FSYS
- 		|--- FSYS2
- 
-+- In case of Exynos5433, there is VDD_INT power line as following:
-+	VDD_INT |--- G2D (parent device)
-+		|--- MSCL
-+		|--- GSCL
-+		|--- JPEG
-+		|--- MFC
-+		|--- HEVC
-+		|--- BUS0
-+		|--- BUS1
-+		|--- BUS2
-+		|--- PERIS (Fixed clock rate)
-+		|--- PERIC (Fixed clock rate)
-+		|--- FSYS  (Fixed clock rate)
-+
- Example1:
- 	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
- 	power line (regulator). The MIF (Memory Interface) AXI bus is used to
--- 
-1.9.1
+I don't get this, isn't this doing the same as
+drivers/power/reset/gpio-poweroff.c
+?
 
+With the only difference that the latter uses the standard syscall
+from pm_power_off to reboot the system instead of some random
+sysfs file.
+
+Yours,
+Linus Walleij
