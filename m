@@ -1,121 +1,88 @@
-From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 6/7] i2c: designware: enable SLAVE in platform module
-Date: Wed, 28 Dec 2016 18:10:34 +0000
-Message-ID: <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
-References: <cover.1482934380.git.lolivei@synopsys.com>
- <ea8b611c3b7c2af8088e2dbc16554af5c8aed368.1482934380.git.lolivei@synopsys.com>
- <1482939844.9552.165.camel@linux.intel.com>
- <20e47113-efd7-787c-b2f8-39e9fd8b83d2@synopsys.com>
- <1482942696.9552.172.camel@linux.intel.com>
- <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
- <1482945043.9552.174.camel@linux.intel.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH] dt: bindings: Add support for CSI1 bus
+Date: Wed, 28 Dec 2016 19:30:36 +0100
+Message-ID: <20161228183036.GA13139@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482945043.9552.174.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-media-owner@vger.kernel.org
+To: robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28-Dec-16 17:10, Andy Shevchenko wrote:
-> On Wed, 2016-12-28 at 16:41 +0000, Luis Oliveira wrote:
->> On 28-Dec-16 16:31, Andy Shevchenko wrote:
->>> On Wed, 2016-12-28 at 15:53 +0000, Luis Oliveira wrote:
->>>> On 28-Dec-16 15:44, Andy Shevchenko wrote:
->>>>> On Wed, 2016-12-28 at 14:43 +0000, Luis Oliveira wrote:
->>>>>> - Slave mode selected in platform module (devicetree support
->>>>>> only)
->>>>>> - Check for ACPI - not supported in SLAVE mode:
->>>>>>   - Changed the ifndef style to the use of ACPI_HANDLE that
->>>>>> returns
->>>>>> NULL
->>>>>>     if the device was not enumerated from ACPI namespace.
->>>>>
->>>>> I'm not sure what is wrong with ACPI?
->>>>
->>>> I dont have a way to test it. Just that.
->>>
->>> Okay, can you provide an excerpt to see how it will look like in
->>> DTS?
->>
->> Yes, it looks like this now:
->>
->> 	i2c@0x2000 {
->> 			compatible = "snps,designware-i2c";
->> 			#address-cells = <1>;
->> 			#size-cells = <0>;
->> 			reg = <0x2000 0x100>;
->> 			clock-frequency = <400000>;
->> 			clocks = <&i2cclk>;
->> 			interrupts = <0>;
->>
->> 			eeprom@64 {
->> 				compatible = "linux,slave-24c02";
->> 				reg = <0x40000064>;
->> 			};
->> 	};
-> 
-> +1 to Carlos' comment.
 
-Agree, I'm on it.
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->>>  
->>>>>> -	dev->functionality = I2C_FUNC_10BIT_ADDR |
->>>>>> DW_IC_DEFAULT_FUNCTIONALITY;
->>>>>> -
->>>>>> -	i2c_dw_configure_master(pdev);
->>>>>> +	if (ACPI_HANDLE(&pdev->dev) == NULL) {
->>>>>
->>>>> I don't think you need this at all.
->>>>
->>>> This is to avoid the use of the "ifdef" style I used before.
->>>
->>> My point is to drop it completely.
->>>
->>>>>
->>>>>> +		device_for_each_child_node(&pdev->dev, child)
->>>>>> {
->>>>>
->>>>> This is resource agnostic.
->>>>>
->>>>>> +			fwnode_property_read_u32(child,
->>>>>> "reg",
->>>>>> &reg);
->>>>>
->>>>> This is as well.
->>>>
->>>> Are you suggesting I use of_ functions?
->>>
->>> Nope. See above.
-> 
-> So, ACPI has a property to support slave mode for I2CSerialBus() macro.
-> 
-> I would propose to create a helper function in i2c-core.c which will be
-> responsible for mode detection
-> 
-> ... i2c_slave_mode_detect()
-> {
-> ...
->  if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
->   ... (use of_*() here) ...
->  } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
->   dev_dbg(..., "ACPI slave is not supported yet\n");
->   ... to master ...
->  } else {
->   ... default to master ...
->  }
-> }
-> EXPORT_...();
-> 
-> Make it as a separate patch.
-> 
+=46rom: Sakari Ailus <sakari.ailus@iki.fi>
 
-Oh I see, yes it looks good. I will check it. Thanks
+In the vast majority of cases the bus type is known to the driver(s)
+since a receiver or transmitter can only support a single one. There
+are cases however where different options are possible.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Document the CSI1/CCP2 properties strobe_clk_inv and strobe_clock
+properties. The former tells whether the strobe/clock signal is
+inverted, while the latter signifies the clock or strobe mode.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b=
+/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 9cd2a36..f0523f7 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -76,6 +76,10 @@ Optional endpoint properties
+   mode horizontal and vertical synchronization signals are provided to the
+   slave device (data source) by the master device (data sink). In the mast=
+er
+   mode the data source device is also the source of the synchronization si=
+gnals.
++- bus-type: data bus type. Possible values are:
++  0 - CSI2
++  1 - parallel / Bt656
++  2 - CCP2
+ - bus-width: number of data lines actively used, valid for the parallel bu=
+sses.
+ - data-shift: on the parallel data busses, if bus-width is used to specify=
+ the
+   number of data lines, data-shift can be used to specify which data lines=
+ are
+@@ -110,9 +114,10 @@ Optional endpoint properties
+   lane and followed by the data lanes in the same order as in data-lanes.
+   Valid values are 0 (normal) and 1 (inverted). The length of the array
+   should be the combined length of data-lanes and clock-lanes properties.
+-  If the lane-polarities property is omitted, the value must be interpreted
+-  as 0 (normal). This property is valid for serial busses only.
+-
++- clock-inv: Clock or strobe signal inversion.
++  Possible values: 0 -- not inverted; 1 -- inverted
++- strobe: Whether the clock signal is used as clock or strobe. Used
++  with CCP2, for instance.
+=20
+ Example
+ -------
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlhkBMwACgkQMOfwapXb+vIeugCcDQbShBzmWUEpckTMNxoGKCqc
+pY0AoJalxbLyE/pMuLZG/PTDl6OVxj5g
+=+RWz
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
