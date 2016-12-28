@@ -1,72 +1,85 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v9 3/8] DT:omap3+tsc2007: use new common touchscreen bindings
-Date: Wed, 28 Dec 2016 15:53:18 +0100
-Message-ID: <17745d35ab0966aca17a0aee431efc662d7cd0e5.1482936802.git.hns@goldelico.com>
-References: <cover.1482936802.git.hns@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1482936802.git.hns@goldelico.com>
-In-Reply-To: <cover.1482936802.git.hns@goldelico.com>
-References: <cover.1482936802.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 2/7] i2c: designware: refactoring of the
+ i2c-designware
+Date: Wed, 28 Dec 2016 17:12:48 +0200
+Message-ID: <1482937968.9552.159.camel@linux.intel.com>
+References: <cover.1482934380.git.lolivei@synopsys.com>
+         <0dbbce3bb2ffd47d5a78ea49f992b48d7ea2f35d.1482934380.git.lolivei@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <0dbbce3bb2ffd47d5a78ea49f992b48d7ea2f35d.1482934380.git.lolivei@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-While we fix the GTA04 we add proper pinmux for the
-penirq gpio.
+On Wed, 2016-12-28 at 14:43 +0000, Luis Oliveira wrote:
+> - Factor out all _master() part of code from i2c-designware-core
+>   and i2c-designware-platdrv to separate functions.
+> - Standardize all code related with MASTER mode.
+> - I have to take off DW_IC_INTR_TX_EMPTY from DW_IC_INTR_DEFAULT_MASK
+>   because it is master specific.
+> 
+> The purpose of this is to prepare the controller to have is I2C MASTER
+> flow in a separate driver. To do this first all the
+> functions/definitions related to the MASTER flow were identified.
 
-Tested on: GTA04A4 and Pyra-Handheld
+Thanks for an update.
+Some style related comments below (For the code related is up to you, my
+tag still stands).
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+> 
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+> Changes V4->V5: (ACK by Andy)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index b3a8b1f..64d6ee3 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -273,6 +273,13 @@
- 			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
- 		>;
- 	};
-+
-+	penirq_pins: pinmux_penirq_pins {
-+		pinctrl-single,pins = <
-+			/* here we could enable to wakeup the cpu from suspend by a pen touch */
-+			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
-+		>;
-+	};
- };
- 
- &omap3_pmx_core2 {
-@@ -410,10 +417,24 @@
- 	tsc2007@48 {
- 		compatible = "ti,tsc2007";
- 		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&penirq_pins>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
--		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
--		ti,x-plate-ohms = <600>;
-+		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
-+		touchscreen-size-x = <480>;
-+		touchscreen-size-y = <640>;
-+		touchscreen-max-pressure = <1000>;
-+		touchscreen-fuzz-x = <3>;
-+		touchscreen-fuzz-y = <8>;
-+		touchscreen-fuzz-pressure = <10>;
-+		touchscreen-inverted-y;
-+		ti,min-x = <0x100>;
-+		ti,max-x = <0xf00>;
-+		ti,min-y = <0x100>;
-+		ti,max-y = <0xf00>;
-+		ti,max-rt = <4096>;
-+		ti,x-plate-ohms = <550>;
- 	};
- 
- 	/* RFID EEPROM */
+When you get an Ack, or other tag (Reviewed-by, Tested-by, etc), and you
+send new version, include this tag to your commit message (it applies to
+all affected patches in your series).
+
+It would be also good to have some high level changelog in the cover
+letter, from this series I don't see, for example, which base you did
+use (i2c-next? linux-next? v4.9? v4.10-rc1?).
+
+> +       dev_dbg(dev->dev,
+> +               "%s: enabled=%#x stat=%#x\n", __func__, enabled,
+stat);
+
+I hope you can fit format string on the first line. __func__ is
+redundant when you are using debug printing (Dynamic Debug would include
+it if asked for).
+
+> +static void i2c_dw_configure_master(struct platform_device *pdev)
+> +{
+> +	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
+
+By the way, does it make sense to pass struct dw_i2c_dev * as a
+parameter of the function?
+
+> +
+> +	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE
+> |
+> +			  DW_IC_CON_RESTART_EN;
+> +
+> +	dev_dbg(&pdev->dev, "I am registed as a I2C Master!\n");
+> +
+> +	switch (dev->clk_freq) {
+> +	case 100000:
+> +		dev->master_cfg |= DW_IC_CON_SPEED_STD;
+> +		break;
+> +	case 3400000:
+> +		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
+> +		break;
+> +	default:
+> +		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
+> +	}
+> +}
+> +
+> 
+
+
 -- 
-2.7.3
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
