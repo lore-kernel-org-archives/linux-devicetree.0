@@ -1,79 +1,54 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] cfg80211: reg: support ieee80211-(min|max)-center-freq
- DT properties
-Date: Wed, 28 Dec 2016 22:30:03 +0100
-Message-ID: <CACna6rzJV-UdydKrXTquEzrkCfNXXKsHBrsZGjTJ8F=BSRyUjA@mail.gmail.com>
-References: <20161228155955.25518-1-zajec5@gmail.com> <20161228155955.25518-2-zajec5@gmail.com>
- <491a5af2-449d-4b2a-c4ed-af0e89b2ca78@broadcom.com> <CACna6rwKLr-makRauYQf51330p96QrSNEhtNqu927yHT_Xm7Wg@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: dts: r8a7794: link DU to VSPD
+Date: Thu, 29 Dec 2016 00:35:07 +0300
+Message-ID: <1524349.7vYNCWaVjE@wasted.cogentembedded.com>
+References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rwKLr-makRauYQf51330p96QrSNEhtNqu927yHT_Xm7Wg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1529351.Fac5N2tKoF-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 December 2016 at 22:28, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> On 28 December 2016 at 22:07, Arend van Spriel
-> <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> On 28-12-16 16:59, Rafa=C5=82 Mi=C5=82ecki wrote:
->>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>
->>> They allow specifying hardware limitations of supported channels. This
->>> may be useful for specifying single band devices or devices that suppor=
-t
->>> only some part of the whole band.
->>> E.g. some tri-band routers have separated radios for lower and higher
->>> part of 5 GHz band.
->>>
->>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>> ---
->>>  net/wireless/reg.c | 34 ++++++++++++++++++++++++++++++++++
->>>  1 file changed, 34 insertions(+)
->>>
->>> diff --git a/net/wireless/reg.c b/net/wireless/reg.c
->>> index 5dbac37..35ba5c7 100644
->>> --- a/net/wireless/reg.c
->>> +++ b/net/wireless/reg.c
->>> @@ -1123,6 +1123,26 @@ const char *reg_initiator_name(enum nl80211_reg_=
-initiator initiator)
->>>  }
->>>  EXPORT_SYMBOL(reg_initiator_name);
->>>
->>> +static bool reg_center_freq_of_valid(struct wiphy *wiphy,
->>> +                                  struct ieee80211_channel *chan)
->>> +{
->>> +     struct device_node *np =3D wiphy_dev(wiphy)->of_node;
->>> +     u32 val;
->>> +
->>> +     if (!np)
->>> +             return true;
->>> +
->>> +     if (!of_property_read_u32(np, "ieee80211-min-center-freq", &val) =
-&&
->>> +         chan->center_freq < KHZ_TO_MHZ(val))
->>> +             return false;
->>> +
->>> +     if (!of_property_read_u32(np, "ieee80211-max-center-freq", &val) =
-&&
->>> +         chan->center_freq > KHZ_TO_MHZ(val))
->>> +             return false;
->>
->> I suspect these functions rely on CONFIG_OF. So might not build for
->> !CONFIG_OF.
->
-> I compiled it with
-> # CONFIG_OF is not set
->
-> Can you test it and provide a non-working config if you see a
-> compilation error, please?
+Add the "vsps" property to the DU device node in order to link this node to
+the (single) VSPD node.
 
-include/linux/of.h provides a lot of dummy static inline functions if
-CONFIG_OF is not used (they also allow compiler to drop most of the
-code).
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
---=20
-Rafa=C5=82
+---
+This patch is against the 'renesas-devel-20161220-v4.9' of Simon Horman's
+'renesas.git' repo.  It's  only meaningful if the "Enable R8A7794 DU VSPD
+compositor" DU driver patches are applied...
+
+ arch/arm/boot/dts/r8a7794.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
++++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+@@ -908,7 +908,7 @@
+ 		power-domains = <&sysc R8A7794_PD_ALWAYS_ON>;
+ 	};
+ 
+-	vsp1@fe930000 {
++	vspd0: vsp1@fe930000 {
+ 		compatible = "renesas,vsp1";
+ 		reg = <0 0xfe930000 0 0x8000>;
+ 		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
+@@ -925,6 +925,7 @@
+ 		clocks = <&mstp7_clks R8A7794_CLK_DU0>,
+ 			 <&mstp7_clks R8A7794_CLK_DU0>;
+ 		clock-names = "du.0", "du.1";
++		vsps = <&vspd0>;
+ 		status = "disabled";
+ 
+ 		ports {
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
