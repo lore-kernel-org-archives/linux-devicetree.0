@@ -1,48 +1,119 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [RESEND v2] dt-bindings: video: exynos7-decon: Remove obsolete samsung,power-domain property
-Date: Wed, 28 Dec 2016 19:50:25 +0200
-Message-ID: <20161228175025.5581-1-krzk@kernel.org>
+From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 6/7] i2c: designware: enable SLAVE in platform module
+Date: Wed, 28 Dec 2016 18:10:34 +0000
+Message-ID: <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
+References: <cover.1482934380.git.lolivei@synopsys.com>
+ <ea8b611c3b7c2af8088e2dbc16554af5c8aed368.1482934380.git.lolivei@synopsys.com>
+ <1482939844.9552.165.camel@linux.intel.com>
+ <20e47113-efd7-787c-b2f8-39e9fd8b83d2@synopsys.com>
+ <1482942696.9552.172.camel@linux.intel.com>
+ <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
+ <1482945043.9552.174.camel@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482945043.9552.174.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The samsung,power-domain property is obsolete since commit 0da658704136
-("ARM: dts: convert to generic power domain bindings for exynos DT").
-Replace it with generic one.
+On 28-Dec-16 17:10, Andy Shevchenko wrote:
+> On Wed, 2016-12-28 at 16:41 +0000, Luis Oliveira wrote:
+>> On 28-Dec-16 16:31, Andy Shevchenko wrote:
+>>> On Wed, 2016-12-28 at 15:53 +0000, Luis Oliveira wrote:
+>>>> On 28-Dec-16 15:44, Andy Shevchenko wrote:
+>>>>> On Wed, 2016-12-28 at 14:43 +0000, Luis Oliveira wrote:
+>>>>>> - Slave mode selected in platform module (devicetree support
+>>>>>> only)
+>>>>>> - Check for ACPI - not supported in SLAVE mode:
+>>>>>>   - Changed the ifndef style to the use of ACPI_HANDLE that
+>>>>>> returns
+>>>>>> NULL
+>>>>>>     if the device was not enumerated from ACPI namespace.
+>>>>>
+>>>>> I'm not sure what is wrong with ACPI?
+>>>>
+>>>> I dont have a way to test it. Just that.
+>>>
+>>> Okay, can you provide an excerpt to see how it will look like in
+>>> DTS?
+>>
+>> Yes, it looks like this now:
+>>
+>> 	i2c@0x2000 {
+>> 			compatible = "snps,designware-i2c";
+>> 			#address-cells = <1>;
+>> 			#size-cells = <0>;
+>> 			reg = <0x2000 0x100>;
+>> 			clock-frequency = <400000>;
+>> 			clocks = <&i2cclk>;
+>> 			interrupts = <0>;
+>>
+>> 			eeprom@64 {
+>> 				compatible = "linux,slave-24c02";
+>> 				reg = <0x40000064>;
+>> 			};
+>> 	};
+> 
+> +1 to Carlos' comment.
 
-Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Agree, I'm on it.
 
----
+> 
+>>>  
+>>>>>> -	dev->functionality = I2C_FUNC_10BIT_ADDR |
+>>>>>> DW_IC_DEFAULT_FUNCTIONALITY;
+>>>>>> -
+>>>>>> -	i2c_dw_configure_master(pdev);
+>>>>>> +	if (ACPI_HANDLE(&pdev->dev) == NULL) {
+>>>>>
+>>>>> I don't think you need this at all.
+>>>>
+>>>> This is to avoid the use of the "ifdef" style I used before.
+>>>
+>>> My point is to drop it completely.
+>>>
+>>>>>
+>>>>>> +		device_for_each_child_node(&pdev->dev, child)
+>>>>>> {
+>>>>>
+>>>>> This is resource agnostic.
+>>>>>
+>>>>>> +			fwnode_property_read_u32(child,
+>>>>>> "reg",
+>>>>>> &reg);
+>>>>>
+>>>>> This is as well.
+>>>>
+>>>> Are you suggesting I use of_ functions?
+>>>
+>>> Nope. See above.
+> 
+> So, ACPI has a property to support slave mode for I2CSerialBus() macro.
+> 
+> I would propose to create a helper function in i2c-core.c which will be
+> responsible for mode detection
+> 
+> ... i2c_slave_mode_detect()
+> {
+> ...
+>  if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
+>   ... (use of_*() here) ...
+>  } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
+>   dev_dbg(..., "ACPI slave is not supported yet\n");
+>   ... to master ...
+>  } else {
+>   ... default to master ...
+>  }
+> }
+> EXPORT_...();
+> 
+> Make it as a separate patch.
+> 
 
-Changes since v1:
-1. Just add the acks/reviews.
-
-I though it will be applied by Exynos DRM maintainer but there was no
-response.
-Dear Rob, could you pick it up?
----
- Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
-index 3938caacf11c..8346fb18a358 100644
---- a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
-@@ -33,7 +33,7 @@ Required properties:
- - i80-if-timings: timing configuration for lcd i80 interface support.
- 
- Optional Properties:
--- samsung,power-domain: a phandle to DECON power domain node.
-+- power-domains: a phandle to DECON power domain node.
- - display-timings: timing settings for DECON, as described in document [1].
- 		Can be used in case timings cannot be provided otherwise
- 		or to override timings provided by the panel.
--- 
-2.9.3
+Oh I see, yes it looks good. I will check it. Thanks
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
