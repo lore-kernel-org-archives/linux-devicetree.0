@@ -1,99 +1,305 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/4] pinctrl: dt-bindings: samsung: add drive strength
- macros for Exynos5433
-Date: Thu, 29 Dec 2016 19:33:53 +0900
-Message-ID: <6bf77b57-c2a4-2dff-9763-1cd1bfa23b9d@samsung.com>
-References: <20161229084211.20442-1-andi.shyti@samsung.com>
- <CGME20161229084221epcas5p43926b87dccbee0db4045faa5ddca565d@epcas5p4.samsung.com>
- <20161229084211.20442-2-andi.shyti@samsung.com>
- <37b86cdb-b5e9-a5fa-fbb1-46e8d8c90cd8@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 2/2] mmc: host: s3cmci: allow probing from device tree
+Date: Thu, 29 Dec 2016 12:40:29 +0100
+Message-ID: <CAPDyKFof0xx0VyAs+jOy0Qe6UDe0DRYTpda0X_seWP+8ao4Ytw@mail.gmail.com>
+References: <1481289284-19919-1-git-send-email-sergio.prado@e-labworks.com>
+ <1481289284-19919-3-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <37b86cdb-b5e9-a5fa-fbb1-46e8d8c90cd8@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1481289284-19919-3-git-send-email-sergio.prado@e-labworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andi,
+On 9 December 2016 at 14:14, Sergio Prado <sergio.prado@e-labworks.com> wrote:
+> Allows configuring Samsung S3C24XX MMC/SD/SDIO controller using a device
+> tree.
+>
+> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+> ---
+>  drivers/mmc/host/s3cmci.c | 155 +++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 131 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
+> index 932a4b1fed33..bfeb90e8ffee 100644
+> --- a/drivers/mmc/host/s3cmci.c
+> +++ b/drivers/mmc/host/s3cmci.c
+> @@ -23,6 +23,9 @@
+>  #include <linux/gpio.h>
+>  #include <linux/irq.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>
+>  #include <plat/gpio-cfg.h>
+>  #include <mach/dma.h>
+> @@ -127,6 +130,22 @@ enum dbg_channels {
+>         dbg_conf  = (1 << 8),
+>  };
+>
+> +struct s3cmci_drv_data {
+> +       int is2440;
 
-On 2016년 12월 29일 18:17, Chanwoo Choi wrote:
-> Hi Andi,
-> 
-> On 2016년 12월 29일 17:42, Andi Shyti wrote:
->> Commit 5db7e3bb87df ("pinctrl: dt-bindings: samsung: Add header with
->> values used for configuration") has added a header file for defining the
->> pinctrl values in order to avoid hardcoded settings in the Exynos
->> DTS related files.
->>
->> Extend samsung.h to the Exynos5433 for drive strength values
->> which are strictly related to the particular SoC and may defer
->> from others.
->>
->> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
->> ---
->>  include/dt-bindings/pinctrl/samsung.h | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/include/dt-bindings/pinctrl/samsung.h b/include/dt-bindings/pinctrl/samsung.h
->> index 6276eb785e2b..58868313d64b 100644
->> --- a/include/dt-bindings/pinctrl/samsung.h
->> +++ b/include/dt-bindings/pinctrl/samsung.h
->> @@ -45,6 +45,12 @@
->>  #define EXYNOS5420_PIN_DRV_LV3		2
->>  #define EXYNOS5420_PIN_DRV_LV4		3
->>  
->> +/* Drive strengths for Exynos5433 */
->> +#define EXYNOS5433_PIN_DRV_LV1		0
->> +#define EXYNOS5433_PIN_DRV_LV2		1
->> +#define EXYNOS5433_PIN_DRV_LV3		2
->> +#define EXYNOS5433_PIN_DRV_LV4		3
-> 
-> Exynos5433 has the same value with EXYNOS5420. So, I'd like you to use the EXYNOS5420_PIN_DRV_LVx instead of separate the definitions.
+This doesn't say much.
 
-I found the problem to handle the *_DRV register of Exynos5433. Because Exynos5433 has the different width length of *_DRV (PINCFG_TYPE_DRV) bitfields from Exynos542x as following. When I was sending the exynos5433 pinctrl patches, I was missing this issue.
+Please use a more descriptive variable name and rename the struct to
+perhaps "variant_data", because I guess that is what this is?
 
-Exynos5422/Exynos5410 have two different bitfields in the same register to set the DRV_LVx as following:
-(n=0 to 7)
-[2n+1:2n] : 2bits
- 0x0 = 1x,
- 0x1 = 2x,
- 0x2 = 3x,
- 0x3 = 4x,
+> +};
+> +
+> +static const struct s3cmci_drv_data s3c2410_s3cmci_drv_data = {
+> +       .is2440 = 0,
+> +};
+> +
+> +static const struct s3cmci_drv_data s3c2412_s3cmci_drv_data = {
+> +       .is2440 = 1,
+> +};
+> +
+> +static const struct s3cmci_drv_data s3c2440_s3cmci_drv_data = {
+> +       .is2440 = 1,
+> +};
+> +
+>  static const int dbgmap_err   = dbg_fail;
+>  static const int dbgmap_info  = dbg_info | dbg_conf;
+>  static const int dbgmap_debug = dbg_err | dbg_debug;
+> @@ -1241,8 +1260,9 @@ static void s3cmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>         case MMC_POWER_ON:
+>         case MMC_POWER_UP:
+>                 /* Configure GPE5...GPE10 pins in SD mode */
+> -               s3c_gpio_cfgall_range(S3C2410_GPE(5), 6, S3C_GPIO_SFN(2),
+> -                                     S3C_GPIO_PULL_NONE);
+> +               if (!host->pdev->dev.of_node)
+> +                       s3c_gpio_cfgall_range(S3C2410_GPE(5), 6, S3C_GPIO_SFN(2),
+> +                                             S3C_GPIO_PULL_NONE);
+>
+>                 if (host->pdata->set_power)
+>                         host->pdata->set_power(ios->power_mode, ios->vdd);
+> @@ -1254,7 +1274,8 @@ static void s3cmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>
+>         case MMC_POWER_OFF:
+>         default:
+> -               gpio_direction_output(S3C2410_GPE(5), 0);
+> +               if (!host->pdev->dev.of_node)
+> +                       gpio_direction_output(S3C2410_GPE(5), 0);
+>
+>                 if (host->is2440)
+>                         mci_con |= S3C2440_SDICON_SDRESET;
+> @@ -1544,21 +1565,12 @@ static inline void s3cmci_debugfs_remove(struct s3cmci_host *host) { }
+>
+>  #endif /* CONFIG_DEBUG_FS */
+>
+> -static int s3cmci_probe(struct platform_device *pdev)
+> +static int s3cmci_probe_pdata(struct s3cmci_host *host)
+>  {
+> -       struct s3cmci_host *host;
+> -       struct mmc_host *mmc;
+> -       int ret;
+> -       int is2440;
+> -       int i;
+> +       struct platform_device *pdev = host->pdev;
+> +       int i, ret;
+>
+> -       is2440 = platform_get_device_id(pdev)->driver_data;
+> -
+> -       mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
+> -       if (!mmc) {
+> -               ret = -ENOMEM;
+> -               goto probe_out;
+> -       }
+> +       host->is2440 = platform_get_device_id(pdev)->driver_data;
+>
+>         for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++) {
+>                 ret = gpio_request(i, dev_name(&pdev->dev));
+> @@ -1568,14 +1580,90 @@ static int s3cmci_probe(struct platform_device *pdev)
+>                         for (i--; i >= S3C2410_GPE(5); i--)
+>                                 gpio_free(i);
+>
+> -                       goto probe_free_host;
+> +                       return ret;
+>                 }
+>         }
+>
+> +       return 0;
+> +}
+> +
+> +static int s3cmci_probe_dt(struct s3cmci_host *host)
+> +{
+> +       struct platform_device *pdev = host->pdev;
+> +       struct s3c24xx_mci_pdata *pdata;
+> +       const struct s3cmci_drv_data *drvdata;
+> +       struct mmc_host *mmc = host->mmc;
+> +       int gpio, ret;
+> +
+> +       drvdata = of_device_get_match_data(&pdev->dev);
+> +       if (!drvdata)
+> +               return -ENODEV;
+> +
+> +       host->is2440 = drvdata->is2440;
 
-[n+16:16]
- 0x0 = Fast Slew Rate,
- 0x1 = Slow Slew Rate,
+Instead of copying only the member, perhaps assign a host->variant
+pointer to the drvdata instead, as that allows to extend the
+information for the variant to cover more things than only "is2440",
+while going forward.
 
-But, Exynos5433 has the following value for PIN_DRV_LVx without additional bitfields to separate 'Fast Slew Rate' and 'Slow Slew Rate'. Just exynos5433 defines the 'Fast Slew Rate(0x0 ~ 0x5)' and 'Slow Slew Rate (0x8 ~ 0xF)'.
-(n=0 to 7)
-[4n+3:4n] : 4 bits
-0x0 = Fast Slew Rate 1x
-0x1 = Fast Slew Rate 2x
-0x2 = Fast Slew Rate 3x
-0x3 = Fast Slew Rate 4x
-0x4 = Fast Slew Rate 5x
-0x5 = Fast Slew Rate 6x
-0x8 = Slow Slew Rate 1x
-0x9 = Slow Slew Rate 2x
-0xA = Slow Slew Rate 3x
-0xB = Slow Slew Rate 4x
-0xC = Slow Slew Rate 5x
-0xF = Slow Slew Rate 6x
+In other words:
 
-So, before this patch, we have to fix it to support the DRV reigster of Exynos5433.
-I'll fix it.
+host->variant = of_device_get_match_data(&pdev->dev);
 
-> 
->> +
->>  #define EXYNOS_PIN_FUNC_INPUT		0
->>  #define EXYNOS_PIN_FUNC_OUTPUT		1
->>  #define EXYNOS_PIN_FUNC_2		2
->>
-> 
+> +
+> +       ret = mmc_of_parse(mmc);
+> +       if (ret)
+> +               return ret;
+> +
+> +       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return -ENOMEM;
+> +
+> +       pdata->ocr_avail = mmc->ocr_avail;
+> +
+> +       if (mmc->caps2 & MMC_CAP2_NO_WRITE_PROTECT)
+> +               pdata->no_wprotect = 1;
+> +
+> +       if (mmc->caps & MMC_CAP_NEEDS_POLL)
+> +               pdata->no_detect = 1;
+> +
+> +       if (mmc->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
+> +               pdata->wprotect_invert = 1;
+> +
+> +       if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
+> +               pdata->detect_invert = 1;
+> +
+> +       gpio = of_get_named_gpio(pdev->dev.of_node, "cd-gpios", 0);
 
--- 
-Regards,
-Chanwoo Choi
+This should already be covered via mmc_of_parse().
+
+> +       if (gpio_is_valid(gpio)) {
+> +               pdata->gpio_detect = gpio;
+> +               gpio_free(gpio);
+> +       }
+> +
+> +       gpio = of_get_named_gpio(pdev->dev.of_node, "wp-gpios", 0);
+
+This should already be covered via mmc_of_parse().
+
+> +       if (gpio_is_valid(gpio)) {
+> +               pdata->gpio_wprotect = gpio;
+> +               gpio_free(gpio);
+> +       }
+> +
+> +       pdev->dev.platform_data = pdata;
+> +
+> +       return 0;
+> +}
+> +
+> +static int s3cmci_probe(struct platform_device *pdev)
+> +{
+> +       struct s3cmci_host *host;
+> +       struct mmc_host *mmc;
+> +       int ret;
+> +       int i;
+> +
+> +       mmc = mmc_alloc_host(sizeof(struct s3cmci_host), &pdev->dev);
+> +       if (!mmc) {
+> +               ret = -ENOMEM;
+> +               goto probe_out;
+> +       }
+> +
+>         host = mmc_priv(mmc);
+>         host->mmc       = mmc;
+>         host->pdev      = pdev;
+> -       host->is2440    = is2440;
+> +
+> +       if (pdev->dev.of_node)
+> +               ret = s3cmci_probe_dt(host);
+> +       else
+> +               ret = s3cmci_probe_pdata(host);
+> +
+> +       if (ret)
+> +               goto probe_free_host;
+>
+>         host->pdata = pdev->dev.platform_data;
+>         if (!host->pdata) {
+> @@ -1586,7 +1674,7 @@ static int s3cmci_probe(struct platform_device *pdev)
+>         spin_lock_init(&host->complete_lock);
+>         tasklet_init(&host->pio_tasklet, pio_tasklet, (unsigned long) host);
+>
+> -       if (is2440) {
+> +       if (host->is2440) {
+>                 host->sdiimsk   = S3C2440_SDIIMSK;
+>                 host->sdidata   = S3C2440_SDIDATA;
+>                 host->clk_div   = 1;
+> @@ -1789,8 +1877,9 @@ static int s3cmci_probe(struct platform_device *pdev)
+>         release_mem_region(host->mem->start, resource_size(host->mem));
+>
+>   probe_free_gpio:
+> -       for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
+> -               gpio_free(i);
+> +       if (!pdev->dev.of_node)
+> +               for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
+> +                       gpio_free(i);
+>
+>   probe_free_host:
+>         mmc_free_host(mmc);
+> @@ -1837,9 +1926,9 @@ static int s3cmci_remove(struct platform_device *pdev)
+>         if (!pd->no_detect)
+>                 gpio_free(pd->gpio_detect);
+>
+> -       for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
+> -               gpio_free(i);
+> -
+> +       if (!pdev->dev.of_node)
+> +               for (i = S3C2410_GPE(5); i <= S3C2410_GPE(10); i++)
+> +                       gpio_free(i);
+>
+>         iounmap(host->base);
+>         release_mem_region(host->mem->start, resource_size(host->mem));
+> @@ -1848,6 +1937,23 @@ static int s3cmci_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static const struct of_device_id s3cmci_dt_match[] = {
+> +       {
+> +               .compatible = "samsung,s3c2410-sdi",
+> +               .data = &s3c2410_s3cmci_drv_data,
+> +       },
+> +       {
+> +               .compatible = "samsung,s3c2412-sdi",
+> +               .data = &s3c2412_s3cmci_drv_data,
+> +       },
+> +       {
+> +               .compatible = "samsung,s3c2440-sdi",
+> +               .data = &s3c2440_s3cmci_drv_data,
+> +       },
+> +       { /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
+> +
+>  static const struct platform_device_id s3cmci_driver_ids[] = {
+>         {
+>                 .name   = "s3c2410-sdi",
+> @@ -1867,6 +1973,7 @@ static int s3cmci_remove(struct platform_device *pdev)
+>  static struct platform_driver s3cmci_driver = {
+>         .driver = {
+>                 .name   = "s3c-sdi",
+> +               .of_match_table = s3cmci_dt_match,
+>         },
+>         .id_table       = s3cmci_driver_ids,
+>         .probe          = s3cmci_probe,
+> --
+> 1.9.1
+>
+
+Kind regards
+Uffe
