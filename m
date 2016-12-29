@@ -1,51 +1,50 @@
-From: Andi Shyti <andi@smida.it>
-Subject: Re: [PATCH 4/4] ARM64: dts: exynos5433: remove unused code
-Date: Thu, 29 Dec 2016 22:41:46 +0900
-Message-ID: <20161229134146.kolvpxrdo2epfav4@jack.zhora.eu>
-References: <20161229084211.20442-1-andi.shyti@samsung.com>
- <CGME20161229084222epcas5p41dacaeed3e2d4f10b07eee3930f7531c@epcas5p4.samsung.com>
- <20161229084211.20442-5-andi.shyti@samsung.com>
- <20161229115421.pq52ab57e53xntoz@kozik-lap>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: Add missing CPU frequencies for
+ Exynos5422/5800
+Date: Thu, 29 Dec 2016 16:17:07 +0200
+Message-ID: <20161229141707.qjrtjz7dik6a7l5s@kozik-lap>
+References: <10512254.nyUcL0zgTP@amdc3058>
+ <CAD=FV=Wo273T20fe8D2v5Pn1HYR==7PHtr7WZGwzFPRspAYPzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161229115421.pq52ab57e53xntoz@kozik-lap>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Andi Shyti <andi.shyti@samsung.com>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAD=FV=Wo273T20fe8D2v5Pn1HYR==7PHtr7WZGwzFPRspAYPzg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, Arjun K V <arjun.kv@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> >  #include <dt-bindings/pinctrl/samsung.h>
-> >  
-> > -#define PIN_PULL_NONE		0
-> > -#define PIN_PULL_DOWN		1
-> > -#define PIN_PULL_UP		3
-> > -
-> > -#define PIN_DRV_LV1		0
-> > -#define PIN_DRV_LV2		2
-> > -#define PIN_DRV_LV3		1
-> > -#define PIN_DRV_LV4		3
-> > -
-> > -#define PIN_IN			0
-> > -#define PIN_OUT			1
-> > -#define PIN_FUNC1		2
-> > -
+On Thu, Dec 15, 2016 at 04:54:30PM -0800, Doug Anderson wrote:
+> > Index: b/arch/arm/boot/dts/exynos5800.dtsi
+> > ===================================================================
+> > --- a/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.365955950 +0100
+> > +++ b/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.361955949 +0100
+> > @@ -24,6 +24,16 @@
+> >  };
+> >
+> >  &cluster_a15_opp_table {
+> > +       opp@2000000000 {
+> > +               opp-hz = /bits/ 64 <2000000000>;
+> > +               opp-microvolt = <1250000>;
+> > +               clock-latency-ns = <140000>;
+> > +       };
+> > +       opp@1900000000 {
+> > +               opp-hz = /bits/ 64 <1900000000>;
+> > +               opp-microvolt = <1250000>;
+> > +               clock-latency-ns = <140000>;
+> > +       };
 > 
-> This should be squashed with 3/4 because logically it is strictly
-> related to it and splitting it does not bring any benefits. Actually
-> while looking at 3/4 I was surprised to see them not removed.
+> I don't think the voltages you listed are high enough for all peach pi
+> boards for A15 at 1.9 GHz and 2.0 GHz, at least based on the research
+> I did.  See my response to v1.
 
-Yes, right :)
+I wanted to apply this but saw this remaining issue. Javier tested it
+on Peach Pi so is this concern still valid?
 
-Thanks,
-Andi
+Bartlomiej,
+When sending dts patches please stick to the common subsystem prefix
+(git log --oneline arch/arm/boot/dts/exynos*).
+
+Best regards,
+Krzysztof
