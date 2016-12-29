@@ -1,46 +1,46 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 3/4] hwmon: adc128d818: Trivial code style fixup
-Date: Thu, 29 Dec 2016 11:46:46 -0800
-Message-ID: <20161229194646.GA1575@roeck-us.net>
-References: <20161223221205.8825-1-mail@alexanderkoch.net>
- <20161223221205.8825-4-mail@alexanderkoch.net>
- <650d2371-57da-2494-7628-5a8bc5b756bf@roeck-us.net>
- <3b34c8aa-9d9a-cf88-0d84-8e0d47f9bf44@alexanderkoch.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3b34c8aa-9d9a-cf88-0d84-8e0d47f9bf44-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2] ARM: dts: qcom: apq8064: Add missing scm clock
+Date: Thu, 29 Dec 2016 04:06:11 -0800
+Message-ID: <20161229120611.7948-1-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 29, 2016 at 07:22:12PM +0100, Alexander Koch wrote:
-> On 12/26/2016 11:47 AM, Guenter Roeck wrote:
-> > On 12/23/2016 02:12 PM, Alexander Koch wrote:
-> >> Replace sysfs symbolic file permissions, e.g. 'S_IRUGO', by octal
-> >> permissions. This fixes checkpatch.pl warnings.
-> >>
-> >> Signed-off-by: Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
-> >
-> > Please do not bother with those warnings and ignore checkpatch.
-> > We are in the process of doing an automated conversion.
-> 
-> Okay, so I shall create v3 of the patchset, without these changes. I've
-> found a typo in the 4th patch so I thought about going v3 anyways.
-> 
-> I've tested operation modes 1-3 on real hardware today and found no
-> issues so far, so I hope v3 will have good chances of getting accepted.
-> 
-Pretty much. One request, though: If there is no configuration data
-from DT, I would like the driver to read the mode from the chip - if for
-nothing else, this will let me test all modes, but it also supports the
-case where the chip is configured by BIOS/ROMMON.
+As per the device tree binding the apq8064 scm node requires the core
+clock to be specified, so add this.
 
-Thanks,
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes since v1:
+- Changed clock to Daytona Fabric
+
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 1dbe697b2e90..a27cc96ac069 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -4,6 +4,7 @@
+ #include <dt-bindings/clock/qcom,gcc-msm8960.h>
+ #include <dt-bindings/reset/qcom,gcc-msm8960.h>
+ #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
++#include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/soc/qcom,gsbi.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -303,6 +304,9 @@
+ 	firmware {
+ 		scm {
+ 			compatible = "qcom,scm-apq8064";
++
++			clocks = <&rpmcc RPM_DAYTONA_FABRIC_CLK>;
++			clock-names = "core";
+ 		};
+ 	};
+ 
+-- 
+2.11.0
