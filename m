@@ -1,39 +1,41 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [EXAMPLE 3/2] ARM: BCM53573: Specify ports for USB LED for Tenda AC9
-Date: Thu, 29 Dec 2016 14:03:06 +0100
-Message-ID: <20161229130306.30400-3-zajec5@gmail.com>
-References: <20161229130306.30400-1-zajec5@gmail.com>
+From: Andi Shyti <andi@etezian.org>
+Subject: Re: [PATCH 1/4] pinctrl: dt-bindings: samsung: add drive strength
+ macros for Exynos5433
+Date: Thu, 29 Dec 2016 22:41:04 +0900
+Message-ID: <20161229134104.gq2spgtpwbkx7mpd@jack.zhora.eu>
+References: <20161229084211.20442-1-andi.shyti@samsung.com>
+ <CGME20161229084221epcas5p43926b87dccbee0db4045faa5ddca565d@epcas5p4.samsung.com>
+ <20161229084211.20442-2-andi.shyti@samsung.com>
+ <20161229115059.ncvtakz32vhcfsij@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20161229130306.30400-1-zajec5@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161229115059.ncvtakz32vhcfsij@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andi Shyti <andi.shyti@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+Hi Krzysztof,
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-This patch was tested & works as expected. It's marked as EXAMPLE just
-because it should go through ARM tree.
----
- arch/arm/boot/dts/bcm47189-tenda-ac9.dts | 1 +
- 1 file changed, 1 insertion(+)
+> >  #define EXYNOS5420_PIN_DRV_LV3		2
+> >  #define EXYNOS5420_PIN_DRV_LV4		3
+> >  
+> > +/* Drive strengths for Exynos5433 */
+> > +#define EXYNOS5433_PIN_DRV_LV1		0
+> > +#define EXYNOS5433_PIN_DRV_LV2		1
+> > +#define EXYNOS5433_PIN_DRV_LV3		2
+> > +#define EXYNOS5433_PIN_DRV_LV4		3
+> 
+> Same values as existing. No need to re-define these.
 
-diff --git a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-index 4403ae8..00bbe48 100644
---- a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-+++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-@@ -24,6 +24,7 @@
- 		compatible = "gpio-leds";
- 
- 		usb {
-+			usb-ports = <&ohci_port1>, <&ehci_port1>;
- 			label = "bcm53xx:blue:usb";
- 			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "default-off";
--- 
-2.10.1
+Yes, I was in doubt when I prepared this patch as on one hand it
+didn't look right to use EXYNOS5420_* for exynos5433, on the other
+hand it didn't look right to duplicate the macros.
+
+In anycase this values need to be fixed as Chanwoo wrote in the
+other mail.
+
+Thanks,
+Andi
