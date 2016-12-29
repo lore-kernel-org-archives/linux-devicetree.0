@@ -1,379 +1,92 @@
-From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/4] ARM64: dts: TM2: comply to the samsung pinctrl naming
- convention
-Date: Thu, 29 Dec 2016 17:42:10 +0900
-Message-ID: <20161229084211.20442-4-andi.shyti@samsung.com>
-References: <20161229084211.20442-1-andi.shyti@samsung.com>
- <CGME20161229084222epcas1p4c0db2fd327fc92bfe123442f44b88ab5@epcas1p4.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20161229084211.20442-1-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] cfg80211: reg: support
+ ieee80211-(min|max)-center-freq DT properties
+Date: Thu, 29 Dec 2016 09:57:12 +0100
+Message-ID: <46007537-835c-90db-a44f-c45c8e2ecaed@broadcom.com>
+References: <20161228155955.25518-1-zajec5@gmail.com>
+ <20161228155955.25518-2-zajec5@gmail.com>
+ <491a5af2-449d-4b2a-c4ed-af0e89b2ca78@broadcom.com>
+ <CACna6rwKLr-makRauYQf51330p96QrSNEhtNqu927yHT_Xm7Wg@mail.gmail.com>
+ <CACna6rzJV-UdydKrXTquEzrkCfNXXKsHBrsZGjTJ8F=BSRyUjA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rzJV-UdydKrXTquEzrkCfNXXKsHBrsZGjTJ8F=BSRyUjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change the PIN() macro definition so that it can use the macros
-from pinctrl/samsung.h header file.
+On 28-12-16 22:30, Rafał Miłecki wrote:
+> On 28 December 2016 at 22:28, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 28 December 2016 at 22:07, Arend van Spriel
+>> <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>> On 28-12-16 16:59, Rafał Miłecki wrote:
+>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> They allow specifying hardware limitations of supported channels. This
+>>>> may be useful for specifying single band devices or devices that support
+>>>> only some part of the whole band.
+>>>> E.g. some tri-band routers have separated radios for lower and higher
+>>>> part of 5 GHz band.
+>>>>
+>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>> ---
+>>>>  net/wireless/reg.c | 34 ++++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 34 insertions(+)
+>>>>
+>>>> diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+>>>> index 5dbac37..35ba5c7 100644
+>>>> --- a/net/wireless/reg.c
+>>>> +++ b/net/wireless/reg.c
+>>>> @@ -1123,6 +1123,26 @@ const char *reg_initiator_name(enum nl80211_reg_initiator initiator)
+>>>>  }
+>>>>  EXPORT_SYMBOL(reg_initiator_name);
+>>>>
+>>>> +static bool reg_center_freq_of_valid(struct wiphy *wiphy,
+>>>> +                                  struct ieee80211_channel *chan)
+>>>> +{
+>>>> +     struct device_node *np = wiphy_dev(wiphy)->of_node;
+>>>> +     u32 val;
+>>>> +
+>>>> +     if (!np)
+>>>> +             return true;
+>>>> +
+>>>> +     if (!of_property_read_u32(np, "ieee80211-min-center-freq", &val) &&
+>>>> +         chan->center_freq < KHZ_TO_MHZ(val))
+>>>> +             return false;
+>>>> +
+>>>> +     if (!of_property_read_u32(np, "ieee80211-max-center-freq", &val) &&
+>>>> +         chan->center_freq > KHZ_TO_MHZ(val))
+>>>> +             return false;
+>>>
+>>> I suspect these functions rely on CONFIG_OF. So might not build for
+>>> !CONFIG_OF.
+>>
+>> I compiled it with
+>> # CONFIG_OF is not set
+>>
+>> Can you test it and provide a non-working config if you see a
+>> compilation error, please?
+> 
+> include/linux/of.h provides a lot of dummy static inline functions if
+> CONFIG_OF is not used (they also allow compiler to drop most of the
+> code).
 
-Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi |  12 +-
- arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 254 ++++++++++-----------
- 2 files changed, 133 insertions(+), 133 deletions(-)
+of_propeirty_read_u32 is static inline in of.h calling
+of_property_read_u32_array, which has a dummy variant in of.h returning
+-ENOSYS so -38. Pretty sure that is not what you want. At least it does
+not allow the compiler to drop any code so probably better to do:
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-index 36da7dce409a..9afed9fcf7e1 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-@@ -27,12 +27,12 @@
- #define PIN_OUT			1
- #define PIN_FUNC1		2
- 
--#define PIN(_func, _pin, _pull, _drv)			\
--	_pin {						\
--		samsung,pins = #_pin;			\
--		samsung,pin-function = <PIN_ ##_func>;	\
--		samsung,pin-pud = <PIN_PULL_ ##_pull>;	\
--		samsung,pin-drv = <PIN_DRV_ ##_drv>;	\
-+#define PIN(_func, _pin, _pull, _drv)					\
-+	_pin {								\
-+		samsung,pins = #_pin;					\
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_ ##_func>;	\
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_ ##_pull>;		\
-+		samsung,pin-drv = <EXYNOS5433_PIN_DRV_ ##_drv>;		\
- 	}
- 
- &pinctrl_alive {
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-index f21bdc2ff834..a2bc8e48eca4 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-@@ -742,77 +742,77 @@
- 	pinctrl-0 = <&initial_alive>;
- 
- 	initial_alive: initial-state {
--		PIN(IN, gpa0-0, DOWN, LV1);
--		PIN(IN, gpa0-1, NONE, LV1);
--		PIN(IN, gpa0-2, DOWN, LV1);
--		PIN(IN, gpa0-3, NONE, LV1);
--		PIN(IN, gpa0-4, NONE, LV1);
--		PIN(IN, gpa0-5, DOWN, LV1);
--		PIN(IN, gpa0-6, NONE, LV1);
--		PIN(IN, gpa0-7, NONE, LV1);
--
--		PIN(IN, gpa1-0, UP, LV1);
--		PIN(IN, gpa1-1, NONE, LV1);
--		PIN(IN, gpa1-2, NONE, LV1);
--		PIN(IN, gpa1-3, DOWN, LV1);
--		PIN(IN, gpa1-4, DOWN, LV1);
--		PIN(IN, gpa1-5, NONE, LV1);
--		PIN(IN, gpa1-6, NONE, LV1);
--		PIN(IN, gpa1-7, NONE, LV1);
--
--		PIN(IN, gpa2-0, NONE, LV1);
--		PIN(IN, gpa2-1, NONE, LV1);
--		PIN(IN, gpa2-2, NONE, LV1);
--		PIN(IN, gpa2-3, DOWN, LV1);
--		PIN(IN, gpa2-4, NONE, LV1);
--		PIN(IN, gpa2-5, DOWN, LV1);
--		PIN(IN, gpa2-6, DOWN, LV1);
--		PIN(IN, gpa2-7, NONE, LV1);
--
--		PIN(IN, gpa3-0, DOWN, LV1);
--		PIN(IN, gpa3-1, DOWN, LV1);
--		PIN(IN, gpa3-2, NONE, LV1);
--		PIN(IN, gpa3-3, DOWN, LV1);
--		PIN(IN, gpa3-4, NONE, LV1);
--		PIN(IN, gpa3-5, DOWN, LV1);
--		PIN(IN, gpa3-6, DOWN, LV1);
--		PIN(IN, gpa3-7, DOWN, LV1);
--
--		PIN(IN, gpf1-0, NONE, LV1);
--		PIN(IN, gpf1-1, NONE, LV1);
--		PIN(IN, gpf1-2, DOWN, LV1);
--		PIN(IN, gpf1-4, UP, LV1);
--		PIN(OUT, gpf1-5, NONE, LV1);
--		PIN(IN, gpf1-6, DOWN, LV1);
--		PIN(IN, gpf1-7, DOWN, LV1);
--
--		PIN(IN, gpf2-0, DOWN, LV1);
--		PIN(IN, gpf2-1, DOWN, LV1);
--		PIN(IN, gpf2-2, DOWN, LV1);
--		PIN(IN, gpf2-3, DOWN, LV1);
--
--		PIN(IN, gpf3-0, DOWN, LV1);
--		PIN(IN, gpf3-1, DOWN, LV1);
--		PIN(IN, gpf3-2, NONE, LV1);
--		PIN(IN, gpf3-3, DOWN, LV1);
--
--		PIN(IN, gpf4-0, DOWN, LV1);
--		PIN(IN, gpf4-1, DOWN, LV1);
--		PIN(IN, gpf4-2, DOWN, LV1);
--		PIN(IN, gpf4-3, DOWN, LV1);
--		PIN(IN, gpf4-4, DOWN, LV1);
--		PIN(IN, gpf4-5, DOWN, LV1);
--		PIN(IN, gpf4-6, DOWN, LV1);
--		PIN(IN, gpf4-7, DOWN, LV1);
--
--		PIN(IN, gpf5-0, DOWN, LV1);
--		PIN(IN, gpf5-1, DOWN, LV1);
--		PIN(IN, gpf5-2, DOWN, LV1);
--		PIN(IN, gpf5-3, DOWN, LV1);
--		PIN(OUT, gpf5-4, NONE, LV1);
--		PIN(IN, gpf5-5, DOWN, LV1);
--		PIN(IN, gpf5-6, DOWN, LV1);
--		PIN(IN, gpf5-7, DOWN, LV1);
-+		PIN(INPUT, gpa0-0, DOWN, LV1);
-+		PIN(INPUT, gpa0-1, NONE, LV1);
-+		PIN(INPUT, gpa0-2, DOWN, LV1);
-+		PIN(INPUT, gpa0-3, NONE, LV1);
-+		PIN(INPUT, gpa0-4, NONE, LV1);
-+		PIN(INPUT, gpa0-5, DOWN, LV1);
-+		PIN(INPUT, gpa0-6, NONE, LV1);
-+		PIN(INPUT, gpa0-7, NONE, LV1);
-+
-+		PIN(INPUT, gpa1-0, UP, LV1);
-+		PIN(INPUT, gpa1-1, NONE, LV1);
-+		PIN(INPUT, gpa1-2, NONE, LV1);
-+		PIN(INPUT, gpa1-3, DOWN, LV1);
-+		PIN(INPUT, gpa1-4, DOWN, LV1);
-+		PIN(INPUT, gpa1-5, NONE, LV1);
-+		PIN(INPUT, gpa1-6, NONE, LV1);
-+		PIN(INPUT, gpa1-7, NONE, LV1);
-+
-+		PIN(INPUT, gpa2-0, NONE, LV1);
-+		PIN(INPUT, gpa2-1, NONE, LV1);
-+		PIN(INPUT, gpa2-2, NONE, LV1);
-+		PIN(INPUT, gpa2-3, DOWN, LV1);
-+		PIN(INPUT, gpa2-4, NONE, LV1);
-+		PIN(INPUT, gpa2-5, DOWN, LV1);
-+		PIN(INPUT, gpa2-6, DOWN, LV1);
-+		PIN(INPUT, gpa2-7, NONE, LV1);
-+
-+		PIN(INPUT, gpa3-0, DOWN, LV1);
-+		PIN(INPUT, gpa3-1, DOWN, LV1);
-+		PIN(INPUT, gpa3-2, NONE, LV1);
-+		PIN(INPUT, gpa3-3, DOWN, LV1);
-+		PIN(INPUT, gpa3-4, NONE, LV1);
-+		PIN(INPUT, gpa3-5, DOWN, LV1);
-+		PIN(INPUT, gpa3-6, DOWN, LV1);
-+		PIN(INPUT, gpa3-7, DOWN, LV1);
-+
-+		PIN(INPUT, gpf1-0, NONE, LV1);
-+		PIN(INPUT, gpf1-1, NONE, LV1);
-+		PIN(INPUT, gpf1-2, DOWN, LV1);
-+		PIN(INPUT, gpf1-4, UP, LV1);
-+		PIN(OUTPUT, gpf1-5, NONE, LV1);
-+		PIN(INPUT, gpf1-6, DOWN, LV1);
-+		PIN(INPUT, gpf1-7, DOWN, LV1);
-+
-+		PIN(INPUT, gpf2-0, DOWN, LV1);
-+		PIN(INPUT, gpf2-1, DOWN, LV1);
-+		PIN(INPUT, gpf2-2, DOWN, LV1);
-+		PIN(INPUT, gpf2-3, DOWN, LV1);
-+
-+		PIN(INPUT, gpf3-0, DOWN, LV1);
-+		PIN(INPUT, gpf3-1, DOWN, LV1);
-+		PIN(INPUT, gpf3-2, NONE, LV1);
-+		PIN(INPUT, gpf3-3, DOWN, LV1);
-+
-+		PIN(INPUT, gpf4-0, DOWN, LV1);
-+		PIN(INPUT, gpf4-1, DOWN, LV1);
-+		PIN(INPUT, gpf4-2, DOWN, LV1);
-+		PIN(INPUT, gpf4-3, DOWN, LV1);
-+		PIN(INPUT, gpf4-4, DOWN, LV1);
-+		PIN(INPUT, gpf4-5, DOWN, LV1);
-+		PIN(INPUT, gpf4-6, DOWN, LV1);
-+		PIN(INPUT, gpf4-7, DOWN, LV1);
-+
-+		PIN(INPUT, gpf5-0, DOWN, LV1);
-+		PIN(INPUT, gpf5-1, DOWN, LV1);
-+		PIN(INPUT, gpf5-2, DOWN, LV1);
-+		PIN(INPUT, gpf5-3, DOWN, LV1);
-+		PIN(OUTPUT, gpf5-4, NONE, LV1);
-+		PIN(INPUT, gpf5-5, DOWN, LV1);
-+		PIN(INPUT, gpf5-6, DOWN, LV1);
-+		PIN(INPUT, gpf5-7, DOWN, LV1);
- 	};
- 
- 	te_irq: te_irq {
-@@ -826,8 +826,8 @@
- 	pinctrl-0 = <&initial_cpif>;
- 
- 	initial_cpif: initial-state {
--		PIN(IN, gpv6-0, DOWN, LV1);
--		PIN(IN, gpv6-1, DOWN, LV1);
-+		PIN(INPUT, gpv6-0, DOWN, LV1);
-+		PIN(INPUT, gpv6-1, DOWN, LV1);
- 	};
- };
- 
-@@ -836,9 +836,9 @@
- 	pinctrl-0 = <&initial_ese>;
- 
- 	initial_ese: initial-state {
--		PIN(IN, gpj2-0, DOWN, LV1);
--		PIN(IN, gpj2-1, DOWN, LV1);
--		PIN(IN, gpj2-2, DOWN, LV1);
-+		PIN(INPUT, gpj2-0, DOWN, LV1);
-+		PIN(INPUT, gpj2-1, DOWN, LV1);
-+		PIN(INPUT, gpj2-2, DOWN, LV1);
- 	};
- };
- 
-@@ -847,11 +847,11 @@
- 	pinctrl-0 = <&initial_fsys>;
- 
- 	initial_fsys: initial-state {
--		PIN(IN, gpr3-0, NONE, LV1);
--		PIN(IN, gpr3-1, DOWN, LV1);
--		PIN(IN, gpr3-2, DOWN, LV1);
--		PIN(IN, gpr3-3, DOWN, LV1);
--		PIN(IN, gpr3-7, NONE, LV1);
-+		PIN(INPUT, gpr3-0, NONE, LV1);
-+		PIN(INPUT, gpr3-1, DOWN, LV1);
-+		PIN(INPUT, gpr3-2, DOWN, LV1);
-+		PIN(INPUT, gpr3-3, DOWN, LV1);
-+		PIN(INPUT, gpr3-7, NONE, LV1);
- 	};
- };
- 
-@@ -860,14 +860,14 @@
- 	pinctrl-0 = <&initial_imem>;
- 
- 	initial_imem: initial-state {
--		PIN(IN, gpf0-0, UP, LV1);
--		PIN(IN, gpf0-1, UP, LV1);
--		PIN(IN, gpf0-2, DOWN, LV1);
--		PIN(IN, gpf0-3, UP, LV1);
--		PIN(IN, gpf0-4, DOWN, LV1);
--		PIN(IN, gpf0-5, NONE, LV1);
--		PIN(IN, gpf0-6, DOWN, LV1);
--		PIN(IN, gpf0-7, UP, LV1);
-+		PIN(INPUT, gpf0-0, UP, LV1);
-+		PIN(INPUT, gpf0-1, UP, LV1);
-+		PIN(INPUT, gpf0-2, DOWN, LV1);
-+		PIN(INPUT, gpf0-3, UP, LV1);
-+		PIN(INPUT, gpf0-4, DOWN, LV1);
-+		PIN(INPUT, gpf0-5, NONE, LV1);
-+		PIN(INPUT, gpf0-6, DOWN, LV1);
-+		PIN(INPUT, gpf0-7, UP, LV1);
- 	};
- };
- 
-@@ -876,7 +876,7 @@
- 	pinctrl-0 = <&initial_nfc>;
- 
- 	initial_nfc: initial-state {
--		PIN(IN, gpj0-2, DOWN, LV1);
-+		PIN(INPUT, gpj0-2, DOWN, LV1);
- 	};
- };
- 
-@@ -885,54 +885,54 @@
- 	pinctrl-0 = <&initial_peric>;
- 
- 	initial_peric: initial-state {
--		PIN(IN, gpv7-0, DOWN, LV1);
--		PIN(IN, gpv7-1, DOWN, LV1);
--		PIN(IN, gpv7-2, NONE, LV1);
--		PIN(IN, gpv7-3, DOWN, LV1);
--		PIN(IN, gpv7-4, DOWN, LV1);
--		PIN(IN, gpv7-5, DOWN, LV1);
-+		PIN(INPUT, gpv7-0, DOWN, LV1);
-+		PIN(INPUT, gpv7-1, DOWN, LV1);
-+		PIN(INPUT, gpv7-2, NONE, LV1);
-+		PIN(INPUT, gpv7-3, DOWN, LV1);
-+		PIN(INPUT, gpv7-4, DOWN, LV1);
-+		PIN(INPUT, gpv7-5, DOWN, LV1);
- 
--		PIN(IN, gpb0-4, DOWN, LV1);
-+		PIN(INPUT, gpb0-4, DOWN, LV1);
- 
--		PIN(IN, gpc0-2, DOWN, LV1);
--		PIN(IN, gpc0-5, DOWN, LV1);
--		PIN(IN, gpc0-7, DOWN, LV1);
-+		PIN(INPUT, gpc0-2, DOWN, LV1);
-+		PIN(INPUT, gpc0-5, DOWN, LV1);
-+		PIN(INPUT, gpc0-7, DOWN, LV1);
- 
--		PIN(IN, gpc1-1, DOWN, LV1);
-+		PIN(INPUT, gpc1-1, DOWN, LV1);
- 
--		PIN(IN, gpc3-4, NONE, LV1);
--		PIN(IN, gpc3-5, NONE, LV1);
--		PIN(IN, gpc3-6, NONE, LV1);
--		PIN(IN, gpc3-7, NONE, LV1);
-+		PIN(INPUT, gpc3-4, NONE, LV1);
-+		PIN(INPUT, gpc3-5, NONE, LV1);
-+		PIN(INPUT, gpc3-6, NONE, LV1);
-+		PIN(INPUT, gpc3-7, NONE, LV1);
- 
--		PIN(OUT, gpg0-0, NONE, LV1);
--		PIN(FUNC1, gpg0-1, DOWN, LV1);
-+		PIN(OUTPUT, gpg0-0, NONE, LV1);
-+		PIN(2, gpg0-1, DOWN, LV1);
- 
--		PIN(IN, gpd2-5, DOWN, LV1);
-+		PIN(INPUT, gpd2-5, DOWN, LV1);
- 
--		PIN(IN, gpd4-0, NONE, LV1);
--		PIN(IN, gpd4-1, DOWN, LV1);
--		PIN(IN, gpd4-2, DOWN, LV1);
--		PIN(IN, gpd4-3, DOWN, LV1);
--		PIN(IN, gpd4-4, DOWN, LV1);
-+		PIN(INPUT, gpd4-0, NONE, LV1);
-+		PIN(INPUT, gpd4-1, DOWN, LV1);
-+		PIN(INPUT, gpd4-2, DOWN, LV1);
-+		PIN(INPUT, gpd4-3, DOWN, LV1);
-+		PIN(INPUT, gpd4-4, DOWN, LV1);
- 
--		PIN(IN, gpd6-3, DOWN, LV1);
-+		PIN(INPUT, gpd6-3, DOWN, LV1);
- 
--		PIN(IN, gpd8-1, UP, LV1);
-+		PIN(INPUT, gpd8-1, UP, LV1);
- 
--		PIN(IN, gpg1-0, DOWN, LV1);
--		PIN(IN, gpg1-1, DOWN, LV1);
--		PIN(IN, gpg1-2, DOWN, LV1);
--		PIN(IN, gpg1-3, DOWN, LV1);
--		PIN(IN, gpg1-4, DOWN, LV1);
-+		PIN(INPUT, gpg1-0, DOWN, LV1);
-+		PIN(INPUT, gpg1-1, DOWN, LV1);
-+		PIN(INPUT, gpg1-2, DOWN, LV1);
-+		PIN(INPUT, gpg1-3, DOWN, LV1);
-+		PIN(INPUT, gpg1-4, DOWN, LV1);
- 
--		PIN(IN, gpg2-0, DOWN, LV1);
--		PIN(IN, gpg2-1, DOWN, LV1);
-+		PIN(INPUT, gpg2-0, DOWN, LV1);
-+		PIN(INPUT, gpg2-1, DOWN, LV1);
- 
--		PIN(IN, gpg3-0, DOWN, LV1);
--		PIN(IN, gpg3-1, DOWN, LV1);
--		PIN(IN, gpg3-5, DOWN, LV1);
--		PIN(IN, gpg3-7, DOWN, LV1);
-+		PIN(INPUT, gpg3-0, DOWN, LV1);
-+		PIN(INPUT, gpg3-1, DOWN, LV1);
-+		PIN(INPUT, gpg3-5, DOWN, LV1);
-+		PIN(INPUT, gpg3-7, DOWN, LV1);
- 	};
- };
- 
-@@ -941,7 +941,7 @@
- 	pinctrl-0 = <&initial_touch>;
- 
- 	initial_touch: initial-state {
--		PIN(IN, gpj1-2, DOWN, LV1);
-+		PIN(INPUT, gpj1-2, DOWN, LV1);
- 	};
- };
- 
--- 
-2.11.0
+if (!IS_ENABLED(CONFIG_OF) || !np)
+	return true;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So with this patch you change the channel to DISABLED. I am not very
+familiar with reg.c so do you know if this is done before or after
+calling regulatory notifier in the driver. brcmfmac will enable channels
+querying the device upon regulatory notifier call, which may undo the
+behavior introduced by your patch.
+
+Regards,
+Arend
