@@ -1,54 +1,64 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 4/4] ARM64: dts: exynos5433: remove unused code
-Date: Thu, 29 Dec 2016 13:54:21 +0200
-Message-ID: <20161229115421.pq52ab57e53xntoz@kozik-lap>
-References: <20161229084211.20442-1-andi.shyti@samsung.com>
- <CGME20161229084222epcas5p41dacaeed3e2d4f10b07eee3930f7531c@epcas5p4.samsung.com>
- <20161229084211.20442-5-andi.shyti@samsung.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: leds: document new usb-ports property
+Date: Thu, 29 Dec 2016 14:03:04 +0100
+Message-ID: <20161229130306.30400-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161229084211.20442-5-andi.shyti@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 29, 2016 at 05:42:11PM +0900, Andi Shyti wrote:
-> Because the pinctrl DTS is using the samsung.h macros, the
-> previously pin defines are anused. Remove them.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi | 13 -------------
->  1 file changed, 13 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-> index 9afed9fcf7e1..3c821e5c241e 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
-> @@ -14,19 +14,6 @@
->  
->  #include <dt-bindings/pinctrl/samsung.h>
->  
-> -#define PIN_PULL_NONE		0
-> -#define PIN_PULL_DOWN		1
-> -#define PIN_PULL_UP		3
-> -
-> -#define PIN_DRV_LV1		0
-> -#define PIN_DRV_LV2		2
-> -#define PIN_DRV_LV3		1
-> -#define PIN_DRV_LV4		3
-> -
-> -#define PIN_IN			0
-> -#define PIN_OUT			1
-> -#define PIN_FUNC1		2
-> -
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-This should be squashed with 3/4 because logically it is strictly
-related to it and splitting it does not bring any benefits. Actually
-while looking at 3/4 I was surprised to see them not removed.
+Some LEDs can be related to particular USB ports (common case for home
+routers). This property allows describing such a relation.
 
-Best regards,
-Krzysztof
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+This patch is based on top of commit 52e847dc431 ("DT: leds: Improve examples
+by adding some context") sitting in the linux-leds.git (for-4.11).
+---
+ Documentation/devicetree/bindings/leds/common.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 24b6560..fcfe661 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -49,6 +49,14 @@ Optional properties for child nodes:
+ - panic-indicator : This property specifies that the LED should be used,
+ 		    if at all possible, as a panic indicator.
+ 
++- usb-ports : List of USB ports related to this LED. Some devices have LEDs that
++	      should be used to indicate USB device activity. This can be
++	      described with this property.
++	      There can be more than one LED like this, e.g. some vendors use
++	      one controller per USB version. It's then common to use different
++	      color LEDs depending on device USB standard (like USB 2.0 vs.
++	      USB 3.0).
++
+ Required properties for flash LED child nodes:
+ - flash-max-microamp : Maximum flash LED supply current in microamperes.
+ - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
+@@ -69,6 +77,11 @@ gpio-leds {
+ 		linux,default-trigger = "heartbeat";
+ 		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+ 	};
++
++	usb {
++		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
++		usb-ports = <&ohci_port1>, <&ehci_port1>;
++	};
+ };
+ 
+ max77693-led {
+-- 
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
