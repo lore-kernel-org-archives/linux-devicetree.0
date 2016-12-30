@@ -1,35 +1,196 @@
-From: =?UTF-8?B?TXl1bmdKb28gSGFt?= <myungjoo.ham@samsung.com>
-Subject: =?UTF-8?B?UkU6IFtQQVRDSCB2MiAxLzhdIFBNIC8gZGV2ZnJlcTogZXh5?=
- =?UTF-8?B?bm9zLWJ1czogQWRkIHRoZSBkZXRhaWxlZCBjb3JyZWxhdGlv?=
- =?UTF-8?B?biBmb3IgRXh5bm9zNTQzMw==?=
-Date: Fri, 30 Dec 2016 01:02:30 +0000
-Message-ID: <20161230010230epcms1p3e70e0a18571ccf724c0362a82edcefec@epcms1p3>
-References: <1482926212-19223-1-git-send-email-cw00.choi@samsung.com>
- <CGME20161228115654epcas1p13fa3cb3615ddf89ebdf747c72b60d809@epcas1p1.samsung.com>
-Reply-To: myungjoo.ham@samsung.com
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: Add DTS support for FSL's LS1012A SoC
+Date: Fri, 30 Dec 2016 09:32:49 +0800
+Message-ID: <20161230013247.GE6177@dragon>
+References: <1481025036-4912-1-git-send-email-harninder.rai@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/related;
- boundary="----=_Part_1069419_310737217.1483059750424"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?Q2hhbndvbyBDaG9p?= <cw00.choi@samsung.com>, =?UTF-8?B?S3l1bmdtaW4gUGFyaw==?= <kyungmin.park@samsung.com>
-Cc: =?UTF-8?B?Y2hhbndvb0BrZXJuZWwub3Jn?= <chanwoo@kernel.org>, =?UTF-8?B?cmp3QHJqd3lzb2NraS5uZXQ=?= <rjw@rjwysocki.net>, =?UTF-8?B?bGludXgtcG1Admdlci5rZXJuZWwub3Jn?= <linux-pm@vger.kernel.org>, =?UTF-8?B?bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw==?= <linux-kernel@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?S3VramluIEtpbQ==?= <kgene@kernel.org>, =?UTF-8?B?S3J6eXN6dG9mIEtvemxvd3NraQ==?= <krzk@kernel.org>, =?UTF-8?B?SmF2aWVyIE1hcnRpbmV6IENhbmlsbGFz?= <javier@osg.samsung.com>, =?UTF-8?B?bGludXgtc2Ftc3VuZy1zb2NAdmdlci5rZXJuZWwub3Jn?= <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1481025036-4912-1-git-send-email-harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_1069419_310737217.1483059750424
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"
+On Tue, Dec 06, 2016 at 05:20:36PM +0530, Harninder Rai wrote:
+> LS1012A features an advanced 64-bit ARM v8 CortexA53 processor
+> with 32 KB of parity protected L1-I cache, 32 KB of ECC protected
+> L1-D cache, as well as 256 KB of ECC protected L2 cache.
+> 
+> Features summary
+>  One 64-bit ARM-v8 Cortex-A53 core with the following capabilities
+>   - Arranged as a cluster of one core supporting a 256 KB L2 cache with ECC
+>     protection
+>   - Speed up to 800 MHz
+>   - Parity-protected 32 KB L1 instruction cache and 32 KB L1 data cache
+>   - Neon SIMD engine
+>   - ARM v8 cryptography extensions
+>  One 16-bit DDR3L SDRAM memory controller
+>  ARM core-link CCI-400 cache coherent interconnect
+>  Cryptography acceleration (SEC)
+>  One Configurable x3 SerDes
+>  One PCI Express Gen2 controller, supporting x1 operation
+>  One serial ATA (SATA Gen 3.0) controller
+>  One USB 3.0/2.0 controller with integrated PHY
+> 
+>  Following levels of DTSI/DTS files have been created for the LS1012A
+>    SoC family:
+> 
+>            - fsl-ls1012a.dtsi:
+>                    DTS-Include file for FSL LS1012A SoC.
+> 
+>            - fsl-ls1012a-frdm.dts:
+>                    DTS file for FSL LS1012A FRDM board.
+> 
+>            - fsl-ls1012a-qds.dts:
+>                    DTS file for FSL LS1012A QDS board.
+> 
+>            - fsl-ls1012a-rdb.dts:
+>                     DTS file for FSL LS1012A RDB board.
+> 
+> Signed-off-by: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
 
-PlRoaXMgcGF0Y2ggYWRkcyB0aGUgZGV0YWlsZWQgY29ycmxlYXRpb24gYmV0d2VlbiBzdWItYmxv
-Y2tzIGFuZCBWRERfSU5UIHBvd2VyDQo+bGluZSBmb3IgRXh5bm9zNTQzMy4gVkREX0lOVCBwcm92
-aWRlZCB0aGUgcG93ZXIgc291cmNlIHRvIElOVCAoSW50ZXJuYWwpIGJsb2NrLg0KPg0KPkNjOiBS
-b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KPkNjOiBLdWtqaW4gS2ltIDxrZ2VuZUBr
-ZXJuZWwub3JnPg0KPkNjOiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+DQo+
-Q2M6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNvbT4NCj5D
-YzogbGludXgtc2Ftc3VuZy1zb2NAdmdlci5rZXJuZWwub3JnDQo+Q2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnDQo+U2lnbmVkLW9mZi1ieTogQ2hhbndvbyBDaG9pIDxjdzAwLmNob2lAc2Ft
-c3VuZy5jb20+DQo+LS0tDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kZXZm
-cmVxL2V4eW5vcy1idXMudHh0IHwgMTQgKysrKysrKysrKysrKysNCj4gMSBmaWxlIGNoYW5nZWQs
-IDE0IGluc2VydGlvbnMoKykNCg0KQWNrZWQtYnk6IE15dW5nSm9vIEhhbSA8bXl1bmdqb28uaGFt
-QHNhbXN1bmcuY29tPg0KDQo=
-------=_Part_1069419_310737217.1483059750424--
+It looks good now, except a few minor things below.
+
+<snip>
+
+> +/ {
+> +	model = "LS1012A Freedom Board";
+> +	compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
+> +
+> +	sys_mclk: clock-mclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +	};
+> +
+> +	regulator_1p8v: regulator {
+
+The node name is too generic.  We generally suggest the following naming
+scheme for fixed regulator.
+
+	reg_xxx: regulator-xxx {
+		...
+	};
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P8V";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +	};
+
+<snip>
+
+> +
+> +/ {
+> +	model = "LS1012A QDS Board";
+> +	compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
+> +
+> +	sys_mclk: clock-mclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24576000>;
+> +	};
+> +
+> +	regulator_3p3v: regulator {
+
+Ditto
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+
+<snip>
+
+> +/ {
+> +	compatible = "fsl,ls1012a";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0>;
+> +			clocks = <&clockgen 1 0>;
+> +			#cooling-cells = <2>;
+> +		};
+> +	};
+> +
+> +	sysclk: sysclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <100000000>;
+> +		clock-output-names = "sysclk";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +
+
+This newline is unnecessary.
+
+> +		interrupts = <1 13 IRQ_TYPE_LEVEL_LOW>,/* Physical Secure PPI */
+> +			     <1 14 IRQ_TYPE_LEVEL_LOW>,/* Physical Non-Secure PPI */
+> +			     <1 11 IRQ_TYPE_LEVEL_LOW>,/* Virtual PPI */
+> +			     <1 10 IRQ_TYPE_LEVEL_LOW>;/* Hypervisor PPI */
+> +	};
+
+<snip>
+
+> +		duart0: serial@21c0500 {
+> +			compatible = "fsl,ns16550", "ns16550a";
+> +			reg = <0x00 0x21c0500 0x0 0x100>;
+> +			interrupts = <0 54 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 0>;
+> +		};
+
+status = "disabled";
+
+> +
+> +		duart1: serial@21c0600 {
+> +			compatible = "fsl,ns16550", "ns16550a";
+> +			reg = <0x00 0x21c0600 0x0 0x100>;
+> +			interrupts = <0 54 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 0>;
+> +		};
+
+Ditto
+
+<snip>
+
+> +		sata: sata@3200000 {
+> +			compatible = "fsl,ls1012a-ahci", "fsl,ls1043a-ahci";
+> +			reg = <0x0 0x3200000 0x0 0x10000>;
+> +			interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 0>;
+
+Ditto
+
+Shawn
+
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
