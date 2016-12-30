@@ -1,47 +1,37 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v3] net: ethernet: faraday: To support device tree usage.
-Date: Fri, 30 Dec 2016 15:37:50 +0800
-Message-ID: <1483083470-15779-1-git-send-email-green.hu@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, arnd@arndb.de, linux-kernel@vger.kernel.org, jiri@resnulli.us
-Cc: Greentime Hu <green.hu@gmail.com>
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH] Documentation: panel-dpi: fix path to display-timing.txt
+Date: Fri, 30 Dec 2016 09:05:33 +0100
+Message-ID: <1483085133-9877-1-git-send-email-yegorslists@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Greentime Hu <green.hu@gmail.com>
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+
+Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
-Changes in v3:
-  - Nothing changed in this patch but I have committed andestech to vendor-prefixes.txt.
+ Documentation/devicetree/bindings/display/panel/panel-dpi.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/net/ethernet/faraday/ftmac100.c |    7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
-index dce5f7b..5d70ee9 100644
---- a/drivers/net/ethernet/faraday/ftmac100.c
-+++ b/drivers/net/ethernet/faraday/ftmac100.c
-@@ -1172,11 +1172,17 @@ static int __exit ftmac100_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+index b52ac52..d4add13 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
++++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+@@ -12,7 +12,7 @@ Optional properties:
  
-+static const struct of_device_id ftmac100_of_ids[] = {
-+	{ .compatible = "andestech,atmac100" },
-+	{ }
-+};
-+
- static struct platform_driver ftmac100_driver = {
- 	.probe		= ftmac100_probe,
- 	.remove		= __exit_p(ftmac100_remove),
- 	.driver		= {
- 		.name	= DRV_NAME,
-+		.of_match_table = ftmac100_of_ids
- 	},
- };
+ Required nodes:
+ - "panel-timing" containing video timings
+-  (Documentation/devicetree/bindings/display/display-timing.txt)
++  (Documentation/devicetree/bindings/display/panel/display-timing.txt)
+ - Video port for DPI input
  
-@@ -1200,3 +1206,4 @@ static void __exit ftmac100_exit(void)
- MODULE_AUTHOR("Po-Yu Chuang <ratbert@faraday-tech.com>");
- MODULE_DESCRIPTION("FTMAC100 driver");
- MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, ftmac100_of_ids);
+ Example
 -- 
-1.7.9.5
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
