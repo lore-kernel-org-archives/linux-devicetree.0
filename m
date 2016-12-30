@@ -1,25 +1,27 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Add missing newline
-Date: Fri, 30 Dec 2016 15:10:24 +0800
-Message-ID: <20161230071023.GP6177@dragon>
-References: <1480276484-5482-1-git-send-email-afaerber@suse.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: fix DT bindings for marvell,kirkwood-pinctrl
+Date: Fri, 30 Dec 2016 08:37:52 +0100
+Message-ID: <CACRpkdaUY1sss+Gz56Du07MqRfoPf5-Yeo=_ne2P2QrLYFgLXA@mail.gmail.com>
+References: <20161213230827.GA5286@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480276484-5482-1-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161213230827.GA5286@andreas>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 27, 2016 at 08:54:44PM +0100, Andreas Färber wrote:
-> Found while reviewing Marvell dsa bindings usage.
-> 
-> Fixes: f283745b3caf ("arm: vf610: zii devel b: Add support for switch interrupts")
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+On Wed, Dec 14, 2016 at 12:08 AM, Andreas Klinger <ak@it-klinger.de> wrote:
 
-Applied, thanks.
+> On Marvell mv88f6180 mpp pins range from 0 to 19 as well as from 35 to 44.
+> This is already fixed in commit: 9573e7923007961799beff38bc5c5a7635634eef
+>
+> This is the documentation change for above commit.
+>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+
+Patch applied.
+
+Yours,
+Linus Walleij
