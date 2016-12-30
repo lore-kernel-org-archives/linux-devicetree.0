@@ -1,1636 +1,600 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] iio: imu: add support to lsm6dsx driver
-Date: Fri, 30 Dec 2016 16:01:35 +0000
-Message-ID: <bf0a4115-bb87-a1cb-4059-d76cc0b51641@kernel.org>
-References: <20161210090218.4609-1-lorenzo.bianconi@st.com>
- <20161210090218.4609-2-lorenzo.bianconi@st.com>
+Subject: Re: [PATCH v4 2/2] iio: adc: hx711: Add IIO driver for AVIA HX711
+Date: Fri, 30 Dec 2016 17:04:17 +0000
+Message-ID: <5eb0ed15-a5f3-fa73-b39a-da39a0b34f97@kernel.org>
+References: <20161221152514.GA14554@andreas>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161210090218.4609-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161221152514.GA14554@andreas>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/16 09:02, Lorenzo Bianconi wrote:
-> Add support to STM LSM6DS3-LSM6DSM 6-axis (acc + gyro) Mems sensor
+On 21/12/16 15:25, Andreas Klinger wrote:
+> This is the IIO driver for AVIA HX711 ADC which ist mostly used in weighting
+> cells.
 > 
-> http://www.st.com/resource/en/datasheet/lsm6ds3.pdf
-> http://www.st.com/resource/en/datasheet/lsm6dsm.pdf
+> The protocol is quite simple and using GPIOs:
+> One GPIO is used as clock (SCK) while another GPIO is read (DOUT)
 > 
-> - continuous mode support
-> - i2c support
-> - spi support
-> - sw fifo mode support
-> - supported devices: lsm6ds3, lsm6dsm
+> The raw value read from the chip is delivered. 
+> To get a weight one needs to subtract the zero offset and scale it.
 > 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Hi Lorenzo,
+> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+I argue myself in an out of using fractional types for the scale (these aren't
+well handled for writeable values as it's very hard to know what fraction we
+should output!).
 
-I've obviously not looked at this for a while and with fresh eyes I've
-picked up on a few more little bits and bobs that would be nice to cleanup.
+Otherwise a few points that may well repeat what Peter said.
 
-* I'm not keen on using the name of the device (string) as the driver_data
-  element. Would be cleaner and more 'standard' to introduce an enum for that.
-* It might be possible to bring all the asignments of hw elements into the
-  core probe which would remove a small amount of duplication and make it
-  a tiny bit more readable. (really minor point!)
-* The use of claim_direct_mode and friends in read_raw is probably covering
-  too many things.  There is no harm in allowing reading of the scale /
-  sampling frequency whilst buffered operation is on going.
+Hard bit is done though (all that bit bashing) so only minor stuff to clean
+up.
 
-A few other trivial bits and bobs inline. Anyhow, nearly ready and a nice
-driver for this complex bit of hardware. Looks like there are plenty of
-other features that could be added later ;)
+Thanks,
 
 Jonathan
 > ---
->  drivers/iio/imu/Kconfig                        |   1 +
->  drivers/iio/imu/Makefile                       |   2 +
->  drivers/iio/imu/st_lsm6dsx/Kconfig             |  23 +
->  drivers/iio/imu/st_lsm6dsx/Makefile            |   5 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 133 +++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 437 +++++++++++++++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 655 +++++++++++++++++++++++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    |  88 ++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    | 126 +++++
->  9 files changed, 1470 insertions(+)
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/Kconfig
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/Makefile
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+>  drivers/iio/adc/Kconfig  |  19 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/hx711.c  | 466 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 486 insertions(+)
+>  create mode 100644 drivers/iio/adc/hx711.c
 > 
-> diff --git a/drivers/iio/imu/Kconfig b/drivers/iio/imu/Kconfig
-> index 1f1ad41..156630a 100644
-> --- a/drivers/iio/imu/Kconfig
-> +++ b/drivers/iio/imu/Kconfig
-> @@ -39,6 +39,7 @@ config KMX61
->  	  be called kmx61.
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 932de1f9d1e7..1dcf2ace1697 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -205,6 +205,25 @@ config HI8435
+>  	  This driver can also be built as a module. If so, the module will be
+>  	  called hi8435.
 >  
->  source "drivers/iio/imu/inv_mpu6050/Kconfig"
-> +source "drivers/iio/imu/st_lsm6dsx/Kconfig"
->  
->  endmenu
->  
-> diff --git a/drivers/iio/imu/Makefile b/drivers/iio/imu/Makefile
-> index c71bcd3..8b563c3 100644
-> --- a/drivers/iio/imu/Makefile
-> +++ b/drivers/iio/imu/Makefile
-> @@ -17,3 +17,5 @@ obj-y += bmi160/
->  obj-y += inv_mpu6050/
->  
->  obj-$(CONFIG_KMX61) += kmx61.o
-> +
-> +obj-y += st_lsm6dsx/
-> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> new file mode 100644
-> index 0000000..2ebcb74
-> --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> @@ -0,0 +1,23 @@
-> +
-> +config IIO_ST_LSM6DSX
-> +	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
-> +	depends on (I2C || SPI)
-> +	select IIO_BUFFER
-> +	select IIO_KFIFO_BUF
-> +	select IIO_ST_LSM6DSX_I2C if (I2C)
-> +	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
+> +config HX711
+> +	tristate "AVIA HX711 ADC for weight cells"
+> +	depends on GPIOLIB
 > +	help
-> +	  Say yes here to build support for STMicroelectronics LSM6DSx imu
-> +	  sensor. Supported devices: lsm6ds3, lsm6dsm
+> +	  If you say yes here you get support for AVIA HX711 ADC which is used
+> +	  for weigh cells
 > +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called st_lsm6dsx.
+> +	  This driver uses two GPIOs, one acts as the clock and controls the
+> +	  channel selection and gain, the other one is used for the measurement
+> +          data
 > +
-> +config IIO_ST_LSM6DSX_I2C
-> +	tristate
-> +	depends on IIO_ST_LSM6DSX
+> +	  Currently the raw value is read from the chip and delivered.
+> +	  To get an actual weight one needs to subtract the
+> +	  zero offset and multiply by a scale factor.
+> +	  This should be done in userspace.
 > +
-> +config IIO_ST_LSM6DSX_SPI
-> +	tristate
-> +	depends on IIO_ST_LSM6DSX
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called hx711.
 > +
-> diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
+>  config INA2XX_ADC
+>  	tristate "Texas Instruments INA2xx Power Monitors IIO driver"
+>  	depends on I2C && !SENSORS_INA2XX
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index b1aa456e6af3..d46e289900ef 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+>  obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_HI8435) += hi8435.o
+> +obj-$(CONFIG_HX711) += hx711.o
+>  obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
+>  obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+> diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
 > new file mode 100644
-> index 0000000..35919fe
+> index 000000000000..f4b5f587e9c0
 > --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
-> @@ -0,0 +1,5 @@
-> +st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o
-> +
-> +obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
-> +obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
-> +obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> new file mode 100644
-> index 0000000..5831f63
-> --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -0,0 +1,133 @@
+> +++ b/drivers/iio/adc/hx711.c
+> @@ -0,0 +1,466 @@
 > +/*
-> + * STMicroelectronics st_lsm6dsx sensor driver
+> + * HX711: analog to digital converter for weight sensor module
 > + *
-> + * Copyright 2016 STMicroelectronics Inc.
+> + * Copyright (c) 2016 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
 > + *
-> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
 > + *
-> + * Licensed under the GPL-2.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
 > + */
-> +
-> +#ifndef ST_LSM6DSX_H
-> +#define ST_LSM6DSX_H
-> +
-> +#include <linux/device.h>
-> +
-> +#define ST_LSM6DS3_DEV_NAME	"lsm6ds3"
-> +#define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
-> +
-> +#define ST_LSM6DSX_CHAN_SIZE		2
-> +#define ST_LSM6DSX_SAMPLE_SIZE		6
-> +#define ST_LSM6DSX_SAMPLE_DEPTH		(ST_LSM6DSX_SAMPLE_SIZE / \
-> +					 ST_LSM6DSX_CHAN_SIZE)
-> +
-> +#define ST_LSM6DSX_RX_MAX_LENGTH	8
-> +#define ST_LSM6DSX_TX_MAX_LENGTH	8
-> +
-> +struct st_lsm6dsx_transfer_buffer {
-> +	u8 rx_buf[ST_LSM6DSX_RX_MAX_LENGTH];
-> +	u8 tx_buf[ST_LSM6DSX_TX_MAX_LENGTH] ____cacheline_aligned;
-> +};
-> +
-> +struct st_lsm6dsx_transfer_function {
-> +	int (*read)(struct device *dev, u8 addr, int len, u8 *data);
-> +	int (*write)(struct device *dev, u8 addr, int len, u8 *data);
-> +};
-> +
-> +struct st_lsm6dsx_reg {
-> +	u8 addr;
-> +	u8 mask;
-> +};
-> +
-> +struct st_lsm6dsx_settings {
-> +	u8 wai;
-> +	u16 max_fifo_size;
-> +};
-> +
-> +enum st_lsm6dsx_sensor_id {
-> +	ST_LSM6DSX_ID_ACC,
-> +	ST_LSM6DSX_ID_GYRO,
-> +	ST_LSM6DSX_ID_MAX,
-> +};
-> +
-> +enum st_lsm6dsx_fifo_mode {
-> +	ST_LSM6DSX_FIFO_BYPASS = 0x0,
-> +	ST_LSM6DSX_FIFO_CONT = 0x6,
-> +};
-> +
-> +/**
-> + * struct st_lsm6dsx_sensor - ST IMU sensor instance
-> + * @id: Sensor identifier.
-> + * @hw: Pointer to instance of struct st_lsm6dsx_hw.
-> + * @gain: Configured sensor sensitivity.
-> + * @odr: Output data rate of the sensor [Hz].
-> + * @watermark: Sensor watermark level.
-> + * @sip: Number of samples in a given pattern.
-> + * @decimator: FIFO decimation factor.
-> + * @decimator_mask: Sensor mask for decimation register.
-> + * @delta_ts: Delta time between two consecutive interrupts.
-> + * @ts: Latest timestamp from the interrupt handler.
-> + */
-> +struct st_lsm6dsx_sensor {
-> +	enum st_lsm6dsx_sensor_id id;
-> +	struct st_lsm6dsx_hw *hw;
-> +
-> +	u32 gain;
-> +	u16 odr;
-> +
-> +	u16 watermark;
-> +	u8 sip;
-> +	u8 decimator;
-> +	u8 decimator_mask;
-> +
-> +	s64 delta_ts;
-> +	s64 ts;
-> +};
-> +
-> +/**
-> + * struct st_lsm6dsx_hw - ST IMU MEMS hw instance
-> + * @name: Pointer to the device name (I2C name or SPI modalias).
-> + * @dev: Pointer to instance of struct device (I2C or SPI).
-> + * @irq: Device interrupt line (I2C or SPI).
-> + * @lock: Mutex to protect read and write operations.
-> + * @fifo_lock: Mutex to prevent concurrent access to the hw FIFO.
-> + * @fifo_mode: FIFO operating mode supported by the device.
-> + * @enable_mask: Enabled sensor bitmask.
-> + * @sip: Total number of samples (acc/gyro) in a given pattern.
-> + * @iio_devs: Pointers to acc/gyro iio_dev instances.
-> + * @settings: Pointer to the specific sensor settings in use.
-> + * @tf: Transfer function structure used by I/O operations.
-> + * @tb: Transfer buffers used by SPI I/O operations.
-> + */
-> +struct st_lsm6dsx_hw {
-> +	const char *name;
-> +	struct device *dev;
-> +	int irq;
-> +
-> +	struct mutex lock;
-> +	struct mutex fifo_lock;
-> +
-> +	enum st_lsm6dsx_fifo_mode fifo_mode;
-> +	u8 enable_mask;
-> +	u8 sip;
-> +
-> +	struct iio_dev *iio_devs[ST_LSM6DSX_ID_MAX];
-> +
-> +	const struct st_lsm6dsx_settings *settings;
-> +
-> +	const struct st_lsm6dsx_transfer_function *tf;
-> +	struct st_lsm6dsx_transfer_buffer tb;
-> +};
-> +
-> +int st_lsm6dsx_probe(struct st_lsm6dsx_hw *hw);
-> +int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor);
-> +int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor);
-> +int st_lsm6dsx_allocate_buffers(struct st_lsm6dsx_hw *hw);
-> +int st_lsm6dsx_write_with_mask(struct st_lsm6dsx_hw *hw, u8 addr, u8 mask,
-> +			       u8 val);
-> +int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
-> +				u16 watermark);
-> +
-> +#endif /* ST_LSM6DSX_H */
-> +
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> new file mode 100644
-> index 0000000..7f4032d
-> --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-> @@ -0,0 +1,437 @@
-> +/*
-> + * STMicroelectronics st_lsm6dsx FIFO buffer library driver
-> + *
-> + * LSM6DS3/LSM6DSM: The FIFO buffer can be configured to store data
-> + * from gyroscope and accelerometer. Samples are queued without any tag
-> + * according to a specific pattern based on 'FIFO data sets' (6 bytes each):
-> + *  - 1st data set is reserved for gyroscope data
-> + *  - 2nd data set is reserved for accelerometer data
-> + * The FIFO pattern changes depending on the ODRs and decimation factors
-> + * assigned to the FIFO data sets. The first sequence of data stored in FIFO
-> + * buffer contains the data of all the enabled FIFO data sets
-> + * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
-> + * value of the decimation factor and ODR set for each FIFO data set.
-> + * FIFO supported modes:
-> + *  - BYPASS: FIFO disabled
-> + *  - CONTINUOUS: FIFO enabled. When the buffer is full, the FIFO index
-> + *    restarts from the beginning and the oldest sample is overwritten
-> + *
-> + * Copyright 2016 STMicroelectronics Inc.
-> + *
-> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-> + *
-> + * Licensed under the GPL-2.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/iio/kfifo_buf.h>
-> +
-> +#include "st_lsm6dsx.h"
-> +
-> +#define ST_LSM6DSX_REG_FIFO_THL_ADDR		0x06
-> +#define ST_LSM6DSX_REG_FIFO_THH_ADDR		0x07
-> +#define ST_LSM6DSX_FIFO_TH_MASK			GENMASK(11, 0)
-> +#define ST_LSM6DSX_REG_FIFO_DEC_GXL_ADDR	0x08
-> +#define ST_LSM6DSX_REG_FIFO_MODE_ADDR		0x0a
-> +#define ST_LSM6DSX_FIFO_MODE_MASK		GENMASK(2, 0)
-> +#define ST_LSM6DSX_FIFO_ODR_MASK		GENMASK(6, 3)
-> +#define ST_LSM6DSX_REG_FIFO_DIFFL_ADDR		0x3a
-> +#define ST_LSM6DSX_FIFO_DIFF_MASK		GENMASK(11, 0)
-> +#define ST_LSM6DSX_FIFO_EMPTY_MASK		BIT(12)
-> +#define ST_LSM6DSX_REG_FIFO_OUTL_ADDR		0x3e
-> +
-> +#define ST_LSM6DSX_MAX_FIFO_ODR_VAL		0x08
-> +
-> +struct st_lsm6dsx_decimator_entry {
-> +	u8 decimator;
-> +	u8 val;
-> +};
-> +
-> +static const
-> +struct st_lsm6dsx_decimator_entry st_lsm6dsx_decimator_table[] = {
-> +	{  0, 0x0 },
-> +	{  1, 0x1 },
-> +	{  2, 0x2 },
-> +	{  3, 0x3 },
-> +	{  4, 0x4 },
-> +	{  8, 0x5 },
-> +	{ 16, 0x6 },
-> +	{ 32, 0x7 },
-> +};
-> +
-> +static int st_lsm6dsx_get_decimator_val(u8 val)
-> +{
-> +	const int max_size = ARRAY_SIZE(st_lsm6dsx_decimator_table);
-> +	int i;
-> +
-> +	for (i = 0; i < max_size; i++)
-> +		if (st_lsm6dsx_decimator_table[i].decimator == val)
-> +			break;
-> +
-> +	return i == max_size ? 0 : st_lsm6dsx_decimator_table[i].val;
-> +}
-> +
-> +static void st_lsm6dsx_get_max_min_odr(struct st_lsm6dsx_hw *hw,
-> +				       u16 *max_odr, u16 *min_odr)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor;
-> +	int i;
-> +
-> +	*max_odr = 0, *min_odr = ~0;
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		sensor = iio_priv(hw->iio_devs[i]);
-> +
-> +		if (!(hw->enable_mask & BIT(sensor->id)))
-> +			continue;
-> +
-> +		*max_odr = max_t(u16, *max_odr, sensor->odr);
-> +		*min_odr = min_t(u16, *min_odr, sensor->odr);
-> +	}
-> +}
-> +
-> +static int st_lsm6dsx_update_decimators(struct st_lsm6dsx_hw *hw)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor;
-> +	u16 max_odr, min_odr, sip = 0;
-> +	int err, i;
-> +	u8 data;
-> +
-> +	st_lsm6dsx_get_max_min_odr(hw, &max_odr, &min_odr);
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		sensor = iio_priv(hw->iio_devs[i]);
-> +
-> +		/* update fifo decimators and sample in pattern */
-> +		if (hw->enable_mask & BIT(sensor->id)) {
-> +			sensor->sip = sensor->odr / min_odr;
-> +			sensor->decimator = max_odr / sensor->odr;
-> +			data = st_lsm6dsx_get_decimator_val(sensor->decimator);
-> +		} else {
-> +			sensor->sip = 0;
-> +			sensor->decimator = 0;
-> +			data = 0;
-> +		}
-> +
-> +		err = st_lsm6dsx_write_with_mask(hw,
-> +					ST_LSM6DSX_REG_FIFO_DEC_GXL_ADDR,
-> +					sensor->decimator_mask, data);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		sip += sensor->sip;
-> +	}
-> +	hw->sip = sip;
-> +
-> +	return 0;
-> +}
-> +
-> +static int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
-> +				    enum st_lsm6dsx_fifo_mode fifo_mode)
-> +{
-> +	u8 data;
-> +	int err;
-> +
-> +	switch (fifo_mode) {
-> +	case ST_LSM6DSX_FIFO_BYPASS:
-> +		data = fifo_mode;
-> +		break;
-> +	case ST_LSM6DSX_FIFO_CONT:
-> +		data = (ST_LSM6DSX_MAX_FIFO_ODR_VAL <<
-> +			__ffs(ST_LSM6DSX_FIFO_ODR_MASK)) | fifo_mode;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_FIFO_MODE_ADDR,
-> +			    sizeof(data), &data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	hw->fifo_mode = fifo_mode;
-> +
-> +	return 0;
-> +}
-> +
-> +int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor, u16 watermark)
-> +{
-> +	u16 fifo_watermark = ~0, cur_watermark, sip = 0;
-> +	struct st_lsm6dsx_hw *hw = sensor->hw;
-> +	struct st_lsm6dsx_sensor *cur_sensor;
-> +	__le16 wdata;
-> +	int i, err;
-> +	u8 data;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		cur_sensor = iio_priv(hw->iio_devs[i]);
-> +
-> +		if (!(hw->enable_mask & BIT(cur_sensor->id)))
-> +			continue;
-> +
-> +		cur_watermark = (cur_sensor == sensor) ? watermark
-> +						       : cur_sensor->watermark;
-> +
-> +		fifo_watermark = min_t(u16, fifo_watermark, cur_watermark);
-> +		sip += cur_sensor->sip;
-> +	}
-> +
-> +	if (!sip)
-> +		return 0;
-> +
-> +	fifo_watermark = max_t(u16, fifo_watermark, sip);
-> +	fifo_watermark = (fifo_watermark / sip) * sip;
-> +	fifo_watermark = fifo_watermark * ST_LSM6DSX_SAMPLE_DEPTH;
-> +
-> +	mutex_lock(&hw->lock);
-> +
-> +	err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_FIFO_THH_ADDR,
-> +			   sizeof(data), &data);
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	fifo_watermark = ((data & ~ST_LSM6DSX_FIFO_TH_MASK) << 8) |
-> +			  (fifo_watermark & ST_LSM6DSX_FIFO_TH_MASK);
-> +
-> +	wdata = cpu_to_le16(fifo_watermark);
-> +	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_FIFO_THL_ADDR,
-> +			    sizeof(wdata), (u8 *)&wdata);
-> +out:
-> +	mutex_unlock(&hw->lock);
-> +
-> +	return err < 0 ? err : 0;
-> +}
-> +
-> +/**
-> + * st_lsm6dsx_read_fifo() - LSM6DS3-LSM6DSM read FIFO routine
-> + * @hw: Pointer to instance of struct st_lsm6dsx_hw.
-> + *
-> + * Read samples from the hw FIFO and push them to IIO buffers.
-> + *
-> + * Return: Number of bytes read from the FIFO
-> + */
-> +static int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
-> +{
-> +	u8 buff[ALIGN(ST_LSM6DSX_SAMPLE_SIZE, sizeof(s64)) + sizeof(s64)];
-> +	u16 fifo_len, pattern_len = hw->sip * ST_LSM6DSX_SAMPLE_SIZE;
-> +	struct st_lsm6dsx_sensor *acc_sensor, *gyro_sensor;
-> +	s64 acc_ts, acc_delta_ts, gyro_ts, gyro_delta_ts;
-> +	int err, acc_sip, gyro_sip, read_len, samples;
-> +	__le16 fifo_status;
-> +
-> +	err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_FIFO_DIFFL_ADDR,
-> +			   sizeof(fifo_status), (u8 *)&fifo_status);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (fifo_status & cpu_to_le16(ST_LSM6DSX_FIFO_EMPTY_MASK))
-> +		return 0;
-> +
-> +	fifo_len = (le16_to_cpu(fifo_status) & ST_LSM6DSX_FIFO_DIFF_MASK) *
-> +		   ST_LSM6DSX_CHAN_SIZE;
-> +	samples = fifo_len / ST_LSM6DSX_SAMPLE_SIZE;
-> +	fifo_len = (fifo_len / pattern_len) * pattern_len;
-> +
-> +	/*
-> +	 * compute delta timestamp between two consecutive samples
-> +	 * in order to estimate queueing time of data generated
-> +	 * by the sensor
-> +	 */
-> +	acc_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
-> +	acc_ts = acc_sensor->ts - acc_sensor->delta_ts;
-> +	acc_delta_ts = div_s64(acc_sensor->delta_ts * acc_sensor->decimator,
-> +			       samples);
-> +
-> +	gyro_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
-> +	gyro_ts = gyro_sensor->ts - gyro_sensor->delta_ts;
-> +	gyro_delta_ts = div_s64(gyro_sensor->delta_ts * gyro_sensor->decimator,
-> +				samples);
-> +
-> +	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
-> +		gyro_sip = gyro_sensor->sip;
-> +		acc_sip = acc_sensor->sip;
-> +
-It might be worth adding a description fo the data pattern here as well.
-Good to have it next to the code. I think I follow how this works, but
-am none too sure!
-> +		while (acc_sip > 0 || gyro_sip > 0) {
-> +			if (gyro_sip-- > 0) {
-> +				err = hw->tf->read(hw->dev,
-> +						ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
-> +						ST_LSM6DSX_SAMPLE_SIZE, buff);
-> +				if (err < 0)
-> +					return err;
-> +
-> +				iio_push_to_buffers_with_timestamp(
-> +					hw->iio_devs[ST_LSM6DSX_ID_GYRO],
-> +					buff, gyro_ts);
-> +				gyro_ts += gyro_delta_ts;
-> +			}
-> +
-> +			if (acc_sip-- > 0) {
-> +				err = hw->tf->read(hw->dev,
-> +						ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
-> +						ST_LSM6DSX_SAMPLE_SIZE, buff);
-> +				if (err < 0)
-> +					return err;
-> +
-> +				iio_push_to_buffers_with_timestamp(
-> +					hw->iio_devs[ST_LSM6DSX_ID_ACC],
-> +					buff, acc_ts);
-> +				acc_ts += acc_delta_ts;
-> +			}
-> +		}
-> +	}
-> +
-> +	return read_len;
-> +}
-> +
-> +static int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw)
-> +{
-> +	int err;
-> +
-> +	mutex_lock(&hw->fifo_lock);
-> +
-> +	st_lsm6dsx_read_fifo(hw);
-> +	err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_BYPASS);
-> +
-> +	mutex_unlock(&hw->fifo_lock);
-> +
-> +	return err;
-> +}
-> +
-> +static int st_lsm6dsx_update_fifo(struct iio_dev *iio_dev, bool enable)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
-> +	struct st_lsm6dsx_hw *hw = sensor->hw;
-> +	int err;
-> +
-> +	if (hw->fifo_mode != ST_LSM6DSX_FIFO_BYPASS) {
-> +		err = st_lsm6dsx_flush_fifo(hw);
-> +		if (err < 0)
-> +			return err;
-> +	}
-> +
-> +	if (enable) {
-> +		err = st_lsm6dsx_sensor_enable(sensor);
-> +		if (err < 0)
-> +			return err;
-> +	} else {
-> +		err = st_lsm6dsx_sensor_disable(sensor);
-> +		if (err < 0)
-> +			return err;
-> +	}
-> +
-> +	err = st_lsm6dsx_update_decimators(hw);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	err = st_lsm6dsx_update_watermark(sensor, sensor->watermark);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (hw->enable_mask) {
-> +		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		/*
-> +		 * store enable buffer timestamp as reference to compute
-> +		 * first delta timestamp
-> +		 */
-> +		sensor->ts = iio_get_time_ns(iio_dev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t st_lsm6dsx_handler_irq(int irq, void *private)
-> +{
-> +	struct st_lsm6dsx_hw *hw = (struct st_lsm6dsx_hw *)private;
-> +	struct st_lsm6dsx_sensor *sensor;
-> +	int i;
-> +
-> +	if (!hw->sip)
-> +		return IRQ_NONE;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		sensor = iio_priv(hw->iio_devs[i]);
-> +
-> +		if (sensor->sip > 0) {
-> +			s64 timestamp;
-> +
-> +			timestamp = iio_get_time_ns(hw->iio_devs[i]);
-> +			sensor->delta_ts = timestamp - sensor->ts;
-> +			sensor->ts = timestamp;
-> +		}
-> +	}
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +static irqreturn_t st_lsm6dsx_handler_thread(int irq, void *private)
-> +{
-> +	struct st_lsm6dsx_hw *hw = (struct st_lsm6dsx_hw *)private;
-> +	int count;
-> +
-> +	mutex_lock(&hw->fifo_lock);
-> +	count = st_lsm6dsx_read_fifo(hw);
-> +	mutex_unlock(&hw->fifo_lock);
-> +
-> +	return !count ? IRQ_NONE : IRQ_HANDLED;
-> +}
-> +
-> +static int st_lsm6dsx_buffer_preenable(struct iio_dev *iio_dev)
-> +{
-> +	return st_lsm6dsx_update_fifo(iio_dev, true);
-> +}
-> +
-> +static int st_lsm6dsx_buffer_postdisable(struct iio_dev *iio_dev)
-> +{
-> +	return st_lsm6dsx_update_fifo(iio_dev, false);
-> +}
-> +
-> +static const struct iio_buffer_setup_ops st_lsm6dsx_buffer_ops = {
-> +	.preenable = st_lsm6dsx_buffer_preenable,
-> +	.postdisable = st_lsm6dsx_buffer_postdisable,
-> +};
-> +
-> +int st_lsm6dsx_allocate_buffers(struct st_lsm6dsx_hw *hw)
-Consider renaming this function as it does a lot more than allocating
-the buffers (such as requesting irqs)
-> +{
-> +	struct iio_buffer *buffer;
-> +	unsigned long irq_type;
-> +	int i, err;
-> +
-> +	irq_type = irqd_get_trigger_type(irq_get_irq_data(hw->irq));
-> +
-> +	switch (irq_type) {
-> +	case IRQF_TRIGGER_HIGH:
-> +	case IRQF_TRIGGER_RISING:
-> +		break;
-> +	default:
-> +		dev_info(hw->dev, "mode %lx unsupported\n", irq_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	err = devm_request_threaded_irq(hw->dev, hw->irq,
-> +					st_lsm6dsx_handler_irq,
-> +					st_lsm6dsx_handler_thread,
-> +					irq_type | IRQF_ONESHOT,
-> +					hw->name, hw);
-> +	if (err) {
-> +		dev_err(hw->dev, "failed to request trigger irq %d\n",
-> +			hw->irq);
-> +		return err;
-> +	}
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		buffer = devm_iio_kfifo_allocate(hw->dev);
-> +		if (!buffer)
-> +			return -ENOMEM;
-> +
-> +		iio_device_attach_buffer(hw->iio_devs[i], buffer);
-> +		hw->iio_devs[i]->modes |= INDIO_BUFFER_SOFTWARE;
-> +		hw->iio_devs[i]->setup_ops = &st_lsm6dsx_buffer_ops;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> new file mode 100644
-> index 0000000..473315a
-> --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -0,0 +1,655 @@
-> +/*
-> + * STMicroelectronics st_lsm6dsx sensor driver
-> + *
-> + * The ST LSM6DSx IMU MEMS series consists of 3D digital accelerometer
-> + * and 3D digital gyroscope system-in-package with a digital I2C/SPI serial
-> + * interface standard output.
-> + * LSM6DSx IMU MEMS series has a dynamic user-selectable full-scale
-> + * acceleration range of +-2/+-4/+-8/+-16 g and an angular rate range of
-> + * +-125/+-245/+-500/+-1000/+-2000 dps
-> + * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
-> + * allowing dynamic batching of sensor data.
-> + *
-> + * Supported sensors:
-> + * - LSM6DS3:
-> + *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
-> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-> + *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-> + *   - FIFO size: 8KB
-> + *
-> + * - LSM6DSM:
-> + *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
-> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-> + *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-> + *   - FIFO size: 4KB
-> + *
-> + * Copyright 2016 STMicroelectronics Inc.
-> + *
-> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-> + *
-> + * Licensed under the GPL-2.
-> + */
-> +
+> +#include <linux/err.h>
 > +#include <linux/kernel.h>
 > +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/slab.h>
+> +#include <linux/sched.h>
 > +#include <linux/delay.h>
 > +#include <linux/iio/iio.h>
 > +#include <linux/iio/sysfs.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/regulator/consumer.h>
 > +
-> +#include "st_lsm6dsx.h"
+> +/*
+> + * gain to pulse and scale conversion
+> + */
+/* gain to pulse and scale conversion */
+(we are very fussy about comment syntax, particularly as otherwise
+I'll get inundated with patches fixing it ;)
+> +#define HX711_CHAN_A		0	/* channel id for A  */
+> +#define HX711_CHAN_B		1	/* channel id for B  */
 > +
-> +#define ST_LSM6DSX_REG_ACC_DEC_MASK		GENMASK(2, 0)
-> +#define ST_LSM6DSX_REG_GYRO_DEC_MASK		GENMASK(5, 3)
-> +#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
-> +#define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
-> +#define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
-> +#define ST_LSM6DSX_REG_RESET_ADDR		0x12
-> +#define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
-> +#define ST_LSM6DSX_REG_BDU_ADDR			0x12
-> +#define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
-> +#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
-> +#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
-> +#define ST_LSM6DSX_REG_ROUNDING_ADDR		0x16
-> +#define ST_LSM6DSX_REG_ROUNDING_MASK		BIT(2)
-> +#define ST_LSM6DSX_REG_LIR_ADDR			0x58
-> +#define ST_LSM6DSX_REG_LIR_MASK			BIT(0)
+> +#define HX711_GAIN_MAX		3
 > +
-> +#define ST_LSM6DSX_REG_ACC_ODR_ADDR		0x10
-> +#define ST_LSM6DSX_REG_ACC_ODR_MASK		GENMASK(7, 4)
-> +#define ST_LSM6DSX_REG_ACC_FS_ADDR		0x10
-> +#define ST_LSM6DSX_REG_ACC_FS_MASK		GENMASK(3, 2)
-> +#define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
-> +#define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
-> +#define ST_LSM6DSX_REG_ACC_OUT_Z_L_ADDR		0x2c
-> +
-> +#define ST_LSM6DSX_REG_GYRO_ODR_ADDR		0x11
-> +#define ST_LSM6DSX_REG_GYRO_ODR_MASK		GENMASK(7, 4)
-> +#define ST_LSM6DSX_REG_GYRO_FS_ADDR		0x11
-> +#define ST_LSM6DSX_REG_GYRO_FS_MASK		GENMASK(3, 2)
-> +#define ST_LSM6DSX_REG_GYRO_OUT_X_L_ADDR	0x22
-> +#define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
-> +#define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
-> +
-> +#define ST_LSM6DS3_WHOAMI			0x69
-> +#define ST_LSM6DSM_WHOAMI			0x6a
-> +
-> +#define ST_LSM6DS3_MAX_FIFO_SIZE		8192
-> +#define ST_LSM6DSM_MAX_FIFO_SIZE		4096
-> +
-> +#define ST_LSM6DSX_ACC_FS_2G_GAIN		IIO_G_TO_M_S_2(61)
-> +#define ST_LSM6DSX_ACC_FS_4G_GAIN		IIO_G_TO_M_S_2(122)
-> +#define ST_LSM6DSX_ACC_FS_8G_GAIN		IIO_G_TO_M_S_2(244)
-> +#define ST_LSM6DSX_ACC_FS_16G_GAIN		IIO_G_TO_M_S_2(488)
-> +
-> +#define ST_LSM6DSX_GYRO_FS_245_GAIN		IIO_DEGREE_TO_RAD(4375)
-> +#define ST_LSM6DSX_GYRO_FS_500_GAIN		IIO_DEGREE_TO_RAD(8750)
-> +#define ST_LSM6DSX_GYRO_FS_1000_GAIN		IIO_DEGREE_TO_RAD(17500)
-> +#define ST_LSM6DSX_GYRO_FS_2000_GAIN		IIO_DEGREE_TO_RAD(70000)
-> +
-> +struct st_lsm6dsx_odr {
-> +	u16 hz;
-> +	u8 val;
+> +struct hx711_gain_to_scale {
+> +	int			gain;
+> +	int			gain_pulse;
+> +	int			scale;
+> +	int			channel;
 > +};
 > +
-> +#define ST_LSM6DSX_ODR_LIST_SIZE	6
-> +struct st_lsm6dsx_odr_table_entry {
-> +	struct st_lsm6dsx_reg reg;
-> +	struct st_lsm6dsx_odr odr_avl[ST_LSM6DSX_ODR_LIST_SIZE];
+> +static struct hx711_gain_to_scale hx711_gain_to_scale[HX711_GAIN_MAX] = {
+> +	{ 128, 1, 0, HX711_CHAN_A },
+> +	{  32, 2, 0, HX711_CHAN_B },
+> +	{  64, 3, 0, HX711_CHAN_A }
 > +};
 > +
-> +static const struct st_lsm6dsx_odr_table_entry st_lsm6dsx_odr_table[] = {
-> +	[ST_LSM6DSX_ID_ACC] = {
-> +		.reg = {
-> +			.addr = ST_LSM6DSX_REG_ACC_ODR_ADDR,
-> +			.mask = ST_LSM6DSX_REG_ACC_ODR_MASK,
-> +		},
-> +		.odr_avl[0] = {  13, 0x01 },
-> +		.odr_avl[1] = {  26, 0x02 },
-> +		.odr_avl[2] = {  52, 0x03 },
-> +		.odr_avl[3] = { 104, 0x04 },
-> +		.odr_avl[4] = { 208, 0x05 },
-> +		.odr_avl[5] = { 416, 0x06 },
-> +	},
-> +	[ST_LSM6DSX_ID_GYRO] = {
-> +		.reg = {
-> +			.addr = ST_LSM6DSX_REG_GYRO_ODR_ADDR,
-> +			.mask = ST_LSM6DSX_REG_GYRO_ODR_MASK,
-> +		},
-> +		.odr_avl[0] = {  13, 0x01 },
-> +		.odr_avl[1] = {  26, 0x02 },
-> +		.odr_avl[2] = {  52, 0x03 },
-> +		.odr_avl[3] = { 104, 0x04 },
-> +		.odr_avl[4] = { 208, 0x05 },
-> +		.odr_avl[5] = { 416, 0x06 },
-> +	}
-> +};
+> +static int hx711_get_gain_to_pulse(int gain)
+> +{
+> +	int i;
 > +
-> +struct st_lsm6dsx_fs {
-> +	u32 gain;
-> +	u8 val;
-> +};
-> +
-> +#define ST_LSM6DSX_FS_LIST_SIZE		4
-> +struct st_lsm6dsx_fs_table_entry {
-> +	struct st_lsm6dsx_reg reg;
-> +	struct st_lsm6dsx_fs fs_avl[ST_LSM6DSX_FS_LIST_SIZE];
-> +};
-> +
-> +static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
-> +	[ST_LSM6DSX_ID_ACC] = {
-> +		.reg = {
-> +			.addr = ST_LSM6DSX_REG_ACC_FS_ADDR,
-> +			.mask = ST_LSM6DSX_REG_ACC_FS_MASK,
-> +		},
-> +		.fs_avl[0] = {  ST_LSM6DSX_ACC_FS_2G_GAIN, 0x0 },
-> +		.fs_avl[1] = {  ST_LSM6DSX_ACC_FS_4G_GAIN, 0x2 },
-> +		.fs_avl[2] = {  ST_LSM6DSX_ACC_FS_8G_GAIN, 0x3 },
-> +		.fs_avl[3] = { ST_LSM6DSX_ACC_FS_16G_GAIN, 0x1 },
-> +	},
-> +	[ST_LSM6DSX_ID_GYRO] = {
-> +		.reg = {
-> +			.addr = ST_LSM6DSX_REG_GYRO_FS_ADDR,
-> +			.mask = ST_LSM6DSX_REG_GYRO_FS_MASK,
-> +		},
-> +		.fs_avl[0] = {  ST_LSM6DSX_GYRO_FS_245_GAIN, 0x0 },
-> +		.fs_avl[1] = {  ST_LSM6DSX_GYRO_FS_500_GAIN, 0x1 },
-> +		.fs_avl[2] = { ST_LSM6DSX_GYRO_FS_1000_GAIN, 0x2 },
-> +		.fs_avl[3] = { ST_LSM6DSX_GYRO_FS_2000_GAIN, 0x3 },
-> +	}
-> +};
-> +
-> +static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
-> +	{
-> +		.wai = ST_LSM6DS3_WHOAMI,
-> +		.max_fifo_size = ST_LSM6DS3_MAX_FIFO_SIZE,
-> +	},
-> +	{
-> +		.wai = ST_LSM6DSM_WHOAMI,
-> +		.max_fifo_size = ST_LSM6DSM_MAX_FIFO_SIZE,
-> +	},
-> +};
-> +
-> +#define ST_LSM6DSX_CHANNEL(chan_type, addr, mod, scan_idx)		\
-> +{									\
-> +	.type = chan_type,						\
-> +	.address = addr,						\
-> +	.modified = 1,							\
-> +	.channel2 = mod,						\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-> +			      BIT(IIO_CHAN_INFO_SCALE),			\
-> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-> +	.scan_index = scan_idx,						\
-> +	.scan_type = {							\
-> +		.sign = 's',						\
-> +		.realbits = 16,						\
-> +		.storagebits = 16,					\
-> +		.endianness = IIO_LE,					\
-> +	},								\
+> +	for (i = 0; i < HX711_GAIN_MAX; i++)
+> +		if (hx711_gain_to_scale[i].gain == gain)
+> +			return hx711_gain_to_scale[i].gain_pulse;
+> +	return 1;
 > +}
 > +
-> +static const struct iio_chan_spec st_lsm6dsx_acc_channels[] = {
-> +	ST_LSM6DSX_CHANNEL(IIO_ACCEL, ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR,
-> +			   IIO_MOD_X, 0),
-> +	ST_LSM6DSX_CHANNEL(IIO_ACCEL, ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR,
-> +			   IIO_MOD_Y, 1),
-> +	ST_LSM6DSX_CHANNEL(IIO_ACCEL, ST_LSM6DSX_REG_ACC_OUT_Z_L_ADDR,
-> +			   IIO_MOD_Z, 2),
-> +	IIO_CHAN_SOFT_TIMESTAMP(3),
-> +};
-> +
-> +static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM6DSX_REG_GYRO_OUT_X_L_ADDR,
-> +			   IIO_MOD_X, 0),
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR,
-> +			   IIO_MOD_Y, 1),
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR,
-> +			   IIO_MOD_Z, 2),
-> +	IIO_CHAN_SOFT_TIMESTAMP(3),
-> +};
-> +
-> +int st_lsm6dsx_write_with_mask(struct st_lsm6dsx_hw *hw, u8 addr, u8 mask,
-> +			       u8 val)
+> +static int hx711_get_gain_to_scale(int gain)
 > +{
-> +	u8 data;
-> +	int err;
+> +	int i;
 > +
-> +	mutex_lock(&hw->lock);
-> +
-> +	err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
-> +	if (err < 0) {
-> +		dev_err(hw->dev, "failed to read %02x register\n", addr);
-> +		goto out;
-> +	}
-> +
-> +	data = (data & ~mask) | ((val << __ffs(mask)) & mask);
-> +
-> +	err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
-> +	if (err < 0)
-> +		dev_err(hw->dev, "failed to write %02x register\n", addr);
-> +
-> +out:
-> +	mutex_unlock(&hw->lock);
-> +
-> +	return err;
+> +	for (i = 0; i < HX711_GAIN_MAX; i++)
+> +		if (hx711_gain_to_scale[i].gain == gain)
+> +			return hx711_gain_to_scale[i].scale;
+> +	return 0;
 > +}
 > +
-> +static int st_lsm6dsx_check_whoami(struct st_lsm6dsx_hw *hw)
+> +static int hx711_get_scale_to_gain(int scale)
 > +{
-> +	int err, i;
-> +	u8 data;
+> +	int i;
 > +
-> +	err = hw->tf->read(hw->dev, ST_LSM6DSX_REG_WHOAMI_ADDR, sizeof(data),
-> +			   &data);
-> +	if (err < 0) {
-> +		dev_err(hw->dev, "failed to read whoami register\n");
-> +		return err;
+> +	for (i = 0; i < HX711_GAIN_MAX; i++)
+> +		if (hx711_gain_to_scale[i].scale == scale)
+> +			return hx711_gain_to_scale[i].gain;
+> +	return -EINVAL;
+> +}
+> +
+> +struct hx711_data {
+> +	struct device		*dev;
+> +	struct gpio_desc	*gpiod_pd_sck;
+> +	struct gpio_desc	*gpiod_dout;
+> +	struct regulator	*reg_avdd;
+> +	int			gain_set;	/* gain set on device */
+> +	int			gain_chan_a;	/* gain for channel A */
+> +	struct mutex		lock;
+> +};
+> +
+> +static int hx711_read(struct hx711_data *hx711_data);
+> +
+> +static int hx711_reset(struct hx711_data *hx711_data)
+> +{
+> +	int ret;
+> +	int val = gpiod_get_value(hx711_data->gpiod_dout);
+> +
+> +	if (val) {
+> +		int i;
+> +
+> +		/*
+> +		 * an examination with the oszilloscope indicated
+> +		 * that the first value read after the reset is not stable
+> +		 * if we reset too short;
+> +		 * the shorter the reset cycle
+> +		 * the less reliable the first value after reset is;
+> +		 * there were no problems encountered with a value
+> +		 * of 10 ms or higher
+> +		 */
+> +		gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
+> +		msleep(10);
+> +		gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
+> +
+> +		/*
+> +		 * a maximum reset cycle time of 56 ms was measured.
+> +		 * we round it up to 100 ms
+> +		 */
+> +		for (i = 0; i < 100; i++) {
+> +			val = gpiod_get_value(hx711_data->gpiod_dout);
+> +			if (!val)
+> +				break;
+> +			/* sleep at least 1 ms */
+> +			msleep(1);
+> +		}
+> +
+> +		/*
+> +		 * after a reset the gain is 128 so we do a dummy read
+> +		 *   to set the gain for the next read
+> +		 */
+> +		ret = hx711_read(hx711_data);
+> +		if (ret < 0)
+> +			return ret;
 > +	}
 > +
-> +	for (i = 0; i < ARRAY_SIZE(st_lsm6dsx_sensor_settings); i++) {
-> +		if (data == st_lsm6dsx_sensor_settings[i].wai) {
-> +			hw->settings = &st_lsm6dsx_sensor_settings[i];
-> +			break;
-Normally we would sanity check that the expected whoami was the one read.
-Here you are matching against all supported parts.  As we know what we
-are expecting it would be nice to at least kick out a warning if we
-infact find another supported part.  This would require you to pass
-through the enum element from the enum suggested in the spi driver
-review below.
+> +	return val;
+> +}
+> +
+> +static int hx711_cycle(struct hx711_data *hx711_data)
+> +{
+> +	int val;
+> +
+> +	/*
+> +	 * if preempted for more then 60us while PD_SCK is high:
+> +	 * hx711 is going in reset
+> +	 * ==> measuring is false
+> +	 */
+> +	preempt_disable();
+> +	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
+> +	val = gpiod_get_value(hx711_data->gpiod_dout);
+> +	/*
+> +	 * here we are not waiting for 0.2 us as suggested by the datasheet,
+> +	 * because the oszilloscope showed in a test scenario
+> +	 * at least 1.15 us for PD_SCK high (T3 in datasheet)
+> +	 * and 0.56 us for PD_SCK low on TI Sitara with 800 MHz
+> +	 */
+> +	gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
+> +	preempt_enable();
+> +
+> +	return val;
+> +}
+> +
+> +static int hx711_read(struct hx711_data *hx711_data)
+> +{
+> +	int i, ret;
+> +	int value = 0;
+> +
+> +	if (hx711_reset(hx711_data)) {
+> +		dev_err(hx711_data->dev, "reset failed!");
+> +		return -EIO;
+> +	}
+> +
+> +	for (i = 0; i < 24; i++) {
+> +		value <<= 1;
+> +		ret = hx711_cycle(hx711_data);
+> +		if (ret)
+> +			value++;
+> +	}
+> +
+> +	value ^= 0x800000;
+> +
+> +	for (i = 0; i < hx711_get_gain_to_pulse(hx711_data->gain_set); i++)
+> +		hx711_cycle(hx711_data);
+> +
+> +	return value;
+> +}
+> +
+> +static int hx711_set_gain_for_channel(struct hx711_data *hx711_data, int chan)
+> +{
+> +	int ret;
+> +
+> +	if (chan == HX711_CHAN_A) {
+> +		if (hx711_data->gain_set == 32) {
+> +			hx711_data->gain_set = hx711_data->gain_chan_a;
+> +
+> +			ret = hx711_read(hx711_data);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +	} else {
+> +		if (hx711_data->gain_set != 32) {
+> +			hx711_data->gain_set = 32;
+> +
+> +			ret = hx711_read(hx711_data);
+> +			if (ret < 0)
+> +				return ret;
 > +		}
 > +	}
 > +
-> +	if (i == ARRAY_SIZE(st_lsm6dsx_sensor_settings)) {
-> +		dev_err(hw->dev, "unsupported whoami [%02x]\n", data);
-> +		return -ENODEV;
-> +	}
-> +
 > +	return 0;
 > +}
 > +
-> +static int st_lsm6dsx_set_full_scale(struct st_lsm6dsx_sensor *sensor,
-> +				     u32 gain)
+> +static int hx711_read_raw(struct iio_dev *iio_dev,
+> +				const struct iio_chan_spec *chan,
+> +				int *val, int *val2, long mask)
 > +{
-> +	enum st_lsm6dsx_sensor_id id = sensor->id;
-> +	int i, err;
-> +	u8 val;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_FS_LIST_SIZE; i++)
-> +		if (st_lsm6dsx_fs_table[id].fs_avl[i].gain == gain)
-> +			break;
-> +
-> +	if (i == ST_LSM6DSX_FS_LIST_SIZE)
-> +		return -EINVAL;
-> +
-> +	val = st_lsm6dsx_fs_table[id].fs_avl[i].val;
-> +	err = st_lsm6dsx_write_with_mask(sensor->hw,
-> +					 st_lsm6dsx_fs_table[id].reg.addr,
-> +					 st_lsm6dsx_fs_table[id].reg.mask,
-> +					 val);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	sensor->gain = gain;
-> +
-> +	return 0;
-> +}
-> +
-> +static int st_lsm6dsx_set_odr(struct st_lsm6dsx_sensor *sensor, u16 odr)
-> +{
-> +	enum st_lsm6dsx_sensor_id id = sensor->id;
-> +	int i, err;
-> +	u8 val;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
-> +		if (st_lsm6dsx_odr_table[id].odr_avl[i].hz == odr)
-> +			break;
-> +
-> +	if (i == ST_LSM6DSX_ODR_LIST_SIZE)
-> +		return -EINVAL;
-> +
-> +	val = st_lsm6dsx_odr_table[id].odr_avl[i].val;
-> +	err = st_lsm6dsx_write_with_mask(sensor->hw,
-> +					 st_lsm6dsx_odr_table[id].reg.addr,
-> +					 st_lsm6dsx_odr_table[id].reg.mask,
-> +					 val);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	sensor->odr = odr;
-> +
-> +	return 0;
-> +}
-> +
-> +int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor)
-> +{
-> +	int err;
-> +
-> +	err = st_lsm6dsx_set_odr(sensor, sensor->odr);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	sensor->hw->enable_mask |= BIT(sensor->id);
-> +
-> +	return 0;
-> +}
-> +
-> +int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor)
-> +{
-> +	enum st_lsm6dsx_sensor_id id = sensor->id;
-> +	int err;
-> +
-> +	err = st_lsm6dsx_write_with_mask(sensor->hw,
-> +					 st_lsm6dsx_odr_table[id].reg.addr,
-> +					 st_lsm6dsx_odr_table[id].reg.mask, 0);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	sensor->hw->enable_mask &= ~BIT(id);
-> +
-> +	return 0;
-> +}
-> +
-> +static int st_lsm6dsx_read_oneshot(struct st_lsm6dsx_sensor *sensor,
-> +				   u8 addr, int *val)
-> +{
-> +	int err, delay;
-> +	__le16 data;
-> +
-> +	err = st_lsm6dsx_sensor_enable(sensor);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	delay = 1000000 / sensor->odr;
-> +	usleep_range(delay, 2 * delay);
-> +
-> +	err = sensor->hw->tf->read(sensor->hw->dev, addr, sizeof(data),
-> +				   (u8 *)&data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	st_lsm6dsx_sensor_disable(sensor);
-> +
-> +	*val = (s16)data;
-> +
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static int st_lsm6dsx_read_raw(struct iio_dev *iio_dev,
-> +			       struct iio_chan_spec const *ch,
-> +			       int *val, int *val2, long mask)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+> +	struct hx711_data *hx711_data = iio_priv(iio_dev);
 > +	int ret;
 > +
-> +	ret = iio_device_claim_direct_mode(iio_dev);
-> +	if (ret)
-> +		return ret;
-This feels like overkill.  You are protecting elements that shouldn't
-need such heavy handed protection.  This prevent syou reading the
-sampling frequency or scale whilst the buffer is enabled.
-
-I'd move the claim and release to being just within the _RAW element
-of the switch.
+> +	mutex_lock(&hx711_data->lock);
 > +
 > +	switch (mask) {
 > +	case IIO_CHAN_INFO_RAW:
-> +		ret = st_lsm6dsx_read_oneshot(sensor, ch->address, val);
-> +		break;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val = sensor->odr;
-> +		ret = IIO_VAL_INT;
-> +		break;
+> +		ret = hx711_set_gain_for_channel(hx711_data, chan->channel);
+> +		if (ret < 0) {
+> +			mutex_unlock(&hx711_data->lock);
+> +			return ret;
+> +		}
+> +
+> +		*val = hx711_read(hx711_data);
+> +		mutex_unlock(&hx711_data->lock);
+> +		if (*val < 0)
+> +			return *val;
+> +		return IIO_VAL_INT;
 > +	case IIO_CHAN_INFO_SCALE:
 > +		*val = 0;
-> +		*val2 = sensor->gain;
-> +		ret = IIO_VAL_INT_PLUS_MICRO;
-> +		break;
+> +		*val2 = hx711_get_gain_to_scale(hx711_data->gain_set);
+> +		mutex_unlock(&hx711_data->lock);
+> +		return IIO_VAL_INT_PLUS_NANO;
 > +	default:
-> +		ret = -EINVAL;
-> +		break;
+> +		mutex_unlock(&hx711_data->lock);
+> +		return -EINVAL;
 > +	}
-> +
-> +	iio_device_release_direct_mode(iio_dev);
-> +
-> +	return ret;
 > +}
 > +
-> +static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
+> +static int hx711_write_raw(struct iio_dev *iio_dev,
 > +				struct iio_chan_spec const *chan,
-> +				int val, int val2, long mask)
+> +				int val,
+> +				int val2,
+> +				long mask)
 > +{
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
-> +	int err;
-> +
-> +	err = iio_device_claim_direct_mode(iio_dev);
-> +	if (err)
-> +		return err;
+> +	struct hx711_data *hx711_data = iio_priv(iio_dev);
+> +	int ret;
+> +	int gain;
 > +
 > +	switch (mask) {
 > +	case IIO_CHAN_INFO_SCALE:
-> +		err = st_lsm6dsx_set_full_scale(sensor, val2);
-> +		break;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		err = st_lsm6dsx_set_odr(sensor, val);
-> +		break;
-> +	default:
-> +		err = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	iio_device_release_direct_mode(iio_dev);
-> +
-> +	return err;
-> +}
-> +
-> +static int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
-> +	struct st_lsm6dsx_hw *hw = sensor->hw;
-> +	int err, max_fifo_len;
-> +
-> +	max_fifo_len = hw->settings->max_fifo_size / ST_LSM6DSX_SAMPLE_SIZE;
-> +	if (val < 1 || val > max_fifo_len)
-> +		return -EINVAL;
-> +
-> +	err = st_lsm6dsx_update_watermark(sensor, val);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	sensor->watermark = val;
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t
-> +st_lsm6dsx_sysfs_sampling_frequency_avail(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(dev_get_drvdata(dev));
-> +	enum st_lsm6dsx_sensor_id id = sensor->id;
-> +	int i, len = 0;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ODR_LIST_SIZE; i++)
-> +		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
-> +				 st_lsm6dsx_odr_table[id].odr_avl[i].hz);
-> +	buf[len - 1] = '\n';
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t st_lsm6dsx_sysfs_scale_avail(struct device *dev,
-> +					    struct device_attribute *attr,
-> +					    char *buf)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor = iio_priv(dev_get_drvdata(dev));
-> +	enum st_lsm6dsx_sensor_id id = sensor->id;
-> +	int i, len = 0;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_FS_LIST_SIZE; i++)
-> +		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%06u ",
-> +				 st_lsm6dsx_fs_table[id].fs_avl[i].gain);
-> +	buf[len - 1] = '\n';
-> +
-> +	return len;
-> +}
-> +
-> +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(st_lsm6dsx_sysfs_sampling_frequency_avail);
-> +static IIO_DEVICE_ATTR(in_accel_scale_available, 0444,
-> +		       st_lsm6dsx_sysfs_scale_avail, NULL, 0);
-> +static IIO_DEVICE_ATTR(in_anglvel_scale_available, 0444,
-> +		       st_lsm6dsx_sysfs_scale_avail, NULL, 0);
-> +
-> +static struct attribute *st_lsm6dsx_acc_attributes[] = {
-> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> +	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group st_lsm6dsx_acc_attribute_group = {
-> +	.attrs = st_lsm6dsx_acc_attributes,
-> +};
-> +
-> +static const struct iio_info st_lsm6dsx_acc_info = {
-> +	.driver_module = THIS_MODULE,
-> +	.attrs = &st_lsm6dsx_acc_attribute_group,
-> +	.read_raw = st_lsm6dsx_read_raw,
-> +	.write_raw = st_lsm6dsx_write_raw,
-> +	.hwfifo_set_watermark = st_lsm6dsx_set_watermark,
-> +};
-> +
-> +static struct attribute *st_lsm6dsx_gyro_attributes[] = {
-> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> +	&iio_dev_attr_in_anglvel_scale_available.dev_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group st_lsm6dsx_gyro_attribute_group = {
-> +	.attrs = st_lsm6dsx_gyro_attributes,
-> +};
-> +
-> +static const struct iio_info st_lsm6dsx_gyro_info = {
-> +	.driver_module = THIS_MODULE,
-> +	.attrs = &st_lsm6dsx_gyro_attribute_group,
-> +	.read_raw = st_lsm6dsx_read_raw,
-> +	.write_raw = st_lsm6dsx_write_raw,
-> +	.hwfifo_set_watermark = st_lsm6dsx_set_watermark,
-> +};
-> +
-> +static const unsigned long st_lsm6dsx_available_scan_masks[] = {0x7, 0x0};
-> +
-> +static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
-> +{
-> +	int err;
-> +	u8 data;
-> +
-> +	data = ST_LSM6DSX_REG_RESET_MASK;
-> +	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_RESET_ADDR, sizeof(data),
-> +			    &data);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	msleep(200);
-> +
-> +	/* latch interrupts */
-> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_LIR_ADDR,
-> +					 ST_LSM6DSX_REG_LIR_MASK, 1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* enable Block Data Update */
-> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_BDU_ADDR,
-> +					 ST_LSM6DSX_REG_BDU_MASK, 1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_ROUNDING_ADDR,
-> +					 ST_LSM6DSX_REG_ROUNDING_MASK, 1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* enable FIFO watermak interrupt */
-> +	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT1_ADDR,
-> +					 ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* redirect INT2 on INT1 */
-> +	return st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT2_ON_INT1_ADDR,
-> +					  ST_LSM6DSX_REG_INT2_ON_INT1_MASK, 1);
-> +}
-> +
-> +static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
-> +					       enum st_lsm6dsx_sensor_id id)
-> +{
-> +	struct st_lsm6dsx_sensor *sensor;
-> +	struct iio_dev *iio_dev;
-> +
-> +	iio_dev = devm_iio_device_alloc(hw->dev, sizeof(*sensor));
-> +	if (!iio_dev)
-> +		return NULL;
-> +
-> +	iio_dev->modes = INDIO_DIRECT_MODE;
-> +	iio_dev->dev.parent = hw->dev;
-> +	iio_dev->available_scan_masks = st_lsm6dsx_available_scan_masks;
-> +
-> +	sensor = iio_priv(iio_dev);
-> +	sensor->id = id;
-> +	sensor->hw = hw;
-> +	sensor->odr = st_lsm6dsx_odr_table[id].odr_avl[0].hz;
-> +	sensor->gain = st_lsm6dsx_fs_table[id].fs_avl[0].gain;
-> +	sensor->watermark = 1;
-> +
-> +	switch (id) {
-> +	case ST_LSM6DSX_ID_ACC:
-> +		iio_dev->channels = st_lsm6dsx_acc_channels;
-> +		iio_dev->num_channels = ARRAY_SIZE(st_lsm6dsx_acc_channels);
-> +		iio_dev->name = "lsm6dsx_accel";
-> +		iio_dev->info = &st_lsm6dsx_acc_info;
-> +
-> +		sensor->decimator_mask = ST_LSM6DSX_REG_ACC_DEC_MASK;
-> +		break;
-> +	case ST_LSM6DSX_ID_GYRO:
-> +		iio_dev->channels = st_lsm6dsx_gyro_channels;
-> +		iio_dev->num_channels = ARRAY_SIZE(st_lsm6dsx_gyro_channels);
-> +		iio_dev->name = "lsm6dsx_gyro";
-> +		iio_dev->info = &st_lsm6dsx_gyro_info;
-> +
-> +		sensor->decimator_mask = ST_LSM6DSX_REG_GYRO_DEC_MASK;
-> +		break;
-> +	default:
-> +		return NULL;
-> +	}
-> +
-> +	return iio_dev;
-> +}
-> +
-> +int st_lsm6dsx_probe(struct st_lsm6dsx_hw *hw)
-> +{
-> +	int i, err;
-> +
-> +	mutex_init(&hw->lock);
-> +	mutex_init(&hw->fifo_lock);
-> +
-> +	err = st_lsm6dsx_check_whoami(hw);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		hw->iio_devs[i] = st_lsm6dsx_alloc_iiodev(hw, i);
-> +		if (!hw->iio_devs[i])
-> +			return -ENOMEM;
-> +	}
-> +
-> +	err = st_lsm6dsx_init_device(hw);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (hw->irq > 0) {
-> +		err = st_lsm6dsx_allocate_buffers(hw);
-> +		if (err < 0)
-> +			return err;
-> +	}
-> +
-> +	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-> +		err = devm_iio_device_register(hw->dev, hw->iio_devs[i]);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(st_lsm6dsx_probe);
-> +
-> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_AUTHOR("Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> new file mode 100644
-> index 0000000..cb9a158
-> --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> @@ -0,0 +1,88 @@
-> +/*
-> + * STMicroelectronics st_lsm6dsx i2c driver
-> + *
-> + * Copyright 2016 STMicroelectronics Inc.
-> + *
-> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-> + *
-> + * Licensed under the GPL-2.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +
-> +#include "st_lsm6dsx.h"
-> +
-> +static int st_lsm6dsx_i2c_read(struct device *dev, u8 addr, int len, u8 *data)
-> +{
-> +	return i2c_smbus_read_i2c_block_data_or_emulated(to_i2c_client(dev),
-> +							 addr, len, data);
-> +}
-> +
-> +static int st_lsm6dsx_i2c_write(struct device *dev, u8 addr, int len, u8 *data)
-> +{
-> +	return i2c_smbus_write_i2c_block_data(to_i2c_client(dev), addr,
-> +					      len, data);
-> +}
-> +
-> +static const struct st_lsm6dsx_transfer_function st_lsm6dsx_transfer_fn = {
-> +	.read = st_lsm6dsx_i2c_read,
-> +	.write = st_lsm6dsx_i2c_write,
-> +};
-> +
-> +static int st_lsm6dsx_i2c_probe(struct i2c_client *client,
-> +				const struct i2c_device_id *id)
-> +{
-> +	struct st_lsm6dsx_hw *hw;
-> +
-> +	hw = devm_kzalloc(&client->dev, sizeof(*hw), GFP_KERNEL);
-> +	if (!hw)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, hw);
-> +	hw->name = client->name;
-> +	hw->dev = &client->dev;
-> +	hw->irq = client->irq;
-> +	hw->tf = &st_lsm6dsx_transfer_fn;
-> +
-> +	return st_lsm6dsx_probe(hw);
-> +}
-> +
-> +static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
-> +	{
-> +		.compatible = "st,lsm6ds3",
-> +		.data = ST_LSM6DS3_DEV_NAME,
-> +	},
-> +	{
-> +		.compatible = "st,lsm6dsm",
-> +		.data = ST_LSM6DSM_DEV_NAME,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-> +
-> +static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
-> +	{ ST_LSM6DS3_DEV_NAME },
-> +	{ ST_LSM6DSM_DEV_NAME },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-> +
-> +static struct i2c_driver st_lsm6dsx_driver = {
-> +	.driver = {
-> +		.name = "st_lsm6dsx_i2c",
-> +		.of_match_table = of_match_ptr(st_lsm6dsx_i2c_of_match),
-> +	},
-> +	.probe = st_lsm6dsx_i2c_probe,
-> +	.id_table = st_lsm6dsx_i2c_id_table,
-> +};
-> +module_i2c_driver(st_lsm6dsx_driver);
-> +
-> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_AUTHOR("Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i2c driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> new file mode 100644
-> index 0000000..f16eab5
-> --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> @@ -0,0 +1,126 @@
-> +/*
-> + * STMicroelectronics st_lsm6dsx spi driver
-> + *
-> + * Copyright 2016 STMicroelectronics Inc.
-> + *
-> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> + * Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-> + *
-> + * Licensed under the GPL-2.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +
-> +#include "st_lsm6dsx.h"
-> +
-> +#define SENSORS_SPI_READ	BIT(7)
-> +
-> +static int st_lsm6dsx_spi_read(struct device *dev, u8 addr, int len,
-> +			       u8 *data)
-> +{
-> +	struct spi_device *spi = to_spi_device(dev);
-> +	struct st_lsm6dsx_hw *hw = spi_get_drvdata(spi);
-> +	int err;
-> +
-> +	struct spi_transfer xfers[] = {
-> +		{
-> +			.tx_buf = hw->tb.tx_buf,
-> +			.bits_per_word = 8,
-> +			.len = 1,
-> +		},
-> +		{
-> +			.rx_buf = hw->tb.rx_buf,
-> +			.bits_per_word = 8,
-> +			.len = len,
+> +		/*
+> +		 * a scale greater than 1 mV per LSB is not possible
+> +		 * with the HX711, therefore val must be 0
+> +		 */
+> +		if (val != 0)
+> +			return -EINVAL;
+> +
+> +		mutex_lock(&hx711_data->lock);
+> +
+> +		gain = hx711_get_scale_to_gain(val2);
+> +		if (gain < 0) {
+> +			mutex_unlock(&hx711_data->lock);
+> +			return gain;
 > +		}
-> +	};
 > +
-> +	hw->tb.tx_buf[0] = addr | SENSORS_SPI_READ;
+> +		if (gain != hx711_data->gain_set) {
+> +			hx711_data->gain_set = gain;
+> +			if (gain != 32)
+> +				hx711_data->gain_chan_a = gain;
 > +
-> +	err = spi_sync_transfer(spi, xfers,  ARRAY_SIZE(xfers));
-> +	if (err < 0)
-> +		return err;
+> +			ret = hx711_read(hx711_data);
+> +			if (ret < 0) {
+> +				mutex_unlock(&hx711_data->lock);
+> +				return ret;
+> +			}
+> +		}
 > +
-> +	memcpy(data, hw->tb.rx_buf, len * sizeof(u8));
+> +		mutex_unlock(&hx711_data->lock);
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +
-> +	return len;
+> +	return 0;
 > +}
 > +
-> +static int st_lsm6dsx_spi_write(struct device *dev, u8 addr, int len,
-> +				u8 *data)
+> +static int hx711_write_raw_get_fmt(struct iio_dev *indio_dev,
+> +		struct iio_chan_spec const *chan,
+> +		long mask)
 > +{
-> +	struct st_lsm6dsx_hw *hw;
-> +	struct spi_device *spi;
-> +
-> +	if (len >= ST_LSM6DSX_TX_MAX_LENGTH)
-> +		return -ENOMEM;
-> +
-> +	spi = to_spi_device(dev);
-> +	hw = spi_get_drvdata(spi);
-> +
-> +	hw->tb.tx_buf[0] = addr;
-> +	memcpy(&hw->tb.tx_buf[1], data, len);
-> +
-> +	return spi_write(spi, hw->tb.tx_buf, len + 1);
+> +	return IIO_VAL_INT_PLUS_NANO;
 > +}
 > +
-> +static const struct st_lsm6dsx_transfer_function st_lsm6dsx_transfer_fn = {
-> +	.read = st_lsm6dsx_spi_read,
-> +	.write = st_lsm6dsx_spi_write,
+> +static ssize_t hx711_scale_available_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	return sprintf(buf, "0.%09d 0.%09d 0.%09d\n",
+> +			hx711_gain_to_scale[0].scale,
+> +			hx711_gain_to_scale[2].scale,
+> +			hx711_gain_to_scale[1].scale);
+If you did use the fractional types as defined below, you could then
+use the core functions to give you the pretty printed output.
+
+Hmm.. Not all these scales are available for each of the channels.
+You should have separate scale_availables
+in_voltage0_scale_available, in_voltage1_scale_available
+(though no actual need for the one that only has one scale)
+
+It shouldn't be up to userspace to guess which is relevant to a given
+channel.
+> +}
+> +
+> +static IIO_DEVICE_ATTR(scale_available, S_IRUGO,
+> +	hx711_scale_available_show, NULL, 0);
+> +
+> +static struct attribute *hx711_attributes[] = {
+> +	&iio_dev_attr_scale_available.dev_attr.attr,
+> +	NULL,
 > +};
 > +
-> +static int st_lsm6dsx_spi_probe(struct spi_device *spi)
+> +static struct attribute_group hx711_attribute_group = {
+> +	.attrs = hx711_attributes,
+> +};
+> +
+> +static const struct iio_info hx711_iio_info = {
+> +	.driver_module		= THIS_MODULE,
+> +	.read_raw		= hx711_read_raw,
+> +	.write_raw		= hx711_write_raw,
+> +	.write_raw_get_fmt	= hx711_write_raw_get_fmt,
+> +	.attrs			= &hx711_attribute_group,
+> +};
+> +
+> +static const struct iio_chan_spec hx711_chan_spec[] = {
+> +	{
+> +		.type = IIO_VOLTAGE,
+> +		.channel = HX711_CHAN_A,
+I'd be tempted to just make the two channels directly 0 and 1 and loose
+this define throughout. Don't think it makes much difference to readability
+elsewhare, but here it had me momentarily confused...
+> +		.indexed = 1,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +	{
+> +		.type = IIO_VOLTAGE,
+> +		.channel = HX711_CHAN_B,
+> +		.indexed = 1,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static int hx711_probe(struct platform_device *pdev)
 > +{
-> +	struct st_lsm6dsx_hw *hw;
+> +	struct device *dev = &pdev->dev;
+> +	struct hx711_data *hx711_data;
+> +	struct iio_dev *iio;
+It's mostly become convention to call this indio_dev but it doesn't
+realy matter if you prefer iio.
+> +	int ret;
+> +	int i;
 > +
-> +	hw = devm_kzalloc(&spi->dev, sizeof(*hw), GFP_KERNEL);
-> +	if (!hw)
+> +	iio = devm_iio_device_alloc(dev, sizeof(struct hx711_data));
+> +	if (!iio) {
+> +		dev_err(dev, "failed to allocate IIO device\n");
 > +		return -ENOMEM;
+> +	}
 > +
-> +	spi_set_drvdata(spi, hw);
-You could have moved this into the st_lsm6dsx_probe function by
-using dev_set_drvdata(spi->dev).  Having done that...
-> +	hw->name = spi->modalias;
-> +	hw->dev = &spi->dev;
-> +	hw->irq = spi->irq;
-> +	hw->tf = &st_lsm6dsx_transfer_fn;
-I'm not convinced having the hw structure visible here adds anything useful.
-I'd have made the st_lsm6dsx_probe function just take the various elements
-as separate parameters.  There would only be 4 of them and that would
-bring all the setting of elements of hw into one place rather than scattered
-as they are now.
+> +	hx711_data = iio_priv(iio);
+> +	hx711_data->dev = dev;
+> +
+> +	mutex_init(&hx711_data->lock);
+> +
+> +	/* PD_SCK stands for power down and serial clock input of HX711
+> +	 * in the driver it is an output
+> +	 */
+> +	hx711_data->gpiod_pd_sck = devm_gpiod_get(dev, "sck", GPIOD_OUT_LOW);
+> +	if (IS_ERR(hx711_data->gpiod_pd_sck)) {
+> +		dev_err(dev, "failed to get sck-gpiod: err=%ld\n",
+> +					PTR_ERR(hx711_data->gpiod_pd_sck));
+> +		return PTR_ERR(hx711_data->gpiod_pd_sck);
+> +	}
+> +
+> +	/* DOUT stands for serial data output of HX711
+Please use
+/*
+ * DOUT...
 
-(minor point though!)
+Same elsewhere for multiline comments. 
+> +	 * for the driver it is an input
+> +	 */
+> +	hx711_data->gpiod_dout = devm_gpiod_get(dev, "dout", GPIOD_IN);
+> +	if (IS_ERR(hx711_data->gpiod_dout)) {
+> +		dev_err(dev, "failed to get dout-gpiod: err=%ld\n",
+> +					PTR_ERR(hx711_data->gpiod_dout));
+> +		return PTR_ERR(hx711_data->gpiod_dout);
+> +	}
 > +
-> +	return st_lsm6dsx_probe(hw);
+> +	hx711_data->reg_avdd = devm_regulator_get(dev, "avdd");
+> +	if (IS_ERR(hx711_data->reg_avdd))
+> +		return PTR_ERR(hx711_data->reg_avdd);
+> +
+> +	ret = regulator_enable(hx711_data->reg_avdd);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * with
+> +	 * full scale differential input range: AVDD / GAIN
+> +	 * full scale output data: 2^24
+> +	 * we can say:
+> +	 *     AVDD / GAIN = 2^24
+> +	 * therefore:
+> +	 *     1 LSB = AVDD / GAIN / 2^24
+> +	 * AVDD is in uV, but we need 10^-9 mV
+> +	 * approximately to fit into a 32 bit number:
+> +	 * 1 LSB = (AVDD * 100) / GAIN / 1678 [10^-9 mV]
+> +	 */
+> +	ret = regulator_get_voltage(hx711_data->reg_avdd);
+> +	if (ret < 0)
+> +		return ret;
+> +	/* we need 10^-9 mV */
+> +	ret *= 100;
+> +
+> +	for (i = 0; i < HX711_GAIN_MAX; i++)
+> +		hx711_gain_to_scale[i].scale =
+> +			ret / hx711_gain_to_scale[i].gain / 1678;
+I wonder if we can manipulate things to be able to use one of the
+fractional IIO types instead of doing this manually here. Will still
+have to be careful with limits of the storage though.
+Also, don't think we do anything clever with input of these right
+now so you may be stuck doing it this way.
+> +
+> +	hx711_data->gain_set = 128;
+> +	hx711_data->gain_chan_a = 128;
+> +
+> +	platform_set_drvdata(pdev, iio);
+> +
+> +	iio->name = "hx711";
+> +	iio->dev.parent = &pdev->dev;
+> +	iio->info = &hx711_iio_info;
+> +	iio->modes = INDIO_DIRECT_MODE;
+> +	iio->channels = hx711_chan_spec;
+> +	iio->num_channels = ARRAY_SIZE(hx711_chan_spec);
+> +
+> +	return devm_iio_device_register(dev, iio);
 > +}
 > +
-> +static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
-> +	{
-> +		.compatible = "st,lsm6ds3",
-> +		.data = ST_LSM6DS3_DEV_NAME,
-> +	},
-> +	{
-> +		.compatible = "st,lsm6dsm",
-> +		.data = ST_LSM6DSM_DEV_NAME,
-I would have preferred the use of an enum to using strings in here.
-You would have needed to provide the enum entries as data for the
-struct spi_device_id entries as well.
+> +static int hx711_remove(struct platform_device *pdev)
+> +{
+> +	struct hx711_data *hx711_data;
+> +	struct iio_dev *iio;
+> +
+> +	iio = platform_get_drvdata(pdev);
+> +	hx711_data = iio_priv(iio);
+> +
+> +	regulator_disable(hx711_data->reg_avdd);
+Ah. The usual fun of having using devm_ functions.
+They are safe 'until' you do something in the probe before one of them that
+needs to be unwound.
 
-This is just a bit 'unusual' and I like everything done in the predictable
-way ;)
-> +	},
+The result here is that we turn the power off before the userspace interface
+for the device is removed (as the unregister occurs only after this remove
+function is done).  Thus any reads in that period result in attempting to
+talk to hardware that is turned off.
+
+Hence, you need to not use the non managed version of iio_device_register
+and manually call iio_device_unregister here. (nearly everyone makes this
+mistake at least once!)
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_hx711_match[] = {
+> +	{ .compatible = "avia,hx711", },
 > +	{},
 > +};
-> +MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
 > +
-> +static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
-> +	{ ST_LSM6DS3_DEV_NAME },
-> +	{ ST_LSM6DSM_DEV_NAME },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
+> +MODULE_DEVICE_TABLE(of, of_hx711_match);
 > +
-> +static struct spi_driver st_lsm6dsx_driver = {
-> +	.driver = {
-> +		.name = "st_lsm6dsx_spi",
-> +		.of_match_table = of_match_ptr(st_lsm6dsx_spi_of_match),
+> +static struct platform_driver hx711_driver = {
+> +	.probe		= hx711_probe,
+> +	.remove		= hx711_remove,
+> +	.driver		= {
+> +		.name		= "hx711-gpio",
+> +		.of_match_table	= of_hx711_match,
 > +	},
-> +	.probe = st_lsm6dsx_spi_probe,
-> +	.id_table = st_lsm6dsx_spi_id_table,
 > +};
-> +module_spi_driver(st_lsm6dsx_driver);
 > +
-> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_AUTHOR("Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx spi driver");
-> +MODULE_LICENSE("GPL v2");
+> +module_platform_driver(hx711_driver);
+> +
+> +MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
+> +MODULE_DESCRIPTION("HX711 bitbanging driver - ADC for weight cells");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:hx711-gpio");
+> +
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
