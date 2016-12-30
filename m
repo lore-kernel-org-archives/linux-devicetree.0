@@ -1,213 +1,57 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v2] ARM64: dts: meson-gx: Add reserved memory zone and
- usable memory range
-Date: Fri, 30 Dec 2016 15:51:37 +0100
-Message-ID: <5c99bc3d-58ae-0434-4b68-bc0445f928ad@gmx.de>
-References: <1483105232-6242-1-git-send-email-narmstrong@baylibre.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] devicetree: power: add bindings for GPIO-driven power
+ switches
+Date: Fri, 30 Dec 2016 15:03:06 +0000
+Message-ID: <5bbedbb7-2391-c927-deab-75fd9fffe7f6@kernel.org>
+References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481494905-18037-2-git-send-email-bgolaszewski@baylibre.com>
+ <20161213192712.gbaw4t4awayybnta@rob-hp-laptop>
+ <CAMpxmJWw3wCE4ch8TVik+2b3BC8Lvxbi13HGd9GxruSRLu95Mg@mail.gmail.com>
+ <CAL_JsqLwS51MhOJQb-Lmo=osHiYKcAcCJaxKJFdSvZBpafz7Gw@mail.gmail.com>
+ <CAMuHMdWfAwPE2N-_0WhW5+EEK3bqWoo9HpQZTgLzRRutCg++qg@mail.gmail.com>
+ <505b7c02-e7dd-b0a5-8009-dca9101b0dd4@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483105232-6242-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <505b7c02-e7dd-b0a5-8009-dca9101b0dd4@metafoo.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio <linux-gpio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-pm <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/30/2016 02:40 PM, Neil Armstrong wrote:
-> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
-> this patch adds this reserved zone and redefines the usable memory range.
+On 23/12/16 11:40, Lars-Peter Clausen wrote:
+> On 12/23/2016 10:07 AM, Geert Uytterhoeven wrote:
+>> BTW, I'm not an IIO expert, but from my limited knowledge, it looks like "O"
+>> support in IIO is limited to DACs?
 > 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
-> Changes since v1 at [1] :
->  - Renamed reg into linux,usable-memory to ovveride u-boot memory
->  - only kept secmon memory zone
-> 
->  [1] http://lkml.kernel.org/r/20161212101801.28491-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> 
->  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi       |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi                 | 12 ++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts       |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi          |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts  |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts   |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts       |  2 +-
->  11 files changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-> index 7a078be..ca3c7fa 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-> @@ -56,7 +56,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  
->  	vddio_boot: regulator-vddio_boot {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index eada0b5..7f244b5 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -55,6 +55,18 @@
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* global autoconfigured region for contiguous allocations */
+> Depends on what you categorize as DACs. There are also
+> potentiometer/rheostat drivers. They are kind of like DACs but the unit you
+> control are ohm, rather than current or voltage.
+Though they are still in staging there are also things like function generators.
 
-This comment does not make sense here. It is what you would write over a
-compatible to "shared-dma-pool" region. Cf. hi6220-hikey.dts
+I've been mulling doing a driver for the st-powerstep01 parts as well which
+is a smart stepper motor controller.  At that level we'd need to start describing
+the connected stepper motors in DT :) Whole chunk of API to define to do that
+though - might well take longer than writing the driver.
 
-I suggest you use
-/* Amlogic Meson GXBB/GXL/GXM secure monitor reserved memory */
-instead.
+So in practice yeah - dac like things, but then on the input side they are almost
+all really ADCs with some funny analog stuff on the front end ;)
 
-Doesn't firmware/meson/meson_sm.c already reserve a communication area
-to secmon with quite a different address range?
-So where is this new region secmon set up? And where is it used?
+Arguably switches are 1 bit DACs ;)
 
-Best regards
+The distinction here is whether 'what is passing through' the device is knowable.
+So regulators and your power switch are well described.  A relay less so unless
+we know what load it is switching...
 
-Heinrich
++ it's IIO.  We are open to almost anything as long as we aren't stepping on
+any toes!
 
-> +		secmon: secmon {
-> +			reg = <0x0 0x10000000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <0x2>;
->  		#size-cells = <0x0>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-> index 4cbd626..c7f008a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-> @@ -62,7 +62,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x40000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
->  	};
->  
->  	leds {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 238fbea..546cbe4 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -61,7 +61,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  
->  	usb_otg_pwr: regulator-usb-pwrs {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> index 4a96e0f..1fdf6da 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> @@ -55,7 +55,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x40000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
->  	};
->  
->  	usb_pwr: regulator-usb-pwrs {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
-> index 62fb496..6ac5c89 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
-> @@ -50,6 +50,6 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
-> index 9a9663a..58be8b4 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
-> @@ -50,6 +50,6 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x40000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
-> index 2fe167b..010cb29 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
-> @@ -50,6 +50,6 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-> index cea4a3e..fb4a89b 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-> @@ -60,7 +60,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  
->  	vddio_card: gpio-regulator {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> index 9639f01..908894c 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> @@ -59,7 +59,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-> index 5a337d3..2077385 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-> @@ -62,7 +62,7 @@
->  
->  	memory@0 {
->  		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->  	};
->  
->  	vddio_boot: regulator-vddio-boot {
+Jonathan
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
