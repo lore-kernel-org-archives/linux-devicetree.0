@@ -1,32 +1,53 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: imx31: fix AVIC base address
-Date: Fri, 30 Dec 2016 10:29:08 +0800
-Message-ID: <20161230022907.GI6177@dragon>
-References: <20161117013051.29381-1-vz@mleia.com>
+Subject: Re: [PATCH 2/2] arm64: dts: updated sata node on ls1046a dts
+Date: Fri, 30 Dec 2016 10:36:07 +0800
+Message-ID: <20161230023606.GJ6177@dragon>
+References: <1479369560-9188-1-git-send-email-yuantian.tang@nxp.com>
+ <1479369560-9188-2-git-send-email-yuantian.tang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161117013051.29381-1-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1479369560-9188-2-git-send-email-yuantian.tang-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: yuantian.tang-3arQi8VN3Tc@public.gmane.org
+Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 03:30:51AM +0200, Vladimir Zapolskiy wrote:
-> From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+On Thu, Nov 17, 2016 at 03:59:20PM +0800, yuantian.tang-3arQi8VN3Tc@public.gmane.org wrote:
+> From: Tang Yuantian <Yuantian.Tang-3arQi8VN3Tc@public.gmane.org>
 > 
-> On i.MX31 AVIC interrupt controller base address is at 0x68000000.
-> 
-> The problem was shadowed by the AVIC driver, which takes the correct
-> base address from a SoC specific header file.
-> 
-> Fixes: d2a37b3d91f4 ("ARM i.MX31: Add devicetree support")
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> On ls1046a soc, sata ecc should be disabled. So added sata ecc
 
-s/dt/dts in the subject, and applied patch, thanks.
+disabled or enabled?
 
 Shawn
+
+> register address so that driver can get this information.
+> 
+> Signed-off-by: Tang Yuantian <yuantian.tang-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 38806ca..88aaaf1 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -507,7 +507,9 @@
+>  
+>  		sata: sata@3200000 {
+>  			compatible = "fsl,ls1046a-ahci";
+> -			reg = <0x0 0x3200000 0x0 0x10000>;
+> +			reg = <0x0 0x3200000 0x0 0x10000>,
+> +			    <0x0 0x20140520 0x0 0x4>;
+> +			reg-names = "ahci", "sata-ecc";
+>  			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clockgen 4 1>;
+>  		};
+> -- 
+> 2.1.0.27.g96db324
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
