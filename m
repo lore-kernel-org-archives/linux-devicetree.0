@@ -1,63 +1,59 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 3/4] hwmon: adc128d818: Trivial code style fixup
-Date: Thu, 29 Dec 2016 16:55:52 -0800
-Message-ID: <a49dc78b-cc66-43d8-57ff-57bdbc0f6dda@roeck-us.net>
-References: <20161223221205.8825-1-mail@alexanderkoch.net>
- <20161223221205.8825-4-mail@alexanderkoch.net>
- <650d2371-57da-2494-7628-5a8bc5b756bf@roeck-us.net>
- <3b34c8aa-9d9a-cf88-0d84-8e0d47f9bf44@alexanderkoch.net>
- <20161229194646.GA1575@roeck-us.net>
- <3274026c-9575-b85e-54da-dd1cd3c3ce2f@alexanderkoch.net>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] arm64: dts: exynos5433: Add bus dt node using
+ VDD_INT for Exynos5433
+Date: Fri, 30 Dec 2016 09:59:17 +0900
+Message-ID: <5865B165.3010203@samsung.com>
+References: <1481173091-9728-1-git-send-email-cw00.choi@samsung.com>
+ <1481173091-9728-5-git-send-email-cw00.choi@samsung.com>
+ <CGME20161208175257epcas2p333f794a00f433dd8312a5faa088a5f34@epcas2p3.samsung.com>
+ <20161208175243.GA9451@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3274026c-9575-b85e-54da-dd1cd3c3ce2f-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
+In-reply-to: <20161208175243.GA9451@kozik-lap>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/29/2016 12:30 PM, Alexander Koch wrote:
-> On 12/29/2016 08:46 PM, Guenter Roeck wrote:
->> On Thu, Dec 29, 2016 at 07:22:12PM +0100, Alexander Koch wrote:
->>> On 12/26/2016 11:47 AM, Guenter Roeck wrote:
->>>> On 12/23/2016 02:12 PM, Alexander Koch wrote:
->>>>> Replace sysfs symbolic file permissions, e.g. 'S_IRUGO', by octal
->>>>> permissions. This fixes checkpatch.pl warnings.
->>>>>
->>>>> Signed-off-by: Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
->>>> Please do not bother with those warnings and ignore checkpatch.
->>>> We are in the process of doing an automated conversion.
->>> Okay, so I shall create v3 of the patchset, without these changes. I've
->>> found a typo in the 4th patch so I thought about going v3 anyways.
->>>
->>> I've tested operation modes 1-3 on real hardware today and found no
->>> issues so far, so I hope v3 will have good chances of getting accepted.
->>>
->> Pretty much. One request, though: If there is no configuration data
->> from DT, I would like the driver to read the mode from the chip - if for
->> nothing else, this will let me test all modes, but it also supports the
->> case where the chip is configured by BIOS/ROMMON.
->
-> Aye, will add this as new fourth patch then. I assume the chip reset in
-> adc128_init_client() clears the chip mode as well, so I will read it in
-> the operation mode block in adc128_probe().
->
-> Just out of interest: how does this help you test the modes? Do you
-> configure the chip externally and test it on a platform without
-> devicetree support?
->
+Hi Krzysztof,
 
-I use the i2c test driver in the kernel and a module test script, on x86.
-See https://github.com/groeck/module-tests. That only works if the driver
-does not overwrite the register values on probe.
+On 2016년 12월 09일 02:52, Krzysztof Kozlowski wrote:
+> On Thu, Dec 08, 2016 at 01:58:10PM +0900, Chanwoo Choi wrote:
+>> This patch adds the bus nodes using VDD_INT for Exynos5433 SoC.
+>> Exynos5433 has the following AMBA AXI buses to translate data
+>> between DRAM and sub-blocks.
+>>
+>> Following list specify the detailed correlation between sub-block and clock:
+>> - CLK_ACLK_G2D_{400|266}  : Bus clock for G2D (2D graphic engine)
+>> - CLK_ACLK_MSCL_400       : Bus clock for MSCL (Memory to memory Scaler)
+>> - CLK_ACLK_GSCL_333       : Bus clock for GSCL (General Scaler)
+>> - CLK_SCLK_JPEG_MSCL      : Bus clock for JPEG
+>> - CLK_ACLK_MFC_400        : Bus clock for MFC (Multi Format Codec)
+>> - CLK_ACLK_HEVC_400       : Bus clock for HEVC (High Efficient Video Codec)
+>> - CLK_ACLK_BUS0_400       : NoC(Network On Chip)'s bus clock for PERIC/PERIS/FSYS/MSCL
+>> - CLK_ACLK_BUS1_400       : NoC's bus clock for MFC/HEVC/G3D
+>> - CLK_ACLK_BUS2_400       : NoC's bus clock for GSCL/DISP/G2D/CAM0/CAM1/ISP
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos5433-bus.dtsi | 197 +++++++++++++++++++++++++
+>>  arch/arm64/boot/dts/exynos/exynos5433.dtsi     |   1 +
+>>  2 files changed, 198 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-bus.dtsi
+> 
+> For the reference:
+> Reviewed-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> I'll queue it for v4.11, after this merge window.
 
-Not really sure if resetting the chip during probe is such a good idea
-in the first place. It is quite unusual.
+Could you please pick this patch3/4/5?
+These patches were already reviewed by you.
 
-Guenter
-
+-- 
+Regards,
+Chanwoo Choi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
