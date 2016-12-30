@@ -1,70 +1,177 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] bus: imx-weim: Place 'fsl,weim-cs-timing' under the required properties section
-Date: Fri, 30 Dec 2016 08:46:12 -0200
-Message-ID: <1483094772-14904-1-git-send-email-festevam@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] iio: bmi160: Protect data transmission with mutex
+Date: Fri, 30 Dec 2016 10:47:31 +0000
+Message-ID: <38885189-27b9-4420-1c28-dfd33eb5ac1f@kernel.org>
+References: <20161208142259.26230-1-m.niestroj@grinn-global.com>
+ <20161208142259.26230-5-m.niestroj@grinn-global.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161208142259.26230-5-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+On 08/12/16 14:22, Marcin Niestroj wrote:
+> There are currently two possible cases for data transmission with the
+> sensor: read/write by iio sysfs and read in trigger interrupt
+> handler. Hence we need to protect data transmission using regmap_*
+> functions with mutex.
 
-Property 'fsl,weim-cs-timing' is a required one, so place it under
-"Required properties" section.
+Except that the regmap functions themselves have build in protection against
+any such clashes.  Hence I don't 'think' this is necessary as we don't
+have any open coded read / update loops in here that I can see.
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
- Documentation/devicetree/bindings/bus/imx-weim.txt | 27 ++++++++++------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-index 6630d84..a9a125b 100644
---- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-+++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-@@ -23,6 +23,18 @@ Required properties:
- 			integer values for each chip-select line in use:
- 
- 			   <cs-number> 0 <physical address of mapping> <size>
-+ - fsl,weim-cs-timing:	The timing array, contains timing values for the
-+			child node. We can get the CS index from the child
-+			node's "reg" property. The number of registers depends
-+			on the selected chip.
-+			For i.MX1, i.MX21 ("fsl,imx1-weim") there are two
-+			registers: CSxU, CSxL.
-+			For i.MX25, i.MX27, i.MX31 and i.MX35 ("fsl,imx27-weim")
-+			there are three registers: CSCRxU, CSCRxL, CSCRxA.
-+			For i.MX50, i.MX53 ("fsl,imx50-weim"),
-+			i.MX51 ("fsl,imx51-weim") and i.MX6Q ("fsl,imx6q-weim")
-+			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
-+			CSxRCR2, CSxWCR1, CSxWCR2.
- 
- Optional properties:
- 
-@@ -44,21 +56,6 @@ Optional properties:
- 			what bootloader sets up in IOMUXC_GPR1[11:0] will be
- 			used.
- 
--Timing property for child nodes. It is mandatory, not optional.
--
-- - fsl,weim-cs-timing:	The timing array, contains timing values for the
--			child node. We can get the CS index from the child
--			node's "reg" property. The number of registers depends
--			on the selected chip.
--			For i.MX1, i.MX21 ("fsl,imx1-weim") there are two
--			registers: CSxU, CSxL.
--			For i.MX25, i.MX27, i.MX31 and i.MX35 ("fsl,imx27-weim")
--			there are three registers: CSCRxU, CSCRxL, CSCRxA.
--			For i.MX50, i.MX53 ("fsl,imx50-weim"),
--			i.MX51 ("fsl,imx51-weim") and i.MX6Q ("fsl,imx6q-weim")
--			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
--			CSxRCR2, CSxWCR1, CSxWCR2.
--
- Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
- 
- 	weim: weim@021b8000 {
--- 
-2.7.4
+Jonathan
+> 
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+> ---
+> Patch introduced in v2
+> 
+>  drivers/iio/imu/bmi160/bmi160_core.c | 39 +++++++++++++++++++++++++++++-------
+>  1 file changed, 32 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index e0251b8..095533c 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -2,6 +2,7 @@
+>   * BMI160 - Bosch IMU (accel, gyro plus external magnetometer)
+>   *
+>   * Copyright (c) 2016, Intel Corporation.
+> + * Copyright (c) 2016, Grinn
+>   *
+>   * This file is subject to the terms and conditions of version 2 of
+>   * the GNU General Public License.  See the file COPYING in the main
+> @@ -112,6 +113,7 @@ enum bmi160_sensor_type {
+>  
+>  struct bmi160_data {
+>  	struct regmap *regmap;
+> +	struct mutex mutex;
+>  };
+>  
+>  const struct regmap_config bmi160_regmap_config = {
+> @@ -285,7 +287,9 @@ int bmi160_set_mode(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  	else
+>  		cmd = bmi160_regs[t].pmu_cmd_suspend;
+>  
+> +	mutex_lock(&data->mutex);
+>  	ret = regmap_write(data->regmap, BMI160_REG_CMD, cmd);
+> +	mutex_unlock(&data->mutex);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -298,6 +302,7 @@ static
+>  int bmi160_set_scale(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  		     int uscale)
+>  {
+> +	int ret;
+>  	int i;
+>  
+>  	for (i = 0; i < bmi160_scale_table[t].num; i++)
+> @@ -307,8 +312,12 @@ int bmi160_set_scale(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  	if (i == bmi160_scale_table[t].num)
+>  		return -EINVAL;
+>  
+> -	return regmap_write(data->regmap, bmi160_regs[t].range,
+> -			    bmi160_scale_table[t].tbl[i].bits);
+> +	mutex_lock(&data->mutex);
+> +	ret = regmap_write(data->regmap, bmi160_regs[t].range,
+> +			   bmi160_scale_table[t].tbl[i].bits);
+> +	mutex_unlock(&data->mutex);
+> +
+> +	return ret;
+>  }
+>  
+>  static
+> @@ -317,7 +326,9 @@ int bmi160_get_scale(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  {
+>  	int i, ret, val;
+>  
+> +	mutex_lock(&data->mutex);
+>  	ret = regmap_read(data->regmap, bmi160_regs[t].range, &val);
+> +	mutex_unlock(&data->mutex);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -340,7 +351,9 @@ static int bmi160_get_data(struct bmi160_data *data, int chan_type,
+>  
+>  	reg = bmi160_regs[t].data + (axis - IIO_MOD_X) * sizeof(__le16);
+>  
+> +	mutex_lock(&data->mutex);
+>  	ret = regmap_bulk_read(data->regmap, reg, &sample, sizeof(__le16));
+> +	mutex_unlock(&data->mutex);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -353,6 +366,7 @@ static
+>  int bmi160_set_odr(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  		   int odr, int uodr)
+>  {
+> +	int ret;
+>  	int i;
+>  
+>  	for (i = 0; i < bmi160_odr_table[t].num; i++)
+> @@ -363,10 +377,14 @@ int bmi160_set_odr(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  	if (i >= bmi160_odr_table[t].num)
+>  		return -EINVAL;
+>  
+> -	return regmap_update_bits(data->regmap,
+> -				  bmi160_regs[t].config,
+> -				  bmi160_regs[t].config_odr_mask,
+> -				  bmi160_odr_table[t].tbl[i].bits);
+> +	mutex_lock(&data->mutex);
+> +	ret = regmap_update_bits(data->regmap,
+> +				 bmi160_regs[t].config,
+> +				 bmi160_regs[t].config_odr_mask,
+> +				 bmi160_odr_table[t].tbl[i].bits);
+> +	mutex_unlock(&data->mutex);
+> +
+> +	return ret;
+>  }
+>  
+>  static int bmi160_get_odr(struct bmi160_data *data, enum bmi160_sensor_type t,
+> @@ -374,7 +392,9 @@ static int bmi160_get_odr(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  {
+>  	int i, val, ret;
+>  
+> +	mutex_lock(&data->mutex);
+>  	ret = regmap_read(data->regmap, bmi160_regs[t].config, &val);
+> +	mutex_unlock(&data->mutex);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -402,14 +422,18 @@ static irqreturn_t bmi160_trigger_handler(int irq, void *p)
+>  	int i, ret, j = 0, base = BMI160_REG_DATA_MAGN_XOUT_L;
+>  	__le16 sample;
+>  
+> +	mutex_lock(&data->mutex);
+>  	for_each_set_bit(i, indio_dev->active_scan_mask,
+>  			 indio_dev->masklength) {
+>  		ret = regmap_bulk_read(data->regmap, base + i * sizeof(__le16),
+>  				       &sample, sizeof(__le16));
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			mutex_unlock(&data->mutex);
+>  			goto done;
+> +		}
+>  		buf[j++] = sample;
+>  	}
+> +	mutex_unlock(&data->mutex);
+>  
+>  	iio_push_to_buffers_with_timestamp(indio_dev, buf,
+>  					   iio_get_time_ns(indio_dev));
+> @@ -575,6 +599,7 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  	data = iio_priv(indio_dev);
+>  	dev_set_drvdata(dev, indio_dev);
+>  	data->regmap = regmap;
+> +	mutex_init(&data->mutex);
+>  
+>  	ret = bmi160_chip_init(data, use_spi);
+>  	if (ret < 0)
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
