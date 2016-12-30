@@ -1,35 +1,37 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: imx: Add speed grading check for imx6ul
-Date: Fri, 30 Dec 2016 19:57:23 +0800
-Message-ID: <20161230115717.GR6177@dragon>
-References: <1480475098-2037-1-git-send-email-ping.bai@nxp.com>
- <1480475098-2037-2-git-send-email-ping.bai@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 0/2] Use macros to describe gpios on rockchip platform
+Date: Fri, 30 Dec 2016 13:31:27 +0100
+Message-ID: <1558490.gPc1QP0JTO@phil>
+References: <1477140706-6886-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480475098-2037-2-git-send-email-ping.bai-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477140706-6886-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2016 at 11:04:58AM +0800, Bai Ping wrote:
-> On i.MX6UL, it has two type of part, the difference
-> is the max ARM frequency that can run at(528MHz/700MHz).
-> The part can be identified by part marking for speed grading
-> fuse. This patch add speed grading check to disable the unsupported
-> OPP dynamically.
+Am Samstag, 22. Oktober 2016, 20:51:46 CET schrieb Andy Yan:
+> As patch 150696e2e3a4("Add GPIO pin index definition for rockchip pinctrl")
+> has been applied, now we can use these macros to describe the corresponding
+> gpio ranther than hard code numbers, this will make the dts easier to read
+> and write.
 > 
-> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+> Some ideas from Krzysztof's patch on EXYNOS[0].
+> 
+> [0]https://lkml.org/lkml/2016/9/4/71
+> 
+> 
+> 
+> Andy Yan (2):
+>   ARM: dts: rockchip: use pin constants to describe gpios
+>   ARM64: dts: rockchip: use pin constants to describe gpios
 
-We chose to handle such speed grading thing in IMX platform code with
-the assumption that this is a special case for i.MX6Q only.  No, I'm not
-going to take such code for any other i.MX6 SoCs.  Please patch cpufreq
-driver to handle the speed grading check.
+applied to dts branches for 4.11
+I've also adapted the gpio interrupts accordingly inside the patches.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thanks
+Heiko
