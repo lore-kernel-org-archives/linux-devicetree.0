@@ -1,67 +1,57 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx6ul: Add OCOTP node
-Date: Fri, 30 Dec 2016 21:01:06 +0800
-Message-ID: <20161230130105.GS6177@dragon>
-References: <1480689949-17957-1-git-send-email-d.schultz@phytec.de>
- <1480689949-17957-2-git-send-email-d.schultz@phytec.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] iio: misc: add support for GPIO power switches
+Date: Fri, 30 Dec 2016 14:05:48 +0100
+Message-ID: <CACRpkdbjbtFwwQCdR3krWG0P4UMhWySTTkzqZFBZ6EGXPS=k8g@mail.gmail.com>
+References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481494905-18037-3-git-send-email-bgolaszewski@baylibre.com>
+ <CACRpkdZ7JrNfCKPuuCmkZd_7+NV0QLUN8ZMukFA0TcqS9SYXcQ@mail.gmail.com> <20161229162919.j2ej2cyeuoqnxykf@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1480689949-17957-2-git-send-email-d.schultz@phytec.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Schultz <d.schultz@phytec.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Bai Ping <ping.bai@nxp.com>, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, kernel@pengutronix.de, fabio.estevam@nxp.com, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161229162919.j2ej2cyeuoqnxykf@earth>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Lia
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 03:45:48PM +0100, Daniel Schultz wrote:
-> This device node adds OCOTP for the i.MX6UL SoC.
-> 
-> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+n Thu, Dec 29, 2016 at 5:29 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> On Wed, Dec 28, 2016 at 01:50:17PM +0100, Linus Walleij wrote:
+>> On Sun, Dec 11, 2016 at 11:21 PM, Bartosz Golaszewski
+>> <bgolaszewski@baylibre.com> wrote:
+>>
+>> > Some power-measuring ADCs work together with power load switches which
+>> > allow to power-cycle measured devices.
+>> >
+>> > An example use case would be measuring the power consumption of a
+>> > development board during boot using a power monitor such as TI INA226
+>> > and power-cycling the board remotely using a TPS229* power switch.
+>> >
+>> > Add an iio driver for simple GPIO power switches and expose a sysfs
+>> > attribute allowing to toggle their state.
+>> >
+>> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> I don't get this, isn't this doing the same as
+>> drivers/power/reset/gpio-poweroff.c
+>> ?
+>>
+>> With the only difference that the latter uses the standard syscall
+>> from pm_power_off to reboot the system instead of some random
+>> sysfs file.
+>
+> As far as I understand it, the TPS229 is used by Barzosz to poweroff
+> a remote system. The gpio-poweroff driver is used to poweroff the
+> local system.
 
-Bai Ping (Cc'ed here) from NXP is sending similar patches [1].  DTS
-change looks good to me, but I will not apply it until the driver and
-bindings get accepted.
+Thanks yeah I understood this from the context of later patches.
 
-Shawn
+Well if such a property is used it should be the property of the remote
+system per se, and the remote system should then also be desribed in
+DT, not half-described by dangling references at random nodes.
 
-[1] https://www.spinics.net/lists/arm-kernel/msg540900.html
+So this needs to be re-architected to either describe the remote system
+in DT and handle it in the kernel, or handle it all from userspace if it
+is a one-off non-product thing.
 
-> ---
->  arch/arm/boot/dts/imx6ul.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index c5c05fd..ee53795 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -849,6 +849,12 @@
->  				reg = <0x021b0000 0x4000>;
->  			};
->  
-> +			ocotp: ocotp@021bc000 {
-> +				compatible = "fsl,imx6ul-ocotp";
-> +				reg = <0x021bc000 0x4000>;
-> +				clocks = <&clks IMX6UL_CLK_OCOTP>;
-> +			};
-> +
->  			lcdif: lcdif@021c8000 {
->  				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
->  				reg = <0x021c8000 0x4000>;
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Yours,
+Linus Walleij
