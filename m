@@ -1,246 +1,257 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 2/8] MFD: add STM32 Timers driver
-Date: Fri, 30 Dec 2016 20:38:15 +0000
-Message-ID: <47085504-26d3-ed34-07cc-373401e0d98a@kernel.org>
-References: <1481292919-26587-1-git-send-email-benjamin.gaignard@st.com>
- <1481292919-26587-3-git-send-email-benjamin.gaignard@st.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] iio: adc: Add Renesas GyroADC driver
+Date: Fri, 30 Dec 2016 21:52:37 +0100
+Message-ID: <442f8085-110c-659d-d097-add788b8f291@gmail.com>
+References: <20161230191800.2532-1-marek.vasut@gmail.com>
+ <alpine.DEB.2.02.1612302027480.3977@pmeerw.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1481292919-26587-3-git-send-email-benjamin.gaignard@st.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1612302027480.3977-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/16 14:15, Benjamin Gaignard wrote:
-> This hardware block could at used at same time for PWM generation
-> and IIO timers.
-> PWM and IIO timer configuration are mixed in the same registers
-> so we need a multi fonction driver to be able to share those registers.
-fonction -> function
+On 12/30/2016 08:50 PM, Peter Meerwald-Stadler wrote:
 > 
-> version 6:
-> - rename files to stm32-timers
-> - rename functions to stm32_timers_xxx
+>> Add IIO driver for the Renesas RCar GyroADC block. This block is a
+>> simple 4/8-channel ADC which samples 12/15/24 bits of data every
+>> cycle from all channels.
 > 
-> version 5:
-> - fix Lee comments about detect function
-> - add missing dependency on REGMAP_MMIO
-> 
-> version 4:
-> - add a function to detect Auto Reload Register (ARR) size
-> - rename the structure shared with other drivers
-> 
-> version 2:
-> - rename driver "stm32-gptimer" to be align with SoC documentation
-> - only keep one compatible
-> - use of_platform_populate() instead of devm_mfd_add_devices()
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/mfd/Kconfig              | 11 ++++++
->  drivers/mfd/Makefile             |  2 +
->  drivers/mfd/stm32-timers.c       | 80 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/stm32-timers.h | 71 +++++++++++++++++++++++++++++++++++
->  4 files changed, 164 insertions(+)
->  create mode 100644 drivers/mfd/stm32-timers.c
->  create mode 100644 include/linux/mfd/stm32-timers.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index c6df644..4ec1906 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1607,6 +1607,17 @@ config MFD_STW481X
->  	  in various ST Microelectronics and ST-Ericsson embedded
->  	  Nomadik series.
+> comments below
 >  
-> +config MFD_STM32_TIMERS
-> +	tristate "Support for STM32 Timers"
-> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-> +	select MFD_CORE
-> +	select REGMAP
-> +	select REGMAP_MMIO
-> +	help
-> +	  Select this option to enable STM32 timers driver used
-> +	  for PWM and IIO Timer. This driver allow to share the
-> +	  registers between the others drivers.
-> +
->  menu "Multimedia Capabilities Port drivers"
->  	depends on ARCH_SA1100
->  
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9834e66..11a52f8 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -211,3 +211,5 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> +
-> +obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
-> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
-> new file mode 100644
-> index 0000000..68d115e
-> --- /dev/null
-> +++ b/drivers/mfd/stm32-timers.c
-> @@ -0,0 +1,80 @@
-> +/*
-> + * Copyright (C) STMicroelectronics 2016
-> + *
-> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com>
-> + *
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#include <linux/mfd/stm32-timers.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/reset.h>
-> +
-> +static const struct regmap_config stm32_timers_regmap_cfg = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = sizeof(u32),
-> +	.max_register = 0x400,
-> +};
-> +
-> +static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
-> +{
-> +	/*
-> +	 * Only the available bits will be written so when readback
-> +	 * we get the maximum value of auto reload register
-> +	 */
-> +	regmap_write(ddata->regmap, TIM_ARR, ~0L);
-> +	regmap_read(ddata->regmap, TIM_ARR, &ddata->max_arr);
-> +	regmap_write(ddata->regmap, TIM_ARR, 0x0);
-> +}
-> +
-> +static int stm32_timers_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct stm32_timers *ddata;
-> +	struct resource *res;
-> +	void __iomem *mmio;
-> +
-> +	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-> +	if (!ddata)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mmio = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(mmio))
-> +		return PTR_ERR(mmio);
-> +
-> +	ddata->regmap = devm_regmap_init_mmio_clk(dev, "clk_int", mmio,
-> +						  &stm32_timers_regmap_cfg);
-> +	if (IS_ERR(ddata->regmap))
-> +		return PTR_ERR(ddata->regmap);
-> +
-> +	ddata->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(ddata->clk))
-> +		return PTR_ERR(ddata->clk);
-> +
-> +	stm32_timers_get_arr_size(ddata);
-> +
-> +	platform_set_drvdata(pdev, ddata);
-> +
-> +	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> +}
-> +
-> +static const struct of_device_id stm32_timers_of_match[] = {
-> +	{ .compatible = "st,stm32-timers", },
-> +	{ /* end node */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_timers_of_match);
-> +
-> +static struct platform_driver stm32_timers_driver = {
-> +	.probe = stm32_timers_probe,
-> +	.driver	= {
-> +		.name = "stm32-timers",
-> +		.of_match_table = stm32_timers_of_match,
-> +	},
-> +};
-> +module_platform_driver(stm32_timers_driver);
-> +
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 Timers");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
-> new file mode 100644
-> index 0000000..d030004
-> --- /dev/null
-> +++ b/include/linux/mfd/stm32-timers.h
-> @@ -0,0 +1,71 @@
-> +/*
-> + * Copyright (C) STMicroelectronics 2016
-> + *
-> + * Author: Benjamin Gaignard <benjamin.gaignard@st.com>
-> + *
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#ifndef _LINUX_STM32_GPTIMER_H_
-> +#define _LINUX_STM32_GPTIMER_H_
-> +
-> +#include <linux/clk.h>
-> +#include <linux/regmap.h>
-> +
-> +#define TIM_CR1		0x00	/* Control Register 1      */
-> +#define TIM_CR2		0x04	/* Control Register 2      */
-> +#define TIM_SMCR	0x08	/* Slave mode control reg  */
-> +#define TIM_DIER	0x0C	/* DMA/interrupt register  */
-> +#define TIM_SR		0x10	/* Status register	   */
-> +#define TIM_EGR		0x14	/* Event Generation Reg    */
-> +#define TIM_CCMR1	0x18	/* Capt/Comp 1 Mode Reg    */
-> +#define TIM_CCMR2	0x1C	/* Capt/Comp 2 Mode Reg    */
-> +#define TIM_CCER	0x20	/* Capt/Comp Enable Reg    */
-> +#define TIM_PSC		0x28	/* Prescaler               */
-> +#define TIM_ARR		0x2c	/* Auto-Reload Register    */
-> +#define TIM_CCR1	0x34	/* Capt/Comp Register 1    */
-> +#define TIM_CCR2	0x38	/* Capt/Comp Register 2    */
-> +#define TIM_CCR3	0x3C	/* Capt/Comp Register 3    */
-> +#define TIM_CCR4	0x40	/* Capt/Comp Register 4    */
-> +#define TIM_BDTR	0x44	/* Break and Dead-Time Reg */
-> +
-> +#define TIM_CR1_CEN	BIT(0)	/* Counter Enable	   */
-> +#define TIM_CR1_ARPE	BIT(7)	/* Auto-reload Preload Ena */
-> +#define TIM_CR2_MMS	(BIT(4) | BIT(5) | BIT(6)) /* Master mode selection */
-> +#define TIM_SMCR_SMS	(BIT(0) | BIT(1) | BIT(2)) /* Slave mode selection */
-> +#define TIM_SMCR_TS	(BIT(4) | BIT(5) | BIT(6)) /* Trigger selection */
-> +#define TIM_DIER_UIE	BIT(0)	/* Update interrupt	   */
-> +#define TIM_SR_UIF	BIT(0)	/* Update interrupt flag   */
-> +#define TIM_EGR_UG	BIT(0)	/* Update Generation       */
-> +#define TIM_CCMR_PE	BIT(3)	/* Channel Preload Enable  */
-> +#define TIM_CCMR_M1	(BIT(6) | BIT(5))  /* Channel PWM Mode 1 */
-> +#define TIM_CCER_CC1E	BIT(0)	/* Capt/Comp 1  out Ena    */
-> +#define TIM_CCER_CC1P	BIT(1)	/* Capt/Comp 1  Polarity   */
-> +#define TIM_CCER_CC1NE	BIT(2)	/* Capt/Comp 1N out Ena    */
-> +#define TIM_CCER_CC1NP	BIT(3)	/* Capt/Comp 1N Polarity   */
-> +#define TIM_CCER_CC2E	BIT(4)	/* Capt/Comp 2  out Ena    */
-> +#define TIM_CCER_CC3E	BIT(8)	/* Capt/Comp 3  out Ena    */
-> +#define TIM_CCER_CC4E	BIT(12)	/* Capt/Comp 4  out Ena    */
-> +#define TIM_CCER_CCXE	(BIT(0) | BIT(4) | BIT(8) | BIT(12))
-> +#define TIM_BDTR_BKE	BIT(12) /* Break input enable	   */
-> +#define TIM_BDTR_BKP	BIT(13) /* Break input polarity	   */
-> +#define TIM_BDTR_AOE	BIT(14)	/* Automatic Output Enable */
-> +#define TIM_BDTR_MOE	BIT(15)	/* Main Output Enable      */
-> +#define TIM_BDTR_BKF	(BIT(16) | BIT(17) | BIT(18) | BIT(19))
-> +#define TIM_BDTR_BK2F	(BIT(20) | BIT(21) | BIT(22) | BIT(23))
-> +#define TIM_BDTR_BK2E	BIT(24) /* Break 2 input enable	   */
-> +#define TIM_BDTR_BK2P	BIT(25) /* Break 2 input polarity  */
-> +
-> +#define MAX_TIM_PSC		0xFFFF
-> +#define TIM_CR2_MMS_SHIFT	4
-> +#define TIM_SMCR_TS_SHIFT	4
-> +#define TIM_BDTR_BKF_MASK	0xF
-> +#define TIM_BDTR_BKF_SHIFT	16
-> +#define TIM_BDTR_BK2F_SHIFT	20
-> +
-> +struct stm32_timers {
-> +	struct clk *clk;
-> +	struct regmap *regmap;
-> +	u32 max_arr;
-> +};
-> +#endif
+>> Signed-off-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+>> ---
+>>  .../bindings/iio/adc/renesas,gyroadc.txt           |  38 +++
+>>  MAINTAINERS                                        |   6 +
+>>  drivers/iio/adc/Kconfig                            |  10 +
+>>  drivers/iio/adc/Makefile                           |   1 +
+>>  drivers/iio/adc/rcar_gyro_adc.c                    | 379 +++++++++++++++++++++
+>>  5 files changed, 434 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+>>  create mode 100644 drivers/iio/adc/rcar_gyro_adc.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+>> new file mode 100644
+>> index 0000000..3fd5f57
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+>> @@ -0,0 +1,38 @@
+>> +* Renesas RCar GyroADC device driver
+>> +
+>> +Required properties:
+>> +- compatible:	Should be "renesas,rcar-gyroadc" for regular GyroADC or
+>> +		"renesas,rcar-gyroadc-r8a7792" for GyroADC without interrupt
+>> +		block found in R8A7792.
+>> +- reg:		Address and length of the register set for the device
+>> +- clocks:	References to all the clocks specified in the clock-names
+>> +		property as specified in
+>> +		Documentation/devicetree/bindings/clock/clock-bindings.txt.
+>> +- clock-names:	Shall contain "fck" and "if". The "fck" are the GyroADC block
 > 
+> "fck" is...
+> 
+>> +		clock, the "if" are the interface clock.
+> 
+> "if" is ...
+> 
+>> +		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+> 
+> this is just an example and not appropriate here?
+
+Oh, copy-paste error, thanks :)
+
+>> +- power-domains: Must contain a reference to the PM domain, if available.
+>> +- renesas,gyroadc-mode:	GyroADC mode of operation, must be either of:
+>> +			1 - MB88101A mode, 12bit sampling, 4 channels
+>> +			2 - ADCS7476 mode, 15bit sampling, 8 channels
+>> +			3 - MAX1162 mode,  16bit sampling, 8 channels
+>> +- renesas,gyroadc-vref:	Array of reference voltage values for each input to
+>> +			the GyroADC, in uV. Array must have 4 elemenets for
+> 
+> elements
+
+All spelling fixed.
+
+[...]
+
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 99c0514..4a4cac7 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -408,6 +408,16 @@ config QCOM_SPMI_VADC
+>>  	  To compile this driver as a module, choose M here: the module will
+>>  	  be called qcom-spmi-vadc.
+>>  
+>> +config RCAR_GYRO_ADC
+>> +	tristate "Renesas RCAR GyroADC driver"
+>> +	depends on ARCH_RCAR_GEN2 || (ARM && COMPILE_TEST)
+>> +	help
+>> +	  Say yes here to build support for the GyroADC found in Renesas
+>> +	  RCar Gen2 SoCs.
+>> +
+>> +	  To compile this driver as a module, choose M here: the
+>> +	  module will be called rcar-gyroadc.
+> 
+> called rcar_gyro_adc?
+
+Why so ? The driver is really named rcar-gyroadc , I guess I should
+rename either the file or the driver to keep things consistent. So
+probably the file .
+
+>> +
+>>  config ROCKCHIP_SARADC
+>>  	tristate "Rockchip SARADC driver"
+>>  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+
+[...]
+
+>> +
+>> +#define RCAR_GYROADC_CLOCK_LENGTH		0x08
+>> +#define RCAR_GYROADC_1_25MS_LENGTH		0x0c
+>> +
+>> +#define RCAR_GYROADC_REALTIME_DATA(ch)		(0x10 + ((ch) * 4))
+>> +#define RCAR_GYROADC_100MS_ADDED_DATA(ch)	(0x30 + ((ch) * 4))
+>> +#define RCAR_GYROADC_10MS_AVG_DATA(ch)		(0x50 + ((ch) * 4))
+>> +
+>> +#define RCAR_GYROADC_FIFO_STATUS		0x70
+>> +#define RCAR_GYROADC_FIFO_STATUS_EMPTY(ch)	BIT(0 + (4 * (ch)))
+> 
+> FIFO_STATUS_... is not used (yet)
+
+Is it a problem to have a complete register layout here ?
+
+> 4*ch looks suspicious for ch==8??
+
+Well yes, channel is in range 0..7 :)
+
+>> +#define RCAR_GYROADC_FIFO_STATUS_FULL(ch)	BIT(1 + (4 * (ch)))
+>> +#define RCAR_GYROADC_FIFO_STATUS_ERROR(ch)	BIT(2 + (4 * (ch)))
+>> +
+>> +#define RCAR_GYROADC_INTR			0x74
+>> +#define RCAR_GYROADC_INTR_INT			BIT(0)
+>> +
+>> +#define RCAR_GYROADC_INTENR			0x78
+>> +#define RCAR_GYROADC_INTENR_INTEN		BIT(0)
+>> +
+>> +#define RCAR_GYROADC_SAMPLE_RATE		800	/* Hz */
+
+[...]
+
+>> +#define RCAR_GYROADC_CHAN(_idx, _chan_type, _realbits) {	\
+>> +	.type			= (_chan_type),			\
+> 
+> _chan_type is IIO_VOLTAGE always?
+
+Yep, fixed.
+
+>> +	.indexed		= 1,				\
+>> +	.channel		= (_idx),			\
+>> +	.info_mask_separate	= BIT(IIO_CHAN_INFO_RAW),	\
+>> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
+>> +				    BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+>> +	.scan_index		= (_idx),			\
+> 
+> no buffered mode yet, so strictly no need for a scan_index and scan_type
+
+OK
+
+>> +	.scan_type	= {					\
+>> +		.sign		= 'u',				\
+>> +		.realbits	= (_realbits),			\
+>> +		.storagebits	= 16,				\
+>> +	},							\
+>> +}
+>> +
+>> +static const struct iio_chan_spec rcar_gyroadc_iio_channels_1[] = {
+>> +	RCAR_GYROADC_CHAN(0, IIO_VOLTAGE, 12),
+>> +	RCAR_GYROADC_CHAN(1, IIO_VOLTAGE, 12),
+>> +	RCAR_GYROADC_CHAN(2, IIO_VOLTAGE, 12),
+>> +	RCAR_GYROADC_CHAN(3, IIO_VOLTAGE, 12),
+>> +};
+>> +
+>> +static const struct iio_chan_spec rcar_gyroadc_iio_channels_2[] = {
+>> +	RCAR_GYROADC_CHAN(0, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(1, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(2, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(3, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(4, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(5, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(6, IIO_VOLTAGE, 15),
+>> +	RCAR_GYROADC_CHAN(7, IIO_VOLTAGE, 15),
+>> +};
+>> +
+>> +/*
+>> + * NOTE: The data we receive in mode 3 from MAX1162 have MSByte = 0,
+>> + *       therefore we only use 16bit realbits here instead of 24.
+>> + */
+>> +static const struct iio_chan_spec rcar_gyroadc_iio_channels_3[] = {
+>> +	RCAR_GYROADC_CHAN(0, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(1, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(2, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(3, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(4, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(5, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(6, IIO_VOLTAGE, 16),
+>> +	RCAR_GYROADC_CHAN(7, IIO_VOLTAGE, 16),
+>> +};
+>> +
+>> +static int rcar_gyroadc_read_raw(struct iio_dev *indio_dev,
+>> +				 struct iio_chan_spec const *chan,
+>> +				 int *val, int *val2, long mask)
+>> +{
+>> +	struct rcar_gyroadc *priv = iio_priv(indio_dev);
+>> +	unsigned int datareg = RCAR_GYROADC_REALTIME_DATA(chan->channel);
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		if (chan->type != IIO_VOLTAGE)
+>> +			return -EINVAL;
+>> +
+>> +		if (iio_buffer_enabled(indio_dev))
+>> +			return -EBUSY;
+> 
+> use iio_device_claim_direct_mode()
+
+Why ? Do I really need the mutex locking here ?
+
+>> +
+>> +		*val = readl(priv->regs + datareg);
+>> +		*val &= BIT(chan->scan_type.realbits) - 1;
+>> +
+>> +		return IIO_VAL_INT;
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		*val = 0;
+>> +		*val2 = (priv->vref_uv[chan->channel] * 1000) / 0x10000;
+>> +		return IIO_VAL_INT_PLUS_NANO;
+>> +	case IIO_CHAN_INFO_SAMP_FREQ:
+>> +		*val = RCAR_GYROADC_SAMPLE_RATE;
+>> +		*val2 = 0;
+> 
+> *val2 = 0 not needed
+
+OK
+
+[...]
+
+>> +	indio_dev->name = dev_name(dev);
+>> +	indio_dev->dev.parent = dev;
+>> +	indio_dev->dev.of_node = pdev->dev.of_node;
+>> +	indio_dev->info = &rcar_gyroadc_iio_info;
+>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>> +	if (mode == 1) {
+> 
+> maybe do the mode differentiation only once, any with a switch?
+
+Done
+
+[...]
+
+-- 
+Best regards,
+Marek Vasut
