@@ -1,36 +1,29 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: of: Add support for multiple GPIOs in a single GPIO hog
-Date: Fri, 30 Dec 2016 09:28:01 +0100
-Message-ID: <CACRpkdYf-KBzSL6qNWdou9zfh2m553GFVV=LB269P6qu_HHrLQ@mail.gmail.com>
-References: <1482171694-18237-1-git-send-email-geert@linux-m68k.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Fri, 30 Dec 2016 10:03:36 +0100
+Message-ID: <CACRpkdY75CfP82zr_a4+tn0S=GHRDnM=DPr_2zRf_XYsLEo6+w@mail.gmail.com>
+References: <20161222041328.3303-1-chris.packham@alliedtelesis.co.nz> <20161222041328.3303-4-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482171694-18237-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161222041328.3303-4-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2016 at 7:21 PM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+On Thu, Dec 22, 2016 at 5:13 AM, Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 
-> When listing multiple GPIOs in the "gpios" property of a GPIO hog, only
-> the first GPIO is affected.  The user is left clueless about the
-> disfunctioning of the other GPIOs specified.
+> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
 >
-> Fix this by adding and documenting support for specifying multiple
-> GPIOs in a single GPIO hog.
+> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
+> from Marvell.
 >
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-Makes a lot of sense.
-
-Patch applied!
+Looks good to me, Sebastian and/or Thomas P can you ACK this patch?
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
