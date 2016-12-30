@@ -1,81 +1,71 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v2] iio: light: add DT bindings for Capella CM3605
-Date: Fri, 30 Dec 2016 17:18:39 +0000
-Message-ID: <2d176f85-f5ee-69b1-55a1-404b6eb86a66@kernel.org>
-References: <1482098155-16148-1-git-send-email-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482098155-16148-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+From: eajames.ibm@gmail.com
+Subject: [PATCH linux 0/6] drivers: hwmon: Add On-Chip Controller driver
+Date: Fri, 30 Dec 2016 11:56:02 -0600
+Message-ID: <1483120568-21082-1-git-send-email-eajames.ibm@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18/12/16 21:55, Linus Walleij wrote:
-> This adds device tree bindings for the Capella Microsystems CM3605
-> ambient light sensor and short range proximity sensor.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Capella Microsystems <capellamicro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Applied
-> ---
-> ChangeLog v1->v2:
-> - Rename aset-resistance to aset-resistance-ohms
-> ---
->  .../devicetree/bindings/iio/light/cm3605.txt       | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/cm3605.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/cm3605.txt b/Documentation/devicetree/bindings/iio/light/cm3605.txt
-> new file mode 100644
-> index 000000000000..56331a79f9ab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/cm3605.txt
-> @@ -0,0 +1,41 @@
-> +Capella Microsystems CM3605
-> +Ambient Light and Short Distance Proximity Sensor
-> +
-> +The CM3605 is an entirely analog part which however require quite a bit of
-> +software logic to interface a host operating system.
-> +
-> +This ALS and proximity sensor was one of the very first deployed in mobile
-> +handsets, notably it is used in the very first Nexus One Android phone from
-> +2010.
-> +
-> +Required properties:
-> +- compatible: must be: "capella,cm3605"
-> +- aset-gpios: GPIO line controlling the ASET line (drive low
-> +  to activate the ALS, should be flagged GPIO_ACTIVE_LOW)
-> +- interrupts: the IRQ line (such as a GPIO) that is connected to
-> +  the POUT (proximity sensor out) line. The edge detection must
-> +  be set to IRQ_TYPE_EDGE_BOTH so as to detect movements toward
-> +  and away from the proximity sensor.
-> +- io-channels: the ADC channel used for converting the voltage from
-> +  AOUT to a digital representation.
-> +- io-channel-names: must be "aout"
-> +
-> +Optional properties:
-> +- vdd-supply: regulator supplying VDD power to the component.
-> +- capella,aset-resistance-ohms: the sensitivity calibration resistance,
-> +  in Ohms. Valid values are: 50000, 100000, 300000 and 600000,
-> +  as these are the resistance values that we are supplied with
-> +  calibration curves for. If not supplied, 100 kOhm will be assumed
-> +  but it is strongly recommended to supply this.
-> +
-> +Example:
-> +
-> +cm3605 {
-> +	compatible = "capella,cm3605";
-> +	vdd-supply = <&foo_reg>;
-> +	aset-gpios = <&foo_gpio 1 GPIO_ACTIVE_LOW>;
-> +	capella,aset-resistance-ohms = <100000>;
-> +	interrupts = <1 IRQ_TYPE_EDGE_BOTH>;
-> +	io-channels = <&adc 0x01>;
-> +	io-channel-names = "aout";
-> +};
-> 
+From: "Edward A. James" <eajames@us.ibm.com>
+
+This patchset adds a hwmon driver to support the OCC (On-Chip Controller)
+on the IBM POWER8 and POWER9 processors, from a BMC (Baseboard Management
+Controller). The OCC is an embedded processor that provides real time
+power and thermal monitoring.
+
+The driver provides an interface on a BMC to poll OCC sensor data, set
+user power caps, and perform some basic OCC error handling. It interfaces
+with userspace through hwmon.
+
+The driver is currently functional only for the OCC on POWER8 chips.
+Communicating with the POWER9 OCC requries FSI support.
+
+Edward A. James (6):
+  hwmon: Add core On-Chip Controller support for POWER CPUs
+  hwmon: occ: Add sysfs interface
+  hwmon: occ: Add I2C transport implementation for SCOM operations
+  hwmon: occ: Add callbacks for parsing P8 OCC datastructures
+  hwmon: occ: Add hwmon implementation for the P8 OCC
+  hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+
+ .../devicetree/bindings/i2c/i2c-ibm-occ.txt        |  13 +
+ Documentation/hwmon/occ                            | 100 ++++
+ drivers/hwmon/Kconfig                              |   2 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/occ/Kconfig                          |  29 ++
+ drivers/hwmon/occ/Makefile                         |   2 +
+ drivers/hwmon/occ/occ.c                            | 544 +++++++++++++++++++++
+ drivers/hwmon/occ/occ.h                            |  86 ++++
+ drivers/hwmon/occ/occ_p8.c                         | 217 ++++++++
+ drivers/hwmon/occ/occ_p8.h                         |  30 ++
+ drivers/hwmon/occ/occ_scom_i2c.c                   |  73 +++
+ drivers/hwmon/occ/occ_scom_i2c.h                   |  26 +
+ drivers/hwmon/occ/occ_sysfs.c                      | 492 +++++++++++++++++++
+ drivers/hwmon/occ/occ_sysfs.h                      |  52 ++
+ drivers/hwmon/occ/p8_occ_i2c.c                     | 141 ++++++
+ drivers/hwmon/occ/p9_occ.c                         | 243 +++++++++
+ drivers/hwmon/occ/p9_occ.h                         |  30 ++
+ drivers/hwmon/occ/scom.h                           |  47 ++
+ 18 files changed, 2128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-ibm-occ.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/occ.c
+ create mode 100644 drivers/hwmon/occ/occ.h
+ create mode 100644 drivers/hwmon/occ/occ_p8.c
+ create mode 100644 drivers/hwmon/occ/occ_p8.h
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+ create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
+ create mode 100644 drivers/hwmon/occ/p9_occ.c
+ create mode 100644 drivers/hwmon/occ/p9_occ.h
+ create mode 100644 drivers/hwmon/occ/scom.h
+
+-- 
+1.9.1
+
