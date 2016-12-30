@@ -1,41 +1,37 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 3/4] ARM64: dts: exynos5433: use macros for pinctrl
- configuration on Exynos5433
-Date: Fri, 30 Dec 2016 17:17:24 +0200
-Message-ID: <20161230151724.5wlp4hbphasmw3rg@kozik-lap>
-References: <CGME20161230041427epcas1p1151d6e28fac143c63efaf4f7c8ed432d@epcas1p1.samsung.com>
- <20161230041421.24448-1-andi.shyti@samsung.com>
- <20161230041421.24448-4-andi.shyti@samsung.com>
- <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: Re: [PATCHv2 0/5] Add generic pinctrl helpers for managing groups and function
+Date: Fri, 30 Dec 2016 16:43:24 +0100
+Message-ID: <CAAMH-ysDwyLst+EYtNNmO0qgAq4e=7ESxGYynDM1GOyDqXx3OQ@mail.gmail.com>
+References: <20161227172003.6517-1-tony@atomide.com> <CACRpkda9Lv-WF+fLysoEbqBPuMtPBwo_xQT7y0_CHVjC+cAL2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda9Lv-WF+fLysoEbqBPuMtPBwo_xQT7y0_CHVjC+cAL2Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andi Shyti <andi@etezian.org>
+Cc: Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 30, 2016 at 02:32:39PM +0100, Linus Walleij wrote:
-> On Fri, Dec 30, 2016 at 5:14 AM, Andi Shyti <andi.shyti@samsung.com> wrote:
-> 
-> > Use the macros defined in include/dt-bindings/pinctrl/samsung.h
-> > instead of hardcoded values.
-> >
-> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> 
-> These look fine, but that this and the other DTS patch through ARM SoC.
-> 
-> If you also need the headerfile patch (patch 2) to go through ARM SoC
-> that is fine,
-> I can take it out of pinctrl if you want.
+Hi Linus,
 
-Yes, I need the header. It would be much appreciated if you could
-provide a tag or stable branch with it.
+On Fri, Dec 30, 2016 at 3:39 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Dec 27, 2016 at 6:19 PM, Tony Lindgren <tony@atomide.com> wrote:
+>
+>> Here are some changes to add generic helpers for managing pinctrl groups and
+>> functions.
+>
+> I applied it, screwed around with it and pushed to the build servers to see
+> if it survived.
+>
+> I really like the look of this and I hope lots of driver start to use it.
+>
+> Gary, I just applied your radix patches for i.MX, can you look if you can
+> use the GENERIC_PINCTRL_GROUPS and GENERIC_PINMUX_FUCNTIONS
+> that Tony invented and that I just merged to my devel branch in the
+> pinctrl tree?
 
-BTW, Andi, please follow the subject prefix convention (git log
---oneline arch/arm64/boot/dts/exynos).
+Yes I will have a look. It does sound like a good idea. I'll share my
+findings beginning of next week.
 
-Best regards,
-Krzysztof
+Regards,
+Gary
