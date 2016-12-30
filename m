@@ -1,74 +1,25 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 10/20] gpio: pca953x: Add optional reset gpio control
-Date: Fri, 30 Dec 2016 08:06:23 +0100
-Message-ID: <20161230080623.6cc58298@ipc1.ka-ro>
-References: <1483050455-10683-1-git-send-email-steve_longerbeam@mentor.com>
- <1483050455-10683-11-git-send-email-steve_longerbeam@mentor.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Add missing newline
+Date: Fri, 30 Dec 2016 15:10:24 +0800
+Message-ID: <20161230071023.GP6177@dragon>
+References: <1480276484-5482-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483050455-10683-11-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, gnurou@gmail.com, devel@driverdev.osuosl.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, robh+dt@kernel.org, kernel@pengutronix.de, linux-gpio@vger.kernel.org, fabio.estevam@nxp.com, mchehab@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480276484-5482-1-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIDI5IERlYyAyMDE2IDE0OjI3OjI1IC0wODAwIFN0ZXZlIExvbmdlcmJlYW0g
-d3JvdGU6Cj4gQWRkIG9wdGlvbmFsIHJlc2V0LWdwaW9zIHBpbiBjb250cm9sLiBJZiBwcmVzZW50
-LCBkZS1hc3NlcnQgdGhlCj4gc3BlY2lmaWVkIHJlc2V0IGdwaW8gcGluIHRvIGJyaW5nIHRoZSBj
-aGlwIG91dCBvZiByZXNldC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTdGV2ZSBMb25nZXJiZWFtIDxz
-dGV2ZV9sb25nZXJiZWFtQG1lbnRvci5jb20+Cj4gQ2M6IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
-bGxlaWpAbGluYXJvLm9yZz4KPiBDYzogQWxleGFuZHJlIENvdXJib3QgPGdudXJvdUBnbWFpbC5j
-b20+Cj4gQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnCj4gQ2M6IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmcKPiAKPiAtLS0KPiAKPiB2MjoKPiAtIGRvY3VtZW50ZWQgb3B0aW9uYWwg
-cmVzZXQtZ3Bpb3MgcHJvcGVydHkgaW4KPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9ncGlvL2dwaW8tcGNhOTUzeC50eHQuCj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tcGNhOTUzeC50eHQgfCAgNCArKysrCj4gIGRyaXZlcnMv
-Z3Bpby9ncGlvLXBjYTk1M3guYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxNyArKysr
-KysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykKPiAKPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby1w
-Y2E5NTN4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8t
-cGNhOTUzeC50eHQKPiBpbmRleCAwOGRkMTVmLi5kYTU0ZjRjIDEwMDY0NAo+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tcGNhOTUzeC50eHQKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLXBjYTk1M3gudHh0
-Cj4gQEAgLTI5LDYgKzI5LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIAlvbnNlbWkscGNh
-OTY1NAo+ICAJZXhhcix4cmExMjAyCj4gIAo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgLSBy
-ZXNldC1ncGlvczogR1BJTyBzcGVjaWZpY2F0aW9uIGZvciB0aGUgUkVTRVQgaW5wdXQKPiArCj4g
-Kwo+ICBFeGFtcGxlOgo+ICAKPiAgCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLXBj
-YTk1M3guYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXBjYTk1M3guYwo+IGluZGV4IGQ1ZDcyZDguLmQx
-YzBiZDUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncGlvL2dwaW8tcGNhOTUzeC5jCj4gKysrIGIv
-ZHJpdmVycy9ncGlvL2dwaW8tcGNhOTUzeC5jCj4gQEAgLTIyLDYgKzIyLDcgQEAKPiAgI2luY2x1
-ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9hY3BpLmg+Cj4gICNp
-bmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2dw
-aW8vY29uc3VtZXIuaD4KPiAgCj4gICNkZWZpbmUgUENBOTUzWF9JTlBVVAkJMAo+ICAjZGVmaW5l
-IFBDQTk1M1hfT1VUUFVUCQkxCj4gQEAgLTEzMyw2ICsxMzQsNyBAQCBzdHJ1Y3QgcGNhOTUzeF9j
-aGlwIHsKPiAgCWNvbnN0IGNoYXIgKmNvbnN0ICpuYW1lczsKPiAgCXVuc2lnbmVkIGxvbmcgZHJp
-dmVyX2RhdGE7Cj4gIAlzdHJ1Y3QgcmVndWxhdG9yICpyZWd1bGF0b3I7Cj4gKwlzdHJ1Y3QgZ3Bp
-b19kZXNjICpyZXNldF9ncGlvOwo+ICAKPiAgCWNvbnN0IHN0cnVjdCBwY2E5NTN4X3JlZ19jb25m
-aWcgKnJlZ3M7Cj4gIAo+IEBAIC03NTYsNiArNzU4LDIxIEBAIHN0YXRpYyBpbnQgcGNhOTUzeF9w
-cm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAo+ICAJfSBlbHNlIHsKPiAgCQljaGlwLT5n
-cGlvX3N0YXJ0ID0gLTE7Cj4gIAkJaXJxX2Jhc2UgPSAwOwo+ICsKPiArCQkvKiBzZWUgaWYgd2Ug
-bmVlZCB0byBkZS1hc3NlcnQgYSByZXNldCBwaW4gKi8KPiArCQljaGlwLT5yZXNldF9ncGlvID0g
-ZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoJmNsaWVudC0+ZGV2LAo+ICsJCQkJCQkJICAgInJlc2V0
-IiwKPiArCQkJCQkJCSAgIEdQSU9EX09VVF9MT1cpOwoKPiArCQlpZiAoSVNfRVJSKGNoaXAtPnJl
-c2V0X2dwaW8pKSB7Cj4gKwkJCWRldl9lcnIoJmNsaWVudC0+ZGV2LCAicmVxdWVzdCBmb3IgcmVz
-ZXQgcGluIGZhaWxlZFxuIik7Cj4gKwkJCXJldHVybiBQVFJfRVJSKGNoaXAtPnJlc2V0X2dwaW8p
-Owo+ICsJCX0KPiArCj4gKwkJaWYgKGNoaXAtPnJlc2V0X2dwaW8pIHsKPiArCQkJLyogYnJpbmcg
-Y2hpcCBvdXQgb2YgcmVzZXQgKi8KPiArCQkJZGV2X2luZm8oJmNsaWVudC0+ZGV2LCAicmVsZWFz
-aW5nIHJlc2V0XG4iKTsKPiArCQkJZ3Bpb2Rfc2V0X3ZhbHVlKGNoaXAtPnJlc2V0X2dwaW8sIDAp
-Owo+ClRoZSBwaW4gaXMgYWxyZWFkeSBpbml0aWFsaXplZCB0byB0aGUgaW5hY3RpdmUgc3RhdGUg
-dGhydSB0aGUKR1BJT0RfT1VUX0xPVyBmbGFnIGluIGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKCks
-IHNvIHRoaXMgY2FsbCB0bwpncGlvZF9zZXRfdmFsdWUoKSBpcyB1c2VsZXNzLgoKCkxvdGhhciBX
-YcOfbWFubgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On Sun, Nov 27, 2016 at 08:54:44PM +0100, Andreas Färber wrote:
+> Found while reviewing Marvell dsa bindings usage.
+> 
+> Fixes: f283745b3caf ("arm: vf610: zii devel b: Add support for switch interrupts")
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+
+Applied, thanks.
