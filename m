@@ -1,47 +1,36 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: add Garmin vendor prefix
-Date: Fri, 30 Dec 2016 20:26:09 +0000
-Message-ID: <144bd616-1b5a-970a-edcb-13ebf67178f1@kernel.org>
-References: <20161229051306.28547-1-matt@ranostay.consulting>
+From: Andi Shyti <andi@etezian.org>
+Subject: Re: [PATCH v2 3/4] ARM64: dts: exynos5433: use macros for pinctrl
+ configuration on Exynos5433
+Date: Sat, 31 Dec 2016 05:28:43 +0900
+Message-ID: <20161230202843.qac5fziejog2yghh@jack.zhora.eu>
+References: <CGME20161230041427epcas1p1151d6e28fac143c63efaf4f7c8ed432d@epcas1p1.samsung.com>
+ <20161230041421.24448-1-andi.shyti@samsung.com>
+ <20161230041421.24448-4-andi.shyti@samsung.com>
+ <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161229051306.28547-1-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/12/16 05:13, Matt Ranostay wrote:
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Rob, just to check - is this the right way to go with prefixes?
-It's awfully ugly in this case ;)
+Hi Linus,
 
-Jonathan
-> ---
-> Changes from v1:
-> * switch to stock ticker for Garmin Limited
+> > Use the macros defined in include/dt-bindings/pinctrl/samsung.h
+> > instead of hardcoded values.
+> >
+> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
 > 
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> These look fine, but that this and the other DTS patch through ARM SoC.
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 16d3b5e7f5d1..5749bfc5fc5b 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -107,6 +107,7 @@ firefly	Firefly
->  focaltech	FocalTech Systems Co.,Ltd
->  friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
->  fsl	Freescale Semiconductor
-> +grmn	Garmin Limited
->  ge	General Electric Company
->  geekbuying	GeekBuying
->  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-> 
+> If you also need the headerfile patch (patch 2) to go through ARM SoC
+> that is fine,
+> I can take it out of pinctrl if you want.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+yes, sure... no problem from my side :)
+
+Thanks,
+Andi
