@@ -1,28 +1,32 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] iio: bmi160: Add of device table for i2c
-Date: Fri, 30 Dec 2016 10:47:36 +0000
-Message-ID: <a262d6f4-a7a1-3eb9-af89-f3f03484600b@kernel.org>
+Subject: Re: [PATCH v2 5/6] iio: bmi160: Fix time needed to sleep after
+ command execution
+Date: Fri, 30 Dec 2016 10:49:54 +0000
+Message-ID: <7668f191-dafd-e616-171a-cafc52791292@kernel.org>
 References: <20161208142259.26230-1-m.niestroj@grinn-global.com>
- <20161208142259.26230-2-m.niestroj@grinn-global.com>
+ <20161208142259.26230-6-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161208142259.26230-2-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161208142259.26230-6-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 08/12/16 14:22, Marcin Niestroj wrote:
-> From now on we can add bmi160 device to device-tree by specifying
-> compatible string.
+> Datasheet specifies typical and maximum execution times for which CMD
+> register is occupied after previous command execution. We took these
+> values as minimum and maximum time for usleep_range() call before making
+> a new command execution.
+> 
+> To be sure, that the CMD register is no longer occupied we need to wait
+> *at least* the maximum time specified by datasheet.
 > 
 > Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Other than the fact this should really have been two patches, this looks good.
-
-Applied to the togreg branch of iio.git and pushed out as testing for the autobuilders
-to play with it.
+This looks like a definite bug that we would want to fix in stable as well.
+If possible, could you ensure this is the first patch in the updated series?
 
 Thanks,
 
@@ -30,52 +34,57 @@ Jonathan
 > ---
 > Patch introduced in v2
 > 
->  drivers/iio/imu/bmi160/bmi160_i2c.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+>  drivers/iio/imu/bmi160/bmi160_core.c | 25 ++++++-------------------
+>  1 file changed, 6 insertions(+), 19 deletions(-)
 > 
-> diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
-> index 07a179d..155a31f 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_i2c.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
-> @@ -11,10 +11,11 @@
->   *      - 0x68 if SDO is pulled to GND
->   *      - 0x69 if SDO is pulled to VDDIO
->   */
-> -#include <linux/module.h>
-> +#include <linux/acpi.h>
->  #include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/regmap.h>
-> -#include <linux/acpi.h>
-Whilst I have no objection to reordering headers so they are alphabetical
-(as long as not clarity is lost) it should really be in it's own patch...
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index 095533c..88bcf3f 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -67,10 +67,8 @@
 >  
->  #include "bmi160.h"
+>  #define BMI160_REG_DUMMY		0x7F
 >  
-> @@ -56,10 +57,19 @@ static const struct acpi_device_id bmi160_acpi_match[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, bmi160_acpi_match);
+> -#define BMI160_ACCEL_PMU_MIN_USLEEP	3200
+> -#define BMI160_ACCEL_PMU_MAX_USLEEP	3800
+> -#define BMI160_GYRO_PMU_MIN_USLEEP	55000
+> -#define BMI160_GYRO_PMU_MAX_USLEEP	80000
+> +#define BMI160_ACCEL_PMU_MIN_USLEEP	3800
+> +#define BMI160_GYRO_PMU_MIN_USLEEP	80000
+>  #define BMI160_SOFTRESET_USLEEP		1000
 >  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id bmi160_of_match[] = {
-> +	{ .compatible = "bosch,bmi160" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, bmi160_of_match);
-> +#endif
-> +
->  static struct i2c_driver bmi160_i2c_driver = {
->  	.driver = {
->  		.name			= "bmi160_i2c",
->  		.acpi_match_table	= ACPI_PTR(bmi160_acpi_match),
-> +		.of_match_table		= of_match_ptr(bmi160_of_match),
+>  #define BMI160_CHANNEL(_type, _axis, _index) {			\
+> @@ -153,20 +151,9 @@ static struct bmi160_regs bmi160_regs[] = {
 >  	},
->  	.probe		= bmi160_i2c_probe,
->  	.remove		= bmi160_i2c_remove,
+>  };
+>  
+> -struct bmi160_pmu_time {
+> -	unsigned long min;
+> -	unsigned long max;
+> -};
+> -
+> -static struct bmi160_pmu_time bmi160_pmu_time[] = {
+> -	[BMI160_ACCEL] = {
+> -		.min = BMI160_ACCEL_PMU_MIN_USLEEP,
+> -		.max = BMI160_ACCEL_PMU_MAX_USLEEP
+> -	},
+> -	[BMI160_GYRO] = {
+> -		.min = BMI160_GYRO_PMU_MIN_USLEEP,
+> -		.max = BMI160_GYRO_PMU_MIN_USLEEP,
+> -	},
+> +static unsigned long bmi160_pmu_time[] = {
+> +	[BMI160_ACCEL] = BMI160_ACCEL_PMU_MIN_USLEEP,
+> +	[BMI160_GYRO] = BMI160_GYRO_PMU_MIN_USLEEP,
+>  };
+>  
+>  struct bmi160_scale {
+> @@ -293,7 +280,7 @@ int bmi160_set_mode(struct bmi160_data *data, enum bmi160_sensor_type t,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	usleep_range(bmi160_pmu_time[t].min, bmi160_pmu_time[t].max);
+> +	usleep_range(bmi160_pmu_time[t], bmi160_pmu_time[t] + 1000);
+>  
+>  	return 0;
+>  }
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
