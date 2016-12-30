@@ -1,36 +1,36 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH] ARM: dts: am572x-idk: Add gpios property to control PCIE_RESETn
-Date: Fri, 30 Dec 2016 13:37:20 +0530
-Message-ID: <1483085240-16102-1-git-send-email-kishon@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio: of: Add support for multiple GPIOs in a single GPIO hog
+Date: Fri, 30 Dec 2016 09:28:01 +0100
+Message-ID: <CACRpkdYf-KBzSL6qNWdou9zfh2m553GFVV=LB269P6qu_HHrLQ@mail.gmail.com>
+References: <1482171694-18237-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, nsekhar@ti.com, kishon@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482171694-18237-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add 'gpios' property to pcie1 dt node and populate it with
-GPIO3_23 in order to drive PCIE_RESETn high.
+On Mon, Dec 19, 2016 at 7:21 PM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
 
-This gets PCIe cards to be detected in AM572X IDK board.
+> When listing multiple GPIOs in the "gpios" property of a GPIO hog, only
+> the first GPIO is affected.  The user is left clueless about the
+> disfunctioning of the other GPIOs specified.
+>
+> Fix this by adding and documenting support for specifying multiple
+> GPIOs in a single GPIO hog.
+>
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/am572x-idk.dts |    4 ++++
- 1 file changed, 4 insertions(+)
+Makes a lot of sense.
 
-diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-index 27d9149..1540f7a 100644
---- a/arch/arm/boot/dts/am572x-idk.dts
-+++ b/arch/arm/boot/dts/am572x-idk.dts
-@@ -87,3 +87,7 @@
- &sn65hvs882 {
- 	load-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
- };
-+
-+&pcie1 {
-+	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
-+};
--- 
-1.7.9.5
+Patch applied!
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
