@@ -1,61 +1,38 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH v7 3/5] ARM: dts: stm32: Add I2C1 support for STM32F429 SoC
-Date: Fri, 30 Dec 2016 15:36:53 +0100
-Message-ID: <CAOAejn2dWj7m2PpbupiUHQMEceUNcLOHE58iLRKutq3i47pdWA@mail.gmail.com>
-References: <1482413704-17531-1-git-send-email-cedric.madianga@gmail.com>
- <1482413704-17531-4-git-send-email-cedric.madianga@gmail.com>
- <20161222191103.vzmfhnrtrzw2ivwa@pengutronix.de> <CAOAejn1zHMFNiGc-wVbbkC1-JFzG3sjnnUJogtCp9EeAkWsV5A@mail.gmail.com>
- <CACRpkdaNyL2iV+risLudW=O55w81-AuEZhMwRu9NLdXpnC2r1w@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 0/5] Add generic pinctrl helpers for managing groups and function
+Date: Fri, 30 Dec 2016 15:39:29 +0100
+Message-ID: <CACRpkda9Lv-WF+fLysoEbqBPuMtPBwo_xQT7y0_CHVjC+cAL2Q@mail.gmail.com>
+References: <20161227172003.6517-1-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaNyL2iV+risLudW=O55w81-AuEZhMwRu9NLdXpnC2r1w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161227172003.6517-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- Hi Linus,
+On Tue, Dec 27, 2016 at 6:19 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
 
-2016-12-30 10:07 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Fri, Dec 23, 2016 at 2:09 PM, M'boumba Cedric Madianga
-> <cedric.madianga@gmail.com> wrote:
->> 2016-12-22 20:11 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengut=
-ronix.de>:
->>> On Thu, Dec 22, 2016 at 02:35:02PM +0100, M'boumba Cedric Madianga wrot=
-e:
->>>> @@ -337,6 +350,16 @@
->>>>                                       slew-rate =3D <2>;
->>>>                               };
->>>>                       };
->>>> +
->>>> +                     i2c1_pins_b: i2c1@0 {
->>>> +                             pins1 {
->>>> +                                     pinmux =3D <STM32F429_PB9_FUNC_I=
-2C1_SDA>;
->>>> +                                     drive-open-drain;
->>>> +                             };
->>>> +                             pins2 {
->>>> +                                     pinmux =3D <STM32F429_PB6_FUNC_I=
-2C1_SCL>;
->>>> +                             };
->>>
->>> the second doesn't need the open-drain property? Why?
->>
->> I thought that open-drain was only needed for SDA line.
->> But after double-checking I2C specification, it seems that SDA and SCL
->> lines need open-drain or open-collector to perform the wired-AND
->> function.
->
-> I think I2C SDA/SCL must be open drain by definition.
->
-> It also requires pull-up resistors, I guess you have these mounted on the=
- board
-> so you do not need pull-up from the pin controller?
-Yes, I have 1 pull-up resistor of 1,5K ohm for each line (SDA & SCL)
-on the board
+> Here are some changes to add generic helpers for managing pinctrl groups and
+> functions.
 
->
-> Yours,
-> Linus Walleij
+I applied it, screwed around with it and pushed to the build servers to see
+if it survived.
+
+I really like the look of this and I hope lots of driver start to use it.
+
+Gary, I just applied your radix patches for i.MX, can you look if you can
+use the GENERIC_PINCTRL_GROUPS and GENERIC_PINMUX_FUCNTIONS
+that Tony invented and that I just merged to my devel branch in the
+pinctrl tree?
+
+It seems the i.MX could just reuse this right off and slim down quite a bit
+but the devil is in the details.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
