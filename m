@@ -1,30 +1,37 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v3] net: ethernet: faraday: To support device tree usage.
-Date: Sat, 31 Dec 2016 10:48:39 -0800
-Message-ID: <351d1ae7-ca51-7962-0e52-38cdc69bcebd@gmail.com>
-References: <1483083470-15779-1-git-send-email-green.hu@gmail.com>
+Date: Sat, 31 Dec 2016 21:23:58 +0100
+Message-ID: <6434425.l4ZxB6kK6L@wuerfel>
+References: <1483083470-15779-1-git-send-email-green.hu@gmail.com> <351d1ae7-ca51-7962-0e52-38cdc69bcebd@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483083470-15779-1-git-send-email-green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <351d1ae7-ca51-7962-0e52-38cdc69bcebd@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Greentime Hu <green.hu@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, jiri@resnulli.us
 List-Id: devicetree@vger.kernel.org
 
+On Saturday, December 31, 2016 10:48:39 AM CET Florian Fainelli wrote:
+> 
+> On 12/29/2016 11:37 PM, Greentime Hu wrote:
+> > Signed-off-by: Greentime Hu <green.hu@gmail.com>
+> 
+> This is not enough, you need to add a Device Tree binding document under
+> Documentation/devicetree/bindings/net/ which documents this compatible
+> string, as well as additional properties that may be required to
+> describe this hardware block.
 
+We already have
 
-On 12/29/2016 11:37 PM, Greentime Hu wrote:
-> Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
 
-This is not enough, you need to add a Device Tree binding document under
-Documentation/devicetree/bindings/net/ which documents this compatible
-string, as well as additional properties that may be required to
-describe this hardware block.
+for the same hardware (though used by a different driver).
 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd suggest renaming that one to a more generic file name and
+adding the new compatible string there.
+
+Aside from that, every patch should also have a changelog comment.
+
+	Arnd
