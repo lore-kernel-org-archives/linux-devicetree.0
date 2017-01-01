@@ -1,53 +1,80 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: [PATCH V7 2/4] MAINTAINERS: Add entry for GE B850v3 LVDS/DP++ Bridge
-Date: Sun,  1 Jan 2017 21:24:30 +0100
-Message-ID: <597f32d0aac5f87b88b88d99b2e8622ffe71a165.1483301745.git.peter.senna@collabora.com>
+From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH V7 4/4] dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
+Date: Sun,  1 Jan 2017 21:24:32 +0100
+Message-ID: <6ebee60090b46bbd329732d7e962c5a694045d15.1483301745.git.peter.senna@collabora.com>
 References: <cover.1483301745.git.peter.senna@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1483301745.git.peter.senna@collabora.com>
-In-Reply-To: <cover.1483301745.git.peter.senna@collabora.com>
-References: <cover.1483301745.git.peter.senna@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie, architt@codeaurora.org, akpm@linux-foundation.org, daniel.vetter@ffwll.ch, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, javier@dowhile0.org, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@collabora.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org
-Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1483301745.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <cover.1483301745.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+References: <cover.1483301745.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the MAINTAINERS file for the GE B850v3 LVDS/DP++ Bridge.
+Configures the GE B850v3 LVDS/DP++ bridge on the dts file.
 
-Cc: Martyn Welch <martyn.welch@collabora.co.uk>
-Cc: Martin Donnelly <martin.donnelly@ge.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-CC: David Airlie <airlied@linux.ie>
-CC: Thierry Reding <treding@nvidia.com>
-CC: Thierry Reding <thierry.reding@gmail.com>
-CC: Archit Taneja <architt@codeaurora.org>
-Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/imx6q-b850v3.dts | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fdd9d5e3..1d3f17a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5371,6 +5371,14 @@ W:	https://linuxtv.org
- S:	Maintained
- F:	drivers/media/radio/radio-gemtek*
- 
-+GENERAL ELECTRIC B850V3 LVDS/DP++ BRIDGE
-+M:	Peter Senna Tschudin <peter.senna@collabora.com>
-+M:	Martin Donnelly <martin.donnelly@ge.com>
-+M:	Martyn Welch <martyn.welch@collabora.co.uk>
-+S:	Maintained
-+F:	drivers/gpu/drm/bridge/ge_b850v3_dp2.c
-+F:	Documentation/devicetree/bindings/ge/b850v3_dp2_bridge.txt
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index 167f744..ce0ca3a 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -72,6 +72,13 @@
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+ 		status = "okay";
 +
- GENERIC GPIO I2C DRIVER
- M:	Haavard Skinnemoen <hskinnemoen@gmail.com>
- S:	Supported
++		port@4 {
++			reg = <4>;
++			lvds0_out: endpoint {
++				remote-endpoint = <&b850v3_lvds_dp_bridge_in>;
++			};
++		};
+ 	};
+ };
+ 
+@@ -142,3 +149,26 @@
+ 		reg = <0x4a>;
+ 	};
+ };
++
++&mux2_i2c2 {
++	status = "okay";
++	clock-frequency = <100000>;
++
++	b850v3-lvds-dp-bridge@73 {
++		compatible = "ge,b850v3-lvds-dp";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg = <0x73 0x72>;
++		reg-names = "main", "edid";
++
++		interrupt-parent = <&gpio2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++		port {
++			b850v3_lvds_dp_bridge_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++};
 -- 
 2.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
