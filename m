@@ -1,56 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] iio: misc: add support for GPIO power switches
-Date: Mon, 2 Jan 2017 22:53:54 +0100
-Message-ID: <CACRpkdZRGygeNjK=mujT-veCW+oC_vEED9Z0fSiMxFrDT0hqzA@mail.gmail.com>
-References: <1481494905-18037-1-git-send-email-bgolaszewski@baylibre.com>
- <1481494905-18037-3-git-send-email-bgolaszewski@baylibre.com>
- <CACRpkdZ7JrNfCKPuuCmkZd_7+NV0QLUN8ZMukFA0TcqS9SYXcQ@mail.gmail.com>
- <20161229162919.j2ej2cyeuoqnxykf@earth> <CACRpkdbjbtFwwQCdR3krWG0P4UMhWySTTkzqZFBZ6EGXPS=k8g@mail.gmail.com>
- <0c3511be-6a3c-f65c-c562-1c4b9318acb1@kernel.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] cfg80211: support ieee80211-freq-limit DT property
+Date: Mon, 2 Jan 2017 23:12:53 +0100
+Message-ID: <CACna6ryrYY5G=Fvmsrq_sD3iX5dWreyz7R8mGEd6ogUck=twnQ@mail.gmail.com>
+References: <20170102163209.2445-1-zajec5@gmail.com> <20170102163209.2445-2-zajec5@gmail.com>
+ <1483379548.15591.1.camel@sipsolutions.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c3511be-6a3c-f65c-c562-1c4b9318acb1@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483379548.15591.1.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 30, 2016 at 4:15 PM, Jonathan Cameron <jic23@kernel.org> wrote:
-> On 30/12/16 13:05, Linus Walleij wrote:
-
->> So this needs to be re-architected to either describe the remote system
->> in DT and handle it in the kernel, or handle it all from userspace if it
->> is a one-off non-product thing.
+On 2 January 2017 at 18:52, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org> wrote=
+:
+>> +static void wiphy_freq_limits_apply(struct wiphy *wiphy)
+> [...]
+>> +                     if (!wiphy_freq_limits_valid_chan(wiphy,
+>> chan)) {
+>> +                             pr_debug("Disabling freq %d MHz as
+>> it's out of OF limits\n",
+>> +                                      chan->center_freq);
+>> +                             chan->flags |=3D
+>> IEEE80211_CHAN_DISABLED;
 >
-> I'm not sure this is always true (though it might be here).  There is always
-> a need to describe the edge of the known world.  Be it that we have
-> an accelerometer - ultimately we could describe the device generating the
-> acceleration but we have no way of knowing what it is or what it will do..
+> I think you didn't address the problem in the best way now.
 >
-> What we have here is a rather simple case, but what about an I/O bank on
-> a PLC.  Obviously we can handle that as a bunch of GPIOs but if we know
-> more about it we should have means to describe that.  Say we know they are
-> always driving relays, we should be able to describe that additional known
-> stuff. Relays have characteristics such as bounce times etc that if described
-> would allow us to do the relevant filtering on inputs to handle this.
+> The problem with the channel sharing was the way you're applying the
+> limits - at runtime. This is now OK since the new function shouldn't be
+> called when the channel structs are shared, but hooking it all into the
+> regulatory code is now no longer needed.
 >
-> Here the fact it is a power supply switch should be describable.  Hard to
-> get right in a generic way though so in cases like this perhaps you
-> are right and it should just be left undescribed and handled in userspace.
+> What you can do now, when reading the OF data, is actually apply it to
+> the channel flags immediately. If done *before* wiphy_register(), these
+> flags will be preserved forever, so you no longer need any hooks in
+> regulatory code at all - you can just set the original channel flags
+> according to the OF data.
 >
-> Anyhow, here I think leaving it as a gpio interface is probably the way to
-> go, but I'm not sure that will always be the case.
+> I think this greatly simplifies the flow, since you can also remove
+> wiphy->freq_limits (and n_freq_limits) completely, since now the only
+> effect of the function would be to modify the channel list, and later
+> regulatory updates would always preserve the flags.
 
-No you are right. We are at the fuzzy system perimeter.
+I need some extra help understanding this :(
 
-For GPIO we currently only have asserted/unasserted, polarity
-of that, open drain/source and debounce time. But we will need the whole
-slew of pin control settings in the future: drive strength, schmitt-trigger
-hysteresis etc etc. And if there is a further component beyond that it
-may need a driver in turn even if it is "only" a relay.
+When driver uses custom regulatory it registers initial channels at
+init but it can also react to regdom changes using reg_notifier. Is
+that correct?
 
-Let's see about this one...
+So I'm looking at brcmf_cfg80211_reg_notifier which calls
+brcmf_setup_wiphybands which calls brcmf_construct_chaninfo.
+That last one reworks all channels on every call. It first marks all
+existing channels as DISABLED then queries firmware for the list of
+supported channels and updates wiphy channels one by one.
+So if I understand this correctly, every regdom change can result in
+rebuilding channels pretty much from the scratch. That's why I
+believed I need to call wiphy_freq_limits_apply on runtime, not just
+during the init.
 
-Yours,
-Linus Walleij
+Is there some flow in my understanding?
+
+--=20
+Rafa=C5=82
