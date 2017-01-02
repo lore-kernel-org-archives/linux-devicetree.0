@@ -1,44 +1,50 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH] ARM: dts: armada388-clearfog: fix SPI flash #size-cells
-Date: Mon, 02 Jan 2017 14:55:32 +0000
-Message-ID: <E1cO41M-0007xc-Id@rmk-PC.armlinux.org.uk>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: Add bindings info for
+ rfkill-regulator
+Date: Mon, 02 Jan 2017 15:57:07 +0100
+Message-ID: <1483369027.21014.11.camel@sipsolutions.net>
+References: <20161101105840.24313-1-paul@crapouillou.net>
+         <20161109182612.i4rnsdxulk5ghemz@rob-hp-laptop>
+         (sfid-20161109_192614_527668_B4DB10FA)
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20161109182612.i4rnsdxulk5ghemz@rob-hp-laptop> (sfid-20161109_192614_527668_B4DB10FA)
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Paul Cercueil <paul@crapouillou.net>
+Cc: "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, Maarten ter Huurne <maarten@treewalker.org>
 List-Id: devicetree@vger.kernel.org
 
-The SPI flash #size-cells is specified in the binding documentation to
-have value 1, but we were setting it to zero.  This wasn't causing any
-problem as we do not list any partitions, but it's worth specifying
-correctly if we're going to specify it at all.
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
- arch/arm/boot/dts/armada-388-clearfog.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> My understanding is it is generally felt that using the regulator
+> enable GPIO commonly found on WiFi chips for rfkill is an abuse of
+> rfkill as it is more that just an RF disable. From a DT standpoint,
+> this seems like creating a binding for what a Linux driver wants.
+> Instead, I think this should be either a GPIO or GPIO regulator and
+> the driver for the WiFi chip should decide whether or not to register
+> that as an rfkill driver.
 
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
-index 71ce201c903e..3e7c3a6237c3 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dts
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dts
-@@ -437,7 +437,7 @@
- 
- 	spi-flash@0 {
- 		#address-cells = <1>;
--		#size-cells = <0>;
-+		#size-cells = <1>;
- 		compatible = "w25q32", "jedec,spi-nor";
- 		reg = <0>; /* Chip select 0 */
- 		spi-max-frequency = <3000000>;
--- 
-2.7.4
+Sadly, there are two ways to use rfkill right now:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1) the more common, and correct, way of having rfkill be a control tied
+to a specific wireless interface (wifi, BT, FM, GPS, NFC, ...), to both
+report the hardware button state that might be tied to it, and to
+control - centrally - the software state.
+
+2) the platform way, which some ACPI based platforms do, which register
+an rfkill instance, which often allows controlling in software the
+hardware line that then toggles the hardware rfkill on the WiFi NIC.
+
+
+It's not clear to me what this patch is trying to achieve. It seems a
+bit like something else entirely, which would be using it to toggle the
+power for a wifi device? I agree that doesn't seem appropriate, and
+instead the driver could bind to the regulator and disable it when wifi
+gets disabled (by rfkill or simply by taking all interfaces down.)
+
+
+In fact, given that there are no in-tree users, I'm tempted to remove
+the rfkill-regulator entirely. Thoughts?
+
+johannes
