@@ -1,82 +1,104 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: Add support for CSI1 bus
-Date: Mon, 2 Jan 2017 09:00:10 +0200
-Message-ID: <20170102070010.GD3958@valkosipuli.retiisi.org.uk>
-References: <20161228183036.GA13139@amd>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: imx6: Support Savageboard dual
+Date: Mon, 2 Jan 2017 15:03:04 +0800
+Message-ID: <20170102070302.GD20956@dragon>
+References: <20161209010436.7994-1-woogyom.kim@gmail.com>
+ <20161209010436.7994-3-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161228183036.GA13139@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161209010436.7994-3-woogyom.kim@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On Wed, Dec 28, 2016 at 07:30:36PM +0100, Pavel Machek wrote:
-> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+On Fri, Dec 09, 2016 at 10:04:35AM +0900, Milo Kim wrote:
+> Common savageboard DT file is used for board support.
+> Specify this dtb file for i.MX6Q build.
 > 
-> In the vast majority of cases the bus type is known to the driver(s)
-> since a receiver or transmitter can only support a single one. There
-> are cases however where different options are possible.
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+> ---
+>  arch/arm/boot/dts/Makefile               |  1 +
+>  arch/arm/boot/dts/imx6dl-savageboard.dts | 50 ++++++++++++++++++++++++++++++++
+>  2 files changed, 51 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
 > 
-> Document the CSI1/CCP2 properties strobe_clk_inv and strobe_clock
-> properties. The former tells whether the strobe/clock signal is
-> inverted, while the latter signifies the clock or strobe mode.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index c558ba7..64660c7 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -348,6 +348,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6dl-sabreauto.dtb \
+>  	imx6dl-sabrelite.dtb \
+>  	imx6dl-sabresd.dtb \
+> +	imx6dl-savageboard.dtb \
+>  	imx6dl-ts4900.dtb \
+>  	imx6dl-tx6dl-comtft.dtb \
+>  	imx6dl-tx6s-8034.dtb \
+> diff --git a/arch/arm/boot/dts/imx6dl-savageboard.dts b/arch/arm/boot/dts/imx6dl-savageboard.dts
+> new file mode 100644
+> index 0000000..2cac30d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-savageboard.dts
+> @@ -0,0 +1,50 @@
+> +/*
+> + * Copyright (C) 2016 Milo Kim <woogyom.kim@gmail.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6dl.dtsi"
+> +#include "imx6qdl-savageboard.dtsi"
+> +
+> +/ {
+> +	model = "Poslab SavageBoard Dual";
+> +	compatible = "poslab,imx6dl-savageboard", "fsl,imx6dl";
+
+It seems that 'poslab' should be added to
+Documentation/devicetree/bindings/vendor-prefixes.txt.
+
+Shawn
+
+> +};
+> -- 
+> 2.9.3
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index 9cd2a36..f0523f7 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -76,6 +76,10 @@ Optional endpoint properties
->    mode horizontal and vertical synchronization signals are provided to the
->    slave device (data source) by the master device (data sink). In the master
->    mode the data source device is also the source of the synchronization signals.
-> +- bus-type: data bus type. Possible values are:
-> +  0 - CSI2
-> +  1 - parallel / Bt656
-> +  2 - CCP2
-
-I wonder if we should make a difference between CCP2 and CSI-1 here, as it
-may make a difference in hardware configuration. The next patch does
-recognise that difference, so it should be present here as well.
-
-Perhaps 2 - CSI1; 3 - CCP2. What do you think?
-
->  - bus-width: number of data lines actively used, valid for the parallel busses.
->  - data-shift: on the parallel data busses, if bus-width is used to specify the
->    number of data lines, data-shift can be used to specify which data lines are
-> @@ -110,9 +114,10 @@ Optional endpoint properties
->    lane and followed by the data lanes in the same order as in data-lanes.
->    Valid values are 0 (normal) and 1 (inverted). The length of the array
->    should be the combined length of data-lanes and clock-lanes properties.
-> -  If the lane-polarities property is omitted, the value must be interpreted
-> -  as 0 (normal). This property is valid for serial busses only.
-> -
-> +- clock-inv: Clock or strobe signal inversion.
-> +  Possible values: 0 -- not inverted; 1 -- inverted
-> +- strobe: Whether the clock signal is used as clock or strobe. Used
-> +  with CCP2, for instance.
->  
->  Example
->  -------
-> 
-> 
-
-
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
