@@ -1,73 +1,39 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Mon,  2 Jan 2017 13:07:51 -0800
-Message-ID: <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 00/20] i.MX Media Driver
+Date: Mon, 2 Jan 2017 19:09:41 -0200
+Message-ID: <CAOMZO5DM4aRwzCWkRoZLmbCxn155YL+CUR_gJyDh+FjzSKD3PQ@mail.gmail.com>
+References: <1483050455-10683-1-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1483050455-10683-1-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devel@driverdev.osuosl.org, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Steve Longerbeam <steve_longerbeam@mentor.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add optional reset-gpios pin control. If present, de-assert the
-specified reset gpio pin to bring the chip out of reset.
+Hi Steve,
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |  4 ++++
- drivers/gpio/gpio-pca953x.c                             | 11 +++++++++++
- 2 files changed, 15 insertions(+)
+On Thu, Dec 29, 2016 at 8:27 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
+> This is a media driver for video capture on i.MX.
+>
+> Refer to Documentation/media/v4l-drivers/imx.rst for example capture
+> pipelines on SabreSD, SabreAuto, and SabreLite reference platforms.
+>
+> This patchset includes the OF graph layout as proposed by Philipp Zabel,
+> with only minor changes which are enumerated in the patch header.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-index 08dd15f..da54f4c 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-@@ -29,6 +29,10 @@ Required properties:
- 	onsemi,pca9654
- 	exar,xra1202
- 
-+Optional properties:
-+ - reset-gpios: GPIO specification for the RESET input
-+
-+
- Example:
- 
- 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index d5d72d8..ca2ddea 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -22,6 +22,7 @@
- #include <linux/of_platform.h>
- #include <linux/acpi.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/gpio/consumer.h>
- 
- #define PCA953X_INPUT		0
- #define PCA953X_OUTPUT		1
-@@ -754,8 +755,18 @@ static int pca953x_probe(struct i2c_client *client,
- 		invert = pdata->invert;
- 		chip->names = pdata->names;
- 	} else {
-+		struct gpio_desc *reset_gpio;
-+
- 		chip->gpio_start = -1;
- 		irq_base = 0;
-+
-+		/* see if we need to de-assert a reset pin */
-+		reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+						     GPIOD_OUT_LOW);
-+		if (IS_ERR(reset_gpio)) {
-+			dev_err(&client->dev, "request for reset pin failed\n");
-+			return PTR_ERR(reset_gpio);
-+		}
- 	}
- 
- 	chip->client = client;
--- 
-2.7.4
+Patches 13, 14 and 19 miss your Signed-off-by tag.
+
+Tested the whole series on a mx6qsabresd:
+
+Tested-by: Fabio Estevam <fabio.estevam@nxp.com>
