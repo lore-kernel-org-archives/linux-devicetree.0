@@ -1,40 +1,51 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM64: zynqmp: Fix i2c node's compatible string
-Date: Mon, 2 Jan 2017 14:35:38 +0100
-Message-ID: <5b6514b5-dcc8-4478-90df-57d1aa7040e4@xilinx.com>
-References: <1482427165-8951-1-git-send-email-mdf@kernel.org>
- <20161222172740.7eieploc3kp5lunx@xsjsorenbubuntu.xilinx.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] cfg80211: allow passing struct device in the
+ wiphy_new call
+Date: Mon, 02 Jan 2017 14:38:18 +0100
+Message-ID: <1483364298.21014.3.camel@sipsolutions.net>
+References: <20170102132747.3491-1-zajec5@gmail.com>
+         (sfid-20170102_142831_033140_A7AF3467)
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161222172740.7eieploc3kp5lunx-W+a29BXK3HMBNn8Usd2qwIIxRWo/Wh1X0E9HWUfgJXw@public.gmane.org>
+In-Reply-To: <20170102132747.3491-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (sfid-20170102_142831_033140_A7AF3467)
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22.12.2016 18:27, S�ren Brinkmann wrote:
-> On Thu, 2016-12-22 at 09:19:25 -0800, mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org wrote:
->> From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> The Zynq Ultrascale MP uses version 1.4 of the Cadence IP core
->> which fixes some silicon bugs that needed software workarounds
->> in Version 1.0 that was used on Zynq systems.
->>
->> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Cc: S�ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: S�ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> 
-> 	S�ren
-> 
 
-Applied and send as the part of PR to arm-soc guys.
+> --- a/include/net/cfg80211.h
+> +++ b/include/net/cfg80211.h
+> @@ -3730,8 +3730,8 @@ static inline const char *wiphy_name(const
+> struct wiphy *wiphy)
+>   * Return: A pointer to the new wiphy. This pointer must be
+>   * assigned to each netdev's ieee80211_ptr for proper operation.
+>   */
+> -struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int
+> sizeof_priv,
+> -			   const char *requested_name);
+> +struct wiphy *wiphy_new_nm(struct device *dev, const struct
+> cfg80211_ops *ops,
+> +			   int sizeof_priv, const char
+> *requested_name);
 
-Thanks,
-Michal
+This is obviously missing documentation updates.
+
+>   */
+> -static inline struct wiphy *wiphy_new(const struct cfg80211_ops
+> *ops,
+> +static inline struct wiphy *wiphy_new(struct device *dev,
+> +				      const struct cfg80211_ops
+> *ops,
+
+Ditto.
+
+It looks like you practically removed all users of set_wiphy_dev(), why
+not do that completely and remove that entirely?
+
+johannes
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
