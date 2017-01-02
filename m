@@ -1,38 +1,62 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [3/5] pinctrl: core: Add generic pinctrl functions for managing
- groups
-Date: Mon, 2 Jan 2017 17:21:03 +0100
-Message-ID: <20170102162103.xp5ekyyc6dwpeh4j@t450s.lan>
-References: <20161227172003.6517-4-tony@atomide.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V3 1/2] dt-bindings: document common IEEE 802.11 frequency limit property
+Date: Mon,  2 Jan 2017 17:32:07 +0100
+Message-ID: <20170102163209.2445-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161227172003.6517-4-tony@atomide.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-On Tue, Dec 27, 2016 at 09:20:01AM -0800, Tony Lindgren wrote:
-> We can add generic helpers for function handling for cases where the pin
-> controller driver does not need to use static arrays.
-> 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+This new file should be used for properties that apply to all wireless
+devices.
 
-Shouldn't the patch title be:
-pinctrl: core: Add generic pinmux functions for managing functions
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Switch to a single ieee80211-freq-limit property that allows specifying
+    *multiple* ranges. This resolves problem with more complex rules as pointed
+    by Felx.
+    Make description implementation agnostic as pointed by Arend.
+    Rename node to wifi as suggested by Martin.
+V3: Use more real-life frequencies in the example.
+---
+ .../devicetree/bindings/net/wireless/ieee80211.txt     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 
-It looks like a copy/paste issue since both patches have the same title:
-824bef17d16c pinctrl: core: Add generic pinctrl functions for managing
-groups
-d70a0fb14682 pinctrl: core: Add generic pinctrl functions for managing
-groups
+diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+new file mode 100644
+index 0000000..0cd1219
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+@@ -0,0 +1,18 @@
++Common IEEE 802.11 properties
++
++This provides documentation of common properties that are valid for all wireless
++devices.
++
++Optional properties:
++ - ieee80211-freq-limit : list of supported frequency ranges in KHz
++
++Example:
++
++pcie@0,0 {
++	reg = <0x0000 0 0 0 0>;
++	wifi@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		ieee80211-freq-limit = <2402000 2482000>,
++				       <5170000 5250000>;
++	};
++};
+-- 
+2.10.1
 
-That's actually my only remark, I had another comment about freeing the
-trees but it is actually done in the unregister so everything is good.
-
-Regards,
-Gary
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
