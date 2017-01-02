@@ -1,337 +1,81 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: dts: imx6: Add Savageboard common file
-Date: Mon, 2 Jan 2017 14:52:40 +0800
-Message-ID: <20170102065239.GC20956@dragon>
-References: <20161209010436.7994-1-woogyom.kim@gmail.com>
- <20161209010436.7994-2-woogyom.kim@gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: Add support for CSI1 bus
+Date: Mon, 2 Jan 2017 09:00:10 +0200
+Message-ID: <20170102070010.GD3958@valkosipuli.retiisi.org.uk>
+References: <20161228183036.GA13139@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161209010436.7994-2-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20161228183036.GA13139@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 09, 2016 at 10:04:34AM +0900, Milo Kim wrote:
-> * Memory
->   memblock for DDR3 1GB
+Hi Pavel,
+
+On Wed, Dec 28, 2016 at 07:30:36PM +0100, Pavel Machek wrote:
+> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 > 
-> * Regulator
->   3.3V for panel and backlight.
+> In the vast majority of cases the bus type is known to the driver(s)
+> since a receiver or transmitter can only support a single one. There
+> are cases however where different options are possible.
 > 
-> * Display
->   Enable HDMI and LVDS panel. Savageboard supports AVIC TM097TDH02 panel
->   which is compatible with Hannstar HSD100PXN1, so reuse it.
+> Document the CSI1/CCP2 properties strobe_clk_inv and strobe_clock
+> properties. The former tells whether the strobe/clock signal is
+> inverted, while the latter signifies the clock or strobe mode.
 > 
-> * Clock
->   The commit d28be499c45e6 is applied to support LVDS and HDMI output
->   simultaneously.
+> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 > 
-> * Pinmux
->   eMMC, ethernet, HDMI, I2C, power button, PWM, SD card and UART.
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 9cd2a36..f0523f7 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -76,6 +76,10 @@ Optional endpoint properties
+>    mode horizontal and vertical synchronization signals are provided to the
+>    slave device (data source) by the master device (data sink). In the master
+>    mode the data source device is also the source of the synchronization signals.
+> +- bus-type: data bus type. Possible values are:
+> +  0 - CSI2
+> +  1 - parallel / Bt656
+> +  2 - CCP2
+
+I wonder if we should make a difference between CCP2 and CSI-1 here, as it
+may make a difference in hardware configuration. The next patch does
+recognise that difference, so it should be present here as well.
+
+Perhaps 2 - CSI1; 3 - CCP2. What do you think?
+
+>  - bus-width: number of data lines actively used, valid for the parallel busses.
+>  - data-shift: on the parallel data busses, if bus-width is used to specify the
+>    number of data lines, data-shift can be used to specify which data lines are
+> @@ -110,9 +114,10 @@ Optional endpoint properties
+>    lane and followed by the data lanes in the same order as in data-lanes.
+>    Valid values are 0 (normal) and 1 (inverted). The length of the array
+>    should be the combined length of data-lanes and clock-lanes properties.
+> -  If the lane-polarities property is omitted, the value must be interpreted
+> -  as 0 (normal). This property is valid for serial busses only.
+> -
+> +- clock-inv: Clock or strobe signal inversion.
+> +  Possible values: 0 -- not inverted; 1 -- inverted
+> +- strobe: Whether the clock signal is used as clock or strobe. Used
+> +  with CCP2, for instance.
+>  
+>  Example
+>  -------
 > 
-> * Others
->   Enable ethernet, UART1 debug, USB host, USDHC3 for microSD card and
->   USDHC4 for built-in eMMC storage.
 > 
-> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6qdl-savageboard.dtsi | 262 +++++++++++++++++++++++++++++
->  1 file changed, 262 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6qdl-savageboard.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-savageboard.dtsi b/arch/arm/boot/dts/imx6qdl-savageboard.dtsi
-> new file mode 100644
-> index 0000000..a7a7e1d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6qdl-savageboard.dtsi
-> @@ -0,0 +1,262 @@
-> +/*
-> + * Copyright (C) 2016 Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
 
-The copyright text needs to be corrected as below.
 
-https://patchwork.kernel.org/patch/9475057/
 
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +
-> +/ {
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	memory@10000000 {
-> +		device_type = "memory";
-> +		reg = <0x10000000 0x40000000>;
-> +	};
-> +
-> +	backlight: panel_bl {
+-- 
+Kind regards,
 
-The node name should be as generic as possible, while label name can be
-specific.  That said, the following one should be better.
-
-	panel_bl: backlight
-
-> +		compatible = "pwm-backlight";
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <4>;
-> +		power-supply = <&reg_3p3v>;
-> +		pwms = <&pwm1 0 10000>;
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_keys>;
-> +
-> +		power {
-> +			gpios = <&gpio3 7 GPIO_ACTIVE_LOW>;
-> +			label = "Power Button";
-> +			linux,code = <KEY_POWER>;
-> +			wakeup-source;
-> +		};
-> +	};
-> +
-> +	panel {
-> +		compatible = "avic, tm097tdh02", "hannstar,hsd100pxn1";
-
-"avic, tm097tdh02" is an undocumented compatible.
-
-> +		backlight = <&backlight>;
-> +		power-supply = <&reg_3p3v>;
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds0_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	reg_3p3v: regulator-3p3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3P3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&clks {
-> +	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-> +			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
-> +	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
-> +				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-> +};
-> +
-> +&fec {
-> +	phy-mode = "rgmii";
-> +	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi {
-> +	ddc-i2c-bus = <&i2c2>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hdmi_tx_cec>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +};
-> +
-> +&ldb {
-> +	status = "okay";
-> +
-> +	lvds-channel@0 {
-> +		reg = <0>;
-> +		status = "okay";
-> +
-> +		port@4 {
-> +			reg = <4>;
-> +
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&panel_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&usbh1 {
-> +	status = "okay";
-> +};
-> +
-> +/* SD card */
-> +&usdhc3 {
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
-> +	no-1-8-v;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sd>;
-> +	status = "okay";
-> +};
-> +
-> +/* eMMC */
-> +&usdhc4 {
-> +	bus-width = <8>;
-> +	keep-power-in-suspend;
-> +	no-1-8-v;
-> +	non-removable;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_emmc>;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_emmc: emmcgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD4_CMD__SD4_CMD		0x17059
-> +			MX6QDL_PAD_SD4_CLK__SD4_CLK		0x10059
-> +			MX6QDL_PAD_SD4_DAT0__SD4_DATA0		0x17059
-> +			MX6QDL_PAD_SD4_DAT1__SD4_DATA1		0x17059
-> +			MX6QDL_PAD_SD4_DAT2__SD4_DATA2		0x17059
-> +			MX6QDL_PAD_SD4_DAT3__SD4_DATA3		0x17059
-> +			MX6QDL_PAD_SD4_DAT4__SD4_DATA4		0x17059
-> +			MX6QDL_PAD_SD4_DAT5__SD4_DATA5		0x17059
-> +			MX6QDL_PAD_SD4_DAT6__SD4_DATA6		0x17059
-> +			MX6QDL_PAD_SD4_DAT7__SD4_DATA7		0x17059
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet: enetgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-> +			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
-> +			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
-> +			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
-> +			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
-> +			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
-> +			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
-> +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-> +			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
-> +			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
-> +			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
-> +			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
-> +			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
-> +			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
-> +			/* PHY reset */
-> +			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_hdmi_tx_cec: hdmitxcecgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_KEY_ROW2__HDMI_TX_CEC_LINE	0x1f8b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c2: i2c2grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-> +			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio_keys: gpiokeysgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_EIM_DA7__GPIO3_IO07		0x1b0b1
-> +		>;
-> +	};
-
-The pinctrl entries are well sorted alphabetically except this one.
-
-Shawn
-
-> +
-> +	pinctrl_pwm1: pwm1grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD1_DAT3__PWM1_OUT		0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_sd: sdgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
-> +			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
-> +			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
-> +			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
-> +			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
-> +			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
-> +			/* CD pin */
-> +			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-> +			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.9.3
-> 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
