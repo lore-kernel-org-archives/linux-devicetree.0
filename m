@@ -1,171 +1,105 @@
-From: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 03/10] dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
-Date: Mon,  2 Jan 2017 01:49:21 -0500
-Message-ID: <1483339761-23927-1-git-send-email-anurup.m@huawei.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Anurup M <anurupvasu@gmail.com>
+Subject: [PATCH v3 10/10] dts: arm64: hip06: Add Hisilicon SoC PMU support
+Date: Mon,  2 Jan 2017 01:51:17 -0500
+Message-ID: <1483339877-24252-1-git-send-email-anurup.m@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mark.rutland@arm.com, will.deacon@arm.com, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, linuxarm@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-1) Device tree bindings for Hisilicon SoC PMU.
-2) Add example for Hisilicon L3 cache and MN PMU.
-3) Add child nodes of L3C and MN in djtag bindings example.
+1. Add nodes for hip06 L3 cache to support uncore events.
+2. Add nodes for hip06 MN to support uncore events.
 
-Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Anurup M <anurup.m@huawei.com>
 ---
- .../devicetree/bindings/arm/hisilicon/djtag.txt    |  25 ++++++
- .../devicetree/bindings/arm/hisilicon/pmu.txt      | 100 +++++++++++++++++++++
- 2 files changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi | 72 ++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-index bbe8b45..653fdb7 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-@@ -27,6 +27,31 @@ Example 1: Djtag for CPU die
- 		hisi-scl-id = <0x02>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+index e861698..02ff95f 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+@@ -963,6 +963,78 @@
+ 			status = "disabled";
+ 		};
  
- 		/* All connecting components will appear as child nodes */
++		djtag0: djtag@60010000 {
++			compatible = "hisilicon,hip06-djtag-v1";
++			reg = <0x0 0x60010000 0x0 0x10000>;
++			hisi-scl-id = <0x02>;
 +
-+		pmul3c0 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x02>;
++			/* L3 cache bank 0 for socket0 CPU die scl#2 */
++			pmul3c0 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x02>;
++			};
++
++			/* L3 cache bank 1 for socket0 CPU die scl#2 */
++			pmul3c1 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x04>;
++			};
++
++			/* L3 cache bank 2 for socket0 CPU die scl#2 */
++			pmul3c2 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x01>;
++			};
++
++			/* L3 cache bank 3 for socket0 CPU die scl#2 */
++			pmul3c3 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x08>;
++			};
++
++			/* Miscellaneous node for socket0 CPU die scl#2 */
++			pmumn0 {
++				compatible = "hisilicon,hip06-pmu-mn-v1";
++				hisi-module-id = <0x0b>;
++			};
 +		};
 +
-+		pmul3c1 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x04>;
++		djtag1: djtag@40010000 {
++			compatible = "hisilicon,hip06-djtag-v1";
++			reg = <0x0 0x40010000 0x0 0x10000>;
++			hisi-scl-id = <0x01>;
++
++			/* L3 cache bank 0 for socket0 CPU die scl#1 */
++			pmul3c0 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x02>;
++			};
++
++			/* L3 cache bank 1 for socket0 CPU die scl#1 */
++			pmul3c1 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x04>;
++			};
++
++			/* L3 cache bank 2 for socket0 CPU die scl#1 */
++			pmul3c2 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x01>;
++			};
++
++			/* L3 cache bank 3 for socket0 CPU die scl#1 */
++			pmul3c3 {
++				compatible = "hisilicon,hip06-pmu-l3c-v1";
++				hisi-module-id = <0x04 0x08>;
++			};
++
++			/* Miscellaneous node for socket0 CPU die scl#1 */
++			pmumn1 {
++				compatible = "hisilicon,hip06-pmu-mn-v1";
++				hisi-module-id = <0x0b>;
++			};
 +		};
 +
-+		pmul3c2 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x01>;
-+		};
-+
-+		pmul3c3 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x08>;
-+		};
-+
-+		pmumn0 {
-+			compatible = "hisilicon,hip05-pmu-mn-v1";
-+			hisi-module-id = <0x0b>;
-+		};
- 	};
- 
- Example 2: Djtag for IO die
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-new file mode 100644
-index 0000000..fceef8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-@@ -0,0 +1,100 @@
-+Hisilicon SoC HiP05/06/07 ARMv8 PMU
-+===================================
-+
-+The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
-+system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
-+PMU devices are independent and have hardware logic to gather statistics and
-+performance information.
-+
-+HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
-+is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
-+in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
-+4 cpu-cores each.
-+e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
-+The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
-+
-+The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
-+For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
-+the parent node will be the djtag node of the corresponding CPU die (SCCL).
-+
-+L3 cache
-+---------
-+The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
-+L3 cache banks. Each L3 cache bank have separate DT nodes.
-+
-+Required properties:
-+
-+	- compatible : This value should be as follows
-+		(a) "hisilicon,hip05-pmu-l3c-v1" for v1 hw in HiP05 chipset
-+		(b) "hisilicon,hip06-pmu-l3c-v1" for v1 hw in HiP06 chipset
-+		(c) "hisilicon,hip07-pmu-l3c-v2" for v2 hw in HiP07 chipset
-+
-+	- hisi-module-id : This property is a combination of two values in the below order.
-+		      a) Module ID: The module identifier for djtag.
-+		      b) Instance or Bank ID: This will identify the L3 cache bank
-+			 or instance.
-+
-+Optional properties:
-+
-+	- interrupt-parent : A phandle indicating which interrupt controller
-+		this PMU signals interrupts to.
-+
-+	- interrupts : Interrupt line used by this L3 cache bank.
-+
-+	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
-+
-+Miscellaneous Node
-+------------------
-+The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
-+for each SCCL.
-+
-+Required properties:
-+
-+	- compatible : This value should be as follows
-+		(a) "hisilicon,hip05-pmu-mn-v1" for v1 hw in HiP05 chipset
-+		(b) "hisilicon,hip06-pmu-mn-v1" for v1 hw in HiP06 chipset
-+		(c) "hisilicon,hip07-pmu-mn-v2" for v2 hw in HiP07 chipset
-+
-+	- hisi-module-id : Module ID to input for djtag.
-+
-+Optional properties:
-+
-+	- interrupt-parent : A phandle indicating which interrupt controller
-+		this PMU signals interrupts to.
-+
-+	- interrupts : Interrupt line used by this PMU.
-+
-+	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
-+
-+Example:
-+
-+	djtag0: djtag@80010000 {
-+		compatible = "hisilicon,hip05-djtag-v1";
-+		reg = <0x0 0x80010000 0x0 0x10000>;
-+		scl-id = <0x02>;
-+
-+		pmul3c0 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x02>;
-+		};
-+
-+		pmul3c1 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x04>;
-+		};
-+
-+		pmul3c2 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x01>;
-+		};
-+
-+		pmul3c3 {
-+			compatible = "hisilicon,hip05-pmu-l3c-v1";
-+			hisi-module-id = <0x04 0x08>;
-+		};
-+
-+		pmumn0 {
-+			compatible = "hisilicon,hip05-pmu-mn-v1";
-+			hisi-module-id = <0x0b>;
-+		};
-+	};
+ 		sas1: sas@a2000000 {
+ 			compatible = "hisilicon,hip06-sas-v2";
+ 			reg = <0 0xa2000000 0 0x10000>;
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
