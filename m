@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 6/8] ARM: dts: kirkwood-linksys-viper: Utilize new DSA binding
-Date: Sun,  1 Jan 2017 18:22:47 -0800
-Message-ID: <20170102022249.10657-7-f.fainelli@gmail.com>
+Subject: [PATCH 4/8] ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
+Date: Sun,  1 Jan 2017 18:22:45 -0800
+Message-ID: <20170102022249.10657-5-f.fainelli@gmail.com>
 References: <20170102022249.10657-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170102022249.10657-1-f.fainelli@gmail.com>
@@ -17,14 +17,14 @@ disabled.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/kirkwood-linksys-viper.dts | 49 ++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 53 +++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm/boot/dts/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-index 345fcac48dc7..df7851820507 100644
---- a/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-+++ b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-@@ -70,6 +70,8 @@
+diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+index 83ac884c0f8a..42ea8764814c 100644
+--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -302,6 +302,8 @@
  	};
  
  	dsa {
@@ -33,16 +33,19 @@ index 345fcac48dc7..df7851820507 100644
  		compatible = "marvell,dsa";
  		#address-cells = <2>;
  		#size-cells = <0>;
-@@ -207,6 +209,53 @@
- 
- &mdio {
- 	status = "okay";
+@@ -398,3 +400,54 @@
+ 		spi-max-frequency = <40000000>;
+ 	};
+ };
 +
-+	switch@10 {
++&mdio {
++	status = "okay";
++
++	switch@0 {
 +		compatible = "marvell,mv88e6085";
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		reg = <16>;
++		reg = <0>;
 +
 +		ports {
 +			#address-cells = <1>;
@@ -50,22 +53,22 @@ index 345fcac48dc7..df7851820507 100644
 +
 +			port@0 {
 +				reg = <0>;
-+				label = "ethernet1";
++				label = "lan4";
 +			};
 +
 +			port@1 {
 +				reg = <1>;
-+				label = "ethernet2";
++				label = "lan3";
 +			};
 +
 +			port@2 {
 +				reg = <2>;
-+				label = "ethernet3";
++				label = "lan2";
 +			};
 +
 +			port@3 {
 +				reg = <3>;
-+				label = "ethernet4";
++				label = "lan1";
 +			};
 +
 +			port@4 {
@@ -76,7 +79,7 @@ index 345fcac48dc7..df7851820507 100644
 +			port@5 {
 +				reg = <5>;
 +				label = "cpu";
-+				ethernet = <&eth0port>;
++				ethernet = <&eth0>;
 +				fixed-link {
 +					speed = <1000>;
 +					full-duplex;
@@ -84,8 +87,6 @@ index 345fcac48dc7..df7851820507 100644
 +			};
 +		};
 +	};
- };
- 
- &uart0 {
++};
 -- 
 2.9.3
