@@ -1,39 +1,138 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
-Date: Mon, 2 Jan 2017 10:04:25 -0800
-Message-ID: <20170102180424.GE9325@atomide.com>
-References: <20161230183732.5595-3-tony@atomide.com>
- <201701010645.EBjk2p8Y%fengguang.wu@intel.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 8/9] dt-bindings: mux-adg792a: document devicetree
+ bindings for ADG792A/G mux
+Date: Mon, 2 Jan 2017 18:05:56 +0000
+Message-ID: <86bfcc29-df24-d877-915f-d62fc3987c05@kernel.org>
+References: <1480493823-21462-1-git-send-email-peda@axentia.se>
+ <1480493823-21462-9-git-send-email-peda@axentia.se>
+ <d4c41153-aebf-be05-a323-1298e8c4ee65@kernel.org>
+ <3fa5b6f0-76c1-0ca6-978e-9407a44a2e7e@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201701010645.EBjk2p8Y%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3fa5b6f0-76c1-0ca6-978e-9407a44a2e7e@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> [161231 14:53]:
-> Hi Nishanth,
+On 02/01/17 16:01, Peter Rosin wrote:
+> On 2017-01-01 12:00, Jonathan Cameron wrote:
+>> On 30/11/16 08:17, Peter Rosin wrote:
+>>> Analog Devices ADG792A/G is a triple 4:1 mux.
+>>>
+>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>> Few comments inline.  Worth adding anything about the gpio (output pins) to
+>> the binding at this stage as well?  Would certainly be nice to support
+>> them.
 > 
-> [auto build test ERROR on pinctrl/for-next]
-> [also build test ERROR on v4.10-rc1 next-20161224]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-This patch is against pinctrl/devel as noted in the cover
-letter. Next does not yet have the dependencies.
-
-I did note another build error with COMPILE_TEST
-though if DEBUG_FS is not selected, will send a fix for
-that.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I'll add optional properties "gpio-controller;" and "#gpio-cells = <2>;"
+> with the usual interpretation in v7 (but no implementation...) Is that
+> enough?
+> 
+>> Jonathan
+>>> ---
+>>>  .../devicetree/bindings/misc/mux-adg792a.txt       | 64 ++++++++++++++++++++++
+>>>  1 file changed, 64 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/misc/mux-adg792a.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/misc/mux-adg792a.txt b/Documentation/devicetree/bindings/misc/mux-adg792a.txt
+>>> new file mode 100644
+>>> index 000000000000..4677f9ab1c55
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/misc/mux-adg792a.txt
+>>> @@ -0,0 +1,64 @@
+>>> +Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
+>>> +
+>>> +Required properties:
+>>> +- compatible : "adi,adg792a" or "adi,adg792g"
+>>> +- #mux-control-cells : <0> if parallel, or <1> if not.
+>>> +* Standard mux-controller bindings as decribed in mux-controller.txt
+>>> +
+>>> +Optional properties:
+>>> +- adi,parallel : if present, the three muxes are bound together with a single
+>>> +  mux controller, controlling all three muxes in parallel.
+>>> +- adi,idle-state : if present, array of states the three mux controllers will
+>>> +  have when idle (or, if parallel, a single idle-state).
+>> Hmm. These are actually a policy decision.  As only one policy will make
+>> sense for a given set of hardware probably fine to have it in here I guess.
+>> Might be worth adding a note to say this though.
+> 
+> I don't really know what you want me to add, do you have a suggestion for the
+> wording?
+> 
+>>> +
+>>> +Mux controller states 0 through 3 correspond to signals A through D in the
+>>> +datasheet. Mux controller states 4 and 5 are only available as possible idle
+>>> +states. State 4 represents that nothing is connected, and state 5 represents
+>>> +that the mux controller keeps the mux in its previously selected state during
+>>> +the idle period. State 5 is the default idle state.
+>> I'm never a great fan of magic numbers.  Can we represent this more cleanly by
+>> breaking it into multiple properties?
+>> Optional:
+>> adi,idle-switch-to-channel : switch to this channel when idle.
+>> adi,idle-high-impedance : <boolean> the nothing connected state?
+>>
+>> If neither present leaves it in previous state?
+> 
+> It's not that easy. adi,idle-state is an array when there are three single
+> pole quadruple throw muxes, so there really needs to be a number for each
+> desired idle-behavior. Unless you have a better idea for how to describe
+> that?
+The above with arrays for each of the two parameters?
+Though then you need a priority documented - I'd say high impedance overrides
+the channel selection if both are present.
+> 
+> Cheers,
+> peda
+> 
+>>> +
+>>> +Example:
+>>> +
+>>> +	/* three independent mux controllers (of which one is used) */
+>>> +	&i2c0 {
+>>> +		mux: adg792a@50 {
+>>> +			compatible = "adi,adg792a";
+>>> +			reg = <0x50>;
+>>> +			#mux-control-cells = <1>;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	adc-mux {
+>>> +		compatible = "iio-mux";
+>>> +		io-channels = <&adc 0>;
+>>> +		io-channel-names = "parent";
+>>> +
+>>> +		mux-controls = <&mux 1>;
+>>> +
+>>> +		channels = "sync-1", "", "out";
+>>> +	};
+>>> +
+>>> +
+>>> +	/*
+>>> +	 * Three parallel muxes with one mux controller, useful e.g. if
+>>> +	 * the adc is differential, thus needing two signals to be muxed
+>>> +	 * simultaneously for correct operation.
+>>> +	 */
+>>> +	&i2c0 {
+>>> +		pmux: adg792a@50 {
+>>> +			compatible = "adi,adg792a";
+>>> +			reg = <0x50>;
+>>> +			#mux-control-cells = <0>;
+>>> +			adi,parallel;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	diff-adc-mux {
+>>> +		compatible = "iio-mux";
+>>> +		io-channels = <&adc 0>;
+>>> +		io-channel-names = "parent";
+>>> +
+>>> +		mux-controls = <&pmux>;
+>>> +
+>>> +		channels = "sync-1", "", "out";
+>>> +	};
+>>>
+>>
+> 
