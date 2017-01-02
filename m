@@ -1,53 +1,35 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] ARM: dts: da850: rename the display node label
-Date: Mon, 2 Jan 2017 16:34:37 +0530
-Message-ID: <cb0e2aad-b63e-923a-bd63-26f059eeb05e@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v7 3/5] drm: bridge: add support for TI ths8135
+Date: Mon, 2 Jan 2017 16:38:00 +0530
+Message-ID: <0b47c27e-cda4-b5f6-ff3c-da74c40ed204@ti.com>
 References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
- <1481623759-12786-2-git-send-email-bgolaszewski@baylibre.com>
- <750eaa32-ca29-b140-eec6-cec4350cf304@ti.com>
+ <1481623759-12786-4-git-send-email-bgolaszewski@baylibre.com>
+ <dbb47a8f-07be-19d6-e77b-f5c06fd39c61@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <750eaa32-ca29-b140-eec6-cec4350cf304-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <dbb47a8f-07be-19d6-e77b-f5c06fd39c61@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 December 2016 03:27 PM, Tomi Valkeinen wrote:
-> On 13/12/16 12:09, Bartosz Golaszewski wrote:
->> The tilcdc node name is 'display' as per the ePAPR 1.1 recommendation.
->> The label is also 'display', but change it to 'lcdc' to make it clear
->> what the underlying hardware is.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/da850.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index 104155d..6b0ef3d 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -458,7 +458,7 @@
->>  			dma-names = "tx", "rx";
->>  		};
->>  
->> -		display: display@213000 {
->> +		lcdc: display@213000 {
->>  			compatible = "ti,da850-tilcdc";
->>  			reg = <0x213000 0x1000>;
->>  			interrupts = <52>;
->>
-> 
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Hi Archit,
 
-Applied with Tomi's reviewed-by.
+On Wednesday 14 December 2016 10:35 AM, Archit Taneja wrote:
+> 
+> 
+> On 12/13/2016 03:39 PM, Bartosz Golaszewski wrote:
+>> THS8135 is a configurable video DAC, but no configuration is actually
+>> necessary to make it work.
+>>
+>> For now use the dumb-vga-dac driver to support it.
+> 
+> Queued to drm-misc-next
+
+This patch and 2/5 are not in v4.10 kernel. Did you mean to queue them
+to v4.10?
 
 Thanks,
 Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
