@@ -1,36 +1,80 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v7 5/5] ARM: dts: da850: specify the maximum pixel clock
- rate for tilcdc
-Date: Mon, 2 Jan 2017 16:59:35 +0530
-Message-ID: <778cfd63-823c-7bf6-dc9d-0f2dcb43e129@ti.com>
-References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
- <1481623759-12786-6-git-send-email-bgolaszewski@baylibre.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 0/2] Add support for the S6E3HA2 panel on TM2 board
+Date: Mon, 02 Jan 2017 13:06:30 +0100
+Message-ID: <5aa24b42-6879-6f01-06d1-def32ef8d727@samsung.com>
+References: <CGME20161230065850epcas5p3ecad04edde7dfe1f2ad3c86815dcc377@epcas5p3.samsung.com>
+ <1483081108-32055-1-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481623759-12786-6-git-send-email-bgolaszewski@baylibre.com>
+In-reply-to: <1483081108-32055-1-git-send-email-hoegeun.kwon@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, inki.dae@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 December 2016 03:39 PM, Bartosz Golaszewski wrote:
-> At maximum CPU frequency of 300 MHz the maximum pixel clock frequency
-> is 37.5 MHz[1]. We must filter out any mode for which the calculated
-> pixel clock rate would exceed this value.
-> 
-> Specify the max-pixelclock property for the display node for
-> da850-lcdk.
-> 
-> [1] http://processors.wiki.ti.com/index.php/OMAP-L1x/C674x/AM1x_LCD_Controller_(LCDC)_Throughput_and_Optimization_Techniques
+On 30.12.2016 07:58, Hoegeun Kwon wrote:
+> Purpose of this patch is add support for S6E3HA2 AMOLED panel on
+> the TM2 board. The first patch adds support for S6E3HA2 panel
+> device tree document and driver, the second patch add support for
+> S6E3HA2 panel device tree.
+>
+> Changes for V3:
+>
+> - In the DT binding document, made it clearly that the panel is a
+>   child node of dsi.
+> - Fix reset-gpio active from high to low.
+> - Is the OF graph saying related to [1]?
 
-This wiki page is not really a TI datasheet and can change without
-notice. I changed this to refer to
-http://www.ti.com/lit/ds/symlink/am1808.pdf (SPRS653E, revised March
-2014), table 6-110.
+Yes, video-interfaces described in [1] are OF graphs described in [2]
+with additional properties specific for video pipelines.
 
-Applied to v4.11/dt
+[2]: Documentation/devicetree/bindings/graph.txt
 
-Thanks,
-Sekhar
+>   Althogh the panel is a child of dsi, I think OF graph necessary.
+>   because if a remote-endpoint is not specified, the dsi also
+>   panel is not probed.
+
+OK, I see the issue: dsi driver requires presence of DSI_PORT_OUT
+endpoint, because it needs to read MIPI-DSI burst and esc clock
+frequencies from these nodes, however it does not use it to get panel
+node, panel node is get by .attach callback. Probably these clock
+frequencies should be passed via struct mipi_dsi_device.
+So as for now I think it would be simpler to leave OF graph, as it is
+already used this way in other drivers.
+
+> - The display-timings has been fixed to be provided by the device
+>   driver. however, I think display-timings is necessary in dts.
+>   because if dts does not have display-timings, dsi will not load.
+
+After examining drivers it looks like these timings, beside panel, are
+read by MIC driver, and this is wrong. MIC driver shouldn't peek into
+other driver's nodes, it can use DRM callbacks (mode_fixup, mode_set) to
+get necessary information. And more importantly display-timings in
+panels are not accepted by panels maintainer AFAIK, see [1] for rationale.
+
+[1]:
+https://sietch-tagr.blogspot.de/2016/04/display-panels-are-not-special.html
+
+Regards
+Andrzej
+
+>
+> [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+>
+> Hoegeun Kwon (1):
+>   drm/panel: Add support for S6E3HA2 panel driver on TM2 board
+>
+> Hyungwon Hwang (1):
+>   arm64: dts: exynos: Add support for S6E3HA2 panel device on TM2 board
+>
+>  .../bindings/display/panel/samsung,s6e3ha2.txt     |  58 ++
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      |  31 +
+>  drivers/gpu/drm/panel/Kconfig                      |   6 +
+>  drivers/gpu/drm/panel/Makefile                     |   1 +
+>  drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 741 +++++++++++++++++++++
+>  5 files changed, 837 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
+>  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c
+>
