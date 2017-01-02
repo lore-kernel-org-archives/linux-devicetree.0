@@ -1,11 +1,13 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V3 1/2] dt-bindings: document common IEEE 802.11 frequency limit property
-Date: Mon,  2 Jan 2017 17:32:07 +0100
-Message-ID: <20170102163209.2445-1-zajec5@gmail.com>
+Subject: [PATCH V3 2/2] cfg80211: support ieee80211-freq-limit DT property
+Date: Mon,  2 Jan 2017 17:32:08 +0100
+Message-ID: <20170102163209.2445-2-zajec5@gmail.com>
+References: <20170102163209.2445-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170102163209.2445-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
@@ -13,46 +15,229 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-This new file should be used for properties that apply to all wireless
-devices.
+It allows specifying hardware limitations of supported channels. This
+may be useful for specifying single band devices or devices that support
+only some part of the whole band.
+This can be useful for some tri-band routers that have separated radios
+for lower and higher part of 5 GHz band.
 
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
-V2: Switch to a single ieee80211-freq-limit property that allows specifying
-    *multiple* ranges. This resolves problem with more complex rules as pointed
-    by Felx.
-    Make description implementation agnostic as pointed by Arend.
-    Rename node to wifi as suggested by Martin.
-V3: Use more real-life frequencies in the example.
+V2: Put main code in core.c as it isn't strictly part of regulatory - pointed
+    by Arend.
+    Update to support ieee80211-freq-limit (new property).
+V3: Introduce separated wiphy_read_of_freq_limits function.
+    Add extra sanity checks for DT data.
+    Move code back to reg.c as suggested by Johannes.
 ---
- .../devicetree/bindings/net/wireless/ieee80211.txt     | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+ include/net/cfg80211.h |  23 ++++++++++
+ net/wireless/core.c    |   1 +
+ net/wireless/reg.c     | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 142 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
-new file mode 100644
-index 0000000..0cd1219
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
-@@ -0,0 +1,18 @@
-+Common IEEE 802.11 properties
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index ca2ac1c..5002625 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -3515,6 +3515,9 @@ struct wiphy_iftype_ext_capab {
+  *	attribute indices defined in &enum nl80211_bss_select_attr.
+  *
+  * @cookie_counter: unique generic cookie counter, used to identify objects.
++ *
++ * @n_freq_limits: number of frequency limits
++ * @freq_limits: array of extra frequency limits
+  */
+ struct wiphy {
+ 	/* assign these fields before you register the wiphy */
+@@ -3646,6 +3649,9 @@ struct wiphy {
+ 
+ 	u64 cookie_counter;
+ 
++	unsigned int n_freq_limits;
++	struct ieee80211_freq_range *freq_limits;
 +
-+This provides documentation of common properties that are valid for all wireless
-+devices.
+ 	char priv[0] __aligned(NETDEV_ALIGN);
+ };
+ 
+@@ -4278,6 +4284,23 @@ const u8 *cfg80211_find_vendor_ie(unsigned int oui, int oui_type,
+  */
+ 
+ /**
++ * wiphy_read_of_freq_limits - read frequency limits from device tree
++ *
++ * @wiphy: the wireless device to get extra limits for
++ *
++ * Some devices may have extra limitations specified in DT. This may be useful
++ * for chipsets that normally support more bands but are limited due to board
++ * design (e.g. by antennas or extermal power amplifier).
++ *
++ * This function reads info from DT and uses it to *modify* channels (disable
++ * unavailable ones) in a regulary code. It's usually a *bad* idea to use it in
++ * drivers with *shared* channel data as DT limitations are device specific.
++ *
++ * As this function access device node it has to be called after set_wiphy_dev.
++ */
++int wiphy_read_of_freq_limits(struct wiphy *wiphy);
 +
-+Optional properties:
-+ - ieee80211-freq-limit : list of supported frequency ranges in KHz
++/**
+  * regulatory_hint - driver hint to the wireless core a regulatory domain
+  * @wiphy: the wireless device giving the hint (used only for reporting
+  *	conflicts)
+diff --git a/net/wireless/core.c b/net/wireless/core.c
+index 158c59e..c1b5fc7 100644
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -940,6 +940,7 @@ void cfg80211_dev_free(struct cfg80211_registered_device *rdev)
+ 
+ void wiphy_free(struct wiphy *wiphy)
+ {
++	kfree(wiphy->freq_limits);
+ 	put_device(&wiphy->dev);
+ }
+ EXPORT_SYMBOL(wiphy_free);
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 5dbac37..e00fd5b 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1158,6 +1158,120 @@ static uint32_t reg_rule_to_chan_bw_flags(const struct ieee80211_regdomain *regd
+ 	return bw_flags;
+ }
+ 
++int wiphy_read_of_freq_limits(struct wiphy *wiphy)
++{
++	struct device *dev = wiphy_dev(wiphy);
++	struct device_node *np;
++	struct property *prop;
++	const __be32 *p;
++	int len, i, err;
 +
-+Example:
++	if (wiphy->n_freq_limits)
++		return 0;
 +
-+pcie@0,0 {
-+	reg = <0x0000 0 0 0 0>;
-+	wifi@0,0 {
-+		reg = <0x0000 0 0 0 0>;
-+		ieee80211-freq-limit = <2402000 2482000>,
-+				       <5170000 5250000>;
-+	};
-+};
++	if (!dev)
++		return 0;
++	np = dev_of_node(dev);
++	if (!np)
++		return 0;
++
++	prop = of_find_property(np, "ieee80211-freq-limit", &len);
++	if (!prop)
++		return 0;
++
++	if (!len || len % sizeof(u32) || len / sizeof(u32) % 2) {
++		dev_err(dev, "ieee80211-freq-limit wrong format");
++		return -EPROTO;
++	}
++	wiphy->n_freq_limits = len / sizeof(u32) / 2;
++
++	wiphy->freq_limits = kzalloc(wiphy->n_freq_limits * sizeof(*wiphy->freq_limits),
++				     GFP_KERNEL);
++	if (!wiphy->freq_limits) {
++		err = -ENOMEM;
++		goto out;
++	}
++
++	p = NULL;
++	for (i = 0; i < wiphy->n_freq_limits; i++) {
++		struct ieee80211_freq_range *limit = &wiphy->freq_limits[i];
++
++		p = of_prop_next_u32(prop, p, &limit->start_freq_khz);
++		if (!p) {
++			err = -EINVAL;
++			goto out;
++		}
++
++		p = of_prop_next_u32(prop, p, &limit->end_freq_khz);
++		if (!p) {
++			err = -EINVAL;
++			goto out;
++		}
++
++		if (!limit->start_freq_khz ||
++		    !limit->end_freq_khz ||
++		    limit->start_freq_khz >= limit->end_freq_khz) {
++			err = -EINVAL;
++			goto out;
++		}
++	}
++
++	return 0;
++
++out:
++	dev_err(dev, "Failed to get limits: %d\n", err);
++	kfree(wiphy->freq_limits);
++	wiphy->n_freq_limits = 0;
++
++	return err;
++}
++EXPORT_SYMBOL(wiphy_read_of_freq_limits);
++
++static bool wiphy_freq_limits_valid_chan(struct wiphy *wiphy,
++					 struct ieee80211_channel *chan)
++{
++	u32 bw = MHZ_TO_KHZ(20);
++	int i;
++
++	for (i = 0; i < wiphy->n_freq_limits; i++) {
++		struct ieee80211_freq_range *limit = &wiphy->freq_limits[i];
++
++		if (reg_does_bw_fit(limit, MHZ_TO_KHZ(chan->center_freq), bw))
++			return true;
++	}
++
++	return false;
++}
++
++static void wiphy_freq_limits_apply(struct wiphy *wiphy)
++{
++	enum nl80211_band band;
++	int i;
++
++	if (!wiphy->n_freq_limits)
++		return;
++
++	for (band = 0; band < NUM_NL80211_BANDS; band++) {
++		struct ieee80211_supported_band *sband = wiphy->bands[band];
++
++		if (!sband)
++			continue;
++
++		for (i = 0; i < sband->n_channels; i++) {
++			struct ieee80211_channel *chan = &sband->channels[i];
++
++			if (chan->flags & IEEE80211_CHAN_DISABLED)
++				continue;
++
++			if (!wiphy_freq_limits_valid_chan(wiphy, chan)) {
++				pr_debug("Disabling freq %d MHz as it's out of OF limits\n",
++					 chan->center_freq);
++				chan->flags |= IEEE80211_CHAN_DISABLED;
++			}
++		}
++	}
++}
++
+ /*
+  * Note that right now we assume the desired channel bandwidth
+  * is always 20 MHz for each individual channel (HT40 uses 20 MHz
+@@ -1693,6 +1807,8 @@ static void wiphy_update_regulatory(struct wiphy *wiphy,
+ 	for (band = 0; band < NUM_NL80211_BANDS; band++)
+ 		handle_band(wiphy, initiator, wiphy->bands[band]);
+ 
++	wiphy_freq_limits_apply(wiphy);
++
+ 	reg_process_beacons(wiphy);
+ 	reg_process_ht_flags(wiphy);
+ 	reg_call_notifier(wiphy, lr);
+@@ -1800,6 +1916,8 @@ void wiphy_apply_custom_regulatory(struct wiphy *wiphy,
+ 		bands_set++;
+ 	}
+ 
++	wiphy_freq_limits_apply(wiphy);
++
+ 	/*
+ 	 * no point in calling this if it won't have any effect
+ 	 * on your device's supported bands.
 -- 
 2.10.1
 
