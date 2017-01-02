@@ -1,400 +1,369 @@
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v3 6/7] [media] coda: use VDOA for un-tiling custom macroblock format
-Date: Mon,  2 Jan 2017 14:23:51 +0100
-Message-ID: <20170102132352.23669-7-m.tretter@pengutronix.de>
-References: <20170102132352.23669-1-m.tretter@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170102132352.23669-1-m.tretter@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2 1/3] cfg80211: allow passing struct device in the wiphy_new call
+Date: Mon,  2 Jan 2017 14:27:45 +0100
+Message-ID: <20170102132747.3491-1-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If the CODA driver is configured to produce NV12 output and the VDOA is
-available, the VDOA can be used to transform the custom macroblock tiled
-format to a raster-ordered format for scanout.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-In this case, set the output format of the CODA to the custom macroblock
-tiled format, disable the rotator, and use the VDOA to write to the v4l2
-buffer. The VDOA is synchronized with the CODA to always un-tile the
-frame that the CODA finished in the previous run.
+So far wiphy's device had to be set using separated set_wiphy_dev call.
+Most drivers were doing this right after calling wiphy_new anyway so
+this just simplifies the code a bit.
+The real advantage of this however is having access to struct dev during
+early wiphy init. This allows e.g. reading extra DT info thanks to
+of_node reference. It's important for things that may happen before
+wiphy_register like custom regulatory.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
- drivers/media/platform/coda/coda-bit.c    |  86 +++++++++++++++++--------
- drivers/media/platform/coda/coda-common.c | 102 ++++++++++++++++++++++++++++--
- drivers/media/platform/coda/coda.h        |   3 +
- 3 files changed, 161 insertions(+), 30 deletions(-)
+V2: This is a new patch, wasn't used in V1
+---
+ drivers/net/wireless/ath/ath6kl/cfg80211.c                  | 7 ++-----
+ drivers/net/wireless/ath/ath6kl/cfg80211.h                  | 2 +-
+ drivers/net/wireless/ath/ath6kl/core.c                      | 2 +-
+ drivers/net/wireless/ath/wil6210/cfg80211.c                 | 3 +--
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 3 +--
+ drivers/net/wireless/intel/ipw2x00/libipw_module.c          | 2 +-
+ drivers/net/wireless/intersil/orinoco/cfg.c                 | 2 --
+ drivers/net/wireless/intersil/orinoco/main.c                | 2 +-
+ drivers/net/wireless/marvell/libertas/cfg.c                 | 3 ++-
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c             | 4 +---
+ drivers/net/wireless/rndis_wlan.c                           | 5 ++---
+ drivers/staging/wilc1000/wilc_wfi_cfgoperations.c           | 9 ++++-----
+ drivers/staging/wlan-ng/cfg80211.c                          | 3 +--
+ include/net/cfg80211.h                                      | 9 +++++----
+ net/mac80211/main.c                                         | 3 ++-
+ net/wireless/core.c                                         | 6 ++++--
+ 16 files changed, 29 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index 309eb4eb5ad1..f608de4c52ac 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -30,6 +30,7 @@
- #include <media/videobuf2-vmalloc.h>
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index b7fe0af..0f9f7e7 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -3870,9 +3870,6 @@ int ath6kl_cfg80211_init(struct ath6kl *ar)
  
- #include "coda.h"
-+#include "imx-vdoa.h"
- #define CREATE_TRACE_POINTS
- #include "trace.h"
+ 	wiphy->max_remain_on_channel_duration = 5000;
  
-@@ -1517,6 +1518,10 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 	u32 val;
- 	int ret;
- 
-+	v4l2_dbg(1, coda_debug, &dev->v4l2_dev,
-+		 "Video Data Order Adapter: %s\n",
-+		 ctx->use_vdoa ? "Enabled" : "Disabled");
-+
- 	/* Start decoding */
- 	q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
- 	q_data_dst = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
-@@ -1535,7 +1540,8 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 	if (dst_fourcc == V4L2_PIX_FMT_NV12)
- 		ctx->frame_mem_ctrl |= CODA_FRAME_CHROMA_INTERLEAVE;
- 	if (ctx->tiled_map_type == GDI_TILED_FRAME_MB_RASTER_MAP)
--		ctx->frame_mem_ctrl |= (0x3 << 9) | CODA9_FRAME_TILED2LINEAR;
-+		ctx->frame_mem_ctrl |= (0x3 << 9) |
-+			((ctx->use_vdoa) ? 0 : CODA9_FRAME_TILED2LINEAR);
- 	coda_write(dev, ctx->frame_mem_ctrl, CODA_REG_BIT_FRAME_MEM_CTRL);
- 
- 	ctx->display_idx = -1;
-@@ -1618,6 +1624,15 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 		 __func__, ctx->idx, width, height);
- 
- 	ctx->num_internal_frames = coda_read(dev, CODA_RET_DEC_SEQ_FRAME_NEED);
-+	/*
-+	 * If the VDOA is used, the decoder needs one additional frame,
-+	 * because the frames are freed when the next frame is decoded.
-+	 * Otherwise there are visible errors in the decoded frames (green
-+	 * regions in displayed frames) and a broken order of frames (earlier
-+	 * frames are sporadically displayed after later frames).
-+	 */
-+	if (ctx->use_vdoa)
-+		ctx->num_internal_frames += 1;
- 	if (ctx->num_internal_frames > CODA_MAX_FRAMEBUFFERS) {
- 		v4l2_err(&dev->v4l2_dev,
- 			 "not enough framebuffers to decode (%d < %d)\n",
-@@ -1724,6 +1739,7 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
- 	struct coda_q_data *q_data_dst;
- 	struct coda_buffer_meta *meta;
- 	unsigned long flags;
-+	u32 rot_mode = 0;
- 	u32 reg_addr, reg_stride;
- 
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-@@ -1759,27 +1775,40 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
- 	if (dev->devtype->product == CODA_960)
- 		coda_set_gdi_regs(ctx);
- 
--	if (dev->devtype->product == CODA_960) {
--		/*
--		 * The CODA960 seems to have an internal list of buffers with
--		 * 64 entries that includes the registered frame buffers as
--		 * well as the rotator buffer output.
--		 * ROT_INDEX needs to be < 0x40, but > ctx->num_internal_frames.
--		 */
--		coda_write(dev, CODA_MAX_FRAMEBUFFERS + dst_buf->vb2_buf.index,
--				CODA9_CMD_DEC_PIC_ROT_INDEX);
+-	/* set device pointer for wiphy */
+-	set_wiphy_dev(wiphy, ar->dev);
 -
--		reg_addr = CODA9_CMD_DEC_PIC_ROT_ADDR_Y;
--		reg_stride = CODA9_CMD_DEC_PIC_ROT_STRIDE;
-+	if (ctx->use_vdoa &&
-+	    ctx->display_idx >= 0 &&
-+	    ctx->display_idx < ctx->num_internal_frames) {
-+		vdoa_device_run(ctx->vdoa,
-+				vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0),
-+				ctx->internal_frames[ctx->display_idx].paddr);
- 	} else {
--		reg_addr = CODA_CMD_DEC_PIC_ROT_ADDR_Y;
--		reg_stride = CODA_CMD_DEC_PIC_ROT_STRIDE;
-+		if (dev->devtype->product == CODA_960) {
-+			/*
-+			 * The CODA960 seems to have an internal list of
-+			 * buffers with 64 entries that includes the
-+			 * registered frame buffers as well as the rotator
-+			 * buffer output.
-+			 *
-+			 * ROT_INDEX needs to be < 0x40, but >
-+			 * ctx->num_internal_frames.
-+			 */
-+			coda_write(dev,
-+				   CODA_MAX_FRAMEBUFFERS + dst_buf->vb2_buf.index,
-+				   CODA9_CMD_DEC_PIC_ROT_INDEX);
-+
-+			reg_addr = CODA9_CMD_DEC_PIC_ROT_ADDR_Y;
-+			reg_stride = CODA9_CMD_DEC_PIC_ROT_STRIDE;
-+		} else {
-+			reg_addr = CODA_CMD_DEC_PIC_ROT_ADDR_Y;
-+			reg_stride = CODA_CMD_DEC_PIC_ROT_STRIDE;
-+		}
-+		coda_write_base(ctx, q_data_dst, dst_buf, reg_addr);
-+		coda_write(dev, q_data_dst->bytesperline, reg_stride);
-+
-+		rot_mode = CODA_ROT_MIR_ENABLE | ctx->params.rot_mode;
- 	}
--	coda_write_base(ctx, q_data_dst, dst_buf, reg_addr);
--	coda_write(dev, q_data_dst->bytesperline, reg_stride);
- 
--	coda_write(dev, CODA_ROT_MIR_ENABLE | ctx->params.rot_mode,
--			CODA_CMD_DEC_PIC_ROT_MODE);
-+	coda_write(dev, rot_mode, CODA_CMD_DEC_PIC_ROT_MODE);
- 
- 	switch (dev->devtype->product) {
- 	case CODA_DX6:
-@@ -1851,6 +1880,7 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 	u32 src_fourcc;
- 	int success;
- 	u32 err_mb;
-+	int err_vdoa = 0;
- 	u32 val;
- 
- 	/* Update kfifo out pointer from coda bitstream read pointer */
-@@ -1934,13 +1964,17 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		}
- 	}
- 
-+	/* Wait until the VDOA finished writing the previous display frame */
-+	if (ctx->use_vdoa &&
-+	    ctx->display_idx >= 0 &&
-+	    ctx->display_idx < ctx->num_internal_frames) {
-+		err_vdoa = vdoa_wait_for_completion(ctx->vdoa);
-+	}
-+
- 	ctx->frm_dis_flg = coda_read(dev,
- 				     CODA_REG_BIT_FRM_DIS_FLG(ctx->reg_idx));
- 
--	/*
--	 * The previous display frame was copied out by the rotator,
--	 * now it can be overwritten again
--	 */
-+	/* The previous display frame was copied out and can be overwritten */
- 	if (ctx->display_idx >= 0 &&
- 	    ctx->display_idx < ctx->num_internal_frames) {
- 		ctx->frm_dis_flg &= ~(1 << ctx->display_idx);
-@@ -2057,8 +2091,10 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		}
- 		vb2_set_plane_payload(&dst_buf->vb2_buf, 0, payload);
- 
--		coda_m2m_buf_done(ctx, dst_buf, ctx->frame_errors[ctx->display_idx] ?
--				  VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE);
-+		if (ctx->frame_errors[ctx->display_idx] || err_vdoa)
-+			coda_m2m_buf_done(ctx, dst_buf, VB2_BUF_STATE_ERROR);
-+		else
-+			coda_m2m_buf_done(ctx, dst_buf, VB2_BUF_STATE_DONE);
- 
- 		v4l2_dbg(1, coda_debug, &dev->v4l2_dev,
- 			"job finished: decoding frame (%d) (%s)\n",
-diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-index b23fe0f0fb56..8977a56d6a38 100644
---- a/drivers/media/platform/coda/coda-common.c
-+++ b/drivers/media/platform/coda/coda-common.c
-@@ -41,6 +41,7 @@
- #include <media/videobuf2-vmalloc.h>
- 
- #include "coda.h"
-+#include "imx-vdoa.h"
- 
- #define CODA_NAME		"coda"
- 
-@@ -66,6 +67,10 @@ static int disable_tiling;
- module_param(disable_tiling, int, 0644);
- MODULE_PARM_DESC(disable_tiling, "Disable tiled frame buffers");
- 
-+static int disable_vdoa;
-+module_param(disable_vdoa, int, 0644);
-+MODULE_PARM_DESC(disable_vdoa, "Disable Video Data Order Adapter tiled to raster-scan conversion");
-+
- void coda_write(struct coda_dev *dev, u32 data, u32 reg)
- {
- 	v4l2_dbg(2, coda_debug, &dev->v4l2_dev,
-@@ -325,6 +330,31 @@ const char *coda_product_name(int product)
- 	}
+ 	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+ 				 BIT(NL80211_IFTYPE_ADHOC) |
+ 				 BIT(NL80211_IFTYPE_AP);
+@@ -4004,13 +4001,13 @@ void ath6kl_cfg80211_cleanup(struct ath6kl *ar)
+ 	ar->wiphy_registered = false;
  }
  
-+static struct vdoa_data *coda_get_vdoa_data(void)
-+{
-+	struct device_node *vdoa_node;
-+	struct platform_device *vdoa_pdev;
-+	struct vdoa_data *vdoa_data = NULL;
-+
-+	vdoa_node = of_find_compatible_node(NULL, NULL, "fsl,imx6q-vdoa");
-+	if (!vdoa_node)
-+		return NULL;
-+
-+	vdoa_pdev = of_find_device_by_node(vdoa_node);
-+	if (!vdoa_pdev)
-+		goto out;
-+
-+	vdoa_data = platform_get_drvdata(vdoa_pdev);
-+	if (!vdoa_data)
-+		vdoa_data = ERR_PTR(-EPROBE_DEFER);
-+
-+out:
-+	if (vdoa_node)
-+		of_node_put(vdoa_node);
-+
-+	return vdoa_data;
-+}
-+
- /*
-  * V4L2 ioctl() operations.
-  */
-@@ -417,6 +447,33 @@ static int coda_try_pixelformat(struct coda_ctx *ctx, struct v4l2_format *f)
- 	return 0;
+-struct ath6kl *ath6kl_cfg80211_create(void)
++struct ath6kl *ath6kl_cfg80211_create(struct device *dev)
+ {
+ 	struct ath6kl *ar;
+ 	struct wiphy *wiphy;
+ 
+ 	/* create a new wiphy for use with cfg80211 */
+-	wiphy = wiphy_new(&ath6kl_cfg80211_ops, sizeof(struct ath6kl));
++	wiphy = wiphy_new(dev, &ath6kl_cfg80211_ops, sizeof(struct ath6kl));
+ 
+ 	if (!wiphy) {
+ 		ath6kl_err("couldn't allocate wiphy device\n");
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.h b/drivers/net/wireless/ath/ath6kl/cfg80211.h
+index 5aa57a7..994ba2c 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.h
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.h
+@@ -60,7 +60,7 @@ void ath6kl_cfg80211_stop_all(struct ath6kl *ar);
+ int ath6kl_cfg80211_init(struct ath6kl *ar);
+ void ath6kl_cfg80211_cleanup(struct ath6kl *ar);
+ 
+-struct ath6kl *ath6kl_cfg80211_create(void);
++struct ath6kl *ath6kl_cfg80211_create(struct device *dev);
+ void ath6kl_cfg80211_destroy(struct ath6kl *ar);
+ 
+ #endif /* ATH6KL_CFG80211_H */
+diff --git a/drivers/net/wireless/ath/ath6kl/core.c b/drivers/net/wireless/ath/ath6kl/core.c
+index ebb9f16..d3f3822 100644
+--- a/drivers/net/wireless/ath/ath6kl/core.c
++++ b/drivers/net/wireless/ath/ath6kl/core.c
+@@ -267,7 +267,7 @@ struct ath6kl *ath6kl_core_create(struct device *dev)
+ 	struct ath6kl *ar;
+ 	u8 ctr;
+ 
+-	ar = ath6kl_cfg80211_create();
++	ar = ath6kl_cfg80211_create(dev);
+ 	if (!ar)
+ 		return NULL;
+ 
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index 6aa3ff4..ce4d7d4 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -1575,14 +1575,13 @@ struct wireless_dev *wil_cfg80211_init(struct device *dev)
+ 	if (!wdev)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	wdev->wiphy = wiphy_new(&wil_cfg80211_ops,
++	wdev->wiphy = wiphy_new(dev, &wil_cfg80211_ops,
+ 				sizeof(struct wil6210_priv));
+ 	if (!wdev->wiphy) {
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	set_wiphy_dev(wdev->wiphy, dev);
+ 	wil_wiphy_init(wdev->wiphy);
+ 
+ 	return wdev;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index ccae3bb..29cb1e9 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -6779,13 +6779,12 @@ struct brcmf_cfg80211_info *brcmf_cfg80211_attach(struct brcmf_pub *drvr,
+ 	if (brcmf_feat_is_enabled(ifp, BRCMF_FEAT_WOWL_GTK))
+ 		ops->set_rekey_data = brcmf_cfg80211_set_rekey_data;
+ #endif
+-	wiphy = wiphy_new(ops, sizeof(struct brcmf_cfg80211_info));
++	wiphy = wiphy_new(busdev, ops, sizeof(struct brcmf_cfg80211_info));
+ 	if (!wiphy) {
+ 		brcmf_err("Could not allocate wiphy device\n");
+ 		return NULL;
+ 	}
+ 	memcpy(wiphy->perm_addr, drvr->mac, ETH_ALEN);
+-	set_wiphy_dev(wiphy, busdev);
+ 
+ 	cfg = wiphy_priv(wiphy);
+ 	cfg->wiphy = wiphy;
+diff --git a/drivers/net/wireless/intel/ipw2x00/libipw_module.c b/drivers/net/wireless/intel/ipw2x00/libipw_module.c
+index 2332075..555ef56 100644
+--- a/drivers/net/wireless/intel/ipw2x00/libipw_module.c
++++ b/drivers/net/wireless/intel/ipw2x00/libipw_module.c
+@@ -135,7 +135,7 @@ struct net_device *alloc_libipw(int sizeof_priv, int monitor)
+ 	ieee->dev = dev;
+ 
+ 	if (!monitor) {
+-		ieee->wdev.wiphy = wiphy_new(&libipw_config_ops, 0);
++		ieee->wdev.wiphy = wiphy_new(NULL, &libipw_config_ops, 0);
+ 		if (!ieee->wdev.wiphy) {
+ 			LIBIPW_ERROR("Unable to allocate wiphy.\n");
+ 			goto failed_free_netdev;
+diff --git a/drivers/net/wireless/intersil/orinoco/cfg.c b/drivers/net/wireless/intersil/orinoco/cfg.c
+index 7aa4706..5848fd6 100644
+--- a/drivers/net/wireless/intersil/orinoco/cfg.c
++++ b/drivers/net/wireless/intersil/orinoco/cfg.c
+@@ -26,8 +26,6 @@ void orinoco_wiphy_init(struct wiphy *wiphy)
+ 	struct orinoco_private *priv = wiphy_priv(wiphy);
+ 
+ 	wiphy->privid = orinoco_wiphy_privid;
+-
+-	set_wiphy_dev(wiphy, priv->dev);
  }
  
-+static int coda_try_fmt_vdoa(struct coda_ctx *ctx, struct v4l2_format *f,
-+			     bool *use_vdoa)
-+{
-+	int err;
-+
-+	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	if (!use_vdoa)
-+		return -EINVAL;
-+
-+	if (!ctx->vdoa) {
-+		*use_vdoa = false;
-+		return 0;
-+	}
-+
-+	err = vdoa_context_configure(NULL, f->fmt.pix.width, f->fmt.pix.height,
-+				     f->fmt.pix.pixelformat);
-+	if (err) {
-+		*use_vdoa = false;
-+		return 0;
-+	}
-+
-+	*use_vdoa = true;
-+	return 0;
-+}
-+
- static unsigned int coda_estimate_sizeimage(struct coda_ctx *ctx, u32 sizeimage,
- 					    u32 width, u32 height)
- {
-@@ -495,6 +552,7 @@ static int coda_try_fmt_vid_cap(struct file *file, void *priv,
- 	const struct coda_codec *codec;
- 	struct vb2_queue *src_vq;
- 	int ret;
-+	bool use_vdoa;
+ /* Called after firmware is initialised */
+diff --git a/drivers/net/wireless/intersil/orinoco/main.c b/drivers/net/wireless/intersil/orinoco/main.c
+index 9d96b7c..3465ea6 100644
+--- a/drivers/net/wireless/intersil/orinoco/main.c
++++ b/drivers/net/wireless/intersil/orinoco/main.c
+@@ -2178,7 +2178,7 @@ struct orinoco_private
+ 	 * NOTE: We only support a single virtual interface
+ 	 *       but this may change when monitor mode is added
+ 	 */
+-	wiphy = wiphy_new(&orinoco_cfg_ops,
++	wiphy = wiphy_new(device, &orinoco_cfg_ops,
+ 			  sizeof(struct orinoco_private) + sizeof_card);
+ 	if (!wiphy)
+ 		return NULL;
+diff --git a/drivers/net/wireless/marvell/libertas/cfg.c b/drivers/net/wireless/marvell/libertas/cfg.c
+index 7ff2efa..f87d279 100644
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -2120,7 +2120,8 @@ struct wireless_dev *lbs_cfg_alloc(struct device *dev)
+ 	if (!wdev)
+ 		return ERR_PTR(-ENOMEM);
  
- 	ret = coda_try_pixelformat(ctx, f);
- 	if (ret < 0)
-@@ -531,6 +589,10 @@ static int coda_try_fmt_vid_cap(struct file *file, void *priv,
- 		f->fmt.pix.bytesperline = round_up(f->fmt.pix.width, 16);
- 		f->fmt.pix.sizeimage = f->fmt.pix.bytesperline *
- 				       f->fmt.pix.height * 3 / 2;
-+
-+		ret = coda_try_fmt_vdoa(ctx, f, &use_vdoa);
-+		if (ret < 0)
-+			return ret;
- 	}
+-	wdev->wiphy = wiphy_new(&lbs_cfg80211_ops, sizeof(struct lbs_private));
++	wdev->wiphy = wiphy_new(dev, &lbs_cfg80211_ops,
++				sizeof(struct lbs_private));
+ 	if (!wdev->wiphy) {
+ 		dev_err(dev, "cannot allocate wiphy\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 1e3bd43..d92a649 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -4232,7 +4232,7 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	u32 thr, retry;
  
- 	return 0;
-@@ -601,11 +663,9 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
+ 	/* create a new wiphy for use with cfg80211 */
+-	wiphy = wiphy_new(&mwifiex_cfg80211_ops,
++	wiphy = wiphy_new(priv->adapter->dev, &mwifiex_cfg80211_ops,
+ 			  sizeof(struct mwifiex_adapter *));
+ 	if (!wiphy) {
+ 		mwifiex_dbg(adapter, ERROR,
+@@ -4328,8 +4328,6 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wdev_priv = wiphy_priv(wiphy);
+ 	*(unsigned long *)wdev_priv = (unsigned long)adapter;
  
- 	switch (f->fmt.pix.pixelformat) {
- 	case V4L2_PIX_FMT_NV12:
--		if (f->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
--			ctx->tiled_map_type = GDI_TILED_FRAME_MB_RASTER_MAP;
--			if (!disable_tiling)
--				break;
--		}
-+		ctx->tiled_map_type = GDI_TILED_FRAME_MB_RASTER_MAP;
-+		if (!disable_tiling)
-+			break;
- 		/* else fall through */
- 	case V4L2_PIX_FMT_YUV420:
- 	case V4L2_PIX_FMT_YVU420:
-@@ -615,6 +675,13 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
- 		break;
- 	}
+-	set_wiphy_dev(wiphy, priv->adapter->dev);
+-
+ 	ret = wiphy_register(wiphy);
+ 	if (ret < 0) {
+ 		mwifiex_dbg(adapter, ERROR,
+diff --git a/drivers/net/wireless/rndis_wlan.c b/drivers/net/wireless/rndis_wlan.c
+index 603c904..6535f26 100644
+--- a/drivers/net/wireless/rndis_wlan.c
++++ b/drivers/net/wireless/rndis_wlan.c
+@@ -3408,7 +3408,8 @@ static int rndis_wlan_bind(struct usbnet *usbdev, struct usb_interface *intf)
+ 	 * NOTE: We only support a single virtual interface, so wiphy
+ 	 * and wireless_dev are somewhat synonymous for this device.
+ 	 */
+-	wiphy = wiphy_new(&rndis_config_ops, sizeof(struct rndis_wlan_private));
++	wiphy = wiphy_new(&usbdev->udev->dev, &rndis_config_ops,
++			  sizeof(struct rndis_wlan_private));
+ 	if (!wiphy)
+ 		return -ENOMEM;
  
-+	if (ctx->tiled_map_type == GDI_TILED_FRAME_MB_RASTER_MAP &&
-+	    !coda_try_fmt_vdoa(ctx, f, &ctx->use_vdoa) &&
-+	    ctx->use_vdoa)
-+		vdoa_context_configure(ctx->vdoa, f->fmt.pix.width,
-+				       f->fmt.pix.height,
-+				       f->fmt.pix.pixelformat);
-+
- 	v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
- 		"Setting format for type %d, wxh: %dx%d, fmt: %4.4s %c\n",
- 		f->type, q_data->width, q_data->height,
-@@ -1041,6 +1108,16 @@ static int coda_job_ready(void *m2m_priv)
- 		bool stream_end = ctx->bit_stream_param &
- 				  CODA_BIT_STREAM_END_FLAG;
- 		int num_metas = ctx->num_metas;
-+		unsigned int count;
-+
-+		count = hweight32(ctx->frm_dis_flg);
-+		if (ctx->use_vdoa && count >= (ctx->num_internal_frames - 1)) {
-+			v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
-+				 "%d: not ready: all internal buffers in use: %d/%d (0x%x)",
-+				 ctx->idx, count, ctx->num_internal_frames,
-+				 ctx->frm_dis_flg);
-+			return 0;
-+		}
+@@ -3486,8 +3487,6 @@ static int rndis_wlan_bind(struct usbnet *usbdev, struct usb_interface *intf)
+ 	wiphy->cipher_suites = priv->cipher_suites;
+ 	wiphy->n_cipher_suites = ARRAY_SIZE(rndis_cipher_suites);
  
- 		if (ctx->hold && !src_bufs) {
- 			v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
-@@ -1731,6 +1808,13 @@ static int coda_open(struct file *file)
- 	default:
- 		ctx->reg_idx = idx;
- 	}
-+	if (ctx->dev->vdoa && !disable_vdoa) {
-+		ctx->vdoa = vdoa_context_create(dev->vdoa);
-+		if (!ctx->vdoa)
-+			v4l2_warn(&dev->v4l2_dev,
-+				  "Failed to create vdoa context: not using vdoa");
-+	}
-+	ctx->use_vdoa = false;
+-	set_wiphy_dev(wiphy, &usbdev->udev->dev);
+-
+ 	if (wiphy_register(wiphy)) {
+ 		retval = -ENODEV;
+ 		goto fail;
+diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
+index 60d8b05..dd87557 100644
+--- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
++++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
+@@ -2243,7 +2243,7 @@ static const struct cfg80211_ops wilc_cfg80211_ops = {
  
- 	/* Power up and upload firmware if necessary */
- 	ret = pm_runtime_get_sync(&dev->plat_dev->dev);
-@@ -1806,6 +1890,9 @@ static int coda_release(struct file *file)
- 	v4l2_dbg(1, coda_debug, &dev->v4l2_dev, "Releasing instance %p\n",
- 		 ctx);
- 
-+	if (ctx->vdoa)
-+		vdoa_context_destroy(ctx->vdoa);
-+
- 	if (ctx->inst_type == CODA_INST_DECODER && ctx->use_bit)
- 		coda_bit_stream_end_flag(ctx);
- 
-@@ -2258,6 +2345,11 @@ static int coda_probe(struct platform_device *pdev)
- 	}
- 	dev->iram_pool = pool;
- 
-+	/* Get vdoa_data if supported by the platform */
-+	dev->vdoa = coda_get_vdoa_data();
-+	if (PTR_ERR(dev->vdoa) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
- 	ret = v4l2_device_register(&pdev->dev, &dev->v4l2_dev);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/media/platform/coda/coda.h b/drivers/media/platform/coda/coda.h
-index 53f96661683c..7ed79eb774e7 100644
---- a/drivers/media/platform/coda/coda.h
-+++ b/drivers/media/platform/coda/coda.h
-@@ -75,6 +75,7 @@ struct coda_dev {
- 	struct platform_device	*plat_dev;
- 	const struct coda_devtype *devtype;
- 	int			firmware;
-+	struct vdoa_data	*vdoa;
- 
- 	void __iomem		*regs_base;
- 	struct clk		*clk_per;
-@@ -236,6 +237,8 @@ struct coda_ctx {
- 	int				display_idx;
- 	struct dentry			*debugfs_entry;
- 	bool				use_bit;
-+	bool				use_vdoa;
-+	struct vdoa_ctx			*vdoa;
  };
  
- extern int coda_debug;
+-static struct wireless_dev *WILC_WFI_CfgAlloc(void)
++static struct wireless_dev *WILC_WFI_CfgAlloc(struct device *dev)
+ {
+ 	struct wireless_dev *wdev;
+ 
+@@ -2251,7 +2251,8 @@ static struct wireless_dev *WILC_WFI_CfgAlloc(void)
+ 	if (!wdev)
+ 		goto _fail_;
+ 
+-	wdev->wiphy = wiphy_new(&wilc_cfg80211_ops, sizeof(struct wilc_priv));
++	wdev->wiphy = wiphy_new(dev, &wilc_cfg80211_ops,
++				sizeof(struct wilc_priv));
+ 	if (!wdev->wiphy)
+ 		goto _fail_mem_;
+ 
+@@ -2277,7 +2278,7 @@ struct wireless_dev *wilc_create_wiphy(struct net_device *net, struct device *de
+ 	struct wireless_dev *wdev;
+ 	s32 s32Error = 0;
+ 
+-	wdev = WILC_WFI_CfgAlloc();
++	wdev = WILC_WFI_CfgAlloc(dev);
+ 	if (!wdev) {
+ 		netdev_err(net, "wiphy new allocate failed\n");
+ 		return NULL;
+@@ -2302,8 +2303,6 @@ struct wireless_dev *wilc_create_wiphy(struct net_device *net, struct device *de
+ 	wdev->wiphy->flags |= WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL;
+ 	wdev->iftype = NL80211_IFTYPE_STATION;
+ 
+-	set_wiphy_dev(wdev->wiphy, dev);
+-
+ 	s32Error = wiphy_register(wdev->wiphy);
+ 	if (s32Error)
+ 		netdev_err(net, "Cannot register wiphy device\n");
+diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
+index 182b2d5..444b7fc 100644
+--- a/drivers/staging/wlan-ng/cfg80211.c
++++ b/drivers/staging/wlan-ng/cfg80211.c
+@@ -694,7 +694,7 @@ static struct wiphy *wlan_create_wiphy(struct device *dev, struct wlandevice *wl
+ 	struct wiphy *wiphy;
+ 	struct prism2_wiphy_private *priv;
+ 
+-	wiphy = wiphy_new(&prism2_usb_cfg_ops, sizeof(*priv));
++	wiphy = wiphy_new(dev, &prism2_usb_cfg_ops, sizeof(*priv));
+ 	if (!wiphy)
+ 		return NULL;
+ 
+@@ -710,7 +710,6 @@ static struct wiphy *wlan_create_wiphy(struct device *dev, struct wlandevice *wl
+ 	priv->band.ht_cap.ht_supported = false;
+ 	wiphy->bands[NL80211_BAND_2GHZ] = &priv->band;
+ 
+-	set_wiphy_dev(wiphy, dev);
+ 	wiphy->privid = prism2_wiphy_privid;
+ 	wiphy->max_scan_ssids = 1;
+ 	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION)
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index ca2ac1c..e952cca 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -3730,8 +3730,8 @@ static inline const char *wiphy_name(const struct wiphy *wiphy)
+  * Return: A pointer to the new wiphy. This pointer must be
+  * assigned to each netdev's ieee80211_ptr for proper operation.
+  */
+-struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int sizeof_priv,
+-			   const char *requested_name);
++struct wiphy *wiphy_new_nm(struct device *dev, const struct cfg80211_ops *ops,
++			   int sizeof_priv, const char *requested_name);
+ 
+ /**
+  * wiphy_new - create a new wiphy for use with cfg80211
+@@ -3745,10 +3745,11 @@ struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int sizeof_priv,
+  * Return: A pointer to the new wiphy. This pointer must be
+  * assigned to each netdev's ieee80211_ptr for proper operation.
+  */
+-static inline struct wiphy *wiphy_new(const struct cfg80211_ops *ops,
++static inline struct wiphy *wiphy_new(struct device *dev,
++				      const struct cfg80211_ops *ops,
+ 				      int sizeof_priv)
+ {
+-	return wiphy_new_nm(ops, sizeof_priv, NULL);
++	return wiphy_new_nm(dev, ops, sizeof_priv, NULL);
+ }
+ 
+ /**
+diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+index 1822c77..a0f780f 100644
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -524,7 +524,8 @@ struct ieee80211_hw *ieee80211_alloc_hw_nm(size_t priv_data_len,
+ 	 */
+ 	priv_size = ALIGN(sizeof(*local), NETDEV_ALIGN) + priv_data_len;
+ 
+-	wiphy = wiphy_new_nm(&mac80211_config_ops, priv_size, requested_name);
++	wiphy = wiphy_new_nm(NULL, &mac80211_config_ops, priv_size,
++			     requested_name);
+ 
+ 	if (!wiphy)
+ 		return NULL;
+diff --git a/net/wireless/core.c b/net/wireless/core.c
+index 158c59e..398922a 100644
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -359,8 +359,8 @@ static void cfg80211_sched_scan_stop_wk(struct work_struct *work)
+ 
+ /* exported functions */
+ 
+-struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int sizeof_priv,
+-			   const char *requested_name)
++struct wiphy *wiphy_new_nm(struct device *dev, const struct cfg80211_ops *ops,
++			   int sizeof_priv, const char *requested_name)
+ {
+ 	static atomic_t wiphy_counter = ATOMIC_INIT(0);
+ 
+@@ -404,6 +404,8 @@ struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int sizeof_priv,
+ 	/* atomic_inc_return makes it start at 1, make it start at 0 */
+ 	rdev->wiphy_idx--;
+ 
++	set_wiphy_dev(&rdev->wiphy, dev);
++
+ 	/* give it a proper name */
+ 	if (requested_name && requested_name[0]) {
+ 		int rv;
 -- 
-2.11.0
+2.10.1
