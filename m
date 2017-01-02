@@ -1,224 +1,62 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH] DTS: MCCMON6: IMX: Provide support for iMX6Q based
- Liebherr mccmon6 board
-Date: Mon, 2 Jan 2017 21:12:02 +0200
-Message-ID: <cfe2bb88-833e-4e9f-26c5-4ebf764f19e2@mentor.com>
-References: <1482794396-16153-1-git-send-email-l.majewski@majess.pl>
- <610d3784-ee2e-c213-2a8c-6db6d7af578b@mentor.com>
- <20170102154437.63406b95@jawa>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] cfg80211: support ieee80211-freq-limit DT property
+Date: Mon, 2 Jan 2017 21:12:07 +0100
+Message-ID: <e194b980-1048-8da6-624b-26f824ff655d@broadcom.com>
+References: <20170102163209.2445-1-zajec5@gmail.com>
+ <20170102163209.2445-2-zajec5@gmail.com>
+ <1483379548.15591.1.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170102154437.63406b95@jawa>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lukasz Majewski <l.majewski@majess.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Lukasz Majewski <lukma@denx.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483379548.15591.1.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
 
-please find some comments below as usual.
 
-On 01/02/2017 04:44 PM, Lukasz Majewski wrote:
-> Hi Vladimir,
+On 02-01-17 18:52, Johannes Berg wrote:
+>> +static void wiphy_freq_limits_apply(struct wiphy *wiphy)
+> [...]
+>> +			if (!wiphy_freq_limits_valid_chan(wiphy,
+>> chan)) {
+>> +				pr_debug("Disabling freq %d MHz as
+>> it's out of OF limits\n",
+>> +					 chan->center_freq);
+>> +				chan->flags |=
+>> IEEE80211_CHAN_DISABLED;
 > 
-> Thank you for review. Comments without my remarks have been applied
-> already.
+> I think you didn't address the problem in the best way now.
 > 
->> Hello Lukasz,
->>
->> On 12/27/2016 01:19 AM, Lukasz Majewski wrote:
->>> Signed-off-by: Lukasz Majewski <l.majewski@majess.pl>
->>
->> please add a commit message with a short description of the change.
->>
->> Also change subject line to "ARM: dts: imx6q: Add mccmon6 board
->> support".
->>
->>> ---
-
-[snip]
-
->>> +/ {
->>> +	model = "Monitor6 i.MX6 Quad Board";
->>
->> Missing hardware vendor name.
->>
->>> +	compatible = "mccmon6", "fsl,imx6q";
->>
->> Missing hardware vendor prefix before "mccmon6".
+> The problem with the channel sharing was the way you're applying the
+> limits - at runtime. This is now OK since the new function shouldn't be
+> called when the channel structs are shared, but hooking it all into thes 
+> regulatory code is now no longer needed.
 > 
-> "lwn,mccmon6" ?
-> 
+> What you can do now, when reading the OF data, is actually apply it to
+> the channel flags immediately. If done *before* wiphy_register(), these
+> flags will be preserved forever, so you no longer need any hooks in
+> regulatory code at all - you can just set the original channel flags
+> according to the OF data.
 
-Something like that, but please ensure that you add "lwn" vendor in a separate
-preceding change to Documentation/devicetree/bindings/vendor-prefixes.txt
+I suppose this then can also be done early in the wiphy_register()
+function itself, right?
 
->>
->>> +
->>> +	memory {
->>> +		reg = <0x10000000 0x80000000>;
->>> +	};
->>> +
->>> +	ethernet0 {
->>> +		status = "okay";
->>> +	};
->>
->> It looks like a useless device node, you have a description of &fec
->> already.
->>
->>> +
->>> +	backlight_lvds: backlight {
->>> +		compatible = "pwm-backlight";
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&pinctrl_display>;
->>
->> I would recommend to rename "pinctrl_display" to "pinctrl_backlight".
->>
->>> +		pwms = <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
->>
->> This should work when extension to the i.MX PWM driver is merged.
-> 
-> Yes. The PWM -> apply is an ongoing work. But without the PMW patch the
-> board is also fully operational (with reversed PWM :-) )
-> 
+> I think this greatly simplifies the flow, since you can also remove
+> wiphy->freq_limits (and n_freq_limits) completely, since now the only
+> effect of the function would be to modify the channel list, and later
+> regulatory updates would always preserve the flags.
 
-Right, I believe that the current PWM driver igonores the value passed
-in the third cell, so it should be okay.
+So does it mean the function can go in core.c again :-p If it is likely
+there will be other properties being added it might justify adding a new
+source file, eg. of.c, and only compile it when CONFIG_OF is set. Just a
+thought.
 
->>
->>> +		brightness-levels = <  0   1   2   3   4   5   6
->>> 7   8   9
->>> +				      10  11  12  13  14  15  16
->>> 17  18  19
->>> +				      20  21  22  23  24  25  26
->>> 27  28  29
->>> +				      30  31  32  33  34  35  36
->>> 37  38  39
->>> +				      40  41  42  43  44  45  46
->>> 47  48  49
->>> +				      50  51  52  53  54  55  56
->>> 57  58  59
->>> +				      60  61  62  63  64  65  66
->>> 67  68  69
->>> +				      70  71  72  73  74  75  76
->>> 77  78  79
->>> +				      80  81  82  83  84  85  86
->>> 87  88  89
->>> +				      90  91  92  93  94  95  96
->>> 97  98  99
->>> +				     100 101 102 103 104 105 106
->>> 107 108 109
->>> +				     110 111 112 113 114 115 116
->>> 117 118 119
->>> +				     120 121 122 123 124 125 126
->>> 127 128 129
->>> +				     130 131 132 133 134 135 136
->>> 137 138 139
->>> +				     140 141 142 143 144 145 146
->>> 147 148 149
->>> +				     150 151 152 153 154 155 156
->>> 157 158 159
->>> +				     160 161 162 163 164 165 166
->>> 167 168 169
->>> +				     170 171 172 173 174 175 176
->>> 177 178 179
->>> +				     180 181 182 183 184 185 186
->>> 187 188 189
->>> +				     190 191 192 193 194 195 196
->>> 197 198 199
->>> +				     200 201 202 203 204 205 206
->>> 207 208 209
->>> +				     210 211 212 213 214 215 216
->>> 217 218 219
->>> +				     220 221 222 223 224 225 226
->>> 227 228 229
->>> +				     230 231 232 233 234 235 236
->>> 237 238 239
->>> +				     240 241 242 243 244 245 246
->>> 247 248 249
->>> +				     250 251 252 253 254 255>;
->>
->> I'm not sure that actually need such a long list of brightness levels.
-> 
-> Such brightness-level property is so verbose on purpose - in this board
-> we need fine brightness adjustment (harsh environment operation).
-
-Okay.
-
->>
->>> +		default-brightness-level = <50>;
->>> +		enable-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
->>> +	};
->>> +
-
-[snip]
-
->>> +		pinctrl_display: dispgrp {
->>> +			fsl,pins = <
->>> +				/* BLEN_OUT */
->>> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02
->>> 0x1b0b0
->>> +				/* LVDS_PPEN_OUT */
->>> +				MX6QDL_PAD_SD1_DAT2__GPIO1_IO19
->>> 0x1b0b0
->>
->> This GPIO should be moved to a pinctrl group of regulator-lvds device
->> node.
-> 
-> You mean to provide separate:
-> 
-> pinctrl_reg_lvds: req_lvds_grp {
-> 		fsl,pins = <
-> 		/* LVDS_PPEN_OUT */
-> 		MX6QDL_PAD_SD1_DAT2__GPIO1_IO19
-> 		>;
-> 
-> and then
-> 
-> 	reg_lvds: regulator-lvds {
-> 		compatible = "regulator-fixed";
-> 		regulator-name = "lvds_ppen";
-> 		regulator-min-microvolt = <3300000>;
-> 		regulator-max-microvolt = <3300000>;
-> 		regulator-boot-on;
-> 
-> 		pinctrl-names = "default";
-> 		pinctrl-0 = <&pinctrl_reg_lvds>;
-> 
-> 		gpio = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-> 		enable-active-high;
-> 	};
-> 
-
-This looks correct.
-
-[snip]
-
->>> +
->>> +&uart1 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&pinctrl_uart1>;
->>
->> Should you add "uart-has-rtscts" property?
-> 
-> This is a simple "console" uart without rts/cts, so this property is
-> not needed.
-> 
-
-You are right, my review comment is valid for UART4 only.
-
-[snip]
-
+Regards,
+Arend
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
