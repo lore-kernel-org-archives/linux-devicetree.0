@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 2/5] ARM: dts: armada388-clearfog: move device specific
- pinctrl nodes
-Date: Mon, 02 Jan 2017 15:27:16 +0000
-Message-ID: <E1cO4W4-000060-EK@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 3/5] ARM: dts: armada388-clearfog: move I2C nodes
+Date: Mon, 02 Jan 2017 15:27:21 +0000
+Message-ID: <E1cO4W9-000069-IZ@rmk-PC.armlinux.org.uk>
 References: <E1cO4UH-0008SR-GW@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,129 +14,277 @@ To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z
 Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move the device specific pinctrl nodes over to use the label form to
-reference the pin mux controller, rather than replicating the device
-node path.
+Move the I2C nodes over to use the label form to reference the I2C
+controllers, rather than replicating the device node path.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-388-clearfog.dtsi         | 50 +++++++++++-----------
- .../arm/boot/dts/armada-38x-solidrun-microsom.dtsi | 27 ++++++------
- 2 files changed, 38 insertions(+), 39 deletions(-)
+ arch/arm/boot/dts/armada-388-clearfog.dtsi | 245 ++++++++++++++---------------
+ 1 file changed, 120 insertions(+), 125 deletions(-)
 
 diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-index 770d4bff6884..7946400b4bf2 100644
+index 7946400b4bf2..eeb845bbe3f3 100644
 --- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
 +++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-@@ -217,31 +217,6 @@
- 				status = "okay";
+@@ -92,131 +92,6 @@
+ 				};
  			};
  
--			pinctrl@18000 {
--				clearfog_i2c1_pins: i2c1-pins {
--					/* SFP, PCIe, mSATA, mikrobus */
--					marvell,pins = "mpp26", "mpp27";
--					marvell,function = "i2c1";
+-			i2c@11000 {
+-				/* Is there anything on this? */
+-				clock-frequency = <100000>;
+-				pinctrl-0 = <&i2c0_pins>;
+-				pinctrl-names = "default";
+-				status = "okay";
+-
+-				/*
+-				 * PCA9655 GPIO expander, up to 1MHz clock.
+-				 *  0-CON3 CLKREQ#
+-				 *  1-CON3 PERST#
+-				 *  2-
+-				 *  3-CON3 W_DISABLE
+-				 *  4-
+-				 *  5-USB3 overcurrent
+-				 *  6-USB3 power
+-				 *  7-
+-				 *  8-JP4 P1
+-				 *  9-JP4 P4
+-				 * 10-JP4 P5
+-				 * 11-m.2 DEVSLP
+-				 * 12-SFP_LOS
+-				 * 13-SFP_TX_FAULT
+-				 * 14-SFP_TX_DISABLE
+-				 * 15-SFP_MOD_DEF0
+-				 */
+-				expander0: gpio-expander@20 {
+-					/*
+-					 * This is how it should be:
+-					 * compatible = "onnn,pca9655",
+-					 *	 "nxp,pca9555";
+-					 * but you can't do this because of
+-					 * the way I2C works.
+-					 */
+-					compatible = "nxp,pca9555";
+-					gpio-controller;
+-					#gpio-cells = <2>;
+-					reg = <0x20>;
+-
+-					pcie1_0_clkreq {
+-						gpio-hog;
+-						gpios = <0 GPIO_ACTIVE_LOW>;
+-						input;
+-						line-name = "pcie1.0-clkreq";
+-					};
+-					pcie1_0_w_disable {
+-						gpio-hog;
+-						gpios = <3 GPIO_ACTIVE_LOW>;
+-						output-low;
+-						line-name = "pcie1.0-w-disable";
+-					};
+-					usb3_ilimit {
+-						gpio-hog;
+-						gpios = <5 GPIO_ACTIVE_LOW>;
+-						input;
+-						line-name = "usb3-current-limit";
+-					};
+-					usb3_power {
+-						gpio-hog;
+-						gpios = <6 GPIO_ACTIVE_HIGH>;
+-						output-high;
+-						line-name = "usb3-power";
+-					};
+-					m2_devslp {
+-						gpio-hog;
+-						gpios = <11 GPIO_ACTIVE_HIGH>;
+-						output-low;
+-						line-name = "m.2 devslp";
+-					};
+-					sfp_los {
+-						/* SFP loss of signal */
+-						gpio-hog;
+-						gpios = <12 GPIO_ACTIVE_HIGH>;
+-						input;
+-						line-name = "sfp-los";
+-					};
+-					sfp_tx_fault {
+-						/* SFP laser fault */
+-						gpio-hog;
+-						gpios = <13 GPIO_ACTIVE_HIGH>;
+-						input;
+-						line-name = "sfp-tx-fault";
+-					};
+-					sfp_tx_disable {
+-						/* SFP transmit disable */
+-						gpio-hog;
+-						gpios = <14 GPIO_ACTIVE_HIGH>;
+-						output-low;
+-						line-name = "sfp-tx-disable";
+-					};
+-					sfp_mod_def0 {
+-						/* SFP module present */
+-						gpio-hog;
+-						gpios = <15 GPIO_ACTIVE_LOW>;
+-						input;
+-						line-name = "sfp-mod-def0";
+-					};
 -				};
--				clearfog_sdhci_cd_pins: clearfog-sdhci-cd-pins {
--					marvell,pins = "mpp20";
--					marvell,function = "gpio";
+-
+-				/* The MCP3021 is 100kHz clock only */
+-				mikrobus_adc: mcp3021@4c {
+-					compatible = "microchip,mcp3021";
+-					reg = <0x4c>;
 -				};
--				mikro_pins: mikro-pins {
--					/* int: mpp22 rst: mpp29 */
--					marvell,pins = "mpp22", "mpp29";
--					marvell,function = "gpio";
--				};
--				mikro_spi_pins: mikro-spi-pins {
--					marvell,pins = "mpp43";
--					marvell,function = "spi1";
--				};
--				mikro_uart_pins: mikro-uart-pins {
--					marvell,pins = "mpp24", "mpp25";
--					marvell,function = "ua1";
--				};
+-
+-				/* Also something at 0x64 */
+-			};
+-
+-			i2c@11100 {
+-				/*
+-				 * Routed to SFP, mikrobus, and PCIe.
+-				 * SFP limits this to 100kHz, and requires
+-				 *  an AT24C01A/02/04 with address pins tied
+-				 *  low, which takes addresses 0x50 and 0x51.
+-				 * Mikrobus doesn't specify beyond an I2C
+-				 *  bus being present.
+-				 * PCIe uses ARP to assign addresses, or
+-				 *  0x63-0x64.
+-				 */
+-				clock-frequency = <100000>;
+-				pinctrl-0 = <&clearfog_i2c1_pins>;
+-				pinctrl-names = "default";
+-				status = "okay";
 -			};
 -
  			sata@a8000 {
  				/* pinctrl? */
  				status = "okay";
-@@ -297,6 +272,31 @@
+@@ -272,6 +147,126 @@
  	};
  };
  
-+&pinctrl {
-+	clearfog_i2c1_pins: i2c1-pins {
-+		/* SFP, PCIe, mSATA, mikrobus */
-+		marvell,pins = "mpp26", "mpp27";
-+		marvell,function = "i2c1";
++&i2c0 {
++	/* Is there anything on this? */
++	clock-frequency = <100000>;
++	pinctrl-0 = <&i2c0_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	/*
++	 * PCA9655 GPIO expander, up to 1MHz clock.
++	 *  0-CON3 CLKREQ#
++	 *  1-CON3 PERST#
++	 *  2-
++	 *  3-CON3 W_DISABLE
++	 *  4-
++	 *  5-USB3 overcurrent
++	 *  6-USB3 power
++	 *  7-
++	 *  8-JP4 P1
++	 *  9-JP4 P4
++	 * 10-JP4 P5
++	 * 11-m.2 DEVSLP
++	 * 12-SFP_LOS
++	 * 13-SFP_TX_FAULT
++	 * 14-SFP_TX_DISABLE
++	 * 15-SFP_MOD_DEF0
++	 */
++	expander0: gpio-expander@20 {
++		/*
++		 * This is how it should be:
++		 * compatible = "onnn,pca9655", "nxp,pca9555";
++		 * but you can't do this because of the way I2C works.
++		 */
++		compatible = "nxp,pca9555";
++		gpio-controller;
++		#gpio-cells = <2>;
++		reg = <0x20>;
++
++		pcie1_0_clkreq {
++			gpio-hog;
++			gpios = <0 GPIO_ACTIVE_LOW>;
++			input;
++			line-name = "pcie1.0-clkreq";
++		};
++		pcie1_0_w_disable {
++			gpio-hog;
++			gpios = <3 GPIO_ACTIVE_LOW>;
++			output-low;
++			line-name = "pcie1.0-w-disable";
++		};
++		usb3_ilimit {
++			gpio-hog;
++			gpios = <5 GPIO_ACTIVE_LOW>;
++			input;
++			line-name = "usb3-current-limit";
++		};
++		usb3_power {
++			gpio-hog;
++			gpios = <6 GPIO_ACTIVE_HIGH>;
++			output-high;
++			line-name = "usb3-power";
++		};
++		m2_devslp {
++			gpio-hog;
++			gpios = <11 GPIO_ACTIVE_HIGH>;
++			output-low;
++			line-name = "m.2 devslp";
++		};
++		sfp_los {
++			/* SFP loss of signal */
++			gpio-hog;
++			gpios = <12 GPIO_ACTIVE_HIGH>;
++			input;
++			line-name = "sfp-los";
++		};
++		sfp_tx_fault {
++			/* SFP laser fault */
++			gpio-hog;
++			gpios = <13 GPIO_ACTIVE_HIGH>;
++			input;
++			line-name = "sfp-tx-fault";
++		};
++		sfp_tx_disable {
++			/* SFP transmit disable */
++			gpio-hog;
++			gpios = <14 GPIO_ACTIVE_HIGH>;
++			output-low;
++			line-name = "sfp-tx-disable";
++		};
++		sfp_mod_def0 {
++			/* SFP module present */
++			gpio-hog;
++			gpios = <15 GPIO_ACTIVE_LOW>;
++			input;
++			line-name = "sfp-mod-def0";
++		};
 +	};
-+	clearfog_sdhci_cd_pins: clearfog-sdhci-cd-pins {
-+		marvell,pins = "mpp20";
-+		marvell,function = "gpio";
++
++	/* The MCP3021 is 100kHz clock only */
++	mikrobus_adc: mcp3021@4c {
++		compatible = "microchip,mcp3021";
++		reg = <0x4c>;
 +	};
-+	mikro_pins: mikro-pins {
-+		/* int: mpp22 rst: mpp29 */
-+		marvell,pins = "mpp22", "mpp29";
-+		marvell,function = "gpio";
-+	};
-+	mikro_spi_pins: mikro-spi-pins {
-+		marvell,pins = "mpp43";
-+		marvell,function = "spi1";
-+	};
-+	mikro_uart_pins: mikro-uart-pins {
-+		marvell,pins = "mpp24", "mpp25";
-+		marvell,function = "ua1";
-+	};
++
++	/* Also something at 0x64 */
 +};
 +
- &spi1 {
- 	/*
- 	 * Add SPI CS pins for clearfog:
-diff --git a/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi b/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
-index 6608657b9994..e397421d1531 100644
---- a/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
-+++ b/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
-@@ -94,20 +94,6 @@
- 				};
- 			};
- 
--			pinctrl@18000 {
--				microsom_phy_clk_pins: microsom-phy-clk-pins {
--					marvell,pins = "mpp45";
--					marvell,function = "ref";
--				};
--				/* Optional eMMC */
--				microsom_sdhci_pins: microsom-sdhci-pins {
--					marvell,pins = "mpp21", "mpp28",
--						       "mpp37", "mpp38",
--						       "mpp39", "mpp40";
--					marvell,function = "sd0";
--				};
--			};
--
- 			rtc@a3800 {
- 				/*
- 				 * If the rtc doesn't work, run "date reset"
-@@ -134,6 +120,19 @@
- 	};
- };
- 
-+&pinctrl {
-+	microsom_phy_clk_pins: microsom-phy-clk-pins {
-+		marvell,pins = "mpp45";
-+		marvell,function = "ref";
-+	};
-+	/* Optional eMMC */
-+	microsom_sdhci_pins: microsom-sdhci-pins {
-+		marvell,pins = "mpp21", "mpp28", "mpp37",
-+			       "mpp38", "mpp39", "mpp40";
-+		marvell,function = "sd0";
-+	};
++&i2c1 {
++	/*
++	 * Routed to SFP, mikrobus, and PCIe.
++	 * SFP limits this to 100kHz, and requires an AT24C01A/02/04 with
++	 *  address pins tied low, which takes addresses 0x50 and 0x51.
++	 * Mikrobus doesn't specify beyond an I2C bus being present.
++	 * PCIe uses ARP to assign addresses, or 0x63-0x64.
++	 */
++	clock-frequency = <100000>;
++	pinctrl-0 = <&clearfog_i2c1_pins>;
++	pinctrl-names = "default";
++	status = "okay";
 +};
 +
- &spi1 {
- 	/* The microsom has an optional W25Q32 on board, connected to CS0 */
- 	pinctrl-0 = <&spi1_pins>;
+ &pinctrl {
+ 	clearfog_i2c1_pins: i2c1-pins {
+ 		/* SFP, PCIe, mSATA, mikrobus */
 -- 
 2.7.4
 
