@@ -1,51 +1,49 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V3 3/2] brcmfmac: use wiphy_read_of_freq_limits to get extra limits
-Date: Mon,  2 Jan 2017 17:32:09 +0100
-Message-ID: <20170102163209.2445-3-zajec5@gmail.com>
-References: <20170102163209.2445-1-zajec5@gmail.com>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH 02/22] mfd: axp20x: add ADC data regs to volatile regs for
+ AXP22X
+Date: Mon,  2 Jan 2017 17:37:02 +0100
+Message-ID: <20170102163723.7939-3-quentin.schulz@free-electrons.com>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170102163209.2445-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, bonbons@linux-vserver.org, icenowy@aosc.xyz, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+The AXP22X PMICs have multiple ADCs, each one exposing data from the
+different power supplies connected to the PMIC.
 
-There are some devices (e.g. Netgear R8000 home router) with one chipset
-model used for different radios, some of them limited to subbands. NVRAM
-entries don't contain any extra info on such limitations and firmware
-reports full list of channels to us. We need to store extra limitation
-info on DT to support such devices properly.
+This adds the different ADC data registers to the volatile registers of
+the AXP22X PMIC.
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 ---
-This patch should probably go through wireless-driver-next, I'm sending
-it just as a proof of concept. It was succesfully tested on SmartRG
-SR400ac with BCM43602.
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 1 +
+ drivers/mfd/axp20x.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index ccae3bb..dab4082 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -6825,6 +6825,7 @@ struct brcmf_cfg80211_info *brcmf_cfg80211_attach(struct brcmf_pub *drvr,
- 		goto priv_out;
- 
- 	brcmf_dbg(INFO, "Registering custom regulatory\n");
-+	wiphy_read_of_freq_limits(wiphy);
- 	wiphy->reg_notifier = brcmf_cfg80211_reg_notifier;
- 	wiphy->regulatory_flags |= REGULATORY_CUSTOM_REG;
- 	wiphy_apply_custom_regulatory(wiphy, &brcmf_regdom);
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 619a83e..a33db5e 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -100,6 +100,7 @@ static const struct regmap_range axp22x_writeable_ranges[] = {
+ static const struct regmap_range axp22x_volatile_ranges[] = {
+ 	regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_PWR_OP_MODE),
+ 	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
++	regmap_reg_range(AXP22X_TEMP_ADC_H, AXP20X_BATT_DISCHRG_I_L),
+ 	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
+ 	regmap_reg_range(AXP22X_GPIO_STATE, AXP22X_GPIO_STATE),
+ 	regmap_reg_range(AXP22X_PMIC_ADC_H, AXP20X_IPSOUT_V_HIGH_L),
 -- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
