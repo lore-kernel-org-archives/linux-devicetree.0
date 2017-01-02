@@ -1,7 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 7/9] ARM: dts: armada388-clearfog: move rear button
-Date: Mon, 02 Jan 2017 14:59:12 +0000
-Message-ID: <E1cO44u-00082w-It@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 9/9] ARM: dts: armada388-clearfog: add pro model DTS file
+Date: Mon, 02 Jan 2017 14:59:22 +0000
+Message-ID: <E1cO454-00083C-Tj@rmk-PC.armlinux.org.uk>
 References: <E1cO43Q-0007yJ-ON@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -11,89 +11,95 @@ In-Reply-To: <E1cO43Q-0007yJ-ON-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.or
 Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move the rear button support into the clearfog pro support file.
+Add the DTS file to describe the clearfog pro model - we update the
+platform name and compatible string compared to the original version.
+The original version remains for compatibility for the time being as
+the name of the file has become established, and the machine name
+and/or compatible may be used by userspace.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-388-clearfog.dts  | 18 ++++++++++++++++++
- arch/arm/boot/dts/armada-388-clearfog.dtsi | 18 ------------------
- 2 files changed, 18 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/Makefile                    |  1 +
+ arch/arm/boot/dts/armada-388-clearfog-pro.dts | 55 +++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-388-clearfog-pro.dts
 
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
-index b56ce4a32519..51887b85dba4 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dts
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dts
-@@ -126,6 +126,20 @@
- 			};
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 22d2ca2b52ec..8cf288f8b84f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -922,6 +922,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-linksys-cobra.dtb \
+ 	armada-388-clearfog.dtb \
+ 	armada-388-clearfog-base.dtb \
++	armada-388-clearfog-pro.dtb \
+ 	armada-388-db.dtb \
+ 	armada-388-gp.dtb \
+ 	armada-388-rd.dtb
+diff --git a/arch/arm/boot/dts/armada-388-clearfog-pro.dts b/arch/arm/boot/dts/armada-388-clearfog-pro.dts
+new file mode 100644
+index 000000000000..e0c630a4d92c
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-388-clearfog-pro.dts
+@@ -0,0 +1,55 @@
++/*
++ * Device Tree file for SolidRun Clearfog Pro revision A1 rev 2.0 (88F6828)
++ *
++ *  Copyright (C) 2015 Russell King
++ *
++ * This board is in development; the contents of this file work with
++ * the A1 rev 2.0 of the board, which does not represent final
++ * production board.  Things will change, don't expect this file to
++ * remain compatible info the future.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++#include "armada-388-clearfog.dts"
 +
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&rear_button_pins>;
-+		pinctrl-names = "default";
-+
-+		button_0 {
-+			/* The rear SW3 button */
-+			label = "Rear Button";
-+			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-+			linux,can-disable;
-+			linux,code = <BTN_0>;
-+		};
-+	};
- };
- 
- &eth1 {
-@@ -183,6 +197,10 @@
- 		marvell,pins = "mpp55";
- 		marvell,function = "spi1";
- 	};
-+	rear_button_pins: rear-button-pins {
-+		marvell,pins = "mpp34";
-+		marvell,function = "gpio";
-+	};
- };
- 
- &spi1 {
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-index 30b75379377a..770d4bff6884 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-@@ -240,10 +240,6 @@
- 					marvell,pins = "mpp24", "mpp25";
- 					marvell,function = "ua1";
- 				};
--				rear_button_pins: rear-button-pins {
--					marvell,pins = "mpp34";
--					marvell,function = "gpio";
--				};
- 			};
- 
- 			sata@a8000 {
-@@ -299,20 +295,6 @@
- 			};
- 		};
- 	};
--
--	gpio-keys {
--		compatible = "gpio-keys";
--		pinctrl-0 = <&rear_button_pins>;
--		pinctrl-names = "default";
--
--		button_0 {
--			/* The rear SW3 button */
--			label = "Rear Button";
--			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
--			linux,can-disable;
--			linux,code = <BTN_0>;
--		};
--	};
- };
- 
- &spi1 {
++/ {
++	model = "SolidRun Clearfog Pro A1";
++	compatible = "solidrun,clearfog-pro-a1",
++		"solidrun,clearfog-a1", "marvell,armada388",
++		"marvell,armada385", "marvell,armada380";
++};
 -- 
 2.7.4
 
