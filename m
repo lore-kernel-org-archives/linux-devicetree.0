@@ -1,29 +1,160 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 0/9] dmaengine: stm32-dma: Bug fixes and improvements
- series
-Date: Mon, 2 Jan 2017 09:44:34 +0530
-Message-ID: <20170102041433.GM3573@localhost>
-References: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64:dt:ls1046a: Add TMU device tree support for
+ LS1046A
+Date: Mon, 2 Jan 2017 14:24:35 +0800
+Message-ID: <20170102062433.GA20956@dragon>
+References: <1481167706-44234-1-git-send-email-hongtao.jia@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481636451-27863-1-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1481167706-44234-1-git-send-email-hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2016 at 02:40:42PM +0100, M'boumba Cedric Madianga wrote:
-> This patchset adds bug fixes reported by devices using STM32 DMA and some
-> improvements mainly linked to dmaengine framework evolution.
+On Thu, Dec 08, 2016 at 11:28:25AM +0800, Jia Hongtao wrote:
+> Also add nodes and properties for thermal management support.
+> 
+> Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 
-So you should order fixes first and then new additions.
+"arm64: dts: ls1046a: ..." for subject prefix please.  Also, since we
+have ls1046a in prefix, the 'for LS1046A' is not needed.
 
-Fixes go in for current release whereas the rest for next one.
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 79 ++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 38806ca..40604e9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -45,6 +45,8 @@
+>   */
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/thermal/thermal.h>
+> +
 
-I have applied two to fixes and rest to updated, patch 5 didn't apply, please
-resend that one.
+Unneeded newline.
 
--- 
-~Vinod
+>  
+>  / {
+>  	compatible = "fsl,ls1046a";
+> @@ -67,6 +69,7 @@
+>  			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&l2>;
+>  			cpu-idle-states = <&CPU_PH20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -279,6 +282,82 @@
+>  			clocks = <&sysclk>;
+>  		};
+>  
+> +		tmu: tmu@1f00000 {
+> +			compatible = "fsl,qoriq-tmu";
+> +			reg = <0x0 0x1f00000 0x0 0x10000>;
+> +			interrupts = <0 33 0x4>;
+> +			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
+> +			fsl,tmu-calibration = <0x00000000 0x00000026
+> +					       0x00000001 0x0000002d
+> +					       0x00000002 0x00000032
+> +					       0x00000003 0x00000039
+> +					       0x00000004 0x0000003f
+> +					       0x00000005 0x00000046
+> +					       0x00000006 0x0000004d
+> +					       0x00000007 0x00000054
+> +					       0x00000008 0x0000005a
+> +					       0x00000009 0x00000061
+> +					       0x0000000a 0x0000006a
+> +					       0x0000000b 0x00000071
+> +
+
+Instead of a newline, can we have a single line comment here to tell how
+these calibration data is grouped?
+
+> +					       0x00010000 0x00000025
+> +					       0x00010001 0x0000002c
+> +					       0x00010002 0x00000035
+> +					       0x00010003 0x0000003d
+> +					       0x00010004 0x00000045
+> +					       0x00010005 0x0000004e
+> +					       0x00010006 0x00000057
+> +					       0x00010007 0x00000061
+> +					       0x00010008 0x0000006b
+> +					       0x00010009 0x00000076
+> +
+> +					       0x00020000 0x00000029
+> +					       0x00020001 0x00000033
+> +					       0x00020002 0x0000003d
+> +					       0x00020003 0x00000049
+> +					       0x00020004 0x00000056
+> +					       0x00020005 0x00000061
+> +					       0x00020006 0x0000006d
+> +
+> +					       0x00030000 0x00000021
+> +					       0x00030001 0x0000002a
+> +					       0x00030002 0x0000003c
+> +					       0x00030003 0x0000004e>;
+> +			big-endian;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+> +		thermal-zones {
+> +			cpu_thermal: cpu-thermal {
+> +				polling-delay-passive = <1000>;
+> +				polling-delay = <5000>;
+> +
+
+We usually do not have newline between properties but nodes, or between
+property list and child node.
+
+> +				thermal-sensors = <&tmu 3>;
+> +
+> +				trips {
+> +					cpu_alert: cpu-alert {
+> +						temperature = <85000>;
+> +						hysteresis = <2000>;
+> +						type = "passive";
+> +					};
+
+Have a newline here.
+
+Shawn
+
+> +					cpu_crit: cpu-crit {
+> +						temperature = <95000>;
+> +						hysteresis = <2000>;
+> +						type = "critical";
+> +					};
+> +				};
+> +
+> +				cooling-maps {
+> +					map0 {
+> +						trip = <&cpu_alert>;
+> +						cooling-device =
+> +							<&cpu0 THERMAL_NO_LIMIT
+> +							THERMAL_NO_LIMIT>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		dspi: dspi@2100000 {
+>  			compatible = "fsl,ls1021a-v1.0-dspi";
+>  			#address-cells = <1>;
+> -- 
+> 2.1.0.27.g96db324
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
