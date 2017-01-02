@@ -1,51 +1,83 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] cfg80211: support ieee80211-freq-limit DT
- property
-Date: Mon, 02 Jan 2017 18:52:28 +0100
-Message-ID: <1483379548.15591.1.camel@sipsolutions.net>
-References: <20170102163209.2445-1-zajec5@gmail.com>
-         <20170102163209.2445-2-zajec5@gmail.com>
-         (sfid-20170102_173227_440720_CC4EC280)
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 2/9] ARM: dts: omap3: Add an empty chosen node to top
+ level DTSI
+Date: Mon, 2 Jan 2017 19:01:22 +0100
+Message-ID: <201701021901.22476@pali>
+References: <1482158681-4530-1-git-send-email-javier@osg.samsung.com>
+ <1482158681-4530-3-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170102163209.2445-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (sfid-20170102_173227_440720_CC4EC280)
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1790374566702098828=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1482158681-4530-3-git-send-email-javier@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> +static void wiphy_freq_limits_apply(struct wiphy *wiphy)
-[...]
-> +			if (!wiphy_freq_limits_valid_chan(wiphy,
-> chan)) {
-> +				pr_debug("Disabling freq %d MHz as
-> it's out of OF limits\n",
-> +					 chan->center_freq);
-> +				chan->flags |=
-> IEEE80211_CHAN_DISABLED;
+--===============1790374566702098828==
+Content-Type: multipart/signed;
+  boundary="nextPart1589658.ne9uvhShho";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
-I think you didn't address the problem in the best way now.
+--nextPart1589658.ne9uvhShho
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-The problem with the channel sharing was the way you're applying the
-limits - at runtime. This is now OK since the new function shouldn't be
-called when the channel structs are shared, but hooking it all into the
-regulatory code is now no longer needed.
+On Monday 19 December 2016 15:44:34 Javier Martinez Canillas wrote:
+> Commit 008a2ebcd677 ("ARM: dts: omap3: Remove skeleton.dtsi usage")
+> removed the skeleton.dtsi usage since we want to get rid of it.
+>=20
+> But this can cause issues when booting a kernel with a boot-loader
+> that doesn't create a chosen node if this isn't present in the DTB
+> since the decompressor relies on a pre-existing chosen node to be
+> available to insert the command line and merge other ATAGS info.
+>=20
+> Fixes: 008a2ebcd677 ("ARM: dts: omap3: Remove skeleton.dtsi usage")
+> Reported-by: Pali Rohar <pali.rohar@gmail.com>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-What you can do now, when reading the OF data, is actually apply it to
-the channel flags immediately. If done *before* wiphy_register(), these
-flags will be preserved forever, so you no longer need any hooks in
-regulatory code at all - you can just set the original channel flags
-according to the OF data.
+Including empty chosen node fixes (or rather workaround) this problem.=20
+You can add my Tested-By.
 
-I think this greatly simplifies the flow, since you can also remove
-wiphy->freq_limits (and n_freq_limits) completely, since now the only
-effect of the function would be to modify the channel list, and later
-regulatory updates would always preserve the flags.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-johannes
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nextPart1589658.ne9uvhShho
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlhqlXIACgkQi/DJPQPkQ1KykgCdFEGHXJMGa9F2NDojt3FoYAP8
+N7IAoK8gbZurOMm8f2/DG9fuATNkyn6+
+=rCS9
+-----END PGP SIGNATURE-----
+
+--nextPart1589658.ne9uvhShho--
+
+
+--===============1790374566702098828==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1790374566702098828==--
