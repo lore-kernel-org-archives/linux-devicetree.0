@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 5/8] ARM: dts: kirkwood-dir665: Utilize new DSA binding
-Date: Sun,  1 Jan 2017 18:22:46 -0800
-Message-ID: <20170102022249.10657-6-f.fainelli@gmail.com>
+Subject: [PATCH 7/8] ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA binding
+Date: Sun,  1 Jan 2017 18:22:48 -0800
+Message-ID: <20170102022249.10657-8-f.fainelli@gmail.com>
 References: <20170102022249.10657-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170102022249.10657-1-f.fainelli@gmail.com>
@@ -17,23 +17,23 @@ disabled.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/kirkwood-dir665.dts | 49 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 ++++++++++++++++++++++++++
  1 file changed, 49 insertions(+)
 
-diff --git a/arch/arm/boot/dts/kirkwood-dir665.dts b/arch/arm/boot/dts/kirkwood-dir665.dts
-index 41acbb6dd6ab..4d2b15d6244a 100644
---- a/arch/arm/boot/dts/kirkwood-dir665.dts
-+++ b/arch/arm/boot/dts/kirkwood-dir665.dts
-@@ -194,6 +194,8 @@
+diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+index 172a38c0b8a9..5622115158ab 100644
+--- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
++++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+@@ -112,6 +112,8 @@
  	};
  
  	dsa {
 +		status = "disabled";
 +
  		compatible = "marvell,dsa";
- 		#address-cells = <2>;
+ 		#address-cells = <1>;
  		#size-cells = <0>;
-@@ -241,6 +243,53 @@
+@@ -159,6 +161,53 @@
  
  &mdio {
  	status = "okay";
@@ -50,22 +50,22 @@ index 41acbb6dd6ab..4d2b15d6244a 100644
 +
 +			port@0 {
 +				reg = <0>;
-+				label = "lan4";
++				label = "lan1";
 +			};
 +
 +			port@1 {
-+			       reg = <1>;
-+			       label = "lan3";
++				reg = <1>;
++				label = "lan2";
 +			};
 +
 +			port@2 {
-+			       reg = <2>;
-+			       label = "lan2";
++				reg = <2>;
++				label = "lan3";
 +			};
 +
 +			port@3 {
-+			       reg = <3>;
-+			       label = "lan1";
++				reg = <3>;
++				label = "lan4";
 +			};
 +
 +			port@4 {
@@ -73,8 +73,8 @@ index 41acbb6dd6ab..4d2b15d6244a 100644
 +				label = "wan";
 +			};
 +
-+			port@6 {
-+				reg = <6>;
++			port@5 {
++				reg = <5>;
 +				label = "cpu";
 +				ethernet = <&eth0port>;
 +				fixed-link {
@@ -83,9 +83,9 @@ index 41acbb6dd6ab..4d2b15d6244a 100644
 +				};
 +			};
 +		};
-+	};
++	};	
  };
  
- /* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
+ &eth0 {
 -- 
 2.9.3
