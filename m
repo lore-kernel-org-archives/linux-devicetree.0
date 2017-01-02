@@ -1,61 +1,38 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 4/5] arm64: dts: Pine64: add MMC support
-Date: Mon,  2 Jan 2017 23:03:45 +0000
-Message-ID: <1483398226-29321-5-git-send-email-andre.przywara@arm.com>
-References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRB25YVPBQKGQEXBZEAUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1483398226-29321-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v2 1/2] Doc: devicetree: bindings: Add vendor prefix entry - lwn
+Date: Tue,  3 Jan 2017 00:43:37 +0100
+Message-ID: <1483400618-16845-1-git-send-email-lukma@denx.de>
+References: <1482794396-16153-1-git-send-email-l.majewski@majess.pl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1482794396-16153-1-git-send-email-l.majewski@majess.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, "Zerlauth Karl (LWN)" <Karl.Zerlauth@liebherr.com>, Lukasz Majewski <l.majewski@majess.pl>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+This patch adds entry for LWN - the Liebherr-Werk Nenzing GmbH company to
+vendor-prefixes.txt file.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 4709590..c18ab03 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -55,6 +55,13 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
- 
- &uart0 {
-@@ -72,3 +79,14 @@
- &i2c1_pins {
- 	bias-pull-up;
- };
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>, <&mmc0_default_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	cd-gpios = <&pio 5 6 0>;
-+	cd-inverted;
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+Changes for v2:
+- New patch
+
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index f0a48ea..dd8b2eb 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -158,6 +158,7 @@ lg	LG Corporation
+ linux	Linux-specific binding
+ lltc	Linear Technology Corporation
+ lsi	LSI Corp. (LSI Logic)
++lwn	Liebherr-Werk Nenzing GmbH
+ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
+ meas	Measurement Specialties
 -- 
-2.8.2
+2.1.4
