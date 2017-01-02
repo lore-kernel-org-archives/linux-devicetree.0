@@ -1,49 +1,72 @@
-From: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 4/7] [media] coda: add debug output about tiling
-Date: Mon,  2 Jan 2017 14:23:49 +0100
-Message-ID: <20170102132352.23669-5-m.tretter@pengutronix.de>
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v3 1/7] [media] dt-bindings: Add a binding for Video Data Order Adapter
+Date: Mon,  2 Jan 2017 14:23:46 +0100
+Message-ID: <20170102132352.23669-2-m.tretter@pengutronix.de>
 References: <20170102132352.23669-1-m.tretter@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170102132352.23669-1-m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170102132352.23669-1-m.tretter@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, Philipp Zabel <philipp.zabel@gmail.com>, Michael Tretter <m.tretter@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Philipp Zabel <philipp.zabel@gmail.com>
 
-In order to make the VDOA work correctly, the CODA must produce frames
-in tiled format. Print this information in the debug output.
+Add a DT binding documentation for the Video Data Order Adapter (VDOA)
+of the Freescale i.MX6 SoC.
 
-Also print the color format in fourcc instead of the numeric value.
+Also, add the compatible property and correct clock to the device tree
+to match the documentation.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 ---
- drivers/media/platform/coda/coda-common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/media/fsl-vdoa.txt          | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl.dtsi                      |  2 ++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/fsl-vdoa.txt
 
-diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-index fa3ed74af116..b23fe0f0fb56 100644
---- a/drivers/media/platform/coda/coda-common.c
-+++ b/drivers/media/platform/coda/coda-common.c
-@@ -616,8 +616,10 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
- 	}
+diff --git a/Documentation/devicetree/bindings/media/fsl-vdoa.txt b/Documentation/devicetree/bindings/media/fsl-vdoa.txt
+new file mode 100644
+index 000000000000..6c5628530bb7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/fsl-vdoa.txt
+@@ -0,0 +1,21 @@
++Freescale Video Data Order Adapter
++==================================
++
++The Video Data Order Adapter (VDOA) is present on the i.MX6q. Its sole purpose
++is to reorder video data from the macroblock tiled order produced by the CODA
++960 VPU to the conventional raster-scan order for scanout.
++
++Required properties:
++- compatible: must be "fsl,imx6q-vdoa"
++- reg: the register base and size for the device registers
++- interrupts: the VDOA interrupt
++- clocks: the vdoa clock
++
++Example:
++
++vdoa@21e4000 {
++        compatible = "fsl,imx6q-vdoa";
++        reg = <0x021e4000 0x4000>;
++        interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_VDOA>;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 53e6e63cbb02..61569c86d28e 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1157,8 +1157,10 @@
+ 			};
  
- 	v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
--		"Setting format for type %d, wxh: %dx%d, fmt: %d\n",
--		f->type, q_data->width, q_data->height, q_data->fourcc);
-+		"Setting format for type %d, wxh: %dx%d, fmt: %4.4s %c\n",
-+		f->type, q_data->width, q_data->height,
-+		(char *)&q_data->fourcc,
-+		(ctx->tiled_map_type == GDI_LINEAR_FRAME_MAP) ? 'L' : 'T');
+ 			vdoa@021e4000 {
++				compatible = "fsl,imx6q-vdoa";
+ 				reg = <0x021e4000 0x4000>;
+ 				interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6QDL_CLK_VDOA>;
+ 			};
  
- 	return 0;
- }
+ 			uart2: serial@021e8000 {
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
