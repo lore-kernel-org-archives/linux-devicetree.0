@@ -1,83 +1,78 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH RESEND] dmaengine: stm32-dma: Rework starting transfer management
-Date: Mon,  2 Jan 2017 10:33:27 +0100
-Message-ID: <1483349607-16870-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 0/4] PCI: exynos: use the PHY generic framework
+Date: Mon, 02 Jan 2017 18:45:25 +0900
+Message-ID: <a9141f6a-0eb6-0556-c525-2df71a47acfd@samsung.com>
+References: <CGME20161228103455epcas1p1c762bc59add0011beff1d4ff697b5c8d@epcas1p1.samsung.com>
+ <20161228103454.26467-1-jh80.chung@samsung.com>
+ <20161230155613.jpwzytnh4osz76c6@kozik-lap>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20161230155613.jpwzytnh4osz76c6@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch reworks the way to manage transfer starting.
-Now, starting DMA is only allowed when the channel is not busy.
-Then, stm32_dma_start_transfer is declared as void.
-At least, after each transfer completion, we start the next transfer if a
-new descriptor as been queued in the issued list during an ongoing
-transfer.
+On 12/31/2016 12:56 AM, Krzysztof Kozlowski wrote:
+> On Wed, Dec 28, 2016 at 07:34:50PM +0900, Jaehoon Chung wrote:
+>> This patch is for using PHY generic framework.
+>> When Exynos5440 had upstreamed, there was no PHY subsytem.
+>> Now the using PHY framework is mandantory.
+>> In future, Exynos variant should be supported in pci-exynos.c
+>>
+>> Theses pathces based on the below patches
+>>
+> 
+> Aren't you breaking DTB ABI here? If yes, then I don't mind but please
+> put it in the commit message.  Also order the patches in a way
+> preserving bisectability.
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
----
- drivers/dma/stm32-dma.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+Will resend the patch v2.
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 3056ce7..adb846c 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -421,7 +421,7 @@ static void stm32_dma_dump_reg(struct stm32_dma_chan *chan)
- 	dev_dbg(chan2dev(chan), "SFCR:  0x%08x\n", sfcr);
- }
- 
--static int stm32_dma_start_transfer(struct stm32_dma_chan *chan)
-+static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- {
- 	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
- 	struct virt_dma_desc *vdesc;
-@@ -432,12 +432,12 @@ static int stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 
- 	ret = stm32_dma_disable_chan(chan);
- 	if (ret < 0)
--		return ret;
-+		return;
- 
- 	if (!chan->desc) {
- 		vdesc = vchan_next_desc(&chan->vchan);
- 		if (!vdesc)
--			return -EPERM;
-+			return;
- 
- 		chan->desc = to_stm32_dma_desc(vdesc);
- 		chan->next_sg = 0;
-@@ -471,7 +471,7 @@ static int stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 
- 	chan->busy = true;
- 
--	return 0;
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
-@@ -552,15 +552,13 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
- {
- 	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
- 	unsigned long flags;
--	int ret;
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
--	if (!chan->busy) {
--		if (vchan_issue_pending(&chan->vchan) && !chan->desc) {
--			ret = stm32_dma_start_transfer(chan);
--			if ((!ret) && (chan->desc->cyclic))
--				stm32_dma_configure_next_sg(chan);
--		}
-+	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
-+		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
-+		stm32_dma_start_transfer(chan);
-+		if (chan->desc->cyclic)
-+			stm32_dma_configure_next_sg(chan);
- 	}
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
--- 
-1.9.1
+Best Regards,
+Jaehoon Chung
+
+> 
+> Best regards,
+> Krzysztof
+> 
+>> - Jaehoon's patches
+>> http://patchwork.ozlabs.org/patch/706998/
+>> http://patchwork.ozlabs.org/patch/706997/
+>> http://patchwork.ozlabs.org/patch/706995/
+>> http://patchwork.ozlabs.org/patch/706994/
+>>
+>> - Srinivas's patch
+>> http://patchwork.ozlabs.org/patch/703530/
+>>
+>> - Pankaj's patch
+>> http://patchwork.ozlabs.org/patch/708414/
+>>
+>> Jaehoon Chung (4):
+>>   phy: exynos-pcie: Add support for Exynos PCIe phy
+>>   Documetation: samsung-phy: add the exynos-pcie-phy binding
+>>   Documetation: binding: modify the exynos5440 pcie binding
+>>   ARM: dts: exynos5440: support the phy-pcie node for pcie
+>>
+>>  .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 ++-
+>>  .../devicetree/bindings/phy/samsung-phy.txt        |  23 ++
+>>  arch/arm/boot/dts/exynos5440.dtsi                  |  44 +++-
+>>  drivers/pci/host/pci-exynos.c                      | 198 ++------------
+>>  drivers/phy/Kconfig                                |   9 +
+>>  drivers/phy/Makefile                               |   1 +
+>>  drivers/phy/phy-exynos-pcie.c                      | 289 +++++++++++++++++++++
+>>  7 files changed, 395 insertions(+), 198 deletions(-)
+>>  create mode 100644 drivers/phy/phy-exynos-pcie.c
+>>
+>> -- 
+>> 2.10.2
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
