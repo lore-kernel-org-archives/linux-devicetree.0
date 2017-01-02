@@ -1,51 +1,111 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] cfg80211: allow passing struct device in the
- wiphy_new call
-Date: Mon, 02 Jan 2017 14:38:18 +0100
-Message-ID: <1483364298.21014.3.camel@sipsolutions.net>
-References: <20170102132747.3491-1-zajec5@gmail.com>
-         (sfid-20170102_142831_033140_A7AF3467)
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/3] ARM: dts: imx6dl: Add Engicam i.CoreM6 DualLite/Solo RQS initial support
+Date: Mon,  2 Jan 2017 14:40:18 +0100
+Message-ID: <1483364420-10012-1-git-send-email-jagan@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170102132747.3491-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (sfid-20170102_142831_033140_A7AF3467)
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-> --- a/include/net/cfg80211.h
-> +++ b/include/net/cfg80211.h
-> @@ -3730,8 +3730,8 @@ static inline const char *wiphy_name(const
-> struct wiphy *wiphy)
->   * Return: A pointer to the new wiphy. This pointer must be
->   * assigned to each netdev's ieee80211_ptr for proper operation.
->   */
-> -struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int
-> sizeof_priv,
-> -			   const char *requested_name);
-> +struct wiphy *wiphy_new_nm(struct device *dev, const struct
-> cfg80211_ops *ops,
-> +			   int sizeof_priv, const char
-> *requested_name);
+i.CoreM6 DualLite/Solo modules are system on module solutions manufactured
+by Engicam with following characteristics:
+CPU           NXP i.MX6 DL, 800MHz
+RAM           1GB, 32, 64 bit, DDR3-800/1066
+NAND          SLC,512MB
+Power supply  Single 5V
+MAX LCD RES   FULLHD
 
-This is obviously missing documentation updates.
+and more info at
+http://www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
 
->   */
-> -static inline struct wiphy *wiphy_new(const struct cfg80211_ops
-> *ops,
-> +static inline struct wiphy *wiphy_new(struct device *dev,
-> +				      const struct cfg80211_ops
-> *ops,
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v2:
+- Update correct licenece notes
 
-Ditto.
+ arch/arm/boot/dts/Makefile             |  1 +
+ arch/arm/boot/dts/imx6dl-icore-rqs.dts | 51 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-icore-rqs.dts
 
-It looks like you practically removed all users of set_wiphy_dev(), why
-not do that completely and remove that entirely?
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cccdbcb..51f8dae 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -349,6 +349,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw553x.dtb \
+ 	imx6dl-hummingboard.dtb \
+ 	imx6dl-icore.dtb \
++	imx6dl-icore-rqs.dtb \
+ 	imx6dl-nit6xlite.dtb \
+ 	imx6dl-nitrogen6x.dtb \
+ 	imx6dl-phytec-pbab01.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
+new file mode 100644
+index 0000000..cf42c2f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
+@@ -0,0 +1,51 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6q.dtsi"
++#include "imx6qdl-icore-rqs.dtsi"
++
++/ {
++	model = "Engicam i.CoreM6 DualLite/Solo RQS Starter Kit";
++	compatible = "engicam,imx6-icore-rqs", "fsl,imx6dl";
++};
+-- 
+1.9.1
 
-johannes
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
