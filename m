@@ -1,104 +1,37 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: imx6: Support Savageboard dual
-Date: Mon, 2 Jan 2017 15:03:04 +0800
-Message-ID: <20170102070302.GD20956@dragon>
+From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] ARM: dts: imx6: Add Savageboard common file
+Date: Mon, 2 Jan 2017 16:31:07 +0900
+Message-ID: <450d89c7-7459-6369-3a07-cc60d70de0db@gmail.com>
 References: <20161209010436.7994-1-woogyom.kim@gmail.com>
- <20161209010436.7994-3-woogyom.kim@gmail.com>
+ <20161209010436.7994-2-woogyom.kim@gmail.com> <20170102065239.GC20956@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161209010436.7994-3-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170102065239.GC20956@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 09, 2016 at 10:04:35AM +0900, Milo Kim wrote:
-> Common savageboard DT file is used for board support.
-> Specify this dtb file for i.MX6Q build.
-> 
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
-> ---
->  arch/arm/boot/dts/Makefile               |  1 +
->  arch/arm/boot/dts/imx6dl-savageboard.dts | 50 ++++++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c558ba7..64660c7 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -348,6 +348,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6dl-sabreauto.dtb \
->  	imx6dl-sabrelite.dtb \
->  	imx6dl-sabresd.dtb \
-> +	imx6dl-savageboard.dtb \
->  	imx6dl-ts4900.dtb \
->  	imx6dl-tx6dl-comtft.dtb \
->  	imx6dl-tx6s-8034.dtb \
-> diff --git a/arch/arm/boot/dts/imx6dl-savageboard.dts b/arch/arm/boot/dts/imx6dl-savageboard.dts
-> new file mode 100644
-> index 0000000..2cac30d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6dl-savageboard.dts
-> @@ -0,0 +1,50 @@
-> +/*
-> + * Copyright (C) 2016 Milo Kim <woogyom.kim@gmail.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx6dl.dtsi"
-> +#include "imx6qdl-savageboard.dtsi"
-> +
-> +/ {
-> +	model = "Poslab SavageBoard Dual";
-> +	compatible = "poslab,imx6dl-savageboard", "fsl,imx6dl";
 
-It seems that 'poslab' should be added to
-Documentation/devicetree/bindings/vendor-prefixes.txt.
+On 01/02/2017 03:52 PM, Shawn Guo wrote:
+>> +	panel {
+>> +		compatible = "avic, tm097tdh02", "hannstar,hsd100pxn1";
+> "avic, tm097tdh02" is an undocumented compatible.
+>
 
-Shawn
+AVIC TM097TDH02 panel is compatible with Hannstar HSD100PXN1, so I reuse 
+it. It's the same rule as the usage of imx6q I2C controller.
 
-> +};
-> -- 
-> 2.9.3
-> 
+	i2c2: i2c@021a4000 {
+		compatible = "fsl,imx6q-i2c", "fsl,imx21-i2c";
+	};
+
+
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
