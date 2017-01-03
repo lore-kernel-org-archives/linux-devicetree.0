@@ -1,129 +1,237 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V5 2/3] cfg80211: move function checking range fit to util.c
-Date: Tue,  3 Jan 2017 23:57:13 +0100
-Message-ID: <20170103225715.14072-2-zajec5@gmail.com>
+Subject: [PATCH V5 3/3] cfg80211: support ieee80211-freq-limit DT property
+Date: Tue,  3 Jan 2017 23:57:14 +0100
+Message-ID: <20170103225715.14072-3-zajec5@gmail.com>
 References: <20170103225715.14072-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170103225715.14072-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-It is needed for another cfg80211 helper that will be out of reg.c so
-move it to common util.c file and make it non-static.
+This patch adds a helper for reading that new property and applying
+limitations or supported channels specified this way.
+It may be useful for specifying single band devices or devices that
+support only some part of the whole band. It's common that tri-band
+routers have separated radios for lower and higher part of 5 GHz band.
 
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
-V5: Add this patch as suggested by Arend
+V2: Put main code in core.c as it isn't strictly part of regulatory - pointed
+    by Arend.
+    Update to support ieee80211-freq-limit (new property).
+V3: Introduce separated wiphy_read_of_freq_limits function.
+    Add extra sanity checks for DT data.
+    Move code back to reg.c as suggested by Johannes.
+V4: Move code to of.c
+    Use one helper called at init time (no runtime hooks)
+    Modify orig_flags
+V5: Make wiphy_read_of_freq_limits return void as there isn't much point of
+    handling errors.
 ---
- net/wireless/core.h |  3 +++
- net/wireless/reg.c  | 27 +++++++--------------------
- net/wireless/util.c | 15 +++++++++++++++
- 3 files changed, 25 insertions(+), 20 deletions(-)
+ include/net/cfg80211.h |  25 +++++++++
+ net/wireless/Makefile  |   1 +
+ net/wireless/of.c      | 138 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 164 insertions(+)
+ create mode 100644 net/wireless/of.c
 
-diff --git a/net/wireless/core.h b/net/wireless/core.h
-index af6e023..bc8ba6e 100644
---- a/net/wireless/core.h
-+++ b/net/wireless/core.h
-@@ -430,6 +430,9 @@ int cfg80211_change_iface(struct cfg80211_registered_device *rdev,
- void cfg80211_process_rdev_events(struct cfg80211_registered_device *rdev);
- void cfg80211_process_wdev_events(struct wireless_dev *wdev);
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index ca2ac1c..a58cdc9 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -311,6 +311,31 @@ struct ieee80211_supported_band {
+ 	struct ieee80211_sta_vht_cap vht_cap;
+ };
  
-+bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
-+				u32 center_freq_khz, u32 bw_khz);
-+
- /**
-  * cfg80211_chandef_dfs_usable - checks if chandef is DFS usable
-  * @wiphy: the wiphy to validate against
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 5dbac37..753efcd 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -748,21 +748,6 @@ static bool is_valid_rd(const struct ieee80211_regdomain *rd)
- 	return true;
- }
- 
--static bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
--			    u32 center_freq_khz, u32 bw_khz)
--{
--	u32 start_freq_khz, end_freq_khz;
--
--	start_freq_khz = center_freq_khz - (bw_khz/2);
--	end_freq_khz = center_freq_khz + (bw_khz/2);
--
--	if (start_freq_khz >= freq_range->start_freq_khz &&
--	    end_freq_khz <= freq_range->end_freq_khz)
--		return true;
--
--	return false;
--}
--
- /**
-  * freq_in_rule_band - tells us if a frequency is in a frequency band
-  * @freq_range: frequency rule we want to query
-@@ -1070,7 +1055,7 @@ freq_reg_info_regd(u32 center_freq,
- 		if (!band_rule_found)
- 			band_rule_found = freq_in_rule_band(fr, center_freq);
- 
--		bw_fits = reg_does_bw_fit(fr, center_freq, bw);
-+		bw_fits = cfg80211_does_bw_fit_range(fr, center_freq, bw);
- 
- 		if (band_rule_found && bw_fits)
- 			return rr;
-@@ -1138,11 +1123,13 @@ static uint32_t reg_rule_to_chan_bw_flags(const struct ieee80211_regdomain *regd
- 		max_bandwidth_khz = reg_get_max_bandwidth(regd, reg_rule);
- 
- 	/* If we get a reg_rule we can assume that at least 5Mhz fit */
--	if (!reg_does_bw_fit(freq_range, MHZ_TO_KHZ(chan->center_freq),
--			     MHZ_TO_KHZ(10)))
-+	if (!cfg80211_does_bw_fit_range(freq_range,
-+					MHZ_TO_KHZ(chan->center_freq),
-+					MHZ_TO_KHZ(10)))
- 		bw_flags |= IEEE80211_CHAN_NO_10MHZ;
--	if (!reg_does_bw_fit(freq_range, MHZ_TO_KHZ(chan->center_freq),
--			     MHZ_TO_KHZ(20)))
-+	if (!cfg80211_does_bw_fit_range(freq_range,
-+					MHZ_TO_KHZ(chan->center_freq),
-+					MHZ_TO_KHZ(20)))
- 		bw_flags |= IEEE80211_CHAN_NO_20MHZ;
- 
- 	if (max_bandwidth_khz < MHZ_TO_KHZ(10))
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index 2cf7df8..62dc214 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -1847,6 +1847,21 @@ void cfg80211_free_nan_func(struct cfg80211_nan_func *f)
- }
- EXPORT_SYMBOL(cfg80211_free_nan_func);
- 
-+bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
-+				u32 center_freq_khz, u32 bw_khz)
++/**
++ * wiphy_read_of_freq_limits - read frequency limits from device tree
++ *
++ * @wiphy: the wireless device to get extra limits for
++ *
++ * Some devices may have extra limitations specified in DT. This may be useful
++ * for chipsets that normally support more bands but are limited due to board
++ * design (e.g. by antennas or extermal power amplifier).
++ *
++ * This function reads info from DT and uses it to *modify* channels (disable
++ * unavailable ones). It's usually a *bad* idea to use it in drivers with
++ * shared channel data as DT limitations are device specific.
++ *
++ * As this function access device node it has to be called after set_wiphy_dev.
++ * It also modifies channels so they have to be set first.
++ */
++#ifdef CONFIG_OF
++void wiphy_read_of_freq_limits(struct wiphy *wiphy);
++#else /* CONFIG_OF */
++static inline void wiphy_read_of_freq_limits(struct wiphy *wiphy)
 +{
-+	u32 start_freq_khz, end_freq_khz;
++}
++#endif /* !CONFIG_OF */
 +
-+	start_freq_khz = center_freq_khz - (bw_khz / 2);
-+	end_freq_khz = center_freq_khz + (bw_khz / 2);
 +
-+	if (start_freq_khz >= freq_range->start_freq_khz &&
-+	    end_freq_khz <= freq_range->end_freq_khz)
-+		return true;
+ /*
+  * Wireless hardware/device configuration structures and methods
+  */
+diff --git a/net/wireless/Makefile b/net/wireless/Makefile
+index 4c9e39f..95b4c09 100644
+--- a/net/wireless/Makefile
++++ b/net/wireless/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_WEXT_PRIV) += wext-priv.o
+ 
+ cfg80211-y += core.o sysfs.o radiotap.o util.o reg.o scan.o nl80211.o
+ cfg80211-y += mlme.o ibss.o sme.o chan.o ethtool.o mesh.o ap.o trace.o ocb.o
++cfg80211-$(CONFIG_OF) += of.o
+ cfg80211-$(CONFIG_CFG80211_DEBUGFS) += debugfs.o
+ cfg80211-$(CONFIG_CFG80211_WEXT) += wext-compat.o wext-sme.o
+ cfg80211-$(CONFIG_CFG80211_INTERNAL_REGDB) += regdb.o
+diff --git a/net/wireless/of.c b/net/wireless/of.c
+new file mode 100644
+index 0000000..70b21e0
+--- /dev/null
++++ b/net/wireless/of.c
+@@ -0,0 +1,138 @@
++/*
++ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ *
++ * Permission to use, copy, modify, and/or distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++
++#include <linux/of.h>
++#include <net/cfg80211.h>
++#include "core.h"
++
++static bool wiphy_freq_limits_valid_chan(struct wiphy *wiphy,
++					 struct ieee80211_freq_range *freq_limits,
++					 unsigned int n_freq_limits,
++					 struct ieee80211_channel *chan)
++{
++	u32 bw = MHZ_TO_KHZ(20);
++	int i;
++
++	for (i = 0; i < n_freq_limits; i++) {
++		struct ieee80211_freq_range *limit = &freq_limits[i];
++
++		if (cfg80211_does_bw_fit_range(limit,
++					       MHZ_TO_KHZ(chan->center_freq),
++					       bw))
++			return true;
++	}
 +
 +	return false;
 +}
 +
- /* See IEEE 802.1H for LLC/SNAP encapsulation/decapsulation */
- /* Ethernet-II snap header (RFC1042 for most EtherTypes) */
- const unsigned char rfc1042_header[] __aligned(2) =
++static void wiphy_freq_limits_apply(struct wiphy *wiphy,
++				    struct ieee80211_freq_range *freq_limits,
++				    unsigned int n_freq_limits)
++{
++	enum nl80211_band band;
++	int i;
++
++	if (WARN_ON(!n_freq_limits))
++		return;
++
++	for (band = 0; band < NUM_NL80211_BANDS; band++) {
++		struct ieee80211_supported_band *sband = wiphy->bands[band];
++
++		if (!sband)
++			continue;
++
++		for (i = 0; i < sband->n_channels; i++) {
++			struct ieee80211_channel *chan = &sband->channels[i];
++
++			if (chan->orig_flags & IEEE80211_CHAN_DISABLED)
++				continue;
++
++			if (!wiphy_freq_limits_valid_chan(wiphy, freq_limits,
++							  n_freq_limits,
++							  chan)) {
++				pr_debug("Disabling freq %d MHz as it's out of OF limits\n",
++					 chan->center_freq);
++				chan->orig_flags |= IEEE80211_CHAN_DISABLED;
++			}
++		}
++	}
++}
++
++void wiphy_read_of_freq_limits(struct wiphy *wiphy)
++{
++	struct device *dev = wiphy_dev(wiphy);
++	struct device_node *np;
++	struct property *prop;
++	struct ieee80211_freq_range *freq_limits;
++	unsigned int n_freq_limits;
++	const __be32 *p;
++	int len, i;
++	int err = 0;
++
++	if (!dev)
++		return;
++	np = dev_of_node(dev);
++	if (!np)
++		return;
++
++	prop = of_find_property(np, "ieee80211-freq-limit", &len);
++	if (!prop)
++		return;
++
++	if (!len || len % sizeof(u32) || len / sizeof(u32) % 2) {
++		dev_err(dev, "ieee80211-freq-limit wrong format");
++		return;
++	}
++	n_freq_limits = len / sizeof(u32) / 2;
++
++	freq_limits = kcalloc(n_freq_limits, sizeof(*freq_limits), GFP_KERNEL);
++	if (!freq_limits) {
++		err = -ENOMEM;
++		goto out_kfree;
++	}
++
++	p = NULL;
++	for (i = 0; i < n_freq_limits; i++) {
++		struct ieee80211_freq_range *limit = &freq_limits[i];
++
++		p = of_prop_next_u32(prop, p, &limit->start_freq_khz);
++		if (!p) {
++			err = -EINVAL;
++			goto out_kfree;
++		}
++
++		p = of_prop_next_u32(prop, p, &limit->end_freq_khz);
++		if (!p) {
++			err = -EINVAL;
++			goto out_kfree;
++		}
++
++		if (!limit->start_freq_khz ||
++		    !limit->end_freq_khz ||
++		    limit->start_freq_khz >= limit->end_freq_khz) {
++			err = -EINVAL;
++			goto out_kfree;
++		}
++	}
++
++	wiphy_freq_limits_apply(wiphy, freq_limits, n_freq_limits);
++
++out_kfree:
++	kfree(freq_limits);
++	if (err)
++		dev_err(dev, "Failed to get limits: %d\n", err);
++}
++EXPORT_SYMBOL(wiphy_read_of_freq_limits);
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
