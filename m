@@ -1,81 +1,57 @@
-From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm64: dts: exynos: make tm2 and tm2e independent from
- each other
-Date: Tue, 03 Jan 2017 20:55:30 +0900
-Message-ID: <20170103115530.zhjwn7bzmqmumy23@gangnam.samsung>
-References: <CGME20170103075734epcas5p43a9743131f63affd0a438d2ed342f22e@epcas5p4.samsung.com>
- <1483430237-26823-1-git-send-email-jcsing.lee@samsung.com>
- <1483430237-26823-4-git-send-email-jcsing.lee@samsung.com>
- <CAJKOXPev9m07_dQWAvJ+=MKnbT0TFERKOtjWUDU+WXdGAiRyDA@mail.gmail.com>
- <20170103095842.h3hl64amje4qv4ts@gangnam.samsung>
- <CAJKOXPeEE1VwAUSAOpfyX+t58zKeAT1fe3ybp0BoQiiDBb4Uqg@mail.gmail.com>
- <20170103102548.73jg6qddlcthe2mu@gangnam.samsung>
- <CAGTfZH3ez4DPTE7-bDeayjhSGxJ_8Mj1MQz1M7O1qhwOGOnmMQ@mail.gmail.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6qdl-nitrogen6_max: fix sgtl5000
+ pinctrl init
+Date: Tue, 3 Jan 2017 12:55:49 +0100
+Message-ID: <20170103115530.vngqbev7nsavgtdc@t450s.lan>
+References: <20170103112247.4563-1-gary.bisson@boundarydevices.com>
+ <20170103112247.4563-2-gary.bisson@boundarydevices.com>
+ <20170103114316.GC20956@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-disposition: inline
-In-reply-to: <CAGTfZH3ez4DPTE7-bDeayjhSGxJ_8Mj1MQz1M7O1qhwOGOnmMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galaxyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170103114316.GC20956@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Shawn,
 
-> >> >> > Currently tm2e dts includes tm2 but there are some differences
-> >> >> > between the two boards and tm2 has some properties that tm2e
-> >> >> > doesn't have.
-> >> >> >
-> >> >> > That's why it's important to keep the two dts files independent
-> >> >> > and put all the commonalities in a tm2-common.dtsi file.
-> >> >> >
-> >> >> > Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> >> > Signed-off-by: Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> >> > ---
-> >> >> >  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 1046 ++++++++++++++++++++
-> >> >> >  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1033 +------------------
-> >> >> >  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |    2 +-
-> >> >> >  3 files changed, 1049 insertions(+), 1032 deletions(-)
-> >> >> >  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> >> >>
-
-[...]
-
-> > Because exynos5433-tm2.dts results modified, while
-> > exynos5433-tm2-common.dtsi is new. Even though I did:
-> >
-> > 1. mv exynos5433-tm2.dts exynos5433-tm2-common.dtsi
-> > 2. copied pieces from exynos5433-tm2-common.dtsi to a new
-> >    exynos5433-tm2.dts
+On Tue, Jan 03, 2017 at 07:43:17PM +0800, Shawn Guo wrote:
+> On Tue, Jan 03, 2017 at 12:22:46PM +0100, Gary Bisson wrote:
+> > This patch fixes the following error:
+> > sgtl5000 0-000a: Error reading chip id -6
+> > imx-sgtl5000 sound: ASoC: CODEC DAI sgtl5000 not registered
+> > imx-sgtl5000 sound: snd_soc_register_card failed (-517)
+> > 
+> > The problem was that the pinctrl group was linked to the sound driver
+> > instead of the codec node. Since the codec is probed first, the sys_mclk
+> > was missing and it would therefore fail to initialize.
+> > 
+> > Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
 > 
-> I think that exynos5433-tm2-common.dtsi is not necessary because there
-> is small difference between TM2 and TM2E.
-> 
-> I explain the detailed difference between TM2 and TM2E and then reply
-> how to support the TM2E board with existing exynos5433-tm2.dts file
-> without exynos5433-tm2-common.dtsi.
-> 
-> Difference and the way to support TM2E with existing
-> exynos5433-tm2.dts file as following:
-> - hsi2c_9 is either used or not. TM2 uses the hsi2c_9 node for
-> touchkey. but TM2E do not use the hsi2c_9.
->    : We can just disable the hsi2c_9 node on tm2e.dts as following:
-> 
->    &hsi2c_9 {
->          status = "disable";
->    };
+> Should we have it go as a fix for v4.10-rc cycles?  In that case, please
+> add a Fixes: tag.  Also, do we need to apply it for stable kernel?
 
-I thought about this alternative too, it just looked cleaner to
-me to have a tm2-common.dtsi file.
+Sure it'd be great if it could be in v4.10.
+Fixes: b32e700256bc ("ARM: dts: imx: add Boundary Devices Nitrogen6_Max board")
 
-Anyway, as you guys wish. If for you and Krzysztof is better this
-way, we can drop this patch and add the above lines in the current
-Jaechul's patch 4/4.
+As for stable kernel, I guess it wouldn't hurt but it's not mandatory in
+my opinion.
+
+Do you want me to re-send with the Fixes line? What about the SOM2
+patch, should it include a Fixes line although it works thanks to
+U-Boot?
 
 Thanks,
-Andi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gary
