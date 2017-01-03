@@ -1,183 +1,72 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 03/10] dt-bindings: perf: hisi: Add Devicetree
- bindings for Hisilicon SoC PMU
-Date: Tue, 3 Jan 2017 16:59:14 -0600
-Message-ID: <20170103225914.w3drvtpvupnpfa4x@rob-hp-laptop>
-References: <1483339761-23927-1-git-send-email-anurup.m@huawei.com>
+Subject: Re: [PATCH V4 1/2] dt-bindings: document common IEEE 802.11
+ frequency limit property
+Date: Tue, 3 Jan 2017 17:08:41 -0600
+Message-ID: <20170103230841.hs7ebd2recvh6ywx@rob-hp-laptop>
+References: <20170103110340.23249-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483339761-23927-1-git-send-email-anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170103110340.23249-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 02, 2017 at 01:49:21AM -0500, Anurup M wrote:
-> 1) Device tree bindings for Hisilicon SoC PMU.
-> 2) Add example for Hisilicon L3 cache and MN PMU.
-> 3) Add child nodes of L3C and MN in djtag bindings example.
+On Tue, Jan 03, 2017 at 12:03:38PM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > 
-> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> This new file should be used for properties that apply to all wireless
+> devices.
+
+The commit msg should answer the questions I asked on v1.
+
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/hisilicon/djtag.txt    |  25 ++++++
->  .../devicetree/bindings/arm/hisilicon/pmu.txt      | 100 +++++++++++++++++++++
->  2 files changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> V2: Switch to a single ieee80211-freq-limit property that allows specifying
+>     *multiple* ranges. This resolves problem with more complex rules as pointed
+>     by Felx.
+>     Make description implementation agnostic as pointed by Arend.
+>     Rename node to wifi as suggested by Martin.
+> V3: Use more real-life frequencies in the example.
+> ---
+>  .../devicetree/bindings/net/wireless/ieee80211.txt     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> index bbe8b45..653fdb7 100644
-> --- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> @@ -27,6 +27,31 @@ Example 1: Djtag for CPU die
->  		hisi-scl-id = <0x02>;
->  
->  		/* All connecting components will appear as child nodes */
-> +
-> +		pmul3c0 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x02>;
-> +		};
-> +
-> +		pmul3c1 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x04>;
-> +		};
-> +
-> +		pmul3c2 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x01>;
-> +		};
-> +
-> +		pmul3c3 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x08>;
-> +		};
-> +
-> +		pmumn0 {
-> +			compatible = "hisilicon,hip05-pmu-mn-v1";
-> +			hisi-module-id = <0x0b>;
-> +		};
->  	};
->  
->  Example 2: Djtag for IO die
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 > new file mode 100644
-> index 0000000..fceef8d
+> index 0000000..0cd1219
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-> @@ -0,0 +1,100 @@
-> +Hisilicon SoC HiP05/06/07 ARMv8 PMU
-> +===================================
+> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> @@ -0,0 +1,18 @@
+> +Common IEEE 802.11 properties
 > +
-> +The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
-> +system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
-> +PMU devices are independent and have hardware logic to gather statistics and
-> +performance information.
-> +
-> +HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
-> +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
-> +in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
-> +4 cpu-cores each.
-> +e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
-> +The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
-> +
-> +The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
-> +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
-> +the parent node will be the djtag node of the corresponding CPU die (SCCL).
-> +
-> +L3 cache
-> +---------
-> +The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
-> +L3 cache banks. Each L3 cache bank have separate DT nodes.
-> +
-> +Required properties:
-> +
-> +	- compatible : This value should be as follows
-> +		(a) "hisilicon,hip05-pmu-l3c-v1" for v1 hw in HiP05 chipset
-> +		(b) "hisilicon,hip06-pmu-l3c-v1" for v1 hw in HiP06 chipset
-> +		(c) "hisilicon,hip07-pmu-l3c-v2" for v2 hw in HiP07 chipset
-> +
-> +	- hisi-module-id : This property is a combination of two values in the below order.
-
-Vendor prefix: hisilicon,module-id
-
-> +		      a) Module ID: The module identifier for djtag.
-> +		      b) Instance or Bank ID: This will identify the L3 cache bank
-> +			 or instance.
+> +This provides documentation of common properties that are valid for all wireless
+> +devices.
 > +
 > +Optional properties:
-> +
-> +	- interrupt-parent : A phandle indicating which interrupt controller
-> +		this PMU signals interrupts to.
-> +
-> +	- interrupts : Interrupt line used by this L3 cache bank.
-> +
-> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
-> +
-> +Miscellaneous Node
-> +------------------
-> +The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
-> +for each SCCL.
-> +
-> +Required properties:
-> +
-> +	- compatible : This value should be as follows
-> +		(a) "hisilicon,hip05-pmu-mn-v1" for v1 hw in HiP05 chipset
-> +		(b) "hisilicon,hip06-pmu-mn-v1" for v1 hw in HiP06 chipset
-> +		(c) "hisilicon,hip07-pmu-mn-v2" for v2 hw in HiP07 chipset
-> +
-> +	- hisi-module-id : Module ID to input for djtag.
-
-ditto
-
-> +
-> +Optional properties:
-> +
-> +	- interrupt-parent : A phandle indicating which interrupt controller
-> +		this PMU signals interrupts to.
-> +
-> +	- interrupts : Interrupt line used by this PMU.
-> +
-> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
+> + - ieee80211-freq-limit : list of supported frequency ranges in KHz
 > +
 > +Example:
 > +
-> +	djtag0: djtag@80010000 {
-> +		compatible = "hisilicon,hip05-djtag-v1";
-> +		reg = <0x0 0x80010000 0x0 0x10000>;
-> +		scl-id = <0x02>;
-> +
-> +		pmul3c0 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x02>;
-> +		};
-> +
-> +		pmul3c1 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x04>;
-> +		};
-> +
-> +		pmul3c2 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x01>;
-> +		};
-> +
-> +		pmul3c3 {
-> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
-> +			hisi-module-id = <0x04 0x08>;
-> +		};
-> +
-> +		pmumn0 {
-> +			compatible = "hisilicon,hip05-pmu-mn-v1";
-> +			hisi-module-id = <0x0b>;
-> +		};
+> +pcie@0,0 {
+> +	reg = <0x0000 0 0 0 0>;
+> +	wifi@0,0 {
+> +		reg = <0x0000 0 0 0 0>;
+> +		ieee80211-freq-limit = <2402000 2482000>,
+> +				       <5170000 5250000>;
 > +	};
+> +};
 > -- 
-> 2.1.4
+> 2.10.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
