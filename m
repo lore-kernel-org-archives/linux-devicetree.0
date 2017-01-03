@@ -1,122 +1,70 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/4 v2] of/overlay: sysfs based ABI for dt overlays
-Date: Tue, 3 Jan 2017 14:11:08 +0200
-Message-ID: <ADF59727-1808-4C9E-B763-FF1F493DAACE@konsulko.com>
-References: <20161220190455.25115-1-xypron.glpk@gmx.de> <585C22BB.3080403@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] mfd: dt: Add bindings for the Aspeed MFDs
+Date: Tue, 3 Jan 2017 12:17:03 +0000
+Message-ID: <20170103121703.GD2977@dell>
+References: <20161220071535.27542-1-andrew@aj.id.au>
+ <4e69b379-299f-ebf3-3a61-9ac1bcaba7b3@acm.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <585C22BB.3080403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4e69b379-299f-ebf3-3a61-9ac1bcaba7b3-HInyCGIudOg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank, Heinrich,
+On Thu, 22 Dec 2016, Corey Minyard wrote:
 
-> On Dec 22, 2016, at 21:00 , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->=20
-> Hi Heinrich,
->=20
-> On 12/20/16 11:04, Heinrich Schuchardt wrote:
->> Currently the kernel only supplies an internal API for creating
->> and destroying device tree overlays.
->>=20
->> For some boards vendor specific kernel modules exist for
->> managing device tree overlays but they have not been
->> upstreamed or upstreaming stalled.
->> https://lkml.org/lkml/2015/6/12/624
->> https://lkml.org/lkml/2013/1/7/366
->>=20
->> This patch series provides a sysfs based ABI for creation and
->> destruction of dt overlays in /sys/firmware/devicetree/overlays.
->>=20
->> The following files are provided:
->>=20
->> load:   This is a write only file.
->>        A string written to it is interpreted as the path to a
->>        flattened device tree overlay file. It is used to create
->>        and apply the contained overlays.
->>=20
->> loaded: This is a read only file.
->>        It provides the count of loaded overlays as a decimal
->>        number.
->>=20
->> unload: This is a write only file.
->>        If a positive number n is wrtten to this file the n
->>        most recent overlays are destroyed.
->>        If a negative number is written to this file all
->>        overlays are destroyed.
->=20
-> This patch series follows a _somewhat_ similar approach to what
-> was first proposed two years ago, and does not address the
-> issues that were brought up at that time.  See:
->=20
->  From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->  Date: Wed,  3 Dec 2014 13:23:28 +0200
->  Subject: [PATCH] OF: DT-Overlay configfs interface (v3)
->=20
-> But just responding directly to the two year old issues would not
-> be a productive approach, since there has been a lot of subsequent
-> discussion on how to load overlays (you point to two of the many
-> threads above).  The latest discussions are based on the concept
-> of describing the overlay attachment points as connectors.
->=20
-> Please join in pushing the connectors discussion along to make
-> sure that it meets your needs.
->=20
+> It looks like this is ready.  Should I take this in the IPMI tree, or is
+> there a better tree for it?
 
-I think it would be best if we focus on getting the configfs based =
-loader
-to work. It is pretty similar to what Heinrich is proposing.
+Please refrain from top posting.
 
-> -Frank
->=20
+Judging by the diff, it looks like the MFD tree would be the most
+appropriate place to merge these into.
 
-Regards
+> On 12/20/2016 01:15 AM, Andrew Jeffery wrote:
+> > Hi Lee,
+> > 
+> > Here's v4 of the Aspeed LPC MFD devicetree bindings series. v3 can be found at:
+> > 
+> >    https://lkml.org/lkml/2016/12/5/835
+> > 
+> > Changes since v3:
+> > 
+> > * Based on Arnd's argument[1], drop the addition of the mfd/syscon bindings
+> >    directory as well as the the last patch in v3, which moved a number of
+> >    existing bindings. Eventually the Aspeed display controller will have a
+> >    device-specific driver so it doesn't belong there either.
+> > 
+> > * Add a compatible string for the AST2400 in the LPC Host Controller bindings
+> >    as requested by Joel and slightly tweak the reg description for Rob.
+> > 
+> > [1] https://lkml.org/lkml/2016/12/13/202
+> > 
+> > Andrew Jeffery (5):
+> >    mfd: dt: Fix "indicates" typo in mfd bindings document
+> >    mfd: dt: ranges, #address-cells and #size-cells as optional properties
+> >    mfd: dt: Add Aspeed Low Pin Count Controller bindings
+> >    mfd: dt: Add bindings for the Aspeed LPC Host Controller (LHC)
+> >    mfd: dt: Add bindings for the Aspeed SoC Display Controller (GFX)
+> > 
+> >   .../devicetree/bindings/mfd/aspeed-gfx.txt         |  17 +++
+> >   .../devicetree/bindings/mfd/aspeed-lpc.txt         | 137 +++++++++++++++++++++
+> >   Documentation/devicetree/bindings/mfd/mfd.txt      |  12 +-
+> >   3 files changed, 165 insertions(+), 1 deletion(-)
+> >   create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> >   create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> > 
+> 
 
-=97 Pantelis
-
->=20
->>=20
->> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
->>=20
->> version 2:
->> 	change sysfs path to
->> 	/sys/firmware/devicetree/overlays
->>=20
->> 	Fix errors indicated by kbuild robot:
->> 	Add missing inline attribute to of_overlay_count
->> 	in patch 1.
->> 	Add 'select CONFIG_OF_EARLY_FLATTREE' to Kconfig
->> 	in patch 2.
->>=20
->> 	Change unit test cases to check new functions
->> 	of_overlay_count and of_overlay_destroy_last.
->>=20
->> Heinrich Schuchardt (4):
->>  of/overlay: add API function to count and pop last
->>  of/overlay: sysfs based ABI for dt overlays
->>  of/overlay: documentation for sysfs ABI=20
->>  of/overlay: test count and destroy_last
->>=20
->> .../ABI/testing/sysfs-firmware-devicetree-overlays |  24 +++=20
->> Documentation/devicetree/overlay-notes.txt         |   7 +-
->> drivers/of/Kconfig                                 |  15 ++
->> drivers/of/Makefile                                |   2 +=20
->> drivers/of/base.c                                  |   1 +=20
->> drivers/of/ov_sysfs.c                              | 223 =
-+++++++++++++++++++++
->> drivers/of/overlay.c                               |  50 +++++
->> drivers/of/unittest.c                              |  15 +-
->> include/linux/of.h                                 |  12 ++
->> 9 files changed, 346 insertions(+), 3 deletions(-)
->> create mode 100644 =
-Documentation/ABI/testing/sysfs-firmware-devicetree-overlays
->> create mode 100644 drivers/of/ov_sysfs.c
-
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
