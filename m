@@ -1,88 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 02/10] dt-bindings: hisi: Add Hisilicon HiP05/06/07
- Djtag dts bindings
-Date: Tue, 3 Jan 2017 16:56:23 -0600
-Message-ID: <20170103225623.ynhc7n267jpzu44z@rob-hp-laptop>
-References: <1483339743-23881-1-git-send-email-anurup.m@huawei.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V5 1/3] dt-bindings: document common IEEE 802.11 frequency limit property
+Date: Tue,  3 Jan 2017 23:57:12 +0100
+Message-ID: <20170103225715.14072-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483339743-23881-1-git-send-email-anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 02, 2017 at 01:49:03AM -0500, Anurup M wrote:
-> From: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> 
-> Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
-> 
-> Signed-off-by: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/hisilicon/djtag.txt    | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> new file mode 100644
-> index 0000000..bbe8b45
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-> @@ -0,0 +1,41 @@
-> +The Hisilicon Djtag is an independent component which connects with some other
-> +components in the SoC by Debug Bus. The djtag is available in CPU and IO dies
-> +in the chip. The djtag controls access to connecting modules of CPU and IO
-> +dies.
-> +The various connecting components in CPU die (like L3 cache, L3 cache PMU etc.)
-> +are accessed by djtag during real time debugging. In IO die there are connecting
-> +components like RSA. These components appear as devices attached to djtag bus.
-> +
-> +Hisilicon HiP05/06/07 djtag for CPU and IO die
-> +Required properties:
-> +  - compatible : The value should be as follows
-> +	(a) "hisilicon,hip05-djtag-v1" for CPU and IO die which use v1 hw in
-> +	    HiP05 chipset.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-You don't need to distinguish the CPU and IO blocks?
+This new file should be used for properties that apply to all wireless
+devices.
 
-> +	(b) "hisilicon,hip06-djtag-v1" for CPU die which use v1 hw in HiP06 chipset.
-> +	(c) "hisilicon,hip06-djtag-v2" for IO die which use v2 hw in HiP06 chipset.
-> +	(d) "hisilicon,hip07-djtag-v2" for CPU and IO die which use v2 hw in
-> +	    HiP07 chipset.
-> +  - reg : Register address and size
-> +  - hisi-scl-id : The Super Cluster ID for CPU or IO die
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Switch to a single ieee80211-freq-limit property that allows specifying
+    *multiple* ranges. This resolves problem with more complex rules as pointed
+    by Felx.
+    Make description implementation agnostic as pointed by Arend.
+    Rename node to wifi as suggested by Martin.
+V3: Use more real-life frequencies in the example.
+V5: Describe hardware design as possible use for this property
+---
+ .../devicetree/bindings/net/wireless/ieee80211.txt   | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 
-Still needs a vendor prefix. i.e. hisilicon,scl-id
-
-> +
-> +Example 1: Djtag for CPU die
-> +
-> +	/* for Hisilicon HiP05 djtag for CPU Die */
-> +	djtag0: djtag@80010000 {
-> +		compatible = "hisilicon,hip05-djtag-v1";
-> +		reg = <0x0 0x80010000 0x0 0x10000>;
-> +		hisi-scl-id = <0x02>;
-> +
-> +		/* All connecting components will appear as child nodes */
-> +	};
-> +
-> +Example 2: Djtag for IO die
-> +
-> +	/* for Hisilicon HiP05 djtag for IO Die */
-> +	djtag1: djtag@d0000000 {
-> +		compatible = "hisilicon,hip05-djtag-v1";
-> +		reg = <0x0 0xd0000000 0x0 0x10000>;
-> +		hisi-scl-id = <0x01>;
-> +
-> +		/* All connecting components will appear as child nodes */
-> +	};
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+new file mode 100644
+index 0000000..1c82c16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+@@ -0,0 +1,20 @@
++Common IEEE 802.11 properties
++
++This provides documentation of common properties that are valid for all wireless
++devices.
++
++Optional properties:
++ - ieee80211-freq-limit : list of supported frequency ranges in KHz. This can be
++	used to specify extra hardware limitations caused by e.g. used antennas
++	or power amplifiers.
++
++Example:
++
++pcie@0,0 {
++	reg = <0x0000 0 0 0 0>;
++	wifi@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		ieee80211-freq-limit = <2402000 2482000>,
++				       <5170000 5250000>;
++	};
++};
+-- 
+2.10.1
