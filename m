@@ -1,81 +1,23 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/5] mfd: twl: remove useless header
-Date: Tue, 3 Jan 2017 15:30:50 +0000
-Message-ID: <20170103153050.GH2977@dell>
-References: <20161126181326.14951-1-Nicolae_Rosia@mentor.com>
- <20161126181326.14951-3-Nicolae_Rosia@mentor.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] devicetree: add vendor prefix for Zeitec
+Date: Tue, 3 Jan 2017 09:25:27 -0600
+Message-ID: <20170103152527.cu45vw6abxnk3geo@rob-hp-laptop>
+References: <20161223163214.7716-1-jelle@vdwaa.nl>
+ <20161223163214.7716-2-jelle@vdwaa.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161126181326.14951-3-Nicolae_Rosia@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolae Rosia <Nicolae_Rosia@mentor.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Mark Brown <broonie@kernel.org>, Graeme Gregory <gg@slimlogic.co.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161223163214.7716-2-jelle@vdwaa.nl>
+Sender: linux-input-owner@vger.kernel.org
+To: Jelle van der Waa <jelle@vdwaa.nl>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAyNiBOb3YgMjAxNiwgTmljb2xhZSBSb3NpYSB3cm90ZToKCj4gVGhpcyBoZWFkZXIg
-aGFzIG9uZSB1c2VyLCB0d2wtY29yZS5jIC4KPiBSZW1vdmUgaXQgYmVmb3JlIGl0IGdldHMgbW9y
-ZSB1c2Vycy4KClRoZSBoZWFkZXIgaXMgbm90IHVzZWxlc3MuICBJdCBwcmV2ZW50cyB1cyBmcm9t
-IGhhdmluZyB0byBwbGFjZQpleHRlcm5hbCBwcm90b3R5cGVzIGludG8gQyBmaWxlcy4KCj4gU2ln
-bmVkLW9mZi1ieTogTmljb2xhZSBSb3NpYSA8Tmljb2xhZV9Sb3NpYUBtZW50b3IuY29tPgo+IC0t
-LQo+ICBkcml2ZXJzL21mZC90d2wtY29yZS5jICAgIHwgIDggKysrKysrLS0KPiAgZHJpdmVycy9t
-ZmQvdHdsLWNvcmUuaCAgICB8IDEwIC0tLS0tLS0tLS0KPiAgZHJpdmVycy9tZmQvdHdsNDAzMC1p
-cnEuYyB8ICAyIC0tCj4gIGRyaXZlcnMvbWZkL3R3bDYwMzAtaXJxLmMgfCAgMiAtLQo+ICA0IGZp
-bGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCj4gIGRlbGV0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL21mZC90d2wtY29yZS5oCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbWZkL3R3bC1jb3JlLmMgYi9kcml2ZXJzL21mZC90d2wtY29yZS5jCj4gaW5kZXggNDhiMDY2
-OC4uZTE2MDg0ZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC90d2wtY29yZS5jCj4gKysrIGIv
-ZHJpdmVycy9tZmQvdHdsLWNvcmUuYwo+IEBAIC01Miw4ICs1Miw2IEBACj4gIC8qIFJlZ2lzdGVy
-IGRlc2NyaXB0aW9ucyBmb3IgYXVkaW8gKi8KPiAgI2luY2x1ZGUgPGxpbnV4L21mZC90d2w0MDMw
-LWF1ZGlvLmg+Cj4gIAo+IC0jaW5jbHVkZSAidHdsLWNvcmUuaCIKPiAtCj4gIC8qCj4gICAqIFRo
-ZSBUV0w0MDMwICJUcml0b24gMiIgaXMgb25lIG9mIGEgZmFtaWx5IG9mIGEgbXVsdGktZnVuY3Rp
-b24gIlBvd2VyCj4gICAqIE1hbmFnZW1lbnQgYW5kIFN5c3RlbSBDb21wYW5pb24gRGV2aWNlIiBj
-aGlwcyBvcmlnaW5hbGx5IGRlc2lnbmVkIGZvcgo+IEBAIC0xNTAsNiArMTQ4LDEyIEBACj4gIAo+
-ICAvKi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0qLwo+ICAKPiAraW50IHR3bDYwMzBfaW5pdF9pcnEoc3RydWN0IGRl
-dmljZSAqZGV2LCBpbnQgaXJxX251bSk7Cj4gK2ludCB0d2w2MDMwX2V4aXRfaXJxKHZvaWQpOwo+
-ICtpbnQgdHdsNDAzMF9pbml0X2lycShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpcnFfbnVtKTsK
-PiAraW50IHR3bDQwMzBfZXhpdF9pcnEodm9pZCk7Cj4gK2ludCB0d2w0MDMwX2luaXRfY2hpcF9p
-cnEoY29uc3QgY2hhciAqY2hpcCk7Cj4gKwo+ICAvKiBTdHJ1Y3R1cmUgZm9yIGVhY2ggVFdMNDAz
-MC9UV0w2MDMwIFNsYXZlICovCj4gIHN0cnVjdCB0d2xfY2xpZW50IHsKPiAgCXN0cnVjdCBpMmNf
-Y2xpZW50ICpjbGllbnQ7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3R3bC1jb3JlLmggYi9k
-cml2ZXJzL21mZC90d2wtY29yZS5oCj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-NmZmOTlkYy4uMDAwMDAwMAo+IC0tLSBhL2RyaXZlcnMvbWZkL3R3bC1jb3JlLmgKPiArKysgL2Rl
-di9udWxsCj4gQEAgLTEsMTAgKzAsMCBAQAo+IC0jaWZuZGVmIF9fVFdMX0NPUkVfSF9fCj4gLSNk
-ZWZpbmUgX19UV0xfQ09SRV9IX18KPiAtCj4gLWV4dGVybiBpbnQgdHdsNjAzMF9pbml0X2lycShz
-dHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpcnFfbnVtKTsKPiAtZXh0ZXJuIGludCB0d2w2MDMwX2V4
-aXRfaXJxKHZvaWQpOwo+IC1leHRlcm4gaW50IHR3bDQwMzBfaW5pdF9pcnEoc3RydWN0IGRldmlj
-ZSAqZGV2LCBpbnQgaXJxX251bSk7Cj4gLWV4dGVybiBpbnQgdHdsNDAzMF9leGl0X2lycSh2b2lk
-KTsKPiAtZXh0ZXJuIGludCB0d2w0MDMwX2luaXRfY2hpcF9pcnEoY29uc3QgY2hhciAqY2hpcCk7
-Cj4gLQo+IC0jZW5kaWYgLyogIF9fVFdMX0NPUkVfSF9fICovCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbWZkL3R3bDQwMzAtaXJxLmMgYi9kcml2ZXJzL21mZC90d2w0MDMwLWlycS5jCj4gaW5kZXgg
-YjQ2YzBjZi4uMDAwYzIzMSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC90d2w0MDMwLWlycS5j
-Cj4gKysrIGIvZHJpdmVycy9tZmQvdHdsNDAzMC1pcnEuYwo+IEBAIC0zNSw4ICszNSw2IEBACj4g
-ICNpbmNsdWRlIDxsaW51eC9pcnFkb21haW4uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2kyYy90d2wu
-aD4KPiAgCj4gLSNpbmNsdWRlICJ0d2wtY29yZS5oIgo+IC0KPiAgLyoKPiAgICogVFdMNDAzMCBJ
-UlEgaGFuZGxpbmcgaGFzIHR3byBzdGFnZXMgaW4gaGFyZHdhcmUsIGFuZCB0aHVzIGluIHNvZnR3
-YXJlLgo+ICAgKiBUaGUgUHJpbWFyeSBJbnRlcnJ1cHQgSGFuZGxlciAoUElIKSBzdGFnZSBleHBv
-c2VzIHN0YXR1cyBiaXRzIHNheWluZwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC90d2w2MDMw
-LWlycS5jIGIvZHJpdmVycy9tZmQvdHdsNjAzMC1pcnEuYwo+IGluZGV4IDUzNTc0NTAuLjYzZWNh
-NzYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvdHdsNjAzMC1pcnEuYwo+ICsrKyBiL2RyaXZl
-cnMvbWZkL3R3bDYwMzAtaXJxLmMKPiBAQCAtNDIsOCArNDIsNiBAQAo+ICAjaW5jbHVkZSA8bGlu
-dXgvaXJxZG9tYWluLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPiAgCj4gLSNp
-bmNsdWRlICJ0d2wtY29yZS5oIgo+IC0KPiAgLyoKPiAgICogVFdMNjAzMCAodW5saWtlIGl0cyBw
-cmVkZWNlc3NvcnMsIHdoaWNoIGhhZCB0d28gbGV2ZWwgaW50ZXJydXB0IGhhbmRsaW5nKQo+ICAg
-KiB0aHJlZSBpbnRlcnJ1cHQgcmVnaXN0ZXJzIElOVF9TVFNfQSwgSU5UX1NUU19CIGFuZCBJTlRf
-U1RTX0MuCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBU
-ZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0Nz
-CkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Dec 23, 2016 at 05:32:14PM +0100, Jelle van der Waa wrote:
+> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+Acked-by: Rob Herring <robh@kernel.org>
