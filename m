@@ -1,64 +1,88 @@
-From: Mark Greer <mgreer@animalcreek.com>
-Subject: Re: [PATCH v3 3/3] nfc: trf7970a: Prevent repeated polling from
- crashing the kernel
-Date: Tue, 3 Jan 2017 14:21:36 -0700
-Message-ID: <20170103212136.GA9899@animalcreek.com>
-References: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
- <1482380314-16440-3-git-send-email-geoff@kuvee.com>
- <20161224060141.GA9069@animalcreek.com>
- <CAO7Z3W+n85jbr8cmj3HJV1c+eL=oRh-XRy+O=iZ+mD=ov2WABA@mail.gmail.com>
- <20161224172439.GA15103@animalcreek.com>
- <CAO7Z3WJa0goJ-VXc7dvyz8imZtqby6QsC0QNH+uRAE8LhxqU2w@mail.gmail.com>
- <20170103163324.GA3184@animalcreek.com>
- <CAO7Z3WK5pF+q0vAoPPie8wXYQPigpGd7W8uQiGSgN79z4=W9uQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Tue, 3 Jan 2017 15:23:46 -0600
+Message-ID: <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
+References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+ <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
+ <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
+ <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAO7Z3WK5pF+q0vAoPPie8wXYQPigpGd7W8uQiGSgN79z4=W9uQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Geoff Lansberry <geoff@kuvee.com>
-Cc: linux-wireless <linux-wireless@vger.kernel.org>, Lauro Ramos Venancio <lauro.venancio@openbossa.org>, Aloisio Almeida Jr <aloisio.almeida@openbossa.org>, Samuel Ortiz <sameo@linux.intel.com>, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Justin Bronder <justin@kuvee.com>, Jaret Cantu <jaret.cantu@timesys.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerry Huang <jerry.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2017 at 01:35:18PM -0500, Geoff Lansberry wrote:
-> On Tue, Jan 3, 2017 at 11:33 AM, Mark Greer <mgreer@animalcreek.com> wrote:
-> > On Tue, Dec 27, 2016 at 09:18:32AM -0500, Geoff Lansberry wrote:
+On Thu, Dec 22, 2016 at 8:52 PM, Jerry Huang <jerry.huang@nxp.com> wrote:
+> Hi, Rob,
+>> -----Original Message-----
+>> From: Rob Herring [mailto:robh@kernel.org]
+>> Sent: Friday, December 23, 2016 2:45 AM
+>> To: Jerry Huang <jerry.huang@nxp.com>
+>> Cc: balbi@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+>> will.deacon@arm.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
+>> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org
+>> Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-
+>> type-adjustment" for INCR burst type
+>>
+>> On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
+>> > New property "snps,incr-burst-type-adjustment = <x>, <y>" for USB3.0
+>> DWC3.
+>> > Field "x": 1/0 - undefined length INCR burst type enable or not; Field
+>> > "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst type.
+>> >
+>> > While enabling undefined length INCR burst type and INCR16 burst type,
+>> > get better write performance on NXP Layerscape platform:
+>> > around 3% improvement (from 364MB/s to 375MB/s).
+>> >
+>> > Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+>> > ---
+>> > Changes in v3:
+>> >   - add new property for INCR burst in usb node.
+>> >
+>> >  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
+>> >  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
+>> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+>> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
+>> >  4 files changed, 11 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > index e3e6983..8c405a3 100644
+>> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > @@ -55,6 +55,10 @@ Optional properties:
+>> >     fladj_30mhz_sdbnd signal is invalid or incorrect.
+>> >
+>> >   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be
+>> reallocated.
+>> > + - snps,incr-burst-type-adjustment: Value for INCR burst type of
+>> GSBUSCFG0
+>> > +   register, undefined length INCR burst type enable and INCRx type.
+>> > +   First field is for undefined length INCR burst type enable or not.
+>> > +   Second field is for largest INCRx type enabled.
+>>
+>> Why do you need the first field? Is the 2nd field used if the 1st is 0?
+>> If not, then just use the presence of the property to enable or not.
+> The first field is one switch.
+> When it is 1, means undefined length INCR burst type enabled, we can use any length less than or equal to the largest-enabled burst length of INCR4/8/16/32/64/128/256.
+> When it is zero, means INCRx burst mode enabled, we can use one fixed burst length of 1/4/8/16/32/64/128/256 byte.
+> So, the 2nd field is used if the 1st is 0, we need to select one largest burst length the USB controller can support.
+> If we don't want to change the value of this register (use the default value), we don't need to add this property to usb node.
 
-> >> In the meantime - here is some more info about how we use it.
-> >>
-> >> We do use NFC structures.    I did find an interesting clue in that
-> >> there are certain bottles that cause neard to segfault,  I'm not sure
-> >> what is different about them.  We write a string, like
-> >> "coppola_chardonnay_2015" to the bottles.
-> >
-> > Off the top of my head, it could be the length of the text.
-> > It would be useful to compare the data that works to the data
-> > that doesn't work.  Can you install NXP's 'TagInfo' app on a
-> > smartphone and scan tags with working & non-working data?
-> > You can email the data from the app to yourself, edit out
-> > the cruft, and share here.
-> 
-> The data is always the same - and the tags are all the same.  Only
-> difference is that the tag is physically different, and perhaps
-> orientation; distance from antenna to tag is fixed.
+Just make this a single value with 0 meaning INCR and 4/8/16/etc being INCRx.
 
-Interesting...  They're all type 2 tags, right?
-
-> I can't even
-> write the tags at all, so reading them will show blank.   Also a minor
-> but significant detail, is that the tags are embedded in such a way
-> that the phone cannot get close enough to them to connect.
-
-This section had me completely confused for a couple minutes until I realized
-that you mean that you can read & write the tags using the trf7970a with
-an attached antenna but not with your phone.  Is that correct?
-
-If so, try a tag that isn't embedded in something else and move it around
-the back of the phone.  Try to find where it works best.  The phone
-manufacturers are notorius for paying little attention to the NFC antenna
-they put on their products.  For example, I have a Samsung S5 next to me
-and it seems to work best around the center of the phone.  I've used others
-where I had to use the upper-left or upper-right corner of the phone.
-
-Mark
+Rob
