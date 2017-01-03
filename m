@@ -1,44 +1,89 @@
-From: HS Liao <hs.liao@mediatek.com>
-Subject: [PATCH v19 3/4] arm64: dts: mt8173: Add GCE node
-Date: Tue, 3 Jan 2017 11:05:50 +0800
-Message-ID: <1483412751-28690-4-git-send-email-hs.liao@mediatek.com>
-References: <1483412751-28690-1-git-send-email-hs.liao@mediatek.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] bus: imx-weim: Place 'fsl,weim-cs-timing' under the
+ required properties section
+Date: Tue, 3 Jan 2017 11:10:00 +0800
+Message-ID: <20170103030959.GO20956@dragon>
+References: <1483094772-14904-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483412751-28690-1-git-send-email-hs.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.co>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483094772-14904-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device node of the GCE hardware for CMDQ module.
+On Fri, Dec 30, 2016 at 08:46:12AM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> 
+> Property 'fsl,weim-cs-timing' is a required one, so place it under
+> "Required properties" section.
 
-Signed-off-by: HS Liao <hs.liao@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+NAK.  Both "Required properties" and "Optional properties" are talking
+about parent node, while 'fsl,weim-cs-timing' is a property of child
+node.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 12e7027..9f93447 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -422,6 +422,16 @@
- 			status = "disabled";
- 		};
- 
-+		gce: gce@10212000 {
-+			compatible = "mediatek,mt8173-gce";
-+			reg = <0 0x10212000 0 0x1000>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
-+
-+			#mbox-cells = <2>;
-+		};
-+
- 		mipi_tx0: mipi-dphy@10215000 {
- 			compatible = "mediatek,mt8173-mipi-tx";
- 			reg = <0 0x10215000 0 0x1000>;
--- 
-1.9.1
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/bus/imx-weim.txt | 27 ++++++++++------------
+>  1 file changed, 12 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
+> index 6630d84..a9a125b 100644
+> --- a/Documentation/devicetree/bindings/bus/imx-weim.txt
+> +++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
+> @@ -23,6 +23,18 @@ Required properties:
+>  			integer values for each chip-select line in use:
+>  
+>  			   <cs-number> 0 <physical address of mapping> <size>
+> + - fsl,weim-cs-timing:	The timing array, contains timing values for the
+> +			child node. We can get the CS index from the child
+> +			node's "reg" property. The number of registers depends
+> +			on the selected chip.
+> +			For i.MX1, i.MX21 ("fsl,imx1-weim") there are two
+> +			registers: CSxU, CSxL.
+> +			For i.MX25, i.MX27, i.MX31 and i.MX35 ("fsl,imx27-weim")
+> +			there are three registers: CSCRxU, CSCRxL, CSCRxA.
+> +			For i.MX50, i.MX53 ("fsl,imx50-weim"),
+> +			i.MX51 ("fsl,imx51-weim") and i.MX6Q ("fsl,imx6q-weim")
+> +			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
+> +			CSxRCR2, CSxWCR1, CSxWCR2.
+>  
+>  Optional properties:
+>  
+> @@ -44,21 +56,6 @@ Optional properties:
+>  			what bootloader sets up in IOMUXC_GPR1[11:0] will be
+>  			used.
+>  
+> -Timing property for child nodes. It is mandatory, not optional.
+
+This line already told everything we need to know.
+
+Shawn
+
+> -
+> - - fsl,weim-cs-timing:	The timing array, contains timing values for the
+> -			child node. We can get the CS index from the child
+> -			node's "reg" property. The number of registers depends
+> -			on the selected chip.
+> -			For i.MX1, i.MX21 ("fsl,imx1-weim") there are two
+> -			registers: CSxU, CSxL.
+> -			For i.MX25, i.MX27, i.MX31 and i.MX35 ("fsl,imx27-weim")
+> -			there are three registers: CSCRxU, CSCRxL, CSCRxA.
+> -			For i.MX50, i.MX53 ("fsl,imx50-weim"),
+> -			i.MX51 ("fsl,imx51-weim") and i.MX6Q ("fsl,imx6q-weim")
+> -			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
+> -			CSxRCR2, CSxWCR1, CSxWCR2.
+> -
+>  Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
+>  
+>  	weim: weim@021b8000 {
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
