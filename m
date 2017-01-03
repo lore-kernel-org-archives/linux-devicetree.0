@@ -1,74 +1,115 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: leds: document new usb-ports property
-Date: Tue, 3 Jan 2017 14:52:02 -0600
-Message-ID: <20170103205202.5ztb5i56d7qmgx5t@rob-hp-laptop>
-References: <20161229130306.30400-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161229130306.30400-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v2 00/19] i.MX Media Driver
+Date: Tue,  3 Jan 2017 12:57:10 -0800
+Message-ID: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 29, 2016 at 02:03:04PM +0100, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> Some LEDs can be related to particular USB ports (common case for home
-> routers). This property allows describing such a relation.
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
-> This patch is based on top of commit 52e847dc431 ("DT: leds: Improve examples
-> by adding some context") sitting in the linux-leds.git (for-4.11).
-> ---
->  Documentation/devicetree/bindings/leds/common.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 24b6560..fcfe661 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -49,6 +49,14 @@ Optional properties for child nodes:
->  - panic-indicator : This property specifies that the LED should be used,
->  		    if at all possible, as a panic indicator.
->  
-> +- usb-ports : List of USB ports related to this LED. Some devices have LEDs that
-> +	      should be used to indicate USB device activity. This can be
-> +	      described with this property.
-> +	      There can be more than one LED like this, e.g. some vendors use
-> +	      one controller per USB version. It's then common to use different
-> +	      color LEDs depending on device USB standard (like USB 2.0 vs.
-> +	      USB 3.0).
+In version 2 (no functional changes):
 
-I don't like this being USB specific. Either we should have a generic 
-way to link triggers to other DT nodes or the existing trigger property 
-should be used (and be capable of listing more than 1 port). I'd prefer 
-the latter as I don't think we need another way to specify triggers.
+- removed patch "gpio: pca953x: Add optional reset gpio control", it
+  has been submitted separately.
+- fixed some whitespace errors.
+- added a few missing Signed-off-by's.
 
-> +
->  Required properties for flash LED child nodes:
->  - flash-max-microamp : Maximum flash LED supply current in microamperes.
->  - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
-> @@ -69,6 +77,11 @@ gpio-leds {
->  		linux,default-trigger = "heartbeat";
->  		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
->  	};
-> +
-> +	usb {
-> +		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-> +		usb-ports = <&ohci_port1>, <&ehci_port1>;
-> +	};
->  };
->  
->  max77693-led {
-> -- 
-> 2.10.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Philipp Zabel (2):
+  ARM: dts: imx6qdl: Add mipi_ipu1/2 multiplexers, mipi_csi, and their
+    connections
+  media: imx: Add video switch subdev driver
+
+Steve Longerbeam (17):
+  ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
+  ARM: dts: imx6qdl: add media device
+  ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
+  ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
+  ARM: dts: imx6-sabreauto: create i2cmux for i2c3
+  ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
+  ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
+  ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+  media: Add i.MX media core driver
+  media: imx: Add CSI subdev driver
+  media: imx: Add SMFC subdev driver
+  media: imx: Add IC subdev drivers
+  media: imx: Add Camera Interface subdev driver
+  media: imx: Add MIPI CSI-2 Receiver subdev driver
+  media: imx: Add MIPI CSI-2 OV5640 sensor subdev driver
+  media: imx: Add Parallel OV5642 sensor subdev driver
+  ARM: imx_v6_v7_defconfig: Enable staging video4linux drivers
+
+ Documentation/devicetree/bindings/media/imx.txt   |  205 +
+ Documentation/media/v4l-drivers/imx.rst           |  430 ++
+ arch/arm/boot/dts/imx6dl-sabrelite.dts            |    5 +
+ arch/arm/boot/dts/imx6dl-sabresd.dts              |    5 +
+ arch/arm/boot/dts/imx6dl.dtsi                     |  183 +
+ arch/arm/boot/dts/imx6q-sabrelite.dts             |    6 +
+ arch/arm/boot/dts/imx6q-sabresd.dts               |    5 +
+ arch/arm/boot/dts/imx6q.dtsi                      |  123 +
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi          |  142 +-
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi          |  122 +-
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi            |  114 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                    |   25 +-
+ arch/arm/configs/imx_v6_v7_defconfig              |   10 +-
+ drivers/staging/media/Kconfig                     |    2 +
+ drivers/staging/media/Makefile                    |    1 +
+ drivers/staging/media/imx/Kconfig                 |   36 +
+ drivers/staging/media/imx/Makefile                |   16 +
+ drivers/staging/media/imx/TODO                    |   18 +
+ drivers/staging/media/imx/imx-camif.c             | 1010 +++++
+ drivers/staging/media/imx/imx-csi.c               |  638 +++
+ drivers/staging/media/imx/imx-ic-common.c         |  113 +
+ drivers/staging/media/imx/imx-ic-pp.c             |  636 +++
+ drivers/staging/media/imx/imx-ic-prpenc.c         | 1037 +++++
+ drivers/staging/media/imx/imx-ic-prpvf.c          | 1180 ++++++
+ drivers/staging/media/imx/imx-ic.h                |   36 +
+ drivers/staging/media/imx/imx-media-common.c      |  985 +++++
+ drivers/staging/media/imx/imx-media-dev.c         |  479 +++
+ drivers/staging/media/imx/imx-media-fim.c         |  509 +++
+ drivers/staging/media/imx/imx-media-internal-sd.c |  457 +++
+ drivers/staging/media/imx/imx-media-of.c          |  291 ++
+ drivers/staging/media/imx/imx-media-of.h          |   25 +
+ drivers/staging/media/imx/imx-media.h             |  299 ++
+ drivers/staging/media/imx/imx-mipi-csi2.c         |  509 +++
+ drivers/staging/media/imx/imx-smfc.c              |  739 ++++
+ drivers/staging/media/imx/imx-video-switch.c      |  351 ++
+ drivers/staging/media/imx/ov5640-mipi.c           | 2349 +++++++++++
+ drivers/staging/media/imx/ov5642.c                | 4364 +++++++++++++++++++++
+ include/media/imx.h                               |   15 +
+ include/uapi/Kbuild                               |    1 +
+ include/uapi/linux/v4l2-controls.h                |    4 +
+ include/uapi/media/Kbuild                         |    2 +
+ include/uapi/media/imx.h                          |   30 +
+ 42 files changed, 17479 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+ create mode 100644 Documentation/media/v4l-drivers/imx.rst
+ create mode 100644 drivers/staging/media/imx/Kconfig
+ create mode 100644 drivers/staging/media/imx/Makefile
+ create mode 100644 drivers/staging/media/imx/TODO
+ create mode 100644 drivers/staging/media/imx/imx-camif.c
+ create mode 100644 drivers/staging/media/imx/imx-csi.c
+ create mode 100644 drivers/staging/media/imx/imx-ic-common.c
+ create mode 100644 drivers/staging/media/imx/imx-ic-pp.c
+ create mode 100644 drivers/staging/media/imx/imx-ic-prpenc.c
+ create mode 100644 drivers/staging/media/imx/imx-ic-prpvf.c
+ create mode 100644 drivers/staging/media/imx/imx-ic.h
+ create mode 100644 drivers/staging/media/imx/imx-media-common.c
+ create mode 100644 drivers/staging/media/imx/imx-media-dev.c
+ create mode 100644 drivers/staging/media/imx/imx-media-fim.c
+ create mode 100644 drivers/staging/media/imx/imx-media-internal-sd.c
+ create mode 100644 drivers/staging/media/imx/imx-media-of.c
+ create mode 100644 drivers/staging/media/imx/imx-media-of.h
+ create mode 100644 drivers/staging/media/imx/imx-media.h
+ create mode 100644 drivers/staging/media/imx/imx-mipi-csi2.c
+ create mode 100644 drivers/staging/media/imx/imx-smfc.c
+ create mode 100644 drivers/staging/media/imx/imx-video-switch.c
+ create mode 100644 drivers/staging/media/imx/ov5640-mipi.c
+ create mode 100644 drivers/staging/media/imx/ov5642.c
+ create mode 100644 include/media/imx.h
+ create mode 100644 include/uapi/media/Kbuild
+ create mode 100644 include/uapi/media/imx.h
+
+-- 
+2.7.4
