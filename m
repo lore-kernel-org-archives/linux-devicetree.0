@@ -1,48 +1,53 @@
-From: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/2] mmc: mediatek: correct the implementation of msdc_card_busy
-Date: Tue, 3 Jan 2017 16:49:57 +0800
-Message-ID: <1483433397-11756-3-git-send-email-yong.mao@mediatek.com>
-References: <1483433397-11756-1-git-send-email-yong.mao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] soc: zte: Add header for PM domains specifiers
+Date: Tue,  3 Jan 2017 17:01:37 +0800
+Message-ID: <1483434097-13647-1-git-send-email-baoyou.xie@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483433397-11756-1-git-send-email-yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, yong
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch adds header with values used for ZTE 2967
+SoC's power domain driver.
 
-msdc_card_busy only need check if the data0 is low.
-In sdio data1 irq mode, data1 may be low because of interruption.
-
-Signed-off-by: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mmc/host/mtk-sd.c |    7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ include/dt-bindings/zte,pm_domains.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/dt-bindings/zte,pm_domains.h
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 10ef2ae..80ba034 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -1074,11 +1074,8 @@ static int msdc_card_busy(struct mmc_host *mmc)
- 	struct msdc_host *host = mmc_priv(mmc);
- 	u32 status = readl(host->base + MSDC_PS);
- 
--	/* check if any pin between dat[0:3] is low */
--	if (((status >> 16) & 0xf) != 0xf)
--		return 1;
--
--	return 0;
-+	/* only check if data0 is low */
-+	return !(status & BIT(16));
- }
- 
- static void msdc_request_timeout(struct work_struct *work)
+diff --git a/include/dt-bindings/zte,pm_domains.h b/include/dt-bindings/zte,pm_domains.h
+new file mode 100644
+index 0000000..a64cfb8
+--- /dev/null
++++ b/include/dt-bindings/zte,pm_domains.h
+@@ -0,0 +1,23 @@
++/*
++ * Copyright (C) 2015 Linaro Ltd.
++ *
++ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ * License terms: GNU General Public License (GPL) version 2
++ */
++#ifndef _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
++#define _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
++
++#define DM_ZX296718_SAPPU	0
++#define DM_ZX296718_VDE		1  /* g1v6 */
++#define DM_ZX296718_VCE		2  /* h1v6 */
++#define DM_ZX296718_HDE		3  /* g2v2 */
++#define DM_ZX296718_VIU		4
++#define DM_ZX296718_USB20	5
++#define DM_ZX296718_USB21	6
++#define DM_ZX296718_USB30	7
++#define DM_ZX296718_HSIC	8
++#define DM_ZX296718_GMAC	9
++#define DM_ZX296718_TS		10
++#define DM_ZX296718_VOU		11
++
++#endif /* _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H */
 -- 
-1.7.9.5
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
