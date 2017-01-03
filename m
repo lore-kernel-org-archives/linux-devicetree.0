@@ -1,84 +1,42 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 2/3] DT: bingdings: power: reset: add linkstation-reset
- doc
-Date: Mon, 2 Jan 2017 21:21:09 -0800
-Message-ID: <519e07d0-9b73-4445-ec5e-7ea2cbc1b814@gmail.com>
-References: <20161216100501.18173-1-rogershimizu@gmail.com>
- <20161227070611.14852-1-rogershimizu@gmail.com>
- <20161227070611.14852-3-rogershimizu@gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v7 3/5] drm: bridge: add support for TI ths8135
+Date: Tue, 3 Jan 2017 10:56:47 +0530
+Message-ID: <da6d299e-be36-7564-f57f-ba5e3601cafc@codeaurora.org>
+References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
+ <1481623759-12786-4-git-send-email-bgolaszewski@baylibre.com>
+ <dbb47a8f-07be-19d6-e77b-f5c06fd39c61@codeaurora.org>
+ <0b47c27e-cda4-b5f6-ff3c-da74c40ed204@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20161227070611.14852-3-rogershimizu@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Roger Shimizu <rogershimizu@gmail.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Ryan Tandy <ryan@nardis.ca>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0b47c27e-cda4-b5f6-ff3c-da74c40ed204@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/26/2016 11:06 PM, Roger Shimizu wrote:
-> Add linkstation-reset doc to describe the newly added
-> POWER_RESET_LINKSTATION driver, which controls magic command
-> sending to UART1 to power-off Buffalo Linkstation / KuroBox
-> and their variants.
-> 
-> To: Sebastian Reichel <sre@kernel.org>
-> To: Rob Herring <robh+dt@kernel.org>
-> To: Mark Rutland <mark.rutland@arm.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Ryan Tandy <ryan@nardis.ca>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> 
-> Signed-off-by: Roger Shimizu <rogershimizu@gmail.com>
-> ---
->  .../bindings/power/reset/linkstation-reset.txt     | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/linkstation-reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/linkstation-reset.txt b/Documentation/devicetree/bindings/power/reset/linkstation-reset.txt
-> new file mode 100644
-> index 000000000000..815e340318f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/linkstation-reset.txt
-> @@ -0,0 +1,26 @@
-> +* Buffalo Linkstation Reset Driver
-> +
-> +Power of some Buffalo Linkstation or KuroBox Pro is managed by
-> +micro-controller, which connects to UART1. After being fed from UART1
-> +by a few magic numbers, the so-called power-off command,
-> +the micro-controller will turn power off the device.
-> +
-> +This is very similar to QNAP or Synology NAS devices, which is
-> +described in qnap-poweroff.txt, however the command is much simpler,
-> +only 1-byte long and without checksums.
-> +
-> +This driver adds a handler to pm_power_off which is called to turn the
-> +power off.
-
-This is a driver implementation detail, so does not really belong in the
-DT here.
-
-> +
-> +Required Properties:
-> +- compatible: Should be "linkstation,power-off"
-> +- reg: Address and length of the register set for UART1
-
-Humm, should we instead have a phandle to the uart1 node?
-
-> +- clocks: tclk clock
-> +
-> +Example:
-> +
-> +	reset {
-> +		compatible = "linkstation,power-off";
-> +		reg = <0x12100 0x100>;
-> +		clocks = <&core_clk 0>;
-> +	};
-> 
-
--- 
-Florian
+SGkgU2VraGFyLAoKT24gMS8yLzIwMTcgNDozOCBQTSwgU2VraGFyIE5vcmkgd3JvdGU6Cj4gSGkg
+QXJjaGl0LAo+Cj4gT24gV2VkbmVzZGF5IDE0IERlY2VtYmVyIDIwMTYgMTA6MzUgQU0sIEFyY2hp
+dCBUYW5lamEgd3JvdGU6Cj4+Cj4+Cj4+IE9uIDEyLzEzLzIwMTYgMDM6MzkgUE0sIEJhcnRvc3og
+R29sYXN6ZXdza2kgd3JvdGU6Cj4+PiBUSFM4MTM1IGlzIGEgY29uZmlndXJhYmxlIHZpZGVvIERB
+QywgYnV0IG5vIGNvbmZpZ3VyYXRpb24gaXMgYWN0dWFsbHkKPj4+IG5lY2Vzc2FyeSB0byBtYWtl
+IGl0IHdvcmsuCj4+Pgo+Pj4gRm9yIG5vdyB1c2UgdGhlIGR1bWItdmdhLWRhYyBkcml2ZXIgdG8g
+c3VwcG9ydCBpdC4KPj4KPj4gUXVldWVkIHRvIGRybS1taXNjLW5leHQKPgo+IFRoaXMgcGF0Y2gg
+YW5kIDIvNSBhcmUgbm90IGluIHY0LjEwIGtlcm5lbC4gRGlkIHlvdSBtZWFuIHRvIHF1ZXVlIHRo
+ZW0KPiB0byB2NC4xMD8KClRoZXNlIG1pc3NlZCBvdXQgb24gNC4xMCBiZWNhdXNlIHRoZSBkcm0g
+cmVsYXRlZCBwdWxsIHJlcXVlc3RzIHdlcmUKYWxyZWFkeSBzZW50IGJ5IHRoZW4uIFRoZXNlIDIg
+cGF0Y2hlcyBhcmUgcXVldWVkIGZvciA0LjExLgoKVGhhbmtzLApBcmNoaXQKCj4KPiBUaGFua3Ms
+Cj4gU2VraGFyCj4KCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1l
+bWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRp
+dmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
