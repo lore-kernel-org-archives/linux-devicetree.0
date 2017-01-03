@@ -1,534 +1,171 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v3 2/2] ARM: dts: imx6q: Add mccmon6 board support
-Date: Tue,  3 Jan 2017 11:46:21 +0100
-Message-ID: <1483440381-24268-2-git-send-email-lukma@denx.de>
-References: <1483440381-24268-1-git-send-email-lukma@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483440381-24268-1-git-send-email-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, "Zerlauth Karl (LWN)" <Karl.Zerlauth@liebherr.com>, Lukasz Majewski <l.majewski@majess.pl>, Lukasz Majewski <lukma@denx.de>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/5] arm64: dts: sun50i: add MMC nodes
+Date: Tue, 3 Jan 2017 10:48:04 +0000
+Message-ID: <d4c2233c-95aa-4d72-1501-9ecb62f6cd82@arm.com>
+References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
+ <1483398226-29321-4-git-send-email-andre.przywara@arm.com>
+ <CAGb2v65GJFTnQZtWHCS7CAtA+Dry94o77aakPLr938BpQksLog@mail.gmail.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRB24CV3BQKGQEETJ4KIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65GJFTnQZtWHCS7CAtA+Dry94o77aakPLr938BpQksLog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lukasz Majewski <l.majewski@majess.pl>
+On 03/01/17 02:52, Chen-Yu Tsai wrote:
 
-This patch provides support for Liebherr's Monitor 6 board (abverrated as
-mccmon6) to Linux kernel.
+Hi,
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
-Changes for v3:
-- Reorganize the dts file according to Shawn Guo's comments
+> On Tue, Jan 3, 2017 at 7:03 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+> 
+> A commit message explaining the mmc controllers would be nice.
 
-Changes for v2:
-- Reorganize the dts file according to Valdimir Zapolskiy's comments
+OK.
 
----
-MCCMON6 board support depends on following patches:
+>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 67 +++++++++++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> index e0dcab8..c680566 100644
+>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> @@ -150,6 +150,32 @@
+>>                                 pins = "PB8", "PB9";
+>>                                 function = "uart0";
+>>                         };
+>> +
+>> +                       mmc0_pins: mmc0@0 {
+>> +                               pins = "PF0", "PF1", "PF2", "PF3", "PF4", "PF5";
+>> +                               function = "mmc0";
+>> +                               drive-strength = <30>;
+>> +                       };
+>> +
+>> +                       mmc0_default_cd_pin: mmc0_cd_pin@0 {
+>> +                               pins = "PF6";
+>> +                               function = "gpio_in";
+>> +                               bias-pull-up;
+>> +                       };
+> 
+> We are starting to drop pinmux nodes for gpio usage.
 
-1. "video: backlight: pwm_bl: Initialize fb_bl_on[x] and use_count during pwm_backlight_probe()"
-	http://patchwork.ozlabs.org/patch/708844/
+And replacing them with what?
+Or do you mean they go in the individual board .dts files?
+In this case I believe having a default pin defined here would help to
+define it in every .dts.
 
-2. "pwm: imx: Provide atomic operation for IMX PWM driver"
-	http://patchwork.ozlabs.org/patch/708847/ - http://patchwork.ozlabs.org/patch/708843/
+>> +
+>> +                       mmc1_pins: mmc1@0 {
+>> +                               pins = "PG0", "PG1", "PG2", "PG3", "PG4", "PG5";
+>> +                               function = "mmc1";
+>> +                               drive-strength = <30>;
+>> +                       };
+>> +
+>> +                       mmc2_pins: mmc2@0 {
+>> +                               pins = "PC1", "PC5", "PC6", "PC8", "PC9",
+>> +                                      "PC10", "PC11", "PC12", "PC13", "PC14",
+>> +                                      "PC15", "PC16";
+>> +                               function = "mmc2";
+>> +                               drive-strength = <30>;
+>> +                       };
+> 
+> Moreover I think you should split out the pinmux nodes to a separate patch.
 
-The patch applies to v4.10-rc2
----
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/imx6q-mccmon6.dts | 473 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 474 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-mccmon6.dts
+I can surely do, just wondering what's the rationale is behind that?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cccdbcb..316c178 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -393,6 +393,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-icore.dtb \
- 	imx6q-icore-rqs.dtb \
- 	imx6q-marsboard.dtb \
-+	imx6q-mccmon6.dtb \
- 	imx6q-nitrogen6x.dtb \
- 	imx6q-nitrogen6_max.dtb \
- 	imx6q-nitrogen6_som2.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts b/arch/arm/boot/dts/imx6q-mccmon6.dts
-new file mode 100644
-index 0000000..eedbe73
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
-@@ -0,0 +1,473 @@
-+/*
-+ * Copyright 2016-2017
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	model = "Liebherr (LWN) monitor6 i.MX6 Quad Board";
-+	compatible = "lwn,mccmon6", "fsl,imx6q";
-+
-+	memory {
-+		reg = <0x10000000 0x80000000>;
-+	};
-+
-+	backlight_lvds: backlight {
-+		compatible = "pwm-backlight";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_backlight>;
-+		pwms = <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <  0   1   2   3   4   5   6   7   8   9
-+				      10  11  12  13  14  15  16  17  18  19
-+				      20  21  22  23  24  25  26  27  28  29
-+				      30  31  32  33  34  35  36  37  38  39
-+				      40  41  42  43  44  45  46  47  48  49
-+				      50  51  52  53  54  55  56  57  58  59
-+				      60  61  62  63  64  65  66  67  68  69
-+				      70  71  72  73  74  75  76  77  78  79
-+				      80  81  82  83  84  85  86  87  88  89
-+				      90  91  92  93  94  95  96  97  98  99
-+				     100 101 102 103 104 105 106 107 108 109
-+				     110 111 112 113 114 115 116 117 118 119
-+				     120 121 122 123 124 125 126 127 128 129
-+				     130 131 132 133 134 135 136 137 138 139
-+				     140 141 142 143 144 145 146 147 148 149
-+				     150 151 152 153 154 155 156 157 158 159
-+				     160 161 162 163 164 165 166 167 168 169
-+				     170 171 172 173 174 175 176 177 178 179
-+				     180 181 182 183 184 185 186 187 188 189
-+				     190 191 192 193 194 195 196 197 198 199
-+				     200 201 202 203 204 205 206 207 208 209
-+				     210 211 212 213 214 215 216 217 218 219
-+				     220 221 222 223 224 225 226 227 228 229
-+				     230 231 232 233 234 235 236 237 238 239
-+				     240 241 242 243 244 245 246 247 248 249
-+				     250 251 252 253 254 255>;
-+		default-brightness-level = <50>;
-+		enable-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_lvds: regulator-lvds {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lvds_ppen";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_lvds>;
-+		gpio = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	panel-lvds0 {
-+		compatible = "innolux,g121x1-l03";
-+		backlight = <&backlight_lvds>;
-+		power-supply = <&reg_lvds>;
-+
-+		port {
-+			panel_in_lvds0: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&ecspi3 {
-+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs &pinctrl_ecspi3_flwp>;
-+	status = "okay";
-+
-+	s25sl032p: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <40000000>;
-+		reg = <0>;
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio1 27 GPIO_ACTIVE_LOW>;
-+	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	pfuze100: pmic@08 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3950000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds0: lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in_lvds0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm2 {
-+	#pwm-cells = <3>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&weim {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_weim_nor &pinctrl_weim_cs0>;
-+	ranges = <0 0 0x08000000 0x08000000>;
-+	status = "okay";
-+
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		reg = <0 0 0x02000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		bank-width = <2>;
-+		use-advanced-sector-protection;
-+		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
-+				0x0000c000 0x1404a38e 0x00000000>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+
-+	pinctrl_backlight: dispgrp {
-+		fsl,pins = <
-+			/* BLEN_OUT */
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02    0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_ecspi3: ecspi3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
-+			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
-+			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
-+		>;
-+	};
-+
-+	pinctrl_ecspi3_cs: ecspi3csgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_ecspi3_flwp: ecspi3flwpgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK 0x4001b0a8
-+			MX6QDL_PAD_GPIO_6__ENET_IRQ		0x000b1
-+			MX6QDL_PAD_ENET_RXD0__GPIO1_IO27        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL	0x4001b8b1
-+			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA	0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__PWM2_OUT	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_reg_lvds: reqlvdsgrp {
-+		fsl,pins = <
-+			/* LVDS_PPEN_OUT */
-+			MX6QDL_PAD_SD1_DAT2__GPIO1_IO19         0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+			MX6QDL_PAD_GPIO_4__GPIO1_IO04           0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
-+			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17059
-+			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17059
-+			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17059
-+			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
-+			MX6QDL_PAD_SD3_RST__SD3_RESET		0x17059
-+		>;
-+	};
-+
-+	pinctrl_weim_cs0: weimcs0grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_CS0__EIM_CS0_B		0xb0b1
-+		>;
-+	};
-+
-+	pinctrl_weim_nor: weimnorgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_OE__EIM_OE_B		0xb0b1
-+			MX6QDL_PAD_EIM_RW__EIM_RW		0xb0b1
-+			MX6QDL_PAD_EIM_WAIT__EIM_WAIT_B	0xb060
-+			MX6QDL_PAD_EIM_D16__EIM_DATA16		0x1b0b0
-+			MX6QDL_PAD_EIM_D17__EIM_DATA17		0x1b0b0
-+			MX6QDL_PAD_EIM_D18__EIM_DATA18		0x1b0b0
-+			MX6QDL_PAD_EIM_D19__EIM_DATA19		0x1b0b0
-+			MX6QDL_PAD_EIM_D20__EIM_DATA20		0x1b0b0
-+			MX6QDL_PAD_EIM_D21__EIM_DATA21		0x1b0b0
-+			MX6QDL_PAD_EIM_D22__EIM_DATA22		0x1b0b0
-+			MX6QDL_PAD_EIM_D23__EIM_DATA23		0x1b0b0
-+			MX6QDL_PAD_EIM_D24__EIM_DATA24		0x1b0b0
-+			MX6QDL_PAD_EIM_D25__EIM_DATA25		0x1b0b0
-+			MX6QDL_PAD_EIM_D26__EIM_DATA26		0x1b0b0
-+			MX6QDL_PAD_EIM_D27__EIM_DATA27		0x1b0b0
-+			MX6QDL_PAD_EIM_D28__EIM_DATA28		0x1b0b0
-+			MX6QDL_PAD_EIM_D29__EIM_DATA29		0x1b0b0
-+			MX6QDL_PAD_EIM_D30__EIM_DATA30		0x1b0b0
-+			MX6QDL_PAD_EIM_D31__EIM_DATA31		0x1b0b0
-+			MX6QDL_PAD_EIM_A23__EIM_ADDR23		0xb0b1
-+			MX6QDL_PAD_EIM_A22__EIM_ADDR22		0xb0b1
-+			MX6QDL_PAD_EIM_A21__EIM_ADDR21		0xb0b1
-+			MX6QDL_PAD_EIM_A20__EIM_ADDR20		0xb0b1
-+			MX6QDL_PAD_EIM_A19__EIM_ADDR19		0xb0b1
-+			MX6QDL_PAD_EIM_A18__EIM_ADDR18		0xb0b1
-+			MX6QDL_PAD_EIM_A17__EIM_ADDR17		0xb0b1
-+			MX6QDL_PAD_EIM_A16__EIM_ADDR16		0xb0b1
-+			MX6QDL_PAD_EIM_DA15__EIM_AD15		0xb0b1
-+			MX6QDL_PAD_EIM_DA14__EIM_AD14		0xb0b1
-+			MX6QDL_PAD_EIM_DA13__EIM_AD13		0xb0b1
-+			MX6QDL_PAD_EIM_DA12__EIM_AD12		0xb0b1
-+			MX6QDL_PAD_EIM_DA11__EIM_AD11		0xb0b1
-+			MX6QDL_PAD_EIM_DA10__EIM_AD10		0xb0b1
-+			MX6QDL_PAD_EIM_DA9__EIM_AD09		0xb0b1
-+			MX6QDL_PAD_EIM_DA8__EIM_AD08		0xb0b1
-+			MX6QDL_PAD_EIM_DA7__EIM_AD07		0xb0b1
-+			MX6QDL_PAD_EIM_DA6__EIM_AD06		0xb0b1
-+			MX6QDL_PAD_EIM_DA5__EIM_AD05		0xb0b1
-+			MX6QDL_PAD_EIM_DA4__EIM_AD04		0xb0b1
-+			MX6QDL_PAD_EIM_DA3__EIM_AD03		0xb0b1
-+			MX6QDL_PAD_EIM_DA2__EIM_AD02		0xb0b1
-+			MX6QDL_PAD_EIM_DA1__EIM_AD01		0xb0b1
-+			MX6QDL_PAD_EIM_DA0__EIM_AD00		0xb0b1
-+		>;
-+	};
-+};
--- 
-2.1.4
+> 
+>>                 };
+>>
+>>                 uart0: serial@1c28000 {
+>> @@ -240,6 +266,47 @@
+>>                         #size-cells = <0>;
+>>                 };
+>>
+>> +               mmc0: mmc@1c0f000 {
+>> +                       compatible = "allwinner,sun50i-a64-mmc",
+>> +                                    "allwinner,sun5i-a13-mmc";
+> 
+> Given that sun5i doesn't support mmc delay timings, and the A64 has
+> calibration and delay timings, I wouldn't call them compatible.
+> 
+> Or are you claiming that for the A64 has a delay of 0 for the
+> currently supported speeds, so the calibration doesn't really
+> matter? If so this should be mentioned in the commit message.
+
+Yes, that's my observation: Driving it with sun5-a13-mmc just works.
+This sun5i driver version does not (and will never) support higher
+transfer modes anyway, so for that subset they are compatible. This
+opens up the door to other operating systems not having a particular
+driver for the A64, for instance, also older Linux kernels.
+I know that sunxi doesn't use this compatible feature much, but IMHO we
+should really start thinking about the DT not just being Linux specific
+- or even being specific to a certain Linux version. And this case here
+is a good example: An A13 MMC driver can drive this device - if there is
+no better driver (an A64 one) available.
+
+> 
+>> +                       reg = <0x01c0f000 0x1000>;
+>> +                       clocks = <&ccu 31>, <&ccu 75>;
+> 
+> The clock / reset index macros are in the tree now.
+> Please switch to them.
+
+The include file is in the tree, but it isn't used in the current HEAD
+(as in #included and the actual macros being used in the .dtsi).
+So I was wondering if there is a patch pending for that?
+
+Cheers,
+Andre
+
+>> +                       clock-names = "ahb", "mmc";
+>> +                       resets = <&ccu 8>;
+>> +                       reset-names = "ahb";
+>> +                       interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       status = "disabled";
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +               };
+>> +
+>> +               mmc1: mmc@1c10000 {
+>> +                       compatible = "allwinner,sun50i-a64-mmc",
+>> +                                    "allwinner,sun5i-a13-mmc";
+>> +                       reg = <0x01c10000 0x1000>;
+>> +                       clocks = <&ccu 32>, <&ccu 76>;
+>> +                       clock-names = "ahb", "mmc";
+>> +                       resets = <&ccu 9>;
+>> +                       reset-names = "ahb";
+>> +                       interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       status = "disabled";
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +               };
+>> +
+>> +               mmc2: mmc@1c11000 {
+>> +                       compatible = "allwinner,sun50i-a64-emmc";
+>> +                       reg = <0x01c11000 0x1000>;
+>> +                       clocks = <&ccu 33>, <&ccu 77>;
+>> +                       clock-names = "ahb", "mmc";
+>> +                       resets = <&ccu 10>;
+>> +                       reset-names = "ahb";
+>> +                       interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       status = "disabled";
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +               };
+>> +
+>>                 gic: interrupt-controller@1c81000 {
+>>                         compatible = "arm,gic-400";
+>>                         reg = <0x01c81000 0x1000>,
+>> --
+>> 2.8.2
+>>
