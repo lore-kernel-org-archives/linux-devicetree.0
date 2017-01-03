@@ -1,39 +1,42 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: imx6dl: Add Engicam i.CoreM6
- DualLite/Solo RQS initial support
-Date: Tue, 3 Jan 2017 14:55:32 +0800
-Message-ID: <20170103065530.GV20956@dragon>
-References: <1483364420-10012-1-git-send-email-jagan@openedev.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] cfg80211: support ieee80211-freq-limit DT
+ property
+Date: Tue, 03 Jan 2017 08:00:58 +0100
+Message-ID: <1483426858.15591.3.camel@sipsolutions.net>
+References: <20170102163209.2445-1-zajec5@gmail.com>
+         <20170102163209.2445-2-zajec5@gmail.com>
+         <1483379548.15591.1.camel@sipsolutions.net>
+         <e194b980-1048-8da6-624b-26f824ff655d@broadcom.com>
+         (sfid-20170102_211210_491488_1DB64A4C)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483364420-10012-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <e194b980-1048-8da6-624b-26f824ff655d-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (sfid-20170102_211210_491488_1DB64A4C)
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 02, 2017 at 02:40:18PM +0100, Jagan Teki wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> 
-> i.CoreM6 DualLite/Solo modules are system on module solutions manufactured
-> by Engicam with following characteristics:
-> CPU           NXP i.MX6 DL, 800MHz
-> RAM           1GB, 32, 64 bit, DDR3-800/1066
-> NAND          SLC,512MB
-> Power supply  Single 5V
-> MAX LCD RES   FULLHD
-> 
-> and more info at
-> http://www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
-> 
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Applied all, thanks.
+> I suppose this then can also be done early in the wiphy_register()
+> function itself, right?
+
+No, because of the shared channel data issue. If this is
+unconditionally in wiphy_register() then we can no longer guarantee
+that sharing it is acceptable - which it is today under certain
+circumstances the driver controls. This would move it out of driver
+control, making it never possible to share any more.
+
+> So does it mean the function can go in core.c again :-p If it is
+> likely there will be other properties being added it might justify
+> adding a new source file, eg. of.c, and only compile it when
+> CONFIG_OF is set. Just a thought.
+
+Yeah, whatever :)
+We can figure that out once we have the mechanisms in place.
+
+johannes
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
