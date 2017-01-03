@@ -1,87 +1,62 @@
-From: Hanjun Guo <guohanjun@huawei.com>
-Subject: Re: [PATCH v5 0/6] arm64: arch_timer: Add workaround for
- hisilicon-161601 erratum
-Date: Tue, 3 Jan 2017 18:03:53 +0800
-Message-ID: <586B7709.1080600@huawei.com>
-References: <1482476669-15596-1-git-send-email-dingtianhong@huawei.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH 3/4] arm64: dts: exynos: make tm2 and tm2e independent from
+ each other
+Date: Tue, 03 Jan 2017 19:25:48 +0900
+Message-ID: <20170103102548.73jg6qddlcthe2mu@gangnam.samsung>
+References: <CGME20170103075734epcas5p43a9743131f63affd0a438d2ed342f22e@epcas5p4.samsung.com>
+ <1483430237-26823-1-git-send-email-jcsing.lee@samsung.com>
+ <1483430237-26823-4-git-send-email-jcsing.lee@samsung.com>
+ <CAJKOXPev9m07_dQWAvJ+=MKnbT0TFERKOtjWUDU+WXdGAiRyDA@mail.gmail.com>
+ <20170103095842.h3hl64amje4qv4ts@gangnam.samsung>
+ <CAJKOXPeEE1VwAUSAOpfyX+t58zKeAT1fe3ybp0BoQiiDBb4Uqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1482476669-15596-1-git-send-email-dingtianhong@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ding Tianhong <dingtianhong@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <CAJKOXPeEE1VwAUSAOpfyX+t58zKeAT1fe3ybp0BoQiiDBb4Uqg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jaechul Lee <jcsing.lee@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ding,
+> >> > Currently tm2e dts includes tm2 but there are some differences
+> >> > between the two boards and tm2 has some properties that tm2e
+> >> > doesn't have.
+> >> >
+> >> > That's why it's important to keep the two dts files independent
+> >> > and put all the commonalities in a tm2-common.dtsi file.
+> >> >
+> >> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> >> > Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+> >> > ---
+> >> >  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 1046 ++++++++++++++++++++
+> >> >  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1033 +------------------
+> >> >  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |    2 +-
+> >> >  3 files changed, 1049 insertions(+), 1032 deletions(-)
+> >> >  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> >>
+> >> I would like to see here the rename and diff from it. Not entire delta
+> >> (deletions and addons). It is not possible to compare it... I think
+> >> git supports it by default with similarity of 50%.
+> >
+> > I understand, it's indeed quite cryptic to understand. But all
+> > the diff algorithms (patience, minimal, histogram, myers) give
+> > the same result. I don't know how to make it better.
+> >
+> > I could split this patch, but this also means breaking tm2's
+> > functionality, which looks worse.
+> >
+> > Please tell me if you know a better way for generating the patch.
+> 
+> git format-patch -M95%?
 
-On 2016/12/23 15:04, Ding Tianhong wrote:
-> Erratum Hisilicon-161601 says that the ARM generic timer counter "has the
-> potential to contain an erroneous value when the timer value changes".
-> Accesses to TVAL (both read and write) are also affected due to the implicit counter
-> read.  Accesses to CVAL are not affected.
->
-> The workaround is to reread the system count registers until the value of the second
-> read is larger than the first one by less than 32, the system counter can be guaranteed
-> not to return wrong value twice by back-to-back read and the error value is always larger
-> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
->
-> v2: Introducing a new generic erratum handling mechanism for fsl,a008585 and hisilicon,161601.
->     Significant rework based on feedback, including seperate the fsl erratum a008585
->     to another patch, update the erratum name and remove unwanted code.
->
-> v3: Introducing the erratum_workaround_set_sne generic function for fsl erratum a008585
->     and make the #define __fsl_a008585_read_reg to be private to the .c file instead of
->     being globally visible. After discussion with Marc and Will, a consensus decision was
->     made to remove the commandline parameter for enabling fsl,erratum-a008585 erratum,
->     and make some generic name more specific, export timer_unstable_counter_workaround
->     for module access.
->     
->     Significant rework based on feedback, including fix some alignment problem, make the
->     #define __hisi_161601_read_reg to be private to the .c file instead of being globally
->     visible, add more accurate annotation and modify a bit of logical format to enable
->     arch_timer_read_ool_enabled, remove the kernel commandline parameter
->     clocksource.arm_arch_timer.hisilicon-161601.
->
->     Introduce a generic aquick framework for erratum in ACPI mode.
->
-> v4: rename the quirk handler parameter to make it more generic, and
->     avoid break loop when handling the quirk becasue it need to
->     support multi quirks handler.
->
->     update some data structures for acpi mode. 
->
-> v5: Adapt the new kernel-parameters.txt for latest kernel version.
->     Set the retries of reread system counter to 50, because it is possible 
->     that some interrupts may lead to more than twice read errors and break the loop,
->     it will trigger the warning, so we set the number of retries far beyond the number of
->     iterations the loop has been observed to take.
->
-> Ding Tianhong (4):
->   arm64: arch_timer: Add device tree binding for hisilicon-161601
->     erratum
->   arm64: arch_timer: Introduce a generic erratum handing mechanism for
->     fsl-a008585
->   arm64: arch_timer: Work around Erratum Hisilicon-161601
->   arm64: arch timer: Add timer erratum property for Hip05-d02 and
->     Hip06-d03
->
-> Hanjun Guo (2):
->   arm64: arch_timer: apci: Introduce a generic aquirk framework for
->     erratum
->   arm64: arch_timer: acpi: add hisi timer errata data
+Same thing with all M values.
 
-Since the ACPI code is conflict with Fuwei's GTDT patch set, let's split this patch
-set into two parts, one is the DT based code, and the other is the ACPI part,
-I will rebase ACPI code on top of Fuwei's patch set so please go upstream first.
+Because exynos5433-tm2.dts results modified, while
+exynos5433-tm2-common.dtsi is new. Even though I did:
 
-Thanks
-Hanjun
+1. mv exynos5433-tm2.dts exynos5433-tm2-common.dtsi
+2. copied pieces from exynos5433-tm2-common.dtsi to a new
+   exynos5433-tm2.dts
+
+Andi
