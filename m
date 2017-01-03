@@ -1,71 +1,294 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] mfd: dt: Add bindings for the Aspeed MFDs
-Date: Tue, 3 Jan 2017 12:17:03 +0000
-Message-ID: <20170103121703.GD2977@dell>
-References: <20161220071535.27542-1-andrew@aj.id.au>
- <4e69b379-299f-ebf3-3a61-9ac1bcaba7b3@acm.org>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/5] overlay: tool to convert old overlay style dts to new style
+Date: Tue, 3 Jan 2017 14:13:53 +0200
+Message-ID: <00322597-9F32-42AC-925A-38E977046F24@konsulko.com>
+References: <1482909617-31950-1-git-send-email-frowand.list@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4e69b379-299f-ebf3-3a61-9ac1bcaba7b3-HInyCGIudOg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
-Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482909617-31950-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, jdl-CYoMK+44s/E@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Dec 2016, Corey Minyard wrote:
+Hi Frank,
 
-> It looks like this is ready.  Should I take this in the IPMI tree, or is
-> there a better tree for it?
+> On Dec 28, 2016, at 09:20 , frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>=20
+> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+>=20
+> In response to "Subject: Re: [PATCH v11 5/7] overlay: Documentation =
+for the
+> overlay sugar syntax" I suggested a tool to convert the old style of =
+dts
+> overlay files to use the new syntactic sugar [1]:
+>=20
+>>>> I can imagine some reasons to support the fully written out =
+version,
+>>>> but can we document what those reasons are?
+>>>=20
+>>> I believe the main one is the dts files in this format out in the
+>>> field.  Mind you, I guess we're already requiring them to tweak how
+>>> they declare the /plugin/ option.
+>>=20
+>> It might be easy to write a program that transforms the expanded
+>> format to the simple format.  I'll try to make some time to see
+>> how difficult it is.  The transformation is relatively easy to
+>> do manually, but I don't know how many dts files would need to
+>> be converted.
+>=20
+> My goal is to minimize legacy issues of dts files that expose the
+> internal implementation of overlays, such as the fragment and
+> __overlay__ nodes.  Pantelis has submitted the dtc patches to add
+> the necessary syntactic sugar, and these appear to be moving toward
+> acceptance.
+>=20
+> I have created a perl script to create a new style dts overlay file
+> from an old style dts overlay file.  I have also created a shell
+> script to provide some error checking and to validate that the
+> new dts file compiles to the same result as the old dts file.
+>=20
+> I treat the issue as a simplistic text processing exercise instead
+> of using a more complex approach with the hope that this is
+> sufficient to process the bulk of the existing in the wild overlay
+> dts files.
+>=20
+> I do not think it is worth cluttering the dtc git repo with these
+> tools, but have no objection to them being hosted there if David
+> prefers.  I can host them on github, elinux.org, or anywhere else
+> that makes sense for a (hopefully) short lived tool.
+>=20
+> Patches 3, 4, and 5 are sample old style dts overlay files and
+> are not intended to be committed.
+>=20
+> Following are several examples of use.  One example that converts
+> properly and two that show how convsersion a malformed old style
+> dts is reported.
+>=20
+> -----  example 1
+>=20
+> $ export PATH=3D"$PATH:/home/frowand/nobackup/src/github_pantelis/dtc/"
+> $ ./overlay_convert_old_to_new a.dts b.dts
+>=20
+> $ cat a.dts
+> /dts-v1/;
+> /plugin/;
+>=20
+> / {
+> 	fragment@0 {
+> 		target =3D <&am3353x_pinmux>;
+>=20
+> 		__overlay__ {
+>=20
+> 			i2c1_pins: pinmux_i2c1_pins {
+> 				pinctrl-single,pins =3D <
+> 					0x158 0x72
+> 					0x15c 0x72
+> 				>;
+> 			};
+> 		};
+> 	};
+>=20
+> 	fragment@1 {
+> 		target =3D <&i2c1>;
+>=20
+> 		__overlay__ {
+> 			#address-cells =3D <1>;
+> 			#size-cells =3D <0>;
+> 			pinctrl-names =3D "default";
+> 			pinctrl-0 =3D <&i2c1_pins>;
+> 			clock-frequency =3D <400000>;
+> 			status =3D "okay";
+>=20
+> 			at24@50 {
+> 				compatible =3D "at,24c256";
+> 				pagesize =3D <64>;
+> 				reg =3D <0x50>;
+> 			};
+> 		};
+> 	};
+> };
+> $ cat b.dts
+> /dts-v1/;
+> /plugin/;
+>=20
+> 		&am3353x_pinmux {
+>=20
+> 			i2c1_pins: pinmux_i2c1_pins {
+> 				pinctrl-single,pins =3D <
+> 					0x158 0x72
+> 					0x15c 0x72
+> 				>;
+> 			};
+> 		};
+>=20
+> 		&i2c1 {
+> 			#address-cells =3D <1>;
+> 			#size-cells =3D <0>;
+> 			pinctrl-names =3D "default";
+> 			pinctrl-0 =3D <&i2c1_pins>;
+> 			clock-frequency =3D <400000>;
+> 			status =3D "okay";
+>=20
+> 			at24@50 {
+> 				compatible =3D "at,24c256";
+> 				pagesize =3D <64>;
+> 				reg =3D <0x50>;
+> 			};
+> 		};
+> $ diff -u a.dts b.dts
+> --- a.dts	2016-12-27 15:51:36.433101164 -0800
+> +++ b.dts	2016-12-27 22:01:28.541530464 -0800
+> @@ -1,11 +1,7 @@
+> /dts-v1/;
+> /plugin/;
+>=20
+> -/ {
+> -	fragment@0 {
+> -		target =3D <&am3353x_pinmux>;
+> -
+> -		__overlay__ {
+> +		&am3353x_pinmux {
+>=20
+> 			i2c1_pins: pinmux_i2c1_pins {
+> 				pinctrl-single,pins =3D <
+> @@ -14,12 +10,8 @@
+> 				>;
+> 			};
+> 		};
+> -	};
+> -
+> -	fragment@1 {
+> -		target =3D <&i2c1>;
+>=20
+> -		__overlay__ {
+> +		&i2c1 {
+> 			#address-cells =3D <1>;
+> 			#size-cells =3D <0>;
+> 			pinctrl-names =3D "default";
+> @@ -33,5 +25,3 @@
+> 				reg =3D <0x50>;
+> 			};
+> 		};
+> -	};
+> -};
+>=20
+>=20
+> -----  example 2
+>=20
+> $ export PATH=3D"$PATH:/home/frowand/nobackup/src/github_pantelis/dtc/"
+> $ ./overlay_convert_old_to_new bad_a_1.dts bad_b_1.dts
+> No 'target' property in node fragment@0
+>=20
+> ERROR: unable to convert bad_a_1.dts
+>=20
+> $ cat bad_a_1.dts
+> /dts-v1/;
+> /plugin/;
+>=20
+> / {
+> 	fragment@0 {
+>=20
+> 		__overlay__ {
+>=20
+> 			i2c1_pins: pinmux_i2c1_pins {
+> 				pinctrl-single,pins =3D <
+> 					0x158 0x72
+> 					0x15c 0x72
+> 				>;
+> 			};
+> 		};
+> 	};
+>=20
+> 	fragment@1 {
+> 		target =3D <&i2c1>;
+>=20
+> 		__overlay__ {
+> 			#address-cells =3D <1>;
+> 			#size-cells =3D <0>;
+> 			pinctrl-names =3D "default";
+> 			pinctrl-0 =3D <&i2c1_pins>;
+> 			clock-frequency =3D <400000>;
+> 			status =3D "okay";
+>=20
+> 			at24@50 {
+> 				compatible =3D "at,24c256";
+> 				pagesize =3D <64>;
+> 				reg =3D <0x50>;
+> 			};
+> 		};
+> 	};
+> };
+>=20
+>=20
+> -----  example 3
+>=20
+> $ export PATH=3D"$PATH:/home/frowand/nobackup/src/github_pantelis/dtc/"
+> $ ./overlay_convert_old_to_new bad_a_2.dts bad_b_2.dts
+> No 'target' property in node fragment@1
+>=20
+> ERROR: unable to convert bad_a_2.dts
+>=20
+> $ cat bad_a_2.dts
+> /dts-v1/;
+> /plugin/;
+>=20
+> / {
+> 	fragment@0 {
+> 		target =3D <&am3353x_pinmux>;
+>=20
+> 		__overlay__ {
+>=20
+> 			i2c1_pins: pinmux_i2c1_pins {
+> 				pinctrl-single,pins =3D <
+> 					0x158 0x72
+> 					0x15c 0x72
+> 				>;
+> 			};
+> 		};
+> 	};
+>=20
+> 	fragment@1 {
+>=20
+> 		__overlay__ {
+> 			#address-cells =3D <1>;
+> 			#size-cells =3D <0>;
+> 			pinctrl-names =3D "default";
+> 			pinctrl-0 =3D <&i2c1_pins>;
+> 			clock-frequency =3D <400000>;
+> 			status =3D "okay";
+>=20
+> 			at24@50 {
+> 				compatible =3D "at,24c256";
+> 				pagesize =3D <64>;
+> 				reg =3D <0x50>;
+> 			};
+> 		};
+> 	};
+> };
+>=20
+>=20
+>=20
+> [1] http://www.spinics.net/lists/devicetree/msg152891.html
+>=20
 
-Please refrain from top posting.
+Very interesting and helpful.
 
-Judging by the diff, it looks like the MFD tree would be the most
-appropriate place to merge these into.
+Thanks for the good work. I would support converting all overlays in the =
+wild
+to the new format to get going on the connector problem.
 
-> On 12/20/2016 01:15 AM, Andrew Jeffery wrote:
-> > Hi Lee,
-> > 
-> > Here's v4 of the Aspeed LPC MFD devicetree bindings series. v3 can be found at:
-> > 
-> >    https://lkml.org/lkml/2016/12/5/835
-> > 
-> > Changes since v3:
-> > 
-> > * Based on Arnd's argument[1], drop the addition of the mfd/syscon bindings
-> >    directory as well as the the last patch in v3, which moved a number of
-> >    existing bindings. Eventually the Aspeed display controller will have a
-> >    device-specific driver so it doesn't belong there either.
-> > 
-> > * Add a compatible string for the AST2400 in the LPC Host Controller bindings
-> >    as requested by Joel and slightly tweak the reg description for Rob.
-> > 
-> > [1] https://lkml.org/lkml/2016/12/13/202
-> > 
-> > Andrew Jeffery (5):
-> >    mfd: dt: Fix "indicates" typo in mfd bindings document
-> >    mfd: dt: ranges, #address-cells and #size-cells as optional properties
-> >    mfd: dt: Add Aspeed Low Pin Count Controller bindings
-> >    mfd: dt: Add bindings for the Aspeed LPC Host Controller (LHC)
-> >    mfd: dt: Add bindings for the Aspeed SoC Display Controller (GFX)
-> > 
-> >   .../devicetree/bindings/mfd/aspeed-gfx.txt         |  17 +++
-> >   .../devicetree/bindings/mfd/aspeed-lpc.txt         | 137 +++++++++++++++++++++
-> >   Documentation/devicetree/bindings/mfd/mfd.txt      |  12 +-
-> >   3 files changed, 165 insertions(+), 1 deletion(-)
-> >   create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-> >   create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > 
-> 
+> Frank Rowand (5):
+>  perl script to convert dts from old overlay style to new overlay =
+style
+>  shell script to make overlay_convert easier to use
+>  a.dts: example of an old style dts file to be converted
+>  bad_a_1.dts: example of an old style dts file unable to be converted
+>  bad_a_2.dts: example of an old style dts file to be converted
+>=20
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+
+=E2=80=94 Pantelis
