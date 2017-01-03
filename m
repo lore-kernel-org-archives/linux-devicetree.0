@@ -1,69 +1,55 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] ARM: dts: r8a7791: link DU to VSPDs
-Date: Tue, 03 Jan 2017 11:24:12 +0200
-Message-ID: <1632814.9a17uG6rp2@avalon>
-References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com> <1922293.x1RvWWSErN@wasted.cogentembedded.com>
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] pinctrl: samsung: Fix the width of PINCFG_TYPE_DRV
+ bitfields for Exynos5433
+Date: Tue, 03 Jan 2017 18:45:43 +0900
+Message-ID: <20170103094543.ccb353srxszkovip@gangnam.samsung>
+References: <CGME20161230041426epcas1p1f827d3cee8b607d81e9921b412ddf301@epcas1p1.samsung.com>
+ <20161230041421.24448-1-andi.shyti@samsung.com>
+ <20161230041421.24448-2-andi.shyti@samsung.com>
+ <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
+ <20161230150932.q7kadv4ouhdrkqea@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1922293.x1RvWWSErN@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-disposition: inline
+In-reply-to: <20161230150932.q7kadv4ouhdrkqea@kozik-lap>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Linus and Krzysztof,
 
-On Thursday 15 Dec 2016 01:07:52 Sergei Shtylyov wrote:
-> Add the "vsps" property to the DU device node in order to link this node to
-> the VSPD nodes.
+> > > From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > >
+> > > This patch fixes the wrong width of PINCFG_TYPE_DRV bitfields for Exynos5433
+> > > because PINCFG_TYPE_DRV of Exynos5433 has 4bit fields in the *_DRV
+> > > registers. Usually, other Exynos have 2bit field for PINCFG_TYPE_DRV.
+> > >
+> > > Fixes: 3c5ecc9ed353 ("pinctrl: exynos: Add support for Exynos5433")
+> > > Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > > Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> > > Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Nominally I think you should sign this off too Andi, as you are in the delivery
+> > path.
+> > 
+> > Patch applied for fixes.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> That has to be signed by Andi... otherwise the chain is broken (and
+> there could be changes added inside).
 
-I'd like to first address the issues I've pointed out on the driver side of 
-this change.
+yes, sorry about this. If Linus wants and it's not too late, he
+can add my signed off at the bottom.
 
-> ---
-> This patch is against the 'renesas-devel-20161212-v4.9' of Simon Horman's
-> 'renesas.git' repo.  It's  only meaningful if the DU driver patch I've just
-> posted is applied.
-> 
->  arch/arm/boot/dts/r8a7791.dtsi |    5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -989,7 +989,7 @@
->  		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
->  	};
-> 
-> -	vsp1@fe930000 {
-> +	vspd0: vsp1@fe930000 {
->  		compatible = "renesas,vsp1";
->  		reg = <0 0xfe930000 0 0x8000>;
->  		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -997,7 +997,7 @@
->  		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
->  	};
-> 
-> -	vsp1@fe938000 {
-> +	vspd1: vsp1@fe938000 {
->  		compatible = "renesas,vsp1";
->  		reg = <0 0xfe938000 0 0x8000>;
->  		interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -1016,6 +1016,7 @@
->  			 <&mstp7_clks R8A7791_CLK_DU1>,
->  			 <&mstp7_clks R8A7791_CLK_LVDS0>;
->  		clock-names = "du.0", "du.1", "lvds.0";
-> +		vsps = <&vspd0 &vspd1>;
->  		status = "disabled";
-> 
->  		ports {
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Andi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
