@@ -1,30 +1,65 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] Add OV5647 device tree documentation
-Date: Tue, 3 Jan 2017 12:02:42 -0600
-Message-ID: <20170103180242.v6b2q4n2nv7jwygb@rob-hp-laptop>
-References: <cover.1482846784.git.roliveir@synopsys.com>
- <2df6779f915edc7eb48ef215235d480f62f165b0.1482846784.git.roliveir@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] Documetation: samsung-phy: add the exynos-pcie-phy
+ binding
+Date: Tue, 3 Jan 2017 12:05:07 -0600
+Message-ID: <20170103180507.b7otjrfo4ye3yx42@rob-hp-laptop>
+References: <20161228103454.26467-1-jh80.chung@samsung.com>
+ <CGME20161228103455epcas5p2acc54945d70ac45b2ce2cd4f6ad4b875@epcas5p2.samsung.com>
+ <20161228103454.26467-3-jh80.chung@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2df6779f915edc7eb48ef215235d480f62f165b0.1482846784.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+In-Reply-To: <20161228103454.26467-3-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2016 at 01:59:02PM +0000, Ramiro Oliveira wrote:
-> Create device tree bindings documentation.
+On Wed, Dec 28, 2016 at 07:34:52PM +0900, Jaehoon Chung wrote:
+> Adds the exynos-pcie-phy binding for Exynos PCIe PHY.
+> This is for using generic PHY framework.
 > 
-> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 > ---
->  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>  .../devicetree/bindings/phy/samsung-phy.txt        | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index 9872ba8..1cbc15f 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -191,3 +191,26 @@ Example:
+>  		usbdrdphy0 = &usb3_phy0;
+>  		usbdrdphy1 = &usb3_phy1;
+>  	};
+> +
+> +Samsung Exynos SoC series PCIe PHY controller
+> +--------------------------------------------------
+> +Required properties:
+> +- compatible : Should be set to "samsung,exynos5440-pcie-phy"
+> +- #phy-cells : Must be zero
+> +- reg : a register used by phy driver.
+> +
+> +Required properies for child node:
+> +- reg : a block register used by phy driver.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There's no need for this. Either just make the length 0x1040 or add a 
+2nd address to the parent reg prop.
+
+> +
+> +Example:
+> +	pcie_phy0: pcie-phy@270000 {
+> +		#phy-cells = <0>;
+> +		compatible = "samsung,exynos5440-pcie-phy";
+> +		reg = <0x270000 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +		block@271000 {
+> +			reg = <0x271000 0x40>;
+> +		};
+> +	};
+> -- 
+> 2.10.2
+> 
