@@ -1,237 +1,184 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V5 3/3] cfg80211: support ieee80211-freq-limit DT property
-Date: Tue,  3 Jan 2017 23:57:14 +0100
-Message-ID: <20170103225715.14072-3-zajec5@gmail.com>
-References: <20170103225715.14072-1-zajec5@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 03/10] dt-bindings: perf: hisi: Add Devicetree
+ bindings for Hisilicon SoC PMU
+Date: Tue, 3 Jan 2017 16:59:14 -0600
+Message-ID: <20170103225914.w3drvtpvupnpfa4x@rob-hp-laptop>
+References: <1483339761-23927-1-git-send-email-anurup.m@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170103225715.14072-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483339761-23927-1-git-send-email-anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Mon, Jan 02, 2017 at 01:49:21AM -0500, Anurup M wrote:
+> 1) Device tree bindings for Hisilicon SoC PMU.
+> 2) Add example for Hisilicon L3 cache and MN PMU.
+> 3) Add child nodes of L3C and MN in djtag bindings example.
+> 
+> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/hisilicon/djtag.txt    |  25 ++++++
+>  .../devicetree/bindings/arm/hisilicon/pmu.txt      | 100 +++++++++++++++++++++
+>  2 files changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+> index bbe8b45..653fdb7 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+> @@ -27,6 +27,31 @@ Example 1: Djtag for CPU die
+>  		hisi-scl-id = <0x02>;
+>  
+>  		/* All connecting components will appear as child nodes */
+> +
+> +		pmul3c0 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x02>;
+> +		};
+> +
+> +		pmul3c1 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x04>;
+> +		};
+> +
+> +		pmul3c2 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x01>;
+> +		};
+> +
+> +		pmul3c3 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x08>;
+> +		};
+> +
+> +		pmumn0 {
+> +			compatible = "hisilicon,hip05-pmu-mn-v1";
+> +			hisi-module-id = <0x0b>;
+> +		};
+>  	};
+>  
+>  Example 2: Djtag for IO die
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> new file mode 100644
+> index 0000000..fceef8d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> @@ -0,0 +1,100 @@
+> +Hisilicon SoC HiP05/06/07 ARMv8 PMU
+> +===================================
+> +
+> +The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
+> +system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
+> +PMU devices are independent and have hardware logic to gather statistics and
+> +performance information.
+> +
+> +HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
+> +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
+> +in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
+> +4 cpu-cores each.
+> +e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
+> +The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
+> +
+> +The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
+> +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
+> +the parent node will be the djtag node of the corresponding CPU die (SCCL).
+> +
+> +L3 cache
+> +---------
+> +The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
+> +L3 cache banks. Each L3 cache bank have separate DT nodes.
+> +
+> +Required properties:
+> +
+> +	- compatible : This value should be as follows
+> +		(a) "hisilicon,hip05-pmu-l3c-v1" for v1 hw in HiP05 chipset
+> +		(b) "hisilicon,hip06-pmu-l3c-v1" for v1 hw in HiP06 chipset
+> +		(c) "hisilicon,hip07-pmu-l3c-v2" for v2 hw in HiP07 chipset
+> +
+> +	- hisi-module-id : This property is a combination of two values in the below order.
 
-This patch adds a helper for reading that new property and applying
-limitations or supported channels specified this way.
-It may be useful for specifying single band devices or devices that
-support only some part of the whole band. It's common that tri-band
-routers have separated radios for lower and higher part of 5 GHz band.
+Vendor prefix: hisilicon,module-id
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Put main code in core.c as it isn't strictly part of regulatory - pointed
-    by Arend.
-    Update to support ieee80211-freq-limit (new property).
-V3: Introduce separated wiphy_read_of_freq_limits function.
-    Add extra sanity checks for DT data.
-    Move code back to reg.c as suggested by Johannes.
-V4: Move code to of.c
-    Use one helper called at init time (no runtime hooks)
-    Modify orig_flags
-V5: Make wiphy_read_of_freq_limits return void as there isn't much point of
-    handling errors.
----
- include/net/cfg80211.h |  25 +++++++++
- net/wireless/Makefile  |   1 +
- net/wireless/of.c      | 138 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 164 insertions(+)
- create mode 100644 net/wireless/of.c
+> +		      a) Module ID: The module identifier for djtag.
+> +		      b) Instance or Bank ID: This will identify the L3 cache bank
+> +			 or instance.
+> +
+> +Optional properties:
+> +
+> +	- interrupt-parent : A phandle indicating which interrupt controller
+> +		this PMU signals interrupts to.
+> +
+> +	- interrupts : Interrupt line used by this L3 cache bank.
+> +
+> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
+> +
+> +Miscellaneous Node
+> +------------------
+> +The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
+> +for each SCCL.
+> +
+> +Required properties:
+> +
+> +	- compatible : This value should be as follows
+> +		(a) "hisilicon,hip05-pmu-mn-v1" for v1 hw in HiP05 chipset
+> +		(b) "hisilicon,hip06-pmu-mn-v1" for v1 hw in HiP06 chipset
+> +		(c) "hisilicon,hip07-pmu-mn-v2" for v2 hw in HiP07 chipset
+> +
+> +	- hisi-module-id : Module ID to input for djtag.
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index ca2ac1c..a58cdc9 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -311,6 +311,31 @@ struct ieee80211_supported_band {
- 	struct ieee80211_sta_vht_cap vht_cap;
- };
- 
-+/**
-+ * wiphy_read_of_freq_limits - read frequency limits from device tree
-+ *
-+ * @wiphy: the wireless device to get extra limits for
-+ *
-+ * Some devices may have extra limitations specified in DT. This may be useful
-+ * for chipsets that normally support more bands but are limited due to board
-+ * design (e.g. by antennas or extermal power amplifier).
-+ *
-+ * This function reads info from DT and uses it to *modify* channels (disable
-+ * unavailable ones). It's usually a *bad* idea to use it in drivers with
-+ * shared channel data as DT limitations are device specific.
-+ *
-+ * As this function access device node it has to be called after set_wiphy_dev.
-+ * It also modifies channels so they have to be set first.
-+ */
-+#ifdef CONFIG_OF
-+void wiphy_read_of_freq_limits(struct wiphy *wiphy);
-+#else /* CONFIG_OF */
-+static inline void wiphy_read_of_freq_limits(struct wiphy *wiphy)
-+{
-+}
-+#endif /* !CONFIG_OF */
-+
-+
- /*
-  * Wireless hardware/device configuration structures and methods
-  */
-diff --git a/net/wireless/Makefile b/net/wireless/Makefile
-index 4c9e39f..95b4c09 100644
---- a/net/wireless/Makefile
-+++ b/net/wireless/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_WEXT_PRIV) += wext-priv.o
- 
- cfg80211-y += core.o sysfs.o radiotap.o util.o reg.o scan.o nl80211.o
- cfg80211-y += mlme.o ibss.o sme.o chan.o ethtool.o mesh.o ap.o trace.o ocb.o
-+cfg80211-$(CONFIG_OF) += of.o
- cfg80211-$(CONFIG_CFG80211_DEBUGFS) += debugfs.o
- cfg80211-$(CONFIG_CFG80211_WEXT) += wext-compat.o wext-sme.o
- cfg80211-$(CONFIG_CFG80211_INTERNAL_REGDB) += regdb.o
-diff --git a/net/wireless/of.c b/net/wireless/of.c
-new file mode 100644
-index 0000000..70b21e0
---- /dev/null
-+++ b/net/wireless/of.c
-@@ -0,0 +1,138 @@
-+/*
-+ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * Permission to use, copy, modify, and/or distribute this software for any
-+ * purpose with or without fee is hereby granted, provided that the above
-+ * copyright notice and this permission notice appear in all copies.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-+ */
-+
-+#include <linux/of.h>
-+#include <net/cfg80211.h>
-+#include "core.h"
-+
-+static bool wiphy_freq_limits_valid_chan(struct wiphy *wiphy,
-+					 struct ieee80211_freq_range *freq_limits,
-+					 unsigned int n_freq_limits,
-+					 struct ieee80211_channel *chan)
-+{
-+	u32 bw = MHZ_TO_KHZ(20);
-+	int i;
-+
-+	for (i = 0; i < n_freq_limits; i++) {
-+		struct ieee80211_freq_range *limit = &freq_limits[i];
-+
-+		if (cfg80211_does_bw_fit_range(limit,
-+					       MHZ_TO_KHZ(chan->center_freq),
-+					       bw))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void wiphy_freq_limits_apply(struct wiphy *wiphy,
-+				    struct ieee80211_freq_range *freq_limits,
-+				    unsigned int n_freq_limits)
-+{
-+	enum nl80211_band band;
-+	int i;
-+
-+	if (WARN_ON(!n_freq_limits))
-+		return;
-+
-+	for (band = 0; band < NUM_NL80211_BANDS; band++) {
-+		struct ieee80211_supported_band *sband = wiphy->bands[band];
-+
-+		if (!sband)
-+			continue;
-+
-+		for (i = 0; i < sband->n_channels; i++) {
-+			struct ieee80211_channel *chan = &sband->channels[i];
-+
-+			if (chan->orig_flags & IEEE80211_CHAN_DISABLED)
-+				continue;
-+
-+			if (!wiphy_freq_limits_valid_chan(wiphy, freq_limits,
-+							  n_freq_limits,
-+							  chan)) {
-+				pr_debug("Disabling freq %d MHz as it's out of OF limits\n",
-+					 chan->center_freq);
-+				chan->orig_flags |= IEEE80211_CHAN_DISABLED;
-+			}
-+		}
-+	}
-+}
-+
-+void wiphy_read_of_freq_limits(struct wiphy *wiphy)
-+{
-+	struct device *dev = wiphy_dev(wiphy);
-+	struct device_node *np;
-+	struct property *prop;
-+	struct ieee80211_freq_range *freq_limits;
-+	unsigned int n_freq_limits;
-+	const __be32 *p;
-+	int len, i;
-+	int err = 0;
-+
-+	if (!dev)
-+		return;
-+	np = dev_of_node(dev);
-+	if (!np)
-+		return;
-+
-+	prop = of_find_property(np, "ieee80211-freq-limit", &len);
-+	if (!prop)
-+		return;
-+
-+	if (!len || len % sizeof(u32) || len / sizeof(u32) % 2) {
-+		dev_err(dev, "ieee80211-freq-limit wrong format");
-+		return;
-+	}
-+	n_freq_limits = len / sizeof(u32) / 2;
-+
-+	freq_limits = kcalloc(n_freq_limits, sizeof(*freq_limits), GFP_KERNEL);
-+	if (!freq_limits) {
-+		err = -ENOMEM;
-+		goto out_kfree;
-+	}
-+
-+	p = NULL;
-+	for (i = 0; i < n_freq_limits; i++) {
-+		struct ieee80211_freq_range *limit = &freq_limits[i];
-+
-+		p = of_prop_next_u32(prop, p, &limit->start_freq_khz);
-+		if (!p) {
-+			err = -EINVAL;
-+			goto out_kfree;
-+		}
-+
-+		p = of_prop_next_u32(prop, p, &limit->end_freq_khz);
-+		if (!p) {
-+			err = -EINVAL;
-+			goto out_kfree;
-+		}
-+
-+		if (!limit->start_freq_khz ||
-+		    !limit->end_freq_khz ||
-+		    limit->start_freq_khz >= limit->end_freq_khz) {
-+			err = -EINVAL;
-+			goto out_kfree;
-+		}
-+	}
-+
-+	wiphy_freq_limits_apply(wiphy, freq_limits, n_freq_limits);
-+
-+out_kfree:
-+	kfree(freq_limits);
-+	if (err)
-+		dev_err(dev, "Failed to get limits: %d\n", err);
-+}
-+EXPORT_SYMBOL(wiphy_read_of_freq_limits);
--- 
-2.10.1
+ditto
+
+> +
+> +Optional properties:
+> +
+> +	- interrupt-parent : A phandle indicating which interrupt controller
+> +		this PMU signals interrupts to.
+> +
+> +	- interrupts : Interrupt line used by this PMU.
+> +
+> +	*The counter overflow IRQ is not supported in v1 hardware (HiP05/06).
+> +
+> +Example:
+> +
+> +	djtag0: djtag@80010000 {
+> +		compatible = "hisilicon,hip05-djtag-v1";
+> +		reg = <0x0 0x80010000 0x0 0x10000>;
+> +		scl-id = <0x02>;
+> +
+> +		pmul3c0 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x02>;
+> +		};
+> +
+> +		pmul3c1 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x04>;
+> +		};
+> +
+> +		pmul3c2 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x01>;
+> +		};
+> +
+> +		pmul3c3 {
+> +			compatible = "hisilicon,hip05-pmu-l3c-v1";
+> +			hisi-module-id = <0x04 0x08>;
+> +		};
+> +
+> +		pmumn0 {
+> +			compatible = "hisilicon,hip05-pmu-mn-v1";
+> +			hisi-module-id = <0x0b>;
+> +		};
+> +	};
+> -- 
+> 2.1.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
