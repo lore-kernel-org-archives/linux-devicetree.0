@@ -1,16 +1,18 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v7 3/4] arm64: dts: marvell: Add I2C definitions for the
- Armada 3700
-Date: Tue, 03 Jan 2017 16:20:34 +0100
-Message-ID: <8760lwgofx.fsf@free-electrons.com>
-References: <20161201110440.27530-1-romain.perier@free-electrons.com>
- <20161201110440.27530-4-romain.perier@free-electrons.com>
+From: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Subject: Re: [PATCH 1/3] dt: pwm: lpc32xx: add description of clocks and
+ #pwm-cells properties
+Date: Tue, 03 Jan 2017 10:22:00 -0500
+Message-ID: <1483456920.7643.1.camel@localhost>
+References: <20161205014237.1689-1-vz@mleia.com>
+ <20161205014237.1689-2-vz@mleia.com>
+ <20161209214137.2hdugl5rmnwjrus4@rob-hp-laptop>
+ <015305d5-c22f-52da-9605-f2c19e3108b1@mleia.com>
+ <5a865e27-e673-2f45-6c71-ca1e7d92a346@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161201110440.27530-4-romain.perier@free-electrons.com> (Romain
- Perier's message of "Thu, 1 Dec 2016 12:04:39 +0100")
+In-Reply-To: <5a865e27-e673-2f45-6c71-ca1e7d92a346@mleia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,49 +22,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yahuda Yitschak <yehuday@marvell.com>, Omri Itach <omrii@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Igal Liberman <igall@marvell.com>, Hanna Hawa <hannah@marvell.com>, Wolfram Sang <wsa@the-dreams.de>, Neta Zur Hershkovits <neta@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-i2c@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9tYWluLAogCiBPbiBqZXUuLCBkw6ljLiAwMSAyMDE2LCBSb21haW4gUGVyaWVyIDxyb21h
-aW4ucGVyaWVyQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cgo+IFRoZSBBcm1hZGEgMzcwMCBo
-YXMgdHdvIGkyYyBidXMgaW50ZXJmYWNlIHVuaXRzLCB0aGlzIGNvbW1pdCBhZGRzIHRoZQo+IGRl
-ZmluaXRpb25zIG9mIHRoZSBjb3JyZXNwb25kaW5nIGRldmljZSBub2Rlcy4gSXQgYWxzbyBlbmFi
-bGVzIHRoZSBub2RlCj4gb24gdGhlIGRldmVsb3BtZW50IGJvYXJkIGZvciB0aGlzIFNvQy4KPgo+
-IFNpZ25lZC1vZmYtYnk6IFJvbWFpbiBQZXJpZXIgPHJvbWFpbi5wZXJpZXJAZnJlZS1lbGVjdHJv
-bnMuY29tPgo+IEFja2VkLWJ5OiBHcmVnb3J5IENMRU1FTlQgPGdyZWdvcnkuY2xlbWVudEBmcmVl
-LWVsZWN0cm9ucy5jb20+CgpBcHBsaWVkIG9uIG12ZWJ1L2R0NjQKClRoYW5rcywKCkdyZWdvcnkK
-Cj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtMzcyMC1kYi5kdHMg
-fCAgNCArKysrCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtMzd4eC5kdHNp
-ICAgfCAxOCArKysrKysrKysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMiBpbnNlcnRp
-b25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFk
-YS0zNzIwLWRiLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtMzcyMC1k
-Yi5kdHMKPiBpbmRleCAxMzcyZTlhNi4uMTZkODRhZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0
-L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3MjAtZGIuZHRzCj4gKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zNzIwLWRiLmR0cwo+IEBAIC02Miw2ICs2MiwxMCBAQAo+
-ICAJfTsKPiAgfTsKPiAgCj4gKyZpMmMwIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiAr
-Cj4gIC8qIENPTjMgKi8KPiAgJnNhdGEgewo+ICAJc3RhdHVzID0gIm9rYXkiOwo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaSBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtMzd4eC5kdHNpCj4gaW5kZXggZTliZDU4Ny4u
-MWIwZmQyMSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRh
-LTM3eHguZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtMzd4
-eC5kdHNpCj4gQEAgLTk4LDYgKzk4LDI0IEBACj4gIAkJCS8qIDMyTSBpbnRlcm5hbCByZWdpc3Rl
-ciBAIDB4ZDAwMF8wMDAwICovCj4gIAkJCXJhbmdlcyA9IDwweDAgMHgwIDB4ZDAwMDAwMDAgMHgy
-MDAwMDAwPjsKPiAgCj4gKwkJCWkyYzA6IGkyY0AxMTAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0g
-Im1hcnZlbGwsYXJtYWRhLTM3MDAtaTJjIjsKPiArCQkJCXJlZyA9IDwweDExMDAwIDB4MjQ+Owo+
-ICsJCQkJY2xvY2tzID0gPCZuYl9wZXJpcGhfY2xrIDEwPjsKPiArCQkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAxIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCQkJbXJ2bCxpMmMtZmFzdC1tb2Rl
-Owo+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCQkJfTsKPiArCj4gKwkJCWkyYzE6IGky
-Y0AxMTA4MCB7Cj4gKwkJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLTM3MDAtaTJjIjsK
-PiArCQkJCXJlZyA9IDwweDExMDgwIDB4MjQ+Owo+ICsJCQkJY2xvY2tzID0gPCZuYl9wZXJpcGhf
-Y2xrIDk+Owo+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIgSVJRX1RZUEVfTEVWRUxfSElH
-SD47Cj4gKwkJCQltcnZsLGkyYy1mYXN0LW1vZGU7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Owo+ICsJCQl9Owo+ICsKPiAgCQkJdWFydDA6IHNlcmlhbEAxMjAwMCB7Cj4gIAkJCQljb21wYXRp
-YmxlID0gIm1hcnZlbGwsYXJtYWRhLTM3MDAtdWFydCI7Cj4gIAkJCQlyZWcgPSA8MHgxMjAwMCAw
-eDQwMD47Cj4gLS0gCj4gMi45LjMKPgoKLS0gCkdyZWdvcnkgQ2xlbWVudCwgRnJlZSBFbGVjdHJv
-bnMKS2VybmVsLCBkcml2ZXJzLCByZWFsLXRpbWUgYW5kIGVtYmVkZGVkIExpbnV4CmRldmVsb3Bt
-ZW50LCBjb25zdWx0aW5nLCB0cmFpbmluZyBhbmQgc3VwcG9ydC4KaHR0cDovL2ZyZWUtZWxlY3Ry
-b25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Hi Rob,
+
+On Wed, 2016-12-21 at 05:30 +0200, Vladimir Zapolskiy wrote:
+> On 12/10/2016 01:51 AM, Vladimir Zapolskiy wrote:
+> > Hi Rob,
+> > 
+> > On 12/09/2016 11:41 PM, Rob Herring wrote:
+> >> On Mon, Dec 05, 2016 at 03:42:37AM +0200, Vladimir Zapolskiy wrote:
+> >>> NXP LPC32xx SoCs have two simple independent PWM controllers with a single
+> >>> output each, in this case there is no need to specify PWM channel argument
+> >>> on client side, one cell for setting PWM output frequency is sufficient.
+> >>>
+> >>> Another added to the description property 'clocks' has a standard meaning
+> >>> of a controller supply clock, in the LPC32xx User's Manual the clock is
+> >>> denoted as PWM1_CLK or PWM2_CLK clock.
+> >>>
+> >>> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 +++++++
+> >>>  1 file changed, 7 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+> >>> index 74b5bc5..523d796 100644
+> >>> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+> >>> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+> >>> @@ -3,15 +3,22 @@ LPC32XX PWM controller
+> >>>  Required properties:
+> >>>  - compatible: should be "nxp,lpc3220-pwm"
+> >>>  - reg: physical base address and length of the controller's registers
+> >>> +- clocks: clock phandle and clock specifier pair
+> >>> +- #pwm-cells: should be 1, the cell is used to specify the period in
+> >>> +  nanoseconds.
+> >>
+> >> This use of the cell is a bit odd as the period is s/w config and this 
+> >> would typically be a channel selection or such.
+> > 
+> > this is a classic PWM channel configuration property for PWM consumers
+> > described in DT, for instance PWM frequency for display panel backlight
+> > on boot.
+> > 
+> > I think >90% of PWM controllers with device tree bindings have this
+> > argument in #pwm-cells, from bindings/pwm/pwm.txt :
+> > 
+> >     pwm-specifier typically encodes the chip-relative PWM number and
+> >     the PWM period in nanoseconds.
+> > 
+> > You also may skim through phandle arguments of 'pwms' property,
+> > commonly the second argument is the requested frequency.
+> > 
+> > In this particular case I just drop PWM channel number, because
+> > the LPC32xx PWM controller has a single output channel.
+> > 
+> >> What if I want user specified/changed periods?
+> >>
+> > 
+> > The preset period still can be changed over sysfs in runtime.
+> 
+> Rob, have I managed to answer your questions?
+> 
+> If you accept my clarification, could you please ack the change?
+> 
+> --
+> With best wishes,
+> Vladimir
+> 
+ping
+
+Sylvain
