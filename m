@@ -1,68 +1,66 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: new qmp phy driver for
- qcom-chipsets
-Date: Tue, 3 Jan 2017 11:24:29 -0800
-Message-ID: <20170103192429.GL10531@minitux>
-References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
- <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
- <20161228231659.GD17126@codeaurora.org>
- <CAFp+6iF0FQjt3bt1d_HjYmpMb8cTkg+BudoNR7yzThd+EgZfQg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: document common IEEE 802.11 frequency
+ properties
+Date: Tue, 3 Jan 2017 13:55:14 -0600
+Message-ID: <20170103195514.vf4psb6qw2bd2lcw@rob-hp-laptop>
+References: <20161228155955.25518-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFp+6iF0FQjt3bt1d_HjYmpMb8cTkg+BudoNR7yzThd+EgZfQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20161228155955.25518-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 28 Dec 23:39 PST 2016, Vivek Gautam wrote:
-
-> >> + *
-> >> + */
-> >> +static int phy_pipe_clk_register(struct qcom_qmp_phy *qphy, int id)
-> >> +{
-> >> +     char clk_name[MAX_PROP_NAME];
-> >
-> > I'm not sure MAX_PROP_NAME is the same as some max clk name but
-> > ok. We should be able to calculate that the maximum is length of
-> > usb3_phy_pipe_clk_src for now though?
+On Wed, Dec 28, 2016 at 04:59:54PM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > 
-> Yea, i thought of using the same macro, considering that it provides
-> 32 characters :-)
-> Will rather use the length of usb3_phy_pipe_clk_src for now. May be
-> #define MAX_CLK_NAME   24
+> This new file should be used for properties handled at higher level and
+> so usable with all drivers.
+
+Why is this needed? Where would this data normally come from?
+
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/wireless/ieee80211.txt       | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> new file mode 100644
+> index 0000000..c762769
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> @@ -0,0 +1,16 @@
+> +Common IEEE 802.11 properties
+> +
+> +This provides documentation of common properties that are handled by a proper
+> +net layer and don't require extra driver code.
 
-Using a macro indicates that the size have some global meaning, but as
-far as I can see it doesn't. Just write 24 and you will have enough
-space for 100k pcie pipe clocks. And then use sizeof(clk_name) below.
+Not relavent to a binding. Bindings describe h/w.
 
-> >
-> >> +     struct clk *clk;
-> >> +
-> >> +     memset(&clk_name, 0, sizeof(clk_name));
-
-There's no point in clearing clk_name, as it will be overwritten
-and nul-terminated below.
-
-> >> +     switch (qphy->cfg->type) {
-> >> +     case PHY_TYPE_USB3:
-> >> +             snprintf(clk_name, MAX_PROP_NAME, "usb3_phy_pipe_clk_src");
-> >> +             break;
-> >> +     case PHY_TYPE_PCIE:
-> >> +             snprintf(clk_name, MAX_PROP_NAME, "pcie_%d_pipe_clk_src", id);
-> >> +             break;
-> >> +     default:
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> >> +     /* controllers using QMP phys use 125MHz pipe clock interface */
-> >> +     clk = clk_register_fixed_rate(qphy->dev, clk_name, NULL, 0, 125000000);
-
-Regards,
-Bjorn
+> +
+> +Optional properties:
+> + - ieee80211-min-center-freq : minimal supported frequency in KHz
+> + - ieee80211-max-center-freq : maximal supported frequency in KHz
+> +
+> +Example:
+> +
+> +pcie@0,0 {
+> +	reg = <0x0000 0 0 0 0>;
+> +	ieee80211-min-center-freq = <2437000>;
+> +	ieee80211-max-center-freq = <2457000>;
+> +};
+> -- 
+> 2.10.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
