@@ -1,61 +1,73 @@
-From: Mark Greer <mgreer@animalcreek.com>
-Subject: Re: [PATCH v3 3/3] nfc: trf7970a: Prevent repeated polling from
- crashing the kernel
-Date: Tue, 3 Jan 2017 09:33:24 -0700
-Message-ID: <20170103163324.GA3184@animalcreek.com>
-References: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
- <1482380314-16440-3-git-send-email-geoff@kuvee.com>
- <20161224060141.GA9069@animalcreek.com>
- <CAO7Z3W+n85jbr8cmj3HJV1c+eL=oRh-XRy+O=iZ+mD=ov2WABA@mail.gmail.com>
- <20161224172439.GA15103@animalcreek.com>
- <CAO7Z3WJa0goJ-VXc7dvyz8imZtqby6QsC0QNH+uRAE8LhxqU2w@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] devicetree: bq27425: add documentation for bq27425
+ fuel gauge
+Date: Tue, 3 Jan 2017 10:47:15 -0600
+Message-ID: <20170103164715.pypb5zt22hg4zqlh@rob-hp-laptop>
+References: <20161226054442.23599-1-matt@ranostay.consulting>
+ <20161226054442.23599-3-matt@ranostay.consulting>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAO7Z3WJa0goJ-VXc7dvyz8imZtqby6QsC0QNH+uRAE8LhxqU2w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geoff Lansberry <geoff@kuvee.com>
-Cc: linux-wireless <linux-wireless@vger.kernel.org>, Lauro Ramos Venancio <lauro.venancio@openbossa.org>, Aloisio Almeida Jr <aloisio.almeida@openbossa.org>, Samuel Ortiz <sameo@linux.intel.com>, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Justin Bronder <justin@kuvee.com>, Jaret Cantu <jaret.cantu@timesys.com>
+In-Reply-To: <20161226054442.23599-3-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[Please stop top-posting.  Bottom-post only to these lists.]
-
-Hi Geoff & happy new year.
-
-On Tue, Dec 27, 2016 at 09:18:32AM -0500, Geoff Lansberry wrote:
-> Mark - I will split this off soon.
-
-OK
-
-> In the meantime - here is some more info about how we use it.
+On Sun, Dec 25, 2016 at 09:44:41PM -0800, Matt Ranostay wrote:
+> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/power/bq27425.txt          | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/bq27425.txt
 > 
-> We do use NFC structures.    I did find an interesting clue in that
-> there are certain bottles that cause neard to segfault,  I'm not sure
-> what is different about them.  We write a string, like
-> "coppola_chardonnay_2015" to the bottles.
+> diff --git a/Documentation/devicetree/bindings/power/bq27425.txt b/Documentation/devicetree/bindings/power/bq27425.txt
+> new file mode 100644
+> index 000000000000..f09f787a9378
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/bq27425.txt
+> @@ -0,0 +1,25 @@
+> +* TI BQ27425 Fuel Gauge
+> +
+> +http://www.ti.com/lit/ds/symlink/bq27425-g2a.pdf
+> +
+> +Please note that if any of the optional properties are defined
+> +then all settings must be.
+> +
+> +Required properties:
+> +- compatible: Should be "ti,bq27425"
+> +- reg: integer, i2c of the device
 
-Off the top of my head, it could be the length of the text.
-It would be useful to compare the data that works to the data
-that doesn't work.  Can you install NXP's 'TagInfo' app on a
-smartphone and scan tags with working & non-working data?
-You can email the data from the app to yourself, edit out
-the cruft, and share here.
+s/i2c/I2C address/
 
-> Come to think of it, I
-> haven't done anything special to make that an ndef record, just
-> assumed that it would happen by default, I'll look into this further.
+> +
+> +Optional properties:
+> +- ti,design-capacity: integer of mAh of the battery
+> +- ti,design-energy: integer of the mWh of the battery
+> +- ti,terminate-voltage: integer of mV of the dead voltage of
+> +			the battery
 
-If you wrote the data using neard, it will be NDEF formatted.
-Since it is working this well, it is virtually guaranteed that
-the data is NDEF formatted.
+These all need unit suffixes. mAh and mWh may need to be added to 
+property-units.txt.
 
->   Also, I've been running neard with --plugin nfctype2. Just in case
-> the problem was happening due to cycling through other tag types.   It
-> didn't seem to make any difference, but I have not gone back to
-> default.
-
-Good to know, thanks.
-
-Mark
+> +
+> +bq27425 {
+> +	compatible = "ti,bq27425";
+> +	reg = <0x55>;
+> +
+> +	ti,design-capacity = <1360>;
+> +	ti,design-energy = <4970>;
+> +	ti,terminate-voltage = <3200>;
+> +};
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
