@@ -1,15 +1,15 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 5/5] mfd: twl: use mfd_add_devices for TWL6032 regulator
-Date: Tue, 3 Jan 2017 15:46:56 +0000
-Message-ID: <20170103154656.GK2977@dell>
-References: <20161126181326.14951-1-Nicolae_Rosia@mentor.com>
- <20161126181326.14951-6-Nicolae_Rosia@mentor.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 2/8] ARM: dts: armada-38x: Utilize new DSA binding
+Date: Tue, 03 Jan 2017 17:14:08 +0100
+Message-ID: <87inpwf7e7.fsf@free-electrons.com>
+References: <20170102022249.10657-1-f.fainelli@gmail.com>
+ <20170102022249.10657-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20161126181326.14951-6-Nicolae_Rosia@mentor.com>
+In-Reply-To: <20170102022249.10657-3-f.fainelli@gmail.com> (Florian Fainelli's
+ message of "Sun, 1 Jan 2017 18:22:43 -0800")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,51 +19,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolae Rosia <Nicolae_Rosia@mentor.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Mark Brown <broonie@kernel.org>, Graeme Gregory <gg@slimlogic.co.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAyNiBOb3YgMjAxNiwgTmljb2xhZSBSb3NpYSB3cm90ZToKCj4gVFdMNjAzMiByZWd1
-bGF0b3IgZHJpdmVyIHVzZXMgdGhlIGRydmRhdGEgdHdsX3ByaXYgcG9pbnRlci4KPiBJbiBvcmRl
-ciB0byBhdm9pZCBhY2Nlc3NpbmcgYW4gaW52YWxpZCBkcnZkYXRhCj4gd2hlbiB0aGUgZHJpdmVy
-IGdldHMgdW5iaW5kZWQsIG1ha2Ugc3VyZSB3ZSByZW1vdmUgdGhlCj4gY2hpbGQgZGV2aWNlcyBi
-ZWZvcmUgZGVsZXRpbmcgdGhlIGRydmRhdGEuCgpUaGlzIGRvZXNuJ3QgcmVhbGx5IGRlc2NyaWJl
-IHRoZSBjaGFuZ2UuCgpTdXJlbHkgd2UncmUgcmVhbGx5IGp1c3QgcmVnaXN0ZXJpbmcgdGhlIHJl
-Z3VsYXRvciBkcml2ZXI/CgpUaGUgZmFjdCB0aGF0IHdlIHRoZW4gcmVtb3ZlIHRoZSBkZXZpY2Ug
-ZHVyaW5nIC5yZW1vdmUoKSBpcwppbmNpZGVudGFsLiAKCj4gU2lnbmVkLW9mZi1ieTogTmljb2xh
-ZSBSb3NpYSA8Tmljb2xhZV9Sb3NpYUBtZW50b3IuY29tPgo+IC0tLQo+ICBkcml2ZXJzL21mZC90
-d2wtY29yZS5jIHwgMjIgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-MjIgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC90d2wtY29yZS5j
-IGIvZHJpdmVycy9tZmQvdHdsLWNvcmUuYwo+IGluZGV4IDQwOWI4MzYuLjFlOTQzNjQgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9tZmQvdHdsLWNvcmUuYwo+ICsrKyBiL2RyaXZlcnMvbWZkL3R3bC1j
-b3JlLmMKPiBAQCAtNDMsNiArNDMsNyBAQAo+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0u
-aD4KPiAgI2luY2x1ZGUgPGxpbnV4L2lycS5oPgo+ICAjaW5jbHVkZSA8bGludXgvaXJxZG9tYWlu
-Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tZmQvY29yZS5oPgo+ICAKPiAgI2luY2x1ZGUgPGxpbnV4
-L3JlZ3VsYXRvci9tYWNoaW5lLmg+Cj4gIAo+IEBAIC0xNTUsOCArMTU2LDE2IEBAIGludCB0d2w0
-MDMwX2luaXRfaXJxKHN0cnVjdCBkZXZpY2UgKmRldiwgaW50IGlycV9udW0pOwo+ICBpbnQgdHds
-NDAzMF9leGl0X2lycSh2b2lkKTsKPiAgaW50IHR3bDQwMzBfaW5pdF9jaGlwX2lycShjb25zdCBj
-aGFyICpjaGlwKTsKPiAgCj4gKwoKPwoKPiAgc3RhdGljIHN0cnVjdCB0d2xjb3JlICp0d2xfcHJp
-djsKPiAgCj4gK3N0YXRpYyBzdHJ1Y3QgbWZkX2NlbGwgdHdsNjAzMl9kZXZzW10gPSB7Cj4gKwl7
-Cj4gKwkJLm5hbWUgPSAidHdsNjAzMi1yZWd1bGF0b3IiLAo+ICsJCS5vZl9jb21wYXRpYmxlID0g
-InRpLHR3bDYwMzItcmVndWxhdG9yIiwKPiArCX0sCj4gK307Cj4gKwo+ICBzdGF0aWMgc3RydWN0
-IHR3bF9tYXBwaW5nIHR3bDQwMzBfbWFwW10gPSB7Cj4gIAkvKgo+ICAJICogTk9URTogIGRvbid0
-IGNoYW5nZSB0aGlzIHRhYmxlIHdpdGhvdXQgdXBkYXRpbmcgdGhlCj4gQEAgLTY2NSw2ICs2NzQs
-OCBAQCBzdGF0aWMgaW50IHR3bF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkKPiAg
-CXVuc2lnbmVkIGksIG51bV9zbGF2ZXM7Cj4gIAlpbnQgc3RhdHVzOwo+ICAKPiArCW1mZF9yZW1v
-dmVfZGV2aWNlcygmY2xpZW50LT5kZXYpOwo+ICsKPiAgCWlmICh0d2xfY2xhc3NfaXNfNDAzMCgp
-KQo+ICAJCXN0YXR1cyA9IHR3bDQwMzBfZXhpdF9pcnEoKTsKPiAgCWVsc2UKPiBAQCAtODM0LDYg
-Kzg0NSwxNyBAQCB0d2xfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwgY29uc3Qgc3Ry
-dWN0IGkyY19kZXZpY2VfaWQgKmlkKQo+ICAJCQkJIFRXTDQwMzBfRENEQ19HTE9CQUxfQ0ZHKTsK
-PiAgCX0KPiAgCj4gKwlpZiAoaWQtPmRyaXZlcl9kYXRhICYgVFdMNjAzMl9TVUJDTEFTUykgewo+
-ICsJCXN0YXR1cyA9IG1mZF9hZGRfZGV2aWNlcygmY2xpZW50LT5kZXYsIFBMQVRGT1JNX0RFVklE
-X05PTkUsCj4gKwkJCQkJIHR3bDYwMzJfZGV2cywgQVJSQVlfU0laRSh0d2w2MDMyX2RldnMpLAo+
-ICsJCQkJCSBOVUxMLCAwLCBOVUxMKTsKPiArCQlpZiAoc3RhdHVzICE9IDApIHsKPiArCQkJZGV2
-X2VycigmY2xpZW50LT5kZXYsICJmYWlsZWQgdG8gYWRkIG1mZCBkZXZpY2VzOiAlZFxuIiwKPiAr
-CQkJCXN0YXR1cyk7Cj4gKwkJCWdvdG8gZmFpbDsKPiArCQl9Cj4gKwl9Cj4gKwo+ICBmYWlsOgo+
-ICAJaWYgKHN0YXR1cyA8IDApCj4gIAkJdHdsX3JlbW92ZShjbGllbnQpOwoKLS0gCkxlZSBKb25l
-cwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg
-4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNl
-Ym9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Florian,
+
+You should use the board name in the topic, ie:
+"ARM: dts: armada-385-linksys: Utilize new DSA binding"
+
+Thanks,
+
+Gregory
+
+
+ On lun., janv. 02 2017, Florian Fainelli <f.fainelli@gmail.com> wrote:
+
+> Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
+> Document new binding"). The legacy binding node is kept included, but is marked
+> disabled.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm/boot/dts/armada-385-linksys.dtsi | 52 ++++++++++++++++++++++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+> index 8f0e508f64ae..20d5e8b00f2d 100644
+> --- a/arch/arm/boot/dts/armada-385-linksys.dtsi
+> +++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+> @@ -103,8 +103,56 @@
+>  				};
+>  			};
+>  
+> -			mdio {
+> +			mdio@72004 {
+>  				status = "okay";
+> +
+> +				switch@0 {
+> +					compatible = "marvell,mv88e6095";
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <0>;
+> +
+> +					ports {
+> +						#address-cells = <1>;
+> +						#size-cells = <0>;
+> +
+> +						port@0 {
+> +							reg = <0>;
+> +							label = "lan4";
+> +						};
+> +
+> +						port@1 {
+> +							reg = <1>;
+> +							label = "lan3";
+> +						};
+> +
+> +						port@2 {
+> +							reg = <2>;
+> +							label = "lan2";
+> +						};
+> +
+> +						port@3 {
+> +							reg = <3>;
+> +							label = "lan1";
+> +						};
+> +
+> +						port@4 {
+> +							reg = <4>;
+> +							label = "wan";
+> +						};
+> +
+> +						port@5 {
+> +							reg = <5>;
+> +							label = "cpu";
+> +							ethernet = <&eth2>;
+> +
+> +							fixed-link {
+> +								speed = <1000>;
+> +								full-duplex;
+> +							};
+> +						};
+> +					};
+> +				};
+>  			};
+>  
+>  			sata@a8000 {
+> @@ -261,6 +309,8 @@
+>  	};
+>  
+>  	dsa@0 {
+> +		status = "disabled";
+> +
+>  		compatible = "marvell,dsa";
+>  		#address-cells = <2>;
+>  		#size-cells = <0>;
+> -- 
+> 2.9.3
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
