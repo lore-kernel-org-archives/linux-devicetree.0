@@ -1,15 +1,14 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 2/8] ARM: dts: armada-38x: Utilize new DSA binding
-Date: Tue, 03 Jan 2017 17:14:08 +0100
-Message-ID: <87inpwf7e7.fsf@free-electrons.com>
+Subject: Re: [PATCH 0/8] ARM: dts: Switch to new DSA binding
+Date: Tue, 03 Jan 2017 17:19:17 +0100
+Message-ID: <87eg0kf75m.fsf@free-electrons.com>
 References: <20170102022249.10657-1-f.fainelli@gmail.com>
- <20170102022249.10657-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170102022249.10657-3-f.fainelli@gmail.com> (Florian Fainelli's
- message of "Sun, 1 Jan 2017 18:22:43 -0800")
+In-Reply-To: <20170102022249.10657-1-f.fainelli@gmail.com> (Florian Fainelli's
+ message of "Sun, 1 Jan 2017 18:22:41 -0800")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,97 +23,52 @@ Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Coo
 List-Id: devicetree@vger.kernel.org
 
 Hi Florian,
+ 
+ On lun., janv. 02 2017, Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-You should use the board name in the topic, ie:
-"ARM: dts: armada-385-linksys: Utilize new DSA binding"
+> Hi all,
+>
+> This patch series converts the in-tree users to utilize the new (relatively)
+> DSA binding that was introduced with commit 8c5ad1d6179d ("net: dsa: Document
+> new binding"). The legacy binding node is kept included, but is marked
+> disabled.
+>
+> In about 2-3 releases we may consider removing the old DSA binding entirely
+> from the kernel.
+
+The series looks OK. However I would like to have a reviewed by from
+Andrew who know well the mvebu platform and the DSA subsystem.
+
+Also there's few fixes needed for the v2.
 
 Thanks,
 
 Gregory
 
-
- On lun., janv. 02 2017, Florian Fainelli <f.fainelli@gmail.com> wrote:
-
-> Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
-> Document new binding"). The legacy binding node is kept included, but is marked
-> disabled.
 >
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm/boot/dts/armada-385-linksys.dtsi | 52 ++++++++++++++++++++++++++++++-
->  1 file changed, 51 insertions(+), 1 deletion(-)
+> Thank you!
 >
-> diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> index 8f0e508f64ae..20d5e8b00f2d 100644
-> --- a/arch/arm/boot/dts/armada-385-linksys.dtsi
-> +++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-> @@ -103,8 +103,56 @@
->  				};
->  			};
->  
-> -			mdio {
-> +			mdio@72004 {
->  				status = "okay";
-> +
-> +				switch@0 {
-> +					compatible = "marvell,mv88e6095";
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <0>;
-> +
-> +					ports {
-> +						#address-cells = <1>;
-> +						#size-cells = <0>;
-> +
-> +						port@0 {
-> +							reg = <0>;
-> +							label = "lan4";
-> +						};
-> +
-> +						port@1 {
-> +							reg = <1>;
-> +							label = "lan3";
-> +						};
-> +
-> +						port@2 {
-> +							reg = <2>;
-> +							label = "lan2";
-> +						};
-> +
-> +						port@3 {
-> +							reg = <3>;
-> +							label = "lan1";
-> +						};
-> +
-> +						port@4 {
-> +							reg = <4>;
-> +							label = "wan";
-> +						};
-> +
-> +						port@5 {
-> +							reg = <5>;
-> +							label = "cpu";
-> +							ethernet = <&eth2>;
-> +
-> +							fixed-link {
-> +								speed = <1000>;
-> +								full-duplex;
-> +							};
-> +						};
-> +					};
-> +				};
->  			};
->  
->  			sata@a8000 {
-> @@ -261,6 +309,8 @@
->  	};
->  
->  	dsa@0 {
-> +		status = "disabled";
-> +
->  		compatible = "marvell,dsa";
->  		#address-cells = <2>;
->  		#size-cells = <0>;
+> Florian Fainelli (8):
+>   ARM: dts: armada-370-rd: Utilize new DSA binding
+>   ARM: dts: armada-38x: Utilize new DSA binding
+>   ARM: dts: armada-388-clearfog: Utilize new DSA binding
+>   ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
+>   ARM: dts: kirkwood-dir665: Utilize new DSA binding
+>   ARM: dts: kirkwood-linksys-viper: Utilize new DSA binding
+>   ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA binding
+>   ARM: dts: kirkwood-rd88f6281: Utilize new DSA binding
+>
+>  arch/arm/boot/dts/armada-370-rd.dts            | 44 +++++++++++++++++
+>  arch/arm/boot/dts/armada-385-linksys.dtsi      | 52 ++++++++++++++++++++-
+>  arch/arm/boot/dts/armada-388-clearfog.dts      | 65 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/armada-xp-linksys-mamba.dts  | 53 +++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-dir665.dts          | 49 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-linksys-viper.dts   | 49 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-rd88f6281-z0.dts    | 11 +++++
+>  arch/arm/boot/dts/kirkwood-rd88f6281.dtsi      | 44 +++++++++++++++++
+>  9 files changed, 415 insertions(+), 1 deletion(-)
+>
 > -- 
 > 2.9.3
 >
