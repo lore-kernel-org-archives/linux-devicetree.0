@@ -1,88 +1,200 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] bus: imx-weim: Place 'fsl,weim-cs-timing' under the
- required properties section
-Date: Tue, 3 Jan 2017 11:10:00 +0800
-Message-ID: <20170103030959.GO20956@dragon>
-References: <1483094772-14904-1-git-send-email-festevam@gmail.com>
+From: Troy Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 1/2] arm64:dt:ls1046a: Add TMU device tree support for
+ LS1046A
+Date: Tue, 3 Jan 2017 03:49:33 +0000
+Message-ID: <AM4PR0401MB1843C415E2CF7D58BD5A1064EB6E0@AM4PR0401MB1843.eurprd04.prod.outlook.com>
+References: <1481167706-44234-1-git-send-email-hongtao.jia@nxp.com>
+ <20170102062433.GA20956@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483094772-14904-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170102062433.GA20956@dragon>
+Content-Language: zh-CN
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Y.T. Tang" <yuantian.tang-3arQi8VN3Tc@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 30, 2016 at 08:46:12AM -0200, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> 
-> Property 'fsl,weim-cs-timing' is a required one, so place it under
-> "Required properties" section.
+Add Yuantian who is the owner of this patch set since next week.
 
-NAK.  Both "Required properties" and "Optional properties" are talking
-about parent node, while 'fsl,weim-cs-timing' is a property of child
-node.
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Monday, January 02, 2017 2:25 PM
+> To: Troy Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+> Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Scott W=
+ood
+> <scott.wood-3arQi8VN3Tc@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: Re: [PATCH 1/2] arm64:dt:ls1046a: Add TMU device tree support fo=
+r
+> LS1046A
+>=20
+> On Thu, Dec 08, 2016 at 11:28:25AM +0800, Jia Hongtao wrote:
+> > Also add nodes and properties for thermal management support.
+> >
+> > Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+>=20
+> "arm64: dts: ls1046a: ..." for subject prefix please.  Also, since we hav=
+e ls1046a in
+> prefix, the 'for LS1046A' is not needed.
 
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/bus/imx-weim.txt | 27 ++++++++++------------
->  1 file changed, 12 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-> index 6630d84..a9a125b 100644
-> --- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-> +++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-> @@ -23,6 +23,18 @@ Required properties:
->  			integer values for each chip-select line in use:
->  
->  			   <cs-number> 0 <physical address of mapping> <size>
-> + - fsl,weim-cs-timing:	The timing array, contains timing values for the
-> +			child node. We can get the CS index from the child
-> +			node's "reg" property. The number of registers depends
-> +			on the selected chip.
-> +			For i.MX1, i.MX21 ("fsl,imx1-weim") there are two
-> +			registers: CSxU, CSxL.
-> +			For i.MX25, i.MX27, i.MX31 and i.MX35 ("fsl,imx27-weim")
-> +			there are three registers: CSCRxU, CSCRxL, CSCRxA.
-> +			For i.MX50, i.MX53 ("fsl,imx50-weim"),
-> +			i.MX51 ("fsl,imx51-weim") and i.MX6Q ("fsl,imx6q-weim")
-> +			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
-> +			CSxRCR2, CSxWCR1, CSxWCR2.
->  
->  Optional properties:
->  
-> @@ -44,21 +56,6 @@ Optional properties:
->  			what bootloader sets up in IOMUXC_GPR1[11:0] will be
->  			used.
->  
-> -Timing property for child nodes. It is mandatory, not optional.
+Thanks. I will fix it.
 
-This line already told everything we need to know.
+>=20
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 79
+> > ++++++++++++++++++++++++++
+> >  1 file changed, 79 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > index 38806ca..40604e9 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > @@ -45,6 +45,8 @@
+> >   */
+> >
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/thermal/thermal.h>
+> > +
+>=20
+> Unneeded newline.
 
-Shawn
+Got it.
 
-> -
-> - - fsl,weim-cs-timing:	The timing array, contains timing values for the
-> -			child node. We can get the CS index from the child
-> -			node's "reg" property. The number of registers depends
-> -			on the selected chip.
-> -			For i.MX1, i.MX21 ("fsl,imx1-weim") there are two
-> -			registers: CSxU, CSxL.
-> -			For i.MX25, i.MX27, i.MX31 and i.MX35 ("fsl,imx27-weim")
-> -			there are three registers: CSCRxU, CSCRxL, CSCRxA.
-> -			For i.MX50, i.MX53 ("fsl,imx50-weim"),
-> -			i.MX51 ("fsl,imx51-weim") and i.MX6Q ("fsl,imx6q-weim")
-> -			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
-> -			CSxRCR2, CSxWCR1, CSxWCR2.
-> -
->  Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
->  
->  	weim: weim@021b8000 {
-> -- 
-> 2.7.4
-> 
+>=20
+> >
+> >  / {
+> >  	compatible =3D "fsl,ls1046a";
+> > @@ -67,6 +69,7 @@
+> >  			clocks =3D <&clockgen 1 0>;
+> >  			next-level-cache =3D <&l2>;
+> >  			cpu-idle-states =3D <&CPU_PH20>;
+> > +			#cooling-cells =3D <2>;
+> >  		};
+> >
+> >  		cpu1: cpu@1 {
+> > @@ -279,6 +282,82 @@
+> >  			clocks =3D <&sysclk>;
+> >  		};
+> >
+> > +		tmu: tmu@1f00000 {
+> > +			compatible =3D "fsl,qoriq-tmu";
+> > +			reg =3D <0x0 0x1f00000 0x0 0x10000>;
+> > +			interrupts =3D <0 33 0x4>;
+> > +			fsl,tmu-range =3D <0xb0000 0x9002a 0x6004c 0x30062>;
+> > +			fsl,tmu-calibration =3D <0x00000000 0x00000026
+> > +					       0x00000001 0x0000002d
+> > +					       0x00000002 0x00000032
+> > +					       0x00000003 0x00000039
+> > +					       0x00000004 0x0000003f
+> > +					       0x00000005 0x00000046
+> > +					       0x00000006 0x0000004d
+> > +					       0x00000007 0x00000054
+> > +					       0x00000008 0x0000005a
+> > +					       0x00000009 0x00000061
+> > +					       0x0000000a 0x0000006a
+> > +					       0x0000000b 0x00000071
+> > +
+>=20
+> Instead of a newline, can we have a single line comment here to tell how =
+these
+> calibration data is grouped?
+
+Each group represent one temperature range. It's a good idea to add comment=
+ here.
+Could I just add one comment like below to clarify all four groups?
+/* Each calibration data group represent one temperature range. There are f=
+our ranges in total */
+
+>=20
+> > +					       0x00010000 0x00000025
+> > +					       0x00010001 0x0000002c
+> > +					       0x00010002 0x00000035
+> > +					       0x00010003 0x0000003d
+> > +					       0x00010004 0x00000045
+> > +					       0x00010005 0x0000004e
+> > +					       0x00010006 0x00000057
+> > +					       0x00010007 0x00000061
+> > +					       0x00010008 0x0000006b
+> > +					       0x00010009 0x00000076
+> > +
+> > +					       0x00020000 0x00000029
+> > +					       0x00020001 0x00000033
+> > +					       0x00020002 0x0000003d
+> > +					       0x00020003 0x00000049
+> > +					       0x00020004 0x00000056
+> > +					       0x00020005 0x00000061
+> > +					       0x00020006 0x0000006d
+> > +
+> > +					       0x00030000 0x00000021
+> > +					       0x00030001 0x0000002a
+> > +					       0x00030002 0x0000003c
+> > +					       0x00030003 0x0000004e>;
+> > +			big-endian;
+> > +			#thermal-sensor-cells =3D <1>;
+> > +		};
+> > +
+> > +		thermal-zones {
+> > +			cpu_thermal: cpu-thermal {
+> > +				polling-delay-passive =3D <1000>;
+> > +				polling-delay =3D <5000>;
+> > +
+>=20
+> We usually do not have newline between properties but nodes, or between
+> property list and child node.
+
+I just follow the style of thermal binding of
+Documentation/devicetree/bindings/thermal/thermal.txt.
+
+>=20
+> > +				thermal-sensors =3D <&tmu 3>;
+> > +
+> > +				trips {
+> > +					cpu_alert: cpu-alert {
+> > +						temperature =3D <85000>;
+> > +						hysteresis =3D <2000>;
+> > +						type =3D "passive";
+> > +					};
+>=20
+> Have a newline here.
+
+Also follow the thermal binding.
+
+-Hongtao.
+
+>=20
+> > +					cpu_crit: cpu-crit {
+> > +						temperature =3D <95000>;
+> > +						hysteresis =3D <2000>;
+> > +						type =3D "critical";
+> > +					};
+> > +				};
+> > +
+> > +				cooling-maps {
+> > +					map0 {
+> > +						trip =3D <&cpu_alert>;
+> > +						cooling-device =3D
+> > +							<&cpu0
+> THERMAL_NO_LIMIT
+> > +							THERMAL_NO_LIMIT>;
+> > +					};
+> > +				};
+> > +			};
+> > +		};
+> > +
+> >  		dspi: dspi@2100000 {
+> >  			compatible =3D "fsl,ls1021a-v1.0-dspi";
+> >  			#address-cells =3D <1>;
+> > --
+> > 2.1.0.27.g96db324
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
