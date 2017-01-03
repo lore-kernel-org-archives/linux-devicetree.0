@@ -1,97 +1,86 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V7 1/4] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Tue, 3 Jan 2017 16:51:27 -0600
-Message-ID: <20170103225127.jn36tatufdfz2k5q@rob-hp-laptop>
-References: <cover.1483301745.git.peter.senna@collabora.com>
- <21ea1b0795bdaa30ca475d6ce675b620b2b644ed.1483301745.git.peter.senna@collabora.com>
+Subject: Re: [PATCH v3 02/10] dt-bindings: hisi: Add Hisilicon HiP05/06/07
+ Djtag dts bindings
+Date: Tue, 3 Jan 2017 16:56:23 -0600
+Message-ID: <20170103225623.ynhc7n267jpzu44z@rob-hp-laptop>
+References: <1483339743-23881-1-git-send-email-anurup.m@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <21ea1b0795bdaa30ca475d6ce675b620b2b644ed.1483301745.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <1483339743-23881-1-git-send-email-anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ykk@rock-c
+To: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin wrote:
-> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-> display bridge.
+On Mon, Jan 02, 2017 at 01:49:03AM -0500, Anurup M wrote:
+> From: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > 
-> Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
-> Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
+> 
+> Signed-off-by: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
-> There was an Acked-by from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> for V6, but I changed
-> the bindings to use i2c_new_secondary_device() so I removed it from the commit
-> message.
+>  .../devicetree/bindings/arm/hisilicon/djtag.txt    | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
 > 
->  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 ++++++++++++++++++++++
-
-Generally, bindings are not organized by vendor. Put in 
-bindings/display/bridge/... instead.
-
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
 > new file mode 100644
-> index 0000000..1bc6ebf
+> index 0000000..bbe8b45
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> @@ -0,0 +1,39 @@
-> +Driver for GE B850v3 LVDS/DP++ display bridge
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+> @@ -0,0 +1,41 @@
+> +The Hisilicon Djtag is an independent component which connects with some other
+> +components in the SoC by Debug Bus. The djtag is available in CPU and IO dies
+> +in the chip. The djtag controls access to connecting modules of CPU and IO
+> +dies.
+> +The various connecting components in CPU die (like L3 cache, L3 cache PMU etc.)
+> +are accessed by djtag during real time debugging. In IO die there are connecting
+> +components like RSA. These components appear as devices attached to djtag bus.
 > +
+> +Hisilicon HiP05/06/07 djtag for CPU and IO die
 > +Required properties:
-> +  - compatible : should be "ge,b850v3-lvds-dp".
+> +  - compatible : The value should be as follows
+> +	(a) "hisilicon,hip05-djtag-v1" for CPU and IO die which use v1 hw in
+> +	    HiP05 chipset.
 
-Isn't '-lvds-dp' redundant? The part# should be enough.
+You don't need to distinguish the CPU and IO blocks?
 
-> +  - reg : should contain the main address which is used to ack the
-> +    interrupts and address for edid.
-> +  - reg-names : comma separeted list of register names. Valid values
+> +	(b) "hisilicon,hip06-djtag-v1" for CPU die which use v1 hw in HiP06 chipset.
+> +	(c) "hisilicon,hip06-djtag-v2" for IO die which use v2 hw in HiP06 chipset.
+> +	(d) "hisilicon,hip07-djtag-v2" for CPU and IO die which use v2 hw in
+> +	    HiP07 chipset.
+> +  - reg : Register address and size
+> +  - hisi-scl-id : The Super Cluster ID for CPU or IO die
 
-s/separeted/separated/
+Still needs a vendor prefix. i.e. hisilicon,scl-id
 
-> +    are "main", and "edid".
-> +  - interrupt-parent : phandle of the interrupt controller that services
-> +    interrupts to the device
-> +  - interrupts : one interrupt should be described here, as in
-> +    <0 IRQ_TYPE_LEVEL_HIGH>.
-> +  - port : should describe the video signal connection between the host
-> +    and the bridge.
 > +
-> +Example:
+> +Example 1: Djtag for CPU die
 > +
-> +&mux2_i2c2 {
-> +	status = "okay";
-> +	clock-frequency = <100000>;
+> +	/* for Hisilicon HiP05 djtag for CPU Die */
+> +	djtag0: djtag@80010000 {
+> +		compatible = "hisilicon,hip05-djtag-v1";
+> +		reg = <0x0 0x80010000 0x0 0x10000>;
+> +		hisi-scl-id = <0x02>;
 > +
-> +	b850v3-lvds-dp-bridge@73  {
-> +		compatible = "ge,b850v3-lvds-dp";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg = <0x73 0x72>;
-> +		reg-names = "main", "edid";
-> +
-> +		interrupt-parent = <&gpio2>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		port {
-> +			b850v3_dp_bridge_in: endpoint {
-> +				remote-endpoint = <&lvds0_out>;
-> +			};
-> +		};
+> +		/* All connecting components will appear as child nodes */
 > +	};
-> +};
+> +
+> +Example 2: Djtag for IO die
+> +
+> +	/* for Hisilicon HiP05 djtag for IO Die */
+> +	djtag1: djtag@d0000000 {
+> +		compatible = "hisilicon,hip05-djtag-v1";
+> +		reg = <0x0 0xd0000000 0x0 0x10000>;
+> +		hisi-scl-id = <0x01>;
+> +
+> +		/* All connecting components will appear as child nodes */
+> +	};
 > -- 
-> 2.5.5
+> 2.1.4
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
