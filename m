@@ -1,126 +1,90 @@
 From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 2/2] cfg80211: support ieee80211-freq-limit DT property
-Date: Tue, 3 Jan 2017 15:17:44 +0100
-Message-ID: <CACna6ryAHJuxduKYHCrB+8bbix7Nqe-bQfOAo6ONOEDpXp5CFA@mail.gmail.com>
-References: <20170103110340.23249-1-zajec5@gmail.com> <20170103110340.23249-2-zajec5@gmail.com>
- <a67789ba-3346-6e10-89c2-2df419a80910@broadcom.com>
+Subject: Re: [PATCH V4 3/2] brcmfmac: use wiphy_read_of_freq_limits to respect
+ extra limits
+Date: Tue, 3 Jan 2017 15:24:11 +0100
+Message-ID: <CACna6rxUuwoL=df-Q=Awi-MmUKrHHJfKkcMn=76sAxaG6_2LPg@mail.gmail.com>
+References: <20170103110340.23249-1-zajec5@gmail.com> <20170103110340.23249-3-zajec5@gmail.com>
+ <d306c928-3725-f9d3-e3c5-e75a1849bd8b@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a67789ba-3346-6e10-89c2-2df419a80910-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <d306c928-3725-f9d3-e3c5-e75a1849bd8b-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 January 2017 at 13:10, Arend Van Spriel
+On 3 January 2017 at 14:29, Arend Van Spriel
 <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> What is with the patch numbering, ie. 3/2?
+
+It's my small trick related to the "This patch should probably go
+through wireless-driver-next" ;) I wanted to make it clear that only 2
+patches are strictly targeted for the mac80211-next tree.
+
+
 > On 3-1-2017 12:03, Rafa=C5=82 Mi=C5=82ecki wrote:
 >> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 >>
->> This patch adds a helper for reading that new property and applying
->> limitations or supported channels specified this way.
->> It may be useful for specifying single band devices or devices that
->> support only some part of the whole band. It's common that tri-band
->> routers have separated radios for lower and higher part of 5 GHz band.
+>> There are some devices (e.g. Netgear R8000 home router) with one chipset
+>> model used for different radios, some of them limited to subbands. NVRAM
+>> entries don't contain any extra info on such limitations and firmware
+>> reports full list of channels to us. We need to store extra limitation
+>> info on DT to support such devices properly.
 >>
+>> This patch adds check for channel being disabled with orig_flags which
+>> is how this wiphy helper works.
+>
+> this is the first mention about the wiphy helper. Probably need
+> statement here that call to wiphy_read_of_freq_limits() was added in
+> this patch which applies the extra limitation info read from DT.
+
+OK, I'll improve this description.
+
+
 >> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 >> ---
->> V2: Put main code in core.c as it isn't strictly part of regulatory - po=
-inted
->>     by Arend.
->>     Update to support ieee80211-freq-limit (new property).
->> V3: Introduce separated wiphy_read_of_freq_limits function.
->>     Add extra sanity checks for DT data.
->>     Move code back to reg.c as suggested by Johannes.
->> V4: Move code to of.c
->>     Use one helper called at init time (no runtime hooks)
->>     Modify orig_flags
+>> This patch should probably go through wireless-driver-next, I'm sending
+>> it just as a proof of concept. It was succesfully tested on SmartRG
+>> SR400ac with BCM43602.
+>>
+>> V4: Respect IEEE80211_CHAN_DISABLED in orig_flags
 >> ---
->>  include/net/cfg80211.h |  26 ++++++++++
->>  net/wireless/Makefile  |   1 +
->>  net/wireless/of.c      | 137 ++++++++++++++++++++++++++++++++++++++++++=
-+++++++
->>  net/wireless/reg.c     |   4 +-
->>  net/wireless/reg.h     |   2 +
->>  5 files changed, 168 insertions(+), 2 deletions(-)
->>  create mode 100644 net/wireless/of.c
+>>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
 >>
->> diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
->> index ca2ac1c..d7723a8 100644
->> --- a/include/net/cfg80211.h
->> +++ b/include/net/cfg80211.h
->> @@ -311,6 +311,32 @@ struct ieee80211_supported_band {
->>       struct ieee80211_sta_vht_cap vht_cap;
->>  };
+>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c=
+ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>> index ccae3bb..f95e316 100644
+>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>> @@ -5886,6 +5886,9 @@ static int brcmf_construct_chaninfo(struct brcmf_c=
+fg80211_info *cfg,
+>>                                                      band->band);
+>>               channel[index].hw_value =3D ch.control_ch_num;
 >>
->> +/**
->> + * wiphy_read_of_freq_limits - read frequency limits from device tree
->> + *
->> + * @wiphy: the wireless device to get extra limits for
->> + *
->> + * Some devices may have extra limitations specified in DT. This may be=
- useful
->> + * for chipsets that normally support more bands but are limited due to=
- board
->> + * design (e.g. by antennas or extermal power amplifier).
->> + *
->> + * This function reads info from DT and uses it to *modify* channels (d=
-isable
->> + * unavailable ones). It's usually a *bad* idea to use it in drivers wi=
-th
->> + * shared channel data as DT limitations are device specific.
->> + *
->> + * As this function access device node it has to be called after set_wi=
-phy_dev.
->
-> You are aware that you need to modify this description with earlier
-> patch "cfg80211: allow passing struct device in the wiphy_new call",
-> right? :-p
-
-I dropped that earlier patch for now as it's no longer a requirement
-for this change. If someone find is useful though, I'll be happy to
-resume my work on it later. And update this documentation as you
-pointed out ;)
-
-
->> + * It also modifies channels so they have to be set first.
->> + */
->> +#ifdef CONFIG_OF
->> +int wiphy_read_of_freq_limits(struct wiphy *wiphy);
->> +#else /* CONFIG_OF */
->> +static inline int wiphy_read_of_freq_limits(struct wiphy *wiphy)
->> +{
->> +     return 0;
->> +}
->> +#endif /* !CONFIG_OF */
+>> +             if (channel->orig_flags & IEEE80211_CHAN_DISABLED)
+>> +                     continue;
 >> +
->> +
+>>               /* assuming the chanspecs order is HT20,
+>>                * HT40 upper, HT40 lower, and VHT80.
+>>                */
+>> @@ -6477,6 +6480,7 @@ static int brcmf_setup_wiphy(struct wiphy *wiphy, =
+struct brcmf_if *ifp)
+>>                       wiphy->bands[NL80211_BAND_5GHZ] =3D band;
+>>               }
+>>       }
+>> +     wiphy_read_of_freq_limits(wiphy);
 >
-> [...]
->
->> diff --git a/net/wireless/reg.c b/net/wireless/reg.c
->> index 5dbac37..bda0e9e 100644
->> --- a/net/wireless/reg.c
->> +++ b/net/wireless/reg.c
->> @@ -748,8 +748,8 @@ static bool is_valid_rd(const struct ieee80211_regdo=
-main *rd)
->>       return true;
->>  }
->>
->> -static bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_ran=
-ge,
->> -                         u32 center_freq_khz, u32 bw_khz)
->> +bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
->> +                  u32 center_freq_khz, u32 bw_khz)
->>  {
->>       u32 start_freq_khz, end_freq_khz;
->
-> would it be more appropriate to move this function to util.c?
+> The return value is ignored, which I suppose is fine. So does the
+> function need a return value at all? Is there a scenario where the DT
+> info *must* be supplied?
 
-I'm OK with moving this function (and maybe struct
-ieee80211_freq_range as well). Any objections?
+To be honest, I can't decide. Right now I don't see a point of
+checking that function result (as you noticed, it should never be
+required). If no one objects, I'll try switching that function to
+void.
 
 --=20
 Rafa=C5=82
