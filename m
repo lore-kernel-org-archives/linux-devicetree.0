@@ -1,110 +1,163 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64:dt:ls1046a: Add TMU device tree support for
- LS1046A
-Date: Tue, 3 Jan 2017 14:26:35 +0800
-Message-ID: <20170103062633.GR20956@dragon>
-References: <1481167706-44234-1-git-send-email-hongtao.jia@nxp.com>
- <20170102062433.GA20956@dragon>
- <AM4PR0401MB1843C415E2CF7D58BD5A1064EB6E0@AM4PR0401MB1843.eurprd04.prod.outlook.com>
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 0/8] power: add power sequence library
+Date: Tue, 3 Jan 2017 14:33:23 +0800
+Message-ID: <1483425211-14473-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AM4PR0401MB1843C415E2CF7D58BD5A1064EB6E0-4rsfagO7TJwDKNMzkuERCo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Troy Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Y.T. Tang" <yuantian.tang-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2017 at 03:49:33AM +0000, Troy Jia wrote:
-> > > @@ -279,6 +282,82 @@
-> > >  			clocks = <&sysclk>;
-> > >  		};
-> > >
-> > > +		tmu: tmu@1f00000 {
-> > > +			compatible = "fsl,qoriq-tmu";
-> > > +			reg = <0x0 0x1f00000 0x0 0x10000>;
-> > > +			interrupts = <0 33 0x4>;
-> > > +			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
-> > > +			fsl,tmu-calibration = <0x00000000 0x00000026
-> > > +					       0x00000001 0x0000002d
-> > > +					       0x00000002 0x00000032
-> > > +					       0x00000003 0x00000039
-> > > +					       0x00000004 0x0000003f
-> > > +					       0x00000005 0x00000046
-> > > +					       0x00000006 0x0000004d
-> > > +					       0x00000007 0x00000054
-> > > +					       0x00000008 0x0000005a
-> > > +					       0x00000009 0x00000061
-> > > +					       0x0000000a 0x0000006a
-> > > +					       0x0000000b 0x00000071
-> > > +
-> > 
-> > Instead of a newline, can we have a single line comment here to tell how these
-> > calibration data is grouped?
-> 
-> Each group represent one temperature range. It's a good idea to add comment here.
-> Could I just add one comment like below to clarify all four groups?
-> /* Each calibration data group represent one temperature range. There are four ranges in total */
+Hi all,
 
-Probably the following form?
+This is a follow-up for my last power sequence framework patch set [1].
+According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+power sequence instances will be added at postcore_initcall, the match
+criteria is compatible string first, if the compatible string is not
+matched between dts and library, it will try to use generic power sequence.
+	 
+The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+if only one power sequence instance is needed, for more power sequences
+are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
 
-	/* Calibration data group 1 */
-	...
-	/* Calibration data group 2 */
-	...
-	/* Calibration data group 3 */
-	...
-	/* Calibration data group 4 */
-	...
+In future, if there are special power sequence requirements, the special
+power sequence library can be created.
 
+This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+two hot-plug devices to simulate this use case, the related binding
+change is updated at patch [1/6], The udoo board changes were tested
+using my last power sequence patch set.[3]
 
-> 
-> > 
-> > > +					       0x00010000 0x00000025
-> > > +					       0x00010001 0x0000002c
-> > > +					       0x00010002 0x00000035
-> > > +					       0x00010003 0x0000003d
-> > > +					       0x00010004 0x00000045
-> > > +					       0x00010005 0x0000004e
-> > > +					       0x00010006 0x00000057
-> > > +					       0x00010007 0x00000061
-> > > +					       0x00010008 0x0000006b
-> > > +					       0x00010009 0x00000076
-> > > +
-> > > +					       0x00020000 0x00000029
-> > > +					       0x00020001 0x00000033
-> > > +					       0x00020002 0x0000003d
-> > > +					       0x00020003 0x00000049
-> > > +					       0x00020004 0x00000056
-> > > +					       0x00020005 0x00000061
-> > > +					       0x00020006 0x0000006d
-> > > +
-> > > +					       0x00030000 0x00000021
-> > > +					       0x00030001 0x0000002a
-> > > +					       0x00030002 0x0000003c
-> > > +					       0x00030003 0x0000004e>;
-> > > +			big-endian;
-> > > +			#thermal-sensor-cells = <1>;
-> > > +		};
-> > > +
-> > > +		thermal-zones {
-> > > +			cpu_thermal: cpu-thermal {
-> > > +				polling-delay-passive = <1000>;
-> > > +				polling-delay = <5000>;
-> > > +
-> > 
-> > We usually do not have newline between properties but nodes, or between
-> > property list and child node.
-> 
-> I just follow the style of thermal binding of
-> Documentation/devicetree/bindings/thermal/thermal.txt.
+Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+need to power on itself before it can be found by ULPI bus.
 
-Different subsystem or binding examples use different style, but when we
-put things together in the platform dts, we would like to have them in a
-unified style.
+[1] http://www.spinics.net/lists/linux-usb/msg142755.html
+[2] http://www.spinics.net/lists/linux-usb/msg143106.html
+[3] http://www.spinics.net/lists/linux-usb/msg142815.html
 
-Shawn
+Changes for v11:
+- Fix warning: (USB) selects POWER_SEQUENCE which has unmet direct dependencies (OF)
+- Delete redundant copyright statement.
+- Change pr_warn to pr_debug at wrseq_find_available_instance
+- Refine kerneldoc
+- %s/ENONET/ENOENT 
+- Allocate pwrseq list node before than carry out power sequence on 
+- Add mutex_lock/mutex_lock for pwrseq node browse at pwrseq_find_available_instance
+- Add pwrseq_suspend/resume for API both single instance and list 
+- Add .pwrseq_suspend/resume for pwrseq_generic.c
+- Add pwrseq_suspend_list and pwrseq_resume_list for USB hub suspend
+  and resume routine
+
+Changes for v10:
+- Improve the kernel-doc for power sequence core, including exported APIs and
+  main structure. [Patch 2/8]
+- Change Kconfig, and let the user choose power sequence. [Patch 2/8]
+- Delete EXPORT_SYMBOL and change related APIs as local, these APIs do not
+  be intended to export currently. [Patch 2/8]
+- Selete POWER_SEQUENCE at USB core's Kconfig. [Patch 4/8]
+
+Changes for v9:
+- Add Vaibhav Hiremath's reviewed-by [Patch 4/8]
+- Rebase to v4.9-rc1
+
+Changes for v8:
+- Allocate one extra pwrseq instance if pwrseq_get has succeed, it can avoid
+  preallocate instances problem which the number of instance is decided at
+  compile time, thanks for Heiko Stuebner's suggestion [Patch 2/8]
+- Delete pwrseq_compatible_sample.c which is the demo purpose to show compatible
+  match method. [Patch 2/8]
+- Add Maciej S. Szmigiero's tested-by. [Patch 7/8]
+
+Changes for v7:
+- Create kinds of power sequence instance at postcore_initcall, and match
+  the instance with node using compatible string, the beneit of this is
+  the host driver doesn't need to consider which pwrseq instance needs
+  to be used, and pwrseq core will match it, however, it eats some memories
+  if less power sequence instances are used. [Patch 2/8]
+- Add pwrseq_compatible_sample.c to test match pwrseq using device_id. [Patch 2/8]
+- Fix the comments Vaibhav Hiremath adds for error path for clock and do not
+  use device_node for parameters at pwrseq_on. [Patch 2/8]
+- Simplify the caller to use power sequence, follows Alan's commnets [Patch 4/8]
+- Tested three pwrseq instances together using both specific compatible string and
+  generic libraries.
+
+Changes for v6:
+- Add Matthias Kaehlcke's Reviewed-by and Tested-by. (patch [2/6])
+- Change chipidea core of_node assignment for coming user. (patch [5/6])
+- Applies Joshua Clayton's three dts changes for two boards,
+  the USB device's reg has only #address-cells, but without #size-cells.
+
+Changes for v5:
+- Delete pwrseq_register/pwrseq_unregister, which is useless currently
+- Fix the linker error when the pwrseq user is compiled as module
+
+Changes for v4:
+- Create the patch on next-20160722 
+- Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
+- Using more friendly wait method for reset gpio [Patch 2/6]
+- Support multiple input clocks [Patch 2/6]
+- Add Rob Herring's ack for DT changes
+- Add Joshua Clayton's Tested-by
+
+Changes for v3:
+- Delete "power-sequence" property at binding-doc, and change related code
+  at both library and user code.
+- Change binding-doc example node name with Rob's comments
+- of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
+  add additional code request gpio with proper gpio flags
+- Add Philipp Zabel's Ack and MAINTAINER's entry
+
+Changes for v2:
+- Delete "pwrseq" prefix and clock-names for properties at dt binding
+- Should use structure not but its pointer for kzalloc
+- Since chipidea core has no of_node, let core's of_node equals glue
+  layer's at core's probe
+
+Joshua Clayton (2):
+  ARM: dts: imx6qdl: Enable usb node children with <reg>
+  ARM: dts: imx6q-evi: Fix onboard hub reset line
+
+Peter Chen (6):
+  binding-doc: power: pwrseq-generic: add binding doc for generic power
+    sequence library
+  power: add power sequence library
+  binding-doc: usb: usb-device: add optional properties for power
+    sequence
+  usb: core: add power sequence handling for USB devices
+  usb: chipidea: let chipidea core device of_node equal's glue layer
+    device of_node
+  ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
+
+ .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 +++
+ .../devicetree/bindings/usb/usb-device.txt         |  10 +-
+ MAINTAINERS                                        |   9 +
+ arch/arm/boot/dts/imx6q-evi.dts                    |  25 +-
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   6 +
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/pwrseq/Kconfig                       |  20 ++
+ drivers/power/pwrseq/Makefile                      |   2 +
+ drivers/power/pwrseq/core.c                        | 335 +++++++++++++++++++++
+ drivers/power/pwrseq/pwrseq_generic.c              | 224 ++++++++++++++
+ drivers/usb/Kconfig                                |   1 +
+ drivers/usb/chipidea/core.c                        |  27 +-
+ drivers/usb/core/hub.c                             |  48 ++-
+ drivers/usb/core/hub.h                             |   1 +
+ include/linux/power/pwrseq.h                       |  81 +++++
+ 17 files changed, 823 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+ create mode 100644 drivers/power/pwrseq/Kconfig
+ create mode 100644 drivers/power/pwrseq/Makefile
+ create mode 100644 drivers/power/pwrseq/core.c
+ create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
+ create mode 100644 include/linux/power/pwrseq.h
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
