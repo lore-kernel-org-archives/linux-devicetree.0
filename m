@@ -1,125 +1,185 @@
-From: Troy Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 1/2] arm64:dt:ls1046a: Add TMU device tree support for
- LS1046A
-Date: Tue, 3 Jan 2017 06:44:18 +0000
-Message-ID: <AM4PR0401MB1843A7A90B448EC9EC72C320EB6E0@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-References: <1481167706-44234-1-git-send-email-hongtao.jia@nxp.com>
- <20170102062433.GA20956@dragon>
- <AM4PR0401MB1843C415E2CF7D58BD5A1064EB6E0@AM4PR0401MB1843.eurprd04.prod.outlook.com>
- <20170103062633.GR20956@dragon>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v6 8/9] dt-bindings: mux-adg792a: document devicetree
+ bindings for ADG792A/G mux
+Date: Tue, 3 Jan 2017 07:44:46 +0100
+Message-ID: <82707c88-ffa5-52fd-5b05-bbfa8f876807@axentia.se>
+References: <1480493823-21462-1-git-send-email-peda@axentia.se>
+ <1480493823-21462-9-git-send-email-peda@axentia.se>
+ <d4c41153-aebf-be05-a323-1298e8c4ee65@kernel.org>
+ <3fa5b6f0-76c1-0ca6-978e-9407a44a2e7e@axentia.se>
+ <86bfcc29-df24-d877-915f-d62fc3987c05@kernel.org>
+ <cdb3b543-979d-69cc-fb7d-a1d968a75056@axentia.se>
+ <90A8A4B3-670B-4409-B7AB-47BF4B2ABDDA@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170103062633.GR20956@dragon>
-Content-Language: zh-CN
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Y.T. Tang" <yuantian.tang-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <90A8A4B3-670B-4409-B7AB-47BF4B2ABDDA-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->=20
-> On Tue, Jan 03, 2017 at 03:49:33AM +0000, Troy Jia wrote:
-> > > > @@ -279,6 +282,82 @@
-> > > >  			clocks =3D <&sysclk>;
-> > > >  		};
-> > > >
-> > > > +		tmu: tmu@1f00000 {
-> > > > +			compatible =3D "fsl,qoriq-tmu";
-> > > > +			reg =3D <0x0 0x1f00000 0x0 0x10000>;
-> > > > +			interrupts =3D <0 33 0x4>;
-> > > > +			fsl,tmu-range =3D <0xb0000 0x9002a 0x6004c 0x30062>;
-> > > > +			fsl,tmu-calibration =3D <0x00000000 0x00000026
-> > > > +					       0x00000001 0x0000002d
-> > > > +					       0x00000002 0x00000032
-> > > > +					       0x00000003 0x00000039
-> > > > +					       0x00000004 0x0000003f
-> > > > +					       0x00000005 0x00000046
-> > > > +					       0x00000006 0x0000004d
-> > > > +					       0x00000007 0x00000054
-> > > > +					       0x00000008 0x0000005a
-> > > > +					       0x00000009 0x00000061
-> > > > +					       0x0000000a 0x0000006a
-> > > > +					       0x0000000b 0x00000071
-> > > > +
-> > >
-> > > Instead of a newline, can we have a single line comment here to tell
-> > > how these calibration data is grouped?
-> >
-> > Each group represent one temperature range. It's a good idea to add com=
-ment
-> here.
-> > Could I just add one comment like below to clarify all four groups?
-> > /* Each calibration data group represent one temperature range. There
-> > are four ranges in total */
->=20
-> Probably the following form?
->=20
-> 	/* Calibration data group 1 */
-> 	...
-> 	/* Calibration data group 2 */
-> 	...
-> 	/* Calibration data group 3 */
-> 	...
-> 	/* Calibration data group 4 */
-> 	...
->=20
+On 2017-01-02 22:13, Jonathan Cameron wrote:
+> 
+> 
+> On 2 January 2017 20:47:58 GMT+00:00, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
+>> On 2017-01-02 19:05, Jonathan Cameron wrote:
+>>> On 02/01/17 16:01, Peter Rosin wrote:
+>>>> On 2017-01-01 12:00, Jonathan Cameron wrote:
+>>>>> On 30/11/16 08:17, Peter Rosin wrote:
+>>>>>> Analog Devices ADG792A/G is a triple 4:1 mux.
+>>>>>>
+>>>>>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>>>> Few comments inline.  Worth adding anything about the gpio (output pins) to
+>>>>> the binding at this stage as well?  Would certainly be nice to support
+>>>>> them.
+>>>>
+>>>> I'll add optional properties "gpio-controller;" and "#gpio-cells = <2>;"
+>>>> with the usual interpretation in v7 (but no implementation...) Is that
+>>>> enough?
+>>>>
+>>>>> Jonathan
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/misc/mux-adg792a.txt       | 64 ++++++++++++++++++++++
+>>>>>>  1 file changed, 64 insertions(+)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/misc/mux-adg792a.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/misc/mux-adg792a.txt b/Documentation/devicetree/bindings/misc/mux-adg792a.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..4677f9ab1c55
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/misc/mux-adg792a.txt
+>>>>>> @@ -0,0 +1,64 @@
+>>>>>> +Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible : "adi,adg792a" or "adi,adg792g"
+>>>>>> +- #mux-control-cells : <0> if parallel, or <1> if not.
+>>>>>> +* Standard mux-controller bindings as decribed in mux-controller.txt
+>>>>>> +
+>>>>>> +Optional properties:
+>>>>>> +- adi,parallel : if present, the three muxes are bound together with a single
+>>>>>> +  mux controller, controlling all three muxes in parallel.
+>>>>>> +- adi,idle-state : if present, array of states the three mux controllers will
+>>>>>> +  have when idle (or, if parallel, a single idle-state).
+>>>>> Hmm. These are actually a policy decision.  As only one policy will make
+>>>>> sense for a given set of hardware probably fine to have it in here I guess.
+>>>>> Might be worth adding a note to say this though.
+>>>>
+>>>> I don't really know what you want me to add, do you have a suggestion for the
+>>>> wording?
+>>>>
+>>>>>> +
+>>>>>> +Mux controller states 0 through 3 correspond to signals A through D in the
+>>>>>> +datasheet. Mux controller states 4 and 5 are only available as possible idle
+>>>>>> +states. State 4 represents that nothing is connected, and state 5 represents
+>>>>>> +that the mux controller keeps the mux in its previously selected state during
+>>>>>> +the idle period. State 5 is the default idle state.
+>>>>> I'm never a great fan of magic numbers.  Can we represent this more cleanly by
+>>>>> breaking it into multiple properties?
+>>>>> Optional:
+>>>>> adi,idle-switch-to-channel : switch to this channel when idle.
+>>>>> adi,idle-high-impedance : <boolean> the nothing connected state?
+>>>>>
+>>>>> If neither present leaves it in previous state?
+>>>>
+>>>> It's not that easy. adi,idle-state is an array when there are three single
+>>>> pole quadruple throw muxes, so there really needs to be a number for each
+>>>> desired idle-behavior. Unless you have a better idea for how to describe
+>>>> that?
+>>> The above with arrays for each of the two parameters?
+>>> Though then you need a priority documented - I'd say high impedance overrides
+>>> the channel selection if both are present.
+>>
+>> How would you specify that the first mux should idle in "state 5", the second
+>> should idle in "state 4" and the third in "state 0"? (original state numbering)
+>>
+>> You'd still need a magic number for the default idle state (state 5) so that
+>> you can skip entries in the arrays. Or am I missing something?
+> Ah I had missed state 5. Hmm would need explicit control for that as well. Not nice...
+> 
+> Perhaps 3 state control (magic number but with channel nums separate)
+> 
+> Idle-state array of <switchtostate, currentstate, highimpedance>
+> 
+> Idle-state array of states to switch to if so set?
+> 
+> Slight nicer than a mess of the two things perhaps?
 
-It's good for me.
+Perhaps making adi,idle-state an array of tuples <mux-number state> and
+add adi,idle-high-impedance as an array of mux-numbers, so that my example
+above would come out as:
 
->=20
-> >
-> > >
-> > > > +					       0x00010000 0x00000025
-> > > > +					       0x00010001 0x0000002c
-> > > > +					       0x00010002 0x00000035
-> > > > +					       0x00010003 0x0000003d
-> > > > +					       0x00010004 0x00000045
-> > > > +					       0x00010005 0x0000004e
-> > > > +					       0x00010006 0x00000057
-> > > > +					       0x00010007 0x00000061
-> > > > +					       0x00010008 0x0000006b
-> > > > +					       0x00010009 0x00000076
-> > > > +
-> > > > +					       0x00020000 0x00000029
-> > > > +					       0x00020001 0x00000033
-> > > > +					       0x00020002 0x0000003d
-> > > > +					       0x00020003 0x00000049
-> > > > +					       0x00020004 0x00000056
-> > > > +					       0x00020005 0x00000061
-> > > > +					       0x00020006 0x0000006d
-> > > > +
-> > > > +					       0x00030000 0x00000021
-> > > > +					       0x00030001 0x0000002a
-> > > > +					       0x00030002 0x0000003c
-> > > > +					       0x00030003 0x0000004e>;
-> > > > +			big-endian;
-> > > > +			#thermal-sensor-cells =3D <1>;
-> > > > +		};
-> > > > +
-> > > > +		thermal-zones {
-> > > > +			cpu_thermal: cpu-thermal {
-> > > > +				polling-delay-passive =3D <1000>;
-> > > > +				polling-delay =3D <5000>;
-> > > > +
-> > >
-> > > We usually do not have newline between properties but nodes, or
-> > > between property list and child node.
-> >
-> > I just follow the style of thermal binding of
-> > Documentation/devicetree/bindings/thermal/thermal.txt.
->=20
-> Different subsystem or binding examples use different style, but when we =
-put
-> things together in the platform dts, we would like to have them in a unif=
-ied style.
+	adi,idle-high-impedance = <1>; /* mux 1 idles with high imp */
+	adi,idle-state = <2 0>;  /* mux 2 idles in state 0 (signal A) */
 
-Good point here.
-I will fix it and send the new version.
+mux 0 is not mentioned and idles in its previously selected state.
 
-Thanks.
--Hongtao.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+If you want mux 0 to idle with high impedance:
+
+	adi,idle-high-impedance = <0 1>;
+	adi,idle-state = <2 0>;
+
+If you want mux 0 to idle with signal C:
+
+	adi,idle-high-impedance = <1>;
+	adi,idle-state = <0 3>, <2 0>;
+
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +
+>>>>>> +	/* three independent mux controllers (of which one is used) */
+>>>>>> +	&i2c0 {
+>>>>>> +		mux: adg792a@50 {
+>>>>>> +			compatible = "adi,adg792a";
+>>>>>> +			reg = <0x50>;
+>>>>>> +			#mux-control-cells = <1>;
+>>>>>> +		};
+>>>>>> +	};
+>>>>>> +
+>>>>>> +	adc-mux {
+>>>>>> +		compatible = "iio-mux";
+>>>>>> +		io-channels = <&adc 0>;
+>>>>>> +		io-channel-names = "parent";
+>>>>>> +
+>>>>>> +		mux-controls = <&mux 1>;
+>>>>>> +
+>>>>>> +		channels = "sync-1", "", "out";
+>>>>>> +	};
+>>>>>> +
+>>>>>> +
+>>>>>> +	/*
+>>>>>> +	 * Three parallel muxes with one mux controller, useful e.g. if
+>>>>>> +	 * the adc is differential, thus needing two signals to be muxed
+>>>>>> +	 * simultaneously for correct operation.
+>>>>>> +	 */
+>>>>>> +	&i2c0 {
+>>>>>> +		pmux: adg792a@50 {
+>>>>>> +			compatible = "adi,adg792a";
+>>>>>> +			reg = <0x50>;
+>>>>>> +			#mux-control-cells = <0>;
+>>>>>> +			adi,parallel;
+>>>>>> +		};
+>>>>>> +	};
+>>>>>> +
+>>>>>> +	diff-adc-mux {
+>>>>>> +		compatible = "iio-mux";
+>>>>>> +		io-channels = <&adc 0>;
+>>>>>> +		io-channel-names = "parent";
+>>>>>> +
+>>>>>> +		mux-controls = <&pmux>;
+>>>>>> +
+>>>>>> +		channels = "sync-1", "", "out";
+>>>>>> +	};
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
