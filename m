@@ -1,82 +1,97 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 1/4] devicetree: hwmon: Add bindings for ADC128D818
-Date: Tue, 3 Jan 2017 09:28:19 -0600
-Message-ID: <20170103152819.r4ybaxyaqd7aotak@rob-hp-laptop>
-References: <20161223221205.8825-1-mail@alexanderkoch.net>
- <20161223221205.8825-2-mail@alexanderkoch.net>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/5] mfd: twl: move structure definitions to a public
+ header
+Date: Tue, 3 Jan 2017 15:40:51 +0000
+Message-ID: <20170103154051.GI2977@dell>
+References: <20161126181326.14951-1-Nicolae_Rosia@mentor.com>
+ <20161126181326.14951-4-Nicolae_Rosia@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20161223221205.8825-2-mail@alexanderkoch.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Alexander Koch <mail@alexanderkoch.net>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jiri Kosina <trivial@kernel.org>
+In-Reply-To: <20161126181326.14951-4-Nicolae_Rosia@mentor.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolae Rosia <Nicolae_Rosia@mentor.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Mark Brown <broonie@kernel.org>, Graeme Gregory <gg@slimlogic.co.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 23, 2016 at 11:12:02PM +0100, Alexander Koch wrote:
-> Add bindings documentation for the ADC128D818 driver, featuring default I2C
-> properties along with the optional 'mode' property for chip operation mode
-> selection (see datasheet, sec. 8.4.1).
-> 
-> Signed-off-by: Alexander Koch <mail@alexanderkoch.net>
-> ---
->  .../devicetree/bindings/hwmon/adc128d818.txt       | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adc128d818.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adc128d818.txt b/Documentation/devicetree/bindings/hwmon/adc128d818.txt
-> new file mode 100644
-> index 000000000000..5e14aa36a696
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adc128d818.txt
-> @@ -0,0 +1,39 @@
-> +TI ADC128D818 ADC System Monitor With Temperature Sensor
-> +--------------------------------------------------------
-> +
-> +Operation modes:
-> +
-> + - Mode 0:  7 single-ended voltage readings (IN0-IN6),
-> +            1 temperature reading (internal)
-> + - Mode 1:  8 single-ended voltage readings (IN0-IN7),
-> +            no temperature
-> + - Mode 2:  4 pseudo-differential voltage readings
-> +              (IN0-IN1, IN3-IN2, IN4-IN5, IN7-IN6),
-> +            1 temperature reading (internal)
-> + - Mode 3:  4 single-ended voltage readings (IN0-IN3),
-> +            2 pseudo-differential voltage readings
-> +              (IN4-IN5, IN7-IN6),
-> +            1 temperature reading (internal)
-> +
-> +If no operation mode is configured via device tree, the driver defaults
-> +to Mode 0.
-> +
-> +
-> +Required node properties:
-> +
-> + - compatible:  must be set to "ti,adc128d818"
-> + - reg:         I2C address of the device
-> +
-> +Optional node properties:
-> +
-> + - mode:        Operation mode (see above).
-
-Needs a vendor prefix.
-
-> +
-> +
-> +Example (operation mode 2):
-> +
-> +	adc128d818@1d {
-> +		compatible = "ti,adc128d818";
-> +		reg = <0x1d>;
-> +		mode = /bits/ 8 <2>;
-
-Need to specify above this is an 8-bit value. Or just drop the size 
-here as there's little gain to use a byte here.
-
-> +	};
-> +
-> -- 
-> 2.11.0
-> 
+T24gU2F0LCAyNiBOb3YgMjAxNiwgTmljb2xhZSBSb3NpYSB3cm90ZToKCj4gV2Ugd2FudCB0byBn
+ZXQgcmlkIG9mIGV4cG9ydGVkIHN5bWJvbHMgYW5kIGhhdmUKPiB0aGUgY2hpbGQgZGV2aWNlcyB1
+c2Ugc3RydWN0dXJlIG1lbWJlcnMgZGlyZWN0bHkuCj4gTW92ZSB0aGUgc3RydWN0dXJlIGRlZmlu
+aXRpb25zIHRvIGhlYWRlciBhbmQgc2V0Cj4gZHJ2ZGF0YSBzbyBjaGlsZCBkZXZpY2VzIGNhbiBh
+Y2Nlc3MgaXQuCgogIDwgUGxlYXNlIHVzZSBhbGwgNzUgY2hhcnMgYWxsb2NhdGVkIHRvIHRoZSBj
+b21taXRsb2cgYmVmb3JlIGxpbmUgd3JhcHBpbmcgPgoKPiBTaWduZWQtb2ZmLWJ5OiBOaWNvbGFl
+IFJvc2lhIDxOaWNvbGFlX1Jvc2lhQG1lbnRvci5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvbWZkL3R3
+bC1jb3JlLmMgICAgICAgfCAyNyArKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgaW5jbHVk
+ZS9saW51eC9tZmQvdHdsLWNvcmUuaCB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRpb25z
+KC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L21mZC90d2wtY29yZS5oCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3R3bC1jb3JlLmMgYi9kcml2ZXJzL21mZC90d2wt
+Y29yZS5jCj4gaW5kZXggZTE2MDg0ZS4uNDA5YjgzNiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21m
+ZC90d2wtY29yZS5jCj4gKysrIGIvZHJpdmVycy9tZmQvdHdsLWNvcmUuYwo+IEBAIC00OCw2ICs0
+OCw3IEBACj4gIAo+ICAjaW5jbHVkZSA8bGludXgvaTJjLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9p
+MmMvdHdsLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tZmQvdHdsLWNvcmUuaD4KPiAgCj4gIC8qIFJl
+Z2lzdGVyIGRlc2NyaXB0aW9ucyBmb3IgYXVkaW8gKi8KPiAgI2luY2x1ZGUgPGxpbnV4L21mZC90
+d2w0MDMwLWF1ZGlvLmg+Cj4gQEAgLTE1NCwyOCArMTU1LDcgQEAgaW50IHR3bDQwMzBfaW5pdF9p
+cnEoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaXJxX251bSk7Cj4gIGludCB0d2w0MDMwX2V4aXRf
+aXJxKHZvaWQpOwo+ICBpbnQgdHdsNDAzMF9pbml0X2NoaXBfaXJxKGNvbnN0IGNoYXIgKmNoaXAp
+Owo+ICAKPiAtLyogU3RydWN0dXJlIGZvciBlYWNoIFRXTDQwMzAvVFdMNjAzMCBTbGF2ZSAqLwo+
+IC1zdHJ1Y3QgdHdsX2NsaWVudCB7Cj4gLQlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50Owo+IC0J
+c3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+IC19Owo+IC0KPiAtLyogbWFwcGluZyB0aGUgbW9kdWxl
+IGlkIHRvIHNsYXZlIGlkIGFuZCBiYXNlIGFkZHJlc3MgKi8KPiAtc3RydWN0IHR3bF9tYXBwaW5n
+IHsKPiAtCXVuc2lnbmVkIGNoYXIgc2lkOwkvKiBTbGF2ZSBJRCAqLwo+IC0JdW5zaWduZWQgY2hh
+ciBiYXNlOwkvKiBiYXNlIGFkZHJlc3MgKi8KPiAtfTsKPiAtCj4gLXN0cnVjdCB0d2xfcHJpdmF0
+ZSB7Cj4gLQlib29sIHJlYWR5OyAvKiBUaGUgY29yZSBkcml2ZXIgaXMgcmVhZHkgdG8gYmUgdXNl
+ZCAqLwo+IC0JdTMyIHR3bF9pZGNvZGU7IC8qIFRXTCBJRENPREUgUmVnaXN0ZXIgdmFsdWUgKi8K
+PiAtCXVuc2lnbmVkIGludCB0d2xfaWQ7Cj4gLQo+IC0Jc3RydWN0IHR3bF9tYXBwaW5nICp0d2xf
+bWFwOwo+IC0Jc3RydWN0IHR3bF9jbGllbnQgKnR3bF9tb2R1bGVzOwo+IC19Owo+IC0KPiAtc3Rh
+dGljIHN0cnVjdCB0d2xfcHJpdmF0ZSAqdHdsX3ByaXY7Cj4gK3N0YXRpYyBzdHJ1Y3QgdHdsY29y
+ZSAqdHdsX3ByaXY7CgpJJ20gZ3Vlc3Npbmcgd2hlbiB5b3UgcmVtb3ZlIHRoZSBleHBvcnRlZCBm
+dW5jdGlvbnMsIHlvdSBjYW4gcmVtb3ZlIHRoaXM/Cgo+ICBzdGF0aWMgc3RydWN0IHR3bF9tYXBw
+aW5nIHR3bDQwMzBfbWFwW10gPSB7Cj4gIAkvKgo+IEBAIC03NDUsNyArNzI1LDcgQEAgdHdsX3By
+b2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lk
+ICppZCkKPiAgCQlnb3RvIGZyZWU7Cj4gIAl9Cj4gIAo+IC0JdHdsX3ByaXYgPSBkZXZtX2t6YWxs
+b2MoJmNsaWVudC0+ZGV2LCBzaXplb2Yoc3RydWN0IHR3bF9wcml2YXRlKSwKPiArCXR3bF9wcml2
+ID0gZGV2bV9remFsbG9jKCZjbGllbnQtPmRldiwgc2l6ZW9mKHN0cnVjdCB0d2xjb3JlKSwKPiAg
+CQkJCUdGUF9LRVJORUwpOwo+ICAJaWYgKCF0d2xfcHJpdikgewo+ICAJCXN0YXR1cyA9IC1FTk9N
+RU07Cj4gQEAgLTgwMyw2ICs3ODMsNyBAQCB0d2xfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNs
+aWVudCwgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKQo+ICAJfQo+ICAKPiAgCXR3bF9w
+cml2LT5yZWFkeSA9IHRydWU7Cj4gKwlkZXZfc2V0X2RydmRhdGEoJmNsaWVudC0+ZGV2LCB0d2xf
+cHJpdik7Cj4gIAo+ICAJLyogc2V0dXAgY2xvY2sgZnJhbWV3b3JrICovCj4gIAljbG9ja3NfaW5p
+dCgmcGRldi0+ZGV2KTsKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tZmQvdHdsLWNvcmUu
+aCBiL2luY2x1ZGUvbGludXgvbWZkL3R3bC1jb3JlLmgKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAuLmQxYzAxYjMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvaW5jbHVkZS9s
+aW51eC9tZmQvdHdsLWNvcmUuaAo+IEBAIC0wLDAgKzEsMzUgQEAKPiArLyoKPiArICogTUZEIGNv
+cmUgZHJpdmVyIGZvciB0aGUgVGV4YXMgSW5zdHJ1bWVudHMgVFdMIFBNSUMgZmFtaWx5Cj4gKyAq
+Cj4gKyAqIENvcHlyaWdodCAoQykgMjAxNiBOaWNvbGFlIFJvc2lhIDxuaWNvbGFlLnJvc2lhQGdt
+YWlsLmNvbT4KCllvdXIgc2lnbi1vZmYgYW5kIFNvQiBhcmUgZGlmZmVyZW50PyAgV2h5PwoKPiAr
+ICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0
+IGFuZC9vciBtb2RpZnkKPiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJh
+bCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKPiArICogcHVibGlzaGVkIGJ5IHRoZSBGcmVl
+IFNvZnR3YXJlIEZvdW5kYXRpb24uCj4gKyAqLwo+ICsKPiArI2lmbmRlZiBfX1RXTF9DT1JFX0hf
+Xwo+ICsjZGVmaW5lIF9fVFdMX0NPUkVfSF9fCgpfTUZEXwoKPiArLyogU3RydWN0dXJlIGZvciBl
+YWNoIFRXTDQwMzAvVFdMNjAzMCBTbGF2ZSAqLwo+ICtzdHJ1Y3QgdHdsX2NsaWVudCB7Cj4gKwlz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50Owo+ICsJc3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+ICt9
+Owo+ICsKPiArLyogbWFwcGluZyB0aGUgbW9kdWxlIGlkIHRvIHNsYXZlIGlkIGFuZCBiYXNlIGFk
+ZHJlc3MgKi8KPiArc3RydWN0IHR3bF9tYXBwaW5nIHsKPiArCXVuc2lnbmVkIGNoYXIgc2lkOyAv
+KiBTbGF2ZSBJRCAqLwo+ICsJdW5zaWduZWQgY2hhciBiYXNlOyAvKiBiYXNlIGFkZHJlc3MgKi8K
+PiArfTsKPiArCj4gK3N0cnVjdCB0d2xjb3JlIHsKPiArCWJvb2wgcmVhZHk7IC8qIFRoZSBjb3Jl
+IGRyaXZlciBpcyByZWFkeSB0byBiZSB1c2VkICovCj4gKwl1MzIgdHdsX2lkY29kZTsgLyogVFdM
+IElEQ09ERSBSZWdpc3RlciB2YWx1ZSAqLwo+ICsJdW5zaWduZWQgaW50IHR3bF9pZDsKPiArCj4g
+KwlzdHJ1Y3QgdHdsX21hcHBpbmcgKnR3bF9tYXA7Cj4gKwlzdHJ1Y3QgdHdsX2NsaWVudCAqdHds
+X21vZHVsZXM7Cj4gK307Cj4gKwo+ICsjZW5kaWYKCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWlj
+cm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJj
+ZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVy
+IHwgQmxvZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
