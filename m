@@ -1,51 +1,126 @@
-From: Roger Shimizu <rogershimizu@gmail.com>
-Subject: Re: [PATCH v3 2/3] DT: bingdings: power: reset: add linkstation-reset
- doc
-Date: Tue, 3 Jan 2017 23:11:19 +0900
-Message-ID: <CAEQ9gEnKSDefeF_5WVRiu8pw5gnBWRoqYgMufoowox1ArD6e7w@mail.gmail.com>
-References: <20161216100501.18173-1-rogershimizu@gmail.com>
- <20161227070611.14852-1-rogershimizu@gmail.com>
- <20161227070611.14852-3-rogershimizu@gmail.com>
- <519e07d0-9b73-4445-ec5e-7ea2cbc1b814@gmail.com>
- <20170103131256.GB30197@lunn.ch>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 2/2] cfg80211: support ieee80211-freq-limit DT property
+Date: Tue, 3 Jan 2017 15:17:44 +0100
+Message-ID: <CACna6ryAHJuxduKYHCrB+8bbix7Nqe-bQfOAo6ONOEDpXp5CFA@mail.gmail.com>
+References: <20170103110340.23249-1-zajec5@gmail.com> <20170103110340.23249-2-zajec5@gmail.com>
+ <a67789ba-3346-6e10-89c2-2df419a80910@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170103131256.GB30197@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ryan Tandy <ryan@nardis.ca>, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a67789ba-3346-6e10-89c2-2df419a80910-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian, Andrew,
-
-Thanks for your comments!
-
-On Tue, Jan 3, 2017 at 10:12 PM, Andrew Lunn <andrew@lunn.ch> wrote:
->> > +
->> > +Required Properties:
->> > +- compatible: Should be "linkstation,power-off"
->> > +- reg: Address and length of the register set for UART1
+On 3 January 2017 at 13:10, Arend Van Spriel
+<arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On 3-1-2017 12:03, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 >>
->> Humm, should we instead have a phandle to the uart1 node?
+>> This patch adds a helper for reading that new property and applying
+>> limitations or supported channels specified this way.
+>> It may be useful for specifying single band devices or devices that
+>> support only some part of the whole band. It's common that tri-band
+>> routers have separated radios for lower and higher part of 5 GHz band.
+>>
+>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> ---
+>> V2: Put main code in core.c as it isn't strictly part of regulatory - po=
+inted
+>>     by Arend.
+>>     Update to support ieee80211-freq-limit (new property).
+>> V3: Introduce separated wiphy_read_of_freq_limits function.
+>>     Add extra sanity checks for DT data.
+>>     Move code back to reg.c as suggested by Johannes.
+>> V4: Move code to of.c
+>>     Use one helper called at init time (no runtime hooks)
+>>     Modify orig_flags
+>> ---
+>>  include/net/cfg80211.h |  26 ++++++++++
+>>  net/wireless/Makefile  |   1 +
+>>  net/wireless/of.c      | 137 ++++++++++++++++++++++++++++++++++++++++++=
++++++++
+>>  net/wireless/reg.c     |   4 +-
+>>  net/wireless/reg.h     |   2 +
+>>  5 files changed, 168 insertions(+), 2 deletions(-)
+>>  create mode 100644 net/wireless/of.c
+>>
+>> diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+>> index ca2ac1c..d7723a8 100644
+>> --- a/include/net/cfg80211.h
+>> +++ b/include/net/cfg80211.h
+>> @@ -311,6 +311,32 @@ struct ieee80211_supported_band {
+>>       struct ieee80211_sta_vht_cap vht_cap;
+>>  };
+>>
+>> +/**
+>> + * wiphy_read_of_freq_limits - read frequency limits from device tree
+>> + *
+>> + * @wiphy: the wireless device to get extra limits for
+>> + *
+>> + * Some devices may have extra limitations specified in DT. This may be=
+ useful
+>> + * for chipsets that normally support more bands but are limited due to=
+ board
+>> + * design (e.g. by antennas or extermal power amplifier).
+>> + *
+>> + * This function reads info from DT and uses it to *modify* channels (d=
+isable
+>> + * unavailable ones). It's usually a *bad* idea to use it in drivers wi=
+th
+>> + * shared channel data as DT limitations are device specific.
+>> + *
+>> + * As this function access device node it has to be called after set_wi=
+phy_dev.
 >
-> Probably. Again, this is to do with copying the QNAP driver. I was
-> young, new to device tree, and i just did a logical conversion of the
-> existing code, and did not at the time understand phandles, etc.
+> You are aware that you need to modify this description with earlier
+> patch "cfg80211: allow passing struct device in the wiphy_new call",
+> right? :-p
 
-Can you tell me where should I place this document?
-or simply remove it?
+I dropped that earlier patch for now as it's no longer a requirement
+for this change. If someone find is useful though, I'll be happy to
+resume my work on it later. And update this documentation as you
+pointed out ;)
 
-Cheers,
--- 
-Roger Shimizu, GMT +9 Tokyo
-PGP/GPG: 4096R/6C6ACD6417B3ACB1
+
+>> + * It also modifies channels so they have to be set first.
+>> + */
+>> +#ifdef CONFIG_OF
+>> +int wiphy_read_of_freq_limits(struct wiphy *wiphy);
+>> +#else /* CONFIG_OF */
+>> +static inline int wiphy_read_of_freq_limits(struct wiphy *wiphy)
+>> +{
+>> +     return 0;
+>> +}
+>> +#endif /* !CONFIG_OF */
+>> +
+>> +
+>
+> [...]
+>
+>> diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+>> index 5dbac37..bda0e9e 100644
+>> --- a/net/wireless/reg.c
+>> +++ b/net/wireless/reg.c
+>> @@ -748,8 +748,8 @@ static bool is_valid_rd(const struct ieee80211_regdo=
+main *rd)
+>>       return true;
+>>  }
+>>
+>> -static bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_ran=
+ge,
+>> -                         u32 center_freq_khz, u32 bw_khz)
+>> +bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
+>> +                  u32 center_freq_khz, u32 bw_khz)
+>>  {
+>>       u32 start_freq_khz, end_freq_khz;
+>
+> would it be more appropriate to move this function to util.c?
+
+I'm OK with moving this function (and maybe struct
+ieee80211_freq_range as well). Any objections?
+
+--=20
+Rafa=C5=82
