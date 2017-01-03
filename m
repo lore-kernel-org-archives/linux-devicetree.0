@@ -1,60 +1,57 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 3/4] arm64: dts: marvell: Add definition of SPI
- controller for Armada 3700
-Date: Tue, 03 Jan 2017 16:14:15 +0100
-Message-ID: <87lgusgoqg.fsf@free-electrons.com>
-References: <20161208145847.7794-1-romain.perier@free-electrons.com>
- <20161208145847.7794-4-romain.perier@free-electrons.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 0/5] add support for Allwinner V3s SoC
+Date: Tue,  3 Jan 2017 23:16:24 +0800
+Message-ID: <20170103151629.19447-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161208145847.7794-4-romain.perier@free-electrons.com> (Romain
- Perier's message of "Thu, 8 Dec 2016 15:58:46 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, xigu@marvell.com, dingwei@marvell.com, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBBEBV7BQKGQE7ROXTAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9tYWluLAogCiBPbiBqZXUuLCBkw6ljLiAwOCAyMDE2LCBSb21haW4gUGVyaWVyIDxyb21h
-aW4ucGVyaWVyQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cgo+IEFybWFkYSAzNzAwIFNvQyBo
-YXMgYW4gU1BJIENvbnRyb2xsZXIsIHRoaXMgY29tbWl0IGFkZHMgdGhlIGRlZmluaXRpb24KPiBv
-ZiB0aGUgU1BJIGRldmljZSBub2RlIGF0IHRoZSBTb0MgbGV2ZWwuCj4KPiBTaWduZWQtb2ZmLWJ5
-OiBSb21haW4gUGVyaWVyIDxyb21haW4ucGVyaWVyQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiBUZXN0
-ZWQtYnk6IEdyZWdvcnkgQ0xFTUVOVCA8Z3JlZ29yeS5jbGVtZW50QGZyZWUtZWxlY3Ryb25zLmNv
-bT4KCkFwcGxpZWQgb24gbXZlYnUvZHQ2NAoKVGhhbmtzLAoKR3JlZ29yeQo+IC0tLQo+Cj4gQ2hh
-bmdlcyBpbiB2MzoKPiAgLSBGaXhlZCB3cm9uZyByZWdpc3RlciBzaXplIGZvciBzcGkwLCBhcyBz
-dWdnZXN0ZWQgYnkgdGhlIG1haW50YWluZXIKPiAgICBvbiB0aGUgTUwuCj4gIC0gQWRkZWQgdGFn
-ICJUZXN0ZWQtYnkiIGJ5IEdyZWdvcnkKPgo+IENoYW5nZXMgaW4gdjI6Cj4gIC0gUmVtb3ZlZCBw
-cm9wZXJ0aWVzIG1heC1mcmVxdWVuY3kgYW5kIGNsb2NrLWZyZXF1ZW5jeSwgaXQgaXMgbm8KPiAg
-ICBsb25nZXIgcmVxdWlyZWQgYW5kIG5vdCB1c2VkIGJ5IHRoZSBEVC1iaW5kaW5ncy4KPgo+ICBh
-cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaSB8IDExICsrKysrKysr
-KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zN3h4LmR0c2kgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRzaQo+IGluZGV4IGU5YmQ1ODcuLmZjZWY5
-YTUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zN3h4
-LmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTM3eHguZHRz
-aQo+IEBAIC05OCw2ICs5OCwxNyBAQAo+ICAJCQkvKiAzMk0gaW50ZXJuYWwgcmVnaXN0ZXIgQCAw
-eGQwMDBfMDAwMCAqLwo+ICAJCQlyYW5nZXMgPSA8MHgwIDB4MCAweGQwMDAwMDAwIDB4MjAwMDAw
-MD47Cj4gIAo+ICsJCQlzcGkwOiBzcGlAMTA2MDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJtYXJ2
-ZWxsLGFybWFkYS0zNzAwLXNwaSI7Cj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJ
-CSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQkJcmVnID0gPDB4MTA2MDAgMHhBMDA+Owo+ICsJCQkJ
-Y2xvY2tzID0gPCZuYl9wZXJpcGhfY2xrIDc+Owo+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDAgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKwkJCQludW0tY3MgPSA8ND47Cj4gKwkJCQlzdGF0
-dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsKPiAgCQkJdWFydDA6IHNlcmlhbEAxMjAwMCB7
-Cj4gIAkJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLTM3MDAtdWFydCI7Cj4gIAkJCQly
-ZWcgPSA8MHgxMjAwMCAweDQwMD47Cj4gLS0gCj4gMi45LjMKPgoKLS0gCkdyZWdvcnkgQ2xlbWVu
-dCwgRnJlZSBFbGVjdHJvbnMKS2VybmVsLCBkcml2ZXJzLCByZWFsLXRpbWUgYW5kIGVtYmVkZGVk
-IExpbnV4CmRldmVsb3BtZW50LCBjb25zdWx0aW5nLCB0cmFpbmluZyBhbmQgc3VwcG9ydC4KaHR0
-cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Allwinner produced a single-core Cortex-A7 SoC, V3s, with integrated 64MiB DDR2
+DRAM, and in LQFP package. With such a package, it has been easier for hackers
+to DIY a board (no BGA needed, and no DRAM wiring needed).
+
+Add support for this SoC, as well as one board with it (Lichee Pi Zero).
+
+Icenowy Zheng (5):
+  arm: sunxi: add support for V3s SoC
+  clk: sunxi-ng: add support for V3s CCU
+  pinctrl: sunxi: add driver for V3s SoC
+  ARM: dts: sunxi: add dtsi file for V3s SoC
+  ARM: dts: sunxi: add support for Lichee Pi Zero board
+
+ Documentation/arm/sunxi/README                |   4 +
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts |  73 ++++
+ arch/arm/boot/dts/sun8i-v3s.dtsi              | 257 +++++++++++
+ arch/arm/mach-sunxi/sunxi.c                   |   1 +
+ drivers/clk/sunxi-ng/Kconfig                  |  11 +
+ drivers/clk/sunxi-ng/Makefile                 |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c          | 590 ++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h          |  63 +++
+ drivers/pinctrl/sunxi/Kconfig                 |   4 +
+ drivers/pinctrl/sunxi/Makefile                |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     | 321 ++++++++++++++
+ include/dt-bindings/clock/sun8i-v3s-ccu.h     | 107 +++++
+ include/dt-bindings/reset/sun8i-v3s-ccu.h     |  78 ++++
+ 14 files changed, 1513 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-v3s.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
+ create mode 100644 include/dt-bindings/clock/sun8i-v3s-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-v3s-ccu.h
+
+-- 
+2.11.0
