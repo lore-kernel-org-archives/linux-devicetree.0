@@ -1,73 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] devicetree: bq27425: add documentation for bq27425
- fuel gauge
-Date: Tue, 3 Jan 2017 10:47:15 -0600
-Message-ID: <20170103164715.pypb5zt22hg4zqlh@rob-hp-laptop>
-References: <20161226054442.23599-1-matt@ranostay.consulting>
- <20161226054442.23599-3-matt@ranostay.consulting>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 4/4] arm64: dts: exynos: Add tm2 touchkey node
+Date: Tue, 3 Jan 2017 18:49:55 +0200
+Message-ID: <20170103164955.2oqyd2du2dom7wym@kozik-lap>
+References: <1483430237-26823-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170103075734epcas5p439b05860a3238ce638f683d9687786a3@epcas5p4.samsung.com>
+ <1483430237-26823-5-git-send-email-jcsing.lee@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20161226054442.23599-3-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1483430237-26823-5-git-send-email-jcsing.lee@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jaechul Lee <jcsing.lee@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-input@vger.kernel.org, galaxyra@gmail.com, beomho.seo@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 25, 2016 at 09:44:41PM -0800, Matt Ranostay wrote:
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> ---
->  .../devicetree/bindings/power/bq27425.txt          | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/bq27425.txt
+On Tue, Jan 03, 2017 at 04:57:17PM +0900, Jaechul Lee wrote:
+> Add DT node support for TM2 touchkey device.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/bq27425.txt b/Documentation/devicetree/bindings/power/bq27425.txt
-> new file mode 100644
-> index 000000000000..f09f787a9378
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/bq27425.txt
-> @@ -0,0 +1,25 @@
-> +* TI BQ27425 Fuel Gauge
-> +
-> +http://www.ti.com/lit/ds/symlink/bq27425-g2a.pdf
-> +
-> +Please note that if any of the optional properties are defined
-> +then all settings must be.
-> +
-> +Required properties:
-> +- compatible: Should be "ti,bq27425"
-> +- reg: integer, i2c of the device
+> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
 
-s/i2c/I2C address/
+The order of sign-offs should follow the order of "who touched it". I
+assume that the real order was like this:
+1. Initially create by Beomho,
+2. Adjustments by Andi,
+3. Final adjustments and sending by you.
 
-> +
-> +Optional properties:
-> +- ti,design-capacity: integer of mAh of the battery
-> +- ti,design-energy: integer of the mWh of the battery
-> +- ti,terminate-voltage: integer of mV of the dead voltage of
-> +			the battery
+If that is correct then the order should be 1->2->3.
 
-These all need unit suffixes. mAh and mWh may need to be added to 
-property-units.txt.
+Beside of that, patch looks good.
 
-> +
-> +bq27425 {
-> +	compatible = "ti,bq27425";
-> +	reg = <0x55>;
-> +
-> +	ti,design-capacity = <1360>;
-> +	ti,design-energy = <4970>;
-> +	ti,terminate-voltage = <3200>;
-> +};
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
