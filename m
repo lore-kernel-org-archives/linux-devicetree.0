@@ -1,62 +1,37 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/6] mfd: dt: ranges, #address-cells and #size-cells
- as optional properties
-Date: Tue, 3 Jan 2017 17:49:29 +0000
-Message-ID: <20170103174929.GD27589@dell>
-References: <20161206025321.1792-1-andrew@aj.id.au>
- <20161206025321.1792-3-andrew@aj.id.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 8/9] irqchip/ls-scfg-msi: add LS1043a v1.1 MSI support
+Date: Tue, 3 Jan 2017 11:46:01 -0600
+Message-ID: <20170103174601.jbmqo7iataemzyxc@rob-hp-laptop>
+References: <1482829985-24421-1-git-send-email-Minghuan.Lian@nxp.com>
+ <1482829985-24421-8-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161206025321.1792-3-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1482829985-24421-8-git-send-email-Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Minghuan Lian <Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 06 Dec 2016, Andrew Jeffery wrote:
-
-> Whilst describing a device and not a bus, simple-mfd is modelled on
-> simple-bus where child nodes are iterated and registered as platform
-> devices. Some complex devices, e.g. the Aspeed LPC controller, can
-> benefit from address space mapping such that child nodes can use the
-> regs property to describe their resources within the multi-function
-> device.
+On Tue, Dec 27, 2016 at 05:13:04PM +0800, Minghuan Lian wrote:
+> A MSI controller of LS1043a v1.0 only includes one MSIR and
+> is assigned one GIC interrupt. In order to support affinity,
+> LS1043a v1.1 MSI is assigned 4 MSIRs and 4 GIC interrupts.
+> But the MSIR has the different offset and only supports 8 MSIs.
+> The bits between variable bit_start and bit_end in structure
+> ls_scfg_msir are used to show 8 MSI interrupts. msir_irqs and
+> msir_base are added to describe the difference of MSI between
+> LS1043a v1.1 and other SoCs.
 > 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-
-Applied with Acks, thanks.
-
+> Signed-off-by: Minghuan Lian <Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/mfd.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
-> index f1fceeda12f1..bcb6abb9d413 100644
-> --- a/Documentation/devicetree/bindings/mfd/mfd.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-> @@ -25,6 +25,16 @@ Optional properties:
->    be used. In the latter case the child devices will be determined by the
->    operating system.
->  
-> +- ranges: Describes the address mapping relationship to the parent. Should set
-> +  the child's base address to 0, the physical address within parent's address
-> +  space, and the length of the address map.
-> +
-> +- #address-cells: Specifies the number of cells used to represent physical base
-> +  addresses. Must be present if ranges is used.
-> +
-> +- #size-cells: Specifies the number of cells used to represent the size of an
-> +  address. Must be present if ranges is used.
-> +
->  Example:
->  
->  foo@1000 {
+>  .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
+>  drivers/irqchip/irq-ls-scfg-msi.c                  | 45 +++++++++++++++++++---
+>  2 files changed, 40 insertions(+), 6 deletions(-)
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
