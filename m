@@ -1,55 +1,43 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3] soc: zte: Add header for PM domains specifiers
-Date: Tue,  3 Jan 2017 17:15:11 +0800
-Message-ID: <1483434911-29421-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] ARM: davinci_all_defconfig: enable dumb vga-dac drm
+ bridge
+Date: Tue, 3 Jan 2017 14:50:53 +0530
+Message-ID: <213a0474-b548-88fb-062b-958a905d1ea7@ti.com>
+References: <1480065182-7095-1-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480065182-7095-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds header with values used for zx96718
-SoC's power domain driver.
+On Friday 25 November 2016 02:43 PM, Bartosz Golaszewski wrote:
+> This enables the dumb-vga-dac driver by default for davinci boards.
+> 
+> The driver is needed for tilcdc support on da850-lcdk board.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/configs/davinci_all_defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+> index b5e978f..ab1bf18 100644
+> --- a/arch/arm/configs/davinci_all_defconfig
+> +++ b/arch/arm/configs/davinci_all_defconfig
+> @@ -127,6 +127,8 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+>  CONFIG_REGULATOR_TPS6507X=y
+>  CONFIG_DRM=m
+>  CONFIG_DRM_TILCDC=m
+> +CONFIG_DRM_BRIDGE=y
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- include/dt-bindings/soc/zte,pm_domains.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 include/dt-bindings/soc/zte,pm_domains.h
+DRM_BRIDGE is a 'def_bool y'. So no need to explicitly enable it. And
+actually it will get dropped with the next savedefconfig refresh anyway.
 
-diff --git a/include/dt-bindings/soc/zte,pm_domains.h b/include/dt-bindings/soc/zte,pm_domains.h
-new file mode 100644
-index 0000000..a64cfb8
---- /dev/null
-+++ b/include/dt-bindings/soc/zte,pm_domains.h
-@@ -0,0 +1,23 @@
-+/*
-+ * Copyright (C) 2015 Linaro Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+#ifndef _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
-+#define _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
-+
-+#define DM_ZX296718_SAPPU	0
-+#define DM_ZX296718_VDE		1  /* g1v6 */
-+#define DM_ZX296718_VCE		2  /* h1v6 */
-+#define DM_ZX296718_HDE		3  /* g2v2 */
-+#define DM_ZX296718_VIU		4
-+#define DM_ZX296718_USB20	5
-+#define DM_ZX296718_USB21	6
-+#define DM_ZX296718_USB30	7
-+#define DM_ZX296718_HSIC	8
-+#define DM_ZX296718_GMAC	9
-+#define DM_ZX296718_TS		10
-+#define DM_ZX296718_VOU		11
-+
-+#endif /* _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H */
--- 
-2.7.4
+Applying this patch with this line dropped.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
