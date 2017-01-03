@@ -1,53 +1,431 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v2 01/19] ARM: dts: imx6qdl: Add compatible, clocks,
- irqs to MIPI CSI-2 node
-Date: Tue,  3 Jan 2017 12:57:11 -0800
-Message-ID: <1483477049-19056-2-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 02/19] ARM: dts: imx6qdl: Add mipi_ipu1/2 multiplexers, mipi_csi, and their connections
+Date: Tue,  3 Jan 2017 12:57:12 -0800
+Message-ID: <1483477049-19056-3-git-send-email-steve_longerbeam@mentor.com>
 References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483477049-19056-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add to the MIPI CSI2 receiver node: compatible string, interrupt sources,
-clocks.
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+This patch adds the device tree graph connecting the input multiplexers
+to the IPU CSIs and the MIPI-CSI2 gasket on i.MX6. The MIPI_IPU
+multiplexers are added as children of the iomuxc-gpr syscon device node.
+On i.MX6Q/D two two-input multiplexers in front of IPU1 CSI0 and IPU2
+CSI1 allow to select between CSI0/1 parallel input pads and the MIPI
+CSI-2 virtual channels 0/3.
+On i.MX6DL/S two five-input multiplexers in front of IPU1 CSI0 and IPU1
+CSI1 allow to select between CSI0/1 parallel input pads and any of the
+four MIPI CSI-2 virtual channels.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+- Removed some dangling/unused endpoints (ipu2_csi0_from_csi2ipu)
+- Renamed the mipi virtual channel endpoint labels, from "mipi_csiX_..."
+  to "mipi_vcX...".
+- Added input endpoints to the video muxes for the connections from parallel
+  sensors.
+- Added input endpoints to the mipi_csi for the connections from mipi csi-2
+  sensors.
+- The video multiplexer node has compatible string "imx-video-mux" instead
+  of "video-multiplexer".
+- The video multiplexer node indicates GPR register via reg propert only,
+  (register offset and bitmask), instead of specifying with "bit-mask" and
+  "bit-shift" properties.
+
+Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6dl.dtsi  | 183 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q.dtsi   | 119 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl.dtsi |  10 ++-
+ 3 files changed, 311 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 1ade195..0a1718c 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -181,6 +181,189 @@
+ 		      "di0", "di1";
+ };
+ 
++&gpr {
++	ipu1_csi0_mux: ipu1_csi0_mux@34 {
++		compatible = "imx-video-mux";
++		reg = <0x34 0x07>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			ipu1_csi0_mux_from_mipi_vc0: endpoint {
++				remote-endpoint = <&mipi_vc0_to_ipu1_csi0_mux>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			ipu1_csi0_mux_from_mipi_vc1: endpoint {
++				remote-endpoint = <&mipi_vc1_to_ipu1_csi0_mux>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			ipu1_csi0_mux_from_mipi_vc2: endpoint {
++				remote-endpoint = <&mipi_vc2_to_ipu1_csi0_mux>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			ipu1_csi0_mux_from_mipi_vc3: endpoint {
++				remote-endpoint = <&mipi_vc3_to_ipu1_csi0_mux>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			ipu1_csi0_mux_from_parallel_sensor: endpoint {
++			};
++		};
++
++		port@5 {
++			reg = <5>;
++
++			ipu1_csi0_mux_to_ipu1_csi0: endpoint {
++				remote-endpoint = <&ipu1_csi0_from_ipu1_csi0_mux>;
++			};
++		};
++	};
++
++	ipu1_csi1_mux: ipu1_csi1_mux@34 {
++		compatible = "imx-video-mux";
++		reg = <0x34 0x38>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			ipu1_csi1_mux_from_mipi_vc0: endpoint {
++				remote-endpoint = <&mipi_vc0_to_ipu1_csi1_mux>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			ipu1_csi1_mux_from_mipi_vc1: endpoint {
++				remote-endpoint = <&mipi_vc1_to_ipu1_csi1_mux>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			ipu1_csi1_mux_from_mipi_vc2: endpoint {
++				remote-endpoint = <&mipi_vc2_to_ipu1_csi1_mux>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			ipu1_csi1_mux_from_mipi_vc3: endpoint {
++				remote-endpoint = <&mipi_vc3_to_ipu1_csi1_mux>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			ipu1_csi1_mux_from_parallel_sensor: endpoint {
++			};
++		};
++
++		port@5 {
++			reg = <5>;
++
++			ipu1_csi1_mux_to_ipu1_csi1: endpoint {
++				remote-endpoint = <&ipu1_csi1_from_ipu1_csi1_mux>;
++			};
++		};
++	};
++};
++
++&ipu1_csi1 {
++	ipu1_csi1_from_ipu1_csi1_mux: endpoint {
++		remote-endpoint = <&ipu1_csi1_mux_to_ipu1_csi1>;
++	};
++};
++
++&mipi_csi {
++	port@0 {
++		reg = <0>;
++
++		mipi_csi_from_mipi_sensor: endpoint {
++		};
++	};
++
++	port@1 {
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mipi_vc0_to_ipu1_csi0_mux: endpoint@0 {
++			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc0>;
++		};
++
++		mipi_vc0_to_ipu1_csi1_mux: endpoint@1 {
++			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc0>;
++		};
++	};
++
++	port@2 {
++		reg = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mipi_vc1_to_ipu1_csi0_mux: endpoint@0 {
++			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc1>;
++		};
++
++		mipi_vc1_to_ipu1_csi1_mux: endpoint@1 {
++			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc1>;
++		};
++	};
++
++	port@3 {
++		reg = <3>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mipi_vc2_to_ipu1_csi0_mux: endpoint@0 {
++			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc2>;
++		};
++
++		mipi_vc2_to_ipu1_csi1_mux: endpoint@1 {
++			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc2>;
++		};
++	};
++
++	port@4 {
++		reg = <4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mipi_vc3_to_ipu1_csi0_mux: endpoint@0 {
++			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc3>;
++		};
++
++		mipi_vc3_to_ipu1_csi1_mux: endpoint@1 {
++			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc3>;
++		};
++	};
++};
++
+ &vpu {
+ 	compatible = "fsl,imx6dl-vpu", "cnm,coda960";
+ };
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index e9a5d0b..56a314f 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -143,10 +143,18 @@
+ 
+ 			ipu2_csi0: port@0 {
+ 				reg = <0>;
++
++				ipu2_csi0_from_mipi_vc2: endpoint {
++					remote-endpoint = <&mipi_vc2_to_ipu2_csi0>;
++				};
+ 			};
+ 
+ 			ipu2_csi1: port@1 {
+ 				reg = <1>;
++
++				ipu2_csi1_from_ipu2_csi1_mux: endpoint {
++					remote-endpoint = <&ipu2_csi1_mux_to_ipu2_csi1>;
++				};
+ 			};
+ 
+ 			ipu2_di0: port@2 {
+@@ -266,6 +274,76 @@
+ 	};
+ };
+ 
++&gpr {
++	ipu1_csi0_mux: ipu1_csi0_mux@4 {
++		compatible = "imx-video-mux";
++		reg = <0x04 0x80000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			ipu1_csi0_mux_from_mipi_vc0: endpoint {
++				remote-endpoint = <&mipi_vc0_to_ipu1_csi0_mux>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			ipu1_csi0_mux_from_parallel_sensor: endpoint {
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			ipu1_csi0_mux_to_ipu1_csi0: endpoint {
++				remote-endpoint = <&ipu1_csi0_from_ipu1_csi0_mux>;
++			};
++		};
++	};
++
++	ipu2_csi1_mux: ipu2_csi1_mux@4 {
++		compatible = "imx-video-mux";
++		reg = <0x04 0x100000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			ipu2_csi1_mux_from_mipi_vc3: endpoint {
++				remote-endpoint = <&mipi_vc3_to_ipu2_csi1_mux>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			ipu2_csi1_mux_from_parallel_sensor: endpoint {
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			ipu2_csi1_mux_to_ipu2_csi1: endpoint {
++				remote-endpoint = <&ipu2_csi1_from_ipu2_csi1_mux>;
++			};
++		};
++	};
++};
++
++&ipu1_csi1 {
++	ipu1_csi1_from_mipi_vc1: endpoint {
++		remote-endpoint = <&mipi_vc1_to_ipu1_csi1>;
++	};
++};
++
+ &ldb {
+ 	clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>, <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
+ 		 <&clks IMX6QDL_CLK_IPU1_DI0_SEL>, <&clks IMX6QDL_CLK_IPU1_DI1_SEL>,
+@@ -312,6 +390,47 @@
+ 	};
+ };
+ 
++&mipi_csi {
++	port@0 {
++		reg = <0>;
++
++		mipi_csi_from_mipi_sensor: endpoint {
++		};
++	};
++
++	port@1 {
++		reg = <1>;
++
++		mipi_vc0_to_ipu1_csi0_mux: endpoint {
++			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc0>;
++		};
++	};
++
++	port@2 {
++		reg = <2>;
++
++		mipi_vc1_to_ipu1_csi1: endpoint {
++			remote-endpoint = <&ipu1_csi1_from_mipi_vc1>;
++		};
++	};
++
++	port@3 {
++		reg = <3>;
++
++		mipi_vc2_to_ipu2_csi0: endpoint {
++			remote-endpoint = <&ipu2_csi0_from_mipi_vc2>;
++		};
++	};
++
++	port@4 {
++		reg = <4>;
++
++		mipi_vc3_to_ipu2_csi1_mux: endpoint {
++			remote-endpoint = <&ipu2_csi1_mux_from_mipi_vc3>;
++		};
++	};
++};
++
+ &mipi_dsi {
+ 	ports {
+ 		port@2 {
 diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 53e6e63..7b546e3 100644
+index 7b546e3..89218a4 100644
 --- a/arch/arm/boot/dts/imx6qdl.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1125,7 +1125,14 @@
+@@ -799,8 +799,10 @@
  			};
  
+ 			gpr: iomuxc-gpr@020e0000 {
+-				compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
++				compatible = "fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
+ 				reg = <0x020e0000 0x38>;
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 			};
+ 
+ 			iomuxc: iomuxc@020e0000 {
+@@ -1127,6 +1129,8 @@
  			mipi_csi: mipi@021dc000 {
-+				compatible = "fsl,imx-mipi-csi2";
+ 				compatible = "fsl,imx-mipi-csi2";
  				reg = <0x021dc000 0x4000>;
-+				interrupts = <0 100 0x04>, <0 101 0x04>;
-+				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
-+					 <&clks IMX6QDL_CLK_VIDEO_27M>,
-+					 <&clks IMX6QDL_CLK_EIM_SEL>;
-+				clock-names = "dphy_clk", "cfg_clk", "pix_clk";
-+				status = "disabled";
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				interrupts = <0 100 0x04>, <0 101 0x04>;
+ 				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
+ 					 <&clks IMX6QDL_CLK_VIDEO_27M>,
+@@ -1232,6 +1236,10 @@
+ 
+ 			ipu1_csi0: port@0 {
+ 				reg = <0>;
++
++				ipu1_csi0_from_ipu1_csi0_mux: endpoint {
++					remote-endpoint = <&ipu1_csi0_mux_to_ipu1_csi0>;
++				};
  			};
  
- 			mipi_dsi: mipi@021e0000 {
+ 			ipu1_csi1: port@1 {
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
