@@ -1,67 +1,92 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6qdl-nitrogen6_max: fix sgtl5000
- pinctrl init
-Date: Tue, 3 Jan 2017 19:43:17 +0800
-Message-ID: <20170103114316.GC20956@dragon>
-References: <20170103112247.4563-1-gary.bisson@boundarydevices.com>
- <20170103112247.4563-2-gary.bisson@boundarydevices.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH 3/4] arm64: dts: exynos: make tm2 and tm2e independent
+ from each other
+Date: Tue, 3 Jan 2017 20:47:23 +0900
+Message-ID: <CAGTfZH3ez4DPTE7-bDeayjhSGxJ_8Mj1MQz1M7O1qhwOGOnmMQ@mail.gmail.com>
+References: <CGME20170103075734epcas5p43a9743131f63affd0a438d2ed342f22e@epcas5p4.samsung.com>
+ <1483430237-26823-1-git-send-email-jcsing.lee@samsung.com>
+ <1483430237-26823-4-git-send-email-jcsing.lee@samsung.com>
+ <CAJKOXPev9m07_dQWAvJ+=MKnbT0TFERKOtjWUDU+WXdGAiRyDA@mail.gmail.com>
+ <20170103095842.h3hl64amje4qv4ts@gangnam.samsung> <CAJKOXPeEE1VwAUSAOpfyX+t58zKeAT1fe3ybp0BoQiiDBb4Uqg@mail.gmail.com>
+ <20170103102548.73jg6qddlcthe2mu@gangnam.samsung>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170103112247.4563-2-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170103102548.73jg6qddlcthe2mu@gangnam.samsung>
+Sender: linux-input-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Jaechul Lee <jcsing.lee@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2017 at 12:22:46PM +0100, Gary Bisson wrote:
-> This patch fixes the following error:
-> sgtl5000 0-000a: Error reading chip id -6
-> imx-sgtl5000 sound: ASoC: CODEC DAI sgtl5000 not registered
-> imx-sgtl5000 sound: snd_soc_register_card failed (-517)
-> 
-> The problem was that the pinctrl group was linked to the sound driver
-> instead of the codec node. Since the codec is probed first, the sys_mclk
-> was missing and it would therefore fail to initialize.
-> 
-> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Dear all,
 
-Should we have it go as a fix for v4.10-rc cycles?  In that case, please
-add a Fixes: tag.  Also, do we need to apply it for stable kernel?
+2017-01-03 19:25 GMT+09:00 Andi Shyti <andi.shyti@samsung.com>:
+>> >> > Currently tm2e dts includes tm2 but there are some differences
+>> >> > between the two boards and tm2 has some properties that tm2e
+>> >> > doesn't have.
+>> >> >
+>> >> > That's why it's important to keep the two dts files independent
+>> >> > and put all the commonalities in a tm2-common.dtsi file.
+>> >> >
+>> >> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+>> >> > Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+>> >> > ---
+>> >> >  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 1046 ++++++++++++++++++++
+>> >> >  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1033 +------------------
+>> >> >  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |    2 +-
+>> >> >  3 files changed, 1049 insertions(+), 1032 deletions(-)
+>> >> >  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> >>
+>> >> I would like to see here the rename and diff from it. Not entire delta
+>> >> (deletions and addons). It is not possible to compare it... I think
+>> >> git supports it by default with similarity of 50%.
+>> >
+>> > I understand, it's indeed quite cryptic to understand. But all
+>> > the diff algorithms (patience, minimal, histogram, myers) give
+>> > the same result. I don't know how to make it better.
+>> >
+>> > I could split this patch, but this also means breaking tm2's
+>> > functionality, which looks worse.
+>> >
+>> > Please tell me if you know a better way for generating the patch.
+>>
+>> git format-patch -M95%?
+>
+> Same thing with all M values.
+>
+> Because exynos5433-tm2.dts results modified, while
+> exynos5433-tm2-common.dtsi is new. Even though I did:
+>
+> 1. mv exynos5433-tm2.dts exynos5433-tm2-common.dtsi
+> 2. copied pieces from exynos5433-tm2-common.dtsi to a new
+>    exynos5433-tm2.dts
 
-Shawn
+I think that exynos5433-tm2-common.dtsi is not necessary because there
+is small difference between TM2 and TM2E.
 
-> ---
->  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> index 34887a10c5f1..47ba97229a48 100644
-> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-> @@ -319,8 +319,6 @@
->  		compatible = "fsl,imx6q-nitrogen6_max-sgtl5000",
->  			     "fsl,imx-audio-sgtl5000";
->  		model = "imx6q-nitrogen6_max-sgtl5000";
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&pinctrl_sgtl5000>;
->  		ssi-controller = <&ssi1>;
->  		audio-codec = <&codec>;
->  		audio-routing =
-> @@ -402,6 +400,8 @@
->  
->  	codec: sgtl5000@0a {
->  		compatible = "fsl,sgtl5000";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sgtl5000>;
->  		reg = <0x0a>;
->  		clocks = <&clks IMX6QDL_CLK_CKO>;
->  		VDDA-supply = <&reg_2p5v>;
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I explain the detailed difference between TM2 and TM2E and then reply
+how to support the TM2E board with existing exynos5433-tm2.dts file
+without exynos5433-tm2-common.dtsi.
+
+Difference and the way to support TM2E with existing
+exynos5433-tm2.dts file as following:
+- hsi2c_9 is either used or not. TM2 uses the hsi2c_9 node for
+touchkey. but TM2E do not use the hsi2c_9.
+   : We can just disable the hsi2c_9 node on tm2e.dts as following:
+
+   &hsi2c_9 {
+         status = "disable";
+   };
+
+- The difference name and voltage of regulators.
+   : Already modified on tm2e.dts.
+- The size of touchscreen between tm2 and tm2e ('x-size', 'y-size')
+   : We can update the x/y size on tm2e.dts.
+- The timing value of display-timing between tm2 and tm2e
+('clock-frequency', 'hactive')
+   : We can update the 'clock-frequency' and 'hactive'  on tm2e.dts.
+
+-- 
+Best Regards,
+Chanwoo Choi
