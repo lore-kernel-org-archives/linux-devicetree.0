@@ -1,71 +1,65 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] soc: zte: Add header for PM domains specifiers
-Date: Tue, 3 Jan 2017 19:37:07 +0800
-Message-ID: <20170103113706.GB20956@dragon>
-References: <1483434911-29421-1-git-send-email-baoyou.xie@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6qdl-nitrogen6_max: fix sgtl5000
+ pinctrl init
+Date: Tue, 3 Jan 2017 19:43:17 +0800
+Message-ID: <20170103114316.GC20956@dragon>
+References: <20170103112247.4563-1-gary.bisson@boundarydevices.com>
+ <20170103112247.4563-2-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483434911-29421-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170103112247.4563-2-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2017 at 05:15:11PM +0800, Baoyou Xie wrote:
-> This patch adds header with values used for zx96718
-> SoC's power domain driver.
+On Tue, Jan 03, 2017 at 12:22:46PM +0100, Gary Bisson wrote:
+> This patch fixes the following error:
+> sgtl5000 0-000a: Error reading chip id -6
+> imx-sgtl5000 sound: ASoC: CODEC DAI sgtl5000 not registered
+> imx-sgtl5000 sound: snd_soc_register_card failed (-517)
 > 
-> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> The problem was that the pinctrl group was linked to the sound driver
+> instead of the codec node. Since the codec is probed first, the sys_mclk
+> was missing and it would therefore fail to initialize.
+> 
+> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 
-There is a hard dependency between this patch and the following one:
-
-[PATCH v4 2/3] soc: zte: pm_domains: Add support for zx296718 board
-
-For example, you renamed the header in this patch, and above one will
-not compile.  So you should either add this patch into power domain
-patch series before the one using the header, or you can just merge it
-into its user.
+Should we have it go as a fix for v4.10-rc cycles?  In that case, please
+add a Fixes: tag.  Also, do we need to apply it for stable kernel?
 
 Shawn
 
 > ---
->  include/dt-bindings/soc/zte,pm_domains.h | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 include/dt-bindings/soc/zte,pm_domains.h
+>  arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/dt-bindings/soc/zte,pm_domains.h b/include/dt-bindings/soc/zte,pm_domains.h
-> new file mode 100644
-> index 0000000..a64cfb8
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/zte,pm_domains.h
-> @@ -0,0 +1,23 @@
-> +/*
-> + * Copyright (C) 2015 Linaro Ltd.
-> + *
-> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + * License terms: GNU General Public License (GPL) version 2
-> + */
-> +#ifndef _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
-> +#define _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
-> +
-> +#define DM_ZX296718_SAPPU	0
-> +#define DM_ZX296718_VDE		1  /* g1v6 */
-> +#define DM_ZX296718_VCE		2  /* h1v6 */
-> +#define DM_ZX296718_HDE		3  /* g2v2 */
-> +#define DM_ZX296718_VIU		4
-> +#define DM_ZX296718_USB20	5
-> +#define DM_ZX296718_USB21	6
-> +#define DM_ZX296718_USB30	7
-> +#define DM_ZX296718_HSIC	8
-> +#define DM_ZX296718_GMAC	9
-> +#define DM_ZX296718_TS		10
-> +#define DM_ZX296718_VOU		11
-> +
-> +#endif /* _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H */
+> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+> index 34887a10c5f1..47ba97229a48 100644
+> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+> @@ -319,8 +319,6 @@
+>  		compatible = "fsl,imx6q-nitrogen6_max-sgtl5000",
+>  			     "fsl,imx-audio-sgtl5000";
+>  		model = "imx6q-nitrogen6_max-sgtl5000";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_sgtl5000>;
+>  		ssi-controller = <&ssi1>;
+>  		audio-codec = <&codec>;
+>  		audio-routing =
+> @@ -402,6 +400,8 @@
+>  
+>  	codec: sgtl5000@0a {
+>  		compatible = "fsl,sgtl5000";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_sgtl5000>;
+>  		reg = <0x0a>;
+>  		clocks = <&clks IMX6QDL_CLK_CKO>;
+>  		VDDA-supply = <&reg_2p5v>;
 > -- 
-> 2.7.4
+> 2.11.0
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
