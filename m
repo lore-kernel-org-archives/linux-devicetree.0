@@ -1,49 +1,783 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] drm: bridge: add support for TI ths8135
-Date: Tue, 3 Jan 2017 11:08:51 +0530
-Message-ID: <d550a8e6-9939-aa5c-8c8c-938dd2290552@ti.com>
-References: <1481623759-12786-1-git-send-email-bgolaszewski@baylibre.com>
- <1481623759-12786-4-git-send-email-bgolaszewski@baylibre.com>
- <dbb47a8f-07be-19d6-e77b-f5c06fd39c61@codeaurora.org>
- <0b47c27e-cda4-b5f6-ff3c-da74c40ed204@ti.com>
- <da6d299e-be36-7564-f57f-ba5e3601cafc@codeaurora.org>
+From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx6q: Add mccmon6 board support
+Date: Tue, 3 Jan 2017 07:02:49 +0100
+Message-ID: <20170103070249.601d4b17@jawa>
+References: <1482794396-16153-1-git-send-email-l.majewski@majess.pl>
+        <1483400618-16845-1-git-send-email-lukma@denx.de>
+        <1483400618-16845-2-git-send-email-lukma@denx.de>
+        <20170103020650.GM20956@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <da6d299e-be36-7564-f57f-ba5e3601cafc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20170103020650.GM20956@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Zerlauth Karl (LWN)" <Karl.Zerlauth-JZopHpGcqKNWk0Htik3J/w@public.gmane.org>, Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 January 2017 10:56 AM, Archit Taneja wrote:
-> Hi Sekhar,
-> 
-> On 1/2/2017 4:38 PM, Sekhar Nori wrote:
->> Hi Archit,
->>
->> On Wednesday 14 December 2016 10:35 AM, Archit Taneja wrote:
->>>
->>>
->>> On 12/13/2016 03:39 PM, Bartosz Golaszewski wrote:
->>>> THS8135 is a configurable video DAC, but no configuration is actually
->>>> necessary to make it work.
->>>>
->>>> For now use the dumb-vga-dac driver to support it.
->>>
->>> Queued to drm-misc-next
->>
->> This patch and 2/5 are not in v4.10 kernel. Did you mean to queue them
->> to v4.10?
-> 
-> These missed out on 4.10 because the drm related pull requests were
-> already sent by then. These 2 patches are queued for 4.11.
+Hi Shawn,
 
-Alright, thanks for the update.
+Thank you for your comments.
 
-Regards,
-Sekhar
+> On Tue, Jan 03, 2017 at 12:43:38AM +0100, Lukasz Majewski wrote:
+> > From: Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>
+> > 
+> > This patch provides support for Liebherr's Monitor 6 board
+> > (abverrated as mccmon6) to Linux kernel.
+> > 
+> > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+> > ---
+> > Changes for v2:
+> > - Reorganize the dts file according to Valdimir Zapolskiy's comments
+> > 
+> > ---
+> > MCCMON6 board support depends on following patches:
+> > 
+> > 1. "video: backlight: pwm_bl: Initialize fb_bl_on[x] and use_count
+> > during pwm_backlight_probe()"
+> > http://patchwork.ozlabs.org/patch/708844/
+> > 
+> > 2. "pwm: imx: Provide atomic operation for IMX PWM driver"
+> > 	http://patchwork.ozlabs.org/patch/708847/ -
+> > http://patchwork.ozlabs.org/patch/708843/ ---
+> >  arch/arm/boot/dts/Makefile          |   1 +
+> >  arch/arm/boot/dts/imx6q-mccmon6.dts | 477
+> > ++++++++++++++++++++++++++++++++++++ 2 files changed, 478
+> > insertions(+) create mode 100644 arch/arm/boot/dts/imx6q-mccmon6.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index c558ba7..0aa8e89 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -383,6 +383,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+> >  	imx6q-hummingboard.dtb \
+> >  	imx6q-icore-rqs.dtb \
+> >  	imx6q-marsboard.dtb \
+> > +	imx6q-mccmon6.dtb \
+> >  	imx6q-nitrogen6x.dtb \
+> >  	imx6q-nitrogen6_max.dtb \
+> >  	imx6q-novena.dtb \
+> > diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts
+> > b/arch/arm/boot/dts/imx6q-mccmon6.dts new file mode 100644
+> > index 0000000..7128dc2
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
+> > @@ -0,0 +1,477 @@
+> > +/*
+> > + * Copyright 2016-2017
+> > + * Lukasz Majewski, DENX Software Engineering, lukma-ynQEQJNshbs@public.gmane.org
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > modify
+> > + * it under the terms of the GNU General Public License version 2
+> > as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + */
+> 
+> You might want to GPL/X11 dual licence for non-Linux device tree
+> users. There are a plenty of examples in arch/arm/boot/dts.  But note
+> the following correction.
+> 
+> https://patchwork.kernel.org/patch/9475057/
+
+For this board GPLv2 is enough. Is the above description correct or do
+I need to add something?
+
+> 
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "imx6q.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> > +
+> > +/ {
+> > +	model = "Liebherr (LWN) monitor6 i.MX6 Quad Board";
+> > +	compatible = "lwn,mccmon6", "fsl,imx6q";
+> > +
+> > +	memory {
+> > +		reg = <0x10000000 0x80000000>;
+> > +	};
+> > +
+> > +	backlight_lvds: backlight {
+> > +		compatible = "pwm-backlight";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_backlight>;
+> > +		pwms = <&pwm2 0 5000000 PWM_POLARITY_INVERTED>;
+> > +		brightness-levels = <  0   1   2   3   4   5   6
+> > 7   8   9
+> > +				      10  11  12  13  14  15  16
+> > 17  18  19
+> > +				      20  21  22  23  24  25  26
+> > 27  28  29
+> > +				      30  31  32  33  34  35  36
+> > 37  38  39
+> > +				      40  41  42  43  44  45  46
+> > 47  48  49
+> > +				      50  51  52  53  54  55  56
+> > 57  58  59
+> > +				      60  61  62  63  64  65  66
+> > 67  68  69
+> > +				      70  71  72  73  74  75  76
+> > 77  78  79
+> > +				      80  81  82  83  84  85  86
+> > 87  88  89
+> > +				      90  91  92  93  94  95  96
+> > 97  98  99
+> > +				     100 101 102 103 104 105 106
+> > 107 108 109
+> > +				     110 111 112 113 114 115 116
+> > 117 118 119
+> > +				     120 121 122 123 124 125 126
+> > 127 128 129
+> > +				     130 131 132 133 134 135 136
+> > 137 138 139
+> > +				     140 141 142 143 144 145 146
+> > 147 148 149
+> > +				     150 151 152 153 154 155 156
+> > 157 158 159
+> > +				     160 161 162 163 164 165 166
+> > 167 168 169
+> > +				     170 171 172 173 174 175 176
+> > 177 178 179
+> > +				     180 181 182 183 184 185 186
+> > 187 188 189
+> > +				     190 191 192 193 194 195 196
+> > 197 198 199
+> > +				     200 201 202 203 204 205 206
+> > 207 208 209
+> > +				     210 211 212 213 214 215 216
+> > 217 218 219
+> > +				     220 221 222 223 224 225 226
+> > 227 228 229
+> > +				     230 231 232 233 234 235 236
+> > 237 238 239
+> > +				     240 241 242 243 244 245 246
+> > 247 248 249
+> > +				     250 251 252 253 254 255>;
+> > +		default-brightness-level = <50>;
+> > +		enable-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
+> > +	};
+> > +
+> > +	reg_lvds: regulator-lvds {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "lvds_ppen";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		regulator-boot-on;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_reg_lvds>;
+> > +		gpio = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> > +		enable-active-high;
+> > +	};
+> > +
+> > +	panel-lvds0 {
+> > +		compatible = "innolux,g121x1-l03";
+> > +		backlight = <&backlight_lvds>;
+> > +		power-supply = <&reg_lvds>;
+> > +
+> > +		port {
+> > +			panel_in_lvds0: endpoint {
+> > +				remote-endpoint = <&lvds0_out>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&iomuxc {
+> 
+> Considering the data amount of this node, we generally put it at the
+> bottom of the file to improve the readability of the rest.
+
+But then it will not be alphabetically ordered :-).
+
+I can put it on the end - no problem.
+
+> 
+> > +	pinctrl-names = "default";
+> > +
+> > +	imx6q-mccmon6 {
+> 
+> This container node can now be dropped completely to save one level of
+> indentation.
+
+Ok, I will remove imx6q-mccmon6 container node completely.
+
+> 
+> > +		pinctrl_backlight: dispgrp {
+> > +			fsl,pins = <
+> > +				/* BLEN_OUT */
+> > +				MX6QDL_PAD_GPIO_2__GPIO1_IO02
+> > 0x1b0b0
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_ecspi3: ecspi3grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
+> > +
+> > MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
+> > +
+> > MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_ecspi3_cs: ecspi3cs {
+> 
+> ecspi3csgrp, if we follow the naming scheme used in other nodes.
+> 
+> > +			fsl,pins = <
+> > +				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24
+> > 0x80000000
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_ecspi3_flwp: ecspi3flwp {
+> 
+> Ditto
+> 
+> > +			fsl,pins = <
+> > +				MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27
+> > 0x80000000
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_enet: enetgrp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
+> > +
+> > MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
+> > +
+> > MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
+> > +
+> > MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
+> > +				MX6QDL_PAD_GPIO_16__ENET_REF_CLK
+> > 0x4001b0a8
+> > +
+> > MX6QDL_PAD_GPIO_6__ENET_IRQ		0x000b1
+> > +
+> > MX6QDL_PAD_ENET_RXD0__GPIO1_IO27        0x1b0b0
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_i2c1: i2c1grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_CSI0_DAT9__I2C1_SCL	0x4001b8b1
+> > +
+> > MX6QDL_PAD_CSI0_DAT8__I2C1_SDA	0x4001b8b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_i2c2: i2c2grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
+> > +
+> > MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_pwm2: pwm2grp {
+> > +			fsl,pins = <
+> > +				MX6QDL_PAD_GPIO_1__PWM2_OUT
+> > 0x1b0b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_reg_lvds: req_lvds_grp {
+> 
+> reglvdsgrp
+> 
+> > +			fsl,pins = <
+> > +				/* LVDS_PPEN_OUT */
+> > +
+> > MX6QDL_PAD_SD1_DAT2__GPIO1_IO19         0x1b0b0
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart1: uart1grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+> > +
+> > MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart4: uart4grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+> > +
+> > MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+> > +
+> > MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B	0x1b0b1
+> > +
+> > MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B	0x1b0b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_usdhc2: usdhc2grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
+> > +
+> > MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
+> > +
+> > MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
+> > +
+> > MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+> > +
+> > MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+> > +
+> > MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+> > +
+> > MX6QDL_PAD_GPIO_4__GPIO1_IO04           0x1b0b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_usdhc3: usdhc3grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
+> > +
+> > MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
+> > +
+> > MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17059
+> > +
+> > MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
+> > +
+> > MX6QDL_PAD_SD3_RST__SD3_RESET		0x17059
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_weim_cs0: weimcs0grp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_EIM_CS0__EIM_CS0_B		0xb0b1
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_weim_nor: weimnorgrp {
+> > +			fsl,pins = <
+> > +
+> > MX6QDL_PAD_EIM_OE__EIM_OE_B		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_RW__EIM_RW		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_WAIT__EIM_WAIT_B	0xb060
+> > +
+> > MX6QDL_PAD_EIM_D16__EIM_DATA16		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D17__EIM_DATA17		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D18__EIM_DATA18		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D19__EIM_DATA19		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D20__EIM_DATA20		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D21__EIM_DATA21		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D22__EIM_DATA22		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D23__EIM_DATA23		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D24__EIM_DATA24		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D25__EIM_DATA25		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D26__EIM_DATA26		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D27__EIM_DATA27		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D28__EIM_DATA28		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D29__EIM_DATA29		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D30__EIM_DATA30		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_D31__EIM_DATA31		0x1b0b0
+> > +
+> > MX6QDL_PAD_EIM_A23__EIM_ADDR23		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A22__EIM_ADDR22		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A21__EIM_ADDR21		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A20__EIM_ADDR20		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A19__EIM_ADDR19		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A18__EIM_ADDR18		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A17__EIM_ADDR17		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_A16__EIM_ADDR16		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA15__EIM_AD15		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA14__EIM_AD14		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA13__EIM_AD13		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA12__EIM_AD12		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA11__EIM_AD11		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA10__EIM_AD10		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA9__EIM_AD09		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA8__EIM_AD08		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA7__EIM_AD07		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA6__EIM_AD06		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA5__EIM_AD05		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA4__EIM_AD04		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA3__EIM_AD03		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA2__EIM_AD02		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA1__EIM_AD01		0xb0b1
+> > +
+> > MX6QDL_PAD_EIM_DA0__EIM_AD00		0xb0b1
+> > +			>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&ecspi3 {
+> > +	cs-gpios = <&gpio4 24 0>;
+> 
+> GPIO_ACTIVE_HIGH?
+
+No, on our HW it is GPIO_ACTIVE_LOW
+
+> 
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs
+> > &pinctrl_ecspi3_flwp>;
+> > +	status = "okay";
+> > +
+> > +	flash: s25sl032p@0 {
+> 
+> Node name should be as generic as possible, while label name can be
+> specific.  That said, 's25sl032p: flash@0' should be better.
+
+OK.
+
+> 
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "spansion,s25sl032p", "jedec,spi-nor";
+> 
+> "spansion,s25sl032p" doesn't seem to be documented.  Can it be
+> dropped?
+
+This memory is jedec compatible and uses "jedec,spi-nor", so
+"spansion,s25sl032p" can be dropped
+
+> 
+> > +		spi-max-frequency = <40000000>;
+> > +		reg = <0>;
+> > +	};
+> > +};
+> > +
+> > +&fec {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_enet>;
+> > +	phy-mode = "rgmii";
+> > +	phy-reset-gpios = <&gpio1 27 0>;
+> 
+> GPIO_ACTIVE_xxx?  But you probably need GPIO_ACTIVE_LOW.
+
+Yes.
+
+> 
+> > +	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+> > +			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c1 {
+> > +	clock-frequency = <100000>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c1>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c2 {
+> > +	clock-frequency = <100000>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c2>;
+> > +	status = "okay";
+> > +
+> > +	pmic: pfuze100@08 {
+> 
+> pfuze100: pmic@08
+> 
+> > +		compatible = "fsl,pfuze100";
+> > +		reg = <0x08>;
+> > +
+> > +		regulators {
+> > +			sw1a_reg: sw1ab {
+> > +				regulator-min-microvolt = <300000>;
+> > +				regulator-max-microvolt =
+> > <1875000>;
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +				regulator-ramp-delay = <6250>;
+> > +			};
+> > +
+> > +			sw1c_reg: sw1c {
+> > +				regulator-min-microvolt = <300000>;
+> > +				regulator-max-microvolt =
+> > <1875000>;
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +				regulator-ramp-delay = <6250>;
+> > +			};
+> > +
+> > +			sw2_reg: sw2 {
+> > +				regulator-min-microvolt = <800000>;
+> > +				regulator-max-microvolt =
+> > <3950000>;
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			sw3a_reg: sw3a {
+> > +				regulator-min-microvolt = <400000>;
+> > +				regulator-max-microvolt =
+> > <1975000>;
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			sw3b_reg: sw3b {
+> > +				regulator-min-microvolt = <400000>;
+> > +				regulator-max-microvolt =
+> > <1975000>;
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			sw4_reg: sw4 {
+> > +				regulator-min-microvolt = <800000>;
+> > +				regulator-max-microvolt =
+> > <3300000>;
+> > +			};
+> > +
+> > +			swbst_reg: swbst {
+> > +				regulator-min-microvolt =
+> > <5000000>;
+> > +				regulator-max-microvolt =
+> > <5150000>;
+> > +			};
+> > +
+> > +			snvs_reg: vsnvs {
+> > +				regulator-min-microvolt =
+> > <1000000>;
+> > +				regulator-max-microvolt =
+> > <3000000>;
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			vref_reg: vrefddr {
+> > +				regulator-boot-on;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			vgen1_reg: vgen1 {
+> > +				regulator-min-microvolt = <800000>;
+> > +				regulator-max-microvolt =
+> > <1550000>;
+> > +			};
+> > +
+> > +			vgen2_reg: vgen2 {
+> > +				regulator-min-microvolt = <800000>;
+> > +				regulator-max-microvolt =
+> > <1550000>;
+> > +			};
+> > +
+> > +			vgen3_reg: vgen3 {
+> > +				regulator-min-microvolt =
+> > <1800000>;
+> > +				regulator-max-microvolt =
+> > <3300000>;
+> > +			};
+> > +
+> > +			vgen4_reg: vgen4 {
+> > +				regulator-min-microvolt =
+> > <1800000>;
+> > +				regulator-max-microvolt =
+> > <3300000>;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			vgen5_reg: vgen5 {
+> > +				regulator-min-microvolt =
+> > <1800000>;
+> > +				regulator-max-microvolt =
+> > <3300000>;
+> > +				regulator-always-on;
+> > +			};
+> > +
+> > +			vgen6_reg: vgen6 {
+> > +				regulator-min-microvolt =
+> > <1800000>;
+> > +				regulator-max-microvolt =
+> > <3300000>;
+> > +				regulator-always-on;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&ldb {
+> > +	status = "okay";
+> > +
+> > +	lvds0: lvds-channel@0 {
+> > +		fsl,data-mapping = "spwg";
+> > +		fsl,data-width = <24>;
+> > +		status = "okay";
+> > +
+> > +		port@4 {
+> > +			reg = <4>;
+> > +
+> > +			lvds0_out: endpoint {
+> > +				remote-endpoint =
+> > <&panel_in_lvds0>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&pwm2 {
+> > +	#pwm-cells = <3>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_pwm2>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart1>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart4 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart4>;
+> > +	uart-has-rtscts;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usdhc2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_usdhc2>;
+> > +	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+> > +	bus-width = <4>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usdhc3 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_usdhc3>;
+> > +	bus-width = <8>;
+> > +	non-removable;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&weim {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_weim_nor &pinctrl_weim_cs0>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <1>;
+> 
+> These two properties can be saved from board dts since commit
+> 1be81ea58607 ("ARM: dts: imx6: Add imx-weim parameters to dtsi's").
+
+Ok, I will remove them.
+
+> 
+> Shawn
+> 
+> > +	ranges = <0 0 0x08000000 0x08000000>;
+> > +	status = "okay";
+> > +
+> > +	nor@0,0 {
+> > +		compatible = "cfi-flash";
+> > +		reg = <0 0 0x02000000>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		bank-width = <2>;
+> > +		use-advanced-sector-protection;
+> > +		fsl,weim-cs-timing = <0x00620081 0x00000001
+> > 0x1c022000
+> > +				0x0000c000 0x1404a38e 0x00000000>;
+> > +	};
+> > +};
+> > -- 
+> > 2.1.4
+> > 
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
