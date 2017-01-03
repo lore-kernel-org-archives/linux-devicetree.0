@@ -1,59 +1,62 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 4/6] mfd: dt: Add bindings for the Aspeed LPC Host
- Controller (LHC)
-Date: Tue, 3 Jan 2017 17:49:06 +0000
-Message-ID: <20170103174906.GB27589@dell>
+Subject: Re: [PATCH v3 2/6] mfd: dt: ranges, #address-cells and #size-cells
+ as optional properties
+Date: Tue, 3 Jan 2017 17:49:29 +0000
+Message-ID: <20170103174929.GD27589@dell>
 References: <20161206025321.1792-1-andrew@aj.id.au>
- <20161206025321.1792-5-andrew@aj.id.au>
+ <20161206025321.1792-3-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161206025321.1792-5-andrew@aj.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <20161206025321.1792-3-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, linux-arm-kernel@lists.infradead.org, Joel Stanley <joel@jms.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAwNiBEZWMgMjAxNiwgQW5kcmV3IEplZmZlcnkgd3JvdGU6Cgo+IFRoZSBMUEMgYnVz
-IHBpbm11eCBjb25maWd1cmF0aW9uIG9uIGZpZnRoIGdlbmVyYXRpb24gQXNwZWVkIFNvQ3MgZGVw
-ZW5kcwo+IG9uIGJpdHMgaW4gYm90aCB0aGUgU3lzdGVtIENvbnRyb2wgVW5pdCBhbmQgdGhlIExQ
-QyBIb3N0IENvbnRyb2xsZXIuCj4gCj4gVGhlIEFzcGVlZCBMUEMgSG9zdCBDb250cm9sbGVyIGlz
-IGRlc2NyaWJlZCBhcyBhIGNoaWxkIG5vZGUgb2YgdGhlCj4gTFBDIGhvc3QtcmFuZ2Ugc3lzY29u
-IGRldmljZSBmb3IgYXJiaXRyYXRpb24gb2YgYWNjZXNzIGJ5IHRoZSBob3N0Cj4gY29udHJvbGxl
-ciBhbmQgcGlubXV4IGRyaXZlcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcmV3IEplZmZlcnkg
-PGFuZHJld0Bhai5pZC5hdT4KCkFwcGxpZWQgd2l0aCBBY2tzLCB0aGFua3MuCgo+IC0tLQo+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXNwZWVkLWxwYy50eHQgICAgICAgICB8IDIyICsr
-KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9h
-c3BlZWQtbHBjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXNw
-ZWVkLWxwYy50eHQKPiBpbmRleCBhOTcxMzFhYmE0NDYuLjlkZTMxOGVmNzJkYSAxMDA2NDQKPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FzcGVlZC1scGMudHh0
-Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hc3BlZWQtbHBj
-LnR4dAo+IEBAIC0xMDksMyArMTA5LDI1IEBAIGxwYzogbHBjQDFlNzg5MDAwIHsKPiAgCX07Cj4g
-IH07Cj4gIAo+ICtIb3N0IE5vZGUgQ2hpbGRyZW4KPiArPT09PT09PT09PT09PT09PT09Cj4gKwo+
-ICtMUEMgSG9zdCBDb250cm9sbGVyCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBB
-c3BlZWQgTFBDIEhvc3QgQ29udHJvbGxlciBjb25maWd1cmVzIHRoZSBMb3cgUGluIENvdW50IChM
-UEMpIGJ1cyBiZWhhdmlvdXIKPiArYmV0d2VlbiB0aGUgaG9zdCBhbmQgdGhlIGJhc2Vib2FyZCBt
-YW5hZ2VtZW50IGNvbnRyb2xsZXIuIFRoZSByZWdpc3RlcnMgZXhpc3QKPiAraW4gdGhlICJob3N0
-IiBwb3J0aW9uIG9mIHRoZSBBc3BlZWQgTFBDIGNvbnRyb2xsZXIsIHdoaWNoIG11c3QgYmUgdGhl
-IHBhcmVudCBvZgo+ICt0aGUgTFBDIGhvc3QgY29udHJvbGxlciBub2RlLgo+ICsKPiArUmVxdWly
-ZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOgkJImFzcGVlZCxhc3QyNTAwLWxoYyI7Cj4g
-Ky0gcmVnOgkJCWNvbnRhaW5zIG9mZnNldC9sZW5ndGggdmFsdWUgb2YgdGhlIExIQyBtZW1vcnkK
-PiArCQkJcmVnaW9uLgo+ICsKPiArRXhhbXBsZToKPiArCj4gK2xoYzogbGhjQDIwIHsKPiArCWNv
-bXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtbGhjIjsKPiArCXJlZyA9IDwweDIwIDB4MjQgMHg0
-OCAweDg+Owo+ICt9OwoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExh
-bmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBB
-Uk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Tue, 06 Dec 2016, Andrew Jeffery wrote:
+
+> Whilst describing a device and not a bus, simple-mfd is modelled on
+> simple-bus where child nodes are iterated and registered as platform
+> devices. Some complex devices, e.g. the Aspeed LPC controller, can
+> benefit from address space mapping such that child nodes can use the
+> regs property to describe their resources within the multi-function
+> device.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+
+Applied with Acks, thanks.
+
+> ---
+>  Documentation/devicetree/bindings/mfd/mfd.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
+> index f1fceeda12f1..bcb6abb9d413 100644
+> --- a/Documentation/devicetree/bindings/mfd/mfd.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+> @@ -25,6 +25,16 @@ Optional properties:
+>    be used. In the latter case the child devices will be determined by the
+>    operating system.
+>  
+> +- ranges: Describes the address mapping relationship to the parent. Should set
+> +  the child's base address to 0, the physical address within parent's address
+> +  space, and the length of the address map.
+> +
+> +- #address-cells: Specifies the number of cells used to represent physical base
+> +  addresses. Must be present if ranges is used.
+> +
+> +- #size-cells: Specifies the number of cells used to represent the size of an
+> +  address. Must be present if ranges is used.
+> +
+>  Example:
+>  
+>  foo@1000 {
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
