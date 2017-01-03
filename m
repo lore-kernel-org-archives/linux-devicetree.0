@@ -1,88 +1,114 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Tue, 3 Jan 2017 15:23:46 -0600
-Message-ID: <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
- <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
- <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
- <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 3 Jan 2017 16:33:13 -0600
+Message-ID: <CAL_JsqJyN3-PkJMK87c+zYbkK5+_HzOBSTzjxTYNcVQ5mPzj3Q@mail.gmail.com>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <2900223.pppRAbRhe6@avalon>
+ <CAL_JsqKBoAJFiOqNhMPzF5VXjdXT2jbWHV0zxfX0gdSz0yGZLQ@mail.gmail.com>
+ <2477026.2bVvJoQSTE@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry Huang <jerry.huang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2477026.2bVvJoQSTE@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 22, 2016 at 8:52 PM, Jerry Huang <jerry.huang@nxp.com> wrote:
-> Hi, Rob,
->> -----Original Message-----
->> From: Rob Herring [mailto:robh@kernel.org]
->> Sent: Friday, December 23, 2016 2:45 AM
->> To: Jerry Huang <jerry.huang@nxp.com>
->> Cc: balbi@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
->> will.deacon@arm.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
->> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org
->> Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-
->> type-adjustment" for INCR burst type
->>
->> On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
->> > New property "snps,incr-burst-type-adjustment = <x>, <y>" for USB3.0
->> DWC3.
->> > Field "x": 1/0 - undefined length INCR burst type enable or not; Field
->> > "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst type.
->> >
->> > While enabling undefined length INCR burst type and INCR16 burst type,
->> > get better write performance on NXP Layerscape platform:
->> > around 3% improvement (from 364MB/s to 375MB/s).
->> >
->> > Signed-off-by: Changming Huang <jerry.huang@nxp.com>
->> > ---
->> > Changes in v3:
->> >   - add new property for INCR burst in usb node.
->> >
->> >  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
->> >  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
->> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
->> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
->> >  4 files changed, 11 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
->> > b/Documentation/devicetree/bindings/usb/dwc3.txt
->> > index e3e6983..8c405a3 100644
->> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> > @@ -55,6 +55,10 @@ Optional properties:
->> >     fladj_30mhz_sdbnd signal is invalid or incorrect.
->> >
->> >   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be
->> reallocated.
->> > + - snps,incr-burst-type-adjustment: Value for INCR burst type of
->> GSBUSCFG0
->> > +   register, undefined length INCR burst type enable and INCRx type.
->> > +   First field is for undefined length INCR burst type enable or not.
->> > +   Second field is for largest INCRx type enabled.
->>
->> Why do you need the first field? Is the 2nd field used if the 1st is 0?
->> If not, then just use the presence of the property to enable or not.
-> The first field is one switch.
-> When it is 1, means undefined length INCR burst type enabled, we can use any length less than or equal to the largest-enabled burst length of INCR4/8/16/32/64/128/256.
-> When it is zero, means INCRx burst mode enabled, we can use one fixed burst length of 1/4/8/16/32/64/128/256 byte.
-> So, the 2nd field is used if the 1st is 0, we need to select one largest burst length the USB controller can support.
-> If we don't want to change the value of this register (use the default value), we don't need to add this property to usb node.
-
-Just make this a single value with 0 meaning INCR and 4/8/16/etc being INCRx.
-
-Rob
+T24gTW9uLCBEZWMgMTksIDIwMTYgYXQgMTA6NTQgQU0sIExhdXJlbnQgUGluY2hhcnQKPGxhdXJl
+bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gT24gTW9u
+ZGF5IDE5IERlYyAyMDE2IDA5OjM4OjQ5IFJvYiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBTdW4sIERl
+YyAxOCwgMjAxNiBhdCAyOjU0IFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+PiA+IE9uIFR1
+ZXNkYXkgMjkgTm92IDIwMTYgMjA6MjM6NDEgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPj4gPj4g
+T24gVHVlc2RheSAyOSBOb3YgMjAxNiAwOToxNDowOSBSb2IgSGVycmluZyB3cm90ZToKPj4gPj4+
+IE9uIFR1ZSwgTm92IDI5LCAyMDE2IGF0IDI6MjcgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
+Cj4+ID4+Pj4gT24gVHVlc2RheSAyMiBOb3YgMjAxNiAxMTozNjo1NSBMYXVyZW50IFBpbmNoYXJ0
+IHdyb3RlOgo+PiA+Pj4+PiBPbiBNb25kYXkgMjEgTm92IDIwMTYgMTA6NDg6MTUgUm9iIEhlcnJp
+bmcgd3JvdGU6Cj4+ID4+Pj4+PiBPbiBTYXQsIE5vdiAxOSwgMjAxNiBhdCAwNToyODowMUFNICsw
+MjAwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+PiA+Pj4+Pj4+IERvY3VtZW50IHByb3BlcnRp
+ZXMgY29tbW9uIHRvIHNldmVyYWwgZGlzcGxheSBwYW5lbHMgaW4gYSBjZW50cmFsCj4+ID4+Pj4+
+Pj4gbG9jYXRpb24gdGhhdCBjYW4gYmUgcmVmZXJlbmNlZCBieSB0aGUgcGFuZWwgZGV2aWNlIHRy
+ZWUgYmluZGluZ3MuCj4+ID4+Pj4+Pgo+PiA+Pj4+Pj4gTG9va3MgZ29vZC4gSnVzdCBvbmUgY29t
+bWVudC4uLgo+PiA+Pj4+Pj4KPj4gPj4+Pj4+IFsuLi5dCj4+ID4+Pj4+Pgo+PiA+Pj4+Pj4+ICtD
+b25uZWN0aXZpdHkKPj4gPj4+Pj4+PiArLS0tLS0tLS0tLS0tCj4+ID4+Pj4+Pj4gKwo+PiA+Pj4+
+Pj4+ICstIHBvcnRzOiBQYW5lbHMgcmVjZWl2ZSB2aWRlbyBkYXRhIHRocm91Z2ggb25lIG9yIG11
+bHRpcGxlCj4+ID4+Pj4+Pj4gY29ubmVjdGlvbnMuIFdoaWxlCj4+ID4+Pj4+Pj4gKyAgdGhlIG5h
+dHVyZSBvZiB0aG9zZSBjb25uZWN0aW9ucyBpcyBzcGVjaWZpYyB0byB0aGUgcGFuZWwgdHlwZSwK
+Pj4gPj4+Pj4+PiB0aGUKPj4gPj4+Pj4+PiArICBjb25uZWN0aXZpdHkgaXMgZXhwcmVzc2VkIGlu
+IGEgc3RhbmRhcmQgZmFzaGlvbiB1c2luZyBwb3J0cyBhcwo+PiA+Pj4+Pj4+IHNwZWNpZmllZCBp
+bgo+PiA+Pj4+Pj4+ICsgIHRoZSBkZXZpY2UgZ3JhcGggYmluZGluZ3MgZGVmaW5lZCBpbgo+PiA+
+Pj4+Pj4+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+
+ID4+Pj4+Pgo+PiA+Pj4+Pj4gV2UgYWxsb3cgcGFuZWxzIHRvIGVpdGhlciB1c2UgZ3JhcGggYmlu
+ZGluZyBvciBiZSBhIGNoaWxkIG9mIHRoZQo+PiA+Pj4+Pj4gZGlzcGxheSBjb250cm9sbGVyLgo+
+PiA+Pj4+Pgo+PiA+Pj4+PiBJIGtuZXcgdGhhdCBzb21lIGRpc3BsYXkgY29udHJvbGxlcnMgdXNl
+IGEgcGhhbmRsZSB0byB0aGUgcGFuZWwgKHNlZQo+PiA+Pj4+PiB0aGUgZnNsLHBhbmVsIGFuZCBu
+dmlkaWEscGFuZWwgcHJvcGVydGllcyksIGJ1dCBJIGRpZG4ndCBrbm93IHdlIGhhZAo+PiA+Pj4+
+PiBwYW5lbHMgYXMgY2hpbGRyZW4gb2YgZGlzcGxheSBjb250cm9sbGVyIG5vZGVzLiBJIGRvbid0
+IHRoaW5rIHdlCj4+ID4+Pj4+IHNob3VsZCBhbGxvdyB0aGF0IGZvciBhbnl0aGluZyBidXQgRFNJ
+IHBhbmVscywgYXMgdGhlIERUIGhpZXJhcmNoeSBpcwo+PiA+Pj4+PiBiYXNlZCBvbiBjb250cm9s
+IGJ1c2VzLiBBcmUgeW91IHN1cmUgd2UgaGF2ZSBvdGhlciBwYW5lbHMgaW5zdGFudGlhdGVkCj4+
+ID4+Pj4+IHRocm91Z2ggdGhhdCBtZWNoYW5pc20gPwo+PiA+Pj4KPj4gPj4+IFNvbWUgcGFuZWxz
+IGhhdmUgbm8gY29udHJvbCBidXMsIHNvIHdlcmUgZG8gd2UgcGxhY2UgdGhlbT8KPj4gPj4KPj4g
+Pj4gSSdkIHNheSB1bmRlciB0aGUgcm9vdCBub2RlLCBsaWtlIGFsbCBzaW1pbGFyIGNvbnRyb2wt
+bGVzcyBkZXZpY2VzLgo+PiA+Pgo+PiA+Pj4gSSB3b3VsZCBzYXkgdGhlIGhpZXJhcmNoeSBpcyBi
+YXNlZCBvbiBidXNlcyB3aXRoIGEgcHJlZmVyZW5jZSBmb3IgdGhlCj4+ID4+PiBjb250cm9sIGJ1
+cyB3aGVuIHRoZXJlIGFyZSBtdWx0aXBsZSBidXNlcy4gSSdtIG5vdCBhIGZhbiBvZiBqdXN0Cj4+
+ID4+PiBzdGlja2luZyB0aGluZ3MgYXJlIHRoZSB0b3AgbGV2ZWwuCj4+ID4+Cj4+ID4+IE9LLCBz
+byBtdWNoIGZvciBteSBjb21tZW50IGEgZmV3IGxpbmVzIHVwIDotKQo+PiA+Pgo+PiA+PiBUaGUg
+cHJvYmxlbSB3aXRoIHBsYWNpbmcgbm9uLURTSSBwYW5lbHMgYXMgY2hpbGRyZW4gb2YgdGhlIGRp
+c3BsYXkKPj4gPj4gY29udHJvbGxlciBhbmQgbm90IHVzaW5nIE9GIGdyYXBoIGlzIHRoYXQgdGhl
+IHBhbmVsIGJpbmRpbmdzIGJlY29tZQo+PiA+PiBkZXBlbmRlbnQgb2YgdGhlIGRpc3BsYXkgY29u
+dHJvbGxlciBiZWluZyB1c2VkLiBBIGRpc3BsYXkgY29udHJvbGxlcgo+PiA+PiB1c2luZyBPRiBn
+cmFwaCB3b3VsZCByZXF1aXJlIHRoZSBwYW5lbCB0byBkbyB0aGUgc2FtZSwgd2hpbGUgYSBkaXNw
+bGF5Cj4+ID4+IGNvbnRyb2xsZXIgZXhwZWN0aW5nIGEgcGFuZWwgY2hpbGQgbm9kZSAod2l0aCBh
+IHNwZWNpZmljIG5hbWUpIHdvdWxkCj4+ID4+IHJlcXVpcmUgRFQgcHJvcGVydGllcyBmb3IgdGhl
+IHBhbmVsIG5vZGUuCj4+Cj4+IE5vdCBzdXJlIEkgZm9sbG93Lgo+Cj4gU29ycnksIEkgbWVhbnQg
+IndvdWxkIG5vdCByZXF1aXRlIERUIHByb3BlcnRpZXMiLgo+Cj4+IFRoZXkgYmVjb21lIGRlcGVu
+ZGVudCBvbiB0aGUgY29udHJvbGxlciBkcml2ZXIgdG8gcHJvYmUgdGhlIHBhbmVsLCBidXQgdGhl
+Cj4+IGNvbnRlbnRzIG9mIHRoZSBwYW5lbCBub2RlIHdvdWxkIG5vdCBiZSBjb250cm9sbGVyIGRl
+cGVuZGVudC4KPgo+IElmIGEgZGlzcGxheSBjb250cm9sbGVyIHVzZXMgT0YgZ3JhcGggdGhlbiB0
+aGUgcGFuZWwgRFQgbm9kZSBoYXMgdG8gZGVjbGFyZQo+IHBvcnRzLiBJZiB0aGUgZGlzcGxheSBj
+b250cm9sbGVyIGRvZXNuJ3QgdXNlIE9GIGdyYXBoIGJ1dCBpbnN0ZWFkIGV4cGVjdHMgdGhlCj4g
+cGFuZWwgdG8gYmUgYSBkaXJlY3Qgc3Vibm9kZSwgb3IgcG9pbnRzIHRvIHRoZSBwYW5lbCB1c2lu
+ZyBhIHByb3BlcnR5IHN1Y2ggYXMKPiBmc2wscGFuZWwsIHRoZW4gdGhlIHBhbmVsIERUIG5vZGUg
+d2lsbCBub3QgaGF2ZSBwb3J0cy4KClRoZSBjb250cm9sbGVyIHNob3VsZCBqdXN0IGFzayBmb3Ig
+dGhlIHBhbmVsIHZpYSBhIGNvbW1vbiBmdW5jdGlvbi4KVGhhdCBmdW5jdGlvbiBzaG91bGQgdGhl
+biBsb29rIGZvciBlaXRoZXIgYSBjaGlsZCBub2RlIChjYWxsZWQKJ3BhbmVsJykgb3IgYSBncmFw
+aCBwb3J0LiBPZiBjb3Vyc2UsIGZvciBtb3JlIGNvbXBsZXggY2FzZXMsIG9ubHkgT0YKZ3JhcGgg
+bWF5IHdvcmsuIEl0IHJlYWxseSBqdXN0IHRoZSBzaW1wbGUgY2FzZSBvZiBhIGNvbnRyb2xsZXIg
+d2l0aCBhCnNpbmdsZSBvdXRwdXQgYW5kIHNpbmdsZSBwYW5lbCB0aGF0IEknbSB0YWxraW5nIGFi
+b3V0LgoKCj4+ID4+IEknbSBhbHNvIG5vdCBzdXJlIHRoZSBjb21wbGV4aXR5IG9mIE9GIGdyYXBo
+IGlzIHJlYWxseSB0aGF0IHByb2hpYml0aXZlCj4+ID4+IGlmIHlvdSBjb21wYXJlIGl0IHRvIHBh
+bmVscyBhcyBjaGlsZCBub2Rlcy4gVG8gZ2V0IHRoZSBwYW5lbCBkcml2ZXIgdG8KPj4gPj4gYmlu
+ZCB0byB0aGUgcGFuZWwgRFQgbm9kZSB0aGUgZGlzcGxheSBjb250cm9sbGVyIGRyaXZlciB3b3Vs
+ZCBuZWVkIHRvCj4+ID4+IGNyZWF0ZSBhIHBsYXRmb3JtIGRldmljZSBmb3IgdGhlIHBhbmVsIGFu
+ZCByZWdpc3RlciBpdC4gVGhhdCdzIG5vdCB2ZXJ5Cj4+ID4+IGRpZmZpY3VsdCwgYnV0IHBhcnNp
+bmcgYSBzaW5nbGUgcG9ydCBhbmQgZW5kcG9pbnQgaXNuJ3QgZWl0aGVyIChhbmQgd2UKPj4gPj4g
+Y291bGQgZXZlbiBwcm92aWRlIGEgaGVscGVyIGZ1bmN0aW9uIGZvciB0aGF0LCBhIHZlcnNpb24g
+b2YKPj4gPj4gb2ZfZHJtX2ZpbmRfcGFuZWwoKSB0aGF0IHdvdWxkIHRha2UgYXMgYW4gYXJndW1l
+bnQgdGhlIGRpc3BsYXkgY29udHJvbGxlcgo+PiA+PiBkZXZpY2Ugbm9kZSBpbnN0ZWFkIG9mIHRo
+ZSBwYW5lbCBkZXZpY2Ugbm9kZSkuCj4+ID4KPj4gPiBQaW5nID8KPj4gPgo+PiA+IEknZCBsaWtl
+IHRvIHN0YW5kYXJkaXplIG9uIG9uZSBtb2RlbCBmb3IgcGFuZWwgRFQgYmluZGluZ3MsIGJ1dCBJ
+J20gbm90Cj4+ID4gc3VyZSB0aGF0IGNhbiBiZSBhY2hpZXZlZCBnaXZlbiB0aGF0IHdlIGFscmVh
+ZHkgaGF2ZSBtdWx0aXBsZSBjb21wZXRpbmcKPj4gPiBtb2RlbHMuIEluIGFueSBjYXNlLCBpcyB0
+aGF0IGJsb2NraW5nIHRvIG1lcmdlIHRoaXMgcGF0Y2ggPyBJIG9ubHkKPj4gPiBkZXNjcmliZSBv
+bmUgY29ubmVjdGl2aXR5IG1vZGVsIGhlcmUgYXMgdGhhdCdzIHdoYXQgbXkgcGFuZWwgZHJpdmVy
+Cj4+ID4gbmVlZHMsIGJ1dCBJIGhhdmUgbm8gaXNzdWUgYWRkaW5nIG1vcmUgbW9kZWxzIGxhdGVy
+IHdoZW4gbmVlZGVkLiBJCj4+ID4gYmVsaWV2ZSB0aGlzIHBhdGNoIGlzIGEgZ29vZCBzdGVwIGZv
+cndhcmQgYWxyZWFkeS4KPj4KPj4gSXQgaXMgYW4gaW1wcm92ZW1lbnQgd2hpY2ggSSBhcHByZWNp
+YXRlLCBzbyB5ZXMgSSBndWVzcyB3ZSBjYW4gYWRkcmVzcwo+PiBpdCBsYXRlciB3aGVuIG5lZWRl
+ZC4KPgo+IFRoYW5rIHlvdS4gQ2FuIEkgZ2V0IHlvdXIgYWNrIHRoZW4gPyA6LSkKClllcy4KCkFj
+a2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
