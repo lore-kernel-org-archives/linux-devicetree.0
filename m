@@ -1,265 +1,59 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V4 2/2] cfg80211: support ieee80211-freq-limit DT property
-Date: Tue,  3 Jan 2017 12:03:39 +0100
-Message-ID: <20170103110340.23249-2-zajec5@gmail.com>
-References: <20170103110340.23249-1-zajec5@gmail.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 0/2] PM / Domains / OPP: Introduce
+ domain-performance-state binding
+Date: Tue, 3 Jan 2017 16:37:54 +0530
+Message-ID: <20170103110754.GA14137@vireshk-i7>
+References: <cover.1481539827.git.viresh.kumar@linaro.org>
+ <20161222181422.2cpmdfzeyxdi6vpa@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170103110340.23249-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161222181422.2cpmdfzeyxdi6vpa@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nayak Rajendra <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On 22-12-16, 12:14, Rob Herring wrote:
+> On Mon, Dec 12, 2016 at 04:26:17PM +0530, Viresh Kumar wrote:
+> > Hello,
+> > 
+> > Some platforms have the capability to configure the performance state of
+> > their Power Domains. The performance levels are represented by positive
+> > integer values, a lower value represents lower performance state.
+> > 
+> > We had some discussions about it in the past on the PM list [1], which is
+> > followed by discussions during the LPC. The outcome of all that was that we
+> > should extend Power Domain framework to support active state power management
+> > as well.
+> > 
+> > The power-domains until now were only concentrating on the idle state
+> > management of the device and this needs to change in order to reuse the
+> > infrastructure of power domains for active state management.
+> 
+> >From a h/w perspective, are idle states really different from 
+> performance states? 
+> 
+> > 
+> > To get a complete picture of the proposed plan, following is what we
+> > need to do:
+> > - Create DT bindings to get domain performance state information for the
+> >   platforms.
+> 
+> I would do this last so you can evolve things if you're not certain 
+> about what the bindings should look like. You can always start with 
+> things in the kernel and add to DT later.
 
-This patch adds a helper for reading that new property and applying
-limitations or supported channels specified this way.
-It may be useful for specifying single band devices or devices that
-support only some part of the whole band. It's common that tri-band
-routers have separated radios for lower and higher part of 5 GHz band.
+Okay, I have just posted some code for this:
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Put main code in core.c as it isn't strictly part of regulatory - pointed
-    by Arend.
-    Update to support ieee80211-freq-limit (new property).
-V3: Introduce separated wiphy_read_of_freq_limits function.
-    Add extra sanity checks for DT data.
-    Move code back to reg.c as suggested by Johannes.
-V4: Move code to of.c
-    Use one helper called at init time (no runtime hooks)
-    Modify orig_flags
----
- include/net/cfg80211.h |  26 ++++++++++
- net/wireless/Makefile  |   1 +
- net/wireless/of.c      | 137 +++++++++++++++++++++++++++++++++++++++++++++++++
- net/wireless/reg.c     |   4 +-
- net/wireless/reg.h     |   2 +
- 5 files changed, 168 insertions(+), 2 deletions(-)
- create mode 100644 net/wireless/of.c
+lkml.kernel.org/r/cover.1483439894.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index ca2ac1c..d7723a8 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -311,6 +311,32 @@ struct ieee80211_supported_band {
- 	struct ieee80211_sta_vht_cap vht_cap;
- };
- 
-+/**
-+ * wiphy_read_of_freq_limits - read frequency limits from device tree
-+ *
-+ * @wiphy: the wireless device to get extra limits for
-+ *
-+ * Some devices may have extra limitations specified in DT. This may be useful
-+ * for chipsets that normally support more bands but are limited due to board
-+ * design (e.g. by antennas or extermal power amplifier).
-+ *
-+ * This function reads info from DT and uses it to *modify* channels (disable
-+ * unavailable ones). It's usually a *bad* idea to use it in drivers with
-+ * shared channel data as DT limitations are device specific.
-+ *
-+ * As this function access device node it has to be called after set_wiphy_dev.
-+ * It also modifies channels so they have to be set first.
-+ */
-+#ifdef CONFIG_OF
-+int wiphy_read_of_freq_limits(struct wiphy *wiphy);
-+#else /* CONFIG_OF */
-+static inline int wiphy_read_of_freq_limits(struct wiphy *wiphy)
-+{
-+	return 0;
-+}
-+#endif /* !CONFIG_OF */
-+
-+
- /*
-  * Wireless hardware/device configuration structures and methods
-  */
-diff --git a/net/wireless/Makefile b/net/wireless/Makefile
-index 4c9e39f..95b4c09 100644
---- a/net/wireless/Makefile
-+++ b/net/wireless/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_WEXT_PRIV) += wext-priv.o
- 
- cfg80211-y += core.o sysfs.o radiotap.o util.o reg.o scan.o nl80211.o
- cfg80211-y += mlme.o ibss.o sme.o chan.o ethtool.o mesh.o ap.o trace.o ocb.o
-+cfg80211-$(CONFIG_OF) += of.o
- cfg80211-$(CONFIG_CFG80211_DEBUGFS) += debugfs.o
- cfg80211-$(CONFIG_CFG80211_WEXT) += wext-compat.o wext-sme.o
- cfg80211-$(CONFIG_CFG80211_INTERNAL_REGDB) += regdb.o
-diff --git a/net/wireless/of.c b/net/wireless/of.c
-new file mode 100644
-index 0000000..d5791c8
---- /dev/null
-+++ b/net/wireless/of.c
-@@ -0,0 +1,137 @@
-+/*
-+ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * Permission to use, copy, modify, and/or distribute this software for any
-+ * purpose with or without fee is hereby granted, provided that the above
-+ * copyright notice and this permission notice appear in all copies.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-+ */
-+
-+#include <linux/of.h>
-+#include <net/cfg80211.h>
-+#include "reg.h"
-+
-+static bool wiphy_freq_limits_valid_chan(struct wiphy *wiphy,
-+					 struct ieee80211_freq_range *freq_limits,
-+					 unsigned int n_freq_limits,
-+					 struct ieee80211_channel *chan)
-+{
-+	u32 bw = MHZ_TO_KHZ(20);
-+	int i;
-+
-+	for (i = 0; i < n_freq_limits; i++) {
-+		struct ieee80211_freq_range *limit = &freq_limits[i];
-+
-+		if (reg_does_bw_fit(limit, MHZ_TO_KHZ(chan->center_freq), bw))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void wiphy_freq_limits_apply(struct wiphy *wiphy,
-+				    struct ieee80211_freq_range *freq_limits,
-+				    unsigned int n_freq_limits)
-+{
-+	enum nl80211_band band;
-+	int i;
-+
-+	if (WARN_ON(!n_freq_limits))
-+		return;
-+
-+	for (band = 0; band < NUM_NL80211_BANDS; band++) {
-+		struct ieee80211_supported_band *sband = wiphy->bands[band];
-+
-+		if (!sband)
-+			continue;
-+
-+		for (i = 0; i < sband->n_channels; i++) {
-+			struct ieee80211_channel *chan = &sband->channels[i];
-+
-+			if (chan->orig_flags & IEEE80211_CHAN_DISABLED)
-+				continue;
-+
-+			if (!wiphy_freq_limits_valid_chan(wiphy, freq_limits,
-+							  n_freq_limits,
-+							  chan)) {
-+				pr_debug("Disabling freq %d MHz as it's out of OF limits\n",
-+					 chan->center_freq);
-+				chan->orig_flags |= IEEE80211_CHAN_DISABLED;
-+			}
-+		}
-+	}
-+}
-+
-+int wiphy_read_of_freq_limits(struct wiphy *wiphy)
-+{
-+	struct device *dev = wiphy_dev(wiphy);
-+	struct device_node *np;
-+	struct property *prop;
-+	struct ieee80211_freq_range *freq_limits;
-+	unsigned int n_freq_limits;
-+	const __be32 *p;
-+	int len, i, err;
-+
-+	if (!dev)
-+		return 0;
-+	np = dev_of_node(dev);
-+	if (!np)
-+		return 0;
-+
-+	prop = of_find_property(np, "ieee80211-freq-limit", &len);
-+	if (!prop)
-+		return 0;
-+
-+	if (!len || len % sizeof(u32) || len / sizeof(u32) % 2) {
-+		dev_err(dev, "ieee80211-freq-limit wrong format");
-+		return -EPROTO;
-+	}
-+	n_freq_limits = len / sizeof(u32) / 2;
-+
-+	freq_limits = kcalloc(n_freq_limits, sizeof(*freq_limits), GFP_KERNEL);
-+	if (!freq_limits) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	p = NULL;
-+	for (i = 0; i < n_freq_limits; i++) {
-+		struct ieee80211_freq_range *limit = &freq_limits[i];
-+
-+		p = of_prop_next_u32(prop, p, &limit->start_freq_khz);
-+		if (!p) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+
-+		p = of_prop_next_u32(prop, p, &limit->end_freq_khz);
-+		if (!p) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+
-+		if (!limit->start_freq_khz ||
-+		    !limit->end_freq_khz ||
-+		    limit->start_freq_khz >= limit->end_freq_khz) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+	wiphy_freq_limits_apply(wiphy, freq_limits, n_freq_limits);
-+
-+	return 0;
-+
-+out:
-+	dev_err(dev, "Failed to get limits: %d\n", err);
-+	kfree(freq_limits);
-+	return err;
-+}
-+EXPORT_SYMBOL(wiphy_read_of_freq_limits);
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 5dbac37..bda0e9e 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -748,8 +748,8 @@ static bool is_valid_rd(const struct ieee80211_regdomain *rd)
- 	return true;
- }
- 
--static bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
--			    u32 center_freq_khz, u32 bw_khz)
-+bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
-+		     u32 center_freq_khz, u32 bw_khz)
- {
- 	u32 start_freq_khz, end_freq_khz;
- 
-diff --git a/net/wireless/reg.h b/net/wireless/reg.h
-index f6ced31..b8e44ef 100644
---- a/net/wireless/reg.h
-+++ b/net/wireless/reg.h
-@@ -54,6 +54,8 @@ void regulatory_exit(void);
- int set_regdom(const struct ieee80211_regdomain *rd,
- 	       enum ieee80211_regd_source regd_src);
- 
-+bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
-+		     u32 center_freq_khz, u32 bw_khz);
- unsigned int reg_get_max_bandwidth(const struct ieee80211_regdomain *rd,
- 				   const struct ieee80211_reg_rule *rule);
- 
+Thanks for your inputs.
+
 -- 
-2.10.1
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
