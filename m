@@ -1,43 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/4] ARM64: dts: exynos5433: use macros for pinctrl
- configuration on Exynos5433
-Date: Tue, 3 Jan 2017 09:24:34 +0100
-Message-ID: <CACRpkdbX_MuLSCerq08-1VZV6VJfynjkv1QOr7ssOCGvM5aB_Q@mail.gmail.com>
-References: <CGME20161230041427epcas1p1151d6e28fac143c63efaf4f7c8ed432d@epcas1p1.samsung.com>
- <20161230041421.24448-1-andi.shyti@samsung.com> <20161230041421.24448-4-andi.shyti@samsung.com>
- <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com> <20161230151724.5wlp4hbphasmw3rg@kozik-lap>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/4] arm64: dts: exynos: make tm2 and tm2e independent
+ from each other
+Date: Tue, 3 Jan 2017 10:27:29 +0200
+Message-ID: <CAJKOXPev9m07_dQWAvJ+=MKnbT0TFERKOtjWUDU+WXdGAiRyDA@mail.gmail.com>
+References: <CGME20170103075734epcas5p43a9743131f63affd0a438d2ed342f22e@epcas5p4.samsung.com>
+ <1483430237-26823-1-git-send-email-jcsing.lee@samsung.com> <1483430237-26823-4-git-send-email-jcsing.lee@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20161230151724.5wlp4hbphasmw3rg@kozik-lap>
-Sender: stable-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andi Shyti <andi@etezian.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1483430237-26823-4-git-send-email-jcsing.lee@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jaechul Lee <jcsing.lee@samsung.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 30, 2016 at 4:17 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, Dec 30, 2016 at 02:32:39PM +0100, Linus Walleij wrote:
->> On Fri, Dec 30, 2016 at 5:14 AM, Andi Shyti <andi.shyti@samsung.com> wrote:
->>
->> > Use the macros defined in include/dt-bindings/pinctrl/samsung.h
->> > instead of hardcoded values.
->> >
->> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
->>
->> These look fine, but that this and the other DTS patch through ARM SoC.
->>
->> If you also need the headerfile patch (patch 2) to go through ARM SoC
->> that is fine,
->> I can take it out of pinctrl if you want.
+On Tue, Jan 3, 2017 at 9:57 AM, Jaechul Lee <jcsing.lee@samsung.com> wrote:
+> From: Andi Shyti <andi.shyti@samsung.com>
 >
-> Yes, I need the header. It would be much appreciated if you could
-> provide a tag or stable branch with it.
+> Currently tm2e dts includes tm2 but there are some differences
+> between the two boards and tm2 has some properties that tm2e
+> doesn't have.
+>
+> That's why it's important to keep the two dts files independent
+> and put all the commonalities in a tm2-common.dtsi file.
+>
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+> ---
+>  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 1046 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1033 +------------------
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |    2 +-
+>  3 files changed, 1049 insertions(+), 1032 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
 
-Nah better just merge that patch into the ARM SoC tree only.
+I would like to see here the rename and diff from it. Not entire delta
+(deletions and addons). It is not possible to compare it... I think
+git supports it by default with similarity of 50%.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-I'll remove it from the pinctrl tree.
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
