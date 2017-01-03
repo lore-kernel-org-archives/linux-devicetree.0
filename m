@@ -1,16 +1,16 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 5/6] mfd: dt: Add bindings for the Aspeed SoC Display
- Controller (GFX)
-Date: Tue, 3 Jan 2017 17:49:54 +0000
-Message-ID: <20170103174954.GF27589@dell>
-References: <20161206025321.1792-1-andrew@aj.id.au>
- <20161206025321.1792-6-andrew@aj.id.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 03/12] Document: dt: binding: imx: update clock doc
+ for imx6sll
+Date: Tue, 3 Jan 2017 11:48:25 -0600
+Message-ID: <20170103174825.sbw5pjvejjm46mbm@rob-hp-laptop>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <1482832070-22668-4-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20161206025321.1792-6-andrew@aj.id.au>
+In-Reply-To: <1482832070-22668-4-git-send-email-ping.bai@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,39 +20,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, linux-arm-kernel@lists.infradead.org, Joel Stanley <joel@jms.id.au>
+To: Bai Ping <ping.bai@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, mturquette@baylibre.com, daniel.lezcano@linaro.org, sboyd@codeaurora.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, kernel@pengutronix.de, jacky.baip@gmail.com, fabio.estevam@nxp.com, tglx@linutronix.de, shawnguo@kernel.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAwNiBEZWMgMjAxNiwgQW5kcmV3IEplZmZlcnkgd3JvdGU6Cgo+IFRoZSBBc3BlZWQg
-U29DIERpc3BsYXkgQ29udHJvbGxlciBpcyBwcmVzZW50ZWQgYXMgYSBzeXNjb24gZGV2aWNlIHRv
-Cj4gYXJiaXRyYXRlIGFjY2VzcyBieSBkaXNwbGF5IGFuZCBwaW5tdXggZHJpdmVycy4gVmlkZW8g
-cGlubXV4Cj4gY29uZmlndXJhdGlvbiBvbiBmaWZ0aCBnZW5lcmF0aW9uIFNvQ3MgZGVwZW5kcyBv
-biBiaXRzIGluIGJvdGggdGhlCj4gU3lzdGVtIENvbnRyb2wgVW5pdCBhbmQgdGhlIERpc3BsYXkg
-Q29udHJvbGxlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgSmVmZmVyeSA8YW5kcmV3QGFq
-LmlkLmF1Pgo+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKQXBwbGll
-ZCB3aXRoIEFja3MsIHRoYW5rcy4KCj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21m
-ZC9zeXNjb24vYXNwZWVkLWdmeC50eHQgICAgICAgfCAxNyArKysrKysrKysrKysrKysrKwo+ICAx
-IGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zeXNjb24vYXNwZWVkLWdmeC50eHQK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9z
-eXNjb24vYXNwZWVkLWdmeC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWZkL3N5c2Nvbi9hc3BlZWQtZ2Z4LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-MDAwMDAwMDAwMDAwLi5hZWE1MzcwZWZkOTcKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zeXNjb24vYXNwZWVkLWdmeC50eHQKPiBA
-QCAtMCwwICsxLDE3IEBACj4gKyogRGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIEFzcGVlZCBTb0Mg
-RGlzcGxheSBDb250cm9sbGVyIChHRlgpCj4gKwo+ICtUaGUgQXNwZWVkIFNvQyBEaXNwbGF5IENv
-bnRyb2xsZXIgcHJpbWFyaWx5IGRvZXMgYXMgaXRzIG5hbWUgc3VnZ2VzdHMsIGJ1dCBhbHNvCj4g
-K3BhcnRpY2lwYXRlcyBpbiBwaW5tdXggcmVxdWVzdHMgb24gdGhlIGc1IFNvQ3MuIEl0IGlzIHRo
-ZXJlZm9yZSBjb25zaWRlcmVkIGEKPiArc3lzY29uIGRldmljZS4KPiArCj4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZToJCSJhc3BlZWQsYXN0MjUwMC1nZngiLCAic3lzY29u
-Igo+ICstIHJlZzoJCQljb250YWlucyBvZmZzZXQvbGVuZ3RoIHZhbHVlIG9mIHRoZSBHRlggbWVt
-b3J5Cj4gKwkJCXJlZ2lvbi4KPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICtnZng6IGRpc3BsYXlAMWU2
-ZTYwMDAgewo+ICsJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1nZngiLCAic3lzY29uIjsK
-PiArCXJlZyA9IDwweDFlNmU2MDAwIDB4MTAwMD47Cj4gK307CgotLSAKTGVlIEpvbmVzCkxpbmFy
-byBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3Bl
-biBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwg
-VHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Tue, Dec 27, 2016 at 05:47:41PM +0800, Bai Ping wrote:
+> Add clock binding doc uppdate for imx6sll.
+
+s/uppdate/update/
+
+> 
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/imx6sll-clock.txt    | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+> new file mode 100644
+> index 0000000..3a46787
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+> @@ -0,0 +1,37 @@
+> +* Clock bindings for Freescale i.MX6 SLL
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx6sll-ccm"
+> +- reg: Address and length of the register set
+> +- #clock-cells: Should be <1>
+> +- clocks: list of clock specifiers, must contain an entry for each required
+> +  entry in clock-names
+> +- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
+> +
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sll-clock.h
+> +for the full list of i.MX6 SLL clock IDs.
+> +
+> +Examples:
+> +
+> +#include <dt-bindings/clock/imx6sll-clock.h>
+> +
+> +clks: ccm@020c4000 {
+
+Drop leading 0s.
+
+> +		compatible = "fsl,imx6sll-ccm";
+> +		reg = <0x020c4000 0x4000>;
+> +		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+> +		#clock-cells = <1>;
+> +		clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>;
+> +		clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
+> +};
+> +
+> +uart1: serial@02020000 {
+
+ditto.
+
+> +		compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart", "fsl,imx21-uart";
+> +		reg = <0x02020000 0x4000>;
+> +		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&clks IMX6SLL_CLK_UART1_IPG>,
+> +			 <&clks IMX6SLL_CLK_UART1_SERIAL>;
+> +		clock-names = "ipg", "per";
+> +		status = "disabled";
+> +};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
