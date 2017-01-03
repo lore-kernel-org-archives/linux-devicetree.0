@@ -1,58 +1,39 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 0/2] PM / Domains / OPP: Introduce
- domain-performance-state binding
-Date: Tue, 3 Jan 2017 16:37:54 +0530
-Message-ID: <20170103110754.GA14137@vireshk-i7>
-References: <cover.1481539827.git.viresh.kumar@linaro.org>
- <20161222181422.2cpmdfzeyxdi6vpa@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: boundary: fix sgtl5000 pinctrl init
+Date: Tue,  3 Jan 2017 12:22:45 +0100
+Message-ID: <20170103112247.4563-1-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161222181422.2cpmdfzeyxdi6vpa@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nayak Rajendra <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22-12-16, 12:14, Rob Herring wrote:
-> On Mon, Dec 12, 2016 at 04:26:17PM +0530, Viresh Kumar wrote:
-> > Hello,
-> > 
-> > Some platforms have the capability to configure the performance state of
-> > their Power Domains. The performance levels are represented by positive
-> > integer values, a lower value represents lower performance state.
-> > 
-> > We had some discussions about it in the past on the PM list [1], which is
-> > followed by discussions during the LPC. The outcome of all that was that we
-> > should extend Power Domain framework to support active state power management
-> > as well.
-> > 
-> > The power-domains until now were only concentrating on the idle state
-> > management of the device and this needs to change in order to reuse the
-> > infrastructure of power domains for active state management.
-> 
-> >From a h/w perspective, are idle states really different from 
-> performance states? 
-> 
-> > 
-> > To get a complete picture of the proposed plan, following is what we
-> > need to do:
-> > - Create DT bindings to get domain performance state information for the
-> >   platforms.
-> 
-> I would do this last so you can evolve things if you're not certain 
-> about what the bindings should look like. You can always start with 
-> things in the kernel and add to DT later.
+Hi Shawn, all,
 
-Okay, I have just posted some code for this:
+While testing other features, I realized that the sound card wouldn't
+probe on Nitrogen6_MAX. This is because the pinctrl node was under the
+sound driver node whereas it should be under the codec one.
 
-lkml.kernel.org/r/cover.1483439894.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+This caused GPIO_0 not to be set as CLKO1 and therefore the codec probing
+was failing. The pinctrl node is just moved around to fix it.
 
-Thanks for your inputs.
+Also making the same patch for our SOM2 although it was working, the
+reason is that U-Boot is setting GPIO_0 in U-Boot for SOM2 and not MAX.
+
+Regards,
+Gary
+
+Gary Bisson (2):
+  ARM: dts: imx6qdl-nitrogen6_max: fix sgtl5000 pinctrl init
+  ARM: dts: imx6qdl-nitrogen6_som2: fix sgtl5000 pinctrl init
+
+ arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi  | 4 ++--
+ arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 -- 
-viresh
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
