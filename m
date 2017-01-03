@@ -1,54 +1,46 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/4] ARM: dts: Add am335x-boneblack-wireless
-Date: Tue, 3 Jan 2017 12:43:44 -0800
-Message-ID: <20170103204343.GC25222@atomide.com>
-References: <20161227175837.28970-1-robertcnelson@gmail.com>
- <20161227175837.28970-2-robertcnelson@gmail.com>
- <CB5C8999-6CAE-41F6-85A6-D2A856BD8011@gmail.com>
- <20170103201103.GB25222@atomide.com>
- <2D5ABB5A-E332-4D77-89EA-9DBF9A2FECFB@gmail.com>
+From: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 00/20] i.MX Media Driver
+Date: Tue, 3 Jan 2017 12:50:35 -0800
+Message-ID: <183d9b6e-c195-128b-e74b-9103a3402dab@mentor.com>
+References: <1483050455-10683-1-git-send-email-steve_longerbeam@mentor.com>
+ <CAOMZO5DM4aRwzCWkRoZLmbCxn155YL+CUR_gJyDh+FjzSKD3PQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <2D5ABB5A-E332-4D77-89EA-9DBF9A2FECFB@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Kridner <jkridner@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org, Jason Kridner <jkridner@beagleboard.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5DM4aRwzCWkRoZLmbCxn155YL+CUR_gJyDh+FjzSKD3PQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Jason Kridner <jkridner@gmail.com> [170103 12:30]:
-> 
-> 
-> > On Jan 3, 2017, at 3:11 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > 
-> > * Jason Kridner <jkridner@gmail.com> [161228 13:27]:
-> >> 
-> >> 
-> >>> On Dec 27, 2016, at 11:58 AM, Robert Nelson <robertcnelson@gmail.com> wrote:
-> >>> 
-> >>> BeagleBone Black Wireless is clone of the BeagleBone Black (BBB) with the Ethernet
-> >>> replaced by a TI wl1835 wireless module.
-> >>> 
-> >>> This board can be indentified by the BWAx value after A335BNLT (BBB) in the at24 eeprom:
-> >>> BWAx [aa 55 33 ee 41 33 33 35  42 4e 4c 54 42 57 41 35  |.U3.A335BNLTBWA5|]
-> >> 
-> >> I believe the correct statement is BWxx, but BWBx reserves the option to be software incompatible in some way. My preference is to have it boot anyway, but I believe that is only dependent in the bootloader. 
-> > 
-> > So does this patch need updating for that?
-> 
-> No, it is bootloader controlled. 
+Hi Fabio,
 
-What about the patch description? Does it need updating or is that
-an Acked-by?
 
-Tony
+On 01/02/2017 01:09 PM, Fabio Estevam wrote:
+> Hi Steve,
+>
+> On Thu, Dec 29, 2016 at 8:27 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> This is a media driver for video capture on i.MX.
+>>
+>> Refer to Documentation/media/v4l-drivers/imx.rst for example capture
+>> pipelines on SabreSD, SabreAuto, and SabreLite reference platforms.
+>>
+>> This patchset includes the OF graph layout as proposed by Philipp Zabel,
+>> with only minor changes which are enumerated in the patch header.
+> Patches 13, 14 and 19 miss your Signed-off-by tag.
+
+thanks for catching. I've added them to version 2.
+
+Steve
+
+>
+> Tested the whole series on a mx6qsabresd:
+>
+> Tested-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
