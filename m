@@ -1,101 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: Add DT bindings info for FlexRM ring
- manager
-Date: Wed, 4 Jan 2017 08:37:52 -0600
-Message-ID: <20170104143752.bl47gdfczbnfy6b3@rob-hp-laptop>
-References: <1483508082-7008-1-git-send-email-anup.patel@broadcom.com>
- <1483508082-7008-3-git-send-email-anup.patel@broadcom.com>
+Subject: Re: [PATCH resend v4 2/3] ARM: dts: imx6: Support Savageboard dual
+Date: Wed, 4 Jan 2017 08:38:52 -0600
+Message-ID: <20170104143852.dkc2pfcighl7p3la@rob-hp-laptop>
+References: <20170104070436.3425-1-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483508082-7008-3-git-send-email-anup.patel@broadcom.com>
+In-Reply-To: <20170104070436.3425-1-woogyom.kim@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 11:04:42AM +0530, Anup Patel wrote:
-> This patch adds device tree bindings document for the FlexRM
-> ring manager found on Broadcom iProc SoCs.
+On Wed, Jan 04, 2017 at 04:04:36PM +0900, Milo Kim wrote:
+> Common savageboard DT file is used for board support.
+> Add the vendor name and specify the dtb file for i.MX6Q build.
 > 
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
 > ---
->  .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
-> new file mode 100644
-> index 0000000..ca51a39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
-> @@ -0,0 +1,60 @@
-> +Broadcom FlexRM Ring Manager
-> +============================
-> +The Broadcom FlexRM ring manager provides a set of rings which can be
-> +used to submit work to offload engines. An SoC may have multiple FlexRM
-> +hardware blocks. There is one device tree entry per FlexRM block. The
-> +FlexRM driver will create a mailbox-controller instance for given FlexRM
-> +hardware block where each mailbox channel is a separate FlexRM ring.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:	Should be "brcm,iproc-flexrm-mbox"
-> +- reg:		Specifies base physical address and size of the FlexRM
-> +		ring registers
-> +- msi-parent:	Phandles (and potential Device IDs) to MSI controllers
-> +		The FlexRM engine will send MSIs (instead of wired
-> +		interrupts) to CPU. There is one MSI for each FlexRM ring.
-> +		Refer devicetree/bindings/interrupt-controller/msi.txt
-> +- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
-> +		channel. This should be 3.
-> +
-> +		The 1st cell is the mailbox channel number.
-> +
-> +		The 2nd cell contains MSI completion threshold. This is the
-> +		number of completion messages for which FlexRM will inject
-> +		one MSI interrupt to CPU.
-> +
-> +		The 3nd cell contains MSI timer value representing time for
-> +		which FlexRM will wait to accumulate N completion messages
-> +		where N is the value specified by 2nd cell above. If FlexRM
-> +		does not get required number of completion messages in time
-> +		specified by this cell then it will inject one MSI interrupt
-> +		to CPU provided atleast one completion message is available.
-> +
-> +Optional properties:
-> +--------------------
-> +- dma-coherent:	Present if DMA operations made by the FlexRM engine (such
-> +		as DMA descriptor access, access to buffers pointed by DMA
-> +		descriptors and read/write pointer updates to DDR) are
-> +		cache coherent with the CPU.
-> +
-> +Example:
-> +--------
-> +crypto_mbox: mbox@67000000 {
-> +	compatible = "brcm,iproc-flexrm-mbox";
-> +	reg = <0x67000000 0x200000>;
-> +	msi-parent = <&gic_its 0x7f00>;
-> +	#mbox-cells = <3>;
-> +};
-> +
-> +crypto_client {
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  arch/arm/boot/dts/Makefile                         |  1 +
+>  arch/arm/boot/dts/imx6dl-savageboard.dts           | 51 ++++++++++++++++++++++
+>  3 files changed, 53 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-savageboard.dts
 
-crypto@<addr>
-
-> +	...
-> +	mboxes = <&crypto_mbox 0 0x1 0xffff>,
-> +		 <&crypto_mbox 1 0x1 0xffff>,
-> +		 <&crypto_mbox 16 0x1 0xffff>,
-> +		 <&crypto_mbox 17 0x1 0xffff>,
-> +		 <&crypto_mbox 30 0x1 0xffff>,
-> +		 <&crypto_mbox 31 0x1 0xffff>;
-> +	};
-> +	...
-
-Please somewhat fully list the contents for node.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
