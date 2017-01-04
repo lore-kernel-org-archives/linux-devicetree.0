@@ -1,77 +1,43 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: imx: Add ocotp node for imx6ul
-Date: Wed, 4 Jan 2017 14:06:47 +0000
-Message-ID: <8badaf4a-01c9-95e0-ada1-41e7a81fe35e@linaro.org>
-References: <1479344899-3141-1-git-send-email-ping.bai@nxp.com>
- <1479344899-3141-3-git-send-email-ping.bai@nxp.com>
- <20161230022527.GH6177@dragon>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] drivers: mmc: sunxi: limit A64 MMC2 to
+ 8K DMA buffer
+Date: Wed, 4 Jan 2017 08:07:50 -0600
+Message-ID: <20170104140750.7qs4pvggwjdj5cma@rob-hp-laptop>
+References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
+ <1483398226-29321-3-git-send-email-andre.przywara@arm.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161230022527.GH6177@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Bai Ping <ping.bai@nxp.com>
-Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBOEDWTBQKGQEZ235EPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1483398226-29321-3-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 02, 2017 at 11:03:43PM +0000, Andre Przywara wrote:
+> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> Unlike the A64 user manual reports, the third MMC controller on the
+> A64 (and the only one capable of 8-bit HS400 eMMC transfers) has a
+> DMA buffer size limit of 8KB (much like the very old Allwinner SoCs).
+> This does not affect the other two controllers, so introduce a new
+> DT compatible string to let the driver use different settings for that
+> particular device. This will also help to enable the high-speed transfer
+> modes of that controller later.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
+>  drivers/mmc/host/sunxi-mmc.c                        | 7 +++++++
+>  2 files changed, 8 insertions(+)
 
-
-On 30/12/16 02:25, Shawn Guo wrote:
-> On Thu, Nov 17, 2016 at 09:08:19AM +0800, Bai Ping wrote:
->> Add ocotp node for i.MX6UL SOC.
->>
->> Signed-off-by: Bai Ping <ping.bai@nxp.com>
->
-> The DTS change looks good to me.  But I cannot apply it until the driver
-> and bindings part get accepted.  You should figure out who is collecting
-> nvmem patches.  It seems to be Greg Kroah-Hartman, who is not on copy.
-Sorry for delay in response,
-
-I will take care of the 1/3 and 2/3 nvmem patches.
-
-Thanks,
-srini
-
->
-
-
-> Shawn
->
->> ---
->>  arch/arm/boot/dts/imx6ul.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
->> index c5c05fd..c6f6613 100644
->> --- a/arch/arm/boot/dts/imx6ul.dtsi
->> +++ b/arch/arm/boot/dts/imx6ul.dtsi
->> @@ -849,6 +849,12 @@
->>  				reg = <0x021b0000 0x4000>;
->>  			};
->>
->> +			ocotp: ocotp-ctrl@021bc000 {
->> +				compatible = "fsl,imx6ul-ocotp", "syscon";
->> +				reg = <0x021bc000 0x4000>;
->> +				clocks = <&clks IMX6UL_CLK_OCOTP>;
->> +			};
->> +
->>  			lcdif: lcdif@021c8000 {
->>  				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
->>  				reg = <0x021c8000 0x4000>;
->> --
->> 1.9.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
