@@ -1,131 +1,115 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 3/4] Documetation: binding: modify the exynos5440 pcie
- binding
-Date: Wed, 04 Jan 2017 17:23:24 +0900
-Message-ID: <1c7c1319-70cd-e6d5-87d1-c329a8166497@samsung.com>
-References: <20161228103454.26467-1-jh80.chung@samsung.com>
- <CGME20161228103455epcas5p2b3ea563efc00c776e77477ab3c778bb1@epcas5p2.samsung.com>
- <20161228103454.26467-4-jh80.chung@samsung.com>
- <20170103195144.7fwtlvhzxhq3r25z@rob-hp-laptop>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: Add support for CSI1 bus
+Date: Wed, 4 Jan 2017 10:54:20 +0200
+Message-ID: <20170104085420.GN3958@valkosipuli.retiisi.org.uk>
+References: <20161228183036.GA13139@amd>
+ <20170103203854.gyyfzxbnnxl3flov@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <20170103195144.7fwtlvhzxhq3r25z@rob-hp-laptop>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170103203854.gyyfzxbnnxl3flov@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2017 04:51 AM, Rob Herring wrote:
-> On Wed, Dec 28, 2016 at 07:34:53PM +0900, Jaehoon Chung wrote:
->> According to using PHY framework, modified the exynos5440-pcie binding.
->> And use "config" property to follow the designware-pcie binding.
+Hi Rob,
+
+Thanks for the review.
+
+On Tue, Jan 03, 2017 at 02:38:54PM -0600, Rob Herring wrote:
+> On Wed, Dec 28, 2016 at 07:30:36PM +0100, Pavel Machek wrote:
+> > From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> > 
+> > In the vast majority of cases the bus type is known to the driver(s)
+> > since a receiver or transmitter can only support a single one. There
+> > are cases however where different options are possible.
 > 
-> You are breaking compatibility here. Please state that and why it is 
-> okay to do so.
+> What cases specifically?
 
-I will update it..And i'm modifying the patches about maintaining the backward compatibility.
-So i will leave the current dt-binding. Just will add the dt-binding example for using phy framework.
-How about?
+The existing V4L2 OF support tries to figure out the bus type and parse the
+bus parameters based on that. This does not scale too well as there are
+multiple serial busses that share common properties.
 
-And will add the "DEPRECATED" for some properties. Also will display the kernel message.
-
-> 
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> ---
->>  .../bindings/pci/samsung,exynos5440-pcie.txt       | 29 +++++++++++++---------
->>  1 file changed, 17 insertions(+), 12 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
->> index 4f9d23d..51f6214 100644
->> --- a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
->> @@ -5,10 +5,15 @@ and thus inherits all the common properties defined in designware-pcie.txt.
->>  
->>  Required properties:
->>  - compatible: "samsung,exynos5440-pcie"
->> -- reg: base addresses and lengths of the pcie controller,
->> -	the phy controller, additional register for the phy controller.
->> +- reg: base addresses and lengths of the pcie controller
->>  - interrupts: A list of interrupt outputs for level interrupt,
->>  	pulse interrupt, special interrupt.
->> +- phys: From PHY binding. Phandle for the Generic PHY.
->> +	Refer to Documentation/devicetree/bindings/phy/samsung-phy.txt
->> +- phy-names: Must be "pcie-phy".
-> 
-> -names is pointless for a single element.
-
-Will remove.
+Some hardware also supports multiple types of busses on the same interfaces.
 
 > 
->> +
->> +Other common properties refer to
->> +	Documentation/devicetree/binding/pci/designware-pcie.txt
->>  
->>  Example:
->>  
->> @@ -16,18 +21,18 @@ SoC specific DT Entry:
->>  
->>  	pcie@290000 {
->>  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
->> -		reg = <0x290000 0x1000
->> -			0x270000 0x1000
->> -			0x271000 0x40>;
->> +		reg = <0x290000 0x1000>, <0x40000000 0x100>;
+> > Document the CSI1/CCP2 properties strobe_clk_inv and strobe_clock
+> > properties. The former tells whether the strobe/clock signal is
+> > inverted, while the latter signifies the clock or strobe mode.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index 9cd2a36..f0523f7 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -76,6 +76,10 @@ Optional endpoint properties
+> >    mode horizontal and vertical synchronization signals are provided to the
+> >    slave device (data source) by the master device (data sink). In the master
+> >    mode the data source device is also the source of the synchronization signals.
+> > +- bus-type: data bus type. Possible values are:
+> > +  0 - CSI2
 > 
-> 256 bytes of config space?
+> As in MIPI CSI2?
 
-Typo. Will fix.
+Yeah, I guess it'd make sense to make this explicit.
 
 > 
->> +		reg-names = "elbi", "config";
->>  		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
->>  		clocks = <&clock 28>, <&clock 27>;
->>  		clock-names = "pcie", "pcie_bus";
->>  		#address-cells = <3>;
->>  		#size-cells = <2>;
->>  		device_type = "pci";
->> -		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
->> -			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
->> +		ranges = <0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
->>  			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
->> +		phys = <&pcie_phy0>;
->> +		phy-names = "pcie-phy";
->>  		#interrupt-cells = <1>;
->>  		interrupt-map-mask = <0 0 0 0>;
->>  		interrupt-map = <0 0 0 0 &gic GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -36,17 +41,17 @@ SoC specific DT Entry:
->>  
->>  	pcie@2a0000 {
->>  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
->> -		reg = <0x2a0000 0x1000
->> -			0x272000 0x1000
->> -			0x271040 0x40>;
->> +		reg = <0x2a0000 0x1000>, <0x60000000 0x1000>;
->> +		reg-names = "elbi", "config";
->>  		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
->>  		clocks = <&clock 29>, <&clock 27>;
->>  		clock-names = "pcie", "pcie_bus";
->>  		#address-cells = <3>;
->>  		#size-cells = <2>;
->>  		device_type = "pci";
->> -		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
->> -			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
->> +		phys = <&pcie_phy1>;
->> +		phy-names = "pcie-phy";
->> +		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
->>  			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
->>  		#interrupt-cells = <1>;
->>  		interrupt-map-mask = <0 0 0 0>;
->> -- 
->> 2.10.2
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +  1 - parallel / Bt656
+> > +  2 - CCP2
+> >  - bus-width: number of data lines actively used, valid for the parallel busses.
+> >  - data-shift: on the parallel data busses, if bus-width is used to specify the
+> >    number of data lines, data-shift can be used to specify which data lines are
+> > @@ -110,9 +114,10 @@ Optional endpoint properties
+> >    lane and followed by the data lanes in the same order as in data-lanes.
+> >    Valid values are 0 (normal) and 1 (inverted). The length of the array
+> >    should be the combined length of data-lanes and clock-lanes properties.
+> > -  If the lane-polarities property is omitted, the value must be interpreted
+> > -  as 0 (normal). This property is valid for serial busses only.
 > 
+> Why is this removed?
+
+Must have been by mistake. :-)
+
 > 
+> > -
+> > +- clock-inv: Clock or strobe signal inversion.
+> > +  Possible values: 0 -- not inverted; 1 -- inverted
 > 
+> "invert" assumes I know what is normal and I do not. Define what is 
+> "normal" and name the property the opposite of that. If normal is data 
+> shifted on clock rising edge, then call the the property 
+> "clock-shift-falling-edge" for example..
+
+The hardware documentation says this is the "strobe/clock inversion control
+signal". I'm not entirely sure whether this is just signal polarity (it's a
+differential signal) or inversion of an internal signal of the CCP2 block.
+
+It might make sense to make this a private property for the OMAP 3 ISP
+instead. If it's seen elsewhere, then think about it again. I doubt it
+would, as CCP2 is an old bus that's used on Nokia N9, N950 and N900.
+
+As strobe is included, I'd add that to the name. Say, "ti,clock-strobe-inv".
+
+> 
+> > +- strobe: Whether the clock signal is used as clock or strobe. Used
+> > +  with CCP2, for instance.
+> >  
+> >  Example
+> >  -------
+> > 
+> > 
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
