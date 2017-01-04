@@ -1,15 +1,14 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: keystone: Add "ti, da830-uart" compatible
- string
-Date: Wed, 4 Jan 2017 14:00:01 -0800
-Message-ID: <93c4aed0-6faa-2c27-7931-454fc1f48e79@oracle.com>
-References: <1483561814-21953-1-git-send-email-david@lechnology.com>
- <1483561814-21953-5-git-send-email-david@lechnology.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v3 0/4] ARM: K2G: Add support for TI-SCI Generic PM Domains
+Date: Wed, 4 Jan 2017 16:06:02 -0600
+Message-ID: <bf9286b1-379d-1cc8-4eae-d268540dd2a6@ti.com>
+References: <20170104205536.15963-1-d-gerlach@ti.com>
+ <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483561814-21953-5-git-send-email-david@lechnology.com>
+In-Reply-To: <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,20 +18,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/4/2017 12:30 PM, David Lechner wrote:
-> The TI Keystone SoCs have extra UART registers beyond the standard 8250
-> registers, so we need a new compatible string to indicate this. Also, at
-> least one of these registers uses the full 32 bits, so we need to specify
-> reg-io-width in addition to reg-shift.
+Santosh,
+On 01/04/2017 03:54 PM, Santosh Shilimkar wrote:
+> On 1/4/2017 12:55 PM, Dave Gerlach wrote:
+>> Hi,
+>> This is v3 of the series to add support for TI-SCI Generic PM Domains.
+>> Previous versions can be found here:
+>>
+>> v2: https://www.spinics.net/lists/kernel/msg2364612.html
+>> v1: http://www.spinics.net/lists/arm-kernel/msg525204.html
+>>
+>> This version is rebased on v4.10-rc2 but is the same as v2 with the
+>> exception of patch 2 in which the devicetree binding documentation
+>> needed to be updated to show the k2g_pds node should be a child of
+>> the pmmc node. Apart from that, the acks provided by Ulf were added
+>> to patches 1 and 3.
+>>
+>> Now that the TI-SCI series has been merged [1] this series will be ready
+>> to go in with an ack on the DT binding. Rob had raised some questions on
+>> the necessity ti,sci-id property but I believe these were properly
+>> addressed during the discussion of v2 so hopefully an ack is in order
+>> now.
+>>
+> How do you plan to merge this series with below patch ?
 >
-> "ns16550a" is left in the compatible specification since it does work as
-> long as the bootloader configures the SoC UART power management registers.
+>>   PM / Domains: Add generic data pointer to genpd data struct
+> I think this one goes via Rafael's tree. If you want me to merge this
+> along with other patches then will need his ack.
 >
-NAK!!
-We can't break the booting boards with existing boot loaders.
-I suggest you to first get the driver updated to take care of
-the UART PM register and then enable the support for it.
+> Other way is to get that merged first via Rafael's tree and then
+> the remainder series.
+
+I'd be happy with it going in through your tree with an ack to avoid any 
+delay but I'd say it's Rafael's call as it is a patch to the genpd core, 
+even though at this point I am the only user.
+
+Regards,
+Dave
+
+>
+> Regards,
+> Santosh
