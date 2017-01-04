@@ -1,43 +1,71 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
-Date: Wed, 4 Jan 2017 10:51:52 -0600
-Message-ID: <4b102eed-b795-3b07-179d-7f5cda53d46f@ti.com>
-References: <20161230183732.5595-1-tony@atomide.com>
- <20161230183732.5595-3-tony@atomide.com> <20170102221228.GH9325@atomide.com>
- <63a8a1ec-343a-8c96-a0d2-21d81f7ad10e@ti.com>
- <20170104160511.GF25222@atomide.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V7 1/4] Documentation/devicetree/bindings: b850v3_lvds_dp
+Date: Wed, 4 Jan 2017 14:39:50 -0600
+Message-ID: <CAL_JsqJk=QZ20VmV5uE1ta2T0TEO3rvWFbiGsJpH1e3-ojnBfA@mail.gmail.com>
+References: <20170103225127.jn36tatufdfz2k5q@rob-hp-laptop> <529b-586c3500-5-5e05b080@98620974>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170104160511.GF25222-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <529b-586c3500-5-5e05b080@98620974>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Senna Tschudin <peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh@>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2017 10:05 AM, Tony Lindgren wrote:
-> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [170104 07:39]:
->> On 01/02/2017 04:12 PM, Tony Lindgren wrote:
->> [...]
->> Minor one:
->>> + * Copyright (C) 2015 Texas Instruments, Inc.
->> Could you make this:
->>  Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
+On Tue, Jan 3, 2017 at 5:34 PM, Peter Senna Tschudin
+<peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+>  Hi Rob,
 >
-> Sure, it's your patch :) Will repost.
-Thanks.
+> Thank you for the review.
+>
+> On 03 January, 2017 23:51 CET, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+>> On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin wrote:
+>> > Devicetree bindings documentation for the GE B850v3 LVDS/DP++
+>> > display bridge.
+>> >
+>> > Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+>> > Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+>> > Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+>> > Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> > Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+>> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> > ---
+>> > There was an Acked-by from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> for V6, but I changed
+>> > the bindings to use i2c_new_secondary_device() so I removed it from the commit
+>> > message.
+>> >
+>> >  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 ++++++++++++++++++++++
+>>
+>> Generally, bindings are not organized by vendor. Put in
+>> bindings/display/bridge/... instead.
+>
+> Will change that.
+>
+>>
+>> >  1 file changed, 39 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+>> > new file mode 100644
+>> > index 0000000..1bc6ebf
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+>> > @@ -0,0 +1,39 @@
+>> > +Driver for GE B850v3 LVDS/DP++ display bridge
+>> > +
+>> > +Required properties:
+>> > +  - compatible : should be "ge,b850v3-lvds-dp".
+>>
+>> Isn't '-lvds-dp' redundant? The part# should be enough.
+>
+> b850v3 is the name of the product, this is why the proposed name. What about, b850v3-dp2 dp2 indicating the second DP output?
 
-I just finished testing it as well and well it still does the job it 
-used to do. thanks for taking this forward.
+Humm, b850v3 is the board name? This node should be the name of the bridge chip.
 
-I did get a few kernel-doc warnings, which i need to look closer at. 
-will comment back today if I see something of use for us to fix up.
-
-
--- 
-Regards,
-Nishanth Menon
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
