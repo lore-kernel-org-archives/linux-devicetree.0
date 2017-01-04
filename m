@@ -1,47 +1,51 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Update QorIQ TMU thermal bindings
-Date: Wed, 04 Jan 2017 04:37:54 -0600
-Message-ID: <1483526274.17813.1.camel@buserror.net>
-References: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
-         <1483520271-3838-2-git-send-email-hongtao.jia@nxp.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] mfd: dt: Fix "indicates" typo in mfd bindings
+ document
+Date: Wed, 4 Jan 2017 11:23:35 +0000
+Message-ID: <20170104112335.GB27589@dell>
+References: <20161220071535.27542-1-andrew@aj.id.au>
+ <20161220071535.27542-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483520271-3838-2-git-send-email-hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161220071535.27542-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yuantian.tang-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-01-04 at 16:57 +0800, Jia Hongtao wrote:
-> For different types of SoC the sensor id and endianness may vary.
-> "#thermal-sensor-cells" is used to provide sensor id information.
-> "little-endian" property is to tell the endianness of TMU.
-> 
-> Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+On Tue, 20 Dec 2016, Andrew Jeffery wrote:
+
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-> b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-> index 66223d5..20ca4ef 100644
-> --- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-> @@ -17,6 +17,12 @@ Required properties:
->  	calibration data, as specified by the SoC reference manual.
->  	The first cell of each pair is the value to be written to TTCFGR,
->  	and the second is the value to be written to TSCFGR.
-> +- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
-> +	site ID, and represents the "n" in TRITSRn and TRATSRn.
+>  Documentation/devicetree/bindings/mfd/mfd.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I assume the driver will continue to work with existing device trees where
-this information is absent?  If so, ACK for the whole series.
+Applied, thanks.
 
--Scott
+> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
+> index af9d6931a1a2..f1fceeda12f1 100644
+> --- a/Documentation/devicetree/bindings/mfd/mfd.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+> @@ -19,7 +19,7 @@ Optional properties:
+>  
+>  - compatible : "simple-mfd" - this signifies that the operating system should
+>    consider all subnodes of the MFD device as separate devices akin to how
+> -  "simple-bus" inidicates when to see subnodes as children for a simple
+> +  "simple-bus" indicates when to see subnodes as children for a simple
+>    memory-mapped bus. For more complex devices, when the nexus driver has to
+>    probe registers to figure out what child devices exist etc, this should not
+>    be used. In the latter case the child devices will be determined by the
 
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
