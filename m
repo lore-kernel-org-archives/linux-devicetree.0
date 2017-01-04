@@ -1,83 +1,80 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
- device on TM2 board
-Date: Wed, 04 Jan 2017 17:20:40 +0900
-Message-ID: <7fc1f041-6f6e-e02a-1c7c-014b12d74b2a@samsung.com>
-References: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170104081522epcas5p1985a9b2404976bd26df4e13fa5ffe1bc@epcas5p1.samsung.com>
- <1483517711-23849-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 0/5] Add intial support to DW MMC host on ZTE SoC
+Date: Wed, 04 Jan 2017 17:25:16 +0900
+Message-ID: <a7014d59-7071-917e-27d8-a1dffc373737@samsung.com>
+References: <CGME20161222045752epcas5p3ed15c57243cee4c65c0c2e784baf9e02@epcas5p3.samsung.com>
+ <1482382657-16681-1-git-send-email-jun.nie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1483517711-23849-4-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-reply-to: <1482382657-16681-1-git-send-email-jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, lai.binz-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CPGS <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hoegeun,
+Hi Jun,
 
-I tested this patch. But this patch does not include my tested-by tag.
-
-Tested-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Regards,
-Chanwoo Choi
-
-On 2017년 01월 04일 17:15, Hoegeun Kwon wrote:
-> From: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On 12/22/2016 01:57 PM, Jun Nie wrote:
+> Add intial support to DW MMC host on ZTE SoC. It include platform
+> specific wrapper driver and workarounds for fifo quirk.
 > 
-> This patch add the panel device tree node for S6E3HA2 display
-> controller to TM2 dts.
+> Changes vs version 7:
+>   - Re-order patches sequence so that new dts property is introduced before usage.
+>   - Remove unecessary property in zx mmc dts.
 > 
-> Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> Changes vs version 6:
+>   - Resolve confilict when rebase to latest dw-mmc.git for-ulf branch.
+>   - Add Shawn Lin's review tag.
 > 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> index 5b9451d..b3ba1ac 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> @@ -304,11 +304,28 @@
->  			reg = <1>;
->  
->  			dsi_out: endpoint {
-> +				remote-endpoint = <&panel_in>;
->  				samsung,burst-clock-frequency = <512000000>;
->  				samsung,esc-clock-frequency = <16000000>;
->  			};
->  		};
->  	};
-> +
-> +	panel@0 {
-> +		compatible = "samsung,s6e3ha2";
-> +		reg = <0>;
-> +		vdd3-supply = <&ldo27_reg>;
-> +		vci-supply = <&ldo28_reg>;
-> +		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
-> +		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
-> +		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
->  };
->  
->  &hsi2c_0 {
+> Changes vs version 5:
+>   - Add clock delay lock status check to save CPU cycle in timing tuning CMD.
+> 
+> Changes vs version 4:
+>   - Fix missing empty dts compatible element in the end of compatible array.
+> 
+> Changes vs version 3:
+>   - Fix brace error in document.
+> 
+> Changes vs version 2:
+>   - Change dt property fifo-addr to data-addr and fifo-watermark-quirk to
+>     fifo-watermark-aligned.
+>   - Polish ZX MMC driver on minor coding style issues.
+> 
+> Changes vs version 1:
+>   - Change fifo-addr-override to fifo-addr and remove its workaround tag in comments.
+>   - Remove ZX DW MMC driver reset cap in driver, which can be added in dt nodes.
+> 
+> 
+> Jun Nie (5):
+>   Documentation: synopsys-dw-mshc: add binding for fifo quirks
+>   mmc: dw: Add fifo address property
+>   mmc: dw: Add fifo watermark alignment property
+>   mmc: dt-bindings: add ZTE ZX296718 MMC bindings
+>   mmc: zx: Initial support for ZX mmc controller
+> 
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  13 ++
+>  .../devicetree/bindings/mmc/zx-dw-mshc.txt         |  33 +++
+>  drivers/mmc/host/Kconfig                           |   9 +
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/dw_mmc-zx.c                       | 242 +++++++++++++++++++++
+>  drivers/mmc/host/dw_mmc-zx.h                       |  31 +++
+>  drivers/mmc/host/dw_mmc.c                          |  17 +-
+>  include/linux/mmc/dw_mmc.h                         |   5 +
+>  8 files changed, 348 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>  create mode 100644 drivers/mmc/host/dw_mmc-zx.c
+>  create mode 100644 drivers/mmc/host/dw_mmc-zx.h
+
+I will pick your patches after modifying the subject some prefix.
+Sorry for late. Thanks!
+
+Best Regards,
+Jaehoon Chung
+
 > 
 
-
--- 
-Regards,
-Chanwoo Choi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
