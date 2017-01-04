@@ -1,48 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Wed, 4 Jan 2017 07:22:31 -0600
-Message-ID: <20170104132231.jlhqwngaeza7duoo@rob-hp-laptop>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
- <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH V5 3/3] cfg80211: support ieee80211-freq-limit DT
+ property
+Date: Wed, 04 Jan 2017 14:26:46 +0100
+Message-ID: <1483536406.7312.3.camel@sipsolutions.net>
+References: <20170103225715.14072-1-zajec5@gmail.com>
+         <20170103225715.14072-3-zajec5@gmail.com>
+         (sfid-20170103_235738_606634_945A6D98)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170103225715.14072-3-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (sfid-20170103_235738_606634_945A6D98)
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 02, 2017 at 01:07:51PM -0800, Steve Longerbeam wrote:
-> Add optional reset-gpios pin control. If present, de-assert the
-> specified reset gpio pin to bring the chip out of reset.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |  4 ++++
->  drivers/gpio/gpio-pca953x.c                             | 11 +++++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> index 08dd15f..da54f4c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> @@ -29,6 +29,10 @@ Required properties:
->  	onsemi,pca9654
->  	exar,xra1202
->  
-> +Optional properties:
-> + - reset-gpios: GPIO specification for the RESET input
 
-Need to specify active high or low.
+> V4: Move code to of.c
+>     Use one helper called at init time (no runtime hooks)
+>     Modify orig_flags
 
-> +
-> +
->  Example:
->  
->  
+
+> +/**
+> + * wiphy_read_of_freq_limits - read frequency limits from device
+> tree
+> + *
+> + * @wiphy: the wireless device to get extra limits for
+> + *
+> + * Some devices may have extra limitations specified in DT. This may
+> be useful
+> + * for chipsets that normally support more bands but are limited due
+> to board
+> + * design (e.g. by antennas or extermal power amplifier).
+> + *
+> + * This function reads info from DT and uses it to *modify* channels
+> (disable
+> + * unavailable ones). It's usually a *bad* idea to use it in drivers
+> with
+> + * shared channel data as DT limitations are device specific.
+> + *
+> + * As this function access device node it has to be called after
+> set_wiphy_dev.
+> + * It also modifies channels so they have to be set first.
+> + */
+
+It should also be called before wiphy_register(), I think? And I
+suppose you should add a comment about not being able to use shared
+channels.
+
+> +				pr_debug("Disabling freq %d MHz as
+> it's out of OF limits\n",
+> +					 chan->center_freq);
+> +				chan->orig_flags |=
+> IEEE80211_CHAN_DISABLED;
+> 
+But just setting orig_flags also won't work, since it'd be overwritten
+again by wiphy_register(), no?
+
+johannes
