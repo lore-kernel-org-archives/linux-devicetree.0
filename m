@@ -1,226 +1,282 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v6 5/5] soc: zte: pm_domains: Add support for zx296718
-Date: Wed,  4 Jan 2017 19:48:14 +0800
-Message-ID: <1483530494-14177-5-git-send-email-baoyou.xie@linaro.org>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: [PATCH v6 4/5] soc: zte: pm_domains: Prepare for supporting ARMv8 zx2967 family
+Date: Wed,  4 Jan 2017 19:48:13 +0800
+Message-ID: <1483530494-14177-4-git-send-email-baoyou.xie@linaro.org>
 References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483530494-14177-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amitdanielk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, claudiu.manoil-3arQi8VN3Tc@public.gmane.org, yangbo.lu-3arQi8VN3Tc@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jun.nie@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, krzk@kernel.org, arnd@arndb.de, ulf.hansson@linaro.org, amitdanielk@gmail.com, claudiu.manoil@nxp.com, yangbo.lu@nxp.com, pankaj.dubey@samsung.com, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces the power domain driver of zx296718
-which belongs to zte's zx2967 family.
+The ARMv8 zx2967 family (296718, 296716 etc) uses different value
+for controlling the power domain on/off registers, Choose the
+value depending on the compatible.
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Multiple domains are prepared for the family, this patch prepares
+the common functions.
+
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 ---
- drivers/soc/zte/Makefile              |   1 +
- drivers/soc/zte/zx296718_pm_domains.c | 181 ++++++++++++++++++++++++++++++++++
- 2 files changed, 182 insertions(+)
- create mode 100644 drivers/soc/zte/zx296718_pm_domains.c
+ drivers/soc/Kconfig                 |   1 +
+ drivers/soc/Makefile                |   1 +
+ drivers/soc/zte/Kconfig             |  13 ++++
+ drivers/soc/zte/Makefile            |   4 +
+ drivers/soc/zte/zx2967_pm_domains.c | 142 ++++++++++++++++++++++++++++++++++++
+ drivers/soc/zte/zx2967_pm_domains.h |  44 +++++++++++
+ 6 files changed, 205 insertions(+)
+ create mode 100644 drivers/soc/zte/Kconfig
+ create mode 100644 drivers/soc/zte/Makefile
+ create mode 100644 drivers/soc/zte/zx2967_pm_domains.c
+ create mode 100644 drivers/soc/zte/zx2967_pm_domains.h
 
-diff --git a/drivers/soc/zte/Makefile b/drivers/soc/zte/Makefile
-index 8a37f2f..96b7cd4 100644
---- a/drivers/soc/zte/Makefile
-+++ b/drivers/soc/zte/Makefile
-@@ -2,3 +2,4 @@
- # ZTE SOC drivers
- #
- obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx2967_pm_domains.o
-+obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx296718_pm_domains.o
-diff --git a/drivers/soc/zte/zx296718_pm_domains.c b/drivers/soc/zte/zx296718_pm_domains.c
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index f31bceb..f09023f 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -11,5 +11,6 @@ source "drivers/soc/tegra/Kconfig"
+ source "drivers/soc/ti/Kconfig"
+ source "drivers/soc/ux500/Kconfig"
+ source "drivers/soc/versatile/Kconfig"
++source "drivers/soc/zte/Kconfig"
+ 
+ endmenu
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 50c23d0..05eae52 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -16,3 +16,4 @@ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+ obj-$(CONFIG_SOC_TI)		+= ti/
+ obj-$(CONFIG_ARCH_U8500)	+= ux500/
+ obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
++obj-$(CONFIG_ARCH_ZX)		+= zte/
+diff --git a/drivers/soc/zte/Kconfig b/drivers/soc/zte/Kconfig
 new file mode 100644
-index 0000000..52003ee
+index 0000000..20bde38
 --- /dev/null
-+++ b/drivers/soc/zte/zx296718_pm_domains.c
-@@ -0,0 +1,181 @@
++++ b/drivers/soc/zte/Kconfig
+@@ -0,0 +1,13 @@
++#
++# ZTE SoC drivers
++#
++menuconfig SOC_ZTE
++	bool "ZTE SoC driver support"
++
++if SOC_ZTE
++
++config ZX2967_PM_DOMAINS
++	bool "ZX2967 PM domains"
++	depends on PM_GENERIC_DOMAINS
++
++endif
+diff --git a/drivers/soc/zte/Makefile b/drivers/soc/zte/Makefile
+new file mode 100644
+index 0000000..8a37f2f
+--- /dev/null
++++ b/drivers/soc/zte/Makefile
+@@ -0,0 +1,4 @@
++#
++# ZTE SOC drivers
++#
++obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx2967_pm_domains.o
+diff --git a/drivers/soc/zte/zx2967_pm_domains.c b/drivers/soc/zte/zx2967_pm_domains.c
+new file mode 100644
+index 0000000..f190a62
+--- /dev/null
++++ b/drivers/soc/zte/zx2967_pm_domains.c
+@@ -0,0 +1,142 @@
 +/*
 + * Copyright (C) 2017 ZTE Ltd.
 + *
-+ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ * Author: Baoyou Xie <baoyou.xie@linaro.org>
 + * License terms: GNU General Public License (GPL) version 2
 + */
-+#include <dt-bindings/soc/zte,pm_domains.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/of.h>
++
 +#include "zx2967_pm_domains.h"
 +
-+static u16 zx296718_offsets[REG_ARRAY_SIZE] = {
-+	[REG_CLKEN] = 0x18,
-+	[REG_ISOEN] = 0x1c,
-+	[REG_RSTEN] = 0x20,
-+	[REG_PWREN] = 0x24,
-+	[REG_ACK_SYNC] = 0x28,
-+};
++#define PCU_DM_CLKEN(zpd)	((zpd)->reg_offset[REG_CLKEN])
++#define PCU_DM_ISOEN(zpd)	((zpd)->reg_offset[REG_ISOEN])
++#define PCU_DM_RSTEN(zpd)	((zpd)->reg_offset[REG_RSTEN])
++#define PCU_DM_PWREN(zpd)	((zpd)->reg_offset[REG_PWREN])
++#define PCU_DM_ACK_SYNC(zpd)	((zpd)->reg_offset[REG_ACK_SYNC])
++
++static void __iomem *pcubase;
++
++int zx2967_power_on(struct generic_pm_domain *domain)
++{
++	struct zx2967_pm_domain *zpd = (struct zx2967_pm_domain *)domain;
++	unsigned long loop = 1000;
++	u32 val;
++
++	val = readl_relaxed(pcubase + PCU_DM_PWREN(zpd));
++	if (zpd->polarity == PWREN)
++		val |= BIT(zpd->bit);
++	else
++		val &= ~BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_PWREN(zpd));
++
++	do {
++		udelay(1);
++		val = readl_relaxed(pcubase + PCU_DM_ACK_SYNC(zpd))
++				   & BIT(zpd->bit);
++	} while (--loop && !val);
++
++	if (!loop) {
++		pr_err("Error: %s %s fail\n", __func__, domain->name);
++		return -EIO;
++	}
++
++	val = readl_relaxed(pcubase + PCU_DM_RSTEN(zpd));
++	val |= BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_RSTEN(zpd));
++	udelay(5);
++
++	val = readl_relaxed(pcubase + PCU_DM_ISOEN(zpd));
++	val &= ~BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_ISOEN(zpd));
++	udelay(5);
++
++	val = readl_relaxed(pcubase + PCU_DM_CLKEN(zpd));
++	val |= BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_CLKEN(zpd));
++	udelay(5);
++
++	pr_debug("poweron %s\n", domain->name);
++
++	return 0;
++}
++
++int zx2967_power_off(struct generic_pm_domain *domain)
++{
++	struct zx2967_pm_domain *zpd = (struct zx2967_pm_domain *)domain;
++	unsigned long loop = 1000;
++	u32 val;
++
++	val = readl_relaxed(pcubase + PCU_DM_CLKEN(zpd));
++	val &= ~BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_CLKEN(zpd));
++	udelay(5);
++
++	val = readl_relaxed(pcubase + PCU_DM_ISOEN(zpd));
++	val |= BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_ISOEN(zpd));
++	udelay(5);
++
++	val = readl_relaxed(pcubase + PCU_DM_RSTEN(zpd));
++	val &= ~BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_RSTEN(zpd));
++	udelay(5);
++
++	val = readl_relaxed(pcubase + PCU_DM_PWREN(zpd));
++	if (zpd->polarity == PWREN)
++		val &= ~BIT(zpd->bit);
++	else
++		val |= BIT(zpd->bit);
++	writel_relaxed(val, pcubase + PCU_DM_PWREN(zpd));
++
++	do {
++		udelay(1);
++		val = readl_relaxed(pcubase + PCU_DM_ACK_SYNC(zpd))
++				   & BIT(zpd->bit);
++	} while (--loop && val);
++
++	if (!loop) {
++		pr_err("Error: %s %s fail\n", __func__, domain->name);
++		return -EIO;
++	}
++
++	pr_debug("poweroff %s\n", domain->name);
++
++	return 0;
++}
++
++int zx2967_pd_probe(struct platform_device *pdev,
++		    struct generic_pm_domain **zx_pm_domains,
++		    int domain_num)
++{
++	struct genpd_onecell_data *genpd_data;
++	struct resource *res;
++	int i;
++
++	genpd_data = devm_kzalloc(&pdev->dev, sizeof(*genpd_data), GFP_KERNEL);
++	if (!genpd_data)
++		return -ENOMEM;
++
++	genpd_data->domains = zx_pm_domains;
++	genpd_data->num_domains = domain_num;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	pcubase = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(pcubase)) {
++		dev_err(&pdev->dev, "ioremap fail.\n");
++		return PTR_ERR(pcubase);
++	}
++
++	for (i = 0; i < domain_num; ++i) {
++		zx_pm_domains[i]->power_on = zx2967_power_on;
++		zx_pm_domains[i]->power_off = zx2967_power_off;
++
++		pm_genpd_init(zx_pm_domains[i], NULL, false);
++	}
++
++	of_genpd_add_provider_onecell(pdev->dev.of_node, genpd_data);
++	dev_info(&pdev->dev, "powerdomain init ok\n");
++	return 0;
++}
+diff --git a/drivers/soc/zte/zx2967_pm_domains.h b/drivers/soc/zte/zx2967_pm_domains.h
+new file mode 100644
+index 0000000..cb46595
+--- /dev/null
++++ b/drivers/soc/zte/zx2967_pm_domains.h
+@@ -0,0 +1,44 @@
++/*
++ * Header for ZTE's Power Domain Driver support
++ *
++ * Copyright (C) 2017 ZTE Ltd.
++ *
++ * Author: Baoyou Xie <baoyou.xie@linaro.org>
++ * License terms: GNU General Public License (GPL) version 2
++ */
++
++#ifndef __ZTE_ZX2967_PM_DOMAIN_H
++#define __ZTE_ZX2967_PM_DOMAIN_H
++
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
 +
 +enum {
-+	PCU_DM_VOU = 0,
-+	PCU_DM_SAPPU,
-+	PCU_DM_VDE,
-+	PCU_DM_VCE,
-+	PCU_DM_HDE,
-+	PCU_DM_VIU,
-+	PCU_DM_USB20,
-+	PCU_DM_USB21,
-+	PCU_DM_USB30,
-+	PCU_DM_HSIC,
-+	PCU_DM_GMAC,
-+	PCU_DM_TS,
++	REG_CLKEN,
++	REG_ISOEN,
++	REG_RSTEN,
++	REG_PWREN,
++	REG_PWRDN,
++	REG_ACK_SYNC,
++
++	/* The size of the array - must be last */
++	REG_ARRAY_SIZE,
 +};
 +
-+static struct zx2967_pm_domain vou_domain = {
-+	.dm = {
-+		.name		= "vou_domain",
-+	},
-+	.bit = PCU_DM_VOU,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
++enum zx2967_power_polarity {
++	PWREN,
++	PWRDN,
 +};
 +
-+static struct zx2967_pm_domain sappu_domain = {
-+	.dm = {
-+		.name		= "sappu_domain",
-+	},
-+	.bit = PCU_DM_SAPPU,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
++struct zx2967_pm_domain {
++	struct generic_pm_domain dm;
++	const u16 bit;
++	const enum zx2967_power_polarity polarity;
++	const u16 *reg_offset;
 +};
 +
-+static struct zx2967_pm_domain vde_domain = {
-+	.dm = {
-+		.name		= "vde_domain",
-+	},
-+	.bit = PCU_DM_VDE,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
++int zx2967_pd_probe(struct platform_device *pdev,
++		    struct generic_pm_domain **zx_pm_domains,
++		    int domain_num);
 +
-+static struct zx2967_pm_domain vce_domain = {
-+	.dm = {
-+		.name		= "vce_domain",
-+	},
-+	.bit = PCU_DM_VCE,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain hde_domain = {
-+	.dm = {
-+		.name		= "hde_domain",
-+	},
-+	.bit = PCU_DM_HDE,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain viu_domain = {
-+	.dm = {
-+		.name		= "viu_domain",
-+	},
-+	.bit = PCU_DM_VIU,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain usb20_domain = {
-+	.dm = {
-+		.name		= "usb20_domain",
-+	},
-+	.bit = PCU_DM_USB20,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain usb21_domain = {
-+	.dm = {
-+		.name		= "usb21_domain",
-+	},
-+	.bit = PCU_DM_USB21,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain usb30_domain = {
-+	.dm = {
-+		.name		= "usb30_domain",
-+	},
-+	.bit = PCU_DM_USB30,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain hsic_domain = {
-+	.dm = {
-+		.name		= "hsic_domain",
-+	},
-+	.bit = PCU_DM_HSIC,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain gmac_domain = {
-+	.dm = {
-+		.name		= "gmac_domain",
-+	},
-+	.bit = PCU_DM_GMAC,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct zx2967_pm_domain ts_domain = {
-+	.dm = {
-+		.name		= "ts_domain",
-+	},
-+	.bit = PCU_DM_TS,
-+	.polarity = PWREN,
-+	.reg_offset = zx296718_offsets,
-+};
-+
-+static struct generic_pm_domain *zx296718_pm_domains[] = {
-+	[DM_ZX296718_SAPPU] = &sappu_domain.dm,
-+	[DM_ZX296718_VDE] = &vde_domain.dm,
-+	[DM_ZX296718_VCE] = &vce_domain.dm,
-+	[DM_ZX296718_HDE] = &hde_domain.dm,
-+	[DM_ZX296718_VIU] = &viu_domain.dm,
-+	[DM_ZX296718_USB20] = &usb20_domain.dm,
-+	[DM_ZX296718_USB21] = &usb21_domain.dm,
-+	[DM_ZX296718_USB30] = &usb30_domain.dm,
-+	[DM_ZX296718_HSIC] = &hsic_domain.dm,
-+	[DM_ZX296718_GMAC] = &gmac_domain.dm,
-+	[DM_ZX296718_TS] = &ts_domain.dm,
-+	[DM_ZX296718_VOU] = &vou_domain.dm,
-+};
-+
-+static int zx296718_pd_probe(struct platform_device *pdev)
-+{
-+	return zx2967_pd_probe(pdev,
-+			  zx296718_pm_domains,
-+			  ARRAY_SIZE(zx296718_pm_domains));
-+}
-+
-+static const struct of_device_id zx296718_pm_domain_matches[] = {
-+	{ .compatible = "zte,zx296718-pcu", },
-+	{ },
-+};
-+
-+static struct platform_driver zx296718_pd_driver = {
-+	.driver = {
-+		.name = "zx-powerdomain",
-+		.owner = THIS_MODULE,
-+		.of_match_table = zx296718_pm_domain_matches,
-+	},
-+	.probe = zx296718_pd_probe,
-+};
-+
-+static int __init zx296718_pd_init(void)
-+{
-+	return platform_driver_register(&zx296718_pd_driver);
-+}
-+subsys_initcall(zx296718_pd_init);
++#endif /* __ZTE_ZX2967_PM_DOMAIN_H */
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
