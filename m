@@ -1,65 +1,46 @@
-From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] dt-bindings: qman: Remove pool channel node
-Date: Wed, 4 Jan 2017 13:03:49 +0200
-Message-ID: <1483527829-8369-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Update QorIQ TMU thermal bindings
+Date: Wed, 04 Jan 2017 04:37:54 -0600
+Message-ID: <1483526274.17813.1.camel@buserror.net>
+References: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
+         <1483520271-3838-2-git-send-email-hongtao.jia@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483520271-3838-2-git-send-email-hongtao.jia-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yuantian.tang-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+On Wed, 2017-01-04 at 16:57 +0800, Jia Hongtao wrote:
+> For different types of SoC the sensor id and endianness may vary.
+> "#thermal-sensor-cells" is used to provide sensor id information.
+> "little-endian" property is to tell the endianness of TMU.
+> 
+> Signed-off-by: Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> index 66223d5..20ca4ef 100644
+> --- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> @@ -17,6 +17,12 @@ Required properties:
+>  	calibration data, as specified by the SoC reference manual.
+>  	The first cell of each pair is the value to be written to TTCFGR,
+>  	and the second is the value to be written to TSCFGR.
+> +- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
+> +	site ID, and represents the "n" in TRITSRn and TRATSRn.
 
-No device tree has these, nor does any driver look for them.
+I assume the driver will continue to work with existing device trees where
+this information is absent?  If so, ACK for the whole series.
 
-Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
----
- .../devicetree/bindings/soc/fsl/qman-portals.txt     | 20 --------------------
- 1 file changed, 20 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
-index 47e46cc..5a34f3a 100644
---- a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
-@@ -5,7 +5,6 @@ Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
- CONTENTS
- 
- 	- QMan Portal
--	- QMan Pool Channel
- 	- Example
- 
- QMan Portal Node
-@@ -82,25 +81,6 @@ These subnodes should have the following properties:
- 	Definition:	The phandle to the particular hardware device that this
- 			portal is connected to.
- 
--DPAA QMan Pool Channel Nodes
--
--Pool Channels are defined with the following properties.
--
--PROPERTIES
--
--- compatible
--	Usage:		Required
--	Value type:	<stringlist>
--	Definition:	Must include "fsl,qman-pool-channel"
--			May include "fsl,<SoC>-qman-pool-channel"
--
--- fsl,qman-channel-id
--	Usage:		Required
--	Value type:	<u32>
--	Definition:	The hardware index of the channel. This can also be
--			determined by dividing any of the channel's 8 work queue
--			IDs by 8
--
- EXAMPLE
- 
- The example below shows a (P4080) QMan portals container/bus node with two portals
--- 
-2.1.0
+-Scott
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
