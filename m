@@ -1,64 +1,99 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] ARM: dts: Add missing CPU frequencies for
- Exynos5422/5800
-Date: Wed, 4 Jan 2017 13:05:41 -0800
-Message-ID: <CAD=FV=WM_K_f0NQ0mxB55Ksbqg1gYJHs5d66ARYsa1=5hKLjXA@mail.gmail.com>
-References: <10512254.nyUcL0zgTP@amdc3058>
- <CAD=FV=Wo273T20fe8D2v5Pn1HYR==7PHtr7WZGwzFPRspAYPzg@mail.gmail.com>
- <20161229141707.qjrtjz7dik6a7l5s@kozik-lap>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to respect
+ extra limits
+Date: Wed, 4 Jan 2017 22:19:57 +0100
+Message-ID: <CACna6rxay9sC+QT2G4AfjWT1ERsNDzFQ620hNhVhr0FRHXJu=w@mail.gmail.com>
+References: <20170104175832.25996-1-zajec5@gmail.com> <20170104175832.25996-4-zajec5@gmail.com>
+ <3fc87224-7f08-e365-7bbb-a4b8b5746e4f@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161229141707.qjrtjz7dik6a7l5s@kozik-lap>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ben Gamari <ben@smart-cactus.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Arjun K V <arjun.kv@samsung.com>, Andreas Faerber <afaerber@suse.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3fc87224-7f08-e365-7bbb-a4b8b5746e4f-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Dec 29, 2016 at 6:17 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, Dec 15, 2016 at 04:54:30PM -0800, Doug Anderson wrote:
->> > Index: b/arch/arm/boot/dts/exynos5800.dtsi
->> > ===================================================================
->> > --- a/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.365955950 +0100
->> > +++ b/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.361955949 +0100
->> > @@ -24,6 +24,16 @@
->> >  };
->> >
->> >  &cluster_a15_opp_table {
->> > +       opp@2000000000 {
->> > +               opp-hz = /bits/ 64 <2000000000>;
->> > +               opp-microvolt = <1250000>;
->> > +               clock-latency-ns = <140000>;
->> > +       };
->> > +       opp@1900000000 {
->> > +               opp-hz = /bits/ 64 <1900000000>;
->> > +               opp-microvolt = <1250000>;
->> > +               clock-latency-ns = <140000>;
->> > +       };
+On 4 January 2017 at 21:07, Arend Van Spriel
+<arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On 4-1-2017 18:58, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 >>
->> I don't think the voltages you listed are high enough for all peach pi
->> boards for A15 at 1.9 GHz and 2.0 GHz, at least based on the research
->> I did.  See my response to v1.
+>> There are some devices (e.g. Netgear R8000 home router) with one chipset
+>> model used for different radios, some of them limited to subbands. NVRAM
+>> entries don't contain any extra info on such limitations and firmware
+>> reports full list of channels to us. We need to store extra limitation
+>> info in DT to support such devices properly.
+>>
+>> Now there is a cfg80211 helper for reading such info use it in brcmfmac.
+>> This patch adds check for channel being disabled with orig_flags which
+>> is how this wiphy helper and wiphy_register work.
+>>
+>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> ---
+>> This patch should probably go through wireless-driver-next which is why
+>> it got weird number 4/3. I'm sending it just as a proof of concept.
+>> It was succesfully tested on SmartRG SR400ac with BCM43602.
+>>
+>> V4: Respect IEEE80211_CHAN_DISABLED in orig_flags
+>> V5: Update commit message
+>> V6: Call wiphy_read_of_freq_limits after brcmf_setup_wiphybands to make =
+it work
+>>     with helper setting "flags" instead of "orig_flags".
+>> ---
+>>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 9 +++++++=
++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c=
+ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>> index ccae3bb..a008ba5 100644
+>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>> @@ -5886,6 +5886,9 @@ static int brcmf_construct_chaninfo(struct brcmf_c=
+fg80211_info *cfg,
+>>                                                      band->band);
+>>               channel[index].hw_value =3D ch.control_ch_num;
+>>
+>> +             if (channel->orig_flags & IEEE80211_CHAN_DISABLED)
+>> +                     continue;
+>> +
 >
-> I wanted to apply this but saw this remaining issue. Javier tested it
-> on Peach Pi so is this concern still valid?
+> So to be clear this is still needed for subsequent calls to
+> brcmf_setup_wiphybands(). The subsequent calls are done from the
+> regulatory notifier. So I think we have an issue with this approach. Say
+> the device comes up with US. That would set DISABLED flags for channels
+> 12 to 14. With a country update to PL we would want to enable channels
+> 12 and 13, right? The orig_flags are copied from the initial flags
+> during wiphy_register() so it seems we will skip enabling 12 and 13. I
+> think we should remove the check above and call
+> wiphy_read_of_freq_limits() as a last step within
+> brcmf_setup_wiphybands(). It means it is called every time, but it
+> safeguards that the limits in DT are always applied.
 
-I'm not sure.  It's been years since I did anything with exynos, so I
-won't stand in the way if everyone else agrees that this patch is
-good, but I will point out that testing on a single Peach Pi board is
-not really enough given the massive difference in voltage needed
-between the highest ASV group and the lowest (a whopping 112.5 mV from
-looking in the Chrome OS source tree).
+I'm not exactly happy with channels management in brcmfmac. Before
+calling wiphy_register it already disables channels unavailable for
+current country. This results in setting IEEE80211_CHAN_DISABLED in
+orig_flags of channels that may become available later, after country
+change. Please note it happens even right now, without this patch.
+Maybe you can workaround this by ignoring orig_flags in custom
+regulatory code, but I'd just prefer to have it nicely handled in the
+first place.
 
--Doug
+This is the next feature I'm going to work on. AFAIU this patch won't
+be applied for now (it's for wireless-drivers-next and we first need
+to get wiphy_read_of_freq_limits in that tree). By the time that
+happens I may have another patchset cleaning brcmfmac ready. And FWIW
+this patch wouldn't make things worse *at this point* as we don't
+really support country switching for any device yet.
+
+So I hope problem with channels in brcmfmac doesn't mean we need to
+postpone patches 1-3.
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
