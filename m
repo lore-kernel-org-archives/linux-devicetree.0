@@ -1,40 +1,101 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: document common IEEE 802.11 frequency properties
-Date: Wed, 04 Jan 2017 16:32:44 +0200
-Message-ID: <874m1ej3oz.fsf@kamboji.qca.qualcomm.com>
-References: <20161228155955.25518-1-zajec5@gmail.com>
-        <20170103195514.vf4psb6qw2bd2lcw@rob-hp-laptop>
-        <CACna6rxmgN2zz-Fc1-Uu02oqMQreNkMJt0jGjLOMrXM=6iujFw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: Add DT bindings info for FlexRM ring
+ manager
+Date: Wed, 4 Jan 2017 08:37:52 -0600
+Message-ID: <20170104143752.bl47gdfczbnfy6b3@rob-hp-laptop>
+References: <1483508082-7008-1-git-send-email-anup.patel@broadcom.com>
+ <1483508082-7008-3-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rxmgN2zz-Fc1-Uu02oqMQreNkMJt0jGjLOMrXM=6iujFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (=?utf-8?Q?=22Rafa=C5=82_Mi=C5=82ecki=22's?= message of "Tue, 3 Jan 2017
- 21:20:49 +0100")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1483508082-7008-3-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+On Wed, Jan 04, 2017 at 11:04:42AM +0530, Anup Patel wrote:
+> This patch adds device tree bindings document for the FlexRM
+> ring manager found on Broadcom iProc SoCs.
+> 
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> ---
+>  .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+> new file mode 100644
+> index 0000000..ca51a39
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+> @@ -0,0 +1,60 @@
+> +Broadcom FlexRM Ring Manager
+> +============================
+> +The Broadcom FlexRM ring manager provides a set of rings which can be
+> +used to submit work to offload engines. An SoC may have multiple FlexRM
+> +hardware blocks. There is one device tree entry per FlexRM block. The
+> +FlexRM driver will create a mailbox-controller instance for given FlexRM
+> +hardware block where each mailbox channel is a separate FlexRM ring.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:	Should be "brcm,iproc-flexrm-mbox"
+> +- reg:		Specifies base physical address and size of the FlexRM
+> +		ring registers
+> +- msi-parent:	Phandles (and potential Device IDs) to MSI controllers
+> +		The FlexRM engine will send MSIs (instead of wired
+> +		interrupts) to CPU. There is one MSI for each FlexRM ring.
+> +		Refer devicetree/bindings/interrupt-controller/msi.txt
+> +- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
+> +		channel. This should be 3.
+> +
+> +		The 1st cell is the mailbox channel number.
+> +
+> +		The 2nd cell contains MSI completion threshold. This is the
+> +		number of completion messages for which FlexRM will inject
+> +		one MSI interrupt to CPU.
+> +
+> +		The 3nd cell contains MSI timer value representing time for
+> +		which FlexRM will wait to accumulate N completion messages
+> +		where N is the value specified by 2nd cell above. If FlexRM
+> +		does not get required number of completion messages in time
+> +		specified by this cell then it will inject one MSI interrupt
+> +		to CPU provided atleast one completion message is available.
+> +
+> +Optional properties:
+> +--------------------
+> +- dma-coherent:	Present if DMA operations made by the FlexRM engine (such
+> +		as DMA descriptor access, access to buffers pointed by DMA
+> +		descriptors and read/write pointer updates to DDR) are
+> +		cache coherent with the CPU.
+> +
+> +Example:
+> +--------
+> +crypto_mbox: mbox@67000000 {
+> +	compatible = "brcm,iproc-flexrm-mbox";
+> +	reg = <0x67000000 0x200000>;
+> +	msi-parent = <&gic_its 0x7f00>;
+> +	#mbox-cells = <3>;
+> +};
+> +
+> +crypto_client {
 
-> On 3 January 2017 at 20:55, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Dec 28, 2016 at 04:59:54PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
->>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>
->>> This new file should be used for properties handled at higher level and
->>> so usable with all drivers.
->>
->> Why is this needed? Where would this data normally come from?
->
-> Vendors limit choice of channels at their web user interface level. I
-> want to do better and report proper channels directly at kernel level
-> instead of masking them in every possible configuration tool.
+crypto@<addr>
 
-Why do vendors limit the channels? Is it because of a hardware
-limitation (antenna does not support, or not calibrated, for a certain
-band etc) or something else?
+> +	...
+> +	mboxes = <&crypto_mbox 0 0x1 0xffff>,
+> +		 <&crypto_mbox 1 0x1 0xffff>,
+> +		 <&crypto_mbox 16 0x1 0xffff>,
+> +		 <&crypto_mbox 17 0x1 0xffff>,
+> +		 <&crypto_mbox 30 0x1 0xffff>,
+> +		 <&crypto_mbox 31 0x1 0xffff>;
+> +	};
+> +	...
 
---=20
-Kalle Valo
+Please somewhat fully list the contents for node.
+
+Rob
