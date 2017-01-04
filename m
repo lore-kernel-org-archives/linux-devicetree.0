@@ -1,37 +1,79 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] soc: zte: pm_domains: Add support for zx296718
- board
-Date: Wed, 4 Jan 2017 13:49:47 +0800
-Message-ID: <20170104054945.GG20956@dragon>
-References: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
- <1483489157-10782-3-git-send-email-baoyou.xie@linaro.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V5 1/3] dt-bindings: document common IEEE 802.11 frequency
+ limit property
+Date: Wed, 4 Jan 2017 07:20:48 +0100
+Message-ID: <d90127bd-6a9e-2773-fdf9-527afdc004a6@gmail.com>
+References: <20170103225715.14072-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483489157-10782-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yangbo.lu-3arQi8VN3Tc@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, claudiu.manoil-3arQi8VN3Tc@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170103225715.14072-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 08:19:16AM +0800, Baoyou Xie wrote:
-> This patch introduces the power domain driver of zx296718
-> which belongs to zte's zx2967 family.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Rob,
 
-Jun did give his Reviewed-by tag on v2 of this patch, but I did not.
+On 01/03/2017 11:57 PM, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>
+> This new file should be used for properties that apply to all wireless
+> devices.
+>
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+> V2: Switch to a single ieee80211-freq-limit property that allows specifying
+>     *multiple* ranges. This resolves problem with more complex rules as pointed
+>     by Felx.
+>     Make description implementation agnostic as pointed by Arend.
+>     Rename node to wifi as suggested by Martin.
+> V3: Use more real-life frequencies in the example.
+> V5: Describe hardware design as possible use for this property
+> ---
+>  .../devicetree/bindings/net/wireless/ieee80211.txt   | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> new file mode 100644
+> index 0000000..1c82c16
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+> @@ -0,0 +1,20 @@
+> +Common IEEE 802.11 properties
+> +
+> +This provides documentation of common properties that are valid for all wireless
+> +devices.
+> +
+> +Optional properties:
+> + - ieee80211-freq-limit : list of supported frequency ranges in KHz. This can be
+> +	used to specify extra hardware limitations caused by e.g. used antennas
+> +	or power amplifiers.
 
-Once again, I put quite a few comments on v3 of this patch [1].  But
-neither you responded to nor address any of them in reposting.
+Do you find this description sufficient now? I'm not sure how/if I could answer
+"Where would this data normally come from?" question.
 
-Shawn
+One vendor may hardcode choice of channels in their PHP web UI.
+Another one may do it in Andoid app.
+OpenWrt so far was describing this limitation on their wiki page.
 
-[1] http://www.spinics.net/lists/arm-kernel/msg547691.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It doesn't sound like any valuable info if I understand this correctly. We also
+don't describe where to get information about amount o RAM. One may just check
+the hardware, one may use vendor firmware, one could check product data sheet.
+
+If I missed the point, could you help me get this?
+
+
+> +Example:
+> +
+> +pcie@0,0 {
+> +	reg = <0x0000 0 0 0 0>;
+> +	wifi@0,0 {
+> +		reg = <0x0000 0 0 0 0>;
+> +		ieee80211-freq-limit = <2402000 2482000>,
+> +				       <5170000 5250000>;
+> +	};
+> +};
+>
