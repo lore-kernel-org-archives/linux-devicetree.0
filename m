@@ -1,61 +1,34 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mailbox: sti: Fix mbox-names copy and paste error
-Date: Wed, 4 Jan 2017 16:01:07 +0000
-Message-ID: <20170104160107.GD24225@dell>
-References: <20170104120527.24806-1-lee.jones@linaro.org>
- <20170104145732.7yiqbi7rf7m6lem4@rob-hp-laptop>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
+Date: Wed, 4 Jan 2017 08:05:12 -0800
+Message-ID: <20170104160511.GF25222@atomide.com>
+References: <20161230183732.5595-1-tony@atomide.com>
+ <20161230183732.5595-3-tony@atomide.com>
+ <20170102221228.GH9325@atomide.com>
+ <63a8a1ec-343a-8c96-a0d2-21d81f7ad10e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170104145732.7yiqbi7rf7m6lem4@rob-hp-laptop>
+In-Reply-To: <63a8a1ec-343a-8c96-a0d2-21d81f7ad10e-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 04 Jan 2017, Rob Herring wrote:
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [170104 07:39]:
+> On 01/02/2017 04:12 PM, Tony Lindgren wrote:
+> [...]
+> Minor one:
+> > + * Copyright (C) 2015 Texas Instruments, Inc.
+> Could you make this:
+>  Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
 
-> On Wed, Jan 04, 2017 at 12:05:27PM +0000, Lee Jones wrote:
-> > Due to an over-sight, mbox-names has become mbox-name in some instances.
-> > 
-> > Let's put it right.
-> > 
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mailbox/sti-mailbox.txt | 4 ++--
-> >  arch/arm/boot/dts/stih407-family.dtsi                     | 8 ++++----
-> >  drivers/mailbox/mailbox-sti.c                             | 2 +-
-> >  3 files changed, 7 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-> > index 351f612..648d176 100644
-> > --- a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-> > +++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
-> > @@ -9,7 +9,7 @@ Controller
-> >  Required properties:
-> >  - compatible		: Should be "st,stih407-mailbox"
-> >  - reg			: Offset and length of the device's register set
-> > -- mbox-name		: Name of the mailbox
-> > +- mbox-names		: Name of the mailbox
-> 
-> It's worse than this. mbox-names is for the mailbox client side.
+Sure, it's your patch :) Will repost.
 
-Ah yes, of course.  False alarm.
+Regards,
 
-Let's just leave it as it is. ;)
-
-I'll reply to the reporter directly.
-
-> This should just be dropped. Plus, *-names is pointless when there
-> is only 1 element.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
