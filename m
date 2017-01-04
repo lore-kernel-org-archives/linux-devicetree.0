@@ -1,116 +1,38 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] i2c: do not enable fall back to Host Notify by default
-Date: Wed, 4 Jan 2017 13:58:53 -0800
-Message-ID: <20170104215853.GA10799@dtor-ws>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: keystone: Add "ti, da830-uart" compatible
+ string
+Date: Wed, 4 Jan 2017 14:00:01 -0800
+Message-ID: <93c4aed0-6faa-2c27-7931-454fc1f48e79@oracle.com>
+References: <1483561814-21953-1-git-send-email-david@lechnology.com>
+ <1483561814-21953-5-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1483561814-21953-5-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Falling back unconditionally to HostNotify as primary client's interrupt
-breaks some drivers which alter their functionality depending on whether
-interrupt is present or not, so let's introduce a board flag telling I2C
-core explicitly if we want wired interrupt or HostNotify-based one:
-I2C_CLIENT_HOST_NOTIFY.
-
-For DT-based systems we introduce "host-notify" property that we convert
-to I2C_CLIENT_HOST_NOTIFY board flag.
-
-Tested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- Documentation/devicetree/bindings/i2c/i2c.txt |  8 ++++++++
- drivers/i2c/i2c-core.c                        | 17 ++++++++---------
- include/linux/i2c.h                           |  1 +
- 3 files changed, 17 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 5fa691e6f638..cee9d5055fa2 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -62,6 +62,9 @@ wants to support one of the below features, it should adapt the bindings below.
- 	"irq" and "wakeup" names are recognized by I2C core, other names are
- 	left to individual drivers.
- 
-+- host-notify
-+	device uses SMBus host notify protocol instead of interrupt line.
-+
- - multi-master
- 	states that there is another master active on this bus. The OS can use
- 	this information to adapt power management to keep the arbitration awake
-@@ -81,6 +84,11 @@ Binding may contain optional "interrupts" property, describing interrupts
- used by the device. I2C core will assign "irq" interrupt (or the very first
- interrupt if not using interrupt names) as primary interrupt for the slave.
- 
-+Alternatively, devices supporting SMbus Host Notify, and connected to
-+adapters that support this feature, may use "host-notify" property. I2C
-+core will create a virtual interrupt for Host Notify and assign it as
-+primary interrupt for the slave.
-+
- Also, if device is marked as a wakeup source, I2C core will set up "wakeup"
- interrupt for the device. If "wakeup" interrupt name is not present in the
- binding, then primary interrupt will be used as wakeup interrupt.
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index cf9e396d7702..fbd1db014768 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -931,7 +931,10 @@ static int i2c_device_probe(struct device *dev)
- 	if (!client->irq) {
- 		int irq = -ENOENT;
- 
--		if (dev->of_node) {
-+		if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
-+			dev_dbg(dev, "Using Host Notify IRQ\n");
-+			irq = i2c_smbus_host_notify_to_irq(client);
-+		} else if (dev->of_node) {
- 			irq = of_irq_get_byname(dev->of_node, "irq");
- 			if (irq == -EINVAL || irq == -ENODATA)
- 				irq = of_irq_get(dev->of_node, 0);
-@@ -940,14 +943,7 @@ static int i2c_device_probe(struct device *dev)
- 		}
- 		if (irq == -EPROBE_DEFER)
- 			return irq;
--		/*
--		 * ACPI and OF did not find any useful IRQ, try to see
--		 * if Host Notify can be used.
--		 */
--		if (irq < 0) {
--			dev_dbg(dev, "Using Host Notify IRQ\n");
--			irq = i2c_smbus_host_notify_to_irq(client);
--		}
-+
- 		if (irq < 0)
- 			irq = 0;
- 
-@@ -1716,6 +1712,9 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
- 	info.of_node = of_node_get(node);
- 	info.archdata = &dev_ad;
- 
-+	if (of_read_property_bool(node, "host-notify"))
-+		info.flags |= I2C_CLIENT_HOST_NOTIFY;
-+
- 	if (of_get_property(node, "wakeup-source", NULL))
- 		info.flags |= I2C_CLIENT_WAKE;
- 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index b2109c522dec..4b45ec46161f 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -665,6 +665,7 @@ i2c_unlock_adapter(struct i2c_adapter *adapter)
- #define I2C_CLIENT_TEN		0x10	/* we have a ten bit chip address */
- 					/* Must equal I2C_M_TEN below */
- #define I2C_CLIENT_SLAVE	0x20	/* we are the slave */
-+#define I2C_CLIENT_HOST_NOTIFY	0x40	/* We want to use I2C host notify */
- #define I2C_CLIENT_WAKE		0x80	/* for board_info; true iff can wake */
- #define I2C_CLIENT_SCCB		0x9000	/* Use Omnivision SCCB protocol */
- 					/* Must match I2C_M_STOP|IGNORE_NAK */
--- 
-2.11.0.390.gc69c2f50cf-goog
-
-
--- 
-Dmitry
+On 1/4/2017 12:30 PM, David Lechner wrote:
+> The TI Keystone SoCs have extra UART registers beyond the standard 8250
+> registers, so we need a new compatible string to indicate this. Also, at
+> least one of these registers uses the full 32 bits, so we need to specify
+> reg-io-width in addition to reg-shift.
+>
+> "ns16550a" is left in the compatible specification since it does work as
+> long as the bootloader configures the SoC UART power management registers.
+>
+NAK!!
+We can't break the booting boards with existing boot loaders.
+I suggest you to first get the driver updated to take care of
+the UART PM register and then enable the support for it.
