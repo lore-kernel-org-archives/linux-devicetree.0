@@ -1,79 +1,56 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 1/3] dt-bindings: document common IEEE 802.11 frequency
- limit property
-Date: Wed, 4 Jan 2017 07:20:48 +0100
-Message-ID: <d90127bd-6a9e-2773-fdf9-527afdc004a6@gmail.com>
-References: <20170103225715.14072-1-zajec5@gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: document new usb-ports property
+Date: Wed, 4 Jan 2017 07:33:32 +0100
+Message-ID: <1ca1256a-7a97-1bd9-fe91-2d9076fb9331@gmail.com>
+References: <20161229130306.30400-1-zajec5@gmail.com>
+ <20170103205202.5ztb5i56d7qmgx5t@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170103225715.14072-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170103205202.5ztb5i56d7qmgx5t@rob-hp-laptop>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 01/03/2017 11:57 PM, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On 01/03/2017 09:52 PM, Rob Herring wrote:
+> On Thu, Dec 29, 2016 at 02:03:04PM +0100, Rafał Miłecki wrote:
+>> From: Rafał Miłecki <rafal@milecki.pl>
+>>
+>> Some LEDs can be related to particular USB ports (common case for home
+>> routers). This property allows describing such a relation.
+>>
+>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>> ---
+>> This patch is based on top of commit 52e847dc431 ("DT: leds: Improve examples
+>> by adding some context") sitting in the linux-leds.git (for-4.11).
+>> ---
+>>  Documentation/devicetree/bindings/leds/common.txt | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index 24b6560..fcfe661 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -49,6 +49,14 @@ Optional properties for child nodes:
+>>  - panic-indicator : This property specifies that the LED should be used,
+>>  		    if at all possible, as a panic indicator.
+>>
+>> +- usb-ports : List of USB ports related to this LED. Some devices have LEDs that
+>> +	      should be used to indicate USB device activity. This can be
+>> +	      described with this property.
+>> +	      There can be more than one LED like this, e.g. some vendors use
+>> +	      one controller per USB version. It's then common to use different
+>> +	      color LEDs depending on device USB standard (like USB 2.0 vs.
+>> +	      USB 3.0).
 >
-> This new file should be used for properties that apply to all wireless
-> devices.
->
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
-> V2: Switch to a single ieee80211-freq-limit property that allows specifying
->     *multiple* ranges. This resolves problem with more complex rules as pointed
->     by Felx.
->     Make description implementation agnostic as pointed by Arend.
->     Rename node to wifi as suggested by Martin.
-> V3: Use more real-life frequencies in the example.
-> V5: Describe hardware design as possible use for this property
-> ---
->  .../devicetree/bindings/net/wireless/ieee80211.txt   | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
-> new file mode 100644
-> index 0000000..1c82c16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
-> @@ -0,0 +1,20 @@
-> +Common IEEE 802.11 properties
-> +
-> +This provides documentation of common properties that are valid for all wireless
-> +devices.
-> +
-> +Optional properties:
-> + - ieee80211-freq-limit : list of supported frequency ranges in KHz. This can be
-> +	used to specify extra hardware limitations caused by e.g. used antennas
-> +	or power amplifiers.
+> I don't like this being USB specific. Either we should have a generic
+> way to link triggers to other DT nodes or the existing trigger property
+> should be used (and be capable of listing more than 1 port). I'd prefer
+> the latter as I don't think we need another way to specify triggers.
 
-Do you find this description sufficient now? I'm not sure how/if I could answer
-"Where would this data normally come from?" question.
+Hi Rob & thanks for your review.
 
-One vendor may hardcode choice of channels in their PHP web UI.
-Another one may do it in Andoid app.
-OpenWrt so far was describing this limitation on their wiki page.
-
-It doesn't sound like any valuable info if I understand this correctly. We also
-don't describe where to get information about amount o RAM. One may just check
-the hardware, one may use vendor firmware, one could check product data sheet.
-
-If I missed the point, could you help me get this?
-
-
-> +Example:
-> +
-> +pcie@0,0 {
-> +	reg = <0x0000 0 0 0 0>;
-> +	wifi@0,0 {
-> +		reg = <0x0000 0 0 0 0>;
-> +		ieee80211-freq-limit = <2402000 2482000>,
-> +				       <5170000 5250000>;
-> +	};
-> +};
->
+Could you point me to "the existing trigger property" you meant, please? It's
+not clear to me, sorry.
