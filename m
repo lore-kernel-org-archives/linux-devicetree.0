@@ -1,204 +1,51 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v3 1/3] dmaengine: xilinx_dma: Check for channel idle state
- before submitting dma descriptor
-Date: Wed, 4 Jan 2017 12:24:05 +0530
-Message-ID: <1483512847-25710-2-git-send-email-appanad@xilinx.com>
-References: <1483512847-25710-1-git-send-email-appanad@xilinx.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v4 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
+ device on TM2 board
+Date: Wed, 04 Jan 2017 15:58:35 +0900
+Message-ID: <1483513115-3068-4-git-send-email-hoegeun.kwon@samsung.com>
+References: <1483513115-3068-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170104065900epcas5p2752d2a9575b62a6155ffeb2b7d8f49a7@epcas5p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483512847-25710-1-git-send-email-appanad@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, Jose.Abreu@synopsys.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1483513115-3068-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add channel idle state to ensure that dma descriptor is not
-submitted when VDMA engine is in progress.
-
-Reviewed-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes for v3:
----> None.
-Changes for v2:
----> Add idle check in the reset as suggested by Jose Abreu
----> Removed xilinx_dma_is_running/xilinx_dma_is_idle checks
-    in the driver and used common idle checks across the driver
-    as suggested by Laurent Pinchart.
-
- drivers/dma/xilinx/xilinx_dma.c | 56 +++++++++++++----------------------------
- 1 file changed, 17 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 8288fe4..be7eb41 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -321,6 +321,7 @@ struct xilinx_dma_tx_descriptor {
-  * @cyclic: Check for cyclic transfers.
-  * @genlock: Support genlock mode
-  * @err: Channel has errors
-+ * @idle: Check for channel idle
-  * @tasklet: Cleanup work after irq
-  * @config: Device configuration info
-  * @flush_on_fsync: Flush on Frame sync
-@@ -351,6 +352,7 @@ struct xilinx_dma_chan {
- 	bool cyclic;
- 	bool genlock;
- 	bool err;
-+	bool idle;
- 	struct tasklet_struct tasklet;
- 	struct xilinx_vdma_config config;
- 	bool flush_on_fsync;
-@@ -920,32 +922,6 @@ static enum dma_status xilinx_dma_tx_status(struct dma_chan *dchan,
- }
- 
- /**
-- * xilinx_dma_is_running - Check if DMA channel is running
-- * @chan: Driver specific DMA channel
-- *
-- * Return: '1' if running, '0' if not.
-- */
--static bool xilinx_dma_is_running(struct xilinx_dma_chan *chan)
--{
--	return !(dma_ctrl_read(chan, XILINX_DMA_REG_DMASR) &
--		 XILINX_DMA_DMASR_HALTED) &&
--		(dma_ctrl_read(chan, XILINX_DMA_REG_DMACR) &
--		 XILINX_DMA_DMACR_RUNSTOP);
--}
--
--/**
-- * xilinx_dma_is_idle - Check if DMA channel is idle
-- * @chan: Driver specific DMA channel
-- *
-- * Return: '1' if idle, '0' if not.
-- */
--static bool xilinx_dma_is_idle(struct xilinx_dma_chan *chan)
--{
--	return dma_ctrl_read(chan, XILINX_DMA_REG_DMASR) &
--		XILINX_DMA_DMASR_IDLE;
--}
--
--/**
-  * xilinx_dma_halt - Halt DMA channel
-  * @chan: Driver specific DMA channel
-  */
-@@ -966,6 +942,7 @@ static void xilinx_dma_halt(struct xilinx_dma_chan *chan)
- 			chan, dma_ctrl_read(chan, XILINX_DMA_REG_DMASR));
- 		chan->err = true;
- 	}
-+	chan->idle = true;
- }
- 
- /**
-@@ -1007,6 +984,9 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
- 	if (chan->err)
- 		return;
- 
-+	if (!chan->idle)
-+		return;
-+
- 	if (list_empty(&chan->pending_list))
- 		return;
- 
-@@ -1018,13 +998,6 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
- 	tail_segment = list_last_entry(&tail_desc->segments,
- 				       struct xilinx_vdma_tx_segment, node);
- 
--	/* If it is SG mode and hardware is busy, cannot submit */
--	if (chan->has_sg && xilinx_dma_is_running(chan) &&
--	    !xilinx_dma_is_idle(chan)) {
--		dev_dbg(chan->dev, "DMA controller still busy\n");
--		return;
--	}
--
- 	/*
- 	 * If hardware is idle, then all descriptors on the running lists are
- 	 * done, start new transfers
-@@ -1110,6 +1083,7 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
- 		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
- 	}
- 
-+	chan->idle = false;
- 	if (!chan->has_sg) {
- 		list_del(&desc->node);
- 		list_add_tail(&desc->node, &chan->active_list);
-@@ -1136,6 +1110,9 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
- 	if (chan->err)
- 		return;
- 
-+	if (!chan->idle)
-+		return;
-+
- 	if (list_empty(&chan->pending_list))
- 		return;
- 
-@@ -1181,6 +1158,7 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
- 
- 	list_splice_tail_init(&chan->pending_list, &chan->active_list);
- 	chan->desc_pendingcount = 0;
-+	chan->idle = false;
- }
- 
- /**
-@@ -1196,15 +1174,11 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
- 	if (chan->err)
- 		return;
- 
--	if (list_empty(&chan->pending_list))
-+	if (!chan->idle)
- 		return;
- 
--	/* If it is SG mode and hardware is busy, cannot submit */
--	if (chan->has_sg && xilinx_dma_is_running(chan) &&
--	    !xilinx_dma_is_idle(chan)) {
--		dev_dbg(chan->dev, "DMA controller still busy\n");
-+	if (list_empty(&chan->pending_list))
- 		return;
--	}
- 
- 	head_desc = list_first_entry(&chan->pending_list,
- 				     struct xilinx_dma_tx_descriptor, node);
-@@ -1302,6 +1276,7 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
- 
- 	list_splice_tail_init(&chan->pending_list, &chan->active_list);
- 	chan->desc_pendingcount = 0;
-+	chan->idle = false;
- }
- 
- /**
-@@ -1366,6 +1341,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
- 	}
- 
- 	chan->err = false;
-+	chan->idle = true;
- 
- 	return err;
- }
-@@ -1447,6 +1423,7 @@ static irqreturn_t xilinx_dma_irq_handler(int irq, void *data)
- 	if (status & XILINX_DMA_DMASR_FRM_CNT_IRQ) {
- 		spin_lock(&chan->lock);
- 		xilinx_dma_complete_descriptor(chan);
-+		chan->idle = true;
- 		chan->start_transfer(chan);
- 		spin_unlock(&chan->lock);
- 	}
-@@ -2327,6 +2304,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 	chan->has_sg = xdev->has_sg;
- 	chan->desc_pendingcount = 0x0;
- 	chan->ext_addr = xdev->ext_addr;
-+	chan->idle = true;
- 
- 	spin_lock_init(&chan->lock);
- 	INIT_LIST_HEAD(&chan->pending_list);
--- 
-2.1.2
+RnJvbTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1bmcuY29tPgoKVGhpcyBwYXRj
+aCBhZGQgdGhlIHBhbmVsIGRldmljZSB0cmVlIG5vZGUgZm9yIFM2RTNIQTIgZGlzcGxheQpjb250
+cm9sbGVyIHRvIFRNMiBkdHMuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4u
+aHdhbmdAc2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
+c2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1
+bmcuY29tPgpTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5n
+LmNvbT4KLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMg
+fCAxNyArKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKykK
+CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5k
+dHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMKaW5kZXgg
+NWI5NDUxZC4uYjNiYTFhYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3Mv
+ZXh5bm9zNTQzMy10bTIuZHRzCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5v
+czU0MzMtdG0yLmR0cwpAQCAtMzA0LDExICszMDQsMjggQEAKIAkJCXJlZyA9IDwxPjsKIAogCQkJ
+ZHNpX291dDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW4+Owog
+CQkJCXNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5ID0gPDUxMjAwMDAwMD47CiAJCQkJc2Ft
+c3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5ID0gPDE2MDAwMDAwPjsKIAkJCX07CiAJCX07CiAJfTsK
+KworCXBhbmVsQDAgeworCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlM2hhMiI7CisJCXJlZyA9
+IDwwPjsKKwkJdmRkMy1zdXBwbHkgPSA8JmxkbzI3X3JlZz47CisJCXZjaS1zdXBwbHkgPSA8Jmxk
+bzI4X3JlZz47CisJCXJlc2V0LWdwaW9zID0gPCZncGcwIDAgR1BJT19BQ1RJVkVfTE9XPjsKKwkJ
+ZW5hYmxlLWdwaW9zID0gPCZncGYxIDUgR1BJT19BQ1RJVkVfSElHSD47CisJCXRlLWdwaW9zID0g
+PCZncGYxIDMgR1BJT19BQ1RJVkVfSElHSD47CisKKwkJcG9ydCB7CisJCQlwYW5lbF9pbjogZW5k
+cG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47CisJCQl9OworCQl9Owor
+CX07CiB9OwogCiAmaHNpMmNfMCB7Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
