@@ -1,126 +1,99 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v2 2/4] serial: 8250: Add new port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx/C66x
-Date: Wed,  4 Jan 2017 14:30:12 -0600
-Message-ID: <1483561814-21953-3-git-send-email-david@lechnology.com>
-References: <1483561814-21953-1-git-send-email-david@lechnology.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] iio: adc: Add Renesas GyroADC driver
+Date: Wed, 4 Jan 2017 21:36:45 +0100
+Message-ID: <CAMuHMdVgaAD5EaK0aMS3HEXUeNQaz_ZiwG4cTtpDMMma_YWBbg@mail.gmail.com>
+References: <20161230191800.2532-1-marek.vasut@gmail.com> <CAMuHMdX20kc8h4DiNLu0KwaA0FL6F-WXLnA3YXvu02VJTh_7fQ@mail.gmail.com>
+ <f4bb8922-36dc-ff69-45fc-e1d9cba821ba@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483561814-21953-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <f4bb8922-36dc-ff69-45fc-e1d9cba821ba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx/C66x.
-These SoCs have standard 8250 registers plus some extra non-standard
-registers.
+Hi Marek,
 
-The UART will not function unless the non-standard Power and Emulation
-Management Register (PWREMU_MGMT) is configured correctly. This is
-currently handled in arch/arm/mach-davinci/serial.c for non-device-tree
-boards. Making this part of the UART driver will allow UART to work on
-device-tree boards as well and the mach code can eventually be removed.
+On Wed, Jan 4, 2017 at 3:27 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 01/02/2017 11:01 AM, Geert Uytterhoeven wrote:
+>> On Fri, Dec 30, 2016 at 8:18 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+>>> @@ -0,0 +1,38 @@
+>>> +* Renesas RCar GyroADC device driver
+>>> +
+>>> +Required properties:
+>>> +- compatible:  Should be "renesas,rcar-gyroadc" for regular GyroADC or
+>>> +               "renesas,rcar-gyroadc-r8a7792" for GyroADC without interrupt
+>>
+>> Please use "renesas,r8a7792-gyroadc" to match existing practices.
+>
+> Actually, that should probably be gyroadc-r8a7791 if we want to match
+> the existing practice. Fixed.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
----
+No, "renesas,r8a7791-gyroadc" ("<vendor>,<family>-<block>").
 
-v2 changes:
-* Added C66x to list of SoCs
+>>> +static void rcar_gyroadc_hw_init(struct rcar_gyroadc *priv)
+>>> +{
+>>> +       unsigned long clk_mhz = clk_get_rate(priv->clk) / 1000000;
+>>> +
+>>> +       /* Stop the GyroADC. */
+>>> +       writel(0, priv->regs + RCAR_GYROADC_START_STOP);
+>>> +
+>>> +       /* Disable IRQ, except on V2H. */
+>>> +       if (priv->model != RCAR_GYROADC_MODEL_R8A7792)
+>>> +               writel(0, priv->regs + RCAR_GYROADC_INTENR);
+>>> +
+>>> +       /* Set mode and timing. */
+>>> +       writel(priv->mode, priv->regs + RCAR_GYROADC_MODE_SELECT);
+>>> +
+>>> +       if (priv->mode == RCAR_GYROADC_MODE_SELECT_1_MB88101A)
+>>> +               writel(clk_mhz * 10, priv->regs + RCAR_GYROADC_CLOCK_LENGTH);
+>>> +       else if (priv->mode == RCAR_GYROADC_MODE_SELECT_2_ADCS7476)
+>>> +               writel(clk_mhz * 5, priv->regs + RCAR_GYROADC_CLOCK_LENGTH);
+>>> +       else if (priv->mode == RCAR_GYROADC_MODE_SELECT_3_MAX1162)
+>>> +               writel(clk_mhz * 5, priv->regs + RCAR_GYROADC_CLOCK_LENGTH);
+>>> +       writel(clk_mhz * 1250, priv->regs + RCAR_GYROADC_1_25MS_LENGTH);
+>>> +
+>>> +       /*
+>>> +        * We can possibly turn the sampling on/off on-demand to reduce power
+>>
+>> And the module clock, using runtime PM (see below).
 
+>>> +static int rcar_gyroadc_probe(struct platform_device *pdev)
+>>> +{
+>>
+>>> +       priv->fclk = devm_clk_get(dev, "fck");
+>>
+>> The module clock isn't used directly by this driver (you don't need
+>> e.g. its rate),
+>> so you can leave out all handling related to this clock iff you enable
+>> runtime PM:
+>>
+>>     pm_runtime_enable(dev);
+>>     pm_runtime_get_sync(dev);
+>>
+>> Then runtime PM will take care of enabling the module clock, as the
+>> GyroADC block is part of the CPG/MSSR clock domain.
+>> Doing that also means the driver keeps on working in future SoCs where
+>> the GyroADC block may be located in a power area.
+>
+> So I won't even need the fclk phandle in DT, right ?
 
- drivers/tty/serial/8250/8250_of.c   |  1 +
- drivers/tty/serial/8250/8250_port.c | 22 ++++++++++++++++++++++
- include/uapi/linux/serial_core.h    |  3 ++-
- include/uapi/linux/serial_reg.h     |  8 ++++++++
- 4 files changed, 33 insertions(+), 1 deletion(-)
+You still need the fclk phandle in DT, so the PM domain code can find out
+which clock to use for PM.
 
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-index d25ab1c..5281252 100644
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -332,6 +332,7 @@ static const struct of_device_id of_platform_serial_table[] = {
- 		.data = (void *)PORT_ALTR_16550_F128, },
- 	{ .compatible = "mrvl,mmp-uart",
- 		.data = (void *)PORT_XSCALE, },
-+	{ .compatible = "ti,da830-uart", .data = (void *)PORT_DA830, },
- 	{ /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, of_platform_serial_table);
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index fe4399b..61dd806 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -273,6 +273,15 @@ static const struct serial8250_config uart_config[] = {
- 		.rxtrig_bytes	= {1, 4, 8, 14},
- 		.flags		= UART_CAP_FIFO,
- 	},
-+	[PORT_DA830] = {
-+		.name		= "TI DA8xx/OMAPL13x/AM17xx/AM18xx/C66x",
-+		.fifo_size	= 16,
-+		.tx_loadsz	= 16,
-+		.fcr		= UART_FCR_DMA_SELECT | UART_FCR_ENABLE_FIFO |
-+				  UART_FCR_R_TRIG_10,
-+		.rxtrig_bytes	= {1, 4, 8, 14},
-+		.flags		= UART_CAP_FIFO | UART_CAP_AFE,
-+	},
- };
- 
- /* Uart divisor latch read */
-@@ -2118,6 +2127,19 @@ int serial8250_do_startup(struct uart_port *port)
- 		serial_port_out(port, UART_LCR, 0);
- 	}
- 
-+	if (port->type == PORT_DA830) {
-+		/* Reset the port */
-+		serial_port_out(port, UART_IER, 0);
-+		serial_port_out(port, UART_DA830_PWREMU_MGMT, 0);
-+		mdelay(10);
-+
-+		/* Enable Tx, Rx and free run mode */
-+		serial_port_out(port, UART_DA830_PWREMU_MGMT,
-+				UART_DA830_PWREMU_MGMT_UTRST |
-+				UART_DA830_PWREMU_MGMT_URRST |
-+				UART_DA830_PWREMU_MGMT_FREE);
-+	}
-+
- #ifdef CONFIG_SERIAL_8250_RSA
- 	/*
- 	 * If this is an RSA port, see if we can kick it up to the
-diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-index 99dbed8..1265918 100644
---- a/include/uapi/linux/serial_core.h
-+++ b/include/uapi/linux/serial_core.h
-@@ -56,7 +56,8 @@
- #define PORT_ALTR_16550_F128 28 /* Altera 16550 UART with 128 FIFOs */
- #define PORT_RT2880	29	/* Ralink RT2880 internal UART */
- #define PORT_16550A_FSL64 30	/* Freescale 16550 UART with 64 FIFOs */
--#define PORT_MAX_8250	30	/* max port ID */
-+#define PORT_DA830	31	/* TI DA8xx/OMAP13x/AM17xx/AM18xx/C66x */
-+#define PORT_MAX_8250	31	/* max port ID */
- 
- /*
-  * ARM specific type numbers.  These are not currently guaranteed
-diff --git a/include/uapi/linux/serial_reg.h b/include/uapi/linux/serial_reg.h
-index b4c0484..84606d8 100644
---- a/include/uapi/linux/serial_reg.h
-+++ b/include/uapi/linux/serial_reg.h
-@@ -327,6 +327,14 @@
- #define SERIAL_RSA_BAUD_BASE (921600)
- #define SERIAL_RSA_BAUD_BASE_LO (SERIAL_RSA_BAUD_BASE / 8)
- 
-+/* Extra registers for TI DA8xx/OMAP13x/AM17xx/AM18xx/C66x */
-+#define UART_DA830_PWREMU_MGMT	12
-+
-+/* PWREMU_MGMT register bits */
-+#define UART_DA830_PWREMU_MGMT_FREE	(1 << 0)  /* Free-running mode */
-+#define UART_DA830_PWREMU_MGMT_URRST	(1 << 13) /* Receiver reset/enable */
-+#define UART_DA830_PWREMU_MGMT_UTRST	(1 << 14) /* Transmitter reset/enable */
-+
- /*
-  * Extra serial register definitions for the internal UARTs
-  * in TI OMAP processors.
--- 
-2.7.4
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
