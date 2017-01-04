@@ -1,72 +1,82 @@
-From: Matt Ranostay <matt@ranostay.consulting>
-Subject: Re: [PATCH 2/3] devicetree: bq27425: add documentation for bq27425
- fuel gauge
-Date: Tue, 3 Jan 2017 21:23:55 -0800
-Message-ID: <CAJ_EiSTcpxQVWZALJC_u5P8YM_ku8_wPaiTLyENq5h0XHiQA2g@mail.gmail.com>
-References: <20161226054442.23599-1-matt@ranostay.consulting>
- <20161226054442.23599-3-matt@ranostay.consulting> <20170103164715.pypb5zt22hg4zqlh@rob-hp-laptop>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v5 1/4] soc: zte: Add header for PM domains specifiers
+Date: Wed, 4 Jan 2017 13:29:46 +0800
+Message-ID: <20170104052945.GE20956@dragon>
+References: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170103164715.pypb5zt22hg4zqlh@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, jun.nie@linaro.org, geert+renesas@glider.be, linus.walleij@linaro.org, f.fainelli@gmail.com, pankaj.dubey@samsung.com, krzk@kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, linux@roeck-us.net, devicetree@vger.kernel.org, arnd@arndb.de, xie.baoyou@zte.com.cn, claudiu.manoil@nxp.com, robh+dt@kernel.org, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, yangbo.lu@nxp.com, akpm@linux-foundation.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 3, 2017 at 8:47 AM, Rob Herring <robh@kernel.org> wrote:
-> On Sun, Dec 25, 2016 at 09:44:41PM -0800, Matt Ranostay wrote:
->> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->> ---
->>  .../devicetree/bindings/power/bq27425.txt          | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/bq27425.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/bq27425.txt b/Documentation/devicetree/bindings/power/bq27425.txt
->> new file mode 100644
->> index 000000000000..f09f787a9378
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/bq27425.txt
->> @@ -0,0 +1,25 @@
->> +* TI BQ27425 Fuel Gauge
->> +
->> +http://www.ti.com/lit/ds/symlink/bq27425-g2a.pdf
->> +
->> +Please note that if any of the optional properties are defined
->> +then all settings must be.
->> +
->> +Required properties:
->> +- compatible: Should be "ti,bq27425"
->> +- reg: integer, i2c of the device
->
-> s/i2c/I2C address/
->
->> +
->> +Optional properties:
->> +- ti,design-capacity: integer of mAh of the battery
->> +- ti,design-energy: integer of the mWh of the battery
->> +- ti,terminate-voltage: integer of mV of the dead voltage of
->> +                     the battery
->
-> These all need unit suffixes. mAh and mWh may need to be added to
-> property-units.txt.
+On Wed, Jan 04, 2017 at 08:19:14AM +0800, Baoyou Xie wrote:
+> This patch adds header with values used for ZTE 2967
+> SoC's power domain driver.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
 
-Ok makes sense.
+The tags like Reviewed-by, Acked-by etc, can only be added into your
+patch after people give it explicitly.  One of the examples is that Jun
+Nie gave his Reviewed-by tag on your "[PATCH v2 2/2] soc: zte:
+pm_domains: Add support for zx296718 board".
 
->
->> +
->> +bq27425 {
->> +     compatible = "ti,bq27425";
->> +     reg = <0x55>;
->> +
->> +     ti,design-capacity = <1360>;
->> +     ti,design-energy = <4970>;
->> +     ti,terminate-voltage = <3200>;
->> +};
->> --
->> 2.7.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+https://www.spinics.net/lists/arm-kernel/msg547282.html
+
+I did not give my Reviewed-by tag on list, so you shouldn't add it here.
+Actually, in case of this patch series, I will probably apply them
+through ZTE -> arm-soc tree, when I feel it's ready.  So I'm do not even
+need to give the Reviewed-by tag.
+
+Shawn
+
+> ---
+>  include/dt-bindings/soc/zte,pm_domains.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 include/dt-bindings/soc/zte,pm_domains.h
+> 
+> diff --git a/include/dt-bindings/soc/zte,pm_domains.h b/include/dt-bindings/soc/zte,pm_domains.h
+> new file mode 100644
+> index 0000000..01e9abc
+> --- /dev/null
+> +++ b/include/dt-bindings/soc/zte,pm_domains.h
+> @@ -0,0 +1,23 @@
+> +/*
+> + * Copyright (C) 2017 Linaro Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +#ifndef _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
+> +#define _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
+> +
+> +#define DM_ZX296718_SAPPU	0
+> +#define DM_ZX296718_VDE		1  /* g1v6 */
+> +#define DM_ZX296718_VCE		2  /* h1v6 */
+> +#define DM_ZX296718_HDE		3  /* g2v2 */
+> +#define DM_ZX296718_VIU		4
+> +#define DM_ZX296718_USB20	5
+> +#define DM_ZX296718_USB21	6
+> +#define DM_ZX296718_USB30	7
+> +#define DM_ZX296718_HSIC	8
+> +#define DM_ZX296718_GMAC	9
+> +#define DM_ZX296718_TS		10
+> +#define DM_ZX296718_VOU		11
+> +
+> +#endif /* _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H */
+> -- 
+> 2.7.4
+> 
