@@ -1,74 +1,114 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v4 1/3] drm/exynos: mic: Add mode_set callback function
-Date: Wed, 04 Jan 2017 16:29:53 +0900
-Message-ID: <586CA471.9030803@samsung.com>
-References: <1483513115-3068-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170104065859epcas1p1df9efb3844bd8e4e4d4bb0af0a229ca2@epcas1p1.samsung.com>
- <1483513115-3068-2-git-send-email-hoegeun.kwon@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1483513115-3068-2-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com
+From: John Crispin <john@phrozen.org>
+Subject: [RFC 1/4] Documentation: devicetree: add multiple cpu port DSA binding
+Date: Wed,  4 Jan 2017 08:38:01 +0100
+Message-ID: <1483515484-21793-2-git-send-email-john@phrozen.org>
+References: <1483515484-21793-1-git-send-email-john@phrozen.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1483515484-21793-1-git-send-email-john@phrozen.org>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE364WEIDAx7JuUIDA07J28IDE1OjU47JeQIEhvZWdldW4gS3dvbiDsnbQo6rCAKSDsk7Qg
-6riAOgo+IEJlZm9yZSBhcHBseWluZyB0aGUgcGF0Y2gsIHVzZWQgdGhlIG9mX2dldF92aWRlb21v
-ZGUgZnVuY3Rpb24gdG8KPiBwYXJzZSB0aGUgZGlzcGxheS10aW1pbmdzIGluIHRoZSBwYW5lbCB3
-aGljaCBpcyB0aGUgY2hpbGQgZHJpdmVyCj4gb2YgZHNpIGluIHRoZSBkZXZpY2V0cmVlLiB0aGlz
-IGlzIHdyb25nLiBTbyByZW1vdmVkIHRoZQo+IG9mX2dldF92aWRlb21vZGUgYW5kIGZpeGVkIHRv
-IGdldCB2aWRlb21vZGUgc3RydWN0IHRocm91Z2gKPiBtb2RlX3NldCBjYWxsYmFjayBmdW5jdGlv
-bi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5n
-LmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX21pYy5jIHwg
-MzMgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-MiBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX21pYy5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9leHlub3NfZHJtX21pYy5jCj4gaW5kZXggYTBkZWYwYi4uOWE1MGNlYiAxMDA2NDQKPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMKPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMKPiBAQCAtMjg2LDEzICsyODYsNiBAQCBz
-dGF0aWMgaW50IHBhcnNlX2R0KHN0cnVjdCBleHlub3NfbWljICptaWMpCj4gIAkJCX0KPiAgCQkJ
-bm9kZXNbaisrXSA9IHJlbW90ZV9ub2RlOwo+ICAKPiAtCQkJcmV0ID0gb2ZfZ2V0X3ZpZGVvbW9k
-ZShyZW1vdGVfbm9kZSwKPiAtCQkJCQkJCSZtaWMtPnZtLCAwKTsKPiAtCQkJaWYgKHJldCkgewo+
-IC0JCQkJRFJNX0VSUk9SKCJtaWM6IGZhaWxlZCB0byBnZXQgdmlkZW9tb2RlIik7Cj4gLQkJCQln
-b3RvIGV4aXQ7Cj4gLQkJCX0KPiAtCj4gIAkJCWJyZWFrOwo+ICAJCWRlZmF1bHQ6Cj4gIAkJCURS
-TV9FUlJPUigibWljOiBVbmtub3duIGVuZHBvaW50IGZyb20gTUlDIik7Cj4gQEAgLTMyOSw2ICsz
-MjIsMjcgQEAgc3RhdGljIHZvaWQgbWljX3Bvc3RfZGlzYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAq
-YnJpZGdlKQo+ICAJbXV0ZXhfdW5sb2NrKCZtaWNfbXV0ZXgpOwo+ICB9Cj4gIAo+ICtzdGF0aWMg
-dm9pZCBtaWNfbW9kZV9zZXQoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSwKPiArCQkJc3RydWN0
-IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsCj4gKwkJCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICph
-ZGp1c3RlZF9tb2RlKQo+ICt7Cj4gKwlzdHJ1Y3QgZXh5bm9zX21pYyAqbWljID0gYnJpZGdlLT5k
-cml2ZXJfcHJpdmF0ZTsKPiArCj4gKwltdXRleF9sb2NrKCZtaWNfbXV0ZXgpOwo+ICsJaWYgKG1p
-Yy0+ZW5hYmxlZCkKPiArCQlnb3RvIGFscmVhZHlfZW5hYmxlZDsKCm1vZGUgc2V0dGluZyBzaG91
-bGQgYmUgcGVyZm9ybWVkIGV2ZXJ5IHRpbWUgbW9kZV9zZXQgY2FsbGJhY2sgaXMgY2FsbGVkIHNv
-IHJlbW92ZSBhYm92ZSB0d28gbGluZXMuCgo+ICsKPiArCWRybV9kaXNwbGF5X21vZGVfdG9fdmlk
-ZW9tb2RlKG1vZGUsICZtaWMtPnZtKTsKPiArCj4gKwlpZiAoIW1pYy0+aTgwX21vZGUpCj4gKwkJ
-bWljX3NldF9wb3JjaF90aW1pbmcobWljKTsKPiArCW1pY19zZXRfaW1nX3NpemUobWljKTsKPiAr
-CW1pY19zZXRfb3V0cHV0X3RpbWluZyhtaWMpOwo+ICsKPiArYWxyZWFkeV9lbmFibGVkOgoKU28g
-dGhpcyBsYWJlbCBpcyB1bm5lY2Vzc2FyeS4KCj4gKwltdXRleF91bmxvY2soJm1pY19tdXRleCk7
-Cj4gK30KPiArCj4gIHN0YXRpYyB2b2lkIG1pY19wcmVfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdl
-ICpicmlkZ2UpCj4gIHsKPiAgCXN0cnVjdCBleHlub3NfbWljICptaWMgPSBicmlkZ2UtPmRyaXZl
-cl9wcml2YXRlOwo+IEBAIC0zNTUsMTAgKzM2OSw2IEBAIHN0YXRpYyB2b2lkIG1pY19wcmVfZW5h
-YmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gIAkJZ290byB0dXJuX29mZl9jbGtzOwo+
-ICAJfQo+ICAKPiAtCWlmICghbWljLT5pODBfbW9kZSkKPiAtCQltaWNfc2V0X3BvcmNoX3RpbWlu
-ZyhtaWMpOwo+IC0JbWljX3NldF9pbWdfc2l6ZShtaWMpOwo+IC0JbWljX3NldF9vdXRwdXRfdGlt
-aW5nKG1pYyk7Cj4gIAltaWNfc2V0X3JlZ19vbihtaWMsIDEpOwo+ICAJbWljLT5lbmFibGVkID0g
-MTsKPiAgCW11dGV4X3VubG9jaygmbWljX211dGV4KTsKPiBAQCAtMzc3LDYgKzM4Nyw3IEBAIHN0
-YXRpYyB2b2lkIG1pY19lbmFibGUoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkgeyB9Cj4gIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV9mdW5jcyBtaWNfYnJpZGdlX2Z1bmNzID0gewo+
-ICAJLmRpc2FibGUgPSBtaWNfZGlzYWJsZSwKPiAgCS5wb3N0X2Rpc2FibGUgPSBtaWNfcG9zdF9k
-aXNhYmxlLAo+ICsJLm1vZGVfc2V0ID0gbWljX21vZGVfc2V0LAo+ICAJLnByZV9lbmFibGUgPSBt
-aWNfcHJlX2VuYWJsZSwKPiAgCS5lbmFibGUgPSBtaWNfZW5hYmxlLAo+ICB9Owo+IApfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Andrew Lunn <andrew@lunn.ch>
+
+Extend the DSA binding documentation, adding the new properties required
+when there is more than one CPU port attached to the switch.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+---
+ Documentation/devicetree/bindings/net/dsa/dsa.txt |   67 ++++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
+index a4a570f..fc901cf 100644
+--- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
++++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
+@@ -337,13 +337,25 @@ Optional property:
+ 			  This mii-bus will be used in preference to the
+ 			  global dsa,mii-bus defined above, for this switch.
+ 
++- ethernet		: Optional for "cpu" ports. A phandle to an ethernet
++                          device which will be used by this CPU port for
++			  passing packets to/from the host. If not present,
++			  the port will use the "dsa,ethernet" property
++			  defined above.
++
++- cpu			: Option for non "cpu"/"dsa" ports. A phandle to a
++			  "cpu" port, which will be used for passing packets
++			  from this port to the host. If not present, the first
++			  "cpu" port will be used.
++
++
+ Optional subnodes:
+ - fixed-link		: Fixed-link subnode describing a link to a non-MDIO
+ 			  managed entity. See
+ 			  Documentation/devicetree/bindings/net/fixed-link.txt
+ 			  for details.
+ 
+-Example:
++Examples:
+ 
+ 	dsa@0 {
+ 		compatible = "marvell,dsa";
+@@ -416,3 +428,56 @@ Example:
+ 			};
+ 		};
+ 	};
++
++	dsa@1 {
++		compatible = "marvell,dsa";
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		dsa,ethernet = <&eth0port>;
++		dsa,mii-bus = <&mdio>;
++
++		switch@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0 0>;	/* MDIO address 0, switch 0 in tree */
++
++			port@0 {
++				reg = <0>;
++				label = "lan4";
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "lan3";
++				cpu = <&cpu1>;
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "lan2";
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "lan1";
++				cpu = <&cpu1>;
++			};
++
++			port@4 {
++				reg = <4>;
++				label = "wan";
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "cpu";
++			};
++
++			cpu1: port@6 {
++				reg = <6>;
++				label = "cpu";
++				ethernet = <&eth1port>;
++			};
++		};
++	};
+-- 
+1.7.10.4
