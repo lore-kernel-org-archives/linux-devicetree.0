@@ -1,7 +1,7 @@
 From: Manish Narani <manish.narani@xilinx.com>
-Subject: [RFC PATCH] usb: host: xhci: plat: add support for otg_set_host() call
-Date: Wed, 4 Jan 2017 18:53:01 +0530
-Message-ID: <1483536181-22356-7-git-send-email-mnarani@xilinx.com>
+Subject: [RFC PATCH] usb: dwc3: gadget: add support for OTG in gadget framework
+Date: Wed, 4 Jan 2017 18:52:58 +0530
+Message-ID: <1483536181-22356-4-git-send-email-mnarani@xilinx.com>
 References: <1483536181-22356-1-git-send-email-mnarani@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,84 +12,227 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deac
 Cc: anirudh@xilinx.com, anuragku@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-This patch will add support for OTG host initialization. This will
-help OTG drivers to populate their host subsystem.
+This patch adds support for OTG in DWC3 gadget framework. This
+also adds support for HNP polling by host while in OTG mode.
+
+Modifications in couple of functions to make it in sync with
+OTG driver while keeping its original functionality intact.
 
 Signed-off-by: Manish Narani <mnarani@xilinx.com>
 ---
- drivers/usb/host/xhci-plat.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/usb/dwc3/ep0.c    | 49 +++++++++++++++++++++++---
+ drivers/usb/dwc3/gadget.c | 87 +++++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 116 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index ddfab30..aa08bdd 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -19,6 +19,7 @@
- #include <linux/usb/phy.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-+#include <linux/usb/otg.h>
+diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+index 4878d18..aa78c1b 100644
+--- a/drivers/usb/dwc3/ep0.c
++++ b/drivers/usb/dwc3/ep0.c
+@@ -334,6 +334,8 @@ static int dwc3_ep0_handle_status(struct dwc3 *dwc,
+ 				usb_status |= 1 << USB_DEV_STAT_U2_ENABLED;
+ 		}
  
- #include "xhci.h"
- #include "xhci-plat.h"
-@@ -144,6 +145,37 @@ static const struct of_device_id usb_xhci_of_match[] = {
- MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
- #endif
- 
-+static int usb_otg_set_host(struct device *dev, struct usb_hcd *hcd, bool yes)
-+{
-+	int ret = 0;
++		usb_status |= dwc->remote_wakeup << USB_DEVICE_REMOTE_WAKEUP;
 +
-+	hcd->usb_phy = usb_get_phy(USB_PHY_TYPE_USB3);
-+	if (!IS_ERR_OR_NULL(hcd->usb_phy) && hcd->usb_phy->otg) {
-+		dev_dbg(dev, "%s otg support available\n", __func__);
-+		if (yes) {
-+			if (otg_set_host(hcd->usb_phy->otg, &hcd->self)) {
-+				dev_err(dev, "%s otg_set_host failed\n",
-+						__func__);
-+				usb_put_phy(hcd->usb_phy);
-+				goto disable_phy;
+ 		break;
+ 
+ 	case USB_RECIP_INTERFACE:
+@@ -448,11 +450,45 @@ static int dwc3_ep0_handle_device(struct dwc3 *dwc,
+ 
+ 	switch (wValue) {
+ 	case USB_DEVICE_REMOTE_WAKEUP:
++		if (set)
++			dwc->remote_wakeup = 1;
++		else
++			dwc->remote_wakeup = 0;
+ 		break;
+-	/*
+-	 * 9.4.1 says only only for SS, in AddressState only for
+-	 * default control pipe
+-	 */
++	case USB_DEVICE_B_HNP_ENABLE:
++		dev_dbg(dwc->dev,
++			"SET_FEATURE: USB_DEVICE_B_HNP_ENABLE\n");
++		if (set && dwc->gadget.is_otg) {
++			if (dwc->gadget.host_request_flag) {
++				struct usb_phy *phy =
++					usb_get_phy(USB_PHY_TYPE_USB3);
++
++				dwc->gadget.b_hnp_enable = 0;
++				dwc->gadget.host_request_flag = 0;
++				otg_start_hnp(phy->otg);
++				usb_put_phy(phy);
++			} else {
++				dwc->gadget.b_hnp_enable = 1;
 +			}
-+		} else {
-+			ret = otg_set_host(hcd->usb_phy->otg, NULL);
-+			usb_put_phy(hcd->usb_phy);
-+			goto disable_phy;
-+		}
++		} else
++			return -EINVAL;
++		break;
 +
-+	} else
-+		goto disable_phy;
++	case USB_DEVICE_A_HNP_SUPPORT:
++		/* RH port supports HNP */
++		dev_dbg(dwc->dev,
++			"SET_FEATURE: USB_DEVICE_A_HNP_SUPPORT\n");
++		break;
 +
-+	return 0;
-+
-+disable_phy:
-+	hcd->usb_phy = NULL;
-+
-+	return ret;
-+}
-+
- static int xhci_plat_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *match;
-@@ -255,6 +287,11 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto dealloc_usb2_hcd;
++	case USB_DEVICE_A_ALT_HNP_SUPPORT:
++		/* other RH port does */
++		dev_dbg(dwc->dev,
++			"SET_FEATURE: USB_DEVICE_A_ALT_HNP_SUPPORT\n");
++		break;
++		/*
++		 * 9.4.1 says only only for SS, in AddressState only for
++		 * default control pipe
++		 */
+ 	case USB_DEVICE_U1_ENABLE:
+ 		ret = dwc3_ep0_handle_u1(dwc, state, set);
+ 		break;
+@@ -759,7 +795,10 @@ static int dwc3_ep0_std_request(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
  
-+	ret = usb_otg_set_host(&pdev->dev, hcd, 1);
-+	if (ret)
-+		goto dealloc_usb2_hcd;
+ 	switch (ctrl->bRequest) {
+ 	case USB_REQ_GET_STATUS:
+-		ret = dwc3_ep0_handle_status(dwc, ctrl);
++		if (le16_to_cpu(ctrl->wIndex) == OTG_STS_SELECTOR)
++			ret = dwc3_ep0_delegate_req(dwc, ctrl);
++		else
++			ret = dwc3_ep0_handle_status(dwc, ctrl);
+ 		break;
+ 	case USB_REQ_CLEAR_FEATURE:
+ 		ret = dwc3_ep0_handle_feature(dwc, ctrl, 0);
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 6785595..3b0b771 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -34,6 +34,7 @@
+ #include "core.h"
+ #include "gadget.h"
+ #include "io.h"
++#include "otg.h"
+ 
+ /**
+  * dwc3_gadget_set_test_mode - Enables USB2 Test Modes
+@@ -1792,25 +1793,51 @@ static int dwc3_gadget_start(struct usb_gadget *g,
+ 	int			ret = 0;
+ 	int			irq;
+ 
+-	irq = dwc->irq_gadget;
+-	ret = request_threaded_irq(irq, dwc3_interrupt, dwc3_thread_interrupt,
+-			IRQF_SHARED, "dwc3", dwc->ev_buf);
+-	if (ret) {
+-		dev_err(dwc->dev, "failed to request irq #%d --> %d\n",
+-				irq, ret);
+-		goto err0;
+-	}
+-
+ 	spin_lock_irqsave(&dwc->lock, flags);
+ 	if (dwc->gadget_driver) {
+ 		dev_err(dwc->dev, "%s is already bound to %s\n",
+ 				dwc->gadget.name,
+ 				dwc->gadget_driver->driver.name);
+ 		ret = -EBUSY;
+-		goto err1;
++		goto err0;
+ 	}
+ 
+-	dwc->gadget_driver	= driver;
++	if (g->is_otg) {
++		static struct usb_gadget_driver *prev_driver;
++		/* There are two instances where OTG functionality is enabled :
++		 * 1. This function will be called from OTG driver to start the
++		 * gadget
++		 * 2. This function will be called by the Linux Class Driver to
++		 * start the gadget
++		 * Below code will keep synchronization between these calls. The
++		 * "driver" argument will be NULL when it is called from the OTG
++		 * driver, so we are maintaning a global variable "prev_driver"
++		 * to assign value of argument "driver" (from class driver) to
++		 * dwc->gadget_driver when it is called from OTG.
++		 */
++		if (driver) {
++			prev_driver	= driver;
++			if (dwc->otg) {
++				struct dwc3_otg		*otg = dwc->otg;
 +
++				if ((otg->host_started ||
++						(!otg->peripheral_started)))
++					goto err0;
++			}
++			dwc->gadget_driver	= driver;
++		} else
++			dwc->gadget_driver	= prev_driver;
++	} else
++		dwc->gadget_driver	= driver;
++
++	irq = dwc->irq_gadget;
++	ret = request_threaded_irq(irq, dwc3_interrupt, dwc3_thread_interrupt,
++			IRQF_SHARED, "dwc3", dwc->ev_buf);
++	if (ret) {
++		dev_err(dwc->dev, "failed to request irq #%d --> %d\n",
++				irq, ret);
++		goto err0;
++	}
+ 
+ 	if (pm_runtime_active(dwc->dev))
+ 		__dwc3_gadget_start(dwc);
+@@ -1819,11 +1846,9 @@ static int dwc3_gadget_start(struct usb_gadget *g,
+ 
+ 	return 0;
+ 
+-err1:
+-	spin_unlock_irqrestore(&dwc->lock, flags);
+-	free_irq(irq, dwc);
+-
+ err0:
++	dwc->gadget_driver = NULL;
++	spin_unlock_irqrestore(&dwc->lock, flags);
+ 	return ret;
+ }
+ 
+@@ -2977,6 +3002,18 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 
+ 	dwc->irq_gadget = irq;
+ 
++	if (dwc->dr_mode == USB_DR_MODE_OTG) {
++		struct usb_phy *phy;
++		/* Switch otg to peripheral mode */
++		phy = usb_get_phy(USB_PHY_TYPE_USB3);
++		if (!IS_ERR(phy)) {
++			if (phy && phy->otg)
++				otg_set_peripheral(phy->otg,
++						(struct usb_gadget *)(long)1);
++			usb_put_phy(phy);
++		}
++	}
++
+ 	dwc->ctrl_req = dma_alloc_coherent(dwc->sysdev, sizeof(*dwc->ctrl_req),
+ 			&dwc->ctrl_req_addr, GFP_KERNEL);
+ 	if (!dwc->ctrl_req) {
+@@ -3066,6 +3103,26 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 		goto err5;
+ 	}
+ 
++	if (dwc->dr_mode == USB_DR_MODE_OTG) {
++		struct usb_phy *phy;
++
++		phy = usb_get_phy(USB_PHY_TYPE_USB3);
++		if (!IS_ERR(phy)) {
++			if (phy && phy->otg) {
++				ret = otg_set_peripheral(phy->otg,
++						&dwc->gadget);
++				if (ret) {
++					usb_put_phy(phy);
++					phy = NULL;
++					goto err5;
++				}
++			} else {
++				usb_put_phy(phy);
++				phy = NULL;
++			}
++		}
++	}
 +
  	return 0;
  
- 
-@@ -283,6 +320,8 @@ static int xhci_plat_remove(struct platform_device *dev)
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
- 	struct clk *clk = xhci->clk;
- 
-+	usb_otg_set_host(&dev->dev, hcd, 0);
-+
- 	usb_remove_hcd(xhci->shared_hcd);
- 	usb_phy_shutdown(hcd->usb_phy);
- 
+ err5:
 -- 
 2.1.1
