@@ -1,47 +1,46 @@
-From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe phy
-Date: Wed, 4 Jan 2017 15:21:31 -0500
-Message-ID: <000501d266c8$23d63960$6b82ac20$@gmail.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com> <CGME20170104123436epcas1p1a729583c3c2307d8539a186f1050ea98@epcas1p1.samsung.com> <20170104123435.30740-3-jh80.chung@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170104123435.30740-3-jh80.chung@samsung.com>
-Content-Language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Jaehoon Chung' <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v2 0/4] TI DA8xx/OMAPL13x/AM17xx/AM18xx/C66x UART
+Date: Wed,  4 Jan 2017 14:30:10 -0600
+Message-ID: <1483561814-21953-1-git-send-email-david@lechnology.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, January 4, 2017 7:35 AM, Jaehoon Chung wrote:
-> 
-> This patch supports to use Generic Phy framework for Exynos PCIe phy.
-> When Exynos that supported the pcie want to use the PCIe,
-> it needs to control the phy resgister.
-> But it should be more complex to control in their own PCIe device drivers.
-> 
-> Currently, there is an exynos5440 case to support the pcie.
-> So this driver is based on Exynos5440 PCIe.
-> In future, will support the Other exynos SoCs likes exynos5433, exynos7.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+This series adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx/C66x
+UART. This SoCs have a non-standard register for UART power management that
+needs special handling in the UART driver.
 
-Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
+v2 changes:
+* Added references to C66x SoC in various places, which I assume is an OK
+  shorthand for TI Keystone processors.
+* New patch for Keystone device tree. This is untested as I don't have any
+  Keystone boards.
 
-Best regards,
-Jingoo Han
 
-> ---
-> Changelog on V2:
-> - Not include the codes relevant to pci-exynos.
-> - Remove the getting child node.
-> 
->  drivers/phy/Kconfig           |   9 ++
->  drivers/phy/Makefile          |   1 +
->  drivers/phy/phy-exynos-pcie.c | 280
-> ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 290 insertions(+)
->  create mode 100644 drivers/phy/phy-exynos-pcie.c
-> 
+David Lechner (4):
+  doc: DT: Add ti,da830-uart to serial/8250 bindings
+  serial: 8250: Add new port type for TI
+    DA8xx/OMAPL13x/AM17xx/AM18xx/C66x
+  ARM: da850: Add ti,da830-uart compatible for serial ports
+  ARM: dts: keystone: Add "ti,da830-uart" compatible string
+
+ Documentation/devicetree/bindings/serial/8250.txt |  1 +
+ arch/arm/boot/dts/da850.dtsi                      |  9 ++++++---
+ arch/arm/boot/dts/keystone-k2g.dtsi               |  2 +-
+ arch/arm/boot/dts/keystone-k2l.dtsi               |  4 ++--
+ arch/arm/boot/dts/keystone.dtsi                   |  4 ++--
+ drivers/tty/serial/8250/8250_of.c                 |  1 +
+ drivers/tty/serial/8250/8250_port.c               | 22 ++++++++++++++++++++++
+ include/uapi/linux/serial_core.h                  |  3 ++-
+ include/uapi/linux/serial_reg.h                   |  8 ++++++++
+ 9 files changed, 45 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
