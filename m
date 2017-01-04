@@ -1,74 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 07/22] dt-bindings: power: supply: add AXP20X/AXP22X AC
- power supply
-Date: Wed, 4 Jan 2017 07:14:10 -0600
-Message-ID: <20170104131410.mni7opxnouzagypu@rob-hp-laptop>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-8-quentin.schulz@free-electrons.com>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [RFC PATCH] arch: arm64: dts: add USB OTG interrupts support in ZynqMP device tree
+Date: Wed, 4 Jan 2017 18:52:55 +0530
+Message-ID: <1483536181-22356-1-git-send-email-mnarani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170102163723.7939-8-quentin.schulz@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, icenowy@aosc.xyz, bonbons@linux-vserver.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@kernel.org, gregkh@linuxfoundation.org, mathias.nyman@intel.com, agraf@suse.de, bharatku@xilinx.com, punnaiah.choudary.kalluri@xilinx.com, dhdang@apm.com, marc.zyngier@arm.com, mnarani@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: anirudh@xilinx.com, anuragku@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 02, 2017 at 05:37:07PM +0100, Quentin Schulz wrote:
-> The X-Powers AXP20X and AXP22X PMICs have an AC entry to supply power to
-> the board. They have a few registers dedicated to the status of the AC
-> power supply.
-> 
-> This adds the DT binding documentation for the AC power supply for
-> AXP20X and AXP22X PMICs.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->  .../bindings/power/supply/axp20x_ac_power.txt      | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
-> new file mode 100644
-> index 0000000..16d0de4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
-> @@ -0,0 +1,28 @@
-> +AXP20X and AXP22X PMICs' AC power supply
-> +
-> +Required Properties:
-> + - compatible: One of:
-> +			"x-powers,axp202-ac-power-supply"
-> +			"x-powers,axp221-ac-power-supply"
-> +
-> +More Required Properties for AXP20X PMICs:
-> + - io-channels: phandles to ACIN voltage and current ADC channels
-> + - io-channel-names = "acin_v", "acin_i";
-> +
-> +This node is a subnode of the axp20x PMIC.
-> +
-> +The AXP20X can read the current current and voltage supplied by AC by
-> +reading ADC channels from the AXP20X ADC.
-> +
-> +The AXP22X is only able to tell if an AC power supply is present and
-> +usable.
-> +
-> +Example:
-> +
-> +&axp209 {
-> +	ac_power_supply: ac_power_supply {
+This patch adds OTG interrupt support in device tree. It will add
+an extra interrupt line number dedicated to OTG events. This will
+enable OTG interrupts to serve in DWC3 OTG driver.
 
-power-supply {
+Signed-off-by: Manish Narani <mnarani@xilinx.com>
+---
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +		compatible = "x-powers,axp202-ac-power-supply";
-> +		io-channels = <&axp209_adc 0>, <&axp209_adc 1>;
-
-Is this assignment fixed? If so, then it doesn't need to be in DT.
-
-> +		io-channel-names = "acin_v", "acin_i";
-> +	};
-> +};
-> -- 
-> 2.9.3
-> 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 68a90833..ce9ad02 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -351,7 +351,7 @@
+ 			compatible = "snps,dwc3";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+-			interrupts = <0 65 4>;
++			interrupts = <0 65 4>, <0 69 4>;
+ 			reg = <0x0 0xfe200000 0x0 0x40000>;
+ 			clock-names = "clk_xin", "clk_ahb";
+ 		};
+-- 
+2.1.1
