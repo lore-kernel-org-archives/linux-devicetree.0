@@ -1,67 +1,61 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM: dts: armada388: Introduce Clearfog Base DT
-Date: Wed, 04 Jan 2017 16:48:20 +0100
-Message-ID: <8760lug723.fsf@free-electrons.com>
-References: <E1cO41M-0007xc-Id@rmk-PC.armlinux.org.uk>
-        <E1cO43Q-0007yJ-ON@rmk-PC.armlinux.org.uk>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mailbox: sti: Fix mbox-names copy and paste error
+Date: Wed, 4 Jan 2017 16:01:07 +0000
+Message-ID: <20170104160107.GD24225@dell>
+References: <20170104120527.24806-1-lee.jones@linaro.org>
+ <20170104145732.7yiqbi7rf7m6lem4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1cO43Q-0007yJ-ON-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org> (Russell King's
-        message of "Mon, 02 Jan 2017 14:57:40 +0000")
+Content-Disposition: inline
+In-Reply-To: <20170104145732.7yiqbi7rf7m6lem4@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
- 
- On lun., janv. 02 2017, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+On Wed, 04 Jan 2017, Rob Herring wrote:
 
-> This patch series, based upon the previously submitted fix for the SPI
-> flash, reworks the Clearfog DT files to add support for the SolidRun
-> Clearfog Base platform.
->
-> The conventional model is now known as the "Clearfog Pro" module, which
-> has the DSA switch and two PCIe sockets.  The base model is a smaller
-> board without the DSA switch, replacing it with a second copper gigabit
-> port, and only one PCIe socket.
->
-> We retain the original DT file (named armada-388-clearfog.dtb) for
-> compatibility with existing installations - not only the filename,
-> but also the board name exposed in userspace.
+> On Wed, Jan 04, 2017 at 12:05:27PM +0000, Lee Jones wrote:
+> > Due to an over-sight, mbox-names has become mbox-name in some instances.
+> > 
+> > Let's put it right.
+> > 
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mailbox/sti-mailbox.txt | 4 ++--
+> >  arch/arm/boot/dts/stih407-family.dtsi                     | 8 ++++----
+> >  drivers/mailbox/mailbox-sti.c                             | 2 +-
+> >  3 files changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+> > index 351f612..648d176 100644
+> > --- a/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+> > +++ b/Documentation/devicetree/bindings/mailbox/sti-mailbox.txt
+> > @@ -9,7 +9,7 @@ Controller
+> >  Required properties:
+> >  - compatible		: Should be "st,stih407-mailbox"
+> >  - reg			: Offset and length of the device's register set
+> > -- mbox-name		: Name of the mailbox
+> > +- mbox-names		: Name of the mailbox
+> 
+> It's worse than this. mbox-names is for the mailbox client side.
 
+Ah yes, of course.  False alarm.
 
-All the series applied on mvebu/dt.
+Let's just leave it as it is. ;)
 
-I amended the last two patches because the license text was mangled as
-spotted by Alexandre Belloni, so I fixed it while applying the patches.
+I'll reply to the reporter directly.
 
-
-Thanks,
-
-Gregory
-
-
->
->  arch/arm/boot/dts/Makefile                         |   2 +
->  arch/arm/boot/dts/armada-388-clearfog-base.dts     |  94 ++++++
->  arch/arm/boot/dts/armada-388-clearfog-pro.dts      |  55 ++++
->  arch/arm/boot/dts/armada-388-clearfog.dts          | 364 ++++-----------------
->  arch/arm/boot/dts/armada-388-clearfog.dtsi         | 310 ++++++++++++++++++
->  .../arm/boot/dts/armada-38x-solidrun-microsom.dtsi |  21 ++
->  6 files changed, 548 insertions(+), 298 deletions(-)
->  create mode 100644 arch/arm/boot/dts/armada-388-clearfog-base.dts
->  create mode 100644 arch/arm/boot/dts/armada-388-clearfog-pro.dts
->  create mode 100644 arch/arm/boot/dts/armada-388-clearfog.dtsi
->
->
+> This should just be dropped. Plus, *-names is pointless when there
+> is only 1 element.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
