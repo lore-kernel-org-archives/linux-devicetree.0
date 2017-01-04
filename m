@@ -1,15 +1,15 @@
 From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v2 04/19] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
+Subject: Re: [PATCH v2 05/19] ARM: dts: imx6-sabresd: add OV5642 and OV5640
  camera sensors
-Date: Wed, 4 Jan 2017 14:25:17 +0200
-Message-ID: <0a343705-1d38-9fe2-6419-56ab9bdfb0c2@mentor.com>
+Date: Wed, 4 Jan 2017 14:33:07 +0200
+Message-ID: <c8c09060-dd6b-f495-da7d-b1f9fad79b89@mentor.com>
 References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
- <1483477049-19056-5-git-send-email-steve_longerbeam@mentor.com>
+ <1483477049-19056-6-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1483477049-19056-5-git-send-email-steve_longerbeam@mentor.com>
+In-Reply-To: <1483477049-19056-6-git-send-email-steve_longerbeam@mentor.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -23,74 +23,47 @@ To: Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org, kernel@pengut
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
-
 On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
 > Enables the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
-> Both hang off the same i2c2 bus, so they require different (and non-
-> default) i2c slave addresses.
 > 
 > The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
 > 
 > The OV5640 connects to the input port on the MIPI CSI-2 receiver on
 > mipi_csi. It is set to transmit over MIPI virtual channel 1.
 > 
-> Note there is a pin conflict with GPIO6. This pin functions as a power
-> input pin to the OV5642, but ENET uses it as the h/w workaround for
-> erratum ERR006687, to wake-up the ARM cores on normal RX and TX packet
-> done events (see 6261c4c8). So workaround 6261c4c8 is reverted here to
-> support the OV5642, and the "fsl,err006687-workaround-present" boolean
-> also must be removed. The result is that the CPUidle driver will no longer
-> allow entering the deep idle states on the sabrelite.
-
-For me it sounds like a candidate of its own separate change.
-
+> Until the OV5652 sensor module compatible with the SabreSD becomes
+> available for testing, the ov5642 node is currently disabled.
 > 
 > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 > ---
 
 [snip]
 
->  &audmux {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_audmux>;
-> @@ -271,9 +298,6 @@
->  	txd1-skew-ps = <0>;
->  	txd2-skew-ps = <0>;
->  	txd3-skew-ps = <0>;
-> -	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
-> -			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
-
-Like you say in the commit message this is a partial revert of 6261c4c8f13e
-("ARM: dts: imx6qdl-sabrelite: use GPIO_6 for FEC interrupt.")
-
-> -	fsl,err006687-workaround-present;
-
-This is a partial revert of a28eeb43ee57 ("ARM: dts: imx6: tag boards that
-have the HW workaround for ERR006687").
-
-The change should be split and reviewed separately in my opinion, also
-cc Gary Bisson <gary.bisson@boundarydevices.com> for SabreLite changes.
-
->  	status = "okay";
->  };
->  
-> @@ -302,6 +326,52 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_i2c2>;
->  	status = "okay";
 > +
-> +	camera: ov5642@42 {
+> +	camera: ov5642@3c {
+
+ov5642: camera@3c
+
 > +		compatible = "ovti,ov5642";
 > +		pinctrl-names = "default";
 > +		pinctrl-0 = <&pinctrl_ov5642>;
-> +		clocks = <&clks IMX6QDL_CLK_CKO2>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
 > +		clock-names = "xclk";
-> +		reg = <0x42>;
+> +		reg = <0x3c>;
 > +		xclk = <24000000>;
-> +		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-> +		pwdn-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> +		gp-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
+> +		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +		AVDD-supply = <&vgen5_reg>;  /* 2.8v, rev C board is VGEN3
+> +						rev B board is VGEN5 */
+> +		DVDD-supply = <&vgen2_reg>;  /* 1.5v*/
+> +		pwdn-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>; /* SD1_DAT0 */
+> +		reset-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>; /* SD1_DAT1 */
+
+Comments about SD1_* pad names are redundant.
+
+> +		status = "disabled";
+
+Why is it disabled here?
+
 > +
 > +		port {
 > +			ov5642_to_ipu1_csi0_mux: endpoint {
@@ -101,29 +74,34 @@ cc Gary Bisson <gary.bisson@boundarydevices.com> for SabreLite changes.
 > +			};
 > +		};
 > +	};
+>  };
+>  
+>  &i2c2 {
+> @@ -322,6 +376,34 @@
+>  			};
+>  		};
+>  	};
 > +
-> +	mipi_camera: ov5640@40 {
+> +	mipi_camera: ov5640@3c {
 
-Please reorder device nodes by address value, also according to ePAPR
-node names should be generic, labels can be specific:
-
-	ov5640: camera@40 {
-		...
-	};
-
-	ov5642: camera@42 {
-		...
-	};
+ov5640: camera@3c
 
 > +		compatible = "ovti,ov5640_mipi";
 > +		pinctrl-names = "default";
 > +		pinctrl-0 = <&pinctrl_ov5640>;
-> +		clocks = <&mipi_xclk>;
+> +		reg = <0x3c>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
 > +		clock-names = "xclk";
-> +		reg = <0x40>;
-> +		xclk = <22000000>;
-> +		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* NANDF_D5 */
-> +		pwdn-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
+> +		xclk = <24000000>;
+> +		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +		AVDD-supply = <&vgen5_reg>;  /* 2.8v, rev C board is VGEN3
+> +						rev B board is VGEN5 */
+> +		DVDD-supply = <&vgen2_reg>;  /* 1.5v*/
+> +		pwdn-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>; /* SD1_DAT2 */
+> +		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>; /* SD1_CLK */
+
+Comments about SD1_* pad names are redundant.
+
 > +
 > +		port {
 > +			#address-cells = <1>;
@@ -140,33 +118,29 @@ node names should be generic, labels can be specific:
 >  };
 >  
 >  &i2c3 {
-> @@ -374,7 +444,6 @@
->  				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
->  				/* Phy reset */
->  				MX6QDL_PAD_EIM_D23__GPIO3_IO23		0x000b0
-> -				MX6QDL_PAD_GPIO_6__ENET_IRQ		0x000b1
-
-Yep.
-
+> @@ -426,6 +508,36 @@
 >  			>;
 >  		};
 >  
-> @@ -449,6 +518,39 @@
->  			>;
->  		};
->  
+> +		pinctrl_ov5640: ov5640grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD1_DAT2__GPIO1_IO19 0x80000000
+> +				MX6QDL_PAD_SD1_CLK__GPIO1_IO20  0x80000000
+> +			>;
+> +		};
+> +
 > +		pinctrl_ov5642: ov5642grp {
 > +			fsl,pins = <
 > +				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x80000000
-> +				MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x80000000
-> +				MX6QDL_PAD_GPIO_8__GPIO1_IO08   0x80000000
-> +				MX6QDL_PAD_GPIO_3__CCM_CLKO2    0x80000000
+> +				MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 0x80000000
 > +			>;
 > +		};
 > +
 > +		pinctrl_ipu1_csi0: ipu1grp-csi0 {
 
-Please rename node name to ipu1csi0grp.
+Please rename the node name to ipu1csi0grp.
+
+Please add new pin control groups preserving the alphanimerical order.
 
 > +			fsl,pins = <
 > +				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x80000000
@@ -180,21 +154,13 @@ Please rename node name to ipu1csi0grp.
 > +				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x80000000
 > +				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x80000000
 > +				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x80000000
-> +				MX6QDL_PAD_CSI0_DATA_EN__IPU1_CSI0_DATA_EN 0x80000000
 > +			>;
 > +		};
 > +
-> +                pinctrl_ov5640: ov5640grp {
-> +                        fsl,pins = <
-> +				MX6QDL_PAD_NANDF_D5__GPIO2_IO05 0x000b0
-> +				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09 0x0b0b0
-> +                        >;
-> +                };
-> +
-
-Indentation issues above, please use tabs instead of spaces.
-
-Also please add new pin control groups preserving the alphanimerical order.
+>  		pinctrl_pcie: pciegrp {
+>  			fsl,pins = <
+>  				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x1b0b0
+> 
 
 --
 With best wishes,
