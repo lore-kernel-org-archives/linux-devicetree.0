@@ -1,58 +1,39 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v5 4/4] MAINTAINERS: add zx2967 SoC drivers to ARM ZTE
- architecture
-Date: Wed,  4 Jan 2017 08:19:17 +0800
-Message-ID: <1483489157-10782-4-git-send-email-baoyou.xie@linaro.org>
-References: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: dts: Add am335x-boneblack-wireless
+Date: Tue, 3 Jan 2017 16:41:48 -0800
+Message-ID: <20170104004147.GD25222@atomide.com>
+References: <20161227175837.28970-1-robertcnelson@gmail.com>
+ <20161227175837.28970-2-robertcnelson@gmail.com>
+ <CB5C8999-6CAE-41F6-85A6-D2A856BD8011@gmail.com>
+ <20170103201103.GB25222@atomide.com>
+ <2D5ABB5A-E332-4D77-89EA-9DBF9A2FECFB@gmail.com>
+ <20170103204343.GC25222@atomide.com>
+ <CA+T6QPnTS-XyV0G9X78hAh=D79TkZkU+evN2RA6VF3f_jyBtkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jun.nie@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, davem@davemloft.net, geert+renesas@glider.be, akpm@linux-foundation.org, mchehab@kernel.org, linux@roeck-us.net, krzk@kernel.org, arnd@arndb.de, linus.walleij@linaro.org, pankaj.dubey@samsung.com, yangbo.lu@nxp.com, f.fainelli@gmail.com, claudiu.manoil@nxp.com, laurent.pinchart+renesas@ideasonboard.com
-Cc: devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, baoyou.xie@linaro.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CA+T6QPnTS-XyV0G9X78hAh=D79TkZkU+evN2RA6VF3f_jyBtkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Kridner <jdk-l0cyMroinI0@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the ZTE SoC drivers as maintained by ARM ZTE
-architecture maintainers, as they're parts of the core IP.
+* Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170103 12:58]:
+> Asked-by: Jason Kridner <jdk-l0cyMroinI0@public.gmane.org>
+> 
+> Sorry for the phone mailer (HTML).
 
-By the way, this patch adds the maintainer for ARM
-ZTE architecture to Baoyou Xie.
+OK fixed that to Acked-by :) Applied into omap-for-v4.11/dt and pushed
+out.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+BBB Green Wireless seems to work nicely for WLAN out of the box with
+these patches :)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ad199da..64f04df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1975,12 +1975,16 @@ F:	arch/arm/mach-pxa/include/mach/z2.h
- 
- ARM/ZTE ARCHITECTURE
- M:	Jun Nie <jun.nie@linaro.org>
-+M:	Baoyou Xie <baoyou.xie@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/mach-zx/
- F:	drivers/clk/zte/
-+F:	drivers/soc/zte/
- F:	Documentation/devicetree/bindings/arm/zte.txt
- F:	Documentation/devicetree/bindings/clock/zx296702-clk.txt
-+F:	Documentation/devicetree/bindings/soc/zte/
-+F:	include/dt-bindings/soc/zx*.h
- 
- ARM/ZYNQ ARCHITECTURE
- M:	Michal Simek <michal.simek@xilinx.com>
--- 
-2.7.4
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
