@@ -1,10 +1,10 @@
 From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/6] arm64: dts: apq8016-sbc: Limit MPP4 high state to 1.8V
-Date: Wed,  4 Jan 2017 13:35:00 +0000
-Message-ID: <1483536902-21450-5-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 4/4] ARM: dts: apq8064: Add ADM configuration node
+Date: Wed,  4 Jan 2017 13:34:14 +0000
+Message-ID: <1483536854-21389-4-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1483536854-21389-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483536902-21450-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1483536854-21389-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -12,43 +12,83 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-96Boards specs require all GPIO signals to be at 1.8V.
-Limit MPP4, which is PIN28 on J8, to 1.8V(L5).
+Add Application Data Mover (DMA) device node.
+Connect GSBI6 UARTDM RX and TX channels to it.
 
 Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  4 ++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi        | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-index f881437..d946408 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-@@ -1,4 +1,5 @@
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 881ce70..eec67cd 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -234,6 +234,10 @@
+ 			};
+ 		};
  
- &pm8916_gpios {
- 
-@@ -30,6 +31,18 @@
- 
- &pm8916_mpps {
- 
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ls_exp_gpio_f>;
-+
-+	ls_exp_gpio_f: pm8916_mpp4 {
-+		pinconf {
-+			pins = "mpp4";
-+			function = "digital";
-+			output-low;
-+			power-source = <PM8916_MPP_L5>;	// 1.8V
++		adm: dma@18320000 {
++			status = "okay";
 +		};
-+	};
 +
- 	pm8916_mpps_leds: pm8916_mpps_leds {
- 		pinconf {
- 			pins = "mpp2", "mpp3";
+ 		sata_phy0: phy@1b400000 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index e68a8a1..8a7c325 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -564,6 +564,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
++			syscon-tcsr = <&tcsr>;
+ 
+ 			gsbi6_serial: serial@16540000 {
+ 				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+@@ -572,6 +573,13 @@
+ 				interrupts = <0 156 0x0>;
+ 				clocks = <&gcc GSBI6_UART_CLK>, <&gcc GSBI6_H_CLK>;
+ 				clock-names = "core", "iface";
++
++				qcom,rx-crci = <11>;
++				qcom,tx-crci = <6>;
++
++				dmas = <&adm 6>, <&adm 7>;
++				dma-names = "rx", "tx";
++
+ 				status = "disabled";
+ 			};
+ 
+@@ -1059,6 +1067,26 @@
+ 			};
+ 		};
+ 
++		adm: dma@18320000 {
++			compatible = "qcom,adm";
++			reg = <0x18320000 0xE0000>;
++			interrupts = <GIC_SPI 171 IRQ_TYPE_NONE>;
++			#dma-cells = <1>;
++
++			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
++			clock-names = "core", "iface";
++
++			resets = <&gcc ADM0_RESET>,
++				 <&gcc ADM0_PBUS_RESET>,
++				 <&gcc ADM0_C0_RESET>,
++				 <&gcc ADM0_C1_RESET>,
++				 <&gcc ADM0_C2_RESET>;
++			reset-names = "clk", "pbus", "c0", "c1", "c2";
++			qcom,ee = <1>;
++
++			status = "disabled";
++		};
++
+ 		tcsr: syscon@1a400000 {
+ 			compatible = "qcom,tcsr-apq8064", "syscon";
+ 			reg = <0x1a400000 0x100>;
 -- 
 2.10.1
 
