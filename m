@@ -1,82 +1,52 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v5 1/4] soc: zte: Add header for PM domains specifiers
-Date: Wed, 4 Jan 2017 13:29:46 +0800
-Message-ID: <20170104052945.GE20956@dragon>
-References: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: mark.rutland@arm.com, jun.nie@linaro.org, geert+renesas@glider.be, linus.walleij@linaro.org, f.fainelli@gmail.com, pankaj.dubey@samsung.com, krzk@kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, linux@roeck-us.net, devicetree@vger.kernel.org, arnd@arndb.de, xie.baoyou@zte.com.cn, claudiu.manoil@nxp.com, robh+dt@kernel.org, mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, yangbo.lu@nxp.com, akpm@linux-foundation.org, davem@davemloft.net
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v3 0/2] Broadcom FlexRM ring manager support
+Date: Wed,  4 Jan 2017 11:04:40 +0530
+Message-ID: <1483508082-7008-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 08:19:14AM +0800, Baoyou Xie wrote:
-> This patch adds header with values used for ZTE 2967
-> SoC's power domain driver.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+The Broadcom FlexRM ring manager provides producer-consumer style
+ring interface for offload engines on Broadcom iProc SoCs. We can
+have one or more instances of Broadcom FlexRM ring manager in a SoC.
 
-The tags like Reviewed-by, Acked-by etc, can only be added into your
-patch after people give it explicitly.  One of the examples is that Jun
-Nie gave his Reviewed-by tag on your "[PATCH v2 2/2] soc: zte:
-pm_domains: Add support for zx296718 board".
+This patchset adds a mailbox driver for Broadcom FlexRM ring manager
+which can be used by offload engine drivers as mailbox clients.
 
-https://www.spinics.net/lists/arm-kernel/msg547282.html
+The Broadcom FlexRM mailbox driver is feature complete for RAID and
+Crypto offload engines. We will have incremental patches in-future
+for ring-level statistics using debugfs and minor optimizations.
 
-I did not give my Reviewed-by tag on list, so you shouldn't add it here.
-Actually, in case of this patch series, I will probably apply them
-through ZTE -> arm-soc tree, when I feel it's ready.  So I'm do not even
-need to give the Reviewed-by tag.
+This patchset is based on Linux-4.10-rc2 and it is also available
+at flexrm-v3 branch of https://github.com/Broadcom/arm64-linux.git
 
-Shawn
+Changes since v2:
+ - Rebased patches for Linux-4.10-rc2
 
-> ---
->  include/dt-bindings/soc/zte,pm_domains.h | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 include/dt-bindings/soc/zte,pm_domains.h
-> 
-> diff --git a/include/dt-bindings/soc/zte,pm_domains.h b/include/dt-bindings/soc/zte,pm_domains.h
-> new file mode 100644
-> index 0000000..01e9abc
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/zte,pm_domains.h
-> @@ -0,0 +1,23 @@
-> +/*
-> + * Copyright (C) 2017 Linaro Ltd.
-> + *
-> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
-> + * License terms: GNU General Public License (GPL) version 2
-> + */
-> +#ifndef _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
-> +#define _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
-> +
-> +#define DM_ZX296718_SAPPU	0
-> +#define DM_ZX296718_VDE		1  /* g1v6 */
-> +#define DM_ZX296718_VCE		2  /* h1v6 */
-> +#define DM_ZX296718_HDE		3  /* g2v2 */
-> +#define DM_ZX296718_VIU		4
-> +#define DM_ZX296718_USB20	5
-> +#define DM_ZX296718_USB21	6
-> +#define DM_ZX296718_USB30	7
-> +#define DM_ZX296718_HSIC	8
-> +#define DM_ZX296718_GMAC	9
-> +#define DM_ZX296718_TS		10
-> +#define DM_ZX296718_VOU		11
-> +
-> +#endif /* _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H */
-> -- 
-> 2.7.4
-> 
+Changes since v1:
+ - Use compatile string as brcm,iproc-flexrm-mbox
+ - Rephrase commit message and text in DT bindings patch
+
+Anup Patel (2):
+  mailbox: Add driver for Broadcom FlexRM ring manager
+  dt-bindings: Add DT bindings info for FlexRM ring manager
+
+ .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    |  60 ++
+ drivers/mailbox/Kconfig                            |  11 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mailbox-flexrm/Makefile            |   6 +
+ drivers/mailbox/mailbox-flexrm/flexrm-desc.c       | 764 +++++++++++++++++++
+ drivers/mailbox/mailbox-flexrm/flexrm-desc.h       |  47 ++
+ drivers/mailbox/mailbox-flexrm/flexrm-main.c       | 829 +++++++++++++++++++++
+ include/linux/mailbox/brcm-message.h               |  14 +-
+ 8 files changed, 1729 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+ create mode 100644 drivers/mailbox/mailbox-flexrm/Makefile
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-desc.c
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-desc.h
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-main.c
+
+-- 
+2.7.4
