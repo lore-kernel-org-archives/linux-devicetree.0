@@ -1,65 +1,71 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 0/4] ARM: K2G: Add support for TI-SCI Generic PM Domains
-Date: Wed, 4 Jan 2017 16:06:02 -0600
-Message-ID: <bf9286b1-379d-1cc8-4eae-d268540dd2a6@ti.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2] ARM: dts: Add missing CPU frequencies for
+ Exynos5422/5800
+Date: Wed, 4 Jan 2017 20:57:47 -0300
+Message-ID: <2c85559a-dc12-610b-c842-c89d078e1c2a@osg.samsung.com>
+References: <10512254.nyUcL0zgTP@amdc3058>
+ <CAD=FV=Wo273T20fe8D2v5Pn1HYR==7PHtr7WZGwzFPRspAYPzg@mail.gmail.com>
+ <20161229141707.qjrtjz7dik6a7l5s@kozik-lap>
+ <CAD=FV=WM_K_f0NQ0mxB55Ksbqg1gYJHs5d66ARYsa1=5hKLjXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WM_K_f0NQ0mxB55Ksbqg1gYJHs5d66ARYsa1=5hKLjXA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, Arjun K V <arjun.kv@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Santosh,
-On 01/04/2017 03:54 PM, Santosh Shilimkar wrote:
-> On 1/4/2017 12:55 PM, Dave Gerlach wrote:
->> Hi,
->> This is v3 of the series to add support for TI-SCI Generic PM Domains.
->> Previous versions can be found here:
->>
->> v2: https://www.spinics.net/lists/kernel/msg2364612.html
->> v1: http://www.spinics.net/lists/arm-kernel/msg525204.html
->>
->> This version is rebased on v4.10-rc2 but is the same as v2 with the
->> exception of patch 2 in which the devicetree binding documentation
->> needed to be updated to show the k2g_pds node should be a child of
->> the pmmc node. Apart from that, the acks provided by Ulf were added
->> to patches 1 and 3.
->>
->> Now that the TI-SCI series has been merged [1] this series will be ready
->> to go in with an ack on the DT binding. Rob had raised some questions on
->> the necessity ti,sci-id property but I believe these were properly
->> addressed during the discussion of v2 so hopefully an ack is in order
->> now.
->>
-> How do you plan to merge this series with below patch ?
->
->>   PM / Domains: Add generic data pointer to genpd data struct
-> I think this one goes via Rafael's tree. If you want me to merge this
-> along with other patches then will need his ack.
->
-> Other way is to get that merged first via Rafael's tree and then
-> the remainder series.
+Hello Doug,
 
-I'd be happy with it going in through your tree with an ack to avoid any 
-delay but I'd say it's Rafael's call as it is a patch to the genpd core, 
-even though at this point I am the only user.
+On 01/04/2017 06:05 PM, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, Dec 29, 2016 at 6:17 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On Thu, Dec 15, 2016 at 04:54:30PM -0800, Doug Anderson wrote:
+>>>> Index: b/arch/arm/boot/dts/exynos5800.dtsi
+>>>> ===================================================================
+>>>> --- a/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.365955950 +0100
+>>>> +++ b/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.361955949 +0100
+>>>> @@ -24,6 +24,16 @@
+>>>>  };
+>>>>
+>>>>  &cluster_a15_opp_table {
+>>>> +       opp@2000000000 {
+>>>> +               opp-hz = /bits/ 64 <2000000000>;
+>>>> +               opp-microvolt = <1250000>;
+>>>> +               clock-latency-ns = <140000>;
+>>>> +       };
+>>>> +       opp@1900000000 {
+>>>> +               opp-hz = /bits/ 64 <1900000000>;
+>>>> +               opp-microvolt = <1250000>;
+>>>> +               clock-latency-ns = <140000>;
+>>>> +       };
+>>>
+>>> I don't think the voltages you listed are high enough for all peach pi
+>>> boards for A15 at 1.9 GHz and 2.0 GHz, at least based on the research
+>>> I did.  See my response to v1.
+>>
+>> I wanted to apply this but saw this remaining issue. Javier tested it
+>> on Peach Pi so is this concern still valid?
+> 
+> I'm not sure.  It's been years since I did anything with exynos, so I
+> won't stand in the way if everyone else agrees that this patch is
+> good, but I will point out that testing on a single Peach Pi board is
+> not really enough given the massive difference in voltage needed
+> between the highest ASV group and the lowest (a whopping 112.5 mV from
+> looking in the Chrome OS source tree).
+> 
 
-Regards,
-Dave
+I agree. That's why answered that I wasn't able to find regressions on the
+Peach Pi I've access to, but I couldn't provide a Reviewed-by tag since it
+wasn't clear to me that the values were safe for any Exynos5420/5422/5800.
 
->
-> Regards,
-> Santosh
+> -Doug
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
