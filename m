@@ -1,76 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
- Tree
-Date: Wed, 4 Jan 2017 11:26:08 -0800
-Message-ID: <20170104192608.GN10531@minitux>
-References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
- <20161226181153.11271-2-bjorn.andersson@linaro.org>
- <20170104115424.GH27589@dell>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V6 1/3] dt-bindings: document common IEEE 802.11 frequency
+ limit property
+Date: Wed, 4 Jan 2017 13:46:46 -0600
+Message-ID: <CAL_JsqLg5YkC-YUHg6mQ35nmGaG7SC33VJB++fgtZsu1fRV-7Q@mail.gmail.com>
+References: <20170104175832.25996-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170104115424.GH27589@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170104175832.25996-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
+On Wed, Jan 4, 2017 at 11:58 AM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>
+> This new file should be used for properties that apply to all wireless
+> devices.
+>
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+> V2: Switch to a single ieee80211-freq-limit property that allows specifying
+>     *multiple* ranges. This resolves problem with more complex rules as pointed
+>     by Felx.
+>     Make description implementation agnostic as pointed by Arend.
+>     Rename node to wifi as suggested by Martin.
+> V3: Use more real-life frequencies in the example.
+> V5: Describe hardware design as possible use for this property
+> V6: Even better property description, thanks Rob for your help!
+> ---
+>  .../devicetree/bindings/net/wireless/ieee80211.txt | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 
-> On Mon, 26 Dec 2016, Bjorn Andersson wrote:
-> 
-> > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > 
-> > Implement support for initialization of the lm3533 driver core and
-> > probing child devices from Device Tree.
-> > 
-
-[..]
-
-> > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
-> >  	lm3533_device_bl_init(lm3533);
-> >  	lm3533_device_led_init(lm3533);
-> >  
-> > +	if (lm3533->dev->of_node) {
-> > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
-> > +				     lm3533->dev);
-> > +	}
-> 
-> I think it's save to call of_platform_populate(), even if !of_node.
-> It will just fail and return an error code, which you are ignoring
-> anyway.
-> 
-
-I thought so too, but that's apparently how you trigger probing children
-of the root node. So we're stuck with a conditional.
-
-[..]
-
-> >  static int lm3533_i2c_probe(struct i2c_client *i2c,
-> >  					const struct i2c_device_id *id)
-> >  {
-
-[..]
-
-> >  
-> > +	if (i2c->dev.of_node) {
-> 
-> I'd prefer this check to be placed in lm3533_pdata_from_of_node().
-> 
-> Just return silently if !dev->of_node.
-> 
-
-I agree, will update this.
-
-> > +		ret = lm3533_pdata_from_of_node(lm3533->dev);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >  	return lm3533_device_init(lm3533);
-> >  }
-> >  
-
-Regards,
-Bjorn
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
