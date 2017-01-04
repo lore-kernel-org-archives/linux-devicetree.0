@@ -1,170 +1,53 @@
-From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH V2 4/5] PCI: exynos: support the using PHY generic framework
-Date: Wed, 4 Jan 2017 14:56:15 -0500
-Message-ID: <000201d266c4$9bed0270$d3c70750$@gmail.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com> <CGME20170104123436epcas1p1651443c5fe13f67006864aed2f70fa9d@epcas1p1.samsung.com> <20170104123435.30740-5-jh80.chung@samsung.com>
+From: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: document common IEEE 802.11 frequency
+ properties
+Date: Wed, 4 Jan 2017 20:53:07 +0100
+Message-ID: <fec0dffd-5c9f-0d9d-a458-464d81952ce0@broadcom.com>
+References: <20161228155955.25518-1-zajec5@gmail.com>
+ <20170103195514.vf4psb6qw2bd2lcw@rob-hp-laptop>
+ <CACna6rxmgN2zz-Fc1-Uu02oqMQreNkMJt0jGjLOMrXM=6iujFw@mail.gmail.com>
+ <874m1ej3oz.fsf@kamboji.qca.qualcomm.com>
+ <CACna6rxx-8499ZQKekdORF0UWQQazwGu2On1aq-fwA4oCX7pgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170104123435.30740-5-jh80.chung@samsung.com>
-Content-Language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Jaehoon Chung' <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rxx-8499ZQKekdORF0UWQQazwGu2On1aq-fwA4oCX7pgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, January 4, 2017 7:35 AM, Jaehoon Chung wrote:
+On 4-1-2017 15:53, Rafał Miłecki wrote:
+> On 4 January 2017 at 15:32, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>>
+>>> On 3 January 2017 at 20:55, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Wed, Dec 28, 2016 at 04:59:54PM +0100, Rafał Miłecki wrote:
+>>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>>
+>>>>> This new file should be used for properties handled at higher level and
+>>>>> so usable with all drivers.
+>>>>
+>>>> Why is this needed? Where would this data normally come from?
+>>>
+>>> Vendors limit choice of channels at their web user interface level. I
+>>> want to do better and report proper channels directly at kernel level
+>>> instead of masking them in every possible configuration tool.
+>>
+>> Why do vendors limit the channels? Is it because of a hardware
+>> limitation (antenna does not support, or not calibrated, for a certain
+>> band etc) or something else?
 > 
-> This patch is for using PHY generic framework.
-> To maintain backward compatibility, check whether phy is supported or
-> not with 'using_phy'.
-> 
-> And if someone use the old dt-file, display the "deprecated" message.
-> But it's still working fine with it.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Please review & comment on the latest version, currently V5:
+> https://patchwork.kernel.org/patch/9495795/
+> "This can be used to specify extra hardware limitations caused by e.g.
+> used antennas or power amplifiers."
 
-It looks good!
+Just to be clear, it is does not need to be a hardware limitation, but
+simply a way to assure that multiple wlan radios are not interfering
+with each other and crank up the total bandwidth that vendors can put on
+their box.
 
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
-
-Best regards,
-Jingoo Han
-
-
-> ---
-> Changelog on V2:
-> - This patch is split from previous PATCH[1/4]
-> - Maintain the backward compatibility
-> - Adds 'using_phy' for cheching whether phy framework is used or not
-> - Adds 'DEPRECATED' message for old dt-binding way
-> 
->  drivers/pci/host/pci-exynos.c | 61 +++++++++++++++++++++++++++++++++++---
-> -----
->  1 file changed, 50 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-exynos.c
-> index feed0fd..34f2eed 100644
-> --- a/drivers/pci/host/pci-exynos.c
-> +++ b/drivers/pci/host/pci-exynos.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
->  #include <linux/types.h>
-> @@ -110,6 +111,10 @@ struct exynos_pcie {
->  	struct exynos_pcie_clk_res	*clk_res;
->  	const struct exynos_pcie_ops	*ops;
->  	int				reset_gpio;
-> +
-> +	/* For Generic PHY Framework */
-> +	bool				using_phy;
-> +	struct phy			*phy;
->  };
-> 
->  struct exynos_pcie_ops {
-> @@ -135,6 +140,10 @@ static int exynos5440_pcie_get_mem_resources(struct
-> platform_device *pdev,
->  	if (IS_ERR(ep->mem_res->elbi_base))
->  		return PTR_ERR(ep->mem_res->elbi_base);
-> 
-> +	/* If using the PHY framework, doesn't need to get other resource
-> */
-> +	if (ep->using_phy)
-> +		return 0;
-> +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->  	ep->mem_res->phy_base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(ep->mem_res->phy_base))
-> @@ -396,17 +405,28 @@ static int exynos_pcie_establish_link(struct
-> exynos_pcie *exynos_pcie)
->  	}
-> 
->  	exynos_pcie_assert_core_reset(exynos_pcie);
-> -	exynos_pcie_assert_phy_reset(exynos_pcie);
-> -	exynos_pcie_deassert_phy_reset(exynos_pcie);
-> -	exynos_pcie_power_on_phy(exynos_pcie);
-> -	exynos_pcie_init_phy(exynos_pcie);
-> -
-> -	/* pulse for common reset */
-> -	exynos_pcie_writel(exynos_pcie->mem_res->block_base, 1,
-> -				PCIE_PHY_COMMON_RESET);
-> -	udelay(500);
-> -	exynos_pcie_writel(exynos_pcie->mem_res->block_base, 0,
-> -				PCIE_PHY_COMMON_RESET);
-> +
-> +	if (exynos_pcie->using_phy) {
-> +		phy_reset(exynos_pcie->phy);
-> +
-> +		exynos_pcie_writel(exynos_pcie->mem_res->elbi_base, 1,
-> +				PCIE_PWR_RESET);
-> +
-> +		phy_power_on(exynos_pcie->phy);
-> +		phy_init(exynos_pcie->phy);
-> +	} else {
-> +		exynos_pcie_assert_phy_reset(exynos_pcie);
-> +		exynos_pcie_deassert_phy_reset(exynos_pcie);
-> +		exynos_pcie_power_on_phy(exynos_pcie);
-> +		exynos_pcie_init_phy(exynos_pcie);
-> +
-> +		/* pulse for common reset */
-> +		exynos_pcie_writel(exynos_pcie->mem_res->block_base, 1,
-> +					PCIE_PHY_COMMON_RESET);
-> +		udelay(500);
-> +		exynos_pcie_writel(exynos_pcie->mem_res->block_base, 0,
-> +					PCIE_PHY_COMMON_RESET);
-> +	}
-> 
->  	exynos_pcie_deassert_core_reset(exynos_pcie);
->  	dw_pcie_setup_rc(pp);
-> @@ -420,6 +440,11 @@ static int exynos_pcie_establish_link(struct
-> exynos_pcie *exynos_pcie)
->  	if (!dw_pcie_wait_for_link(pp))
->  		return 0;
-> 
-> +	if (exynos_pcie->using_phy) {
-> +		phy_power_off(exynos_pcie->phy);
-> +		return -ETIMEDOUT;
-> +	}
-> +
->  	while (exynos_pcie_readl(exynos_pcie->mem_res->phy_base,
->  				PCIE_PHY_PLL_LOCKED) == 0) {
->  		val = exynos_pcie_readl(exynos_pcie->mem_res->block_base,
-> @@ -633,6 +658,17 @@ static int __init exynos_pcie_probe(struct
-> platform_device *pdev)
-> 
->  	exynos_pcie->reset_gpio = of_get_named_gpio(np, "reset-gpio", 0);
-> 
-> +	/* Assume that controller doesn't use the PHY framework */
-> +	exynos_pcie->using_phy = false;
-> +
-> +	exynos_pcie->phy = devm_of_phy_get(dev, np, NULL);
-> +	if (IS_ERR(exynos_pcie->phy)) {
-> +		if (PTR_ERR(exynos_pcie->phy) == -EPROBE_DEFER)
-> +			return PTR_ERR(exynos_pcie->phy);
-> +		dev_warn(dev, "Use the 'phy' property. Current DT of pci-
-> exynos was deprecated!!\n");
-> +	} else
-> +		exynos_pcie->using_phy = true;
-> +
->  	if (exynos_pcie->ops && exynos_pcie->ops->get_mem_resources) {
->  		ret = exynos_pcie->ops->get_mem_resources(pdev, exynos_pcie);
->  		if (ret)
-> @@ -657,6 +693,9 @@ static int __init exynos_pcie_probe(struct
-> platform_device *pdev)
->  	return 0;
-> 
->  fail_probe:
-> +	if (exynos_pcie->using_phy)
-> +		phy_exit(exynos_pcie->phy);
-> +
->  	if (exynos_pcie->ops && exynos_pcie->ops->deinit_clk_resources)
->  		exynos_pcie->ops->deinit_clk_resources(exynos_pcie);
->  	return ret;
-> --
-> 2.10.2
+Regards,
+Arend
