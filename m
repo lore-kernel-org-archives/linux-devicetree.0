@@ -1,128 +1,74 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v2 09/19] ARM: dts: imx6-sabreauto: add the ADV7180 video
- decoder
-Date: Wed, 4 Jan 2017 14:41:37 +0200
-Message-ID: <acbdc873-3166-f56d-e6d1-948becb1a57c@mentor.com>
-References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
- <1483477049-19056-10-git-send-email-steve_longerbeam@mentor.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 07/22] dt-bindings: power: supply: add AXP20X/AXP22X AC
+ power supply
+Date: Wed, 4 Jan 2017 07:14:10 -0600
+Message-ID: <20170104131410.mni7opxnouzagypu@rob-hp-laptop>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-8-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1483477049-19056-10-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170102163723.7939-8-quentin.schulz@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, icenowy@aosc.xyz, bonbons@linux-vserver.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
-> Enables the ADV7180 decoder sensor. The ADV7180 connects to the
-> parallel-bus mux input on ipu1_csi0_mux.
+On Mon, Jan 02, 2017 at 05:37:07PM +0100, Quentin Schulz wrote:
+> The X-Powers AXP20X and AXP22X PMICs have an AC entry to supply power to
+> the board. They have a few registers dedicated to the status of the AC
+> power supply.
 > 
-> On the sabreauto, two analog video inputs are routed to the ADV7180,
-> composite on Ain1, and composite on Ain3. Those inputs are defined
-> via inputs and input-names under the ADV7180 node. The ADV7180 power
-> pin is via max7310_b port expander.
+> This adds the DT binding documentation for the AC power supply for
+> AXP20X and AXP22X PMICs.
 > 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 > ---
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 56 ++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
+>  .../bindings/power/supply/axp20x_ac_power.txt      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
 > 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> index 83ac2ff..30ee378 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> @@ -147,10 +147,42 @@
->  				gpio-controller;
->  				#gpio-cells = <2>;
->  			};
+> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
+> new file mode 100644
+> index 0000000..16d0de4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
+> @@ -0,0 +1,28 @@
+> +AXP20X and AXP22X PMICs' AC power supply
 > +
-> +			camera: adv7180@21 {
-
-adv7180: camera@21
-
-> +				compatible = "adi,adv7180";
-> +				reg = <0x21>;
-> +				powerdown-gpios = <&max7310_b 2 GPIO_ACTIVE_LOW>;
-> +				interrupt-parent = <&gpio1>;
-> +				interrupts = <27 0x8>;
-> +				inputs = <0x00 0x02>;
-> +				input-names = "ADV7180 Composite on Ain1",
-> +						"ADV7180 Composite on Ain3";
+> +Required Properties:
+> + - compatible: One of:
+> +			"x-powers,axp202-ac-power-supply"
+> +			"x-powers,axp221-ac-power-supply"
 > +
-> +				port {
-> +					adv7180_to_ipu1_csi0_mux: endpoint {
-> +						remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-> +						bus-width = <8>;
-> +					};
-> +				};
-> +			};
->  		};
->  	};
->  };
->  
-> +&ipu1_csi0_from_ipu1_csi0_mux {
-> +	bus-width = <8>;
+> +More Required Properties for AXP20X PMICs:
+> + - io-channels: phandles to ACIN voltage and current ADC channels
+> + - io-channel-names = "acin_v", "acin_i";
+> +
+> +This node is a subnode of the axp20x PMIC.
+> +
+> +The AXP20X can read the current current and voltage supplied by AC by
+> +reading ADC channels from the AXP20X ADC.
+> +
+> +The AXP22X is only able to tell if an AC power supply is present and
+> +usable.
+> +
+> +Example:
+> +
+> +&axp209 {
+> +	ac_power_supply: ac_power_supply {
+
+power-supply {
+
+> +		compatible = "x-powers,axp202-ac-power-supply";
+> +		io-channels = <&axp209_adc 0>, <&axp209_adc 1>;
+
+Is this assignment fixed? If so, then it doesn't need to be in DT.
+
+> +		io-channel-names = "acin_v", "acin_i";
+> +	};
 > +};
-> +
-> +&ipu1_csi0_mux_from_parallel_sensor {
-> +	remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
-> +	bus-width = <8>;
-> +};
-> +
-> +&ipu1_csi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ipu1_csi0>;
-> +};
-> +
->  &clks {
->  	assigned-clocks = <&clks IMX6QDL_PLL4_BYPASS_SRC>,
->  			  <&clks IMX6QDL_PLL4_BYPASS>,
-> @@ -451,6 +483,30 @@
->  			>;
->  		};
->  
-> +		pinctrl_ipu1_csi0: ipu1grp-csi0 {
-
-Please rename node name to ipu1csi0grp.
-
-> +			fsl,pins = <
-> +				MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04   0x80000000
-> +				MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05   0x80000000
-> +				MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06   0x80000000
-> +				MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07   0x80000000
-> +				MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08   0x80000000
-> +				MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09   0x80000000
-> +				MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18  0x80000000
-> +				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19  0x80000000
-> +				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x80000000
-> +				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC    0x80000000
-> +				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC   0x80000000
-> +			>;
-> +		};
-> +
->  		pinctrl_pwm3: pwm1grp {
->  			fsl,pins = <
->  				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
+> -- 
+> 2.9.3
 > 
-
---
-With best wishes,
-Vladimir
