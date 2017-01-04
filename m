@@ -1,99 +1,105 @@
-From: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V5 1/3] dt-bindings: document common IEEE 802.11 frequency
- limit property
-Date: Wed, 4 Jan 2017 11:02:13 +0100
-Message-ID: <202768c7-b305-7eb0-e42e-dfecd5ec7800@broadcom.com>
-References: <20170103225715.14072-1-zajec5@gmail.com>
- <d90127bd-6a9e-2773-fdf9-527afdc004a6@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: mfd: Remove TPS65217 interrupts
+Date: Wed, 4 Jan 2017 10:21:57 +0000
+Message-ID: <20170104102157.GU27589@dell>
+References: <20161209062833.5768-1-woogyom.kim@gmail.com>
+ <20161209062833.5768-3-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d90127bd-6a9e-2773-fdf9-527afdc004a6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161209062833.5768-3-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4-1-2017 7:20, Rafał Miłecki wrote:
-> Hi Rob,
-> 
-> On 01/03/2017 11:57 PM, Rafał Miłecki wrote:
->> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>
->> This new file should be used for properties that apply to all wireless
->> devices.
->>
->> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->> ---
->> V2: Switch to a single ieee80211-freq-limit property that allows
->> specifying
->>     *multiple* ranges. This resolves problem with more complex rules
->> as pointed
->>     by Felx.
->>     Make description implementation agnostic as pointed by Arend.
->>     Rename node to wifi as suggested by Martin.
->> V3: Use more real-life frequencies in the example.
->> V5: Describe hardware design as possible use for this property
->> ---
->>  .../devicetree/bindings/net/wireless/ieee80211.txt   | 20
->> ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/net/wireless/ieee80211.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
->> b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
->> new file mode 100644
->> index 0000000..1c82c16
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
->> @@ -0,0 +1,20 @@
->> +Common IEEE 802.11 properties
->> +
->> +This provides documentation of common properties that are valid for
->> all wireless
->> +devices.
->> +
->> +Optional properties:
->> + - ieee80211-freq-limit : list of supported frequency ranges in KHz.
->> This can be
->> +    used to specify extra hardware limitations caused by e.g. used
->> antennas
->> +    or power amplifiers.
-> 
-> Do you find this description sufficient now? I'm not sure how/if I could
-> answer
-> "Where would this data normally come from?" question.
->
-> One vendor may hardcode choice of channels in their PHP web UI.
-> Another one may do it in Andoid app.
-> OpenWrt so far was describing this limitation on their wiki page.
-> 
-> It doesn't sound like any valuable info if I understand this correctly.
-> We also
-> don't describe where to get information about amount o RAM. One may just
-> check
-> the hardware, one may use vendor firmware, one could check product data
-> sheet.
-> 
-> If I missed the point, could you help me get this?
+On Fri, 09 Dec 2016, Milo Kim wrote:
 
+> Interrupt numbers are from the datasheet, so no need to keep them in
+> the ABI. Use the number in the DT file.
+> 
+> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-bone-common.dtsi |  8 +++-----
+>  include/dt-bindings/mfd/tps65217.h        | 26 --------------------------
+>  2 files changed, 3 insertions(+), 31 deletions(-)
+>  delete mode 100644 include/dt-bindings/mfd/tps65217.h
 
-There is probably no easy answer. DT is used to describe device
-properties that are not otherwise discoverable (at least that is my rule
-of thumb). So what is the "device" in this context? You may consider
-just the chip, but in this case it is combination of the chip and its RF
-path that determine the frequency range that it can operate in.
-Apparently this was assured in user-space due to lack of a better
-option. Having this specified in DT seems a viable option getting rid of
-having a particular platform impose a requirement upon user-space.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-You could consider these properties global as they are describing the
-platform, but again this depends on what you consider the "device". If
-you want to do this global you may add a global node for wifi properties
-and use references to the device.
+I'm happy for this to go in via your respective ARM tree.
 
-Regards,
-Arend
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> index 14b6269..3e32dd1 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -6,8 +6,6 @@
+>   * published by the Free Software Foundation.
+>   */
+>  
+> -#include <dt-bindings/mfd/tps65217.h>
+> -
+>  / {
+>  	cpus {
+>  		cpu@0 {
+> @@ -319,13 +317,13 @@
+>  	ti,pmic-shutdown-controller;
+>  
+>  	charger {
+> -		interrupts = <TPS65217_IRQ_AC>, <TPS65217_IRQ_USB>;
+> -		interrupt-names = "AC", "USB";
+> +		interrupts = <0>, <1>;
+> +		interrupt-names = "USB", "AC";
+>  		status = "okay";
+>  	};
+>  
+>  	pwrbutton {
+> -		interrupts = <TPS65217_IRQ_PB>;
+> +		interrupts = <2>;
+>  		status = "okay";
+>  	};
+>  
+> diff --git a/include/dt-bindings/mfd/tps65217.h b/include/dt-bindings/mfd/tps65217.h
+> deleted file mode 100644
+> index cafb9e6..0000000
+> --- a/include/dt-bindings/mfd/tps65217.h
+> +++ /dev/null
+> @@ -1,26 +0,0 @@
+> -/*
+> - * This header provides macros for TI TPS65217 DT bindings.
+> - *
+> - * Copyright (C) 2016 Texas Instruments
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful, but
+> - * WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> - * General Public License for more details.
+> - *
+> - * You should have received a copy of the GNU General Public License along with
+> - * this program.  If not, see <http://www.gnu.org/licenses/>.
+> - */
+> -
+> -#ifndef __DT_BINDINGS_TPS65217_H__
+> -#define __DT_BINDINGS_TPS65217_H__
+> -
+> -#define TPS65217_IRQ_USB	0
+> -#define TPS65217_IRQ_AC		1
+> -#define TPS65217_IRQ_PB		2
+> -
+> -#endif
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
