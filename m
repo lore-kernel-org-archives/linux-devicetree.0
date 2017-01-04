@@ -1,70 +1,124 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V6 1/3] dt-bindings: document common IEEE 802.11 frequency limit property
-Date: Wed,  4 Jan 2017 18:58:29 +0100
-Message-ID: <20170104175832.25996-1-zajec5@gmail.com>
+Subject: [PATCH V6 2/3] cfg80211: move function checking range fit to util.c
+Date: Wed,  4 Jan 2017 18:58:30 +0100
+Message-ID: <20170104175832.25996-2-zajec5@gmail.com>
+References: <20170104175832.25996-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170104175832.25996-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-This new file should be used for properties that apply to all wireless
-devices.
+It is needed for another cfg80211 helper that will be out of reg.c so
+move it to common util.c file and make it non-static.
 
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
-V2: Switch to a single ieee80211-freq-limit property that allows specifying
-    *multiple* ranges. This resolves problem with more complex rules as pointed
-    by Felx.
-    Make description implementation agnostic as pointed by Arend.
-    Rename node to wifi as suggested by Martin.
-V3: Use more real-life frequencies in the example.
-V5: Describe hardware design as possible use for this property
-V6: Even better property description, thanks Rob for your help!
+V5: Add this patch as suggested by Arend
 ---
- .../devicetree/bindings/net/wireless/ieee80211.txt | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+ net/wireless/core.h |  3 +++
+ net/wireless/reg.c  | 27 +++++++--------------------
+ net/wireless/util.c | 15 +++++++++++++++
+ 3 files changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
-new file mode 100644
-index 0000000..f6442b1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
-@@ -0,0 +1,24 @@
-+Common IEEE 802.11 properties
+diff --git a/net/wireless/core.h b/net/wireless/core.h
+index af6e023..bc8ba6e 100644
+--- a/net/wireless/core.h
++++ b/net/wireless/core.h
+@@ -430,6 +430,9 @@ int cfg80211_change_iface(struct cfg80211_registered_device *rdev,
+ void cfg80211_process_rdev_events(struct cfg80211_registered_device *rdev);
+ void cfg80211_process_wdev_events(struct wireless_dev *wdev);
+ 
++bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
++				u32 center_freq_khz, u32 bw_khz);
 +
-+This provides documentation of common properties that are valid for all wireless
-+devices.
+ /**
+  * cfg80211_chandef_dfs_usable - checks if chandef is DFS usable
+  * @wiphy: the wiphy to validate against
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 5dbac37..753efcd 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -748,21 +748,6 @@ static bool is_valid_rd(const struct ieee80211_regdomain *rd)
+ 	return true;
+ }
+ 
+-static bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
+-			    u32 center_freq_khz, u32 bw_khz)
+-{
+-	u32 start_freq_khz, end_freq_khz;
+-
+-	start_freq_khz = center_freq_khz - (bw_khz/2);
+-	end_freq_khz = center_freq_khz + (bw_khz/2);
+-
+-	if (start_freq_khz >= freq_range->start_freq_khz &&
+-	    end_freq_khz <= freq_range->end_freq_khz)
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * freq_in_rule_band - tells us if a frequency is in a frequency band
+  * @freq_range: frequency rule we want to query
+@@ -1070,7 +1055,7 @@ freq_reg_info_regd(u32 center_freq,
+ 		if (!band_rule_found)
+ 			band_rule_found = freq_in_rule_band(fr, center_freq);
+ 
+-		bw_fits = reg_does_bw_fit(fr, center_freq, bw);
++		bw_fits = cfg80211_does_bw_fit_range(fr, center_freq, bw);
+ 
+ 		if (band_rule_found && bw_fits)
+ 			return rr;
+@@ -1138,11 +1123,13 @@ static uint32_t reg_rule_to_chan_bw_flags(const struct ieee80211_regdomain *regd
+ 		max_bandwidth_khz = reg_get_max_bandwidth(regd, reg_rule);
+ 
+ 	/* If we get a reg_rule we can assume that at least 5Mhz fit */
+-	if (!reg_does_bw_fit(freq_range, MHZ_TO_KHZ(chan->center_freq),
+-			     MHZ_TO_KHZ(10)))
++	if (!cfg80211_does_bw_fit_range(freq_range,
++					MHZ_TO_KHZ(chan->center_freq),
++					MHZ_TO_KHZ(10)))
+ 		bw_flags |= IEEE80211_CHAN_NO_10MHZ;
+-	if (!reg_does_bw_fit(freq_range, MHZ_TO_KHZ(chan->center_freq),
+-			     MHZ_TO_KHZ(20)))
++	if (!cfg80211_does_bw_fit_range(freq_range,
++					MHZ_TO_KHZ(chan->center_freq),
++					MHZ_TO_KHZ(20)))
+ 		bw_flags |= IEEE80211_CHAN_NO_20MHZ;
+ 
+ 	if (max_bandwidth_khz < MHZ_TO_KHZ(10))
+diff --git a/net/wireless/util.c b/net/wireless/util.c
+index 2cf7df8..62dc214 100644
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -1847,6 +1847,21 @@ void cfg80211_free_nan_func(struct cfg80211_nan_func *f)
+ }
+ EXPORT_SYMBOL(cfg80211_free_nan_func);
+ 
++bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
++				u32 center_freq_khz, u32 bw_khz)
++{
++	u32 start_freq_khz, end_freq_khz;
 +
-+Optional properties:
-+ - ieee80211-freq-limit : list of supported frequency ranges in KHz. This can be
-+	used for devices that in a given config support less channels than
-+	normally. It may happen chipset supports a wide wireless band but it is
-+	limited to some part of it due to used antennas or power amplifier.
-+	An example case for this can be tri-band wireless router with two
-+	identical chipsets used for two different 5 GHz subbands. Using them
-+	incorrectly could not work or decrease performance noticeably.
++	start_freq_khz = center_freq_khz - (bw_khz / 2);
++	end_freq_khz = center_freq_khz + (bw_khz / 2);
 +
-+Example:
++	if (start_freq_khz >= freq_range->start_freq_khz &&
++	    end_freq_khz <= freq_range->end_freq_khz)
++		return true;
 +
-+pcie@0,0 {
-+	reg = <0x0000 0 0 0 0>;
-+	wifi@0,0 {
-+		reg = <0x0000 0 0 0 0>;
-+		ieee80211-freq-limit = <2402000 2482000>,
-+				       <5170000 5250000>;
-+	};
-+};
++	return false;
++}
++
+ /* See IEEE 802.1H for LLC/SNAP encapsulation/decapsulation */
+ /* Ethernet-II snap header (RFC1042 for most EtherTypes) */
+ const unsigned char rfc1042_header[] __aligned(2) =
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
