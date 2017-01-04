@@ -1,114 +1,66 @@
-From: John Crispin <john@phrozen.org>
-Subject: [RFC 1/4] Documentation: devicetree: add multiple cpu port DSA binding
-Date: Wed,  4 Jan 2017 08:38:01 +0100
-Message-ID: <1483515484-21793-2-git-send-email-john@phrozen.org>
-References: <1483515484-21793-1-git-send-email-john@phrozen.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1483515484-21793-1-git-send-email-john@phrozen.org>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v5 1/3] drm/exynos: mic: Add mode_set callback function
+Date: Wed, 04 Jan 2017 17:15:09 +0900
+Message-ID: <1483517711-23849-2-git-send-email-hoegeun.kwon@samsung.com>
+References: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170104081521epcas1p40d5fbfbe0600d0df05e77b36ce6a353f@epcas1p4.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-
-Extend the DSA binding documentation, adding the new properties required
-when there is more than one CPU port attached to the switch.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
----
- Documentation/devicetree/bindings/net/dsa/dsa.txt |   67 ++++++++++++++++++++-
- 1 file changed, 66 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-index a4a570f..fc901cf 100644
---- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-@@ -337,13 +337,25 @@ Optional property:
- 			  This mii-bus will be used in preference to the
- 			  global dsa,mii-bus defined above, for this switch.
- 
-+- ethernet		: Optional for "cpu" ports. A phandle to an ethernet
-+                          device which will be used by this CPU port for
-+			  passing packets to/from the host. If not present,
-+			  the port will use the "dsa,ethernet" property
-+			  defined above.
-+
-+- cpu			: Option for non "cpu"/"dsa" ports. A phandle to a
-+			  "cpu" port, which will be used for passing packets
-+			  from this port to the host. If not present, the first
-+			  "cpu" port will be used.
-+
-+
- Optional subnodes:
- - fixed-link		: Fixed-link subnode describing a link to a non-MDIO
- 			  managed entity. See
- 			  Documentation/devicetree/bindings/net/fixed-link.txt
- 			  for details.
- 
--Example:
-+Examples:
- 
- 	dsa@0 {
- 		compatible = "marvell,dsa";
-@@ -416,3 +428,56 @@ Example:
- 			};
- 		};
- 	};
-+
-+	dsa@1 {
-+		compatible = "marvell,dsa";
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		dsa,ethernet = <&eth0port>;
-+		dsa,mii-bus = <&mdio>;
-+
-+		switch@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0>;	/* MDIO address 0, switch 0 in tree */
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan4";
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				label = "lan3";
-+				cpu = <&cpu1>;
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				label = "lan2";
-+			};
-+
-+			port@3 {
-+				reg = <3>;
-+				label = "lan1";
-+				cpu = <&cpu1>;
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "wan";
-+			};
-+
-+			port@5 {
-+				reg = <5>;
-+				label = "cpu";
-+			};
-+
-+			cpu1: port@6 {
-+				reg = <6>;
-+				label = "cpu";
-+				ethernet = <&eth1port>;
-+			};
-+		};
-+	};
--- 
-1.7.10.4
+QmVmb3JlIGFwcGx5aW5nIHRoZSBwYXRjaCwgdXNlZCB0aGUgb2ZfZ2V0X3ZpZGVvbW9kZSBmdW5j
+dGlvbiB0bwpwYXJzZSB0aGUgZGlzcGxheS10aW1pbmdzIGluIHRoZSBwYW5lbCB3aGljaCBpcyB0
+aGUgY2hpbGQgZHJpdmVyCm9mIGRzaSBpbiB0aGUgZGV2aWNldHJlZS4gdGhpcyBpcyB3cm9uZy4g
+U28gcmVtb3ZlZCB0aGUKb2ZfZ2V0X3ZpZGVvbW9kZSBhbmQgZml4ZWQgdG8gZ2V0IHZpZGVvbW9k
+ZSBzdHJ1Y3QgdGhyb3VnaAptb2RlX3NldCBjYWxsYmFjayBmdW5jdGlvbi4KClNpZ25lZC1vZmYt
+Ynk6IEhvZWdldW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgotLS0KIGRyaXZlcnMv
+Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9taWMuYyB8IDMwICsrKysrKysrKysrKysrKysrKyst
+LS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9u
+cygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9taWMu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9taWMuYwppbmRleCBhMGRlZjBi
+Li5hMGY0NTljIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1f
+bWljLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX21pYy5jCkBAIC0y
+ODYsMTMgKzI4Niw2IEBAIHN0YXRpYyBpbnQgcGFyc2VfZHQoc3RydWN0IGV4eW5vc19taWMgKm1p
+YykKIAkJCX0KIAkJCW5vZGVzW2orK10gPSByZW1vdGVfbm9kZTsKIAotCQkJcmV0ID0gb2ZfZ2V0
+X3ZpZGVvbW9kZShyZW1vdGVfbm9kZSwKLQkJCQkJCQkmbWljLT52bSwgMCk7Ci0JCQlpZiAocmV0
+KSB7Ci0JCQkJRFJNX0VSUk9SKCJtaWM6IGZhaWxlZCB0byBnZXQgdmlkZW9tb2RlIik7Ci0JCQkJ
+Z290byBleGl0OwotCQkJfQotCiAJCQlicmVhazsKIAkJZGVmYXVsdDoKIAkJCURSTV9FUlJPUigi
+bWljOiBVbmtub3duIGVuZHBvaW50IGZyb20gTUlDIik7CkBAIC0zMjksNiArMzIyLDI0IEBAIHN0
+YXRpYyB2b2lkIG1pY19wb3N0X2Rpc2FibGUoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKIAlt
+dXRleF91bmxvY2soJm1pY19tdXRleCk7CiB9CiAKK3N0YXRpYyB2b2lkIG1pY19tb2RlX3NldChz
+dHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLAorCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1v
+ZGUsCisJCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqYWRqdXN0ZWRfbW9kZSkKK3sKKwlzdHJ1
+Y3QgZXh5bm9zX21pYyAqbWljID0gYnJpZGdlLT5kcml2ZXJfcHJpdmF0ZTsKKworCW11dGV4X2xv
+Y2soJm1pY19tdXRleCk7CisKKwlkcm1fZGlzcGxheV9tb2RlX3RvX3ZpZGVvbW9kZShtb2RlLCAm
+bWljLT52bSk7CisKKwlpZiAoIW1pYy0+aTgwX21vZGUpCisJCW1pY19zZXRfcG9yY2hfdGltaW5n
+KG1pYyk7CisJbWljX3NldF9pbWdfc2l6ZShtaWMpOworCW1pY19zZXRfb3V0cHV0X3RpbWluZyht
+aWMpOworCisJbXV0ZXhfdW5sb2NrKCZtaWNfbXV0ZXgpOworfQorCiBzdGF0aWMgdm9pZCBtaWNf
+cHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQogewogCXN0cnVjdCBleHlub3Nf
+bWljICptaWMgPSBicmlkZ2UtPmRyaXZlcl9wcml2YXRlOwpAQCAtMzU1LDEwICszNjYsNiBAQCBz
+dGF0aWMgdm9pZCBtaWNfcHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQogCQln
+b3RvIHR1cm5fb2ZmX2Nsa3M7CiAJfQogCi0JaWYgKCFtaWMtPmk4MF9tb2RlKQotCQltaWNfc2V0
+X3BvcmNoX3RpbWluZyhtaWMpOwotCW1pY19zZXRfaW1nX3NpemUobWljKTsKLQltaWNfc2V0X291
+dHB1dF90aW1pbmcobWljKTsKIAltaWNfc2V0X3JlZ19vbihtaWMsIDEpOwogCW1pYy0+ZW5hYmxl
+ZCA9IDE7CiAJbXV0ZXhfdW5sb2NrKCZtaWNfbXV0ZXgpOwpAQCAtMzc3LDYgKzM4NCw3IEBAIHN0
+YXRpYyB2b2lkIG1pY19lbmFibGUoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkgeyB9CiBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfZnVuY3MgbWljX2JyaWRnZV9mdW5jcyA9IHsKIAku
+ZGlzYWJsZSA9IG1pY19kaXNhYmxlLAogCS5wb3N0X2Rpc2FibGUgPSBtaWNfcG9zdF9kaXNhYmxl
+LAorCS5tb2RlX3NldCA9IG1pY19tb2RlX3NldCwKIAkucHJlX2VuYWJsZSA9IG1pY19wcmVfZW5h
+YmxlLAogCS5lbmFibGUgPSBtaWNfZW5hYmxlLAogfTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
