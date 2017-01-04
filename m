@@ -1,56 +1,40 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: leds: document new usb-ports property
-Date: Wed, 4 Jan 2017 07:33:32 +0100
-Message-ID: <1ca1256a-7a97-1bd9-fe91-2d9076fb9331@gmail.com>
-References: <20161229130306.30400-1-zajec5@gmail.com>
- <20170103205202.5ztb5i56d7qmgx5t@rob-hp-laptop>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v3 0/3] dmaengine: xilinx_dma: Bug fixes
+Date: Wed, 4 Jan 2017 12:24:04 +0530
+Message-ID: <1483512847-25710-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170103205202.5ztb5i56d7qmgx5t@rob-hp-laptop>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, Jose.Abreu@synopsys.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2017 09:52 PM, Rob Herring wrote:
-> On Thu, Dec 29, 2016 at 02:03:04PM +0100, Rafał Miłecki wrote:
->> From: Rafał Miłecki <rafal@milecki.pl>
->>
->> Some LEDs can be related to particular USB ports (common case for home
->> routers). This property allows describing such a relation.
->>
->> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
->> ---
->> This patch is based on top of commit 52e847dc431 ("DT: leds: Improve examples
->> by adding some context") sitting in the linux-leds.git (for-4.11).
->> ---
->>  Documentation/devicetree/bindings/leds/common.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
->> index 24b6560..fcfe661 100644
->> --- a/Documentation/devicetree/bindings/leds/common.txt
->> +++ b/Documentation/devicetree/bindings/leds/common.txt
->> @@ -49,6 +49,14 @@ Optional properties for child nodes:
->>  - panic-indicator : This property specifies that the LED should be used,
->>  		    if at all possible, as a panic indicator.
->>
->> +- usb-ports : List of USB ports related to this LED. Some devices have LEDs that
->> +	      should be used to indicate USB device activity. This can be
->> +	      described with this property.
->> +	      There can be more than one LED like this, e.g. some vendors use
->> +	      one controller per USB version. It's then common to use different
->> +	      color LEDs depending on device USB standard (like USB 2.0 vs.
->> +	      USB 3.0).
->
-> I don't like this being USB specific. Either we should have a generic
-> way to link triggers to other DT nodes or the existing trigger property
-> should be used (and be capable of listing more than 1 port). I'd prefer
-> the latter as I don't think we need another way to specify triggers.
+This patch series fixes below bugs in DMA and VDMA IP's
+---> Do not start VDMA until frame buffer is processed by the h/w Fix 
+---> bug in Multi frame sotres handling in VDMA Fix issues w.r.to multi 
+---> frame descriptors submit with AXI DMA S2MM(recv) Side.
 
-Hi Rob & thanks for your review.
+Kedareswara rao Appana (3):
+  dmaengine: xilinx_dma: Check for channel idle state before submitting
+    dma descriptor
+  dmaeninge: xilinx_dma: Fix bug in multiple frame stores scenario in
+    vdma
+  dmaengine: xilinx_dma: Fix race condition in the driver for multiple
+    descriptor scenario
 
-Could you point me to "the existing trigger property" you meant, please? It's
-not clear to me, sorry.
+ .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |   2 +
+ drivers/dma/xilinx/xilinx_dma.c                    | 265 ++++++++++++---------
+ 2 files changed, 156 insertions(+), 111 deletions(-)
+
+-- 
+2.1.2
