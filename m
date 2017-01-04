@@ -1,84 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Wed, 4 Jan 2017 12:31:59 +0200
-Message-ID: <CAHp75Vey4R8o+7h3DuBJ9FiciGSHfvRWjs_0d3ZWeTm+cB4WrA@mail.gmail.com>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
- <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
- <CAHp75VeCKPy4B51P_N9Bp03zPUbRodKzitc-n16ZRKJWcEF4fA@mail.gmail.com> <7bfce806-7670-0bf3-bdf2-00aaf68b5b11@mentor.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada388-clearfog: fix SPI flash #size-cells
+Date: Wed, 04 Jan 2017 11:37:06 +0100
+Message-ID: <87a8b7f6wd.fsf@free-electrons.com>
+References: <E1cO41M-0007xc-Id@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7bfce806-7670-0bf3-bdf2-00aaf68b5b11-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <E1cO41M-0007xc-Id-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org> (Russell King's
+        message of "Mon, 02 Jan 2017 14:55:32 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 4, 2017 at 12:20 PM, Vladimir Zapolskiy
-<vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
-> On 01/04/2017 01:37 AM, Andy Shevchenko wrote:
->> On Mon, Jan 2, 2017 at 11:07 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Add optional reset-gpios pin control. If present, de-assert the
->>> specified reset gpio pin to bring the chip out of reset.
->>
->>> --- a/drivers/gpio/gpio-pca953x.c
->>> +++ b/drivers/gpio/gpio-pca953x.c
->>> @@ -22,6 +22,7 @@
->>>  #include <linux/of_platform.h>
->>>  #include <linux/acpi.h>
->>>  #include <linux/regulator/consumer.h>
->>
->>> +#include <linux/gpio/consumer.h>
->>
->> Please, try to put it somehow alphabetically ordered (yes, I see it's
->> not in general, but try to squeeze it into longest part which is
->> ordered).
->>
->>>
->>>  #define PCA953X_INPUT          0
->>>  #define PCA953X_OUTPUT         1
->>> @@ -754,8 +755,18 @@ static int pca953x_probe(struct i2c_client *client,
->>>                 invert = pdata->invert;
->>>                 chip->names = pdata->names;
->>>         } else {
->>> +               struct gpio_desc *reset_gpio;
->>> +
->>>                 chip->gpio_start = -1;
->>>                 irq_base = 0;
->>> +
->>> +               /* see if we need to de-assert a reset pin */
->>
->> see -> See
->>
->>> +               reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
->>> +                                                    GPIOD_OUT_LOW);
->>
->> Shouldn't be _optional_exclusive?
->> See this recent discussion https://patchwork.ozlabs.org/patch/706002/
+Hi Russell,
+ 
+ On lun., janv. 02 2017, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+
+> The SPI flash #size-cells is specified in the binding documentation to
+> have value 1, but we were setting it to zero.  This wasn't causing any
+> problem as we do not list any partitions, but it's worth specifying
+> correctly if we're going to specify it at all.
 >
-> There is no devm_gpiod_get_optional_exclusive(), probably you confuse
-> the function with devm_reset_control_get_optional_exclusive().
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 
-Perhaps it's time to add
-drivers/reset/reset-gpio.c ?
+Applied on mvebu/dt
 
+Thanks,
+
+Gregory
+
+> ---
+>  arch/arm/boot/dts/armada-388-clearfog.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->>> +               if (IS_ERR(reset_gpio)) {
->>> +                       dev_err(&client->dev, "request for reset pin failed\n");
->>> +                       return PTR_ERR(reset_gpio);
->>> +               }
->>>         }
->>
+> diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
+> index 71ce201c903e..3e7c3a6237c3 100644
+> --- a/arch/arm/boot/dts/armada-388-clearfog.dts
+> +++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+> @@ -437,7 +437,7 @@
+>  
+>  	spi-flash@0 {
+>  		#address-cells = <1>;
+> -		#size-cells = <0>;
+> +		#size-cells = <1>;
+>  		compatible = "w25q32", "jedec,spi-nor";
+>  		reg = <0>; /* Chip select 0 */
+>  		spi-max-frequency = <3000000>;
+> -- 
+> 2.7.4
 >
-> --
-> With best wishes,
-> Vladimir
-
-
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
