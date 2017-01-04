@@ -1,99 +1,43 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] iio: adc: Add Renesas GyroADC driver
-Date: Wed, 4 Jan 2017 21:36:45 +0100
-Message-ID: <CAMuHMdVgaAD5EaK0aMS3HEXUeNQaz_ZiwG4cTtpDMMma_YWBbg@mail.gmail.com>
-References: <20161230191800.2532-1-marek.vasut@gmail.com> <CAMuHMdX20kc8h4DiNLu0KwaA0FL6F-WXLnA3YXvu02VJTh_7fQ@mail.gmail.com>
- <f4bb8922-36dc-ff69-45fc-e1d9cba821ba@gmail.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
+Date: Wed, 4 Jan 2017 10:51:52 -0600
+Message-ID: <4b102eed-b795-3b07-179d-7f5cda53d46f@ti.com>
+References: <20161230183732.5595-1-tony@atomide.com>
+ <20161230183732.5595-3-tony@atomide.com> <20170102221228.GH9325@atomide.com>
+ <63a8a1ec-343a-8c96-a0d2-21d81f7ad10e@ti.com>
+ <20170104160511.GF25222@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f4bb8922-36dc-ff69-45fc-e1d9cba821ba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170104160511.GF25222-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On Wed, Jan 4, 2017 at 3:27 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 01/02/2017 11:01 AM, Geert Uytterhoeven wrote:
->> On Fri, Dec 30, 2016 at 8:18 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
->>> @@ -0,0 +1,38 @@
->>> +* Renesas RCar GyroADC device driver
->>> +
->>> +Required properties:
->>> +- compatible:  Should be "renesas,rcar-gyroadc" for regular GyroADC or
->>> +               "renesas,rcar-gyroadc-r8a7792" for GyroADC without interrupt
->>
->> Please use "renesas,r8a7792-gyroadc" to match existing practices.
+On 01/04/2017 10:05 AM, Tony Lindgren wrote:
+> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [170104 07:39]:
+>> On 01/02/2017 04:12 PM, Tony Lindgren wrote:
+>> [...]
+>> Minor one:
+>>> + * Copyright (C) 2015 Texas Instruments, Inc.
+>> Could you make this:
+>>  Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
 >
-> Actually, that should probably be gyroadc-r8a7791 if we want to match
-> the existing practice. Fixed.
+> Sure, it's your patch :) Will repost.
+Thanks.
 
-No, "renesas,r8a7791-gyroadc" ("<vendor>,<family>-<block>").
+I just finished testing it as well and well it still does the job it 
+used to do. thanks for taking this forward.
 
->>> +static void rcar_gyroadc_hw_init(struct rcar_gyroadc *priv)
->>> +{
->>> +       unsigned long clk_mhz = clk_get_rate(priv->clk) / 1000000;
->>> +
->>> +       /* Stop the GyroADC. */
->>> +       writel(0, priv->regs + RCAR_GYROADC_START_STOP);
->>> +
->>> +       /* Disable IRQ, except on V2H. */
->>> +       if (priv->model != RCAR_GYROADC_MODEL_R8A7792)
->>> +               writel(0, priv->regs + RCAR_GYROADC_INTENR);
->>> +
->>> +       /* Set mode and timing. */
->>> +       writel(priv->mode, priv->regs + RCAR_GYROADC_MODE_SELECT);
->>> +
->>> +       if (priv->mode == RCAR_GYROADC_MODE_SELECT_1_MB88101A)
->>> +               writel(clk_mhz * 10, priv->regs + RCAR_GYROADC_CLOCK_LENGTH);
->>> +       else if (priv->mode == RCAR_GYROADC_MODE_SELECT_2_ADCS7476)
->>> +               writel(clk_mhz * 5, priv->regs + RCAR_GYROADC_CLOCK_LENGTH);
->>> +       else if (priv->mode == RCAR_GYROADC_MODE_SELECT_3_MAX1162)
->>> +               writel(clk_mhz * 5, priv->regs + RCAR_GYROADC_CLOCK_LENGTH);
->>> +       writel(clk_mhz * 1250, priv->regs + RCAR_GYROADC_1_25MS_LENGTH);
->>> +
->>> +       /*
->>> +        * We can possibly turn the sampling on/off on-demand to reduce power
->>
->> And the module clock, using runtime PM (see below).
+I did get a few kernel-doc warnings, which i need to look closer at. 
+will comment back today if I see something of use for us to fix up.
 
->>> +static int rcar_gyroadc_probe(struct platform_device *pdev)
->>> +{
->>
->>> +       priv->fclk = devm_clk_get(dev, "fck");
->>
->> The module clock isn't used directly by this driver (you don't need
->> e.g. its rate),
->> so you can leave out all handling related to this clock iff you enable
->> runtime PM:
->>
->>     pm_runtime_enable(dev);
->>     pm_runtime_get_sync(dev);
->>
->> Then runtime PM will take care of enabling the module clock, as the
->> GyroADC block is part of the CPG/MSSR clock domain.
->> Doing that also means the driver keeps on working in future SoCs where
->> the GyroADC block may be located in a power area.
->
-> So I won't even need the fclk phandle in DT, right ?
 
-You still need the fclk phandle in DT, so the PM domain code can find out
-which clock to use for PM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
