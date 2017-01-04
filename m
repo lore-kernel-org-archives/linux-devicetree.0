@@ -1,32 +1,27 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: reserved_mem: set dma_ops for devices using reserved
- mem
-Date: Wed, 4 Jan 2017 14:02:09 -0600
-Message-ID: <20170104200209.pefpffxssu46qqcq@rob-hp-laptop>
-References: <1482299071-22637-1-git-send-email-pankaj.dubey@samsung.com>
+Subject: Re: [PATCH] of: drop duplicate headers
+Date: Wed, 4 Jan 2017 14:02:39 -0600
+Message-ID: <20170104200239.36ztbiyalxnkoaj7@rob-hp-laptop>
+References: <2dbc4a9165d0a1e1569dc3990cbe5567fb312c74.1482593743.git.geliangtang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1482299071-22637-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <2dbc4a9165d0a1e1569dc3990cbe5567fb312c74.1482593743.git.geliangtang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Geliang Tang <geliangtang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 11:14:31AM +0530, Pankaj Dubey wrote:
-> From: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Sat, Dec 24, 2016 at 11:45:06PM +0800, Geliang Tang wrote:
+> Drop duplicate headers string.h and of_platform.h.
 > 
-> For some IPs, there may be virtual child devices created and for them its
-> necessary to set the dma_ops if it's using reserved memory else it will call
-> the dummy dma_ops during buffer operations for the child devices which will
-> lead to memory mapping failure.
-> 
-> Signed-off-by: Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Geliang Tang <geliangtang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/of/of_reserved_mem.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/of/overlay.c  | 1 -
+>  drivers/of/resolver.c | 1 -
+>  drivers/of/unittest.c | 1 -
+>  3 files changed, 3 deletions(-)
 
 Applied, thanks.
 
