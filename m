@@ -1,98 +1,63 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH V2 5/5] ARM: dts: exynos5440: support the phy-pcie node for pcie
-Date: Wed, 04 Jan 2017 21:34:35 +0900
-Message-ID: <20170104123435.30740-6-jh80.chung@samsung.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p10b52f24e7d6c00edb44e4331a1870e4d@epcas1p1.samsung.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <20170104123435.30740-1-jh80.chung@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com, Jaehoon Chung <jh80.chung@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 16/22] mfd: axp20x: add V_OFF to writeable regs for
+ AXP20X and AXP22X
+Date: Wed, 4 Jan 2017 11:57:31 +0000
+Message-ID: <20170104115731.GF24058@dell>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-17-quentin.schulz@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170102163723.7939-17-quentin.schulz@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, icenowy@aosc.xyz, bonbons@linux-vserver.org
 List-Id: devicetree@vger.kernel.org
 
-Add phy-pcie node for using Exynos5440 pcie.
-And use the reg-names as "elbi" and "config".
-Because the getting configuratioin space address from ranges is old way.
-It also is helpful to distinguish more clearly.
+On Mon, 02 Jan 2017, Quentin Schulz wrote:
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
-Changelog on V2:
-- Removes the child-node
-- Fixes the typo
-- Removes the unnecessary comments
+> The V_OFF register has its first 3 read-write bits for the minimal
+> voltage (Voff) of the battery before the system is automatically shut
+> down due to the power being too low.
+> 
+> This adds V_OFF register to the writeable registers of AXP20X and AXP22X
+> PMICs.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> ---
+>  drivers/mfd/axp20x.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
- arch/arm/boot/dts/exynos5440.dtsi | 34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+  
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 19bdba3..7f0f05f 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -65,7 +65,7 @@ static const struct regmap_access_table axp152_volatile_table = {
+>  
+>  static const struct regmap_range axp20x_writeable_ranges[] = {
+>  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+> -	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+> +	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_V_OFF),
+>  	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL1),
+>  	regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
+>  	regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(AXP20X_OCV_MAX)),
+> @@ -94,7 +94,7 @@ static const struct regmap_access_table axp20x_volatile_table = {
+>  /* AXP22x ranges are shared with the AXP809, as they cover the same range */
+>  static const struct regmap_range axp22x_writeable_ranges[] = {
+>  	regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+> -	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
+> +	regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_V_OFF),
+>  	regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL1),
+>  	regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
+>  };
 
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 2a2e570..feb074d 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -290,11 +290,22 @@
- 		clock-names = "usbhost";
- 	};
- 
-+	pcie_phy0: pcie-phy@270000 {
-+		#phy-cells = <0>;
-+		compatible = "samsung,exynos5440-pcie-phy";
-+		reg = <0x270000 0x1000>, <0x271000 0x40>;
-+	};
-+
-+	pcie_phy1: pcie-phy@272000 {
-+		#phy-cells = <0>;
-+		compatible = "samsung,exynos5440-pcie-phy";
-+		reg = <0x272000 0x1000>, <0x271040 0x40>;
-+	};
-+
- 	pcie_0: pcie@290000 {
- 		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
--		reg = <0x290000 0x1000
--			0x270000 0x1000
--			0x271000 0x40>;
-+		reg = <0x290000 0x1000>, <0x40000000 0x1000>;
-+		reg-names = "elbi", "config";
- 		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-@@ -303,9 +314,9 @@
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		device_type = "pci";
--		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
--			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
--			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
-+		phys = <&pcie_phy0>;
-+		ranges = <0x81000000 0 0	  0x40001000 0 0x00010000
-+			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>;
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0>;
- 		interrupt-map = <0x0 0 &gic 53>;
-@@ -315,9 +326,8 @@
- 
- 	pcie_1: pcie@2a0000 {
- 		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
--		reg = <0x2a0000 0x1000
--			0x272000 0x1000
--			0x271040 0x40>;
-+		reg = <0x2a0000 0x1000>, <0x60000000 0x1000>;
-+		reg-names = "elbi", "config";
- 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-@@ -326,9 +336,9 @@
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		device_type = "pci";
--		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
--			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
--			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
-+		phys = <&pcie_phy1>;
-+		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000
-+			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>;
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0>;
- 		interrupt-map = <0x0 0 &gic 56>;
 -- 
-2.10.2
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
