@@ -1,67 +1,228 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v5 0/3] Add support for the S6E3HA2 panel on TM2 board
-Date: Wed, 04 Jan 2017 18:58:35 +0900
-Message-ID: <20170104095835.etmu26rb5xeudqq2@gangnam.samsung>
-References: <CGME20170104081520epcas1p42dd46f1d13adfde20a2559bd5c1cbd3d@epcas1p4.samsung.com>
- <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH v3 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
+ stores scenario in vdma
+Date: Wed, 4 Jan 2017 09:59:44 +0000
+Message-ID: <df3662de-fa3b-b33e-ebf5-88802aea5c49@synopsys.com>
+References: <1483512847-25710-1-git-send-email-appanad@xilinx.com>
+ <1483512847-25710-3-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1483512847-25710-3-git-send-email-appanad@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, Jose.Abreu@synopsys.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hoegeun,
+Hi Kedar,
 
-On Wed, Jan 04, 2017 at 05:15:08PM +0900, Hoegeun Kwon wrote:
-> Purpose of this patch is add support for S6E3HA2 AMOLED panel on
-> the TM2 board. The first patch adds support for S6E3HA2 panel
-> device tree document and driver, the second patch add support for
-> S6E3HA2 panel device tree.
-> 
-> Change for V5:
-> - The V5 has only one fix in V4 below.
-> - Removed the enable check of the mic driver in mode_set
->   callback, because mode_set should be performed every time.
-> 
-> Changes for V4:
-> - Removed display-timings in devicetree, the display-timings has
->   been fixed to be provided by the device driver.
-> - Added the mode_set callback function into exynos_drm_mic,
->   because the exynos_drm_mic driver can not parse a videomode
->   struct by removing the display-timings from the devicetree.
 
-Next time, please add the full history, from "Changes for V1".
-Moreover in this patchset you haven't added the
-"Tested-by: Chanwoo..." in patch 2 and 3.
+On 04-01-2017 06:54, Kedareswara rao Appana wrote:
+> When VDMA is configured for more than one frame in the h/w
+> for example h/w is configured for n number of frames and user
+> Submits n number of frames and triggered the DMA using issue_pending API.
+> In the current driver flow we are submitting one frame at a time
+> but we should submit all the n number of frames at one time as the h/w
+> Is configured for n number of frames.
+>
+> This patch fixes this issue.
+>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 
-Andi
+Looks fine. I have a couple of minor comments, if you address
+them you can add "Reviewed-by: Jose Abreu <joabreu@synopsys.com>"
+in next version.
 
-> 
-> Hoegeun Kwon (2):
->   drm/exynos: mic: Add mode_set callback function
->   drm/panel: Add support for S6E3HA2 panel driver on TM2 board
-> 
-> Hyungwon Hwang (1):
->   arm64: dts: exynos: Add support for S6E3HA2 panel device on TM2 board
-> 
->  .../bindings/display/panel/samsung,s6e3ha2.txt     |  40 ++
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      |  17 +
->  drivers/gpu/drm/exynos/exynos_drm_mic.c            |  30 +-
->  drivers/gpu/drm/panel/Kconfig                      |   6 +
->  drivers/gpu/drm/panel/Makefile                     |   1 +
->  drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 741 +++++++++++++++++++++
->  6 files changed, 824 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
->  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c
-> 
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> Changes for v3:
+> ---> Added Checks for frame store configuration. If frame store
+>      Configuration is not present at the h/w level and user
+>      Submits less frames added debug prints in the driver as relevant.
+> Changes for v2:
+> ---> Fixed race conditions in the driver as suggested by Jose Abreu
+> ---> Fixed unnecessray if else checks in the vdma_start_transfer
+>      as suggested by Laurent Pinchart.
+>
+>  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
+>  drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
+>  2 files changed, 57 insertions(+), 23 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> index a2b8bfa..1f65e09 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> @@ -66,6 +66,8 @@ Optional child node properties:
+>  Optional child node properties for VDMA:
+>  - xlnx,genlock-mode: Tells Genlock synchronization is
+>  	enabled/disabled in hardware.
+> +- xlnx,fstore-config: Tells Whether Frame Store Configuration is
+> +	enabled/disabled in hardware.
+>  Optional child node properties for AXI DMA:
+>  -dma-channels: Number of dma channels in child node.
+>  
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index be7eb41..7cd8e08 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -322,6 +322,7 @@ struct xilinx_dma_tx_descriptor {
+>   * @genlock: Support genlock mode
+>   * @err: Channel has errors
+>   * @idle: Check for channel idle
+> + * @has_fstoreconfig: Check for frame store configuration
+>   * @tasklet: Cleanup work after irq
+>   * @config: Device configuration info
+>   * @flush_on_fsync: Flush on Frame sync
+> @@ -353,6 +354,7 @@ struct xilinx_dma_chan {
+>  	bool genlock;
+>  	bool err;
+>  	bool idle;
+> +	bool has_fstoreconfig;
+>  	struct tasklet_struct tasklet;
+>  	struct xilinx_vdma_config config;
+>  	bool flush_on_fsync;
+> @@ -990,6 +992,26 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  	if (list_empty(&chan->pending_list))
+>  		return;
+>  
+> +	/*
+> +	 * Note: When VDMA is built with default h/w configuration
+> +	 * On the S2MM(recv) side user should submit frames upto
+> +	 * H/W configured. If users submits less than h/w configured
+> +	 * VDMA engine tries to write to a invalid location
+> +	 * Results undefined behaviour/memory corruption.
+> +	 *
+> +	 * If user would like to submit frames less than h/w capable
+> +	 * On S2MM side please enable debug info 13 at the h/w level
+> +	 * It will allows the frame buffers numbers to be modified at runtime.
+> +	 */
+> +	if (!chan->has_fstoreconfig && chan->direction == DMA_DEV_TO_MEM &&
+> +	    chan->desc_pendingcount < chan->num_frms) {
+> +		dev_dbg(chan->dev, "Frame Store Configuration is not enabled at the");
+> +		dev_dbg(chan->dev, " H/w level enable Debug info 13 at the h/w level");
+> +		dev_dbg(chan->dev, " OR Submit the frames upto h/w Capable\n\r");
+> +
+> +		return;
+> +	}
+
+Hmm, may dev_warn would be more suitable because with dev_dbg and
+no dynamic debug enabled user will not know what happened. Also,
+I am aware that in direction DMA_MEM_TO_DEV there will be no
+corruption in PC side but it will be corruption in VDMA side
+because it will read from invalid memory locations. Maybe drop
+the check for channel direction.
+
+I am also not fancy about dropping prints that are not grep'able
+(you do not break line in each print so a user searching for the
+whole string will not find it). Try to do a line break in each
+print or change the string to be smaller.
+
+Best regards,
+Jose Miguel Abreu
+
+> +
+>  	desc = list_first_entry(&chan->pending_list,
+>  				struct xilinx_dma_tx_descriptor, node);
+>  	tail_desc = list_last_entry(&chan->pending_list,
+> @@ -1052,25 +1074,38 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  	if (chan->has_sg) {
+>  		dma_ctrl_write(chan, XILINX_DMA_REG_TAILDESC,
+>  				tail_segment->phys);
+> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> +		chan->desc_pendingcount = 0;
+>  	} else {
+>  		struct xilinx_vdma_tx_segment *segment, *last = NULL;
+> -		int i = 0;
+> +		int i = 0, j = 0;
+>  
+>  		if (chan->desc_submitcount < chan->num_frms)
+>  			i = chan->desc_submitcount;
+>  
+> -		list_for_each_entry(segment, &desc->segments, node) {
+> -			if (chan->ext_addr)
+> -				vdma_desc_write_64(chan,
+> -					XILINX_VDMA_REG_START_ADDRESS_64(i++),
+> -					segment->hw.buf_addr,
+> -					segment->hw.buf_addr_msb);
+> -			else
+> -				vdma_desc_write(chan,
+> -					XILINX_VDMA_REG_START_ADDRESS(i++),
+> -					segment->hw.buf_addr);
+> -
+> -			last = segment;
+> +		for (j = 0; j < chan->num_frms; ) {
+> +			list_for_each_entry(segment, &desc->segments, node) {
+> +				if (chan->ext_addr)
+> +					vdma_desc_write_64(chan,
+> +					  XILINX_VDMA_REG_START_ADDRESS_64(i++),
+> +					  segment->hw.buf_addr,
+> +					  segment->hw.buf_addr_msb);
+> +				else
+> +					vdma_desc_write(chan,
+> +					    XILINX_VDMA_REG_START_ADDRESS(i++),
+> +					    segment->hw.buf_addr);
+> +
+> +				last = segment;
+> +			}
+> +			list_del(&desc->node);
+> +			list_add_tail(&desc->node, &chan->active_list);
+> +			j++;
+> +			if (list_empty(&chan->pending_list) ||
+> +			    (i == chan->num_frms))
+> +				break;
+> +			desc = list_first_entry(&chan->pending_list,
+> +						struct xilinx_dma_tx_descriptor,
+> +						node);
+>  		}
+>  
+>  		if (!last)
+> @@ -1081,20 +1116,14 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  		vdma_desc_write(chan, XILINX_DMA_REG_FRMDLY_STRIDE,
+>  				last->hw.stride);
+>  		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
+> -	}
+>  
+> -	chan->idle = false;
+> -	if (!chan->has_sg) {
+> -		list_del(&desc->node);
+> -		list_add_tail(&desc->node, &chan->active_list);
+> -		chan->desc_submitcount++;
+> -		chan->desc_pendingcount--;
+> +		chan->desc_submitcount += j;
+> +		chan->desc_pendingcount -= j;
+>  		if (chan->desc_submitcount == chan->num_frms)
+>  			chan->desc_submitcount = 0;
+> -	} else {
+> -		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> -		chan->desc_pendingcount = 0;
+>  	}
+> +
+> +	chan->idle = false;
+>  }
+>  
+>  /**
+> @@ -1342,6 +1371,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+>  
+>  	chan->err = false;
+>  	chan->idle = true;
+> +	chan->desc_submitcount = 0;
+>  
+>  	return err;
+>  }
+> @@ -2315,6 +2345,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+>  	has_dre = of_property_read_bool(node, "xlnx,include-dre");
+>  
+>  	chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
+> +	chan->has_fstoreconfig = of_property_read_bool(node,
+> +						       "xlnx,fstore-config");
+>  
+>  	err = of_property_read_u32(node, "xlnx,datawidth", &value);
+>  	if (err) {
