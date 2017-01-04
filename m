@@ -1,78 +1,36 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 6/6] arm64: dts: db820c: add support to volume up key
-Date: Wed,  4 Jan 2017 13:35:02 +0000
-Message-ID: <1483536902-21450-7-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/3] dmaengine: xilinx_dma: Bug fixes
+Date: Wed, 4 Jan 2017 19:05:51 +0530
+Message-ID: <1483536954-27203-1-git-send-email-appanad@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to volume-up key found on the board.
+This patch series fixes below bugs in DMA and VDMA IP's
+---> Do not start VDMA until frame buffer is processed by the h/w Fix 
+---> bug in Multi frame sotres handling in VDMA Fix issues w.r.to multi 
+---> frame descriptors submit with AXI DMA S2MM(recv) Side.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi | 12 ++++++++++++
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi          | 19 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
+Kedareswara rao Appana (3):
+  dmaengine: xilinx_dma: Check for channel idle state before submitting
+    dma descriptor
+  dmaeninge: xilinx_dma: Fix bug in multiple frame stores scenario in
+    vdma
+  dmaengine: xilinx_dma: Fix race condition in the driver for multiple
+    descriptor scenario
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-index 6c1628c..b1142c4 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-@@ -12,4 +12,16 @@
- 			power-source = <2>; // PM8994_GPIO_S4, 1.8V
- 		};
- 	};
-+
-+	volume_up_gpio: pm8996_gpio2 {
-+		pinconf {
-+			pins = "gpio2";
-+			function = "normal";
-+			input-enable;
-+			drive-push-pull;
-+			bias-pull-up;
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 422959b..d2196fc 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -15,6 +15,8 @@
- #include "pm8994.dtsi"
- #include "apq8096-db820c-pins.dtsi"
- #include "apq8096-db820c-pmic-pins.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	aliases {
-@@ -87,4 +89,21 @@
- 			status = "okay";
- 		};
- 	};
-+
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&volume_up_gpio>;
-+
-+		button@0 {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
+ .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |   2 +
+ drivers/dma/xilinx/xilinx_dma.c                    | 266 ++++++++++++---------
+ 2 files changed, 157 insertions(+), 111 deletions(-)
+
 -- 
-2.10.1
+2.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
