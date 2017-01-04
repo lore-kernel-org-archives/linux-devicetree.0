@@ -1,104 +1,302 @@
-From: Jerry Huang <jerry.huang-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Wed, 4 Jan 2017 02:24:59 +0000
-Message-ID: <DB5PR0401MB181361EBAD1B2BFA8DC5ED7AFE610@DB5PR0401MB1813.eurprd04.prod.outlook.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
- <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
- <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
- <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
- <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/5] arm64: dts: sun50i: add MMC nodes
+Date: Wed, 4 Jan 2017 10:37:57 +0800
+Message-ID: <CAGb2v65hmQPdt6tG9vx2Bfw0Y8zH+mYojdYUKtb1zPona2efLw@mail.gmail.com>
+References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
+ <1483398226-29321-4-git-send-email-andre.przywara@arm.com>
+ <CAGb2v65GJFTnQZtWHCS7CAtA+Dry94o77aakPLr938BpQksLog@mail.gmail.com>
+ <d4c2233c-95aa-4d72-1501-9ecb62f6cd82@arm.com> <CAGb2v65GAvyDn1oMXy2cpOD5PFRoYYOk-VbsMPAX3SNFz2ukLg@mail.gmail.com>
+ <6e90ad76-8f25-538a-433e-ab31e8fab526@arm.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHWAWHBQKGQEGGR2DZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <6e90ad76-8f25-538a-433e-ab31e8fab526-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVy
-cmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5
-IDA0LCAyMDE3IDU6MjQgQU0NCj4gVG86IEplcnJ5IEh1YW5nIDxqZXJyeS5odWFuZ0BueHAuY29t
-Pg0KPiBDYzogYmFsYmlAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4u
-bWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBsaW51eEBhcm1saW51eC5v
-cmcudWs7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC11c2JAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8zXSBVU0Iz
-L0RXQzM6IEFkZCBwcm9wZXJ0eSAic25wcywgaW5jci1idXJzdC0NCj4gdHlwZS1hZGp1c3RtZW50
-IiBmb3IgSU5DUiBidXJzdCB0eXBlDQo+IA0KPiBPbiBUaHUsIERlYyAyMiwgMjAxNiBhdCA4OjUy
-IFBNLCBKZXJyeSBIdWFuZyA8amVycnkuaHVhbmdAbnhwLmNvbT4gd3JvdGU6DQo+ID4gSGksIFJv
-YiwNCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogUm9iIEhlcnJp
-bmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+ID4+IFNlbnQ6IEZyaWRheSwgRGVjZW1iZXIg
-MjMsIDIwMTYgMjo0NSBBTQ0KPiA+PiBUbzogSmVycnkgSHVhbmcgPGplcnJ5Lmh1YW5nQG54cC5j
-b20+DQo+ID4+IENjOiBiYWxiaUBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgY2F0
-YWxpbi5tYXJpbmFzQGFybS5jb207DQo+ID4+IHdpbGwuZGVhY29uQGFybS5jb207IGxpbnV4QGFy
-bWxpbnV4Lm9yZy51azsNCj4gPj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXVz
-YkB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
-bnV4LWFybS0ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCB2MyAyLzNdIFVTQjMvRFdDMzogQWRkIHByb3BlcnR5ICJzbnBzLA0KPiA+PiBpbmNyLWJ1
-cnN0LSB0eXBlLWFkanVzdG1lbnQiIGZvciBJTkNSIGJ1cnN0IHR5cGUNCj4gPj4NCj4gPj4gT24g
-TW9uLCBEZWMgMTksIDIwMTYgYXQgMDU6MjU6NTNQTSArMDgwMCwgQ2hhbmdtaW5nIEh1YW5nIHdy
-b3RlOg0KPiA+PiA+IE5ldyBwcm9wZXJ0eSAic25wcyxpbmNyLWJ1cnN0LXR5cGUtYWRqdXN0bWVu
-dCA9IDx4PiwgPHk+IiBmb3INCj4gPj4gPiBVU0IzLjANCj4gPj4gRFdDMy4NCj4gPj4gPiBGaWVs
-ZCAieCI6IDEvMCAtIHVuZGVmaW5lZCBsZW5ndGggSU5DUiBidXJzdCB0eXBlIGVuYWJsZSBvciBu
-b3Q7DQo+ID4+ID4gRmllbGQNCj4gPj4gPiAieSI6IElOQ1I0L0lOQ1I4L0lOQ1IxNi9JTkNSMzIv
-SU5DUjY0L0lOQ1IxMjgvSU5DUjI1NiBidXJzdCB0eXBlLg0KPiA+PiA+DQo+ID4+ID4gV2hpbGUg
-ZW5hYmxpbmcgdW5kZWZpbmVkIGxlbmd0aCBJTkNSIGJ1cnN0IHR5cGUgYW5kIElOQ1IxNiBidXJz
-dA0KPiA+PiA+IHR5cGUsIGdldCBiZXR0ZXIgd3JpdGUgcGVyZm9ybWFuY2Ugb24gTlhQIExheWVy
-c2NhcGUgcGxhdGZvcm06DQo+ID4+ID4gYXJvdW5kIDMlIGltcHJvdmVtZW50IChmcm9tIDM2NE1C
-L3MgdG8gMzc1TUIvcykuDQo+ID4+ID4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBDaGFuZ21pbmcg
-SHVhbmcgPGplcnJ5Lmh1YW5nQG54cC5jb20+DQo+ID4+ID4gLS0tDQo+ID4+ID4gQ2hhbmdlcyBp
-biB2MzoNCj4gPj4gPiAgIC0gYWRkIG5ldyBwcm9wZXJ0eSBmb3IgSU5DUiBidXJzdCBpbiB1c2Ig
-bm9kZS4NCj4gPj4gPg0KPiA+PiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-dXNiL2R3YzMudHh0IHwgICAgNSArKysrKw0KPiA+PiA+ICBhcmNoL2FybS9ib290L2R0cy9sczEw
-MjFhLmR0c2kgICAgICAgICAgICAgICAgIHwgICAgMSArDQo+ID4+ID4gIGFyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kgfCAgICAzICsrKw0KPiA+PiA+ICBhcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDgwYS5kdHNpIHwgICAgMiArKw0KPiA+
-PiA+ICA0IGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4gPj4gPg0KPiA+PiA+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0
-DQo+ID4+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0
-DQo+ID4+ID4gaW5kZXggZTNlNjk4My4uOGM0MDVhMyAxMDA2NDQNCj4gPj4gPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+ID4+ID4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+PiA+IEBA
-IC01NSw2ICs1NSwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+PiA+ICAgICBmbGFkal8z
-MG1oel9zZGJuZCBzaWduYWwgaXMgaW52YWxpZCBvciBpbmNvcnJlY3QuDQo+ID4+ID4NCj4gPj4g
-PiAgIC0gPERFUFJFQ0FURUQ+IHR4LWZpZm8tcmVzaXplOiBkZXRlcm1pbmVzIGlmIHRoZSBGSUZP
-ICpoYXMqIHRvIGJlDQo+ID4+IHJlYWxsb2NhdGVkLg0KPiA+PiA+ICsgLSBzbnBzLGluY3ItYnVy
-c3QtdHlwZS1hZGp1c3RtZW50OiBWYWx1ZSBmb3IgSU5DUiBidXJzdCB0eXBlIG9mDQo+ID4+IEdT
-QlVTQ0ZHMA0KPiA+PiA+ICsgICByZWdpc3RlciwgdW5kZWZpbmVkIGxlbmd0aCBJTkNSIGJ1cnN0
-IHR5cGUgZW5hYmxlIGFuZCBJTkNSeCB0eXBlLg0KPiA+PiA+ICsgICBGaXJzdCBmaWVsZCBpcyBm
-b3IgdW5kZWZpbmVkIGxlbmd0aCBJTkNSIGJ1cnN0IHR5cGUgZW5hYmxlIG9yIG5vdC4NCj4gPj4g
-PiArICAgU2Vjb25kIGZpZWxkIGlzIGZvciBsYXJnZXN0IElOQ1J4IHR5cGUgZW5hYmxlZC4NCj4g
-Pj4NCj4gPj4gV2h5IGRvIHlvdSBuZWVkIHRoZSBmaXJzdCBmaWVsZD8gSXMgdGhlIDJuZCBmaWVs
-ZCB1c2VkIGlmIHRoZSAxc3QgaXMgMD8NCj4gPj4gSWYgbm90LCB0aGVuIGp1c3QgdXNlIHRoZSBw
-cmVzZW5jZSBvZiB0aGUgcHJvcGVydHkgdG8gZW5hYmxlIG9yIG5vdC4NCj4gPiBUaGUgZmlyc3Qg
-ZmllbGQgaXMgb25lIHN3aXRjaC4NCj4gPiBXaGVuIGl0IGlzIDEsIG1lYW5zIHVuZGVmaW5lZCBs
-ZW5ndGggSU5DUiBidXJzdCB0eXBlIGVuYWJsZWQsIHdlIGNhbiB1c2UNCj4gYW55IGxlbmd0aCBs
-ZXNzIHRoYW4gb3IgZXF1YWwgdG8gdGhlIGxhcmdlc3QtZW5hYmxlZCBidXJzdCBsZW5ndGggb2YN
-Cj4gSU5DUjQvOC8xNi8zMi82NC8xMjgvMjU2Lg0KPiA+IFdoZW4gaXQgaXMgemVybywgbWVhbnMg
-SU5DUnggYnVyc3QgbW9kZSBlbmFibGVkLCB3ZSBjYW4gdXNlIG9uZSBmaXhlZA0KPiBidXJzdCBs
-ZW5ndGggb2YgMS80LzgvMTYvMzIvNjQvMTI4LzI1NiBieXRlLg0KPiA+IFNvLCB0aGUgMm5kIGZp
-ZWxkIGlzIHVzZWQgaWYgdGhlIDFzdCBpcyAwLCB3ZSBuZWVkIHRvIHNlbGVjdCBvbmUgbGFyZ2Vz
-dCBidXJzdA0KPiBsZW5ndGggdGhlIFVTQiBjb250cm9sbGVyIGNhbiBzdXBwb3J0Lg0KPiA+IElm
-IHdlIGRvbid0IHdhbnQgdG8gY2hhbmdlIHRoZSB2YWx1ZSBvZiB0aGlzIHJlZ2lzdGVyICh1c2Ug
-dGhlIGRlZmF1bHQgdmFsdWUpLA0KPiB3ZSBkb24ndCBuZWVkIHRvIGFkZCB0aGlzIHByb3BlcnR5
-IHRvIHVzYiBub2RlLg0KPiANCj4gSnVzdCBtYWtlIHRoaXMgYSBzaW5nbGUgdmFsdWUgd2l0aCAw
-IG1lYW5pbmcgSU5DUiBhbmQgNC84LzE2L2V0YyBiZWluZyBJTkNSeC4NCk1heWJlLCBJIGRpZG4n
-dCBkZXNjcmliZSBpdCBjbGVhcmx5LiANCkFjY29yZGluZyB0byBEV0MzIHNwZWMsIHRoZSB2YWx1
-ZSAiMCIgb2YgZmllbGQgSU5DUkJyc3RFbmEgbWVhbnMgSU5DUnggYnVyc3QgbW9kZSwgMSBtZWFu
-cyBJTkNSIGJ1cnN0IG1vZGUuDQpSZWdhcmRsZXNzIG9mIHRoZSB2YWx1ZSBvZiBJTkNSQnJzdEVu
-YSBbYml0MF0sIHdlIG5lZWQgdG8gbW9kaWZ5IHRoZSBvdGhlciBmaWVsZCBiaXRbMSwyLDMsNCw1
-LDYsN10gdG8gb25lIElOQ1IgYnVyc3QgdHlwZSAgZm9yIHRoZSBwbGF0Zm9ybSBzdXBwb3J0ZWQu
-DQpBZCB5b3UgbWVudGlvbmVkLCBpZiB3ZSBqdXN0IHVzZSBhIHNpbmdsZSB2YWx1ZSB3aXRoIDAg
-bWVhbmluZyBJTkNSIGFuZCA0LzgvMTYvZXRjIGJlaW5nIElOQ1J4Lg0KSSB1bmRlcnN0YW5kIHRv
-dGFsbHkgdGhhdCB3aGVuIGl0IGlzIG5vbmUtemVybywgd2UgY2FuIHVzZSBpdCBmb3IgSU5DUiBi
-dXJzdCBtb2RlLiANClRoZW4sIHdoZW4gaXQgaXMgMCwgaG93IHRvIHNlbGVjdCB0aGUgSU5DUngg
-dmFsdWU/DQoNClNvLCBJIHRoaW5rIHdlIHN0aWxsIG5lZWQgdHdvIHZhdWUgdG8gc3BlY2lmeSBJ
-TkNSQnJzdEVuYSBhbmQgSU5DUnggYnVyc3QgdHlwZS4NCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Jan 4, 2017 at 8:22 AM, Andr=C3=A9 Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org=
+> wrote:
+> On 03/01/17 13:28, Chen-Yu Tsai wrote:
+>> On Tue, Jan 3, 2017 at 6:48 PM, Andr=C3=A9 Przywara <andre.przywara@arm.=
+com> wrote:
+>>> On 03/01/17 02:52, Chen-Yu Tsai wrote:
+>
+> Hi Chen-Yu,
+>
+>>>> On Tue, Jan 3, 2017 at 7:03 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org=
+> wrote:
+>>>>
+>>>> A commit message explaining the mmc controllers would be nice.
+>>>
+>>> OK.
+>>>
+>>>>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 67 +++++++++++++++++=
+++++++++++
+>>>>>  1 file changed, 67 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm=
+64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>>> index e0dcab8..c680566 100644
+>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>>>> @@ -150,6 +150,32 @@
+>>>>>                                 pins =3D "PB8", "PB9";
+>>>>>                                 function =3D "uart0";
+>>>>>                         };
+>>>>> +
+>>>>> +                       mmc0_pins: mmc0@0 {
+>>>>> +                               pins =3D "PF0", "PF1", "PF2", "PF3", =
+"PF4", "PF5";
+>>>>> +                               function =3D "mmc0";
+>>>>> +                               drive-strength =3D <30>;
+>>>>> +                       };
+>>>>> +
+>>>>> +                       mmc0_default_cd_pin: mmc0_cd_pin@0 {
+>>>>> +                               pins =3D "PF6";
+>>>>> +                               function =3D "gpio_in";
+>>>>> +                               bias-pull-up;
+>>>>> +                       };
+>>>>
+>>>> We are starting to drop pinmux nodes for gpio usage.
+>>>
+>>> And replacing them with what?
+>>> Or do you mean they go in the individual board .dts files?
+>>> In this case I believe having a default pin defined here would help to
+>>> define it in every .dts.
+>>
+>> Nope. I meant dropping them. Pinmux and gpio are orthogonal. One should =
+not
+>> need to specify a gpio pinmux to use it as a gpio. We added them because=
+ in
+>> the past nothing was preventing someone from claiming an already muxed p=
+in
+>> as a gpio. On some platforms this is fine. For sunxi, this breaks the sy=
+stem,
+>> as the gpio functions are muxed in.
+>>
+>> The idea moving forward is that these cases should be guarded in the dri=
+ver.
+>
+> Ah, OK, you mean just referencing the pin like:
+>         cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+> in the board DT is enough? And the driver claiming it will (eventually?)
+> prevent users from using them via the sysfs interface then?
+
+cd-gpios =3D ....
+
+should be enough to block other devices from claiming a pinmux (pinctrl-N =
+=3D ...)
+on the same pin, or vice versa, whichever claimed it first in kernel space.
+
+Same goes for a pin already claimed by a device through a pinmux. It should
+not be claimable as a gpio through the sysfs interface.
+
+>> Of course we would have to deal with existing dtbs, but lets not add any=
+ more.
+>>
+>>>>> +
+>>>>> +                       mmc1_pins: mmc1@0 {
+>>>>> +                               pins =3D "PG0", "PG1", "PG2", "PG3", =
+"PG4", "PG5";
+>>>>> +                               function =3D "mmc1";
+>>>>> +                               drive-strength =3D <30>;
+>>>>> +                       };
+>>>>> +
+>>>>> +                       mmc2_pins: mmc2@0 {
+>>>>> +                               pins =3D "PC1", "PC5", "PC6", "PC8", =
+"PC9",
+>>>>> +                                      "PC10", "PC11", "PC12", "PC13"=
+, "PC14",
+>>>>> +                                      "PC15", "PC16";
+>>>>> +                               function =3D "mmc2";
+>>>>> +                               drive-strength =3D <30>;
+>>>>> +                       };
+>>>>
+>>>> Moreover I think you should split out the pinmux nodes to a separate p=
+atch.
+>>>
+>>> I can surely do, just wondering what's the rationale is behind that?
+>>
+>> More or less the "do one thing in one patch" rationale. Of course you ca=
+n
+>> claim these are the defaults used in the reference design and pretty muc=
+h
+>> every board out there. Then it makes sense to do them together. :)
+>
+> Mmmh, probably a misunderstanding, but:
+> Those pins are the possible pins that expose the MMC interface. Those
+> nodes here name them to allow easy and concise reference by a board DT
+> (as in the following patch).
+> And in fact in case of the A64 there are _no_ alternative muxes for the
+> three MMC controllers: SDC0 is only on PF0-5, SDC1 on PG0-PG5 and SDC2
+> on PC1-PC16.
+> So it's not a board design question, apart from using a controller or not=
+.
+>
+> That's why I rather keep them together with the MMC controller nodes.
+
+Cool. Please mention this in the commit log, as in they are the only
+possible choice.S ince they are the only choices, please drop the @0
+in the node name.
+
+And you might want to rename mmc2_pins to something like
+"mmc2_8bit_pins: mmc2_8bit". Who knows, someone might consider using
+it for an SD card or SDIO, and the remaining pins for something else.
+
+>>>>
+>>>>>                 };
+>>>>>
+>>>>>                 uart0: serial@1c28000 {
+>>>>> @@ -240,6 +266,47 @@
+>>>>>                         #size-cells =3D <0>;
+>>>>>                 };
+>>>>>
+>>>>> +               mmc0: mmc@1c0f000 {
+>>>>> +                       compatible =3D "allwinner,sun50i-a64-mmc",
+>>>>> +                                    "allwinner,sun5i-a13-mmc";
+>>>>
+>>>> Given that sun5i doesn't support mmc delay timings, and the A64 has
+>>>> calibration and delay timings, I wouldn't call them compatible.
+>>>>
+>>>> Or are you claiming that for the A64 has a delay of 0 for the
+>>>> currently supported speeds, so the calibration doesn't really
+>>>> matter? If so this should be mentioned in the commit message.
+>>>
+>>> Yes, that's my observation: Driving it with sun5-a13-mmc just works.
+>>> This sun5i driver version does not (and will never) support higher
+>>> transfer modes anyway, so for that subset they are compatible. This
+>>> opens up the door to other operating systems not having a particular
+>>> driver for the A64, for instance, also older Linux kernels.
+>>> I know that sunxi doesn't use this compatible feature much, but IMHO we
+>>> should really start thinking about the DT not just being Linux specific
+>>> - or even being specific to a certain Linux version. And this case here
+>>> is a good example: An A13 MMC driver can drive this device - if there i=
+s
+>>> no better driver (an A64 one) available.
+>>
+>> Cool. Please put this in the commit log. :)
+>
+> Noted for a repost.
+>
+>>>
+>>>>
+>>>>> +                       reg =3D <0x01c0f000 0x1000>;
+>>>>> +                       clocks =3D <&ccu 31>, <&ccu 75>;
+>>>>
+>>>> The clock / reset index macros are in the tree now.
+>>>> Please switch to them.
+>>>
+>>> The include file is in the tree, but it isn't used in the current HEAD
+>>> (as in #included and the actual macros being used in the .dtsi).
+>>> So I was wondering if there is a patch pending for that?
+>>
+>> Not yet I think. Perhaps Maxime will do one once he gets back from vacat=
+ion?
+>
+> Seems like everybody hopes for it and nobody bothers with this rather
+> trivial patch ;-)
+
+A bit of context here. This was changed _after_ the A64 patches were
+pulled into arm-soc, by the arm-soc maintainers, to avoid ugly cross
+tree merges. The idea was to change them back after -rc1. I don't know
+if a patch to do that is ready though.
+
+> Frankly I am not overly keen on having all those defines in the DTs,
+> which rely on a bunch of include files scattered over the Linux include
+> tree. This makes it unnecessarily complicated to compile this out of
+> tree or move it over to some other piece of software (other OS, U-Boot).
+> Also it gives people the impression that it's fine to change the
+> definition in the include file at will (because it looks like Linux
+> territory).
+
+The dt-bindings related header files are split into a separate directory.
+They are also included in the separate devicetree repository:
+
+    https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-reba=
+sing.git/
+
+And no, I don't think it implies that it's fine to change it. The
+include/dt-bindings/ subdirectory is part of the device tree bindings,
+just like Documentation/devicetree/bindings. Does the latter give the
+impression that it is fine to change it, because it's in the docs?
+
+> Eventually some file has to hold the actual hardware information, I
+> don't see why this shouldn't be the one .dtsi file. Reading that the
+> clock for MMC controller 0 is MMC0_CLK isn't very informative.
+
+For me, it makes it much easier to review, than say a plain number,
+which I would have to dig through some file, probably the clock driver,
+to check if it matches.
+
+Regards
+ChenYu
+
+> Cheers,
+> Andre.
+>
+>>>>> +                       clock-names =3D "ahb", "mmc";
+>>>>> +                       resets =3D <&ccu 8>;
+>>>>> +                       reset-names =3D "ahb";
+>>>>> +                       interrupts =3D <GIC_SPI 60 IRQ_TYPE_LEVEL_HIG=
+H>;
+>>>>> +                       status =3D "disabled";
+>>>>> +                       #address-cells =3D <1>;
+>>>>> +                       #size-cells =3D <0>;
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc1: mmc@1c10000 {
+>>>>> +                       compatible =3D "allwinner,sun50i-a64-mmc",
+>>>>> +                                    "allwinner,sun5i-a13-mmc";
+>>>>> +                       reg =3D <0x01c10000 0x1000>;
+>>>>> +                       clocks =3D <&ccu 32>, <&ccu 76>;
+>>>>> +                       clock-names =3D "ahb", "mmc";
+>>>>> +                       resets =3D <&ccu 9>;
+>>>>> +                       reset-names =3D "ahb";
+>>>>> +                       interrupts =3D <GIC_SPI 61 IRQ_TYPE_LEVEL_HIG=
+H>;
+>>>>> +                       status =3D "disabled";
+>>>>> +                       #address-cells =3D <1>;
+>>>>> +                       #size-cells =3D <0>;
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc2: mmc@1c11000 {
+>>>>> +                       compatible =3D "allwinner,sun50i-a64-emmc";
+>>>>> +                       reg =3D <0x01c11000 0x1000>;
+>>>>> +                       clocks =3D <&ccu 33>, <&ccu 77>;
+>>>>> +                       clock-names =3D "ahb", "mmc";
+>>>>> +                       resets =3D <&ccu 10>;
+>>>>> +                       reset-names =3D "ahb";
+>>>>> +                       interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIG=
+H>;
+>>>>> +                       status =3D "disabled";
+>>>>> +                       #address-cells =3D <1>;
+>>>>> +                       #size-cells =3D <0>;
+>>>>> +               };
+>>>>> +
+>>>>>                 gic: interrupt-controller@1c81000 {
+>>>>>                         compatible =3D "arm,gic-400";
+>>>>>                         reg =3D <0x01c81000 0x1000>,
+>>>>> --
+>>>>> 2.8.2
+>>>>>
+>>>
+>
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
