@@ -1,57 +1,48 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [RFC PATCH] usb: dwc3: host: add support for OTG in DWC3 host driver
-Date: Wed, 4 Jan 2017 18:52:59 +0530
-Message-ID: <1483536181-22356-5-git-send-email-mnarani@xilinx.com>
-References: <1483536181-22356-1-git-send-email-mnarani@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
+Date: Wed, 4 Jan 2017 07:22:31 -0600
+Message-ID: <20170104132231.jlhqwngaeza7duoo@rob-hp-laptop>
+References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483536181-22356-1-git-send-email-mnarani@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@kernel.org, gregkh@linuxfoundation.org, mathias.nyman@intel.com, agraf@suse.de, bharatku@xilinx.com, punnaiah.choudary.kalluri@xilinx.com, dhdang@apm.com, marc.zyngier@arm.com, mnarani@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: anirudh@xilinx.com, anuragku@xilinx.com
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for OTG host mode initialization in DWC3
-host driver. Before the host initialization sequence begins. The
-driver has to make sure the no OTG peripheral mode is enabled.
+On Mon, Jan 02, 2017 at 01:07:51PM -0800, Steve Longerbeam wrote:
+> Add optional reset-gpios pin control. If present, de-assert the
+> specified reset gpio pin to bring the chip out of reset.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Alexandre Courbot <gnurou@gmail.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |  4 ++++
+>  drivers/gpio/gpio-pca953x.c                             | 11 +++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> index 08dd15f..da54f4c 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> @@ -29,6 +29,10 @@ Required properties:
+>  	onsemi,pca9654
+>  	exar,xra1202
+>  
+> +Optional properties:
+> + - reset-gpios: GPIO specification for the RESET input
 
-Signed-off-by: Manish Narani <mnarani@xilinx.com>
----
- drivers/usb/dwc3/host.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Need to specify active high or low.
 
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index 487f0ff..4caa3fe 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -16,6 +16,8 @@
-  */
- 
- #include <linux/platform_device.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
- 
- #include "core.h"
- 
-@@ -111,6 +113,18 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	phy_create_lookup(dwc->usb3_generic_phy, "usb3-phy",
- 			  dev_name(dwc->dev));
- 
-+	if (dwc->dr_mode == USB_DR_MODE_OTG) {
-+		struct usb_phy *phy;
-+		/* Switch otg to host mode */
-+		phy = usb_get_phy(USB_PHY_TYPE_USB3);
-+		if (!IS_ERR(phy)) {
-+			if (phy && phy->otg)
-+				otg_set_host(phy->otg,
-+						(struct usb_bus *)(long)1);
-+			usb_put_phy(phy);
-+		}
-+	}
-+
- 	ret = platform_device_add(xhci);
- 	if (ret) {
- 		dev_err(dwc->dev, "failed to register xHCI device\n");
--- 
-2.1.1
+> +
+> +
+>  Example:
+>  
+>  
