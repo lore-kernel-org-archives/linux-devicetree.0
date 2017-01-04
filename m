@@ -1,61 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: zte: documents zx2967 power domain
- driver bindings
-Date: Wed, 4 Jan 2017 08:54:28 -0600
-Message-ID: <20170104145428.b7dqxu34gp2nwup2@rob-hp-laptop>
-References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: document common IEEE 802.11 frequency properties
+Date: Wed, 4 Jan 2017 15:53:38 +0100
+Message-ID: <CACna6rxx-8499ZQKekdORF0UWQQazwGu2On1aq-fwA4oCX7pgw@mail.gmail.com>
+References: <20161228155955.25518-1-zajec5@gmail.com> <20170103195514.vf4psb6qw2bd2lcw@rob-hp-laptop>
+ <CACna6rxmgN2zz-Fc1-Uu02oqMQreNkMJt0jGjLOMrXM=6iujFw@mail.gmail.com> <874m1ej3oz.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, mark.rutland@arm.com, krzk@kernel.org, arnd@arndb.de, ulf.hansson@linaro.org, amitdanielk@gmail.com, claudiu.manoil@nxp.com, yangbo.lu@nxp.com, pankaj.dubey@samsung.com, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <874m1ej3oz.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 07:48:10PM +0800, Baoyou Xie wrote:
-> This patch documents devicetree tree bindings for the ZTE zx2967
-> power domain driver.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> ---
->  Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt b/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
-> new file mode 100644
-> index 0000000..1476318
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
-> @@ -0,0 +1,17 @@
-> +* ZTE 2967 SoC Power Domains
-> +
-> +2967 processors include support for multiple power domains which are used
-> +to gate power to one or more peripherals on the processor.
-> +
-> +Required Properties:
-> +- compatible: should be one of the following.
-> +    * zte,zx296718-pcu - for zx296718 board's power domain.
+On 4 January 2017 at 15:32, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
+>> On 3 January 2017 at 20:55, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Wed, Dec 28, 2016 at 04:59:54PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+>>>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> This new file should be used for properties handled at higher level an=
+d
+>>>> so usable with all drivers.
+>>>
+>>> Why is this needed? Where would this data normally come from?
+>>
+>> Vendors limit choice of channels at their web user interface level. I
+>> want to do better and report proper channels directly at kernel level
+>> instead of masking them in every possible configuration tool.
+>
+> Why do vendors limit the channels? Is it because of a hardware
+> limitation (antenna does not support, or not calibrated, for a certain
+> band etc) or something else?
 
-board? I'd expect this is for an SoC?
+Please review & comment on the latest version, currently V5:
+https://patchwork.kernel.org/patch/9495795/
+"This can be used to specify extra hardware limitations caused by e.g.
+used antennas or power amplifiers."
 
-> +- reg: physical base address of the controller and length of memory mapped
-> +    region.
-
-#power-domain-cells needed?
-
-> +
-> +Example:
-> +
-> +	pcu_domain: pcu@0x00117000 {
-
-pcu@117000
-
-> +		compatible = "zte,zx296718-pcu";
-> +		reg = <0x00117000 0x1000>;
-> +	};
-> -- 
-> 2.7.4
-> 
+--=20
+Rafa=C5=82
