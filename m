@@ -1,79 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: qman: Remove pool channel node
-Date: Wed, 4 Jan 2017 08:52:21 -0600
-Message-ID: <20170104145221.dl472qqys6bz3jfa@rob-hp-laptop>
-References: <1483527829-8369-1-git-send-email-madalin.bucur@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: zte: documents zx2967 power domain
+ driver bindings
+Date: Wed, 4 Jan 2017 08:54:28 -0600
+Message-ID: <20170104145428.b7dqxu34gp2nwup2@rob-hp-laptop>
+References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483527829-8369-1-git-send-email-madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: jun.nie@linaro.org, mark.rutland@arm.com, krzk@kernel.org, arnd@arndb.de, ulf.hansson@linaro.org, amitdanielk@gmail.com, claudiu.manoil@nxp.com, yangbo.lu@nxp.com, pankaj.dubey@samsung.com, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 01:03:49PM +0200, Madalin Bucur wrote:
-> From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+On Wed, Jan 04, 2017 at 07:48:10PM +0800, Baoyou Xie wrote:
+> This patch documents devicetree tree bindings for the ZTE zx2967
+> power domain driver.
 > 
-> No device tree has these, nor does any driver look for them.
-> 
-> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 > ---
->  .../devicetree/bindings/soc/fsl/qman-portals.txt     | 20 --------------------
->  1 file changed, 20 deletions(-)
-
-Applied, thanks.
-
-Rob
-
+>  Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
-> index 47e46cc..5a34f3a 100644
-> --- a/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
-> +++ b/Documentation/devicetree/bindings/soc/fsl/qman-portals.txt
-> @@ -5,7 +5,6 @@ Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
->  CONTENTS
->  
->  	- QMan Portal
-> -	- QMan Pool Channel
->  	- Example
->  
->  QMan Portal Node
-> @@ -82,25 +81,6 @@ These subnodes should have the following properties:
->  	Definition:	The phandle to the particular hardware device that this
->  			portal is connected to.
->  
-> -DPAA QMan Pool Channel Nodes
-> -
-> -Pool Channels are defined with the following properties.
-> -
-> -PROPERTIES
-> -
-> -- compatible
-> -	Usage:		Required
-> -	Value type:	<stringlist>
-> -	Definition:	Must include "fsl,qman-pool-channel"
-> -			May include "fsl,<SoC>-qman-pool-channel"
-> -
-> -- fsl,qman-channel-id
-> -	Usage:		Required
-> -	Value type:	<u32>
-> -	Definition:	The hardware index of the channel. This can also be
-> -			determined by dividing any of the channel's 8 work queue
-> -			IDs by 8
-> -
->  EXAMPLE
->  
->  The example below shows a (P4080) QMan portals container/bus node with two portals
+> diff --git a/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt b/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
+> new file mode 100644
+> index 0000000..1476318
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
+> @@ -0,0 +1,17 @@
+> +* ZTE 2967 SoC Power Domains
+> +
+> +2967 processors include support for multiple power domains which are used
+> +to gate power to one or more peripherals on the processor.
+> +
+> +Required Properties:
+> +- compatible: should be one of the following.
+> +    * zte,zx296718-pcu - for zx296718 board's power domain.
+
+board? I'd expect this is for an SoC?
+
+> +- reg: physical base address of the controller and length of memory mapped
+> +    region.
+
+#power-domain-cells needed?
+
+> +
+> +Example:
+> +
+> +	pcu_domain: pcu@0x00117000 {
+
+pcu@117000
+
+> +		compatible = "zte,zx296718-pcu";
+> +		reg = <0x00117000 0x1000>;
+> +	};
 > -- 
-> 2.1.0
+> 2.7.4
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
