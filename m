@@ -1,99 +1,56 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to respect
- extra limits
-Date: Wed, 4 Jan 2017 22:19:57 +0100
-Message-ID: <CACna6rxay9sC+QT2G4AfjWT1ERsNDzFQ620hNhVhr0FRHXJu=w@mail.gmail.com>
-References: <20170104175832.25996-1-zajec5@gmail.com> <20170104175832.25996-4-zajec5@gmail.com>
- <3fc87224-7f08-e365-7bbb-a4b8b5746e4f@broadcom.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] iio: adc: Add Renesas GyroADC driver
+Date: Wed, 4 Jan 2017 22:36:08 +0100
+Message-ID: <CAMuHMdXD6F7DzCFU6b8UGADkukKRYFhXeHpuEFYaS_qUuNZCOg@mail.gmail.com>
+References: <20161230191800.2532-1-marek.vasut@gmail.com> <CAMuHMdX20kc8h4DiNLu0KwaA0FL6F-WXLnA3YXvu02VJTh_7fQ@mail.gmail.com>
+ <f4bb8922-36dc-ff69-45fc-e1d9cba821ba@gmail.com> <CAMuHMdVgaAD5EaK0aMS3HEXUeNQaz_ZiwG4cTtpDMMma_YWBbg@mail.gmail.com>
+ <2204d490-90bb-07a7-15fa-b05e1add76c9@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3fc87224-7f08-e365-7bbb-a4b8b5746e4f-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2204d490-90bb-07a7-15fa-b05e1add76c9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 January 2017 at 21:07, Arend Van Spriel
-<arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On 4-1-2017 18:58, Rafa=C5=82 Mi=C5=82ecki wrote:
->> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi Marek,
+
+On Wed, Jan 4, 2017 at 10:19 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 01/04/2017 09:36 PM, Geert Uytterhoeven wrote:
+>> On Wed, Jan 4, 2017 at 3:27 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On 01/02/2017 11:01 AM, Geert Uytterhoeven wrote:
+>>>> On Fri, Dec 30, 2016 at 8:18 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+>>>>> @@ -0,0 +1,38 @@
+>>>>> +* Renesas RCar GyroADC device driver
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible:  Should be "renesas,rcar-gyroadc" for regular GyroADC or
+>>>>> +               "renesas,rcar-gyroadc-r8a7792" for GyroADC without interrupt
+>>>>
+>>>> Please use "renesas,r8a7792-gyroadc" to match existing practices.
+>>>
+>>> Actually, that should probably be gyroadc-r8a7791 if we want to match
+>>> the existing practice. Fixed.
 >>
->> There are some devices (e.g. Netgear R8000 home router) with one chipset
->> model used for different radios, some of them limited to subbands. NVRAM
->> entries don't contain any extra info on such limitations and firmware
->> reports full list of channels to us. We need to store extra limitation
->> info in DT to support such devices properly.
->>
->> Now there is a cfg80211 helper for reading such info use it in brcmfmac.
->> This patch adds check for channel being disabled with orig_flags which
->> is how this wiphy helper and wiphy_register work.
->>
->> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->> ---
->> This patch should probably go through wireless-driver-next which is why
->> it got weird number 4/3. I'm sending it just as a proof of concept.
->> It was succesfully tested on SmartRG SR400ac with BCM43602.
->>
->> V4: Respect IEEE80211_CHAN_DISABLED in orig_flags
->> V5: Update commit message
->> V6: Call wiphy_read_of_freq_limits after brcmf_setup_wiphybands to make =
-it work
->>     with helper setting "flags" instead of "orig_flags".
->> ---
->>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 9 +++++++=
-+-
->>  1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c=
- b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
->> index ccae3bb..a008ba5 100644
->> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
->> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
->> @@ -5886,6 +5886,9 @@ static int brcmf_construct_chaninfo(struct brcmf_c=
-fg80211_info *cfg,
->>                                                      band->band);
->>               channel[index].hw_value =3D ch.control_ch_num;
->>
->> +             if (channel->orig_flags & IEEE80211_CHAN_DISABLED)
->> +                     continue;
->> +
+>> No, "renesas,r8a7791-gyroadc" ("<vendor>,<family>-<block>").
 >
-> So to be clear this is still needed for subsequent calls to
-> brcmf_setup_wiphybands(). The subsequent calls are done from the
-> regulatory notifier. So I think we have an issue with this approach. Say
-> the device comes up with US. That would set DISABLED flags for channels
-> 12 to 14. With a country update to PL we would want to enable channels
-> 12 and 13, right? The orig_flags are copied from the initial flags
-> during wiphy_register() so it seems we will skip enabling 12 and 13. I
-> think we should remove the check above and call
-> wiphy_read_of_freq_limits() as a last step within
-> brcmf_setup_wiphybands(). It means it is called every time, but it
-> safeguards that the limits in DT are always applied.
+> So I guess scif is an exception then ? Example from r8a7791.dtsi :
+>
+>  616     compatible = "renesas,scifa-r8a7791",
+>  617                  "renesas,rcar-gen2-scifa", "renesas,scifa";
 
-I'm not exactly happy with channels management in brcmfmac. Before
-calling wiphy_register it already disables channels unavailable for
-current country. This results in setting IEEE80211_CHAN_DISABLED in
-orig_flags of channels that may become available later, after country
-change. Please note it happens even right now, without this patch.
-Maybe you can workaround this by ignoring orig_flags in custom
-regulatory code, but I'd just prefer to have it nicely handled in the
-first place.
+SCIF follows the old deprecated scheme.
 
-This is the next feature I'm going to work on. AFAIU this patch won't
-be applied for now (it's for wireless-drivers-next and we first need
-to get wiphy_read_of_freq_limits in that tree). By the time that
-happens I may have another patchset cleaning brcmfmac ready. And FWIW
-this patch wouldn't make things worse *at this point* as we don't
-really support country switching for any device yet.
+Gr{oetje,eeting}s,
 
-So I hope problem with channels in brcmfmac doesn't mean we need to
-postpone patches 1-3.
+                        Geert
 
---=20
-Rafa=C5=82
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
