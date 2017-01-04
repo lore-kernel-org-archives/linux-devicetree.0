@@ -1,118 +1,78 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH V2 5/5] ARM: dts: exynos5440: support the phy-pcie node
- for pcie
-Date: Wed, 4 Jan 2017 19:58:22 +0200
-Message-ID: <20170104175822.5zedyszx2phiehuv@kozik-lap>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p10b52f24e7d6c00edb44e4331a1870e4d@epcas1p1.samsung.com>
- <20170104123435.30740-6-jh80.chung@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170104123435.30740-6-jh80.chung@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: bcm-qspi: Enable the driver on BMIPS_GENERIC" to the spi tree
+Date: Wed, 04 Jan 2017 18:37:46 +0000
+Message-ID: <E1cOqRW-00028h-2T@debutante>
+References: <20161230063001.944-2-jaedon.shin@gmail.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20161230063001.944-2-jaedon.shin@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Brown <broonie@kernel.org>, Ralf Baechle <ralf@linux-mips.org>Florian Fainelli <f.fainelli@gmail.com>Mark Brown <broonie@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 09:34:35PM +0900, Jaehoon Chung wrote:
-> Add phy-pcie node for using Exynos5440 pcie.
-> And use the reg-names as "elbi" and "config".
+The patch
 
-'and' is only for joining in compound sentences, don't start with it.
+   spi: bcm-qspi: Enable the driver on BMIPS_GENERIC
 
-> Because the getting configuratioin space address from ranges is old way.
+has been applied to the spi tree at
 
-Spell-check please.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-> It also is helpful to distinguish more clearly.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Distinguish what? Please work on the commit msg, I am not picking 
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
-> Changelog on V2:
-> - Removes the child-node
-> - Fixes the typo
-> - Removes the unnecessary comments
-> 
->  arch/arm/boot/dts/exynos5440.dtsi | 34 ++++++++++++++++++++++------------
->  1 file changed, 22 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-> index 2a2e570..feb074d 100644
-> --- a/arch/arm/boot/dts/exynos5440.dtsi
-> +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> @@ -290,11 +290,22 @@
->  		clock-names = "usbhost";
->  	};
->  
-> +	pcie_phy0: pcie-phy@270000 {
-> +		#phy-cells = <0>;
-> +		compatible = "samsung,exynos5440-pcie-phy";
-> +		reg = <0x270000 0x1000>, <0x271000 0x40>;
-> +	};
-> +
-> +	pcie_phy1: pcie-phy@272000 {
-> +		#phy-cells = <0>;
-> +		compatible = "samsung,exynos5440-pcie-phy";
-> +		reg = <0x272000 0x1000>, <0x271040 0x40>;
-> +	};
-> +
->  	pcie_0: pcie@290000 {
->  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
-> -		reg = <0x290000 0x1000
-> -			0x270000 0x1000
-> -			0x271000 0x40>;
-> +		reg = <0x290000 0x1000>, <0x40000000 0x1000>;
-> +		reg-names = "elbi", "config";
->  		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -303,9 +314,9 @@
->  		#address-cells = <3>;
->  		#size-cells = <2>;
->  		device_type = "pci";
-> -		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
-> -			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
-> -			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
-> +		phys = <&pcie_phy0>;
-> +		ranges = <0x81000000 0 0	  0x40001000 0 0x00010000
-> +			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I think the comments were useful. You can leave them.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
->  		#interrupt-cells = <1>;
->  		interrupt-map-mask = <0 0 0 0>;
->  		interrupt-map = <0x0 0 &gic 53>;
-> @@ -315,9 +326,8 @@
->  
->  	pcie_1: pcie@2a0000 {
->  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
-> -		reg = <0x2a0000 0x1000
-> -			0x272000 0x1000
-> -			0x271040 0x40>;
-> +		reg = <0x2a0000 0x1000>, <0x60000000 0x1000>;
-> +		reg-names = "elbi", "config";
->  		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -326,9 +336,9 @@
->  		#address-cells = <3>;
->  		#size-cells = <2>;
->  		device_type = "pci";
-> -		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
-> -			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
-> -			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
-> +		phys = <&pcie_phy1>;
-> +		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000
-> +			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>;
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-I think the comments were useful. You can leave them.
+Thanks,
+Mark
 
-This looks like depending on the changes in the driver, so I will need a
-tag or stable branch from PCIe maintainers.
+>From 279e4af7b4bebc6a5bf2d0e5b3209f3dcea94a19 Mon Sep 17 00:00:00 2001
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Date: Fri, 30 Dec 2016 15:30:00 +0900
+Subject: [PATCH] spi: bcm-qspi: Enable the driver on BMIPS_GENERIC
 
-Best regards,
-Krzysztof
+The Broadcom BCM7XXX ARM and MIPS based SoCs share a similar hardware
+block for SPI.
+
+Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index ec4aa252d6e8..c982a01022ba 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -162,7 +162,8 @@ config SPI_BCM63XX_HSSPI
+ 
+ config SPI_BCM_QSPI
+ 	tristate "Broadcom BSPI and MSPI controller support"
+-	depends on ARCH_BRCMSTB || ARCH_BCM || ARCH_BCM_IPROC || COMPILE_TEST
++	depends on ARCH_BRCMSTB || ARCH_BCM || ARCH_BCM_IPROC || \
++			BMIPS_GENERIC || COMPILE_TEST
+ 	default ARCH_BCM_IPROC
+ 	help
+ 	  Enables support for the Broadcom SPI flash and MSPI controller.
+-- 
+2.11.0
