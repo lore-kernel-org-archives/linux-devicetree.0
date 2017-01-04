@@ -1,73 +1,181 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] nvmem: imx-ocotp: Add support for i.MX6UL
-Date: Wed, 4 Jan 2017 14:14:19 +0000
-Message-ID: <83b9bad4-550d-c685-8202-7a317e2d4499@linaro.org>
-References: <1480689949-17957-1-git-send-email-d.schultz@phytec.de>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v2 12/19] media: imx: Add SMFC subdev driver
+Date: Wed, 4 Jan 2017 16:23:47 +0200
+Message-ID: <13ff9579-ce8e-9272-ee44-9b597631f6b5@mentor.com>
+References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483477049-19056-13-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480689949-17957-1-git-send-email-d.schultz-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Schultz <d.schultz-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1483477049-19056-13-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/12/16 14:45, Daniel Schultz wrote:
-> This patch adds OCOTP support for the i.MX6UL SoC.
->
-> Signed-off-by: Daniel Schultz <d.schultz-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-
-As Shawn said, there is already a similar patch in the mailing list
-http://www.spinics.net/lists/arm-kernel/msg543203.html
-http://www.spinics.net/lists/arm-kernel/msg543204.html
-
-I will pick that patch +  I will queue up fix from you "[PATCH 3/3] 
-nvmem: imx-ocotp: Fix wrong register size"
-
-thanks,
-srini
+On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
+> This is a media entity subdevice driver for the i.MX Sensor Multi-FIFO
+> Controller module. Video frames are received from the CSI and can
+> be routed to various sinks including the i.MX Image Converter for
+> scaling, color-space conversion, motion compensated deinterlacing,
+> and image rotation.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 > ---
->  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 5 +++--
->  drivers/nvmem/imx-ocotp.c                             | 1 +
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> index 383d588..fcb1a48 100644
-> --- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> @@ -1,13 +1,14 @@
->  Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
->
->  This binding represents the on-chip eFuse OTP controller found on
-> -i.MX6Q/D, i.MX6DL/S, i.MX6SL, and i.MX6SX SoCs.
-> +i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX and i.MX6UL SoCs.
->
->  Required properties:
->  - compatible: should be one of
->  	"fsl,imx6q-ocotp" (i.MX6Q/D/DL/S),
->  	"fsl,imx6sl-ocotp" (i.MX6SL), or
-> -	"fsl,imx6sx-ocotp" (i.MX6SX), followed by "syscon".
-> +	"fsl,imx6sx-ocotp" (i.MX6SX), or
-> +	"fsl,imx6ul-ocotp" (i.MX6UL), followed by "syscon".
->  - reg: Should contain the register base and length.
->  - clocks: Should contain a phandle pointing to the gated peripheral clock.
->
-> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> index ac27b9b..d2f78d3 100644
-> --- a/drivers/nvmem/imx-ocotp.c
-> +++ b/drivers/nvmem/imx-ocotp.c
-> @@ -71,6 +71,7 @@ static int imx_ocotp_read(void *context, unsigned int offset,
->
->  static const struct of_device_id imx_ocotp_dt_ids[] = {
->  	{ .compatible = "fsl,imx6q-ocotp",  (void *)128 },
-> +	{ .compatible = "fsl,imx6ul-ocotp", (void *)128 },
->  	{ .compatible = "fsl,imx6sl-ocotp", (void *)32 },
->  	{ .compatible = "fsl,imx6sx-ocotp", (void *)128 },
->  	{ },
->
+>  drivers/staging/media/imx/Makefile   |   1 +
+>  drivers/staging/media/imx/imx-smfc.c | 739 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 740 insertions(+)
+>  create mode 100644 drivers/staging/media/imx/imx-smfc.c
+> 
+> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
+> index 133672a..3559d7b 100644
+> --- a/drivers/staging/media/imx/Makefile
+> +++ b/drivers/staging/media/imx/Makefile
+> @@ -5,4 +5,5 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media.o
+>  obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-common.o
+>  
+>  obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-csi.o
+> +obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-smfc.o
+
+May be
+
+obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-csi.o imx-smfc.o
+
+>  
+> diff --git a/drivers/staging/media/imx/imx-smfc.c b/drivers/staging/media/imx/imx-smfc.c
+> new file mode 100644
+> index 0000000..565048c
+> --- /dev/null
+> +++ b/drivers/staging/media/imx/imx-smfc.c
+> @@ -0,0 +1,739 @@
+> +/*
+> + * V4L2 Capture SMFC Subdev for Freescale i.MX5/6 SOC
+> + *
+> + * This subdevice handles capture of raw/unconverted video frames
+> + * from the CSI, directly to memory via the Sensor Multi-FIFO Controller.
+> + *
+> + * Copyright (c) 2012-2016 Mentor Graphics Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/fs.h>
+> +#include <linux/timer.h>
+> +#include <linux/sched.h>
+> +#include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-ioctl.h>
+> +#include <media/videobuf2-dma-contig.h>
+> +#include <media/v4l2-subdev.h>
+> +#include <media/v4l2-of.h>
+> +#include <media/v4l2-ctrls.h>
+
+Please sort the list of headers alphabetically.
+
+> +#include <media/imx.h>
+> +#include "imx-media.h"
+> +
+
+[snip]
+
+> +static irqreturn_t imx_smfc_eof_interrupt(int irq, void *dev_id)
+> +{
+> +	struct imx_smfc_priv *priv = dev_id;
+> +	struct imx_media_dma_buf *done, *next;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&priv->irqlock, flags);
+
+spin_lock(&priv->irqlock) should be sufficient.
+
+> +
+> +	if (priv->last_eof) {
+> +		complete(&priv->last_eof_comp);
+> +		priv->last_eof = false;
+> +		goto unlock;
+> +	}
+> +
+> +	/* inform CSI of this EOF so it can monitor frame intervals */
+> +	v4l2_subdev_call(priv->src_sd, core, interrupt_service_routine,
+> +			 0, NULL);
+> +
+> +	done = imx_media_dma_buf_get_active(priv->out_ring);
+> +	/* give the completed buffer to the sink  */
+> +	if (!WARN_ON(!done))
+> +		imx_media_dma_buf_done(done, IMX_MEDIA_BUF_STATUS_DONE);
+> +
+> +	/* priv->next buffer is now the active one */
+> +	imx_media_dma_buf_set_active(priv->next);
+> +
+> +	/* bump the EOF timeout timer */
+> +	mod_timer(&priv->eof_timeout_timer,
+> +		  jiffies + msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
+> +
+> +	if (ipu_idmac_buffer_is_ready(priv->smfc_ch, priv->ipu_buf_num))
+> +		ipu_idmac_clear_buffer(priv->smfc_ch, priv->ipu_buf_num);
+> +
+> +	/* get next queued buffer */
+> +	next = imx_media_dma_buf_get_next_queued(priv->out_ring);
+> +
+> +	ipu_cpmem_set_buffer(priv->smfc_ch, priv->ipu_buf_num, next->phys);
+> +	ipu_idmac_select_buffer(priv->smfc_ch, priv->ipu_buf_num);
+> +
+> +	/* toggle IPU double-buffer index */
+> +	priv->ipu_buf_num ^= 1;
+> +	priv->next = next;
+> +
+> +unlock:
+> +	spin_unlock_irqrestore(&priv->irqlock, flags);
+> +	return IRQ_HANDLED;
+> +}
+> +
+
+[snip]
+
+> +
+> +static const struct platform_device_id imx_smfc_ids[] = {
+> +	{ .name = "imx-ipuv3-smfc" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(platform, imx_smfc_ids);
+> +
+> +static struct platform_driver imx_smfc_driver = {
+> +	.probe = imx_smfc_probe,
+> +	.remove = imx_smfc_remove,
+> +	.id_table = imx_smfc_ids,
+> +	.driver = {
+> +		.name = "imx-ipuv3-smfc",
+> +		.owner = THIS_MODULE,
+
+You can drop owner assignment.
+
+> +	},
+> +};
+> +module_platform_driver(imx_smfc_driver);
+> +
+> +MODULE_DESCRIPTION("i.MX SMFC subdev driver");
+> +MODULE_AUTHOR("Steve Longerbeam <steve_longerbeam@mentor.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:imx-ipuv3-smfc");
+> 
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
