@@ -1,70 +1,134 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to respect extra limits
-Date: Wed,  4 Jan 2017 18:58:32 +0100
-Message-ID: <20170104175832.25996-4-zajec5@gmail.com>
-References: <20170104175832.25996-1-zajec5@gmail.com>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH V2 5/5] ARM: dts: exynos5440: support the phy-pcie node for pcie
+Date: Wed, 4 Jan 2017 13:02:29 -0500
+Message-ID: <000001d266b4$b7a27730$26e76590$@gmail.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com> <CGME20170104123436epcas1p10b52f24e7d6c00edb44e4331a1870e4d@epcas1p1.samsung.com> <20170104123435.30740-6-jh80.chung@samsung.com> <20170104175822.5zedyszx2phiehuv@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170104175832.25996-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170104175822.5zedyszx2phiehuv@kozik-lap>
+Content-Language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Krzysztof Kozlowski' <krzk@kernel.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, kishon@ti.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Wednesday, January 4, 2017 12:58 PM, Krzysztof Kozlowski wrote:
+> 
+> On Wed, Jan 04, 2017 at 09:34:35PM +0900, Jaehoon Chung wrote:
+> > Add phy-pcie node for using Exynos5440 pcie.
+> > And use the reg-names as "elbi" and "config".
+> 
+> 'and' is only for joining in compound sentences, don't start with it.
+> 
+> > Because the getting configuratioin space address from ranges is old way.
+> 
+> Spell-check please.
+> 
+> > It also is helpful to distinguish more clearly.
+> 
+> Distinguish what? Please work on the commit msg, I am not picking
+> >
+> > Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> > ---
+> > Changelog on V2:
+> > - Removes the child-node
+> > - Fixes the typo
+> > - Removes the unnecessary comments
+> >
+> >  arch/arm/boot/dts/exynos5440.dtsi | 34 ++++++++++++++++++++++----------
+> --
+> >  1 file changed, 22 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5440.dtsi
+> b/arch/arm/boot/dts/exynos5440.dtsi
+> > index 2a2e570..feb074d 100644
+> > --- a/arch/arm/boot/dts/exynos5440.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> > @@ -290,11 +290,22 @@
+> >  		clock-names = "usbhost";
+> >  	};
+> >
+> > +	pcie_phy0: pcie-phy@270000 {
+> > +		#phy-cells = <0>;
+> > +		compatible = "samsung,exynos5440-pcie-phy";
+> > +		reg = <0x270000 0x1000>, <0x271000 0x40>;
+> > +	};
+> > +
+> > +	pcie_phy1: pcie-phy@272000 {
+> > +		#phy-cells = <0>;
+> > +		compatible = "samsung,exynos5440-pcie-phy";
+> > +		reg = <0x272000 0x1000>, <0x271040 0x40>;
+> > +	};
+> > +
+> >  	pcie_0: pcie@290000 {
+> >  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
+> > -		reg = <0x290000 0x1000
+> > -			0x270000 0x1000
+> > -			0x271000 0x40>;
+> > +		reg = <0x290000 0x1000>, <0x40000000 0x1000>;
+> > +		reg-names = "elbi", "config";
+> >  		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+> > @@ -303,9 +314,9 @@
+> >  		#address-cells = <3>;
+> >  		#size-cells = <2>;
+> >  		device_type = "pci";
+> > -		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000
+> /* configuration space */
+> > -			  0x81000000 0 0	  0x40001000 0 0x00010000   /*
+> downstream I/O */
+> > -			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /*
+> non-prefetchable memory */
+> > +		phys = <&pcie_phy0>;
+> > +		ranges = <0x81000000 0 0	  0x40001000 0 0x00010000
+> > +			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>;
+> 
+> I think the comments were useful. You can leave them.
+> 
+> >  		#interrupt-cells = <1>;
+> >  		interrupt-map-mask = <0 0 0 0>;
+> >  		interrupt-map = <0x0 0 &gic 53>;
+> > @@ -315,9 +326,8 @@
+> >
+> >  	pcie_1: pcie@2a0000 {
+> >  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
+> > -		reg = <0x2a0000 0x1000
+> > -			0x272000 0x1000
+> > -			0x271040 0x40>;
+> > +		reg = <0x2a0000 0x1000>, <0x60000000 0x1000>;
+> > +		reg-names = "elbi", "config";
+> >  		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> > @@ -326,9 +336,9 @@
+> >  		#address-cells = <3>;
+> >  		#size-cells = <2>;
+> >  		device_type = "pci";
+> > -		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000
+> /* configuration space */
+> > -			  0x81000000 0 0	  0x60001000 0 0x00010000   /*
+> downstream I/O */
+> > -			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /*
+> non-prefetchable memory */
+> > +		phys = <&pcie_phy1>;
+> > +		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000
+> > +			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>;
+> 
+> I think the comments were useful. You can leave them.
 
-There are some devices (e.g. Netgear R8000 home router) with one chipset
-model used for different radios, some of them limited to subbands. NVRAM
-entries don't contain any extra info on such limitations and firmware
-reports full list of channels to us. We need to store extra limitation
-info in DT to support such devices properly.
+I think so, too.
+Please leave the comments
 
-Now there is a cfg80211 helper for reading such info use it in brcmfmac.
-This patch adds check for channel being disabled with orig_flags which
-is how this wiphy helper and wiphy_register work.
+Best regards,
+Jingoo Han
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-This patch should probably go through wireless-driver-next which is why
-it got weird number 4/3. I'm sending it just as a proof of concept.
-It was succesfully tested on SmartRG SR400ac with BCM43602.
-
-V4: Respect IEEE80211_CHAN_DISABLED in orig_flags
-V5: Update commit message
-V6: Call wiphy_read_of_freq_limits after brcmf_setup_wiphybands to make it work
-    with helper setting "flags" instead of "orig_flags".
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index ccae3bb..a008ba5 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -5886,6 +5886,9 @@ static int brcmf_construct_chaninfo(struct brcmf_cfg80211_info *cfg,
- 						       band->band);
- 		channel[index].hw_value = ch.control_ch_num;
- 
-+		if (channel->orig_flags & IEEE80211_CHAN_DISABLED)
-+			continue;
-+
- 		/* assuming the chanspecs order is HT20,
- 		 * HT40 upper, HT40 lower, and VHT80.
- 		 */
-@@ -6478,7 +6481,11 @@ static int brcmf_setup_wiphy(struct wiphy *wiphy, struct brcmf_if *ifp)
- 		}
- 	}
- 	err = brcmf_setup_wiphybands(wiphy);
--	return err;
-+	if (err)
-+		return err;
-+	wiphy_read_of_freq_limits(wiphy);
-+
-+	return 0;
- }
- 
- static s32 brcmf_config_dongle(struct brcmf_cfg80211_info *cfg)
--- 
-2.10.1
+> 
+> This looks like depending on the changes in the driver, so I will need a
+> tag or stable branch from PCIe maintainers.
+> 
+> Best regards,
+> Krzysztof
