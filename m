@@ -1,58 +1,24 @@
-From: "Y.T. Tang" <yuantian.tang@nxp.com>
-Subject: RE: [PATCH 0/3] QorIQ TMU bindings and device tree update
-Date: Wed, 4 Jan 2017 09:19:32 +0000
-Message-ID: <DB6PR0402MB2837D623CA7FA287642CA5BEF0610@DB6PR0402MB2837.eurprd04.prod.outlook.com>
-References: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: "oss@buserror.net" <oss@buserror.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Scott Wood <scott.wood@nxp.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Troy Jia <hongtao.jia@nxp.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/2] ARM: dts: oxnas: Update with dt-bindings
+Date: Wed,  4 Jan 2017 10:30:44 +0100
+Message-ID: <20170104093046.12428-1-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-oxnas@lists.tuxfamily.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-++Scott NXP email address.
+This patchsets updates the OX810SE and OX820 dtsi with the reset and
+clock dt-bindings includes then replaces magic values with bindings
+defines.
 
-Hi Scott,
+Neil Armstrong (2):
+  ARM: dts: OX810: Update with dt-bindings includes
+  ARM: dts: OX820: Update with dt-bindings includes
 
-Could you please give these patch set a little higher priority as Troy's la=
-st day is Friday?
-We want those get ACKed or address all the major issues before Friday.
+ arch/arm/boot/dts/ox810se.dtsi | 10 ++++++----
+ arch/arm/boot/dts/ox820.dtsi   | 14 ++++++++------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
 
-Thanks,
-Yuantian
-
-> -----Original Message-----
-> From: Jia Hongtao [mailto:hongtao.jia@nxp.com]
-> Sent: Wednesday, January 04, 2017 4:58 PM
-> To: oss@buserror.net; rui.zhang@intel.com; edubezval@gmail.com; Y.T.
-> Tang <yuantian.tang@nxp.com>; robh+dt@kernel.org
-> Cc: linux-pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Troy Jia <hongtao.jia@nxp.com>
-> Subject: [PATCH 0/3] QorIQ TMU bindings and device tree update
->=20
-> As Rui Zhang suggested I combine TMU binding patch and two device tree
-> patchset together. He will take all of them after the device tree patchse=
-t got
-> ACK.
->=20
-> @Scott please help to review the device tree patchset.
-> Thanks.
->=20
-> Jia Hongtao (3):
->   dt-bindings: Update QorIQ TMU thermal bindings
->   powerpc/mpc85xx: Update TMU device tree node for T1040/T1042
->   powerpc/mpc85xx: Update TMU device tree node for T1023/T1024
->=20
->  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 7
-> +++++++
->  arch/powerpc/boot/dts/fsl/t1023si-post.dtsi                 | 4 ++--
->  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi                 | 4 ++--
->  3 files changed, 11 insertions(+), 4 deletions(-)
->=20
-> --
-> 2.1.0.27.g96db324
-
+-- 
+2.7.0
