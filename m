@@ -1,101 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 06/11] mfd: axp20x: add separate MFD cell for AXP223
-Date: Wed, 4 Jan 2017 09:45:37 +0000
-Message-ID: <20170104094537.GS27589@dell>
-References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
- <20161209110419.28981-7-quentin.schulz@free-electrons.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v5 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
+ device on TM2 board
+Date: Wed, 04 Jan 2017 10:57:11 +0100
+Message-ID: <d9bb4651-0962-f99e-bd18-d73264543a5e@samsung.com>
+References: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170104081522epcas5p1985a9b2404976bd26df4e13fa5ffe1bc@epcas5p1.samsung.com>
+ <1483517711-23849-4-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161209110419.28981-7-quentin.schulz@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1483517711-23849-4-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 09 Dec 2016, Quentin Schulz wrote:
-
-> The AXP223 shares most of its logic with the AXP221 but has some
-> differences for the VBUS power supply driver. Thus, to probe the driver
-> with the correct compatible, the AXP221 and the AXP223 now have separate
-> MFD cells.
-> 
-> AXP221 MFD cells are renamed from axp22x_cells to axp221_cells to avoid
-> confusion.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> ---
-> 
-> v2:
->  - correct indentation,
->  - renaming axp22x_cells to axp221_cells to avoid confusion between axp22x,
-> axp221 and axp223
-> 
->  drivers/mfd/axp20x.c | 28 ++++++++++++++++++++++++----
->  1 file changed, 24 insertions(+), 4 deletions(-)
-
-Applied, thanks.
-
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 6ee2cc6..b31f123 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -591,7 +591,22 @@ static struct mfd_cell axp20x_cells[] = {
->  	},
->  };
->  
-> -static struct mfd_cell axp22x_cells[] = {
-> +static struct mfd_cell axp221_cells[] = {
-> +	{
-> +		.name		= "axp20x-pek",
-> +		.num_resources	= ARRAY_SIZE(axp22x_pek_resources),
-> +		.resources	= axp22x_pek_resources,
-> +	}, {
-> +		.name		= "axp20x-regulator",
-> +	}, {
-> +		.name		= "axp20x-usb-power-supply",
-> +		.of_compatible	= "x-powers,axp221-usb-power-supply",
-> +		.num_resources	= ARRAY_SIZE(axp22x_usb_power_supply_resources),
-> +		.resources	= axp22x_usb_power_supply_resources,
-> +	},
-> +};
-> +
-> +static struct mfd_cell axp223_cells[] = {
->  	{
->  		.name			= "axp20x-pek",
->  		.num_resources		= ARRAY_SIZE(axp22x_pek_resources),
-> @@ -600,7 +615,7 @@ static struct mfd_cell axp22x_cells[] = {
->  		.name			= "axp20x-regulator",
->  	}, {
->  		.name		= "axp20x-usb-power-supply",
-> -		.of_compatible	= "x-powers,axp221-usb-power-supply",
-> +		.of_compatible	= "x-powers,axp223-usb-power-supply",
->  		.num_resources	= ARRAY_SIZE(axp22x_usb_power_supply_resources),
->  		.resources	= axp22x_usb_power_supply_resources,
->  	},
-> @@ -793,9 +808,14 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
->  		axp20x->regmap_irq_chip = &axp20x_regmap_irq_chip;
->  		break;
->  	case AXP221_ID:
-> +		axp20x->nr_cells = ARRAY_SIZE(axp221_cells);
-> +		axp20x->cells = axp221_cells;
-> +		axp20x->regmap_cfg = &axp22x_regmap_config;
-> +		axp20x->regmap_irq_chip = &axp22x_regmap_irq_chip;
-> +		break;
->  	case AXP223_ID:
-> -		axp20x->nr_cells = ARRAY_SIZE(axp22x_cells);
-> -		axp20x->cells = axp22x_cells;
-> +		axp20x->nr_cells = ARRAY_SIZE(axp223_cells);
-> +		axp20x->cells = axp223_cells;
->  		axp20x->regmap_cfg = &axp22x_regmap_config;
->  		axp20x->regmap_irq_chip = &axp22x_regmap_irq_chip;
->  		break;
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gMDQuMDEuMjAxNyAwOToxNSwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IEZyb206IEh5dW5nd29u
+IEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPgo+IFRoaXMgcGF0Y2ggYWRkIHRoZSBw
+YW5lbCBkZXZpY2UgdHJlZSBub2RlIGZvciBTNkUzSEEyIGRpc3BsYXkKPiBjb250cm9sbGVyIHRv
+IFRNMiBkdHMuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdA
+c2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1z
+dW5nLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5n
+LmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5n
+LmNvbT4KClJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgot
+LQpSZWdhcmRzCkFuZHJ6ZWoKCj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4
+eW5vczU0MzMtdG0yLmR0cyB8IDE3ICsrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxNyBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9l
+eHlub3MvZXh5bm9zNTQzMy10bTIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5
+bm9zNTQzMy10bTIuZHRzCj4gaW5kZXggNWI5NDUxZC4uYjNiYTFhYyAxMDA2NDQKPiAtLS0gYS9h
+cmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMKPiArKysgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMKPiBAQCAtMzA0LDExICsz
+MDQsMjggQEAKPiAgCQkJcmVnID0gPDE+Owo+ICAKPiAgCQkJZHNpX291dDogZW5kcG9pbnQgewo+
+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbj47Cj4gIAkJCQlzYW1zdW5nLGJ1cnN0
+LWNsb2NrLWZyZXF1ZW5jeSA9IDw1MTIwMDAwMDA+Owo+ICAJCQkJc2Ftc3VuZyxlc2MtY2xvY2st
+ZnJlcXVlbmN5ID0gPDE2MDAwMDAwPjsKPiAgCQkJfTsKPiAgCQl9Owo+ICAJfTsKPiArCj4gKwlw
+YW5lbEAwIHsKPiArCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlM2hhMiI7Cj4gKwkJcmVnID0g
+PDA+Owo+ICsJCXZkZDMtc3VwcGx5ID0gPCZsZG8yN19yZWc+Owo+ICsJCXZjaS1zdXBwbHkgPSA8
+JmxkbzI4X3JlZz47Cj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZzAgMCBHUElPX0FDVElWRV9MT1c+
+Owo+ICsJCWVuYWJsZS1ncGlvcyA9IDwmZ3BmMSA1IEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsJCXRl
+LWdwaW9zID0gPCZncGYxIDMgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwo+ICsJCXBvcnQgewo+ICsJ
+CQlwYW5lbF9pbjogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0
+PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiAgfTsKPiAgCj4gICZoc2kyY18wIHsKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
