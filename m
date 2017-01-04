@@ -1,305 +1,78 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5/6] arm64: dts: msm8916: Add CoreSight components
-Date: Wed,  4 Jan 2017 13:35:01 +0000
-Message-ID: <1483536902-21450-6-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 6/6] arm64: dts: db820c: add support to volume up key
+Date: Wed,  4 Jan 2017 13:35:02 +0000
+Message-ID: <1483536902-21450-7-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, Georgi Djakov <georgi.djakov@linaro.org>
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+This patch adds support to volume-up key found on the board.
 
-Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
-
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi | 254 ++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi           |   3 +-
- 2 files changed, 256 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+ .../arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi | 12 ++++++++++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi          | 19 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
-new file mode 100644
-index 0000000..c008dc7
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
-@@ -0,0 +1,254 @@
-+/*
-+ * Copyright (c) 2013 - 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+&soc {
-+
-+	tpiu@820000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0x820000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		port {
-+			tpiu_in: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out1>;
-+			};
-+		};
-+	};
-+
-+	funnel@821000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0x821000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/*
-+			 * Not described input ports:
-+			 * 0 - connected to Resource and Power Manger CPU ETM
-+			 * 1 - not-connected
-+			 * 2 - connected to Modem CPU ETM
-+			 * 3 - not-connected
-+			 * 5 - not-connected
-+			 * 6 - connected trought funnel to Wireless CPU ETM
-+			 * 7 - connected to STM component
-+			 */
-+			port@4 {
-+				reg = <4>;
-+				funnel0_in4: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel1_out>;
-+				};
-+			};
-+			port@8 {
-+				reg = <0>;
-+				funnel0_out: endpoint {
-+					remote-endpoint = <&etf_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	replicator@824000 {
-+		compatible = "qcom,coresight-replicator1x", "arm,primecell";
-+		reg = <0x824000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				replicator_out0: endpoint {
-+					remote-endpoint = <&etr_in>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				replicator_out1: endpoint {
-+					remote-endpoint = <&tpiu_in>;
-+				};
-+			};
-+			port@2 {
-+				reg = <0>;
-+				replicator_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etf_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	etf@825000 {
-+		compatible = "arm,coresight-tmc", "arm,primecell";
-+		reg = <0x825000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				etf_out: endpoint {
-+					remote-endpoint = <&replicator_in>;
-+				};
-+			};
-+			port@1 {
-+				reg = <0>;
-+				etf_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	etr@826000 {
-+		compatible = "arm,coresight-tmc", "arm,primecell";
-+		reg = <0x826000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		port {
-+			etr_in: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out0>;
-+			};
-+		};
-+	};
-+
-+	funnel@841000 {	/* APSS funnel only 4 inputs are used */
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0x841000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				funnel1_in0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				funnel1_in1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm1_out>;
-+				};
-+			};
-+			port@2 {
-+				reg = <2>;
-+				funnel1_in2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm2_out>;
-+				};
-+			};
-+			port@3 {
-+				reg = <3>;
-+				funnel1_in3: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm3_out>;
-+				};
-+			};
-+			port@4 {
-+				reg = <0>;
-+				funnel1_out: endpoint {
-+					remote-endpoint = <&funnel0_in4>;
-+				};
-+			};
-+		};
-+	};
-+
-+	etm@85c000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0x85c000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		cpu = <&CPU0>;
-+
-+		port {
-+			etm0_out: endpoint {
-+				remote-endpoint = <&funnel1_in0>;
-+			};
-+		};
-+	};
-+
-+	etm@85d000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0x85d000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		cpu = <&CPU1>;
-+
-+		port {
-+			etm1_out: endpoint {
-+				remote-endpoint = <&funnel1_in1>;
-+			};
-+		};
-+	};
-+
-+	etm@85e000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0x85e000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		cpu = <&CPU2>;
-+
-+		port {
-+			etm2_out: endpoint {
-+				remote-endpoint = <&funnel1_in2>;
-+			};
-+		};
-+	};
-+
-+	etm@85f000 {
-+		compatible = "arm,coresight-etm4x", "arm,primecell";
-+		reg = <0x85f000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+		clock-names = "apb_pclk", "atclk";
-+
-+		cpu = <&CPU3>;
-+
-+		port {
-+			etm3_out: endpoint {
-+				remote-endpoint = <&funnel1_in3>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index f8ff327..50838b3 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8916.h>
- #include <dt-bindings/reset/qcom,gcc-msm8916.h>
-+#include <dt-bindings/clock/qcom,rpmcc.h>
- 
- / {
- 	model = "Qualcomm Technologies, Inc. MSM8916";
-@@ -995,5 +996,5 @@
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+index 6c1628c..b1142c4 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+@@ -12,4 +12,16 @@
+ 			power-source = <2>; // PM8994_GPIO_S4, 1.8V
  		};
  	};
++
++	volume_up_gpio: pm8996_gpio2 {
++		pinconf {
++			pins = "gpio2";
++			function = "normal";
++			input-enable;
++			drive-push-pull;
++			bias-pull-up;
++			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++			power-source = <PM8994_GPIO_S4>; // 1.8V
++		};
++	};
  };
--
- #include "msm8916-pins.dtsi"
-+#include "msm8916-coresight.dtsi"
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 422959b..d2196fc 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -15,6 +15,8 @@
+ #include "pm8994.dtsi"
+ #include "apq8096-db820c-pins.dtsi"
+ #include "apq8096-db820c-pmic-pins.dtsi"
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	aliases {
+@@ -87,4 +89,21 @@
+ 			status = "okay";
+ 		};
+ 	};
++
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&volume_up_gpio>;
++
++		button@0 {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
++		};
++	};
+ };
 -- 
 2.10.1
