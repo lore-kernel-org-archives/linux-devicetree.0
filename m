@@ -1,531 +1,124 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH 2/3] gpio: Add gpio driver support for ThunderX and OCTEON-TX
-Date: Tue,  3 Jan 2017 16:55:33 -0800
-Message-ID: <1483491334-167095-3-git-send-email-ddaney.cavm@gmail.com>
-References: <1483491334-167095-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1483491334-167095-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: David Daney <david.daney@cavium.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Subject: Re: [PATCH v2 9/9] ARM: sunxi: Convert pinctrl nodes to generic
+ bindings
+Date: Wed, 4 Jan 2017 02:16:23 +0000
+Message-ID: <58723369-50ad-1792-9be1-c277eb719044@arm.com>
+References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+On 18/10/16 08:43, Chen-Yu Tsai wrote:
 
-Cavium ThunderX and OCTEON-TX are arm64 based SoCs.  Add driver for
-the on-chip GPIO pins.
+Hi Maxime, Chen-Yu,
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- drivers/gpio/Kconfig         |   7 +
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-thunderx.c | 467 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 475 insertions(+)
- create mode 100644 drivers/gpio/gpio-thunderx.c
+I just stumbled over this patch in Maxime's -next tree and think I
+missed it before. I guess it's a bit late, but I just wanted to express
+my concerns and write out the issues with the current DT approach:
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index ed37e59..6655477 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -421,6 +421,13 @@ config GPIO_TS4800
- 	help
- 	  This driver support TS-4800 FPGA GPIO controllers.
- 
-+config GPIO_THUNDERX
-+	tristate "Cavium ThunderX/OCTEON-TX GPIO"
-+	depends on ARCH_THUNDER || (64BIT && COMPILE_TEST)
-+	help
-+	  Say yes here to support the on-chip GPIO lines on the ThunderX
-+	  and OCTEON-TX families of SoCs.
-+
- config GPIO_TZ1090
- 	bool "Toumaz Xenif TZ1090 GPIO support"
- 	depends on SOC_TZ1090
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index d074c22..ab387bf 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -107,6 +107,7 @@ obj-$(CONFIG_GPIO_SYSCON)	+= gpio-syscon.o
- obj-$(CONFIG_GPIO_TB10X)	+= gpio-tb10x.o
- obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
- obj-$(CONFIG_GPIO_TEGRA)	+= gpio-tegra.o
-+obj-$(CONFIG_GPIO_THUNDERX)	+= gpio-thunderx.o
- obj-$(CONFIG_GPIO_TIMBERDALE)	+= gpio-timberdale.o
- obj-$(CONFIG_GPIO_PALMAS)	+= gpio-palmas.o
- obj-$(CONFIG_GPIO_TPIC2810)	+= gpio-tpic2810.o
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-new file mode 100644
-index 0000000..7830f4d
---- /dev/null
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -0,0 +1,467 @@
-+/*
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ *
-+ * Copyright (C) 2016 Cavium Inc.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/spinlock.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/gpio.h>
-+#include <linux/irq.h>
-+#include <linux/pci.h>
-+#include <linux/io.h>
-+
-+
-+#define GPIO_RX_DAT	0x0
-+#define GPIO_TX_SET	0x8
-+#define GPIO_TX_CLR	0x10
-+#define GPIO_CONST	0x90
-+#define  GPIO_CONST_GPIOS_MASK 0xff
-+#define GPIO_BIT_CFG	0x400
-+#define  GPIO_BIT_CFG_TX_OE		BIT(0)
-+#define  GPIO_BIT_CFG_PIN_XOR		BIT(1)
-+#define  GPIO_BIT_CFG_INT_EN		BIT(2)
-+#define  GPIO_BIT_CFG_INT_TYPE		BIT(3)
-+#define  GPIO_BIT_CFG_FIL_CNT_SHIFT	4
-+#define  GPIO_BIT_CFG_FIL_SEL_SHIFT	8
-+#define  GPIO_BIT_CFG_TX_OD		BIT(12)
-+#define  GPIO_BIT_CFG_PIN_SEL_MASK	GENMASK(25, 16)
-+#define GPIO_INTR	0x800
-+#define  GPIO_INTR_INTR			BIT(0)
-+#define  GPIO_INTR_INTR_W1S		BIT(1)
-+#define  GPIO_INTR_ENA_W1C		BIT(2)
-+#define  GPIO_INTR_ENA_W1S		BIT(3)
-+#define GPIO_2ND_BANK	0x1400
-+
-+#define GLITCH_FILTER_400NS ((4ull << GPIO_BIT_CFG_FIL_SEL_SHIFT) | \
-+			     (9ull << GPIO_BIT_CFG_FIL_CNT_SHIFT))
-+
-+/*
-+ * The address offset of the GPIO configuration register for a given
-+ * line.
-+ */
-+static unsigned int bit_cfg_reg(unsigned int line)
-+{
-+	return 8 * line + GPIO_BIT_CFG;
-+}
-+
-+static unsigned int intr_reg(unsigned int line)
-+{
-+	return 8 * line + GPIO_INTR;
-+}
-+
-+struct thunderx_gpio;
-+
-+struct thunderx_irqdev {
-+	struct thunderx_gpio	*gpio;
-+	char			*name;
-+	unsigned int		line;
-+};
-+
-+struct thunderx_gpio {
-+	struct gpio_chip	chip;
-+	u8 __iomem		*register_base;
-+	struct msix_entry	*msix_entries;
-+	struct thunderx_irqdev	*irqdev_entries;
-+	raw_spinlock_t		lock;
-+	unsigned long		invert_mask[2];
-+	unsigned long		od_mask[2];
-+	int			base_msi;
-+};
-+
-+static bool thunderx_gpio_is_gpio(struct thunderx_gpio *gpio, unsigned int line)
-+{
-+	u64 bit_cfg = readq(gpio->register_base + bit_cfg_reg(line));
-+	bool rv = (bit_cfg & GPIO_BIT_CFG_PIN_SEL_MASK) == 0;
-+
-+	WARN_RATELIMIT(!rv, "Pin %d not available for GPIO\n", line);
-+
-+	return rv;
-+}
-+
-+static int thunderx_gpio_dir_in(struct gpio_chip *chip, unsigned int line)
-+{
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+
-+	if (!thunderx_gpio_is_gpio(gpio, line))
-+		return -EIO;
-+
-+	raw_spin_lock(&gpio->lock);
-+	clear_bit(line, gpio->invert_mask);
-+	clear_bit(line, gpio->od_mask);
-+	writeq(GLITCH_FILTER_400NS, gpio->register_base + bit_cfg_reg(line));
-+	raw_spin_unlock(&gpio->lock);
-+	return 0;
-+}
-+
-+static void thunderx_gpio_set(struct gpio_chip *chip, unsigned int line,
-+			      int value)
-+{
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	int bank = line / 64;
-+	int bank_bit = line % 64;
-+
-+	void __iomem *reg = gpio->register_base +
-+		(bank * GPIO_2ND_BANK) + (value ? GPIO_TX_SET : GPIO_TX_CLR);
-+
-+	writeq(1ull << bank_bit, reg);
-+}
-+
-+static int thunderx_gpio_dir_out(struct gpio_chip *chip, unsigned int line,
-+				 int value)
-+{
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	u64 bit_cfg = GPIO_BIT_CFG_TX_OE;
-+
-+	if (!thunderx_gpio_is_gpio(gpio, line))
-+		return -EIO;
-+
-+	raw_spin_lock(&gpio->lock);
-+
-+	thunderx_gpio_set(chip, line, value);
-+
-+	if (test_bit(line, gpio->invert_mask))
-+		bit_cfg |= GPIO_BIT_CFG_PIN_XOR;
-+
-+	if (test_bit(line, gpio->od_mask))
-+		bit_cfg |= GPIO_BIT_CFG_TX_OD;
-+
-+	writeq(bit_cfg, gpio->register_base + bit_cfg_reg(line));
-+
-+	raw_spin_unlock(&gpio->lock);
-+	return 0;
-+}
-+
-+static int thunderx_gpio_set_single_ended(struct gpio_chip *chip,
-+					  unsigned int line,
-+					  enum single_ended_mode mode)
-+{
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+
-+	if (mode == LINE_MODE_OPEN_SOURCE)
-+		return -ENOTSUPP;
-+
-+	if (!thunderx_gpio_is_gpio(gpio, line))
-+		return -EIO;
-+
-+	raw_spin_lock(&gpio->lock);
-+	if (mode == LINE_MODE_OPEN_DRAIN) {
-+		set_bit(line, gpio->invert_mask);
-+		set_bit(line, gpio->od_mask);
-+	} else {
-+		clear_bit(line, gpio->invert_mask);
-+		clear_bit(line, gpio->od_mask);
-+	}
-+	raw_spin_unlock(&gpio->lock);
-+
-+	return 0;
-+}
-+
-+static int thunderx_gpio_get(struct gpio_chip *chip, unsigned int line)
-+{
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	int bank = line / 64;
-+	int bank_bit = line % 64;
-+	u64 read_bits = readq(gpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_RX_DAT);
-+
-+	read_bits >>= bank_bit;
-+
-+	if (test_bit(line, gpio->invert_mask))
-+		return !(read_bits & 1);
-+	else
-+		return read_bits & 1;
-+}
-+
-+static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
-+				       unsigned long *mask, unsigned long *bits)
-+{
-+	int bank;
-+	u64 set_bits, clear_bits;
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+
-+	for (bank = 0; bank <= (chip->ngpio / 64); bank++) {
-+		set_bits = bits[bank] & mask[bank];
-+		clear_bits = ~bits[bank] & mask[bank];
-+		writeq(set_bits, gpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_SET);
-+		writeq(clear_bits, gpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_CLR);
-+	}
-+}
-+
-+static irqreturn_t thunderx_gpio_chain_handler(int irq, void *dev)
-+{
-+	struct thunderx_irqdev *irqdev = dev;
-+	int chained_irq;
-+	int ret;
-+
-+	chained_irq = irq_find_mapping(irqdev->gpio->chip.irqdomain, irqdev->line);
-+	if (!chained_irq)
-+		return IRQ_NONE;
-+
-+	ret = generic_handle_irq(chained_irq);
-+
-+	return ret ? IRQ_NONE : IRQ_HANDLED;
-+}
-+
-+static int thunderx_gpio_irq_request_resources(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+	struct thunderx_irqdev *irqdev;
-+	int err;
-+
-+	if (!thunderx_gpio_is_gpio(gpio, line))
-+		return -EIO;
-+
-+	irqdev = gpio->irqdev_entries + line;
-+
-+	irqdev->gpio = gpio;
-+	irqdev->line = line;
-+	irqdev->name = devm_kasprintf(chip->parent, GFP_KERNEL, "gpio-%d", line + chip->base);
-+
-+	writeq(GPIO_INTR_ENA_W1C, gpio->register_base + intr_reg(line));
-+
-+	err = devm_request_irq(chip->parent, gpio->msix_entries[line].vector,
-+			       thunderx_gpio_chain_handler, IRQF_NO_THREAD, irqdev->name, irqdev);
-+	return err;
-+}
-+
-+static void thunderx_gpio_irq_release_resources(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+	struct thunderx_irqdev *irqdev;
-+
-+	irqdev = gpio->irqdev_entries + line;
-+
-+	devm_free_irq(chip->parent, gpio->msix_entries[line].vector, irqdev);
-+
-+	writeq(GPIO_INTR_ENA_W1C, gpio->register_base + intr_reg(line));
-+
-+	devm_kfree(chip->parent, irqdev->name);
-+}
-+
-+static void thunderx_gpio_irq_ack(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+
-+	writeq(GPIO_INTR_INTR,
-+	       gpio->register_base + intr_reg(line));
-+}
-+
-+static void thunderx_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+
-+	writeq(GPIO_INTR_ENA_W1C, gpio->register_base + intr_reg(line));
-+}
-+
-+static void thunderx_gpio_irq_mask_ack(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+
-+	writeq(GPIO_INTR_ENA_W1C | GPIO_INTR_INTR,
-+	       gpio->register_base + intr_reg(line));
-+}
-+
-+static void thunderx_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+
-+	writeq(GPIO_INTR_ENA_W1S, gpio->register_base + intr_reg(line));
-+}
-+
-+static int thunderx_gpio_irq_set_type(struct irq_data *data,
-+				      unsigned int flow_type)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *gpio = container_of(chip, struct thunderx_gpio, chip);
-+	unsigned int line = data->hwirq;
-+	u64 bit_cfg;
-+
-+	irqd_set_trigger_type(data, flow_type);
-+
-+	bit_cfg = GLITCH_FILTER_400NS | GPIO_BIT_CFG_INT_EN;
-+
-+	if (flow_type & IRQ_TYPE_EDGE_BOTH) {
-+		irq_set_handler_locked(data, handle_edge_irq);
-+		bit_cfg |= GPIO_BIT_CFG_INT_TYPE;
-+	} else {
-+		irq_set_handler_locked(data, handle_level_irq);
-+	}
-+
-+	raw_spin_lock(&gpio->lock);
-+	if (flow_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_LOW)) {
-+		bit_cfg |= GPIO_BIT_CFG_PIN_XOR;
-+		set_bit(line, gpio->invert_mask);
-+	} else {
-+		clear_bit(line, gpio->invert_mask);
-+	}
-+	clear_bit(line, gpio->od_mask);
-+	writeq(bit_cfg, gpio->register_base + bit_cfg_reg(line));
-+	raw_spin_unlock(&gpio->lock);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static struct irq_chip thunderx_gpio_irq_chip = {
-+	.name			= "GPIO",
-+	.irq_enable		= thunderx_gpio_irq_unmask,
-+	.irq_disable		= thunderx_gpio_irq_mask,
-+	.irq_ack		= thunderx_gpio_irq_ack,
-+	.irq_mask		= thunderx_gpio_irq_mask,
-+	.irq_mask_ack		= thunderx_gpio_irq_mask_ack,
-+	.irq_unmask		= thunderx_gpio_irq_unmask,
-+	.irq_set_type		= thunderx_gpio_irq_set_type,
-+	.irq_request_resources	= thunderx_gpio_irq_request_resources,
-+	.irq_release_resources	= thunderx_gpio_irq_release_resources,
-+	.flags			= IRQCHIP_SET_TYPE_MASKED
-+};
-+
-+static int thunderx_gpio_probe(struct pci_dev *pdev,
-+			       const struct pci_device_id *id)
-+{
-+	void __iomem * const *tbl;
-+	struct device *dev = &pdev->dev;
-+	struct thunderx_gpio *gpio;
-+	struct gpio_chip *chip;
-+	int ngpio, i;
-+	int err = 0;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	raw_spin_lock_init(&gpio->lock);
-+	chip = &gpio->chip;
-+
-+	pci_set_drvdata(pdev, gpio);
-+
-+	err = pcim_enable_device(pdev);
-+	if (err) {
-+		dev_err(dev, "Failed to enable PCI device: err %d\n", err);
-+		goto out;
-+	}
-+
-+	err = pcim_iomap_regions(pdev, 1 << 0, KBUILD_MODNAME);
-+	if (err) {
-+		dev_err(dev, "Failed to iomap PCI device: err %d\n", err);
-+		goto out;
-+	}
-+
-+	tbl = pcim_iomap_table(pdev);
-+	gpio->register_base = tbl[0];
-+	if (!gpio->register_base) {
-+		dev_err(dev, "Cannot map PCI resource\n");
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	if (pdev->subsystem_device == 0xa10a) {
-+		/* CN88XX has no GPIO_CONST register*/
-+		ngpio = 50;
-+		gpio->base_msi = 48;
-+	} else {
-+		u64 c = readq(gpio->register_base + GPIO_CONST);
-+
-+		ngpio = c & GPIO_CONST_GPIOS_MASK;
-+		gpio->base_msi = (c >> 8) & 0xff;
-+	}
-+
-+	gpio->msix_entries = devm_kzalloc(&pdev->dev, sizeof(struct msix_entry) * ngpio, GFP_KERNEL);
-+	if (!gpio->msix_entries) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	gpio->irqdev_entries = devm_kzalloc(&pdev->dev, sizeof(struct thunderx_irqdev) * ngpio, GFP_KERNEL);
-+	if (!gpio->irqdev_entries) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < ngpio; i++)
-+		gpio->msix_entries[i].entry = gpio->base_msi + (2 * i);
-+
-+	err = pci_enable_msix(pdev, gpio->msix_entries, ngpio);
-+	if (err < 0)
-+		goto out;
-+
-+	chip->label = KBUILD_MODNAME;
-+	chip->parent = &pdev->dev;
-+	chip->owner = THIS_MODULE;
-+	chip->base = -1; /* System allocated */
-+	chip->can_sleep = false;
-+	chip->ngpio = ngpio;
-+	chip->direction_input = thunderx_gpio_dir_in;
-+	chip->get = thunderx_gpio_get;
-+	chip->direction_output = thunderx_gpio_dir_out;
-+	chip->set = thunderx_gpio_set;
-+	chip->set_multiple = thunderx_gpio_set_multiple;
-+	chip->set_single_ended = thunderx_gpio_set_single_ended;
-+	err = gpiochip_add(chip);
-+	if (err)
-+		goto msix_out;
-+
-+	err = gpiochip_irqchip_add(chip, &thunderx_gpio_irq_chip, 0,
-+				   handle_level_irq, IRQ_TYPE_NONE);
-+	if (err) {
-+		dev_err(dev, "gpiochip_irqchip_add failed: %d\n", err);
-+		goto irqchip_out;
-+	}
-+
-+	dev_info(&pdev->dev, "ThunderX GPIO: %d lines with base %d.\n",
-+		 ngpio, chip->base);
-+	return 0;
-+
-+irqchip_out:
-+	gpiochip_remove(chip);
-+
-+msix_out:
-+	pci_disable_msix(pdev);
-+
-+out:
-+	pci_set_drvdata(pdev, NULL);
-+	return err;
-+}
-+
-+static void thunderx_gpio_remove(struct pci_dev *pdev)
-+{
-+	struct thunderx_gpio *gpio = pci_get_drvdata(pdev);
-+
-+	pci_disable_msix(pdev);
-+	gpiochip_remove(&gpio->chip);
-+	pci_set_drvdata(pdev, NULL);
-+}
-+
-+static const struct pci_device_id thunderx_gpio_id_table[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, 0xA00A) },
-+	{ 0, }	/* end of table */
-+};
-+
-+MODULE_DEVICE_TABLE(pci, thunderx_gpio_id_table);
-+
-+static struct pci_driver thunderx_gpio_driver = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = thunderx_gpio_id_table,
-+	.probe = thunderx_gpio_probe,
-+	.remove = thunderx_gpio_remove,
-+};
-+
-+module_pci_driver(thunderx_gpio_driver);
-+
-+MODULE_DESCRIPTION("Cavium Inc. ThunderX/OCTEON-TX GPIO Driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.3.1
+> On Tue, Oct 11, 2016 at 11:46 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> Now that we can handle the generic pinctrl bindings, convert our DT to it.
 
+Do we really want to do this? This makes the new DTs incompatible to
+older kernels, for no good reasons. Or are there any? Does this "lock
+muxed pins" functionality (users cannot export GPIOs which are used by a
+driver) rely on the new binding?
+
+Anyway ...
+I understand that in sunxi world a kernel is always accompanied by a
+matching .dtb, but we should really get away from this, as this doesn't
+scale and more importantly creates big headaches in arm64 world:
+
+1) Scaling: Providing a board .dtb together with a kernel puts the
+burden of board support to each distribution, which means that _every_
+distribution needs to ship matching DTs for _every_ board. There are a
+lot of Allwinner boards (around 100 these days?), I am not sure every
+distribution seriously wants to put every .dtb into some bootloader
+accessible directory. Also this kind of defeats the original DT idea,
+where the .dtb is provided by firmware and a generic kernel just works
+with whatever it gets presented.
+Either distributions will not support certain boards because of this or
+there is a lot of maintenance churn in distros.
+Yes, arm(32) has lived with this for years, but that doesn't mean we
+need to keep it this way.
+
+2) Firmware DT: We start to see more and more Allwinner boards with SPI
+flash now, which is supposed to hold some firmware bits. This gives the
+ultimate opportunity to store the DT in there as well. BUT this relies
+on there being _one_ DT (to rule them all). I don't see issues with
+older DTs not having full functionality on newer kernels (this would be
+a reason for a firmware update), but there should at any given time _one
+best_ DT which is a candidate for being burned into the flash.
+Otherwise people are stuck with a certain kernel version (range).
+As an example in this case: Kernel 4.9 is LTS and will probably be
+elected by Debian to be _the_ kernel for the next release and supported
+over several years. But it relies on an old style DT (allwinner,pins
+properties), newer pinctrl DT nodes will be rejected by the driver.
+But for new features (upcoming HDMI support for H3, for instance) to be
+usable a newer DT is required, even if an old kernel will ignore those
+features. So if the flash provides a new DT, we cannot boot stable
+Debian, whereas if the flash provides a legacy DT, we cannot use new
+features in newer kernels.
+Not changing the DT in a way that breaks forward compatibility can be
+done, for instance we just drop this patch here. For new SoCs (like A64
+or H5, where there are no backward compatibility issues) we can happily
+use the new bindings in the official DTs, but for anything already
+supported by older kernels we just stick which what we have. We have to
+keep the old support code in anyway.
+Yes, providing both forward and backward compatibility is not going to
+be a walk in the park, but is inevitable if we want to get those board
+out of the toy area. Other platform can cope with this.
+
+3) On EFI setups the generation(!) of the DT is actually done in EFI
+firmware (very much like in the original PowerPC OF setup). It is
+expected that the generation relies on a static DT scaffold, but
+firmware is free to add or remove nodes. Providing different DTs for
+each kernel is hard to integrate into this approach.
+
+4) Generic boot images: On the x86 side everybody expects this just to
+work: You put in a generic USB stick with one (or two) generic kernels
+and it just boots, without this installation having to know each
+supported machine beforehand. It even works with machines newer than the
+distro. While the last is hard work, it can be done, but only if the DT
+is provided by firmware, which requires there to be one best DT for each
+board.
+
+5) arm64: Distributions providing support for arm64 machines generally
+do not seem to provide DTs, because most platform do not require them
+to. It is not clear that every distribution will do so for the sake or
+supporting Allwinner boards.
+
+6) Other OSes (or U-Boot) are affected by this as well. Eventually this
+will lead them to create their own DTs (and their own bindings?), which
+makes this situation really a mess. We can hardly request them to stick
+with the Linux bindings if we break them regularly.
+
+7) Dynamic DT alteration (by firmware/U-Boot and using overlays, for
+instance), will be much easier if the DT is originally stored in the
+firmware and snippets are stored there as well. This is for instance a
+use case for the (optional) WiFi module on the Pine64.
+
+8) Those patches also create a lot of potential merge conflicts, since
+they touch almost every sunxi DT file. They are trivial to solve,
+probably, but still tend to create a lot of work and cause nuisance for
+other people (as proven with the A64 CCU driver in this cycle).
+
+So can I ask that we start taking this seriously and stop doing things
+which prevent Allwinner boards from being supported properly?
+Which would first involve dropping this very patch?
+Having done breakage in the past (with "allwinner,sun7i-a20-mmc", for
+instance) is no excuse for doing it again. And especially I want to
+avoid this habit creeping into the arm64 world (thinking about the H5
+here, which may be impacted by this very patch, for instance).
+
+Cheers,
+Andre.
