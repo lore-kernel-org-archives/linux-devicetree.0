@@ -1,73 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] drm/panel: Add support for S6E3HA2 panel driver
- on TM2 board
-Date: Wed, 4 Jan 2017 08:44:39 -0600
-Message-ID: <20170104144439.bzjab3ovixyt3i5b@rob-hp-laptop>
-References: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170104081522epcas5p112698b2499e56dc9027ec1f57f8964ee@epcas5p1.samsung.com>
- <1483517711-23849-3-git-send-email-hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH 2/5] dt: bindings: i2c-mux-pca954x: Add documentation for
+ interrupt controller
+Date: Wed, 4 Jan 2017 08:45:44 -0600
+Message-ID: <20170104144544.e7isnrg5pynipwng@rob-hp-laptop>
+References: <1483522197-38819-1-git-send-email-preid@electromag.com.au>
+ <1483522197-38819-3-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483517711-23849-3-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: devicetree@vger.kernel.org, krzk@kernel.org, cw00.choi@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, jh80.chung@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, kgene@kernel.org, Hyungwon Hwang <human.hwang@samsung.com>
+In-Reply-To: <1483522197-38819-3-git-send-email-preid@electromag.com.au>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: peda@axentia.se, wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKYW4gMDQsIDIwMTcgYXQgMDU6MTU6MTBQTSArMDkwMCwgSG9lZ2V1biBLd29uIHdy
-b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIE1JUEktRFNJIGJhc2VkIFM2RTNIQTIg
-QU1PTEVEIHBhbmVsCj4gZHJpdmVyLiBUaGlzIHBhbmVsIGhhcyAxNDQweDI1NjAgcmVzb2x1dGlv
-biBpbiA1LjctaW5jaCBwaHlzaWNhbAo+IHBhbmVsIGluIHRoZSBUTTIgZGV2aWNlLgo+IAo+IFNp
-Z25lZC1vZmYtYnk6IERvbmdod2EgTGVlIDxkaDA5LmxlZUBzYW1zdW5nLmNvbT4KPiBTaWduZWQt
-b2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4uaHdhbmdAc2Ftc3VuZy5jb20+Cj4gU2lnbmVk
-LW9mZi1ieTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Cj4gLS0tCj4g
-IC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQgICAgIHwgIDQw
-ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
-IHwgICA2ICsKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2Ftc3VuZy1zNmUz
-aGEyLmMgICAgICB8IDc0MSArKysrKysrKysrKysrKysrKysrKysKPiAgNCBmaWxlcyBjaGFuZ2Vk
-LCA3ODggaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEyLnR4dAo+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNhbXN1bmctczZl
-M2hhMi5jCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIudHh0Cj4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi42ODc5ZjUxCj4gLS0tIC9kZXYvbnVsbAo+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Nh
-bXN1bmcsczZlM2hhMi50eHQKPiBAQCAtMCwwICsxLDQwIEBACj4gK1NhbXN1bmcgUzZFM0hBMiA1
-LjciIDE0NDB4MjU2MCBBTU9MRUQgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
-KyAgLSBjb21wYXRpYmxlOiAic2Ftc3VuZyxzNmUzaGEyIgo+ICsgIC0gcmVnOiB0aGUgdmlydHVh
-bCBjaGFubmVsIG51bWJlciBvZiBhIERTSSBwZXJpcGhlcmFsCj4gKyAgLSB2ZGQzLXN1cHBseTog
-SS9PIHZvbHRhZ2Ugc3VwcGx5Cj4gKyAgLSB2Y2ktc3VwcGx5OiB2b2x0YWdlIHN1cHBseSBmb3Ig
-YW5hbG9nIGNpcmN1aXRzCj4gKyAgLSByZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRoZSBy
-ZXNldCBwaW4gKGFjdGl2ZSBsb3cpCj4gKyAgLSBlbmFibGUtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZv
-ciB0aGUgcGFuZWwgZW5hYmxlIHBpbiAoYWN0aXZlIGhpZ2gpCj4gKyAgLSB0ZS1ncGlvczogYSBH
-UElPIHNwZWMgZm9yIHRoZSB0ZWFyaW5nIGVmZmVjdCBzeW5jaHJvbml6YXRpb24gc2lnbmFsCj4g
-KyAgICBncGlvIHBpbiAoYWN0aXZlIGhpZ2gpCj4gKwo+ICtUaGUgZGV2aWNlIG5vZGUgY2FuIGNv
-bnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxkCj4gKydlbmRwb2ludCcg
-bm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVkIGluIFsxXS4gVGhpcwo+ICtu
-b2RlIHNob3VsZCBkZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KPiArCj4gK1sxXTogRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4g
-Kwo+ICtFeGFtcGxlOgo+ICsKPiArJmRzaSB7Cj4gKwkuLi4KPiArCj4gKwlwYW5lbEAwIHsKPiAr
-CQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlM2hhMiI7Cj4gKwkJcmVnID0gPDA+Owo+ICsJCXZk
-ZDMtc3VwcGx5ID0gPCZsZG8yN19yZWc+Owo+ICsJCXZjaS1zdXBwbHkgPSA8JmxkbzI4X3JlZz47
-Cj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZzAgMCBHUElPX0FDVElWRV9MT1c+Owo+ICsJCWVuYWJs
-ZS1ncGlvcyA9IDwmZ3BmMSA1IEdQSU9fQUNUSVZFX0hJR0g+Owo+ICsJCXRlLWdwaW9zID0gPCZn
-cGYxIDMgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwo+ICsJCXBvcnQgewo+ICsJCQlwYW5lbF9pbjog
-ZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKCkFzIEkgc2Fp
-ZCBwcmV2aW91c2x5LCBpdCBtYWtlcyBubyBzZW5zZSB0byBoYXZlIGEgZ3JhcGggdG8gZHNpX291
-dCBpdCBpcyAKc2ltcGx5IHRoZSBwYXJlbnQgbm9kZS4KCj4gKwkJCX07Cj4gKwkJfTsKPiArCX07
-Cj4gK307Cj4gKwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Jan 04, 2017 at 05:29:54PM +0800, Phil Reid wrote:
+> Various muxes can aggregate multiple irq lines and provide a control
+> register to determine the active line. Add bindings for interrupt
+> controller support.
+> 
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> index cf53d5f..9f7c275 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -19,7 +19,14 @@ Optional Properties:
+>    - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
+>      children in idle state. This is necessary for example, if there are several
+>      multiplexers on the bus and the devices behind them use same I2C addresses.
+> -
+> +  - interrupt-parent: Phandle for the interrupt controller that services
+> +    interrupts for this device.
+> +  - interrupts: Interrupt mapping for IRQ.
+> +  - interrupt-controller: Marks the device node as a interrupt controller.
+> +  - #interrupt-cells : Should be two.
+> +    - first cell is the pin number
+> +    - second cell is used to specify flags.
+> +    See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  
+>  Example:
+>  
+> @@ -29,6 +36,11 @@ Example:
+>  		#size-cells = <0>;
+>  		reg = <0x74>;
+>  
+> +		interrupt-parent = <&ipic>;
+> +		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#interrupt-cells=<2>;
+
+Needs spaces around the '='. With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +
+>  		i2c@2 {
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> -- 
+> 1.8.3.1
+> 
