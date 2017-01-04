@@ -1,158 +1,63 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] mfd: dt: Add Aspeed Low Pin Count Controller
- bindings
-Date: Wed, 4 Jan 2017 11:36:20 +0000
-Message-ID: <20170104113620.GD27589@dell>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 5/5] mfd: dt: Add bindings for the Aspeed SoC Display
+ Controller (GFX)
+Date: Wed, 4 Jan 2017 11:36:45 +0000
+Message-ID: <20170104113645.GF27589@dell>
 References: <20161220071535.27542-1-andrew@aj.id.au>
- <20161220071535.27542-4-andrew@aj.id.au>
+ <20161220071535.27542-6-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161220071535.27542-4-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161220071535.27542-6-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Tue, 20 Dec 2016, Andrew Jeffery wrote:
 
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> The Aspeed SoC Display Controller is presented as a syscon device to
+> arbitrate access by display and pinmux drivers. Video pinmux
+> configuration on fifth generation SoCs depends on bits in both the
+> System Control Unit and the Display Controller.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  .../devicetree/bindings/mfd/aspeed-lpc.txt         | 111 +++++++++++++++++++++
->  1 file changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+>  Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
 
 Applied, thanks.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
 > new file mode 100644
-> index 000000000000..a97131aba446
+> index 000000000000..aea5370efd97
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> @@ -0,0 +1,111 @@
-> +======================================================================
-> +Device tree bindings for the Aspeed Low Pin Count (LPC) Bus Controller
-> +======================================================================
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> @@ -0,0 +1,17 @@
+> +* Device tree bindings for Aspeed SoC Display Controller (GFX)
 > +
-> +The LPC bus is a means to bridge a host CPU to a number of low-bandwidth
-> +peripheral devices, replacing the use of the ISA bus in the age of PCI[0]. The
-> +primary use case of the Aspeed LPC controller is as a slave on the bus
-> +(typically in a Baseboard Management Controller SoC), but under certain
-> +conditions it can also take the role of bus master.
+> +The Aspeed SoC Display Controller primarily does as its name suggests, but also
+> +participates in pinmux requests on the g5 SoCs. It is therefore considered a
+> +syscon device.
 > +
-> +The LPC controller is represented as a multi-function device to account for the
-> +mix of functionality it provides. The principle split is between the register
-> +layout at the start of the I/O space which is, to quote the Aspeed datasheet,
-> +"basically compatible with the [LPC registers from the] popular BMC controller
-> +H8S/2168[1]", and everything else, where everything else is an eclectic
-> +collection of functions with a esoteric register layout. "Everything else",
-> +here labeled the "host" portion of the controller, includes, but is not limited
-> +to:
-> +
-> +* An IPMI Block Transfer[2] Controller
-> +
-> +* An LPC Host Controller: Manages LPC functions such as host vs slave mode, the
-> +  physical properties of some LPC pins, configuration of serial IRQs, and
-> +  APB-to-LPC bridging amonst other functions.
-> +
-> +* An LPC Host Interface Controller: Manages functions exposed to the host such
-> +  as LPC firmware hub cycles, configuration of the LPC-to-AHB mapping, UART
-> +  management and bus snoop configuration.
-> +
-> +* A set of SuperIO[3] scratch registers: Enables implementation of e.g. custom
-> +  hardware management protocols for handover between the host and baseboard
-> +  management controller.
-> +
-> +Additionally the state of the LPC controller influences the pinmux
-> +configuration, therefore the host portion of the controller is exposed as a
-> +syscon as a means to arbitrate access.
-> +
-> +[0] http://www.intel.com/design/chipsets/industry/25128901.pdf
-> +[1] https://www.renesas.com/en-sg/doc/products/mpumcu/001/rej09b0078_h8s2168.pdf?key=7c88837454702128622bee53acbda8f4
-> +[2] http://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmi-second-gen-interface-spec-v2-rev1-1.pdf
-> +[3] https://en.wikipedia.org/wiki/Super_I/O
-> +
-> +Required properties
-> +===================
-> +
-> +- compatible:	One of:
-> +		"aspeed,ast2400-lpc", "simple-mfd"
-> +		"aspeed,ast2500-lpc", "simple-mfd"
-> +
-> +- reg:		contains the physical address and length values of the Aspeed
-> +                LPC memory region.
-> +
-> +- #address-cells: <1>
-> +- #size-cells:	<1>
-> +- ranges: 	Maps 0 to the physical address and length of the LPC memory
-> +                region
-> +
-> +Required LPC Child nodes
-> +========================
-> +
-> +BMC Node
-> +--------
-> +
-> +- compatible:	One of:
-> +		"aspeed,ast2400-lpc-bmc"
-> +		"aspeed,ast2500-lpc-bmc"
-> +
-> +- reg:		contains the physical address and length values of the
-> +                H8S/2168-compatible LPC controller memory region
-> +
-> +Host Node
-> +---------
-> +
-> +- compatible:   One of:
-> +		"aspeed,ast2400-lpc-host", "simple-mfd", "syscon"
-> +		"aspeed,ast2500-lpc-host", "simple-mfd", "syscon"
-> +
-> +- reg:		contains the address and length values of the host-related
-> +                register space for the Aspeed LPC controller
-> +
-> +- #address-cells: <1>
-> +- #size-cells:	<1>
-> +- ranges: 	Maps 0 to the address and length of the host-related LPC memory
-> +                region
+> +Required properties:
+> +- compatible:		"aspeed,ast2500-gfx", "syscon"
+> +- reg:			contains offset/length value of the GFX memory
+> +			region.
 > +
 > +Example:
 > +
-> +lpc: lpc@1e789000 {
-> +	compatible = "aspeed,ast2500-lpc", "simple-mfd";
-> +	reg = <0x1e789000 0x1000>;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges = <0x0 0x1e789000 0x1000>;
-> +
-> +	lpc_bmc: lpc-bmc@0 {
-> +		compatible = "aspeed,ast2500-lpc-bmc";
-> +		reg = <0x0 0x80>;
-> +	};
-> +
-> +	lpc_host: lpc-host@80 {
-> +		compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
-> +		reg = <0x80 0x1e0>;
-> +		reg-io-width = <4>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x80 0x1e0>;
-> +	};
+> +gfx: display@1e6e6000 {
+> +	compatible = "aspeed,ast2500-gfx", "syscon";
+> +	reg = <0x1e6e6000 0x1000>;
 > +};
-> +
 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
