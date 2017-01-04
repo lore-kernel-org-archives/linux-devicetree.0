@@ -1,107 +1,139 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: staging/fbtft: Backward Device Tree compatibility in a drm version
-Date: Wed, 4 Jan 2017 18:14:57 +0100
-Message-ID: <f27e5817-2f53-13cf-5009-02f11106c9d4@tronnes.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/8] ARM: dts: armada-388-clearfog: Utilize new DSA binding
+Date: Wed, 04 Jan 2017 18:23:48 +0100
+Message-ID: <87shoyeo2j.fsf@free-electrons.com>
+References: <20170102022249.10657-1-f.fainelli@gmail.com>
+        <20170102022249.10657-4-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: OSUOSL Drivers <devel@driverdev.osuosl.org>, DRI Development <dri-devel@lists.freedesktop.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170102022249.10657-4-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Florian Fainelli's
+        message of "Sun, 1 Jan 2017 18:22:44 -0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Florian,
+ 
+ On lun., janv. 02 2017, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-I'm working on a drivers/gpu/drm version of drivers/staging/fbtft which
-are drivers for tiny, usually SPI connected, displays. Now I'm wondering
-if I can be backwards compatible and support Device Trees written for the
-fbtft drivers. The main obstacle as I understand it, is the init property
-which are values to be written to the controller registers to support a
-different panel with the same controller. It even has encoded values for
-delays... My understanding is that this is not accepted.
-It's in fact a display panel description in the form of register values
-and delays.
+> Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net:
+> dsa: Document new binding"). The legacy binding node is kept included, but is
+> marked disabled.
+>
 
-Here is what a binding doc would look like for one of the fbtft drivers:
+I tested this patch on mvebu/dt (I needed to reduce the context to apply
+the patch due to the changes made by Russell King on this file). I also
+set the status of the old binding to "disable" (instead of "okay").
 
-* Samsung S6D02A1 Framebuffer Driver
+It seems to work with the limited test did:
+ifconfig eth1 up
+udhcpc -i lan1
+iperf -c mylaptop
 
-Required properties:
-   - compatible: Should be "samsung,s6d02a1".
+(same for lan4)
 
-The node for this driver must be a child node of a SPI controller, hence
-all mandatory properties described in ../spi/spi-bus.txt must be specified.
+However is there a way to be sure that the new binding is used?
 
-Optional properties:
-- dc-gpios:    D/C pin used with the 4-wire 8-bit data serial interface mode
-- reset-gpios:    Reset pin
-- led-gpios:    Backlight control
-- width:    Panel width in pixels
-- height:    Panel height in pixels
-- rotate:    Panel rotation in degrees counter clockwise (0,90,180,270)
-- bgr:        Panel is wired as BGR565 instead of RGB565
-- buswidth:    Bit width of the bus, in the case of SPI: 8 (4-wire) or 9 
-(3-wire) bits.
-- txbuflen:    Size of transfer buffer. Used for little-big endian 
-conversion.
-- debug:    Control debug output to the kernel log
-- init:        Panel initialization sequence overriding the driver default.
-         Values OR'ed with:
-         0x1000000 - Write the following values to this register.
-         0x2000000 - Delay in milliseconds
+Gregory
 
-Example:
-mz61581: mz61581@0{
-     compatible = "samsung,s6d02a1";
-     reg = <0>;
-     spi-max-frequency = <128000000>;
-     spi-cpol;
-     spi-cpha;
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-388-clearfog.dts | 65 +++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
+> index 71ce201c903e..35207aa1f4ec 100644
+> --- a/arch/arm/boot/dts/armada-388-clearfog.dts
+> +++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+> @@ -351,6 +351,8 @@
+>  	};
+>  
+>  	dsa@0 {
+> +		status = "okay";
+> +
+>  		compatible = "marvell,dsa";
+>  		dsa,ethernet = <&eth1>;
+>  		dsa,mii-bus = <&mdio>;
+> @@ -444,3 +446,66 @@
+>  		status = "disabled";
+>  	};
+>  };
+> +
+> +&mdio {
+> +	status = "okay";
+> +
+> +	switch@4 {
+> +		compatible = "marvell,mv88e6085";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <4>;
+> +		pinctrl-0 = <&clearfog_dsa0_clk_pins &clearfog_dsa0_pins>;
+> +		pinctrl-names = "default";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				label = "lan5";
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				label = "lan4";
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +				label = "lan3";
+> +			};
+> +
+> +			port@3 {
+> +				reg = <3>;
+> +				label = "lan2";
+> +			};
+> +
+> +			port@4 {
+> +				reg = <4>;
+> +				label = "lan1";
+> +			};
+> +
+> +			port@5 {
+> +				reg = <5>;
+> +				label = "cpu";
+> +				ethernet = <&eth1>;
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			port@6 {
+> +				/* 88E1512 external phy */
+> +				reg = <6>;
+> +				label = "lan6";
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.9.3
+>
 
-     width = <320>;
-     height = <480>;
-     rotate = <270>;
-     bgr;
-     buswidth = <8>;
-     txbuflen = <32768>;
-
-     reset-gpios = <&gpio 15 0>;
-     dc-gpios = <&gpio 25 0>;
-     led-gpios = <&gpio 18 0>;
-
-     init = <0x10000b0 00
-         0x1000011
-         0x20000ff
-         0x10000b3 0x02 0x00 0x00 0x00
-         0x10000c0 0x13 0x3b 0x00 0x02 0x00 0x01 0x00 0x43
-         0x10000c1 0x08 0x16 0x08 0x08
-         0x10000c4 0x11 0x07 0x03 0x03
-         0x10000c6 0x00
-         0x10000c8 0x03 0x03 0x13 0x5c 0x03 0x07 0x14 0x08 0x00 0x21 
-0x08 0x14 0x07 0x53 0x0c 0x13 0x03 0x03 0x21 0x00
-         0x1000035 0x00
-         0x1000036 0xa0
-         0x100003a 0x55
-         0x1000044 0x00 0x01
-         0x10000d0 0x07 0x07 0x1d 0x03
-         0x10000d1 0x03 0x30 0x10
-         0x10000d2 0x03 0x14 0x04
-         0x1000029
-         0x100002c>;
-
-     /* This is a workaround to make sure the init sequence slows down 
-and doesn't fail */
-     debug = <3>;
-};
-
-
-Noralf.
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
