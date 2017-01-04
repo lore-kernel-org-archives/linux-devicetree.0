@@ -1,124 +1,104 @@
-From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Subject: Re: [PATCH v2 9/9] ARM: sunxi: Convert pinctrl nodes to generic
- bindings
-Date: Wed, 4 Jan 2017 02:16:23 +0000
-Message-ID: <58723369-50ad-1792-9be1-c277eb719044@arm.com>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
+From: Jerry Huang <jerry.huang-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Wed, 4 Jan 2017 02:24:59 +0000
+Message-ID: <DB5PR0401MB181361EBAD1B2BFA8DC5ED7AFE610@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+ <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
+ <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
+ <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/10/16 08:43, Chen-Yu Tsai wrote:
-
-Hi Maxime, Chen-Yu,
-
-I just stumbled over this patch in Maxime's -next tree and think I
-missed it before. I guess it's a bit late, but I just wanted to express
-my concerns and write out the issues with the current DT approach:
-
-> On Tue, Oct 11, 2016 at 11:46 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> Now that we can handle the generic pinctrl bindings, convert our DT to it.
-
-Do we really want to do this? This makes the new DTs incompatible to
-older kernels, for no good reasons. Or are there any? Does this "lock
-muxed pins" functionality (users cannot export GPIOs which are used by a
-driver) rely on the new binding?
-
-Anyway ...
-I understand that in sunxi world a kernel is always accompanied by a
-matching .dtb, but we should really get away from this, as this doesn't
-scale and more importantly creates big headaches in arm64 world:
-
-1) Scaling: Providing a board .dtb together with a kernel puts the
-burden of board support to each distribution, which means that _every_
-distribution needs to ship matching DTs for _every_ board. There are a
-lot of Allwinner boards (around 100 these days?), I am not sure every
-distribution seriously wants to put every .dtb into some bootloader
-accessible directory. Also this kind of defeats the original DT idea,
-where the .dtb is provided by firmware and a generic kernel just works
-with whatever it gets presented.
-Either distributions will not support certain boards because of this or
-there is a lot of maintenance churn in distros.
-Yes, arm(32) has lived with this for years, but that doesn't mean we
-need to keep it this way.
-
-2) Firmware DT: We start to see more and more Allwinner boards with SPI
-flash now, which is supposed to hold some firmware bits. This gives the
-ultimate opportunity to store the DT in there as well. BUT this relies
-on there being _one_ DT (to rule them all). I don't see issues with
-older DTs not having full functionality on newer kernels (this would be
-a reason for a firmware update), but there should at any given time _one
-best_ DT which is a candidate for being burned into the flash.
-Otherwise people are stuck with a certain kernel version (range).
-As an example in this case: Kernel 4.9 is LTS and will probably be
-elected by Debian to be _the_ kernel for the next release and supported
-over several years. But it relies on an old style DT (allwinner,pins
-properties), newer pinctrl DT nodes will be rejected by the driver.
-But for new features (upcoming HDMI support for H3, for instance) to be
-usable a newer DT is required, even if an old kernel will ignore those
-features. So if the flash provides a new DT, we cannot boot stable
-Debian, whereas if the flash provides a legacy DT, we cannot use new
-features in newer kernels.
-Not changing the DT in a way that breaks forward compatibility can be
-done, for instance we just drop this patch here. For new SoCs (like A64
-or H5, where there are no backward compatibility issues) we can happily
-use the new bindings in the official DTs, but for anything already
-supported by older kernels we just stick which what we have. We have to
-keep the old support code in anyway.
-Yes, providing both forward and backward compatibility is not going to
-be a walk in the park, but is inevitable if we want to get those board
-out of the toy area. Other platform can cope with this.
-
-3) On EFI setups the generation(!) of the DT is actually done in EFI
-firmware (very much like in the original PowerPC OF setup). It is
-expected that the generation relies on a static DT scaffold, but
-firmware is free to add or remove nodes. Providing different DTs for
-each kernel is hard to integrate into this approach.
-
-4) Generic boot images: On the x86 side everybody expects this just to
-work: You put in a generic USB stick with one (or two) generic kernels
-and it just boots, without this installation having to know each
-supported machine beforehand. It even works with machines newer than the
-distro. While the last is hard work, it can be done, but only if the DT
-is provided by firmware, which requires there to be one best DT for each
-board.
-
-5) arm64: Distributions providing support for arm64 machines generally
-do not seem to provide DTs, because most platform do not require them
-to. It is not clear that every distribution will do so for the sake or
-supporting Allwinner boards.
-
-6) Other OSes (or U-Boot) are affected by this as well. Eventually this
-will lead them to create their own DTs (and their own bindings?), which
-makes this situation really a mess. We can hardly request them to stick
-with the Linux bindings if we break them regularly.
-
-7) Dynamic DT alteration (by firmware/U-Boot and using overlays, for
-instance), will be much easier if the DT is originally stored in the
-firmware and snippets are stored there as well. This is for instance a
-use case for the (optional) WiFi module on the Pine64.
-
-8) Those patches also create a lot of potential merge conflicts, since
-they touch almost every sunxi DT file. They are trivial to solve,
-probably, but still tend to create a lot of work and cause nuisance for
-other people (as proven with the A64 CCU driver in this cycle).
-
-So can I ask that we start taking this seriously and stop doing things
-which prevent Allwinner boards from being supported properly?
-Which would first involve dropping this very patch?
-Having done breakage in the past (with "allwinner,sun7i-a20-mmc", for
-instance) is no excuse for doing it again. And especially I want to
-avoid this habit creeping into the arm64 world (thinking about the H5
-here, which may be impacted by this very patch, for instance).
-
-Cheers,
-Andre.
+SGksIFJvYiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVy
+cmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5
+IDA0LCAyMDE3IDU6MjQgQU0NCj4gVG86IEplcnJ5IEh1YW5nIDxqZXJyeS5odWFuZ0BueHAuY29t
+Pg0KPiBDYzogYmFsYmlAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4u
+bWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyBsaW51eEBhcm1saW51eC5v
+cmcudWs7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC11c2JAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8zXSBVU0Iz
+L0RXQzM6IEFkZCBwcm9wZXJ0eSAic25wcywgaW5jci1idXJzdC0NCj4gdHlwZS1hZGp1c3RtZW50
+IiBmb3IgSU5DUiBidXJzdCB0eXBlDQo+IA0KPiBPbiBUaHUsIERlYyAyMiwgMjAxNiBhdCA4OjUy
+IFBNLCBKZXJyeSBIdWFuZyA8amVycnkuaHVhbmdAbnhwLmNvbT4gd3JvdGU6DQo+ID4gSGksIFJv
+YiwNCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogUm9iIEhlcnJp
+bmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+ID4+IFNlbnQ6IEZyaWRheSwgRGVjZW1iZXIg
+MjMsIDIwMTYgMjo0NSBBTQ0KPiA+PiBUbzogSmVycnkgSHVhbmcgPGplcnJ5Lmh1YW5nQG54cC5j
+b20+DQo+ID4+IENjOiBiYWxiaUBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgY2F0
+YWxpbi5tYXJpbmFzQGFybS5jb207DQo+ID4+IHdpbGwuZGVhY29uQGFybS5jb207IGxpbnV4QGFy
+bWxpbnV4Lm9yZy51azsNCj4gPj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXVz
+YkB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWFybS0ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2MyAyLzNdIFVTQjMvRFdDMzogQWRkIHByb3BlcnR5ICJzbnBzLA0KPiA+PiBpbmNyLWJ1
+cnN0LSB0eXBlLWFkanVzdG1lbnQiIGZvciBJTkNSIGJ1cnN0IHR5cGUNCj4gPj4NCj4gPj4gT24g
+TW9uLCBEZWMgMTksIDIwMTYgYXQgMDU6MjU6NTNQTSArMDgwMCwgQ2hhbmdtaW5nIEh1YW5nIHdy
+b3RlOg0KPiA+PiA+IE5ldyBwcm9wZXJ0eSAic25wcyxpbmNyLWJ1cnN0LXR5cGUtYWRqdXN0bWVu
+dCA9IDx4PiwgPHk+IiBmb3INCj4gPj4gPiBVU0IzLjANCj4gPj4gRFdDMy4NCj4gPj4gPiBGaWVs
+ZCAieCI6IDEvMCAtIHVuZGVmaW5lZCBsZW5ndGggSU5DUiBidXJzdCB0eXBlIGVuYWJsZSBvciBu
+b3Q7DQo+ID4+ID4gRmllbGQNCj4gPj4gPiAieSI6IElOQ1I0L0lOQ1I4L0lOQ1IxNi9JTkNSMzIv
+SU5DUjY0L0lOQ1IxMjgvSU5DUjI1NiBidXJzdCB0eXBlLg0KPiA+PiA+DQo+ID4+ID4gV2hpbGUg
+ZW5hYmxpbmcgdW5kZWZpbmVkIGxlbmd0aCBJTkNSIGJ1cnN0IHR5cGUgYW5kIElOQ1IxNiBidXJz
+dA0KPiA+PiA+IHR5cGUsIGdldCBiZXR0ZXIgd3JpdGUgcGVyZm9ybWFuY2Ugb24gTlhQIExheWVy
+c2NhcGUgcGxhdGZvcm06DQo+ID4+ID4gYXJvdW5kIDMlIGltcHJvdmVtZW50IChmcm9tIDM2NE1C
+L3MgdG8gMzc1TUIvcykuDQo+ID4+ID4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBDaGFuZ21pbmcg
+SHVhbmcgPGplcnJ5Lmh1YW5nQG54cC5jb20+DQo+ID4+ID4gLS0tDQo+ID4+ID4gQ2hhbmdlcyBp
+biB2MzoNCj4gPj4gPiAgIC0gYWRkIG5ldyBwcm9wZXJ0eSBmb3IgSU5DUiBidXJzdCBpbiB1c2Ig
+bm9kZS4NCj4gPj4gPg0KPiA+PiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dXNiL2R3YzMudHh0IHwgICAgNSArKysrKw0KPiA+PiA+ICBhcmNoL2FybS9ib290L2R0cy9sczEw
+MjFhLmR0c2kgICAgICAgICAgICAgICAgIHwgICAgMSArDQo+ID4+ID4gIGFyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kgfCAgICAzICsrKw0KPiA+PiA+ICBhcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDgwYS5kdHNpIHwgICAgMiArKw0KPiA+
+PiA+ICA0IGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4gPj4gPg0KPiA+PiA+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0
+DQo+ID4+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0
+DQo+ID4+ID4gaW5kZXggZTNlNjk4My4uOGM0MDVhMyAxMDA2NDQNCj4gPj4gPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+ID4+ID4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+PiA+IEBA
+IC01NSw2ICs1NSwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+PiA+ICAgICBmbGFkal8z
+MG1oel9zZGJuZCBzaWduYWwgaXMgaW52YWxpZCBvciBpbmNvcnJlY3QuDQo+ID4+ID4NCj4gPj4g
+PiAgIC0gPERFUFJFQ0FURUQ+IHR4LWZpZm8tcmVzaXplOiBkZXRlcm1pbmVzIGlmIHRoZSBGSUZP
+ICpoYXMqIHRvIGJlDQo+ID4+IHJlYWxsb2NhdGVkLg0KPiA+PiA+ICsgLSBzbnBzLGluY3ItYnVy
+c3QtdHlwZS1hZGp1c3RtZW50OiBWYWx1ZSBmb3IgSU5DUiBidXJzdCB0eXBlIG9mDQo+ID4+IEdT
+QlVTQ0ZHMA0KPiA+PiA+ICsgICByZWdpc3RlciwgdW5kZWZpbmVkIGxlbmd0aCBJTkNSIGJ1cnN0
+IHR5cGUgZW5hYmxlIGFuZCBJTkNSeCB0eXBlLg0KPiA+PiA+ICsgICBGaXJzdCBmaWVsZCBpcyBm
+b3IgdW5kZWZpbmVkIGxlbmd0aCBJTkNSIGJ1cnN0IHR5cGUgZW5hYmxlIG9yIG5vdC4NCj4gPj4g
+PiArICAgU2Vjb25kIGZpZWxkIGlzIGZvciBsYXJnZXN0IElOQ1J4IHR5cGUgZW5hYmxlZC4NCj4g
+Pj4NCj4gPj4gV2h5IGRvIHlvdSBuZWVkIHRoZSBmaXJzdCBmaWVsZD8gSXMgdGhlIDJuZCBmaWVs
+ZCB1c2VkIGlmIHRoZSAxc3QgaXMgMD8NCj4gPj4gSWYgbm90LCB0aGVuIGp1c3QgdXNlIHRoZSBw
+cmVzZW5jZSBvZiB0aGUgcHJvcGVydHkgdG8gZW5hYmxlIG9yIG5vdC4NCj4gPiBUaGUgZmlyc3Qg
+ZmllbGQgaXMgb25lIHN3aXRjaC4NCj4gPiBXaGVuIGl0IGlzIDEsIG1lYW5zIHVuZGVmaW5lZCBs
+ZW5ndGggSU5DUiBidXJzdCB0eXBlIGVuYWJsZWQsIHdlIGNhbiB1c2UNCj4gYW55IGxlbmd0aCBs
+ZXNzIHRoYW4gb3IgZXF1YWwgdG8gdGhlIGxhcmdlc3QtZW5hYmxlZCBidXJzdCBsZW5ndGggb2YN
+Cj4gSU5DUjQvOC8xNi8zMi82NC8xMjgvMjU2Lg0KPiA+IFdoZW4gaXQgaXMgemVybywgbWVhbnMg
+SU5DUnggYnVyc3QgbW9kZSBlbmFibGVkLCB3ZSBjYW4gdXNlIG9uZSBmaXhlZA0KPiBidXJzdCBs
+ZW5ndGggb2YgMS80LzgvMTYvMzIvNjQvMTI4LzI1NiBieXRlLg0KPiA+IFNvLCB0aGUgMm5kIGZp
+ZWxkIGlzIHVzZWQgaWYgdGhlIDFzdCBpcyAwLCB3ZSBuZWVkIHRvIHNlbGVjdCBvbmUgbGFyZ2Vz
+dCBidXJzdA0KPiBsZW5ndGggdGhlIFVTQiBjb250cm9sbGVyIGNhbiBzdXBwb3J0Lg0KPiA+IElm
+IHdlIGRvbid0IHdhbnQgdG8gY2hhbmdlIHRoZSB2YWx1ZSBvZiB0aGlzIHJlZ2lzdGVyICh1c2Ug
+dGhlIGRlZmF1bHQgdmFsdWUpLA0KPiB3ZSBkb24ndCBuZWVkIHRvIGFkZCB0aGlzIHByb3BlcnR5
+IHRvIHVzYiBub2RlLg0KPiANCj4gSnVzdCBtYWtlIHRoaXMgYSBzaW5nbGUgdmFsdWUgd2l0aCAw
+IG1lYW5pbmcgSU5DUiBhbmQgNC84LzE2L2V0YyBiZWluZyBJTkNSeC4NCk1heWJlLCBJIGRpZG4n
+dCBkZXNjcmliZSBpdCBjbGVhcmx5LiANCkFjY29yZGluZyB0byBEV0MzIHNwZWMsIHRoZSB2YWx1
+ZSAiMCIgb2YgZmllbGQgSU5DUkJyc3RFbmEgbWVhbnMgSU5DUnggYnVyc3QgbW9kZSwgMSBtZWFu
+cyBJTkNSIGJ1cnN0IG1vZGUuDQpSZWdhcmRsZXNzIG9mIHRoZSB2YWx1ZSBvZiBJTkNSQnJzdEVu
+YSBbYml0MF0sIHdlIG5lZWQgdG8gbW9kaWZ5IHRoZSBvdGhlciBmaWVsZCBiaXRbMSwyLDMsNCw1
+LDYsN10gdG8gb25lIElOQ1IgYnVyc3QgdHlwZSAgZm9yIHRoZSBwbGF0Zm9ybSBzdXBwb3J0ZWQu
+DQpBZCB5b3UgbWVudGlvbmVkLCBpZiB3ZSBqdXN0IHVzZSBhIHNpbmdsZSB2YWx1ZSB3aXRoIDAg
+bWVhbmluZyBJTkNSIGFuZCA0LzgvMTYvZXRjIGJlaW5nIElOQ1J4Lg0KSSB1bmRlcnN0YW5kIHRv
+dGFsbHkgdGhhdCB3aGVuIGl0IGlzIG5vbmUtemVybywgd2UgY2FuIHVzZSBpdCBmb3IgSU5DUiBi
+dXJzdCBtb2RlLiANClRoZW4sIHdoZW4gaXQgaXMgMCwgaG93IHRvIHNlbGVjdCB0aGUgSU5DUngg
+dmFsdWU/DQoNClNvLCBJIHRoaW5rIHdlIHN0aWxsIG5lZWQgdHdvIHZhdWUgdG8gc3BlY2lmeSBJ
+TkNSQnJzdEVuYSBhbmQgSU5DUnggYnVyc3QgdHlwZS4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
