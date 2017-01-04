@@ -1,138 +1,69 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
-Date: Wed, 4 Jan 2017 11:57:46 -0600
-Message-ID: <41e171e7-4812-51fa-980c-197f7db7b5ef@ti.com>
-References: <20161230183732.5595-1-tony@atomide.com>
- <20161230183732.5595-3-tony@atomide.com> <20170102221228.GH9325@atomide.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V6 1/3] dt-bindings: document common IEEE 802.11 frequency limit property
+Date: Wed,  4 Jan 2017 18:58:29 +0100
+Message-ID: <20170104175832.25996-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170102221228.GH9325-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/02/2017 04:12 PM, Tony Lindgren wrote:
-[...]
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-I got the following warnings with kernel-doc:
-> $ ./scripts/kernel-doc drivers/pinctrl/ti/pinctrl-ti-iodelay.c>/dev/null
-> drivers/pinctrl/ti/pinctrl-ti-iodelay.c:132: warning: Excess struct/union/enum/typedef member 'name' description in 'ti_iodelay_pingroup'
-> drivers/pinctrl/ti/pinctrl-ti-iodelay.c:132: warning: Excess struct/union/enum/typedef member 'map' description in 'ti_iodelay_pingroup'
-> drivers/pinctrl/ti/pinctrl-ti-iodelay.c:159: warning: Excess struct/union/enum/typedef member 'names' description in 'ti_iodelay_device'
-> drivers/pinctrl/ti/pinctrl-ti-iodelay.c:211: warning: No description found for parameter 'cfg'
-> drivers/pinctrl/ti/pinctrl-ti-iodelay.c:211: warning: Excess function parameter 'val' description in 'ti_iodelay_pinconf_set'
-> drivers/pinctrl/ti/pinctrl-ti-iodelay.c:418: warning: Cannot understand  *
->  on line 418 - I thought it was a doc line
+This new file should be used for properties that apply to all wireless
+devices.
 
-Marking them below
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Switch to a single ieee80211-freq-limit property that allows specifying
+    *multiple* ranges. This resolves problem with more complex rules as pointed
+    by Felx.
+    Make description implementation agnostic as pointed by Arend.
+    Rename node to wifi as suggested by Martin.
+V3: Use more real-life frequencies in the example.
+V5: Describe hardware design as possible use for this property
+V6: Even better property description, thanks Rob for your help!
+---
+ .../devicetree/bindings/net/wireless/ieee80211.txt | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ieee80211.txt
 
-> diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> new file mode 100644
-> --- /dev/null
-> +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-[...]
-
-> +/**
-> + * struct ti_iodelay_pingroup - Structure that describes one group
-> + * @name: Name of the group
-
-          ^^--> we should drop this
-
-> + * @map: pinctrl map allocated for the group
-
-          ^^--> we should drop this
-
-> + * @cfg: configuration array for the pin (from dt)
-> + * @ncfg: number of configuration values allocated
-> + * @config: pinconf "Config" - currently a dummy value
-> + */
-> +struct ti_iodelay_pingroup {
-> +	struct ti_iodelay_cfg *cfg;
-> +	int ncfg;
-> +	unsigned long config;
-> +};
-> +
-> +/**
-> + * struct ti_iodelay_device - Represents information for a iodelay instance
-> + * @dev: Device pointer
-> + * @phys_base: Physical address base of the iodelay device
-> + * @reg_base: Virtual address base of the iodelay device
-> + * @regmap: Regmap for this iodelay instance
-> + * @pctl: Pinctrl device
-> + * @desc: pinctrl descriptor for pctl
-> + * @pa: pinctrl pin wise description
-> + * @names: names of the pins
-
-          ^^--> we should drop this
-
-> + * @reg_data: Register definition data for the IODelay instance
-> + * @reg_init_conf_values: Initial configuration values.
-> + */
-> +struct ti_iodelay_device {
-> +	struct device *dev;
-> +	unsigned long phys_base;
-> +	void __iomem *reg_base;
-> +	struct regmap *regmap;
-> +
-> +	struct pinctrl_dev *pctl;
-> +	struct pinctrl_desc desc;
-> +	struct pinctrl_pin_desc *pa;
-> +
-> +	const struct ti_iodelay_reg_data *reg_data;
-> +	struct ti_iodelay_reg_values reg_init_conf_values;
-> +};
-> +
-
-[...]
-
-> +/**
-> + * ti_iodelay_pinconf_set() - Configure the pin configuration
-> + * @iod: iodelay device
-> + * @val: Configuration value
-        ^^ --> should be cfg ?
-> + *
-> + * Update the configuration register as per TRM and lockup once done.
-> + * *IMPORTANT NOTE* SoC TRM does recommend doing iodelay programmation only
-> + * while in Isolation. But, then, isolation also implies that every pin
-> + * on the SoC (including DDR) will be isolated out. The only benefit being
-> + * a glitchless configuration, However, the intent of this driver is purely
-> + * to support a "glitchy" configuration where applicable.
-> + *
-> + * Return: 0 in case of success, else appropriate error value
-> + */
-> +static int ti_iodelay_pinconf_set(struct ti_iodelay_device *iod,
-> +				  struct ti_iodelay_cfg *cfg)
-[...]
-
-> +
-> +/**
-> + *
-Could you make this:
-  * ti_iodelay_node_iterator() - Iterate iodelay node
-
-> + * @pctldev: Pin controller driver
-> + * @np: Device node
-> + * @pinctrl_spec: Parsed arguments from device tree
-> + * @pins: Array of pins in the pin group
-> + * @pin_index: Pin index in the pin array
-> + * @data: Pin controller driver specific data
-> + *
-> + */
-> +static int ti_iodelay_node_iterator(struct pinctrl_dev *pctldev,
-> +				    struct device_node *np,
-> +				    const struct of_phandle_args *pinctrl_spec,
-> +				    int *pins, int pin_index, void *data)
-
-[...]
-
-Otherwise, the patch looks fine. Thanks for doing this.
-
+diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.txt b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+new file mode 100644
+index 0000000..f6442b1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.txt
+@@ -0,0 +1,24 @@
++Common IEEE 802.11 properties
++
++This provides documentation of common properties that are valid for all wireless
++devices.
++
++Optional properties:
++ - ieee80211-freq-limit : list of supported frequency ranges in KHz. This can be
++	used for devices that in a given config support less channels than
++	normally. It may happen chipset supports a wide wireless band but it is
++	limited to some part of it due to used antennas or power amplifier.
++	An example case for this can be tri-band wireless router with two
++	identical chipsets used for two different 5 GHz subbands. Using them
++	incorrectly could not work or decrease performance noticeably.
++
++Example:
++
++pcie@0,0 {
++	reg = <0x0000 0 0 0 0>;
++	wifi@0,0 {
++		reg = <0x0000 0 0 0 0>;
++		ieee80211-freq-limit = <2402000 2482000>,
++				       <5170000 5250000>;
++	};
++};
 -- 
-Regards,
-Nishanth Menon
+2.10.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
