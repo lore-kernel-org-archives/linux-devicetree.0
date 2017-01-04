@@ -1,46 +1,72 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am335x-icev2: Remove the duplicated pinmux setting
-Date: Wed, 4 Jan 2017 10:39:40 +0530
-Message-ID: <20170104050940.25698-1-lokeshvutla@ti.com>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: Re: [PATCH 2/3] devicetree: bq27425: add documentation for bq27425
+ fuel gauge
+Date: Tue, 3 Jan 2017 21:23:55 -0800
+Message-ID: <CAJ_EiSTcpxQVWZALJC_u5P8YM_ku8_wPaiTLyENq5h0XHiQA2g@mail.gmail.com>
+References: <20161226054442.23599-1-matt@ranostay.consulting>
+ <20161226054442.23599-3-matt@ranostay.consulting> <20170103164715.pypb5zt22hg4zqlh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170103164715.pypb5zt22hg4zqlh@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-There is no mmc sd card detect on am335x-ice board. But the spi0_cs1
-pin being configured as mmcsd_cd. Removing it fixes the below warning
-during boot.
+On Tue, Jan 3, 2017 at 8:47 AM, Rob Herring <robh@kernel.org> wrote:
+> On Sun, Dec 25, 2016 at 09:44:41PM -0800, Matt Ranostay wrote:
+>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>> ---
+>>  .../devicetree/bindings/power/bq27425.txt          | 25 ++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/bq27425.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/bq27425.txt b/Documentation/devicetree/bindings/power/bq27425.txt
+>> new file mode 100644
+>> index 000000000000..f09f787a9378
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/bq27425.txt
+>> @@ -0,0 +1,25 @@
+>> +* TI BQ27425 Fuel Gauge
+>> +
+>> +http://www.ti.com/lit/ds/symlink/bq27425-g2a.pdf
+>> +
+>> +Please note that if any of the optional properties are defined
+>> +then all settings must be.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "ti,bq27425"
+>> +- reg: integer, i2c of the device
+>
+> s/i2c/I2C address/
+>
+>> +
+>> +Optional properties:
+>> +- ti,design-capacity: integer of mAh of the battery
+>> +- ti,design-energy: integer of the mWh of the battery
+>> +- ti,terminate-voltage: integer of mV of the dead voltage of
+>> +                     the battery
+>
+> These all need unit suffixes. mAh and mWh may need to be added to
+> property-units.txt.
 
-[1.401303] pinctrl-single 44e10800.pinmux: pin 44e10960.0 already requested by 48030000.spi; cannot claim for 48060000.mmc
+Ok makes sense.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
-Logs:
-Before this patch: http://pastebin.ubuntu.com/23737509/
-After this patch: http://pastebin.ubuntu.com/23737467/
-
- arch/arm/boot/dts/am335x-icev2.dts | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-index 1463df3b5b19..8ed46f9d79b7 100644
---- a/arch/arm/boot/dts/am335x-icev2.dts
-+++ b/arch/arm/boot/dts/am335x-icev2.dts
-@@ -170,7 +170,6 @@
- 			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0) /* (G16) mmc0_dat0.mmc0_dat0 */
- 			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0) /* (G17) mmc0_clk.mmc0_clk */
- 			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0) /* (G18) mmc0_cmd.mmc0_cmd */
--			AM33XX_IOPAD(0x960, PIN_INPUT_PULLUP | MUX_MODE5) /* (C15) spi0_cs1.mmc0_sdcd */
- 		>;
- 	};
- 
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +
+>> +bq27425 {
+>> +     compatible = "ti,bq27425";
+>> +     reg = <0x55>;
+>> +
+>> +     ti,design-capacity = <1360>;
+>> +     ti,design-energy = <4970>;
+>> +     ti,terminate-voltage = <3200>;
+>> +};
+>> --
+>> 2.7.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
