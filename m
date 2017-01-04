@@ -1,192 +1,170 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v5 3/5] backlight: lm3533: Support initialization from Device Tree
-Date: Wed,  4 Jan 2017 03:50:48 -0800
-Message-ID: <20170104115050.24770-3-bjorn.andersson@linaro.org>
-References: <20170104115050.24770-1-bjorn.andersson@linaro.org>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH V2 4/5] PCI: exynos: support the using PHY generic framework
+Date: Wed, 4 Jan 2017 14:56:15 -0500
+Message-ID: <000201d266c4$9bed0270$d3c70750$@gmail.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com> <CGME20170104123436epcas1p1651443c5fe13f67006864aed2f70fa9d@epcas1p1.samsung.com> <20170104123435.30740-5-jh80.chung@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170104115050.24770-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20170104123435.30740-5-jh80.chung@samsung.com>
+Content-Language: ko
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org
+To: 'Jaehoon Chung' <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+On Wednesday, January 4, 2017 7:35 AM, Jaehoon Chung wrote:
+> 
+> This patch is for using PHY generic framework.
+> To maintain backward compatibility, check whether phy is supported or
+> not with 'using_phy'.
+> 
+> And if someone use the old dt-file, display the "deprecated" message.
+> But it's still working fine with it.
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-Implement support for initialization of the lm3533 backlight from Device
-Tree.
+It looks good!
 
 Acked-by: Jingoo Han <jingoohan1@gmail.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
 
-Note that this patch can be merged independently of the other patches in the
-series, pending approval of the DT binding.
+Best regards,
+Jingoo Han
 
-Changes since v4:
-- Acks from Pavel and Jingoo
 
-Changes since v3:
-- Moved backlight DT parsing from mfd driver
-- Gave driver its own compatible
-
- drivers/video/backlight/lm3533_bl.c | 98 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 95 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/video/backlight/lm3533_bl.c b/drivers/video/backlight/lm3533_bl.c
-index 0e2337f367b6..2f132199e604 100644
---- a/drivers/video/backlight/lm3533_bl.c
-+++ b/drivers/video/backlight/lm3533_bl.c
-@@ -22,6 +22,7 @@
- 
- 
- #define LM3533_HVCTRLBANK_COUNT		2
-+#define LM3533_BL_DEFAULT_BRIGHTNESS	200
- #define LM3533_BL_MAX_BRIGHTNESS	255
- 
- #define LM3533_REG_CTRLBANK_AB_BCONF	0x1a
-@@ -269,6 +270,86 @@ static int lm3533_bl_setup(struct lm3533_bl *bl,
- 	return lm3533_ctrlbank_set_pwm(&bl->cb, pdata->pwm);
- }
- 
-+static int lm3533_of_parse_pwm_zones(struct device_node *node)
-+{
-+	const char *propname = "ti,pwm-zones";
-+	u32 zones[5];
-+	int count;
-+	int ret;
-+	int i;
-+
-+	count = of_property_count_u32_elems(node, propname);
-+	if (count == -EINVAL)
-+		return 0;
-+	if (count <= 0)
-+		return count;
-+	if (count >= ARRAY_SIZE(zones))
-+		return -EINVAL;
-+
-+	ret = of_property_read_u32_array(node, propname, zones, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Enable pwm input, and enable the selected zones */
-+	ret = BIT(0);
-+	for (i = 0; i < count; i++)
-+		ret |= BIT(zones[i] + 1);
-+
-+	return ret;
-+}
-+
-+static struct lm3533_bl_platform_data *lm3533_bl_of_parse(struct device *dev,
-+							  int *id)
-+{
-+	struct lm3533_bl_platform_data *bl_pdata;
-+	struct device_node *node = dev->of_node;
-+	int ret;
-+	u32 reg;
-+	u32 val;
-+
-+	bl_pdata = devm_kzalloc(dev, sizeof(*bl_pdata), GFP_KERNEL);
-+	if (!bl_pdata)
-+		return NULL;
-+
-+	ret = of_property_read_u32(node, "reg", &reg);
-+	if (ret < 0) {
-+		dev_err(dev, "invalid reg property\n");
-+		return NULL;
-+	}
-+	*id = reg;
-+
-+	ret = of_property_read_string(node, "label",
-+				      (const char **)&bl_pdata->name);
-+	if (ret < 0) {
-+		dev_err(dev, "unable to parse label\n");
-+		return NULL;
-+	}
-+
-+	ret = of_property_read_u32(node, "led-max-microamp", &val);
-+	if (ret < 0) {
-+		dev_err(dev, "unable to parse led-max-microamp\n");
-+		return NULL;
-+	}
-+	bl_pdata->max_current = val;
-+
-+	val = LM3533_BL_DEFAULT_BRIGHTNESS;
-+	ret = of_property_read_u32(node, "default-brightness", &val);
-+	if (ret < 0 && ret != -EINVAL) {
-+		dev_err(dev, "unable to parse default-brightness\n");
-+		return NULL;
-+	}
-+	bl_pdata->default_brightness = val;
-+
-+	ret = lm3533_of_parse_pwm_zones(node);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to parse ti,pwm-zones\n");
-+		return NULL;
-+	}
-+	bl_pdata->pwm = ret;
-+
-+	return bl_pdata;
-+}
-+
- static int lm3533_bl_probe(struct platform_device *pdev)
- {
- 	struct lm3533 *lm3533;
-@@ -277,6 +358,7 @@ static int lm3533_bl_probe(struct platform_device *pdev)
- 	struct backlight_device *bd;
- 	struct backlight_properties props;
- 	int ret;
-+	int id;
- 
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
- 
-@@ -284,14 +366,17 @@ static int lm3533_bl_probe(struct platform_device *pdev)
- 	if (!lm3533)
- 		return -EINVAL;
- 
-+	id = pdev->id;
- 	pdata = dev_get_platdata(&pdev->dev);
-+	if (!pdata)
-+		pdata = lm3533_bl_of_parse(&pdev->dev, &id);
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "no platform data\n");
- 		return -EINVAL;
- 	}
- 
--	if (pdev->id < 0 || pdev->id >= LM3533_HVCTRLBANK_COUNT) {
--		dev_err(&pdev->dev, "illegal backlight id %d\n", pdev->id);
-+	if (id < 0 || id >= LM3533_HVCTRLBANK_COUNT) {
-+		dev_err(&pdev->dev, "illegal backlight id %d\n", id);
- 		return -EINVAL;
- 	}
- 
-@@ -300,7 +385,7 @@ static int lm3533_bl_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	bl->lm3533 = lm3533;
--	bl->id = pdev->id;
-+	bl->id = id;
- 
- 	bl->cb.lm3533 = lm3533;
- 	bl->cb.id = lm3533_bl_get_ctrlbank_id(bl);
-@@ -394,10 +479,17 @@ static void lm3533_bl_shutdown(struct platform_device *pdev)
- 	lm3533_ctrlbank_disable(&bl->cb);
- }
- 
-+static const struct of_device_id lm3533_bl_of_match[] = {
-+	{ .compatible = "ti,lm3533-backlight", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, lm3533_bl_of_match);
-+
- static struct platform_driver lm3533_bl_driver = {
- 	.driver = {
- 		.name	= "lm3533-backlight",
- 		.pm	= &lm3533_bl_pm_ops,
-+		.of_match_table = lm3533_bl_of_match,
- 	},
- 	.probe		= lm3533_bl_probe,
- 	.remove		= lm3533_bl_remove,
--- 
-2.11.0
+> ---
+> Changelog on V2:
+> - This patch is split from previous PATCH[1/4]
+> - Maintain the backward compatibility
+> - Adds 'using_phy' for cheching whether phy framework is used or not
+> - Adds 'DEPRECATED' message for old dt-binding way
+> 
+>  drivers/pci/host/pci-exynos.c | 61 +++++++++++++++++++++++++++++++++++---
+> -----
+>  1 file changed, 50 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-exynos.c
+> index feed0fd..34f2eed 100644
+> --- a/drivers/pci/host/pci-exynos.c
+> +++ b/drivers/pci/host/pci-exynos.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/of_gpio.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/phy/phy.h>
+>  #include <linux/resource.h>
+>  #include <linux/signal.h>
+>  #include <linux/types.h>
+> @@ -110,6 +111,10 @@ struct exynos_pcie {
+>  	struct exynos_pcie_clk_res	*clk_res;
+>  	const struct exynos_pcie_ops	*ops;
+>  	int				reset_gpio;
+> +
+> +	/* For Generic PHY Framework */
+> +	bool				using_phy;
+> +	struct phy			*phy;
+>  };
+> 
+>  struct exynos_pcie_ops {
+> @@ -135,6 +140,10 @@ static int exynos5440_pcie_get_mem_resources(struct
+> platform_device *pdev,
+>  	if (IS_ERR(ep->mem_res->elbi_base))
+>  		return PTR_ERR(ep->mem_res->elbi_base);
+> 
+> +	/* If using the PHY framework, doesn't need to get other resource
+> */
+> +	if (ep->using_phy)
+> +		return 0;
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  	ep->mem_res->phy_base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(ep->mem_res->phy_base))
+> @@ -396,17 +405,28 @@ static int exynos_pcie_establish_link(struct
+> exynos_pcie *exynos_pcie)
+>  	}
+> 
+>  	exynos_pcie_assert_core_reset(exynos_pcie);
+> -	exynos_pcie_assert_phy_reset(exynos_pcie);
+> -	exynos_pcie_deassert_phy_reset(exynos_pcie);
+> -	exynos_pcie_power_on_phy(exynos_pcie);
+> -	exynos_pcie_init_phy(exynos_pcie);
+> -
+> -	/* pulse for common reset */
+> -	exynos_pcie_writel(exynos_pcie->mem_res->block_base, 1,
+> -				PCIE_PHY_COMMON_RESET);
+> -	udelay(500);
+> -	exynos_pcie_writel(exynos_pcie->mem_res->block_base, 0,
+> -				PCIE_PHY_COMMON_RESET);
+> +
+> +	if (exynos_pcie->using_phy) {
+> +		phy_reset(exynos_pcie->phy);
+> +
+> +		exynos_pcie_writel(exynos_pcie->mem_res->elbi_base, 1,
+> +				PCIE_PWR_RESET);
+> +
+> +		phy_power_on(exynos_pcie->phy);
+> +		phy_init(exynos_pcie->phy);
+> +	} else {
+> +		exynos_pcie_assert_phy_reset(exynos_pcie);
+> +		exynos_pcie_deassert_phy_reset(exynos_pcie);
+> +		exynos_pcie_power_on_phy(exynos_pcie);
+> +		exynos_pcie_init_phy(exynos_pcie);
+> +
+> +		/* pulse for common reset */
+> +		exynos_pcie_writel(exynos_pcie->mem_res->block_base, 1,
+> +					PCIE_PHY_COMMON_RESET);
+> +		udelay(500);
+> +		exynos_pcie_writel(exynos_pcie->mem_res->block_base, 0,
+> +					PCIE_PHY_COMMON_RESET);
+> +	}
+> 
+>  	exynos_pcie_deassert_core_reset(exynos_pcie);
+>  	dw_pcie_setup_rc(pp);
+> @@ -420,6 +440,11 @@ static int exynos_pcie_establish_link(struct
+> exynos_pcie *exynos_pcie)
+>  	if (!dw_pcie_wait_for_link(pp))
+>  		return 0;
+> 
+> +	if (exynos_pcie->using_phy) {
+> +		phy_power_off(exynos_pcie->phy);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+>  	while (exynos_pcie_readl(exynos_pcie->mem_res->phy_base,
+>  				PCIE_PHY_PLL_LOCKED) == 0) {
+>  		val = exynos_pcie_readl(exynos_pcie->mem_res->block_base,
+> @@ -633,6 +658,17 @@ static int __init exynos_pcie_probe(struct
+> platform_device *pdev)
+> 
+>  	exynos_pcie->reset_gpio = of_get_named_gpio(np, "reset-gpio", 0);
+> 
+> +	/* Assume that controller doesn't use the PHY framework */
+> +	exynos_pcie->using_phy = false;
+> +
+> +	exynos_pcie->phy = devm_of_phy_get(dev, np, NULL);
+> +	if (IS_ERR(exynos_pcie->phy)) {
+> +		if (PTR_ERR(exynos_pcie->phy) == -EPROBE_DEFER)
+> +			return PTR_ERR(exynos_pcie->phy);
+> +		dev_warn(dev, "Use the 'phy' property. Current DT of pci-
+> exynos was deprecated!!\n");
+> +	} else
+> +		exynos_pcie->using_phy = true;
+> +
+>  	if (exynos_pcie->ops && exynos_pcie->ops->get_mem_resources) {
+>  		ret = exynos_pcie->ops->get_mem_resources(pdev, exynos_pcie);
+>  		if (ret)
+> @@ -657,6 +693,9 @@ static int __init exynos_pcie_probe(struct
+> platform_device *pdev)
+>  	return 0;
+> 
+>  fail_probe:
+> +	if (exynos_pcie->using_phy)
+> +		phy_exit(exynos_pcie->phy);
+> +
+>  	if (exynos_pcie->ops && exynos_pcie->ops->deinit_clk_resources)
+>  		exynos_pcie->ops->deinit_clk_resources(exynos_pcie);
+>  	return ret;
+> --
+> 2.10.2
