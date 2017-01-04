@@ -1,116 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] scripts/dtc: Update to upstream version 0931cea3ba20
-Date: Wed,  4 Jan 2017 10:57:42 -0600
-Message-ID: <20170104165742.32412-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v4 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
+ stores scenario in vdma
+Date: Wed, 4 Jan 2017 17:00:50 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A660958@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1483536954-27203-1-git-send-email-appanad@xilinx.com>
+ <1483536954-27203-3-git-send-email-appanad@xilinx.com>
+ <20170104152613.hhdptwsyg73ev3dz@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170104152613.hhdptwsyg73ev3dz@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Sync to upstream dtc commit 0931cea3ba20 ("dtc: fdtdump: check fdt if
-not in scanning mode"). In particular, this pulls in dtc overlay
-support.
+Hi Rob,
 
-This adds the following commits from upstream:
+	Thanks for the review....
 
-f88865469b65 dtc: Fix memory leak in character literal parsing
-00fbb8696b66 Rename boot_info
-1ef86ad2c24f dtc: Clean up /dts-v1/ and /plugin/ handling in grammar
-e3c769aa9c16 dtc: Don't always generate __symbols__ for plugins
-c96cb3c0169e tests: Don't use -@ on plugin de/recompile tests
-66381538ce24 tests: Remove "suppression of fixups" tests
-ba765b273f0f tests: Clarify dtc overlay tests
-6ea8cd944fcd tests: More thorough tests of libfdt overlay application without dtc
-7d8ef6e1db97 tests: Correct fdt handling of overlays without fixups and base trees without symbols
-b4dc0ed8b127 tests: Fix double expansion bugs in test code
-3ea879dc0c8f tests: Split overlay tests into those with do/don't exercise dtc plugin generation
-47b4d66a2f11 tests: Test auto-alias generation on base tree, not overlay
-72e1ad811523 tests: Make overlay/plugin tests unconditional
-e7b3c3b5951b tests: Add overlay tests
-9637e3f772a9 tests: Add check_path test
-20f29d8d41f6 dtc: Plugin and fixup support
-a2c92cac53f8 dtc: Document the dynamic plugin internals
-8f70ac39801d checks: Pass boot_info instead of root node
-ea10f953878f libfdt: add missing errors to fdt_strerror()
-daa75e8fa594 libfdt: fix fdt_stringlist_search()
-e28eff5b787a libfdt: fix fdt_stringlist_count()
-ae97c7722840 tests: overlay: Rename the device tree blobs to be more explicit
-96162d2bd9cb tests: overlay: Add test suffix to the compiled blobs
-5ce8634733b7 libfdt: Add fdt_overlay_apply to the exported symbols
-804a9db90ad2 fdt: strerr: Remove spurious BADOVERLAY
-e8c3a1a493fa tests: overlay: Move back the bad fixup tests
-7a72d89d3f81 libfdt: overlay: Fix symbols and fixups nodes condition
-cabbaa972cdd libfdt: overlay: Report a bad overlay for mismatching local fixups
-deb0a5c1aeaa libfdt: Add BADPHANDLE error string
-7b7a6be9ba15 libfdt: Don't use 'index' as a local variable name
-aea8860d831e tests: Add tests cases for the overlay code
-0cdd06c5135b libfdt: Add overlay application function
-39240cc865cf libfdt: Extend the reach of FDT_ERR_BADPHANDLE
-4aa3a6f5e6d9 libfdt: Add new errors for the overlay code
-6d1832c9e64b dtc: Remove "home page" link
-45fd440a9561 Fix some typing errors in libfdt.h and livetree.c
-a59be4939c13 Merge tag 'v1.4.2'
-a34bb721caca dtc: Fix assorted problems in the testcases for the -a option
-874f40588d3e Implement the -a option to pad dtb aligned
-ec02b34c05be dtc: Makefile improvements for release uploading
-1ed45d40a137 dtc: Bump version to 1.4.2
-36fd7331fb11 libfdt: simplify fdt_del_mem_rsv()
-d877364e4a0f libfdt: Add fdt_setprop_inplace_namelen_partial
-3e9037aaad44 libfdt: Add fdt_getprop_namelen_w
-84e0e1346c68 libfdt: Add max phandle retrieval function
-d29126c90acb libfdt: Add iterator over properties
-902d0f0953d0 libfdt: Add a subnodes iterator macro
-c539075ba8ba fdtput.c: Fix memory leak.
-f79ddb83e185 fdtget.c: Fix memory leak
-1074ee54b63f convert-dtsv0-lexer.l: fix memory leak
-e24d39a024e6 fdtdump.c: make sure size_t argument to memchr is always unsigned.
-44a59713cf05 Remove unused srcpos_dump() function
-cb9241ae3453 DTC: Fix memory leak on flatname.
-1ee0ae24ea09 Simplify check field and macro names
-9d97527a8621 Remove property check functions
-2e709d158e11 Remove tree check functions
-c4cb12e193e3 Alter grammar to allow multiple /dts-v1/ tags
-d71d25d76012 Use xasprintf() in srcpos
-9dc404958e9c util: Add xasprintf portable asprintf variant
-beef80b8b55f Correct a missing space in a fdt_header cast
-68d43cec1253 Correct line lengths in libfdt.h
-b0dbceafd49a Correct space-after-tab in libfdt.h
+> On Wed, Jan 04, 2017 at 07:05:53PM +0530, Kedareswara rao Appana wrote:
+> > When VDMA is configured for more than one frame in the h/w for example
+> > h/w is configured for n number of frames and user Submits n number of
+> > frames and triggered the DMA using issue_pending API.
+> > In the current driver flow we are submitting one frame at a time but
+> > we should submit all the n number of frames at one time as the h/w Is
+> > configured for n number of frames.
+>=20
+> Please fix run-on sentences, capitalization, and word wrapping.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- scripts/dtc/checks.c                 | 349 ++++++++--------
- scripts/dtc/dtc-lexer.l              |  21 +-
- scripts/dtc/dtc-lexer.lex.c_shipped  | 650 +++++++++++++++---------------
- scripts/dtc/dtc-parser.tab.c_shipped | 752 ++++++++++++++++++-----------------
- scripts/dtc/dtc-parser.tab.h_shipped |  54 +--
- scripts/dtc/dtc-parser.y             |  34 +-
- scripts/dtc/dtc.c                    |  69 +++-
- scripts/dtc/dtc.h                    |  39 +-
- scripts/dtc/flattree.c               |  41 +-
- scripts/dtc/fstree.c                 |   5 +-
- scripts/dtc/libfdt/Makefile.libfdt   |   2 +-
- scripts/dtc/libfdt/fdt_ro.c          |  30 +-
- scripts/dtc/libfdt/fdt_rw.c          |   6 +-
- scripts/dtc/libfdt/fdt_strerror.c    |   6 +
- scripts/dtc/libfdt/fdt_wip.c         |  29 +-
- scripts/dtc/libfdt/libfdt.h          | 210 ++++++++--
- scripts/dtc/libfdt/libfdt_env.h      |   1 +
- scripts/dtc/livetree.c               | 299 +++++++++++++-
- scripts/dtc/srcpos.c                 |  35 +-
- scripts/dtc/srcpos.h                 |   1 -
- scripts/dtc/treesource.c             |  14 +-
- scripts/dtc/util.c                   |  30 ++
- scripts/dtc/util.h                   |   1 +
- scripts/dtc/version_gen.h            |   2 +-
- 24 files changed, 1661 insertions(+), 1019 deletions(-)
+Sure will fix in the next version....
 
-Just sending diffstat to the list. Full patch is here[1].
+[Snip]
+-- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> > @@ -66,6 +66,8 @@ Optional child node properties:
+> >  Optional child node properties for VDMA:
+> >  - xlnx,genlock-mode: Tells Genlock synchronization is
+> >  	enabled/disabled in hardware.
+> > +- xlnx,fstore-config: Tells Whether Frame Store Configuration is
+> > +	enabled/disabled in hardware.
+>=20
+> What's the default (when not present)? That should be the most common cas=
+e.
+> Looks like the code treats this as bool, but that's not clear here. The n=
+ame is not
+> clear what it is doing. Enabling or disabling the feature?
 
-Rob
+Default value is zero...
+When this property is present it tells hardware is configured for frame sto=
+re configuration.
 
-[1] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=6f05afcbb031722ec1eff77dde188ff2edf8940e
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will fix the explanation part in the next version like below.
+ xlnx,fstore-config: Tells hardware is configured for frame store configura=
+tion.
+Is the above explanation clear???
+
+Regards,
+Kedar.
