@@ -1,194 +1,58 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v4 1/3] dmaengine: xilinx_dma: Check for channel idle state before submitting dma descriptor
-Date: Wed, 4 Jan 2017 19:05:52 +0530
-Message-ID: <1483536954-27203-2-git-send-email-appanad@xilinx.com>
-References: <1483536954-27203-1-git-send-email-appanad@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483536954-27203-1-git-send-email-appanad@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, Jose.Abreu@synopsys.com
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 4/6] arm64: dts: apq8016-sbc: Limit MPP4 high state to 1.8V
+Date: Wed,  4 Jan 2017 13:35:00 +0000
+Message-ID: <1483536902-21450-5-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483536902-21450-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add channel idle state to ensure that dma descriptor is not
-submitted when VDMA engine is in progress.
+From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Reviewed-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+96Boards specs require all GPIO signals to be at 1.8V.
+Limit MPP4, which is PIN28 on J8, to 1.8V(L5).
+
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-Changes for v3:
----> None.
-Changes for v2:
----> Add idle check in the reset as suggested by Jose Abreu
----> Removed xilinx_dma_is_running/xilinx_dma_is_idle checks
-    in the driver and used common idle checks across the driver
-    as suggested by Laurent Pinchart.
+ arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- drivers/dma/xilinx/xilinx_dma.c | 56 +++++++++++++----------------------------
- 1 file changed, 17 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 8288fe4..be7eb41 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -321,6 +321,7 @@ struct xilinx_dma_tx_descriptor {
-  * @cyclic: Check for cyclic transfers.
-  * @genlock: Support genlock mode
-  * @err: Channel has errors
-+ * @idle: Check for channel idle
-  * @tasklet: Cleanup work after irq
-  * @config: Device configuration info
-  * @flush_on_fsync: Flush on Frame sync
-@@ -351,6 +352,7 @@ struct xilinx_dma_chan {
- 	bool cyclic;
- 	bool genlock;
- 	bool err;
-+	bool idle;
- 	struct tasklet_struct tasklet;
- 	struct xilinx_vdma_config config;
- 	bool flush_on_fsync;
-@@ -920,32 +922,6 @@ static enum dma_status xilinx_dma_tx_status(struct dma_chan *dchan,
- }
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+index f881437..d946408 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
+@@ -1,4 +1,5 @@
+ #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
  
- /**
-- * xilinx_dma_is_running - Check if DMA channel is running
-- * @chan: Driver specific DMA channel
-- *
-- * Return: '1' if running, '0' if not.
-- */
--static bool xilinx_dma_is_running(struct xilinx_dma_chan *chan)
--{
--	return !(dma_ctrl_read(chan, XILINX_DMA_REG_DMASR) &
--		 XILINX_DMA_DMASR_HALTED) &&
--		(dma_ctrl_read(chan, XILINX_DMA_REG_DMACR) &
--		 XILINX_DMA_DMACR_RUNSTOP);
--}
--
--/**
-- * xilinx_dma_is_idle - Check if DMA channel is idle
-- * @chan: Driver specific DMA channel
-- *
-- * Return: '1' if idle, '0' if not.
-- */
--static bool xilinx_dma_is_idle(struct xilinx_dma_chan *chan)
--{
--	return dma_ctrl_read(chan, XILINX_DMA_REG_DMASR) &
--		XILINX_DMA_DMASR_IDLE;
--}
--
--/**
-  * xilinx_dma_halt - Halt DMA channel
-  * @chan: Driver specific DMA channel
-  */
-@@ -966,6 +942,7 @@ static void xilinx_dma_halt(struct xilinx_dma_chan *chan)
- 			chan, dma_ctrl_read(chan, XILINX_DMA_REG_DMASR));
- 		chan->err = true;
- 	}
-+	chan->idle = true;
- }
+ &pm8916_gpios {
  
- /**
-@@ -1007,6 +984,9 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
- 	if (chan->err)
- 		return;
+@@ -30,6 +31,18 @@
  
-+	if (!chan->idle)
-+		return;
+ &pm8916_mpps {
+ 
++	pinctrl-names = "default";
++	pinctrl-0 = <&ls_exp_gpio_f>;
 +
- 	if (list_empty(&chan->pending_list))
- 		return;
- 
-@@ -1018,13 +998,6 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
- 	tail_segment = list_last_entry(&tail_desc->segments,
- 				       struct xilinx_vdma_tx_segment, node);
- 
--	/* If it is SG mode and hardware is busy, cannot submit */
--	if (chan->has_sg && xilinx_dma_is_running(chan) &&
--	    !xilinx_dma_is_idle(chan)) {
--		dev_dbg(chan->dev, "DMA controller still busy\n");
--		return;
--	}
--
- 	/*
- 	 * If hardware is idle, then all descriptors on the running lists are
- 	 * done, start new transfers
-@@ -1110,6 +1083,7 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
- 		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
- 	}
- 
-+	chan->idle = false;
- 	if (!chan->has_sg) {
- 		list_del(&desc->node);
- 		list_add_tail(&desc->node, &chan->active_list);
-@@ -1136,6 +1110,9 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
- 	if (chan->err)
- 		return;
- 
-+	if (!chan->idle)
-+		return;
++	ls_exp_gpio_f: pm8916_mpp4 {
++		pinconf {
++			pins = "mpp4";
++			function = "digital";
++			output-low;
++			power-source = <PM8916_MPP_L5>;	// 1.8V
++		};
++	};
 +
- 	if (list_empty(&chan->pending_list))
- 		return;
- 
-@@ -1181,6 +1158,7 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
- 
- 	list_splice_tail_init(&chan->pending_list, &chan->active_list);
- 	chan->desc_pendingcount = 0;
-+	chan->idle = false;
- }
- 
- /**
-@@ -1196,15 +1174,11 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
- 	if (chan->err)
- 		return;
- 
--	if (list_empty(&chan->pending_list))
-+	if (!chan->idle)
- 		return;
- 
--	/* If it is SG mode and hardware is busy, cannot submit */
--	if (chan->has_sg && xilinx_dma_is_running(chan) &&
--	    !xilinx_dma_is_idle(chan)) {
--		dev_dbg(chan->dev, "DMA controller still busy\n");
-+	if (list_empty(&chan->pending_list))
- 		return;
--	}
- 
- 	head_desc = list_first_entry(&chan->pending_list,
- 				     struct xilinx_dma_tx_descriptor, node);
-@@ -1302,6 +1276,7 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
- 
- 	list_splice_tail_init(&chan->pending_list, &chan->active_list);
- 	chan->desc_pendingcount = 0;
-+	chan->idle = false;
- }
- 
- /**
-@@ -1366,6 +1341,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
- 	}
- 
- 	chan->err = false;
-+	chan->idle = true;
- 
- 	return err;
- }
-@@ -1447,6 +1423,7 @@ static irqreturn_t xilinx_dma_irq_handler(int irq, void *data)
- 	if (status & XILINX_DMA_DMASR_FRM_CNT_IRQ) {
- 		spin_lock(&chan->lock);
- 		xilinx_dma_complete_descriptor(chan);
-+		chan->idle = true;
- 		chan->start_transfer(chan);
- 		spin_unlock(&chan->lock);
- 	}
-@@ -2327,6 +2304,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 	chan->has_sg = xdev->has_sg;
- 	chan->desc_pendingcount = 0x0;
- 	chan->ext_addr = xdev->ext_addr;
-+	chan->idle = true;
- 
- 	spin_lock_init(&chan->lock);
- 	INIT_LIST_HEAD(&chan->pending_list);
+ 	pm8916_mpps_leds: pm8916_mpps_leds {
+ 		pinconf {
+ 			pins = "mpp2", "mpp3";
 -- 
-2.1.2
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
