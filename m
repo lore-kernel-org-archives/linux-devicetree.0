@@ -1,62 +1,51 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Wed, 4 Jan 2017 01:37:23 +0200
-Message-ID: <CAHp75VeCKPy4B51P_N9Bp03zPUbRodKzitc-n16ZRKJWcEF4fA@mail.gmail.com>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com> <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: [PATCH v5 1/4] soc: zte: Add header for PM domains specifiers
+Date: Wed,  4 Jan 2017 08:19:14 +0800
+Message-ID: <1483489157-10782-1-git-send-email-baoyou.xie@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steve Longerbeam <steve_longerbeam@mentor.com>
+To: jun.nie@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, davem@davemloft.net, geert+renesas@glider.be, akpm@linux-foundation.org, mchehab@kernel.org, linux@roeck-us.net, krzk@kernel.org, arnd@arndb.de, linus.walleij@linaro.org, pankaj.dubey@samsung.com, yangbo.lu@nxp.com, f.fainelli@gmail.com, claudiu.manoil@nxp.com, laurent.pinchart+renesas@ideasonboard.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 2, 2017 at 11:07 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
-> Add optional reset-gpios pin control. If present, de-assert the
-> specified reset gpio pin to bring the chip out of reset.
+This patch adds header with values used for ZTE 2967
+SoC's power domain driver.
 
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/acpi.h>
->  #include <linux/regulator/consumer.h>
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ include/dt-bindings/soc/zte,pm_domains.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/dt-bindings/soc/zte,pm_domains.h
 
-> +#include <linux/gpio/consumer.h>
-
-Please, try to put it somehow alphabetically ordered (yes, I see it's
-not in general, but try to squeeze it into longest part which is
-ordered).
-
->
->  #define PCA953X_INPUT          0
->  #define PCA953X_OUTPUT         1
-> @@ -754,8 +755,18 @@ static int pca953x_probe(struct i2c_client *client,
->                 invert = pdata->invert;
->                 chip->names = pdata->names;
->         } else {
-> +               struct gpio_desc *reset_gpio;
-> +
->                 chip->gpio_start = -1;
->                 irq_base = 0;
-> +
-> +               /* see if we need to de-assert a reset pin */
-
-see -> See
-
-> +               reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> +                                                    GPIOD_OUT_LOW);
-
-Shouldn't be _optional_exclusive?
-See this recent discussion https://patchwork.ozlabs.org/patch/706002/
-
-> +               if (IS_ERR(reset_gpio)) {
-> +                       dev_err(&client->dev, "request for reset pin failed\n");
-> +                       return PTR_ERR(reset_gpio);
-> +               }
->         }
-
+diff --git a/include/dt-bindings/soc/zte,pm_domains.h b/include/dt-bindings/soc/zte,pm_domains.h
+new file mode 100644
+index 0000000..01e9abc
+--- /dev/null
++++ b/include/dt-bindings/soc/zte,pm_domains.h
+@@ -0,0 +1,23 @@
++/*
++ * Copyright (C) 2017 Linaro Ltd.
++ *
++ * Author: Baoyou Xie <baoyou.xie@linaro.org>
++ * License terms: GNU General Public License (GPL) version 2
++ */
++#ifndef _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
++#define _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H
++
++#define DM_ZX296718_SAPPU	0
++#define DM_ZX296718_VDE		1  /* g1v6 */
++#define DM_ZX296718_VCE		2  /* h1v6 */
++#define DM_ZX296718_HDE		3  /* g2v2 */
++#define DM_ZX296718_VIU		4
++#define DM_ZX296718_USB20	5
++#define DM_ZX296718_USB21	6
++#define DM_ZX296718_USB30	7
++#define DM_ZX296718_HSIC	8
++#define DM_ZX296718_GMAC	9
++#define DM_ZX296718_TS		10
++#define DM_ZX296718_VOU		11
++
++#endif /* _DT_BINDINGS_SOC_ZTE_PM_DOMAINS_H */
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
