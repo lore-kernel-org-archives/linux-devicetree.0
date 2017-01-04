@@ -1,16 +1,16 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] mfd: dt: ranges, #address-cells and #size-cells
- as optional properties
-Date: Wed, 4 Jan 2017 11:36:08 +0000
-Message-ID: <20170104113608.GC27589@dell>
+Subject: Re: [PATCH v4 4/5] mfd: dt: Add bindings for the Aspeed LPC Host
+ Controller (LHC)
+Date: Wed, 4 Jan 2017 11:36:34 +0000
+Message-ID: <20170104113634.GE27589@dell>
 References: <20161220071535.27542-1-andrew@aj.id.au>
- <20161220071535.27542-3-andrew@aj.id.au>
+ <20161220071535.27542-5-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161220071535.27542-3-andrew-zrmu5oMJ5Fs@public.gmane.org>
+In-Reply-To: <20161220071535.27542-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -18,42 +18,60 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, 20 Dec 2016, Andrew Jeffery wrote:
 
-> Whilst describing a device and not a bus, simple-mfd is modelled on
-> simple-bus where child nodes are iterated and registered as platform
-> devices. Some complex devices, e.g. the Aspeed LPC controller, can
-> benefit from address space mapping such that child nodes can use the
-> regs property to describe their resource offsets within the
-> multi-function device.
+> The LPC bus pinmux configuration on fifth generation Aspeed SoCs depends
+> on bits in both the System Control Unit and the LPC Host Controller.
+> 
+> The Aspeed LPC Host Controller is described as a child node of the
+> LPC host-range syscon device for arbitration of access by the host
+> controller and pinmux drivers.
 > 
 > Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/mfd.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> 
+> Linus: I've retained your r-b tag I don't think the addition of the ast2400
+> compatible string will fuss you. Please let me know if you feel this is
+> inappropriate.
+> 
+>  .../devicetree/bindings/mfd/aspeed-lpc.txt         | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 
 Applied, thanks.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd.txt b/Documentation/devicetree/bindings/mfd/mfd.txt
-> index f1fceeda12f1..bcb6abb9d413 100644
-> --- a/Documentation/devicetree/bindings/mfd/mfd.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-> @@ -25,6 +25,16 @@ Optional properties:
->    be used. In the latter case the child devices will be determined by the
->    operating system.
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> index a97131aba446..514d82ced95b 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> @@ -109,3 +109,29 @@ lpc: lpc@1e789000 {
+>  	};
+>  };
 >  
-> +- ranges: Describes the address mapping relationship to the parent. Should set
-> +  the child's base address to 0, the physical address within parent's address
-> +  space, and the length of the address map.
+> +Host Node Children
+> +==================
 > +
-> +- #address-cells: Specifies the number of cells used to represent physical base
-> +  addresses. Must be present if ranges is used.
+> +LPC Host Controller
+> +-------------------
 > +
-> +- #size-cells: Specifies the number of cells used to represent the size of an
-> +  address. Must be present if ranges is used.
+> +The Aspeed LPC Host Controller configures the Low Pin Count (LPC) bus behaviour
+> +between the host and the baseboard management controller. The registers exist
+> +in the "host" portion of the Aspeed LPC controller, which must be the parent of
+> +the LPC host controller node.
 > +
->  Example:
->  
->  foo@1000 {
+> +Required properties:
+> +
+> +- compatible:	One of:
+> +		"aspeed,ast2400-lhc";
+> +		"aspeed,ast2500-lhc";
+> +
+> +- reg:		contains offset/length values of the LHC memory regions. In the
+> +		AST2400 and AST2500 there are two regions.
+> +
+> +Example:
+> +
+> +lhc: lhc@20 {
+> +	compatible = "aspeed,ast2500-lhc";
+> +	reg = <0x20 0x24 0x48 0x8>;
+> +};
 
 -- 
 Lee Jones
