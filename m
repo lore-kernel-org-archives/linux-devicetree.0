@@ -1,60 +1,177 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 1/5] ARM: dts: armada388-clearfog: add phy reset gpio-hog
-Date: Thu, 5 Jan 2017 10:31:35 +0000
-Message-ID: <20170105103134.GS14217@n2100.armlinux.org.uk>
-References: <E1cO4UH-0008SR-GW@rmk-PC.armlinux.org.uk>
- <E1cO4Vz-00005t-8n@rmk-PC.armlinux.org.uk>
- <871swig5b3.fsf@free-electrons.com>
- <20170105101620.GR14217@n2100.armlinux.org.uk>
- <87zij5dckj.fsf@free-electrons.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to respect
+ extra limits
+Date: Thu, 5 Jan 2017 11:02:30 +0100
+Message-ID: <CACna6rw22benfuw_7BSFw1wedavmMJWTo_hfPLCVa1t0kV+Aqg@mail.gmail.com>
+References: <20170104175832.25996-1-zajec5@gmail.com> <20170104175832.25996-4-zajec5@gmail.com>
+ <3fc87224-7f08-e365-7bbb-a4b8b5746e4f@broadcom.com> <CACna6rxay9sC+QT2G4AfjWT1ERsNDzFQ620hNhVhr0FRHXJu=w@mail.gmail.com>
+ <e2bbce35-af09-adfa-09ea-e9fcf57b4d09@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <87zij5dckj.fsf@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e2bbce35-af09-adfa-09ea-e9fcf57b4d09-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 11:29:48AM +0100, Gregory CLEMENT wrote:
-> Hi Russell King,
->  
->  On jeu., janv. 05 2017, Russell King - ARM Linux <linux@armlinux.org.uk> wrote:
-> 
-> > On Wed, Jan 04, 2017 at 05:26:08PM +0100, Gregory CLEMENT wrote:
-> >> Hi Russell,
-> >>  
-> >>  On lun., janv. 02 2017, Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> >> 
-> >> 
-> >> It would be nice to have some word here about this patch. Especially why
-> >> we need it now. I guess it is for being less dependent on the
-> >> initialization done by the bootloader but maybe you have other reasons.
-> >
-> > I'm not sure I follow.  This is adding it to the new platform, not the
-> > old one.  I guess I should've rolled this into the patch creating the
-> > clearfog-base dts file, and this question wouldn't have come up.
-> >
-> 
-> Indeed I missed the fact that it was on the new board as all the other
-> patches were related to the common part.
-> 
-> Do you agree that I squash this patch into the "ARM: dts:
-> armada388-clearfog: add base model DTS file" patch?
+On 5 January 2017 at 10:31, Arend Van Spriel
+<arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On 4-1-2017 22:19, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> On 4 January 2017 at 21:07, Arend Van Spriel
+>> <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>> On 4-1-2017 18:58, Rafa=C5=82 Mi=C5=82ecki wrote:
+>>>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> There are some devices (e.g. Netgear R8000 home router) with one chips=
+et
+>>>> model used for different radios, some of them limited to subbands. NVR=
+AM
+>>>> entries don't contain any extra info on such limitations and firmware
+>>>> reports full list of channels to us. We need to store extra limitation
+>>>> info in DT to support such devices properly.
+>>>>
+>>>> Now there is a cfg80211 helper for reading such info use it in brcmfma=
+c.
+>>>> This patch adds check for channel being disabled with orig_flags which
+>>>> is how this wiphy helper and wiphy_register work.
+>>>>
+>>>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>> ---
+>>>> This patch should probably go through wireless-driver-next which is wh=
+y
+>>>> it got weird number 4/3. I'm sending it just as a proof of concept.
+>>>> It was succesfully tested on SmartRG SR400ac with BCM43602.
+>>>>
+>>>> V4: Respect IEEE80211_CHAN_DISABLED in orig_flags
+>>>> V5: Update commit message
+>>>> V6: Call wiphy_read_of_freq_limits after brcmf_setup_wiphybands to mak=
+e it work
+>>>>     with helper setting "flags" instead of "orig_flags".
+>>>> ---
+>>>>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 9 +++++=
++++-
+>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211=
+.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>>>> index ccae3bb..a008ba5 100644
+>>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+>>>> @@ -5886,6 +5886,9 @@ static int brcmf_construct_chaninfo(struct brcmf=
+_cfg80211_info *cfg,
+>>>>                                                      band->band);
+>>>>               channel[index].hw_value =3D ch.control_ch_num;
+>>>>
+>>>> +             if (channel->orig_flags & IEEE80211_CHAN_DISABLED)
+>>>> +                     continue;
+>>>> +
+>>>
+>>> So to be clear this is still needed for subsequent calls to
+>>> brcmf_setup_wiphybands(). The subsequent calls are done from the
+>>> regulatory notifier. So I think we have an issue with this approach. Sa=
+y
+>>> the device comes up with US. That would set DISABLED flags for channels
+>>> 12 to 14. With a country update to PL we would want to enable channels
+>>> 12 and 13, right? The orig_flags are copied from the initial flags
+>>> during wiphy_register() so it seems we will skip enabling 12 and 13. I
+>>> think we should remove the check above and call
+>>> wiphy_read_of_freq_limits() as a last step within
+>>> brcmf_setup_wiphybands(). It means it is called every time, but it
+>>> safeguards that the limits in DT are always applied.
+>>
+>> I'm not exactly happy with channels management in brcmfmac. Before
+>> calling wiphy_register it already disables channels unavailable for
+>> current country. This results in setting IEEE80211_CHAN_DISABLED in
+>
+> What do you mean by current country. There is none that we are aware off
+> in the driver. So we obtain the channels for the current
+> country/revision in the firmware and enable those before
+> wiphy_register(). This all is within the probe/init sequence so I do not
+> really see an issue. As the wiphy object is not yet registered there is
+> no user-space awareness
 
-Yep, thanks.
+It seems I'm terrible as describing my patches/problems/ideas :( Here
+I used 1 inaccurate word and you couldn't understand my point.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+By "current country" I meant current region (and so a set of
+regulatory rules) used by the firmware. I believe firmware describes
+it using "ccode" and "regrev".
+
+Now, about the issue I see:
+
+AFAIU if you set IEEE80211_CHAN_DISABLED in "orig_flags" it's meant to
+be there for good. Some reference code that makes me believe so
+(reg.c):
+pr_debug("Disabling freq %d MHz for good\n", chan->center_freq);
+chan->orig_flags |=3D IEEE80211_CHAN_DISABLED;
+
+This is what happens with brcmfmac right now. If firmware doesn't
+report some channels, you set "flags" to IEEE80211_CHAN_DISABLED for
+them. Then you call wiphy_register which copies that "flags" to the
+"orig_flags". I read it as: we are never going to use these channels.
+
+Now, consider you support regdom change (I do with my local patches).
+You translate alpha2 to a proper firmware request (board specific!),
+you execute it and then firmware may allow you to use channels that
+you marked as disabled for good. You would need to mess with
+orig_flags to recover from this issue.
+
+Does my explanation make more sense of this issue now?
+
+
+>> orig_flags of channels that may become available later, after country
+>> change. Please note it happens even right now, without this patch.
+>
+> Nope. As stated earlier the country setting in firmware is not updated
+> unless you provide a *proper* mapping of user-space country code to
+> firmware country code/revision. That is the reason, ie. firmware simply
+> returns the same list of channels as nothing changed from its
+> perspective. We may actually drop 11d support.
+
+I implemented mapping support locally, this is the feature I'm talking abou=
+t.
+
+
+>> Maybe you can workaround this by ignoring orig_flags in custom
+>> regulatory code, but I'd just prefer to have it nicely handled in the
+>> first place.
+>
+> Please care to explain your ideas before putting any effort in this
+> "feature". As the author of the code that makes you unhappy and as
+> driver maintainer I would like to get a clearer picture of your point of
+> view. What exactly is the issue that makes you unhappy.
+
+I meant that problem with "orig_flags" I described in the first
+paragraph. I wasn't trying to hide whatever issue I'm seeing, I swear
+;)
+
+
+>> This is the next feature I'm going to work on. AFAIU this patch won't
+>> be applied for now (it's for wireless-drivers-next and we first need
+>> to get wiphy_read_of_freq_limits in that tree). By the time that
+>> happens I may have another patchset cleaning brcmfmac ready. And FWIW
+>> this patch wouldn't make things worse *at this point* as we don't
+>> really support country switching for any device yet.
+>
+> Now who is *we*? We as Broadcom can, because we know how to map the ISO
+> 3166-1 country code to firmware country code/revision for a specific
+> firmware release. Firmware uses its own regulatory rules which may
+> differ from what regdb has. Now I know Intel submitted a mechanism to
+> export firmware rules to regdb so maybe we should consider switching to
+> that api if that has been upstreamed. Need to check.
+
+We as a driver developers. Please read
+"we don't really support country switching for any device yet"
+as
+"brcmfmac doesn't really support country switching for any device yet"
+
+Does it help to get the context?
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
