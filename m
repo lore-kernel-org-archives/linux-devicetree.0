@@ -1,40 +1,58 @@
-From: "pankaj.dubey" <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH V2 4/5] PCI: exynos: support the using PHY generic framework
-Date: Thu, 05 Jan 2017 14:31:14 +0530
-Message-ID: <bf937878-04a0-77cb-4c0a-cecf1bc20a2e@samsung.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p1651443c5fe13f67006864aed2f70fa9d@epcas1p1.samsung.com>
- <20170104123435.30740-5-jh80.chung@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: keystone: Add "ti, da830-uart" compatible
+ string
+Date: Thu, 5 Jan 2017 14:34:10 +0530
+Message-ID: <824238e0-b710-7146-b67b-b2135c2a8bd2@ti.com>
+References: <1483561814-21953-1-git-send-email-david@lechnology.com>
+ <1483561814-21953-5-git-send-email-david@lechnology.com>
+ <93c4aed0-6faa-2c27-7931-454fc1f48e79@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170104123435.30740-5-jh80.chung@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, alim.akhtar@samsung.com, cpgs@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <93c4aed0-6faa-2c27-7931-454fc1f48e79@oracle.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+Hi Santosh,
 
-On Wednesday 04 January 2017 06:04 PM, Jaehoon Chung wrote:
-> This patch is for using PHY generic framework.
-> To maintain backward compatibility, check whether phy is supported or
-> not with 'using_phy'.
-> 
-> And if someone use the old dt-file, display the "deprecated" message.
-> But it's still working fine with it.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
-> Changelog on V2:
-> - This patch is split from previous PATCH[1/4]
-> - Maintain the backward compatibility
-> - Adds 'using_phy' for cheching whether phy framework is used or not
-> - Adds 'DEPRECATED' message for old dt-binding way
-> 
+On Thursday 05 January 2017 03:30 AM, Santosh Shilimkar wrote:
+> On 1/4/2017 12:30 PM, David Lechner wrote:
+>> The TI Keystone SoCs have extra UART registers beyond the standard 8250
+>> registers, so we need a new compatible string to indicate this. Also, at
+>> least one of these registers uses the full 32 bits, so we need to specify
+>> reg-io-width in addition to reg-shift.
+>>
+>> "ns16550a" is left in the compatible specification since it does work as
+>> long as the bootloader configures the SoC UART power management
+>> registers.
+>>
+> NAK!!
+> We can't break the booting boards with existing boot loaders.
 
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Sorry, but it not clear to me how this breaks booting with older
+bootloaders? If older DTB is ROM'ed, it will continue to work because of
+match with ns16550a.
+
+I just verified boot on K2E with these patches applied and using 2016.05
+based U-Boot from a TI release.
+
+http://pastebin.ubuntu.com/23744719/
+
+> I suggest you to first get the driver updated to take care of
+> the UART PM register and then enable the support for it.
+
+Isn't that what patch 2/4 is doing?
 
 Thanks,
-Pankaj Dubey
+Sekhar
