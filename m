@@ -1,93 +1,52 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v3 4/4] ARM: dts: keystone: Add "ti,da830-uart" compatible string
-Date: Thu,  5 Jan 2017 12:54:20 -0600
-Message-ID: <1483642460-6891-5-git-send-email-david@lechnology.com>
-References: <1483642460-6891-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483642460-6891-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: David Lechner <david@lechnology.com>, Franklin S Cooper Jr <fcooper@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Axel Haslam <ahaslam@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCHv3 0/2] Add TI iodelay driver using #pinctrl-cells
+Date: Thu,  5 Jan 2017 10:54:12 -0800
+Message-ID: <20170105185414.27247-1-tony@atomide.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Gary Bisson <gary.bisson@boundarydevices.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The TI Keystone SoCs have extra UART registers beyond the standard 8250
-registers, so we need a new compatible string to indicate this. Also, at
-least one of these registers uses the full 32 bits, so we need to specify
-reg-io-width in addition to reg-shift.
+Hi,
 
-"ns16550a" is left in the compatible specification since it does work as
-long as the bootloader configures the SoC UART power management registers.
+Here's a v3 respin of Nishanth's iodelay driver that I've updated to
+use #pinctrl-cells and generic pinctrl group and function code.
 
-Signed-off-by: David Lechner <david@lechnology.com>
----
+Gary, note that this one has an iterator function that you may
+be able to use too, and hopefully we can simplify things further
+eventually by introducing a generic iterator.
 
-v3 changes:
-* None
+Regards,
 
-v2 changes:
-* This is a new patch in v2
+Tony
 
- arch/arm/boot/dts/keystone-k2g.dtsi | 2 +-
- arch/arm/boot/dts/keystone-k2l.dtsi | 4 ++--
- arch/arm/boot/dts/keystone.dtsi     | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Changes since v1
+- Fix compile error if CONFIG_DEBUG_FS is not set
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 63c7cf0c..7d7b9a8 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -90,7 +90,7 @@
- 		};
- 
- 		uart0: serial@02530c00 {
--			compatible = "ns16550a";
-+			compatible = "ti,da830-uart", "ns16550a";
- 			current-speed = <115200>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index 0c5e74e..e91633f 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -35,7 +35,7 @@
- 		/include/ "keystone-k2l-clocks.dtsi"
- 
- 		uart2: serial@02348400 {
--			compatible = "ns16550a";
-+			compatible = "ti,da830-uart", "ns16550a";
- 			current-speed = <115200>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-@@ -45,7 +45,7 @@
- 		};
- 
- 		uart3:	serial@02348800 {
--			compatible = "ns16550a";
-+			compatible = "ti,da830-uart", "ns16550a";
- 			current-speed = <115200>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 02708ba..9152610 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -98,7 +98,7 @@
- 		/include/ "keystone-clocks.dtsi"
- 
- 		uart0: serial@02530c00 {
--			compatible = "ns16550a";
-+			compatible = "ti,da830-uart", "ns16550a";
- 			current-speed = <115200>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-@@ -108,7 +108,7 @@
- 		};
- 
- 		uart1:	serial@02531000 {
--			compatible = "ns16550a";
-+			compatible = "ti,da830-uart", "ns16550a";
- 			current-speed = <115200>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
+Changes since v2
+- Update with Nishanth's kerneldoc comments
+- Added Rob's ack
+
+Nishanth Menon (1):
+  pinctrl: Introduce TI IOdelay configuration driver
+
+Tony Lindgren (1):
+  pinctrl: core: Make dt_free_map optional
+
+ .../devicetree/bindings/pinctrl/ti,iodelay.txt     |  47 +
+ drivers/pinctrl/Kconfig                            |   1 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/core.c                             |   3 -
+ drivers/pinctrl/devicetree.c                       |   3 +-
+ drivers/pinctrl/ti/Kconfig                         |  10 +
+ drivers/pinctrl/ti/Makefile                        |   1 +
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c            | 944 +++++++++++++++++++++
+ 8 files changed, 1006 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ti,iodelay.txt
+ create mode 100644 drivers/pinctrl/ti/Kconfig
+ create mode 100644 drivers/pinctrl/ti/Makefile
+ create mode 100644 drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+
 -- 
-2.7.4
+2.11.0
