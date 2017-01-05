@@ -1,147 +1,35 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH v5 6/7] i2c: designware: enable SLAVE in platform module
-Date: Thu, 5 Jan 2017 12:13:56 +0000
-Message-ID: <9747bb4d-9a52-789d-32e9-ddbef9e129e4@synopsys.com>
-References: <cover.1482934380.git.lolivei@synopsys.com>
- <ea8b611c3b7c2af8088e2dbc16554af5c8aed368.1482934380.git.lolivei@synopsys.com>
- <1482939844.9552.165.camel@linux.intel.com>
- <20e47113-efd7-787c-b2f8-39e9fd8b83d2@synopsys.com>
- <1482942696.9552.172.camel@linux.intel.com>
- <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
- <1482945043.9552.174.camel@linux.intel.com>
- <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v7 2/4] drm/exynos: mic: Fix parse_dt function
+Date: Thu, 05 Jan 2017 13:16:56 +0100
+Message-ID: <250677fc-e0ea-68f4-5891-1f02dfb20993@samsung.com>
+References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170105102012epcas5p308c2d3ed269d9bf76f76f1d38422eb54@epcas5p3.samsung.com>
+ <1483611609-23522-3-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1483611609-23522-3-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 28-Dec-16 18:10, Luis Oliveira wrote:
-> On 28-Dec-16 17:10, Andy Shevchenko wrote:
->> On Wed, 2016-12-28 at 16:41 +0000, Luis Oliveira wrote:
->>> On 28-Dec-16 16:31, Andy Shevchenko wrote:
->>>> On Wed, 2016-12-28 at 15:53 +0000, Luis Oliveira wrote:
->>>>> On 28-Dec-16 15:44, Andy Shevchenko wrote:
->>>>>> On Wed, 2016-12-28 at 14:43 +0000, Luis Oliveira wrote:
->>>>>>> - Slave mode selected in platform module (devicetree support
->>>>>>> only)
->>>>>>> - Check for ACPI - not supported in SLAVE mode:
->>>>>>>   - Changed the ifndef style to the use of ACPI_HANDLE that
->>>>>>> returns
->>>>>>> NULL
->>>>>>>     if the device was not enumerated from ACPI namespace.
->>>>>>
->>>>>> I'm not sure what is wrong with ACPI?
->>>>>
->>>>> I dont have a way to test it. Just that.
->>>>
->>>> Okay, can you provide an excerpt to see how it will look like in
->>>> DTS?
->>>
->>> Yes, it looks like this now:
->>>
->>> 	i2c@0x2000 {
->>> 			compatible = "snps,designware-i2c";
->>> 			#address-cells = <1>;
->>> 			#size-cells = <0>;
->>> 			reg = <0x2000 0x100>;
->>> 			clock-frequency = <400000>;
->>> 			clocks = <&i2cclk>;
->>> 			interrupts = <0>;
->>>
->>> 			eeprom@64 {
->>> 				compatible = "linux,slave-24c02";
->>> 				reg = <0x40000064>;
->>> 			};
->>> 	};
->>
->> +1 to Carlos' comment.
-> 
-> Agree, I'm on it.
-> 
->>
->>>>  
->>>>>>> -	dev->functionality = I2C_FUNC_10BIT_ADDR |
->>>>>>> DW_IC_DEFAULT_FUNCTIONALITY;
->>>>>>> -
->>>>>>> -	i2c_dw_configure_master(pdev);
->>>>>>> +	if (ACPI_HANDLE(&pdev->dev) == NULL) {
->>>>>>
->>>>>> I don't think you need this at all.
->>>>>
->>>>> This is to avoid the use of the "ifdef" style I used before.
->>>>
->>>> My point is to drop it completely.
->>>>
->>>>>>
->>>>>>> +		device_for_each_child_node(&pdev->dev, child)
->>>>>>> {
->>>>>>
->>>>>> This is resource agnostic.
->>>>>>
->>>>>>> +			fwnode_property_read_u32(child,
->>>>>>> "reg",
->>>>>>> &reg);
->>>>>>
->>>>>> This is as well.
->>>>>
->>>>> Are you suggesting I use of_ functions?
->>>>
->>>> Nope. See above.
->>
->> So, ACPI has a property to support slave mode for I2CSerialBus() macro.
->>
->> I would propose to create a helper function in i2c-core.c which will be
->> responsible for mode detection
->>
->> ... i2c_slave_mode_detect()
->> {
->> ...
->>  if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
->>   ... (use of_*() here) ...
->>  } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
->>   dev_dbg(..., "ACPI slave is not supported yet\n");
->>   ... to master ...
->>  } else {
->>   ... default to master ...
->>  }
->> }
->> EXPORT_...();
->>
->> Make it as a separate patch.
->>
-> 
-> Oh I see, yes it looks good. I will check it. Thanks
-> 
-
-Hi Andy,
-
-I implemented a helper function as you proposed and it looks like this:
-
-int i2c_slave_mode_detect(struct device *dev)
-{
-	struct device_node *child;
-	u32 reg;
-	
-	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-		for_each_child_of_node(dev->of_node, child) {
-			of_property_read_u32(child, "reg", &reg);
-			if (reg & I2C_OWN_SLAVE_ADDRESS)
-				return 1;
-		}
-	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
-		dev_dbg(dev, "ACPI slave is not supported yet\n");
-	else
-		return 0;
-	return 0;
-}
-
-Before I submit the patch to the i2c-core.c I wonder if I could have some
-comment on the implementation.
-
-Thanks,
-Luis
+T24gMDUuMDEuMjAxNyAxMToyMCwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IFRoZSBPRiBncmFwaCBp
+cyBub3QgbmVjZXNzYXJ5IGJlY2F1c2UgdGhlIHBhbmVsIGlzIGEgY2hpbGQgb2YKPiBkc2kuIHRo
+ZXJlZm9yZSwgdGhlIHBhcnNlX2R0IGZ1bmN0aW9uIG9mIGRzaSBkb2VzIG5vdCBuZWVkIHRvCj4g
+Y2hlY2sgdGhlIHJlbW90ZV9ub2RlIGNvbm5lY3RlZCB0byB0aGUgcGFuZWwuIGFuZCB0aGUgd2hv
+bGUKPiBwYXJzZV9kdCBmdW5jdGlvbiBzaG91bGQgYmUgcmVmYWN0b3JlZCBsYXRlci4KPgo+IFNp
+Z25lZC1vZmYtYnk6IEhvZWdldW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgoKUmV2
+aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Ci0tClJlZ2FyZHMK
+QW5kcnplagpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
