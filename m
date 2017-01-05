@@ -1,7 +1,7 @@
 From: Minghuan Lian <Minghuan.Lian@nxp.com>
-Subject: [PATCH v2,2/9] arm: dts: ls1021a: fix typo of MSI compatible string
-Date: Thu, 5 Jan 2017 16:10:30 +0800
-Message-ID: <1483603837-4629-2-git-send-email-Minghuan.Lian@nxp.com>
+Subject: [PATCH v2,4/9] arm: dts: ls1021a: share all MSIs
+Date: Thu, 5 Jan 2017 16:10:32 +0800
+Message-ID: <1483603837-4629-4-git-send-email-Minghuan.Lian@nxp.com>
 References: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,8 +21,9 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetr
 Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-"1" should be replaced by "l". This is a typo.
-The patch is to fix it.
+In order to maximize the use of MSI, a PCIe controller will share
+all MSI controllers. The patch changes msi-parent to refer to all
+MSI controller dts nodes.
 
 Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
@@ -33,25 +34,26 @@ v2-v1:
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 282d854..6651938 100644
+index 6651938..1c82024 100644
 --- a/arch/arm/boot/dts/ls1021a.dtsi
 +++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -122,14 +122,14 @@
- 		};
- 
- 		msi1: msi-controller@1570e00 {
--			compatible = "fsl,1s1021a-msi";
-+			compatible = "fsl,ls1021a-msi";
- 			reg = <0x0 0x1570e00 0x0 0x8>;
- 			msi-controller;
- 			interrupts =  <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		msi2: msi-controller@1570e08 {
--			compatible = "fsl,1s1021a-msi";
-+			compatible = "fsl,ls1021a-msi";
- 			reg = <0x0 0x1570e08 0x0 0x8>;
- 			msi-controller;
- 			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+@@ -723,7 +723,7 @@
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+-			msi-parent = <&msi1>;
++			msi-parent = <&msi1>, <&msi2>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0000 0 0 1 &gic GIC_SPI 91  IRQ_TYPE_LEVEL_HIGH>,
+@@ -746,7 +746,7 @@
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x48 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+-			msi-parent = <&msi2>;
++			msi-parent = <&msi1>, <&msi2>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0000 0 0 1 &gic GIC_SPI 92  IRQ_TYPE_LEVEL_HIGH>,
 -- 
 1.9.1
