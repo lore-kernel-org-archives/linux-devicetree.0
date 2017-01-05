@@ -1,13 +1,15 @@
-From: Minghuan Lian <Minghuan.Lian@nxp.com>
-Subject: [PATCH v2,6/9] arm64: dts: ls1046a: add MSI dts node
-Date: Thu, 5 Jan 2017 16:10:34 +0800
-Message-ID: <1483603837-4629-6-git-send-email-Minghuan.Lian@nxp.com>
-References: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 2/4] serial: 8250: Add new port type for TI
+ DA8xx/OMAPL13x/AM17xx/AM18xx/C66x
+Date: Thu, 5 Jan 2017 13:51:50 +0530
+Message-ID: <7b175d65-7193-32e4-999b-e3cdd0005c3a@ti.com>
+References: <1483561814-21953-1-git-send-email-david@lechnology.com>
+ <1483561814-21953-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
+In-Reply-To: <1483561814-21953-3-git-send-email-david@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,75 +19,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+To: David Lechner <david@lechnology.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-LS1046a includes 3 MSI controllers.
-Each controller supports 128 interrupts.
+On Thursday 05 January 2017 02:00 AM, David Lechner wrote:
+> This adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx/C66x.
 
-Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org> 
----
-v2-v1:
-- change whitespace number
+The Keystone2 processors do include the C66x DSP. But the SoCs being
+targeted with this patch are the ARM + DSP variants. Using 66AK2x is
+more appropriate.
 
- .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 31 ++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+http://www.ti.com/lsds/ti/processors/dsp/c6000_dsp-arm/66ak2x/overview.page
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
-index 2755cd1..dde4552 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	      Layerscape PCIe MSI controller block such as:
-               "fsl,ls1021a-msi"
-               "fsl,ls1043a-msi"
-+              "fsl,ls1046a-msi"
- - msi-controller: indicates that this is a PCIe MSI controller node
- - reg: physical base address of the controller and length of memory mapped.
- - interrupts: an interrupt to the parent interrupt controller.
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 38806ca..49dbafc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -511,5 +511,36 @@
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clockgen 4 1>;
- 		};
-+
-+		msi1: msi-controller@1580000 {
-+			compatible = "fsl,ls1046a-msi";
-+			msi-controller;
-+			reg = <0x0 0x1580000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		msi2: msi-controller@1590000 {
-+			compatible = "fsl,ls1046a-msi";
-+			msi-controller;
-+			reg = <0x0 0x1590000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		msi3: msi-controller@15a0000 {
-+			compatible = "fsl,ls1046a-msi";
-+			msi-controller;
-+			reg = <0x0 0x15a0000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 	};
- };
--- 
-1.9.1
+Also, DA8xx includes DA830 which is pin-compatible with AM17x. So you
+can shorten the list of supported processors to DA8xx/66AK2x.
+
+> These SoCs have standard 8250 registers plus some extra non-standard
+> registers.
+> 
+> The UART will not function unless the non-standard Power and Emulation
+> Management Register (PWREMU_MGMT) is configured correctly. This is
+> currently handled in arch/arm/mach-davinci/serial.c for non-device-tree
+> boards. Making this part of the UART driver will allow UART to work on
+> device-tree boards as well and the mach code can eventually be removed.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+
+Looks good to me, apart from the minor change above.
+
+Acked-by: Sekhar Nori <nsekhar@ti.com>
+
+Thanks,
+Sekhar
