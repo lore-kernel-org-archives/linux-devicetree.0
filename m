@@ -1,52 +1,178 @@
-From: Troy Jia <hongtao.jia@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: Update QorIQ TMU thermal bindings
-Date: Thu, 5 Jan 2017 02:28:50 +0000
-Message-ID: <AM4PR0401MB184304CF8DAB4FE6B6ECC13DEB600@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-References: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
-         <1483520271-3838-2-git-send-email-hongtao.jia@nxp.com>
- <1483526274.17813.1.camel@buserror.net>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH V2 4/5] PCI: exynos: support the using PHY generic framework
+Date: Thu, 05 Jan 2017 11:21:44 +0900
+Message-ID: <6cb5851e-d9c9-cdaa-22a0-2f3153b02a99@samsung.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com>
+ <CGME20170104123436epcas1p1651443c5fe13f67006864aed2f70fa9d@epcas1p1.samsung.com>
+ <20170104123435.30740-5-jh80.chung@samsung.com>
+ <20170104175004.bfob5p3esfn2bfai@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1483526274.17813.1.camel@buserror.net>
-Content-Language: zh-CN
-Sender: linux-pm-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "Y.T. Tang" <yuantian.tang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20170104175004.bfob5p3esfn2bfai@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFyeSAwNCwgMjAx
-NyA2OjM4IFBNDQo+IFRvOiBUcm95IEppYSA8aG9uZ3Rhby5qaWFAbnhwLmNvbT47IHJ1aS56aGFu
-Z0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb207DQo+IFkuVC4gVGFuZyA8eXVhbnRpYW4u
-dGFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnDQo+IENjOiBsaW51eC1wbUB2Z2VyLmtl
-cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZn
-ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gZHQtYmluZGluZ3M6IFVw
-ZGF0ZSBRb3JJUSBUTVUgdGhlcm1hbCBiaW5kaW5ncw0KPiANCj4gT24gV2VkLCAyMDE3LTAxLTA0
-IGF0IDE2OjU3ICswODAwLCBKaWEgSG9uZ3RhbyB3cm90ZToNCj4gPiBGb3IgZGlmZmVyZW50IHR5
-cGVzIG9mIFNvQyB0aGUgc2Vuc29yIGlkIGFuZCBlbmRpYW5uZXNzIG1heSB2YXJ5Lg0KPiA+ICIj
-dGhlcm1hbC1zZW5zb3ItY2VsbHMiIGlzIHVzZWQgdG8gcHJvdmlkZSBzZW5zb3IgaWQgaW5mb3Jt
-YXRpb24uDQo+ID4gImxpdHRsZS1lbmRpYW4iIHByb3BlcnR5IGlzIHRvIHRlbGwgdGhlIGVuZGlh
-bm5lc3Mgb2YgVE1VLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmlhIEhvbmd0YW8gPGhvbmd0
-YW8uamlhQG54cC5jb20+DQo+ID4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
-cmc+DQo+ID4gLS0tDQo+ID4gwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhl
-cm1hbC9xb3JpcS10aGVybWFsLnR4dCB8IDcNCj4gPiArKysrKysrDQo+ID4gwqAxIGZpbGUgY2hh
-bmdlZCwgNyBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4dA0KPiA+
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1h
-bC50eHQNCj4gPiBpbmRleCA2NjIyM2Q1Li4yMGNhNGVmIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwudHh0DQo+
-ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEt
-dGhlcm1hbC50eHQNCj4gPiBAQCAtMTcsNiArMTcsMTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoN
-Cj4gPiDCoAljYWxpYnJhdGlvbiBkYXRhLCBhcyBzcGVjaWZpZWQgYnkgdGhlIFNvQyByZWZlcmVu
-Y2UgbWFudWFsLg0KPiA+IMKgCVRoZSBmaXJzdCBjZWxsIG9mIGVhY2ggcGFpciBpcyB0aGUgdmFs
-dWUgdG8gYmUgd3JpdHRlbiB0byBUVENGR1IsDQo+ID4gwqAJYW5kIHRoZSBzZWNvbmQgaXMgdGhl
-IHZhbHVlIHRvIGJlIHdyaXR0ZW4gdG8gVFNDRkdSLg0KPiA+ICstICN0aGVybWFsLXNlbnNvci1j
-ZWxscyA6IE11c3QgYmUgMS4gVGhlIHNlbnNvciBzcGVjaWZpZXIgaXMgdGhlIG1vbml0b3JpbmcN
-Cj4gPiArCXNpdGUgSUQsIGFuZCByZXByZXNlbnRzIHRoZSAibiIgaW4gVFJJVFNSbiBhbmQgVFJB
-VFNSbi4NCj4gDQo+IEkgYXNzdW1lIHRoZSBkcml2ZXIgd2lsbCBjb250aW51ZSB0byB3b3JrIHdp
-dGggZXhpc3RpbmcgZGV2aWNlIHRyZWVzIHdoZXJlIHRoaXMNCj4gaW5mb3JtYXRpb24gaXMgYWJz
-ZW50PyDCoElmIHNvLCBBQ0sgZm9yIHRoZSB3aG9sZSBzZXJpZXMuDQoNClllcy4gVGhlIGRyaXZl
-ciB3b3JrcyBmb3IgYWxsIGV4aXN0aW5nIGRldmljZSB0cmVlcy4NCg0KVGhhbmtzIGZvciB0aGUg
-QUNLLg0KDQo+IA0KPiAtU2NvdHQNCg0K
+On 01/05/2017 02:50 AM, Krzysztof Kozlowski wrote:
+> On Wed, Jan 04, 2017 at 09:34:34PM +0900, Jaehoon Chung wrote:
+>> This patch is for using PHY generic framework.
+>> To maintain backward compatibility, check whether phy is supported or
+>> not with 'using_phy'.
+>>
+>> And if someone use the old dt-file, display the "deprecated" message.
+>> But it's still working fine with it.
+> 
+> This needs improvements. How about:
+> "Switch the pci-exynos driver to generic PHY framework. At the same time
+> backward compatibility is preserved: warning will be printed for old
+> DTB.
+
+Thanks for comments. Will describe the commit-msg in more detail.
+
+Best Regards,
+Jaehoon Chung
+
+> 
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Best regards,
+> Krzysztof
+> 
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>> Changelog on V2:
+>> - This patch is split from previous PATCH[1/4]
+>> - Maintain the backward compatibility
+>> - Adds 'using_phy' for cheching whether phy framework is used or not
+>> - Adds 'DEPRECATED' message for old dt-binding way
+>>
+>>  drivers/pci/host/pci-exynos.c | 61 +++++++++++++++++++++++++++++++++++--------
+>>  1 file changed, 50 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-exynos.c
+>> index feed0fd..34f2eed 100644
+>> --- a/drivers/pci/host/pci-exynos.c
+>> +++ b/drivers/pci/host/pci-exynos.c
+>> @@ -21,6 +21,7 @@
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/pci.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/phy/phy.h>
+>>  #include <linux/resource.h>
+>>  #include <linux/signal.h>
+>>  #include <linux/types.h>
+>> @@ -110,6 +111,10 @@ struct exynos_pcie {
+>>  	struct exynos_pcie_clk_res	*clk_res;
+>>  	const struct exynos_pcie_ops	*ops;
+>>  	int				reset_gpio;
+>> +
+>> +	/* For Generic PHY Framework */
+>> +	bool				using_phy;
+>> +	struct phy			*phy;
+>>  };
+>>  
+>>  struct exynos_pcie_ops {
+>> @@ -135,6 +140,10 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
+>>  	if (IS_ERR(ep->mem_res->elbi_base))
+>>  		return PTR_ERR(ep->mem_res->elbi_base);
+>>  
+>> +	/* If using the PHY framework, doesn't need to get other resource */
+>> +	if (ep->using_phy)
+>> +		return 0;
+>> +
+>>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>  	ep->mem_res->phy_base = devm_ioremap_resource(dev, res);
+>>  	if (IS_ERR(ep->mem_res->phy_base))
+>> @@ -396,17 +405,28 @@ static int exynos_pcie_establish_link(struct exynos_pcie *exynos_pcie)
+>>  	}
+>>  
+>>  	exynos_pcie_assert_core_reset(exynos_pcie);
+>> -	exynos_pcie_assert_phy_reset(exynos_pcie);
+>> -	exynos_pcie_deassert_phy_reset(exynos_pcie);
+>> -	exynos_pcie_power_on_phy(exynos_pcie);
+>> -	exynos_pcie_init_phy(exynos_pcie);
+>> -
+>> -	/* pulse for common reset */
+>> -	exynos_pcie_writel(exynos_pcie->mem_res->block_base, 1,
+>> -				PCIE_PHY_COMMON_RESET);
+>> -	udelay(500);
+>> -	exynos_pcie_writel(exynos_pcie->mem_res->block_base, 0,
+>> -				PCIE_PHY_COMMON_RESET);
+>> +
+>> +	if (exynos_pcie->using_phy) {
+>> +		phy_reset(exynos_pcie->phy);
+>> +
+>> +		exynos_pcie_writel(exynos_pcie->mem_res->elbi_base, 1,
+>> +				PCIE_PWR_RESET);
+>> +
+>> +		phy_power_on(exynos_pcie->phy);
+>> +		phy_init(exynos_pcie->phy);
+>> +	} else {
+>> +		exynos_pcie_assert_phy_reset(exynos_pcie);
+>> +		exynos_pcie_deassert_phy_reset(exynos_pcie);
+>> +		exynos_pcie_power_on_phy(exynos_pcie);
+>> +		exynos_pcie_init_phy(exynos_pcie);
+>> +
+>> +		/* pulse for common reset */
+>> +		exynos_pcie_writel(exynos_pcie->mem_res->block_base, 1,
+>> +					PCIE_PHY_COMMON_RESET);
+>> +		udelay(500);
+>> +		exynos_pcie_writel(exynos_pcie->mem_res->block_base, 0,
+>> +					PCIE_PHY_COMMON_RESET);
+>> +	}
+>>  
+>>  	exynos_pcie_deassert_core_reset(exynos_pcie);
+>>  	dw_pcie_setup_rc(pp);
+>> @@ -420,6 +440,11 @@ static int exynos_pcie_establish_link(struct exynos_pcie *exynos_pcie)
+>>  	if (!dw_pcie_wait_for_link(pp))
+>>  		return 0;
+>>  
+>> +	if (exynos_pcie->using_phy) {
+>> +		phy_power_off(exynos_pcie->phy);
+>> +		return -ETIMEDOUT;
+>> +	}
+>> +
+>>  	while (exynos_pcie_readl(exynos_pcie->mem_res->phy_base,
+>>  				PCIE_PHY_PLL_LOCKED) == 0) {
+>>  		val = exynos_pcie_readl(exynos_pcie->mem_res->block_base,
+>> @@ -633,6 +658,17 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+>>  
+>>  	exynos_pcie->reset_gpio = of_get_named_gpio(np, "reset-gpio", 0);
+>>  
+>> +	/* Assume that controller doesn't use the PHY framework */
+>> +	exynos_pcie->using_phy = false;
+>> +
+>> +	exynos_pcie->phy = devm_of_phy_get(dev, np, NULL);
+>> +	if (IS_ERR(exynos_pcie->phy)) {
+>> +		if (PTR_ERR(exynos_pcie->phy) == -EPROBE_DEFER)
+>> +			return PTR_ERR(exynos_pcie->phy);
+>> +		dev_warn(dev, "Use the 'phy' property. Current DT of pci-exynos was deprecated!!\n");
+>> +	} else
+>> +		exynos_pcie->using_phy = true;
+>> +
+>>  	if (exynos_pcie->ops && exynos_pcie->ops->get_mem_resources) {
+>>  		ret = exynos_pcie->ops->get_mem_resources(pdev, exynos_pcie);
+>>  		if (ret)
+>> @@ -657,6 +693,9 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+>>  	return 0;
+>>  
+>>  fail_probe:
+>> +	if (exynos_pcie->using_phy)
+>> +		phy_exit(exynos_pcie->phy);
+>> +
+>>  	if (exynos_pcie->ops && exynos_pcie->ops->deinit_clk_resources)
+>>  		exynos_pcie->ops->deinit_clk_resources(exynos_pcie);
+>>  	return ret;
+>> -- 
+>> 2.10.2
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
