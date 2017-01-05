@@ -1,51 +1,70 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH 08/12] ARM: dts: socfpga: Add NAND device tree for Arria10
-Date: Thu, 5 Jan 2017 05:42:54 -0600
-Message-ID: <7b15c95e-6d9f-bb2e-8c73-2f01dc3c8af2@kernel.org>
-References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
- <1483575694-29599-9-git-send-email-dinguyen@kernel.org>
- <73a8b5ga1v.fsf@pengutronix.de>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH V5 3/3] cfg80211: support ieee80211-freq-limit DT
+ property
+Date: Thu, 05 Jan 2017 12:50:50 +0100
+Message-ID: <1483617050.4394.12.camel@sipsolutions.net>
+References: <20170103225715.14072-1-zajec5@gmail.com>
+         <20170103225715.14072-3-zajec5@gmail.com>
+         <1483536406.7312.3.camel@sipsolutions.net>
+         <CACna6ryzk958T0by_4F96hJxUCR5VsKJjrsjByFO96+HcfmXqg@mail.gmail.com>
+         (sfid-20170104_171308_807288_97C21013)
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <73a8b5ga1v.fsf@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree@vger.kernel.org, dinguyen@opensource.altera.com, linux-arm-kernel@lists.infradead.org, Graham Moore <grmoore@opensource.altera.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6ryzk958T0by_4F96hJxUCR5VsKJjrsjByFO96+HcfmXqg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org> (sfid-20170104_171308_807288_97C21013)
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 01/05/2017 02:55 AM, Steffen Trumtrar wrote:
-
->> +#include "socfpga_arria10_socdk.dtsi"
->> +
->> +/ {
->> +	soc {
->> +		nand: nand@ffb90000 {
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			status = "okay";
->> +
->> +			compatible = "denali,denali-nand-dt", "altr,socfpga-denali-nand";
->> +			reg = <0xffb90000 0x72000>, <0xffb80000 0x10000>;
->> +			reg-names = "nand_data", "denali_reg";
->> +			interrupts = <0 99 4>;
->> +			dma-mask = <0xffffffff>;
->> +			clocks = <&nand_clk>;
+> > But just setting orig_flags also won't work, since it'd be
+> > overwritten again by wiphy_register(), no?
 > 
-> This belongs into the socfpga_arria10.dtsi.
+> I told you I successfully tested it, didn't I? Well, I quickly
+> checked wiphy_register and couldn't understand how it was possible it
+> worked for me...
+
+I guess I didn't believe it ;-)
+
+> OK, so after some debugging I understood why I got this working. It's
+> the way brcmfmac handles channels.
 > 
+> At the beginning all channels are disabled: see __wl_2ghz_channels &
+> __wl_5ghz_channels. They have IEEE80211_CHAN_DISABLED set in "flags"
+> for every channel.
+> 
+> In early phase brcmfmac calls wiphy_read_of_freq_limits which sets
+> IEEE80211_CHAN_DISABLED in "orig_flags" for unavailable channels.
+> 
+> Then brcmf_construct_chaninfo kicks in. Normally it removes
+> IEEE80211_CHAN_DISABLED from "flags" for most of channels, but it
+> doesn't happen anymore due to my change:
+> if (channel->orig_flags & IEEE80211_CHAN_DISABLED)
+>         continue;
+> 
+> Then brcmfmac calls wiphy_apply_custom_regulatory which sets some
+> bits like IEEE80211_CHAN_NO_80MHZ and IEEE80211_CHAN_NO_160MHZ in
+> "flags".
+> 
+> Finally wiphy_register is called which copies "flags" to
+> "original_flags". As brcmfmac /respected/ IEEE80211_CHAN_DISABLED set
+> in orig_flags, it also left IEEE80211_CHAN_DISABLED in flags. This
+> way I got IEEE80211_CHAN_DISABLED in orig_flags after overwriting
+> that field inside wiphy_register.
+> 
+> That's quite crazy, right?
 
-Ah yes, you're right. Thanks for the review.
+Yeah, that was pretty crazy.
 
-Dinh
+> I guess you're right after all, I should set IEEE80211_CHAN_DISABLED
+> in "flags" field, let wiphy_register copy that to "orig_flags" and
+> sanitize brcmfmac.
+
+Makes sense to me. That would also match the way it works when no
+custom regulatory notifier is used, which makes the OF function more
+widely applicable.
+
+Thanks,
+johannes
