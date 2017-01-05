@@ -1,82 +1,46 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Thu, 5 Jan 2017 14:00:05 +0000
-Message-ID: <20170105140005.GJ679@arm.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
-	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
-	<20170105115528.GG679@arm.com> <20170105120857.GB21952@leverpostej>
+From: Marcin Wojtas <mw@semihalf.com>
+Subject: Re: [PATCHv2 0/5] Support for Marvell switches with integrated CPUs
+Date: Thu, 5 Jan 2017 15:07:02 +0100
+Message-ID: <CAPv3WKdsiGis6gG0SmLT1mg+LYA8i5p4u9KJiYJxng8jrLsj+w@mail.gmail.com>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <6c6795d3-06ab-a4f0-78ad-5ecc78c1aa2f@gmail.com> <185147a37cab4d7eaea5f79d86cc9451@svr-chch-ex1.atlnz.lc>
+ <20170105130945.GA18033@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170105120857.GB21952@leverpostej>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170105130945.GA18033@lunn.ch>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Juri Lelli <juri.lelli@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gre>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 12:08:57PM +0000, Mark Rutland wrote:
-> On Thu, Jan 05, 2017 at 11:55:29AM +0000, Will Deacon wrote:
-> > On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
-> > > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > > index ef465b0..5f405a6 100644
-> > > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > > @@ -68,6 +68,9 @@ conditions.
-> > >                    aliases of secure registers have to be used during
-> > >                    SMMU configuration.
-> > >  
-> > > +- arm,smmu-enable-stall : Enable stall mode to stall memory transactions
-> > > +                  and resume after fault is handled
-> 
-> The wording here seems to describe a policy rather than a property.
-> 
-> Can you elaborate on when/why this is required/preferred/valid?
+Hi Andrew,
 
-It's not a policy, it's a hardware capability. There are some non-probeable
-reasons why stalling mode is unsafe or unusable:
+2017-01-05 14:09 GMT+01:00 Andrew Lunn <andrew@lunn.ch>:
+>> I'd love to see a switchdev driver but it's a huge task (and no I'm not
+>> committing to writing it). As it stands Marvell ship a switch SDK
+>> largely executes in userspace with a small kernel module providing some
+>> linkage to the underlying hardware.
+>
+> Is there any similarity to the mv88e6xxx family?
 
-  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/474530.html
+Prestera switches (they are sold as standalone devices and with
+integrated CPU's, like ones submitted) are as far from mv88e6xxx as
+possible. There are various mix of 1/2.5/10/40G ports, depending on
+model.
 
-Some of these are specific to the SMMU implementation (e.g. whether or not
-the SS bit can remain set without reasserting the IRQ) and some are specific
-to the integration (e.g. whether or not stalling an endpoint can deadlock
-the SoC). The key point is that, without support from both the
-implementation and the integration, stalls are unusable.
+>
+> If it was similar registers, just a different access mechanising, we
+> could probably extend the mv88e6xxx to support MMIO as well as MDIO.
+>
 
-> > >  static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
-> > > @@ -824,6 +852,8 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-> > >  
-> > >  	/* SCTLR */
-> > >  	reg = SCTLR_CFIE | SCTLR_CFRE | SCTLR_AFE | SCTLR_TRE | SCTLR_M;
-> > > +	if (smmu->options & ARM_SMMU_OPT_ENABLE_STALL)
-> > > +		reg |= SCTLR_CFCFG;
-> > 
-> > I wonder if this should also be predicated on the compatible string, so
-> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
-> > the compatible string isn't specific enough to identify an implementation
-> > with the required SS behaviour? On the other hand, it feels pretty
-> > redundant and a single "stalling works" property is all we need.
-> 
-> Can you elaborate on what "stalling works" entails? Is that just the SS
-> bit behaviour? are there integration or endpoint-specific things that we
-> need to care about?
+The difference is huge, nothing existing in the mainline can fit. The
+driver, that exposes resources to the userspace SDK (called CPSS, it's
+huge and complex piece of code) is existing in Marvell internal
+branches (kernel v4.4 is the latest one), but I doubt such solution
+(despite it's really small) is upstreamable. I believe it can be
+shipped to the customers along with the SDK as a kernel module. Having
+the CPU's support in the mainline is IMO sufficient.
 
-See above. The "stalling works" property (arm,smmu-enable-stall) would
-indicate that both the implementation *and* the integration are such
-that stalling is usable for demand paging. I suspect there are endpoints
-that can't deal with stalls (e.g. they might timeout and signal a RAS
-event), but in that case their respective device drivers should ensure
-that any DMA buffers are pinned and/or register a fault handler to
-request termination of the faulting transaction.
-
-Will
+Best regards,
+Marcin
