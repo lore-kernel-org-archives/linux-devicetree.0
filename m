@@ -1,91 +1,81 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 5/8] ARM: dts: kirkwood-dir665: Utilize new DSA binding
-Date: Thu,  5 Jan 2017 11:29:54 -0800
-Message-ID: <20170105192957.14304-6-f.fainelli@gmail.com>
-References: <20170105192957.14304-1-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170105192957.14304-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, vivien.didelot@savoirfairelinux.com
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: Add missing CPU frequencies for
+ Exynos5422/5800
+Date: Thu, 5 Jan 2017 21:40:59 +0200
+Message-ID: <20170105194059.bwpotpv3zjtvg5oz@kozik-lap>
+References: <10512254.nyUcL0zgTP@amdc3058>
+ <CAD=FV=Wo273T20fe8D2v5Pn1HYR==7PHtr7WZGwzFPRspAYPzg@mail.gmail.com>
+ <20161229141707.qjrtjz7dik6a7l5s@kozik-lap>
+ <CAD=FV=WM_K_f0NQ0mxB55Ksbqg1gYJHs5d66ARYsa1=5hKLjXA@mail.gmail.com>
+ <2c85559a-dc12-610b-c842-c89d078e1c2a@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <2c85559a-dc12-610b-c842-c89d078e1c2a@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ben Gamari <ben@smart-cactus.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Krzysztof Kozlowski <krzk@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Arjun K V <arjun.kv@samsung.com>, Andreas Faerber <afaerber@suse.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
-Document new binding"). The legacy binding node is kept included, but is marked
-disabled.
+On Wed, Jan 04, 2017 at 08:57:47PM -0300, Javier Martinez Canillas wrote:
+> Hello Doug,
+> 
+> On 01/04/2017 06:05 PM, Doug Anderson wrote:
+> > Hi,
+> > 
+> > On Thu, Dec 29, 2016 at 6:17 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >> On Thu, Dec 15, 2016 at 04:54:30PM -0800, Doug Anderson wrote:
+> >>>> Index: b/arch/arm/boot/dts/exynos5800.dtsi
+> >>>> ===================================================================
+> >>>> --- a/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.365955950 +0100
+> >>>> +++ b/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.361955949 +0100
+> >>>> @@ -24,6 +24,16 @@
+> >>>>  };
+> >>>>
+> >>>>  &cluster_a15_opp_table {
+> >>>> +       opp@2000000000 {
+> >>>> +               opp-hz = /bits/ 64 <2000000000>;
+> >>>> +               opp-microvolt = <1250000>;
+> >>>> +               clock-latency-ns = <140000>;
+> >>>> +       };
+> >>>> +       opp@1900000000 {
+> >>>> +               opp-hz = /bits/ 64 <1900000000>;
+> >>>> +               opp-microvolt = <1250000>;
+> >>>> +               clock-latency-ns = <140000>;
+> >>>> +       };
+> >>>
+> >>> I don't think the voltages you listed are high enough for all peach pi
+> >>> boards for A15 at 1.9 GHz and 2.0 GHz, at least based on the research
+> >>> I did.  See my response to v1.
+> >>
+> >> I wanted to apply this but saw this remaining issue. Javier tested it
+> >> on Peach Pi so is this concern still valid?
+> > 
+> > I'm not sure.  It's been years since I did anything with exynos, so I
+> > won't stand in the way if everyone else agrees that this patch is
+> > good, but I will point out that testing on a single Peach Pi board is
+> > not really enough given the massive difference in voltage needed
+> > between the highest ASV group and the lowest (a whopping 112.5 mV from
+> > looking in the Chrome OS source tree).
+> > 
+> 
+> I agree. That's why answered that I wasn't able to find regressions on the
+> Peach Pi I've access to, but I couldn't provide a Reviewed-by tag since it
+> wasn't clear to me that the values were safe for any Exynos5420/5422/5800.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/dts/kirkwood-dir665.dts | 49 +++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+The value of 1.250 V seems to be covering only half of ASV values for
+2.0 GHz so indeed it might be insufficient for some of the chips.
+Unfortunately...
 
-diff --git a/arch/arm/boot/dts/kirkwood-dir665.dts b/arch/arm/boot/dts/kirkwood-dir665.dts
-index 41acbb6dd6ab..4d2b15d6244a 100644
---- a/arch/arm/boot/dts/kirkwood-dir665.dts
-+++ b/arch/arm/boot/dts/kirkwood-dir665.dts
-@@ -194,6 +194,8 @@
- 	};
- 
- 	dsa {
-+		status = "disabled";
-+
- 		compatible = "marvell,dsa";
- 		#address-cells = <2>;
- 		#size-cells = <0>;
-@@ -241,6 +243,53 @@
- 
- &mdio {
- 	status = "okay";
-+
-+	switch@0 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan4";
-+			};
-+
-+			port@1 {
-+			       reg = <1>;
-+			       label = "lan3";
-+			};
-+
-+			port@2 {
-+			       reg = <2>;
-+			       label = "lan2";
-+			};
-+
-+			port@3 {
-+			       reg = <3>;
-+			       label = "lan1";
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "wan";
-+			};
-+
-+			port@6 {
-+				reg = <6>;
-+				label = "cpu";
-+				ethernet = <&eth0port>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
- };
- 
- /* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
--- 
-2.9.3
+Best regards,
+Krzysztof
