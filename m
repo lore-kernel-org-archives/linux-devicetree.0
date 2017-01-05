@@ -1,141 +1,52 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH V2 5/5] ARM: dts: exynos5440: support the phy-pcie node for
- pcie
-Date: Thu, 05 Jan 2017 11:24:24 +0900
-Message-ID: <76739931-33f0-a457-fae1-7ea11ea0cfea@samsung.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p10b52f24e7d6c00edb44e4331a1870e4d@epcas1p1.samsung.com>
- <20170104123435.30740-6-jh80.chung@samsung.com>
- <20170104175822.5zedyszx2phiehuv@kozik-lap>
+From: Troy Jia <hongtao.jia@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: Update QorIQ TMU thermal bindings
+Date: Thu, 5 Jan 2017 02:28:50 +0000
+Message-ID: <AM4PR0401MB184304CF8DAB4FE6B6ECC13DEB600@AM4PR0401MB1843.eurprd04.prod.outlook.com>
+References: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
+         <1483520271-3838-2-git-send-email-hongtao.jia@nxp.com>
+ <1483526274.17813.1.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170104175822.5zedyszx2phiehuv@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1483526274.17813.1.camel@buserror.net>
+Content-Language: zh-CN
+Sender: linux-pm-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "Y.T. Tang" <yuantian.tang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2017 02:58 AM, Krzysztof Kozlowski wrote:
-> On Wed, Jan 04, 2017 at 09:34:35PM +0900, Jaehoon Chung wrote:
->> Add phy-pcie node for using Exynos5440 pcie.
->> And use the reg-names as "elbi" and "config".
-> 
-> 'and' is only for joining in compound sentences, don't start with it.
-
-Got it.
-
-> 
->> Because the getting configuratioin space address from ranges is old way.
-> 
-> Spell-check please.
-
-Will do.
-
-> 
->> It also is helpful to distinguish more clearly.
-> 
-> Distinguish what? Please work on the commit msg, I am not picking 
-
-Will update the commit-msg.
-
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> ---
->> Changelog on V2:
->> - Removes the child-node
->> - Fixes the typo
->> - Removes the unnecessary comments
->>
->>  arch/arm/boot/dts/exynos5440.dtsi | 34 ++++++++++++++++++++++------------
->>  1 file changed, 22 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
->> index 2a2e570..feb074d 100644
->> --- a/arch/arm/boot/dts/exynos5440.dtsi
->> +++ b/arch/arm/boot/dts/exynos5440.dtsi
->> @@ -290,11 +290,22 @@
->>  		clock-names = "usbhost";
->>  	};
->>  
->> +	pcie_phy0: pcie-phy@270000 {
->> +		#phy-cells = <0>;
->> +		compatible = "samsung,exynos5440-pcie-phy";
->> +		reg = <0x270000 0x1000>, <0x271000 0x40>;
->> +	};
->> +
->> +	pcie_phy1: pcie-phy@272000 {
->> +		#phy-cells = <0>;
->> +		compatible = "samsung,exynos5440-pcie-phy";
->> +		reg = <0x272000 0x1000>, <0x271040 0x40>;
->> +	};
->> +
->>  	pcie_0: pcie@290000 {
->>  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
->> -		reg = <0x290000 0x1000
->> -			0x270000 0x1000
->> -			0x271000 0x40>;
->> +		reg = <0x290000 0x1000>, <0x40000000 0x1000>;
->> +		reg-names = "elbi", "config";
->>  		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
->>  			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
->>  			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -303,9 +314,9 @@
->>  		#address-cells = <3>;
->>  		#size-cells = <2>;
->>  		device_type = "pci";
->> -		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
->> -			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
->> -			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
->> +		phys = <&pcie_phy0>;
->> +		ranges = <0x81000000 0 0	  0x40001000 0 0x00010000
->> +			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>;
-> 
-> I think the comments were useful. You can leave them.
-
-Ok. will keep.
-
-> 
->>  		#interrupt-cells = <1>;
->>  		interrupt-map-mask = <0 0 0 0>;
->>  		interrupt-map = <0x0 0 &gic 53>;
->> @@ -315,9 +326,8 @@
->>  
->>  	pcie_1: pcie@2a0000 {
->>  		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
->> -		reg = <0x2a0000 0x1000
->> -			0x272000 0x1000
->> -			0x271040 0x40>;
->> +		reg = <0x2a0000 0x1000>, <0x60000000 0x1000>;
->> +		reg-names = "elbi", "config";
->>  		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
->>  			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
->>  			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -326,9 +336,9 @@
->>  		#address-cells = <3>;
->>  		#size-cells = <2>;
->>  		device_type = "pci";
->> -		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
->> -			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
->> -			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
->> +		phys = <&pcie_phy1>;
->> +		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000
->> +			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>;
-> 
-> I think the comments were useful. You can leave them.
-> 
-> This looks like depending on the changes in the driver, so I will need a
-> tag or stable branch from PCIe maintainers.
-
-Right..
-
-Best Regards,
-Jaehoon Chung
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
+bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFyeSAwNCwgMjAx
+NyA2OjM4IFBNDQo+IFRvOiBUcm95IEppYSA8aG9uZ3Rhby5qaWFAbnhwLmNvbT47IHJ1aS56aGFu
+Z0BpbnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb207DQo+IFkuVC4gVGFuZyA8eXVhbnRpYW4u
+dGFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnDQo+IENjOiBsaW51eC1wbUB2Z2VyLmtl
+cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZn
+ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gZHQtYmluZGluZ3M6IFVw
+ZGF0ZSBRb3JJUSBUTVUgdGhlcm1hbCBiaW5kaW5ncw0KPiANCj4gT24gV2VkLCAyMDE3LTAxLTA0
+IGF0IDE2OjU3ICswODAwLCBKaWEgSG9uZ3RhbyB3cm90ZToNCj4gPiBGb3IgZGlmZmVyZW50IHR5
+cGVzIG9mIFNvQyB0aGUgc2Vuc29yIGlkIGFuZCBlbmRpYW5uZXNzIG1heSB2YXJ5Lg0KPiA+ICIj
+dGhlcm1hbC1zZW5zb3ItY2VsbHMiIGlzIHVzZWQgdG8gcHJvdmlkZSBzZW5zb3IgaWQgaW5mb3Jt
+YXRpb24uDQo+ID4gImxpdHRsZS1lbmRpYW4iIHByb3BlcnR5IGlzIHRvIHRlbGwgdGhlIGVuZGlh
+bm5lc3Mgb2YgVE1VLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmlhIEhvbmd0YW8gPGhvbmd0
+YW8uamlhQG54cC5jb20+DQo+ID4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
+cmc+DQo+ID4gLS0tDQo+ID4gwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhl
+cm1hbC9xb3JpcS10aGVybWFsLnR4dCB8IDcNCj4gPiArKysrKysrDQo+ID4gwqAxIGZpbGUgY2hh
+bmdlZCwgNyBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4dA0KPiA+
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1h
+bC50eHQNCj4gPiBpbmRleCA2NjIyM2Q1Li4yMGNhNGVmIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwudHh0DQo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEt
+dGhlcm1hbC50eHQNCj4gPiBAQCAtMTcsNiArMTcsMTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoN
+Cj4gPiDCoAljYWxpYnJhdGlvbiBkYXRhLCBhcyBzcGVjaWZpZWQgYnkgdGhlIFNvQyByZWZlcmVu
+Y2UgbWFudWFsLg0KPiA+IMKgCVRoZSBmaXJzdCBjZWxsIG9mIGVhY2ggcGFpciBpcyB0aGUgdmFs
+dWUgdG8gYmUgd3JpdHRlbiB0byBUVENGR1IsDQo+ID4gwqAJYW5kIHRoZSBzZWNvbmQgaXMgdGhl
+IHZhbHVlIHRvIGJlIHdyaXR0ZW4gdG8gVFNDRkdSLg0KPiA+ICstICN0aGVybWFsLXNlbnNvci1j
+ZWxscyA6IE11c3QgYmUgMS4gVGhlIHNlbnNvciBzcGVjaWZpZXIgaXMgdGhlIG1vbml0b3JpbmcN
+Cj4gPiArCXNpdGUgSUQsIGFuZCByZXByZXNlbnRzIHRoZSAibiIgaW4gVFJJVFNSbiBhbmQgVFJB
+VFNSbi4NCj4gDQo+IEkgYXNzdW1lIHRoZSBkcml2ZXIgd2lsbCBjb250aW51ZSB0byB3b3JrIHdp
+dGggZXhpc3RpbmcgZGV2aWNlIHRyZWVzIHdoZXJlIHRoaXMNCj4gaW5mb3JtYXRpb24gaXMgYWJz
+ZW50PyDCoElmIHNvLCBBQ0sgZm9yIHRoZSB3aG9sZSBzZXJpZXMuDQoNClllcy4gVGhlIGRyaXZl
+ciB3b3JrcyBmb3IgYWxsIGV4aXN0aW5nIGRldmljZSB0cmVlcy4NCg0KVGhhbmtzIGZvciB0aGUg
+QUNLLg0KDQo+IA0KPiAtU2NvdHQNCg0K
