@@ -1,123 +1,47 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v4 1/4] mtd: spi-nor: add memory controllers for the
- Aspeed AST2500 SoC
-Date: Thu, 5 Jan 2017 14:39:14 +0100
-Message-ID: <4c0b4498-12c7-303d-c8f8-4f27a02d6c12@kaod.org>
-References: <1481557252-13656-1-git-send-email-clg@kaod.org>
- <1481557252-13656-2-git-send-email-clg@kaod.org>
- <5566c62d-cc72-f207-e1dd-5a59e6947c24@wedev4u.fr>
- <a7cb781c-a4a8-f0f7-e7db-5cd9f19da0aa@kaod.org>
- <2bec1e91-a196-b894-fb66-590b8f4f35c3@atmel.com>
- <645db8c4-7f3c-f8bf-ddd9-3f513ce2ed14@kaod.org>
- <4c5cf674-06f9-ad6b-05bf-a1d39aaa7ed5@atmel.com>
- <20170104185005.7fcafd2d@bbrezillon>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCHv3 1/8] ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz
+ on stm32f429
+Date: Thu, 5 Jan 2017 14:43:22 +0100
+Message-ID: <1483623809-29937-2-git-send-email-amelie.delaunay@st.com>
+References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170104185005.7fcafd2d@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQ3lyaWxsZSwgQm9yaXMgCgpPbiAwMS8wNC8yMDE3IDA2OjUwIFBNLCBCb3JpcyBCcmV6
-aWxsb24gd3JvdGU6Cj4gQ3lyaWxsZSwgQ8OpZHJpYywKPiAKPiBPbiBXZWQsIDQgSmFuIDIwMTcg
-MTU6NTI6MDcgKzAxMDAKPiBDeXJpbGxlIFBpdGNoZW4gPGN5cmlsbGUucGl0Y2hlbkBhdG1lbC5j
-b20+IHdyb3RlOgo+IAo+Pj4gICAKPj4+PiBBbnl3YXksIHNpbmNlIHRoZSByZXZpZXcgaXMgZG9u
-ZSBub3csIG9uIG15IHNpZGUgSSB3b24ndCBhc2sgeW91IHRvIHJlbW92ZQo+Pj4+IG9yIHNwbGl0
-IHRoZSBzdXBwb3J0IG9mIHRoZSAnQ29tbWFuZCcgbW9kZSBpbiBhIHNlcGFyYXRlZCBwYXRjaC4K
-Pj4+PiBJIGxldCB5b3UgZG8gYXMgeW91IHdhbnQsIGlmIGl0IGhlbHAgeW91IHRvIGludHJvZHVj
-ZSBzb21lIHBhcnQgb2YgdGhlCj4+Pj4gc3VwcG9ydCBvZiB0aGlzICdDb21tYW5kJyBtb2RlIG5v
-dyBldmVuIGlmIG5vdCBjb21wbGV0ZWQgeWV0LCBubyBwcm9ibGVtIG9uCj4+Pj4gbXkgc2lkZSA6
-KQo+Pj4+Cj4+Pj4gSSB3YXMganVzdCBnaXZpbmcgeW91IHNvbWUgcGllY2VzIG9mIGFkdmljZSBm
-b3IgdGhlIG5leHQgdGltZSBpZiB5b3Ugd2FudAo+Pj4+IHRvIHNwZWVkIHVwIHRoZSByZXZpZXcg
-b2YgYW5vdGhlciBwYXRjaCBpbnRyb2R1Y2luZyBuZXcgZmVhdHVyZXMuCj4+Pj4KPj4+PiBIb3dl
-dmVyLCBJIHdpbGwganVzdCBhc2sgeW91IG9uZSBtb3JlIHZlcnNpb24gaGFuZGxpbmcgdGhlIGR1
-bW15IGN5Y2xlcwo+Pj4+IHByb3Blcmx5IGFzIGl0IHdvdWxkIGhlbHAgdXMgZm9yIHRoZSBnbG9i
-YWwgbWFpbnRlbmFuY2Ugb2YgdGhlIHNwaS1ub3IKPj4+PiBzdWJzeXN0ZW0uIFRoaXMgaXMgdGhl
-IG9ubHkgbWFuZGF0b3J5IG1vZGlmaWNhdGlvbiBJIGFzayB5b3UsIGFmdGVyIHRoYXQgSQo+Pj4+
-IHRoaW5rIGl0IHdvdWxkIGJlIG9rIGZvciBtZSBhbmQgc2luY2UgTWFyZWsgaGFzIGFscmVhZHkg
-cmV2aWV3ZWQgeW91cgo+Pj4+IGRyaXZlciwgaXQgd291bGQgYmUgcmVhZHkgdG8gYmUgbWVyZ2Vk
-IGludG8gdGhlIHNwaS1ub3IgdHJlZS4gIAo+Pj4KPj4+IFNlbmRpbmcgYSB2NSB3aGljaCBzaG91
-bGQgYWRkcmVzcyB5b3VyIGNvbW1lbnRzLiAKPj4+Cj4+PiBJIGhhdmUgcmVtb3ZlZCB0aGUgbGFi
-ZWwgcHJvcGVydHkgYW5kIHdpbGwgc3RhcnQgYSBuZXcgdGhyZWFkIGluIHRoZSAKPj4+IHRvcGlj
-LiBBbnkgaGludHMgb24gd2hpY2ggYmluZGluZyB3ZSBjb3VsZCBhZGQgdGhpcyBsYWJlbCBwcm9w
-ID8gIAo+Pj4gIAo+Pgo+PiBIZXJlIEkgd2lsbCBwcm92aWRlIGp1c3QgZmV3IHRob3VnaHRzIGFi
-b3V0IHRoaXMgbmV3IERUIHByb3BlcnR5LiBJIGRvbid0Cj4+IHByZXRlbmQgdGhpcyBpcyB3aGF0
-IHNob3VsZCBiZSBkb25lLiBJIHN0aWxsIHRoaW5rIG90aGVyIG10ZCBtYWludGFpbmVycwo+PiBz
-aG91bGQgYmUgaW52b2x2ZWQgdG8gZGlzY3VzcyB0aGlzIHRvcGljLgo+Pgo+PiBGaXJzdCB0aGUg
-RFQgcHJvcGVydHkgbmFtZSAibGFiZWwiIHNvdW5kcyBnb29kIHRvIG1lOiBpdCBpcyBjb25zaXN0
-ZW50IHdpdGgKPj4gImxhYmVsIiBEVCBwcm9wZXJ0eSB1c2VkIHRvIG5hbWUgbXRkIHBhcnRpdGlv
-bnMuIEhvd2V2ZXIsIEkgZG9uJ3QgdGhpbmsgaXQKPj4gc2hvdWxkIGJlIGRvY3VtZW50ZWQgaW4g
-amVkZWMsc3BpLW5vci50eHQgYnV0ICptYXliZSogaW4gcGFydGl0aW9uLnR4dCBhcwo+PiB0aGUg
-cHVycG9zZSBvZiB0aGlzIG5ldyBEVCBwcm9wZXJ0eSBzZWVtcyB2ZXJ5IGNsb3NlIHRvIHRoZSAi
-bGFiZWwiCj4+IHByb3BlcnR5IG9mIHBhcnRpdGlvbiBub2RlczogbGV0J3MgdGhpbmsgYWJvdXQg
-c29tZSBoYXJkLWRpc2sgZGV2aWNlCj4+ICgvZGV2L3NkYSkgYW5kIGl0cyBwYXJ0aXRpb24gZGV2
-aWNlcyAoL2Rldi9zZGFYKS4KCnllcyB0aGlzIGlzIHZlcnkgc2ltaWxhci4gSSBmaXJzdCBsb29r
-ZWQgYXQgaW50cm9kdWNpbmcgYSBuYW1lIHRvIAphbiBvdmVyYWxsIGNvbnRhaW5pbmcgcGFydGl0
-aW9uIGJ1dCB0aGUgcGFydGl0aW9uIGJpbmRpbmcgaXMgbm90IApkZXNpZ25lZCBmb3IgdGhhdC4g
-VGhlcmUgYXJlIGNvbnN0cmFpbnRzIG9uIHRoZSBzdGFydCBhZGRyZXNzIGFuZAp0aGUgc2l6ZSB3
-aGljaCBkb2VzIG5vdCBmaXQgdGhlIHB1cnBvc2UuCgo+IEhtLCBwYXJ0aXRpb24udHh0IG1heSBu
-b3QgYmUgYXBwcm9wcmlhdGUgaGVyZS4gV2UncmUgbm90IGRvY3VtZW50aW5nCj4gdGhlIE1URCBw
-YXJ0aXRpb24gYmluZGluZywgYnV0IHRoZSBNVEQgZGV2aWNlIG9uZS4gTWF5YmUgd2Ugc2hvdWxk
-Cj4gY3JlYXRlIG10ZC50eHQgYW5kIHB1dCBhbGwgZ2VuZXJpYyBNVEQgZGV2IHByb3BlcnRpZXMg
-aGVyZS4KPj4KPj4gQmVzaWRlcywgdGhlIGNvbmNlcHQgb2YgdGhpcyBtZW1vcnkgbGFiZWwgaXMg
-bm90IGxpbWl0ZWQgdG8gU1BJIE5PUiBidXQKPj4gY291bGQgYWxzbyBhcHBseSB0byBOQU5EIG1l
-bW9yaWVzIG9yIGFueSBvdGhlciBNVEQgaGFuZGxlZCBtZW1vcmllcy4KPiAKPiBEZWZpbml0ZWx5
-LiBBY3R1YWxseSBJIHRoaW5rIEknbGwgbmVlZCB0aGF0IGZvciB0aGUgQXRtZWwgTkFORAo+IGNv
-bnRyb2xsZXIgZHJpdmVyIHJld29yayBJJ20gY3VycmVudGx5IHdvcmtpbmcgb24sIHRvIGtlZXAg
-bXRkcGFydHMKPiBwYXJzZXIgaGFwcHkgZXZlbiBhZnRlciBjaGFuZ2luZyB0aGUgTkFORCBkZXZp
-Y2UgbmFtaW5nIHNjaGVtZS4KPiAKPj4gSGVuY2UgdGhlIERUIHByb3BlcnR5IG1pZ2h0IGJlIGhh
-bmRsZWQgYnkgZHJpdmVycy9tdGQvb2ZwYXJ0LmMgaW5zdGVhZCBvZgo+PiBiZWluZyBoYW5kbGVk
-IGJ5IHNwaS1ub3IuYyBvciBieSBlYWNoIFNQSSBOT1IgbWVtb3J5IGNvbnRyb2xsZXIgZHJpdmVy
-Lgo+IAo+IEFjdHVhbGx5LCB0aGF0IGNvdWxkIGJlIGRvbmUgYXQgdGhlIG10ZGNvcmUgbGV2ZWwg
-aW4KPiBtdGRfc2V0X2Rldl9kZWZhdWx0cygpIFsxXS4KCnRoYXQgd291bGQgYmUgcGVyZmVjdC4K
-Cj4+IEZpbmFsbHksIEkgZ3Vlc3Mgd2Ugc2hvdWxkIHRha2UgdGltZSB0byBkaXNjdXNzIGFuZCBh
-bGwgYWdyZWUgd2hhdCBzaG91bGQKPj4gYmUgZG9uZSBwcmVjaXNlbHkgYmVmb3JlIGludHJvZHVj
-aW5nIGEgbmV3IERUIHByb3BlcnR5IGJlY2F1c2Ugb25lIGdlbmVyYWwKPj4gcnVsZSB3aXRoIERU
-QiBmaWxlcyBpcyB0aGF0IHVzZXJzIHNob3VsZCBiZSBhYmxlIHRvIHVwZGF0ZSB0aGVpciBrZXJu
-ZWwKPj4gaW1hZ2UgKHpJbWFnZSwgdUltYWdlLCAuLi4pIHdpdGhvdXQgY2hhbmdpbmcgdGhlaXIg
-RFRCOiBkZXZpY2UgdHJlZXMgc2hvdWxkCj4+IGJlIGJhY2t3YXJkIGNvbXBhdGlibGUuIEhlbmNl
-IGlmIHdlIG1ha2UgYSB3cm9uZyBjaG9pY2UgdG9kYXksIHdlIGFyZQo+PiBsaWtlbHkgdG8gaGF2
-ZSB0byBsaXZlIHdpdGggaXQgYW5kIGtlZXAgc3VwcG9ydGluZyB0aGF0IGJhZCBjaG9pY2UuCj4g
-Cj4gUm9iIGFscmVhZHkgYWNrZWQgdGhlIHBhdGNoLCBzbywgaWYgYWxsIE1URCBtYWludGFpbmVy
-cyBhZ3JlZSB0aGF0IHRoaXMKPiBuZXcgcHJvcGVydHkgaXMgYWNjZXB0YWJsZSwgd2Ugc2hvdWxk
-IGJlIGZpbmUgOy0pLgoKeWVzIGJ1dCB3ZSB3b3VsZCBuZWVkIHRvIG1vdmUgdGhlIGJpbmRpbmcg
-cHJvcGVydHkgdG8gYW5vdGhlciBmaWxlLiAKV2hhdCBJIHNlbnQgYXBwbGllZCB0byAiamVkZWMs
-c3BpLW5vciIgYW5kIHdlIHdhbnQgdG8gZ2VuZXJhbGl6ZSB0aGUgCnByb3BlcnR5IHRvIG90aGVy
-IGRldmljZXMuCgo+PiBBbnl3YXksIG1heWJlIHlvdSBjb3VsZCBkZXNjcmliZSBhIGxpdHRsZSBi
-aXQgeW91ciB1c2UgY2FzZTsgd2hhdCB5b3UKPj4gaW50ZW5kIHRvIGRvIHdpdGggdGhpcyBsYWJl
-bCBmcm9tIHlvdSB1c2Vyc3BhY2UgYXBwbGljYXRpb24uCj4KPiBIZXJlIGlzIG1pbmU6IEkgd2Fu
-dCB0aGUgbXRkcGFydHMgcGFyc2VyIHRvIHdvcmsgY29ycmVjdGx5IHdpdGgKPiBleGlzdGluZyBi
-b290bG9hZGVycyBldmVuIGFmdGVyIGNoYW5naW5nIHRoZSBOQU5EIGRldmljZSBuYW1pbmcgc2No
-ZW1lCj4gdG8gYWxsb3cgb25lIE5BTkQgY29udHJvbGxlciB0byBleHBvc2UgbXVsdGlwbGUgZGV2
-aWNlcy4KPiAKPiBDdXJyZW50IG5hbWluZyBzY2hlbWU6IE5BTkQgZGV2aWNlIG5hbWUgaXMgYWx3
-YXlzIGF0bWVsX25hbmQKPiBOZXcgbmFtaW5nIHNoZW1lOiBhdG1lbC1uYW5kLiVkIHdoZXJlICVk
-IGlzIHJlcGxhY2VkIGJ5IHRoZSBDUyBsaW5lCj4gbnVtYmVyIHRoZSBOQU5EIGRldmljZSBpcyBj
-b25uZWN0ZWQgdG9vLgo+IAo+IEFsc28gbm90ZSB0aGF0IGl0J3MgZWFzaWVyIHRvIHJlZmVyIHRv
-IGEgZmxhc2ggZGV2aWNlIGJ5IGl0J3MgcHVycG9zZQo+IChsaWtlIFN5c3RlbS1maXJtd2FyZSBp
-biBDZWRyaWMncyBleGFtcGxlKSByYXRoZXIgdGhhbiB0aGUgY29udHJvbGxlcgo+IENTIGxpbmUg
-dGhpcyBkZXZpY2UgaXMgY29ubmVjdGVkIHRvLgoKWWVzIHRoaXMgaXMgd2hhdCB3ZSB1c2UuIFRo
-ZXJlIGFyZSBwb3NzaWJseSBvdGhlciB3YXlzIGJ1dCBhZGRpbmcKYSBsYWJlbCBwcm9wZXJ0eSBh
-dCB0aGUgZmxhc2ggZGV2aWNlIGxldmVsIGlzIGEgcHJhY3RpY2FsIHNvbHV0aW9uIFsxXQoKU28g
-aGVyZSdzIG91ciBuZWVkLiBTeXN0ZW1zIGNhbiBoYXZlIG11bHRpcGxlIGNoaXBzIGZvciBkaWZm
-ZXJlbnQKcHVycG9zZXMgOiAKCiAtIEJNQyBGaXJtd2FyZSAKIC0gQk1DIEZpcm13YXJlIGdvbGRl
-biBpbWFnZQogLSBIb3N0IEZpcm13YXJlCiAtIFZpZGVvIEZpcm13YXJlCiAtIGV0YwoKVGhlIGdv
-YWwgaXMgdG8gc2ltcGxpZnkgdGhlIGlkZW50aWZpY2F0aW9uIG9mIGEgc3BlY2lmaWMgY2hpcCBm
-b3IgCnVzZXJzcGFjZSB0b29scyBvciBkYWVtb25zIHdoaWNoIG5lZWQgdG8gc2VsZWN0IHRoZSBh
-cHByb3ByaWF0ZSAKbXRkIGRldmljZS4gCgkKVGhhbmtzLCAKCkMuCgpbMV0gaHR0cHM6Ly9naXRo
-dWIuY29tL29wZW5ibWMvbGludXgvYmxvYi9kZXYtNC43L2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVl
-ZC1ibWMtb3BwLXdpdGhlcnNwb29uLmR0cyNMMzYKCj4gUmVnYXJkcywKPiAKPiBCb3Jpcwo+IAo+
-IFsxXWh0dHA6Ly9jb2RlLmJ1bGl4Lm9yZy9wMDE5YWgtMTA3ODc3Cj4gCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNj
-dXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LW10ZC8K
+This patch set HSE_RTC clock frequency to 1 MHz, as the clock supplied to
+the RTC must be 1 MHz.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index b077f99..d195ccf 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -371,6 +371,8 @@
+ 			reg = <0x40023800 0x400>;
+ 			clocks = <&clk_hse>, <&clk_i2s_ckin>;
+ 			st,syscfg = <&pwrcfg>;
++			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
++			assigned-clock-rates = <1000000>;
+ 		};
+ 
+ 		dma1: dma-controller@40026000 {
+-- 
+1.9.1
