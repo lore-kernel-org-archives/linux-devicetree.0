@@ -1,75 +1,72 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition
- table
-Date: Thu, 5 Jan 2017 09:56:20 -0800
-Message-ID: <20170105175619.GA56877@google.com>
-References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
- <1483627851-17996-2-git-send-email-t.remmet@phytec.de>
- <20170105153637.GA4310@atomide.com>
- <20170105171845.GK4310@atomide.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/5] drivers: mmc: sunxi: limit A64 MMC2 to
+ 8K DMA buffer
+Date: Thu, 5 Jan 2017 18:57:46 +0100
+Message-ID: <20170105175746.fq6crpc3krz7tzxi@lukather>
+References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
+ <1483398226-29321-3-git-send-email-andre.przywara@arm.com>
+ <20170104140750.7qs4pvggwjdj5cma@rob-hp-laptop>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="chu2rgfkbjn4epfw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBM4SXLBQKGQEOGGHP7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170105171845.GK4310@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Teresa Remmet <t.remmet@phytec.de>, linux-omap@vger.kernel.org, Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170104140750.7qs4pvggwjdj5cma@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 09:18:45AM -0800, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [170105 07:37]:
-> > * Teresa Remmet <t.remmet@phytec.de> [170105 06:57]:
-> > > To improve NAND safety we updated the partition layout.
-> > > Added barebox backup partition and removed kernel and oftree
-> > > partition. They are kept in ubi now.
+
+--chu2rgfkbjn4epfw
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi Rob,
+
+On Wed, Jan 04, 2017 at 08:07:50AM -0600, Rob Herring wrote:
+> On Mon, Jan 02, 2017 at 11:03:43PM +0000, Andre Przywara wrote:
+> > From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > > 
-> > What about the users with earlier partition tables?
+> > Unlike the A64 user manual reports, the third MMC controller on the
+> > A64 (and the only one capable of 8-bit HS400 eMMC transfers) has a
+> > DMA buffer size limit of 8KB (much like the very old Allwinner SoCs).
+> > This does not affect the other two controllers, so introduce a new
+> > DT compatible string to let the driver use different settings for that
+> > particular device. This will also help to enable the high-speed transfer
+> > modes of that controller later.
 > > 
-> > Please read about "flag day" changes, typically they are not
-> > acceptable.
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
+> >  drivers/mmc/host/sunxi-mmc.c                        | 7 +++++++
+> >  2 files changed, 8 insertions(+)
 > 
-> Adding Brian and Adam to Cc. Can you guys come up with some
-> solution on this?
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I don't have much context for this thread, and no I don't plan to solve
-your problems for you. But I can provide tips!
+Some kind of a digression on this: we have three MMC controllers on
+this SoC. Like this patch shows, the third one is clearly different,
+and supports both more modes, a wider bus, and specific quirks. We
+need a new compatible for this one, everything's perfect.
 
-> I'm suggesting we leave the kernel nodes empty and let u-boot
-> populate them, so maybe you guys can discuss this on the related
-> lists.
+However, the other two are mostly the same, but seems to need
+different tuning parameters to get more performances out of the
+controller (but this is unclear yet). How do we usually deal with
+that?
 
-That's an option. I've worked with platforms that did something like
-this, and that's really one of the only ways you can handle putting
-partition information in the device tree. You're really hamstringing
-yourself when you put all the partition information in the device tree.
-And it's just dumb once that gets codified in the kernel source tree.
+Thanks,
+Maxime
 
-The best solution would be to try to migrate away from static device
-tree representations of partition info entirely. UBI volumes are best
-where possible. If not, then some other kind of on-flash data structures
-(along the lines of a GPT) with a corresponding MTD partition parser is
-an OK alternative. Unfortunately, there isn't any good standard format
-for this on MTD, so it's typically all custom -- and so people use the
-easiest approach: device tree. And it's even more difficult with NAND,
-which has reliability problems, especially with static data (e.g., read
-disturb).
-
-Anyway, the parser solution is helpful only if one can properly fix the
-"flag day" first. And it requires a little bit more work to be generally
-useful; I posted some work for this over a year ago, but bikeshedding
-brought it down.
-
-> The rest of the series looks fine to me so applying it into
-> omap-for-v4.11/dt.
-
-Brian
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--chu2rgfkbjn4epfw--
