@@ -1,118 +1,75 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 03/22] iio: adc: add support for X-Powers AXP20X and
- AXP22X PMICs ADCs
-Date: Thu, 5 Jan 2017 17:46:51 +0100
-Message-ID: <20170105164651.tk5e3rhdthtpn4lc@lukather>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-4-quentin.schulz@free-electrons.com>
- <CAGb2v67S==AG=jZA=mO-bB4u1F2TOwhmBXg385W1xhUa3RAFbA@mail.gmail.com>
- <9acfe5e0-dc56-bd63-02b4-7bf34d49d62c@free-electrons.com>
- <CAGb2v66n46KQAzQBUrDwx7sYADkRm3_XyCHf9imN+FiDkHfP1w@mail.gmail.com>
- <cf4590d1-5381-f1da-7271-e6e7fee0c479@free-electrons.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the device tree
+Date: Thu, 05 Jan 2017 18:48:38 +0200
+Message-ID: <2557392.58vudoaMIY@avalon>
+References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com> <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA@mail.gmail.com> <20170105163928.GD4310@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8192709076306840755=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cf4590d1-5381-f1da-7271-e6e7fee0c479@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170105163928.GD4310-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---===============8192709076306840755==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="shktkrd5emwedjwp"
-Content-Disposition: inline
+On Thursday 05 Jan 2017 08:39:29 Tony Lindgren wrote:
+> * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170105 08:28]:
+> > On Fri, Dec 2, 2016 at 3:11 PM, Laurent Pinchart wrote:
+> >> The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
+> >> connected to port 2 of the OMAP EHCI controller. The board however has
+> >> no EEPROM to store the ethernet MAC address, which is programmed by the
+> >> boot loader.
+> >> 
+> >> To allow Linux to use the same MAC address as the boot loader (or for
+> >> that matter any fixed MAC address), we need a node in the device tree
+> >> for the ethernet controller that the boot loader can update at runtime
+> >> with a local-mac-address property. Add it, along with an alias for the
+> >> ethernet controller to let the boot loader locate it easily.
+> >> 
+> >> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> >> ---
+> >> Changes since v1:
+> >> 
+> >> - Renamed usb2 DT node to hub
+> >> ---
+> >> 
+> >>  arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
+> >>  1 file changed, 16 insertions(+)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts
+> >> b/arch/arm/boot/dts/omap3-beagle-xm.dts index
+> >> 85e297ed0ea1..673cee2234b2 100644
+> >> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
+> >> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+> >> @@ -27,6 +27,7 @@
+> >>         aliases {
+> >>                 display0 = &dvi0;
+> >>                 display1 = &tv0;
+> >> +               ethernet = &ethernet;
+> > 
+> > Sorry, just noticed this, but this should be dropped. It's not used
+> > nor do we want an alias here.
+> 
+> OK, will update locally as I have not pushed out yet.
 
+The ethernet alias is used by U-Boot to locate the ethernet controller and 
+update the MAC address.
 
---shktkrd5emwedjwp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > P.S. The display ones are questionable, too. Only OMAP has them and
+> > per platform alias names is not something we want.
+> 
+> OK. What about the mmc ones? Otherwise the MMC devices keep moving
+> around depending on the kernel version..
 
-On Thu, Jan 05, 2017 at 10:50:33AM +0100, Quentin Schulz wrote:
-> >>>> +static int axp20x_remove(struct platform_device *pdev)
-> >>>> +{
-> >>>> +       struct axp20x_adc_iio *info;
-> >>>> +       struct iio_dev *indio_dev =3D platform_get_drvdata(pdev);
-> >>>> +
-> >>>> +       info =3D iio_priv(indio_dev);
-> >>>
-> >>> Nit: you could just reverse the 2 declarations above and join this
-> >>> line after struct axp20x_adc_iio *info;
-> >>>
-> >>>> +       regmap_write(info->regmap, AXP20X_ADC_EN1, 0);
-> >>>> +       regmap_write(info->regmap, AXP20X_ADC_EN2, 0);
-> >>>
-> >>> The existing VBUS power supply driver enables the VBUS ADC bits itsel=
-f,
-> >>> and does not check them later on. This means if one were to remove th=
-is
-> >>> axp20x-adc module, the voltage/current readings in the VBUS power sup=
-ply
-> >>> would be invalid. Some sort of workaround would be needed here in this
-> >>> driver of the VBUS driver.
-> >>>
-> >>
-> >> That would be one reason to migrate the VBUS driver to use the IIO
-> >> channels, wouldn't it?
-> >=20
-> > It is, preferably without changing the device tree.
-> >=20
->=20
-> Yes, of course.
+-- 
+Regards,
 
-Note that you can have something like a test for the iio channel
-property in the VBUS driver, and keep the old behaviour in the case
-where we wouldn't have it.
+Laurent Pinchart
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---shktkrd5emwedjwp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYbnh3AAoJEBx+YmzsjxAg1B0QAJUr7iV7NoatEyLL3tVoe1tb
-b4gImcq8bN/bkBBjfMIIJbUj/R1zekMW5MyCdIfe+QFWGWHzwZduebnxAez57S8y
-NGiSODOXgDoU6/tbMqxehTwhrsad9xEd4Xd7Q+W2Swj04RvFAx4D1jjrusHRv3/T
-f0xmE08TkGZWWKb9O78Ti7iTM2gT986t5PSIdEE3JCMg04Yd7h62khO6f+x3lxsE
-ZdvZuppxYfJcZjRenj3tJW0y9XyRqmEGKflUoojz4rCY67++XP5BIw9pKv8+Eq1h
-LA5D5mp82ioIX7hzkB0f+uJtNG6TNtyC3kzL7xmuJoJHkBANuVPXlOsLcyn5j/gV
-v8U1Rw5K6WJS74YXDjGXc+GtPz3NHTwFwcPEhM6aRiBHPIK+el7Ee2RuQNSuYCKJ
-1X3l3cRh6Tq90fI/0yWDEYOdj1pnC6m12jeo2jPwUrJEPE4qTQh6OzK9hkFXaJKn
-jxCGY9XAxtvboc+ft3P+B8iH8Z4Shq4LyxHHZPx8JtCMaq47QM0t9fow+NRqmbWk
-odpe0YPYAMmci9vPWrDfVYsQ8k+1xcS8ufhss5iUTACPhiZ1bceyb6m5cOt7pUW/
-C7NxHUPt79pwWUFeqQdP8rckyEgOOhw8FmLXtkRK3nQ/F5I3tUTfRLLAc3xbo51U
-b+R7GUAYJE0S7CkxYyVF
-=ZfBu
------END PGP SIGNATURE-----
-
---shktkrd5emwedjwp--
-
-
---===============8192709076306840755==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8192709076306840755==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
