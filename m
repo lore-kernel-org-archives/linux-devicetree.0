@@ -1,34 +1,83 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition
- table
-Date: Thu, 5 Jan 2017 07:36:38 -0800
-Message-ID: <20170105153637.GA4310@atomide.com>
-References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
- <1483627851-17996-2-git-send-email-t.remmet@phytec.de>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Thu, 5 Jan 2017 15:49:51 +0000
+Message-ID: <20170105154950.GM679@arm.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
+	<20170105115528.GG679@arm.com>
+	<CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483627851-17996-2-git-send-email-t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> [170105 06:57]:
-> To improve NAND safety we updated the partition layout.
-> Added barebox backup partition and removed kernel and oftree
-> partition. They are kept in ubi now.
+On Thu, Jan 05, 2017 at 10:27:27AM -0500, Rob Clark wrote:
+> On Thu, Jan 5, 2017 at 6:55 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
+> >> TODO maybe we want two options, one to enable stalling, and 2nd to punt
+> >> handling to wq?  I haven't needed to use mm APIs from fault handler yet
+> >> (although it is something that I think we'll want some day).  Perhaps
+> >> stalling support is limited to just letting driver dump some extra
+> >> debugging information otherwise.  Threaded handling probably only useful
+> >> with stalling, but inverse may not always be true.
+> >
+> > I'd actually like to see this stuck on a worker thread, because I think
+> > that's more generally useful and I don't want to have a situation where
+> > sometimes the IOMMU fault notifier is run in IRQ context and sometimes it's
+> > not.
+> 
+> So I was talking a bit w/ Jordan on IRC yesterday..  and we also have
+> the GPU's hw hang-detect to contend with.  So I *suspect* that when we
+> get to the point of using this to do things like page in things from
+> swap and resume the faulting transaction, we probably want to get
+> called immediately from the IRQ handler so we can disable the hw
+> hang-detect.
 
-What about the users with earlier partition tables?
+Well, if you want to use an SMMU for paging, then the GPU driver would
+need to request that explicitly when allocating its DMA buffers, to that
+would be the time to either delay or disable the hang detection.
 
-Please read about "flag day" changes, typically they are not
-acceptable.
+> I'm not sure if the better solution then would be to have two fault
+> callbacks, one immediately from the IRQ and a later one from wq.  Or
+> let the driver handle the wq business and give it a way to tell the
+> IOMMU when to resume.
+> 
+> I kinda think we should punt on the worker thread for now until we are
+> ready to resume faulting transactions, because I guess a strong chance
+> that whatever way we do it now will be wrong ;-)
 
-Regards,
+I guess what I'm after is for you to change the interrupt handlers to be
+threaded, like they are for SMMUv3. I *think* you can do that with a NULL
+thread_fn for now, and just call report_iommu_fault from the handler.
+The return value of that could, in theory, be used to queued the paging
+request and wake the paging thread in future.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > I wonder if this should also be predicated on the compatible string, so
+> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
+> > the compatible string isn't specific enough to identify an implementation
+> > with the required SS behaviour? On the other hand, it feels pretty
+> > redundant and a single "stalling works" property is all we need.
+> 
+> We could also drop the property and key the behavior on specific
+> compat strings I guess.  Having both seems a bit odd.  Anyways, I'll
+> defer to DT folks about what the cleaner approach is.
+
+As Robin pointed out, we do need to be able to distinguish the integration
+of the device from the device itself. For example, MMU-9000 might be capable
+of stalling, but if it's bolted to a PCI RC, it's not safe to do so.
+
+Will
