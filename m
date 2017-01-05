@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH] ARM: dts: sunxi: Use axp209.dtsi for Olinuxino Lime2
-Date: Thu, 5 Jan 2017 18:14:06 +0100
-Message-ID: <20170105171406.s5xpbtcpe4esn6iz@lukather>
-References: <20161227102238.20110-1-manu@bidouilliste.com>
+Subject: Re: [PATCH v3] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Thu, 5 Jan 2017 18:14:27 +0100
+Message-ID: <20170105171427.v4vosv7mfv3zveyz@lukather>
+References: <20161227102807.20244-1-manu@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6576532119163168624=="
+Content-Type: multipart/mixed; boundary="===============5731612938212450627=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161227102238.20110-1-manu@bidouilliste.com>
+In-Reply-To: <20161227102807.20244-1-manu@bidouilliste.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,27 +21,23 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, lin
 List-Id: devicetree@vger.kernel.org
 
 
---===============6576532119163168624==
+--===============5731612938212450627==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s37qztz6jqdsrdoe"
+	protocol="application/pgp-signature"; boundary="okkzjswunm727sc6"
 Content-Disposition: inline
 
 
---s37qztz6jqdsrdoe
+--okkzjswunm727sc6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 27, 2016 at 11:22:38AM +0100, Emmanuel Vadot wrote:
-> Use axp209.dtsi in sun7i-a20-olinuxino-lime2.dts and correct
-> some regulators.
->=20
-> DCDC2 is used for vdd-cpu so it should never be bellow 1V and above 1.4V
-> DCDC3 is used for VDD_INT so same as above.
-> LD01 is used for the RTC, and should have a typical value of 1.3V
-> LD02 is used for AVCC and should have a typical value of 3.0V
-> LD03/4 are used for Port-E/Port-G Power pin, and the schematics recommands
-> to set them to 2.8V as they can be used for CSI0/1.
+On Tue, Dec 27, 2016 at 11:28:07AM +0100, Emmanuel Vadot wrote:
+> The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
+> others three only have 1.
+> Add the num-cs property to each node.
+> The current driver doesn't read this property but this is useful for
+> downstream user of DTS (FreeBSD for example).
 >=20
 > Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
 
@@ -53,30 +49,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---s37qztz6jqdsrdoe
+--okkzjswunm727sc6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYbn7ZAAoJEBx+YmzsjxAgYV4QALrEDyqMnnLuHxy1mdbPg1U/
-By9IyJyBQNOYYt/fluWQoj97DRBPHBZjapFc2KzAWwRMvXLiH3mKkHuk+0/KJtEW
-km24Nq5rMbXf27epOxFFoqQel9uf3PObp33YFpDfckM8AUrrj1XHFR7m043/ebX9
-4h4ljd3m9vpsnZE+gIvIoIFUKb943mMEYa0z5phO0qPwgYUe3UQhCqdZdvF4T3/C
-oirvi7+4wtzSDIVIo95eyvybFBZKDZLR0PmtlvWoYl2H8PIpc/f7TYcPoSGALKqd
-tQ5/ZNtvVMiyHKTQKe+s1Lluq4T/Vf7UyTl7xv5wKb1f43356DlmU/qgbd93cdyV
-9Osuexx+wHNWmY3RxloAQBrJf0bc1QaDDqy6Aw05/dtEk2jNmG7N0Iq1d9U4VZIp
-PeIkouXcl+tR+p1hOow4CiZALw2NwN/4LZS6kCAQzRW+tMlulpPq/k5BrVZeV+GR
-IRB+OYejvcHA5Ys8SPidQacNrgbaVKwAqgb+ywl751gECFlxlQGkebSvuiMXpiAn
-9cKKKsvNhH7h5UD702BDRap9oSjJsqTMIRhuBISnrSmdADMuoOxUsSshzx57oUMA
-P7bftd8rJBVJJ7NeILjeniDd89afnuGhFtJlOhg2AGY7qDgoCe5vojWAToltqP8C
-RLOWjM2Oc5fXJ1Cc+zL5
-=LbZ6
+iQIcBAEBCAAGBQJYbn7zAAoJEBx+YmzsjxAghAQP/2RmVhmy6xBEx5QA1cJukGTF
+SMxTXAHc/1VZaPughhzTA8aesz0N94lKaW2KQ6RDggF5p09FlWG+sQe1O4ToNrGn
+FV4XVdh12TsX7ocnFmetXpavBcabCsQRxsiPMpp+cznD78TlJyQ+j2uWBtjrxYow
+KKlyXWLFtW8XXT6bhjumSvB3NynN4eA3Ps3RKZAjPWsgT3Cx+HV49NGospjnd05a
+MIah4WwShw9+jhW8ti1M1PYFS4haMyedZzn+Uq+pewOyx3AmtpO7Fme6ryPrr+Nw
+uPB4hEhi4v7JtinXz8rroGWp9hU7UoPLTw3WEJnBsCU0HSMk4AolOQX5uml7LLyr
+DE83rG1SLGRn0Rhgx0MfG+TkI8EMm7LFKOSinKBkN5nv2k8DByctn89lDioUkTnE
+UP+/bmr5zsLb+l9wPwFRl7msbpaB0NCO4GYY2VfAKIfzkTajo8UTC7zF4DdRoPt8
+9KEro8tMK/eAu5xia3oupRg2fRoHOXziW68ZCWDb6qDKy7WVA3gYTnqwHef0rRQA
+yM0j9Bu3r2cUt0r07gh4vcP9jlzFX7QwzmxqiwyXGyfWx9VaAk2C895iLFYer1Ng
+sXyJb5Ky6gTTIaj6XOv9lhQC2k+7wcGX+ZEDrVeKzB/Wj2IsNm1/eFku6FytPkel
+4oSij6HGMn+csriRGMff
+=vIza
 -----END PGP SIGNATURE-----
 
---s37qztz6jqdsrdoe--
+--okkzjswunm727sc6--
 
 
---===============6576532119163168624==
+--===============5731612938212450627==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -87,4 +83,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============6576532119163168624==--
+--===============5731612938212450627==--
