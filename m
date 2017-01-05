@@ -1,72 +1,39 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: exynos: Add tm2 touchkey node
-Date: Thu, 5 Jan 2017 20:41:40 +0200
-Message-ID: <20170105184140.tongd3evzm57qkps@kozik-lap>
-References: <1483604833-29746-1-git-send-email-jcsing.lee@samsung.com>
- <CGME20170105082716epcas1p100f48f22d5ff0bad7776f6d7b444daf3@epcas1p1.samsung.com>
- <1483604833-29746-5-git-send-email-jcsing.lee@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/2] pinctrl: Introduce TI IOdelay configuration driver
+Date: Thu, 5 Jan 2017 10:50:21 -0800
+Message-ID: <20170105185020.GQ4310@atomide.com>
+References: <20161230183732.5595-1-tony@atomide.com>
+ <20161230183732.5595-3-tony@atomide.com>
+ <20170102221228.GH9325@atomide.com>
+ <41e171e7-4812-51fa-980c-197f7db7b5ef@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483604833-29746-5-git-send-email-jcsing.lee@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jaechul Lee <jcsing.lee@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-input@vger.kernel.org, galaxyra@gmail.com, beomho.seo@samsung.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <41e171e7-4812-51fa-980c-197f7db7b5ef@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 05:27:13PM +0900, Jaechul Lee wrote:
-> Add DT node support for TM2 touchkey device.
+* Nishanth Menon <nm@ti.com> [170104 09:58]:
+> On 01/02/2017 04:12 PM, Tony Lindgren wrote:
+> [...]
 > 
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Although I said the patch looks correct, it was not an explicit Review
-(and we have a quite serious "Reviewer's statement of oversight") so my
-tag should not be added.
-
-No harm was done, but I prefer clearly and explicitly given tags.
-
-Best regards,
-Krzysztof
-
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> I got the following warnings with kernel-doc:
+> > $ ./scripts/kernel-doc drivers/pinctrl/ti/pinctrl-ti-iodelay.c>/dev/null
+> > drivers/pinctrl/ti/pinctrl-ti-iodelay.c:132: warning: Excess struct/union/enum/typedef member 'name' description in 'ti_iodelay_pingroup'
+> > drivers/pinctrl/ti/pinctrl-ti-iodelay.c:132: warning: Excess struct/union/enum/typedef member 'map' description in 'ti_iodelay_pingroup'
+> > drivers/pinctrl/ti/pinctrl-ti-iodelay.c:159: warning: Excess struct/union/enum/typedef member 'names' description in 'ti_iodelay_device'
+> > drivers/pinctrl/ti/pinctrl-ti-iodelay.c:211: warning: No description found for parameter 'cfg'
+> > drivers/pinctrl/ti/pinctrl-ti-iodelay.c:211: warning: Excess function parameter 'val' description in 'ti_iodelay_pinconf_set'
+> > drivers/pinctrl/ti/pinctrl-ti-iodelay.c:418: warning: Cannot understand  *
+> >  on line 418 - I thought it was a doc line
 > 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> index aa8584a..dad6fb8 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> @@ -17,3 +17,16 @@
->  	model = "Samsung TM2 board";
->  	compatible = "samsung,tm2", "samsung,exynos5433";
->  };
-> +
-> +&hsi2c_9 {
-> +	status = "okay";
-> +
-> +	touchkey@20 {
-> +		compatible = "samsung,tm2-touchkey";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&gpa3>;
-> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +		vcc-supply = <&ldo32_reg>;
-> +		vdd-supply = <&ldo33_reg>;
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+> Marking them below
+
+OK thanks will repost v3 shortly.
+
+Regards,
+
+Tony
