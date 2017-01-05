@@ -1,117 +1,135 @@
-From: Pavel Pisa <ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>
-Subject: Myir AM437x Rico board support (DTS) for Linux mainline 4.9 and 4.4 Ti Processor SDK 03.02.00.05
-Date: Thu, 5 Jan 2017 17:54:03 +0100
-Message-ID: <201701051754.03159.ppisa@pikron.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 17/22] power: supply: add battery driver for AXP20X and
+ AXP22X PMICs
+Date: Thu, 5 Jan 2017 18:02:24 +0100
+Message-ID: <20170105170224.wq45m3pg6sjnuhyh@lukather>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-18-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0172696973153841119=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170102163723.7939-18-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pmeerw@pmeerw.net, knaack.h@gmx.de, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, jic23@kernel.org, icenowy@aosc.xyz
 List-Id: devicetree@vger.kernel.org
 
-Hello Tony and others,
 
-I have found some personal time during holydays[*] and proceed
-furhers with RICO board support for perspective kernel versions.
-
-I have prepared a device tree which provides quite complete
-board support for the most of peripherals found on MyIR
-AM437x Ricoboard. I have tested the kernel on the real board
-which I have bought for myself to do testing and can contribute
-previous work to to mainline.
-
-LEDs, Ethernet, LEDs, SDcard, eMMC, onboard SPI NVM etc.
-works. Generally the AM437x mainline support is great except
-for SGX. It has been pleasant to work with it. I used TFTP boot
-and ramdisk overlay over NFS exported Debian Jessie RO chroot
-install.
-
-Only significant missing piece is HDMI support. I have put
-setup which I prepared for Ti kernels to device-tree.
-But mainline supports SII9022 HDMI encoder only by
-
-  drivers/gpu/drm/bridge/sii902x.c
-
-but OMAP DSS changes "sil,sii9022" in device-tree
-to omapdss,sil,sii9022 which seems to be customized
-version found in Texas Instruments tree
-
-  drivers/gpu/drm/omapdrm/displays/encoder-sii9022-video.c
-
-Do you know if there are some plans to support combination
-of this driver or include customized version in mainline
-for OMAP?
-
-I expect that non accelerated graphic with parallel
-LCD panel would work with 4.9 mainline kernel and
-the prepared device tree if #if 0 is changed to #if 1.
-
-The 4.9 mainline support files can be found there
-
-  http://pikron.com/files/linux/rico/linux-4.9/am437x-myir-ricoboard.dts
-  http://pikron.com/files/linux/rico/linux-4.9/am437x-myir-ricoboard.dtb
-  
-http://pikron.com/files/linux/rico/linux-4.9/config-4.9-mainline-myir-ricoboard
-
-I would be happy if they can help others, some feedback
-and cooperation would be great as well. I would be happy
-to contribute DTS to mainline if it is found acceptable.
-I can prepare version without HDMI or complete DSS section
-if actual untested/able section is unacceptable.
-
-Because of missing HDMI support and attempt to test SGX
-accelerated support, I have tried official Ti
-Processor SDK image for AM437x (am437x-evm-linux-03.02.00.05).
-I have prepared DTS and tested it with my overlay enabled
-kernel and Debian and Ti root filesystems as well as with
-original Ti kernel.
-
-There are files for use with HDMI connected monitor
-
-  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard-hdmi.dts
-  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard-hdmi.dtb
-  files/linux/rico/linux-ti-4.4/config-ti-4.4-myir-ricoboard
-
-and another set for parallel LCD panel (untested)
-
-  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard.dts
-  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard.dtb
-
-I have managed to build SGX driver for my kernel configuration
-and from the testing of Ti image it seem to be used same way
-as for original Ti kernel build.
-
-I have no luck with accelerated Xorg. But Ti release notes
-states that Xorg support is missing in 03.02.00.05.
-
-There is question if it is permanent status or if there is some
-change.
-
-Is there chance that Ti includes this prepared DTS in their
-kernel branch?
-
-For sure mainline 4.9 support is even more interesting
-for me and future.
-
-Best wishes,
-
-Pavel
+--===============0172696973153841119==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4ydonvtwzvx2n2jl"
+Content-Disposition: inline
 
 
-[*] Our company partner cares mainly (and may be pays something)
-for my work on maintenance of ancient MyIR Linux 3.12.10 kernel
-in their products. And MyIR company does not seem to really
-care about users and updates at all even if the enhancements
-are sent them for free. Typical experience but great thing about
-this board is that a schematic diagram is provided which makes
-possible to develop proper support.
+--4ydonvtwzvx2n2jl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 02, 2017 at 05:37:17PM +0100, Quentin Schulz wrote:
+> +		/*
+> +		 * IIO framework gives mV but Power Supply framework gives =B5V.
+> +		 */
+> +		val->intval *=3D 1000;
+
+s/gives/wants/ ?
+
+> +static int axp20x_battery_set_max_voltage(struct axp20x_batt_ps *axp20x_=
+batt,
+> +					  int val)
+> +{
+> +	switch (val) {
+> +	case 4100000:
+> +		return regmap_update_bits(axp20x_batt->regmap,
+> +					  AXP20X_CHRG_CTRL1,
+> +					  AXP20X_CHRG_CTRL1_TGT_VOLT,
+> +					  AXP20X_CHRG_CTRL1_TGT_4_1V);
+> +	case 4150000:
+> +		if (axp20x_batt->axp_id =3D=3D AXP221_ID)
+> +			return -EINVAL;
+> +
+> +		return regmap_update_bits(axp20x_batt->regmap,
+> +					  AXP20X_CHRG_CTRL1,
+> +					  AXP20X_CHRG_CTRL1_TGT_VOLT,
+> +					  AXP20X_CHRG_CTRL1_TGT_4_15V);
+> +	case 4200000:
+> +		return regmap_update_bits(axp20x_batt->regmap,
+> +					  AXP20X_CHRG_CTRL1,
+> +					  AXP20X_CHRG_CTRL1_TGT_VOLT,
+> +					  AXP20X_CHRG_CTRL1_TGT_4_2V);
+> +	default:
+> +		/*
+> +		 * AXP20x max voltage can be set to 4.36V and AXP22X max voltage
+> +		 * can be set to 4.22V and 4.24V, but these voltages are too
+> +		 * high for Lithium based batteries (AXP PMICs are supposed to
+> +		 * be used with these kinds of battery).
+> +		 */
+> +		return -EINVAL;
+> +	}
+
+Since all your calls to regmap are the same, something like:
+
+case 4100000:
+	val =3D AXP20X_CHRG_CTRL1_TGT_4_1V;
+	break;
+
+case 4150000:
+	val =3D AXP20X_CHRG_CTRL1_TGT_4_15V;
+	break;
+
+regmap_update_bits(axp20x_batt->regmap, AXP20X_CHRG_CTRL1,
+		   AXP20X_CHRG_CTRL1_TGT_VOLT, val);
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It would also get rid of your warnings in checkpatch.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--4ydonvtwzvx2n2jl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYbnwbAAoJEBx+YmzsjxAgjkYQALMF1anuaoZC9l++9J6su0Vh
+FgfjsnT7qYWz+qzBFoF42u1ujZSsNrOhlqIKh5lXciCe69Cx6RBxXJgGAkYIxrlO
+kXLcHttap+RU7RYQJ4S4YwKwgksffDw0jx8th5hxZOowBogqG7zDn5H5dz/3wSyf
+qVcyBTwKilIAId6AbUy+T6ptWMMYVt1SPLZVK2bPnQKo+a1f+KScCJ92pfl228vM
+8xGkgHVUgc73a6zePin3oF4d2oRmwYgTdJFiJCXduXwxlfIynwAonDPynu52hdGI
+S7KPI7aIUKWR/fFIQYSU1jFBbBt0h1YXrQFIrGO2f9+Ow2f98vkU9j7Q7mzOOdyc
+33F2VSeSTR3SJarhaQUOsPFScLUo8deNQVE7nv6uBKn8+EId6BvORQ2q3LMEfF2F
+9RZaBBxZ48Qnp14BZrAemiAHccy8bczy465HGqfSVO3hyrHPsEdSL08rF09RaxcU
+9fD56VopraViiomKLKVLYSrHWP8YLXbtAd/vcdDvJNleun1GEk4amLh6xHVI3zE1
+/M6xm4a28vVWOnlW0D4s+PNG7vJp7+mXQ2hAu2ZvaUzhtPIkdHf6w9/y1ytBW2I9
+Kf8CiwFr002dtf3tridrFzoePr9n4ZQvouUGBnMVp2K3cZtYUcxeKbdeH92ZRErw
+cCw+Jgqy3HHTZnG3IoOe
+=ThAR
+-----END PGP SIGNATURE-----
+
+--4ydonvtwzvx2n2jl--
+
+
+--===============0172696973153841119==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0172696973153841119==--
