@@ -1,136 +1,193 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Thu, 5 Jan 2017 15:32:50 +0000
-Message-ID: <d1a36cc5-265d-6971-f698-29b8d76e7884@arm.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
-	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
-	<20170105115528.GG679@arm.com> <20170105120857.GB21952@leverpostej>
-	<20170105140005.GJ679@arm.com> <20170105140720.GA25868@leverpostej>
-	<20170105144742.GK679@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2,9/9] irqchip/ls-scfg-msi: add MSI affinity support
+Date: Thu, 5 Jan 2017 15:33:01 +0000
+Message-ID: <7888f3a1-ae4a-f2b6-f41b-fc414f7ca968@arm.com>
+References: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
+ <1483603837-4629-9-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170105144742.GK679-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1483603837-4629-9-git-send-email-Minghuan.Lian@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Minghuan Lian <Minghuan.Lian@nxp.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/17 14:47, Will Deacon wrote:
-> On Thu, Jan 05, 2017 at 02:07:31PM +0000, Mark Rutland wrote:
->> On Thu, Jan 05, 2017 at 02:00:05PM +0000, Will Deacon wrote:
->>> On Thu, Jan 05, 2017 at 12:08:57PM +0000, Mark Rutland wrote:
->>>> On Thu, Jan 05, 2017 at 11:55:29AM +0000, Will Deacon wrote:
->>>>> On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
->>>>>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>>>>> index ef465b0..5f405a6 100644
->>>>>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>>>>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>>>>> @@ -68,6 +68,9 @@ conditions.
->>>>>>                    aliases of secure registers have to be used during
->>>>>>                    SMMU configuration.
->>>>>>  
->>>>>> +- arm,smmu-enable-stall : Enable stall mode to stall memory transactions
->>>>>> +                  and resume after fault is handled
->>>>
->>>> The wording here seems to describe a policy rather than a property.
->>>>
->>>> Can you elaborate on when/why this is required/preferred/valid?
->>>
->>> It's not a policy, it's a hardware capability. There are some non-probeable
->>> reasons why stalling mode is unsafe or unusable:
->>>
->>>   http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/474530.html
->>
->> Ok. My point was that the wording above is an imperative -- it tells
->> the kernel to enable stall mode, not if/why it is safe to do so (i.e. it
->> is a policy, not a property).
->>
->> It sounds like that's just a wording issue. Something like
->> "arm,stalling-is-usable" (along with a descrition of when that
->> can/should be in the DT) would be vastly better.
+On 05/01/17 08:10, Minghuan Lian wrote:
+> For LS1046a and LS1043a v1.1, the MSI controller has 4 MSIRs and 4
+> CPUs. A GIC SPI interrupt of MSIR can be associated with a CPU.
+> When changing MSI interrupt affinity, this MSI will be moved to the
+> corresponding MSIR and MSI message data will be changed according to
+> MSIR. when requesting a MSI, the bits of all 4 MSIR will be reserved.
+> The parameter 'msi_affinity_flag' is provide to change this mode.
+> "lsmsi=no-affinity" will disable affinity, all MSI can only be
+> associated with CPU 0.
 > 
-> Why does it need a vendor prefix? I'm not down on the convention there.
-> "stalling-safe" or "stalling-supported" are alternative strings.
+> Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> ---
+> v2-v1:
+> - None
 > 
->>>>>>  static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
->>>>>> @@ -824,6 +852,8 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
->>>>>>  
->>>>>>  	/* SCTLR */
->>>>>>  	reg = SCTLR_CFIE | SCTLR_CFRE | SCTLR_AFE | SCTLR_TRE | SCTLR_M;
->>>>>> +	if (smmu->options & ARM_SMMU_OPT_ENABLE_STALL)
->>>>>> +		reg |= SCTLR_CFCFG;
->>>>>
->>>>> I wonder if this should also be predicated on the compatible string, so
->>>>> that the "arm,smmu-enable-stall" property is ignored (with a warning) if
->>>>> the compatible string isn't specific enough to identify an implementation
->>>>> with the required SS behaviour? On the other hand, it feels pretty
->>>>> redundant and a single "stalling works" property is all we need.
->>>>
->>>> Can you elaborate on what "stalling works" entails? Is that just the SS
->>>> bit behaviour? are there integration or endpoint-specific things that we
->>>> need to care about?
->>>
->>> See above. The "stalling works" property (arm,smmu-enable-stall) would
->>> indicate that both the implementation *and* the integration are such
->>> that stalling is usable for demand paging. I suspect there are endpoints
->>> that can't deal with stalls (e.g. they might timeout and signal a RAS
->>> event), but in that case their respective device drivers should ensure
->>> that any DMA buffers are pinned and/or register a fault handler to
->>> request termination of the faulting transaction.
->>
->> Ok. It would be good to elaborate on what "stalling is useable" means in
->> the property description. i.e. what specificallty the implementation and
->> integration need to ensure.
+>  drivers/irqchip/irq-ls-scfg-msi.c | 75 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 70 insertions(+), 5 deletions(-)
 > 
-> We can describe some of those guarantees in the property description, but
-> it's difficult to enumerate them exhaustively. For example, you wouldn't
-> want stalling to lead to data corruption, denial of service, or for the
-> thing to catch fire, but having those as explicit requirements is a bit
-> daft. It's also impossible to check that you thought of everything.
-> 
-> Aside from renaming the option, I'm really after an opinion on whether
-> it's better to have one property or combine it with the compatible
-> string, because I can see benefits of both and don't much care either
-> way.
+> diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-scfg-msi.c
+> index dc19569..753fe39 100644
+> --- a/drivers/irqchip/irq-ls-scfg-msi.c
+> +++ b/drivers/irqchip/irq-ls-scfg-msi.c
+> @@ -40,6 +40,7 @@ struct ls_scfg_msir {
+>  	unsigned int gic_irq;
+>  	unsigned int bit_start;
+>  	unsigned int bit_end;
+> +	unsigned int srs; /* Shared interrupt register select */
+>  	void __iomem *reg;
+>  };
+>  
+> @@ -70,6 +71,19 @@ struct ls_scfg_msi {
+>  	.chip	= &ls_scfg_msi_irq_chip,
+>  };
+>  
+> +static int msi_affinity_flag = 1;
+> +
+> +static int __init early_parse_ls_scfg_msi(char *p)
+> +{
+> +	if (p && strncmp(p, "no-affinity", 11) == 0)
+> +		msi_affinity_flag = 0;
+> +	else
+> +		msi_affinity_flag = 1;
+> +
+> +	return 0;
+> +}
+> +early_param("lsmsi", early_parse_ls_scfg_msi);
 
-The SMMU implementation side of the decision (i.e. independence of IRQ
-assertion vs. SS) seems like exactly the sort of stuff the compatible
-string already has covered. The integration side I'm less confident can
-be described this way at all - the "this device definitely won't go
-wrong if stalled for an indefinite length of time" is inherently a
-per-master thing, so a single property on the SMMU implying that for
-every device connected to it seems a bit optimistic, and breaks down as
-soon as you have one device in the system for which that isn't true (a
-PCI root complex, say), even if that guy's traffic never crosses paths
-with whichever few devices you actually care about using stalls with.
+What is the point of this option? If feels like an unnecessary complexity.
 
-I think this needs to be some kind of "arm,smmu-stall-safe" property
-placed on individual master device nodes (mad idea: or even an extra
-cell of flags in the IOMMU specifier) to encapsulate both that the given
-device itself is OK with being stalled, and that it's integrated in such
-a way that its stalled transactions cannot disrupt any *other* device
-(e.g. it has a TBU all to itself). Then upon initialising a context bank
-on a suitable SMMU implementation, we set CFCFG based on whatever device
-is being attached to the corresponding domain, and refuse any subsequent
-attempts to attach a non-stallable device to a stalling domain (and
-possibly even vice-versa).
+> +
+>  static void ls_scfg_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	struct ls_scfg_msi *msi_data = irq_data_get_irq_chip_data(data);
+> @@ -77,12 +91,43 @@ static void ls_scfg_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+>  	msg->address_hi = upper_32_bits(msi_data->msiir_addr);
+>  	msg->address_lo = lower_32_bits(msi_data->msiir_addr);
+>  	msg->data = data->hwirq;
+> +
+> +	if (msi_affinity_flag) {
+> +		u32 msir_index;
+> +
+> +		msir_index = cpumask_first(data->common->affinity);
+> +		if (msir_index >= msi_data->msir_num)
+> +			msir_index = 0;
 
-Robin.
+How can this happen?
 
+> +
+> +		msg->data |= msir_index;
+
+How do you guarantee that the low bits were clear? Please document the
+way you encode your MSI payload.
+
+> +	}
+>  }
+>  
+>  static int ls_scfg_msi_set_affinity(struct irq_data *irq_data,
+>  				    const struct cpumask *mask, bool force)
+>  {
+> -	return -EINVAL;
+> +	struct ls_scfg_msi *msi_data = irq_data_get_irq_chip_data(irq_data);
+> +	u32 cpu;
+> +
+> +	if (!msi_affinity_flag)
+> +		return -EINVAL;
+> +
+> +	if (!force)
+> +		cpu = cpumask_any_and(mask, cpu_online_mask);
+> +	else
+> +		cpu = cpumask_first(mask);
+> +
+> +	if (cpu >= msi_data->msir_num)
+> +		return -EINVAL;
+> +
+> +	if (msi_data->msir[cpu].gic_irq <= 0) {
+> +		pr_warn("cannot bind the irq to cpu%d\n", cpu);
+
+Please don't. Returning an error is enough. If you really want to have
+something, turn it into a proper debug message.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	cpumask_copy(irq_data->common->affinity, mask);
+> +
+> +	return IRQ_SET_MASK_OK;
+>  }
+>  
+>  static struct irq_chip ls_scfg_msi_parent_chip = {
+> @@ -158,7 +203,7 @@ static void ls_scfg_msi_irq_handler(struct irq_desc *desc)
+>  
+>  	for_each_set_bit_from(pos, &val, size) {
+>  		hwirq = ((msir->bit_end - pos) << msi_data->cfg->ibs_shift) |
+> -			msir->index;
+> +			msir->srs;
+>  		virq = irq_find_mapping(msi_data->parent, hwirq);
+>  		if (virq)
+>  			generic_handle_irq(virq);
+> @@ -221,10 +266,19 @@ static int ls_scfg_msi_setup_hwirq(struct ls_scfg_msi *msi_data, int index)
+>  					 ls_scfg_msi_irq_handler,
+>  					 msir);
+>  
+> +	if (msi_affinity_flag) {
+> +		/* Associate MSIR interrupt to the cpu */
+> +		irq_set_affinity(msir->gic_irq, get_cpu_mask(index));
+> +		msir->srs = 0; /* This value is determined by the CPU */
+> +	} else
+> +		msir->srs = index;
+> +
+>  	/* Release the hwirqs corresponding to this MSIR */
+> -	for (i = 0; i < msi_data->cfg->msir_irqs; i++) {
+> -		hwirq = i << msi_data->cfg->ibs_shift | msir->index;
+> -		bitmap_clear(msi_data->used, hwirq, 1);
+> +	if (!msi_affinity_flag || msir->index == 0) {
+> +		for (i = 0; i < msi_data->cfg->msir_irqs; i++) {
+> +			hwirq = i << msi_data->cfg->ibs_shift | msir->index;
+> +			bitmap_clear(msi_data->used, hwirq, 1);
+> +		}
+>  	}
+>  
+>  	return 0;
+> @@ -316,6 +370,17 @@ static int ls_scfg_msi_probe(struct platform_device *pdev)
+>  	bitmap_set(msi_data->used, 0, msi_data->irqs_num);
+>  
+>  	msi_data->msir_num = of_irq_count(pdev->dev.of_node);
+> +
+> +	if (msi_affinity_flag) {
+> +		u32 cpu_num;
+> +
+> +		cpu_num = num_possible_cpus();
+> +		if (msi_data->msir_num >= cpu_num)
+> +			msi_data->msir_num = cpu_num;
+> +		else
+> +			msi_affinity_flag = 0;
+> +	}
+> +
+>  	msi_data->msir = devm_kcalloc(&pdev->dev, msi_data->msir_num,
+>  				      sizeof(*msi_data->msir),
+>  				      GFP_KERNEL);
 > 
-> Will
-> _______________________________________________
-> iommu mailing list
-> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+
+This is a very confusing patch. Please get rid of this useless option
+and document how you encode the routing in the hwirq.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
