@@ -1,112 +1,67 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 10/12] ARM: dts: socfpga: add base fpga region and fpga
- bridges
-Date: Thu, 5 Jan 2017 10:28:42 -0600
-Message-ID: <CANk1AXSbqohp73xHpp7e9-37d61ZB-dRAPAFc2eQGRYUnvB+0w@mail.gmail.com>
-References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
- <1483575694-29599-11-git-send-email-dinguyen@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
+ Tree
+Date: Thu, 5 Jan 2017 08:30:54 -0800
+Message-ID: <20170105163054.GO10531@minitux>
+References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
+ <20161226181153.11271-2-bjorn.andersson@linaro.org>
+ <20170104115424.GH27589@dell>
+ <20170104192608.GN10531@minitux>
+ <20170105074952.GG24225@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483575694-29599-11-git-send-email-dinguyen@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Alan Tull <atull@opensource.altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170105074952.GG24225@dell>
+Sender: linux-leds-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 4, 2017 at 6:21 PM, Dinh Nguyen <dinguyen@kernel.org> wrote:
-> From: Alan Tull <atull@opensource.altera.com>
->
-> Add h2f and lwh2f bridges.
-> Add base FPGA Region to support DT overlays for FPGA programming.
-> Add l3regs.
->
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
->  arch/arm/boot/dts/socfpga.dtsi | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index de29172..dccc281 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -93,6 +93,16 @@
->                         };
->                 };
->
-> +               base_fpga_region {
-> +                       compatible = "fpga-region";
-> +                       fpga-mgr = <&fpgamgr0>;
-> +                       fpga-bridges = <&fpga_bridge0>, <&fpga_bridge1>;
+On Wed 04 Jan 23:49 PST 2017, Lee Jones wrote:
 
-Hi Dinh,
+> On Wed, 04 Jan 2017, Bjorn Andersson wrote:
+> 
+> > On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
+> > 
+> > > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
+> > > 
+> > > > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > > > 
+> > > > Implement support for initialization of the lm3533 driver core and
+> > > > probing child devices from Device Tree.
+> > > > 
+> > 
+> > [..]
+> > 
+> > > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
+> > > >  	lm3533_device_bl_init(lm3533);
+> > > >  	lm3533_device_led_init(lm3533);
+> > > >  
+> > > > +	if (lm3533->dev->of_node) {
+> > > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
+> > > > +				     lm3533->dev);
+> > > > +	}
+> > > 
+> > > I think it's save to call of_platform_populate(), even if !of_node.
+> > > It will just fail and return an error code, which you are ignoring
+> > > anyway.
+> > > 
+> > 
+> > I thought so too, but that's apparently how you trigger probing children
+> > of the root node. So we're stuck with a conditional.
+> 
+> Ah, so this is to protect against the case where DT is present, but a
+> node for this device is not (or is disabled), so is left unprobed.
+> Then the bind is initiated via I2C?  Or something else?
+> 
 
-We want to get rid of the 'fpga-bridges' line.
+In the event that a new lm3533 is spawned from sysfs we would not have
+platform_data when entering lm3533_device_init() and just bail early.
 
-> +
-> +                       #address-cells = <0x1>;
-> +                       #size-cells = <0x1>;
-> +                       ranges = <0 0xff200000 0x100000>;
+Therefor, this issue would be limited to the odd case of lm3533 being
+initiated from code (e.g. a board file) on a DT enabled system. In which
+case it will create and probe new devices from the root of the DT.
 
-Should get rid of the ranges line here too.  The 'fpga-bridges' and
-'ranges' line can be added in the overlay.
-
-Alan
-
-> +               };
-> +
->                 can0: can@ffc00000 {
->                         compatible = "bosch,d_can";
->                         reg = <0xffc00000 0x1000>;
-> @@ -513,6 +523,22 @@
->                                 };
->                 };
->
-> +               fpga_bridge0: fpga_bridge@ff400000 {
-> +                       compatible = "altr,socfpga-lwhps2fpga-bridge";
-> +                       reg = <0xff400000 0x100000>;
-> +                       resets = <&rst LWHPS2FPGA_RESET>;
-> +                       reset-names = "lwhps2fpga";
-> +                       clocks = <&l4_main_clk>;
-> +               };
-> +
-> +               fpga_bridge1: fpga_bridge@ff500000 {
-> +                       compatible = "altr,socfpga-hps2fpga-bridge";
-> +                       reg = <0xff500000 0x10000>;
-> +                       resets = <&rst HPS2FPGA_RESET>;
-> +                       reset-names = "hps2fpga";
-> +                       clocks = <&l4_main_clk>;
-> +               };
-> +
->                 fpgamgr0: fpgamgr@ff706000 {
->                         compatible = "altr,socfpga-fpga-mgr";
->                         reg = <0xff706000 0x1000
-> @@ -694,6 +720,11 @@
->                         arm,prefetch-offset = <7>;
->                 };
->
-> +               l3regs@0xff800000 {
-> +                       compatible = "altr,l3regs", "syscon";
-> +                       reg = <0xff800000 0x1000>;
-> +               };
-> +
->                 mmc: dwmmc0@ff704000 {
->                         compatible = "altr,socfpga-dw-mshc";
->                         reg = <0xff704000 0x1000>;
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
