@@ -1,120 +1,70 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 03/22] iio: adc: add support for X-Powers AXP20X and
- AXP22X PMICs ADCs
-Date: Thu, 5 Jan 2017 17:51:42 +0100
-Message-ID: <20170105165141.yamr24tn5pcleyfa@lukather>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-4-quentin.schulz@free-electrons.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
+ device tree
+Date: Thu, 5 Jan 2017 08:51:18 -0800
+Message-ID: <20170105165118.GG4310@atomide.com>
+References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA@mail.gmail.com>
+ <20170105163928.GD4310@atomide.com>
+ <2557392.58vudoaMIY@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8988884107367946325=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170102163723.7939-4-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pmeerw@pmeerw.net, knaack.h@gmx.de, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, jic23@kernel.org, icenowy@aosc.xyz
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2557392.58vudoaMIY@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [170105 08:49]:
+> On Thursday 05 Jan 2017 08:39:29 Tony Lindgren wrote:
+> > * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170105 08:28]:
+> > > On Fri, Dec 2, 2016 at 3:11 PM, Laurent Pinchart wrote:
+> > >> The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
+> > >> connected to port 2 of the OMAP EHCI controller. The board however has
+> > >> no EEPROM to store the ethernet MAC address, which is programmed by the
+> > >> boot loader.
+> > >> 
+> > >> To allow Linux to use the same MAC address as the boot loader (or for
+> > >> that matter any fixed MAC address), we need a node in the device tree
+> > >> for the ethernet controller that the boot loader can update at runtime
+> > >> with a local-mac-address property. Add it, along with an alias for the
+> > >> ethernet controller to let the boot loader locate it easily.
+> > >> 
+> > >> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > >> ---
+> > >> Changes since v1:
+> > >> 
+> > >> - Renamed usb2 DT node to hub
+> > >> ---
+> > >> 
+> > >>  arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
+> > >>  1 file changed, 16 insertions(+)
+> > >> 
+> > >> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts
+> > >> b/arch/arm/boot/dts/omap3-beagle-xm.dts index
+> > >> 85e297ed0ea1..673cee2234b2 100644
+> > >> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
+> > >> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+> > >> @@ -27,6 +27,7 @@
+> > >>         aliases {
+> > >>                 display0 = &dvi0;
+> > >>                 display1 = &tv0;
+> > >> +               ethernet = &ethernet;
+> > > 
+> > > Sorry, just noticed this, but this should be dropped. It's not used
+> > > nor do we want an alias here.
+> > 
+> > OK, will update locally as I have not pushed out yet.
+> 
+> The ethernet alias is used by U-Boot to locate the ethernet controller and 
+> update the MAC address.
 
---===============8988884107367946325==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ubympmcbdleq2fod"
-Content-Disposition: inline
+OK let's wait a bit on this one then.
 
-
---ubympmcbdleq2fod
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 02, 2017 at 05:37:03PM +0100, Quentin Schulz wrote:
-> +	switch (axp20x_id) {
-> +	case AXP209_ID:
-> +		indio_dev->info =3D &axp20x_adc_iio_info;
-> +		indio_dev->num_channels =3D ARRAY_SIZE(axp20x_adc_channels);
-> +		indio_dev->channels =3D axp20x_adc_channels;
-> +
-> +		/* Enable the ADCs on IP */
-> +		regmap_write(info->regmap, AXP20X_ADC_EN1, AXP20X_ADC_EN1_MASK);
-> +
-> +		/* Enable GPIO0/1 and internal temperature ADCs */
-> +		regmap_update_bits(info->regmap, AXP20X_ADC_EN2,
-> +				   AXP20X_ADC_EN2_MASK, AXP20X_ADC_EN2_MASK);
-> +
-> +		/* Configure ADCs rate */
-> +		regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
-> +				   AXP20X_ADC_RATE_MASK, AXP20X_ADC_RATE_50HZ);
-> +		break;
-> +
-> +	case AXP221_ID:
-> +		indio_dev->info =3D &axp22x_adc_iio_info;
-> +		indio_dev->num_channels =3D ARRAY_SIZE(axp22x_adc_channels);
-> +		indio_dev->channels =3D axp22x_adc_channels;
-> +
-> +		/* Enable the ADCs on IP */
-> +		regmap_write(info->regmap, AXP20X_ADC_EN1, AXP22X_ADC_EN1_MASK);
-> +
-> +		/* Configure ADCs rate */
-> +		regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
-> +				   AXP20X_ADC_RATE_MASK, AXP22X_ADC_RATE_200HZ);
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-
-I'm not a big fan of those IDs. It always ends up with a ever
-increasing list of cases without any consolidation.
-
-In this case, the only thing you need is a list of pointers and values
-that can definitely be stored in a structure.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ubympmcbdleq2fod
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYbnmdAAoJEBx+YmzsjxAgJ4kP/37Es0ZWIlM6Wh58mgOZYT6X
-6CDKZ+/1efFLTVgyjd+XpAty2H4VL4bu7NJ/x4kLobQop/R5f78yqoywXz6/jnyH
-qotuDSo/RVuPM0c01dXcr1p/TiBpa+ZWQ5u9Q15ux4jnVt0majNzQUE+zPArcICC
-B85bo9HavOPUK+oAcyZiTUwjyMqUlfAlm2Lfr97nrZacgG96mgRNEMOt9E8AbnaZ
-mjBGFpy84lx0N6sg29ZpzFnXmutkoCcMBQR+A7OhY0nF5zjqeDOw/URhI3y4e3tK
-6H5tRkjWhvszUzhmRdrUMdCzrG5ipJWCI2mZBVRYBynDK+2K19NKhe1ovOUhZ20p
-oj8qxuphtQANI8ppskH/a0ynONrvpYTboErgZ/AqjdkP3c+3WBb9VnrHE1iV7tyY
-bBLpiBVEjvYAQlnQTCnVDp1kBfIypg3DDKH4H0OQx0OIpjSe6JdwBGeBJn750K8v
-NBQwYQAiGXX/+6xMdKz7Y25fBKQg40jRAlnXyM22ZAbz+6ZXsSHejFgssfRruCUp
-Mj2kllAAoW6xl+OTcykEeTt2A1evNIZxWO7bbL55FlXBMK32a4PL2kQXdv687Dot
-oiIagvfbqdBwTgM8SquJ4xHXVV/Ln8FkWT8Zt0FWbWPrPGIr1KIl7XGiQr2TG8Zn
-GJrHs1j5gJReCJh6mg+v
-=YjoP
------END PGP SIGNATURE-----
-
---ubympmcbdleq2fod--
-
-
---===============8988884107367946325==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8988884107367946325==--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
