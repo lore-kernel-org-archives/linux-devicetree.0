@@ -1,99 +1,77 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Thu, 5 Jan 2017 14:07:31 +0000
-Message-ID: <20170105140720.GA25868@leverpostej>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
-	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
-	<20170105115528.GG679@arm.com> <20170105120857.GB21952@leverpostej>
-	<20170105140005.GJ679@arm.com>
+From: Marcin Wojtas <mw@semihalf.com>
+Subject: Re: [PATCHv2 0/5] Support for Marvell switches with integrated CPUs
+Date: Thu, 5 Jan 2017 15:09:24 +0100
+Message-ID: <CAPv3WKcT8MxX+g12C1o81MmQJWRt7Rpd-hgBh8rTpLOS3vdtqA@mail.gmail.com>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170105140005.GJ679-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Laxman Dewangan <ldewangan@nvidia.com>, linux-clk@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Juri Lelli <juri.lelli@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kern>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 02:00:05PM +0000, Will Deacon wrote:
-> On Thu, Jan 05, 2017 at 12:08:57PM +0000, Mark Rutland wrote:
-> > On Thu, Jan 05, 2017 at 11:55:29AM +0000, Will Deacon wrote:
-> > > On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
-> > > > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > > > index ef465b0..5f405a6 100644
-> > > > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > > > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > > > @@ -68,6 +68,9 @@ conditions.
-> > > >                    aliases of secure registers have to be used during
-> > > >                    SMMU configuration.
-> > > >  
-> > > > +- arm,smmu-enable-stall : Enable stall mode to stall memory transactions
-> > > > +                  and resume after fault is handled
-> > 
-> > The wording here seems to describe a policy rather than a property.
-> > 
-> > Can you elaborate on when/why this is required/preferred/valid?
-> 
-> It's not a policy, it's a hardware capability. There are some non-probeable
-> reasons why stalling mode is unsafe or unusable:
-> 
->   http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/474530.html
+Hi Chris,
 
-Ok. My point was that the wording above is an imperative -- it tells
-the kernel to enable stall mode, not if/why it is safe to do so (i.e. it
-is a policy, not a property).
+Thanks a lot for your work and v2. Can you please add changelog
+between patchset versions in your cover letter?
 
-It sounds like that's just a wording issue. Something like
-"arm,stalling-is-usable" (along with a descrition of when that
-can/should be in the DT) would be vastly better.
+Best regards,
+Marcin
 
-> Some of these are specific to the SMMU implementation (e.g. whether or not
-> the SS bit can remain set without reasserting the IRQ) and some are specific
-> to the integration (e.g. whether or not stalling an endpoint can deadlock
-> the SoC). The key point is that, without support from both the
-> implementation and the integration, stalls are unusable.
-
-Ok.
-
-> > > >  static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
-> > > > @@ -824,6 +852,8 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-> > > >  
-> > > >  	/* SCTLR */
-> > > >  	reg = SCTLR_CFIE | SCTLR_CFRE | SCTLR_AFE | SCTLR_TRE | SCTLR_M;
-> > > > +	if (smmu->options & ARM_SMMU_OPT_ENABLE_STALL)
-> > > > +		reg |= SCTLR_CFCFG;
-> > > 
-> > > I wonder if this should also be predicated on the compatible string, so
-> > > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
-> > > the compatible string isn't specific enough to identify an implementation
-> > > with the required SS behaviour? On the other hand, it feels pretty
-> > > redundant and a single "stalling works" property is all we need.
-> > 
-> > Can you elaborate on what "stalling works" entails? Is that just the SS
-> > bit behaviour? are there integration or endpoint-specific things that we
-> > need to care about?
-> 
-> See above. The "stalling works" property (arm,smmu-enable-stall) would
-> indicate that both the implementation *and* the integration are such
-> that stalling is usable for demand paging. I suspect there are endpoints
-> that can't deal with stalls (e.g. they might timeout and signal a RAS
-> event), but in that case their respective device drivers should ensure
-> that any DMA buffers are pinned and/or register a fault handler to
-> request termination of the faulting transaction.
-
-Ok. It would be good to elaborate on what "stalling is useable" means in
-the property description. i.e. what specificallty the implementation and
-integration need to ensure.
-
-Thanks,
-Mark.
+2017-01-05 4:36 GMT+01:00 Chris Packham <chris.packham@alliedtelesis.co.nz>:
+> The 98DX3236, 98DX3336 and 98DX4251 are a set of switch ASICs with
+> integrated CPUs. They CPU block is common within these product lines and
+> (as far as I can tell/have been told) is based on the Armada XP. There
+> are a few differences due to the fact they have to squeeze the CPU into
+> the same package as the switch.
+>
+> Chris Packham (4):
+>   clk: mvebu: support for 98DX3236 SoC
+>   arm: mvebu: support for SMP on 98DX3336 SoC
+>   arm: mvebu: Add device tree for 98DX3236 SoCs
+>   arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
+>
+> Kalyan Kinthada (1):
+>   pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+>
+>  Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+>  .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  |  18 ++
+>  .../devicetree/bindings/arm/marvell/98dx3236.txt   |  23 ++
+>  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   1 +
+>  .../pinctrl/marvell,armada-98dx3236-pinctrl.txt    |  46 ++++
+>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi          | 247 +++++++++++++++++++++
+>  arch/arm/boot/dts/armada-xp-98dx3336.dtsi          |  78 +++++++
+>  arch/arm/boot/dts/armada-xp-98dx4251.dtsi          |  92 ++++++++
+>  arch/arm/boot/dts/db-dxbc2.dts                     | 159 +++++++++++++
+>  arch/arm/boot/dts/db-xc3-24g4xg.dts                | 155 +++++++++++++
+>  arch/arm/mach-mvebu/Makefile                       |   1 +
+>  arch/arm/mach-mvebu/common.h                       |   1 +
+>  arch/arm/mach-mvebu/platsmp.c                      |  43 ++++
+>  arch/arm/mach-mvebu/pmsu-98dx3236.c                |  69 ++++++
+>  drivers/clk/mvebu/Makefile                         |   2 +-
+>  drivers/clk/mvebu/armada-xp.c                      |  42 ++++
+>  drivers/clk/mvebu/clk-cpu.c                        |  33 ++-
+>  drivers/clk/mvebu/mv98dx3236-corediv.c             | 207 +++++++++++++++++
+>  drivers/pinctrl/mvebu/pinctrl-armada-xp.c          | 155 +++++++++++++
+>  19 files changed, 1369 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+>  create mode 100644 arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+>  create mode 100644 arch/arm/boot/dts/armada-xp-98dx3336.dtsi
+>  create mode 100644 arch/arm/boot/dts/armada-xp-98dx4251.dtsi
+>  create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
+>  create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
+>  create mode 100644 arch/arm/mach-mvebu/pmsu-98dx3236.c
+>  create mode 100644 drivers/clk/mvebu/mv98dx3236-corediv.c
+>
+> --
+> 2.11.0.24.ge6920cf
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
