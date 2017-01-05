@@ -1,11 +1,13 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 0/8] ARM: dts: Switch to new DSA binding
-Date: Thu,  5 Jan 2017 11:29:49 -0800
-Message-ID: <20170105192957.14304-1-f.fainelli@gmail.com>
+Subject: [PATCH v2 3/8] ARM: dts: armada-388-clearfog: Utilize new DSA binding
+Date: Thu,  5 Jan 2017 11:29:52 -0800
+Message-ID: <20170105192957.14304-4-f.fainelli@gmail.com>
+References: <20170105192957.14304-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170105192957.14304-1-f.fainelli@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,45 +21,94 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net:
+dsa: Document new binding"). The legacy binding node is kept included, but is
+marked disabled.
 
-This patch series converts the in-tree users to utilize the new (relatively)
-DSA binding that was introduced with commit 8c5ad1d6179d ("net: dsa: Document
-new binding"). The legacy binding node is kept included, but is marked
-disabled.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/armada-388-clearfog.dts | 65 +++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-Changes in v2:
-
-- patch 1: Use an hexadecimal reg property
-- patch 2: fixed the subject
-- patch 3: s/okay/disabled/ for the legacy DSA node
-- patches 7/8: fixed a stray whitespace
-
-In about 2-3 releases we may consider removing the old DSA binding entirely
-from the kernel.
-
-Thank you!
-
-Florian Fainelli (8):
-  ARM: dts: armada-370-rd: Utilize new DSA binding
-  ARM: dts: armada-385-linksys: Utilize new DSA binding
-  ARM: dts: armada-388-clearfog: Utilize new DSA binding
-  ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
-  ARM: dts: kirkwood-dir665: Utilize new DSA binding
-  ARM: dts: kirkwood-linksys-viper: Utilize new DSA binding
-  ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA binding
-  ARM: dts: kirkwood-rd88f6281: Utilize new DSA binding
-
- arch/arm/boot/dts/armada-370-rd.dts            | 44 +++++++++++++++++
- arch/arm/boot/dts/armada-385-linksys.dtsi      | 52 ++++++++++++++++++++-
- arch/arm/boot/dts/armada-388-clearfog.dts      | 65 ++++++++++++++++++++++++++
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts  | 53 +++++++++++++++++++++
- arch/arm/boot/dts/kirkwood-dir665.dts          | 49 +++++++++++++++++++
- arch/arm/boot/dts/kirkwood-linksys-viper.dts   | 49 +++++++++++++++++++
- arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 +++++++++++++++++++
- arch/arm/boot/dts/kirkwood-rd88f6281-z0.dts    | 11 +++++
- arch/arm/boot/dts/kirkwood-rd88f6281.dtsi      | 44 +++++++++++++++++
- 9 files changed, 415 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
+index 71ce201c903e..40ec6d768669 100644
+--- a/arch/arm/boot/dts/armada-388-clearfog.dts
++++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+@@ -351,6 +351,8 @@
+ 	};
+ 
+ 	dsa@0 {
++		status = "disabled";
++
+ 		compatible = "marvell,dsa";
+ 		dsa,ethernet = <&eth1>;
+ 		dsa,mii-bus = <&mdio>;
+@@ -444,3 +446,66 @@
+ 		status = "disabled";
+ 	};
+ };
++
++&mdio {
++	status = "okay";
++
++	switch@4 {
++		compatible = "marvell,mv88e6085";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		pinctrl-0 = <&clearfog_dsa0_clk_pins &clearfog_dsa0_pins>;
++		pinctrl-names = "default";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				label = "lan5";
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "lan4";
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "lan3";
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "lan2";
++			};
++
++			port@4 {
++				reg = <4>;
++				label = "lan1";
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "cpu";
++				ethernet = <&eth1>;
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			port@6 {
++				/* 88E1512 external phy */
++				reg = <6>;
++				label = "lan6";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++	};
++};
 -- 
 2.9.3
