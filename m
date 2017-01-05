@@ -1,58 +1,64 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 02/22] mfd: axp20x: add ADC data regs to volatile regs for
- AXP22X
-Date: Thu, 5 Jan 2017 12:12:21 +0800
-Message-ID: <CAGb2v65Bwbi8JtOUydMoP4NFcDD_5VXUMzcWCP+S5UyKTA5H1g@mail.gmail.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-3-quentin.schulz@free-electrons.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH V2 1/5] Documetation: samsung-phy: add the exynos-pcie-phy
+ binding
+Date: Thu, 05 Jan 2017 09:46:13 +0530
+Message-ID: <4110cfa2-bbe8-337e-5f2c-13d82cd23713@samsung.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com>
+ <CGME20170104123436epcas1p1d3d840e4ade396a60ce690b09d486990@epcas1p1.samsung.com>
+ <20170104123435.30740-2-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170102163723.7939-3-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170104123435.30740-2-jh80.chung@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 3, 2017 at 12:37 AM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> The AXP22X PMICs have multiple ADCs, each one exposing data from the
-> different power supplies connected to the PMIC.
+Hi Jaehoon,
+
+On 01/04/2017 06:04 PM, Jaehoon Chung wrote:
+> Adds the exynos-pcie-phy binding for Exynos PCIe PHY.
+> This is for using generic PHY framework.
 >
-> This adds the different ADC data registers to the volatile registers of
-> the AXP22X PMIC.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 > ---
->  drivers/mfd/axp20x.c | 1 +
->  1 file changed, 1 insertion(+)
+> Changelog on V2:
+> - Remove the child node.
+> - Add 2nd address to the parent reg prop.
 >
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 619a83e..a33db5e 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -100,6 +100,7 @@ static const struct regmap_range axp22x_writeable_ranges[] = {
->  static const struct regmap_range axp22x_volatile_ranges[] = {
->         regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP20X_PWR_OP_MODE),
->         regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
-> +       regmap_reg_range(AXP22X_TEMP_ADC_H, AXP20X_BATT_DISCHRG_I_L),
+>  Documentation/devicetree/bindings/phy/samsung-phy.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index 9872ba8..ab80bfe 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -191,3 +191,20 @@ Example:
+>  		usbdrdphy0 = &usb3_phy0;
+>  		usbdrdphy1 = &usb3_phy1;
+>  	};
+> +
+> +Samsung Exynos SoC series PCIe PHY controller
+> +--------------------------------------------------
+> +Required properties:
+> +- compatible : Should be set to "samsung,exynos5440-pcie-phy"
+> +- #phy-cells : Must be zero
+> +- reg : a register used by phy driver.
+> +	- First is for phy register, second is for block register.
+> +- reg-names : Must be set to "phy" and "block".
+> +
+In general PHY uses a "reference clock" to work, if that is true for 
+5440 also, will you consider adding an (may be) optional clock 
+properties as well?
 
-You added this macro in the next patch. Please move that hunk to this patch.
-
-ChenYu
-
->         regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ5_STATE),
->         regmap_reg_range(AXP22X_GPIO_STATE, AXP22X_GPIO_STATE),
->         regmap_reg_range(AXP22X_PMIC_ADC_H, AXP20X_IPSOUT_V_HIGH_L),
-> --
-> 2.9.3
+otherwise this binding looks ok to me.
+> +Example:
+> +	pcie_phy0: pcie-phy@270000 {
+> +		#phy-cells = <0>;
+> +		compatible = "samsung,exynos5440-pcie-phy";
+> +		reg = <0x270000 0x1000>, <0x271000 0x40>;
+> +		reg-names = "phy", "block";
+> +	};
 >
