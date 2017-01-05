@@ -1,115 +1,306 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v5 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Thu, 05 Jan 2017 07:55:29 +0100
-Message-ID: <412a0238-dd8e-6c74-46a7-876e112189f1@samsung.com>
-References: <1483517711-23849-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170104081522epcas5p112698b2499e56dc9027ec1f57f8964ee@epcas5p1.samsung.com>
- <1483517711-23849-3-git-send-email-hoegeun.kwon@samsung.com>
- <20170104144439.bzjab3ovixyt3i5b@rob-hp-laptop>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 4/5] soc: zte: pm_domains: Prepare for supporting
+ ARMv8 zx2967 family
+Date: Thu, 5 Jan 2017 15:05:11 +0800
+Message-ID: <20170105070509.GC4667@x250>
+References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
+ <1483530494-14177-4-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20170104144439.bzjab3ovixyt3i5b@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: devicetree@vger.kernel.org, krzk@kernel.org, cw00.choi@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, jh80.chung@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, kgene@kernel.org, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1483530494-14177-4-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, amitdanielk@gmail.com, ulf.hansson@linaro.org, geert+renesas@glider.be, arnd@arndb.de, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, krzk@kernel.org, claudiu.manoil@nxp.com, robh+dt@kernel.org, chen.chaokai@zte.com.cn, laurent.pinchart@ideasonboard.com, yangbo.lu@nxp.com, wang.qiang01@zte.com.cn, jun.nie@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQuMDEuMjAxNyAxNTo0NCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBKYW4gMDQs
-IDIwMTcgYXQgMDU6MTU6MTBQTSArMDkwMCwgSG9lZ2V1biBLd29uIHdyb3RlOgo+PiBUaGlzIHBh
-dGNoIGFkZCBzdXBwb3J0IGZvciBNSVBJLURTSSBiYXNlZCBTNkUzSEEyIEFNT0xFRCBwYW5lbAo+
-PiBkcml2ZXIuIFRoaXMgcGFuZWwgaGFzIDE0NDB4MjU2MCByZXNvbHV0aW9uIGluIDUuNy1pbmNo
-IHBoeXNpY2FsCj4+IHBhbmVsIGluIHRoZSBUTTIgZGV2aWNlLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
-OiBEb25naHdhIExlZSA8ZGgwOS5sZWVAc2Ftc3VuZy5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6IEh5
-dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTog
-SG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Cj4+IC0tLQo+PiAgLi4uL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEyLnR4dCAgICAgfCAgNDAgKysKPj4g
-IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICA2
-ICsKPj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsKPj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zYW1zdW5nLXM2ZTNoYTIu
-YyAgICAgIHwgNzQxICsrKysrKysrKysrKysrKysrKysrKwo+PiAgNCBmaWxlcyBjaGFuZ2VkLCA3
-ODggaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQKPj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2Ftc3VuZy1zNmUz
-aGEyLmMKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIudHh0Cj4+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjY4NzlmNTEKPj4gLS0tIC9kZXYvbnVs
-bAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9zYW1zdW5nLHM2ZTNoYTIudHh0Cj4+IEBAIC0wLDAgKzEsNDAgQEAKPj4gK1NhbXN1bmcgUzZF
-M0hBMiA1LjciIDE0NDB4MjU2MCBBTU9MRUQgcGFuZWwKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVy
-dGllczoKPj4gKyAgLSBjb21wYXRpYmxlOiAic2Ftc3VuZyxzNmUzaGEyIgo+PiArICAtIHJlZzog
-dGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIgb2YgYSBEU0kgcGVyaXBoZXJhbAo+PiArICAtIHZk
-ZDMtc3VwcGx5OiBJL08gdm9sdGFnZSBzdXBwbHkKPj4gKyAgLSB2Y2ktc3VwcGx5OiB2b2x0YWdl
-IHN1cHBseSBmb3IgYW5hbG9nIGNpcmN1aXRzCj4+ICsgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBz
-cGVjIGZvciB0aGUgcmVzZXQgcGluIChhY3RpdmUgbG93KQo+PiArICAtIGVuYWJsZS1ncGlvczog
-YSBHUElPIHNwZWMgZm9yIHRoZSBwYW5lbCBlbmFibGUgcGluIChhY3RpdmUgaGlnaCkKPj4gKyAg
-LSB0ZS1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRoZSB0ZWFyaW5nIGVmZmVjdCBzeW5jaHJvbml6
-YXRpb24gc2lnbmFsCj4+ICsgICAgZ3BpbyBwaW4gKGFjdGl2ZSBoaWdoKQo+PiArCj4+ICtUaGUg
-ZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNo
-aWxkCj4+ICsnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3MgZGVmaW5l
-ZCBpbiBbMV0uIFRoaXMKPj4gK25vZGUgc2hvdWxkIGRlc2NyaWJlIHBhbmVsJ3MgdmlkZW8gYnVz
-Lgo+PiArCj4+ICtbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92
-aWRlby1pbnRlcmZhY2VzLnR4dAo+PiArCj4+ICtFeGFtcGxlOgo+PiArCj4+ICsmZHNpIHsKPj4g
-KwkuLi4KPj4gKwo+PiArCXBhbmVsQDAgewo+PiArCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZl
-M2hhMiI7Cj4+ICsJCXJlZyA9IDwwPjsKPj4gKwkJdmRkMy1zdXBwbHkgPSA8JmxkbzI3X3JlZz47
-Cj4+ICsJCXZjaS1zdXBwbHkgPSA8JmxkbzI4X3JlZz47Cj4+ICsJCXJlc2V0LWdwaW9zID0gPCZn
-cGcwIDAgR1BJT19BQ1RJVkVfTE9XPjsKPj4gKwkJZW5hYmxlLWdwaW9zID0gPCZncGYxIDUgR1BJ
-T19BQ1RJVkVfSElHSD47Cj4+ICsJCXRlLWdwaW9zID0gPCZncGYxIDMgR1BJT19BQ1RJVkVfSElH
-SD47Cj4+ICsKPj4gKwkJcG9ydCB7Cj4+ICsJCQlwYW5lbF9pbjogZW5kcG9pbnQgewo+PiArCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47Cj4gQXMgSSBzYWlkIHByZXZpb3VzbHksIGl0
-IG1ha2VzIG5vIHNlbnNlIHRvIGhhdmUgYSBncmFwaCB0byBkc2lfb3V0IGl0IGlzIAo+IHNpbXBs
-eSB0aGUgcGFyZW50IG5vZGUuCgpUaGUgcHJvYmxlbSBpcyB0aGF0IGV4eW5vc19kc2kgcmVxdWly
-ZXMgcHJlc2VuY2Ugb2YgZW5kcG9pbnQgbm9kZSwgd2hlbgppdCB3YXMgd3JpdHRlbiB0aGUgcG9s
-aWN5IHdhcyB0aGF0IGdyYXBocyBtdXN0IGJlIGFsd2F5cyBwcmVzZW50LgpEU0kgcmVhZHMgZnJv
-bSB0aGlzIG5vZGUgc2Ftc3VuZyxidXJzdC1jbG9jay1mcmVxdWVuY3kgYW5kCnNhbXN1bmcsZXNj
-LWNsb2NrLWZyZXF1ZW5jeS4gRm9yIGV4YW1wbGUgaW4gZXh5bm9zNDQxMi10cmF0czIuZHRzOgoK
-PiAgICAgICAgIGRzaV8wOiBkc2lAMTFDODAwMDAgewo+ICAgICAgICAgICAgICAgICAuLi4KPiAg
-ICAgICAgICAgICAgICAgcG9ydHMgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+
-Owo+ICAKPiAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDEgewo+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+Cj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBkc2lfb3V0OiBlbmRwb2ludCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX2luPjsKPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgc2Ftc3VuZyxidXJzdC1jbG9jay1mcmVxdWVuY3kK
-PiA9IDw1MDAwMDAwMDA+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBzYW1zdW5nLGVzYy1jbG9jay1mcmVxdWVuY3kgPQo+IDwyMDAwMDAwMD47Cj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4g
-ICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAKPiAgICAgICAgICAgICAgICAgcGFuZWxAMCB7
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgLi4uCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-cG9ydCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkc2lfaW46IGVuZHBvaW50
-IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBv
-aW50ID0gPCZkc2lfb3V0PjsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAg
-IH07CgpIb3dldmVyLCBEU0kgZHJpdmVyIGRvZXMgbm90IHVzZSByZW1vdGUtZW5kcG9pbnQgcHJv
-cGVydHksIGl0IGlzIGhlcmUKb25seSB0byBmdWxmaWxsIG9mX2dyYXBoIHBvbGljeS4KU28gaWYg
-c29tZXRoaW5nIGxpa2UgYmVsb3cgaXMgYWNjZXB0YWJsZSwgd2UgY2FuIGdldCByaWQgb2YgcG9y
-dCBub2RlIGluCnBhbmVsOgoKPiAgICAgICAgIGRzaV8wOiBkc2lAMTFDODAwMDAgewo+ICAgICAg
-ICAgICAgICAgICAuLi4KPiAgICAgICAgICAgICAgICAgcG9ydHMgewo+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICNzaXplLWNlbGxzID0gPDA+Owo+ICAKPiAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDEg
-ewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+Cj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBkc2lfb3V0OiBlbmRwb2ludCB7Cj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVl
-bmN5Cj4gPSA8NTAwMDAwMDAwPjsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgc2Ftc3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5ID0KPiA8MjAwMDAwMDA+Owo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAgICAgICAgICB9
-Owo+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgCj4gICAgICAgICAgICAgICAgIHBhbmVs
-QDAgewo+ICAgICAgICAgICAgICAgICAgICAgICAgIC4uLgo+ICAgICAgICAgICAgICAgICB9Owo+
-ICAgICAgICAgfTsKCldoYXQgZG8geW91IHRoaW5rPwoKT3RoZXIgc29sdXRpb24gaXMgdG8gbW92
-ZSBwcm9ibGVtYXRpYyBwcm9wZXJ0aWVzIHNvbWV3aGVyZSBlbHNlLCBidXQKdGhpcyByZXF1aXJl
-IGNoYW5nZSBvZiBiaW5kaW5ncy4KQW55d2F5IEkgd291bGQgYmUgZ2xhZCB0byByZW1vdmUgcG9y
-dCBub2RlcyBpbiBvdGhlciBzYW1zdW5nIHBhbmVsczoKczZlOGFhMCwgbGQ5MDQwLgoKUmVnYXJk
-cwpBbmRyemVqCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Jan 04, 2017 at 07:48:13PM +0800, Baoyou Xie wrote:
+> The ARMv8 zx2967 family (296718, 296716 etc) uses different value
+> for controlling the power domain on/off registers, Choose the
+> value depending on the compatible.
+> 
+> Multiple domains are prepared for the family, this patch prepares
+> the common functions.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  drivers/soc/Kconfig                 |   1 +
+>  drivers/soc/Makefile                |   1 +
+>  drivers/soc/zte/Kconfig             |  13 ++++
+>  drivers/soc/zte/Makefile            |   4 +
+>  drivers/soc/zte/zx2967_pm_domains.c | 142 ++++++++++++++++++++++++++++++++++++
+>  drivers/soc/zte/zx2967_pm_domains.h |  44 +++++++++++
+>  6 files changed, 205 insertions(+)
+>  create mode 100644 drivers/soc/zte/Kconfig
+>  create mode 100644 drivers/soc/zte/Makefile
+>  create mode 100644 drivers/soc/zte/zx2967_pm_domains.c
+>  create mode 100644 drivers/soc/zte/zx2967_pm_domains.h
+> 
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index f31bceb..f09023f 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -11,5 +11,6 @@ source "drivers/soc/tegra/Kconfig"
+>  source "drivers/soc/ti/Kconfig"
+>  source "drivers/soc/ux500/Kconfig"
+>  source "drivers/soc/versatile/Kconfig"
+> +source "drivers/soc/zte/Kconfig"
+>  
+>  endmenu
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 50c23d0..05eae52 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -16,3 +16,4 @@ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+>  obj-$(CONFIG_SOC_TI)		+= ti/
+>  obj-$(CONFIG_ARCH_U8500)	+= ux500/
+>  obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
+> +obj-$(CONFIG_ARCH_ZX)		+= zte/
+> diff --git a/drivers/soc/zte/Kconfig b/drivers/soc/zte/Kconfig
+> new file mode 100644
+> index 0000000..20bde38
+> --- /dev/null
+> +++ b/drivers/soc/zte/Kconfig
+> @@ -0,0 +1,13 @@
+> +#
+> +# ZTE SoC drivers
+> +#
+> +menuconfig SOC_ZTE
+> +	bool "ZTE SoC driver support"
+> +
+> +if SOC_ZTE
+> +
+> +config ZX2967_PM_DOMAINS
+> +	bool "ZX2967 PM domains"
+> +	depends on PM_GENERIC_DOMAINS
+> +
+> +endif
+> diff --git a/drivers/soc/zte/Makefile b/drivers/soc/zte/Makefile
+> new file mode 100644
+> index 0000000..8a37f2f
+> --- /dev/null
+> +++ b/drivers/soc/zte/Makefile
+> @@ -0,0 +1,4 @@
+> +#
+> +# ZTE SOC drivers
+> +#
+> +obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx2967_pm_domains.o
+> diff --git a/drivers/soc/zte/zx2967_pm_domains.c b/drivers/soc/zte/zx2967_pm_domains.c
+> new file mode 100644
+> index 0000000..f190a62
+> --- /dev/null
+> +++ b/drivers/soc/zte/zx2967_pm_domains.c
+> @@ -0,0 +1,142 @@
+> +/*
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +
+> +#include "zx2967_pm_domains.h"
+> +
+> +#define PCU_DM_CLKEN(zpd)	((zpd)->reg_offset[REG_CLKEN])
+> +#define PCU_DM_ISOEN(zpd)	((zpd)->reg_offset[REG_ISOEN])
+> +#define PCU_DM_RSTEN(zpd)	((zpd)->reg_offset[REG_RSTEN])
+> +#define PCU_DM_PWREN(zpd)	((zpd)->reg_offset[REG_PWREN])
+> +#define PCU_DM_ACK_SYNC(zpd)	((zpd)->reg_offset[REG_ACK_SYNC])
+> +
+> +static void __iomem *pcubase;
+> +
+> +int zx2967_power_on(struct generic_pm_domain *domain)
+
+The function is now used only in this file, so it can be static.
+
+> +{
+> +	struct zx2967_pm_domain *zpd = (struct zx2967_pm_domain *)domain;
+> +	unsigned long loop = 1000;
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_PWREN(zpd));
+> +	if (zpd->polarity == PWREN)
+> +		val |= BIT(zpd->bit);
+> +	else
+> +		val &= ~BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_PWREN(zpd));
+> +
+> +	do {
+> +		udelay(1);
+> +		val = readl_relaxed(pcubase + PCU_DM_ACK_SYNC(zpd))
+> +				   & BIT(zpd->bit);
+> +	} while (--loop && !val);
+> +
+> +	if (!loop) {
+> +		pr_err("Error: %s %s fail\n", __func__, domain->name);
+> +		return -EIO;
+> +	}
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_RSTEN(zpd));
+> +	val |= BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_RSTEN(zpd));
+> +	udelay(5);
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_ISOEN(zpd));
+> +	val &= ~BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_ISOEN(zpd));
+> +	udelay(5);
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_CLKEN(zpd));
+> +	val |= BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_CLKEN(zpd));
+> +	udelay(5);
+> +
+> +	pr_debug("poweron %s\n", domain->name);
+> +
+> +	return 0;
+> +}
+> +
+> +int zx2967_power_off(struct generic_pm_domain *domain)
+
+Ditto
+
+Shawn
+
+> +{
+> +	struct zx2967_pm_domain *zpd = (struct zx2967_pm_domain *)domain;
+> +	unsigned long loop = 1000;
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_CLKEN(zpd));
+> +	val &= ~BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_CLKEN(zpd));
+> +	udelay(5);
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_ISOEN(zpd));
+> +	val |= BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_ISOEN(zpd));
+> +	udelay(5);
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_RSTEN(zpd));
+> +	val &= ~BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_RSTEN(zpd));
+> +	udelay(5);
+> +
+> +	val = readl_relaxed(pcubase + PCU_DM_PWREN(zpd));
+> +	if (zpd->polarity == PWREN)
+> +		val &= ~BIT(zpd->bit);
+> +	else
+> +		val |= BIT(zpd->bit);
+> +	writel_relaxed(val, pcubase + PCU_DM_PWREN(zpd));
+> +
+> +	do {
+> +		udelay(1);
+> +		val = readl_relaxed(pcubase + PCU_DM_ACK_SYNC(zpd))
+> +				   & BIT(zpd->bit);
+> +	} while (--loop && val);
+> +
+> +	if (!loop) {
+> +		pr_err("Error: %s %s fail\n", __func__, domain->name);
+> +		return -EIO;
+> +	}
+> +
+> +	pr_debug("poweroff %s\n", domain->name);
+> +
+> +	return 0;
+> +}
+> +
+> +int zx2967_pd_probe(struct platform_device *pdev,
+> +		    struct generic_pm_domain **zx_pm_domains,
+> +		    int domain_num)
+> +{
+> +	struct genpd_onecell_data *genpd_data;
+> +	struct resource *res;
+> +	int i;
+> +
+> +	genpd_data = devm_kzalloc(&pdev->dev, sizeof(*genpd_data), GFP_KERNEL);
+> +	if (!genpd_data)
+> +		return -ENOMEM;
+> +
+> +	genpd_data->domains = zx_pm_domains;
+> +	genpd_data->num_domains = domain_num;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pcubase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pcubase)) {
+> +		dev_err(&pdev->dev, "ioremap fail.\n");
+> +		return PTR_ERR(pcubase);
+> +	}
+> +
+> +	for (i = 0; i < domain_num; ++i) {
+> +		zx_pm_domains[i]->power_on = zx2967_power_on;
+> +		zx_pm_domains[i]->power_off = zx2967_power_off;
+> +
+> +		pm_genpd_init(zx_pm_domains[i], NULL, false);
+> +	}
+> +
+> +	of_genpd_add_provider_onecell(pdev->dev.of_node, genpd_data);
+> +	dev_info(&pdev->dev, "powerdomain init ok\n");
+> +	return 0;
+> +}
+> diff --git a/drivers/soc/zte/zx2967_pm_domains.h b/drivers/soc/zte/zx2967_pm_domains.h
+> new file mode 100644
+> index 0000000..cb46595
+> --- /dev/null
+> +++ b/drivers/soc/zte/zx2967_pm_domains.h
+> @@ -0,0 +1,44 @@
+> +/*
+> + * Header for ZTE's Power Domain Driver support
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#ifndef __ZTE_ZX2967_PM_DOMAIN_H
+> +#define __ZTE_ZX2967_PM_DOMAIN_H
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +
+> +enum {
+> +	REG_CLKEN,
+> +	REG_ISOEN,
+> +	REG_RSTEN,
+> +	REG_PWREN,
+> +	REG_PWRDN,
+> +	REG_ACK_SYNC,
+> +
+> +	/* The size of the array - must be last */
+> +	REG_ARRAY_SIZE,
+> +};
+> +
+> +enum zx2967_power_polarity {
+> +	PWREN,
+> +	PWRDN,
+> +};
+> +
+> +struct zx2967_pm_domain {
+> +	struct generic_pm_domain dm;
+> +	const u16 bit;
+> +	const enum zx2967_power_polarity polarity;
+> +	const u16 *reg_offset;
+> +};
+> +
+> +int zx2967_pd_probe(struct platform_device *pdev,
+> +		    struct generic_pm_domain **zx_pm_domains,
+> +		    int domain_num);
+> +
+> +#endif /* __ZTE_ZX2967_PM_DOMAIN_H */
+> -- 
+> 2.7.4
+> 
