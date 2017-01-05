@@ -1,47 +1,51 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Thu, 5 Jan 2017 20:09:05 +0200
-Message-ID: <CAJKOXPdD_u0NOixwkEekiF71RDfddkAkJGaKqBhETBwDPA3_1g@mail.gmail.com>
-References: <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
- <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com> <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v2 3/4] arm64: dts: exynos: make tm2 and tm2e independent
+ from each other
+Date: Thu, 5 Jan 2017 20:37:59 +0200
+Message-ID: <20170105183759.ohmsu5ndxt7hwkjj@kozik-lap>
+References: <1483604833-29746-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170105082716epcas1p1f2a6eea40d842e2d8f7f7f54c029bc82@epcas1p1.samsung.com>
+ <1483604833-29746-4-git-send-email-jcsing.lee@samsung.com>
+ <586E0E56.6050608@samsung.com>
+ <20170105092315.swensammin4wbgx5@gangnam.samsung>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170105092315.swensammin4wbgx5@gangnam.samsung>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaechul Lee <jcsing.lee@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 5, 2017 at 12:20 PM, Hoegeun Kwon <hoegeun.kwon@samsung.com> wrote:
-> This patch add support for MIPI-DSI based S6E3HA2 AMOLED panel
-> driver. This panel has 1440x2560 resolution in 5.7-inch physical
-> panel in the TM2 device.
->
-> Signed-off-by: Donghwa Lee <dh09.lee@samsung.com>
-> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  .../bindings/display/panel/samsung,s6e3ha2.txt     |  28 +
->  drivers/gpu/drm/panel/Kconfig                      |   6 +
->  drivers/gpu/drm/panel/Makefile                     |   1 +
->  drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 754 +++++++++++++++++++++
->  4 files changed, 789 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
->  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
-> new file mode 100644
-> index 0000000..da4c291
+On Thu, Jan 05, 2017 at 06:23:15PM +0900, Andi Shyti wrote:
+> Hi Chanwoo,
+> 
+> > I add the some comment as following:
+> > - ldo23/25/31/38 have the different value between tm2 and tm2e.
+> 
+> Thanks for pointing this out. I planned to do this already in a
+> following patch as for now I think it's out from the scope of this
+> particular patch.
+> 
+> > - The patch[1] was alread posted. I think you better to rebase this patch on patch[1].
+> > [1] https://patchwork.kernel.org/patch/9491769/
+> > - ("ARM64: dts: TM2: comply to the samsung pinctrl naming convention")
+> 
+> Yes, I also thought about this, but I didn't know whether it was
+> already picked by anyone. I didn't want to stop Jaechul that's
+> why I was planning to rebase the other rather than this.
+> But you are right, because some bits of the other patches I know
+> that have been merged. Thank you!
+> 
+> Krzysztof, do you mind if I send patch 3 as a reply to this
+> e-mail? The changes should not affect patch 4, anyway.
 
-This should be a separate patch, preferably first one in the series. See:
-Documentation/devicetree/bindings/submitting-patches.txt
-Since you already got reviews and tests, I think you can retain them
-in both patches (so dt-bindings patch will have reviewed-by-Andrzej
-and the code will have review+tested).
+By patch 3 you mean this patch? Yes, you can send another version as a
+reply-to but please version it (2.1? etc).
+
+Anyway I need a proper rename detection. I pointed proper command last
+time. Is it working?
 
 Best regards,
 Krzysztof
