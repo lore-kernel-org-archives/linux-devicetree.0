@@ -1,7 +1,7 @@
 From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 01/12] ARM: dts: socfpga: enable GPIO and LEDs for Cyclone5 and Arria5 devkits
-Date: Wed,  4 Jan 2017 18:21:23 -0600
-Message-ID: <1483575694-29599-2-git-send-email-dinguyen@kernel.org>
+Subject: [PATCH 04/12] ARM: dts: socfpga: enable CAN on Cyclone5 devkit
+Date: Wed,  4 Jan 2017 18:21:26 -0600
+Message-ID: <1483575694-29599-5-git-send-email-dinguyen@kernel.org>
 References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1483575694-29599-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
@@ -10,121 +10,28 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable all the GPIO ports and define the GPIO-based leds on the Cyclone5 and
-Arria5 devkits.
+Enable the CAN node on the Cyclone5 devkit.
 
 Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga_arria5_socdk.dts   | 35 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 31 ++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-index f739ead..fa70c39 100644
---- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-@@ -39,6 +39,29 @@
- 		ethernet0 = &gmac1;
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		hps0 {
-+			label = "hps_led0";
-+			gpios = <&porta 0 1>;
-+		};
-+
-+		hps1 {
-+			label = "hps_led1";
-+			gpios = <&portb 11 1>;
-+		};
-+
-+		hps2 {
-+			label = "hps_led2";
-+			gpios = <&porta 17 1>;
-+		};
-+
-+		hps3 {
-+			label = "hps_led3";
-+			gpios = <&porta 18 1>;
-+		};
-+	};
-+
- 	regulator_3_3v: 3-3-v-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3.3V";
-@@ -61,6 +84,18 @@
- 	rxc-skew-ps = <2000>;
- };
- 
-+&gpio0 {
-+	status = "okay";
-+};
-+
-+&gpio1 {
-+	status = "okay";
-+};
-+
-+&gpio2 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
 diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-index 6306d00..6d3188b 100644
+index c2884c9..7ea32c8 100644
 --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
 +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-@@ -39,6 +39,29 @@
- 		ethernet0 = &gmac1;
+@@ -70,6 +70,10 @@
  	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		hps0 {
-+			label = "hps_led0";
-+			gpios = <&portb 15 1>;
-+		};
-+
-+		hps1 {
-+			label = "hps_led1";
-+			gpios = <&portb 14 1>;
-+		};
-+
-+		hps2 {
-+			label = "hps_led2";
-+			gpios = <&portb 13 1>;
-+		};
-+
-+		hps3 {
-+			label = "hps_led3";
-+			gpios = <&portb 12 1>;
-+		};
-+	};
-+
- 	regulator_3_3v: 3-3-v-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3.3V";
-@@ -61,10 +84,18 @@
- 	rxc-skew-ps = <2000>;
  };
  
-+&gpio0 {
++&can0 {
 +	status = "okay";
 +};
 +
- &gpio1 {
+ &gmac1 {
  	status = "okay";
- };
- 
-+&gpio2 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
+ 	phy-mode = "rgmii";
 -- 
 2.7.4
 
