@@ -1,83 +1,41 @@
-From: Jiada Wang <jiada_wang@mentor.com>
-Subject: [PATCH 1/1] spi: imx: support to set watermark level via DTS
-Date: Thu, 5 Jan 2017 15:10:15 +0900
-Message-ID: <20170105061015.7816-1-jiada_wang@mentor.com>
+From: "pankaj.dubey" <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe
+ phy
+Date: Thu, 05 Jan 2017 11:48:25 +0530
+Message-ID: <d1db94b0-a758-cd9a-2fc6-2db64e0fd741@samsung.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com>
+ <CGME20170104123436epcas1p1a729583c3c2307d8539a186f1050ea98@epcas1p1.samsung.com>
+ <20170104123435.30740-3-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170104123435.30740-3-jh80.chung@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jiada_wang@mentor.com
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Previously watermark level is configured to fifosize/2,
-DMA mode can be used only when transfer length can be divided
-by 'watermark level * bpw', which makes DMA mode not practical.
+Hi Jaehoon,
 
-This patch adds new DTS property 'dma-wml', user can configure
-DMA watermark level, by specify 'dma-wml' in corresponding ecspi
-node.
+On Wednesday 04 January 2017 06:04 PM, Jaehoon Chung wrote:
+> This patch supports to use Generic Phy framework for Exynos PCIe phy.
+> When Exynos that supported the pcie want to use the PCIe,
+> it needs to control the phy resgister.
+> But it should be more complex to control in their own PCIe device drivers.
+> 
+> Currently, there is an exynos5440 case to support the pcie.
+> So this driver is based on Exynos5440 PCIe.
+> In future, will support the Other exynos SoCs likes exynos5433, exynos7.
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> ---
+> Changelog on V2:
+> - Not include the codes relevant to pci-exynos.
+> - Remove the getting child node.
+> 
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt |  2 ++
- drivers/spi/spi-imx.c                                  | 12 ++++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 8bc95e2..1e9345f 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -19,6 +19,7 @@ See the clock consumer binding,
- - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
- 		Documentation/devicetree/bindings/dma/dma.txt
- - dma-names: DMA request names should include "tx" and "rx" if present.
-+- dma-wml: Specifies DMA watermark level
- 
- Obsolete properties:
- - fsl,spi-num-chipselects : Contains the number of the chipselect
-@@ -35,4 +36,5 @@ ecspi@70010000 {
- 		   <&gpio3 25 0>; /* GPIO3_25 */
- 	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
- 	dma-names = "rx", "tx";
-+        dma-wml = <16>;
- };
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index deb782f..5c0ce19 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -929,8 +929,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
- 	if (of_machine_is_compatible("fsl,imx6dl"))
- 		return 0;
- 
--	spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
--
- 	/* Prepare for TX DMA: */
- 	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
- 	if (IS_ERR(master->dma_tx)) {
-@@ -1155,6 +1153,7 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	struct spi_imx_data *spi_imx;
- 	struct resource *res;
- 	int i, ret, irq;
-+	u32 wml;
- 
- 	if (!np && !mxc_platform_info) {
- 		dev_err(&pdev->dev, "can't get the platform data\n");
-@@ -1177,6 +1176,15 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	spi_imx->devtype_data = of_id ? of_id->data :
- 		(struct spi_imx_devtype_data *)pdev->id_entry->driver_data;
- 
-+	if (of_property_read_u32(np, "dma-wml", &wml) == 0) {
-+		if (wml > spi_imx_get_fifosize(spi_imx) || wml == 0) {
-+			dev_warn(&pdev->dev, "mis-configured dma-wml\n");
-+			spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
-+		} else
-+			spi_imx->wml = wml;
-+	} else
-+		spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
-+
- 	if (mxc_platform_info) {
- 		master->num_chipselect = mxc_platform_info->num_chipselect;
- 		master->cs_gpios = devm_kzalloc(&master->dev,
--- 
-2.9.3
+Thanks,
+Pankaj Dubey
