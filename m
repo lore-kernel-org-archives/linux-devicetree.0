@@ -1,50 +1,64 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/2] Documentation: phy: introduce new optional property to
- specify drive impedance
-Date: Thu,  5 Jan 2017 17:31:21 +0800
-Message-ID: <1483608682-226716-1-git-send-email-shawn.lin@rock-chips.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v2 3/4] arm64: dts: exynos: make tm2 and tm2e independent
+ from each other
+Date: Thu, 05 Jan 2017 18:33:08 +0900
+Message-ID: <20170105093308.ixefvxrfhhu2u2ir@gangnam.samsung>
+References: <1483604833-29746-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170105082716epcas1p1f2a6eea40d842e2d8f7f7f54c029bc82@epcas1p1.samsung.com>
+ <1483604833-29746-4-git-send-email-jcsing.lee@samsung.com>
+ <586E0E56.6050608@samsung.com>
+ <20170105092315.swensammin4wbgx5@gangnam.samsung>
+ <586E11FF.9080707@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-disposition: inline
+In-reply-to: <586E11FF.9080707@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Jaechul Lee <jcsing.lee@samsung.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-input@vger.kernel.org, galaxyra@gmail.com, beomho.seo@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We need to modify the drive impedance according to the
-different hardware condition. So let's expose this to
-the DT.
+Hi Chanwoo,
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+> >> I add the some comment as following:
+> >> - ldo23/25/31/38 have the different value between tm2 and tm2e.
+> > 
+> > Thanks for pointing this out. I planned to do this already in a
+> > following patch as for now I think it's out from the scope of this
+> > particular patch.
+> 
+> I think it is very simple work. If you want to make the common.dtsi,
+> I think that you have to separate the different thing on each exynos5433-tm2X.dts.
+> 
+> > 
+> >> - The patch[1] was alread posted. I think you better to rebase this patch on patch[1].
+> >> [1] https://patchwork.kernel.org/patch/9491769/
+> >> - ("ARM64: dts: TM2: comply to the samsung pinctrl naming convention")
+> > 
+> > Yes, I also thought about this, but I didn't know whether it was
+> > already picked by anyone. I didn't want to stop Jaechul that's
+> > why I was planning to rebase the other rather than this.
+> > But you are right, because some bits of the other patches I know
+> > that have been merged. Thank you!
+> > 
+> > Krzysztof, do you mind if I send patch 3 as a reply to this
+> > e-mail? The changes should not affect patch 4, anyway.
+> 
+> No, If exynos5433-tm2.dts includes the different value of regulator,
+> patch4 might be implemented based on patch3.
 
- Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+OK, I will re-work the patch 3 with the regulators and generate
+again patch 4.
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-index e3ea557..731aeb9 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-@@ -14,6 +14,11 @@ specified by name:
- 		access to it), it is strongly suggested.
-  - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
- 
-+Optional Properties:
-+- drive_impedance: Must be one of 33, 40, 50, 66, 100. This property allows
-+	different boards to specify their own drive impedance depending on the
-+	hardware condition.
-+
- Example:
- 
- 
--- 
-1.9.1
+Thanks,
+Andi
