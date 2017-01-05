@@ -1,36 +1,61 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [RFC 1/1] Changes to support the driver for platform device
- registration
-Date: Thu, 5 Jan 2017 09:43:56 -0800
-Message-ID: <3d3e9fce-faae-3ff0-c42c-20f4bced663a@gmail.com>
-References: <1483604597-26160-1-git-send-email-raviteja.garimella@broadcom.com>
- <1483604597-26160-2-git-send-email-raviteja.garimella@broadcom.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] drivers: mmc: sunxi: fix A64
+ calibration routine
+Date: Thu, 5 Jan 2017 18:47:25 +0100
+Message-ID: <20170105174725.kmr25iodjnjozqjm@lukather>
+References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
+ <1483398226-29321-2-git-send-email-andre.przywara@arm.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483604597-26160-2-git-send-email-raviteja.garimella@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="enoc76q3xwcga7iz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOMNXLBQKGQE52EW6NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1483398226-29321-2-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2017 12:23 AM, Raviteja Garimella wrote:
-> -- Add OF based platform device registration
-> -- Modify debug prints to be compatible with both pci and platform devices
-> -- Add members to 'struct udc' for extcon and phy support
-> -- Add checks to not process repeated calls to udc connect and
->    disconnect routines
-> -- Kconfig changes
 
-What you are doing in this patch is all well and good, but since you are
-listing these changes, that means we should see 4/5 patches submitted to
-this driver each one doing what you have as a bullet point.
+--enoc76q3xwcga7iz
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Since you are adding Device Tree probing support to the driver, you also
-need to create a proper binding document which describes the properties
-and nodes.
+Hi,
 
-Thank you
+On Mon, Jan 02, 2017 at 11:03:42PM +0000, Andre Przywara wrote:
+> The calibration facility in the A64 MMC block seems to have been
+> misunderstood: the result value is not the value to program into the
+> delay bits, but is the number of delay cells that result in a full clock
+> cycle delay. So this value has to be scaled by the desired phase, which
+> we still have to know and program.
+> Change the calibration routine to take a phase parameter and scale the
+> calibration value accordingly.
+> Also introduce sun50i-a64 delay parameters to store the required phase.
+> Looking at the BSP kernel the sample delay for anything below HS200 is
+> 0, so we go with that value.
+> Once the driver supports HS200 and faster modes, we can enter confirmed
+> working values in there.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+
+Exactly how that works hasn't been confirmed, and the only thing that
+this patch actually do is... nothing, since the delay is always 0. If
+and when we get HS400 to work and we know for a fact how the
+calibration works, then we'll be able to use it. Until then, we can
+just clear those bits.
+
+Maxime
+
 -- 
-Florian
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--enoc76q3xwcga7iz--
