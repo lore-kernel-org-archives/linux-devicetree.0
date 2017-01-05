@@ -1,101 +1,57 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
-Date: Thu, 5 Jan 2017 08:14:56 -0600
-Message-ID: <20170105141456.GA5710@hector.attlocal.net>
-References: <1482744972-56622-1-git-send-email-puck.chen@hisilicon.com>
- <1482744972-56622-2-git-send-email-puck.chen@hisilicon.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH net-next v4 0/2] Add support for the ethernet switch on the ESPRESSObin
+Date: Thu, 05 Jan 2017 15:25:53 +0100
+Message-ID: <87tw9dbn2m.fsf@free-electrons.com>
+References: <20161221125734.1034-1-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1482744972-56622-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <20161221125734.1034-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
+        Perier's message of "Wed, 21 Dec 2016 13:57:32 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: David Miller <davem-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 26, 2016 at 05:36:12PM +0800, Chen Feng wrote:
-> Add initial dtsi file to support Hisilicon Hi3660 SoC with
-> support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
-> 
-> Also add dts file to support HiKey960 development board which
-> based on Hi3660 SoC.
-> The output console is earlycon "earlycon=pl011,0xfdf05000".
-> And the con_init uart5 with a fixed clock, which already
-> configured at bootloader.
-> 
-> When clock is available, the uart5 will be modified.
-> 
-> Tested on HiKey960 Board.
-> 
-> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  34 +++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 156 ++++++++++++++++++++++
->  3 files changed, 191 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-> index d5f43a0..b633b5d 100644
-> --- a/arch/arm64/boot/dts/hisilicon/Makefile
-> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
-> @@ -1,4 +1,5 @@
->  dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
-> +dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
->  dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
->  dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
->  
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> new file mode 100644
-> index 0000000..3d7aead
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -0,0 +1,34 @@
-> +/*
-> + * dts file for Hisilicon HiKey960 Development Board
-> + *
-> + * Copyright (C) 2016, Hisilicon Ltd.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "hi3660.dtsi"
-> +
-> +/ {
-> +	model = "HiKey960";
-> +	compatible = "hisilicon,hi3660";
-> +
-> +	aliases {
-> +		serial5 = &uart5;       /* console UART */
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial5:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00400000 0x0 0xBFE00000>;
+Hi David,
+ 
+ On mer., déc. 21 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Use lower case letters for hex numbers.  0xbfe00000.
+> This set of patches adds support for the Marvell ethernet switch 88E6341.
+> It also add the devicetree definition of this switch to the DT board.
 
-> +	};
-> +
-> +	soc {
-> +		uart5: uart@fdf05000 {
-> +			status = "ok";
-> +		};
-> +	};
-> +};
+The forth version of this series had been sent while the net-next merge
+window was closed so I think it was missed.
 
-<snip>
+Do you want that we send it again on the netdev mainling list?
 
-Regards,
+Thanks,
 
-Andy
+Gregory
+
+>
+> Romain Perier (2):
+>   net: dsa: mv88e6xxx: Don't forbid MDIO I/Os for PHY addr >=
+>     num_of_ports
+>   net: dsa: mv88e6xxx: Add support for ethernet switch 88E6341/88E6141
+>
+>  drivers/net/dsa/mv88e6xxx/chip.c      | 48 ++++++++++++++++++++++++++++++-----
+>  drivers/net/dsa/mv88e6xxx/mv88e6xxx.h |  4 ++-
+>  2 files changed, 45 insertions(+), 7 deletions(-)
+>
+> -- 
+>
+> Note: As requested by Gregory, I have removed the patch for the DT (already merged).
+>
+> 2.9.3
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
