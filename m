@@ -1,69 +1,116 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Thu, 5 Jan 2017 08:51:18 -0800
-Message-ID: <20170105165118.GG4310@atomide.com>
-References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA@mail.gmail.com>
- <20170105163928.GD4310@atomide.com>
- <2557392.58vudoaMIY@avalon>
+From: Pavel Pisa <ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>
+Subject: Myir AM437x Rico board support (DTS) for Linux mainline 4.9 and 4.4 Ti Processor SDK 03.02.00.05
+Date: Thu, 5 Jan 2017 17:54:03 +0100
+Message-ID: <201701051754.03159.ppisa@pikron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2557392.58vudoaMIY@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [170105 08:49]:
-> On Thursday 05 Jan 2017 08:39:29 Tony Lindgren wrote:
-> > * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170105 08:28]:
-> > > On Fri, Dec 2, 2016 at 3:11 PM, Laurent Pinchart wrote:
-> > >> The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-> > >> connected to port 2 of the OMAP EHCI controller. The board however has
-> > >> no EEPROM to store the ethernet MAC address, which is programmed by the
-> > >> boot loader.
-> > >> 
-> > >> To allow Linux to use the same MAC address as the boot loader (or for
-> > >> that matter any fixed MAC address), we need a node in the device tree
-> > >> for the ethernet controller that the boot loader can update at runtime
-> > >> with a local-mac-address property. Add it, along with an alias for the
-> > >> ethernet controller to let the boot loader locate it easily.
-> > >> 
-> > >> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > >> ---
-> > >> Changes since v1:
-> > >> 
-> > >> - Renamed usb2 DT node to hub
-> > >> ---
-> > >> 
-> > >>  arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
-> > >>  1 file changed, 16 insertions(+)
-> > >> 
-> > >> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > >> b/arch/arm/boot/dts/omap3-beagle-xm.dts index
-> > >> 85e297ed0ea1..673cee2234b2 100644
-> > >> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > >> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > >> @@ -27,6 +27,7 @@
-> > >>         aliases {
-> > >>                 display0 = &dvi0;
-> > >>                 display1 = &tv0;
-> > >> +               ethernet = &ethernet;
-> > > 
-> > > Sorry, just noticed this, but this should be dropped. It's not used
-> > > nor do we want an alias here.
-> > 
-> > OK, will update locally as I have not pushed out yet.
-> 
-> The ethernet alias is used by U-Boot to locate the ethernet controller and 
-> update the MAC address.
+Hello Tony and others,
 
-OK let's wait a bit on this one then.
+I have found some personal time during holydays[*] and proceed
+furhers with RICO board support for perspective kernel versions.
 
-Tony
+I have prepared a device tree which provides quite complete
+board support for the most of peripherals found on MyIR
+AM437x Ricoboard. I have tested the kernel on the real board
+which I have bought for myself to do testing and can contribute
+previous work to to mainline.
+
+LEDs, Ethernet, LEDs, SDcard, eMMC, onboard SPI NVM etc.
+works. Generally the AM437x mainline support is great except
+for SGX. It has been pleasant to work with it. I used TFTP boot
+and ramdisk overlay over NFS exported Debian Jessie RO chroot
+install.
+
+Only significant missing piece is HDMI support. I have put
+setup which I prepared for Ti kernels to device-tree.
+But mainline supports SII9022 HDMI encoder only by
+
+  drivers/gpu/drm/bridge/sii902x.c
+
+but OMAP DSS changes "sil,sii9022" in device-tree
+to omapdss,sil,sii9022 which seems to be customized
+version found in Texas Instruments tree
+
+  drivers/gpu/drm/omapdrm/displays/encoder-sii9022-video.c
+
+Do you know if there are some plans to support combination
+of this driver or include customized version in mainline
+for OMAP?
+
+I expect that non accelerated graphic with parallel
+LCD panel would work with 4.9 mainline kernel and
+the prepared device tree if #if 0 is changed to #if 1.
+
+The 4.9 mainline support files can be found there
+
+  http://pikron.com/files/linux/rico/linux-4.9/am437x-myir-ricoboard.dts
+  http://pikron.com/files/linux/rico/linux-4.9/am437x-myir-ricoboard.dtb
+  
+http://pikron.com/files/linux/rico/linux-4.9/config-4.9-mainline-myir-ricoboard
+
+I would be happy if they can help others, some feedback
+and cooperation would be great as well. I would be happy
+to contribute DTS to mainline if it is found acceptable.
+I can prepare version without HDMI or complete DSS section
+if actual untested/able section is unacceptable.
+
+Because of missing HDMI support and attempt to test SGX
+accelerated support, I have tried official Ti
+Processor SDK image for AM437x (am437x-evm-linux-03.02.00.05).
+I have prepared DTS and tested it with my overlay enabled
+kernel and Debian and Ti root filesystems as well as with
+original Ti kernel.
+
+There are files for use with HDMI connected monitor
+
+  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard-hdmi.dts
+  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard-hdmi.dtb
+  files/linux/rico/linux-ti-4.4/config-ti-4.4-myir-ricoboard
+
+and another set for parallel LCD panel (untested)
+
+  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard.dts
+  files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard.dtb
+
+I have managed to build SGX driver for my kernel configuration
+and from the testing of Ti image it seem to be used same way
+as for original Ti kernel build.
+
+I have no luck with accelerated Xorg. But Ti release notes
+states that Xorg support is missing in 03.02.00.05.
+
+There is question if it is permanent status or if there is some
+change.
+
+Is there chance that Ti includes this prepared DTS in their
+kernel branch?
+
+For sure mainline 4.9 support is even more interesting
+for me and future.
+
+Best wishes,
+
+Pavel
+
+
+[*] Our company partner cares mainly (and may be pays something)
+for my work on maintenance of ancient MyIR Linux 3.12.10 kernel
+in their products. And MyIR company does not seem to really
+care about users and updates at all even if the enhancements
+are sent them for free. Typical experience but great thing about
+this board is that a schematic diagram is provided which makes
+possible to develop proper support.
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
