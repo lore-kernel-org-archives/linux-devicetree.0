@@ -1,193 +1,75 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2,9/9] irqchip/ls-scfg-msi: add MSI affinity support
-Date: Thu, 5 Jan 2017 15:33:01 +0000
-Message-ID: <7888f3a1-ae4a-f2b6-f41b-fc414f7ca968@arm.com>
-References: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
- <1483603837-4629-9-git-send-email-Minghuan.Lian@nxp.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 9/9] ARM: sunxi: Convert pinctrl nodes to generic
+ bindings
+Date: Thu, 5 Jan 2017 16:35:56 +0100
+Message-ID: <20170105153556.pzec5jjuz7pmvsmn@lukather>
+References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
+ <58723369-50ad-1792-9be1-c277eb719044@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483603837-4629-9-git-send-email-Minghuan.Lian@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Minghuan Lian <Minghuan.Lian@nxp.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="skclcjjttxdh2jz4"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <58723369-50ad-1792-9be1-c277eb719044@arm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/17 08:10, Minghuan Lian wrote:
-> For LS1046a and LS1043a v1.1, the MSI controller has 4 MSIRs and 4
-> CPUs. A GIC SPI interrupt of MSIR can be associated with a CPU.
-> When changing MSI interrupt affinity, this MSI will be moved to the
-> corresponding MSIR and MSI message data will be changed according to
-> MSIR. when requesting a MSI, the bits of all 4 MSIR will be reserved.
-> The parameter 'msi_affinity_flag' is provide to change this mode.
-> "lsmsi=no-affinity" will disable affinity, all MSI can only be
-> associated with CPU 0.
-> 
-> Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> v2-v1:
-> - None
-> 
->  drivers/irqchip/irq-ls-scfg-msi.c | 75 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 70 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-scfg-msi.c
-> index dc19569..753fe39 100644
-> --- a/drivers/irqchip/irq-ls-scfg-msi.c
-> +++ b/drivers/irqchip/irq-ls-scfg-msi.c
-> @@ -40,6 +40,7 @@ struct ls_scfg_msir {
->  	unsigned int gic_irq;
->  	unsigned int bit_start;
->  	unsigned int bit_end;
-> +	unsigned int srs; /* Shared interrupt register select */
->  	void __iomem *reg;
->  };
->  
-> @@ -70,6 +71,19 @@ struct ls_scfg_msi {
->  	.chip	= &ls_scfg_msi_irq_chip,
->  };
->  
-> +static int msi_affinity_flag = 1;
-> +
-> +static int __init early_parse_ls_scfg_msi(char *p)
-> +{
-> +	if (p && strncmp(p, "no-affinity", 11) == 0)
-> +		msi_affinity_flag = 0;
-> +	else
-> +		msi_affinity_flag = 1;
-> +
-> +	return 0;
-> +}
-> +early_param("lsmsi", early_parse_ls_scfg_msi);
 
-What is the point of this option? If feels like an unnecessary complexity.
+--skclcjjttxdh2jz4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
->  static void ls_scfg_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	struct ls_scfg_msi *msi_data = irq_data_get_irq_chip_data(data);
-> @@ -77,12 +91,43 @@ static void ls_scfg_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
->  	msg->address_hi = upper_32_bits(msi_data->msiir_addr);
->  	msg->address_lo = lower_32_bits(msi_data->msiir_addr);
->  	msg->data = data->hwirq;
-> +
-> +	if (msi_affinity_flag) {
-> +		u32 msir_index;
-> +
-> +		msir_index = cpumask_first(data->common->affinity);
-> +		if (msir_index >= msi_data->msir_num)
-> +			msir_index = 0;
+On Wed, Jan 04, 2017 at 02:16:23AM +0000, Andr=E9 Przywara wrote:
+> So can I ask that we start taking this seriously and stop doing things
+> which prevent Allwinner boards from being supported properly?
+> Which would first involve dropping this very patch?
 
-How can this happen?
+The driver still supports the old binding.
 
-> +
-> +		msg->data |= msir_index;
+> Having done breakage in the past (with "allwinner,sun7i-a20-mmc", for
+> instance) is no excuse for doing it again.
 
-How do you guarantee that the low bits were clear? Please document the
-way you encode your MSI payload.
+I'm not sure which breakage we introduced with a new compatible: the
+old compatible is working just like it used to, and the new one is
+working like we need it to.
 
-> +	}
->  }
->  
->  static int ls_scfg_msi_set_affinity(struct irq_data *irq_data,
->  				    const struct cpumask *mask, bool force)
->  {
-> -	return -EINVAL;
-> +	struct ls_scfg_msi *msi_data = irq_data_get_irq_chip_data(irq_data);
-> +	u32 cpu;
-> +
-> +	if (!msi_affinity_flag)
-> +		return -EINVAL;
-> +
-> +	if (!force)
-> +		cpu = cpumask_any_and(mask, cpu_online_mask);
-> +	else
-> +		cpu = cpumask_first(mask);
-> +
-> +	if (cpu >= msi_data->msir_num)
-> +		return -EINVAL;
-> +
-> +	if (msi_data->msir[cpu].gic_irq <= 0) {
-> +		pr_warn("cannot bind the irq to cpu%d\n", cpu);
+> And especially I want to avoid this habit creeping into the arm64
+> world (thinking about the H5 here, which may be impacted by this
+> very patch, for instance).
 
-Please don't. Returning an error is enough. If you really want to have
-something, turn it into a proper debug message.
+And again, if you looked at the entire serie, you would have seen that
+I took this into account.
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	cpumask_copy(irq_data->common->affinity, mask);
-> +
-> +	return IRQ_SET_MASK_OK;
->  }
->  
->  static struct irq_chip ls_scfg_msi_parent_chip = {
-> @@ -158,7 +203,7 @@ static void ls_scfg_msi_irq_handler(struct irq_desc *desc)
->  
->  	for_each_set_bit_from(pos, &val, size) {
->  		hwirq = ((msir->bit_end - pos) << msi_data->cfg->ibs_shift) |
-> -			msir->index;
-> +			msir->srs;
->  		virq = irq_find_mapping(msi_data->parent, hwirq);
->  		if (virq)
->  			generic_handle_irq(virq);
-> @@ -221,10 +266,19 @@ static int ls_scfg_msi_setup_hwirq(struct ls_scfg_msi *msi_data, int index)
->  					 ls_scfg_msi_irq_handler,
->  					 msir);
->  
-> +	if (msi_affinity_flag) {
-> +		/* Associate MSIR interrupt to the cpu */
-> +		irq_set_affinity(msir->gic_irq, get_cpu_mask(index));
-> +		msir->srs = 0; /* This value is determined by the CPU */
-> +	} else
-> +		msir->srs = index;
-> +
->  	/* Release the hwirqs corresponding to this MSIR */
-> -	for (i = 0; i < msi_data->cfg->msir_irqs; i++) {
-> -		hwirq = i << msi_data->cfg->ibs_shift | msir->index;
-> -		bitmap_clear(msi_data->used, hwirq, 1);
-> +	if (!msi_affinity_flag || msir->index == 0) {
-> +		for (i = 0; i < msi_data->cfg->msir_irqs; i++) {
-> +			hwirq = i << msi_data->cfg->ibs_shift | msir->index;
-> +			bitmap_clear(msi_data->used, hwirq, 1);
-> +		}
->  	}
->  
->  	return 0;
-> @@ -316,6 +370,17 @@ static int ls_scfg_msi_probe(struct platform_device *pdev)
->  	bitmap_set(msi_data->used, 0, msi_data->irqs_num);
->  
->  	msi_data->msir_num = of_irq_count(pdev->dev.of_node);
-> +
-> +	if (msi_affinity_flag) {
-> +		u32 cpu_num;
-> +
-> +		cpu_num = num_possible_cpus();
-> +		if (msi_data->msir_num >= cpu_num)
-> +			msi_data->msir_num = cpu_num;
-> +		else
-> +			msi_affinity_flag = 0;
-> +	}
-> +
->  	msi_data->msir = devm_kcalloc(&pdev->dev, msi_data->msir_num,
->  				      sizeof(*msi_data->msir),
->  				      GFP_KERNEL);
-> 
+Maxime
 
-This is a very confusing patch. Please get rid of this useless option
-and document how you encode the routing in the hwirq.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Thanks,
+--skclcjjttxdh2jz4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYbmfMAAoJEBx+YmzsjxAgeMsP+wXSVtzU3aRzeFVcgnM1+tCF
+G7KDxWSCDWBsUD4iwbloZQVl3AsY45I2dEskZkISsVLEc7OGs0wmluxlpqfRAuPC
+pjlmNEP9InfKcJgZ89ql2Ffc66VOE+WX83JRGa3Ld1ZQLfpYrTAt7V2yb01jUDre
+w/c+Y/YGn4lABevLCxBaKUFQX5u54d6XIDoajwcKNmVm4oPLswjxm+4vrywh1tXh
+pXa7dVRgvkRd4+562Ikg27OyCp9jZE06F8OmKgVvDIvp8xh36TmWrFYD1Gw3isXN
+2hEn5xTxXRcwl1kOGsihV2bXdB5a6kRar12H69d23jN1pe4pye+snF/3l06M2jws
+EeYrj0FH56e8KO15CItAzRaKdjkuzT4ipxw/pUwZlJB8pRvEaNUkdCJ996rwP2eb
+BPdrJ2VBNGSncwfVEdvHXoPTwLwxixLqGuUJ853Vh1Erow4tjqlLizjS6UOOyCtV
+QCABAr2EtP7dZQ4oWwvzJSanPI0Cjhyl5o+FkCNwQQUQHEHBOpafywNnNXt1onkl
+s+fxTKglTGKRwgxvX6Utn1tIr8hjvkAu5rdm3SFDnCi0IQggDTBO9tchn/I8p7dI
+qZ+JTo/K0TK0uUiEl2alhUhWngau+ei3zgYllyqTZ4t8ssJdEKUF7j8n2jN4J9Tz
+bKIg2gKoufWF5T4CcbTU
+=7mbC
+-----END PGP SIGNATURE-----
+
+--skclcjjttxdh2jz4--
