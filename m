@@ -1,90 +1,60 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v4] net: ethernet: faraday: To support device tree usage.
-Date: Thu, 5 Jan 2017 18:23:53 +0800
-Message-ID: <20170105102345.GA25774@app09>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, linux-kernel@vger.kernel.org, jiri@resnulli.us, jonas.jensen@gmail.com, davem@davemloft.net, arnd@arndb.de
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/2] Broadcom FlexRM ring manager support
+Date: Thu,  5 Jan 2017 16:37:53 +0530
+Message-ID: <1483614475-3442-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod KUMAR <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Greentime Hu <green.hu@gmail.com>
----
-Changes in v4:
-  - Use the same binding document to describe the same faraday ethernet controller and add faraday to vendor-prefixes.txt.
-Changes in v3:
-  - Nothing changed in this patch but I have committed andestech to vendor-prefixes.txt.
-Changes in v2:
-  - Change atmac100_of_ids to ftmac100_of_ids
-      
----
- .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/net/ethernet/faraday/ftmac100.c            |    7 +++++++
- 3 files changed, 13 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
+The Broadcom FlexRM ring manager provides producer-consumer style
+ring interface for offload engines on Broadcom iProc SoCs. We can
+have one or more instances of Broadcom FlexRM ring manager in a SoC.
 
-diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-similarity index 68%
-rename from Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-rename to Documentation/devicetree/bindings/net/faraday,ftmac.txt
-index 583418b..be4f55e 100644
---- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-+++ b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-@@ -1,8 +1,11 @@
--MOXA ART Ethernet Controller
-+Faraday Ethernet Controller
- 
- Required properties:
- 
--- compatible : Must be "moxa,moxart-mac"
-+- compatible : Must contain "faraday,ftmac", as well as one of
-+		the SoC specific identifiers:
-+		"andestech,atmac100"
-+		"moxa,moxart-mac"
- - reg : Should contain register location and length
- - interrupts : Should contain the mac interrupt number
- 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 16d3b5e..489c336 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -102,6 +102,7 @@ everest	Everest Semiconductor Co. Ltd.
- everspin	Everspin Technologies, Inc.
- excito	Excito
- ezchip	EZchip Semiconductor
-+faraday	Faraday Technology Corporation
- fcs	Fairchild Semiconductor
- firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
-diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
-index dce5f7b..5d70ee9 100644
---- a/drivers/net/ethernet/faraday/ftmac100.c
-+++ b/drivers/net/ethernet/faraday/ftmac100.c
-@@ -1172,11 +1172,17 @@ static int __exit ftmac100_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id ftmac100_of_ids[] = {
-+	{ .compatible = "andestech,atmac100" },
-+	{ }
-+};
-+
- static struct platform_driver ftmac100_driver = {
- 	.probe		= ftmac100_probe,
- 	.remove		= __exit_p(ftmac100_remove),
- 	.driver		= {
- 		.name	= DRV_NAME,
-+		.of_match_table = ftmac100_of_ids
- 	},
- };
- 
-@@ -1200,3 +1206,4 @@ static void __exit ftmac100_exit(void)
- MODULE_AUTHOR("Po-Yu Chuang <ratbert@faraday-tech.com>");
- MODULE_DESCRIPTION("FTMAC100 driver");
- MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, ftmac100_of_ids);
+This patchset adds a mailbox driver for Broadcom FlexRM ring manager
+which can be used by offload engine drivers as mailbox clients.
+
+The Broadcom FlexRM mailbox driver is feature complete for RAID and
+Crypto offload engines. We will have incremental patches in-future
+for ring-level statistics using debugfs and minor optimizations.
+
+This patchset is based on Linux-4.10-rc2 and it is also available
+at flexrm-v4 branch of https://github.com/Broadcom/arm64-linux.git
+
+Changes since v3:
+ - Fixed mailbox client example DT node in DT bindings document
+
+Changes since v2:
+ - Rebased patches for Linux-4.10-rc2
+
+Changes since v1:
+ - Use compatile string as brcm,iproc-flexrm-mbox
+ - Rephrase commit message and text in DT bindings patch
+
+Anup Patel (2):
+  mailbox: Add driver for Broadcom FlexRM ring manager
+  dt-bindings: Add DT bindings info for FlexRM ring manager
+
+ .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    |  59 ++
+ drivers/mailbox/Kconfig                            |  11 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mailbox-flexrm/Makefile            |   6 +
+ drivers/mailbox/mailbox-flexrm/flexrm-desc.c       | 764 +++++++++++++++++++
+ drivers/mailbox/mailbox-flexrm/flexrm-desc.h       |  47 ++
+ drivers/mailbox/mailbox-flexrm/flexrm-main.c       | 829 +++++++++++++++++++++
+ include/linux/mailbox/brcm-message.h               |  14 +-
+ 8 files changed, 1728 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+ create mode 100644 drivers/mailbox/mailbox-flexrm/Makefile
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-desc.c
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-desc.h
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-main.c
+
 -- 
-1.7.9.5
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
