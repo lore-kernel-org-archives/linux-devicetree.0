@@ -1,7 +1,7 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCHv3 5/8] ARM: dts: stm32: enable RTC on stm32f429-disco
-Date: Thu, 5 Jan 2017 14:43:26 +0100
-Message-ID: <1483623809-29937-6-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCHv3 6/8] ARM: dts: stm32: enable RTC on stm32f469-disco
+Date: Thu, 5 Jan 2017 14:43:27 +0100
+Message-ID: <1483623809-29937-7-git-send-email-amelie.delaunay@st.com>
 References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,30 +21,27 @@ To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.bellon
 Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables RTC on stm32f429-disco with LSI as clock source because
-X2 crystal for LSE is not fitted by default.
+This patch enables RTC on stm32f469-disco with default LSE clock source.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- arch/arm/boot/dts/stm32f429-disco.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/stm32f469-disco.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index b6e63d8..49eddf6 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -94,6 +94,12 @@
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 8a163d7..af57dd5 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -78,6 +78,10 @@
  	clock-frequency = <8000000>;
  };
  
 +&rtc {
-+	assigned-clocks = <&rcc 1 CLK_RTC>;
-+	assigned-clock-parents = <&rcc 1 CLK_LSI>;
 +	status = "okay";
 +};
 +
- &usart1 {
- 	pinctrl-0 = <&usart1_pins_a>;
- 	pinctrl-names = "default";
+ &usart3 {
+ 	status = "okay";
+ };
 -- 
 1.9.1
