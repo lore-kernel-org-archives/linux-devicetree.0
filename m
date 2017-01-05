@@ -1,58 +1,112 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Thu, 5 Jan 2017 10:27:16 -0600
-Message-ID: <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA@mail.gmail.com>
-References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 10/12] ARM: dts: socfpga: add base fpga region and fpga
+ bridges
+Date: Thu, 5 Jan 2017 10:28:42 -0600
+Message-ID: <CANk1AXSbqohp73xHpp7e9-37d61ZB-dRAPAFc2eQGRYUnvB+0w@mail.gmail.com>
+References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
+ <1483575694-29599-11-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480713097-5931-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1483575694-29599-11-git-send-email-dinguyen@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Alan Tull <atull@opensource.altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 2, 2016 at 3:11 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-> connected to port 2 of the OMAP EHCI controller. The board however has
-> no EEPROM to store the ethernet MAC address, which is programmed by the
-> boot loader.
+On Wed, Jan 4, 2017 at 6:21 PM, Dinh Nguyen <dinguyen@kernel.org> wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 >
-> To allow Linux to use the same MAC address as the boot loader (or for
-> that matter any fixed MAC address), we need a node in the device tree
-> for the ethernet controller that the boot loader can update at runtime
-> with a local-mac-address property. Add it, along with an alias for the
-> ethernet controller to let the boot loader locate it easily.
+> Add h2f and lwh2f bridges.
+> Add base FPGA Region to support DT overlays for FPGA programming.
+> Add l3regs.
 >
-> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > ---
-> Changes since v1:
+>  arch/arm/boot/dts/socfpga.dtsi | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
 >
-> - Renamed usb2 DT node to hub
-> ---
->  arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index de29172..dccc281 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -93,6 +93,16 @@
+>                         };
+>                 };
 >
-> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> index 85e297ed0ea1..673cee2234b2 100644
-> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> @@ -27,6 +27,7 @@
->         aliases {
->                 display0 = &dvi0;
->                 display1 = &tv0;
-> +               ethernet = &ethernet;
+> +               base_fpga_region {
+> +                       compatible = "fpga-region";
+> +                       fpga-mgr = <&fpgamgr0>;
+> +                       fpga-bridges = <&fpga_bridge0>, <&fpga_bridge1>;
 
-Sorry, just noticed this, but this should be dropped. It's not used
-nor do we want an alias here.
+Hi Dinh,
 
-Rob
+We want to get rid of the 'fpga-bridges' line.
 
-P.S. The display ones are questionable, too. Only OMAP has them and
-per platform alias names is not something we want.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +                       #address-cells = <0x1>;
+> +                       #size-cells = <0x1>;
+> +                       ranges = <0 0xff200000 0x100000>;
+
+Should get rid of the ranges line here too.  The 'fpga-bridges' and
+'ranges' line can be added in the overlay.
+
+Alan
+
+> +               };
+> +
+>                 can0: can@ffc00000 {
+>                         compatible = "bosch,d_can";
+>                         reg = <0xffc00000 0x1000>;
+> @@ -513,6 +523,22 @@
+>                                 };
+>                 };
+>
+> +               fpga_bridge0: fpga_bridge@ff400000 {
+> +                       compatible = "altr,socfpga-lwhps2fpga-bridge";
+> +                       reg = <0xff400000 0x100000>;
+> +                       resets = <&rst LWHPS2FPGA_RESET>;
+> +                       reset-names = "lwhps2fpga";
+> +                       clocks = <&l4_main_clk>;
+> +               };
+> +
+> +               fpga_bridge1: fpga_bridge@ff500000 {
+> +                       compatible = "altr,socfpga-hps2fpga-bridge";
+> +                       reg = <0xff500000 0x10000>;
+> +                       resets = <&rst HPS2FPGA_RESET>;
+> +                       reset-names = "hps2fpga";
+> +                       clocks = <&l4_main_clk>;
+> +               };
+> +
+>                 fpgamgr0: fpgamgr@ff706000 {
+>                         compatible = "altr,socfpga-fpga-mgr";
+>                         reg = <0xff706000 0x1000
+> @@ -694,6 +720,11 @@
+>                         arm,prefetch-offset = <7>;
+>                 };
+>
+> +               l3regs@0xff800000 {
+> +                       compatible = "altr,l3regs", "syscon";
+> +                       reg = <0xff800000 0x1000>;
+> +               };
+> +
+>                 mmc: dwmmc0@ff704000 {
+>                         compatible = "altr,socfpga-dw-mshc";
+>                         reg = <0xff704000 0x1000>;
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
