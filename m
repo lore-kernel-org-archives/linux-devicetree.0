@@ -1,96 +1,106 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 07/22] dt-bindings: power: supply: add AXP20X/AXP22X AC
- power supply
-Date: Thu, 5 Jan 2017 14:17:35 +0800
-Message-ID: <CAGb2v67V6oGEyYGsBWfp3rVVm_VWQta0szeBiNSKUQR7awm5ng@mail.gmail.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-8-quentin.schulz@free-electrons.com>
- <20170104131410.mni7opxnouzagypu@rob-hp-laptop>
+From: "pankaj.dubey" <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH V2 3/5] Documetation: binding: modify the exynos5440 pcie
+ binding
+Date: Thu, 05 Jan 2017 11:51:58 +0530
+Message-ID: <059c5912-8078-0191-f677-e85a3b3d91ce@samsung.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com>
+ <CGME20170104123436epcas1p1040f1e074748fabe58af52eb0b833713@epcas1p1.samsung.com>
+ <20170104123435.30740-4-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170104131410.mni7opxnouzagypu@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170104123435.30740-4-jh80.chung@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
+Hi Jaehoon,
 
-On Wed, Jan 4, 2017 at 9:14 PM, Rob Herring <robh@kernel.org> wrote:
-> On Mon, Jan 02, 2017 at 05:37:07PM +0100, Quentin Schulz wrote:
->> The X-Powers AXP20X and AXP22X PMICs have an AC entry to supply power to
->> the board. They have a few registers dedicated to the status of the AC
->> power supply.
->>
->> This adds the DT binding documentation for the AC power supply for
->> AXP20X and AXP22X PMICs.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->> ---
->>  .../bindings/power/supply/axp20x_ac_power.txt      | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
->> new file mode 100644
->> index 0000000..16d0de4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
->> @@ -0,0 +1,28 @@
->> +AXP20X and AXP22X PMICs' AC power supply
->> +
->> +Required Properties:
->> + - compatible: One of:
->> +                     "x-powers,axp202-ac-power-supply"
->> +                     "x-powers,axp221-ac-power-supply"
->> +
->> +More Required Properties for AXP20X PMICs:
->> + - io-channels: phandles to ACIN voltage and current ADC channels
->> + - io-channel-names = "acin_v", "acin_i";
->> +
->> +This node is a subnode of the axp20x PMIC.
->> +
->> +The AXP20X can read the current current and voltage supplied by AC by
->> +reading ADC channels from the AXP20X ADC.
->> +
->> +The AXP22X is only able to tell if an AC power supply is present and
->> +usable.
->> +
->> +Example:
->> +
->> +&axp209 {
->> +     ac_power_supply: ac_power_supply {
->
-> power-supply {
->
->> +             compatible = "x-powers,axp202-ac-power-supply";
->> +             io-channels = <&axp209_adc 0>, <&axp209_adc 1>;
->
-> Is this assignment fixed? If so, then it doesn't need to be in DT.
+On Wednesday 04 January 2017 06:04 PM, Jaehoon Chung wrote:
+> According to using PHY framework, updates the exynos5440-pcie binding.
+> For maintaining backward compatibility, leaves the current dt-binding.
+> (It should be deprecated.)
+> 
+> Recommends to use the Phy Framework and "config" property to follow
+> the designware-pcie binding.
+> If you use the old way, can see "mssing *config* reg space" message.
+> Because the getting configuration space address from range is old way.
+> 
+> NOTE: When use the "config" property, first name of 'reg-names' must be
+> set to "elbi". Otherwise driver can't maintain the backward capability.
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> ---
+> Changelog on V2:
+> - Describes more commit message
+> - Fixes the typos
+> - Adds the new example for using PHY framework
+> - Deprecated the old dt-binding description
+> - Removes 'phy-names'
+> 
+>  .../bindings/pci/samsung,exynos5440-pcie.txt       | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+> index 4f9d23d..1d0af0e 100644
+> --- a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+> @@ -7,8 +7,19 @@ Required properties:
+>  - compatible: "samsung,exynos5440-pcie"
+>  - reg: base addresses and lengths of the pcie controller,
+>  	the phy controller, additional register for the phy controller.
+> +	(Registers for the phy controller are DEPRECATED.
+> +	 Use the PHY framework.)
+> +- reg-names : First name should be set to "elbi".
+> +	And use the "config" instead of getting the confgiruation address space
+> +	from "ranges".
+> +	NOTE: When use the "config" property, reg-names must be set.
+>  - interrupts: A list of interrupt outputs for level interrupt,
+>  	pulse interrupt, special interrupt.
+> +- phys: From PHY binding. Phandle for the Generic PHY.
+> +	Refer to Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +
+> +Other common properties refer to
+> +	Documentation/devicetree/binding/pci/designware-pcie.txt
+>  
+>  Example:
+>  
+> @@ -54,6 +65,24 @@ SoC specific DT Entry:
+>  		num-lanes = <4>;
+>  	};
+>  
+> +With using PHY framework:
+> +	pcie_phy0: pcie-phy@270000 {
+> +		...
+> +		reg = <0x270000 0x1000>, <0x271000 0x40>;
+> +		regn-names = "phy", "block";
 
-Is there any case that we actually need to use the IIO channels
-from the device tree? Seems to me its limited to the other AXP
-sub-devices.
+typo: %s/regn-names/reg-names/
 
-If so you could use struct iio_map to map the channels to other
-devices by name. See axp288_adc for an example.
+> +		...
+> +	};
+> +
+> +	pcie@290000 {
+> +		...
+> +		reg = <0x290000 0x1000>, <0x40000000 0x1000>;
+> +		reg-names = "elbi", "config";
+> +		phys = <&pcie_phy0>;
+> +		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000
+> +			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>;
+> +		...
+> +	};
+> +
+>  Board specific DT Entry:
+>  
+>  	pcie@290000 {
+> 
 
-Regards
-ChenYu
+Other than above one typo rest is looking fine.
+Once you address it, feel free to add
 
->> +             io-channel-names = "acin_v", "acin_i";
->> +     };
->> +};
->> --
->> 2.9.3
->>
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+
+Thanks,
+Pankaj Dubey
