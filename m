@@ -1,85 +1,83 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 15/22] mfd: axp20x: add CHRG_CTRL1 to writeable regs for
- AXP20X/AXP22X
-Date: Thu, 5 Jan 2017 14:10:32 +0800
-Message-ID: <CAGb2v67KmaECfFO+QBxKbtKscD0O=KNVHO1TS4FspYEdaLWUCA@mail.gmail.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-16-quentin.schulz@free-electrons.com>
+From: Jiada Wang <jiada_wang@mentor.com>
+Subject: [PATCH 1/1] spi: imx: support to set watermark level via DTS
+Date: Thu, 5 Jan 2017 15:10:15 +0900
+Message-ID: <20170105061015.7816-1-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170102163723.7939-16-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jiada_wang@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 3, 2017 at 12:37 AM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> The CHR_CTRL1 register is made of 7 read-write bits with one being used
-> to set the target voltage for battery charging.
+Previously watermark level is configured to fifosize/2,
+DMA mode can be used only when transfer length can be divided
+by 'watermark level * bpw', which makes DMA mode not practical.
 
-The description is incorrect.
+This patch adds new DTS property 'dma-wml', user can configure
+DMA watermark level, by specify 'dma-wml' in corresponding ecspi
+node.
 
-All 8 bits are read-write:
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt |  2 ++
+ drivers/spi/spi-imx.c                                  | 12 ++++++++++--
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-  - The highest bit enables the charger module
-  - Bits [6:5] set the target voltage
-  - Bits [4:3] set when the charge cycle ends, based on percentage
-    of charge current
-  - Bits [2:0] set the charge current
-
-Feel free to use the above in the commit message.
-
->
-> This adds the CHRG_CTRL1 register to the list of writeable registers for
-> AXP20X and AXP22X PMICs.
-
-You might want to add up to CHRG_CTRL3 for the AXP22x and CHRG_CTRL2
-for the AXP20x. These control additional aspects of the charger.
-
-AXP20X_CHRG_BAK_CTRL controls the charger for the RTC battery. You
-could add this now, or let the person doing the RTC battery driver
-add it.
-
-Regards
-ChenYu
-
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->  drivers/mfd/axp20x.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 65c57d0..19bdba3 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -66,6 +66,7 @@ static const struct regmap_access_table axp152_volatile_table = {
->  static const struct regmap_range axp20x_writeable_ranges[] = {
->         regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
->         regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
-> +       regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL1),
->         regmap_reg_range(AXP20X_DCDC_MODE, AXP20X_FG_RES),
->         regmap_reg_range(AXP20X_RDC_H, AXP20X_OCV(AXP20X_OCV_MAX)),
->  };
-> @@ -94,6 +95,7 @@ static const struct regmap_access_table axp20x_volatile_table = {
->  static const struct regmap_range axp22x_writeable_ranges[] = {
->         regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
->         regmap_reg_range(AXP20X_VBUS_IPSOUT_MGMT, AXP20X_VBUS_IPSOUT_MGMT),
-> +       regmap_reg_range(AXP20X_CHRG_CTRL1, AXP20X_CHRG_CTRL1),
->         regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
->  };
->
-> --
-> 2.9.3
->
+diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+index 8bc95e2..1e9345f 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+@@ -19,6 +19,7 @@ See the clock consumer binding,
+ - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+ 		Documentation/devicetree/bindings/dma/dma.txt
+ - dma-names: DMA request names should include "tx" and "rx" if present.
++- dma-wml: Specifies DMA watermark level
+ 
+ Obsolete properties:
+ - fsl,spi-num-chipselects : Contains the number of the chipselect
+@@ -35,4 +36,5 @@ ecspi@70010000 {
+ 		   <&gpio3 25 0>; /* GPIO3_25 */
+ 	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+ 	dma-names = "rx", "tx";
++        dma-wml = <16>;
+ };
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index deb782f..5c0ce19 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -929,8 +929,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
+ 	if (of_machine_is_compatible("fsl,imx6dl"))
+ 		return 0;
+ 
+-	spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
+-
+ 	/* Prepare for TX DMA: */
+ 	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
+ 	if (IS_ERR(master->dma_tx)) {
+@@ -1155,6 +1153,7 @@ static int spi_imx_probe(struct platform_device *pdev)
+ 	struct spi_imx_data *spi_imx;
+ 	struct resource *res;
+ 	int i, ret, irq;
++	u32 wml;
+ 
+ 	if (!np && !mxc_platform_info) {
+ 		dev_err(&pdev->dev, "can't get the platform data\n");
+@@ -1177,6 +1176,15 @@ static int spi_imx_probe(struct platform_device *pdev)
+ 	spi_imx->devtype_data = of_id ? of_id->data :
+ 		(struct spi_imx_devtype_data *)pdev->id_entry->driver_data;
+ 
++	if (of_property_read_u32(np, "dma-wml", &wml) == 0) {
++		if (wml > spi_imx_get_fifosize(spi_imx) || wml == 0) {
++			dev_warn(&pdev->dev, "mis-configured dma-wml\n");
++			spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
++		} else
++			spi_imx->wml = wml;
++	} else
++		spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
++
+ 	if (mxc_platform_info) {
+ 		master->num_chipselect = mxc_platform_info->num_chipselect;
+ 		master->cs_gpios = devm_kzalloc(&master->dev,
+-- 
+2.9.3
