@@ -1,76 +1,76 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/8] ARM: dts: armada-388-clearfog: Utilize new DSA binding
-Date: Thu, 05 Jan 2017 13:55:17 +0100
-Message-ID: <87k2a9d5u2.fsf@free-electrons.com>
-References: <20170102022249.10657-1-f.fainelli@gmail.com>
-        <20170102022249.10657-4-f.fainelli@gmail.com>
-        <87shoyeo2j.fsf@free-electrons.com>
-        <5a40436a-ebad-8a94-c5c5-546ba33ba545@gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 1/5] ARM: dts: armada388-clearfog: add phy reset gpio-hog
+Date: Thu, 05 Jan 2017 14:04:43 +0100
+Message-ID: <87eg0hd5ec.fsf@free-electrons.com>
+References: <E1cO4UH-0008SR-GW@rmk-PC.armlinux.org.uk>
+ <E1cO4Vz-00005t-8n@rmk-PC.armlinux.org.uk>
+ <871swig5b3.fsf@free-electrons.com>
+ <20170105101620.GR14217@n2100.armlinux.org.uk>
+ <87zij5dckj.fsf@free-electrons.com>
+ <20170105103134.GS14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5a40436a-ebad-8a94-c5c5-546ba33ba545-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Florian
-        Fainelli's message of "Wed, 4 Jan 2017 09:27:35 -0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170105103134.GS14217@n2100.armlinux.org.uk> (Russell King's
+ message of "Thu, 5 Jan 2017 10:31:35 +0000")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+Hi Russell King,
  
- On mer., janv. 04 2017, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+ On jeu., janv. 05 2017, Russell King - ARM Linux <linux@armlinux.org.uk> wrote:
 
-> On 01/04/2017 09:23 AM, Gregory CLEMENT wrote:
->> Hi Florian,
+> On Thu, Jan 05, 2017 at 11:29:48AM +0100, Gregory CLEMENT wrote:
+>> Hi Russell King,
 >>  
->>  On lun., janv. 02 2017, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>  On jeu., janv. 05 2017, Russell King - ARM Linux <linux@armlinux.org.uk> wrote:
 >> 
->>> Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net:
->>> dsa: Document new binding"). The legacy binding node is kept included, but is
->>> marked disabled.
->>>
+>> > On Wed, Jan 04, 2017 at 05:26:08PM +0100, Gregory CLEMENT wrote:
+>> >> Hi Russell,
+>> >>  
+>> >>  On lun., janv. 02 2017, Russell King <rmk+kernel@armlinux.org.uk> wrote:
+>> >> 
+>> >> 
+>> >> It would be nice to have some word here about this patch. Especially why
+>> >> we need it now. I guess it is for being less dependent on the
+>> >> initialization done by the bootloader but maybe you have other reasons.
+>> >
+>> > I'm not sure I follow.  This is adding it to the new platform, not the
+>> > old one.  I guess I should've rolled this into the patch creating the
+>> > clearfog-base dts file, and this question wouldn't have come up.
+>> >
 >> 
->> I tested this patch on mvebu/dt (I needed to reduce the context to apply
->> the patch due to the changes made by Russell King on this file). I also
->> set the status of the old binding to "disable" (instead of "okay").
->
-> Yes, that needs fixing, thanks for mentioning that.
->
+>> Indeed I missed the fact that it was on the new board as all the other
+>> patches were related to the common part.
 >> 
->> It seems to work with the limited test did:
->> ifconfig eth1 up
->> udhcpc -i lan1
->> iperf -c mylaptop
->> 
->> (same for lan4)
->> 
->> However is there a way to be sure that the new binding is used?
+>> Do you agree that I squash this patch into the "ARM: dts:
+>> armada388-clearfog: add base model DTS file" patch?
 >
-> The best way is probably to make sure that your switch device appears
-> parented to the MDIO bus driver under /sys/class/mdio_bus/*mvmdio*.
-> Alternatively, if you see a message like:
->
-> DSA: switch 0 0 parsed
->
-> in your dmesg, that would also be indicative of using the new binding
-> and corresponding code.
+> Yep, thanks.
 
-So it's OK I had this message.
+It's done and it is also part of mvebu/for-next now.
 
 Gregory
 
-
 >
-> Thanks a lot for trying that out!
 > -- 
-> Florian
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
 
 -- 
 Gregory Clement, Free Electrons
 Kernel, drivers, real-time and embedded Linux
 development, consulting, training and support.
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
