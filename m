@@ -1,95 +1,102 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] arm64: dts: sun50i: add MMC nodes
-Date: Thu, 5 Jan 2017 18:50:10 +0100
-Message-ID: <20170105175010.j3qpqqkj3kmgrmyc@lukather>
-References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
- <1483398226-29321-4-git-send-email-andre.przywara@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v5 0/2] iio: adc: hx711: Add IIO driver for AVIA HX711 ADC
+Date: Thu, 5 Jan 2017 18:51:15 +0100
+Message-ID: <20170105175115.GA12193@andreas>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="unu55hffykuh5z4a"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCMPXLBQKGQED75HSQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483398226-29321-4-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, ak@it-klinger.de
 List-Id: devicetree@vger.kernel.org
 
+This series adds IIO driver support for the AVIA HX711 ADC which is 
+mostly used in weighting cells.
 
---unu55hffykuh5z4a
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+The first patch adds the new DT binding for which a new vendor avia
+was also added.
 
-On Mon, Jan 02, 2017 at 11:03:44PM +0000, Andre Przywara wrote:
-> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 67 +++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index e0dcab8..c680566 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -150,6 +150,32 @@
->  				pins = "PB8", "PB9";
->  				function = "uart0";
->  			};
-> +
-> +			mmc0_pins: mmc0@0 {
-> +				pins = "PF0", "PF1", "PF2", "PF3", "PF4", "PF5";
-> +				function = "mmc0";
-> +				drive-strength = <30>;
-> +			};
-> +
-> +			mmc0_default_cd_pin: mmc0_cd_pin@0 {
-> +				pins = "PF6";
-> +				function = "gpio_in";
-> +				bias-pull-up;
-> +			};
-> +
-> +			mmc1_pins: mmc1@0 {
-> +				pins = "PG0", "PG1", "PG2", "PG3", "PG4", "PG5";
-> +				function = "mmc1";
-> +				drive-strength = <30>;
-> +			};
-> +
-> +			mmc2_pins: mmc2@0 {
-> +				pins = "PC1", "PC5", "PC6", "PC8", "PC9",
-> +				       "PC10", "PC11", "PC12", "PC13", "PC14",
-> +				       "PC15", "PC16";
-> +				function = "mmc2";
-> +				drive-strength = <30>;
-> +			};
->  		};
->  
->  		uart0: serial@1c28000 {
-> @@ -240,6 +266,47 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		mmc0: mmc@1c0f000 {
-> +			compatible = "allwinner,sun50i-a64-mmc",
-> +				     "allwinner,sun5i-a13-mmc";
+The second patch is the simple IIO driver implemented as ADC.
+The protocol is specific to this device and implemented using GPIOs.
 
-That's not correct. There's a bunch of features that are broken
-without A64-specific (or at least not present on the A13)
-quirks. Those features include for example the SDIO aggregation that
-are currently broken for all modes supported so far.
+Documentation of the chip can be found here:
 
-I was in holidays and send those patches tomorrow, but you were a bit
-too quick :)
+https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf
 
-Maxime
+Changes in v5:
+The reviews of Peter and Jonathan induced some improvements and lined out
+at least one bug
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - put Acked-By once again on the patch
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - improved ugly locking
+  - replace devm_iio_device_register() by iio_device_register() because of
+    regulator_disable() in remove()
+  - added ...scale_available() functions for both channels
+  - name channels directly 0 and 1 instead of #define HX711_CHAN_A...
+  - added hx711_wait_for_ready() function which is called after every dummy
+    read to get sure the DOUT line signals that the device is ready
+  - without this check there are cases in which the clock cycle of the next
+    read gets interpreted by the device as gain pulses!
+
+Changes in v4:
+Thanks to the thorough reviews and suggestions of Jonathan and Lars-Peter
+the driver was reworked to better meet the standard ABI of IIO. 
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - added attribute for regulator
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - two read channels for physical channels A and B
+  - remove gain attribute and use scale as read raw
+  - offer scale_available attribute
+  - introduced regulator as analog supply; mainly needed for calculating
+    the scale
+  - simplyfied use of GPIOs
+  - measuring input and output with oszilloscope and revised timing behavior
+  - many minor changes
+
+Changes in v3:
+moved gain from devicetree to sysfs, according to comment of Lars-Peter
+Thanks for reviewing and giving suggestions
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - removed property gain
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - removed property gain from devicetree
+  - added device attribute (rw) for gain
+  - support reading from both channels now
+
+Changes in v2:
+Lots of updates thanks to Peters review.
+
+* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
+  - typo
+  - removed unneded section
+
+* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
+  - updated help text in Kconfig
+  - removed dead code
+  - removed unused power management
+  - reduced channel spec to what is actually used
+  - added error handling in case reset of chip not possible
+
+Andreas Klinger (2):
+  iio: adc: hx711: Add DT binding for avia,hx711
+  iio: adc: hx711: Add IIO driver for AVIA HX711
+
+ .../devicetree/bindings/iio/adc/avia-hx711.txt     |  18 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/adc/Kconfig                            |  19 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/hx711.c                            | 531 +++++++++++++++++++++
+ 5 files changed, 570 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+ create mode 100644 drivers/iio/adc/hx711.c
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---unu55hffykuh5z4a--
+2.1.4
