@@ -1,71 +1,61 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: Add missing CPU frequencies for
- Exynos5422/5800
-Date: Wed, 4 Jan 2017 20:57:47 -0300
-Message-ID: <2c85559a-dc12-610b-c842-c89d078e1c2a@osg.samsung.com>
-References: <10512254.nyUcL0zgTP@amdc3058>
- <CAD=FV=Wo273T20fe8D2v5Pn1HYR==7PHtr7WZGwzFPRspAYPzg@mail.gmail.com>
- <20161229141707.qjrtjz7dik6a7l5s@kozik-lap>
- <CAD=FV=WM_K_f0NQ0mxB55Ksbqg1gYJHs5d66ARYsa1=5hKLjXA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WM_K_f0NQ0mxB55Ksbqg1gYJHs5d66ARYsa1=5hKLjXA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Andreas Faerber <afaerber@suse.de>, Thomas Abraham <thomas.ab@samsung.com>, Ben Gamari <ben@smart-cactus.org>, Arjun K V <arjun.kv@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 00/12] ARM: dts: socfpga: enable a few hardware bits
+Date: Wed,  4 Jan 2017 18:21:22 -0600
+Message-ID: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
+This patch series adds a few DTS updates for SoCFPGA platforms, such as:
 
-On 01/04/2017 06:05 PM, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Dec 29, 2016 at 6:17 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On Thu, Dec 15, 2016 at 04:54:30PM -0800, Doug Anderson wrote:
->>>> Index: b/arch/arm/boot/dts/exynos5800.dtsi
->>>> ===================================================================
->>>> --- a/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.365955950 +0100
->>>> +++ b/arch/arm/boot/dts/exynos5800.dtsi 2016-12-15 12:43:54.361955949 +0100
->>>> @@ -24,6 +24,16 @@
->>>>  };
->>>>
->>>>  &cluster_a15_opp_table {
->>>> +       opp@2000000000 {
->>>> +               opp-hz = /bits/ 64 <2000000000>;
->>>> +               opp-microvolt = <1250000>;
->>>> +               clock-latency-ns = <140000>;
->>>> +       };
->>>> +       opp@1900000000 {
->>>> +               opp-hz = /bits/ 64 <1900000000>;
->>>> +               opp-microvolt = <1250000>;
->>>> +               clock-latency-ns = <140000>;
->>>> +       };
->>>
->>> I don't think the voltages you listed are high enough for all peach pi
->>> boards for A15 at 1.9 GHz and 2.0 GHz, at least based on the research
->>> I did.  See my response to v1.
->>
->> I wanted to apply this but saw this remaining issue. Javier tested it
->> on Peach Pi so is this concern still valid?
-> 
-> I'm not sure.  It's been years since I did anything with exynos, so I
-> won't stand in the way if everyone else agrees that this patch is
-> good, but I will point out that testing on a single Peach Pi board is
-> not really enough given the massive difference in voltage needed
-> between the highest ASV group and the lowest (a whopping 112.5 mV from
-> looking in the Chrome OS source tree).
-> 
+- Adds FPGA manager bits
+- Enable I2C on Cyclone5 and Arria5 devkits
+- Adds LED support on C5/A5 devkits
+- Enables CAN on C5 devkit
+- Enables watchdog
+- Add NAND on Arria10
+- Add the LTC2977 Power Monitor on Arria10 devkit
 
-I agree. That's why answered that I wasn't able to find regressions on the
-Peach Pi I've access to, but I couldn't provide a Reviewed-by tag since it
-wasn't clear to me that the values were safe for any Exynos5420/5422/5800.
+Thanks,
+Dinh
 
-> -Doug
+Alan Tull (1):
+  ARM: dts: socfpga: add base fpga region and fpga bridges
 
-Best regards,
+Dinh Nguyen (10):
+  ARM: dts: socfpga: enable GPIO and LEDs for Cyclone5 and Arria5
+    devkits
+  ARM: dts: socfpga: set desired i2c clock on Cyclone5 and Arria5
+    devkits
+  ARM: dts: socfpga: Add Rohm DH2228FV DAC
+  ARM: dts: socfpga: enable CAN on Cyclone5 devkit
+  ARM: dts: socfpga: enable watchdog timer on Arria5 and Arria10
+  ARM: dts: socfpga: add the LTC2977 power monitor on Arria10 devkit
+  ARM: dts: socfpga: add fpga-manager node for Arria10
+  ARM: dts: socfpga: fpga manager data is 32 bits
+  ARM: dts: socfpga: add fpga region support on Arria10
+  ARM: dts: socfpga: add missing compatible string for SDRAM controller
+
+Graham Moore (1):
+  ARM: dts: socfpga: Add NAND device tree for Arria10
+
+ arch/arm/boot/dts/Makefile                       |  1 +
+ arch/arm/boot/dts/socfpga.dtsi                   | 35 +++++++++++++++-
+ arch/arm/boot/dts/socfpga_arria10.dtsi           | 19 ++++++++-
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi     |  9 ++++
+ arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts | 44 ++++++++++++++++++++
+ arch/arm/boot/dts/socfpga_arria5.dtsi            |  4 ++
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts       | 43 +++++++++++++++++++
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts     | 53 ++++++++++++++++++++++++
+ 8 files changed, 205 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
+
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
