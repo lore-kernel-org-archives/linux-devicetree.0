@@ -1,7 +1,7 @@
 From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 05/12] ARM: dts: socfpga: enable watchdog timer on Arria5 and Arria10
-Date: Wed,  4 Jan 2017 18:21:27 -0600
-Message-ID: <1483575694-29599-6-git-send-email-dinguyen@kernel.org>
+Subject: [PATCH 02/12] ARM: dts: socfpga: set desired i2c clock on Cyclone5 and Arria5 devkits
+Date: Wed,  4 Jan 2017 18:21:24 -0600
+Message-ID: <1483575694-29599-3-git-send-email-dinguyen@kernel.org>
 References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1483575694-29599-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
@@ -10,38 +10,54 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the watchdog for Arria5 and Arria10.
+The I2C LCD display on the Cyclone5 and Arria5 devkits is only capable of
+the standard 100 kHz clock. Set the "clock-frequency" of the I2C node
+to be 100000.
 
 Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 4 ++++
- arch/arm/boot/dts/socfpga_arria5.dtsi        | 4 ++++
- 2 files changed, 8 insertions(+)
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts   | 8 ++++++++
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index eb00ae3..17ec17a 100644
---- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -154,3 +154,7 @@
- &usb0 {
+diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+index fa70c39..8672edf 100644
+--- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+@@ -98,6 +98,14 @@
+ 
+ &i2c0 {
  	status = "okay";
- };
++	clock-frequency = <100000>;
 +
-+&watchdog0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-index 1907cc6..8c03729 100644
---- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-@@ -42,3 +42,7 @@
- 		};
- 	};
- };
++	/*
++	 * adjust the falling times to decrease the i2c frequency to 50Khz
++	 * because the LCD module does not work at the standard 100Khz
++	 */
++	i2c-sda-falling-time-ns = <5000>;
++	i2c-scl-falling-time-ns = <5000>;
+ 
+ 	eeprom@51 {
+ 		compatible = "atmel,24c32";
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 6d3188b..24650ba 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -98,6 +98,14 @@
+ 
+ &i2c0 {
+ 	status = "okay";
++	clock-frequency = <100000>;
 +
-+&watchdog0 {
-+	status = "okay";
-+};
++	/*
++	 * adjust the falling times to decrease the i2c frequency to 50Khz
++	 * because the LCD module does not work at the standard 100Khz
++	 */
++	i2c-sda-falling-time-ns = <5000>;
++	i2c-scl-falling-time-ns = <5000>;
+ 
+ 	eeprom@51 {
+ 		compatible = "atmel,24c32";
 -- 
 2.7.4
 
