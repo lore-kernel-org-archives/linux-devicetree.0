@@ -1,53 +1,61 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH 5/5] i2c: mux: pca954x: Add irq_mask_en to delay enabling
- irqs
-Date: Thu, 5 Jan 2017 11:31:19 +0800
-Message-ID: <dd7a34b0-9390-b035-0d81-e216204eab39@electromag.com.au>
-References: <1483522197-38819-1-git-send-email-preid@electromag.com.au>
- <1483522197-38819-6-git-send-email-preid@electromag.com.au>
- <2bc78ee3-be23-40b8-54ca-90bb2cc05a47@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCHv2 0/5] Support for Marvell switches with integrated CPUs
+Date: Thu,  5 Jan 2017 16:36:36 +1300
+Message-ID: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2bc78ee3-be23-40b8-54ca-90bb2cc05a47-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.>
 List-Id: devicetree@vger.kernel.org
 
-On 4/01/2017 22:21, Peter Rosin wrote:
-> On 2017-01-04 10:29, Phil Reid wrote:
->> Unfortunately some hardware device will assert their irq line immediately
->> on power on and provide no mechanism to mask the irq. As the i2c muxes
->> provide no method to mask irq line this provides a work around by keeping
->> the parent irq masked until enough device drivers have loaded to service
->> all pending interrupts.
->>
->> For example the the ltc1760 assert its SMBALERT irq immediately on power
->> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
->> device is registered irq are enabled and fire continuously as the second
->> device driver has not yet loaded. Setting this parameter to 0x3 while
->> delay the irq being enabled until both devices are ready.
->
-> I think this also needs a comment in the code, including a description
-> of the limitations. If the interrupt is shared between two devices on
-> the same bus, you would have the exact same problem and this workaround
-> would be no good...
->
-> Overall, this series fixes the issues I had with the patch from half
-> a year ago or so. Thanks!
->
-> With nitpicks fixed,
-> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->
-G'day Pater,
+The 98DX3236, 98DX3336 and 98DX4251 are a set of switch ASICs with
+integrated CPUs. They CPU block is common within these product lines and
+(as far as I can tell/have been told) is based on the Armada XP. There
+are a few differences due to the fact they have to squeeze the CPU into
+the same package as the switch.
 
-Thanks for the review. v2 on it's way.
+Chris Packham (4):
+  clk: mvebu: support for 98DX3236 SoC
+  arm: mvebu: support for SMP on 98DX3336 SoC
+  arm: mvebu: Add device tree for 98DX3236 SoCs
+  arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
 
+Kalyan Kinthada (1):
+  pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  |  18 ++
+ .../devicetree/bindings/arm/marvell/98dx3236.txt   |  23 ++
+ .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   1 +
+ .../pinctrl/marvell,armada-98dx3236-pinctrl.txt    |  46 ++++
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi          | 247 +++++++++++++++++++++
+ arch/arm/boot/dts/armada-xp-98dx3336.dtsi          |  78 +++++++
+ arch/arm/boot/dts/armada-xp-98dx4251.dtsi          |  92 ++++++++
+ arch/arm/boot/dts/db-dxbc2.dts                     | 159 +++++++++++++
+ arch/arm/boot/dts/db-xc3-24g4xg.dts                | 155 +++++++++++++
+ arch/arm/mach-mvebu/Makefile                       |   1 +
+ arch/arm/mach-mvebu/common.h                       |   1 +
+ arch/arm/mach-mvebu/platsmp.c                      |  43 ++++
+ arch/arm/mach-mvebu/pmsu-98dx3236.c                |  69 ++++++
+ drivers/clk/mvebu/Makefile                         |   2 +-
+ drivers/clk/mvebu/armada-xp.c                      |  42 ++++
+ drivers/clk/mvebu/clk-cpu.c                        |  33 ++-
+ drivers/clk/mvebu/mv98dx3236-corediv.c             | 207 +++++++++++++++++
+ drivers/pinctrl/mvebu/pinctrl-armada-xp.c          | 155 +++++++++++++
+ 19 files changed, 1369 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+ create mode 100644 arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+ create mode 100644 arch/arm/boot/dts/armada-xp-98dx3336.dtsi
+ create mode 100644 arch/arm/boot/dts/armada-xp-98dx4251.dtsi
+ create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
+ create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
+ create mode 100644 arch/arm/mach-mvebu/pmsu-98dx3236.c
+ create mode 100644 drivers/clk/mvebu/mv98dx3236-corediv.c
 
 -- 
-Regards
-Phil Reid
+2.11.0.24.ge6920cf
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
