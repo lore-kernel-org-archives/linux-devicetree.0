@@ -1,57 +1,54 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH net-next v4 0/2] Add support for the ethernet switch on the ESPRESSObin
-Date: Thu, 05 Jan 2017 15:25:53 +0100
-Message-ID: <87tw9dbn2m.fsf@free-electrons.com>
-References: <20161221125734.1034-1-romain.perier@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] [linux-next] bus:qcom : Fix typo in qcom,ebi2.txt
+Date: Thu,  5 Jan 2017 23:43:07 +0900
+Message-ID: <20170105144307.21871-1-standby24x7@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161221125734.1034-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
-        Perier's message of "Wed, 21 Dec 2016 13:57:32 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+This patch fix 2 spelling typos found in qcom,ebi2.txt
+
+Signed-off-by: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/bus/qcom,ebi2.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+index 920681f552db..5a7d567f6833 100644
+--- a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
++++ b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+@@ -51,7 +51,7 @@ Required properties:
+ - compatible: should be one of:
+   "qcom,msm8660-ebi2"
+   "qcom,apq8060-ebi2"
+-- #address-cells: shoule be <2>: the first cell is the chipselect,
++- #address-cells: should be <2>: the first cell is the chipselect,
+   the second cell is the offset inside the memory range
+ - #size-cells: should be <1>
+ - ranges: should be set to:
+@@ -64,7 +64,7 @@ Required properties:
+ - reg: two ranges of registers: EBI2 config and XMEM config areas
+ - reg-names: should be "ebi2", "xmem"
+ - clocks: two clocks, EBI_2X and EBI
+-- clock-names: shoule be "ebi2x", "ebi2"
++- clock-names: should be "ebi2x", "ebi2"
  
- On mer., déc. 21 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> This set of patches adds support for the Marvell ethernet switch 88E6341.
-> It also add the devicetree definition of this switch to the DT board.
-
-The forth version of this series had been sent while the net-next merge
-window was closed so I think it was missed.
-
-Do you want that we send it again on the netdev mainling list?
-
-Thanks,
-
-Gregory
-
->
-> Romain Perier (2):
->   net: dsa: mv88e6xxx: Don't forbid MDIO I/Os for PHY addr >=
->     num_of_ports
->   net: dsa: mv88e6xxx: Add support for ethernet switch 88E6341/88E6141
->
->  drivers/net/dsa/mv88e6xxx/chip.c      | 48 ++++++++++++++++++++++++++++++-----
->  drivers/net/dsa/mv88e6xxx/mv88e6xxx.h |  4 ++-
->  2 files changed, 45 insertions(+), 7 deletions(-)
->
-> -- 
->
-> Note: As requested by Gregory, I have removed the patch for the DT (already merged).
->
-> 2.9.3
->
-
+ Optional subnodes:
+ - Nodes inside the EBI2 will be considered device nodes.
+@@ -100,7 +100,7 @@ Optional properties arrays for FAST chip selects:
+   assertion, with respect to the cycle where ADV (address valid) is asserted.
+   2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
+ - qcom,xmem-read-hold-cycles: the length in cycles of the first segment of a
+-  read transfer. For a single read trandfer this will be the time from CS
++  read transfer. For a single read transfer this will be the time from CS
+   assertion to OE assertion. Valid values 0 thru 15.
+ 
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.11.0.161.g6610af872f64
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
