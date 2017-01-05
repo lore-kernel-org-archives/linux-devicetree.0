@@ -1,30 +1,40 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/8] ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
-Date: Thu,  5 Jan 2017 11:29:53 -0800
-Message-ID: <20170105192957.14304-5-f.fainelli@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 1/8] ARM: dts: armada-370-rd: Utilize new DSA binding
+Date: Thu,  5 Jan 2017 11:29:50 -0800
+Message-ID: <20170105192957.14304-2-f.fainelli@gmail.com>
 References: <20170105192957.14304-1-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170105192957.14304-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170105192957.14304-1-f.fainelli@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
 Document new binding"). The legacy binding node is kept included, but is marked
 disabled.
 
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 53 +++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ arch/arm/boot/dts/armada-370-rd.dts | 44 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-index 83ac884c0f8a..42ea8764814c 100644
---- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-+++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -302,6 +302,8 @@
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index c3fd6e49212f..ade956cbd41a 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -173,6 +173,8 @@
  	};
  
  	dsa {
@@ -33,19 +43,16 @@ index 83ac884c0f8a..42ea8764814c 100644
  		compatible = "marvell,dsa";
  		#address-cells = <2>;
  		#size-cells = <0>;
-@@ -398,3 +400,54 @@
- 		spi-max-frequency = <40000000>;
+@@ -235,6 +237,48 @@
+ 	phy0: ethernet-phy@0 {
+ 		reg = <0>;
  	};
- };
 +
-+&mdio {
-+	status = "okay";
-+
-+	switch@0 {
++	switch: switch@10 {
 +		compatible = "marvell,mv88e6085";
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		reg = <0>;
++		reg = <0x10>;
 +
 +		ports {
 +			#address-cells = <1>;
@@ -53,33 +60,28 @@ index 83ac884c0f8a..42ea8764814c 100644
 +
 +			port@0 {
 +				reg = <0>;
-+				label = "lan4";
++				label = "lan0";
 +			};
 +
 +			port@1 {
-+				reg = <1>;
-+				label = "lan3";
++			       reg = <1>;
++			       label = "lan1";
 +			};
 +
 +			port@2 {
-+				reg = <2>;
-+				label = "lan2";
++			       reg = <2>;
++			       label = "lan2";
 +			};
 +
 +			port@3 {
-+				reg = <3>;
-+				label = "lan1";
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "internet";
++			       reg = <3>;
++			       label = "lan3";
 +			};
 +
 +			port@5 {
 +				reg = <5>;
 +				label = "cpu";
-+				ethernet = <&eth0>;
++				ethernet = <&eth1>;
 +				fixed-link {
 +					speed = <1000>;
 +					full-duplex;
@@ -87,11 +89,8 @@ index 83ac884c0f8a..42ea8764814c 100644
 +			};
 +		};
 +	};
-+};
+ };
+ 
+ 
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
