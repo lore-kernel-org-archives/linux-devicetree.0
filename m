@@ -1,15 +1,12 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH 05/22] ARM: dtsi: axp209: add AXP209 ADC subnode
-Date: Thu, 5 Jan 2017 09:08:19 +0100
-Message-ID: <1ddf7012-3336-84c2-6392-353b01beea93@free-electrons.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-6-quentin.schulz@free-electrons.com>
- <CAGb2v66dw=DECuHpLDzHnMP-O4UwZ+RkPsH0RofOGdBa7z7OHw@mail.gmail.com>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
+Subject: [PATCH v2,
+ 1/9] irqchip/ls-scfg-msi: fix typo of MSI compatible strings
+Date: Thu, 5 Jan 2017 16:10:29 +0800
+Message-ID: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v66dw=DECuHpLDzHnMP-O4UwZ+RkPsH0RofOGdBa7z7OHw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,44 +16,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/2017 06:51, Chen-Yu Tsai wrote:
-> On Tue, Jan 3, 2017 at 12:37 AM, Quentin Schulz
-> <quentin.schulz@free-electrons.com> wrote:
->> X-Powers AXP209 PMIC has multiple ADCs, each one exposing data from the
->> different power supplies connected to the PMIC.
->>
->> This adds the ADC subnode for AXP20X PMIC.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->> ---
->>  arch/arm/boot/dts/axp209.dtsi | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
->> index 675bb0f..2a4e8ee 100644
->> --- a/arch/arm/boot/dts/axp209.dtsi
->> +++ b/arch/arm/boot/dts/axp209.dtsi
->> @@ -53,6 +53,11 @@
->>         interrupt-controller;
->>         #interrupt-cells = <1>;
->>
->> +       axp209_adc: axp209_adc {
-> 
-> Node name should be generic. Please change it to "adc".
-> 
+The patch is to fix typo of the Layerscape SCFG MSI dts compatible
+strings. "1" is replaced by "l".
 
-OK, do I keep the label as is?
+Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v2-v1:
+- None
 
-axp209_adc: adc {
+ .../devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt    | 6 +++---
+ drivers/irqchip/irq-ls-scfg-msi.c                                   | 6 ++++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-Thanks,
-Quentin
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+index 9e38949..2755cd1 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+@@ -4,8 +4,8 @@ Required properties:
+ 
+ - compatible: should be "fsl,<soc-name>-msi" to identify
+ 	      Layerscape PCIe MSI controller block such as:
+-              "fsl,1s1021a-msi"
+-              "fsl,1s1043a-msi"
++              "fsl,ls1021a-msi"
++              "fsl,ls1043a-msi"
+ - msi-controller: indicates that this is a PCIe MSI controller node
+ - reg: physical base address of the controller and length of memory mapped.
+ - interrupts: an interrupt to the parent interrupt controller.
+@@ -23,7 +23,7 @@ MSI controller node
+ Examples:
+ 
+ 	msi1: msi-controller@1571000 {
+-		compatible = "fsl,1s1043a-msi";
++		compatible = "fsl,ls1043a-msi";
+ 		reg = <0x0 0x1571000 0x0 0x8>,
+ 		msi-controller;
+ 		interrupts = <0 116 0x4>;
+diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-scfg-msi.c
+index 02cca74c..cef67cc 100644
+--- a/drivers/irqchip/irq-ls-scfg-msi.c
++++ b/drivers/irqchip/irq-ls-scfg-msi.c
+@@ -219,8 +219,10 @@ static int ls_scfg_msi_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id ls_scfg_msi_id[] = {
+-	{ .compatible = "fsl,1s1021a-msi", },
+-	{ .compatible = "fsl,1s1043a-msi", },
++	{ .compatible = "fsl,1s1021a-msi", }, /* a typo */
++	{ .compatible = "fsl,1s1043a-msi", }, /* a typo */
++	{ .compatible = "fsl,ls1021a-msi", },
++	{ .compatible = "fsl,ls1043a-msi", },
+ 	{},
+ };
+ 
 -- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
