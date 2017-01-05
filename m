@@ -1,55 +1,139 @@
-From: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] [linux-next] bus:qcom : Fix typo in qcom,ebi2.txt
-Date: Thu,  5 Jan 2017 23:43:07 +0900
-Message-ID: <20170105144307.21871-1-standby24x7@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 0/8] Add PWM and IIO timer drivers for STM32
+Date: Thu, 5 Jan 2017 14:49:53 +0000
+Message-ID: <20170105144953.GT24225@dell>
+References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fix 2 spelling typos found in qcom,ebi2.txt
+On Thu, 05 Jan 2017, Benjamin Gaignard wrote:
 
-Signed-off-by: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/bus/qcom,ebi2.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> version 7:
+> - rebase on v4.10-rc2
+> - remove iio_device code from driver and keep only the trigger part
+> 
+> version 6:
+> - rename stm32-gptimer in stm32-timers.
+> - change "st,stm32-gptimer" compatible to "st,stm32-timers".
+> - modify "st,breakinput" parameter in pwm part.
+> - split DT patch in 2
+> 
+> version 5:
+> - fix comments done on version 4
+> - rebased on kernel 4.9-rc8
+> - change nodes names and re-order then by addresses
+> 
+> version 4:
+> - fix comments done on version 3
+> - don't use interrupts anymore in IIO timer
+> - detect hardware capabilities at probe time to simplify binding
+> 
+> version 3:
+> - no change on mfd and pwm divers patches
+> - add cross reference between bindings
+> - change compatible to "st,stm32-timer-trigger"
+> - fix attributes access rights
+> - use string instead of int for master_mode and slave_mode
+> - document device attributes in sysfs-bus-iio-timer-stm32
+> - update DT with the new compatible
+> 
+> version 2:
+> - keep only one compatible per driver
+> - use DT parameters to describe hardware block configuration:
+>   - pwm channels, complementary output, counter size, break input
+>   - triggers accepted and create by IIO timers
+> - change DT to limite use of reference to the node
+> - interrupt is now in IIO timer driver
+> - rename stm32-mfd-timer to stm32-timers (for general purpose timer)
+> 
+> The following patches enable PWM and IIO Timer features for STM32 platforms.
+> 
+> Those two features are mixed into the registers of the same hardware block
+> (named general purpose timer) which lead to introduce a multifunctions driver 
+> on the top of them to be able to share the registers.
+> 
+> In STM32f4 14 instances of timer hardware block exist, even if they all have
+> the same register mapping they could have a different number of pwm channels
+> and/or different triggers capabilities. We use various parameters in DT to 
+> describe the differences between hardware blocks
+> 
+> The MFD (stm32-timers.c) takes care of clock and register mapping
+> by using regmap. stm32_timers structure is provided to its sub-node to
+> share those information.
+> 
+> PWM driver is implemented into pwm-stm32.c. Depending of the instance we may
+> have up to 4 channels, sometime with complementary outputs or 32 bits counter
+> instead of 16 bits. Some hardware blocks may also have a break input function
+> which allows to stop pwm depending of a level, defined in devicetree, on an
+> external pin.
+> 
+> IIO timer driver (stm32-timer-trigger.c and stm32-timer-trigger.h) define a list
+> of hardware triggers usable by hardware blocks like ADC, DAC or other timers. 
+> 
+> The matrix of possible connections between blocks is quite complex so we use 
+> trigger names and is_stm32_iio_timer_trigger() function to be sure that
+> triggers are valid and configure the IPs.
+> 
+> At run time IIO timer hardware blocks can configure (through "master_mode" 
+> IIO device attribute) which internal signal (counter enable, reset,
+> comparison block, etc...) is used to generate the trigger.
+> 
+> Benjamin Gaignard (8):
+>   MFD: add bindings for STM32 Timers driver
+>   MFD: add STM32 Timers driver
+>   PWM: add pwm-stm32 DT bindings
+>   PWM: add PWM driver for STM32 plaftorm
+>   IIO: add bindings for STM32 timer trigger driver
+>   IIO: add STM32 timer trigger driver
+>   ARM: dts: stm32: add Timers driver for stm32f429 MCU
+>   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
 
-diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
-index 920681f552db..5a7d567f6833 100644
---- a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
-+++ b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
-@@ -51,7 +51,7 @@ Required properties:
- - compatible: should be one of:
-   "qcom,msm8660-ebi2"
-   "qcom,apq8060-ebi2"
--- #address-cells: shoule be <2>: the first cell is the chipselect,
-+- #address-cells: should be <2>: the first cell is the chipselect,
-   the second cell is the offset inside the memory range
- - #size-cells: should be <1>
- - ranges: should be set to:
-@@ -64,7 +64,7 @@ Required properties:
- - reg: two ranges of registers: EBI2 config and XMEM config areas
- - reg-names: should be "ebi2", "xmem"
- - clocks: two clocks, EBI_2X and EBI
--- clock-names: shoule be "ebi2x", "ebi2"
-+- clock-names: should be "ebi2x", "ebi2"
- 
- Optional subnodes:
- - Nodes inside the EBI2 will be considered device nodes.
-@@ -100,7 +100,7 @@ Optional properties arrays for FAST chip selects:
-   assertion, with respect to the cycle where ADV (address valid) is asserted.
-   2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
- - qcom,xmem-read-hold-cycles: the length in cycles of the first segment of a
--  read transfer. For a single read trandfer this will be the time from CS
-+  read transfer. For a single read transfer this will be the time from CS
-   assertion to OE assertion. Valid values 0 thru 15.
- 
- 
+Any reason why you've dropped all your Acks?
+
+I don't really want to review it again if little is different.
+
+How much MFD related code has changed since the last review?
+
+>  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
+>  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
+>  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
+>  .../devicetree/bindings/pwm/pwm-stm32.txt          |  33 ++
+>  arch/arm/boot/dts/stm32f429.dtsi                   | 275 +++++++++++++
+>  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
+>  drivers/iio/Kconfig                                |   1 -
+>  drivers/iio/trigger/Kconfig                        |  10 +
+>  drivers/iio/trigger/Makefile                       |   1 +
+>  drivers/iio/trigger/stm32-timer-trigger.c          | 340 ++++++++++++++++
+>  drivers/mfd/Kconfig                                |  11 +
+>  drivers/mfd/Makefile                               |   2 +
+>  drivers/mfd/stm32-timers.c                         |  80 ++++
+>  drivers/pwm/Kconfig                                |   9 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-stm32.c                            | 434 +++++++++++++++++++++
+>  include/linux/iio/timer/stm32-timer-trigger.h      |  62 +++
+>  include/linux/mfd/stm32-timers.h                   |  71 ++++
+>  18 files changed, 1455 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
+>  create mode 100644 drivers/mfd/stm32-timers.c
+>  create mode 100644 drivers/pwm/pwm-stm32.c
+>  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
+>  create mode 100644 include/linux/mfd/stm32-timers.h
+> 
+
 -- 
-2.11.0.161.g6610af872f64
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
