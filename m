@@ -1,70 +1,88 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH v8 3/5] ARM: dts: stm32: Add I2C1 support for STM32F429 SoC
-Date: Thu,  5 Jan 2017 10:07:24 +0100
-Message-ID: <1483607246-14771-4-git-send-email-cedric.madianga@gmail.com>
-References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+Date: Thu, 5 Jan 2017 14:43:45 +0530
+Message-ID: <CAFp+6iEDjC4OEcB7Ffak5oG_gtVAkBpgp4cZ8E37x=L_YMKfGA@mail.gmail.com>
+References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
+ <20161228231659.GD17126@codeaurora.org> <CAFp+6iF0FQjt3bt1d_HjYmpMb8cTkg+BudoNR7yzThd+EgZfQg@mail.gmail.com>
+ <20170103192429.GL10531@minitux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170103192429.GL10531@minitux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds I2C1 support for STM32F429 SoC
+Hi,
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+On Wed, Jan 4, 2017 at 12:54 AM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed 28 Dec 23:39 PST 2016, Vivek Gautam wrote:
+>
+>> >> + *
+>> >> + */
+>> >> +static int phy_pipe_clk_register(struct qcom_qmp_phy *qphy, int id)
+>> >> +{
+>> >> +     char clk_name[MAX_PROP_NAME];
+>> >
+>> > I'm not sure MAX_PROP_NAME is the same as some max clk name but
+>> > ok. We should be able to calculate that the maximum is length of
+>> > usb3_phy_pipe_clk_src for now though?
+>>
+>> Yea, i thought of using the same macro, considering that it provides
+>> 32 characters :-)
+>> Will rather use the length of usb3_phy_pipe_clk_src for now. May be
+>> #define MAX_CLK_NAME   24
+>>
+>
+> Using a macro indicates that the size have some global meaning, but as
+> far as I can see it doesn't. Just write 24 and you will have enough
+> space for 100k pcie pipe clocks. And then use sizeof(clk_name) below.
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index e4dae0e..5b063e9 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -48,6 +48,7 @@
- #include "skeleton.dtsi"
- #include "armv7-m.dtsi"
- #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
-+#include <dt-bindings/mfd/stm32f4-rcc.h>
- 
- / {
- 	clocks {
-@@ -153,6 +154,18 @@
- 			status = "disabled";
- 		};
- 
-+		i2c1: i2c@40005400 {
-+			compatible = "st,stm32f4-i2c";
-+			reg = <0x40005400 0x400>;
-+			interrupts = <31>,
-+				     <32>;
-+			resets = <&rcc STM32F4_APB1_RESET(I2C1)>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(I2C1)>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		usart7: serial@40007800 {
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007800 0x400>;
-@@ -355,6 +368,16 @@
- 					slew-rate = <2>;
- 				};
- 			};
-+
-+			i2c1_pins_b: i2c1@0 {
-+				pins {
-+					pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>,
-+						 <STM32F429_PB6_FUNC_I2C1_SCL>;
-+					bias-disable;
-+					drive-open-drain;
-+					slew-rate = <3>;
-+				};
-+			};
- 		};
- 
- 		rcc: rcc@40023810 {
+Sure, will do as suggested.
+
+>
+>> >
+>> >> +     struct clk *clk;
+>> >> +
+>> >> +     memset(&clk_name, 0, sizeof(clk_name));
+>
+> There's no point in clearing clk_name, as it will be overwritten
+> and null-terminated below.
+
+Right. Will remove this.
+
+>
+>> >> +     switch (qphy->cfg->type) {
+>> >> +     case PHY_TYPE_USB3:
+>> >> +             snprintf(clk_name, MAX_PROP_NAME, "usb3_phy_pipe_clk_src");
+>> >> +             break;
+>> >> +     case PHY_TYPE_PCIE:
+>> >> +             snprintf(clk_name, MAX_PROP_NAME, "pcie_%d_pipe_clk_src", id);
+>> >> +             break;
+>> >> +     default:
+>> >> +             return -EINVAL;
+>> >> +     }
+>> >> +
+>> >> +     /* controllers using QMP phys use 125MHz pipe clock interface */
+>> >> +     clk = clk_register_fixed_rate(qphy->dev, clk_name, NULL, 0, 125000000);
+>
+> Regards,
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+Regards
+Vivek
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
