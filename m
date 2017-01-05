@@ -1,210 +1,135 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/6] arm64: dts: sunxi: add support for the
- Orange Pi PC 2 board
-Date: Thu, 5 Jan 2017 23:13:04 +0100
-Message-ID: <20170105221304.ai6bue44eu73kwoi@lukather>
-References: <20161226171156.11605-1-icenowy@aosc.xyz>
- <20161226171156.11605-3-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Myir AM437x Rico board support (DTS) for Linux mainline 4.9 and
+ 4.4 Ti Processor SDK 03.02.00.05
+Date: Thu, 5 Jan 2017 14:12:52 -0800
+Message-ID: <20170105221252.GA2630@atomide.com>
+References: <201701051754.03159.ppisa@pikron.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="75ndxishggcqllbq"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4MJXPBQKGQEFWOMVOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161226171156.11605-3-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <201701051754.03159.ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Pisa <ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---75ndxishggcqllbq
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Tue, Dec 27, 2016 at 01:11:56AM +0800, Icenowy Zheng wrote:
-> From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+* Pavel Pisa <ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org> [170105 08:54]:
+> Hello Tony and others,
 > 
-> The Orange Pi PC 2 is a typical single board computer using the
-> Allwinner H5 SoC. Apart from the usual suspects it features three
-> separately driven USB ports and a Gigabit Ethernet port.
-> Also it has a SPI NOR flash soldered, from which the board can boot
-> from. This enables the SBC to behave like a "real computer" with
-> built-in firmware.
+> I have found some personal time during holydays[*] and proceed
+> furhers with RICO board support for perspective kernel versions.
 > 
-> Add the board specific .dts file, which includes the H5 .dtsi and
-> enables the peripherals that we support so far.
+> I have prepared a device tree which provides quite complete
+> board support for the most of peripherals found on MyIR
+> AM437x Ricoboard. I have tested the kernel on the real board
+> which I have bought for myself to do testing and can contribute
+> previous work to to mainline.
 > 
-> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
->  .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 183 +++++++++++++++++++++
->  2 files changed, 184 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> LEDs, Ethernet, LEDs, SDcard, eMMC, onboard SPI NVM etc.
+> works. Generally the AM437x mainline support is great except
+> for SGX. It has been pleasant to work with it. I used TFTP boot
+> and ramdisk overlay over NFS exported Debian Jessie RO chroot
+> install.
+
+OK nice. Please start sending the patches to linux-omap,
+linux-arm-kernel and devicetree mailing lists so we can
+start merging in the support :)
+
+> Only significant missing piece is HDMI support. I have put
+> setup which I prepared for Ti kernels to device-tree.
+> But mainline supports SII9022 HDMI encoder only by
 > 
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> index 1e29a5ae8282..b26bb46b934c 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -1,4 +1,5 @@
->  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
->  
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> new file mode 100644
-> index 000000000000..a29ca6b274bb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> @@ -0,0 +1,183 @@
-> +/*
-> + * Copyright (C) 2016 ARM Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun50i-h5.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +/ {
-> +	model = "Xunlong Orange Pi PC 2";
-> +	compatible = "xunlong,orangepi-pc2", "allwinner,sun50i-h5";
-> +
-> +	reg_vcc3v3: vcc3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
+>   drivers/gpu/drm/bridge/sii902x.c
+> 
+> but OMAP DSS changes "sil,sii9022" in device-tree
+> to omapdss,sil,sii9022 which seems to be customized
+> version found in Texas Instruments tree
+> 
+>   drivers/gpu/drm/omapdrm/displays/encoder-sii9022-video.c
+> 
+> Do you know if there are some plans to support combination
+> of this driver or include customized version in mainline
+> for OMAP?
+> 
+> I expect that non accelerated graphic with parallel
+> LCD panel would work with 4.9 mainline kernel and
+> the prepared device tree if #if 0 is changed to #if 1.
+> 
+> The 4.9 mainline support files can be found there
+> 
+>   http://pikron.com/files/linux/rico/linux-4.9/am437x-myir-ricoboard.dts
+>   http://pikron.com/files/linux/rico/linux-4.9/am437x-myir-ricoboard.dtb
+>   
+> http://pikron.com/files/linux/rico/linux-4.9/config-4.9-mainline-myir-ricoboard
 
-There's no need to declare the LED GPIO in pinctrl.
+Seems OK for the dts on a quick glance. Tomi and Jyri would
+know more about the HDMI support.
 
-> +
-> +		pwr_led {
-> +			label = "orangepi:green:pwr";
-> +			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-> +			default-state = "on";
-> +		};
-> +
-> +		status_led {
-> +			label = "orangepi:red:status";
-> +			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
-> +	r_gpio_keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sw_r_opc>;
+> I would be happy if they can help others, some feedback
+> and cooperation would be great as well. I would be happy
+> to contribute DTS to mainline if it is found acceptable.
 
-Ditto
+Yeah let's do that first, then you can figure out the HDMI
+part.
 
-> +
-> +		sw4 {
-> +			label = "sw4";
-> +			linux,code = <BTN_0>;
-> +			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +&ehci1 {
-> +	status = "okay";
-> +};
-> +
-> +&ehci2 {
-> +	status = "okay";
-> +};
-> +
-> +&ehci3 {
-> +	status = "okay";
-> +};
-> +
-> +&ir {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ir_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+> I can prepare version without HDMI or complete DSS section
+> if actual untested/able section is unacceptable.
+> 
+> Because of missing HDMI support and attempt to test SGX
+> accelerated support, I have tried official Ti
+> Processor SDK image for AM437x (am437x-evm-linux-03.02.00.05).
+> I have prepared DTS and tested it with my overlay enabled
+> kernel and Debian and Ti root filesystems as well as with
+> original Ti kernel.
+> 
+> There are files for use with HDMI connected monitor
+> 
+>   files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard-hdmi.dts
+>   files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard-hdmi.dtb
+>   files/linux/rico/linux-ti-4.4/config-ti-4.4-myir-ricoboard
+> 
+> and another set for parallel LCD panel (untested)
+> 
+>   files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard.dts
+>   files/linux/rico/linux-ti-4.4/am437x-myir-ricoboard.dtb
+> 
+> I have managed to build SGX driver for my kernel configuration
+> and from the testing of Ti image it seem to be used same way
+> as for original Ti kernel build.
+> 
+> I have no luck with accelerated Xorg. But Ti release notes
+> states that Xorg support is missing in 03.02.00.05.
+> 
+> There is question if it is permanent status or if there is some
+> change.
+> 
+> Is there chance that Ti includes this prepared DTS in their
+> kernel branch?
+> 
+> For sure mainline 4.9 support is even more interesting
+> for me and future.
 
-Ditto
+No idea about the above really, but the basic support seem
+very much straight forward.
 
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-> +	cd-inverted;
+Regards,
 
-Do you need both the GPIO flag and the cd-inverted one?
+Tony
 
-Thanks,
-Maxime
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---75ndxishggcqllbq--
+> [*] Our company partner cares mainly (and may be pays something)
+> for my work on maintenance of ancient MyIR Linux 3.12.10 kernel
+> in their products. And MyIR company does not seem to really
+> care about users and updates at all even if the enhancements
+> are sent them for free. Typical experience but great thing about
+> this board is that a schematic diagram is provided which makes
+> possible to develop proper support.
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
