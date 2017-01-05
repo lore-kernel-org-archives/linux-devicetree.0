@@ -1,78 +1,84 @@
-From: "pankaj.dubey" <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 1/5] Documetation: samsung-phy: add the exynos-pcie-phy
- binding
-Date: Thu, 05 Jan 2017 11:36:32 +0530
-Message-ID: <d6a81e81-3ac2-5d83-15f3-9de07fb2d421@samsung.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p1d3d840e4ade396a60ce690b09d486990@epcas1p1.samsung.com>
- <20170104123435.30740-2-jh80.chung@samsung.com>
- <4110cfa2-bbe8-337e-5f2c-13d82cd23713@samsung.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v11 8/8] ARM: dts: imx6q-evi: Fix onboard hub reset line
+Date: Thu, 5 Jan 2017 14:01:59 +0800
+Message-ID: <1483596119-27508-9-git-send-email-peter.chen@nxp.com>
+References: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <4110cfa2-bbe8-337e-5f2c-13d82cd23713-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, rjw@rjwysocki.net, dbaryshkov@gmail.com
+Cc: heiko@sntech.de, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, vaibhav.hiremath@linaro.org, gary.bisson@boundarydevices.com, hverkuil@xs4all.nl, krzk@kernel.org, Peter Chen <peter.chen@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Joshua Clayton <stillcompiling@gmail.com>
 
-On Thursday 05 January 2017 09:46 AM, Alim Akhtar wrote:
-> Hi Jaehoon,
-> 
-> On 01/04/2017 06:04 PM, Jaehoon Chung wrote:
->> Adds the exynos-pcie-phy binding for Exynos PCIe PHY.
->> This is for using generic PHY framework.
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->> Changelog on V2:
->> - Remove the child node.
->> - Add 2nd address to the parent reg prop.
->>
->>  Documentation/devicetree/bindings/phy/samsung-phy.txt | 17
->> +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> index 9872ba8..ab80bfe 100644
->> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> @@ -191,3 +191,20 @@ Example:
->>          usbdrdphy0 = &usb3_phy0;
->>          usbdrdphy1 = &usb3_phy1;
->>      };
->> +
->> +Samsung Exynos SoC series PCIe PHY controller
->> +--------------------------------------------------
->> +Required properties:
->> +- compatible : Should be set to "samsung,exynos5440-pcie-phy"
->> +- #phy-cells : Must be zero
->> +- reg : a register used by phy driver.
->> +    - First is for phy register, second is for block register.
->> +- reg-names : Must be set to "phy" and "block".
->> +
-> In general PHY uses a "reference clock" to work, if that is true for
-> 5440 also, will you consider adding an (may be) optional clock
-> properties as well?
-> 
+Previously the onboard hub was made to work by treating its
+reset gpio as a regulator enable.
+Get rid of that kludge now that pwseq has added reset gpio support
+Move pin muxing the hub reset pin into the usbh1 group
 
-Yes, right, second clock, referred as "bus_clk" in pcie node should
-actually refer to "phy" clock. From Exynos5433 DT patch also you are
-mapping it to CLK_PCLK_PCIE_PHY which is a phy clk. This is same in
-Exynos7 as well. So better we have clocks property defined in pcie-phy
-binding. What do you say?
+Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ arch/arm/boot/dts/imx6q-evi.dts | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
->From Exynos5440 UM, PCIe-Phy needs 250 MHz, clock and second clock used
-as "bus_clk" is providing 250 MHz, so this can be moved in phy driver.
-
-
-Thanks,
-Pankaj Dubey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+index 7c7c1a8..79a0bd5 100644
+--- a/arch/arm/boot/dts/imx6q-evi.dts
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -54,18 +54,6 @@
+ 		reg = <0x10000000 0x40000000>;
+ 	};
+ 
+-	reg_usbh1_vbus: regulator-usbhubreset {
+-		compatible = "regulator-fixed";
+-		regulator-name = "usbh1_vbus";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		enable-active-high;
+-		startup-delay-us = <2>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_usbh1_hubreset>;
+-		gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
+-	};
+-
+ 	reg_usb_otg_vbus: regulator-usbotgvbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "usb_otg_vbus";
+@@ -207,12 +195,18 @@
+ };
+ 
+ &usbh1 {
+-	vbus-supply = <&reg_usbh1_vbus>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usbh1>;
+ 	dr_mode = "host";
+ 	disable-over-current;
+ 	status = "okay";
++
++	usb2415host: hub@1 {
++		compatible = "usb424,2513";
++		reg = <1>;
++		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
++		reset-duration-us = <3000>;
++	};
+ };
+ 
+ &usbotg {
+@@ -468,11 +462,6 @@
+ 			MX6QDL_PAD_GPIO_3__USB_H1_OC 0x1b0b0
+ 			/* usbh1_b OC */
+ 			MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0
+-		>;
+-	};
+-
+-	pinctrl_usbh1_hubreset: usbh1hubresetgrp {
+-		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x1b0b0
+ 		>;
+ 	};
+-- 
+2.7.4
