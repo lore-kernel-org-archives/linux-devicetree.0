@@ -1,75 +1,27 @@
-From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] i2c: core: helper function to detect slave mode
-Date: Thu,  5 Jan 2017 17:24:14 +0000
-Message-ID: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-icev2: Remove the duplicated pinmux
+ setting
+Date: Thu, 5 Jan 2017 09:31:24 -0800
+Message-ID: <20170105173123.GM4310@atomide.com>
+References: <20170104050940.25698-1-lokeshvutla@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170104050940.25698-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This function has the purpose of mode detection by checking the
-device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
-Currently only checks using OF functions (ACPI slave not supported yet).
+* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170103 21:12]:
+> There is no mmc sd card detect on am335x-ice board. But the spi0_cs1
+> pin being configured as mmcsd_cd. Removing it fixes the below warning
+> during boot.
 
-Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
-Due to the need of checking if the I2C slave address is our own (in 
-other words: if we are the I2C slave) I created a helper function 
-(proposed to me by @Andy) to enable that check. 
-Currently (because I am not able to test it using ACPI) it only 
-supports devicetree declarations.
+Applying into omap-for-v4.11/fixes thanks.
 
- drivers/i2c/i2c-core.c | 19 +++++++++++++++++++
- include/linux/i2c.h    |  1 +
- 2 files changed, 20 insertions(+)
-
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 3de95a29024c..48e705b23c59 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -3691,6 +3691,25 @@ int i2c_slave_unregister(struct i2c_client *client)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(i2c_slave_unregister);
-+
-+int i2c_slave_mode_detect(struct device *dev)
-+{
-+	struct device_node *child;
-+	u32 reg;
-+
-+	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-+		for_each_child_of_node(dev->of_node, child) {
-+			of_property_read_u32(child, "reg", &reg);
-+			if (reg & I2C_OWN_SLAVE_ADDRESS)
-+				return 1;
-+		}
-+	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
-+		dev_dbg(dev, "ACPI slave is not supported yet\n");
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
-+
- #endif
- 
- MODULE_AUTHOR("Simon G. Vogl <simon-nD9nYVNVf00W+b/DJNNodF6hYfS7NtTn@public.gmane.org>");
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index b2109c522dec..53cf99569af5 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -282,6 +282,7 @@ enum i2c_slave_event {
- 
- extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
- extern int i2c_slave_unregister(struct i2c_client *client);
-+extern int i2c_slave_mode_detect(struct device *dev);
- 
- static inline int i2c_slave_event(struct i2c_client *client,
- 				  enum i2c_slave_event event, u8 *val)
--- 
-2.11.0
-
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
