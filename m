@@ -1,72 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: misc: add a generic regulator driver
-Date: Thu, 5 Jan 2017 12:00:27 +0000
-Message-ID: <20170105120027.4nftlpegln2se7bq@sirena.org.uk>
-References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
- <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de>
- <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
- <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de>
- <bf3dde7e-cee8-c54c-db93-447ffa063116@kernel.org>
- <CAMpxmJVJ+y9tRbRBsVg+i0EJO_6EFuvrypwC=ETnBWbMnxRFyg@mail.gmail.com>
- <c670d597-46b6-235f-545f-7136a3abff7f@metafoo.de>
- <CAMuHMdX3u4cb2Yq2+VV_eDUaw2EqiOjN2TorW+F5-39Mm=mXmQ@mail.gmail.com>
- <9609b56b-194c-9899-1142-ff2ee285c6bd@metafoo.de>
- <CAMuHMdXnzDUYcr8qiUTwE2peBdjwuVWPRUkms2J8AHFaQ=SHHQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Thu, 5 Jan 2017 12:08:57 +0000
+Message-ID: <20170105120857.GB21952@leverpostej>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+ <1483479056-15202-2-git-send-email-robdclark@gmail.com>
+ <20170105115528.GG679@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="poi24u4kh3yy7qdm"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXnzDUYcr8qiUTwE2peBdjwuVWPRUkms2J8AHFaQ=SHHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170105115528.GG679@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Rob Clark <robdclark@gmail.com>, iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org, Sricharan R <sricharan@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 05, 2017 at 11:55:29AM +0000, Will Deacon wrote:
+> On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
+> > TODO maybe we want two options, one to enable stalling, and 2nd to punt
+> > handling to wq?  I haven't needed to use mm APIs from fault handler yet
+> > (although it is something that I think we'll want some day).  Perhaps
+> > stalling support is limited to just letting driver dump some extra
+> > debugging information otherwise.  Threaded handling probably only useful
+> > with stalling, but inverse may not always be true.
+> 
+> I'd actually like to see this stuck on a worker thread, because I think
+> that's more generally useful and I don't want to have a situation where
+> sometimes the IOMMU fault notifier is run in IRQ context and sometimes it's
+> not.
+> 
+> > 
+> > Signed-off-by: Rob Clark <robdclark@gmail.com>
+> > ---
+> >  .../devicetree/bindings/iommu/arm,smmu.txt         |  3 ++
+> >  drivers/iommu/arm-smmu.c                           | 42 ++++++++++++++++++----
+> >  2 files changed, 39 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > index ef465b0..5f405a6 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > @@ -68,6 +68,9 @@ conditions.
+> >                    aliases of secure registers have to be used during
+> >                    SMMU configuration.
+> >  
+> > +- arm,smmu-enable-stall : Enable stall mode to stall memory transactions
+> > +                  and resume after fault is handled
 
---poi24u4kh3yy7qdm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The wording here seems to describe a policy rather than a property.
 
-On Fri, Dec 23, 2016 at 01:56:11PM +0100, Geert Uytterhoeven wrote:
-> On Fri, Dec 23, 2016 at 12:35 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+Can you elaborate on when/why this is required/preferred/valid?
 
-> > cooperation between kernel- and userspace. Kernelspace offering an interface
-> > to export a device for userspace access and userspace making use of that
-> > interface to request access to a device. In a similar way to how vfio is
-> > structured.
+> >  static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
+> > @@ -824,6 +852,8 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+> >  
+> >  	/* SCTLR */
+> >  	reg = SCTLR_CFIE | SCTLR_CFRE | SCTLR_AFE | SCTLR_TRE | SCTLR_M;
+> > +	if (smmu->options & ARM_SMMU_OPT_ENABLE_STALL)
+> > +		reg |= SCTLR_CFCFG;
+> 
+> I wonder if this should also be predicated on the compatible string, so
+> that the "arm,smmu-enable-stall" property is ignored (with a warning) if
+> the compatible string isn't specific enough to identify an implementation
+> with the required SS behaviour? On the other hand, it feels pretty
+> redundant and a single "stalling works" property is all we need.
 
-...
+Can you elaborate on what "stalling works" entails? Is that just the SS
+bit behaviour? are there integration or endpoint-specific things that we
+need to care about?
 
-> We do not have bindings to describe GPIOs connected to e.g. relays.
-
-Well, it depends what the relays are doing in the system of course...
-
-> Switching external devices (the internals of those devices not described
-> itself in DT, like in an industrial context), sounds more like something to
-> be handled by IIO, doesn't it?
-
-The BayLibre ACME systems have a case like this with their power
-metering stuff (I've got a similar but more overenginered board I'm in
-theory working on with actual relays).  The system itself is controlling
-a power line, it knows nothing about what's connected.  It seems like
-this is coming up often enough that someone should probably just write
-an external system control binding, also tying in things like references
-to the console and so on.
-
---poi24u4kh3yy7qdm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlhuNVoACgkQJNaLcl1U
-h9Atdgf/WDPBaWtTJTwLBt9L5yArvrFOC69azq9epeF9ybv1x6KW1PI7EsmMeQSd
-nAFUykUou3IgAmlWM/JgKlcKVE25xf/S3DskIrMRLd4XkvFQiFPzk2Ng80+NTQGk
-Yy+EejiMxiLDb5rRsuwTjf5kVxq1klfQ2qOWpM7rAmTk50d4lr+FXa6AOPS00UkN
-IBCMo0PIAe+Xg3mXvk9TsLwF8na446BJKho8uT96hoV7k8kdcOdzG4pwhALJU6js
-cwNixNs8UX66WgqXsJE50sM3b5iajKS8Fj+QQkeTn5Lx/rExu5qOCFz/RUIDTAtj
-WDsyNdrCLrlKtXn4rSZi14qaEEjH/A==
-=aMkk
------END PGP SIGNATURE-----
-
---poi24u4kh3yy7qdm--
+Thanks,
+Mark.
