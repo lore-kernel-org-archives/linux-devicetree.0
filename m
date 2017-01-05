@@ -1,38 +1,89 @@
 From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 09/12] ARM: dts: socfpga: fpga manager data is 32 bits
-Date: Wed,  4 Jan 2017 18:21:31 -0600
-Message-ID: <1483575694-29599-10-git-send-email-dinguyen@kernel.org>
+Subject: [PATCH 08/12] ARM: dts: socfpga: Add NAND device tree for Arria10
+Date: Wed,  4 Jan 2017 18:21:30 -0600
+Message-ID: <1483575694-29599-9-git-send-email-dinguyen@kernel.org>
 References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1483575694-29599-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dalon Westergreen <dwesterg-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adjust regs property for the FPGA manager data register to
-properly reflect that it is a single 32 bit register.
+From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Signed-off-by: Dalon Westergreen <dwesterg-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Add socfpga_arria10_socdk_nand.dts board file for supporting NAND.
+
+Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/Makefile                       |  1 +
+ arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts | 44 ++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+ create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index da68965..de29172 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -516,7 +516,7 @@
- 		fpgamgr0: fpgamgr@ff706000 {
- 			compatible = "altr,socfpga-fpga-mgr";
- 			reg = <0xff706000 0x1000
--			       0xffb90000 0x1000>;
-+			       0xffb90000 0x4>;
- 			interrupts = <0 175 4>;
- 		};
- 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cccdbcb..380d9bb 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -717,6 +717,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	sh73a0-kzm9g.dtb
+ dtb-$(CONFIG_ARCH_SOCFPGA) += \
+ 	socfpga_arria5_socdk.dtb \
++	socfpga_arria10_socdk_nand.dtb \
+ 	socfpga_arria10_socdk_qspi.dtb \
+ 	socfpga_arria10_socdk_sdmmc.dtb \
+ 	socfpga_cyclone5_mcvevk.dtb \
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts b/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
+new file mode 100644
+index 0000000..a8c644b
+--- /dev/null
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
+@@ -0,0 +1,44 @@
++/*
++ * Copyright (C) 2015 Altera Corporation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/dts-v1/;
++#include "socfpga_arria10_socdk.dtsi"
++
++/ {
++	soc {
++		nand: nand@ffb90000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			status = "okay";
++
++			compatible = "denali,denali-nand-dt", "altr,socfpga-denali-nand";
++			reg = <0xffb90000 0x72000>, <0xffb80000 0x10000>;
++			reg-names = "nand_data", "denali_reg";
++			interrupts = <0 99 4>;
++			dma-mask = <0xffffffff>;
++			clocks = <&nand_clk>;
++
++			partition@nand-boot {
++				label = "Boot and fpga data";
++				reg = <0x0 0x1C00000>;
++			};
++			partition@nand-rootfs {
++				label = "Root Filesystem - JFFS2";
++				reg = <0x1C00000 0x6400000>;
++			};
++		};
++	};
++};
 -- 
 2.7.4
 
