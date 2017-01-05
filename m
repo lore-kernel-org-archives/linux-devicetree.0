@@ -1,12 +1,13 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3] ARM: dts: sunxi: Add num-cs for A20 spi nodes
-Date: Thu, 5 Jan 2017 18:14:27 +0100
-Message-ID: <20170105171427.v4vosv7mfv3zveyz@lukather>
-References: <20161227102807.20244-1-manu@bidouilliste.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Enable spi1 and spi2 for Olimex A20 SOM
+ EVB
+Date: Thu, 5 Jan 2017 18:16:01 +0100
+Message-ID: <20170105171601.us4wffupptilvvqp@lukather>
+References: <20161226175349.17712-1-manu@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5731612938212450627=="
+Content-Type: multipart/mixed; boundary="===============3464946239068213998=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161227102807.20244-1-manu@bidouilliste.com>
+In-Reply-To: <20161226175349.17712-1-manu@bidouilliste.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,27 +22,51 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, lin
 List-Id: devicetree@vger.kernel.org
 
 
---===============5731612938212450627==
+--===============3464946239068213998==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="okkzjswunm727sc6"
+	protocol="application/pgp-signature"; boundary="adylcpmdhpp4u546"
 Content-Disposition: inline
 
 
---okkzjswunm727sc6
+--adylcpmdhpp4u546
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 27, 2016 at 11:28:07AM +0100, Emmanuel Vadot wrote:
-> The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
-> others three only have 1.
-> Add the num-cs property to each node.
-> The current driver doesn't read this property but this is useful for
-> downstream user of DTS (FreeBSD for example).
+Hi,
+
+On Mon, Dec 26, 2016 at 06:53:49PM +0100, Emmanuel Vadot wrote:
+> Enable the spi1 and spi2 node since the pins are exposed on the UEXT
+> connectors.
 >=20
 > Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/bo=
+ot/dts/sun7i-a20-olimex-som-evb.dts
+> index 669a1c338c76..fa8c6f60552b 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> @@ -300,12 +300,14 @@
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&spi1_pins_a>,
+>  		    <&spi1_cs0_pins_a>;
+> +	status =3D "okay";
+>  };
+> =20
+>  &spi2 {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&spi2_pins_a>,
+>  		    <&spi2_cs0_pins_a>;
+> +	status =3D "okay";
+>  };
 
-Applied, thanks!
+Those nodes don't exist unfortunately. Maybe you forgot to send one
+patch?
+
+Thanks!
 Maxime
 
 --=20
@@ -49,30 +74,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---okkzjswunm727sc6
+--adylcpmdhpp4u546
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYbn7zAAoJEBx+YmzsjxAghAQP/2RmVhmy6xBEx5QA1cJukGTF
-SMxTXAHc/1VZaPughhzTA8aesz0N94lKaW2KQ6RDggF5p09FlWG+sQe1O4ToNrGn
-FV4XVdh12TsX7ocnFmetXpavBcabCsQRxsiPMpp+cznD78TlJyQ+j2uWBtjrxYow
-KKlyXWLFtW8XXT6bhjumSvB3NynN4eA3Ps3RKZAjPWsgT3Cx+HV49NGospjnd05a
-MIah4WwShw9+jhW8ti1M1PYFS4haMyedZzn+Uq+pewOyx3AmtpO7Fme6ryPrr+Nw
-uPB4hEhi4v7JtinXz8rroGWp9hU7UoPLTw3WEJnBsCU0HSMk4AolOQX5uml7LLyr
-DE83rG1SLGRn0Rhgx0MfG+TkI8EMm7LFKOSinKBkN5nv2k8DByctn89lDioUkTnE
-UP+/bmr5zsLb+l9wPwFRl7msbpaB0NCO4GYY2VfAKIfzkTajo8UTC7zF4DdRoPt8
-9KEro8tMK/eAu5xia3oupRg2fRoHOXziW68ZCWDb6qDKy7WVA3gYTnqwHef0rRQA
-yM0j9Bu3r2cUt0r07gh4vcP9jlzFX7QwzmxqiwyXGyfWx9VaAk2C895iLFYer1Ng
-sXyJb5Ky6gTTIaj6XOv9lhQC2k+7wcGX+ZEDrVeKzB/Wj2IsNm1/eFku6FytPkel
-4oSij6HGMn+csriRGMff
-=vIza
+iQIcBAEBCAAGBQJYbn9RAAoJEBx+YmzsjxAgUEQP/AmZr4qrlPMD0GmQfhdtMHJZ
+yW6AvDysHB+7gG04FhiIxz/Fhi7eOiQyllbHpt2xOnkLkkmh98TVwHVG2CII+UB6
+4zhc80WwMBam38SGY6SzEhY1q/WTvjxv5RAZmXdQtJmM88CxyJ0TcE8HTMo77P1B
+2A63dUs/o2fwdlSEFxzJn2uGFr1C6o9jRKn8NB0YLkYrlH+OfVMnFYpyDGNkmorD
+ZP7RtVtnzHkiyjh3iWxXPpalvn3QHcT+8i5kBqBaF3fLVpMVyjVpL06N4zlP/d6J
+3Kfg9pPC8kU75sD8A4RxOF1oEK8hZ3AetrEeiNNMYX9kd3CrfgrVzBoSHwVbhe/k
+Cuvz8p0X3CM4qZTMUOa2L1MWu2likr17bFwk3TFvbNn/afxYsPnJNmTbAno4WBzl
+7x8tz/rKUddgRSE+CdVnnjjk6mnp7AnxpLaqclrOaDBSuCY4u4A3fjudEx98wNai
+6DVryzq/Sfo2C5Y/vRx9v/cSmfGTp7x4eUnvHJQae3m2jolK4lByoijBVMQaMoLR
+dNOKuLrPfO9OiTa6+50+CZYiOUUOOsItM7etLJNdVfkK2f3wKMeZjTYbrB2DWfdy
+c2cDAR3yonOIihjg6fbLXw+xIEBT/TzGIEdZMLNeua6fIE2d0TSzoYjac4l7hu6b
+WAWHyY2kymW4w/dVf5JU
+=9mqd
 -----END PGP SIGNATURE-----
 
---okkzjswunm727sc6--
+--adylcpmdhpp4u546--
 
 
---===============5731612938212450627==
+--===============3464946239068213998==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -83,4 +108,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============5731612938212450627==--
+--===============3464946239068213998==--
