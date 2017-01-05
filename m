@@ -1,74 +1,76 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/3] ARM64: dts: exynos5433: add DECON_TV node
-Date: Thu, 5 Jan 2017 19:26:31 +0200
-Message-ID: <20170105172631.ymu5tlywe44ewb5b@kozik-lap>
-References: <CGME20170105152604eucas1p25340c974fa7f375905c958e2bff6d96f@eucas1p2.samsung.com>
- <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org
+From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] i2c: core: helper function to detect slave mode
+Date: Thu,  5 Jan 2017 17:24:14 +0000
+Message-ID: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 04:25:41PM +0100, Andrzej Hajda wrote:
-> DECON_TV is 2nd display controller on Exynos5433, used in HDMI path
-> or 2nd DSI path.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 44 ++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> index 8cbfd1d..b47951b 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -821,6 +821,28 @@
->  			};
->  		};
->  
-> +		decon_tv: decon@13880000 {
-> +			compatible = "samsung,exynos5433-decon-tv";
-> +			reg = <0x13880000 0x20B8>;
-> +			clocks = <&cmu_disp CLK_PCLK_DECON_TV>,
-> +				 <&cmu_disp CLK_ACLK_DECON_TV>,
-> +				 <&cmu_disp CLK_ACLK_SMMU_TV0X>,
-> +				 <&cmu_disp CLK_ACLK_XIU_TV0X>,
-> +				 <&cmu_disp CLK_PCLK_SMMU_TV0X>,
-> +				 <&cmu_disp CLK_SCLK_DECON_TV_VCLK>,
-> +				 <&cmu_disp CLK_SCLK_DECON_TV_ECLK>;
-> +			clock-names = "pclk", "aclk_decon", "aclk_smmu_decon0x",
-> +				      "aclk_xiu_decon0x", "pclk_smmu_decon0x",
-> +				      "sclk_decon_vclk", "sclk_decon_eclk";
-> +			samsung,disp-sysreg = <&syscon_disp>;
-> +			interrupt-names = "fifo", "vsync", "lcd_sys";
-> +			interrupts = <0 210 0>, <0 211 0>, <0 212 0>;
-> +			power-domains = <&pd_disp>;
-> +			status = "disabled";
-> +			iommus = <&sysmmu_tv0x>, <&sysmmu_tv1x>;
-> +			iommu-names = "m0", "m1";
-> +		};
-> +
->  		syscon_disp: syscon@13b80000 {
->  			compatible = "syscon";
->  			reg = <0x13b80000 0x1010>;
-> @@ -926,6 +948,28 @@
->  			power-domains = <&pd_disp>;
->  		};
->  
-> +		sysmmu_tv0x: sysmmu@0x13a20000 {
+This function has the purpose of mode detection by checking the
+device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
+Currently only checks using OF functions (ACPI slave not supported yet).
 
-Without the '0x' in the address, please. I see that you copied it from
-existing nodes, so maybe you could fix them as well in following patch.
+Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+Due to the need of checking if the I2C slave address is our own (in 
+other words: if we are the I2C slave) I created a helper function 
+(proposed to me by @Andy) to enable that check. 
+Currently (because I am not able to test it using ACPI) it only 
+supports devicetree declarations.
 
-Beside that (and Javier's comments) looks okay, but please choose
-suitable subject prefix matching recent commits. I think it is the third
-time I am mentioning this recently (to different Samsung folks,
-though)... 
+ drivers/i2c/i2c-core.c | 19 +++++++++++++++++++
+ include/linux/i2c.h    |  1 +
+ 2 files changed, 20 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 3de95a29024c..48e705b23c59 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -3691,6 +3691,25 @@ int i2c_slave_unregister(struct i2c_client *client)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(i2c_slave_unregister);
++
++int i2c_slave_mode_detect(struct device *dev)
++{
++	struct device_node *child;
++	u32 reg;
++
++	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
++		for_each_child_of_node(dev->of_node, child) {
++			of_property_read_u32(child, "reg", &reg);
++			if (reg & I2C_OWN_SLAVE_ADDRESS)
++				return 1;
++		}
++	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
++		dev_dbg(dev, "ACPI slave is not supported yet\n");
++	}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
++
+ #endif
+ 
+ MODULE_AUTHOR("Simon G. Vogl <simon-nD9nYVNVf00W+b/DJNNodF6hYfS7NtTn@public.gmane.org>");
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index b2109c522dec..53cf99569af5 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -282,6 +282,7 @@ enum i2c_slave_event {
+ 
+ extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
+ extern int i2c_slave_unregister(struct i2c_client *client);
++extern int i2c_slave_mode_detect(struct device *dev);
+ 
+ static inline int i2c_slave_event(struct i2c_client *client,
+ 				  enum i2c_slave_event event, u8 *val)
+-- 
+2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
