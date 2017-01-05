@@ -1,96 +1,137 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 6/7] i2c: designware: enable SLAVE in platform module
-Date: Thu, 05 Jan 2017 14:43:46 +0200
-Message-ID: <1483620226.9552.237.camel@linux.intel.com>
-References: <cover.1482934380.git.lolivei@synopsys.com>
-         <ea8b611c3b7c2af8088e2dbc16554af5c8aed368.1482934380.git.lolivei@synopsys.com>
-         <1482939844.9552.165.camel@linux.intel.com>
-         <20e47113-efd7-787c-b2f8-39e9fd8b83d2@synopsys.com>
-         <1482942696.9552.172.camel@linux.intel.com>
-         <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
-         <1482945043.9552.174.camel@linux.intel.com>
-         <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
-         <9747bb4d-9a52-789d-32e9-ddbef9e129e4@synopsys.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/1] spi: imx: support to set watermark level via DTS
+Date: Thu, 5 Jan 2017 14:48:29 +0200
+Message-ID: <4649873e-aca5-90b3-cc97-0d2e103ce8dc@mentor.com>
+References: <20170105061015.7816-1-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <9747bb4d-9a52-789d-32e9-ddbef9e129e4@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170105061015.7816-1-jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-01-05 at 12:13 +0000, Luis Oliveira wrote:
-> On 28-Dec-16 18:10, Luis Oliveira wrote:
-> > On 28-Dec-16 17:10, Andy Shevchenko wrote:
-> > > On Wed, 2016-12-28 at 16:41 +0000, Luis Oliveira wrote:
-> > > > On 28-Dec-16 16:31, Andy Shevchenko wrote:
+Hi Jiada,
 
-
-> > > So, ACPI has a property to support slave mode for I2CSerialBus()
-> > > macro.
-> > > 
-> > > I would propose to create a helper function in i2c-core.c which
-> > > will be
-> > > responsible for mode detection
-> > > 
-> > > ... i2c_slave_mode_detect()
-> > > {
-> > > ...
-> > >  if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-> > >   ... (use of_*() here) ...
-> > >  } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
-> > >   dev_dbg(..., "ACPI slave is not supported yet\n");
-> > >   ... to master ...
-> > >  } else {
-> > >   ... default to master ...
-> > >  }
-> > > }
-> > > EXPORT_...();
-> > > 
-> > > Make it as a separate patch.
-> > > 
-> > 
-> > Oh I see, yes it looks good. I will check it. Thanks
-> > 
+On 01/05/2017 08:10 AM, Jiada Wang wrote:
+> Previously watermark level is configured to fifosize/2,
+> DMA mode can be used only when transfer length can be divided
+> by 'watermark level * bpw', which makes DMA mode not practical.
 > 
-> Hi Andy,
+> This patch adds new DTS property 'dma-wml', user can configure
+> DMA watermark level, by specify 'dma-wml' in corresponding ecspi
+> node.
 > 
-> I implemented a helper function as you proposed and it looks like
-> this:
+> Signed-off-by: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt |  2 ++
+>  drivers/spi/spi-imx.c                                  | 12 ++++++++++--
+>  2 files changed, 12 insertions(+), 2 deletions(-)
 > 
-> int i2c_slave_mode_detect(struct device *dev)
-> {
-> 	struct device_node *child;
-> 	u32 reg;
-> 	
-> 	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-> 		for_each_child_of_node(dev->of_node, child) {
-> 			of_property_read_u32(child, "reg", &reg);
-> 			if (reg & I2C_OWN_SLAVE_ADDRESS)
-> 				return 1;
-> 		}
-> 	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
-> 		dev_dbg(dev, "ACPI slave is not supported yet\n");
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> index 8bc95e2..1e9345f 100644
+> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> @@ -19,6 +19,7 @@ See the clock consumer binding,
+>  - dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+>  		Documentation/devicetree/bindings/dma/dma.txt
+>  - dma-names: DMA request names should include "tx" and "rx" if present.
+> +- dma-wml: Specifies DMA watermark level
 
-Curly braces here as well.
+It is supposed to be an optional property, please add a new section.
 
-> 	else
-> 		return 0;
+I'm not sure about the property naming, the property may be considered
+as a generic one and then it should not have 'fsl' prefix like yours one,
+but then its description should be moved to bindings/spi/spi-bus.txt. 
 
-For now this is not needed
+On the other hand for a kind of generic property it might be desirable
+to have two properties, DMA RX and DMA TX watermark (threshold) levels.
 
-> 	return 0;
-> }
+And the property may be defined as a combined DMA RX / DMA TX watermark
+specific to the Freescale ECSPI controller (however I would propose to
+separate them, since the hardware allows to do it), but then please add
+'fsl' prefix.
+
+>  
+>  Obsolete properties:
+>  - fsl,spi-num-chipselects : Contains the number of the chipselect
+> @@ -35,4 +36,5 @@ ecspi@70010000 {
+>  		   <&gpio3 25 0>; /* GPIO3_25 */
+>  	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+>  	dma-names = "rx", "tx";
+> +        dma-wml = <16>;
+
+Please use tab symbols for indentation.
+
+>  };
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index deb782f..5c0ce19 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -929,8 +929,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
+>  	if (of_machine_is_compatible("fsl,imx6dl"))
+>  		return 0;
+>  
+> -	spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
+> -
+>  	/* Prepare for TX DMA: */
+>  	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
+>  	if (IS_ERR(master->dma_tx)) {
+> @@ -1155,6 +1153,7 @@ static int spi_imx_probe(struct platform_device *pdev)
+>  	struct spi_imx_data *spi_imx;
+>  	struct resource *res;
+>  	int i, ret, irq;
+> +	u32 wml;
+>  
+>  	if (!np && !mxc_platform_info) {
+>  		dev_err(&pdev->dev, "can't get the platform data\n");
+> @@ -1177,6 +1176,15 @@ static int spi_imx_probe(struct platform_device *pdev)
+>  	spi_imx->devtype_data = of_id ? of_id->data :
+>  		(struct spi_imx_devtype_data *)pdev->id_entry->driver_data;
+>  
+> +	if (of_property_read_u32(np, "dma-wml", &wml) == 0) {
+> +		if (wml > spi_imx_get_fifosize(spi_imx) || wml == 0) {
+> +			dev_warn(&pdev->dev, "mis-configured dma-wml\n");
+> +			spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
+> +		} else
+> +			spi_imx->wml = wml;
+
+checkpatch should complain regarding missing bracers on the "else" branch.
+
+> +	} else
+> +		spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
+> +
+
+Same is here.
+
+Since the setting depends on the availability of DMA feature, it would be
+better to read the property out from spi_imx_sdma_init():
+
+	spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
+
+	if (!of_property_read_u32(np, "dma-wml", &wml)) {
+		if (!wml || wml > spi_imx_get_fifosize(spi_imx)) /* power of 2 also? */
+			dev_warn(&pdev->dev, "mis-configured dma-wml\n");
+		else
+			spi_imx->wml = wml;
+	}
+
+>  	if (mxc_platform_info) {
+>  		master->num_chipselect = mxc_platform_info->num_chipselect;
+>  		master->cs_gpios = devm_kzalloc(&master->dev,
 > 
-> Before I submit the patch to the i2c-core.c I wonder if I could have
-> some
-> comment on the implementation.
 
-Glad you did it. See above. Otherwise looks good to me.
+For v2 please add to cc list:
+* Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+* Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+* Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
