@@ -1,66 +1,102 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Thu, 5 Jan 2017 08:39:29 -0800
-Message-ID: <20170105163928.GD4310@atomide.com>
-References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA@mail.gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v2 04/19] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
+ camera sensors
+Date: Thu, 5 Jan 2017 11:20:57 -0800
+Message-ID: <d9f31e15-39b7-3c31-e45f-b19c0dd1e791@gmail.com>
+References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483477049-19056-5-git-send-email-steve_longerbeam@mentor.com>
+ <0a343705-1d38-9fe2-6419-56ab9bdfb0c2@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <0a343705-1d38-9fe2-6419-56ab9bdfb0c2@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170105 08:28]:
-> On Fri, Dec 2, 2016 at 3:11 PM, Laurent Pinchart
-> <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> > The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-> > connected to port 2 of the OMAP EHCI controller. The board however has
-> > no EEPROM to store the ethernet MAC address, which is programmed by the
-> > boot loader.
-> >
-> > To allow Linux to use the same MAC address as the boot loader (or for
-> > that matter any fixed MAC address), we need a node in the device tree
-> > for the ethernet controller that the boot loader can update at runtime
-> > with a local-mac-address property. Add it, along with an alias for the
-> > ethernet controller to let the boot loader locate it easily.
-> >
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > ---
-> > Changes since v1:
-> >
-> > - Renamed usb2 DT node to hub
-> > ---
-> >  arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > index 85e297ed0ea1..673cee2234b2 100644
-> > --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > @@ -27,6 +27,7 @@
-> >         aliases {
-> >                 display0 = &dvi0;
-> >                 display1 = &tv0;
-> > +               ethernet = &ethernet;
-> 
-> Sorry, just noticed this, but this should be dropped. It's not used
-> nor do we want an alias here.
+Hi Vladimir,
 
-OK, will update locally as I have not pushed out yet.
 
-> P.S. The display ones are questionable, too. Only OMAP has them and
-> per platform alias names is not something we want.
+On 01/04/2017 04:25 AM, Vladimir Zapolskiy wrote:
+> Hi Steve,
+>
+> On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
+>> Enables the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
+>> Both hang off the same i2c2 bus, so they require different (and non-
+>> default) i2c slave addresses.
+>>
+>> The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
+>>
+>> The OV5640 connects to the input port on the MIPI CSI-2 receiver on
+>> mipi_csi. It is set to transmit over MIPI virtual channel 1.
+>>
+>> Note there is a pin conflict with GPIO6. This pin functions as a power
+>> input pin to the OV5642, but ENET uses it as the h/w workaround for
+>> erratum ERR006687, to wake-up the ARM cores on normal RX and TX packet
+>> done events (see 6261c4c8). So workaround 6261c4c8 is reverted here to
+>> support the OV5642, and the "fsl,err006687-workaround-present" boolean
+>> also must be removed. The result is that the CPUidle driver will no longer
+>> allow entering the deep idle states on the sabrelite.
+> For me it sounds like a candidate of its own separate change.
 
-OK. What about the mmc ones? Otherwise the MMC devices keep moving
-around depending on the kernel version..
+Yes, I split out the two partial reverts into a separate commit
+("ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687
+  workaround").
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+>> +
+>> +	mipi_camera: ov5640@40 {
+> Please reorder device nodes by address value,
+
+done.
+
+>   also according to ePAPR
+> node names should be generic, labels can be specific:
+>
+> 	ov5640: camera@40 {
+> 		...
+> 	};
+>
+> 	ov5642: camera@42 {
+> 		...
+> 	};
+
+fixed.
+
+>
+>> +		pinctrl_ipu1_csi0: ipu1grp-csi0 {
+> Please rename node name to ipu1csi0grp.
+
+done.
+
+>
+>> +
+>> +                pinctrl_ov5640: ov5640grp {
+>> +                        fsl,pins = <
+>> +				MX6QDL_PAD_NANDF_D5__GPIO2_IO05 0x000b0
+>> +				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09 0x0b0b0
+>> +                        >;
+>> +                };
+>> +
+> Indentation issues above, please use tabs instead of spaces.
+
+fixed.
+
+>
+> Also please add new pin control groups preserving the alphanimerical order.
+
+done.
+
+Steve
