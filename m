@@ -1,75 +1,34 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 9/9] ARM: sunxi: Convert pinctrl nodes to generic
- bindings
-Date: Thu, 5 Jan 2017 16:35:56 +0100
-Message-ID: <20170105153556.pzec5jjuz7pmvsmn@lukather>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
- <58723369-50ad-1792-9be1-c277eb719044@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition
+ table
+Date: Thu, 5 Jan 2017 07:36:38 -0800
+Message-ID: <20170105153637.GA4310@atomide.com>
+References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
+ <1483627851-17996-2-git-send-email-t.remmet@phytec.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="skclcjjttxdh2jz4"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <58723369-50ad-1792-9be1-c277eb719044@arm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1483627851-17996-2-git-send-email-t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> [170105 06:57]:
+> To improve NAND safety we updated the partition layout.
+> Added barebox backup partition and removed kernel and oftree
+> partition. They are kept in ubi now.
 
---skclcjjttxdh2jz4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What about the users with earlier partition tables?
 
-On Wed, Jan 04, 2017 at 02:16:23AM +0000, Andr=E9 Przywara wrote:
-> So can I ask that we start taking this seriously and stop doing things
-> which prevent Allwinner boards from being supported properly?
-> Which would first involve dropping this very patch?
+Please read about "flag day" changes, typically they are not
+acceptable.
 
-The driver still supports the old binding.
+Regards,
 
-> Having done breakage in the past (with "allwinner,sun7i-a20-mmc", for
-> instance) is no excuse for doing it again.
-
-I'm not sure which breakage we introduced with a new compatible: the
-old compatible is working just like it used to, and the new one is
-working like we need it to.
-
-> And especially I want to avoid this habit creeping into the arm64
-> world (thinking about the H5 here, which may be impacted by this
-> very patch, for instance).
-
-And again, if you looked at the entire serie, you would have seen that
-I took this into account.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---skclcjjttxdh2jz4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYbmfMAAoJEBx+YmzsjxAgeMsP+wXSVtzU3aRzeFVcgnM1+tCF
-G7KDxWSCDWBsUD4iwbloZQVl3AsY45I2dEskZkISsVLEc7OGs0wmluxlpqfRAuPC
-pjlmNEP9InfKcJgZ89ql2Ffc66VOE+WX83JRGa3Ld1ZQLfpYrTAt7V2yb01jUDre
-w/c+Y/YGn4lABevLCxBaKUFQX5u54d6XIDoajwcKNmVm4oPLswjxm+4vrywh1tXh
-pXa7dVRgvkRd4+562Ikg27OyCp9jZE06F8OmKgVvDIvp8xh36TmWrFYD1Gw3isXN
-2hEn5xTxXRcwl1kOGsihV2bXdB5a6kRar12H69d23jN1pe4pye+snF/3l06M2jws
-EeYrj0FH56e8KO15CItAzRaKdjkuzT4ipxw/pUwZlJB8pRvEaNUkdCJ996rwP2eb
-BPdrJ2VBNGSncwfVEdvHXoPTwLwxixLqGuUJ853Vh1Erow4tjqlLizjS6UOOyCtV
-QCABAr2EtP7dZQ4oWwvzJSanPI0Cjhyl5o+FkCNwQQUQHEHBOpafywNnNXt1onkl
-s+fxTKglTGKRwgxvX6Utn1tIr8hjvkAu5rdm3SFDnCi0IQggDTBO9tchn/I8p7dI
-qZ+JTo/K0TK0uUiEl2alhUhWngau+ei3zgYllyqTZ4t8ssJdEKUF7j8n2jN4J9Tz
-bKIg2gKoufWF5T4CcbTU
-=7mbC
------END PGP SIGNATURE-----
-
---skclcjjttxdh2jz4--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
