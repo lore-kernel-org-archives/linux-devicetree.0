@@ -1,83 +1,121 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCHv2 4/5] arm: mvebu: Add device tree for 98DX3236 SoCs
-Date: Thu, 5 Jan 2017 04:34:55 +0000
-Message-ID: <ac117de5855d45ffa39cf7f7fd8cfbe8@svr-chch-ex1.atlnz.lc>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCHv2 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
+Date: Thu, 5 Jan 2017 04:46:32 +0000
+Message-ID: <dd384eda81d2420dafe740bf5bb4dae0@svr-chch-ex1.atlnz.lc>
 References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
- <20170105033641.6212-5-chris.packham@alliedtelesis.co.nz>
- <1ee850ee-f771-1aeb-6b96-dfbe3118f2fc@gmail.com>
+ <20170105033641.6212-3-chris.packham@alliedtelesis.co.nz>
+ <5edb6751-d15b-6654-f4ae-adf38fafb8a4@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/17 17:06, Florian Fainelli wrote:
-> Le 01/04/17 =E0 19:36, Chris Packham a =E9crit :
->> The Marvell 98DX3236, 98DX3336, 98DX4521 and variants are switch ASICs
->> with integrated CPUs. They are similar to the Armada XP SoCs but have
->> different I/O interfaces.
->>
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->> ---
->> +
->> +		switch {
->> +			packet-processor@0 {
->> +				compatible =3D "marvell,prestera-98dx4521";
->> +			};
->> +		};
->
-> This may be a bit premature if you are not providing a binding document
-> for this sub-node, you might as well add it once you also add a
-> corresponding driver (or if this will remain out of tree, at least
-> submitting a separate binding document).
-
-I also see that I made a typo 4521 should be 4251.
-
-The driver that uses this is an out of tree one so I will add a binding =
-
-document for it for now.
-
-It wouldn't he hard to whip up a simple uio based driver that provides =
-
-mmap access to the switch register space so I might look at that if I =
-
-get time. It would be useful for testing if nothing else.
-
->
-> Also, if this node's unit address is 0, you would expect at least a reg
-> property whose address cell is 0 to be present.
->
-
-The reg property is in the base 98dx3236 dsti file. The 3 devices have =
-
-the same IO footprint but the switching functionality is quite different =
-
-between them hence the different compatible strings (all of which I need =
-
-to add binding documentation for). I guess I could make the 3236 entry
-
-   pp0: packet-processor@0 {
-       compatible =3D "marvell,prestera-98dx3236";
-       reg =3D <0 0x4000000>;
-       ...
-   }
-
-Then the 3336 and 4251 could just override the compatible string
-
-   &pp0 {
-       compatible =3D "marvell,prestera-98dx4251";
-   };
-
-Would that be clearer?
+On 05/01/17 17:04, Florian Fainelli wrote:=0A=
+> Le 01/04/17 =E0 19:36, Chris Packham a =E9crit :=0A=
+>> Compared to the armada-xp the 98DX3336 uses different registers to set=
+=0A=
+>> the boot address for the secondary CPU so a new enable-method is needed.=
+=0A=
+>> This will only work if the machine definition doesn't define an overall=
+=0A=
+>> smp_ops because there is not currently a way of overriding this from the=
+=0A=
+>> device tree if it is set in the machine definition.=0A=
+>=0A=
+> Not sure I follow you here, in theory, each individual CPU could have a=
+=0A=
+> different enable-method property, and considering how you leverage=0A=
+> existing DTS include files, you should be able to override the DTS with=
+=0A=
+> the appropriate enable-method, or do you have a different problem?=0A=
+>=0A=
+=0A=
+The problem is I can't override the enable method if it's set in the =0A=
+machine definition. It's because the devicetree is looked up first then =0A=
+the machine definition overrides it.=0A=
+=0A=
+Heres an old thread that basically outlines the problem.=0A=
+=0A=
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/300371.=
+html=0A=
+=0A=
+I posted a few attempts to work around it but there never really was any =
+=0A=
+consensus reached.=0A=
+=0A=
+>  mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)=0A=
+>> +{=0A=
+>> +	WARN_ON(hw_cpu !=3D 1);=0A=
+>> +=0A=
+>> +	writel(0, mv98dx3236_resume_base + MV98DX3236_CPU_RESUME_CTRL_OFFSET);=
+=0A=
+>> +	writel(virt_to_phys(boot_addr), mv98dx3236_resume_base +=0A=
+>> +	       MV98DX3236_CPU_RESUME_ADDR_OFFSET);=0A=
+>=0A=
+> I just submitted a patch series that switches such users to=0A=
+> __pa_symbol() instead of virt_to_phys() because this is a kernel image=0A=
+> symbol. For now this will work as-is, but depending on which patch=0A=
+> series makes it first, it may be a good idea to keep this on someone's=0A=
+> TODO list (yours or mine). I do expect having to make a second pass of=0A=
+> conversions anyway.=0A=
+>=0A=
+> [1]: https://lkml.org/lkml/2017/1/4/1101=0A=
+=0A=
+OK I'll keep that in mind.=0A=
+=0A=
+>=0A=
+>> +}=0A=
+>> +=0A=
+>> +static int __init mv98dx3236_resume_init(void)=0A=
+>> +{=0A=
+>> +	struct device_node *np;=0A=
+>> +	struct resource res;=0A=
+>> +	int ret =3D 0;=0A=
+>> +=0A=
+>> +	np =3D of_find_matching_node(NULL, of_mv98dx3236_resume_table);=0A=
+>> +	if (!np)=0A=
+>> +		return 0;=0A=
+>> +=0A=
+>> +	pr_info("Initializing 98DX3236 Resume\n");=0A=
+>=0A=
+> This can be probably be dropped, you should know fairly quickly if this=
+=0A=
+> succeeded or not.=0A=
+=0A=
+Will do.=0A=
+=0A=
+>=0A=
+> Can't this function be implemented as a smp_ops::smp_init_cpus instead=0A=
+> of having this initialization done at arch_initcall time?=0A=
+>=0A=
+=0A=
+I'll look into it. My initial reaction is no because I still need =0A=
+armada_xp_smp_init_cpus().=0A=
+=0A=
+>> +=0A=
+>> +	if (of_address_to_resource(np, 0, &res)) {=0A=
+>> +		pr_err("unable to get resource\n");=0A=
+>> +		ret =3D -ENOENT;=0A=
+>> +		goto out;=0A=
+>> +	}=0A=
+>> +=0A=
+>> +	if (!request_mem_region(res.start, resource_size(&res),=0A=
+>> +				np->full_name)) {=0A=
+>> +		pr_err("unable to request region\n");=0A=
+>> +		ret =3D -EBUSY;=0A=
+>> +		goto out;=0A=
+>> +	}=0A=
+>=0A=
+> You should be able to use of_io_request_and_map() and here.=0A=
+>=0A=
+=0A=
+Will do.=0A=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
