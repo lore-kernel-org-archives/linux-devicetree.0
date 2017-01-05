@@ -1,60 +1,129 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCHv3 0/8] Add support for STM32 RTC
-Date: Thu, 5 Jan 2017 14:43:21 +0100
-Message-ID: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv2 1/5] clk: mvebu: support for 98DX3236 SoC
+Date: Thu, 5 Jan 2017 13:53:02 +0000
+Message-ID: <20170105135302.GB25333@leverpostej>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <20170105033641.6212-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170105033641.6212-2-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-v3:
-- rework set_alarm
-- return platform_get_irq error code instead of -ENOENT
+On Thu, Jan 05, 2017 at 04:36:37PM +1300, Chris Packham wrote:
+> The 98DX3236, 98DX3336, 98DX4521 and variants have a different TCLK from
+> the Armada XP (200MHz vs 250MHz). The CPU core clock is fixed at 800MHz.
+> 
+> The clock gating options are a subset of those on the Armada XP.
+> 
+> The core clock divider is different to the Armada XP also.
+> 
+> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> ---
+> Changes in v2:
+> - Update devicetree binding documentation for new compatible string
+> 
+>  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   1 +
+>  drivers/clk/mvebu/Makefile                         |   2 +-
+>  drivers/clk/mvebu/armada-xp.c                      |  42 +++++
+>  drivers/clk/mvebu/clk-cpu.c                        |  33 +++-
+>  drivers/clk/mvebu/mv98dx3236-corediv.c             | 207 +++++++++++++++++++++
+>  5 files changed, 281 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/clk/mvebu/mv98dx3236-corediv.c
 
-v2:
-- remove clock-names and interrupt-names from bindings
-- remove unuseful headers
-- clean stm32_rtc structure
-- replace stm32_rtc_readl/_writel by readl/writel_relaxed
-- use threaded IRQ
-- rework set_alarm
-- add various comments
-- select COMPILE_TEST and REGMAP_MMIO
 
-This patchset adds support for the STM32 Real-Time Clock.
-This RTC is an independent BCD timer/counter and provides a time-of-day
-clock/calendar with programmable alarm interrupt.
-RTC calendar can be driven by three clock sources LSE, LSI or HSE.
+It looks like you also need to update
+Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt for the
+addition of "marvell,mv98dx3236-corediv-clock".
 
-Amelie Delaunay (8):
-  ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz on stm32f429
-  dt-bindings: document the STM32 RTC bindings
-  rtc: add STM32 RTC driver
-  ARM: dts: stm32: Add RTC support for STM32F429 MCU
-  ARM: dts: stm32: enable RTC on stm32f429-disco
-  ARM: dts: stm32: enable RTC on stm32f469-disco
-  ARM: dts: stm32: enable RTC on stm32429i-eval
-  ARM: configs: stm32: Add RTC support in STM32 defconfig
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+> index 99c214660bdc..7f28506eaee7 100644
+> --- a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+> @@ -3,6 +3,7 @@ Device Tree Clock bindings for cpu clock of Marvell EBU platforms
+>  Required properties:
+>  - compatible : shall be one of the following:
+>  	"marvell,armada-xp-cpu-clock" - cpu clocks for Armada XP
+> +	"marvell,mv98dx3236-cpu-clock" - cpu clocks for 98DX3236 SoC
+>  - reg : Address and length of the clock complex register set, followed
+>          by address and length of the PMU DFS registers
+>  - #clock-cells : should be set to 1.
 
- .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  27 +
- arch/arm/boot/dts/stm32429i-eval.dts               |   4 +
- arch/arm/boot/dts/stm32f429-disco.dts              |   6 +
- arch/arm/boot/dts/stm32f429.dtsi                   |  16 +
- arch/arm/boot/dts/stm32f469-disco.dts              |   4 +
- arch/arm/configs/stm32_defconfig                   |   2 +
- drivers/rtc/Kconfig                                |  11 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-stm32.c                            | 776 +++++++++++++++++++++
- 9 files changed, 847 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
- create mode 100644 drivers/rtc/rtc-stm32.c
+[...]
 
--- 
-1.9.1
+> +static void __init mv98dx3236_corediv_clk_init(struct device_node *node)
+> +{
+> +	struct clk_init_data init;
+> +	struct clk_corediv *corediv;
+> +	struct clk **clks;
+> +	void __iomem *base;
+> +	const __be32 *off;
+> +	const char *parent_name;
+> +	const char *clk_name;
+> +	int len;
+> +	struct device_node *dfx_node;
+> +
+> +	dfx_node = of_parse_phandle(node, "base", 0);
+> +	if (WARN_ON(!dfx_node))
 
+What's going on here? The existing bingings don't mention a "base"
+phandle, and nothing was added to describe it.
+
+> +		return;
+> +
+> +	off = of_get_property(node, "reg", &len);
+> +	if (WARN_ON(!off))
+> +		return;
+
+Please don't use of_get_property directly; generally you should use the
+existing higher-level helpers like of_proeprty_read_u32().
+
+> +
+> +	base = of_iomap(dfx_node, 0);
+> +	if (WARN_ON(!base))
+> +		return;
+> +
+> +	of_node_put(dfx_node);
+> +
+> +	parent_name = of_clk_get_parent_name(node, 0);
+> +
+> +	clk_data.clk_num = 1;
+> +
+> +	/* clks holds the clock array */
+> +	clks = kcalloc(clk_data.clk_num, sizeof(struct clk *),
+> +				GFP_KERNEL);
+> +	if (WARN_ON(!clks))
+> +		goto err_unmap;
+> +	/* corediv holds the clock specific array */
+> +	corediv = kcalloc(clk_data.clk_num, sizeof(struct clk_corediv),
+> +				GFP_KERNEL);
+> +	if (WARN_ON(!corediv))
+> +		goto err_free_clks;
+> +
+> +	spin_lock_init(&corediv->lock);
+> +
+> +	of_property_read_string_index(node, "clock-output-names",
+> +					  0, &clk_name);
+> +
+> +	init.num_parents = 1;
+> +	init.parent_names = &parent_name;
+> +	init.name = clk_name;
+> +	init.ops = &ops;
+> +	init.flags = 0;
+> +
+> +	corediv[0].reg = (void *)((int)base + be32_to_cpu(*off));
+
+I don't understand this, but I guess this has something to do with that
+base phandle. Is the corediv clock a sub-component of some "base" clock?
+I don't think this binding is the best way of describing that.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
