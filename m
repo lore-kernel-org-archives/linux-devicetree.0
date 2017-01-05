@@ -1,19 +1,16 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 1/5] ARM: dts: armada388-clearfog: add phy reset gpio-hog
-Date: Thu, 05 Jan 2017 14:04:43 +0100
-Message-ID: <87eg0hd5ec.fsf@free-electrons.com>
-References: <E1cO4UH-0008SR-GW@rmk-PC.armlinux.org.uk>
- <E1cO4Vz-00005t-8n@rmk-PC.armlinux.org.uk>
- <871swig5b3.fsf@free-electrons.com>
- <20170105101620.GR14217@n2100.armlinux.org.uk>
- <87zij5dckj.fsf@free-electrons.com>
- <20170105103134.GS14217@n2100.armlinux.org.uk>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCHv2 0/5] Support for Marvell switches with integrated CPUs
+Date: Thu, 5 Jan 2017 14:09:45 +0100
+Message-ID: <20170105130945.GA18033@lunn.ch>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <6c6795d3-06ab-a4f0-78ad-5ecc78c1aa2f@gmail.com>
+ <185147a37cab4d7eaea5f79d86cc9451@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170105103134.GS14217@n2100.armlinux.org.uk> (Russell King's
- message of "Thu, 5 Jan 2017 10:31:35 +0000")
+Content-Disposition: inline
+In-Reply-To: <185147a37cab4d7eaea5f79d86cc9451@svr-chch-ex1.atlnz.lc>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,54 +20,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Juri Lelli <juri.lelli@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>l
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell King,
- 
- On jeu., janv. 05 2017, Russell King - ARM Linux <linux@armlinux.org.uk> wrote:
+> I'd love to see a switchdev driver but it's a huge task (and no I'm not 
+> committing to writing it). As it stands Marvell ship a switch SDK 
+> largely executes in userspace with a small kernel module providing some 
+> linkage to the underlying hardware.
 
-> On Thu, Jan 05, 2017 at 11:29:48AM +0100, Gregory CLEMENT wrote:
->> Hi Russell King,
->>  
->>  On jeu., janv. 05 2017, Russell King - ARM Linux <linux@armlinux.org.uk> wrote:
->> 
->> > On Wed, Jan 04, 2017 at 05:26:08PM +0100, Gregory CLEMENT wrote:
->> >> Hi Russell,
->> >>  
->> >>  On lun., janv. 02 2017, Russell King <rmk+kernel@armlinux.org.uk> wrote:
->> >> 
->> >> 
->> >> It would be nice to have some word here about this patch. Especially why
->> >> we need it now. I guess it is for being less dependent on the
->> >> initialization done by the bootloader but maybe you have other reasons.
->> >
->> > I'm not sure I follow.  This is adding it to the new platform, not the
->> > old one.  I guess I should've rolled this into the patch creating the
->> > clearfog-base dts file, and this question wouldn't have come up.
->> >
->> 
->> Indeed I missed the fact that it was on the new board as all the other
->> patches were related to the common part.
->> 
->> Do you agree that I squash this patch into the "ARM: dts:
->> armada388-clearfog: add base model DTS file" patch?
->
-> Yep, thanks.
+Is there any similarity to the mv88e6xxx family?
 
-It's done and it is also part of mvebu/for-next now.
+If it was similar registers, just a different access mechanising, we
+could probably extend the mv88e6xxx to support MMIO as well as MDIO.
 
-Gregory
-
->
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+   Andrew
