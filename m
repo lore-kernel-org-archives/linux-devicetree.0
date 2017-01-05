@@ -1,47 +1,86 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v6 4/4] arm64: dts: exynos: Add support for S6E3HA2 panel
- device on TM2 board
-Date: Thu, 05 Jan 2017 15:45:50 +0900
-Message-ID: <1483598750-15062-5-git-send-email-hoegeun.kwon@samsung.com>
-References: <1483598750-15062-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105064609epcas5p3e7ca4d3ee6a8b3d2a1d0fd11794eff12@epcas5p3.samsung.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: zte: documents zx2967 power domain
+ driver bindings
+Date: Thu, 5 Jan 2017 14:46:53 +0800
+Message-ID: <20170105064651.GA4667@x250>
+References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1483598750-15062-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, amitdanielk@gmail.com, ulf.hansson@linaro.org, geert+renesas@glider.be, arnd@arndb.de, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, krzk@kernel.org, claudiu.manoil@nxp.com, robh+dt@kernel.org, chen.chaokai@zte.com.cn, laurent.pinchart@ideasonboard.com, yangbo.lu@nxp.com, wang.qiang01@zte.com.cn, jun.nie@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1bmcuY29tPgoKVGhpcyBwYXRj
-aCBhZGQgdGhlIHBhbmVsIGRldmljZSB0cmVlIG5vZGUgZm9yIFM2RTNIQTIgZGlzcGxheQpjb250
-cm9sbGVyIHRvIFRNMiBkdHMuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4u
-aHdhbmdAc2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1
-bmcuY29tPgpTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5n
-LmNvbT4KVGVzdGVkLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4KLS0t
-CiBhcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMgfCAxMCArKysr
-KysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLmR0cyBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLmR0cwppbmRleCA1Yjk0NTFkLi4wYTYyOTFm
-IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5k
-dHMKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTIuZHRzCkBA
-IC0zMDksNiArMzA5LDE2IEBACiAJCQl9OwogCQl9OwogCX07CisKKwlwYW5lbEAwIHsKKwkJY29t
-cGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTNoYTIiOworCQlyZWcgPSA8MD47CisJCXZkZDMtc3VwcGx5
-ID0gPCZsZG8yN19yZWc+OworCQl2Y2ktc3VwcGx5ID0gPCZsZG8yOF9yZWc+OworCQlyZXNldC1n
-cGlvcyA9IDwmZ3BnMCAwIEdQSU9fQUNUSVZFX0xPVz47CisJCWVuYWJsZS1ncGlvcyA9IDwmZ3Bm
-MSA1IEdQSU9fQUNUSVZFX0hJR0g+OworCQl0ZS1ncGlvcyA9IDwmZ3BmMSAzIEdQSU9fQUNUSVZF
-X0hJR0g+OworCX07CiB9OwogCiAmaHNpMmNfMCB7Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Jan 04, 2017 at 07:48:10PM +0800, Baoyou Xie wrote:
+> This patch documents devicetree tree bindings for the ZTE zx2967
+
+'devicetree' is good enough, and the 'tree' after it is redundant.
+
+> power domain driver.
+
+DT bindings is to describe hardware block not software, so the word like
+'driver' is not appropriate.  So please drop it from here and the patch
+subject.
+
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt b/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
+> new file mode 100644
+> index 0000000..1476318
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/zte/pd-2967xx.txt
+> @@ -0,0 +1,17 @@
+> +* ZTE 2967 SoC Power Domains
+
+ZTE ZX2967 family.  And this is a bindings document for PCU, IMO.  And
+do we know the full name of abbreviation 'PCU'?  Power Control Unit?
+
+> +
+> +2967 processors include support for multiple power domains which are used
+
+ZX2967 family
+
+> +to gate power to one or more peripherals on the processor.
+> +
+> +Required Properties:
+> +- compatible: should be one of the following.
+> +    * zte,zx296718-pcu - for zx296718 board's power domain.
+
+Drop 'board's'.
+
+> +- reg: physical base address of the controller and length of memory mapped
+> +    region.
+> +
+> +Example:
+> +
+> +	pcu_domain: pcu@0x00117000 {
+
+The unit-address in node name shouldn't have 0x and leading zeros.
+
+	pcu_domain: pcu@117000 {
+
+Shawn
+
+> +		compatible = "zte,zx296718-pcu";
+> +		reg = <0x00117000 0x1000>;
+> +	};
+> -- 
+> 2.7.4
+> 
