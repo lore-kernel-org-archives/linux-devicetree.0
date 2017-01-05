@@ -1,38 +1,269 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v6 3/4] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Thu, 05 Jan 2017 08:05:52 +0100
-Message-ID: <22fed05f-d9f5-889d-cc83-4d00a2ab468d@samsung.com>
-References: <1483598750-15062-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105064608epcas5p338d5a6518a8d75e410dc181cb22a6e8c@epcas5p3.samsung.com>
- <1483598750-15062-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 5/5] soc: zte: pm_domains: Add support for zx296718
+Date: Thu, 5 Jan 2017 15:38:48 +0800
+Message-ID: <20170105073846.GD4667@x250>
+References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
+ <1483530494-14177-5-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1483598750-15062-4-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, inki.dae@samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1483530494-14177-5-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, amitdanielk@gmail.com, ulf.hansson@linaro.org, geert+renesas@glider.be, arnd@arndb.de, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, krzk@kernel.org, claudiu.manoil@nxp.com, robh+dt@kernel.org, chen.chaokai@zte.com.cn, laurent.pinchart@ideasonboard.com, yangbo.lu@nxp.com, wang.qiang01@zte.com.cn, jun.nie@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUuMDEuMjAxNyAwNzo0NSwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRk
-IHN1cHBvcnQgZm9yIE1JUEktRFNJIGJhc2VkIFM2RTNIQTIgQU1PTEVEIHBhbmVsCj4gZHJpdmVy
-LiBUaGlzIHBhbmVsIGhhcyAxNDQweDI1NjAgcmVzb2x1dGlvbiBpbiA1LjctaW5jaCBwaHlzaWNh
-bAo+IHBhbmVsIGluIHRoZSBUTTIgZGV2aWNlLgo+Cj4gU2lnbmVkLW9mZi1ieTogRG9uZ2h3YSBM
-ZWUgPGRoMDkubGVlQHNhbXN1bmcuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEh5dW5nd29uIEh3YW5n
-IDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24g
-PGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KPiBUZXN0ZWQtYnk6IENoYW53b28gQ2hvaSA8Y3cw
-MC5jaG9pQHNhbXN1bmcuY29tPgoKUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+CgpSZWdhcmRzCkFuZHJ6ZWoKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Jan 04, 2017 at 07:48:14PM +0800, Baoyou Xie wrote:
+> This patch introduces the power domain driver of zx296718
+> which belongs to zte's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> Reviewed-by: Jun Nie <jun.nie@linaro.org>
+> ---
+>  drivers/soc/zte/Makefile              |   1 +
+>  drivers/soc/zte/zx296718_pm_domains.c | 181 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 182 insertions(+)
+>  create mode 100644 drivers/soc/zte/zx296718_pm_domains.c
+> 
+> diff --git a/drivers/soc/zte/Makefile b/drivers/soc/zte/Makefile
+> index 8a37f2f..96b7cd4 100644
+> --- a/drivers/soc/zte/Makefile
+> +++ b/drivers/soc/zte/Makefile
+> @@ -2,3 +2,4 @@
+>  # ZTE SOC drivers
+>  #
+>  obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx2967_pm_domains.o
+> +obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx296718_pm_domains.o
+> diff --git a/drivers/soc/zte/zx296718_pm_domains.c b/drivers/soc/zte/zx296718_pm_domains.c
+> new file mode 100644
+> index 0000000..52003ee
+> --- /dev/null
+> +++ b/drivers/soc/zte/zx296718_pm_domains.c
+> @@ -0,0 +1,181 @@
+> +/*
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+
+Please have a newline between licence declaration and headers to improve
+the readability.  Same for zx2967_pm_domains.c.
+
+> +#include <dt-bindings/soc/zte,pm_domains.h>
+> +#include "zx2967_pm_domains.h"
+> +
+> +static u16 zx296718_offsets[REG_ARRAY_SIZE] = {
+> +	[REG_CLKEN] = 0x18,
+> +	[REG_ISOEN] = 0x1c,
+> +	[REG_RSTEN] = 0x20,
+> +	[REG_PWREN] = 0x24,
+> +	[REG_ACK_SYNC] = 0x28,
+> +};
+> +
+> +enum {
+> +	PCU_DM_VOU = 0,
+> +	PCU_DM_SAPPU,
+> +	PCU_DM_VDE,
+> +	PCU_DM_VCE,
+> +	PCU_DM_HDE,
+> +	PCU_DM_VIU,
+> +	PCU_DM_USB20,
+> +	PCU_DM_USB21,
+> +	PCU_DM_USB30,
+> +	PCU_DM_HSIC,
+> +	PCU_DM_GMAC,
+> +	PCU_DM_TS,
+> +};
+
+I think we can save this enum completely by defining those
+DM_ZX296718_xxx constants in zte,pm_domains.h in the same order of this
+enum (hardware bit position order), so that DM_ZX296718_xxx can directly
+be used as .bit field of struct zx2967_pm_domain.
+
+#define DM_ZX296718_VOU 	0
+#define DM_ZX296718_SAPPU	1
+#define DM_ZX296718_VDE		2  /* g1v6 */
+#define DM_ZX296718_VCE		3  /* h1v6 */
+#define DM_ZX296718_HDE		4  /* g2v2 */
+#define DM_ZX296718_VIU		5
+#define DM_ZX296718_USB20	6
+#define DM_ZX296718_USB21	7
+#define DM_ZX296718_USB30	8
+#define DM_ZX296718_HSIC	9
+#define DM_ZX296718_GMAC	10
+#define DM_ZX296718_TS		11
+
+> +
+> +static struct zx2967_pm_domain vou_domain = {
+> +	.dm = {
+> +		.name		= "vou_domain",
+> +	},
+> +	.bit = PCU_DM_VOU,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain sappu_domain = {
+> +	.dm = {
+> +		.name		= "sappu_domain",
+> +	},
+> +	.bit = PCU_DM_SAPPU,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain vde_domain = {
+> +	.dm = {
+> +		.name		= "vde_domain",
+> +	},
+> +	.bit = PCU_DM_VDE,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain vce_domain = {
+> +	.dm = {
+> +		.name		= "vce_domain",
+> +	},
+> +	.bit = PCU_DM_VCE,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain hde_domain = {
+> +	.dm = {
+> +		.name		= "hde_domain",
+> +	},
+> +	.bit = PCU_DM_HDE,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain viu_domain = {
+> +	.dm = {
+> +		.name		= "viu_domain",
+> +	},
+> +	.bit = PCU_DM_VIU,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain usb20_domain = {
+> +	.dm = {
+> +		.name		= "usb20_domain",
+> +	},
+> +	.bit = PCU_DM_USB20,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain usb21_domain = {
+> +	.dm = {
+> +		.name		= "usb21_domain",
+> +	},
+> +	.bit = PCU_DM_USB21,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain usb30_domain = {
+> +	.dm = {
+> +		.name		= "usb30_domain",
+> +	},
+> +	.bit = PCU_DM_USB30,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain hsic_domain = {
+> +	.dm = {
+> +		.name		= "hsic_domain",
+> +	},
+> +	.bit = PCU_DM_HSIC,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain gmac_domain = {
+> +	.dm = {
+> +		.name		= "gmac_domain",
+> +	},
+> +	.bit = PCU_DM_GMAC,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct zx2967_pm_domain ts_domain = {
+> +	.dm = {
+> +		.name		= "ts_domain",
+> +	},
+> +	.bit = PCU_DM_TS,
+> +	.polarity = PWREN,
+> +	.reg_offset = zx296718_offsets,
+> +};
+> +
+> +static struct generic_pm_domain *zx296718_pm_domains[] = {
+> +	[DM_ZX296718_SAPPU] = &sappu_domain.dm,
+> +	[DM_ZX296718_VDE] = &vde_domain.dm,
+> +	[DM_ZX296718_VCE] = &vce_domain.dm,
+> +	[DM_ZX296718_HDE] = &hde_domain.dm,
+> +	[DM_ZX296718_VIU] = &viu_domain.dm,
+> +	[DM_ZX296718_USB20] = &usb20_domain.dm,
+> +	[DM_ZX296718_USB21] = &usb21_domain.dm,
+> +	[DM_ZX296718_USB30] = &usb30_domain.dm,
+> +	[DM_ZX296718_HSIC] = &hsic_domain.dm,
+> +	[DM_ZX296718_GMAC] = &gmac_domain.dm,
+> +	[DM_ZX296718_TS] = &ts_domain.dm,
+> +	[DM_ZX296718_VOU] = &vou_domain.dm,
+
+If you update the order of DM_ZX296718_xxx in zte,pm_domains.h, it would
+be nice to update this list accordingly as well.
+
+> +};
+> +
+> +static int zx296718_pd_probe(struct platform_device *pdev)
+> +{
+> +	return zx2967_pd_probe(pdev,
+> +			  zx296718_pm_domains,
+> +			  ARRAY_SIZE(zx296718_pm_domains));
+> +}
+> +
+> +static const struct of_device_id zx296718_pm_domain_matches[] = {
+> +	{ .compatible = "zte,zx296718-pcu", },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver zx296718_pd_driver = {
+> +	.driver = {
+> +		.name = "zx-powerdomain",
+
+This is a zx296718 specific driver.  So zx296718-powerdomain should
+be a better name?
+
+Shawn
+
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = zx296718_pm_domain_matches,
+> +	},
+> +	.probe = zx296718_pd_probe,
+> +};
+> +
+> +static int __init zx296718_pd_init(void)
+> +{
+> +	return platform_driver_register(&zx296718_pd_driver);
+> +}
+> +subsys_initcall(zx296718_pd_init);
+> -- 
+> 2.7.4
+> 
