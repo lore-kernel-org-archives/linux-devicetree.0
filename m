@@ -1,135 +1,125 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 17/22] power: supply: add battery driver for AXP20X and
- AXP22X PMICs
-Date: Thu, 5 Jan 2017 18:02:24 +0100
-Message-ID: <20170105170224.wq45m3pg6sjnuhyh@lukather>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-18-quentin.schulz@free-electrons.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Thu, 5 Jan 2017 17:03:30 +0000
+Message-ID: <611575f4-3e37-1f4d-ef29-94e6f65baf66@arm.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
+	<20170105115528.GG679@arm.com> <20170105120857.GB21952@leverpostej>
+	<20170105140005.GJ679@arm.com> <20170105140720.GA25868@leverpostej>
+	<20170105144742.GK679@arm.com>
+	<d1a36cc5-265d-6971-f698-29b8d76e7884@arm.com>
+	<20170105160755.GN679@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0172696973153841119=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170102163723.7939-18-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pmeerw@pmeerw.net, knaack.h@gmx.de, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, jic23@kernel.org, icenowy@aosc.xyz
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170105160755.GN679-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/01/17 16:07, Will Deacon wrote:
+> On Thu, Jan 05, 2017 at 03:32:50PM +0000, Robin Murphy wrote:
+>> On 05/01/17 14:47, Will Deacon wrote:
+>>> On Thu, Jan 05, 2017 at 02:07:31PM +0000, Mark Rutland wrote:
+>>>> Ok. It would be good to elaborate on what "stalling is useable" means in
+>>>> the property description. i.e. what specificallty the implementation and
+>>>> integration need to ensure.
+>>>
+>>> We can describe some of those guarantees in the property description, but
+>>> it's difficult to enumerate them exhaustively. For example, you wouldn't
+>>> want stalling to lead to data corruption, denial of service, or for the
+>>> thing to catch fire, but having those as explicit requirements is a bit
+>>> daft. It's also impossible to check that you thought of everything.
+>>>
+>>> Aside from renaming the option, I'm really after an opinion on whether
+>>> it's better to have one property or combine it with the compatible
+>>> string, because I can see benefits of both and don't much care either
+>>> way.
+>>
+>> The SMMU implementation side of the decision (i.e. independence of IRQ
+>> assertion vs. SS) seems like exactly the sort of stuff the compatible
+>> string already has covered. The integration side I'm less confident can
+>> be described this way at all - the "this device definitely won't go
+>> wrong if stalled for an indefinite length of time" is inherently a
+>> per-master thing, so a single property on the SMMU implying that for
+>> every device connected to it seems a bit optimistic, and breaks down as
+>> soon as you have one device in the system for which that isn't true (a
+>> PCI root complex, say), even if that guy's traffic never crosses paths
+>> with whichever few devices you actually care about using stalls with.
+>>
+>> I think this needs to be some kind of "arm,smmu-stall-safe" property
+>> placed on individual master device nodes (mad idea: or even an extra
+>> cell of flags in the IOMMU specifier) to encapsulate both that the given
+>> device itself is OK with being stalled, and that it's integrated in such
+>> a way that its stalled transactions cannot disrupt any *other* device
+>> (e.g. it has a TBU all to itself). Then upon initialising a context bank
+>> on a suitable SMMU implementation, we set CFCFG based on whatever device
+>> is being attached to the corresponding domain, and refuse any subsequent
+>> attempts to attach a non-stallable device to a stalling domain (and
+>> possibly even vice-versa).
+> 
+> If we're going to add per-master properties, I'd *really* like them to be
+> independent of the IOMMU in use. That is, we should be able to re-use this
+> property as part of supporting SVM for platform devices in future.
 
---===============0172696973153841119==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4ydonvtwzvx2n2jl"
-Content-Disposition: inline
+I'd argue that they are still fairly separate things despite the
+overlap: stalling is a specific ARM SMMU architecture thing (in both
+architectures) which may be used for purposes unrelated to SVM;
+conversely SVM implemented via PRI or similar mechanisms should be
+pretty much oblivious to the transaction fault model.
 
+> But I think we agree that we need:
+> 
+>   1. A compatible string for the SMMU that can be used to infer the SS
+>      behaviour in the driver
+> 
+>   2. A property on the SMMU to say that it's been integrated in such a
+>      way that stalling is safe (doesn't deadlock)
 
---4ydonvtwzvx2n2jl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's still got to be a per-master property, not a SMMU property, I
+think. To illustrate:
 
-On Mon, Jan 02, 2017 at 05:37:17PM +0100, Quentin Schulz wrote:
-> +		/*
-> +		 * IIO framework gives mV but Power Supply framework gives =B5V.
-> +		 */
-> +		val->intval *=3D 1000;
+  [A]         [B]   [C]
+   |           |_____|
+ __|______________|___
+| TBU |        | TBU |
+|_____|  SMMU  |_____|
+|__|______________|__|
+   |              |
 
-s/gives/wants/ ?
+Say A and B are instances of some device happy to be stalled, and C is a
+PCIe RC, and each is attached to their own context bank - enabling
+stalls for A is definitely fine. However even though B and C are using
+different context banks, enabling stalls for B might deadlock C if it
+results in more total outstanding transactions than the TBU's slave port
+supports. Therefore A can happily claim to be stall-safe, but B cannot
+due to its integration with respect to C.
 
-> +static int axp20x_battery_set_max_voltage(struct axp20x_batt_ps *axp20x_=
-batt,
-> +					  int val)
-> +{
-> +	switch (val) {
-> +	case 4100000:
-> +		return regmap_update_bits(axp20x_batt->regmap,
-> +					  AXP20X_CHRG_CTRL1,
-> +					  AXP20X_CHRG_CTRL1_TGT_VOLT,
-> +					  AXP20X_CHRG_CTRL1_TGT_4_1V);
-> +	case 4150000:
-> +		if (axp20x_batt->axp_id =3D=3D AXP221_ID)
-> +			return -EINVAL;
-> +
-> +		return regmap_update_bits(axp20x_batt->regmap,
-> +					  AXP20X_CHRG_CTRL1,
-> +					  AXP20X_CHRG_CTRL1_TGT_VOLT,
-> +					  AXP20X_CHRG_CTRL1_TGT_4_15V);
-> +	case 4200000:
-> +		return regmap_update_bits(axp20x_batt->regmap,
-> +					  AXP20X_CHRG_CTRL1,
-> +					  AXP20X_CHRG_CTRL1_TGT_VOLT,
-> +					  AXP20X_CHRG_CTRL1_TGT_4_2V);
-> +	default:
-> +		/*
-> +		 * AXP20x max voltage can be set to 4.36V and AXP22X max voltage
-> +		 * can be set to 4.22V and 4.24V, but these voltages are too
-> +		 * high for Lithium based batteries (AXP PMICs are supposed to
-> +		 * be used with these kinds of battery).
-> +		 */
-> +		return -EINVAL;
-> +	}
+And yes, I can point you at some existing hardware which really does
+posess a topology like that.
 
-Since all your calls to regmap are the same, something like:
+>   3. A generic master property that says that the device can DMA to
+>      unpinned memory
 
-case 4100000:
-	val =3D AXP20X_CHRG_CTRL1_TGT_4_1V;
-	break;
+That sounds a bit *too* generic to me, given that there are multiple
+incompatible ways that could be implemented. I'm not the biggest fan of
+properties with heavily context-specific interpretations, especially
+when there's more than a hint of software implementation details in the mix.
 
-case 4150000:
-	val =3D AXP20X_CHRG_CTRL1_TGT_4_15V;
-	break;
+Robin.
 
-regmap_update_bits(axp20x_batt->regmap, AXP20X_CHRG_CTRL1,
-		   AXP20X_CHRG_CTRL1_TGT_VOLT, val);
-
-
-It would also get rid of your warnings in checkpatch.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---4ydonvtwzvx2n2jl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYbnwbAAoJEBx+YmzsjxAgjkYQALMF1anuaoZC9l++9J6su0Vh
-FgfjsnT7qYWz+qzBFoF42u1ujZSsNrOhlqIKh5lXciCe69Cx6RBxXJgGAkYIxrlO
-kXLcHttap+RU7RYQJ4S4YwKwgksffDw0jx8th5hxZOowBogqG7zDn5H5dz/3wSyf
-qVcyBTwKilIAId6AbUy+T6ptWMMYVt1SPLZVK2bPnQKo+a1f+KScCJ92pfl228vM
-8xGkgHVUgc73a6zePin3oF4d2oRmwYgTdJFiJCXduXwxlfIynwAonDPynu52hdGI
-S7KPI7aIUKWR/fFIQYSU1jFBbBt0h1YXrQFIrGO2f9+Ow2f98vkU9j7Q7mzOOdyc
-33F2VSeSTR3SJarhaQUOsPFScLUo8deNQVE7nv6uBKn8+EId6BvORQ2q3LMEfF2F
-9RZaBBxZ48Qnp14BZrAemiAHccy8bczy465HGqfSVO3hyrHPsEdSL08rF09RaxcU
-9fD56VopraViiomKLKVLYSrHWP8YLXbtAd/vcdDvJNleun1GEk4amLh6xHVI3zE1
-/M6xm4a28vVWOnlW0D4s+PNG7vJp7+mXQ2hAu2ZvaUzhtPIkdHf6w9/y1ytBW2I9
-Kf8CiwFr002dtf3tridrFzoePr9n4ZQvouUGBnMVp2K3cZtYUcxeKbdeH92ZRErw
-cCw+Jgqy3HHTZnG3IoOe
-=ThAR
------END PGP SIGNATURE-----
-
---4ydonvtwzvx2n2jl--
-
-
---===============0172696973153841119==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0172696973153841119==--
+> 
+> Anything else?
+> 
+> Will
+> 
