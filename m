@@ -1,126 +1,55 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH net-next 01/10] net: netcp: ethss: add support of
- subsystem register region regmap
-Date: Thu, 5 Jan 2017 17:08:54 -0500
-Message-ID: <586EC3F6.4010109@ti.com>
-References: <1482271793-7671-1-git-send-email-m-karicheri2@ti.com>
- <1482271793-7671-2-git-send-email-m-karicheri2@ti.com>
- <20161222212409.arhurpl4bpqf2yw6@rob-hp-laptop> <586EAFBE.1000500@ti.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: Re: [PATCH 3/6] clk: sunxi-ng: Add H5 clocks
+Date: Fri, 06 Jan 2017 06:48:31 +0800
+Message-ID: <20170106014959.nqPebrUB@smtp1p.mail.yandex.net>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <586EAFBE.1000500@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, grygorii.strashko@ti.com, mugunthanvnm@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de, davem@davemloft.net, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBH43XPBQKGQE7N3PUIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2017 03:42 PM, Murali Karicheri wrote:
-> Rob,
-> 
-> On 12/22/2016 04:24 PM, Rob Herring wrote:
->> On Tue, Dec 20, 2016 at 05:09:44PM -0500, Murali Karicheri wrote:
->>> From: WingMan Kwok <w-kwok2@ti.com>
->>>
->>> 10gbe phy driver needs to access the 10gbe subsystem control
->>> register during phy initialization. To facilitate the shared
->>> access of the subsystem register region between the 10gbe Ethernet
->>> driver and the phy driver, this patch adds support of the
->>> subsystem register region defined by a syscon node in the dts.
->>>
->>> Although there is no shared access to the gbe subsystem register
->>> region, using syscon for that is for the sake of consistency.
->>>
->>> This change is backward compatible with previously released gbe
->>> devicetree bindings.
->>>
->>> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
->>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->>> ---
->>>  .../devicetree/bindings/net/keystone-netcp.txt     |  16 ++-
->>>  drivers/net/ethernet/ti/netcp_ethss.c              | 140 +++++++++++++++++----
->>>  2 files changed, 127 insertions(+), 29 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/Documentation/devicetree/bindings/net/keystone-netcp.txt
->>> index 04ba1dc..0854a73 100644
->>> --- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
->>> +++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
->>> @@ -72,20 +72,24 @@ Required properties:
->>>  		"ti,netcp-gbe-2" for 1GbE N NetCP 1.5 (N=2)
->>>  		"ti,netcp-xgbe" for 10 GbE
->>>  
->>> +- syscon-subsys:	phandle to syscon node of the switch
->>> +			subsystem registers.
->>> +
->>>  - reg:		register location and the size for the following register
->>>  		regions in the specified order.
->>>  		- switch subsystem registers
->>> +		- sgmii module registers
->>
->> This needs to go on the end of the list. Otherwise, it is not backwards 
->> compatible.
-> 
-> Thanks for your review! I assumed backward compatibility means new kernel
-> should work with old DTB. The driver code is adjusted to work with both
-> DTBs. Isn't that enough?
-Rob,
 
-I will pull out 1/10 and 2/10 from the series as it needs more work and
-re-submit rest of the patches in my v1 spin. However please reply to my
-above backward compatibility question.
+2017=E5=B9=B41=E6=9C=886=E6=97=A5 06:04=E4=BA=8E Maxime Ripard <maxime.ripa=
+rd-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, Dec 27, 2016 at 12:25:15AM +0800, Icenowy Zheng wrote:=20
+> > Add the H5 CCU clocks set based on the H3 one.=20
+> >=20
+> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+>
+> Is there any difference with H3's?=20
 
-Thanks and Regards,
+One more Transport Stream controller, so one more bus gate and bus reset fo=
+r it.
 
-Murali
-> 
-> Murali
-> 
->>
->>>  		- sgmii port3/4 module registers (only for NetCP 1.4)
->>>  		- switch module registers
->>>  		- serdes registers (only for 10G)
->>>  
->>>  		NetCP 1.4 ethss, here is the order
->>> -			index #0 - switch subsystem registers
->>> +			index #0 - sgmii module registers
->>>  			index #1 - sgmii port3/4 module registers
->>>  			index #2 - switch module registers
->>>  
->>>  		NetCP 1.5 ethss 9 port, 5 port and 2 port
->>> -			index #0 - switch subsystem registers
->>> +			index #0 - sgmii module registers
->>>  			index #1 - switch module registers
->>>  			index #2 - serdes registers
->>>  
->>> @@ -145,6 +149,11 @@ Optional properties:
->>>  
->>>  Example binding:
->>>  
->>> +gbe_subsys: subsys@2090000 {
->>> +	compatible = "syscon";
->>> +	reg = <0x02090000 0x100>;
->>> +};
->>> +
->>>  netcp: netcp@2000000 {
->>>  	reg = <0x2620110 0x8>;
->>>  	reg-names = "efuse";
->>> @@ -163,7 +172,8 @@ netcp: netcp@2000000 {
->>>  		ranges;
->>>  		gbe@90000 {
->>>  			label = "netcp-gbe";
->>> -			reg = <0x90000 0x300>, <0x90400 0x400>, <0x90800 0x700>;
->>> +			syscon-subsys = <&gbe_subsys>;
->>> +			reg = <0x90100 0x200>, <0x90400 0x200>, <0x90800 0x700>;
->>>  			/* enable-ale; */
->>>  			tx-queue = <648>;
->>>  			tx-channel = <8>;
->>
-> 
-> 
+>
+> Maxime=20
+>
+> --=20
+> Maxime Ripard, Free Electrons=20
+> Embedded Linux and Kernel engineering=20
+> http://free-electrons.com=20
+>
+> --=20
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.=20
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
+> For more options, visit https://groups.google.com/d/optout.=20
 
-
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
