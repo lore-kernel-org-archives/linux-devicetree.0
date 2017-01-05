@@ -1,269 +1,88 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 5/5] soc: zte: pm_domains: Add support for zx296718
-Date: Thu, 5 Jan 2017 15:38:48 +0800
-Message-ID: <20170105073846.GD4667@x250>
-References: <1483530494-14177-1-git-send-email-baoyou.xie@linaro.org>
- <1483530494-14177-5-git-send-email-baoyou.xie@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
+ Tree
+Date: Thu, 5 Jan 2017 07:49:52 +0000
+Message-ID: <20170105074952.GG24225@dell>
+References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
+ <20161226181153.11271-2-bjorn.andersson@linaro.org>
+ <20170104115424.GH27589@dell>
+ <20170104192608.GN10531@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483530494-14177-5-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: mark.rutland@arm.com, amitdanielk@gmail.com, ulf.hansson@linaro.org, geert+renesas@glider.be, arnd@arndb.de, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, krzk@kernel.org, claudiu.manoil@nxp.com, robh+dt@kernel.org, chen.chaokai@zte.com.cn, laurent.pinchart@ideasonboard.com, yangbo.lu@nxp.com, wang.qiang01@zte.com.cn, jun.nie@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170104192608.GN10531@minitux>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 07:48:14PM +0800, Baoyou Xie wrote:
-> This patch introduces the power domain driver of zx296718
-> which belongs to zte's zx2967 family.
+On Wed, 04 Jan 2017, Bjorn Andersson wrote:
+
+> On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
 > 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> Reviewed-by: Jun Nie <jun.nie@linaro.org>
-> ---
->  drivers/soc/zte/Makefile              |   1 +
->  drivers/soc/zte/zx296718_pm_domains.c | 181 ++++++++++++++++++++++++++++++++++
->  2 files changed, 182 insertions(+)
->  create mode 100644 drivers/soc/zte/zx296718_pm_domains.c
+> > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
+> > 
+> > > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > > 
+> > > Implement support for initialization of the lm3533 driver core and
+> > > probing child devices from Device Tree.
+> > > 
 > 
-> diff --git a/drivers/soc/zte/Makefile b/drivers/soc/zte/Makefile
-> index 8a37f2f..96b7cd4 100644
-> --- a/drivers/soc/zte/Makefile
-> +++ b/drivers/soc/zte/Makefile
-> @@ -2,3 +2,4 @@
->  # ZTE SOC drivers
->  #
->  obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx2967_pm_domains.o
-> +obj-$(CONFIG_ZX2967_PM_DOMAINS) += zx296718_pm_domains.o
-> diff --git a/drivers/soc/zte/zx296718_pm_domains.c b/drivers/soc/zte/zx296718_pm_domains.c
-> new file mode 100644
-> index 0000000..52003ee
-> --- /dev/null
-> +++ b/drivers/soc/zte/zx296718_pm_domains.c
-> @@ -0,0 +1,181 @@
-> +/*
-> + * Copyright (C) 2017 ZTE Ltd.
-> + *
-> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
-> + * License terms: GNU General Public License (GPL) version 2
-> + */
-
-Please have a newline between licence declaration and headers to improve
-the readability.  Same for zx2967_pm_domains.c.
-
-> +#include <dt-bindings/soc/zte,pm_domains.h>
-> +#include "zx2967_pm_domains.h"
-> +
-> +static u16 zx296718_offsets[REG_ARRAY_SIZE] = {
-> +	[REG_CLKEN] = 0x18,
-> +	[REG_ISOEN] = 0x1c,
-> +	[REG_RSTEN] = 0x20,
-> +	[REG_PWREN] = 0x24,
-> +	[REG_ACK_SYNC] = 0x28,
-> +};
-> +
-> +enum {
-> +	PCU_DM_VOU = 0,
-> +	PCU_DM_SAPPU,
-> +	PCU_DM_VDE,
-> +	PCU_DM_VCE,
-> +	PCU_DM_HDE,
-> +	PCU_DM_VIU,
-> +	PCU_DM_USB20,
-> +	PCU_DM_USB21,
-> +	PCU_DM_USB30,
-> +	PCU_DM_HSIC,
-> +	PCU_DM_GMAC,
-> +	PCU_DM_TS,
-> +};
-
-I think we can save this enum completely by defining those
-DM_ZX296718_xxx constants in zte,pm_domains.h in the same order of this
-enum (hardware bit position order), so that DM_ZX296718_xxx can directly
-be used as .bit field of struct zx2967_pm_domain.
-
-#define DM_ZX296718_VOU 	0
-#define DM_ZX296718_SAPPU	1
-#define DM_ZX296718_VDE		2  /* g1v6 */
-#define DM_ZX296718_VCE		3  /* h1v6 */
-#define DM_ZX296718_HDE		4  /* g2v2 */
-#define DM_ZX296718_VIU		5
-#define DM_ZX296718_USB20	6
-#define DM_ZX296718_USB21	7
-#define DM_ZX296718_USB30	8
-#define DM_ZX296718_HSIC	9
-#define DM_ZX296718_GMAC	10
-#define DM_ZX296718_TS		11
-
-> +
-> +static struct zx2967_pm_domain vou_domain = {
-> +	.dm = {
-> +		.name		= "vou_domain",
-> +	},
-> +	.bit = PCU_DM_VOU,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain sappu_domain = {
-> +	.dm = {
-> +		.name		= "sappu_domain",
-> +	},
-> +	.bit = PCU_DM_SAPPU,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain vde_domain = {
-> +	.dm = {
-> +		.name		= "vde_domain",
-> +	},
-> +	.bit = PCU_DM_VDE,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain vce_domain = {
-> +	.dm = {
-> +		.name		= "vce_domain",
-> +	},
-> +	.bit = PCU_DM_VCE,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain hde_domain = {
-> +	.dm = {
-> +		.name		= "hde_domain",
-> +	},
-> +	.bit = PCU_DM_HDE,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain viu_domain = {
-> +	.dm = {
-> +		.name		= "viu_domain",
-> +	},
-> +	.bit = PCU_DM_VIU,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain usb20_domain = {
-> +	.dm = {
-> +		.name		= "usb20_domain",
-> +	},
-> +	.bit = PCU_DM_USB20,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain usb21_domain = {
-> +	.dm = {
-> +		.name		= "usb21_domain",
-> +	},
-> +	.bit = PCU_DM_USB21,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain usb30_domain = {
-> +	.dm = {
-> +		.name		= "usb30_domain",
-> +	},
-> +	.bit = PCU_DM_USB30,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain hsic_domain = {
-> +	.dm = {
-> +		.name		= "hsic_domain",
-> +	},
-> +	.bit = PCU_DM_HSIC,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain gmac_domain = {
-> +	.dm = {
-> +		.name		= "gmac_domain",
-> +	},
-> +	.bit = PCU_DM_GMAC,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct zx2967_pm_domain ts_domain = {
-> +	.dm = {
-> +		.name		= "ts_domain",
-> +	},
-> +	.bit = PCU_DM_TS,
-> +	.polarity = PWREN,
-> +	.reg_offset = zx296718_offsets,
-> +};
-> +
-> +static struct generic_pm_domain *zx296718_pm_domains[] = {
-> +	[DM_ZX296718_SAPPU] = &sappu_domain.dm,
-> +	[DM_ZX296718_VDE] = &vde_domain.dm,
-> +	[DM_ZX296718_VCE] = &vce_domain.dm,
-> +	[DM_ZX296718_HDE] = &hde_domain.dm,
-> +	[DM_ZX296718_VIU] = &viu_domain.dm,
-> +	[DM_ZX296718_USB20] = &usb20_domain.dm,
-> +	[DM_ZX296718_USB21] = &usb21_domain.dm,
-> +	[DM_ZX296718_USB30] = &usb30_domain.dm,
-> +	[DM_ZX296718_HSIC] = &hsic_domain.dm,
-> +	[DM_ZX296718_GMAC] = &gmac_domain.dm,
-> +	[DM_ZX296718_TS] = &ts_domain.dm,
-> +	[DM_ZX296718_VOU] = &vou_domain.dm,
-
-If you update the order of DM_ZX296718_xxx in zte,pm_domains.h, it would
-be nice to update this list accordingly as well.
-
-> +};
-> +
-> +static int zx296718_pd_probe(struct platform_device *pdev)
-> +{
-> +	return zx2967_pd_probe(pdev,
-> +			  zx296718_pm_domains,
-> +			  ARRAY_SIZE(zx296718_pm_domains));
-> +}
-> +
-> +static const struct of_device_id zx296718_pm_domain_matches[] = {
-> +	{ .compatible = "zte,zx296718-pcu", },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver zx296718_pd_driver = {
-> +	.driver = {
-> +		.name = "zx-powerdomain",
-
-This is a zx296718 specific driver.  So zx296718-powerdomain should
-be a better name?
-
-Shawn
-
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = zx296718_pm_domain_matches,
-> +	},
-> +	.probe = zx296718_pd_probe,
-> +};
-> +
-> +static int __init zx296718_pd_init(void)
-> +{
-> +	return platform_driver_register(&zx296718_pd_driver);
-> +}
-> +subsys_initcall(zx296718_pd_init);
-> -- 
-> 2.7.4
+> [..]
 > 
+> > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
+> > >  	lm3533_device_bl_init(lm3533);
+> > >  	lm3533_device_led_init(lm3533);
+> > >  
+> > > +	if (lm3533->dev->of_node) {
+> > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
+> > > +				     lm3533->dev);
+> > > +	}
+> > 
+> > I think it's save to call of_platform_populate(), even if !of_node.
+> > It will just fail and return an error code, which you are ignoring
+> > anyway.
+> > 
+> 
+> I thought so too, but that's apparently how you trigger probing children
+> of the root node. So we're stuck with a conditional.
+
+Ah, so this is to protect against the case where DT is present, but a
+node for this device is not (or is disabled), so is left unprobed.
+Then the bind is initiated via I2C?  Or something else?
+
+> > >  static int lm3533_i2c_probe(struct i2c_client *i2c,
+> > >  					const struct i2c_device_id *id)
+> > >  {
+> 
+> [..]
+> 
+> > >  
+> > > +	if (i2c->dev.of_node) {
+> > 
+> > I'd prefer this check to be placed in lm3533_pdata_from_of_node().
+> > 
+> > Just return silently if !dev->of_node.
+> > 
+> 
+> I agree, will update this.
+> 
+> > > +		ret = lm3533_pdata_from_of_node(lm3533->dev);
+> > > +		if (ret < 0)
+> > > +			return ret;
+> > > +	}
+> > > +
+> > >  	return lm3533_device_init(lm3533);
+> > >  }
+> > >  
+> 
+> Regards,
+> Bjorn
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
