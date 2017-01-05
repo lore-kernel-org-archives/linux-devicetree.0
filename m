@@ -1,57 +1,43 @@
 From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 00/12] ARM: dts: socfpga: enable a few hardware bits
-Date: Wed,  4 Jan 2017 18:21:22 -0600
-Message-ID: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
+Subject: [PATCH 03/12] ARM: dts: socfpga: Add Rohm DH2228FV DAC
+Date: Wed,  4 Jan 2017 18:21:25 -0600
+Message-ID: <1483575694-29599-4-git-send-email-dinguyen@kernel.org>
+References: <1483575694-29599-1-git-send-email-dinguyen@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483575694-29599-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds a few DTS updates for SoCFPGA platforms, such as:
+Enable the SPI node and add the Rohm DH2228FV DAC.
 
-- Adds FPGA manager bits
-- Enable I2C on Cyclone5 and Arria5 devkits
-- Adds LED support on C5/A5 devkits
-- Enables CAN on C5 devkit
-- Enables watchdog
-- Add NAND on Arria10
-- Add the LTC2977 Power Monitor on Arria10 devkit
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thanks,
-Dinh
-
-Alan Tull (1):
-  ARM: dts: socfpga: add base fpga region and fpga bridges
-
-Dinh Nguyen (10):
-  ARM: dts: socfpga: enable GPIO and LEDs for Cyclone5 and Arria5
-    devkits
-  ARM: dts: socfpga: set desired i2c clock on Cyclone5 and Arria5
-    devkits
-  ARM: dts: socfpga: Add Rohm DH2228FV DAC
-  ARM: dts: socfpga: enable CAN on Cyclone5 devkit
-  ARM: dts: socfpga: enable watchdog timer on Arria5 and Arria10
-  ARM: dts: socfpga: add the LTC2977 power monitor on Arria10 devkit
-  ARM: dts: socfpga: add fpga-manager node for Arria10
-  ARM: dts: socfpga: fpga manager data is 32 bits
-  ARM: dts: socfpga: add fpga region support on Arria10
-  ARM: dts: socfpga: add missing compatible string for SDRAM controller
-
-Graham Moore (1):
-  ARM: dts: socfpga: Add NAND device tree for Arria10
-
- arch/arm/boot/dts/Makefile                       |  1 +
- arch/arm/boot/dts/socfpga.dtsi                   | 35 +++++++++++++++-
- arch/arm/boot/dts/socfpga_arria10.dtsi           | 19 ++++++++-
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi     |  9 ++++
- arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts | 44 ++++++++++++++++++++
- arch/arm/boot/dts/socfpga_arria5.dtsi            |  4 ++
- arch/arm/boot/dts/socfpga_arria5_socdk.dts       | 43 +++++++++++++++++++
- arch/arm/boot/dts/socfpga_cyclone5_socdk.dts     | 53 ++++++++++++++++++++++++
- 8 files changed, 205 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
-
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 24650ba..c2884c9 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -159,6 +159,16 @@
+ 	};
+ };
+ 
++&spi0 {
++	status = "okay";
++
++	spidev@0 {
++		compatible = "rohm,dh2228fv";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
++};
++
+ &usb1 {
+ 	status = "okay";
+ };
 -- 
 2.7.4
 
