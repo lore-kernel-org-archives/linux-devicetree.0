@@ -1,64 +1,64 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH V2 1/5] Documetation: samsung-phy: add the exynos-pcie-phy
- binding
-Date: Thu, 05 Jan 2017 09:46:13 +0530
-Message-ID: <4110cfa2-bbe8-337e-5f2c-13d82cd23713@samsung.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p1d3d840e4ade396a60ce690b09d486990@epcas1p1.samsung.com>
- <20170104123435.30740-2-jh80.chung@samsung.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCHv2 0/5] Support for Marvell switches with integrated CPUs
+Date: Thu, 5 Jan 2017 04:24:21 +0000
+Message-ID: <185147a37cab4d7eaea5f79d86cc9451@svr-chch-ex1.atlnz.lc>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <6c6795d3-06ab-a4f0-78ad-5ecc78c1aa2f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170104123435.30740-2-jh80.chung@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Juri Lelli <juri.lelli@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+On 05/01/17 17:07, Florian Fainelli wrote:
+> Le 01/04/17 =E0 19:36, Chris Packham a =E9crit :
+>> The 98DX3236, 98DX3336 and 98DX4251 are a set of switch ASICs with
+>> integrated CPUs. They CPU block is common within these product lines and
+>> (as far as I can tell/have been told) is based on the Armada XP. There
+>> are a few differences due to the fact they have to squeeze the CPU into
+>> the same package as the switch.
+>
+> It's really great to see these changes, do you have a plan to also add
+> support for the integrated switch using a DSA/switchdev driver?
 
-On 01/04/2017 06:04 PM, Jaehoon Chung wrote:
-> Adds the exynos-pcie-phy binding for Exynos PCIe PHY.
-> This is for using generic PHY framework.
->
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
-> Changelog on V2:
-> - Remove the child node.
-> - Add 2nd address to the parent reg prop.
->
->  Documentation/devicetree/bindings/phy/samsung-phy.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index 9872ba8..ab80bfe 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -191,3 +191,20 @@ Example:
->  		usbdrdphy0 = &usb3_phy0;
->  		usbdrdphy1 = &usb3_phy1;
->  	};
-> +
-> +Samsung Exynos SoC series PCIe PHY controller
-> +--------------------------------------------------
-> +Required properties:
-> +- compatible : Should be set to "samsung,exynos5440-pcie-phy"
-> +- #phy-cells : Must be zero
-> +- reg : a register used by phy driver.
-> +	- First is for phy register, second is for block register.
-> +- reg-names : Must be set to "phy" and "block".
-> +
-In general PHY uses a "reference clock" to work, if that is true for 
-5440 also, will you consider adding an (may be) optional clock 
-properties as well?
+I'd love to see a switchdev driver but it's a huge task (and no I'm not =
 
-otherwise this binding looks ok to me.
-> +Example:
-> +	pcie_phy0: pcie-phy@270000 {
-> +		#phy-cells = <0>;
-> +		compatible = "samsung,exynos5440-pcie-phy";
-> +		reg = <0x270000 0x1000>, <0x271000 0x40>;
-> +		reg-names = "phy", "block";
-> +	};
->
+committing to writing it). As it stands Marvell ship a switch SDK =
+
+largely executes in userspace with a small kernel module providing some =
+
+linkage to the underlying hardware.
+
+We (a few of us here at Allied Telesis NZ) have discussed switchdev and =
+
+how we get from using Marvell's SDK in our products to using switchdev =
+
+proper.
+
+The first step would probably be some kind of trampoline driver which =
+
+communicates with a userspace helper to do the actual work. =
+
+Alternatively there is some support in Marvell's SDK for compilation as =
+
+a binary blob so a proprietary kernel module is another option. Neither =
+
+of these are particularly nice in a free software world.
+
+A full "free" implementation would be a large undertaking. Ideally I'd =
+
+like to see Marvell involved with producing one but so far they've not =
+
+been interested whenever I've brought it up.
