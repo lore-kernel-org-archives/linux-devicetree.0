@@ -1,68 +1,34 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 1/3] ARM64: dts: exynos5433: add DECON_TV node
-Date: Thu, 5 Jan 2017 13:11:10 -0300
-Message-ID: <4c426e7c-151b-7bdd-995f-33f3fb697e96@osg.samsung.com>
-References: <CGME20170105152604eucas1p25340c974fa7f375905c958e2bff6d96f@eucas1p2.samsung.com>
- <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] n900 device tree: cleanup
+Date: Thu, 5 Jan 2017 08:15:14 -0800
+Message-ID: <20170105161514.GB4310@atomide.com>
+References: <20161011075416.GA22453@amd>
+ <20161011081243.GA24580@amd>
+ <20161207031048.pi7j4dms5uuco3yf@earth>
+ <201612141328.27244@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201612141328.27244@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrzej,
-
-It seems the subject line "arm64" is more common than the capitalized "ARM64".
-
-On 01/05/2017 12:25 PM, Andrzej Hajda wrote:
-> DECON_TV is 2nd display controller on Exynos5433, used in HDMI path
-> or 2nd DSI path.
+* Pali Rohár <pali.rohar@gmail.com> [161214 04:28]:
+> On Wednesday 07 December 2016 04:10:48 Sebastian Reichel wrote:
+> > Hi Tony,
+> > 
+> > It looks like this fell through the cracks. Apart from inconsistent
+> > patch subject:
+> > 
+> > Reviewed-By: Sebastian Reichel <sre@kernel.org>
 > 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 44 ++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> index 8cbfd1d..b47951b 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -821,6 +821,28 @@
->  			};
->  		};
->  
-> +		decon_tv: decon@13880000 {
-> +			compatible = "samsung,exynos5433-decon-tv";
-> +			reg = <0x13880000 0x20B8>;
-> +			clocks = <&cmu_disp CLK_PCLK_DECON_TV>,
-> +				 <&cmu_disp CLK_ACLK_DECON_TV>,
-> +				 <&cmu_disp CLK_ACLK_SMMU_TV0X>,
-> +				 <&cmu_disp CLK_ACLK_XIU_TV0X>,
-> +				 <&cmu_disp CLK_PCLK_SMMU_TV0X>,
-> +				 <&cmu_disp CLK_SCLK_DECON_TV_VCLK>,
-> +				 <&cmu_disp CLK_SCLK_DECON_TV_ECLK>;
-> +			clock-names = "pclk", "aclk_decon", "aclk_smmu_decon0x",
-> +				      "aclk_xiu_decon0x", "pclk_smmu_decon0x",
-> +				      "sclk_decon_vclk", "sclk_decon_eclk";
-> +			samsung,disp-sysreg = <&syscon_disp>;
-> +			interrupt-names = "fifo", "vsync", "lcd_sys";
-> +			interrupts = <0 210 0>, <0 211 0>, <0 212 0>;
+> Fine for me too. Reviewed-By: Pali Rohár <pali.rohar@gmail.com>
 
-You can use the GIC_SPI macro for the interrupt type instead. Also, I think
-IRQ_TYPE_NONE (0) isn't a valid flag for GIC interrupts. AFAIU the platform
-supports both IRQ_TYPE_EDGE_RISING and IRQ_TYPE_LEVEL_HIGH, and the latter
-is what's used consistently in the other Exynos DTS.
+Fixing subject line to use "ARM: dts: n900: cleanup" and applying into
+omap-for-v4.11/dt.
 
-Besides this comment, patch looks good to me.
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Tony
