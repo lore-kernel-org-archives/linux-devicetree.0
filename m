@@ -1,102 +1,72 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v4 2/2] dt-bindings: Add DT bindings info for FlexRM ring
- manager
-Date: Thu,  5 Jan 2017 16:37:55 +0530
-Message-ID: <1483614475-3442-3-git-send-email-anup.patel@broadcom.com>
-References: <1483614475-3442-1-git-send-email-anup.patel@broadcom.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: phy: introduce new optional property
+ to specify drive impedance
+Date: Thu, 05 Jan 2017 12:15:18 +0100
+Message-ID: <11505388.Y1Yzh8HsIT@diego>
+References: <1483608682-226716-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483614475-3442-1-git-send-email-anup.patel@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Pramod KUMAR <pramod.kumar@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Rob Rice <rob.rice@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1483608682-226716-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree bindings document for the FlexRM
-ring manager found on Broadcom iProc SoCs.
+Hi Shawn,
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
----
- .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+Am Donnerstag, 5. Januar 2017, 17:31:21 schrieb Shawn Lin:
+> We need to modify the drive impedance according to the
+> different hardware condition. So let's expose this to
+> the DT.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt index
+> e3ea557..731aeb9 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> @@ -14,6 +14,11 @@ specified by name:
+>  		access to it), it is strongly suggested.
+>   - clocks: Should have a phandle to the card clock exported by the SDHCI
+> driver.
+> 
+> +Optional Properties:
+> +- drive_impedance: Must be one of 33, 40, 50, 66, 100. This property allows
+> +	different boards to specify their own drive impedance depending on the
+> +	hardware condition.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
-new file mode 100644
-index 0000000..752ae6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
-@@ -0,0 +1,59 @@
-+Broadcom FlexRM Ring Manager
-+============================
-+The Broadcom FlexRM ring manager provides a set of rings which can be
-+used to submit work to offload engines. An SoC may have multiple FlexRM
-+hardware blocks. There is one device tree entry per FlexRM block. The
-+FlexRM driver will create a mailbox-controller instance for given FlexRM
-+hardware block where each mailbox channel is a separate FlexRM ring.
-+
-+Required properties:
-+--------------------
-+- compatible:	Should be "brcm,iproc-flexrm-mbox"
-+- reg:		Specifies base physical address and size of the FlexRM
-+		ring registers
-+- msi-parent:	Phandles (and potential Device IDs) to MSI controllers
-+		The FlexRM engine will send MSIs (instead of wired
-+		interrupts) to CPU. There is one MSI for each FlexRM ring.
-+		Refer devicetree/bindings/interrupt-controller/msi.txt
-+- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
-+		channel. This should be 3.
-+
-+		The 1st cell is the mailbox channel number.
-+
-+		The 2nd cell contains MSI completion threshold. This is the
-+		number of completion messages for which FlexRM will inject
-+		one MSI interrupt to CPU.
-+
-+		The 3nd cell contains MSI timer value representing time for
-+		which FlexRM will wait to accumulate N completion messages
-+		where N is the value specified by 2nd cell above. If FlexRM
-+		does not get required number of completion messages in time
-+		specified by this cell then it will inject one MSI interrupt
-+		to CPU provided atleast one completion message is available.
-+
-+Optional properties:
-+--------------------
-+- dma-coherent:	Present if DMA operations made by the FlexRM engine (such
-+		as DMA descriptor access, access to buffers pointed by DMA
-+		descriptors and read/write pointer updates to DDR) are
-+		cache coherent with the CPU.
-+
-+Example:
-+--------
-+crypto_mbox: mbox@67000000 {
-+	compatible = "brcm,iproc-flexrm-mbox";
-+	reg = <0x67000000 0x200000>;
-+	msi-parent = <&gic_its 0x7f00>;
-+	#mbox-cells = <3>;
-+};
-+
-+crypto@672c0000 {
-+	compatible = "brcm,spu2-v2-crypto";
-+	reg = <0x672c0000 0x1000>;
-+	mboxes = <&crypto_mbox 0 0x1 0xffff>,
-+		 <&crypto_mbox 1 0x1 0xffff>,
-+		 <&crypto_mbox 16 0x1 0xffff>,
-+		 <&crypto_mbox 17 0x1 0xffff>,
-+		 <&crypto_mbox 30 0x1 0xffff>,
-+		 <&crypto_mbox 31 0x1 0xffff>;
-+};
--- 
-2.7.4
+In what unit are your 33, 40 etc values?
+
+It is recommended that properties should specify their unit, see all the 
+properties ending in "-ma", "-ns" and so on and also 
+Documentation/devicetree/bindings/property-units.txt
+
+Also properties should use dashes ("-") not underscores.
+
+Judging by the second patch, these are Ohm, so combining the above you 
+probably want
+
+	drive-impedance-ohms
+
+as property name.
+
+Also the patch subject is slightly misleading and should probably specify the 
+rockchip-emmc as well :-)
+
+
+Heiko
