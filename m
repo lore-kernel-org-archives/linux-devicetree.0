@@ -1,13 +1,16 @@
-From: Teresa Remmet <t.remmet@phytec.de>
-Subject: [PATCH 5/6] ARM: dts: am335x-phycore-som: Update ethernet phy node
-Date: Thu, 5 Jan 2017 15:50:50 +0100
-Message-ID: <1483627851-17996-6-git-send-email-t.remmet@phytec.de>
-References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v4 0/2] Add support for the ethernet switch on
+ the ESPRESSObin
+Date: Thu, 5 Jan 2017 15:52:25 +0100
+Message-ID: <20170105145225.GI4229@lunn.ch>
+References: <20161221125734.1034-1-romain.perier@free-electrons.com>
+ <87tw9dbn2m.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
+Content-Disposition: inline
+In-Reply-To: <87tw9dbn2m.fsf@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,40 +20,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Romain Perier <romain.perier@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, netdev@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, David Miller <davem@redhat.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Update ethernet phy0 node to use phy-handle now.
+On Thu, Jan 05, 2017 at 03:25:53PM +0100, Gregory CLEMENT wrote:
+> Hi David,
+>  =
 
-Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
----
- arch/arm/boot/dts/am335x-phycore-som.dtsi | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+>  On mer., d=E9c. 21 2016, Romain Perier <romain.perier@free-electrons.com=
+> wrote:
+> =
 
-diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-index 08d1134..de91275 100644
---- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-@@ -78,7 +78,7 @@
- };
- 
- &cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
-+	phy-handle = <&phy0>;
- 	phy-mode = "rmii";
- 	dual_emac_res_vlan = <1>;
- };
-@@ -87,6 +87,10 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mdio_pins>;
- 	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
- };
- 
- &mac {
--- 
-1.9.1
+> > This set of patches adds support for the Marvell ethernet switch 88E634=
+1.
+> > It also add the devicetree definition of this switch to the DT board.
+> =
+
+> The forth version of this series had been sent while the net-next merge
+> window was closed so I think it was missed.
+
+Having done a bit more research, i'm pretty sure the second patch is
+wrong. The 88E6341 is not compatible with the 6352, it is a different
+family. It might be more like the 6390. So supporting it will need a
+side-by-side comparison of the datasheet against the 6352 and the
+6390, and the correct selection of the ops.
+
+      Andrew
