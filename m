@@ -1,102 +1,75 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v5 0/2] iio: adc: hx711: Add IIO driver for AVIA HX711 ADC
-Date: Thu, 5 Jan 2017 18:51:15 +0100
-Message-ID: <20170105175115.GA12193@andreas>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition
+ table
+Date: Thu, 5 Jan 2017 09:56:20 -0800
+Message-ID: <20170105175619.GA56877@google.com>
+References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
+ <1483627851-17996-2-git-send-email-t.remmet@phytec.de>
+ <20170105153637.GA4310@atomide.com>
+ <20170105171845.GK4310@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, ak@it-klinger.de
+In-Reply-To: <20170105171845.GK4310@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Teresa Remmet <t.remmet@phytec.de>, linux-omap@vger.kernel.org, Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds IIO driver support for the AVIA HX711 ADC which is 
-mostly used in weighting cells.
+On Thu, Jan 05, 2017 at 09:18:45AM -0800, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [170105 07:37]:
+> > * Teresa Remmet <t.remmet@phytec.de> [170105 06:57]:
+> > > To improve NAND safety we updated the partition layout.
+> > > Added barebox backup partition and removed kernel and oftree
+> > > partition. They are kept in ubi now.
+> > 
+> > What about the users with earlier partition tables?
+> > 
+> > Please read about "flag day" changes, typically they are not
+> > acceptable.
+> 
+> Adding Brian and Adam to Cc. Can you guys come up with some
+> solution on this?
 
-The first patch adds the new DT binding for which a new vendor avia
-was also added.
+I don't have much context for this thread, and no I don't plan to solve
+your problems for you. But I can provide tips!
 
-The second patch is the simple IIO driver implemented as ADC.
-The protocol is specific to this device and implemented using GPIOs.
+> I'm suggesting we leave the kernel nodes empty and let u-boot
+> populate them, so maybe you guys can discuss this on the related
+> lists.
 
-Documentation of the chip can be found here:
+That's an option. I've worked with platforms that did something like
+this, and that's really one of the only ways you can handle putting
+partition information in the device tree. You're really hamstringing
+yourself when you put all the partition information in the device tree.
+And it's just dumb once that gets codified in the kernel source tree.
 
-https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf
+The best solution would be to try to migrate away from static device
+tree representations of partition info entirely. UBI volumes are best
+where possible. If not, then some other kind of on-flash data structures
+(along the lines of a GPT) with a corresponding MTD partition parser is
+an OK alternative. Unfortunately, there isn't any good standard format
+for this on MTD, so it's typically all custom -- and so people use the
+easiest approach: device tree. And it's even more difficult with NAND,
+which has reliability problems, especially with static data (e.g., read
+disturb).
 
-Changes in v5:
-The reviews of Peter and Jonathan induced some improvements and lined out
-at least one bug
+Anyway, the parser solution is helpful only if one can properly fix the
+"flag day" first. And it requires a little bit more work to be generally
+useful; I posted some work for this over a year ago, but bikeshedding
+brought it down.
 
-* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
-  - put Acked-By once again on the patch
+> The rest of the series looks fine to me so applying it into
+> omap-for-v4.11/dt.
 
-* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
-  - improved ugly locking
-  - replace devm_iio_device_register() by iio_device_register() because of
-    regulator_disable() in remove()
-  - added ...scale_available() functions for both channels
-  - name channels directly 0 and 1 instead of #define HX711_CHAN_A...
-  - added hx711_wait_for_ready() function which is called after every dummy
-    read to get sure the DOUT line signals that the device is ready
-  - without this check there are cases in which the clock cycle of the next
-    read gets interpreted by the device as gain pulses!
-
-Changes in v4:
-Thanks to the thorough reviews and suggestions of Jonathan and Lars-Peter
-the driver was reworked to better meet the standard ABI of IIO. 
-
-* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
-  - added attribute for regulator
-
-* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
-  - two read channels for physical channels A and B
-  - remove gain attribute and use scale as read raw
-  - offer scale_available attribute
-  - introduced regulator as analog supply; mainly needed for calculating
-    the scale
-  - simplyfied use of GPIOs
-  - measuring input and output with oszilloscope and revised timing behavior
-  - many minor changes
-
-Changes in v3:
-moved gain from devicetree to sysfs, according to comment of Lars-Peter
-Thanks for reviewing and giving suggestions
-
-* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
-  - removed property gain
-
-* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
-  - removed property gain from devicetree
-  - added device attribute (rw) for gain
-  - support reading from both channels now
-
-Changes in v2:
-Lots of updates thanks to Peters review.
-
-* Patch 1: "iio: adc: hx711: Add DT binding for avia,hx711"
-  - typo
-  - removed unneded section
-
-* Patch 2: "iio: adc: hx711: Add IIO driver for AVIA HX711"
-  - updated help text in Kconfig
-  - removed dead code
-  - removed unused power management
-  - reduced channel spec to what is actually used
-  - added error handling in case reset of chip not possible
-
-Andreas Klinger (2):
-  iio: adc: hx711: Add DT binding for avia,hx711
-  iio: adc: hx711: Add IIO driver for AVIA HX711
-
- .../devicetree/bindings/iio/adc/avia-hx711.txt     |  18 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/iio/adc/Kconfig                            |  19 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/hx711.c                            | 531 +++++++++++++++++++++
- 5 files changed, 570 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
- create mode 100644 drivers/iio/adc/hx711.c
-
--- 
-2.1.4
+Brian
