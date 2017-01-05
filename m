@@ -1,116 +1,59 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: Add DT bindings info for FlexRM ring
- manager
-Date: Thu, 5 Jan 2017 13:56:51 +0530
-Message-ID: <CAALAos-EN5-PBt35v75-HiwhR8QcMQVUje=qFWzsk4prfMw19A@mail.gmail.com>
-References: <1483508082-7008-1-git-send-email-anup.patel@broadcom.com>
- <1483508082-7008-3-git-send-email-anup.patel@broadcom.com>
- <20170104143752.bl47gdfczbnfy6b3@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170104143752.bl47gdfczbnfy6b3@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Device Tree <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jassi Brar <jassisinghbrar@gmail.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Pramod KUMAR <pramod.kumar@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+From: Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/4] Add touch key driver support for TM2
+Date: Thu, 05 Jan 2017 17:27:09 +0900
+Message-ID: <1483604833-29746-1-git-send-email-jcsing.lee@samsung.com>
+References: <CGME20170105082715epcas1p10e0820a792ba9d89cd165299d6602654@epcas1p1.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galaxyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 4, 2017 at 8:07 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Jan 04, 2017 at 11:04:42AM +0530, Anup Patel wrote:
->> This patch adds device tree bindings document for the FlexRM
->> ring manager found on Broadcom iProc SoCs.
->>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->> ---
->>  .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    | 60 ++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
->> new file mode 100644
->> index 0000000..ca51a39
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
->> @@ -0,0 +1,60 @@
->> +Broadcom FlexRM Ring Manager
->> +============================
->> +The Broadcom FlexRM ring manager provides a set of rings which can be
->> +used to submit work to offload engines. An SoC may have multiple FlexRM
->> +hardware blocks. There is one device tree entry per FlexRM block. The
->> +FlexRM driver will create a mailbox-controller instance for given FlexRM
->> +hardware block where each mailbox channel is a separate FlexRM ring.
->> +
->> +Required properties:
->> +--------------------
->> +- compatible:        Should be "brcm,iproc-flexrm-mbox"
->> +- reg:               Specifies base physical address and size of the FlexRM
->> +             ring registers
->> +- msi-parent:        Phandles (and potential Device IDs) to MSI controllers
->> +             The FlexRM engine will send MSIs (instead of wired
->> +             interrupts) to CPU. There is one MSI for each FlexRM ring.
->> +             Refer devicetree/bindings/interrupt-controller/msi.txt
->> +- #mbox-cells:       Specifies the number of cells needed to encode a mailbox
->> +             channel. This should be 3.
->> +
->> +             The 1st cell is the mailbox channel number.
->> +
->> +             The 2nd cell contains MSI completion threshold. This is the
->> +             number of completion messages for which FlexRM will inject
->> +             one MSI interrupt to CPU.
->> +
->> +             The 3nd cell contains MSI timer value representing time for
->> +             which FlexRM will wait to accumulate N completion messages
->> +             where N is the value specified by 2nd cell above. If FlexRM
->> +             does not get required number of completion messages in time
->> +             specified by this cell then it will inject one MSI interrupt
->> +             to CPU provided atleast one completion message is available.
->> +
->> +Optional properties:
->> +--------------------
->> +- dma-coherent:      Present if DMA operations made by the FlexRM engine (such
->> +             as DMA descriptor access, access to buffers pointed by DMA
->> +             descriptors and read/write pointer updates to DDR) are
->> +             cache coherent with the CPU.
->> +
->> +Example:
->> +--------
->> +crypto_mbox: mbox@67000000 {
->> +     compatible = "brcm,iproc-flexrm-mbox";
->> +     reg = <0x67000000 0x200000>;
->> +     msi-parent = <&gic_its 0x7f00>;
->> +     #mbox-cells = <3>;
->> +};
->> +
->> +crypto_client {
->
-> crypto@<addr>
->
->> +     ...
->> +     mboxes = <&crypto_mbox 0 0x1 0xffff>,
->> +              <&crypto_mbox 1 0x1 0xffff>,
->> +              <&crypto_mbox 16 0x1 0xffff>,
->> +              <&crypto_mbox 17 0x1 0xffff>,
->> +              <&crypto_mbox 30 0x1 0xffff>,
->> +              <&crypto_mbox 31 0x1 0xffff>;
->> +     };
->> +     ...
->
-> Please somewhat fully list the contents for node.
->
+Hi,
 
-Sure, I will add more complete example DT node for
-mailbox client.
+This patchset adds support for the tm2 touchkey device.
 
-Regards,
-Anup
+The driver has been ported from Tizen Kernel, originally written
+by Beomho. I ported it to the latest mainline Kernel.
+
+The patchset applies on next-20170105.
+
+Changes in v2:
+ - fixed reviews from Javier, Dmitry
+ - refactored power enable/disable functions.
+ - reordered signed-offs in patch 2, while patch 4 is left as it
+   was as Andi copy pasted the node to the new tm2.dts file
+ - added Jarvier's (patch 1,2,4) and Krzysztof's (patch 4) reviews 
+   and Rob's Ack
+ - patch 3 diff has been generated with -B50%
+
+Best Regards,
+Jaechul
+
+Andi Shyti (1):
+  arm64: dts: exynos: make tm2 and tm2e independent from each other
+
+Jaechul Lee (3):
+  input: Add support for the tm2 touchkey device driver
+  input: tm2-touchkey: Add touchkey driver support for TM2
+  arm64: dts: exynos: Add tm2 touchkey node
+
+ .../bindings/input/samsung,tm2-touchkey.txt        |   27 +
+ .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 1116 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1105 +------------------
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |    2 +-
+ drivers/input/keyboard/Kconfig                     |   11 +
+ drivers/input/keyboard/Makefile                    |    1 +
+ drivers/input/keyboard/tm2-touchkey.c              |  280 +++++
+ 7 files changed, 1445 insertions(+), 1097 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+ create mode 100644 drivers/input/keyboard/tm2-touchkey.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
