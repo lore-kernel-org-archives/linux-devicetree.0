@@ -1,114 +1,52 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH net-next 01/10] net: netcp: ethss: add support of
- subsystem register region regmap
-Date: Thu, 5 Jan 2017 15:42:38 -0500
-Message-ID: <586EAFBE.1000500@ti.com>
-References: <1482271793-7671-1-git-send-email-m-karicheri2@ti.com>
- <1482271793-7671-2-git-send-email-m-karicheri2@ti.com>
- <20161222212409.arhurpl4bpqf2yw6@rob-hp-laptop>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCHv2 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
+Date: Thu, 5 Jan 2017 20:49:49 +0000
+Message-ID: <b71083040acf4fbb9341be3c1e70a930@svr-chch-ex1.atlnz.lc>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <20170105033641.6212-3-chris.packham@alliedtelesis.co.nz>
+ <5edb6751-d15b-6654-f4ae-adf38fafb8a4@gmail.com>
+ <dd384eda81d2420dafe740bf5bb4dae0@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161222212409.arhurpl4bpqf2yw6@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, grygorii.strashko@ti.com, mugunthanvnm@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de, davem@davemloft.net, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
-
-On 12/22/2016 04:24 PM, Rob Herring wrote:
-> On Tue, Dec 20, 2016 at 05:09:44PM -0500, Murali Karicheri wrote:
->> From: WingMan Kwok <w-kwok2@ti.com>
->>
->> 10gbe phy driver needs to access the 10gbe subsystem control
->> register during phy initialization. To facilitate the shared
->> access of the subsystem register region between the 10gbe Ethernet
->> driver and the phy driver, this patch adds support of the
->> subsystem register region defined by a syscon node in the dts.
->>
->> Although there is no shared access to the gbe subsystem register
->> region, using syscon for that is for the sake of consistency.
->>
->> This change is backward compatible with previously released gbe
->> devicetree bindings.
->>
->> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->> ---
->>  .../devicetree/bindings/net/keystone-netcp.txt     |  16 ++-
->>  drivers/net/ethernet/ti/netcp_ethss.c              | 140 +++++++++++++++++----
->>  2 files changed, 127 insertions(+), 29 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/keystone-netcp.txt b/Documentation/devicetree/bindings/net/keystone-netcp.txt
->> index 04ba1dc..0854a73 100644
->> --- a/Documentation/devicetree/bindings/net/keystone-netcp.txt
->> +++ b/Documentation/devicetree/bindings/net/keystone-netcp.txt
->> @@ -72,20 +72,24 @@ Required properties:
->>  		"ti,netcp-gbe-2" for 1GbE N NetCP 1.5 (N=2)
->>  		"ti,netcp-xgbe" for 10 GbE
->>  
->> +- syscon-subsys:	phandle to syscon node of the switch
->> +			subsystem registers.
->> +
->>  - reg:		register location and the size for the following register
->>  		regions in the specified order.
->>  		- switch subsystem registers
->> +		- sgmii module registers
-> 
-> This needs to go on the end of the list. Otherwise, it is not backwards 
-> compatible.
-
-Thanks for your review! I assumed backward compatibility means new kernel
-should work with old DTB. The driver code is adjusted to work with both
-DTBs. Isn't that enough?
-
-Murali
-
-> 
->>  		- sgmii port3/4 module registers (only for NetCP 1.4)
->>  		- switch module registers
->>  		- serdes registers (only for 10G)
->>  
->>  		NetCP 1.4 ethss, here is the order
->> -			index #0 - switch subsystem registers
->> +			index #0 - sgmii module registers
->>  			index #1 - sgmii port3/4 module registers
->>  			index #2 - switch module registers
->>  
->>  		NetCP 1.5 ethss 9 port, 5 port and 2 port
->> -			index #0 - switch subsystem registers
->> +			index #0 - sgmii module registers
->>  			index #1 - switch module registers
->>  			index #2 - serdes registers
->>  
->> @@ -145,6 +149,11 @@ Optional properties:
->>  
->>  Example binding:
->>  
->> +gbe_subsys: subsys@2090000 {
->> +	compatible = "syscon";
->> +	reg = <0x02090000 0x100>;
->> +};
->> +
->>  netcp: netcp@2000000 {
->>  	reg = <0x2620110 0x8>;
->>  	reg-names = "efuse";
->> @@ -163,7 +172,8 @@ netcp: netcp@2000000 {
->>  		ranges;
->>  		gbe@90000 {
->>  			label = "netcp-gbe";
->> -			reg = <0x90000 0x300>, <0x90400 0x400>, <0x90800 0x700>;
->> +			syscon-subsys = <&gbe_subsys>;
->> +			reg = <0x90100 0x200>, <0x90400 0x200>, <0x90800 0x700>;
->>  			/* enable-ale; */
->>  			tx-queue = <648>;
->>  			tx-channel = <8>;
-> 
-
-
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+On 05/01/17 17:46, Chris Packham wrote:=0A=
+> On 05/01/17 17:04, Florian Fainelli wrote:=0A=
+>> Le 01/04/17 =E0 19:36, Chris Packham a =E9crit :=0A=
+>>> +}=0A=
+>>> +=0A=
+>>> +static int __init mv98dx3236_resume_init(void)=0A=
+>>> +{=0A=
+>>> +	struct device_node *np;=0A=
+>>> +	struct resource res;=0A=
+>>> +	int ret =3D 0;=0A=
+>>> +=0A=
+>>> +	np =3D of_find_matching_node(NULL, of_mv98dx3236_resume_table);=0A=
+>>> +	if (!np)=0A=
+>>> +		return 0;=0A=
+>>=0A=
+>> Can't this function be implemented as a smp_ops::smp_init_cpus instead=
+=0A=
+>> of having this initialization done at arch_initcall time?=0A=
+>>=0A=
+>=0A=
+> I'll look into it. My initial reaction is no because I still need=0A=
+> armada_xp_smp_init_cpus().=0A=
+>=0A=
+=0A=
+I looked at this. I could write a mv98dx3236_smp_init_cpus() that calls =0A=
+armada_xp_smp_init_cpus() and inits the resume controller address. My =0A=
+original reason for this approach was to parallel mvebu_v7_pmsu_init. I =0A=
+won't do anything just yet but is there any downside to the current =0A=
+approach?=0A=
+=0A=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
