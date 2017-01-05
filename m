@@ -1,44 +1,32 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Thu, 5 Jan 2017 08:19:02 -0800
-Message-ID: <20170105161902.GC4310@atomide.com>
-References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 2/3] ARM64: dts: exynos5433: add HDMI node
+Date: Thu, 5 Jan 2017 13:21:22 -0300
+Message-ID: <7acc5c82-98ad-a540-90c9-763532300250@osg.samsung.com>
+References: <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
+ <CGME20170105152604eucas1p2092deeb660630f09b857cd1f8d1e4dea@eucas1p2.samsung.com>
+ <1483629943-31183-2-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480713097-5931-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1483629943-31183-2-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161202 13:11]:
-> The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-> connected to port 2 of the OMAP EHCI controller. The board however has
-> no EEPROM to store the ethernet MAC address, which is programmed by the
-> boot loader.
+Hello Andrzej,
+
+On 01/05/2017 12:25 PM, Andrzej Hajda wrote:
+> HDMI converts RGB/I80 signal from DECON_TV to HDMI/TMDS video stream.
 > 
-> To allow Linux to use the same MAC address as the boot loader (or for
-> that matter any fixed MAC address), we need a node in the device tree
-> for the ethernet controller that the boot loader can update at runtime
-> with a local-mac-address property. Add it, along with an alias for the
-> ethernet controller to let the boot loader locate it easily.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
-> Changes since v1:
-> 
-> - Renamed usb2 DT node to hub
 
-Applying this finally into omap-for-v4.11/dt. Will post my related
-patches using the hub naming shortly.
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
