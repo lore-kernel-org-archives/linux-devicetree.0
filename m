@@ -1,39 +1,99 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1 0/3] soc: rockchip: power-domain: support RK3328 SoC
-Date: Thu, 05 Jan 2017 15:07:20 +0100
-Message-ID: <4525049.9DCCQ7XhES@phil>
-References: <1482464872-12954-1-git-send-email-zhangqing@rock-chips.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Thu, 5 Jan 2017 14:07:31 +0000
+Message-ID: <20170105140720.GA25868@leverpostej>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
+	<20170105115528.GG679@arm.com> <20170105120857.GB21952@leverpostej>
+	<20170105140005.GJ679@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482464872-12954-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170105140005.GJ679-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 23. Dezember 2016, 11:47:49 CET schrieb Elaine Zhang:
-> Elaine Zhang (3):
->   dt/bindings: power: add RK3328 SoCs header for idle-request
->   dt-bindings: add binding for rk3328 power domains
->   soc: rockchip: power-domain: Modify power domain driver for rk3328
+On Thu, Jan 05, 2017 at 02:00:05PM +0000, Will Deacon wrote:
+> On Thu, Jan 05, 2017 at 12:08:57PM +0000, Mark Rutland wrote:
+> > On Thu, Jan 05, 2017 at 11:55:29AM +0000, Will Deacon wrote:
+> > > On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
+> > > > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > > > index ef465b0..5f405a6 100644
+> > > > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > > > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > > > @@ -68,6 +68,9 @@ conditions.
+> > > >                    aliases of secure registers have to be used during
+> > > >                    SMMU configuration.
+> > > >  
+> > > > +- arm,smmu-enable-stall : Enable stall mode to stall memory transactions
+> > > > +                  and resume after fault is handled
+> > 
+> > The wording here seems to describe a policy rather than a property.
+> > 
+> > Can you elaborate on when/why this is required/preferred/valid?
 > 
->  .../bindings/soc/rockchip/power_domain.txt         |  3 ++
->  drivers/soc/rockchip/pm_domains.c                  | 63
-> +++++++++++++++++++--- include/dt-bindings/power/rk3328-power.h           |
-> 18 +++++++
->  3 files changed, 78 insertions(+), 6 deletions(-)
->  create mode 100644 include/dt-bindings/power/rk3328-power.h
+> It's not a policy, it's a hardware capability. There are some non-probeable
+> reasons why stalling mode is unsafe or unusable:
+> 
+>   http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/474530.html
 
-I've split patch 3 into two parts (hiword support and rk3328 addition) and 
-applied all for 4.11
+Ok. My point was that the wording above is an imperative -- it tells
+the kernel to enable stall mode, not if/why it is safe to do so (i.e. it
+is a policy, not a property).
 
+It sounds like that's just a wording issue. Something like
+"arm,stalling-is-usable" (along with a descrition of when that
+can/should be in the DT) would be vastly better.
 
-Thanks
-Heiko
+> Some of these are specific to the SMMU implementation (e.g. whether or not
+> the SS bit can remain set without reasserting the IRQ) and some are specific
+> to the integration (e.g. whether or not stalling an endpoint can deadlock
+> the SoC). The key point is that, without support from both the
+> implementation and the integration, stalls are unusable.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+> > > >  static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
+> > > > @@ -824,6 +852,8 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+> > > >  
+> > > >  	/* SCTLR */
+> > > >  	reg = SCTLR_CFIE | SCTLR_CFRE | SCTLR_AFE | SCTLR_TRE | SCTLR_M;
+> > > > +	if (smmu->options & ARM_SMMU_OPT_ENABLE_STALL)
+> > > > +		reg |= SCTLR_CFCFG;
+> > > 
+> > > I wonder if this should also be predicated on the compatible string, so
+> > > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
+> > > the compatible string isn't specific enough to identify an implementation
+> > > with the required SS behaviour? On the other hand, it feels pretty
+> > > redundant and a single "stalling works" property is all we need.
+> > 
+> > Can you elaborate on what "stalling works" entails? Is that just the SS
+> > bit behaviour? are there integration or endpoint-specific things that we
+> > need to care about?
+> 
+> See above. The "stalling works" property (arm,smmu-enable-stall) would
+> indicate that both the implementation *and* the integration are such
+> that stalling is usable for demand paging. I suspect there are endpoints
+> that can't deal with stalls (e.g. they might timeout and signal a RAS
+> event), but in that case their respective device drivers should ensure
+> that any DMA buffers are pinned and/or register a fault handler to
+> request termination of the faulting transaction.
+
+Ok. It would be good to elaborate on what "stalling is useable" means in
+the property description. i.e. what specificallty the implementation and
+integration need to ensure.
+
+Thanks,
+Mark.
