@@ -1,11 +1,17 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv2] ARM: dts: socfpga: Add NAND device tree for Arria10
-Date: Thu,  5 Jan 2017 06:16:44 -0600
-Message-ID: <1483618604-24994-1-git-send-email-dinguyen@kernel.org>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: RE: [RFC PATCH] usb: dwc3: host: add support for OTG in DWC3 host
+ driver
+Date: Thu, 5 Jan 2017 12:24:01 +0000
+Message-ID: <B2EF86ADE403CA4A85AF1BE1D3A22A06DB2FC0@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1483536181-22356-1-git-send-email-mnarani@xilinx.com>
+ <1483536181-22356-5-git-send-email-mnarani@xilinx.com>
+ <87o9znvtl3.fsf@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87o9znvtl3.fsf@linux.intel.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,97 +21,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Dinh Nguyen <dinguyen@kernel.org>, dinguyen@opensource.altera.com, s.trumtrar@pengutronix.de, linux-arm-kernel@lists.infradead.org, Graham Moore <grmoore@opensource.altera.com>
+To: Felipe Balbi <balbi@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, "agraf@suse.de" <agraf@suse.de>, Bharat Kumar
+ Gogada <bharatku@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "dhdang@apm.com" <dhdang@apm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.>
+Cc: Anurag Kumar Vulisha <anuragku@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Graham Moore <grmoore@opensource.altera.com>
+Hi Felipe,
 
-Add socfpga_arria10_socdk_nand.dts board file for supporting NAND.
+> -----Original Message-----
+> From: Felipe Balbi [mailto:balbi@kernel.org]
+> Sent: Wednesday, January 04, 2017 7:03 PM
+> 
+> Hi,
+> 
+> Manish Narani <manish.narani@xilinx.com> writes:
+> > This patch adds support for OTG host mode initialization in DWC3 host
+> > driver. Before the host initialization sequence begins. The driver has
+> > to make sure the no OTG peripheral mode is enabled.
+> >
+> > Signed-off-by: Manish Narani <mnarani@xilinx.com>
+> > ---
+> >  drivers/usb/dwc3/host.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c index
+> > 487f0ff..4caa3fe 100644
+> > --- a/drivers/usb/dwc3/host.c
+> > +++ b/drivers/usb/dwc3/host.c
+> > @@ -16,6 +16,8 @@
+> >   */
+> >
+> >  #include <linux/platform_device.h>
+> > +#include <linux/usb.h>
+> > +#include <linux/usb/hcd.h>
+> >
+> >  #include "core.h"
+> >
+> > @@ -111,6 +113,18 @@ int dwc3_host_init(struct dwc3 *dwc)
+> >  	phy_create_lookup(dwc->usb3_generic_phy, "usb3-phy",
+> >  			  dev_name(dwc->dev));
+> >
+> > +	if (dwc->dr_mode == USB_DR_MODE_OTG) {
+> > +		struct usb_phy *phy;
+> > +		/* Switch otg to host mode */
+> > +		phy = usb_get_phy(USB_PHY_TYPE_USB3);
+> > +		if (!IS_ERR(phy)) {
+> > +			if (phy && phy->otg)
+> > +				otg_set_host(phy->otg,
+> > +						(struct usb_bus *)(long)1);
+> > +			usb_put_phy(phy);
+> > +		}
+> > +	}
+> 
+> NAK. Don't change default mode for everybody. Default mode should actually
+> be peripheral, but let's not touch whatever HW designer has set; at least for
+> now.
 
-Signed-off-by: Graham Moore <grmoore@opensource.altera.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2: move nand dts node to socfpga_arria10.dtsi
----
- arch/arm/boot/dts/Makefile                       |  1 +
- arch/arm/boot/dts/socfpga_arria10.dtsi           | 13 ++++++++++
- arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts | 31 ++++++++++++++++++++++++
- 3 files changed, 45 insertions(+)
- create mode 100644 arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
+Yes, The default mode is Peripheral. The above is to initialize the host related stuff in OTG driver before sensing the OTG ID and get to the respective mode.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cccdbcb..380d9bb 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -717,6 +717,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	sh73a0-kzm9g.dtb
- dtb-$(CONFIG_ARCH_SOCFPGA) += \
- 	socfpga_arria5_socdk.dtb \
-+	socfpga_arria10_socdk_nand.dtb \
- 	socfpga_arria10_socdk_qspi.dtb \
- 	socfpga_arria10_socdk_sdmmc.dtb \
- 	socfpga_cyclone5_mcvevk.dtb \
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 3ceb4e4..1139d3b2 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -614,6 +614,19 @@
- 			status = "disabled";
- 		};
- 
-+		nand: nand@ffb90000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "denali,denali-nand-dt", "altr,socfpga-denali-nand";
-+			reg = <0xffb90000 0x72000>,
-+			      <0xffb80000 0x10000>;
-+			reg-names = "nand_data", "denali_reg";
-+			interrupts = <0 99 4>;
-+			dma-mask = <0xffffffff>;
-+			clocks = <&nand_clk>;
-+			status = "disabled";
-+		};
-+
- 		ocram: sram@ffe00000 {
- 			compatible = "mmio-sram";
- 			reg = <0xffe00000 0x40000>;
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts b/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
-new file mode 100644
-index 0000000..d14f9cc
---- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts
-@@ -0,0 +1,31 @@
-+/*
-+ * Copyright (C) 2015 Altera Corporation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/dts-v1/;
-+#include "socfpga_arria10_socdk.dtsi"
-+
-+&nand {
-+	status = "okay";
-+
-+	partition@nand-boot {
-+		label = "Boot and fpga data";
-+		reg = <0x0 0x1C00000>;
-+	};
-+	partition@nand-rootfs {
-+		label = "Root Filesystem - JFFS2";
-+		reg = <0x1C00000 0x6400000>;
-+	};
-+};
--- 
-2.7.4
+- Manish
