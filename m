@@ -1,73 +1,147 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Thu, 5 Jan 2017 12:08:57 +0000
-Message-ID: <20170105120857.GB21952@leverpostej>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
- <1483479056-15202-2-git-send-email-robdclark@gmail.com>
- <20170105115528.GG679@arm.com>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH v5 6/7] i2c: designware: enable SLAVE in platform module
+Date: Thu, 5 Jan 2017 12:13:56 +0000
+Message-ID: <9747bb4d-9a52-789d-32e9-ddbef9e129e4@synopsys.com>
+References: <cover.1482934380.git.lolivei@synopsys.com>
+ <ea8b611c3b7c2af8088e2dbc16554af5c8aed368.1482934380.git.lolivei@synopsys.com>
+ <1482939844.9552.165.camel@linux.intel.com>
+ <20e47113-efd7-787c-b2f8-39e9fd8b83d2@synopsys.com>
+ <1482942696.9552.172.camel@linux.intel.com>
+ <c41db9e0-756d-6697-a845-0d5b1efcaedc@synopsys.com>
+ <1482945043.9552.174.camel@linux.intel.com>
+ <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170105115528.GG679@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Rob Clark <robdclark@gmail.com>, iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org, Sricharan R <sricharan@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, robh@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <b27405b9-b768-34e7-d61a-433100f9856d@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 11:55:29AM +0000, Will Deacon wrote:
-> On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
-> > TODO maybe we want two options, one to enable stalling, and 2nd to punt
-> > handling to wq?  I haven't needed to use mm APIs from fault handler yet
-> > (although it is something that I think we'll want some day).  Perhaps
-> > stalling support is limited to just letting driver dump some extra
-> > debugging information otherwise.  Threaded handling probably only useful
-> > with stalling, but inverse may not always be true.
+On 28-Dec-16 18:10, Luis Oliveira wrote:
+> On 28-Dec-16 17:10, Andy Shevchenko wrote:
+>> On Wed, 2016-12-28 at 16:41 +0000, Luis Oliveira wrote:
+>>> On 28-Dec-16 16:31, Andy Shevchenko wrote:
+>>>> On Wed, 2016-12-28 at 15:53 +0000, Luis Oliveira wrote:
+>>>>> On 28-Dec-16 15:44, Andy Shevchenko wrote:
+>>>>>> On Wed, 2016-12-28 at 14:43 +0000, Luis Oliveira wrote:
+>>>>>>> - Slave mode selected in platform module (devicetree support
+>>>>>>> only)
+>>>>>>> - Check for ACPI - not supported in SLAVE mode:
+>>>>>>>   - Changed the ifndef style to the use of ACPI_HANDLE that
+>>>>>>> returns
+>>>>>>> NULL
+>>>>>>>     if the device was not enumerated from ACPI namespace.
+>>>>>>
+>>>>>> I'm not sure what is wrong with ACPI?
+>>>>>
+>>>>> I dont have a way to test it. Just that.
+>>>>
+>>>> Okay, can you provide an excerpt to see how it will look like in
+>>>> DTS?
+>>>
+>>> Yes, it looks like this now:
+>>>
+>>> 	i2c@0x2000 {
+>>> 			compatible = "snps,designware-i2c";
+>>> 			#address-cells = <1>;
+>>> 			#size-cells = <0>;
+>>> 			reg = <0x2000 0x100>;
+>>> 			clock-frequency = <400000>;
+>>> 			clocks = <&i2cclk>;
+>>> 			interrupts = <0>;
+>>>
+>>> 			eeprom@64 {
+>>> 				compatible = "linux,slave-24c02";
+>>> 				reg = <0x40000064>;
+>>> 			};
+>>> 	};
+>>
+>> +1 to Carlos' comment.
 > 
-> I'd actually like to see this stuck on a worker thread, because I think
-> that's more generally useful and I don't want to have a situation where
-> sometimes the IOMMU fault notifier is run in IRQ context and sometimes it's
-> not.
+> Agree, I'm on it.
 > 
-> > 
-> > Signed-off-by: Rob Clark <robdclark@gmail.com>
-> > ---
-> >  .../devicetree/bindings/iommu/arm,smmu.txt         |  3 ++
-> >  drivers/iommu/arm-smmu.c                           | 42 ++++++++++++++++++----
-> >  2 files changed, 39 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > index ef465b0..5f405a6 100644
-> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > @@ -68,6 +68,9 @@ conditions.
-> >                    aliases of secure registers have to be used during
-> >                    SMMU configuration.
-> >  
-> > +- arm,smmu-enable-stall : Enable stall mode to stall memory transactions
-> > +                  and resume after fault is handled
-
-The wording here seems to describe a policy rather than a property.
-
-Can you elaborate on when/why this is required/preferred/valid?
-
-> >  static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
-> > @@ -824,6 +852,8 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-> >  
-> >  	/* SCTLR */
-> >  	reg = SCTLR_CFIE | SCTLR_CFRE | SCTLR_AFE | SCTLR_TRE | SCTLR_M;
-> > +	if (smmu->options & ARM_SMMU_OPT_ENABLE_STALL)
-> > +		reg |= SCTLR_CFCFG;
+>>
+>>>>  
+>>>>>>> -	dev->functionality = I2C_FUNC_10BIT_ADDR |
+>>>>>>> DW_IC_DEFAULT_FUNCTIONALITY;
+>>>>>>> -
+>>>>>>> -	i2c_dw_configure_master(pdev);
+>>>>>>> +	if (ACPI_HANDLE(&pdev->dev) == NULL) {
+>>>>>>
+>>>>>> I don't think you need this at all.
+>>>>>
+>>>>> This is to avoid the use of the "ifdef" style I used before.
+>>>>
+>>>> My point is to drop it completely.
+>>>>
+>>>>>>
+>>>>>>> +		device_for_each_child_node(&pdev->dev, child)
+>>>>>>> {
+>>>>>>
+>>>>>> This is resource agnostic.
+>>>>>>
+>>>>>>> +			fwnode_property_read_u32(child,
+>>>>>>> "reg",
+>>>>>>> &reg);
+>>>>>>
+>>>>>> This is as well.
+>>>>>
+>>>>> Are you suggesting I use of_ functions?
+>>>>
+>>>> Nope. See above.
+>>
+>> So, ACPI has a property to support slave mode for I2CSerialBus() macro.
+>>
+>> I would propose to create a helper function in i2c-core.c which will be
+>> responsible for mode detection
+>>
+>> ... i2c_slave_mode_detect()
+>> {
+>> ...
+>>  if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
+>>   ... (use of_*() here) ...
+>>  } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
+>>   dev_dbg(..., "ACPI slave is not supported yet\n");
+>>   ... to master ...
+>>  } else {
+>>   ... default to master ...
+>>  }
+>> }
+>> EXPORT_...();
+>>
+>> Make it as a separate patch.
+>>
 > 
-> I wonder if this should also be predicated on the compatible string, so
-> that the "arm,smmu-enable-stall" property is ignored (with a warning) if
-> the compatible string isn't specific enough to identify an implementation
-> with the required SS behaviour? On the other hand, it feels pretty
-> redundant and a single "stalling works" property is all we need.
+> Oh I see, yes it looks good. I will check it. Thanks
+> 
 
-Can you elaborate on what "stalling works" entails? Is that just the SS
-bit behaviour? are there integration or endpoint-specific things that we
-need to care about?
+Hi Andy,
+
+I implemented a helper function as you proposed and it looks like this:
+
+int i2c_slave_mode_detect(struct device *dev)
+{
+	struct device_node *child;
+	u32 reg;
+	
+	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
+		for_each_child_of_node(dev->of_node, child) {
+			of_property_read_u32(child, "reg", &reg);
+			if (reg & I2C_OWN_SLAVE_ADDRESS)
+				return 1;
+		}
+	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev))
+		dev_dbg(dev, "ACPI slave is not supported yet\n");
+	else
+		return 0;
+	return 0;
+}
+
+Before I submit the patch to the i2c-core.c I wonder if I could have some
+comment on the implementation.
 
 Thanks,
-Mark.
+Luis
