@@ -1,37 +1,122 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCHv2 0/5] Support for Marvell switches with integrated CPUs
-Date: Thu, 5 Jan 2017 14:09:45 +0100
-Message-ID: <20170105130945.GA18033@lunn.ch>
-References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
- <6c6795d3-06ab-a4f0-78ad-5ecc78c1aa2f@gmail.com>
- <185147a37cab4d7eaea5f79d86cc9451@svr-chch-ex1.atlnz.lc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <185147a37cab4d7eaea5f79d86cc9451@svr-chch-ex1.atlnz.lc>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Juri Lelli <juri.lelli@arm.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>l
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] iio: accel: st_accel: handle deprecated bindings
+Date: Thu,  5 Jan 2017 14:32:33 +0100
+Message-ID: <20170105133233.24237-1-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> I'd love to see a switchdev driver but it's a huge task (and no I'm not 
-> committing to writing it). As it stands Marvell ship a switch SDK 
-> largely executes in userspace with a small kernel module providing some 
-> linkage to the underlying hardware.
+The earlier deployed LIS3LV02DL driver had already defined a few
+DT bindings that need to be supported by the new more generic
+driver and listed as compatible but deprecated bindings in the
+documentation.
 
-Is there any similarity to the mv88e6xxx family?
+After this we can start to activate the new driver with the old
+systems where applicable.
 
-If it was similar registers, just a different access mechanising, we
-could probably extend the mv88e6xxx to support MMIO as well as MDIO.
+As part of this enablement: make us depend on the old drivers
+not being in use so we don't get a kernel with two competing
+drivers.
 
-   Andrew
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/accel/lis302.txt | 2 +-
+ Documentation/devicetree/bindings/iio/st-sensors.txt   | 2 ++
+ drivers/iio/accel/Kconfig                              | 2 ++
+ drivers/iio/accel/st_accel_i2c.c                       | 5 +++++
+ drivers/iio/accel/st_accel_spi.c                       | 9 +++++++++
+ 5 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/accel/lis302.txt b/Documentation/devicetree/bindings/iio/accel/lis302.txt
+index 2a19bff9693f..dfdce67826ba 100644
+--- a/Documentation/devicetree/bindings/iio/accel/lis302.txt
++++ b/Documentation/devicetree/bindings/iio/accel/lis302.txt
+@@ -5,7 +5,7 @@ that apply in on the generic device (independent from the bus).
+ 
+ 
+ Required properties for the SPI bindings:
+- - compatible: 		should be set to "st,lis3lv02d_spi"
++ - compatible: 		should be set to "st,lis3lv02d-spi"
+  - reg:			the chipselect index
+  - spi-max-frequency:	maximal bus speed, should be set to 1000000 unless
+ 			constrained by external circuitry
+diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
+index c040c9ad1889..eaa8fbba34e2 100644
+--- a/Documentation/devicetree/bindings/iio/st-sensors.txt
++++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
+@@ -27,6 +27,8 @@ standard bindings from pinctrl/pinctrl-bindings.txt.
+ Valid compatible strings:
+ 
+ Accelerometers:
++- st,lis3lv02d (deprecated, use st,lis3lv02dl-accel)
++- st,lis302dl-spi (deprecated, use st,lis3lv02dl-accel)
+ - st,lis3lv02dl-accel
+ - st,lsm303dlh-accel
+ - st,lsm303dlhc-accel
+diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+index c68bdb649005..ea295fe0f561 100644
+--- a/drivers/iio/accel/Kconfig
++++ b/drivers/iio/accel/Kconfig
+@@ -140,11 +140,13 @@ config IIO_ST_ACCEL_3AXIS
+ 
+ config IIO_ST_ACCEL_I2C_3AXIS
+ 	tristate
++	depends on !SENSORS_LIS3_I2C
+ 	depends on IIO_ST_ACCEL_3AXIS
+ 	depends on IIO_ST_SENSORS_I2C
+ 
+ config IIO_ST_ACCEL_SPI_3AXIS
+ 	tristate
++	depends on !SENSORS_LIS3_SPI
+ 	depends on IIO_ST_ACCEL_3AXIS
+ 	depends on IIO_ST_SENSORS_SPI
+ 
+diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
+index c0f8867aa1ea..99a7cdbe3d5d 100644
+--- a/drivers/iio/accel/st_accel_i2c.c
++++ b/drivers/iio/accel/st_accel_i2c.c
+@@ -21,6 +21,11 @@
+ #ifdef CONFIG_OF
+ static const struct of_device_id st_accel_of_match[] = {
+ 	{
++		/* An older compatible */
++		.compatible = "st,lis3lv02d",
++		.data = LIS3LV02DL_ACCEL_DEV_NAME,
++	},
++	{
+ 		.compatible = "st,lis3lv02dl-accel",
+ 		.data = LIS3LV02DL_ACCEL_DEV_NAME,
+ 	},
+diff --git a/drivers/iio/accel/st_accel_spi.c b/drivers/iio/accel/st_accel_spi.c
+index c25ac50d4600..29a15f27a51b 100644
+--- a/drivers/iio/accel/st_accel_spi.c
++++ b/drivers/iio/accel/st_accel_spi.c
+@@ -65,9 +65,18 @@ static const struct spi_device_id st_accel_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st_accel_id_table);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id lis302dl_spi_dt_ids[] = {
++	{ .compatible = "st,lis302dl-spi" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, lis302dl_spi_dt_ids);
++#endif
++
+ static struct spi_driver st_accel_driver = {
+ 	.driver = {
+ 		.name = "st-accel-spi",
++		.of_match_table = of_match_ptr(lis302dl_spi_dt_ids),
+ 	},
+ 	.probe = st_accel_spi_probe,
+ 	.remove = st_accel_spi_remove,
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
