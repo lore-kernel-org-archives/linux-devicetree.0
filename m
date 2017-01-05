@@ -1,80 +1,56 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Thu, 5 Jan 2017 16:07:55 +0000
-Message-ID: <20170105160755.GN679@arm.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
- <1483479056-15202-2-git-send-email-robdclark@gmail.com>
- <20170105115528.GG679@arm.com>
- <20170105120857.GB21952@leverpostej>
- <20170105140005.GJ679@arm.com>
- <20170105140720.GA25868@leverpostej>
- <20170105144742.GK679@arm.com>
- <d1a36cc5-265d-6971-f698-29b8d76e7884@arm.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH 1/2] Documentation: devicetree: Add document bindings for mtk-cir
+Date: Fri, 6 Jan 2017 00:06:23 +0800
+Message-ID: <1483632384-8107-2-git-send-email-sean.wang@mediatek.com>
+References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d1a36cc5-265d-6971-f698-29b8d76e7884@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, robh@kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>, iommu@lists.linux-foundation.org
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
+Sender: linux-media-owner@vger.kernel.org
+To: mchehab@osg.samsung.com, hdegoede@redhat.com, hkallweit1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com
+Cc: andi.shyti@samsung.com, hverkuil@xs4all.nl, sean@mess.org, ivo.g.dimitrov.75@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 03:32:50PM +0000, Robin Murphy wrote:
-> On 05/01/17 14:47, Will Deacon wrote:
-> > On Thu, Jan 05, 2017 at 02:07:31PM +0000, Mark Rutland wrote:
-> >> Ok. It would be good to elaborate on what "stalling is useable" means in
-> >> the property description. i.e. what specificallty the implementation and
-> >> integration need to ensure.
-> > 
-> > We can describe some of those guarantees in the property description, but
-> > it's difficult to enumerate them exhaustively. For example, you wouldn't
-> > want stalling to lead to data corruption, denial of service, or for the
-> > thing to catch fire, but having those as explicit requirements is a bit
-> > daft. It's also impossible to check that you thought of everything.
-> > 
-> > Aside from renaming the option, I'm really after an opinion on whether
-> > it's better to have one property or combine it with the compatible
-> > string, because I can see benefits of both and don't much care either
-> > way.
-> 
-> The SMMU implementation side of the decision (i.e. independence of IRQ
-> assertion vs. SS) seems like exactly the sort of stuff the compatible
-> string already has covered. The integration side I'm less confident can
-> be described this way at all - the "this device definitely won't go
-> wrong if stalled for an indefinite length of time" is inherently a
-> per-master thing, so a single property on the SMMU implying that for
-> every device connected to it seems a bit optimistic, and breaks down as
-> soon as you have one device in the system for which that isn't true (a
-> PCI root complex, say), even if that guy's traffic never crosses paths
-> with whichever few devices you actually care about using stalls with.
-> 
-> I think this needs to be some kind of "arm,smmu-stall-safe" property
-> placed on individual master device nodes (mad idea: or even an extra
-> cell of flags in the IOMMU specifier) to encapsulate both that the given
-> device itself is OK with being stalled, and that it's integrated in such
-> a way that its stalled transactions cannot disrupt any *other* device
-> (e.g. it has a TBU all to itself). Then upon initialising a context bank
-> on a suitable SMMU implementation, we set CFCFG based on whatever device
-> is being attached to the corresponding domain, and refuse any subsequent
-> attempts to attach a non-stallable device to a stalling domain (and
-> possibly even vice-versa).
+From: Sean Wang <sean.wang@mediatek.com>
 
-If we're going to add per-master properties, I'd *really* like them to be
-independent of the IOMMU in use. That is, we should be able to re-use this
-property as part of supporting SVM for platform devices in future.
+This patch adds documentation for devicetree bindings for
+Mediatek IR controller.
 
-But I think we agree that we need:
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ .../devicetree/bindings/media/mtk-cir.txt          | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 linux-4.8.rc1_p0/Documentation/devicetree/bindings/media/mtk-cir.txt
 
-  1. A compatible string for the SMMU that can be used to infer the SS
-     behaviour in the driver
-
-  2. A property on the SMMU to say that it's been integrated in such a
-     way that stalling is safe (doesn't deadlock)
-
-  3. A generic master property that says that the device can DMA to
-     unpinned memory
-
-Anything else?
-
-Will
+diff --git a/Documentation/devicetree/bindings/media/mtk-cir.txt b/Documentation/devicetree/bindings/media/mtk-cir.txt
+new file mode 100644
+index 0000000..bbedd71
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mtk-cir.txt
+@@ -0,0 +1,23 @@
++Device-Tree bindings for Mediatek IR controller found in Mediatek SoC family
++
++Required properties:
++- compatible	    : "mediatek,mt7623-ir"
++- clocks	    : list of clock specifiers, corresponding to
++		      entries in clock-names property;
++- clock-names	    : should contain "clk" entries;
++- interrupts	    : should contain IR IRQ number;
++- reg		    : should contain IO map address for IR.
++
++Optional properties:
++- linux,rc-map-name : Remote control map name.
++
++Example:
++
++cir: cir@0x10013000 {
++	compatible = "mediatek,mt7623-ir";
++	reg = <0 0x10013000 0 0x1000>;
++	interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
++	clocks = <&infracfg CLK_INFRA_IRRX>;
++	clock-names = "clk";
++	linux,rc-map-name = "rc-rc6-mce";
++};
+-- 
+1.9.1
