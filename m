@@ -1,42 +1,52 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: [PATCH v2 1/3] devicetree: property-units: add mWh and mAh units
-Date: Wed,  4 Jan 2017 18:10:05 -0800
-Message-ID: <20170105021007.22088-2-matt@ranostay.consulting>
-References: <20170105021007.22088-1-matt@ranostay.consulting>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170105021007.22088-1-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe
+ phy
+Date: Thu, 05 Jan 2017 11:22:17 +0900
+Message-ID: <666cecb2-0b38-51ba-be5c-086a709c6e48@samsung.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com>
+ <CGME20170104123436epcas1p1a729583c3c2307d8539a186f1050ea98@epcas1p1.samsung.com>
+ <20170104123435.30740-3-jh80.chung@samsung.com>
+ <20170104175257.yte3ntw6nyvh47xt@kozik-lap>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170104175257.yte3ntw6nyvh47xt@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add entries for microwatt-hours and microamp-hours to property
-units.
+On 01/05/2017 02:52 AM, Krzysztof Kozlowski wrote:
+> On Wed, Jan 04, 2017 at 09:34:32PM +0900, Jaehoon Chung wrote:
+>> This patch supports to use Generic Phy framework for Exynos PCIe phy.
+>> When Exynos that supported the pcie want to use the PCIe,
+>> it needs to control the phy resgister.
+>> But it should be more complex to control in their own PCIe device drivers.
+>>
+>> Currently, there is an exynos5440 case to support the pcie.
+>> So this driver is based on Exynos5440 PCIe.
+>> In future, will support the Other exynos SoCs likes exynos5433, exynos7.
+> 
+> I have troubles understanding this. Please, work on the commit message.
+> 
+> For the code itself:
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ... but commit message is really important to understand why/what was
+> done.
 
-Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
----
- Documentation/devicetree/bindings/property-units.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Will update the commit-msg. Thanks for comments.
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index 12278d79f6c0..5e8d220cc2b6 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -25,8 +25,10 @@ Distance
- Electricity
- ----------------------------------------
- -microamp	: micro amps
-+-microamp-hours : micro amp hours
- -ohms		: Ohms
- -micro-ohms	: micro Ohms
-+-microwatt-hours: micro Watt hours
- -microvolt	: micro volts
- 
- Temperature
--- 
-2.10.2
+Best Regards,
+Jaehoon Chung
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Best regards,
+> Krzysztof
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
