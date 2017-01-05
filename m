@@ -1,55 +1,65 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v4 0/4] Fix OdroidC2 Gigabit Tx link issue
-Date: Thu, 5 Jan 2017 23:25:08 +0000
-Message-ID: <20170105232508.GU14217@n2100.armlinux.org.uk>
-References: <1480348229-25672-1-git-send-email-jbrunet@baylibre.com>
- <049b1efc-3bad-92e0-45ef-0563dc5d81de@gmail.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/5] drivers: mmc: sunxi: limit A64 MMC2 to
+ 8K DMA buffer
+Date: Thu, 5 Jan 2017 23:33:28 +0000
+Message-ID: <87b26848-4f86-f2d2-3f82-db0937c572e2@arm.com>
+References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
+ <1483398226-29321-3-git-send-email-andre.przywara@arm.com>
+ <20170104140750.7qs4pvggwjdj5cma@rob-hp-laptop>
+ <20170105175746.fq6crpc3krz7tzxi@lukather>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <049b1efc-3bad-92e0-45ef-0563dc5d81de@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, Alexandre TORGUE <alexandre.torgue@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, netdev@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-kernel@vger.kernel.org, Yegor Yefremov <yegorslists@googlemail.com>, Julia Lawall <julia.lawall@lip6.fr>, Andre Roth <neolynx@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBUFPXPBQKGQESX44OOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170105175746.fq6crpc3krz7tzxi@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 09:54:28AM -0800, Florian Fainelli wrote:
-> If we start supporting generic "enable", "disable" type of properties
-> with values that map directly to register definitions of the HW, we
-> leave too much room for these properties to be utilized to implement a
-> specific policy, and this is not acceptable.
+On 05/01/17 17:57, Maxime Ripard wrote:
+> Hi Rob,
+> 
+> On Wed, Jan 04, 2017 at 08:07:50AM -0600, Rob Herring wrote:
+>> On Mon, Jan 02, 2017 at 11:03:43PM +0000, Andre Przywara wrote:
+>>> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>
+>>> Unlike the A64 user manual reports, the third MMC controller on the
+>>> A64 (and the only one capable of 8-bit HS400 eMMC transfers) has a
+>>> DMA buffer size limit of 8KB (much like the very old Allwinner SoCs).
+>>> This does not affect the other two controllers, so introduce a new
+>>> DT compatible string to let the driver use different settings for that
+>>> particular device. This will also help to enable the high-speed transfer
+>>> modes of that controller later.
+>>>
+>>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
+>>>  drivers/mmc/host/sunxi-mmc.c                        | 7 +++++++
+>>>  2 files changed, 8 insertions(+)
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Some kind of a digression on this: we have three MMC controllers on
+> this SoC. Like this patch shows, the third one is clearly different,
+> and supports both more modes, a wider bus, and specific quirks. We
+> need a new compatible for this one, everything's perfect.
+> 
+> However, the other two are mostly the same, but seems to need
+> different tuning parameters to get more performances out of the
+> controller (but this is unclear yet). How do we usually deal with
+> that?
 
-Another concern with this patch is that the existing phylib "set_eee"
-code is horribly buggy - it just translates the modes from userspace
-into the register value and writes them directly to the register with
-no validation.  So it's possible to set modes in the register that the
-hardware doesn't support, and have them advertised to the link partner.
+I guess you wanted to hear Rob's opinion ;-), but "get more performance"
+sounds like we add one (or more) properties to tune those values.
+If I get this right, it works with default values, but is sub-optimal?
 
-I have a patch which fixes that, restricting (as we do elsewhere) the
-advert according to the EEE supported capabilities retrieved from the
-PCS - maybe the problem here is that the PCS doesn't support support
-EEE in 1000baseT mode?
-
-Out of interest, which PHY is used on this platform?
-
-On the SolidRun boards, they're using AR8035, and have suffered this
-occasional link drop problem.  What has been found is that it seems to
-be to do with the timing parameters, and it seemed to only be 1000bT
-that was affected.  I don't remember off hand exactly which or what
-the change was they made to stabilise it though, but I can probabily
-find out tomorrow.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Cheers,
+Andre.
