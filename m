@@ -1,41 +1,96 @@
-From: "pankaj.dubey" <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe
- phy
-Date: Thu, 05 Jan 2017 11:48:25 +0530
-Message-ID: <d1db94b0-a758-cd9a-2fc6-2db64e0fd741@samsung.com>
-References: <20170104123435.30740-1-jh80.chung@samsung.com>
- <CGME20170104123436epcas1p1a729583c3c2307d8539a186f1050ea98@epcas1p1.samsung.com>
- <20170104123435.30740-3-jh80.chung@samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 07/22] dt-bindings: power: supply: add AXP20X/AXP22X AC
+ power supply
+Date: Thu, 5 Jan 2017 14:17:35 +0800
+Message-ID: <CAGb2v67V6oGEyYGsBWfp3rVVm_VWQta0szeBiNSKUQR7awm5ng@mail.gmail.com>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-8-quentin.schulz@free-electrons.com>
+ <20170104131410.mni7opxnouzagypu@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170104123435.30740-3-jh80.chung@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, alim.akhtar@samsung.com, cpgs@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170104131410.mni7opxnouzagypu@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+Hi Quentin,
 
-On Wednesday 04 January 2017 06:04 PM, Jaehoon Chung wrote:
-> This patch supports to use Generic Phy framework for Exynos PCIe phy.
-> When Exynos that supported the pcie want to use the PCIe,
-> it needs to control the phy resgister.
-> But it should be more complex to control in their own PCIe device drivers.
-> 
-> Currently, there is an exynos5440 case to support the pcie.
-> So this driver is based on Exynos5440 PCIe.
-> In future, will support the Other exynos SoCs likes exynos5433, exynos7.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
-> Changelog on V2:
-> - Not include the codes relevant to pci-exynos.
-> - Remove the getting child node.
-> 
+On Wed, Jan 4, 2017 at 9:14 PM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Jan 02, 2017 at 05:37:07PM +0100, Quentin Schulz wrote:
+>> The X-Powers AXP20X and AXP22X PMICs have an AC entry to supply power to
+>> the board. They have a few registers dedicated to the status of the AC
+>> power supply.
+>>
+>> This adds the DT binding documentation for the AC power supply for
+>> AXP20X and AXP22X PMICs.
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>> ---
+>>  .../bindings/power/supply/axp20x_ac_power.txt      | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
+>> new file mode 100644
+>> index 0000000..16d0de4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_ac_power.txt
+>> @@ -0,0 +1,28 @@
+>> +AXP20X and AXP22X PMICs' AC power supply
+>> +
+>> +Required Properties:
+>> + - compatible: One of:
+>> +                     "x-powers,axp202-ac-power-supply"
+>> +                     "x-powers,axp221-ac-power-supply"
+>> +
+>> +More Required Properties for AXP20X PMICs:
+>> + - io-channels: phandles to ACIN voltage and current ADC channels
+>> + - io-channel-names = "acin_v", "acin_i";
+>> +
+>> +This node is a subnode of the axp20x PMIC.
+>> +
+>> +The AXP20X can read the current current and voltage supplied by AC by
+>> +reading ADC channels from the AXP20X ADC.
+>> +
+>> +The AXP22X is only able to tell if an AC power supply is present and
+>> +usable.
+>> +
+>> +Example:
+>> +
+>> +&axp209 {
+>> +     ac_power_supply: ac_power_supply {
+>
+> power-supply {
+>
+>> +             compatible = "x-powers,axp202-ac-power-supply";
+>> +             io-channels = <&axp209_adc 0>, <&axp209_adc 1>;
+>
+> Is this assignment fixed? If so, then it doesn't need to be in DT.
 
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Is there any case that we actually need to use the IIO channels
+from the device tree? Seems to me its limited to the other AXP
+sub-devices.
 
-Thanks,
-Pankaj Dubey
+If so you could use struct iio_map to map the channels to other
+devices by name. See axp288_adc for an example.
+
+Regards
+ChenYu
+
+>> +             io-channel-names = "acin_v", "acin_i";
+>> +     };
+>> +};
+>> --
+>> 2.9.3
+>>
