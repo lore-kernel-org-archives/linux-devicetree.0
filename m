@@ -1,16 +1,13 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 05/22] ARM: dtsi: axp209: add AXP209 ADC subnode
-Date: Thu, 5 Jan 2017 16:16:07 +0800
-Message-ID: <CAGb2v67zHf9maNvTVKBZWUTAZFP++PsJt+e3_Mt=Mv4FQ-6FZQ@mail.gmail.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-6-quentin.schulz@free-electrons.com>
- <CAGb2v66dw=DECuHpLDzHnMP-O4UwZ+RkPsH0RofOGdBa7z7OHw@mail.gmail.com>
- <1ddf7012-3336-84c2-6392-353b01beea93@free-electrons.com>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
+Subject: [PATCH v2, 3/9] arm64: dts: ls1043a: fix typo of MSI compatible string
+Date: Thu, 5 Jan 2017 16:10:31 +0800
+Message-ID: <1483603837-4629-3-git-send-email-Minghuan.Lian@nxp.com>
+References: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1ddf7012-3336-84c2-6392-353b01beea93@free-electrons.com>
+In-Reply-To: <1483603837-4629-1-git-send-email-Minghuan.Lian@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,52 +17,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 5, 2017 at 4:08 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> On 05/01/2017 06:51, Chen-Yu Tsai wrote:
->> On Tue, Jan 3, 2017 at 12:37 AM, Quentin Schulz
->> <quentin.schulz@free-electrons.com> wrote:
->>> X-Powers AXP209 PMIC has multiple ADCs, each one exposing data from the
->>> different power supplies connected to the PMIC.
->>>
->>> This adds the ADC subnode for AXP20X PMIC.
->>>
->>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>> ---
->>>  arch/arm/boot/dts/axp209.dtsi | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
->>> index 675bb0f..2a4e8ee 100644
->>> --- a/arch/arm/boot/dts/axp209.dtsi
->>> +++ b/arch/arm/boot/dts/axp209.dtsi
->>> @@ -53,6 +53,11 @@
->>>         interrupt-controller;
->>>         #interrupt-cells = <1>;
->>>
->>> +       axp209_adc: axp209_adc {
->>
->> Node name should be generic. Please change it to "adc".
->>
->
-> OK, do I keep the label as is?
->
-> axp209_adc: adc {
+"1" should be replaced by "l". This is a typo.
+The patch is to fix it.
 
-Yup. The label is for dereferencing and stuff, and exists in a global scope.
-You wouldn't want 2 label names clashing.
+Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+---
+v2-v1:
+- None
 
-ChenYu
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->
-> Thanks,
-> Quentin
->
-> --
-> Quentin Schulz, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index ec13a6e..692fc35 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -589,21 +589,21 @@
+ 		};
+ 
+ 		msi1: msi-controller1@1571000 {
+-			compatible = "fsl,1s1043a-msi";
++			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1571000 0x0 0x8>;
+ 			msi-controller;
+ 			interrupts = <0 116 0x4>;
+ 		};
+ 
+ 		msi2: msi-controller2@1572000 {
+-			compatible = "fsl,1s1043a-msi";
++			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1572000 0x0 0x8>;
+ 			msi-controller;
+ 			interrupts = <0 126 0x4>;
+ 		};
+ 
+ 		msi3: msi-controller3@1573000 {
+-			compatible = "fsl,1s1043a-msi";
++			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1573000 0x0 0x8>;
+ 			msi-controller;
+ 			interrupts = <0 160 0x4>;
+-- 
+1.9.1
