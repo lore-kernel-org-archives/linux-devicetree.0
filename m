@@ -1,61 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
-Date: Fri, 6 Jan 2017 18:29:44 +0200
-Message-ID: <CAHp75VdB+pApFgjFOwWYYQFUmxv5k6OYKgB4fstuy=3=2QesBQ@mail.gmail.com>
-References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: dts: stm32f469-disco: Fix memory size from
+ 8MB to 16MB
+Date: Fri, 6 Jan 2017 17:33:34 +0100
+Message-ID: <a8259368-896a-64fe-4a48-71f15906dc74@st.com>
+References: <20161118145845.30455-1-bmh@certi.org.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161118145845.30455-1-bmh-Mok47lTHhVP0xEqrn79Vhg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bruno Meirelles Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 5, 2017 at 7:24 PM, Luis Oliveira
-<Luis.Oliveira@synopsys.com> wrote:
-> This function has the purpose of mode detection by checking the
-> device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
-> Currently only checks using OF functions (ACPI slave not supported yet).
+Hi Bruno,
 
-The code looks good, one important comment below, after addressing it:
+On 11/18/2016 03:58 PM, Bruno Meirelles Herrera wrote:
+> From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> This patch fix memory size to support 16MB of external SDRAM.
+>
+> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stm32f469-disco.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+> index 75f4303..fda12a4 100644
+> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+> @@ -58,7 +58,7 @@
+>  	};
+>
+>  	memory {
+> -		reg = <0x00000000 0x800000>;
+> +		reg = <0x00000000 0x1000000>;
+>  	};
+>
+>  	aliases {
+>
+After a little cosmetic change in commit header:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Applied on stm32-dt-for-v4.11-1
 
-P.S. Btw, we have Suggested-by tag for giving credit for suggestion.
-Please use it.
-
-> --- a/drivers/i2c/i2c-core.c
-> +++ b/drivers/i2c/i2c-core.c
-> @@ -3691,6 +3691,25 @@ int i2c_slave_unregister(struct i2c_client *client)
-
-Please, add kernel doc description here, important thing is to explain
-return codes in Return: section of it.
-
-> +int i2c_slave_mode_detect(struct device *dev)
-> +{
-
-> +       struct device_node *child;
-> +       u32 reg;
-
-I would consider them as private to the OF branch. But it's really
-minor and up to you (I don't remember if we have such style examples
-in i2c core code).
-
-> +
-> +       if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-> +               for_each_child_of_node(dev->of_node, child) {
-> +                       of_property_read_u32(child, "reg", &reg);
-> +                       if (reg & I2C_OWN_SLAVE_ADDRESS)
-> +                               return 1;
-> +               }
-> +       } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
-> +               dev_dbg(dev, "ACPI slave is not supported yet\n");
-> +       }
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
