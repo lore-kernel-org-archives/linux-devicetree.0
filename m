@@ -1,31 +1,42 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: helper function to detect slave mode
-Date: Fri, 6 Jan 2017 23:49:24 +0200
-Message-ID: <bf7c11c8-9dcc-85aa-33ac-daec1d1452db@mleia.com>
-References: <9ada747bd53bb5005a82f913412262b34b6e96b8.1483725370.git.lolivei@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] GPIO: Add driver for ThunderX and OCTEON-TX SoCs
+Date: Fri,  6 Jan 2017 15:22:57 -0800
+Message-ID: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9ada747bd53bb5005a82f913412262b34b6e96b8.1483725370.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luis,
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-On 01/06/2017 08:14 PM, Luis Oliveira wrote:
-> This function has the purpose of mode detection by checking the
-> device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
-> Currently only checks using OF functions (ACPI slave not supported yet).
-> 
+The Cavium ThunderX and OCTEON-TX family of SoCs have on-chip GPIO
+lines.  This patch set adds a driver for these.
 
-I've accidentally reviewed v1, please take the same comments for v2.
+Changes from v1:
 
---
-With best wishes,
-Vladimir
+ - in 1/3: Addressed Rob Harring's comments.
+
+ - in 2/3: Trivial cleanups found in internal review + add some
+   comments.
+
+David Daney (3):
+  dt-bindings: gpio: Add binding documentation for gpio-thunderx
+  gpio: Add gpio driver support for ThunderX and OCTEON-TX
+  MAINTAINERS: Add entry for THUNDERX GPIO Driver.
+
+ .../devicetree/bindings/gpio/gpio-thunderx.txt     |  27 ++
+ MAINTAINERS                                        |   5 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-thunderx.c                       | 487 +++++++++++++++++++++
+ 5 files changed, 528 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+ create mode 100644 drivers/gpio/gpio-thunderx.c
+
+-- 
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
