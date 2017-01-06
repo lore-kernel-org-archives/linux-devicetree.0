@@ -1,17 +1,16 @@
-From: Roger Shimizu <rogershimizu@gmail.com>
-Subject: Re: [PATCH v3 2/3] DT: bingdings: power: reset: add linkstation-reset
- doc
-Date: Fri, 6 Jan 2017 21:18:15 +0900
-Message-ID: <CAEQ9gEkGKHXEqjcuR6nrV5XpLRvCFhaONjpPkeCx46ygD0K1UA@mail.gmail.com>
-References: <20161216100501.18173-1-rogershimizu@gmail.com>
- <20161227070611.14852-1-rogershimizu@gmail.com>
- <20161227070611.14852-3-rogershimizu@gmail.com>
- <20170103170952.7svgaa247ewlht7f@rob-hp-laptop>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v6 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161601 erratum
+Date: Fri, 6 Jan 2017 12:27:39 +0000
+Message-ID: <20170106122739.GA20796@arm.com>
+References: <1483594317-10732-1-git-send-email-dingtianhong@huawei.com>
+ <e518ab78-4093-0bc9-fe68-e7da25fd5644@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170103170952.7svgaa247ewlht7f@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <e518ab78-4093-0bc9-fe68-e7da25fd5644@huawei.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,31 +20,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Ryan Tandy <ryan@nardis.ca>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Ding Tianhong <dingtianhong@huawei.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob,
+On Fri, Jan 06, 2017 at 11:41:28AM +0800, Ding Tianhong wrote:
+> Please help reviewing the new version, I think it is nearly close to the
+> final solution and it is very important to our chip or something else chip
+> has similar erratum.  If there is any dissatisfaction, please inform me
+> and I will fix it. :)
 
-Thanks for your comments!
+It looks fine to me, but I don't maintain the arch timer driver!
 
-On Wed, Jan 4, 2017 at 2:09 AM, Rob Herring <robh@kernel.org> wrote:
->
-> This needs to model the uC connected to the UART rather than some node
-> that defines only some portion of the functionality. I'm working on
-> bindings and proper bus support for this[1], but it's not done yet.
-> Though, the binding side is pretty simple.
->
-> Rob
->
-> [1] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=serial-bus-v2
-
-Actually I have limited knowledge on DT binding.
-I think it should be OK to remove the 2/3 patch (this thread) in my
-next series, and I'll do my homework when you finish it.
-Thank you!
-
-Cheers,
--- 
-Roger Shimizu, GMT +9 Tokyo
-PGP/GPG: 4096R/6C6ACD6417B3ACB1
+Will
