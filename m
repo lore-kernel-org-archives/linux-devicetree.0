@@ -1,132 +1,80 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v2 12/19] media: imx: Add SMFC subdev driver
-Date: Fri, 6 Jan 2017 10:11:54 -0800
-Message-ID: <7814d422-0782-9e5a-bcd9-29e747ba2858@gmail.com>
-References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
- <1483477049-19056-13-git-send-email-steve_longerbeam@mentor.com>
- <13ff9579-ce8e-9272-ee44-9b597631f6b5@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <13ff9579-ce8e-9272-ee44-9b597631f6b5@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [PATCH v2] i2c: core: helper function to detect slave mode
+Date: Fri,  6 Jan 2017 18:14:18 +0000
+Message-ID: <9ada747bd53bb5005a82f913412262b34b6e96b8.1483725370.git.lolivei@synopsys.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
+This function has the purpose of mode detection by checking the
+device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
+Currently only checks using OF functions (ACPI slave not supported yet).
 
+Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+Changes V1->V2:
+- Kernel doc added to i2c-core. (@Andy)
+- Moved the definitions to the OF branch. (@Andy)
+- Changed the return type from int to bool. (@Rob)
 
-On 01/04/2017 06:23 AM, Vladimir Zapolskiy wrote:
-> On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
->> This is a media entity subdevice driver for the i.MX Sensor Multi-FIFO
->> Controller module. Video frames are received from the CSI and can
->> be routed to various sinks including the i.MX Image Converter for
->> scaling, color-space conversion, motion compensated deinterlacing,
->> and image rotation.
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> ---
->>   drivers/staging/media/imx/Makefile   |   1 +
->>   drivers/staging/media/imx/imx-smfc.c | 739 +++++++++++++++++++++++++++++++++++
->>   2 files changed, 740 insertions(+)
->>   create mode 100644 drivers/staging/media/imx/imx-smfc.c
->>
->> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
->> index 133672a..3559d7b 100644
->> --- a/drivers/staging/media/imx/Makefile
->> +++ b/drivers/staging/media/imx/Makefile
->> @@ -5,4 +5,5 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media.o
->>   obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-common.o
->>   
->>   obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-csi.o
->> +obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-smfc.o
-> May be
->
-> obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-csi.o imx-smfc.o
+ drivers/i2c/i2c-core.c | 28 ++++++++++++++++++++++++++++
+ include/linux/i2c.h    |  1 +
+ 2 files changed, 29 insertions(+)
 
-I'd prefer to keep them on separate lines, to indicate they
-are all built as separate modules.
-
->
->>   
->> diff --git a/drivers/staging/media/imx/imx-smfc.c b/drivers/staging/media/imx/imx-smfc.c
->> new file mode 100644
->> index 0000000..565048c
->> --- /dev/null
->> +++ b/drivers/staging/media/imx/imx-smfc.c
->> @@ -0,0 +1,739 @@
->> +/*
->> + * V4L2 Capture SMFC Subdev for Freescale i.MX5/6 SOC
->> + *
->> + * This subdevice handles capture of raw/unconverted video frames
->> + * from the CSI, directly to memory via the Sensor Multi-FIFO Controller.
->> + *
->> + * Copyright (c) 2012-2016 Mentor Graphics Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +#include <linux/module.h>
->> +#include <linux/delay.h>
->> +#include <linux/fs.h>
->> +#include <linux/timer.h>
->> +#include <linux/sched.h>
->> +#include <linux/slab.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pinctrl/consumer.h>
->> +#include <media/v4l2-device.h>
->> +#include <media/v4l2-ioctl.h>
->> +#include <media/videobuf2-dma-contig.h>
->> +#include <media/v4l2-subdev.h>
->> +#include <media/v4l2-of.h>
->> +#include <media/v4l2-ctrls.h>
-> Please sort the list of headers alphabetically.
-
-done.
-
->
->> +static irqreturn_t imx_smfc_eof_interrupt(int irq, void *dev_id)
->> +{
->> +	struct imx_smfc_priv *priv = dev_id;
->> +	struct imx_media_dma_buf *done, *next;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&priv->irqlock, flags);
-> spin_lock(&priv->irqlock) should be sufficient.
-
-yes thanks.
-
->
->> +
->> +static const struct platform_device_id imx_smfc_ids[] = {
->> +	{ .name = "imx-ipuv3-smfc" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(platform, imx_smfc_ids);
->> +
->> +static struct platform_driver imx_smfc_driver = {
->> +	.probe = imx_smfc_probe,
->> +	.remove = imx_smfc_remove,
->> +	.id_table = imx_smfc_ids,
->> +	.driver = {
->> +		.name = "imx-ipuv3-smfc",
->> +		.owner = THIS_MODULE,
-> You can drop owner assignment.
-
-done.
-
-
-Steve
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 3de95a29024c..937605e65976 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -3691,6 +3691,34 @@ int i2c_slave_unregister(struct i2c_client *client)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(i2c_slave_unregister);
++
++/**
++ * i2c_slave_mode_detect - detect operation mode
++ * @dev:  The device owning the bus
++ *
++ * This checks the device nodes for a I2C slave by checking the address
++ * used.
++ *
++ * Returns true if a I2C slave is detected, otherwise returns false.
++ */
++bool i2c_slave_mode_detect(struct device *dev)
++{
++	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
++		struct device_node *child;
++		u32 reg;
++
++		for_each_child_of_node(dev->of_node, child) {
++			of_property_read_u32(child, "reg", &reg);
++			if (reg & I2C_OWN_SLAVE_ADDRESS)
++				return true;
++		}
++	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
++		dev_dbg(dev, "ACPI slave is not supported yet\n");
++	}
++	return false;
++}
++EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
++
+ #endif
+ 
+ MODULE_AUTHOR("Simon G. Vogl <simon@tk.uni-linz.ac.at>");
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index b2109c522dec..bfc3e0cee57e 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -282,6 +282,7 @@ enum i2c_slave_event {
+ 
+ extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
+ extern int i2c_slave_unregister(struct i2c_client *client);
++extern bool i2c_slave_mode_detect(struct device *dev);
+ 
+ static inline int i2c_slave_event(struct i2c_client *client,
+ 				  enum i2c_slave_event event, u8 *val)
+-- 
+2.11.0
