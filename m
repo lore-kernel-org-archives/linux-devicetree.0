@@ -1,68 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
-Date: Fri, 6 Jan 2017 23:32:12 +0200
-Message-ID: <CAHp75VeCADf9bSHZfFrCFeOwWvyr7hOjEBgUNEDAjTtsD39UFA@mail.gmail.com>
-References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
- <CAHp75VdB+pApFgjFOwWYYQFUmxv5k6OYKgB4fstuy=3=2QesBQ@mail.gmail.com>
- <475d9c2a-da11-97d0-d0b6-37ccd4990f18@synopsys.com> <CAHp75Vdv3daVnkFmGc7gXWoqcy+CNgyqdtRXkvTJQpjyJX3eDg@mail.gmail.com>
- <c73ee9ab-64a1-0419-314d-21d4575ca7bf@synopsys.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v5 3/5] input: Add support for the tm2 touchkey device driver
+Date: Sat, 7 Jan 2017 06:34:36 +0900
+Message-ID: <CAGTfZH0mkTQ4=_Xs47z95xu5=GEOuj3NW=8EBP8-jnfR0drJHQ@mail.gmail.com>
+References: <CGME20170106134356epcas1p1758fadaa2b12ad29d90e2da525456a28@epcas1p1.samsung.com>
+ <20170106134350.32428-1-andi.shyti@samsung.com> <20170106134350.32428-4-andi.shyti@samsung.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c73ee9ab-64a1-0419-314d-21d4575ca7bf-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20170106134350.32428-4-andi.shyti@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi@etezian.org>, Jaechul Lee <galaxyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 6, 2017 at 7:46 PM, Luis Oliveira
-<Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
-> On 06-Jan-17 17:17, Andy Shevchenko wrote:
->> On Fri, Jan 6, 2017 at 7:15 PM, Luis Oliveira
->> <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
->>> On 06-Jan-17 16:29, Andy Shevchenko wrote:
->>>> On Thu, Jan 5, 2017 at 7:24 PM, Luis Oliveira
->>
->>>> Please, add kernel doc description here, important thing is to explain
->>>> return codes in Return: section of it.
->>>>
->>>>> +int i2c_slave_mode_detect(struct device *dev)
->>
->> Just to make sure you didn't miss this one.
->>
->>
-> Yes, I saw it. You were talking of something like this, right?
+Hi,
+
+2017-01-06 22:43 GMT+09:00 Andi Shyti <andi.shyti@samsung.com>:
+> From: Jaechul Lee <jcsing.lee@samsung.com>
 >
-> /**
->  * i2c_slave_mode_detect - detect operation mode
->  * @dev:  The device owning the bus
->  *
->  * This checks the device nodes for a I2C slave by checking the address
+> This patch adds the binding description of the tm2 touchkey
+> device driver.
+>
+> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> ---
+>  .../bindings/input/samsung,tm2-touchkey.txt        | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
+>
+> diff --git a/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt b/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
+> new file mode 100644
+> index 000000000000..4de1af0f0a37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
+> @@ -0,0 +1,27 @@
+> +Samsung tm2-touchkey
+> +
+> +Required properties:
+> +- compatible: must be "samsung,tm2-touchkey"
+> +- reg: I2C address of the chip.
+> +- interrupt-parent: a phandle for the interrupt controller (see interrupt
+> +       binding[0]).
+> +- interrupts: interrupt to which the chip is connected (see interrupt
+> +       binding[0]).
+> +- vcc-supply : internal regulator output. 1.8V
+> +- vdd-supply : power supply for IC 3.3V
+> +
+> +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +Example:
+> +       &i2c0 {
+> +               /* ... */
+> +
+> +               touchkey@20 {
+> +                       compatible = "samsung,tm2-touchkey";
+> +                       reg = <0x20>;
+> +                       interrupt-parent = <&gpa3>;
+> +                       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +                       vcc-supply=<&ldo32_reg>;
+> +                       vdd-supply=<&ldo33_reg>;
+> +               };
+> +       };
 
-a -> an
-
->  * used.
->  *
-
->  * Returns true if a I2C slave is detected, otherwise returns false.
-
-It has int type and I would reword this accordingly.
-
-Something like
-
- * Return:
- * 1 when an I2C slave is detected, 0 for I2C master mode,
- * and negative error otherwise.
-
-
->  */
-
-
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Chanwoo Choi
