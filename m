@@ -1,69 +1,128 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH V2 1/2] PM / Domains: Introduce domain-performance-states
- binding
-Date: Fri, 06 Jan 2017 15:42:53 +0530
-Message-ID: <586F6DA5.30203@codeaurora.org>
-References: <cover.1481539827.git.viresh.kumar@linaro.org> <dd95df02a1c3efd00bd4890f8aceeb717ad38788.1481539827.git.viresh.kumar@linaro.org> <586F596C.7000807@codeaurora.org> <20170106092702.GH21926@vireshk-i7>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 1/4] mtd: spi-nor: add memory controllers for the
+ Aspeed AST2500 SoC
+Date: Fri, 6 Jan 2017 11:23:57 +0100
+Message-ID: <20170106112357.1cd79af1@bbrezillon>
+References: <1481557252-13656-1-git-send-email-clg@kaod.org>
+ <1481557252-13656-2-git-send-email-clg@kaod.org>
+ <5566c62d-cc72-f207-e1dd-5a59e6947c24@wedev4u.fr>
+ <a7cb781c-a4a8-f0f7-e7db-5cd9f19da0aa@kaod.org>
+ <2bec1e91-a196-b894-fb66-590b8f4f35c3@atmel.com>
+ <645db8c4-7f3c-f8bf-ddd9-3f513ce2ed14@kaod.org>
+ <4c5cf674-06f9-ad6b-05bf-a1d39aaa7ed5@atmel.com>
+ <20170104185005.7fcafd2d@bbrezillon>
+ <4c0b4498-12c7-303d-c8f8-4f27a02d6c12@kaod.org>
+ <20170106094930.0f579dca@bbrezillon>
+ <5017c983-e619-b3db-404c-8eab45bdd1f8@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170106092702.GH21926@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <5017c983-e619-b3db-404c-8eab45bdd1f8@kaod.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/06/2017 02:57 PM, Viresh Kumar wrote:
-> On 06-01-17, 14:16, Rajendra Nayak wrote:
->>
->> On 12/12/2016 04:26 PM, Viresh Kumar wrote:
->>> Some platforms have the capability to configure the performance state of
->>> their Power Domains. The performance levels are represented by positive
->>> integer values, a lower value represents lower performance state.
->>>
->>> The power-domains until now were only concentrating on the idle state
->>> management of the device and this needs to change in order to reuse the
->>> infrastructure of power domains for active state management.
->>>
->>> This patch adds binding to describe the performance states of a power
->>> domain.
->>
->> The bindings would also need to take into account the fact that a device
->> could (and is quite often the case with qcom platforms) have 2 separate
->> powerdomains, one for idle state management and another to manage active
->> states. I guess the below bindings assume that there's just one.
-> 
-> I have answered a similar question here..
-> 
-> https://marc.info/?l=linux-kernel&m=148067565219477&w=2
-
-I read through that discussion, and I thought that was to do we
-handling multiple powerdomains with performance states
-(or in other words multiple voltage rails controlled by the M3)
-
-What I was pointing to, was that devices quite often (again on qcom
-platforms) have a power-switch (gdscs as we call it) which are modeled
-as powerdomains (which have nothing to do with taking to the M3 core),
-and with the proposed bindings one or more voltage rails controlled by the M3
-also as powerdomains associated with a device and the bindings have just one
-power-domains property in the device node, which runtime PM would use
-to power_on/off the device and OPP core would use to set the performance
-state?
-
-+	leaky-device@12350000 {
-+		compatible = "foo,i-leak-current";
-+		reg = <0x12350000 0x1000>;
-+		power-domains = <&power 0>;
-+		domain-performance-state = <&domain_perf_state2>;
-+	};
-
-Lets say leaky-device needs to switch on/off a gdsc and also send a
-value to M3 to set a minimum performance state (so M3 configures the
-voltage rails accordingly) how would it work?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+T24gRnJpLCA2IEphbiAyMDE3IDExOjA0OjEyICswMTAwCkPDqWRyaWMgTGUgR29hdGVyIDxjbGdA
+a2FvZC5vcmc+IHdyb3RlOgoKPiBIZWxsbyBCb3JpcywKPiAKPiBPbiAwMS8wNi8yMDE3IDA5OjQ5
+IEFNLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBIaSBDw6lkcmljLAo+ID4gCj4gPiBPbiBU
+aHUsIDUgSmFuIDIwMTcgMTQ6Mzk6MTQgKzAxMDAKPiA+IEPDqWRyaWMgTGUgR29hdGVyIDxjbGdA
+a2FvZC5vcmc+IHdyb3RlOgo+ID4gICAKPiA+PiBIZWxsbyBDeXJpbGxlLCBCb3JpcyAKPiA+Pgo+
+ID4+IE9uIDAxLzA0LzIwMTcgMDY6NTAgUE0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZTogIAo+ID4+
+PiBDeXJpbGxlLCBDw6lkcmljLAo+ID4+Pgo+ID4+PiBPbiBXZWQsIDQgSmFuIDIwMTcgMTU6NTI6
+MDcgKzAxMDAKPiA+Pj4gQ3lyaWxsZSBQaXRjaGVuIDxjeXJpbGxlLnBpdGNoZW5AYXRtZWwuY29t
+PiB3cm90ZToKPiA+Pj4gICAgIAo+ID4+Pj4+ICAgICAgIAo+ID4+Pj4+PiBBbnl3YXksIHNpbmNl
+IHRoZSByZXZpZXcgaXMgZG9uZSBub3csIG9uIG15IHNpZGUgSSB3b24ndCBhc2sgeW91IHRvIHJl
+bW92ZQo+ID4+Pj4+PiBvciBzcGxpdCB0aGUgc3VwcG9ydCBvZiB0aGUgJ0NvbW1hbmQnIG1vZGUg
+aW4gYSBzZXBhcmF0ZWQgcGF0Y2guCj4gPj4+Pj4+IEkgbGV0IHlvdSBkbyBhcyB5b3Ugd2FudCwg
+aWYgaXQgaGVscCB5b3UgdG8gaW50cm9kdWNlIHNvbWUgcGFydCBvZiB0aGUKPiA+Pj4+Pj4gc3Vw
+cG9ydCBvZiB0aGlzICdDb21tYW5kJyBtb2RlIG5vdyBldmVuIGlmIG5vdCBjb21wbGV0ZWQgeWV0
+LCBubyBwcm9ibGVtIG9uCj4gPj4+Pj4+IG15IHNpZGUgOikKPiA+Pj4+Pj4KPiA+Pj4+Pj4gSSB3
+YXMganVzdCBnaXZpbmcgeW91IHNvbWUgcGllY2VzIG9mIGFkdmljZSBmb3IgdGhlIG5leHQgdGlt
+ZSBpZiB5b3Ugd2FudAo+ID4+Pj4+PiB0byBzcGVlZCB1cCB0aGUgcmV2aWV3IG9mIGFub3RoZXIg
+cGF0Y2ggaW50cm9kdWNpbmcgbmV3IGZlYXR1cmVzLgo+ID4+Pj4+Pgo+ID4+Pj4+PiBIb3dldmVy
+LCBJIHdpbGwganVzdCBhc2sgeW91IG9uZSBtb3JlIHZlcnNpb24gaGFuZGxpbmcgdGhlIGR1bW15
+IGN5Y2xlcwo+ID4+Pj4+PiBwcm9wZXJseSBhcyBpdCB3b3VsZCBoZWxwIHVzIGZvciB0aGUgZ2xv
+YmFsIG1haW50ZW5hbmNlIG9mIHRoZSBzcGktbm9yCj4gPj4+Pj4+IHN1YnN5c3RlbS4gVGhpcyBp
+cyB0aGUgb25seSBtYW5kYXRvcnkgbW9kaWZpY2F0aW9uIEkgYXNrIHlvdSwgYWZ0ZXIgdGhhdCBJ
+Cj4gPj4+Pj4+IHRoaW5rIGl0IHdvdWxkIGJlIG9rIGZvciBtZSBhbmQgc2luY2UgTWFyZWsgaGFz
+IGFscmVhZHkgcmV2aWV3ZWQgeW91cgo+ID4+Pj4+PiBkcml2ZXIsIGl0IHdvdWxkIGJlIHJlYWR5
+IHRvIGJlIG1lcmdlZCBpbnRvIHRoZSBzcGktbm9yIHRyZWUuICAgICAgCj4gPj4+Pj4KPiA+Pj4+
+PiBTZW5kaW5nIGEgdjUgd2hpY2ggc2hvdWxkIGFkZHJlc3MgeW91ciBjb21tZW50cy4gCj4gPj4+
+Pj4KPiA+Pj4+PiBJIGhhdmUgcmVtb3ZlZCB0aGUgbGFiZWwgcHJvcGVydHkgYW5kIHdpbGwgc3Rh
+cnQgYSBuZXcgdGhyZWFkIGluIHRoZSAKPiA+Pj4+PiB0b3BpYy4gQW55IGhpbnRzIG9uIHdoaWNo
+IGJpbmRpbmcgd2UgY291bGQgYWRkIHRoaXMgbGFiZWwgcHJvcCA/ICAKPiA+Pj4+PiAgICAgIAo+
+ID4+Pj4KPiA+Pj4+IEhlcmUgSSB3aWxsIHByb3ZpZGUganVzdCBmZXcgdGhvdWdodHMgYWJvdXQg
+dGhpcyBuZXcgRFQgcHJvcGVydHkuIEkgZG9uJ3QKPiA+Pj4+IHByZXRlbmQgdGhpcyBpcyB3aGF0
+IHNob3VsZCBiZSBkb25lLiBJIHN0aWxsIHRoaW5rIG90aGVyIG10ZCBtYWludGFpbmVycwo+ID4+
+Pj4gc2hvdWxkIGJlIGludm9sdmVkIHRvIGRpc2N1c3MgdGhpcyB0b3BpYy4KPiA+Pj4+Cj4gPj4+
+PiBGaXJzdCB0aGUgRFQgcHJvcGVydHkgbmFtZSAibGFiZWwiIHNvdW5kcyBnb29kIHRvIG1lOiBp
+dCBpcyBjb25zaXN0ZW50IHdpdGgKPiA+Pj4+ICJsYWJlbCIgRFQgcHJvcGVydHkgdXNlZCB0byBu
+YW1lIG10ZCBwYXJ0aXRpb25zLiBIb3dldmVyLCBJIGRvbid0IHRoaW5rIGl0Cj4gPj4+PiBzaG91
+bGQgYmUgZG9jdW1lbnRlZCBpbiBqZWRlYyxzcGktbm9yLnR4dCBidXQgKm1heWJlKiBpbiBwYXJ0
+aXRpb24udHh0IGFzCj4gPj4+PiB0aGUgcHVycG9zZSBvZiB0aGlzIG5ldyBEVCBwcm9wZXJ0eSBz
+ZWVtcyB2ZXJ5IGNsb3NlIHRvIHRoZSAibGFiZWwiCj4gPj4+PiBwcm9wZXJ0eSBvZiBwYXJ0aXRp
+b24gbm9kZXM6IGxldCdzIHRoaW5rIGFib3V0IHNvbWUgaGFyZC1kaXNrIGRldmljZQo+ID4+Pj4g
+KC9kZXYvc2RhKSBhbmQgaXRzIHBhcnRpdGlvbiBkZXZpY2VzICgvZGV2L3NkYVgpLiAgICAKPiA+
+Pgo+ID4+IHllcyB0aGlzIGlzIHZlcnkgc2ltaWxhci4gSSBmaXJzdCBsb29rZWQgYXQgaW50cm9k
+dWNpbmcgYSBuYW1lIHRvIAo+ID4+IGFuIG92ZXJhbGwgY29udGFpbmluZyBwYXJ0aXRpb24gYnV0
+IHRoZSBwYXJ0aXRpb24gYmluZGluZyBpcyBub3QgCj4gPj4gZGVzaWduZWQgZm9yIHRoYXQuIFRo
+ZXJlIGFyZSBjb25zdHJhaW50cyBvbiB0aGUgc3RhcnQgYWRkcmVzcyBhbmQKPiA+PiB0aGUgc2l6
+ZSB3aGljaCBkb2VzIG5vdCBmaXQgdGhlIHB1cnBvc2UuCj4gPj4gIAo+ID4+PiBIbSwgcGFydGl0
+aW9uLnR4dCBtYXkgbm90IGJlIGFwcHJvcHJpYXRlIGhlcmUuIFdlJ3JlIG5vdCBkb2N1bWVudGlu
+Zwo+ID4+PiB0aGUgTVREIHBhcnRpdGlvbiBiaW5kaW5nLCBidXQgdGhlIE1URCBkZXZpY2Ugb25l
+LiBNYXliZSB3ZSBzaG91bGQKPiA+Pj4gY3JlYXRlIG10ZC50eHQgYW5kIHB1dCBhbGwgZ2VuZXJp
+YyBNVEQgZGV2IHByb3BlcnRpZXMgaGVyZS4gICAgCj4gPj4+Pgo+ID4+Pj4gQmVzaWRlcywgdGhl
+IGNvbmNlcHQgb2YgdGhpcyBtZW1vcnkgbGFiZWwgaXMgbm90IGxpbWl0ZWQgdG8gU1BJIE5PUiBi
+dXQKPiA+Pj4+IGNvdWxkIGFsc28gYXBwbHkgdG8gTkFORCBtZW1vcmllcyBvciBhbnkgb3RoZXIg
+TVREIGhhbmRsZWQgbWVtb3JpZXMuICAgIAo+ID4+Pgo+ID4+PiBEZWZpbml0ZWx5LiBBY3R1YWxs
+eSBJIHRoaW5rIEknbGwgbmVlZCB0aGF0IGZvciB0aGUgQXRtZWwgTkFORAo+ID4+PiBjb250cm9s
+bGVyIGRyaXZlciByZXdvcmsgSSdtIGN1cnJlbnRseSB3b3JraW5nIG9uLCB0byBrZWVwIG10ZHBh
+cnRzCj4gPj4+IHBhcnNlciBoYXBweSBldmVuIGFmdGVyIGNoYW5naW5nIHRoZSBOQU5EIGRldmlj
+ZSBuYW1pbmcgc2NoZW1lLgo+ID4+PiAgICAgCj4gPj4+PiBIZW5jZSB0aGUgRFQgcHJvcGVydHkg
+bWlnaHQgYmUgaGFuZGxlZCBieSBkcml2ZXJzL210ZC9vZnBhcnQuYyBpbnN0ZWFkIG9mCj4gPj4+
+PiBiZWluZyBoYW5kbGVkIGJ5IHNwaS1ub3IuYyBvciBieSBlYWNoIFNQSSBOT1IgbWVtb3J5IGNv
+bnRyb2xsZXIgZHJpdmVyLiAgICAKPiA+Pj4KPiA+Pj4gQWN0dWFsbHksIHRoYXQgY291bGQgYmUg
+ZG9uZSBhdCB0aGUgbXRkY29yZSBsZXZlbCBpbgo+ID4+PiBtdGRfc2V0X2Rldl9kZWZhdWx0cygp
+IFsxXS4gICAgCj4gPj4KPiA+PiB0aGF0IHdvdWxkIGJlIHBlcmZlY3QuCj4gPj4gIAo+ID4+Pj4g
+RmluYWxseSwgSSBndWVzcyB3ZSBzaG91bGQgdGFrZSB0aW1lIHRvIGRpc2N1c3MgYW5kIGFsbCBh
+Z3JlZSB3aGF0IHNob3VsZAo+ID4+Pj4gYmUgZG9uZSBwcmVjaXNlbHkgYmVmb3JlIGludHJvZHVj
+aW5nIGEgbmV3IERUIHByb3BlcnR5IGJlY2F1c2Ugb25lIGdlbmVyYWwKPiA+Pj4+IHJ1bGUgd2l0
+aCBEVEIgZmlsZXMgaXMgdGhhdCB1c2VycyBzaG91bGQgYmUgYWJsZSB0byB1cGRhdGUgdGhlaXIg
+a2VybmVsCj4gPj4+PiBpbWFnZSAoekltYWdlLCB1SW1hZ2UsIC4uLikgd2l0aG91dCBjaGFuZ2lu
+ZyB0aGVpciBEVEI6IGRldmljZSB0cmVlcyBzaG91bGQKPiA+Pj4+IGJlIGJhY2t3YXJkIGNvbXBh
+dGlibGUuIEhlbmNlIGlmIHdlIG1ha2UgYSB3cm9uZyBjaG9pY2UgdG9kYXksIHdlIGFyZQo+ID4+
+Pj4gbGlrZWx5IHRvIGhhdmUgdG8gbGl2ZSB3aXRoIGl0IGFuZCBrZWVwIHN1cHBvcnRpbmcgdGhh
+dCBiYWQgY2hvaWNlLiAgICAKPiA+Pj4KPiA+Pj4gUm9iIGFscmVhZHkgYWNrZWQgdGhlIHBhdGNo
+LCBzbywgaWYgYWxsIE1URCBtYWludGFpbmVycyBhZ3JlZSB0aGF0IHRoaXMKPiA+Pj4gbmV3IHBy
+b3BlcnR5IGlzIGFjY2VwdGFibGUsIHdlIHNob3VsZCBiZSBmaW5lIDstKS4gICAgCj4gPj4KPiA+
+PiB5ZXMgYnV0IHdlIHdvdWxkIG5lZWQgdG8gbW92ZSB0aGUgYmluZGluZyBwcm9wZXJ0eSB0byBh
+bm90aGVyIGZpbGUuIAo+ID4+IFdoYXQgSSBzZW50IGFwcGxpZWQgdG8gImplZGVjLHNwaS1ub3Ii
+IGFuZCB3ZSB3YW50IHRvIGdlbmVyYWxpemUgdGhlIAo+ID4+IHByb3BlcnR5IHRvIG90aGVyIGRl
+dmljZXMuICAKPiA+IAo+ID4gV2UgY291bGQgY3JlYXRlIGFuIG5ldyBmaWxlIHVuZGVyCj4gPiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkLywgb3Igd2UgY291bGQgcmVuYW1l
+Cj4gPiBwYXJ0aXRpb24udHh0IGludG8gc29tZXRoaW5nIGVsc2UgKGdlbmVyaWMudHh0IG9yIGNv
+bW1vbi50eHQpIGFuZAo+ID4gZG9jdW1lbnQgbW9yZSB0aGFuIHRoZSBwYXJ0aXRpb24gYmluZGlu
+Zy4gIAo+IAo+IE9LLiAKPiAKPiBJIGd1ZXNzIHRoYXQgY3JlYXRpbmcgYSBuZXcgZmlsZSBmb3Ig
+YSBzaW5nbGUgcHJvcGVydHkgaXMgYSBsaXR0bGUgCj4gb3ZlcmtpbGwgb3IgZG8gd2UgZXhwZWN0
+IG1vcmUgY29tbW9uIHByb3BlcnRpZXMgYXQgdGhlIGRldmljZSBsZXZlbCA/CgpOb3QgdGhhdCBJ
+IGNhbiB0aGluayBvZiwgYnV0IHdlIG5ldmVyIGtub3cuCgo+IEluIHRoYXQgY2FzZSwgbWF5IGJl
+IHdlIGNvdWxkIGtlZXAgdGhlIHBhcnRpdGlvbi50eHQgZmlsZSBhbmQgYWRkICAKPiBhIGNvbW1v
+bi50eHQgZmlsZS4gSWYgbm90LCBjb21tb24udHh0IHNlZW1zIHRvIGJlIGEgZ29vZCBuYW1lLiAK
+PiBXYWl0aW5nIGEgbGl0dGxlIGZvciBvdGhlcnMgdG8gY2hpbWUgaW4uICAgCj4gCj4gCj4gPiBD
+YW4geW91IHRha2UgY2FyZSBvZiB0aGF0IChpbiBhIHNlcGFyYXRlIHBhdGNoIHNlcmllcyBvZiBj
+b3Vyc2UpPyAgCj4gCj4gc3VyZSwgYW5kIHdpbGwgeW91IHNlbmQgOiAKPiAKPiAJaHR0cDovL2Nv
+ZGUuYnVsaXgub3JnL3AwMTlhaC0xMDc4NzcKPiAKPiBpbiBhIHNlcGFyYXRlIHBhdGNoID8gCgpO
+bywgeW91IHNob3VsZCBtYWtlIGl0IHBhcnQgb2YgeW91ciBzZXJpZXMgOy0pLgoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQg
+ZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1tdGQvCg==
