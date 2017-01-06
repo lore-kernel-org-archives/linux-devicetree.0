@@ -1,59 +1,259 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] phy: rockchip-emmc: try to get drive impedance from DT
-Date: Fri, 6 Jan 2017 10:29:04 -0800
-Message-ID: <CAD=FV=UhPTHqOUNK344FtaX70Eg3SWhHhxtrYEvcSZJdNCNpnQ@mail.gmail.com>
-References: <1483608682-226716-1-git-send-email-shawn.lin@rock-chips.com>
- <1483608682-226716-2-git-send-email-shawn.lin@rock-chips.com>
- <CAD=FV=V0+=yknRQAZu98FVsbKnRTX_5beeKsLe01P0qT7gb5Zg@mail.gmail.com> <669c85b1-f0fb-c58e-90a8-3aeac3118656@rock-chips.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 13/19] media: imx: Add IC subdev drivers
+Date: Fri, 6 Jan 2017 10:34:56 -0800
+Message-ID: <b5bd5807-2db4-8677-0891-11ad74c1de7f@gmail.com>
+References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483477049-19056-14-git-send-email-steve_longerbeam@mentor.com>
+ <96684048-c5ad-3e64-0fbc-61dcaf184519@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <669c85b1-f0fb-c58e-90a8-3aeac3118656-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <96684048-c5ad-3e64-0fbc-61dcaf184519-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thu, Jan 5, 2017 at 5:09 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> On 2017/1/6 8:51, Doug Anderson wrote:
->>
->> Hi,
->>
->> On Thu, Jan 5, 2017 at 1:31 AM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> wrote:
->>>
->>> Try to get drive impedance from DT and use it, otherwise
->>> use 50ohm by default in order not to break the existing boards
->>> as 50ohm works fine for them already.
->>>
->>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->>>
->>>  drivers/phy/phy-rockchip-emmc.c | 29 ++++++++++++++++++++++++++++-
->>>  1 file changed, 28 insertions(+), 1 deletion(-)
->>
->>
->> I could have sworn that you somehow needed to make sure that the eMMC
->> part itself needed to also be updated to be told the matching drive
->> impedance so you don't get a mismatch.  How do you make that work?
+
+On 01/04/2017 06:48 AM, Vladimir Zapolskiy wrote:
+> On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
+>
+>> +
+>> +	ret = ic_ops[priv->task_id]->init(priv);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = v4l2_async_register_subdev(&priv->sd);
+>> +	if (ret)
+>> +		goto remove;
+>> +
+>> +	return 0;
+>> +remove:
+>> +	ic_ops[priv->task_id]->remove(priv);
+>> +	return ret;
+> if (ret)
+> 	ic_ops[priv->task_id]->remove(priv);
+>
+> return ret;
+>
+> as an alternative.
+
+done.
+
 >
 >
-> No I didn't. So that means the eMMC part itself still couldn't be
-> updated. The intention for me to introduce this only for emmc phy is
-> that I got report that the default drive impedance of one eMMC is not
-> 50ohms, so now we haven't been able to update it for eMMC part but maybe
-> we could just update it for the phy itself to match them in between.
+> +
+> +static struct platform_driver imx_ic_driver = {
+> +	.probe = imx_ic_probe,
+> +	.remove = imx_ic_remove,
+> +	.id_table = imx_ic_ids,
+> +	.driver = {
+> +		.name = "imx-ipuv3-ic",
+> +		.owner = THIS_MODULE,
+> Please drop .owner assignment.
 
-Interesting.  ...the eMMC spec says that 50 Ohm is mandatory, so we
-know that 50 Ohm must be supported.
+done.
 
-...and even if the default isn't 50 Ohm then wouldn't it get set to 50
-OHm when we set the HS_TIMING ?
+>> diff --git a/drivers/staging/media/imx/imx-ic-pp.c b/drivers/staging/media/imx/imx-ic-pp.c
+>> new file mode 100644
+>> index 0000000..5ef0581
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx-ic-pp.c
+>> @@ -0,0 +1,636 @@
+>> +/*
+>> + * V4L2 IC Post-Processor Subdev for Freescale i.MX5/6 SOC
+>> + *
+>> + * Copyright (c) 2014-2016 Mentor Graphics Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/fs.h>
+>> +#include <linux/timer.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pinctrl/consumer.h>
+>> +#include <media/v4l2-device.h>
+>> +#include <media/v4l2-ioctl.h>
+>> +#include <media/videobuf2-dma-contig.h>
+>> +#include <media/v4l2-subdev.h>
+>> +#include <media/v4l2-of.h>
+>> +#include <media/v4l2-ctrls.h>
+> Please sort the list of headers alphabetically.
+
+done.
+
+>
+>>
+>> +
+>> +	priv->out_run = kzalloc(IMX_MEDIA_MAX_RING_BUFS *
+>> +				sizeof(*priv->out_run), GFP_KERNEL);
+>> +	if (!priv->out_run) {
+>> +		v4l2_err(&ic_priv->sd, "failed to alloc src ring runs\n");
+> In OOM situation the core will report it, probably you can drop the message.
+
+with a backtrace? I can't remember, if not I'd like to keep this.
+
+>> diff --git a/drivers/staging/media/imx/imx-ic-prpenc.c b/drivers/staging/media/imx/imx-ic-prpenc.c
+>> new file mode 100644
+>> index 0000000..e17216b
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx-ic-prpenc.c
+>> @@ -0,0 +1,1037 @@
+>> +/*
+>> + * V4L2 Capture IC Encoder Subdev for Freescale i.MX5/6 SOC
+>> + *
+>> + * This subdevice handles capture of video frames from the CSI, which
+>> + * are routed directly to the Image Converter preprocess encode task,
+>> + * for resizing, colorspace conversion, and rotation.
+>> + *
+>> + * Copyright (c) 2012-2016 Mentor Graphics Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/fs.h>
+>> +#include <linux/timer.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pinctrl/consumer.h>
+>> +#include <media/v4l2-device.h>
+>> +#include <media/v4l2-ioctl.h>
+>> +#include <media/videobuf2-dma-contig.h>
+>> +#include <media/v4l2-subdev.h>
+>> +#include <media/v4l2-of.h>
+>> +#include <media/v4l2-ctrls.h>
+> Please sort the list of headers alphabetically.
+
+done.
+
+>
+>> +static irqreturn_t prpenc_eof_interrupt(int irq, void *dev_id)
+>> +{
+>> +	struct prpenc_priv *priv = dev_id;
+>> +	struct imx_media_dma_buf *done, *next;
+>> +	struct ipuv3_channel *channel;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&priv->irqlock, flags);
+> Here spin_lock(&priv->irqlock) should be sufficient.
+
+done.
+
+>> +
+>> +	ret = media_entity_pads_init(&sd->entity, PRPENC_NUM_PADS, priv->pad);
+>> +	if (ret)
+>> +		goto free_ctrls;
+>> +
+>> +	return 0;
+>> +free_ctrls:
+>> +	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
+>> +	return ret;
+> if (ret)
+> 	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
+>
+> return ret;
+>
+> version is shorter.
+
+done.
+
+>
+> diff --git a/drivers/staging/media/imx/imx-ic-prpvf.c 
+> b/drivers/staging/media/imx/imx-ic-prpvf.c
+>> new file mode 100644
+>> index 0000000..53ce006
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx-ic-prpvf.c
+>> @@ -0,0 +1,1180 @@
+>> +/*
+>> + * V4L2 IC Deinterlacer Subdev for Freescale i.MX5/6 SOC
+>> + *
+>> + * Copyright (c) 2014-2016 Mentor Graphics Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/fs.h>
+>> +#include <linux/timer.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pinctrl/consumer.h>
+>> +#include <media/v4l2-device.h>
+>> +#include <media/v4l2-ioctl.h>
+>> +#include <media/videobuf2-dma-contig.h>
+>> +#include <media/v4l2-subdev.h>
+>> +#include <media/v4l2-of.h>
+>> +#include <media/v4l2-ctrls.h>
+> Please sort the list of headers alphabetically.
+
+done.
+
+>
+>> +/* prpvf_out_ch EOF interrupt (progressive frame ready) */
+>> +static irqreturn_t prpvf_out_eof_interrupt(int irq, void *dev_id)
+>> +{
+>> +	struct prpvf_priv *priv = dev_id;
+>> +	struct imx_media_dma_buf *done;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&priv->irqlock, flags);
+>
+> Here spin_lock(&priv->irqlock) should be sufficient.
+
+done.
+
+>
+>> diff --git a/drivers/staging/media/imx/imx-ic.h b/drivers/staging/media/imx/imx-ic.h
+>> new file mode 100644
+>> index 0000000..9aed5f5
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx-ic.h
+>> @@ -0,0 +1,36 @@
+>> +/*
+>> + * V4L2 Image Converter Subdev for Freescale i.MX5/6 SOC
+>> + *
+>> + * Copyright (c) 2016 Mentor Graphics Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#ifndef _IMX_IC_H
+>> +#define _IMX_IC_H
+>> +
+> Please add header files or declarations of all used structs.
+
+done (it only needs v4l2-subdev.h).
+
+Steve
 
 
--Doug
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
