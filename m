@@ -1,120 +1,87 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: new qmp phy driver for
- qcom-chipsets
-Date: Thu, 5 Jan 2017 23:18:34 -0800
-Message-ID: <20170106071834.GP10531@minitux>
-References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
- <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 1/5] arm64: dts: exynos5433: TM2/E: Fix wrong
+ information of ldo23 and ldo25
+Date: Fri, 06 Jan 2017 16:20:52 +0900
+Message-ID: <586F4554.6020206@samsung.com>
+References: <1483675149-32598-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170106035913epcas5p20336406863f1029ccf614520f366ddcf@epcas5p2.samsung.com>
+ <1483675149-32598-2-git-send-email-jcsing.lee@samsung.com>
+ <20170106070539.wd3kfhi77pa5ekcy@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: robh+dt@kernel.org, kishon@ti.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20170106070539.wd3kfhi77pa5ekcy@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Jaechul Lee <jcsing.lee@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi.shyti@samsung.com>, linux-input@vger.kernel.org, galaxyra@gmail.com, beomho.seo@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 20 Dec 09:03 PST 2016, Vivek Gautam wrote:
-
-> diff --git a/drivers/phy/phy-qcom-qmp.c b/drivers/phy/phy-qcom-qmp.c
-[..]
-> +static int qcom_qmp_phy_poweron(struct phy *phy)
-[..]
-> +
-> +err3:
-
-Rather than naming your labels errX, it's idiomatic to give them
-descriptive names, e.g. "disable_ref_clk" here.
-
-> +	clk_disable_unprepare(qphy->ref_clk);
-> +err2:
-> +	regulator_disable(qphy->vddp_ref_clk);
-> +err1:
-> +	regulator_disable(qphy->vdda_pll);
-> +err:
-> +	regulator_disable(qphy->vdda_phy);
-> +	return ret;
-> +}
-[..]
-> +static int qcom_qmp_phy_com_init(struct qcom_qmp_phy *qphy)
-> +{
-> +	const struct qmp_phy_cfg *cfg = qphy->cfg;
-> +	void __iomem *serdes = qphy->serdes;
-> +	int ret;
-> +
-> +	mutex_lock(&qphy->phy_mutex);
-> +	if (qphy->init_count++) {
-> +		mutex_unlock(&qphy->phy_mutex);
-> +		return 0;
-> +	}
-
-As far as I can see phy_init() and phy_exit() already keep reference
-count on the initialization and you only call this function from
-phy_ops->init, so you should be able to drop this.
-
-[..]
-> +
-> +/* PHY Initialization */
-> +static int qcom_qmp_phy_init(struct phy *phy)
-> +{
-[..]
-> +	/* phy power down delay; given in PCIE phy programming guide only */
-> +	if (qphy->cfg->type == PHY_TYPE_PCIE)
-
-Rather than basing this off "is this pcie" it's preferred if you have a
-bool power_down_delay; (or optionally carrying the timeout value) to
-control this.
-
-> +		usleep_range(POWER_DOWN_DELAY_US_MIN, POWER_DOWN_DELAY_US_MAX);
-> +
-> +	/* start SerDes and Phy-Coding-Sublayer */
-> +	qphy_setbits(pcs + QPHY_START_CTRL, cfg->start_ctrl);
-> +
-> +	/* Pull PHY out of reset state */
-> +	qphy_clrbits(pcs + QPHY_SW_RESET, SW_RESET);
-> +
-> +	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
-> +	mask = cfg->mask_pcs_ready;
-> +
-> +	ret = !mask ? 0 : readl_poll_timeout(status, val, !(val & mask), 1,
-> +						PHY_INIT_COMPLETE_TIMEOUT);
-
-I presume it's not okay to read the status register even once for pcie?
-If it is you can skip the conditional as !(val & 0) will break the poll
-after the first read.
-
-[..]
-> +static int qcom_qmp_phy_exit(struct phy *phy)
-> +{
-[..]
-> +}
-> +
-> +
-
-Extra blank line
-
-> +static int qcom_qmp_phy_regulator_init(struct device *dev)
-[..]
-> +static
-> +struct qmp_phy_desc *qcom_qmp_phy_create(struct platform_device *pdev, int id)
-> +{
-[..]
-> +	phy_desc->pipe_clk = devm_clk_get(dev, prop_name);
-> +	if (IS_ERR(phy_desc->pipe_clk)) {
-> +		if (qphy->cfg->type == PHY_TYPE_PCIE ||
-> +		    qphy->cfg->type == PHY_TYPE_USB3) {
-
-Is this check adding any value?
-
-> +			ret = PTR_ERR(phy_desc->pipe_clk);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev,
-> +					"failed to get lane%d pipe_clk, %d\n",
-> +					id, ret);
-> +			return ERR_PTR(ret);
-> +		}
-> +		phy_desc->pipe_clk = NULL;
-
-Regards,
-Bjorn
+T24gMjAxN+uFhCAwMeyblCAwNuydvCAxNjowNSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToK
+PiBPbiBGcmksIEphbiAwNiwgMjAxNyBhdCAxMjo1OTowNVBNICswOTAwLCBKYWVjaHVsIExlZSB3
+cm90ZToKPj4gRnJvbTogQ2hhbndvbyBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+Cj4+Cj4+
+IFRoaXMgcGF0Y2ggZml4ZXMgdGhlIHdyb25nIGluZm9ybWF0aW9uIG9mIGxkbzIzIGFuZCBsZG8y
+NSBvbiBib3RoIFRNMiBhbmQgVE0yRS4KPiAKPiBQbGVhc2UgZGVzY3JpYmUgd2hhdCBpcyBleGFj
+dGx5IHdyb25nIGFuZCBob3cgaXQgYWZmZWN0cyB0aGUKPiBzeXN0ZW0vdXNlci4gVGhpcyBpcyBn
+b2luZyB0byB0aGUgZml4ZXMgc28gaXQgbmVlZHMgYSBnb29kIGV4cGxhbmF0aW9uLgoKV2hlbiBJ
+IHBvc3RlZCB0aGUgcGF0Y2hbMV0sIEkgcmVmZXIgdG8gdGhlIG9sZCBzY2hlbWF0aWMgZG9jdW1l
+bnQgb2YgYm90aCBUTTIgYW5kIFRNMkUuClsxXSAwMWU1ZDIzNTIxNTIgKCJhcm02NDogZHRzOiBl
+eHlub3M6IEFkZCBkdHMgZmlsZSBmb3IgRXh5bm9zNTQzMy1iYXNlZCBUTTIgYm9hcmQiKQoKQWZ0
+ZXIgY2hlY2tpbmcgdGhlIGhpZ2hlc3QgdmVyc2lvbiBvZiBzY2hlbWF0aWMgZG9jdW1lbnQgb2Yg
+Ym90aCBUTTIgYW5kIFRNMkUsCnRoZXJlIGlzIG5vIGRpZmZlcmVuY2Ugb2YgbGRvMjMvbGRvMjUg
+b24gYm90aCBUTTIgYW5kIFRNMkUuCi0gbGRvMjMgaXMgdXNlZCBvbiBUTTIvVE0yRSwgYnV0IHRo
+ZSBuYW1lL21heC1taWNyb3ZvbHQgYXJlIHdyb25nLiAKLSBsZG8yNSBpc24ndCB1c2VkIG9uIFRN
+Mi9UTTJFLiAobm90IGNvbm5lY3RlZCkKCkJlY2F1c2UgbGRvMjMgYW5kIGxvZDI1IGFyZSBub3Qg
+dXNlZCBvbiBvdGhlciBkZXZpY2UgaW4gRXh5bm9zNTQzMyBhbmQgVE0yIGJvYXJkLgp0aGlzIHBh
+dGNoIGRvZXMgbm90IGFmZmVjdCB0aGUgb3BlcmF0aW9uIHRvIHN5c3RlbS91c2VyLgoKPiAKPj4K
+Pj4gRml4ZXM6IDAxZTVkMjM1MjE1MiAoImFybTY0OiBkdHM6IGV4eW5vczogQWRkIGR0cyBmaWxl
+IGZvciBFeHlub3M1NDMzLWJhc2VkIFRNMiBib2FyZCIpCj4+IFNpZ25lZC1vZmYtYnk6IENoYW53
+b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1bmcuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmRpIFNo
+eXRpIDxhbmRpLnNoeXRpQHNhbXN1bmcuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBKYWVjaHVsIExl
+ZSA8amNzaW5nLmxlZUBzYW1zdW5nLmNvbT4KPj4gLS0tCj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRz
+L2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMgIHwgIDcgKysrKy0tLQo+PiAgYXJjaC9hcm02NC9i
+b290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTJlLmR0cyB8IDEwIC0tLS0tLS0tLS0KPj4gIDIg
+ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkKPj4KPj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLmR0cyBi
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLmR0cwo+PiBpbmRleCAz
+YjUyMTVjLi5lODk3MWY0IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5v
+cy9leHlub3M1NDMzLXRtMi5kdHMKPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3Mv
+ZXh5bm9zNTQzMy10bTIuZHRzCj4+IEBAIC01MDQsOSArNTA0LDkgQEAKPj4gIAkJCX07Cj4+ICAK
+Pj4gIAkJCWxkbzIzX3JlZzogTERPMjMgewo+PiAtCQkJCXJlZ3VsYXRvci1uYW1lID0gIkNBTV9T
+RU5fQ09SRV8xLjJWX0FQIjsKPj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJDQU1fU0VOX0NPUkVf
+MS4wNVZfQVAiOwo+PiAgCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEwNTAwMDA+Owo+
+PiAtCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEyMDAwMDA+Owo+PiArCQkJCXJlZ3Vs
+YXRvci1tYXgtbWljcm92b2x0ID0gPDEwNTAwMDA+Owo+PiAgCQkJfTsKPj4gIAo+PiAgCQkJbGRv
+MjRfcmVnOiBMRE8yNCB7Cj4+IEBAIC01MTYsOSArNTE2LDEwIEBACj4+ICAJCQl9Owo+PiAgCj4+
+ICAJCQlsZG8yNV9yZWc6IExETzI1IHsKPj4gLQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJDQU1fU0VO
+X0EyLjhWX0FQIjsKPj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJVTlVTRURfTERPMjUiOwo+PiAg
+CQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDI4MDAwMDA+Owo+PiAgCQkJCXJlZ3VsYXRv
+ci1tYXgtbWljcm92b2x0ID0gPDI4MDAwMDA+Owo+PiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb2Zm
+Owo+IAo+IERvbid0IGFkZCBpdC4gU2VlIG15IG90aGVyIHBhdGNoLgoKT0suIEFmdGVyIGNvbXBs
+ZXRpbmcgdGhlIGtlcm5lbCBib290aW5nLCB0aGUgdW51c2VkIHJlZ3VsYXRvcnMgd2lsbCBiZSBv
+ZmYuCgo+IAo+IEJlc3QgcmVnYXJkcywKPiBLcnp5c3p0b2YKPiAKPj4gIAkJCX07Cj4+ICAKPj4g
+IAkJCWxkbzI2X3JlZzogTERPMjYgewo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
+cy9leHlub3MvZXh5bm9zNTQzMy10bTJlLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9z
+L2V4eW5vczU0MzMtdG0yZS5kdHMKPj4gaW5kZXggMWRiNGU3Zi4uODU0YzU4MyAxMDA2NDQKPj4g
+LS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTJlLmR0cwo+PiAr
+KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMmUuZHRzCj4+IEBA
+IC0xOCwxNiArMTgsNiBAQAo+PiAgCWNvbXBhdGlibGUgPSAic2Ftc3VuZyx0bTJlIiwgInNhbXN1
+bmcsZXh5bm9zNTQzMyI7Cj4+ICB9Owo+PiAgCj4+IC0mbGRvMjNfcmVnIHsKPj4gLQlyZWd1bGF0
+b3ItbmFtZSA9ICJDQU1fU0VOX0NPUkVfMS4wMjVWX0FQIjsKPj4gLQlyZWd1bGF0b3ItbWF4LW1p
+Y3Jvdm9sdCA9IDwxMDUwMDAwPjsKPj4gLX07Cj4+IC0KPj4gLSZsZG8yNV9yZWcgewo+PiAtCXJl
+Z3VsYXRvci1uYW1lID0gIlVOVVNFRF9MRE8yNSI7Cj4+IC0JcmVndWxhdG9yLWFsd2F5cy1vZmY7
+Cj4+IC19Owo+PiAtCj4+ICAmbGRvMzFfcmVnIHsKPj4gIAlyZWd1bGF0b3ItbmFtZSA9ICJUU1Bf
+VkREXzEuOFZfQVAiOwo+PiAgCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+Owo+
+PiAtLSAKPj4gMi43LjQKPj4KPiAKPiAKPiAKCgotLSAKQmVzdCBSZWdhcmRzLApDaGFud29vIENo
+b2kKUy9XIENlbnRlciwgU2Ftc3VuZyBFbGVjdHJvbmljcwoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
