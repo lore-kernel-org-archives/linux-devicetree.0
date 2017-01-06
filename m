@@ -1,76 +1,120 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
- Tree
-Date: Fri, 6 Jan 2017 09:53:49 +0000
-Message-ID: <20170106095349.GE9851@dell>
-References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
- <20161226181153.11271-2-bjorn.andersson@linaro.org>
- <20170104115424.GH27589@dell>
- <20170104192608.GN10531@minitux>
- <20170105074952.GG24225@dell>
- <20170105163054.GO10531@minitux>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v4 1/4] mtd: spi-nor: add memory controllers for the
+ Aspeed AST2500 SoC
+Date: Fri, 6 Jan 2017 11:04:12 +0100
+Message-ID: <5017c983-e619-b3db-404c-8eab45bdd1f8@kaod.org>
+References: <1481557252-13656-1-git-send-email-clg@kaod.org>
+ <1481557252-13656-2-git-send-email-clg@kaod.org>
+ <5566c62d-cc72-f207-e1dd-5a59e6947c24@wedev4u.fr>
+ <a7cb781c-a4a8-f0f7-e7db-5cd9f19da0aa@kaod.org>
+ <2bec1e91-a196-b894-fb66-590b8f4f35c3@atmel.com>
+ <645db8c4-7f3c-f8bf-ddd9-3f513ce2ed14@kaod.org>
+ <4c5cf674-06f9-ad6b-05bf-a1d39aaa7ed5@atmel.com>
+ <20170104185005.7fcafd2d@bbrezillon>
+ <4c0b4498-12c7-303d-c8f8-4f27a02d6c12@kaod.org>
+ <20170106094930.0f579dca@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170105163054.GO10531@minitux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20170106094930.0f579dca@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Joel Stanley <joel@jms.id.au>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Jan 2017, Bjorn Andersson wrote:
-
-> On Wed 04 Jan 23:49 PST 2017, Lee Jones wrote:
-> 
-> > On Wed, 04 Jan 2017, Bjorn Andersson wrote:
-> > 
-> > > On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
-> > > 
-> > > > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
-> > > > 
-> > > > > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > > > > 
-> > > > > Implement support for initialization of the lm3533 driver core and
-> > > > > probing child devices from Device Tree.
-> > > > > 
-> > > 
-> > > [..]
-> > > 
-> > > > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
-> > > > >  	lm3533_device_bl_init(lm3533);
-> > > > >  	lm3533_device_led_init(lm3533);
-> > > > >  
-> > > > > +	if (lm3533->dev->of_node) {
-> > > > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
-> > > > > +				     lm3533->dev);
-> > > > > +	}
-> > > > 
-> > > > I think it's save to call of_platform_populate(), even if !of_node.
-> > > > It will just fail and return an error code, which you are ignoring
-> > > > anyway.
-> > > > 
-> > > 
-> > > I thought so too, but that's apparently how you trigger probing children
-> > > of the root node. So we're stuck with a conditional.
-> > 
-> > Ah, so this is to protect against the case where DT is present, but a
-> > node for this device is not (or is disabled), so is left unprobed.
-> > Then the bind is initiated via I2C?  Or something else?
-> > 
-> 
-> In the event that a new lm3533 is spawned from sysfs we would not have
-> platform_data when entering lm3533_device_init() and just bail early.
-> 
-> Therefor, this issue would be limited to the odd case of lm3533 being
-> initiated from code (e.g. a board file) on a DT enabled system. In which
-> case it will create and probe new devices from the root of the DT.
-
-Eewww, do we really want to support that?
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGVsbG8gQm9yaXMsCgpPbiAwMS8wNi8yMDE3IDA5OjQ5IEFNLCBCb3JpcyBCcmV6aWxsb24gd3Jv
+dGU6Cj4gSGkgQ8OpZHJpYywKPiAKPiBPbiBUaHUsIDUgSmFuIDIwMTcgMTQ6Mzk6MTQgKzAxMDAK
+PiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGthb2Qub3JnPiB3cm90ZToKPiAKPj4gSGVsbG8gQ3ly
+aWxsZSwgQm9yaXMgCj4+Cj4+IE9uIDAxLzA0LzIwMTcgMDY6NTAgUE0sIEJvcmlzIEJyZXppbGxv
+biB3cm90ZToKPj4+IEN5cmlsbGUsIEPDqWRyaWMsCj4+Pgo+Pj4gT24gV2VkLCA0IEphbiAyMDE3
+IDE1OjUyOjA3ICswMTAwCj4+PiBDeXJpbGxlIFBpdGNoZW4gPGN5cmlsbGUucGl0Y2hlbkBhdG1l
+bC5jb20+IHdyb3RlOgo+Pj4gICAKPj4+Pj4gICAgIAo+Pj4+Pj4gQW55d2F5LCBzaW5jZSB0aGUg
+cmV2aWV3IGlzIGRvbmUgbm93LCBvbiBteSBzaWRlIEkgd29uJ3QgYXNrIHlvdSB0byByZW1vdmUK
+Pj4+Pj4+IG9yIHNwbGl0IHRoZSBzdXBwb3J0IG9mIHRoZSAnQ29tbWFuZCcgbW9kZSBpbiBhIHNl
+cGFyYXRlZCBwYXRjaC4KPj4+Pj4+IEkgbGV0IHlvdSBkbyBhcyB5b3Ugd2FudCwgaWYgaXQgaGVs
+cCB5b3UgdG8gaW50cm9kdWNlIHNvbWUgcGFydCBvZiB0aGUKPj4+Pj4+IHN1cHBvcnQgb2YgdGhp
+cyAnQ29tbWFuZCcgbW9kZSBub3cgZXZlbiBpZiBub3QgY29tcGxldGVkIHlldCwgbm8gcHJvYmxl
+bSBvbgo+Pj4+Pj4gbXkgc2lkZSA6KQo+Pj4+Pj4KPj4+Pj4+IEkgd2FzIGp1c3QgZ2l2aW5nIHlv
+dSBzb21lIHBpZWNlcyBvZiBhZHZpY2UgZm9yIHRoZSBuZXh0IHRpbWUgaWYgeW91IHdhbnQKPj4+
+Pj4+IHRvIHNwZWVkIHVwIHRoZSByZXZpZXcgb2YgYW5vdGhlciBwYXRjaCBpbnRyb2R1Y2luZyBu
+ZXcgZmVhdHVyZXMuCj4+Pj4+Pgo+Pj4+Pj4gSG93ZXZlciwgSSB3aWxsIGp1c3QgYXNrIHlvdSBv
+bmUgbW9yZSB2ZXJzaW9uIGhhbmRsaW5nIHRoZSBkdW1teSBjeWNsZXMKPj4+Pj4+IHByb3Blcmx5
+IGFzIGl0IHdvdWxkIGhlbHAgdXMgZm9yIHRoZSBnbG9iYWwgbWFpbnRlbmFuY2Ugb2YgdGhlIHNw
+aS1ub3IKPj4+Pj4+IHN1YnN5c3RlbS4gVGhpcyBpcyB0aGUgb25seSBtYW5kYXRvcnkgbW9kaWZp
+Y2F0aW9uIEkgYXNrIHlvdSwgYWZ0ZXIgdGhhdCBJCj4+Pj4+PiB0aGluayBpdCB3b3VsZCBiZSBv
+ayBmb3IgbWUgYW5kIHNpbmNlIE1hcmVrIGhhcyBhbHJlYWR5IHJldmlld2VkIHlvdXIKPj4+Pj4+
+IGRyaXZlciwgaXQgd291bGQgYmUgcmVhZHkgdG8gYmUgbWVyZ2VkIGludG8gdGhlIHNwaS1ub3Ig
+dHJlZS4gICAgCj4+Pj4+Cj4+Pj4+IFNlbmRpbmcgYSB2NSB3aGljaCBzaG91bGQgYWRkcmVzcyB5
+b3VyIGNvbW1lbnRzLiAKPj4+Pj4KPj4+Pj4gSSBoYXZlIHJlbW92ZWQgdGhlIGxhYmVsIHByb3Bl
+cnR5IGFuZCB3aWxsIHN0YXJ0IGEgbmV3IHRocmVhZCBpbiB0aGUgCj4+Pj4+IHRvcGljLiBBbnkg
+aGludHMgb24gd2hpY2ggYmluZGluZyB3ZSBjb3VsZCBhZGQgdGhpcyBsYWJlbCBwcm9wID8gIAo+
+Pj4+PiAgICAKPj4+Pgo+Pj4+IEhlcmUgSSB3aWxsIHByb3ZpZGUganVzdCBmZXcgdGhvdWdodHMg
+YWJvdXQgdGhpcyBuZXcgRFQgcHJvcGVydHkuIEkgZG9uJ3QKPj4+PiBwcmV0ZW5kIHRoaXMgaXMg
+d2hhdCBzaG91bGQgYmUgZG9uZS4gSSBzdGlsbCB0aGluayBvdGhlciBtdGQgbWFpbnRhaW5lcnMK
+Pj4+PiBzaG91bGQgYmUgaW52b2x2ZWQgdG8gZGlzY3VzcyB0aGlzIHRvcGljLgo+Pj4+Cj4+Pj4g
+Rmlyc3QgdGhlIERUIHByb3BlcnR5IG5hbWUgImxhYmVsIiBzb3VuZHMgZ29vZCB0byBtZTogaXQg
+aXMgY29uc2lzdGVudCB3aXRoCj4+Pj4gImxhYmVsIiBEVCBwcm9wZXJ0eSB1c2VkIHRvIG5hbWUg
+bXRkIHBhcnRpdGlvbnMuIEhvd2V2ZXIsIEkgZG9uJ3QgdGhpbmsgaXQKPj4+PiBzaG91bGQgYmUg
+ZG9jdW1lbnRlZCBpbiBqZWRlYyxzcGktbm9yLnR4dCBidXQgKm1heWJlKiBpbiBwYXJ0aXRpb24u
+dHh0IGFzCj4+Pj4gdGhlIHB1cnBvc2Ugb2YgdGhpcyBuZXcgRFQgcHJvcGVydHkgc2VlbXMgdmVy
+eSBjbG9zZSB0byB0aGUgImxhYmVsIgo+Pj4+IHByb3BlcnR5IG9mIHBhcnRpdGlvbiBub2Rlczog
+bGV0J3MgdGhpbmsgYWJvdXQgc29tZSBoYXJkLWRpc2sgZGV2aWNlCj4+Pj4gKC9kZXYvc2RhKSBh
+bmQgaXRzIHBhcnRpdGlvbiBkZXZpY2VzICgvZGV2L3NkYVgpLiAgCj4+Cj4+IHllcyB0aGlzIGlz
+IHZlcnkgc2ltaWxhci4gSSBmaXJzdCBsb29rZWQgYXQgaW50cm9kdWNpbmcgYSBuYW1lIHRvIAo+
+PiBhbiBvdmVyYWxsIGNvbnRhaW5pbmcgcGFydGl0aW9uIGJ1dCB0aGUgcGFydGl0aW9uIGJpbmRp
+bmcgaXMgbm90IAo+PiBkZXNpZ25lZCBmb3IgdGhhdC4gVGhlcmUgYXJlIGNvbnN0cmFpbnRzIG9u
+IHRoZSBzdGFydCBhZGRyZXNzIGFuZAo+PiB0aGUgc2l6ZSB3aGljaCBkb2VzIG5vdCBmaXQgdGhl
+IHB1cnBvc2UuCj4+Cj4+PiBIbSwgcGFydGl0aW9uLnR4dCBtYXkgbm90IGJlIGFwcHJvcHJpYXRl
+IGhlcmUuIFdlJ3JlIG5vdCBkb2N1bWVudGluZwo+Pj4gdGhlIE1URCBwYXJ0aXRpb24gYmluZGlu
+ZywgYnV0IHRoZSBNVEQgZGV2aWNlIG9uZS4gTWF5YmUgd2Ugc2hvdWxkCj4+PiBjcmVhdGUgbXRk
+LnR4dCBhbmQgcHV0IGFsbCBnZW5lcmljIE1URCBkZXYgcHJvcGVydGllcyBoZXJlLiAgCj4+Pj4K
+Pj4+PiBCZXNpZGVzLCB0aGUgY29uY2VwdCBvZiB0aGlzIG1lbW9yeSBsYWJlbCBpcyBub3QgbGlt
+aXRlZCB0byBTUEkgTk9SIGJ1dAo+Pj4+IGNvdWxkIGFsc28gYXBwbHkgdG8gTkFORCBtZW1vcmll
+cyBvciBhbnkgb3RoZXIgTVREIGhhbmRsZWQgbWVtb3JpZXMuICAKPj4+Cj4+PiBEZWZpbml0ZWx5
+LiBBY3R1YWxseSBJIHRoaW5rIEknbGwgbmVlZCB0aGF0IGZvciB0aGUgQXRtZWwgTkFORAo+Pj4g
+Y29udHJvbGxlciBkcml2ZXIgcmV3b3JrIEknbSBjdXJyZW50bHkgd29ya2luZyBvbiwgdG8ga2Vl
+cCBtdGRwYXJ0cwo+Pj4gcGFyc2VyIGhhcHB5IGV2ZW4gYWZ0ZXIgY2hhbmdpbmcgdGhlIE5BTkQg
+ZGV2aWNlIG5hbWluZyBzY2hlbWUuCj4+PiAgIAo+Pj4+IEhlbmNlIHRoZSBEVCBwcm9wZXJ0eSBt
+aWdodCBiZSBoYW5kbGVkIGJ5IGRyaXZlcnMvbXRkL29mcGFydC5jIGluc3RlYWQgb2YKPj4+PiBi
+ZWluZyBoYW5kbGVkIGJ5IHNwaS1ub3IuYyBvciBieSBlYWNoIFNQSSBOT1IgbWVtb3J5IGNvbnRy
+b2xsZXIgZHJpdmVyLiAgCj4+Pgo+Pj4gQWN0dWFsbHksIHRoYXQgY291bGQgYmUgZG9uZSBhdCB0
+aGUgbXRkY29yZSBsZXZlbCBpbgo+Pj4gbXRkX3NldF9kZXZfZGVmYXVsdHMoKSBbMV0uICAKPj4K
+Pj4gdGhhdCB3b3VsZCBiZSBwZXJmZWN0Lgo+Pgo+Pj4+IEZpbmFsbHksIEkgZ3Vlc3Mgd2Ugc2hv
+dWxkIHRha2UgdGltZSB0byBkaXNjdXNzIGFuZCBhbGwgYWdyZWUgd2hhdCBzaG91bGQKPj4+PiBi
+ZSBkb25lIHByZWNpc2VseSBiZWZvcmUgaW50cm9kdWNpbmcgYSBuZXcgRFQgcHJvcGVydHkgYmVj
+YXVzZSBvbmUgZ2VuZXJhbAo+Pj4+IHJ1bGUgd2l0aCBEVEIgZmlsZXMgaXMgdGhhdCB1c2VycyBz
+aG91bGQgYmUgYWJsZSB0byB1cGRhdGUgdGhlaXIga2VybmVsCj4+Pj4gaW1hZ2UgKHpJbWFnZSwg
+dUltYWdlLCAuLi4pIHdpdGhvdXQgY2hhbmdpbmcgdGhlaXIgRFRCOiBkZXZpY2UgdHJlZXMgc2hv
+dWxkCj4+Pj4gYmUgYmFja3dhcmQgY29tcGF0aWJsZS4gSGVuY2UgaWYgd2UgbWFrZSBhIHdyb25n
+IGNob2ljZSB0b2RheSwgd2UgYXJlCj4+Pj4gbGlrZWx5IHRvIGhhdmUgdG8gbGl2ZSB3aXRoIGl0
+IGFuZCBrZWVwIHN1cHBvcnRpbmcgdGhhdCBiYWQgY2hvaWNlLiAgCj4+Pgo+Pj4gUm9iIGFscmVh
+ZHkgYWNrZWQgdGhlIHBhdGNoLCBzbywgaWYgYWxsIE1URCBtYWludGFpbmVycyBhZ3JlZSB0aGF0
+IHRoaXMKPj4+IG5ldyBwcm9wZXJ0eSBpcyBhY2NlcHRhYmxlLCB3ZSBzaG91bGQgYmUgZmluZSA7
+LSkuICAKPj4KPj4geWVzIGJ1dCB3ZSB3b3VsZCBuZWVkIHRvIG1vdmUgdGhlIGJpbmRpbmcgcHJv
+cGVydHkgdG8gYW5vdGhlciBmaWxlLiAKPj4gV2hhdCBJIHNlbnQgYXBwbGllZCB0byAiamVkZWMs
+c3BpLW5vciIgYW5kIHdlIHdhbnQgdG8gZ2VuZXJhbGl6ZSB0aGUgCj4+IHByb3BlcnR5IHRvIG90
+aGVyIGRldmljZXMuCj4gCj4gV2UgY291bGQgY3JlYXRlIGFuIG5ldyBmaWxlIHVuZGVyCj4gRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC8sIG9yIHdlIGNvdWxkIHJlbmFtZQo+
+IHBhcnRpdGlvbi50eHQgaW50byBzb21ldGhpbmcgZWxzZSAoZ2VuZXJpYy50eHQgb3IgY29tbW9u
+LnR4dCkgYW5kCj4gZG9jdW1lbnQgbW9yZSB0aGFuIHRoZSBwYXJ0aXRpb24gYmluZGluZy4KCk9L
+LiAKCkkgZ3Vlc3MgdGhhdCBjcmVhdGluZyBhIG5ldyBmaWxlIGZvciBhIHNpbmdsZSBwcm9wZXJ0
+eSBpcyBhIGxpdHRsZSAKb3ZlcmtpbGwgb3IgZG8gd2UgZXhwZWN0IG1vcmUgY29tbW9uIHByb3Bl
+cnRpZXMgYXQgdGhlIGRldmljZSBsZXZlbCA/IApJbiB0aGF0IGNhc2UsIG1heSBiZSB3ZSBjb3Vs
+ZCBrZWVwIHRoZSBwYXJ0aXRpb24udHh0IGZpbGUgYW5kIGFkZCAgCmEgY29tbW9uLnR4dCBmaWxl
+LiBJZiBub3QsIGNvbW1vbi50eHQgc2VlbXMgdG8gYmUgYSBnb29kIG5hbWUuIApXYWl0aW5nIGEg
+bGl0dGxlIGZvciBvdGhlcnMgdG8gY2hpbWUgaW4uICAgCgoKPiBDYW4geW91IHRha2UgY2FyZSBv
+ZiB0aGF0IChpbiBhIHNlcGFyYXRlIHBhdGNoIHNlcmllcyBvZiBjb3Vyc2UpPwoKc3VyZSwgYW5k
+IHdpbGwgeW91IHNlbmQgOiAKCglodHRwOi8vY29kZS5idWxpeC5vcmcvcDAxOWFoLTEwNzg3NwoK
+aW4gYSBzZXBhcmF0ZSBwYXRjaCA/IAoKVGhhbmtzLAoKQy4KCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBt
+YWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1tdGQvCg==
