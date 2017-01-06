@@ -1,72 +1,58 @@
-From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Subject: [PATCH v3 2/2] backlight arcxcnn devicetree bindings for ArcticSand
-Date: Fri,  6 Jan 2017 15:48:34 -0500
-Message-ID: <1483735714-5500-1-git-send-email-olimpiu@arcticsand.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: new qmp phy driver for
+ qcom-chipsets
+Date: Fri, 6 Jan 2017 13:17:22 -0800
+Message-ID: <20170106211722.GT10531@minitux>
+References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
+ <20170106071834.GP10531@minitux>
+ <e83564d4-d731-44dd-40d1-e36fa56f4920@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e83564d4-d731-44dd-40d1-e36fa56f4920@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: robh+dt@kernel.org, kishon@ti.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-backlight: Add devicetree bindings for the Arctic Sand backlight driver
-This patch provides devicetree bindings for the Arctic Sand
-    driver submitted in the previous patch
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
----
+On Fri 06 Jan 01:47 PST 2017, Vivek Gautam wrote:
 
-v2 => v3:
-- Version updated to match other patch in set. No other changes.
-v1 => v2:
-- Version updated to match other patch in set. No other changes.
+> > > +static int qcom_qmp_phy_com_init(struct qcom_qmp_phy *qphy)
+> > > +{
+> > > +	const struct qmp_phy_cfg *cfg = qphy->cfg;
+> > > +	void __iomem *serdes = qphy->serdes;
+> > > +	int ret;
+> > > +
+> > > +	mutex_lock(&qphy->phy_mutex);
+> > > +	if (qphy->init_count++) {
+> > > +		mutex_unlock(&qphy->phy_mutex);
+> > > +		return 0;
+> > > +	}
+> > As far as I can see phy_init() and phy_exit() already keep reference
+> > count on the initialization and you only call this function from
+> > phy_ops->init, so you should be able to drop this.
+> This is an intermediary function that does the common block initialization.
+> PHYs like PCIe have a separate common block (apart from SerDes)
+> for all phy channels. We shouldn't program this common block
+> multiple times for each channel. That's why this init_count.
+> 
 
- .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+You're right!
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-new file mode 100644
-index 0000000..a7b6ff2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-@@ -0,0 +1,33 @@
-+Binding for ArcticSand arc2c0608 LED driver
-+
-+Required properties:
-+- compatible: should be "arc,arc2c0608"
-+- reg: slave address
-+
-+Optional properties:
-+- default-brightness: brightness value on boot, value from: 0-4095
-+- label: The name of the backlight device
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- led-sources: List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+- arc,led-config-0: setting for register ILED_CONFIG_0
-+- arc,led-config-1: setting for register ILED_CONFIG_1
-+- arc,dim-freq: PWM mode frequence setting (bits [3:0] used)
-+- arc,comp-config: setting for register CONFIG_COMP
-+- arc,filter-config: setting for register FILTER_CONFIG
-+- arc,trim-config: setting for register IMAXTUNE
-+
-+Note: Optional properties not specified will default to values in IC EPROM
-+
-+Example:
-+
-+arc2c0608@30 {
-+	compatible = "arc,arc2c0608";
-+	reg = <0x30>;
-+	default-brightness = <500>;
-+	label = "lcd-backlight";
-+	linux,default-trigger = "backlight";
-+	led-sources = <0 1 2 5>;
-+};
-+
--- 
-2.7.4
+Unfortunately it took me several minutes to wrap my head around the phy
+vs multi-lane and I have a really hard time keeping "qcom_qmp_phy" and
+"qmp_phy_desc" apart throughout the driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I understand correctly the qcom_qmp_phy is the context representing a
+"QMP block", while this is a PHY block it's not actually the phy in
+Linux eyes. The qcom_phy_desc represents a "QMP lane", which in Linux
+eyes is the phys, but as we think of QMP as the PHY this confused me.
+
+How about naming them "struct qmp" and "struct qmp_lane" (or possibly
+qmp_phy) instead? That way we remove the confusion of QMP PHY vs Linux
+PHY and we make the lane part explicit.
+
+Regards,
+Bjorn
