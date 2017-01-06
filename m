@@ -1,330 +1,74 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 3/3] ARM: dts: stm32: Use clock DT binding definition on stm32f429 family
-Date: Fri, 6 Jan 2017 16:52:14 +0100
-Message-ID: <1483717934-21415-4-git-send-email-gabriel.fernandez@st.com>
-References: <1483717934-21415-1-git-send-email-gabriel.fernandez@st.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition
+ table
+Date: Fri, 6 Jan 2017 08:02:23 -0800
+Message-ID: <20170106160222.GC2630@atomide.com>
+References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
+ <1483627851-17996-2-git-send-email-t.remmet@phytec.de>
+ <20170105153637.GA4310@atomide.com>
+ <20170105171845.GK4310@atomide.com>
+ <20170105175619.GA56877@google.com>
+ <1483694849.3634.6.camel@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483717934-21415-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483694849.3634.6.camel-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+* Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> [170106 01:28]:
+> Hello Brian,
+> 
+> Am Donnerstag, den 05.01.2017, 09:56 -0800 schrieb Brian Norris:
+> > On Thu, Jan 05, 2017 at 09:18:45AM -0800, Tony Lindgren wrote:
+> > > 
+> > > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170105 07:37]:
+> > > > 
+> > > > * Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> [170105 06:57]:
+> > > > > 
+> > > > > To improve NAND safety we updated the partition layout.
+> > > > > Added barebox backup partition and removed kernel and oftree
+> > > > > partition. They are kept in ubi now.
+> > > > What about the users with earlier partition tables?
+> > > > 
+> > > > Please read about "flag day" changes, typically they are not
+> > > > acceptable.
+> > > Adding Brian and Adam to Cc. Can you guys come up with some
+> > > solution on this?
+> > I don't have much context for this thread, and no I don't plan to
+> > solve
+> > your problems for you. But I can provide tips!
+> > 
+> > > 
+> > > I'm suggesting we leave the kernel nodes empty and let u-boot
+> > > populate them, so maybe you guys can discuss this on the related
+> > > lists.
+> > That's an option. I've worked with platforms that did something like
+> > this, and that's really one of the only ways you can handle putting
+> > partition information in the device tree. You're really hamstringing
+> > yourself when you put all the partition information in the device
+> > tree.
+> > And it's just dumb once that gets codified in the kernel source tree.
+> > 
+> 
+> In our case the bootloader does pass the partition table to the kernel.
+> So it gets overwritten anyway. This was just more for backup, 
+> if someone uses a different bootloader. But I'm fine with removing the
+> nand partition table completely from the kernel device tree.
+> Same with the SPI nor partition table.
+> 
+> I will send patches for this.
 
-This patch uses clock DT binding definition instead numerical values
-for stm32f429 board.
+OK thanks! Also thank you Brian for your comments.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts |  2 +-
- arch/arm/boot/dts/stm32f429.dtsi     | 66 +++++++++++++++++++-----------------
- 2 files changed, 36 insertions(+), 32 deletions(-)
+Regards,
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 76f7206..4e31881 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -107,7 +107,7 @@
- 	usbotg_hs_phy: usbphy {
- 		#phy-cells = <0>;
- 		compatible = "usb-nop-xceiv";
--		clocks = <&rcc 0 30>;
-+		clocks = <&rcc 0 STM32F4_AHB1_CLOCK(OTGHSULPI)>;
- 		clock-names = "main_clk";
- 	};
- };
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 041e3fc..1bacdfb 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -49,6 +49,7 @@
- #include "armv7-m.dtsi"
- #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
- #include <dt-bindings/clock/stm32fx-clock.h>
-+#include <dt-bindings/mfd/stm32f4-rcc.h>
- 
- / {
- 	clocks {
-@@ -82,7 +83,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000000 0x400>;
- 			interrupts = <28>;
--			clocks = <&rcc 0 128>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM2)>;
- 			status = "disabled";
- 		};
- 
-@@ -90,7 +91,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000400 0x400>;
- 			interrupts = <29>;
--			clocks = <&rcc 0 129>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM3)>;
- 			status = "disabled";
- 		};
- 
-@@ -98,7 +99,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000800 0x400>;
- 			interrupts = <30>;
--			clocks = <&rcc 0 130>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM4)>;
- 			status = "disabled";
- 		};
- 
-@@ -106,14 +107,14 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000c00 0x400>;
- 			interrupts = <50>;
--			clocks = <&rcc 0 131>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM5)>;
- 		};
- 
- 		timer6: timer@40001000 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001000 0x400>;
- 			interrupts = <54>;
--			clocks = <&rcc 0 132>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM6)>;
- 			status = "disabled";
- 		};
- 
-@@ -121,7 +122,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001400 0x400>;
- 			interrupts = <55>;
--			clocks = <&rcc 0 133>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM7)>;
- 			status = "disabled";
- 		};
- 
-@@ -129,7 +130,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
- 			interrupts = <38>;
--			clocks =  <&rcc 0 145>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART2)>;
- 			status = "disabled";
- 		};
- 
-@@ -137,7 +138,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004800 0x400>;
- 			interrupts = <39>;
--			clocks = <&rcc 0 146>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART3)>;
- 			status = "disabled";
- 			dmas = <&dma1 1 4 0x400 0x0>,
- 			       <&dma1 3 4 0x400 0x0>;
-@@ -148,7 +149,7 @@
- 			compatible = "st,stm32-uart";
- 			reg = <0x40004c00 0x400>;
- 			interrupts = <52>;
--			clocks = <&rcc 0 147>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART4)>;
- 			status = "disabled";
- 		};
- 
-@@ -156,7 +157,7 @@
- 			compatible = "st,stm32-uart";
- 			reg = <0x40005000 0x400>;
- 			interrupts = <53>;
--			clocks = <&rcc 0 148>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART5)>;
- 			status = "disabled";
- 		};
- 
-@@ -164,7 +165,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007800 0x400>;
- 			interrupts = <82>;
--			clocks = <&rcc 0 158>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART7)>;
- 			status = "disabled";
- 		};
- 
-@@ -172,7 +173,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007c00 0x400>;
- 			interrupts = <83>;
--			clocks = <&rcc 0 159>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART8)>;
- 			status = "disabled";
- 		};
- 
-@@ -180,7 +181,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <37>;
--			clocks = <&rcc 0 164>;
-+			clocks = <&rcc 0 STM32F4_APB2_CLOCK(USART1)>;
- 			status = "disabled";
- 			dmas = <&dma2 2 4 0x400 0x0>,
- 			       <&dma2 7 4 0x400 0x0>;
-@@ -191,7 +192,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40011400 0x400>;
- 			interrupts = <71>;
--			clocks = <&rcc 0 165>;
-+			clocks = <&rcc 0 STM32F4_APB2_CLOCK(USART6)>;
- 			status = "disabled";
- 		};
- 
-@@ -226,7 +227,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x0 0x400>;
--				clocks = <&rcc 0 0>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOA)>;
- 				st,bank-name = "GPIOA";
- 			};
- 
-@@ -234,7 +235,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x400 0x400>;
--				clocks = <&rcc 0 1>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOB)>;
- 				st,bank-name = "GPIOB";
- 			};
- 
-@@ -242,7 +243,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x800 0x400>;
--				clocks = <&rcc 0 2>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOC)>;
- 				st,bank-name = "GPIOC";
- 			};
- 
-@@ -250,7 +251,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0xc00 0x400>;
--				clocks = <&rcc 0 3>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOD)>;
- 				st,bank-name = "GPIOD";
- 			};
- 
-@@ -258,7 +259,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1000 0x400>;
--				clocks = <&rcc 0 4>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOE)>;
- 				st,bank-name = "GPIOE";
- 			};
- 
-@@ -266,7 +267,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1400 0x400>;
--				clocks = <&rcc 0 5>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOF)>;
- 				st,bank-name = "GPIOF";
- 			};
- 
-@@ -274,7 +275,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1800 0x400>;
--				clocks = <&rcc 0 6>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOG)>;
- 				st,bank-name = "GPIOG";
- 			};
- 
-@@ -282,7 +283,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1c00 0x400>;
--				clocks = <&rcc 0 7>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOH)>;
- 				st,bank-name = "GPIOH";
- 			};
- 
-@@ -290,7 +291,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x2000 0x400>;
--				clocks = <&rcc 0 8>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOI)>;
- 				st,bank-name = "GPIOI";
- 			};
- 
-@@ -298,7 +299,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x2400 0x400>;
--				clocks = <&rcc 0 9>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOJ)>;
- 				st,bank-name = "GPIOJ";
- 			};
- 
-@@ -306,7 +307,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x2800 0x400>;
--				clocks = <&rcc 0 10>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOK)>;
- 				st,bank-name = "GPIOK";
- 			};
- 
-@@ -384,7 +385,7 @@
- 				     <16>,
- 				     <17>,
- 				     <47>;
--			clocks = <&rcc 0 21>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(DMA1)>;
- 			#dma-cells = <4>;
- 		};
- 
-@@ -399,7 +400,7 @@
- 				     <68>,
- 				     <69>,
- 				     <70>;
--			clocks = <&rcc 0 22>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(DMA2)>;
- 			#dma-cells = <4>;
- 			st,mem2mem;
- 		};
-@@ -411,7 +412,9 @@
- 			interrupts = <61>;
- 			interrupt-names = "macirq";
- 			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
--			clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(ETHMAC)>,
-+					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACTX)>,
-+					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACRX)>;
- 			st,syscon = <&syscfg 0x4>;
- 			snps,pbl = <8>;
- 			snps,mixed-burst;
-@@ -422,7 +425,7 @@
- 			compatible = "snps,dwc2";
- 			reg = <0x40040000 0x40000>;
- 			interrupts = <77>;
--			clocks = <&rcc 0 29>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(OTGHS)>;
- 			clock-names = "otg";
- 			status = "disabled";
- 		};
-@@ -431,12 +434,13 @@
- 			compatible = "st,stm32-rng";
- 			reg = <0x50060800 0x400>;
- 			interrupts = <80>;
--			clocks = <&rcc 0 38>;
-+			clocks = <&rcc 0 STM32F4_AHB2_CLOCK(RNG)>;
-+
- 		};
- 	};
- };
- 
- &systick {
--	clocks = <&rcc 1 0>;
-+	clocks = <&rcc 1 SYSTICK>;
- 	status = "okay";
- };
--- 
-1.9.1
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
