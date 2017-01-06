@@ -1,49 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC 0/1] Platform driver support for 'amd5536udc' driver
-Date: Fri, 06 Jan 2017 12:20:39 +0100
-Message-ID: <6422487.mhqDBHHcCr@wuerfel>
-References: <1483604597-26160-1-git-send-email-raviteja.garimella@broadcom.com> <1861880.7pouM4E6RB@wuerfel> <CAEHZuqNK07Xku9SmFhV0DJ4apV0m8yWznuFDwjr33CDP_OcXew@mail.gmail.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH v4 5/5] arm64: dts: exynos: Add tm2 touchkey node
+Date: Fri, 06 Jan 2017 20:41:14 +0900
+Message-ID: <20170106114114.19321-6-andi.shyti@samsung.com>
+References: <20170106114114.19321-1-andi.shyti@samsung.com>
+ <CGME20170106114121epcas5p26862de873ae8efb2102701c6ac452a6e@epcas5p2.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEHZuqNK07Xku9SmFhV0DJ4apV0m8yWznuFDwjr33CDP_OcXew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20170106114114.19321-1-andi.shyti@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaechul Lee <jcsing.lee@samsung.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org, Jaechul Lee <galaxyra@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, January 6, 2017 12:29:12 PM CET Raviteja Garimella wrote:
-> Hi Arnd,
-> 
-> On Fri, Jan 6, 2017 at 3:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Thursday, January 5, 2017 1:53:16 PM CET Raviteja Garimella wrote:
-> >> The UDC is based on Synopsys Designware core USB (2.0) Device controller
-> >> IP.
-> > ...
-> >> This is a request for comments from maintainers/others regarding approach
-> >> on whether to have 2 different drivers (one each for AMD and Broadcom)
-> >> with a common library (3 files in total), or have a single driver like
-> >> it's done in this patch and have the driver filename changed to some
-> >> common name based on ther underlying IP, like snps_udc.c.
-> >
-> > I have not looked at the code at all, so sorry for my ignorance, but
-> > isn't the IP block you describe the one that drivers/usb/dwc2/ is for?
-> > Could you add support for the Broadcom hardware there instead?
-> 
-> The current driver I submitted is for a different Synopsys IP (USB
-> Device Controller IP,
-> not the HS OTG). It's confirmed by John Youn (from Synopsys) earlier.
-> 
+From: Jaechul Lee <jcsing.lee@samsung.com>
 
-Ok, sounds fine the. I'd suggest taking the current driver than and
-splitting out the pci_driver front-end into a separate module that
-calls exported symbols of the main driver, with the new platform
-driver in a third file that also calls the same exported symbols.
+Add DT node support for TM2 touchkey device.
 
-	Arnd
+Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+index d30b45a9c0d4..15bdc2e9f2a3 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+@@ -18,6 +18,19 @@
+ 	compatible = "samsung,tm2e", "samsung,exynos5433";
+ };
+ 
++&hsi2c_9 {
++	status = "okay";
++
++	touchkey@20 {
++		compatible = "samsung,tm2-touchkey";
++		reg = <0x20>;
++		interrupt-parent = <&gpa3>;
++		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++		vcc-supply = <&ldo32_reg>;
++		vdd-supply = <&ldo33_reg>;
++	};
++};
++
+ &regulators {
+ 	ldo31_reg: LDO31 {
+ 		regulator-name = "TSP_VDD_1.85V_AP";
+-- 
+2.11.0
