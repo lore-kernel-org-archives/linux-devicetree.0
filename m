@@ -1,84 +1,71 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
- Tree
-Date: Fri, 6 Jan 2017 10:54:22 -0800
-Message-ID: <20170106185422.GQ10531@minitux>
-References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
- <20161226181153.11271-2-bjorn.andersson@linaro.org>
- <20170104115424.GH27589@dell>
- <20170104192608.GN10531@minitux>
- <20170105074952.GG24225@dell>
- <20170105163054.GO10531@minitux>
- <20170106095349.GE9851@dell>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/5] Use mmio-sram driver for Keystone MSMC RAM
+Date: Fri, 6 Jan 2017 10:56:16 -0800
+Message-ID: <3abc3c7d-2f45-f5dd-e6f5-c03008d22d56@oracle.com>
+References: <20160901225846.31058-1-s-anna@ti.com>
+ <d797bb0d-41b5-45a7-6faf-95baaab0215b@oracle.com>
+ <f6920801-554d-18e8-f140-44aeeb2f878e@ti.com>
+ <287b7e1d-1453-2832-515d-e7e51373a3bc@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170106095349.GE9851@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <287b7e1d-1453-2832-515d-e7e51373a3bc@oracle.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitaly Andrianov <vitalya@ti.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 06 Jan 01:53 PST 2017, Lee Jones wrote:
+Hi Suman,
 
-> On Thu, 05 Jan 2017, Bjorn Andersson wrote:
-> 
-> > On Wed 04 Jan 23:49 PST 2017, Lee Jones wrote:
-> > 
-> > > On Wed, 04 Jan 2017, Bjorn Andersson wrote:
-> > > 
-> > > > On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
-> > > > 
-> > > > > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
-> > > > > 
-> > > > > > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > > > > > 
-> > > > > > Implement support for initialization of the lm3533 driver core and
-> > > > > > probing child devices from Device Tree.
-> > > > > > 
-> > > > 
-> > > > [..]
-> > > > 
-> > > > > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
-> > > > > >  	lm3533_device_bl_init(lm3533);
-> > > > > >  	lm3533_device_led_init(lm3533);
-> > > > > >  
-> > > > > > +	if (lm3533->dev->of_node) {
-> > > > > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
-> > > > > > +				     lm3533->dev);
-> > > > > > +	}
-> > > > > 
-> > > > > I think it's save to call of_platform_populate(), even if !of_node.
-> > > > > It will just fail and return an error code, which you are ignoring
-> > > > > anyway.
-> > > > > 
-> > > > 
-> > > > I thought so too, but that's apparently how you trigger probing children
-> > > > of the root node. So we're stuck with a conditional.
-> > > 
-> > > Ah, so this is to protect against the case where DT is present, but a
-> > > node for this device is not (or is disabled), so is left unprobed.
-> > > Then the bind is initiated via I2C?  Or something else?
-> > > 
-> > 
-> > In the event that a new lm3533 is spawned from sysfs we would not have
-> > platform_data when entering lm3533_device_init() and just bail early.
-> > 
-> > Therefor, this issue would be limited to the odd case of lm3533 being
-> > initiated from code (e.g. a board file) on a DT enabled system. In which
-> > case it will create and probe new devices from the root of the DT.
-> 
-> Eewww, do we really want to support that?
-> 
+On 9/7/16 9:25 AM, Santosh Shilimkar wrote:
+> On 9/7/2016 9:22 AM, Suman Anna wrote:
+>> Hi Santosh,
+>>
+>> On 09/07/2016 11:11 AM, Santosh Shilimkar wrote:
+>>> Hi Suman,
+>>>
+>>> On 9/1/2016 3:58 PM, Suman Anna wrote:
+>>>> Hi,
+>>>>
+>>>> The Keystone 2 family of SoCs have an on-chip RAM called the
+>>>> Multicore Shared Memory (MSM) RAM. This RAM is accessible through
+>>>> the Multicore Shared Memory Controller (MSMC). This series represents
+>>>> these on-chip RAMs as sram nodes so that the memory allocations
+>>>> can be managed by the in-kernel mmio-sram driver.
+>>>>
+>>>> The first 4 patches adds the basic SRAM nodes on each of the SoCs,
+>>>> and the last patch enables the generic on-chip SRAM driver for
+>>>> keystone defconfig.
+>>>>
+>>> The series looks good in general but I would like to understand
+>>> the users of this memory in kernel. Is that going to be posted
+>>> as a follow up patch ? Is the Power controller going to make
+>>> use of this SRAM for PM code ?
+>>
+>> Yes, the users will eventually follow. Power Controller code is not
+>> gonna be using this SRAM, it has its own RAM. This memory is gonna be
+>> split between various functional features like IPC, OPTEE integration,
+>> we already have the Boot Monitor code using this. We will have the
+>> memory split by either having static child nodes or drivers requesting
+>> the memory using gen_pool API.
+>>
+> OK. Its good to add the code at least with one active user of it.
+> Since this has to anyway wait for another merge window, please post the
+> users of it so that I can pull the combined patchset.
+>
+Are you going to post new patchset or you dropped this series ?
 
-As long as we support non-DT probing of the driver this is a possible
-scenario. And with modern ARM being DT-centric I think that if anyone
-uses this driver with a modern version of the Linux kernel it's likely
-that they would have this kind of hybrid solution.
-
-So, although ugly, I think we should keep this conditional and hope that
-anyone using the driver will transition to use the DT binding.
+If you want me to include it for next merge window, please post
+refreshed patchset.
 
 Regards,
-Bjorn
+Santosh
