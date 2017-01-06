@@ -1,100 +1,49 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] power: bq27xxx: add support for NVRAM R/W access
-Date: Fri, 6 Jan 2017 02:53:14 +0100
-Message-ID: <20170106015314.7qju6eodkwldty6h@earth>
-References: <20170105021007.22088-1-matt@ranostay.consulting>
- <20170105021007.22088-4-matt@ranostay.consulting>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v2 3/4] ARM64: dts: exynos5433: use macros for pinctrl
+ configuration on Exynos5433
+Date: Fri, 06 Jan 2017 11:23:43 +0900
+Message-ID: <20170106022343.5w4d7pkydrfh2n75@gangnam.samsung>
+References: <CGME20161230041427epcas1p1151d6e28fac143c63efaf4f7c8ed432d@epcas1p1.samsung.com>
+ <20161230041421.24448-1-andi.shyti@samsung.com>
+ <20161230041421.24448-4-andi.shyti@samsung.com>
+ <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
+ <20161230151724.5wlp4hbphasmw3rg@kozik-lap>
+ <CACRpkdbX_MuLSCerq08-1VZV6VJfynjkv1QOr7ssOCGvM5aB_Q@mail.gmail.com>
+ <20170105200807.54j2ebve6kqd5bob@kozik-lap>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jxjlxtimakzalopx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170105021007.22088-4-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-disposition: inline
+In-reply-to: <20170105200807.54j2ebve6kqd5bob@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Andi Shyti <andi@etezian.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, stable <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---jxjlxtimakzalopx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Andi,
+> Please fix missing Signed-off-by and resend with Linus' tags for #1 and
+> #2 and with other accumulated tags.
 
-On Wed, Jan 04, 2017 at 06:10:07PM -0800, Matt Ranostay wrote:
-> Initial support for access and modification of the non-volatile regions
-> of the bq27425 fuel gauge DesignEnergy, DesignCapacity, and
-> TerminateVoltage settings.
->=20
-> This is intended for fine tuning the fuel gauge state machine for the
-> respective battery specifications.
->=20
-> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> ---
->  drivers/power/supply/bq27xxx_battery_i2c.c | 335 +++++++++++++++++++++++=
-++++++
->  include/linux/power/bq27xxx_battery.h      |   4 +
->  2 files changed, 339 insertions(+)
+patch #1 has already been merged in mainline:
 
-I only skipped over this one, as the changed DT binding requires
-quite some changes in this patch anyways. Here are a couple of
-comments how I would like to see this implemented:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=1259feddd0f83649d5c48d730c140b4f7f3fa288
 
-Add a patch for the power-supply core, which implements a
-structure for the battery info. Something like this:
+and patch #2 is in LinusW's -next branch.
 
-struct power_supply_battery_info {
-    uint32 energy; /* =B5Wh */
-    uint32 power;  /* =B5Ah */
-    uint32 nominal_voltage; /* =B5V */
-    /* ... */
-};
+does it still make sense to send them again? If you want I can
+send again patch 3 and 4 as independent patches with Chanwoo's
+review (the only tags).
 
-And a function in the core framework, which gets the information
-=66rom DT. The function itself should *not* be DT specific, so that
-ACPI/platformdata/whatever support can be added later without
-modifying every single driver.
-
-static struct power_supply_battery_info*
-power_supply_get_battery_info(struct power_supply *psy) {
-    if (psy->dt) {
-        /* get battery phandle or return -ENXIO */
-        /* fill and return struct */
-    }
-
-    return -ENOTSUP;
-}
-
-Then call power_supply_get_battery_info() during bq27xxx probe and
-use the struct to initialize the registers. Also I expect that
-functionality in bq27xxx_battery.c instead of bq27xxx_battery_i2c.c,
-since it's not I=B2C specific.
-
--- Sebastian
-
---jxjlxtimakzalopx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhu+IcACgkQ2O7X88g7
-+ppnEQ//VrdWF6o0Gqzg0xUzU/Gnob0kOmEeJrRBZyDIjWnNyz3ADMlhu0ahw1a8
-oXhHOoyg2myb+fhwRwz9oRh+CcWi5gw7whKvjcf1u6VY6LoQQakwlENMRw2RASfd
-bO3RH4NLius1y0GIWRJRDf9Dy9BYtkmp+bdMJSjOJCGXCevTy38xfCGZV3mbQ/x9
-bnjJJDCkB/xkQCLzTVK5pQsz6k1+xmX7VktOB4s1MMg+1DLyhdr8bOVlz9Kk3Orn
-7eDstSD5PYE/CVz2xQy53qDmU/Ho2KAyFeH+EtMkIyBrWc4VxTJlwlLcYSvrrgU1
-6IQq59Y+Prn6D1p4Bur9LJOCO7jQE8/eZwGVCyas3BTh9W07YC/8Rz9cyYLKCV07
-5zamVg+fBoP1dyHWEU4SvPRxjTjT9WX9hLwpZ+6IkceTVPmEb9gyzvYbhpZuiLnc
-scP1fa44eECRbDXY6WUwd6w6ay8Jfo3wDvt3Z6eOXfe4/8zM2Rdl6YMyTQ0QFz5i
-gAlnaFXpDxtBP0a5QpuGHfPy32AS45PaQi3vnWrLyS9SoJzyXWyAu3GfEUYO96Xv
-hJxkbNiJZXgifpsqiCsscWyLU8b5MKcBNgNewDLivtp3YVIv1GRE92WBEy/HxySJ
-4QBAEcukLwMmzYywZzj83sy1Av1txtChtvoByP6ssgI618gPoUU=
-=MQ8Y
------END PGP SIGNATURE-----
-
---jxjlxtimakzalopx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Andi
