@@ -1,70 +1,67 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2] ARM64: dts: meson-gxbb-odroidc2: Disable SCPI DVFS
-Date: Fri,  6 Jan 2017 09:04:32 +0100
-Message-ID: <1483689872-30389-1-git-send-email-narmstrong@baylibre.com>
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Fri, 06 Jan 2017 17:18:06 +0900
+Message-ID: <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
+References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
+ <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
+ <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
+ <586F2BF3.8080400@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-disposition: inline
+In-reply-to: <586F2BF3.8080400-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Donghwa Lee <dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current hardware is not able to run with all cores enabled at a
-cluster frequency superior at 1536MHz.
-But the currently shipped u-boot for the platform still reports an OPP
-table with possible DVFS frequency up to 2GHz, and will not change since
-the off-tree linux tree supports limiting the OPPs with a kernel parameter.
-A recent u-boot change reports the boot-time DVFS around 100MHz and
-the default performance cpufreq governor sets the maximum frequency.
-Previous version of u-boot reported to be already at the max OPP and
-left the OPP as is.
-Nevertheless, other governors like ondemand could setup the max frequency
-and make the system crash.
+Hi Inki,
 
-This patch disables the DVFS clock and disables cpufreq.
+Thanks for the reply, but...
 
-Fixes: 70db166a2baa ("ARM64: dts: meson-gxbb: Add SCPI with cpufreq & sensors Nodes")
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 4 ++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi         | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+> >> +static const struct drm_display_mode default_mode = {
+> >> +	.clock = 222372,
+> >> +	.hdisplay = 1440,
+> >> +	.hsync_start = 1440 + 1,
+> >> +	.hsync_end = 1440 + 1 + 1,
+> >> +	.htotal = 1440 + 1 + 1 + 1,
+> >> +	.vdisplay = 2560,
+> >> +	.vsync_start = 2560 + 1,
+> >> +	.vsync_end = 2560 + 1 + 1,
+> >> +	.vtotal = 2560 + 1 + 1 + 15,
+> >> +	.vrefresh = 60,
+> >> +	.flags = 0,
+> >> +};
+> > 
+> > how is this working with tm2e? Are these values valid for both
+> > the boards?
+> 
+> We don't need to consider tm2e board with two reasones,
+> 1. there is no tm2e board support in mainline
+> 2. the panel on tm2 would be a little bit different from one on tm2e
 
-Changes since v1 at [1] :
- - Disable scpi_clocks instead of scpi_dvfs_clock
+... this display in the Tizen Kernel is supported by both:
+tm2 [1] and tm2e [2]. The only differences are:
 
-[1] http://lkml.kernel.org/r/1483628549-29486-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+TM2:
+   clock-frequency = <14874444>;
+   hactive = <1440>;
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 238fbea..5d28e1c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -137,6 +137,10 @@
- 	};
- };
- 
-+&scpi_clocks {
-+	status = "disabled";
-+};
-+
- &uart_AO {
- 	status = "okay";
- 	pinctrl-0 = <&uart_ao_a_pins>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 51edd5b5..77caedd8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -55,7 +55,7 @@
- 		mboxes = <&mailbox 1 &mailbox 2>;
- 		shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
- 
--		clocks {
-+		scpi_clocks: clocks {
- 			compatible = "arm,scpi-clocks";
- 
- 			scpi_dvfs: scpi_clocks@0 {
--- 
-1.9.1
+TM2E:
+   clock-frequency = <16523724>;
+   hactive = <1600>;
 
+I don't know much about the differences you mention in point 2,
+but it's a pity to drop support only because we don't want to put
+in the dts the 'hactive', and 'clock-frequency' properties.
+
+Andi
+
+[1] https://git.tizen.org/cgit/platform/kernel/linux-exynos/tree/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts?h=tizen#n1284
+[2] https://git.tizen.org/cgit/platform/kernel/linux-exynos/tree/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts?h=tizen#n1270
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
