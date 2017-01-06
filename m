@@ -1,74 +1,102 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v5 3/5] input: Add support for the tm2 touchkey device driver
-Date: Sat, 7 Jan 2017 06:34:36 +0900
-Message-ID: <CAGTfZH0mkTQ4=_Xs47z95xu5=GEOuj3NW=8EBP8-jnfR0drJHQ@mail.gmail.com>
-References: <CGME20170106134356epcas1p1758fadaa2b12ad29d90e2da525456a28@epcas1p1.samsung.com>
- <20170106134350.32428-1-andi.shyti@samsung.com> <20170106134350.32428-4-andi.shyti@samsung.com>
-Reply-To: cwchoi00@gmail.com
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
+Date: Fri, 6 Jan 2017 23:46:30 +0200
+Message-ID: <73246c4a-504c-52d7-dde4-970a45dca0bd@mleia.com>
+References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170106134350.32428-4-andi.shyti@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi@etezian.org>, Jaechul Lee <galaxyra@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Luis,
 
-2017-01-06 22:43 GMT+09:00 Andi Shyti <andi.shyti@samsung.com>:
-> From: Jaechul Lee <jcsing.lee@samsung.com>
->
-> This patch adds the binding description of the tm2 touchkey
-> device driver.
->
-> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+On 01/05/2017 07:24 PM, Luis Oliveira wrote:
+> This function has the purpose of mode detection by checking the
+> device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
+> Currently only checks using OF functions (ACPI slave not supported yet).
+> 
+> Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 > ---
->  .../bindings/input/samsung,tm2-touchkey.txt        | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
->
-> diff --git a/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt b/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
-> new file mode 100644
-> index 000000000000..4de1af0f0a37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
-> @@ -0,0 +1,27 @@
-> +Samsung tm2-touchkey
+> Due to the need of checking if the I2C slave address is our own (in 
+> other words: if we are the I2C slave) I created a helper function 
+> (proposed to me by @Andy) to enable that check. 
+> Currently (because I am not able to test it using ACPI) it only 
+> supports devicetree declarations.
+> 
+>  drivers/i2c/i2c-core.c | 19 +++++++++++++++++++
+>  include/linux/i2c.h    |  1 +
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index 3de95a29024c..48e705b23c59 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -3691,6 +3691,25 @@ int i2c_slave_unregister(struct i2c_client *client)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(i2c_slave_unregister);
 > +
-> +Required properties:
-> +- compatible: must be "samsung,tm2-touchkey"
-> +- reg: I2C address of the chip.
-> +- interrupt-parent: a phandle for the interrupt controller (see interrupt
-> +       binding[0]).
-> +- interrupts: interrupt to which the chip is connected (see interrupt
-> +       binding[0]).
-> +- vcc-supply : internal regulator output. 1.8V
-> +- vdd-supply : power supply for IC 3.3V
+> +int i2c_slave_mode_detect(struct device *dev)
+> +{
+> +	struct device_node *child;
+> +	u32 reg;
 > +
-> +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +
-> +Example:
-> +       &i2c0 {
-> +               /* ... */
-> +
-> +               touchkey@20 {
-> +                       compatible = "samsung,tm2-touchkey";
-> +                       reg = <0x20>;
-> +                       interrupt-parent = <&gpa3>;
-> +                       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +                       vcc-supply=<&ldo32_reg>;
-> +                       vdd-supply=<&ldo33_reg>;
-> +               };
-> +       };
+> +	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+IS_BUILTIN(CONFIG_OF) looks excessive, check for non-NULL dev->of_node
+should be sufficient.
 
--- 
-Best Regards,
-Chanwoo Choi
+But then you may do for_each_child_of_node() loop totally unconditionally,
+because of_get_next_child() correctly handle NULL as the first argument.
+
+> +		for_each_child_of_node(dev->of_node, child) {
+> +			of_property_read_u32(child, "reg", &reg);
+> +			if (reg & I2C_OWN_SLAVE_ADDRESS)
+> +				return 1;
+
+Leaked incremented reference to a child device node, please add
+of_node_put(child) before return in the loop body.
+
+Also reg variable may be uninitialized here, if child device node
+does not have "reg" property.
+
+> +		}
+> +	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
+> +		dev_dbg(dev, "ACPI slave is not supported yet\n");
+> +	}
+
+If so, then it might be better to drop else-if stub for now.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
+> +
+>  #endif
+>  
+>  MODULE_AUTHOR("Simon G. Vogl <simon-nD9nYVNVf00W+b/DJNNodF6hYfS7NtTn@public.gmane.org>");
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index b2109c522dec..53cf99569af5 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -282,6 +282,7 @@ enum i2c_slave_event {
+>  
+>  extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
+>  extern int i2c_slave_unregister(struct i2c_client *client);
+> +extern int i2c_slave_mode_detect(struct device *dev);
+>  
+>  static inline int i2c_slave_event(struct i2c_client *client,
+>  				  enum i2c_slave_event event, u8 *val)
+> 
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
