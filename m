@@ -1,60 +1,37 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/3] dt-bindings: gpio: Add binding documentation for gpio-thunderx
-Date: Fri,  6 Jan 2017 15:22:58 -0800
-Message-ID: <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v2 3/3] MAINTAINERS: Add entry for THUNDERX GPIO Driver.
+Date: Fri,  6 Jan 2017 15:23:00 -0800
+Message-ID: <1483744980-25898-4-git-send-email-ddaney.cavm@gmail.com>
 References: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483744980-25898-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: David Daney <david.daney@cavium.com>
 
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- .../devicetree/bindings/gpio/gpio-thunderx.txt     | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt b/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
-new file mode 100644
-index 0000000..3f883ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
-@@ -0,0 +1,27 @@
-+Cavium ThunderX/OCTEON-TX GPIO controller bindings
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 97d0b68..3d254e9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10886,6 +10886,11 @@ M:	Andreas Noever <andreas.noever@gmail.com>
+ S:	Maintained
+ F:	drivers/thunderbolt/
+ 
++THUNDERX GPIO DRIVER
++M:	David Daney <david.daney@cavium.com>
++S:	Maintained
++F:	drivers/gpio/gpio-thunderx.c
 +
-+Required Properties:
-+- reg: The controller bus address.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Must be 2.
-+  - First cell is the GPIO pin number relative to the controller.
-+  - Second cell is a standard generic flag bitfield as described in gpio.txt.
-+
-+Optional Properties:
-+- compatible: "cavium,thunder-8890-gpio", unused as PCI driver binding is used.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: Must be present and have value of 2 if
-+                    "interrupt-controller" is present.
-+  - First cell is the GPIO pin number relative to the controller.
-+  - Second cell is triggering flags as defined in interrupts.txt.
-+
-+Example:
-+
-+gpio_6_0: gpio@6,0 {
-+	compatible = "cavium,thunder-8890-gpio";
-+	reg = <0x3000 0 0 0 0>; /*  DEVFN = 0x30 (6:0) */
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+};
+ TI BQ27XXX POWER SUPPLY DRIVER
+ R:	Andrew F. Davis <afd@ti.com>
+ F:	include/linux/power/bq27xxx_battery.h
 -- 
 1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
