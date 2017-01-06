@@ -1,65 +1,102 @@
-From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/5] drivers: mmc: sunxi: limit A64 MMC2 to
- 8K DMA buffer
-Date: Thu, 5 Jan 2017 23:33:28 +0000
-Message-ID: <87b26848-4f86-f2d2-3f82-db0937c572e2@arm.com>
-References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
- <1483398226-29321-3-git-send-email-andre.przywara@arm.com>
- <20170104140750.7qs4pvggwjdj5cma@rob-hp-laptop>
- <20170105175746.fq6crpc3krz7tzxi@lukather>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv3] mfd: cpcap: Add minimal support
+Date: Thu, 5 Jan 2017 16:08:23 -0800
+Message-ID: <20170106000823.GB2630@atomide.com>
+References: <20161206004856.11996-1-tony@atomide.com>
+ <20170103163515.GM2977@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBUFPXPBQKGQESX44OOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170105175746.fq6crpc3krz7tzxi@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170103163515.GM2977@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/17 17:57, Maxime Ripard wrote:
-> Hi Rob,
+* Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [170103 08:32]:
+> On Mon, 05 Dec 2016, Tony Lindgren wrote:
+> > +static int cpcap_init_irq_chip(struct cpcap_ddata *cpcap, int irq_chip,
+> > +			       int irq_start, int nr_irqs)
+> > +{
+> > +	struct regmap_irq_chip *chip = &cpcap_irq_chip[irq_chip];
+> > +	int i, ret;
+> > +
+> > +	for (i = irq_start; i < irq_start + nr_irqs; i++) {
+> > +		struct regmap_irq *cpcap_irq = &cpcap->irqs[i];
+> > +
+> > +		cpcap_irq->reg_offset =
+> > +			((i - irq_start) / cpcap->regmap_conf->val_bits) *
+> > +			cpcap->regmap_conf->reg_stride;
+> > +		cpcap_irq->mask = BIT(i % cpcap->regmap_conf->val_bits);
 > 
-> On Wed, Jan 04, 2017 at 08:07:50AM -0600, Rob Herring wrote:
->> On Mon, Jan 02, 2017 at 11:03:43PM +0000, Andre Przywara wrote:
->>> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>
->>> Unlike the A64 user manual reports, the third MMC controller on the
->>> A64 (and the only one capable of 8-bit HS400 eMMC transfers) has a
->>> DMA buffer size limit of 8KB (much like the very old Allwinner SoCs).
->>> This does not affect the other two controllers, so introduce a new
->>> DT compatible string to let the driver use different settings for that
->>> particular device. This will also help to enable the high-speed transfer
->>> modes of that controller later.
->>>
->>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
->>>  drivers/mmc/host/sunxi-mmc.c                        | 7 +++++++
->>>  2 files changed, 8 insertions(+)
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Some kind of a digression on this: we have three MMC controllers on
-> this SoC. Like this patch shows, the third one is clearly different,
-> and supports both more modes, a wider bus, and specific quirks. We
-> need a new compatible for this one, everything's perfect.
-> 
-> However, the other two are mostly the same, but seems to need
-> different tuning parameters to get more performances out of the
-> controller (but this is unclear yet). How do we usually deal with
-> that?
+> If a code segment takes more than a few seconds to work out, it's
+> either too cluttered (break it down), too complex (simplify it) or if
+> neither of the first two approaches are possible, then a comment is
+> required.
 
-I guess you wanted to hear Rob's opinion ;-), but "get more performance"
-sounds like we add one (or more) properties to tune those values.
-If I get this right, it works with default values, but is sub-optimal?
+Hmm yeah I could not read that myself any longer :) Will split.
 
-Cheers,
-Andre.
+> > +static int cpcap_probe(struct spi_device *spi)
+> > +{
+> > +	const struct of_device_id *match;
+> > +	int ret = -EINVAL;
+> 
+> What is the purpose of initialising ret?
+
+Seems to be not needed.
+
+> > +	struct cpcap_ddata *cpcap;
+> > +
+> > +	match = of_match_device(of_match_ptr(cpcap_of_match), &spi->dev);
+> > +	if (!match)
+> > +		return -ENODEV;
+> > +
+> > +	cpcap = devm_kzalloc(&spi->dev, sizeof(*cpcap), GFP_KERNEL);
+> > +	if (!cpcap)
+> > +		return -ENOMEM;
+> > +
+> > +	cpcap->spi = spi;
+> > +	spi_set_drvdata(spi, cpcap);
+> > +
+> > +	spi->bits_per_word = 16;
+> > +	spi->mode = SPI_MODE_0 | SPI_CS_HIGH;
+> > +
+> > +	ret = spi_setup(spi);
+> > +	if (ret < 0)
+> > +		return ret;
+> 
+> Is it possible for spi_setup() to return >0?
+> 
+> If not, then "if (!ret)" will do.
+
+You're right, the kerneldoc for spi_setup() says:
+
+"Return: zero on success, else a negative error code."
+
+Need to use "if (ret)" to return on error though, not "if (!ret)".
+
+> > +static struct spi_driver cpcap_driver = {
+> > +	.driver = {
+> > +		.name = "cpcap-core",
+> > +		.of_match_table = cpcap_of_match,
+> 
+> of_match_ptr() ?
+
+Well there needs to be a platform specific init added at least in some
+cases. I have not quite yet deciphered what all it does for droid 4
+as it's already done for kexec based booting.
+
+> > + * Copyright (C) 2016 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>.
+> 
+> Actually, it's more traditional to place the CR at the top.
+
+Sure. Will repost v4 shortly.
+
+Thanks,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
