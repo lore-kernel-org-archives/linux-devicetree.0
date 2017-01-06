@@ -1,111 +1,58 @@
-From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [RESEND 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
-Date: Fri, 6 Jan 2017 08:59:19 +0800
-Message-ID: <586EEBE7.4050709@hisilicon.com>
-References: <1482744972-56622-1-git-send-email-puck.chen@hisilicon.com>
- <1482744972-56622-2-git-send-email-puck.chen@hisilicon.com>
- <20170105141456.GA5710@hector.attlocal.net>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] phy: rockchip-emmc: try to get drive impedance from
+ DT
+Date: Fri, 6 Jan 2017 09:09:53 +0800
+Message-ID: <669c85b1-f0fb-c58e-90a8-3aeac3118656@rock-chips.com>
+References: <1483608682-226716-1-git-send-email-shawn.lin@rock-chips.com>
+ <1483608682-226716-2-git-send-email-shawn.lin@rock-chips.com>
+ <CAD=FV=V0+=yknRQAZu98FVsbKnRTX_5beeKsLe01P0qT7gb5Zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170105141456.GA5710-3KkwrOJo9xYlRp7syxWybdHuzzzSOjJt@public.gmane.org>
+In-Reply-To: <CAD=FV=V0+=yknRQAZu98FVsbKnRTX_5beeKsLe01P0qT7gb5Zg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2017/1/5 22:14, Andy Gross wrote:
-> On Mon, Dec 26, 2016 at 05:36:12PM +0800, Chen Feng wrote:
->> Add initial dtsi file to support Hisilicon Hi3660 SoC with
->> support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
+On 2017/1/6 8:51, Doug Anderson wrote:
+> Hi,
+>
+> On Thu, Jan 5, 2017 at 1:31 AM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> Try to get drive impedance from DT and use it, otherwise
+>> use 50ohm by default in order not to break the existing boards
+>> as 50ohm works fine for them already.
 >>
->> Also add dts file to support HiKey960 development board which
->> based on Hi3660 SoC.
->> The output console is earlycon "earlycon=pl011,0xfdf05000".
->> And the con_init uart5 with a fixed clock, which already
->> configured at bootloader.
->>
->> When clock is available, the uart5 will be modified.
->>
->> Tested on HiKey960 Board.
->>
->> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >> ---
->>  arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
->>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  34 +++++
->>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 156 ++++++++++++++++++++++
->>  3 files changed, 191 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 >>
->> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
->> index d5f43a0..b633b5d 100644
->> --- a/arch/arm64/boot/dts/hisilicon/Makefile
->> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
->> @@ -1,4 +1,5 @@
->>  dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
->> +dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
->>  dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
->>  dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
->>  
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> new file mode 100644
->> index 0000000..3d7aead
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> @@ -0,0 +1,34 @@
->> +/*
->> + * dts file for Hisilicon HiKey960 Development Board
->> + *
->> + * Copyright (C) 2016, Hisilicon Ltd.
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "hi3660.dtsi"
->> +
->> +/ {
->> +	model = "HiKey960";
->> +	compatible = "hisilicon,hi3660";
->> +
->> +	aliases {
->> +		serial5 = &uart5;       /* console UART */
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial5:115200n8";
->> +	};
->> +
->> +	memory@0 {
->> +		device_type = "memory";
->> +		reg = <0x0 0x00400000 0x0 0xBFE00000>;
-> 
-> Use lower case letters for hex numbers.  0xbfe00000.
-> 
+>>  drivers/phy/phy-rockchip-emmc.c | 29 ++++++++++++++++++++++++++++-
+>>  1 file changed, 28 insertions(+), 1 deletion(-)
+>
+> I could have sworn that you somehow needed to make sure that the eMMC
+> part itself needed to also be updated to be told the matching drive
+> impedance so you don't get a mismatch.  How do you make that work?
+
+No I didn't. So that means the eMMC part itself still couldn't be
+updated. The intention for me to introduce this only for emmc phy is
+that I got report that the default drive impedance of one eMMC is not
+50ohms, so now we haven't been able to update it for eMMC part but maybe
+we could just update it for the phy itself to match them in between.
 
 
-ok, thanks!
->> +	};
->> +
->> +	soc {
->> +		uart5: uart@fdf05000 {
->> +			status = "ok";
->> +		};
->> +	};
->> +};
-> 
-> <snip>
-> 
-> Regards,
-> 
-> Andy
-> 
-> .
-> 
+> ...or am I just confused.  I meant to try to dig more, but ran out of
+> time today.  :(
+>
+> -Doug
+>
+>
+>
+
+
+-- 
+Best Regards
+Shawn Lin
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
