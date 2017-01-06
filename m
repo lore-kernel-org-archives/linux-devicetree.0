@@ -1,139 +1,49 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/3] ARM64: dts: exynos5433: add DECON_TV node
-Date: Fri, 06 Jan 2017 12:41:31 +0900
-Message-ID: <586F11EB.4060309@samsung.com>
-References: <CGME20170105152604eucas1p25340c974fa7f375905c958e2bff6d96f@eucas1p2.samsung.com>
- <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH 2/2] media: rc: add driver for IR remote receiver on MT7623
+ SoC
+Date: Fri, 06 Jan 2017 12:43:46 +0900
+Message-ID: <20170106034346.7njhyhtsc4yado5c@gangnam.samsung>
+References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
+ <CGME20170105160810epcas3p1b7a85197c15fbbe87e08c736259935d6@epcas3p1.samsung.com>
+ <1483632384-8107-3-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1483629943-31183-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-disposition: inline
+In-reply-to: <1483632384-8107-3-git-send-email-sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sean.wang@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, keyhaede@gmail.com, sean@mess.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org, hverkuil@xs4all.nl, hdegoede@redhat.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrej,
+Hi Sean,
 
-When I applied these patch on next-branch(20170105) for test,
-these patch have the conflict.
+> +	ir->rc = rc_allocate_device();
 
-On 2017년 01월 06일 00:25, Andrzej Hajda wrote:
-> DECON_TV is 2nd display controller on Exynos5433, used in HDMI path
-> or 2nd DSI path.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 44 ++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> index 8cbfd1d..b47951b 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -821,6 +821,28 @@
->  			};
->  		};
->  
-> +		decon_tv: decon@13880000 {
-> +			compatible = "samsung,exynos5433-decon-tv";
-> +			reg = <0x13880000 0x20B8>;
+Yes, you should use devm_rc_allocate_device(...)
 
-As I knew, the maintainer prefer to use the small letter
-on offset instead of capital letter.
-- 0x20B8 -> 0x20b8
+Besides, standing to this patch which is not in yet:
 
-> +			clocks = <&cmu_disp CLK_PCLK_DECON_TV>,
-> +				 <&cmu_disp CLK_ACLK_DECON_TV>,
-> +				 <&cmu_disp CLK_ACLK_SMMU_TV0X>,
-> +				 <&cmu_disp CLK_ACLK_XIU_TV0X>,
-> +				 <&cmu_disp CLK_PCLK_SMMU_TV0X>,
-> +				 <&cmu_disp CLK_SCLK_DECON_TV_VCLK>,
-> +				 <&cmu_disp CLK_SCLK_DECON_TV_ECLK>;
-> +			clock-names = "pclk", "aclk_decon", "aclk_smmu_decon0x",
-> +				      "aclk_xiu_decon0x", "pclk_smmu_decon0x",
-> +				      "sclk_decon_vclk", "sclk_decon_eclk";
-> +			samsung,disp-sysreg = <&syscon_disp>;
-> +			interrupt-names = "fifo", "vsync", "lcd_sys";
-> +			interrupts = <0 210 0>, <0 211 0>, <0 212 0>;
+https://lkml.org/lkml/2016/12/18/39
 
-Use the interrupt definitions with GIC_SPI.
-Also, decon of Exynos5433 uses the IRQ_TYPE_LEVEL_HIGH
-intead of IRQ_TYPE_NONE(0). I think you need to check it.
+rc_allocate_device should provide the driver type during
+allocation, so it should be:
 
-> +			power-domains = <&pd_disp>;
+	ir->rc = rc_allocate_device(RC_DRIVER_IR_RAW);
 
-The exynos5433.dtsi has not yet supported the power domains.
-Exynos5433.dtsi does not include the all of power domains.
+and this line can be removed:
 
+> +	ir->rc->driver_type = RC_DRIVER_IR_RAW;
 
-> +			status = "disabled";
-> +			iommus = <&sysmmu_tv0x>, <&sysmmu_tv1x>;
-> +			iommu-names = "m0", "m1";
-> +		};
-> +
->  		syscon_disp: syscon@13b80000 {
->  			compatible = "syscon";
->  			reg = <0x13b80000 0x1010>;
-> @@ -926,6 +948,28 @@
->  			power-domains = <&pd_disp>;
+I don't know when Mauro will take the patch above.
 
-ditto.
-
->  		};
->  
-> +		sysmmu_tv0x: sysmmu@0x13a20000 {
-> +			compatible = "samsung,exynos-sysmmu";
-> +			reg = <0x13a20000 0x1000>;
-> +			interrupts = <0 214 0>;
-
-Use the interrupt definitions with GIC_SPI.
-Also, other sysmmu of Exynos5433 uses the IRQ_TYPE_LEVEL_HIGH
-intead of IRQ_TYPE_NONE(0). I think you need to check it.
-
-
-> +			clock-names = "pclk", "aclk";
-> +			clocks = <&cmu_disp CLK_PCLK_SMMU_TV0X>,
-> +				<&cmu_disp CLK_ACLK_SMMU_TV0X>;
-> +			#iommu-cells = <0>;
-> +			power-domains = <&pd_disp>;
-
-ditto.
-
-> +		};
-> +
-> +		sysmmu_tv1x: sysmmu@0x13a30000 {
-> +			compatible = "samsung,exynos-sysmmu";
-> +			reg = <0x13a30000 0x1000>;
-> +			interrupts = <0 216 0>;
-
-ditto. Use the interrupt definitions.
-
-> +			clock-names = "pclk", "aclk";
-> +			clocks = <&cmu_disp CLK_PCLK_SMMU_TV1X>,
-> +				<&cmu_disp CLK_ACLK_SMMU_TV1X>;
-> +			#iommu-cells = <0>;
-> +			power-domains = <&pd_disp>;
-
-ditto.
-
-> +		};
-> +
->  		sysmmu_gscl0: sysmmu@0x13C80000 {
-
-ditto.
-- 0x13C80000 -> 0x13c80000
-
->  			compatible = "samsung,exynos-sysmmu";
->  			reg = <0x13C80000 0x1000>;
-
-ditto.
-- 0x13C80000 -> 0x13c80000
-
-> 
-
--- 
-Best Regards,
-Chanwoo Choi
-S/W Center, Samsung Electronics
+Andi
