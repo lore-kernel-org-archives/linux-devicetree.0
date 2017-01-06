@@ -1,8 +1,7 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 7/9] ARM: dts: keystone-k2l: Reserve MSM RAM for boot
- monitor
-Date: Fri, 6 Jan 2017 15:57:31 -0600
-Message-ID: <20170106215733.41637-8-s-anna@ti.com>
+Subject: [PATCH v2 4/9] ARM: dts: keystone-k2g: Add MSM RAM node
+Date: Fri, 6 Jan 2017 15:57:28 -0600
+Message-ID: <20170106215733.41637-5-s-anna@ti.com>
 References: <20170106215733.41637-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,34 +21,36 @@ To: Santosh Shilimkar <ssantosh@kernel.org>
 Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Vitaly Andrianov <vitalya@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Keystone 2 boot monitor uses 32 KB of the MSM RAM @ 0x0c1f8000
-on 66AK2L SoCs, so add a reserved child node for the same.
-
-This address is aligned to the values used within the latest boot
-monitor firmware [1] as of commit cf8b431e8b3b ("soc: Move load
-address to end of MSMC").
-
-[1] git://git.ti.com/processor-firmware/ks2-boot-monitor.git
+Add the RAM managed by the Multicore Shared Memory Controller (MSMC)
+as a mmio-sram node. The 66AK2G SoCs have 1 MB of such memory. Any
+specific MSM memory range needed by a software module ought to be
+reserved using an appropriate child node.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2l.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+v2: No code changes, SoC name in commit message corrected to use 66AK2G
 
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index edc08de4e196..b58015737a35 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -210,6 +210,10 @@
- 			ranges = <0x0 0x0c000000 0x200000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+
-+			sram-bm@1f8000 {
-+				reg = <0x001f8000 0x8000>;
-+			};
- 		};
+ arch/arm/boot/dts/keystone-k2g.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 63c7cf0c6b6d..e63e57e03b7c 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -77,6 +77,14 @@
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
+ 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
  
- 		dspgpio0: keystone_dsp_gpio@02620240 {
++		msm_ram: msmram@0c000000 {
++			compatible = "mmio-sram";
++			reg = <0x0c000000 0x100000>;
++			ranges = <0x0 0x0c000000 0x100000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
+ 		k2g_pinctrl: pinmux@02621000 {
+ 			compatible = "pinctrl-single";
+ 			reg = <0x02621000 0x410>;
 -- 
 2.10.2
