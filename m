@@ -1,107 +1,72 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Fri, 6 Jan 2017 11:26:49 -0500
-Message-ID: <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
-	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
-	<20170105115528.GG679@arm.com>
-	<CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
-	<20170105154950.GM679@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170105154950.GM679-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 6/9] dt/bindings: Add a serial/UART attached device binding
+Date: Fri,  6 Jan 2017 10:26:32 -0600
+Message-ID: <20170106162635.19677-7-robh@kernel.org>
+References: <20170106162635.19677-1-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170106162635.19677-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Cc: Loic Poulain <loic.poulain-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 5, 2017 at 10:49 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Thu, Jan 05, 2017 at 10:27:27AM -0500, Rob Clark wrote:
->> On Thu, Jan 5, 2017 at 6:55 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Tue, Jan 03, 2017 at 04:30:54PM -0500, Rob Clark wrote:
->> >> TODO maybe we want two options, one to enable stalling, and 2nd to punt
->> >> handling to wq?  I haven't needed to use mm APIs from fault handler yet
->> >> (although it is something that I think we'll want some day).  Perhaps
->> >> stalling support is limited to just letting driver dump some extra
->> >> debugging information otherwise.  Threaded handling probably only useful
->> >> with stalling, but inverse may not always be true.
->> >
->> > I'd actually like to see this stuck on a worker thread, because I think
->> > that's more generally useful and I don't want to have a situation where
->> > sometimes the IOMMU fault notifier is run in IRQ context and sometimes it's
->> > not.
->>
->> So I was talking a bit w/ Jordan on IRC yesterday..  and we also have
->> the GPU's hw hang-detect to contend with.  So I *suspect* that when we
->> get to the point of using this to do things like page in things from
->> swap and resume the faulting transaction, we probably want to get
->> called immediately from the IRQ handler so we can disable the hw
->> hang-detect.
->
-> Well, if you want to use an SMMU for paging, then the GPU driver would
-> need to request that explicitly when allocating its DMA buffers, to that
-> would be the time to either delay or disable the hang detection.
+Add a common binding for describing serial/UART attached devices. Common
+examples are Bluetooth, WiFi, NFC and GPS devices.
 
-If userspace is using SVM, for example, it is pretty impossible to
-know when to expect a fault.  The best you could do is keep track that
-*some* process which has active work queued up for gpu is using SVM
-and disable hang detect for *everyone*.. which is kind of sad.
+Serial attached devices are represented as child nodes of a UART node.
+This may need to be extended for more complex devices with multiple
+interfaces, but for the simple cases a child node is sufficient.
 
->> I'm not sure if the better solution then would be to have two fault
->> callbacks, one immediately from the IRQ and a later one from wq.  Or
->> let the driver handle the wq business and give it a way to tell the
->> IOMMU when to resume.
->>
->> I kinda think we should punt on the worker thread for now until we are
->> ready to resume faulting transactions, because I guess a strong chance
->> that whatever way we do it now will be wrong ;-)
->
-> I guess what I'm after is for you to change the interrupt handlers to be
-> threaded, like they are for SMMUv3. I *think* you can do that with a NULL
-> thread_fn for now, and just call report_iommu_fault from the handler.
-> The return value of that could, in theory, be used to queued the paging
-> request and wake the paging thread in future.
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/serial/slave-device.txt    | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/slave-device.txt
 
-If we only pass in the non-threaded irq fxn, I'm not really sure how
-that changes anything.. or maybe I'm not understanding what you mean.
+diff --git a/Documentation/devicetree/bindings/serial/slave-device.txt b/Documentation/devicetree/bindings/serial/slave-device.txt
+new file mode 100644
+index 000000000000..9b7c2d651345
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/slave-device.txt
+@@ -0,0 +1,34 @@
++Serial Slave Device DT binding
++
++This documents the binding structure and common properties for serial
++attached devices. Common examples include Bluetooth, WiFi, NFC and GPS
++devices.
++
++qSerial attached devices shall be a child node of the host UART device the
++slave device is attached to. It is expected that the attached device is
++the only child node of the UART device. The slave device node name shall
++reflect the generic type of device for the node.
++
++Required Properties:
++
++- compatible 	: A string reflecting the vendor and specific device the node
++		  represents.
++
++Optional Properties:
++
++- reg		: A single cell representing the port/line number of the
++		  host UART. Only used if the host UART is a single node
++		  with multiple ports.
++
++Example:
++
++serial@1234 {
++	compatible = "ns16550a";
++	interrupts = <1>;
++
++	bluetooth {
++		compatible = "brcm,bcm43341-bt";
++		interrupt-parent = <&gpio>;
++		interrupts = <10>;
++	};
++};
+--
+2.10.1
 
-But yeah, I guess we could use request_threaded_irq() to get both IRQ
-context notification and a later thread context notification rather
-than doing the wq thing.  Either way the iommu API has to change
-slightly.
-
->> > I wonder if this should also be predicated on the compatible string, so
->> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
->> > the compatible string isn't specific enough to identify an implementation
->> > with the required SS behaviour? On the other hand, it feels pretty
->> > redundant and a single "stalling works" property is all we need.
->>
->> We could also drop the property and key the behavior on specific
->> compat strings I guess.  Having both seems a bit odd.  Anyways, I'll
->> defer to DT folks about what the cleaner approach is.
->
-> As Robin pointed out, we do need to be able to distinguish the integration
-> of the device from the device itself. For example, MMU-9000 might be capable
-> of stalling, but if it's bolted to a PCI RC, it's not safe to do so.
-
-Hmm, well we install the fault handler on the iommu_domain..  perhaps
-maybe a combo of dts property (or deciding based on more specific
-compat string), plus extra param passed in to
-iommu_set_fault_hander().  The dts property or compat string to
-indicate whether the iommu (and how it is wired up) can handle stalls,
-and enable_stall param when fault handler is registered to indicate
-whether the device itself can cope.. if either can't do stalling, then
-don't set CFCFG.
-
-BR,
--R
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
