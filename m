@@ -1,49 +1,82 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v2 3/4] ARM64: dts: exynos5433: use macros for pinctrl
- configuration on Exynos5433
-Date: Fri, 06 Jan 2017 11:23:43 +0900
-Message-ID: <20170106022343.5w4d7pkydrfh2n75@gangnam.samsung>
-References: <CGME20161230041427epcas1p1151d6e28fac143c63efaf4f7c8ed432d@epcas1p1.samsung.com>
- <20161230041421.24448-1-andi.shyti@samsung.com>
- <20161230041421.24448-4-andi.shyti@samsung.com>
- <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
- <20161230151724.5wlp4hbphasmw3rg@kozik-lap>
- <CACRpkdbX_MuLSCerq08-1VZV6VJfynjkv1QOr7ssOCGvM5aB_Q@mail.gmail.com>
- <20170105200807.54j2ebve6kqd5bob@kozik-lap>
+From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] power: bq27xxx: add support for NVRAM R/W access
+Date: Thu, 5 Jan 2017 18:34:03 -0800
+Message-ID: <CAJ_EiSTVv90QSB6TY7+5KXWPbLkkr5vEXpDQrQ0VCvtAkddt5A@mail.gmail.com>
+References: <20170105021007.22088-1-matt@ranostay.consulting>
+ <20170105021007.22088-4-matt@ranostay.consulting> <20170106015314.7qju6eodkwldty6h@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-disposition: inline
-In-reply-to: <20170105200807.54j2ebve6kqd5bob@kozik-lap>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Andi Shyti <andi@etezian.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, stable <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170106015314.7qju6eodkwldty6h@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Thu, Jan 5, 2017 at 5:53 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Jan 04, 2017 at 06:10:07PM -0800, Matt Ranostay wrote:
+>> Initial support for access and modification of the non-volatile regions
+>> of the bq27425 fuel gauge DesignEnergy, DesignCapacity, and
+>> TerminateVoltage settings.
+>>
+>> This is intended for fine tuning the fuel gauge state machine for the
+>> respective battery specifications.
+>>
+>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>> ---
+>>  drivers/power/supply/bq27xxx_battery_i2c.c | 335 ++++++++++++++++++++++=
++++++++
+>>  include/linux/power/bq27xxx_battery.h      |   4 +
+>>  2 files changed, 339 insertions(+)
+>
+> I only skipped over this one, as the changed DT binding requires
+> quite some changes in this patch anyways. Here are a couple of
+> comments how I would like to see this implemented:
+>
+> Add a patch for the power-supply core, which implements a
+> structure for the battery info. Something like this:
+>
+> struct power_supply_battery_info {
+>     uint32 energy; /* =C2=B5Wh */
+>     uint32 power;  /* =C2=B5Ah */
+>     uint32 nominal_voltage; /* =C2=B5V */
+>     /* ... */
+> };
+>
+> And a function in the core framework, which gets the information
+> from DT. The function itself should *not* be DT specific, so that
+> ACPI/platformdata/whatever support can be added later without
+> modifying every single driver.
+>
+> static struct power_supply_battery_info*
+> power_supply_get_battery_info(struct power_supply *psy) {
+>     if (psy->dt) {
+>         /* get battery phandle or return -ENXIO */
+>         /* fill and return struct */
+>     }
+>
+>     return -ENOTSUP;
+> }
+>
+> Then call power_supply_get_battery_info() during bq27xxx probe and
+> use the struct to initialize the registers. Also I expect that
+> functionality in bq27xxx_battery.c instead of bq27xxx_battery_i2c.c,
+> since it's not I=C2=B2C specific.
 
-> Andi,
-> Please fix missing Signed-off-by and resend with Linus' tags for #1 and
-> #2 and with other accumulated tags.
+They may not be i2c specific but they are only used by the i2c path of
+the code currently. Do you think that platform data would ever have a
+struct to pass with the respective data?
 
-patch #1 has already been merged in mainline:
+Also it would have to be in bq27xxx_battery_setup() and not
+bq27xxx_battery_platform_probe() since the former is only thing called
+by both code paths.
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=1259feddd0f83649d5c48d730c140b4f7f3fa288
 
-and patch #2 is in LinusW's -next branch.
-
-does it still make sense to send them again? If you want I can
-send again patch 3 and 4 as independent patches with Chanwoo's
-review (the only tags).
-
-Thanks,
-Andi
+>
+> -- Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
