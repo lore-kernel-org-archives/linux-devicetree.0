@@ -1,48 +1,31 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/5] Use mmio-sram driver for Keystone MSMC RAM
-Date: Fri, 6 Jan 2017 11:13:06 -0800
-Message-ID: <0417f3bc-395f-4cff-153a-25c315773286@oracle.com>
-References: <20160901225846.31058-1-s-anna@ti.com>
- <d797bb0d-41b5-45a7-6faf-95baaab0215b@oracle.com>
- <f6920801-554d-18e8-f140-44aeeb2f878e@ti.com>
- <287b7e1d-1453-2832-515d-e7e51373a3bc@oracle.com>
- <3abc3c7d-2f45-f5dd-e6f5-c03008d22d56@oracle.com>
- <b49bfb08-292f-ee26-b385-fdba304571b0@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 6/9] dt/bindings: Add a serial/UART attached device binding
+Date: Fri, 06 Jan 2017 20:21:34 +0100
+Message-ID: <3363597.IVJfReRkL0@wuerfel>
+References: <20170106162635.19677-1-robh@kernel.org> <20170106162635.19677-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b49bfb08-292f-ee26-b385-fdba304571b0@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitaly Andrianov <vitalya@ti.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170106162635.19677-7-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marcel Holtmann <marcel@holtmann.org>, Jiri Slaby <jslaby@suse.com>, Sebastian Reichel <sre@kernel.org>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Loic Poulain <loic.poulain@intel.com>, Pavel Machek <pavel@ucw.cz>, NeilBrown <neil@brown.name>, Linus Walleij <linus.walleij@linaro.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/6/2017 11:10 AM, Suman Anna wrote:
-> Hi Santosh,
->
+On Friday, January 6, 2017 10:26:32 AM CET Rob Herring wrote:
+> +Optional Properties:
+> +
+> +- reg          : A single cell representing the port/line number of the
+> +                 host UART. Only used if the host UART is a single node
+> +                 with multiple ports.
+> +
 
->>> OK. Its good to add the code at least with one active user of it.
->>> Since this has to anyway wait for another merge window, please post the
->>> users of it so that I can pull the combined patchset.
->>>
->> Are you going to post new patchset or you dropped this series ?
->>
->> If you want me to include it for next merge window, please post
->> refreshed patchset.
->
-> No, haven't dropped the series, will post it today. You prefer the
-> series on -rc1 or -rc2, not that it makes a difference.
->
-Right. rc1 is just fine.
+If there is a 'reg' property in the child, I guess we should also
+document a #address-cells/#size-cells value for the parent.
 
-Regards,
-Sasntosh
+Can you give an example of a multi-port serial device we support?
+I was expecting that we already need a device node per port anyway,
+to make the console work.
+
+	Arnd
