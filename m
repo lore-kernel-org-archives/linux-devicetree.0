@@ -1,101 +1,68 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH 17/22] power: supply: add battery driver for AXP20X and
- AXP22X PMICs
-Date: Fri, 6 Jan 2017 09:29:07 +0100
-Message-ID: <b26272cc-d8c9-f213-ab66-a24d7bc30dc4@free-electrons.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-18-quentin.schulz@free-electrons.com>
- <CAGb2v66XnWOGcaLeRo+cb6NGqfm_cyJVoK+GURUo5iV4pdZzew@mail.gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Fri, 06 Jan 2017 17:36:56 +0900
+Message-ID: <586F5728.1010800@samsung.com>
+References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
+ <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
+ <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
+ <586F2BF3.8080400@samsung.com>
+ <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v66XnWOGcaLeRo+cb6NGqfm_cyJVoK+GURUo5iV4pdZzew@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, devicetree@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 06/01/2017 04:39, Chen-Yu Tsai wrote:
->  Hi,
-> 
-> On Tue, Jan 3, 2017 at 12:37 AM, Quentin Schulz
-> <quentin.schulz@free-electrons.com> wrote:
-[...]
->> +       case POWER_SUPPLY_PROP_CURRENT_MAX:
->> +               ret = regmap_read(axp20x_batt->regmap, AXP20X_CHRG_CTRL1, &reg);
->> +               if (ret)
->> +                       return ret;
->> +
->> +               reg &= AXP20X_CHRG_CTRL1_TGT_CURR;
->> +               val->intval = reg * 100000 + 300000;
->> +               break;
-> 
-> 
-> This controls the charge current. I believe the correct property to use
-> is CONSTANT_CHARGE_CURRENT. And you should add CONSTANT_CHARGE_CURRENT_MAX
-> which returns the highest possible setting.
-> 
-
-ACK.
-
-> Also letting the user control this might not always be a good idea.
-> IIUC, LiPo batteries can only be charged at 1C, where C is the
-> rated capacity (X mAh).
-> 
-
-OK. Should I get the charge current from a DT property then?
-
-Like "x-powers,charge-current = <300000>;"
-It's close to what has been done in bq24257_charger for example.
-
-[...]
->> +static enum power_supply_property axp20x_battery_props[] = {
->> +       POWER_SUPPLY_PROP_PRESENT,
->> +       POWER_SUPPLY_PROP_ONLINE,
->> +       POWER_SUPPLY_PROP_STATUS,
->> +       POWER_SUPPLY_PROP_VOLTAGE_NOW,
->> +       POWER_SUPPLY_PROP_CURRENT_NOW,
->> +       POWER_SUPPLY_PROP_CURRENT_MAX,
->> +       POWER_SUPPLY_PROP_HEALTH,
->> +       POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
->> +       POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
->> +       POWER_SUPPLY_PROP_CAPACITY,
-> 
-> You can also add POWER_SUPPLY_PROP_TECHNOLOGY, which would return
-> POWER_SUPPLY_TECHNOLOGY_LIPO.
-> 
-
-Hum.. There are also POWER_SUPPLY_TECHNOLOGY_LION,
-POWER_SUPPLY_TECHNOLOGY_LiFe and POWER_SUPPLY_TECHNOLOGY_LiMn which are
-all Lithium-based batteries. From the datasheet, it can take a "single
-cell Li-battery (Li-Ion/Polymer)". So I guess it's either
-POWER_SUPPLY_TECHNOLOGY_LION or POWER_SUPPLY_TECHNOLOGY_LIPO.
-
-> It is also possible to do POWER_SUPPLY_PROP_CHARGE_TYPE. According
-> to the manual, if the battery is charging, it is in constant current
-> mode (POWER_SUPPLY_CHARGE_TYPE_FAST) when V_battery < V_target.
-> When V_battery == V_target, it is in constant voltage mode, though
-> I don't think this is the same as POWER_SUPPLY_CHARGE_TYPE_TRICKLE.
-> When it is not charging, you can return POWER_SUPPLY_CHARGE_TYPE_NONE.
-> 
-
-ACK, I'll look into that.
-
-Thanks,
-Quentin
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+CgoyMDE364WEIDAx7JuUIDA27J28IDE3OjE47JeQIEFuZGkgU2h5dGkg7J20KOqwgCkg7JO0IOq4
+gDoKPiBIaSBJbmtpLAo+IAo+IFRoYW5rcyBmb3IgdGhlIHJlcGx5LCBidXQuLi4KPiAKPj4+PiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGRlZmF1bHRfbW9kZSA9IHsKPj4+
+PiArCS5jbG9jayA9IDIyMjM3MiwKPj4+PiArCS5oZGlzcGxheSA9IDE0NDAsCj4+Pj4gKwkuaHN5
+bmNfc3RhcnQgPSAxNDQwICsgMSwKPj4+PiArCS5oc3luY19lbmQgPSAxNDQwICsgMSArIDEsCj4+
+Pj4gKwkuaHRvdGFsID0gMTQ0MCArIDEgKyAxICsgMSwKPj4+PiArCS52ZGlzcGxheSA9IDI1NjAs
+Cj4+Pj4gKwkudnN5bmNfc3RhcnQgPSAyNTYwICsgMSwKPj4+PiArCS52c3luY19lbmQgPSAyNTYw
+ICsgMSArIDEsCj4+Pj4gKwkudnRvdGFsID0gMjU2MCArIDEgKyAxICsgMTUsCj4+Pj4gKwkudnJl
+ZnJlc2ggPSA2MCwKPj4+PiArCS5mbGFncyA9IDAsCj4+Pj4gK307Cj4+Pgo+Pj4gaG93IGlzIHRo
+aXMgd29ya2luZyB3aXRoIHRtMmU/IEFyZSB0aGVzZSB2YWx1ZXMgdmFsaWQgZm9yIGJvdGgKPj4+
+IHRoZSBib2FyZHM/Cj4+Cj4+IFdlIGRvbid0IG5lZWQgdG8gY29uc2lkZXIgdG0yZSBib2FyZCB3
+aXRoIHR3byByZWFzb25lcywKPj4gMS4gdGhlcmUgaXMgbm8gdG0yZSBib2FyZCBzdXBwb3J0IGlu
+IG1haW5saW5lCj4+IDIuIHRoZSBwYW5lbCBvbiB0bTIgd291bGQgYmUgYSBsaXR0bGUgYml0IGRp
+ZmZlcmVudCBmcm9tIG9uZSBvbiB0bTJlCj4gCj4gLi4uIHRoaXMgZGlzcGxheSBpbiB0aGUgVGl6
+ZW4gS2VybmVsIGlzIHN1cHBvcnRlZCBieSBib3RoOgo+IHRtMiBbMV0gYW5kIHRtMmUgWzJdLiBU
+aGUgb25seSBkaWZmZXJlbmNlcyBhcmU6CgpXaHkgdG0yZSBkdHMgZmlsZSBpcyBpbiBtYWlubGlu
+ZT8gU2VlbXMgY29tbXVuaWNhdGlvbiBtaXNzIHdpdGggQ2hhbndvby4gOiggCgo+IAo+IFRNMjoK
+PiAgICBjbG9jay1mcmVxdWVuY3kgPSA8MTQ4NzQ0NDQ+Owo+ICAgIGhhY3RpdmUgPSA8MTQ0MD47
+Cj4gCj4gVE0yRToKPiAgICBjbG9jay1mcmVxdWVuY3kgPSA8MTY1MjM3MjQ+Owo+ICAgIGhhY3Rp
+dmUgPSA8MTYwMD47Cj4gCj4gSSBkb24ndCBrbm93IG11Y2ggYWJvdXQgdGhlIGRpZmZlcmVuY2Vz
+IHlvdSBtZW50aW9uIGluIHBvaW50IDIsCj4gYnV0IGl0J3MgYSBwaXR5IHRvIGRyb3Agc3VwcG9y
+dCBvbmx5IGJlY2F1c2Ugd2UgZG9uJ3Qgd2FudCB0byBwdXQKPiBpbiB0aGUgZHRzIHRoZSAnaGFj
+dGl2ZScsIGFuZCAnY2xvY2stZnJlcXVlbmN5JyBwcm9wZXJ0aWVzLgoKQW55d2F5LCB0bTJlIGJv
+YXJkIGlzIGFscmVhZHkgaW4gbWFpbmxpbmUgc28gUGFuZWwgZHJpdmVyIG1heSBuZWVkIHRvIGlk
+ZW50aWZ5IHdoYXQga2luZHMgb2YgcGFuZWwgaXMgcHJvYmVkIHRvIGRlY2lkZSBwb3JjaCB2YWx1
+ZXMuIEkgdGhpbmsgdGhlcmUgYXJlIHJlbGV2YW50IHJlZ2lzdGVycyBpbiBNQ1Ugb2YgdGhlIFBh
+bmVsIGRldmljZSB0byBjaGVjayB2ZXJzaW9uIG9yIHNpbWlsYXIgdGhpbmcuCgpUaGFua3MuCgo+
+IAo+IEFuZGkKPiAKPiBbMV0gaHR0cHM6Ly9naXQudGl6ZW4ub3JnL2NnaXQvcGxhdGZvcm0va2Vy
+bmVsL2xpbnV4LWV4eW5vcy90cmVlL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0
+MzMtdG0yLmR0cz9oPXRpemVuI24xMjg0Cj4gWzJdIGh0dHBzOi8vZ2l0LnRpemVuLm9yZy9jZ2l0
+L3BsYXRmb3JtL2tlcm5lbC9saW51eC1leHlub3MvdHJlZS9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4
+eW5vcy9leHlub3M1NDMzLXRtMmUuZHRzP2g9dGl6ZW4jbjEyNzAKPiAtLQo+IFRvIHVuc3Vic2Ny
+aWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVl
+IiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3Jn
+Cj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
+bW8taW5mby5odG1sCj4gCj4gLgo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
