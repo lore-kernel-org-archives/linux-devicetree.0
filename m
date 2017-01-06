@@ -1,7 +1,7 @@
 From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v2 2/5] ARM: davinci_all_defconfig: Enable PWM modules
-Date: Thu,  5 Jan 2017 22:33:45 -0600
-Message-ID: <1483677228-2325-3-git-send-email-david@lechnology.com>
+Subject: [PATCH v2 4/5] ARM: davinci_all_defconfig: enable pwm-beeper
+Date: Thu,  5 Jan 2017 22:33:47 -0600
+Message-ID: <1483677228-2325-5-git-send-email-david@lechnology.com>
 References: <1483677228-2325-1-git-send-email-david@lechnology.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1483677228-2325-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
@@ -10,26 +10,26 @@ To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This enables PWM and the TI ECAP and EHRWPM modules. These are used on LEGO
+This enables the pwm-beeper module. This is used by the speaker on LEGO
 MINDSTORMS EV3.
+
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 ---
- arch/arm/configs/davinci_all_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/configs/davinci_all_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index a12e4c2..2b1967a 100644
+index a899876..e046fd7 100644
 --- a/arch/arm/configs/davinci_all_defconfig
 +++ b/arch/arm/configs/davinci_all_defconfig
-@@ -200,6 +200,9 @@ CONFIG_TI_EDMA=y
- CONFIG_MEMORY=y
- CONFIG_TI_AEMIF=m
- CONFIG_DA8XX_DDRCTL=y
-+CONFIG_PWM=y
-+CONFIG_PWM_TIECAP=m
-+CONFIG_PWM_TIEHRPWM=m
- CONFIG_EXT2_FS=y
- CONFIG_EXT3_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
+@@ -100,6 +100,7 @@ CONFIG_KEYBOARD_XTKBD=m
+ # CONFIG_INPUT_MOUSE is not set
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_INPUT_MISC=y
++CONFIG_INPUT_PWM_BEEPER=m
+ CONFIG_INPUT_DM355EVM=m
+ CONFIG_SERIO_LIBPS2=y
+ # CONFIG_VT_CONSOLE is not set
 -- 
 2.7.4
 
