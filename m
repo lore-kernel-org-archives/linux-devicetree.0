@@ -1,44 +1,41 @@
-From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 0/1] Platform driver support for 'amd5536udc' driver
-Date: Fri, 6 Jan 2017 12:29:12 +0530
-Message-ID: <CAEHZuqNK07Xku9SmFhV0DJ4apV0m8yWznuFDwjr33CDP_OcXew@mail.gmail.com>
-References: <1483604597-26160-1-git-send-email-raviteja.garimella@broadcom.com>
- <1861880.7pouM4E6RB@wuerfel>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH 0/3] ARM: at91: fix cpuidle crash on SAMA5D4 Xplained board
+Date: Fri, 6 Jan 2017 14:59:44 +0800
+Message-ID: <20170106065947.30631-1-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1861880.7pouM4E6RB@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob
+ Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Fix cpuidle crash on SAMA5D4 Xplained board when enable
+CONFIG_ARM_AT91_CPUIDLE. Because some SoCs have the L2 cache,
+we should flush the L2 cache before entering the cpu idle.
 
-On Fri, Jan 6, 2017 at 3:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday, January 5, 2017 1:53:16 PM CET Raviteja Garimella wrote:
->> The UDC is based on Synopsys Designware core USB (2.0) Device controller
->> IP.
-> ...
->> This is a request for comments from maintainers/others regarding approach
->> on whether to have 2 different drivers (one each for AMD and Broadcom)
->> with a common library (3 files in total), or have a single driver like
->> it's done in this patch and have the driver filename changed to some
->> common name based on ther underlying IP, like snps_udc.c.
->
-> I have not looked at the code at all, so sorry for my ignorance, but
-> isn't the IP block you describe the one that drivers/usb/dwc2/ is for?
-> Could you add support for the Broadcom hardware there instead?
 
-The current driver I submitted is for a different Synopsys IP (USB
-Device Controller IP,
-not the HS OTG). It's confirmed by John Youn (from Synopsys) earlier.
+Wenyou Yang (3):
+  ARM: at91: flush the L2 cache before entering cpu idle
+  doc: binding: add new compatible for SDRAM/DDR Controller
+  ARM: dts: at91: use "atmel,sama5d4-ddramc" for ramc
 
-Thanks,
-Ravi
->
->         Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/arm/atmel-at91.txt |  1 +
+ arch/arm/boot/dts/sama5d2.dtsi                       |  2 +-
+ arch/arm/boot/dts/sama5d4.dtsi                       |  2 +-
+ arch/arm/mach-at91/pm.c                              | 19 +++++++++++++++++++
+ drivers/memory/atmel-sdramc.c                        |  1 +
+ 5 files changed, 23 insertions(+), 2 deletions(-)
+
+-- 
+2.11.0
