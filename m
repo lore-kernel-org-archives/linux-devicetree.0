@@ -1,86 +1,32 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH 1/3] dt-bindings: mfd: stm32f4: Fix STM32F4_XXXX_CLOCK() macro
-Date: Fri, 6 Jan 2017 16:52:12 +0100
-Message-ID: <1483717934-21415-2-git-send-email-gabriel.fernandez@st.com>
-References: <1483717934-21415-1-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH 0/3] STM32F4 Clock binding fix & update
+Date: Fri, 6 Jan 2017 16:52:11 +0100
+Message-ID: <1483717934-21415-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483717934-21415-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, gabriel.fernandez@st.com, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Macro to select a clock was not correct.
+This patch-set includes:
+ - a fix to STM32F4_XXXX_CLOCK() macro
+ - an update of missing binding definition
+ - a patch to use STM32F4_XXXX_CLOCK() macro
 
-Offset of enable register starts at 0x30, then calculation to select
-a bit is:
+Gabriel Fernandez (3):
+  dt-bindings: mfd: stm32f4: Fix STM32F4_XXXX_CLOCK() macro
+  dt-bindings: mfd: stm32f4: Add missing binding definition
+  ARM: dts: stm32: Use clock DT binding definition on stm32f429 family
 
-(@enable_reg - 0x30) / 4 * 32 + bit_to_select
+ arch/arm/boot/dts/stm32429i-eval.dts  |  2 +-
+ arch/arm/boot/dts/stm32f429.dtsi      | 66 +++++++++++++++++++----------------
+ include/dt-bindings/mfd/stm32f4-rcc.h | 24 +++++++++----
+ 3 files changed, 53 insertions(+), 39 deletions(-)
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Tested-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
----
- include/dt-bindings/mfd/stm32f4-rcc.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/include/dt-bindings/mfd/stm32f4-rcc.h b/include/dt-bindings/mfd/stm32f4-rcc.h
-index e98942d..f662b19 100644
---- a/include/dt-bindings/mfd/stm32f4-rcc.h
-+++ b/include/dt-bindings/mfd/stm32f4-rcc.h
-@@ -25,7 +25,7 @@
- #define STM32F4_RCC_AHB1_OTGHS	29
- 
- #define STM32F4_AHB1_RESET(bit) (STM32F4_RCC_AHB1_##bit + (0x10 * 8))
--#define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit + (0x30 * 8))
-+#define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit)
- 
- 
- /* AHB2 */
-@@ -36,13 +36,13 @@
- #define STM32F4_RCC_AHB2_OTGFS	7
- 
- #define STM32F4_AHB2_RESET(bit)	(STM32F4_RCC_AHB2_##bit + (0x14 * 8))
--#define STM32F4_AHB2_CLOCK(bit)	(STM32F4_RCC_AHB2_##bit + (0x34 * 8))
-+#define STM32F4_AHB2_CLOCK(bit)	(STM32F4_RCC_AHB2_##bit + 0x20)
- 
- /* AHB3 */
- #define STM32F4_RCC_AHB3_FMC	0
- 
- #define STM32F4_AHB3_RESET(bit)	(STM32F4_RCC_AHB3_##bit + (0x18 * 8))
--#define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + (0x38 * 8))
-+#define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + 0x40)
- 
- /* APB1 */
- #define STM32F4_RCC_APB1_TIM2	0
-@@ -72,7 +72,7 @@
- #define STM32F4_RCC_APB1_UART8	31
- 
- #define STM32F4_APB1_RESET(bit)	(STM32F4_RCC_APB1_##bit + (0x20 * 8))
--#define STM32F4_APB1_CLOCK(bit)	(STM32F4_RCC_APB1_##bit + (0x40 * 8))
-+#define STM32F4_APB1_CLOCK(bit)	(STM32F4_RCC_APB1_##bit + 0x80)
- 
- /* APB2 */
- #define STM32F4_RCC_APB2_TIM1	0
-@@ -93,6 +93,6 @@
- #define STM32F4_RCC_APB2_LTDC	26
- 
- #define STM32F4_APB2_RESET(bit)	(STM32F4_RCC_APB2_##bit + (0x24 * 8))
--#define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + (0x44 * 8))
-+#define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + 0xA0)
- 
- #endif /* _DT_BINDINGS_MFD_STM32F4_RCC_H */
 -- 
 1.9.1
+
