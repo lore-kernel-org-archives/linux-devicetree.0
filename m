@@ -1,12 +1,13 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] arm64: dts: exynos: Remove unsupported regulator-always-off
- property from TM2E
-Date: Fri,  6 Jan 2017 09:02:52 +0200
-Message-ID: <20170106070252.6008-1-krzk@kernel.org>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH 2/3] doc: binding: add new compatible for SDRAM/DDR Controller
+Date: Fri, 6 Jan 2017 14:59:46 +0800
+Message-ID: <20170106065947.30631-3-wenyou.yang@atmel.com>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170106065947.30631-1-wenyou.yang@atmel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,29 +17,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jaechul Lee <jcsing.lee@samsung.com>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob
+ Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-The regulator property 'regulator-always-off' is not documented and not
-supported.
+Add the new compatible "atmel,sama5d4-ddramc" for the SDRAM/DDR
+Controller.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 ---
- arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-index 1db4e7f363a9..398f5e092b02 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-@@ -25,7 +25,6 @@
+ Documentation/devicetree/bindings/arm/atmel-at91.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+index 29737b9b616e..9b5de6397666 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -111,6 +111,7 @@ RAMC SDRAM/DDR Controller required properties:
+ 			"atmel,at91sam9260-sdramc",
+ 			"atmel,at91sam9g45-ddramc",
+ 			"atmel,sama5d3-ddramc",
++			"atmel,sama5d4-ddramc",
+ - reg: Should contain registers location and length
  
- &ldo25_reg {
- 	regulator-name = "UNUSED_LDO25";
--	regulator-always-off;
- };
- 
- &ldo31_reg {
+ Examples:
 -- 
-2.9.3
+2.11.0
