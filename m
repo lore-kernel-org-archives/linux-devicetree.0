@@ -1,13 +1,14 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/4] musb: sunxi: add support for the variant in H3/V3s SoC
-Date: Fri, 6 Jan 2017 14:57:15 +0100
-Message-ID: <20170106135715.y7cwrwqyzybl6t5m@lukather>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-3-icenowy@aosc.xyz>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH 1/4] clk: stm32f7: Add stm32f7 clock DT bindings for STM32F746
+ boards
+Date: Fri, 6 Jan 2017 14:59:22 +0100
+Message-ID: <1483711165-17149-2-git-send-email-gabriel.fernandez@st.com>
+References: <1483711165-17149-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2681927268323034006=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170103152534.20118-3-icenowy@aosc.xyz>
+In-Reply-To: <1483711165-17149-1-git-send-email-gabriel.fernandez@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,72 +18,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
+Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, gabriel.fernandez@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
---===============2681927268323034006==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xhhteb42hdiefqo6"
-Content-Disposition: inline
+This patch introduces the stm32f7 clock DT bindings.
 
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ .../devicetree/bindings/clock/st,stm32-rcc.txt       | 20 ++++++++++++++++++++
+ include/dt-bindings/clock/stm32fx-clock.h            | 20 ++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
---xhhteb42hdiefqo6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 03, 2017 at 11:25:32PM +0800, Icenowy Zheng wrote:
-> Allwinner H3/V3s features a variant of MUSB controller, which lacks one
-> endpoint.
->=20
-> Add support for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-Thanks,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---xhhteb42hdiefqo6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYb6I7AAoJEBx+YmzsjxAgkMUP/R8jy2moLgws9P8qfFEqsfdx
-vFpKq6Ci9j8FVXkWmtV3Yv7+0xajrqx3On3nfCjVY4lwRLY0stjf6rnSAXxh6Z6o
-GNJ1SizKPjsspPPpE2MWrB3CVKXsyyJYp0wm6xZNp91S2I9hC5zrLHECRR7NTyec
-X9VsxSUiorOJkji1XBApybVayafHuve1NHxZkdb7jFbMd29CrdtZLyLOjZB7+UAL
-AktDeToD3AE46TW91lybOGG/jNPQFUqK9Fq/TfN51nYl8TaDDFpBPAeMaJWfr154
-TEtZiR6BCCoWx7Z0efGE4Nfapzm8x10BMXuXPUXEqCIFdgryo2OPRZxjdSbsE08O
-AOhq3MklkI+6KYFlgM9qvX4oV2iZazIm3fhrctrbPPH2gPM+terg4ZpaemwS8W6y
-UTWj98Zw3JbV/PZGwajvnu2CHX9vNK6RYbtE18a88MWPTM5aIrlTCPHxIrfqc9Qp
-202aWGsoxmAw583DOylj6l6ShaC1r/vG5DQWnrOEEXXRMfFgGphiJeBL7PN7Vhwr
-RPLmjzlQHauWCAlFDSD4hOYV6HY+bidGb48wyC+3luNtWaErtYMECGcCJ8BifC1q
-ZiyryaFfkBtIlNtsCP8jBdfVMmW3DBiE2dp9V57vfbzH4W2FBoi48rUkMmRDE4tc
-Los5guF06fp9ofBZXXyf
-=N+vN
------END PGP SIGNATURE-----
-
---xhhteb42hdiefqo6--
-
-
---===============2681927268323034006==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2681927268323034006==--
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+index 8f19d87..b240121 100644
+--- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
++++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+@@ -10,6 +10,7 @@ Required properties:
+ - compatible: Should be:
+   "st,stm32f42xx-rcc"
+   "st,stm32f469-rcc"
++  "st,stm32f746-rcc"
+ - reg: should be register base and length as documented in the
+   datasheet
+ - #reset-cells: 1, see below
+@@ -84,6 +85,25 @@ The secondary index is bound with the following magic numbers:
+ 	12	CLK_I2SQ_PDIV	(post divisor of pll i2s q divisor)
+ 	13	CLK_SAIQ_PDIV	(post divisor of pll sai q divisor)
+ 
++	14	CLK_HSI		(Internal ocscillator clock)
++	15	CLK_SYSCLK	(System Clock)
++	16	CLK_HDMI_CEC	(HDMI-CEC clock)
++	17	CLK_SPDIF	(SPDIF-Rx clock)
++	18	CLK_USART1	(U(s)arts clocks)
++	19	CLK_USART2
++	20	CLK_USART3
++	21	CLK_UART4
++	22	CLK_UART5
++	23	CLK_USART6
++	24	CLK_UART7
++	25	CLK_UART8
++	26	CLK_I2C1	(I2S clocks)
++	27	CLK_I2C2
++	28	CLK_I2C3
++	29	CLK_I2C4
++	30	CLK_LPTIMER	(LPTimer1 clock)
++)
++
+ Example:
+ 
+ 	/* Misc clock, FCLK */
+diff --git a/include/dt-bindings/clock/stm32fx-clock.h b/include/dt-bindings/clock/stm32fx-clock.h
+index 08bcab6..49bb3c2 100644
+--- a/include/dt-bindings/clock/stm32fx-clock.h
++++ b/include/dt-bindings/clock/stm32fx-clock.h
+@@ -36,4 +36,24 @@
+ 
+ #define END_PRIMARY_CLK		14
+ 
++#define CLK_HSI			14
++#define CLK_SYSCLK		15
++#define CLK_HDMI_CEC		16
++#define CLK_SPDIF		17
++#define CLK_USART1		18
++#define CLK_USART2		19
++#define CLK_USART3		20
++#define CLK_UART4		21
++#define CLK_UART5		22
++#define CLK_USART6		23
++#define CLK_UART7		24
++#define CLK_UART8		25
++#define CLK_I2C1		26
++#define CLK_I2C2		27
++#define CLK_I2C3		28
++#define CLK_I2C4		29
++#define CLK_LPTIMER		30
++
++#define END_PRIMARY_CLK_F7	31
++
+ #endif
+-- 
+1.9.1
