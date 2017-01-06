@@ -1,90 +1,69 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH net-next v4 0/4] Fix OdroidC2 Gigabit Tx link issue
-Date: Fri, 06 Jan 2017 11:11:36 +0100
-Message-ID: <1483697496.28003.40.camel@baylibre.com>
-References: <1480348229-25672-1-git-send-email-jbrunet@baylibre.com>
- <049b1efc-3bad-92e0-45ef-0563dc5d81de@gmail.com>
- <20170105232508.GU14217@n2100.armlinux.org.uk>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH V2 1/2] PM / Domains: Introduce domain-performance-states
+ binding
+Date: Fri, 06 Jan 2017 15:42:53 +0530
+Message-ID: <586F6DA5.30203@codeaurora.org>
+References: <cover.1481539827.git.viresh.kumar@linaro.org> <dd95df02a1c3efd00bd4890f8aceeb717ad38788.1481539827.git.viresh.kumar@linaro.org> <586F596C.7000807@codeaurora.org> <20170106092702.GH21926@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170105232508.GU14217@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre TORGUE <alexandre.torgue@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, netdev@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-kernel@vger.kernel.org, Yegor Yefremov <yegorslists@googlemail.com>, Julia Lawall <julia.lawall@lip6.fr>, devicetree@vger.kernel.org, Andre Roth <neolynx@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170106092702.GH21926@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE3LTAxLTA1IGF0IDIzOjI1ICswMDAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggd3JvdGU6Cj4gT24gTW9uLCBOb3YgMjgsIDIwMTYgYXQgMDk6NTQ6MjhBTSAtMDgwMCwgRmxv
-cmlhbiBGYWluZWxsaSB3cm90ZToKPiA+IAo+ID4gSWYgd2Ugc3RhcnQgc3VwcG9ydGluZyBnZW5l
-cmljICJlbmFibGUiLCAiZGlzYWJsZSIgdHlwZSBvZgo+ID4gcHJvcGVydGllcwo+ID4gd2l0aCB2
-YWx1ZXMgdGhhdCBtYXAgZGlyZWN0bHkgdG8gcmVnaXN0ZXIgZGVmaW5pdGlvbnMgb2YgdGhlIEhX
-LCB3ZQo+ID4gbGVhdmUgdG9vIG11Y2ggcm9vbSBmb3IgdGhlc2UgcHJvcGVydGllcyB0byBiZSB1
-dGlsaXplZCB0bwo+ID4gaW1wbGVtZW50IGEKPiA+IHNwZWNpZmljIHBvbGljeSwgYW5kIHRoaXMg
-aXMgbm90IGFjY2VwdGFibGUuCj4gCj4gQW5vdGhlciBjb25jZXJuIHdpdGggdGhpcyBwYXRjaCBp
-cyB0aGF0IHRoZSBleGlzdGluZyBwaHlsaWIgInNldF9lZWUiCj4gY29kZSBpcyBob3JyaWJseSBi
-dWdneSAtIGl0IGp1c3QgdHJhbnNsYXRlcyB0aGUgbW9kZXMgZnJvbSB1c2Vyc3BhY2UKPiBpbnRv
-IHRoZSByZWdpc3RlciB2YWx1ZSBhbmQgd3JpdGVzIHRoZW0gZGlyZWN0bHkgdG8gdGhlIHJlZ2lz
-dGVyIHdpdGgKPiBubyB2YWxpZGF0aW9uLsKgwqBTbyBpdCdzIHBvc3NpYmxlIHRvIHNldCBtb2Rl
-cyBpbiB0aGUgcmVnaXN0ZXIgdGhhdAo+IHRoZQo+IGhhcmR3YXJlIGRvZXNuJ3Qgc3VwcG9ydCwg
-YW5kIGhhdmUgdGhlbSBhZHZlcnRpc2VkIHRvIHRoZSBsaW5rCj4gcGFydG5lci4KCkhpIFJ1c3Nl
-bGwsCgpUaGUgcHVycG9zZSBvZiB0aGlzIHBhdGNoIGlzIHRvIHByb3ZpZGUgYSB3YXkgdG8gbWFy
-ayBhcyBicm9rZW4gYQpwYXJ0aWN1bGFyIGVlZSBtb2RlLiBBdCBmaXJzdCwgaXQgaGFkIG5vdGhp
-bmcgdG8gZG8gd2l0aCAic2V0X2VlZSIgYnV0LAphcyBGbG9yaWFuIHJpZ2h0bHkgcG9pbnRlZCBv
-dXQsIHVzZXJzIHNob3VsZG4ndCBiZSBhYmxlIHRvIHJlLWVuYWJsZSBhCmJyb2tlbiBtb2RlLgoK
-QXQgZmlyc3QsIEkgd2FzIHRoaW5raW5nIGFib3V0IHJldHVybmluZyAtRU5PU1VQIGlmIGEgYnJv
-a2VuIG1vZGUgd2FzCnJlcXVlc3RlZC4gVGhlbiBJIG5vdGljZWQgdGhlIGJlaGF2aW9yIHlvdSBq
-dXN0IGRlc2NyaWJlZDogQSB1c2VyIGNhbgpyZXF1ZXN0IGFueXRoaW5nIG9mICJzZXRfZWVlIiwg
-aGUgd29uJ3QgbmVjZXNzYXJpbHkgZ2V0IHdoYXQgaGUgYXNrZWQKYnV0IHdvbid0IGdldCBhbiBl
-cnJvciBlaXRoZXIuCgpUbyBhdm9pZCBtaXhpbmcgZGlmZmVyZW50IHRvcGljIGluIGEgc2luZ2xl
-IHBhdGNoLCBJIGtlcHQgdGhlIHNhbWUKYmVoYXZpb3IsIG5vdCByZXR1cm5pbmcgYW4gZXJyb3Is
-IGp1c3Qgc2lsZW50bHkgZGlzY2FyZGluZyBicm9rZW4gbW9kZXMKCkkgYWdyZWUgd2l0aCB5b3Us
-IHdlIHNob3VsZCBwcm9iYWJseSB2YWxpZGF0ZSBhIGJpdCBtb3JlIHdoYXQgd2UgYXNrZWQKb2Yg
-dGhlIGhhcmR3YXJlIGluIHNldF9lZWUuCgpJIHdvbmRlciBpZiB3ZSBzaG91bGQgcmV0dXJuIGFu
-IGVycm9yIHRob3VnaC4gV2l0aCB0aGUgY3VycmVudAppbXBsZW1lbnRhdGlvbiwgdXNlciBzcGFj
-ZSBhcHBsaWNhdGlvbiBjb3VsZCBzaW1wbHkgYXNrIHRvIGFjdGl2YXRlCmV2ZXJ5dGhpbmcsIGV4
-Y2VwdGluZyB0aGUga2VybmVsIHRvIHNvcnQgaXQgb3V0IGFuZCByZXR1cm4gYW4gZXJyb3IKb25s
-eSBpZiBzb21ldGhpbmcgaG9ycmlibHkgd3JvbmcgaGFwcGVuZWQuIElmIHdlIHN0YXJ0IHJldHVy
-bmluZyBhbgplcnJvciBmb3IgdW5zdXBwb3J0ZWQgbW9kZXMsIHdlIGNvdWxkIGJyZWFrIHRoaW5n
-cy4gSSBndWVzcyB3ZSBzaG91bGQKanVzdCBzaWxlbnRseSBmaWx0ZXIgdGhlIHJlcXVlc3RlZCBt
-b2Rlcy4KCj4gCj4gSSBoYXZlIGEgcGF0Y2ggd2hpY2ggZml4ZXMgdGhhdCwgcmVzdHJpY3Rpbmcg
-KGFzIHdlIGRvIGVsc2V3aGVyZSkgdGhlCj4gYWR2ZXJ0IGFjY29yZGluZyB0byB0aGUgRUVFIHN1
-cHBvcnRlZCBjYXBhYmlsaXRpZXMgcmV0cmlldmVkIGZyb20gdGhlCj4gUENTCgpDb3VsZCBiZSBp
-bnRlcmVzdGluZyA6KQoKPiAgLSBtYXliZSB0aGUgcHJvYmxlbSBoZXJlIGlzIHRoYXQgdGhlIFBD
-UyBkb2Vzbid0IHN1cHBvcnQgc3VwcG9ydAo+IEVFRSBpbiAxMDAwYmFzZVQgbW9kZT8KCgpJdCBk
-b2VzLCBhbmQgdGhhdCdzIGtpbmQgb2YgdGhlIHByb2JsZW0uIEVFRSBpbiBPTiBmb3IgMTAwVHgg
-YW5kIDEwMDBUCmJ5IGRlZmF1bHQgd2l0aCB0aGlzIFBIWS4gSSBoYXZlIHNldmVyYWwgcGxhdGZv
-cm0gd2l0aCB0aGUgc2FtZSBNQUMtUEhZIApjb21iaW5hdGlvbi4gT25seSB0aGUgT2Ryb2lkQzIg
-c2hvd3MgdGhpcyBwYXJ0aWN1bGFyIGlzc3VlIHdpdGggMTAwMFQtCkVFRQoKQXMgZXhwbGFpbmVk
-IGluIG90aGVyIG1haWxzIGluIHRoaXMgdGhyZWFkLiBUaGUgcHJvYmxlbSBkb2VzIG5vdCBjb21l
-CmZyb20gdGhlIE1BQyBlbnRlcmluZyBMUEkuIEl0IGFjdHVhbGx5IGNvbWVzIGZyb20gdGhlIGxp
-bmsgcGFydG5lcgplbnRlcmluZyBMUEkgb24gdGhlIFJ4IHBhdGggdW5kZXIgc2lnbmlmaWNhbnQg
-VHggdHJhbnNmZXIuIEZvciBzb21lCnJlYXNvbiwgdGhpcyBjb21wbGV0ZWx5IG1lc3MgdXAgb3Vy
-IFBIWS4KCj4gCj4gT3V0IG9mIGludGVyZXN0LCB3aGljaCBQSFkgaXMgdXNlZCBvbiB0aGlzIHBs
-YXRmb3JtPwoKVGhlIFBIWSBpcyB0aGUgUmVhbHRlayBSVEw4MjExRgoKPiAKPiBPbiB0aGUgU29s
-aWRSdW4gYm9hcmRzLCB0aGV5J3JlIHVzaW5nIEFSODAzNSwgYW5kIGhhdmUgc3VmZmVyZWQgdGhp
-cwo+IG9jY2FzaW9uYWwgbGluayBkcm9wIHByb2JsZW0uwqDCoFdoYXQgaGFzIGJlZW4gZm91bmQg
-aXMgdGhhdCBpdCBzZWVtcwo+IHRvCj4gYmUgdG8gZG8gd2l0aCB0aGUgdGltaW5nIHBhcmFtZXRl
-cnMsIGFuZCBpdCBzZWVtZWQgdG8gb25seSBiZSAxMDAwYlQKPiB0aGF0IHdhcyBhZmZlY3RlZC7C
-oMKgSSBkb24ndCByZW1lbWJlciBvZmYgaGFuZCBleGFjdGx5IHdoaWNoIG9yIHdoYXQKPiB0aGUg
-Y2hhbmdlIHdhcyB0aGV5IG1hZGUgdG8gc3RhYmlsaXNlIGl0IHRob3VnaCwgYnV0IEkgY2FuIHBy
-b2JhYmlseQo+IGZpbmQgb3V0IHRvbW9ycm93Lgo+IAoKU2luY2UgdGhlIHNhbWUgY29tYmluYXRp
-b24gb2YgTUFDLVBIWSB3b3JrcyB3ZWxsIG9uIG90aGVyIGRlc2lnbnMsIGl0CmlzIGFsc28gbXkg
-ZmVlbGluZyB0aGF0IGlzIGhhcyBzb21ldGhpbmcgdG8gZG8gd2l0aCBzb21lIHRpbWluZwpwYXJh
-bWV0ZXIsIG1heWJlIHJlbGF0ZWQgdG8gdGhpcyBwYXJ0aWN1bGFyIFBDQi4KCldoaWxlIGRlYnVn
-Z2luZyB0aGlzIGlzc3VlLCB3ZSB0cmllZCB0byBwbGF5IHdpdGggYWxsIHRoZSBwYXJhbWV0ZXJz
-IHdlCmNvdWxkIHRoaW5rIG9mIGJ1dCBuZXZlciBmb3VuZCBhbnl0aGluZyB3b3J0aCBtZW50aW9u
-aW5nLgoKSWYgeW91IGhhdmUgYW55IGlkZWFzLCBJJ2QgYmUgaGFwcHkgdG8gdHJ5LgoKSmVyb21l
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+
+
+On 01/06/2017 02:57 PM, Viresh Kumar wrote:
+> On 06-01-17, 14:16, Rajendra Nayak wrote:
+>>
+>> On 12/12/2016 04:26 PM, Viresh Kumar wrote:
+>>> Some platforms have the capability to configure the performance state of
+>>> their Power Domains. The performance levels are represented by positive
+>>> integer values, a lower value represents lower performance state.
+>>>
+>>> The power-domains until now were only concentrating on the idle state
+>>> management of the device and this needs to change in order to reuse the
+>>> infrastructure of power domains for active state management.
+>>>
+>>> This patch adds binding to describe the performance states of a power
+>>> domain.
+>>
+>> The bindings would also need to take into account the fact that a device
+>> could (and is quite often the case with qcom platforms) have 2 separate
+>> powerdomains, one for idle state management and another to manage active
+>> states. I guess the below bindings assume that there's just one.
+> 
+> I have answered a similar question here..
+> 
+> https://marc.info/?l=linux-kernel&m=148067565219477&w=2
+
+I read through that discussion, and I thought that was to do we
+handling multiple powerdomains with performance states
+(or in other words multiple voltage rails controlled by the M3)
+
+What I was pointing to, was that devices quite often (again on qcom
+platforms) have a power-switch (gdscs as we call it) which are modeled
+as powerdomains (which have nothing to do with taking to the M3 core),
+and with the proposed bindings one or more voltage rails controlled by the M3
+also as powerdomains associated with a device and the bindings have just one
+power-domains property in the device node, which runtime PM would use
+to power_on/off the device and OPP core would use to set the performance
+state?
+
++	leaky-device@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&power 0>;
++		domain-performance-state = <&domain_perf_state2>;
++	};
+
+Lets say leaky-device needs to switch on/off a gdsc and also send a
+value to M3 to set a minimum performance state (so M3 configures the
+voltage rails accordingly) how would it work?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
