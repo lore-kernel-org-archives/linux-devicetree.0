@@ -1,75 +1,144 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v5 3/5] input: Add support for the tm2 touchkey device driver
-Date: Fri, 06 Jan 2017 22:43:48 +0900
-Message-ID: <20170106134350.32428-4-andi.shyti@samsung.com>
-References: <20170106134350.32428-1-andi.shyti@samsung.com>
- <CGME20170106134356epcas1p1758fadaa2b12ad29d90e2da525456a28@epcas1p1.samsung.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: Re: [PATCH v1] mtd: spi nor: modify the boot and flash type of FMC
+Date: Fri, 6 Jan 2017 14:44:58 +0100
+Message-ID: <506ed7d0-0bd9-874c-eaf8-4fc5d4366612@atmel.com>
+References: <1483693931-22249-1-git-send-email-linshunquan1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20170106134350.32428-1-andi.shyti@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaechul Lee <jcsing.lee@samsung.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org, Jaechul Lee <galaxyra@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483693931-22249-1-git-send-email-linshunquan1@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linshunquan 00354166 <linshunquan1@hisilicon.com>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: suwenping@hisilicon.com, devicetree@vger.kernel.org, howell.yang@hisilicon.com, jalen.hsu@hisilicon.com, linux-kernel@vger.kernel.org, raojun@hisilicon.com, kevin.lixu@hisilicon.com, linux-mtd@lists.infradead.org, lvkuanliang@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jaechul Lee <jcsing.lee@samsung.com>
+Hi,
 
-This patch adds the binding description of the tm2 touchkey
-device driver.
+Le 06/01/2017 à 10:12, linshunquan 00354166 a écrit :
+> (1) The HiSilicon Flash Memory Controller(FMC) is a multi-functions
+>  device which supports SPI Nor flash controller, SPI nand Flash
+>  controller and parallel nand flash controller. So when we are prepare
+>  to operation SPI Nor, we should make sure the flash type is SPI Nor.
+> 
+> (2) Make sure the boot type is Normal Type before initialize the SPI
+>     Nor controller.
+> 
+> Signed-off-by: linshunquan 00354166 <linshunquan1@hisilicon.com>
+> ---
+>  drivers/mtd/spi-nor/hisi-sfc.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
+> index 20378b0..7855024 100644
+> --- a/drivers/mtd/spi-nor/hisi-sfc.c
+> +++ b/drivers/mtd/spi-nor/hisi-sfc.c
+> @@ -32,6 +32,8 @@
+>  #define FMC_CFG_OP_MODE_MASK		BIT_MASK(0)
+>  #define FMC_CFG_OP_MODE_BOOT		0
+>  #define FMC_CFG_OP_MODE_NORMAL		1
+> +#define FMC_CFG_OP_MODE_SEL(mode)      ((mode) & 0x1)
+> +#define FMC_CFG_FLASH_SEL_SPI_NOR	(0x0 << 1)
+>  #define FMC_CFG_FLASH_SEL(type)		(((type) & 0x3) << 1)
+>  #define FMC_CFG_FLASH_SEL_MASK		0x6
+>  #define FMC_ECC_TYPE(type)		(((type) & 0x7) << 5)
+> @@ -141,10 +143,36 @@ static int get_if_type(enum read_mode flash_read)
+>  	return if_type;
+>  }
+>  
+> +static void spi_nor_switch_spi_type(struct hifmc_host *host)
+> +{
+> +	unsigned int reg;
+> +
+> +	reg = readl(host->regbase + FMC_CFG);
+> +	if ((reg & FMC_CFG_FLASH_SEL_MASK)
+> +		   	== FMC_CFG_FLASH_SEL_SPI_NOR)
+> +		return;
+> +
+> +	/* if the flash type isn't spi nor, change it */
+> +	reg &= ~FMC_CFG_FLASH_SEL_MASK;
+> +	reg |= FMC_CFG_FLASH_SEL(0);
+> +	writel(reg, host->regbase + FMC_CFG);
+> +}
+> +
 
-Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
----
- .../bindings/input/samsung,tm2-touchkey.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
+This is not consistent: we have to check the macro definitions to
+understand that FMC_CFG_FLASH_SPI_NOR == FMC_CFG_FLASH_SEL(0)
 
-diff --git a/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt b/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
-new file mode 100644
-index 000000000000..4de1af0f0a37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
-@@ -0,0 +1,27 @@
-+Samsung tm2-touchkey
-+
-+Required properties:
-+- compatible: must be "samsung,tm2-touchkey"
-+- reg: I2C address of the chip.
-+- interrupt-parent: a phandle for the interrupt controller (see interrupt
-+	binding[0]).
-+- interrupts: interrupt to which the chip is connected (see interrupt
-+	binding[0]).
-+- vcc-supply : internal regulator output. 1.8V
-+- vdd-supply : power supply for IC 3.3V
-+
-+[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+Example:
-+	&i2c0 {
-+		/* ... */
-+
-+		touchkey@20 {
-+			compatible = "samsung,tm2-touchkey";
-+			reg = <0x20>;
-+			interrupt-parent = <&gpa3>;
-+			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+			vcc-supply=<&ldo32_reg>;
-+			vdd-supply=<&ldo33_reg>;
-+		};
-+	};
--- 
-2.11.0
+In such a function, you should use the very same macro for both the test
+and the update of reg; either FMC_CFG_FLASH_SEL_SPI_NOR or
+FMC_CFG_FLASH_SEL(0). Please don't mix the use of those macros.
+
+>  static void hisi_spi_nor_init(struct hifmc_host *host)
+>  {
+>  	u32 reg;
+>  
+> +	/* switch the flash type to spi nor */
+> +	spi_nor_switch_spi_type(host);
+> +
+> +	/* set the boot mode to normal */
+> +	reg = readl(host->regbase + FMC_CFG);
+> +	if ((reg & FMC_CFG_OP_MODE_MASK) == FMC_CFG_OP_MODE_BOOT) {
+> +		reg |= FMC_CFG_OP_MODE_SEL(FMC_CFG_OP_MODE_NORMAL);
+
+This is not consistent: you test FMC_CFG_OP_MODE_BOOT, hence without
+FMC_CFG_OP_MODE_SEL() but you set
+FMC_CFG_OP_MODE_SEL(FMC_CFG_OP_MODE_NORMAL), with FMC_CFG_OP_MODE_SEL().
+
+Of course, looking at the macro definitions, it works as is but once again
+we have to check the macro definitions to understand why sometime you use
+FMC_CFG_OP_MODE_SEL() whereas other times you don't.
+
+> +		writel(reg, host->regbase + FMC_CFG);
+> +	}
+
+spi_nor_switch_spi_type() already updates the FMC_CFG register in the very
+same manner: read, test, modify, write. Hence you should write a more
+generic function and update both bitfields at once.
+
+static void hisi_spi_nor_update_reg(struct hifmc_host *host,
+				    unsigned int reg_offset,
+				    unsigned int value,
+				    unsigned int mask)
+{
+	unsigned int reg;
+
+	reg = readl(host->regbase + reg_offset);
+	if (((reg ^ value) & mask) == 0)
+		return;
+
+	reg = (reg & ~mask) | (value & mask);
+	writel(reg, host->regbase + reg_offset);
+}
+
+...
+
+	unsigned int value, mask;
+
+	/*
+	 * switch the flash type to spi nor and set the boot mode to
+	 * normal.
+	 */
+	value = FMC_CFG_OP_MODE_NORMAL | FMC_CFG_FLASH_SEL_SPI_NOR;
+	mask = FMC_CFG_OP_MODE_MASK | FMC_CFG_FLASH_SEL_MASK;
+	hisi_spi_nor_update_reg(host, FMC_CFG, value, mask);
+
+> +
+> +	/* set timming */
+>  	reg = TIMING_CFG_TCSH(CS_HOLD_TIME)
+>  		| TIMING_CFG_TCSS(CS_SETUP_TIME)
+>  		| TIMING_CFG_TSHSL(CS_DESELECT_TIME);
+> @@ -167,6 +195,8 @@ static int hisi_spi_nor_prep(struct spi_nor *nor, enum spi_nor_ops ops)
+>  	if (ret)
+>  		goto out;
+>  
+> +	spi_nor_switch_spi_type(host);
+> +
+>  	return 0;
+>  
+>  out:
+> 
+
+Best regards,
+
+Cyrille
