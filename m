@@ -1,78 +1,99 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Fri, 6 Jan 2017 08:49:05 -0800
-Message-ID: <20170106164904.GG2630@atomide.com>
-References: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <CAL_Jsq+M7RWiytEA7zPZvR+7CK37WCxN5ZBOQkpjdswjLHL4fA@mail.gmail.com>
- <20170105163928.GD4310@atomide.com>
- <2557392.58vudoaMIY@avalon>
- <CAL_JsqKQLd2SFNVKwZDPTKL-spWknEe5aFDT5RZoCnV1qOP=4Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v11 0/8] power: add power sequence library
+Date: Fri, 6 Jan 2017 19:08:32 +0200
+Message-ID: <20170106170832.jxthwq5sabpyskui@kozik-lap>
+References: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
+ <20170106151841.l6ehqmpben4ilkaf@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKQLd2SFNVKwZDPTKL-spWknEe5aFDT5RZoCnV1qOP=4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170106151841.l6ehqmpben4ilkaf@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, rjw@rjwysocki.net, dbaryshkov@gmail.com, heiko@sntech.de, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, vaibhav.hiremath@linaro.org, gary.bisson@boundarydevices.com, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170105 10:51]:
-> On Thu, Jan 5, 2017 at 10:48 AM, Laurent Pinchart
-> <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> > Hello,
-> >
-> > On Thursday 05 Jan 2017 08:39:29 Tony Lindgren wrote:
-> >> * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170105 08:28]:
-> >> > On Fri, Dec 2, 2016 at 3:11 PM, Laurent Pinchart wrote:
-> >> >> The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-> >> >> connected to port 2 of the OMAP EHCI controller. The board however has
-> >> >> no EEPROM to store the ethernet MAC address, which is programmed by the
-> >> >> boot loader.
-> >> >>
-> >> >> To allow Linux to use the same MAC address as the boot loader (or for
-> >> >> that matter any fixed MAC address), we need a node in the device tree
-> >> >> for the ethernet controller that the boot loader can update at runtime
-> >> >> with a local-mac-address property. Add it, along with an alias for the
-> >> >> ethernet controller to let the boot loader locate it easily.
-> >> >>
-> >> >> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> >> >> ---
-> >> >> Changes since v1:
-> >> >>
-> >> >> - Renamed usb2 DT node to hub
-> >> >> ---
-> >> >>
-> >> >>  arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
-> >> >>  1 file changed, 16 insertions(+)
-> >> >>
-> >> >> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> >> >> b/arch/arm/boot/dts/omap3-beagle-xm.dts index
-> >> >> 85e297ed0ea1..673cee2234b2 100644
-> >> >> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> >> >> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> >> >> @@ -27,6 +27,7 @@
-> >> >>         aliases {
-> >> >>                 display0 = &dvi0;
-> >> >>                 display1 = &tv0;
-> >> >> +               ethernet = &ethernet;
-> >> >
-> >> > Sorry, just noticed this, but this should be dropped. It's not used
-> >> > nor do we want an alias here.
-> >>
-> >> OK, will update locally as I have not pushed out yet.
-> >
-> > The ethernet alias is used by U-Boot to locate the ethernet controller and
-> > update the MAC address.
+On Fri, Jan 06, 2017 at 05:18:41PM +0200, Krzysztof Kozlowski wrote:
+> On Thu, Jan 05, 2017 at 02:01:51PM +0800, Peter Chen wrote:
+> > Hi all,
+> > 
+> > This is a follow-up for my last power sequence framework patch set [1].
+> > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> > power sequence instances will be added at postcore_initcall, the match
+> > criteria is compatible string first, if the compatible string is not
+> > matched between dts and library, it will try to use generic power sequence.
+> > 	 
+> > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > if only one power sequence instance is needed, for more power sequences
+> > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
+> > 
+> > In future, if there are special power sequence requirements, the special
+> > power sequence library can be created.
+> > 
+> > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> > two hot-plug devices to simulate this use case, the related binding
+> > change is updated at patch [1/6], The udoo board changes were tested
+> > using my last power sequence patch set.[3]
+> > 
+> > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> > need to power on itself before it can be found by ULPI bus.
+> > 
+> > [1] http://www.spinics.net/lists/linux-usb/msg142755.html
+> > [2] http://www.spinics.net/lists/linux-usb/msg143106.html
+> > [3] http://www.spinics.net/lists/linux-usb/msg142815.html
+> > 
 > 
-> Okay. Though with only only one, I don't see why that is hard to find.
-> Anyway, this is the least of u-boot's DT abuses.
+> Unfortunately I was unable to utilize this library to solve Odroid U3
+> usb3503/lan9730 power sequence (as a continuation of my old series [0][1]).
+> 
+> The main problem is that power sequence instance (pwrseq_generic.c) is
+> not a device. I don't get why it is not a device. It would be rather
+> intuitive to me to make it a device. Also it would make life easier
+> because you could use all device-like consumer APIs (of getting clocks,
+> GPIOs etc). Since it is not a device, it is not possible to use
+> regulator consumer API.
+> 
+> I need a regulator because I need to toggle the power.
+> 
+> Other encountered issue is that power sequence happens early, before the
+> unused regulators are turned off by the system. However maybe this is
+> the necessity from other point of view.
+> 
+> My case is annoyingly over-complicated so I am slowly getting sertain
+> that it is not generic. Anyway it looks like this:
+> 
+> EHCI controller
+>      |
+>      |--HSIC0--lan9730 (reset is done only through regulator)
+>      |--HSIC1--usb3504 (it has a reset GPIO... but it is toggled by
+>                         usb3504 driver)
+> 
+> Overall, I want to reset the lan9730. This can be done only through
+> power - buck8. buck8 state is an logical OR of register set by I2C and
+> GPIO. Thus to turn it off, it is not sufficient just to set register to
+> 0x0 because the GPIO is keeping it on. The best way is to switch the
+> buck8 to gpio-enable-control thus only GPIO will be toggling it... still
+> through the regulator consumer API (because it is an GPIO for the
+> regulator, not for the reset!).
+> 
+> However these two seems coupled. On invalid reset sequence, both chips
+> die. The usb3504 has its own existing reset sequence and my findings
+> show that it should happen after lan9730 reset sequence. Otherwise all
+> devices might be lost...
 
-Applying Laurent's original patch then into omap-for-v4.11/dt.
+Update - it's working! I skipped entirely the regulator API and I am
+playing with its GPIO. This sounds like a hack but finally after few
+days of different tries I was able to find a working, reproducible
+solution. It turned out that the yours pwrseq is working quite good.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll send a follow-up for my board soon.
+
+Best regards,
+Krzysztof
+
+
+> 
+> [0] http://www.spinics.net/lists/linux-mmc/msg37386.html
+> [1] https://github.com/krzk/linux/commits/for-next/odroid-u3-usb3503-lan-boot-fixes-v4
+> 
