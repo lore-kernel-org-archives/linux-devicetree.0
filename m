@@ -1,82 +1,83 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] power: bq27xxx: add support for NVRAM R/W access
-Date: Thu, 5 Jan 2017 18:34:03 -0800
-Message-ID: <CAJ_EiSTVv90QSB6TY7+5KXWPbLkkr5vEXpDQrQ0VCvtAkddt5A@mail.gmail.com>
-References: <20170105021007.22088-1-matt@ranostay.consulting>
- <20170105021007.22088-4-matt@ranostay.consulting> <20170106015314.7qju6eodkwldty6h@earth>
+From: Rick Chang <rick.chang@mediatek.com>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Fri, 6 Jan 2017 10:34:59 +0800
+Message-ID: <1483670099.18931.5.camel@mtksdaap41>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+ <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+ <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+ <1479784905.8964.15.camel@mtksdaap41>
+ <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+ <1479866054.8964.21.camel@mtksdaap41> <1479894203.8964.29.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170106015314.7qju6eodkwldty6h@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1479894203.8964.29.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 5, 2017 at 5:53 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jan 04, 2017 at 06:10:07PM -0800, Matt Ranostay wrote:
->> Initial support for access and modification of the non-volatile regions
->> of the bq27425 fuel gauge DesignEnergy, DesignCapacity, and
->> TerminateVoltage settings.
->>
->> This is intended for fine tuning the fuel gauge state machine for the
->> respective battery specifications.
->>
->> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->> ---
->>  drivers/power/supply/bq27xxx_battery_i2c.c | 335 ++++++++++++++++++++++=
-+++++++
->>  include/linux/power/bq27xxx_battery.h      |   4 +
->>  2 files changed, 339 insertions(+)
->
-> I only skipped over this one, as the changed DT binding requires
-> quite some changes in this patch anyways. Here are a couple of
-> comments how I would like to see this implemented:
->
-> Add a patch for the power-supply core, which implements a
-> structure for the battery info. Something like this:
->
-> struct power_supply_battery_info {
->     uint32 energy; /* =C2=B5Wh */
->     uint32 power;  /* =C2=B5Ah */
->     uint32 nominal_voltage; /* =C2=B5V */
->     /* ... */
-> };
->
-> And a function in the core framework, which gets the information
-> from DT. The function itself should *not* be DT specific, so that
-> ACPI/platformdata/whatever support can be added later without
-> modifying every single driver.
->
-> static struct power_supply_battery_info*
-> power_supply_get_battery_info(struct power_supply *psy) {
->     if (psy->dt) {
->         /* get battery phandle or return -ENXIO */
->         /* fill and return struct */
->     }
->
->     return -ENOTSUP;
-> }
->
-> Then call power_supply_get_battery_info() during bq27xxx probe and
-> use the struct to initialize the registers. Also I expect that
-> functionality in bq27xxx_battery.c instead of bq27xxx_battery_i2c.c,
-> since it's not I=C2=B2C specific.
+Hi Hans,
 
-They may not be i2c specific but they are only used by the i2c path of
-the code currently. Do you think that platform data would ever have a
-struct to pass with the respective data?
+The dependence on [1] has been merged in 4.10, but [2] has not.Do you have 
+any idea about this patch series? Should we wait for [2] or we could merge
+the source code and dt-binding first?
 
-Also it would have to be in bq27xxx_battery_setup() and not
-bq27xxx_battery_platform_probe() since the former is only thing called
-by both code paths.
+Best Regards,
+Rick
 
-
->
-> -- Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, 2016-11-23 at 17:43 +0800, Rick Chang wrote:
+> On Wed, 2016-11-23 at 09:54 +0800, Rick Chang wrote:
+> > Hi Hans,
+> > 
+> > On Tue, 2016-11-22 at 13:43 +0100, Hans Verkuil wrote:
+> > > On 22/11/16 04:21, Rick Chang wrote:
+> > > > Hi Hans,
+> > > >
+> > > > On Mon, 2016-11-21 at 15:51 +0100, Hans Verkuil wrote:
+> > > >> On 17/11/16 04:38, Rick Chang wrote:
+> > > >>> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
+> > > >>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> > > >>> ---
+> > > >>> This patch depends on:
+> > > >>>   CCF "Add clock support for Mediatek MT2701"[1]
+> > > >>>   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+> > > >>>
+> > > >>> [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+> > > >>> [2] https://patchwork.kernel.org/patch/9164013/
+> > > >>
+> > > >> I assume that 1 & 2 will appear in 4.10? So this patch needs to go in
+> > > >> after the
+> > > >> other two are merged in 4.10?
+> > > >>
+> > > >> Regards,
+> > > >>
+> > > >> 	Hans
+> > > >
+> > > > [1] will appear in 4.10, but [2] will appear latter than 4.10.So this
+> > > > patch needs to go in after [1] & [2] will be merged in 4.11.
+> > > 
+> > > So what should I do? Merge the driver for 4.11 and wait with this patch
+> > > until [2] is merged in 4.11? Does that sound reasonable?
+> > > 
+> > > Regards,
+> > > 
+> > > 	Hans
+> > 
+> > What do you think about this? You merge the driver first and I send this
+> > patch again after [1] & [2] is merged.
+> 
+> BTW, to prevent merging conflict, the dtsi should be merged by mediatek
+> SoC maintainer, Matthias.I think we can only take care on the driver
+> part at this moment.
+> 
