@@ -1,47 +1,91 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH 2/3] dt-bindings: Input: Add enable-gpios to pwm-beeper
-Date: Thu,  5 Jan 2017 20:43:53 -0600
-Message-ID: <1483670635-25060-3-git-send-email-david@lechnology.com>
-References: <1483670635-25060-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483670635-25060-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 17/22] power: supply: add battery driver for AXP20X and
+ AXP22X PMICs
+Date: Fri, 6 Jan 2017 03:46:58 +0100
+Message-ID: <20170106024657.y72pxkh6xeexwpp4@earth>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-18-quentin.schulz@free-electrons.com>
+ <CAAEAJfBeu7Z_JeM55Tyj4a2ZOxNWhq7qoPDwFyftoO8sCumVQw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3491315155080701418=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAEAJfBeu7Z_JeM55Tyj4a2ZOxNWhq7qoPDwFyftoO8sCumVQw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, lars@metafoo.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux@armlinux.org.uk, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, icenowy@aosc.xyz, pmeerw@pmeerw.net, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, bonbons@linux-vserver.org, Lee Jones <lee.jones@linaro.org>, jic23@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds an optional enable-gpios property to pwm-beeper. This gpio is
-used to enable the beeper. For example, the beeper may have an amplifier
-that needs to be switched on.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
----
- Documentation/devicetree/bindings/input/pwm-beeper.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--===============3491315155080701418==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="khfwpblf4d6qwfaw"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-index be332ae..1c6bcf8 100644
---- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
-+++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-@@ -5,3 +5,14 @@ Registers a PWM device as beeper.
- Required properties:
- - compatible: should be "pwm-beeper"
- - pwms: phandle to the physical PWM device
-+
-+Optional properties:
-+- enable-gpios: phandle to gpio to enable the beeper
-+
-+Example:
-+
-+beeper {
-+	compatible = "pwm-beeper";
-+	pwms = <&pwm0>;
-+	enable-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--khfwpblf4d6qwfaw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Jan 05, 2017 at 02:34:48PM -0300, Ezequiel Garcia wrote:
+> > +static int axp20x_power_probe(struct platform_device *pdev)
+> > +{
+> > +       struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev->dev.parent);
+> > +       struct axp20x_batt_ps *axp20x_batt;
+> > +       struct power_supply_config psy_cfg =3D {};
+> > +
+>=20
+> To be consistent with the AC power supply and USB power supply,
+> you might want to call of_device_is_available() here.
+> Otherwise, the device probes even if "disabled" in the DTS.
+
+I would expect that check in the mfd code. Probe should not be
+called at all if the sub-device is disabled.
+
+-- Sebastian
+
+--khfwpblf4d6qwfaw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlhvBR4ACgkQ2O7X88g7
++pp8QRAAk17mkOlg3XNw78yV3odE5Y7CZ96debdw6VTJudUxCVGpvG2TDcnUQfJ0
+6YGPzqJuEROEx02kqnBxHKX0rorAW65Hay+rXk9MWguj7xTAzuYy4Ghb5H4Gnrbp
+f7mXPVBKUFyP5fUWgFDlxzi5rdfcAfDGyBXS4emUDGbCLFMkMZ5/hivCe8V254ne
+e1jOGUeyjIV8xO6FovjO+pHRx6HCS+9O2fGhznNd4JXAtKVNqEC0rBAdP3fqIM/0
+gj3Xs6zTkonoFEnUmhufyNIYz4aQf2qH356PkYTrMCYBqeSZSTVC0biZEKCJ/sEt
+FBmdR1SBP7Xm9H3ExF6UrJ7aZFF0PRK2Y42K60/hUoAwKUqjrK5WPx6GjuMBXky3
+1ABHUU0PVZCCfO3KKF6YJNbtcd0164jb2ruqTokx45Vghg+V5l72i/Pd0/mD0eU5
+Bnee9g+JearygAqES4xaMOrjOQT9//6OToP7jBPVKpoWcQAuY2TE14NAd63UzgOr
+MXGeCDFOqyS8PGkkgRCwsUjJhKCQJrNb0yxKTnl9mHwX8/SF5Di3dYJh0cBpaVmz
+8g0BIIXTkXaH8ki6zsiGb6L8tmBP674PLy+SpKMJtW6yvkRGS5GUvtH8CLgCER2w
+RZHMCzlYMYBNN9TDoZQHzDh03SxxXRz8FxeaaaXsWlK1DwqyvGA=
+=l1Nc
+-----END PGP SIGNATURE-----
+
+--khfwpblf4d6qwfaw--
+
+
+--===============3491315155080701418==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3491315155080701418==--
