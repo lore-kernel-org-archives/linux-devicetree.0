@@ -1,46 +1,87 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM, ARM64: dts: drop "arm,amba-bus" in favor of
- "simple-bus" part 3
-Date: Fri, 6 Jan 2017 16:13:22 +0200
-Message-ID: <20170106141322.pejnlr6vbsq6bo6l@kozik-lap>
-References: <1482853886-7932-1-git-send-email-yamada.masahiro@socionext.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 3/4] ARM: dts: sunxi: add usb_otg and usbphy node for V3s
+ SoC
+Date: Fri, 6 Jan 2017 15:19:11 +0100
+Message-ID: <20170106141911.r4ehba64y4atys74@lukather>
+References: <20170103152534.20118-1-icenowy@aosc.xyz>
+ <20170103152534.20118-4-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482853886-7932-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============8027258569616791313=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170103152534.20118-4-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2016 at 12:51:26AM +0900, Masahiro Yamada wrote:
-> Tree-wide replacement was done by commit 2ef7d5f342c1 ("ARM, ARM64:
-> dts: drop "arm,amba-bus" in favor of "simple-bus"), then the 2nd
-> round by commit 15b7cc78f095 ("arm64: dts: drop "arm,amba-bus" in
-> favor of "simple-bus" part 2").
-> 
-> Here, some new users have appeared for Linux v4.10-rc1.  Eliminate
-> them now.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Hi Arnd, Olof,
-> 
-> Can you pick this up for v4.10 fixes?
-> 
-> If we carry arm,amba-bus until the release, we will need to
-> take more time to deprecate it.
 
-What is the status of this?
+--===============8027258569616791313==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kvo7n7heevrvo4dn"
+Content-Disposition: inline
 
-Masahiro, if you would split this, I could take Exynos part through my
-tree. Anyway I am fine with taking this directly into arm-soc. I do not
-expect conflicts around these lines, so:
 
-For Exynos:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+--kvo7n7heevrvo4dn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Tue, Jan 03, 2017 at 11:25:33PM +0800, Icenowy Zheng wrote:
+> V3s SoC features a USB PHY controller and a MUSB OTG controller.
+>=20
+> Add device nodes for them.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+
+This can be merged in your other DTSI patch.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--kvo7n7heevrvo4dn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYb6dbAAoJEBx+YmzsjxAgHX0P/0NTb9jQb8+fytr/yQyiJTKD
+1zDMrBB8AUByBCkrmEzMhHbSzbH+3Z3i5pduXKvRwgEbimlJ6NMm2tcGX9aJzDgt
+Ocfm0wuiYeUzhVEQyemwQM0svvychXObJnFRrjzp9+e6DOyPpnbUBdZ/q57AvB7b
+ZLpvsK+MHR4gesWndIdoszFc4ZbWRDzWRzniXztsD1Zw02kHc3O0omO3ww3Q4oiM
++QQgyX+KnGIDjsHP4NDoJSbC79XNgkeAahsvINK3q4q0eVwFYMyWtZFYw4zQ9RjV
+liN5XsV7C65umdaFyVM6ppCETKC9zPPXHuxqkbx18Sx6+EIgy+cKJnubLXtTpCDR
+gLFrw08AdHxHl7eQRsLE9z0HW5N3Ud66DOCSvUn4eJmyzZ1OP3rr83wxWMt1qD80
+OSEx9uDldE2n0YSVWvSl6JWj0hregH890TNLHlWHc0trDC7aUAjeLXFtUiLsFtsg
+GziW7+6DzFaOAMDNyIJ+TNm7XcOgVAALDEKmJBy+Qw9iuXcLfRtTjt2z2iVgKgAJ
+AEavZo294Gejm2xMoWQXarrA+GhT3RlfUSPBC+UEXKeSSU44CRVyhA88xU9xTU5e
+PDF1IRxIZtIaT7jw3EFkjjvxrAwRLbO9cwm0N9Q/dqkFxJdPI7psvdOn0bCsyZ46
+1LLERZgTKcRdG5POvwJ2
+=gqHI
+-----END PGP SIGNATURE-----
+
+--kvo7n7heevrvo4dn--
+
+
+--===============8027258569616791313==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8027258569616791313==--
