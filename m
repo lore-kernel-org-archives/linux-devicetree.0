@@ -1,13 +1,12 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu idle
-Date: Fri, 6 Jan 2017 14:59:45 +0800
-Message-ID: <20170106065947.30631-2-wenyou.yang@atmel.com>
-References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] arm64: dts: exynos: Remove unsupported regulator-always-off
+ property from TM2E
+Date: Fri,  6 Jan 2017 09:02:52 +0200
+Message-ID: <20170106070252.6008-1-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170106065947.30631-1-wenyou.yang@atmel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,69 +16,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob
- Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Wenyou Yang <wenyou.yang@atmel.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jaechul Lee <jcsing.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-For the SoCs such as SAMA5D2 and SAMA5D4 which have L2 cache,
-flush the L2 cache first before entering the cpu idle.
+The regulator property 'regulator-always-off' is not documented and not
+supported.
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
- arch/arm/mach-at91/pm.c       | 19 +++++++++++++++++++
- drivers/memory/atmel-sdramc.c |  1 +
- 2 files changed, 20 insertions(+)
-
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index b4332b727e9c..1a60dede1a01 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -289,6 +289,24 @@ static void at91_ddr_standby(void)
- 		at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);
- }
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+index 1db4e7f363a9..398f5e092b02 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+@@ -25,7 +25,6 @@
  
-+static void at91_ddr_cache_standby(void)
-+{
-+	u32 saved_lpr;
-+
-+	flush_cache_all();
-+	outer_disable();
-+
-+	saved_lpr = at91_ramc_read(0, AT91_DDRSDRC_LPR);
-+	at91_ramc_write(0, AT91_DDRSDRC_LPR, (saved_lpr &
-+			(~AT91_DDRSDRC_LPCB)) | AT91_DDRSDRC_LPCB_SELF_REFRESH);
-+
-+	cpu_do_idle();
-+
-+	at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr);
-+
-+	outer_resume();
-+}
-+
- /* We manage both DDRAM/SDRAM controllers, we need more than one value to
-  * remember.
-  */
-@@ -324,6 +342,7 @@ static const struct of_device_id const ramc_ids[] __initconst = {
- 	{ .compatible = "atmel,at91sam9260-sdramc", .data = at91sam9_sdram_standby },
- 	{ .compatible = "atmel,at91sam9g45-ddramc", .data = at91_ddr_standby },
- 	{ .compatible = "atmel,sama5d3-ddramc", .data = at91_ddr_standby },
-+	{ .compatible = "atmel,sama5d4-ddramc", .data = at91_ddr_cache_standby },
- 	{ /*sentinel*/ }
+ &ldo25_reg {
+ 	regulator-name = "UNUSED_LDO25";
+-	regulator-always-off;
  };
  
-diff --git a/drivers/memory/atmel-sdramc.c b/drivers/memory/atmel-sdramc.c
-index b418b39af180..7e5c5c6c1348 100644
---- a/drivers/memory/atmel-sdramc.c
-+++ b/drivers/memory/atmel-sdramc.c
-@@ -48,6 +48,7 @@ static const struct of_device_id atmel_ramc_of_match[] = {
- 	{ .compatible = "atmel,at91sam9260-sdramc", .data = &at91rm9200_caps, },
- 	{ .compatible = "atmel,at91sam9g45-ddramc", .data = &at91sam9g45_caps, },
- 	{ .compatible = "atmel,sama5d3-ddramc", .data = &sama5d3_caps, },
-+	{ .compatible = "atmel,sama5d4-ddramc", .data = &sama5d3_caps, },
- 	{},
- };
- 
+ &ldo31_reg {
 -- 
-2.11.0
+2.9.3
