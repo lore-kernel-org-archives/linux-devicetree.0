@@ -1,42 +1,43 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 3/3] Input: pwm-beeper: add optional enable gpio
-Date: Fri, 6 Jan 2017 11:45:15 -0600
-Message-ID: <79167ff5-64c2-c753-6341-beef32d3bb54@lechnology.com>
-References: <1483670635-25060-1-git-send-email-david@lechnology.com>
- <1483670635-25060-4-git-send-email-david@lechnology.com>
- <CAHp75VfY4CXOmvT5y2NucKLDvdt4i2LhW5rthke1pdvuAVm7gA@mail.gmail.com>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
+Date: Fri, 6 Jan 2017 17:46:33 +0000
+Message-ID: <c73ee9ab-64a1-0419-314d-21d4575ca7bf@synopsys.com>
+References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+ <CAHp75VdB+pApFgjFOwWYYQFUmxv5k6OYKgB4fstuy=3=2QesBQ@mail.gmail.com>
+ <475d9c2a-da11-97d0-d0b6-37ccd4990f18@synopsys.com>
+ <CAHp75Vdv3daVnkFmGc7gXWoqcy+CNgyqdtRXkvTJQpjyJX3eDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfY4CXOmvT5y2NucKLDvdt4i2LhW5rthke1pdvuAVm7gA@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vdv3daVnkFmGc7gXWoqcy+CNgyqdtRXkvTJQpjyJX3eDg@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/06/2017 11:28 AM, Andy Shevchenko wrote:
-> On Fri, Jan 6, 2017 at 4:43 AM, David Lechner <david@lechnology.com> wrote:
->> This adds an optional enable gpio to the pwm-beeper device. This gpio is
->> used in cases where the beeper needs to be switched on before using it.
->
-> Isn't it a property of pin muxing?
+On 06-Jan-17 17:17, Andy Shevchenko wrote:
+> On Fri, Jan 6, 2017 at 7:15 PM, Luis Oliveira
+> <Luis.Oliveira@synopsys.com> wrote:
+>> On 06-Jan-17 16:29, Andy Shevchenko wrote:
+>>> On Thu, Jan 5, 2017 at 7:24 PM, Luis Oliveira
+> 
+>>> Please, add kernel doc description here, important thing is to explain
+>>> return codes in Return: section of it.
+>>>
+>>>> +int i2c_slave_mode_detect(struct device *dev)
+> 
+> Just to make sure you didn't miss this one.
+> 
+> 
+Yes, I saw it. You were talking of something like this, right?
 
-You may want to turn if off when not making a sound to save power.
-
-
->
->> For
->> example, there may be an amplifier that is not always powered on.
->
-> This looks like GPIO based fixed voltage regulator.
-
-
-Yes, I think a regulator could work here just as well.
-
->
->>
->> Tested on LEGO MINDSTORMS EV3, which has a speaker connected to PWM through
->> an amplifier. The amplifier has an enable pin that is connected to a gpio.
->
-
+/**
+ * i2c_slave_mode_detect - detect operation mode
+ * @dev:  The device owning the bus
+ *
+ * This checks the device nodes for a I2C slave by checking the address
+ * used.
+ *
+ * Returns true if a I2C slave is detected, otherwise returns false.
+ */
