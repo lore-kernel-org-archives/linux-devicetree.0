@@ -1,83 +1,45 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v4 2/5] arm64: dts: exynos: make tm2 and tm2e independent
- from each other
-Date: Fri, 6 Jan 2017 09:43:46 -0300
-Message-ID: <705c08b2-e9f4-7998-c927-aa165ba7a102@osg.samsung.com>
-References: <20170106114114.19321-1-andi.shyti@samsung.com>
- <CGME20170106114120epcas5p2dde13ec37b7e53f65b6899da9e7c7e60@epcas5p2.samsung.com>
- <20170106114114.19321-3-andi.shyti@samsung.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH V6 1/3] dt-bindings: document common IEEE 802.11
+ frequency limit property
+Date: Fri, 06 Jan 2017 13:59:57 +0100
+Message-ID: <1483707597.12677.0.camel@sipsolutions.net>
+References: <20170104175832.25996-1-zajec5@gmail.com>
+         <CAL_JsqLg5YkC-YUHg6mQ35nmGaG7SC33VJB++fgtZsu1fRV-7Q@mail.gmail.com>
+         <1483617089.4394.13.camel@sipsolutions.net>
+         <CAL_JsqKYpTZFRJpPR1V9MmA-JW5ntoKzbkjwnYBp9HMWLObG3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170106114114.19321-3-andi.shyti@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andi Shyti <andi.shyti@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaechul Lee <jcsing.lee@samsung.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org, Jaechul Lee <galaxyra@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKYpTZFRJpPR1V9MmA-JW5ntoKzbkjwnYBp9HMWLObG3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andi,
-
-On 01/06/2017 08:41 AM, Andi Shyti wrote:
-> Currently tm2e dts includes tm2 but there are some differences
-> between the two boards and tm2 has some properties that tm2e
-> doesn't have.
+On Thu, 2017-01-05 at 10:34 -0600, Rob Herring wrote:
+> On Thu, Jan 5, 2017 at 5:51 AM, Johannes Berg <johannes@sipsolutions.
+> net> wrote:
+> > 
+> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> > Do I take that to mean that we'll merge it through the subsystem
+> > tree,
+> > and not go through some common DT tree?
 > 
-> That's why it's important to keep the two dts files independent
-> and put all the commonalities in a tm2-common.dtsi file.
-> 
-> At the current status the only two differences between the two
-> dts files (besides the board name) are ldo31 and ldo38.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
+> Yes, that's generally the case when bindings are in a series with
+> driver changes.
 
-Patch looks good to me.
+Alright, thanks.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+I've applied patches 1-3, patch 4 obviously still needs work (and
+probably won't go through my tree anyway.)
 
-I've some comments though:
+Note that I made some documentation fixes in patch 3, Rafał, please
+check.
 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> dissimilarity index 98%
-> index e8971f4a5977..d30b45a9c0d4 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> @@ -1,1120 +1,33 @@
-
-[snip]
-
-> -
-> -/ {
-> -	model = "Samsung TM2 board";
-> -	compatible = "samsung,tm2", "samsung,exynos5433";
-> -
-
-[snip]
-
-> +
-> +/ {
-> +	model = "Samsung TM2E board";
-> +	compatible = "samsung,tm2e", "samsung,exynos5433";
-> +};
-> +
-
-You ended with the wrong model and compatible for TM2.
-
-Speaking about these, I noticed that the common .dtsi has the TM2 model and
-compatible. I think those don't belong to .dtsi files and instead should be
-defined on each .dts file.
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+johannes
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
