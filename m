@@ -1,55 +1,89 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] media: rc: add driver for IR remote receiver on
- MT7623 SoC
-Date: Fri, 6 Jan 2017 15:41:30 +0800
-Message-ID: <1483688490.16976.26.camel@mtkswgap22>
-References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
-         <CGME20170105160810epcas3p1b7a85197c15fbbe87e08c736259935d6@epcas3p1.samsung.com>
-         <1483632384-8107-3-git-send-email-sean.wang@mediatek.com>
-         <20170106034346.7njhyhtsc4yado5c@gangnam.samsung>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv2] ARM: dts: socfpga: add base fpga region and fpga bridges
+Date: Fri,  6 Jan 2017 01:48:03 -0600
+Message-ID: <1483688883-27106-1-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170106034346.7njhyhtsc4yado5c-8vUhnHFVuGn35fTxX1Dczw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Alan Tull <atull@opensource.altera.com>, Dinh Nguyen <dinguyen@kernel.org>, dinguyen@opensource.altera.com, linux-arm-kernel@lists.infradead.org, atull@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andi,
+From: Alan Tull <atull@opensource.altera.com>
 
-Thank for your reminder. I will refine the code based on your work.
-to have elegant code and easy error handling.
+Add h2f and lwh2f bridges.
+Add base FPGA Region to support DT overlays for FPGA programming.
+Add l3regs.
 
-Sean
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v2: removed fpga-bridges, ranges, and reset-names
+---
+ arch/arm/boot/dts/socfpga.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-On Fri, 2017-01-06 at 12:43 +0900, Andi Shyti wrote:
-> Hi Sean,
-> 
-> > +	ir->rc = rc_allocate_device();
-> 
-> Yes, you should use devm_rc_allocate_device(...)
-> 
-> Besides, standing to this patch which is not in yet:
-> 
-> https://lkml.org/lkml/2016/12/18/39
-> 
-> rc_allocate_device should provide the driver type during
-> allocation, so it should be:
-> 
-> 	ir->rc = rc_allocate_device(RC_DRIVER_IR_RAW);
-> 
-> and this line can be removed:
-> 
-> > +	ir->rc->driver_type = RC_DRIVER_IR_RAW;
-> 
-> I don't know when Mauro will take the patch above.
-> 
-> Andi
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index de29172..c984f53 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -93,6 +93,14 @@
+ 			};
+ 		};
+ 
++		base_fpga_region {
++			compatible = "fpga-region";
++			fpga-mgr = <&fpgamgr0>;
++
++			#address-cells = <0x1>;
++			#size-cells = <0x1>;
++		};
++
+ 		can0: can@ffc00000 {
+ 			compatible = "bosch,d_can";
+ 			reg = <0xffc00000 0x1000>;
+@@ -513,6 +521,20 @@
+ 				};
+ 		};
+ 
++		fpga_bridge0: fpga_bridge@ff400000 {
++			compatible = "altr,socfpga-lwhps2fpga-bridge";
++			reg = <0xff400000 0x100000>;
++			resets = <&rst LWHPS2FPGA_RESET>;
++			clocks = <&l4_main_clk>;
++		};
++
++		fpga_bridge1: fpga_bridge@ff500000 {
++			compatible = "altr,socfpga-hps2fpga-bridge";
++			reg = <0xff500000 0x10000>;
++			resets = <&rst HPS2FPGA_RESET>;
++			clocks = <&l4_main_clk>;
++		};
++
+ 		fpgamgr0: fpgamgr@ff706000 {
+ 			compatible = "altr,socfpga-fpga-mgr";
+ 			reg = <0xff706000 0x1000
+@@ -694,6 +716,11 @@
+ 			arm,prefetch-offset = <7>;
+ 		};
+ 
++		l3regs@0xff800000 {
++			compatible = "altr,l3regs", "syscon";
++			reg = <0xff800000 0x1000>;
++		};
++
+ 		mmc: dwmmc0@ff704000 {
+ 			compatible = "altr,socfpga-dw-mshc";
+ 			reg = <0xff704000 0x1000>;
+-- 
+2.7.4
