@@ -1,32 +1,49 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2 1/2] PM / Domains: Introduce domain-performance-states
- binding
-Date: Fri, 6 Jan 2017 16:39:51 +0530
-Message-ID: <20170106110951.GJ21926@vireshk-i7>
-References: <cover.1481539827.git.viresh.kumar@linaro.org>
- <dd95df02a1c3efd00bd4890f8aceeb717ad38788.1481539827.git.viresh.kumar@linaro.org>
- <586F596C.7000807@codeaurora.org>
- <20170106092702.GH21926@vireshk-i7>
- <586F6DA5.30203@codeaurora.org>
- <20170106102308.GI21926@vireshk-i7>
- <586F732A.8090401@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC 0/1] Platform driver support for 'amd5536udc' driver
+Date: Fri, 06 Jan 2017 12:20:39 +0100
+Message-ID: <6422487.mhqDBHHcCr@wuerfel>
+References: <1483604597-26160-1-git-send-email-raviteja.garimella@broadcom.com> <1861880.7pouM4E6RB@wuerfel> <CAEHZuqNK07Xku9SmFhV0DJ4apV0m8yWznuFDwjr33CDP_OcXew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <586F732A.8090401@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEHZuqNK07Xku9SmFhV0DJ4apV0m8yWznuFDwjr33CDP_OcXew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06-01-17, 16:06, Rajendra Nayak wrote:
-> No, I am thoroughly confused :)
-> I was struggling with 2 powerdomains and now there are way too many of them :P
+On Friday, January 6, 2017 12:29:12 PM CET Raviteja Garimella wrote:
+> Hi Arnd,
+> 
+> On Fri, Jan 6, 2017 at 3:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Thursday, January 5, 2017 1:53:16 PM CET Raviteja Garimella wrote:
+> >> The UDC is based on Synopsys Designware core USB (2.0) Device controller
+> >> IP.
+> > ...
+> >> This is a request for comments from maintainers/others regarding approach
+> >> on whether to have 2 different drivers (one each for AMD and Broadcom)
+> >> with a common library (3 files in total), or have a single driver like
+> >> it's done in this patch and have the driver filename changed to some
+> >> common name based on ther underlying IP, like snps_udc.c.
+> >
+> > I have not looked at the code at all, so sorry for my ignorance, but
+> > isn't the IP block you describe the one that drivers/usb/dwc2/ is for?
+> > Could you add support for the Broadcom hardware there instead?
+> 
+> The current driver I submitted is for a different Synopsys IP (USB
+> Device Controller IP,
+> not the HS OTG). It's confirmed by John Youn (from Synopsys) earlier.
+> 
 
-For the record, we had some offline chat and his case is pretty much
-taken care of by the proposed bindings. Though he will look in more
-details and post further queries later. :)
+Ok, sounds fine the. I'd suggest taking the current driver than and
+splitting out the pci_driver front-end into a separate module that
+calls exported symbols of the main driver, with the new platform
+driver in a third file that also calls the same exported symbols.
 
--- 
-viresh
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
