@@ -1,59 +1,48 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
- stores scenario in vdma
-Date: Fri, 6 Jan 2017 06:01:17 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A66111B@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1483536954-27203-1-git-send-email-appanad@xilinx.com>
- <1483536954-27203-3-git-send-email-appanad@xilinx.com>
- <20170104152613.hhdptwsyg73ev3dz@rob-hp-laptop>
- <C246CAC1457055469EF09E3A7AC4E11A4A660958@XAP-PVEXMBX01.xlnx.xilinx.com>
- <CAL_JsqKFF2g7_y6kS_A33wDQE3Sw5mJdoUj8wGaX5ZbQ6pK_zQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/4] ARM64: dts: exynos5433: use macros for pinctrl
+ configuration on Exynos5433
+Date: Fri, 6 Jan 2017 08:18:05 +0200
+Message-ID: <20170106061805.6g57e6iulrclwieb@kozik-lap>
+References: <CGME20161230041427epcas1p1151d6e28fac143c63efaf4f7c8ed432d@epcas1p1.samsung.com>
+ <20161230041421.24448-1-andi.shyti@samsung.com>
+ <20161230041421.24448-4-andi.shyti@samsung.com>
+ <CACRpkdaz9AyFJs1Th_SVexqKaP-=iPF0G-1YXOCoSmrQH8ZHDA@mail.gmail.com>
+ <20161230151724.5wlp4hbphasmw3rg@kozik-lap>
+ <CACRpkdbX_MuLSCerq08-1VZV6VJfynjkv1QOr7ssOCGvM5aB_Q@mail.gmail.com>
+ <20170105200807.54j2ebve6kqd5bob@kozik-lap>
+ <20170106022343.5w4d7pkydrfh2n75@gangnam.samsung>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKFF2g7_y6kS_A33wDQE3Sw5mJdoUj8wGaX5ZbQ6pK_zQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170106022343.5w4d7pkydrfh2n75@gangnam.samsung>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQoJVGhhbmtzIGZvciB0aGUgcmV2aWV3Li4uDQoNCiBbU25pcF0NCj4gPiAtLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF9kbWEu
-dHh0DQo+ID4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS94
-aWxpbngveGlsaW54X2RtYS50eHQNCj4gPj4gPiBAQCAtNjYsNiArNjYsOCBAQCBPcHRpb25hbCBj
-aGlsZCBub2RlIHByb3BlcnRpZXM6DQo+ID4+ID4gIE9wdGlvbmFsIGNoaWxkIG5vZGUgcHJvcGVy
-dGllcyBmb3IgVkRNQToNCj4gPj4gPiAgLSB4bG54LGdlbmxvY2stbW9kZTogVGVsbHMgR2VubG9j
-ayBzeW5jaHJvbml6YXRpb24gaXMNCj4gPj4gPiAgICAgZW5hYmxlZC9kaXNhYmxlZCBpbiBoYXJk
-d2FyZS4NCj4gPj4gPiArLSB4bG54LGZzdG9yZS1jb25maWc6IFRlbGxzIFdoZXRoZXIgRnJhbWUg
-U3RvcmUgQ29uZmlndXJhdGlvbiBpcw0KPiA+PiA+ICsgICBlbmFibGVkL2Rpc2FibGVkIGluIGhh
-cmR3YXJlLg0KPiA+Pg0KPiA+PiBXaGF0J3MgdGhlIGRlZmF1bHQgKHdoZW4gbm90IHByZXNlbnQp
-PyBUaGF0IHNob3VsZCBiZSB0aGUgbW9zdCBjb21tb24NCj4gY2FzZS4NCj4gPj4gTG9va3MgbGlr
-ZSB0aGUgY29kZSB0cmVhdHMgdGhpcyBhcyBib29sLCBidXQgdGhhdCdzIG5vdCBjbGVhciBoZXJl
-Lg0KPiA+PiBUaGUgbmFtZSBpcyBub3QgY2xlYXIgd2hhdCBpdCBpcyBkb2luZy4gRW5hYmxpbmcg
-b3IgZGlzYWJsaW5nIHRoZSBmZWF0dXJlPw0KPiA+DQo+ID4gRGVmYXVsdCB2YWx1ZSBpcyB6ZXJv
-Li4uDQo+ID4gV2hlbiB0aGlzIHByb3BlcnR5IGlzIHByZXNlbnQgaXQgdGVsbHMgaGFyZHdhcmUg
-aXMgY29uZmlndXJlZCBmb3IgZnJhbWUgc3RvcmUNCj4gY29uZmlndXJhdGlvbi4NCj4gDQo+IFNv
-IG1vc3QgcGVvcGxlIHdpbGwgbm90IHdhbnQgImZyYW1lIHN0b3JlIGNvbmZpZ3VyYXRpb24iPw0K
-DQpTaW5jZSB0aGUgZHJpdmVyIGlzIGZvciBTb2Z0SVAgKEkgbWVhbiBmcGdhIGlwKSBkZWZhdWx0
-IGgvdyBjb25maWd1cmF0aW9uIG9mIHRoaXMgSVAgaXMgZnJhbWUgc3RvcmUNCkNvbmZpZ3VyYXRp
-b24gZGlzYWJsZWQgdGhhdCdzIGluIHRoZSBkcml2ZXIgbWFraW5nIGRlZmF1bHQgdmFsdWUgb2Yg
-dGhpcyBjb25maWd1cmF0aW9uIGFzIHplcm8uDQoNCklmIHVzZXJzIGFyZSB0cnlpbmcgYSB1c2Ug
-Y2FzZSB3aGVyZSB0aGlzIGNvbmZpZ3VyYXRpb24gc2hvdWxkIGJlIGVuYWJsZWQgYnV0IGluIHRo
-ZSBoL3cgaXQgaXMgZGlzYWJsZWQuDQpJbiB0aGlzIGNhc2UgZHJpdmVyIHdpbGwgd2FybiB1c2Vy
-cyB0byBlbmFibGUgdGhpcyBmcmFtZSBzdG9yZSBjb25maWd1cmF0aW9uIGluIHRoZSBoL3cuDQpT
-byB0aGF0IHVzZXJzIGNhbiBlbmFibGUgaXQgaW4gdGhlaXIgaC93Lg0KDQpQbGVhc2UgbGV0IG1l
-IGtub3cgaWYgdGhlIGFib3ZlIGV4cGlhdGlvbiBpcyBub3QgY2xlYXIgd2lsbCBleHBsYWluIGlu
-IGRldGFpbC4uLg0KDQo+IA0KPiA+IFdpbGwgZml4IHRoZSBleHBsYW5hdGlvbiBwYXJ0IGluIHRo
-ZSBuZXh0IHZlcnNpb24gbGlrZSBiZWxvdy4NCj4gPiAgeGxueCxmc3RvcmUtY29uZmlnOiBUZWxs
-cyBoYXJkd2FyZSBpcyBjb25maWd1cmVkIGZvciBmcmFtZSBzdG9yZSBjb25maWd1cmF0aW9uLg0K
-PiA+IElzIHRoZSBhYm92ZSBleHBsYW5hdGlvbiBjbGVhcj8/Pw0KPiANCj4gTm8sIEkgbWVhbiBt
-YWtlIGl0IG9idmlvdXMgZnJvbSB0aGUgbmFtZSBvZiB0aGUgcHJvcGVydHk6DQo+IHhsbngsZnN0
-b3JlLWNvbmZpZy1lbmFibGUgb3IgeGxueCxmc3RvcmUtZW5hYmxlDQo+IA0KPiBBbmQgdGhlIGRl
-c2NyaXB0aW9uIG5lZWRzIHRvIHNheSBpdCBpcyBib29sZWFuLg0KDQpTdXJlIHdpbGwgZml4IGlu
-IHRoZSBuZXh0IHZlcnNpb24uLi4NCg0KUmVnYXJkcywNCktlZGFyLg0KDQo+IA0KPiBSb2INCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Jan 06, 2017 at 11:23:43AM +0900, Andi Shyti wrote:
+> Hi Krzysztof,
+> 
+> > Andi,
+> > Please fix missing Signed-off-by and resend with Linus' tags for #1 and
+> > #2 and with other accumulated tags.
+> 
+> patch #1 has already been merged in mainline:
+> 
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=1259feddd0f83649d5c48d730c140b4f7f3fa288
+> 
+> and patch #2 is in LinusW's -next branch.
+
+Yes, but it is gone from devel so I suppose it will be removed from
+for-next in the future as well.
+
+> does it still make sense to send them again? If you want I can
+> send again patch 3 and 4 as independent patches with Chanwoo's
+> review (the only tags).
+
+No, no need. I wanted resend only because of #1 but it is merged as you
+said.
+
+Best regards,
+Krzysztof
