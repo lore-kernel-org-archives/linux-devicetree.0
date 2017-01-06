@@ -1,138 +1,122 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH V2 1/2] PM / Domains: Introduce domain-performance-states
- binding
-Date: Fri, 06 Jan 2017 14:16:36 +0530
-Message-ID: <586F596C.7000807@codeaurora.org>
-References: <cover.1481539827.git.viresh.kumar@linaro.org> <dd95df02a1c3efd00bd4890f8aceeb717ad38788.1481539827.git.viresh.kumar@linaro.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] mtd: spi-nor: add memory controllers for the
+ Aspeed AST2500 SoC
+Date: Fri, 6 Jan 2017 09:49:30 +0100
+Message-ID: <20170106094930.0f579dca@bbrezillon>
+References: <1481557252-13656-1-git-send-email-clg@kaod.org>
+        <1481557252-13656-2-git-send-email-clg@kaod.org>
+        <5566c62d-cc72-f207-e1dd-5a59e6947c24@wedev4u.fr>
+        <a7cb781c-a4a8-f0f7-e7db-5cd9f19da0aa@kaod.org>
+        <2bec1e91-a196-b894-fb66-590b8f4f35c3@atmel.com>
+        <645db8c4-7f3c-f8bf-ddd9-3f513ce2ed14@kaod.org>
+        <4c5cf674-06f9-ad6b-05bf-a1d39aaa7ed5@atmel.com>
+        <20170104185005.7fcafd2d@bbrezillon>
+        <4c0b4498-12c7-303d-c8f8-4f27a02d6c12@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dd95df02a1c3efd00bd4890f8aceeb717ad38788.1481539827.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4c0b4498-12c7-303d-c8f8-4f27a02d6c12-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Cédric,
 
-On 12/12/2016 04:26 PM, Viresh Kumar wrote:
-> Some platforms have the capability to configure the performance state of
-> their Power Domains. The performance levels are represented by positive
-> integer values, a lower value represents lower performance state.
-> 
-> The power-domains until now were only concentrating on the idle state
-> management of the device and this needs to change in order to reuse the
-> infrastructure of power domains for active state management.
-> 
-> This patch adds binding to describe the performance states of a power
-> domain.
+On Thu, 5 Jan 2017 14:39:14 +0100
+Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
 
-The bindings would also need to take into account the fact that a device
-could (and is quite often the case with qcom platforms) have 2 separate
-powerdomains, one for idle state management and another to manage active
-states. I guess the below bindings assume that there's just one.
+> Hello Cyrille, Boris 
+> 
+> On 01/04/2017 06:50 PM, Boris Brezillon wrote:
+> > Cyrille, Cédric,
+> > 
+> > On Wed, 4 Jan 2017 15:52:07 +0100
+> > Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> >>>     
+> >>>> Anyway, since the review is done now, on my side I won't ask you to remove
+> >>>> or split the support of the 'Command' mode in a separated patch.
+> >>>> I let you do as you want, if it help you to introduce some part of the
+> >>>> support of this 'Command' mode now even if not completed yet, no problem on
+> >>>> my side :)
+> >>>>
+> >>>> I was just giving you some pieces of advice for the next time if you want
+> >>>> to speed up the review of another patch introducing new features.
+> >>>>
+> >>>> However, I will just ask you one more version handling the dummy cycles
+> >>>> properly as it would help us for the global maintenance of the spi-nor
+> >>>> subsystem. This is the only mandatory modification I ask you, after that I
+> >>>> think it would be ok for me and since Marek has already reviewed your
+> >>>> driver, it would be ready to be merged into the spi-nor tree.    
+> >>>
+> >>> Sending a v5 which should address your comments. 
+> >>>
+> >>> I have removed the label property and will start a new thread in the 
+> >>> topic. Any hints on which binding we could add this label prop ?  
+> >>>    
+> >>
+> >> Here I will provide just few thoughts about this new DT property. I don't
+> >> pretend this is what should be done. I still think other mtd maintainers
+> >> should be involved to discuss this topic.
+> >>
+> >> First the DT property name "label" sounds good to me: it is consistent with
+> >> "label" DT property used to name mtd partitions. However, I don't think it
+> >> should be documented in jedec,spi-nor.txt but *maybe* in partition.txt as
+> >> the purpose of this new DT property seems very close to the "label"
+> >> property of partition nodes: let's think about some hard-disk device
+> >> (/dev/sda) and its partition devices (/dev/sdaX).  
+> 
+> yes this is very similar. I first looked at introducing a name to 
+> an overall containing partition but the partition binding is not 
+> designed for that. There are constraints on the start address and
+> the size which does not fit the purpose.
+> 
+> > Hm, partition.txt may not be appropriate here. We're not documenting
+> > the MTD partition binding, but the MTD device one. Maybe we should
+> > create mtd.txt and put all generic MTD dev properties here.  
+> >>
+> >> Besides, the concept of this memory label is not limited to SPI NOR but
+> >> could also apply to NAND memories or any other MTD handled memories.  
+> > 
+> > Definitely. Actually I think I'll need that for the Atmel NAND
+> > controller driver rework I'm currently working on, to keep mtdparts
+> > parser happy even after changing the NAND device naming scheme.
+> >   
+> >> Hence the DT property might be handled by drivers/mtd/ofpart.c instead of
+> >> being handled by spi-nor.c or by each SPI NOR memory controller driver.  
+> > 
+> > Actually, that could be done at the mtdcore level in
+> > mtd_set_dev_defaults() [1].  
+> 
+> that would be perfect.
+> 
+> >> Finally, I guess we should take time to discuss and all agree what should
+> >> be done precisely before introducing a new DT property because one general
+> >> rule with DTB files is that users should be able to update their kernel
+> >> image (zImage, uImage, ...) without changing their DTB: device trees should
+> >> be backward compatible. Hence if we make a wrong choice today, we are
+> >> likely to have to live with it and keep supporting that bad choice.  
+> > 
+> > Rob already acked the patch, so, if all MTD maintainers agree that this
+> > new property is acceptable, we should be fine ;-).  
+> 
+> yes but we would need to move the binding property to another file. 
+> What I sent applied to "jedec,spi-nor" and we want to generalize the 
+> property to other devices.
 
-- Rajendra
+We could create an new file under
+Documentation/devicetree/bindings/mtd/, or we could rename
+partition.txt into something else (generic.txt or common.txt) and
+document more than the partition binding.
 
-> 
-> If the consumers don't need the capability of switching to different
-> domain performance states at runtime, then they can simply define their
-> required domain performance state in their node directly. Otherwise the
-> consumers can define their requirements with help of other
-> infrastructure, for example the OPP table.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  .../devicetree/bindings/power/power_domain.txt     | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index 723e1ad937da..a456e0dc04e0 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -38,6 +38,40 @@ phandle arguments (so called PM domain specifiers) of length specified by the
->    domain's idle states. In the absence of this property, the domain would be
->    considered as capable of being powered-on or powered-off.
->  
-> +- domain-performance-states : A phandle of the performance states node, which
-> +		defines all the performance states associated with a power
-> +		domain.
-> +  The domain-performance-states property reflects the performance states of this
-> +  PM domain and not the performance states of the devices or sub-domains in the
-> +  PM domain. Devices and sub-domains have their own performance states, which
-> +  are dependent on the performance state of the PM domain.
-> +
-> +* PM domain performance states node
-> +
-> +This describes the performance states of a PM domain.
-> +
-> +Required properties:
-> +- compatible: Allow performance states to express their compatibility. It should
-> +  be: "domain-performance-state".
-> +
-> +- Performance state nodes: This node shall have one or more "Performance State"
-> +  nodes.
-> +
-> +* Performance state node
-> +
-> +Required properties:
-> +- performance-level: A positive integer value representing the performance level
-> +  associated with a performance state. The integer value '1' represents the
-> +  lowest performance level and the highest value represents the highest
-> +  performance level.
-> +
-> +Optional properties:
-> +- domain-microvolt: voltage in micro Volts.
-> +
-> +  A single regulator's voltage is specified with an array of size one or three.
-> +  Single entry is for target voltage and three entries are for <target min max>
-> +  voltages.
-> +
->  Example:
->  
->  	power: power-controller@12340000 {
-> @@ -118,4 +152,39 @@ The node above defines a typical PM domain consumer device, which is located
->  inside a PM domain with index 0 of a power controller represented by a node
->  with the label "power".
->  
-> +Optional properties:
-> +- domain-performance-state: A phandle of a Performance state node.
-> +
-> +Example:
-> +
-> +	parent: power-controller@12340000 {
-> +		compatible = "foo,power-controller";
-> +		reg = <0x12340000 0x1000>;
-> +		#power-domain-cells = <0>;
-> +		domain-performance-states = <&domain_perf_states>;
-> +	};
-> +
-> +	domain_perf_states: performance_states {
-> +		compatible = "domain-performance-state";
-> +		domain_perf_state1: pstate@1 {
-> +			performance-level = <1>;
-> +			domain-microvolt = <970000 975000 985000>;
-> +		};
-> +		domain_perf_state2: pstate@2 {
-> +			performance-level = <2>;
-> +			domain-microvolt = <1000000 1075000 1085000>;
-> +		};
-> +		domain_perf_state3: pstate@3 {
-> +			performance-level = <3>;
-> +			domain-microvolt = <1100000 1175000 1185000>;
-> +		};
-> +	}
-> +
-> +	leaky-device@12350000 {
-> +		compatible = "foo,i-leak-current";
-> +		reg = <0x12350000 0x1000>;
-> +		power-domains = <&power 0>;
-> +		domain-performance-state = <&domain_perf_state2>;
-> +	};
-> +
->  [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
-> 
+Can you take care of that (in a separate patch series of course)?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks,
+
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
