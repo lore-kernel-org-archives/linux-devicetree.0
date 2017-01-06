@@ -1,47 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 1/5] arm64: dts: exynos5433: TM2/E: Fix wrong
- information of ldo23 and ldo25
-Date: Fri, 6 Jan 2017 10:50:26 +0200
-Message-ID: <20170106085026.5pfwyxt2qipzbjpy@kozik-lap>
-References: <1483675149-32598-1-git-send-email-jcsing.lee@samsung.com>
- <CGME20170106035913epcas5p20336406863f1029ccf614520f366ddcf@epcas5p2.samsung.com>
- <1483675149-32598-2-git-send-email-jcsing.lee@samsung.com>
- <20170106070539.wd3kfhi77pa5ekcy@kozik-lap>
- <586F4554.6020206@samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu idle
+Date: Fri, 6 Jan 2017 10:05:17 +0100
+Message-ID: <20170106090517.txcoukisnx43cfqq@piout.net>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+ <20170106065947.30631-2-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <586F4554.6020206@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Jaechul Lee <jcsing.lee@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Andi Shyti <andi.shyti@samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20170106065947.30631-2-wenyou.yang@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Wenyou Yang <wenyou.yang@microchip.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 04:20:52PM +0900, Chanwoo Choi wrote:
-> On 2017년 01월 06일 16:05, Krzysztof Kozlowski wrote:
-> > On Fri, Jan 06, 2017 at 12:59:05PM +0900, Jaechul Lee wrote:
-> >> From: Chanwoo Choi <cw00.choi@samsung.com>
-> >>
-> >> This patch fixes the wrong information of ldo23 and ldo25 on both TM2 and TM2E.
-> > 
-> > Please describe what is exactly wrong and how it affects the
-> > system/user. This is going to the fixes so it needs a good explanation.
-> 
-> When I posted the patch[1], I refer to the old schematic document of both TM2 and TM2E.
-> [1] 01e5d2352152 ("arm64: dts: exynos: Add dts file for Exynos5433-based TM2 board")
-> 
-> After checking the highest version of schematic document of both TM2 and TM2E,
-> there is no difference of ldo23/ldo25 on both TM2 and TM2E.
-> - ldo23 is used on TM2/TM2E, but the name/max-microvolt are wrong. 
-> - ldo25 isn't used on TM2/TM2E. (not connected)
-> 
-> Because ldo23 and lod25 are not used on other device in Exynos5433 and TM2 board.
-> this patch does not affect the operation to system/user.
+Hi,
 
-If it does not affect anyone (including TM2/TM2E) then this do not have
-to be a fix. Am I right?
+On 06/01/2017 at 14:59:45 +0800, Wenyou Yang wrote :
+> For the SoCs such as SAMA5D2 and SAMA5D4 which have L2 cache,
+> flush the L2 cache first before entering the cpu idle.
+> 
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> ---
+> 
+>  arch/arm/mach-at91/pm.c       | 19 +++++++++++++++++++
+>  drivers/memory/atmel-sdramc.c |  1 +
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+> index b4332b727e9c..1a60dede1a01 100644
+> --- a/arch/arm/mach-at91/pm.c
+> +++ b/arch/arm/mach-at91/pm.c
+> @@ -289,6 +289,24 @@ static void at91_ddr_standby(void)
+>  		at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);
+>  }
+>  
+> +static void at91_ddr_cache_standby(void)
+> +{
+> +	u32 saved_lpr;
+> +
+> +	flush_cache_all();
+> +	outer_disable();
+> +
+> +	saved_lpr = at91_ramc_read(0, AT91_DDRSDRC_LPR);
+> +	at91_ramc_write(0, AT91_DDRSDRC_LPR, (saved_lpr &
+> +			(~AT91_DDRSDRC_LPCB)) | AT91_DDRSDRC_LPCB_SELF_REFRESH);
+> +
+> +	cpu_do_idle();
+> +
+> +	at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr);
+> +
+> +	outer_resume();
+> +}
+> +
 
-Best regards,
-Krzysztof
+Seems good to me. Did you measure the added latency on sama5d3 if you
+add the cache operations in at91_ddr_standby instead of having a new
+function?
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
