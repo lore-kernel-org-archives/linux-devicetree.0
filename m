@@ -1,84 +1,81 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [RESEND PATCH v1] ARM: dts: stm32f429: Add missing USART3 pin
- config to STM32F469I-DISCO board
-Date: Fri, 6 Jan 2017 17:34:29 +0100
-Message-ID: <97600913-7d3e-8096-3bfa-431c70a949dc@st.com>
-References: <20161118151033.30592-1-bmh@certi.org.br>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
+Date: Fri, 6 Jan 2017 10:35:39 -0600
+Message-ID: <CAL_JsqK1=R6M=vrW5aqmQtMHUGGws_Hb=VHb9RNcvesjfkCjRA@mail.gmail.com>
+References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161118151033.30592-1-bmh@certi.org.br>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bruno Meirelles Herrera <bruherrera@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, roliveir <Ramiro.Oliveira@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bruno,
-
-On 11/18/2016 04:10 PM, Bruno Meirelles Herrera wrote:
-> Including new STM32 maintainer. Rebased at stm32-dt-for-v4.10-1 and
-> stm32-dt-for-v4.10-2 branches. It fix the port/pin initialization in
-> case boot-loader does not configure/initialize the pins.
-> Fixing line wrapping from last patch
+On Thu, Jan 5, 2017 at 11:24 AM, Luis Oliveira
+<Luis.Oliveira@synopsys.com> wrote:
+> This function has the purpose of mode detection by checking the
+> device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
+> Currently only checks using OF functions (ACPI slave not supported yet).
 >
-> This patch adds USART3 pin configuration on PB10/PA11 pins
-> for STM32F469I-DISCO board.
->
-> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
 > ---
->  arch/arm/boot/dts/stm32f429.dtsi      | 13 +++++++++++++
->  arch/arm/boot/dts/stm32f469-disco.dts |  2 ++
->  2 files changed, 15 insertions(+)
+> Due to the need of checking if the I2C slave address is our own (in
+> other words: if we are the I2C slave) I created a helper function
+> (proposed to me by @Andy) to enable that check.
+> Currently (because I am not able to test it using ACPI) it only
+> supports devicetree declarations.
 >
-> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-> index e4dae0e..1b8b105 100644
-> --- a/arch/arm/boot/dts/stm32f429.dtsi
-> +++ b/arch/arm/boot/dts/stm32f429.dtsi
-> @@ -316,6 +316,19 @@
->  				};
->  			};
+>  drivers/i2c/i2c-core.c | 19 +++++++++++++++++++
+>  include/linux/i2c.h    |  1 +
+>  2 files changed, 20 insertions(+)
 >
-> +			usart3_pins_a: usart3@0 {
-> +				pins1 {
-> +					pinmux = <STM32F429_PB10_FUNC_USART3_TX>;
-> +					bias-disable;
-> +					drive-push-pull;
-> +					slew-rate = <0>;
-> +				};
-> +				pins2 {
-> +					pinmux = <STM32F429_PB11_FUNC_USART3_RX>;
-> +					bias-disable;
-> +				};
-> +			};
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index 3de95a29024c..48e705b23c59 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -3691,6 +3691,25 @@ int i2c_slave_unregister(struct i2c_client *client)
+>         return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(i2c_slave_unregister);
 > +
->  			usbotg_hs_pins_a: usbotg_hs@0 {
->  				pins {
->  					pinmux = <STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
-> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-> index 8877c00..75f4303 100644
-> --- a/arch/arm/boot/dts/stm32f469-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
-> @@ -79,5 +79,7 @@
->  };
->
->  &usart3 {
-> +	pinctrl-0 = <&usart3_pins_a>;
-> +	pinctrl-names = "default";
->  	status = "okay";
->  };
->
-After a little cosmetic change in commit header:
+> +int i2c_slave_mode_detect(struct device *dev)
 
-Applied on stm32-dt-for-v4.11-1
+This can be bool instead. Otherwise, looks good to me.
 
-Thanks!
-Alex
+> +{
+> +       struct device_node *child;
+> +       u32 reg;
+> +
+> +       if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
+> +               for_each_child_of_node(dev->of_node, child) {
+> +                       of_property_read_u32(child, "reg", &reg);
+> +                       if (reg & I2C_OWN_SLAVE_ADDRESS)
+> +                               return 1;
+> +               }
+> +       } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
+> +               dev_dbg(dev, "ACPI slave is not supported yet\n");
+> +       }
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
+> +
+>  #endif
+>
+>  MODULE_AUTHOR("Simon G. Vogl <simon@tk.uni-linz.ac.at>");
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index b2109c522dec..53cf99569af5 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -282,6 +282,7 @@ enum i2c_slave_event {
+>
+>  extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
+>  extern int i2c_slave_unregister(struct i2c_client *client);
+> +extern int i2c_slave_mode_detect(struct device *dev);
+>
+>  static inline int i2c_slave_event(struct i2c_client *client,
+>                                   enum i2c_slave_event event, u8 *val)
+> --
+> 2.11.0
+>
+>
