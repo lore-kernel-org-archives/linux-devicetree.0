@@ -1,43 +1,59 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Fri, 06 Jan 2017 14:32:35 +0900
-Message-ID: <586F2BF3.8080400@samsung.com>
-References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
- <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
- <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
+From: Yegor Yefremov <yegorslists@googlemail.com>
+Subject: Re: [PATCH net-next v4 0/4] Fix OdroidC2 Gigabit Tx link issue
+Date: Fri, 6 Jan 2017 06:42:24 +0100
+Message-ID: <CAGm1_kvZ4dQrJ89qYU5wLGU1NR=j9xyWUm2mgYtq3F1+bo1OCg@mail.gmail.com>
+References: <1480348229-25672-1-git-send-email-jbrunet@baylibre.com>
+ <049b1efc-3bad-92e0-45ef-0563dc5d81de@gmail.com>
+ <20170105232508.GU14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andi Shyti <andi.shyti@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: krzk@kernel.org, cw00.choi@samsung.com, devicetree@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, jh80.chung@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, kgene@kernel.org, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170105232508.GU14217@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Andrew Lunn <andrew@lunn.ch>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, netdev <netdev@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Neil Armstrong <narmstrong@baylibre.com>, kernel list <linux-kernel@vger.kernel.org>, Julia Lawall <julia.lawall@lip6.fr>, Andre Roth <neolynx@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE364WEIDAx7JuUIDA27J28IDE0OjIy7JeQIEFuZGkgU2h5dGkg7J20KOqwgCkg7JO0IOq4
-gDoKPiBIaSBIb2VnZXVuLAo+IAo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9t
-b2RlIGRlZmF1bHRfbW9kZSA9IHsKPj4gKwkuY2xvY2sgPSAyMjIzNzIsCj4+ICsJLmhkaXNwbGF5
-ID0gMTQ0MCwKPj4gKwkuaHN5bmNfc3RhcnQgPSAxNDQwICsgMSwKPj4gKwkuaHN5bmNfZW5kID0g
-MTQ0MCArIDEgKyAxLAo+PiArCS5odG90YWwgPSAxNDQwICsgMSArIDEgKyAxLAo+PiArCS52ZGlz
-cGxheSA9IDI1NjAsCj4+ICsJLnZzeW5jX3N0YXJ0ID0gMjU2MCArIDEsCj4+ICsJLnZzeW5jX2Vu
-ZCA9IDI1NjAgKyAxICsgMSwKPj4gKwkudnRvdGFsID0gMjU2MCArIDEgKyAxICsgMTUsCj4+ICsJ
-LnZyZWZyZXNoID0gNjAsCj4+ICsJLmZsYWdzID0gMCwKPj4gK307Cj4gCj4gaG93IGlzIHRoaXMg
-d29ya2luZyB3aXRoIHRtMmU/IEFyZSB0aGVzZSB2YWx1ZXMgdmFsaWQgZm9yIGJvdGgKPiB0aGUg
-Ym9hcmRzPwoKV2UgZG9uJ3QgbmVlZCB0byBjb25zaWRlciB0bTJlIGJvYXJkIHdpdGggdHdvIHJl
-YXNvbmVzLAoxLiB0aGVyZSBpcyBubyB0bTJlIGJvYXJkIHN1cHBvcnQgaW4gbWFpbmxpbmUKMi4g
-dGhlIHBhbmVsIG9uIHRtMiB3b3VsZCBiZSBhIGxpdHRsZSBiaXQgZGlmZmVyZW50IGZyb20gb25l
-IG9uIHRtMmUKClRoYW5rcywKSW5raSBEYWUKCj4gCj4gQW5kaQo+IAo+IApfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Russel,
+
+On Fri, Jan 6, 2017 at 12:25 AM, Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+> On Mon, Nov 28, 2016 at 09:54:28AM -0800, Florian Fainelli wrote:
+>> If we start supporting generic "enable", "disable" type of properties
+>> with values that map directly to register definitions of the HW, we
+>> leave too much room for these properties to be utilized to implement a
+>> specific policy, and this is not acceptable.
+>
+> Another concern with this patch is that the existing phylib "set_eee"
+> code is horribly buggy - it just translates the modes from userspace
+> into the register value and writes them directly to the register with
+> no validation.  So it's possible to set modes in the register that the
+> hardware doesn't support, and have them advertised to the link partner.
+>
+> I have a patch which fixes that, restricting (as we do elsewhere) the
+> advert according to the EEE supported capabilities retrieved from the
+> PCS - maybe the problem here is that the PCS doesn't support support
+> EEE in 1000baseT mode?
+>
+> Out of interest, which PHY is used on this platform?
+>
+> On the SolidRun boards, they're using AR8035, and have suffered this
+> occasional link drop problem.  What has been found is that it seems to
+> be to do with the timing parameters, and it seemed to only be 1000bT
+> that was affected.  I don't remember off hand exactly which or what
+> the change was they made to stabilise it though, but I can probabily
+> find out tomorrow.
+
+I have different boards with am335x and AR8035 and we had occasional
+link drop with both 100 and 1000 speeds.
+
+Yegor
