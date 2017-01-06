@@ -1,43 +1,29 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
-Date: Fri, 6 Jan 2017 17:46:33 +0000
-Message-ID: <c73ee9ab-64a1-0419-314d-21d4575ca7bf@synopsys.com>
-References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
- <CAHp75VdB+pApFgjFOwWYYQFUmxv5k6OYKgB4fstuy=3=2QesBQ@mail.gmail.com>
- <475d9c2a-da11-97d0-d0b6-37ccd4990f18@synopsys.com>
- <CAHp75Vdv3daVnkFmGc7gXWoqcy+CNgyqdtRXkvTJQpjyJX3eDg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vdv3daVnkFmGc7gXWoqcy+CNgyqdtRXkvTJQpjyJX3eDg@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] ARM: dts: NSP: DT Clean-ups
+Date: Fri,  6 Jan 2017 09:47:30 -0800
+Message-ID: <20170106174730.28521-1-f.fainelli@gmail.com>
+References: <1481652831-2744-1-git-send-email-jon.mason@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481652831-2744-2-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06-Jan-17 17:17, Andy Shevchenko wrote:
-> On Fri, Jan 6, 2017 at 7:15 PM, Luis Oliveira
-> <Luis.Oliveira@synopsys.com> wrote:
->> On 06-Jan-17 16:29, Andy Shevchenko wrote:
->>> On Thu, Jan 5, 2017 at 7:24 PM, Luis Oliveira
-> 
->>> Please, add kernel doc description here, important thing is to explain
->>> return codes in Return: section of it.
->>>
->>>> +int i2c_slave_mode_detect(struct device *dev)
-> 
-> Just to make sure you didn't miss this one.
-> 
-> 
-Yes, I saw it. You were talking of something like this, right?
+On Tue, 13 Dec 2016 13:13:45 -0500, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> The QSPI entry was added out of the sequental order that the rest of the
+> DTSI file is in. Move it to make it fit in properly. Also, some other
+> entries have been added in a non-alphabetical order in the DTS files,
+> making them different from the other NSP DTS files. Move the relevant
+> peices to make it match. Finally, remove errant new lines.
+>
+> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
 
-/**
- * i2c_slave_mode_detect - detect operation mode
- * @dev:  The device owning the bus
- *
- * This checks the device nodes for a I2C slave by checking the address
- * used.
- *
- * Returns true if a I2C slave is detected, otherwise returns false.
- */
+Applied, thanks!
+--
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
