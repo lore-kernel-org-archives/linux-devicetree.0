@@ -1,7 +1,7 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 3/9] ARM: dts: keystone-k2e: Add MSM RAM node
-Date: Fri, 6 Jan 2017 15:57:27 -0600
-Message-ID: <20170106215733.41637-4-s-anna@ti.com>
+Subject: [PATCH v2 2/9] ARM: dts: keystone-k2l: Add MSM RAM node
+Date: Fri, 6 Jan 2017 15:57:26 -0600
+Message-ID: <20170106215733.41637-3-s-anna@ti.com>
 References: <20170106215733.41637-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,23 +21,23 @@ To: Santosh Shilimkar <ssantosh@kernel.org>
 Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Vitaly Andrianov <vitalya@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the RAM managed by the Multicire Shared Memory Controller (MSMC)
-as a mmio-sram node. The 66AK2E SoCs have 2 MB of such memory. Any
+Add the RAM managed by the Multicore Shared Memory Controller (MSMC)
+as a mmio-sram node. The 66AK2L SoCs have 2 MB of such memory. Any
 specific MSM memory range needed by a software module ought to be
 reserved using an appropriate child node.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
-v2: No code changes, SoC name in commit message corrected to use 66AK2E
+v2: No code changes, SoC name in commit message corrected to use 66AK2L
 
- arch/arm/boot/dts/keystone-k2e.dtsi | 8 ++++++++
+ arch/arm/boot/dts/keystone-k2l.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 497c417db5b6..256dcc87f36a 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -82,6 +82,14 @@
+diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
+index 0c5e74e79ba2..edc08de4e196 100644
+--- a/arch/arm/boot/dts/keystone-k2l.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l.dtsi
+@@ -204,6 +204,14 @@
  			};
  		};
  
