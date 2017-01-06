@@ -1,46 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
-Date: Fri, 06 Jan 2017 12:43:32 +0100
-Message-ID: <4069640.PHLdmY3C6P@wuerfel>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
- <CACVXFVNS9n9_ty8y3CyqfRaLitqDKdk1mMOrQHM-enOgJtUBeQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACVXFVNS9n9_ty8y3CyqfRaLitqDKdk1mMOrQHM-enOgJtUBeQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, gabriele.paoloni@huawei.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ming Lei <tom.leiming@gmail.com>, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, minyard@acm.org, Liviu Dudau <liviu.dudau@arm.com>, john.garry@huawei.com, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, kantyzc@163.com, zhichang.yuan02@gmail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "zhichang.yuan" <yuanzhichang@hisilicon.com>, zourongrong@gmail.com
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH v4 0/5]
+Date: Fri, 06 Jan 2017 20:41:09 +0900
+Message-ID: <20170106114114.19321-1-andi.shyti@samsung.com>
+References: <CGME20170106114119epcas5p2c29ea8c8118db4a1fb600970ea0dafd4@epcas5p2.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>, Jaechul Lee <galaxyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 22, 2016 4:15:57 PM CET Ming Lei wrote:
-> ERROR: "inb" [drivers/watchdog/wdt_pci.ko] undefined!
-> ERROR: "outb" [drivers/watchdog/wdt_pci.ko] undefined!
-> ERROR: "outb" [drivers/watchdog/pcwd_pci.ko] undefined!
-> ERROR: "inb" [drivers/watchdog/pcwd_pci.ko] undefined!
-> ERROR: "outw" [drivers/video/vgastate.ko] undefined!
-> ERROR: "outb" [drivers/video/vgastate.ko] undefined!
-> ERROR: "inb" [drivers/video/vgastate.ko] undefined!
-> ERROR: "outw" [drivers/video/fbdev/vt8623fb.ko] undefined!
-> ERROR: "inb" [drivers/video/fbdev/vt8623fb.ko] undefined!
-> ERROR: "outb" [drivers/video/fbdev/vt8623fb.ko] undefined!
-> ERROR: "outw" [drivers/video/fbdev/tridentfb.ko] undefined!
-> ERROR: "inb" [drivers/video/fbdev/tridentfb.ko] undefined!
-> ERROR: "outb" [drivers/video/fbdev/tridentfb.ko] undefined!
-> ERROR: "inb" [drivers/video/fbdev/tdfxfb.ko] undefined!
-> 
+Hi,
 
-In case you haven't figured it out by now, the new code is simply
-missing a few "EXPORT_SYMBOL" lines.
+I'll send this patch on behalf of Jaechul Lee
+<jcsing.lee@samsung.com> becasue it's I don't want to block
+anyone who wants to make changes to the exynos5433-tm2*dts*
+files.
 
-	Arnd
+This patches are based on Krzysztof's branch for-next [1]
+
+    "This patchset adds support for the tm2 touchkey device.
+     
+     The driver has been ported from Tizen Kernel,
+     originally written
+     by Beomho. I ported it to the latest mainline Kernel."
+
+Thanks,
+Andi
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/log/?h=for-next
+
+Changes in v4:
+ - patch 1 has been rebased on top of 7c294e002641 (arm64: dts:
+   exynos: Remove unsupported regulator-always-off property from
+   TM2E)
+ - patch 2 has been generated with -B50% diff option using git
+   2.11
+
+Changes in v3:
+ - Changed the commit ordering, the tm2-touchkey related patches
+   are the last 3.
+ - Added Chanwoo's patch which fixes the wrong voltage of ldo23
+   and ldo25.
+ - Andi (patch 3) moves the ldo31 and ldo38 in the tm2 and tm2e
+   files as they have different values.
+
+Changes in v2:
+ - fixed reviews from Javier, Dmitry
+ - refactored power enable/disable functions.
+ - reordered signed-offs in patch 2, while patch 4 is left as it
+   was as Andi copy pasted the node to the new tm2.dts file
+ - added Jarvier's (patch 1,2,4) and Krzysztof's (patch 4)
+   reviews
+   and Rob's Ack
+ - patch 3 diff has been generated with -B50%
+
+Andi Shyti (1):
+  arm64: dts: exynos: make tm2 and tm2e independent from each other
+
+Chanwoo Choi (1):
+  arm64: dts: exynos5433: TM2/E: Fix wrong information of ldo23 and
+    ldo25
+
+Jaechul Lee (3):
+  input: Add support for the tm2 touchkey device driver
+  input: tm2-touchkey: Add touchkey driver support for TM2
+  arm64: dts: exynos: Add tm2 touchkey node
+
+ .../bindings/input/samsung,tm2-touchkey.txt        |   27 +
+ ...ynos5433-tm2.dts => exynos5433-tm2-common.dtsi} |   31 +-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1165 +-------------------
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |   31 +-
+ drivers/input/keyboard/Kconfig                     |   11 +
+ drivers/input/keyboard/Makefile                    |    1 +
+ drivers/input/keyboard/tm2-touchkey.c              |  280 +++++
+ 7 files changed, 392 insertions(+), 1154 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/samsung,tm2-touchkey.txt
+ copy arch/arm64/boot/dts/exynos/{exynos5433-tm2.dts => exynos5433-tm2-common.dtsi} (97%)
+ rewrite arch/arm64/boot/dts/exynos/exynos5433-tm2.dts (98%)
+ create mode 100644 drivers/input/keyboard/tm2-touchkey.c
+
+-- 
+2.11.0
