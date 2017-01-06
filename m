@@ -1,14 +1,16 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 3/4] ARM: dts: sunxi: add usb_otg and usbphy node for V3s
- SoC
-Date: Fri, 6 Jan 2017 15:19:11 +0100
-Message-ID: <20170106141911.r4ehba64y4atys74@lukather>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-4-icenowy@aosc.xyz>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
+ descriptors and adapt accessors
+Date: Fri, 6 Jan 2017 14:29:02 +0000
+Message-ID: <20170106142901.GC14217@n2100.armlinux.org.uk>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8027258569616791313=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170103152534.20118-4-icenowy@aosc.xyz>
+Content-Disposition: inline
+In-Reply-To: <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,70 +20,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 28, 2016 at 05:46:21PM +0100, Thomas Petazzoni wrote:
+> This commit adds the definition of the PPv2.2 HW descriptors, adjusts
+> the mvpp2_tx_desc and mvpp2_rx_desc structures accordingly, and adapts
+> the accessors to work on both PPv2.1 and PPv2.2.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+...
+> +		/* On PPv2.2, the situation is more complicated,
+> +		 * because there is only 40 bits to store the virtual
+> +		 * address, which is not sufficient. So on 64 bits
+> +		 * systems, we use phys_to_virt() to get the virtual
+> +		 * address from the physical address, which is fine
+> +		 * because the kernel linear mapping includes the
+> +		 * entire 40 bits physical address space. On 32 bits
+> +		 * systems however, we can't use phys_to_virt(), but
+> +		 * since virtual addresses are 32 bits only, there is
+> +		 * enough space in the RX descriptor for the full
+> +		 * virtual address.
+> +		 */
+> +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+> +		dma_addr_t dma_addr =
+> +			rx_desc->pp22.buf_phys_addr_key_hash & DMA_BIT_MASK(40);
+> +		phys_addr_t phys_addr =
+> +			dma_to_phys(port->dev->dev.parent, dma_addr);
+> +
+> +		return (unsigned long)phys_to_virt(phys_addr);
+> +#else
+> +		return rx_desc->pp22.buf_cookie_misc & DMA_BIT_MASK(40);
+> +#endif
 
---===============8027258569616791313==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kvo7n7heevrvo4dn"
-Content-Disposition: inline
+I'm not sure that's the best way of selecting the difference.  It seems
+that the issue here is the size of the virtual address, so why not test
+the size of a virtual address pointer?
 
+		if (8 * sizeof(rx_desc) > 40) {
+			/* do phys addr dance */
+		} else {
+			return rx_desc->pp22.buf_cookie_misc & DMA_BIT_MASK(40);
+		}
 
---kvo7n7heevrvo4dn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It also means that we get compile coverage over both sides of the
+conditional.
 
-On Tue, Jan 03, 2017 at 11:25:33PM +0800, Icenowy Zheng wrote:
-> V3s SoC features a USB PHY controller and a MUSB OTG controller.
->=20
-> Add device nodes for them.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-
-This can be merged in your other DTSI patch.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---kvo7n7heevrvo4dn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYb6dbAAoJEBx+YmzsjxAgHX0P/0NTb9jQb8+fytr/yQyiJTKD
-1zDMrBB8AUByBCkrmEzMhHbSzbH+3Z3i5pduXKvRwgEbimlJ6NMm2tcGX9aJzDgt
-Ocfm0wuiYeUzhVEQyemwQM0svvychXObJnFRrjzp9+e6DOyPpnbUBdZ/q57AvB7b
-ZLpvsK+MHR4gesWndIdoszFc4ZbWRDzWRzniXztsD1Zw02kHc3O0omO3ww3Q4oiM
-+QQgyX+KnGIDjsHP4NDoJSbC79XNgkeAahsvINK3q4q0eVwFYMyWtZFYw4zQ9RjV
-liN5XsV7C65umdaFyVM6ppCETKC9zPPXHuxqkbx18Sx6+EIgy+cKJnubLXtTpCDR
-gLFrw08AdHxHl7eQRsLE9z0HW5N3Ud66DOCSvUn4eJmyzZ1OP3rr83wxWMt1qD80
-OSEx9uDldE2n0YSVWvSl6JWj0hregH890TNLHlWHc0trDC7aUAjeLXFtUiLsFtsg
-GziW7+6DzFaOAMDNyIJ+TNm7XcOgVAALDEKmJBy+Qw9iuXcLfRtTjt2z2iVgKgAJ
-AEavZo294Gejm2xMoWQXarrA+GhT3RlfUSPBC+UEXKeSSU44CRVyhA88xU9xTU5e
-PDF1IRxIZtIaT7jw3EFkjjvxrAwRLbO9cwm0N9Q/dqkFxJdPI7psvdOn0bCsyZ46
-1LLERZgTKcRdG5POvwJ2
-=gqHI
------END PGP SIGNATURE-----
-
---kvo7n7heevrvo4dn--
-
-
---===============8027258569616791313==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8027258569616791313==--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
