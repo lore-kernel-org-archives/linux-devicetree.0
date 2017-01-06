@@ -1,72 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 6/9] dt/bindings: Add a serial/UART attached device binding
-Date: Fri,  6 Jan 2017 10:26:32 -0600
-Message-ID: <20170106162635.19677-7-robh@kernel.org>
-References: <20170106162635.19677-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170106162635.19677-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
+Date: Fri, 6 Jan 2017 18:29:44 +0200
+Message-ID: <CAHp75VdB+pApFgjFOwWYYQFUmxv5k6OYKgB4fstuy=3=2QesBQ@mail.gmail.com>
+References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Add a common binding for describing serial/UART attached devices. Common
-examples are Bluetooth, WiFi, NFC and GPS devices.
+On Thu, Jan 5, 2017 at 7:24 PM, Luis Oliveira
+<Luis.Oliveira@synopsys.com> wrote:
+> This function has the purpose of mode detection by checking the
+> device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
+> Currently only checks using OF functions (ACPI slave not supported yet).
 
-Serial attached devices are represented as child nodes of a UART node.
-This may need to be extended for more complex devices with multiple
-interfaces, but for the simple cases a child node is sufficient.
+The code looks good, one important comment below, after addressing it:
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/serial/slave-device.txt    | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/slave-device.txt
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/serial/slave-device.txt b/Documentation/devicetree/bindings/serial/slave-device.txt
-new file mode 100644
-index 000000000000..9b7c2d651345
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/slave-device.txt
-@@ -0,0 +1,34 @@
-+Serial Slave Device DT binding
-+
-+This documents the binding structure and common properties for serial
-+attached devices. Common examples include Bluetooth, WiFi, NFC and GPS
-+devices.
-+
-+qSerial attached devices shall be a child node of the host UART device the
-+slave device is attached to. It is expected that the attached device is
-+the only child node of the UART device. The slave device node name shall
-+reflect the generic type of device for the node.
-+
-+Required Properties:
-+
-+- compatible 	: A string reflecting the vendor and specific device the node
-+		  represents.
-+
-+Optional Properties:
-+
-+- reg		: A single cell representing the port/line number of the
-+		  host UART. Only used if the host UART is a single node
-+		  with multiple ports.
-+
-+Example:
-+
-+serial@1234 {
-+	compatible = "ns16550a";
-+	interrupts = <1>;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43341-bt";
-+		interrupt-parent = <&gpio>;
-+		interrupts = <10>;
-+	};
-+};
---
-2.10.1
+P.S. Btw, we have Suggested-by tag for giving credit for suggestion.
+Please use it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -3691,6 +3691,25 @@ int i2c_slave_unregister(struct i2c_client *client)
+
+Please, add kernel doc description here, important thing is to explain
+return codes in Return: section of it.
+
+> +int i2c_slave_mode_detect(struct device *dev)
+> +{
+
+> +       struct device_node *child;
+> +       u32 reg;
+
+I would consider them as private to the OF branch. But it's really
+minor and up to you (I don't remember if we have such style examples
+in i2c core code).
+
+> +
+> +       if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
+> +               for_each_child_of_node(dev->of_node, child) {
+> +                       of_property_read_u32(child, "reg", &reg);
+> +                       if (reg & I2C_OWN_SLAVE_ADDRESS)
+> +                               return 1;
+> +               }
+> +       } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
+> +               dev_dbg(dev, "ACPI slave is not supported yet\n");
+> +       }
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
+
+-- 
+With Best Regards,
+Andy Shevchenko
