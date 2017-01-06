@@ -1,42 +1,64 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 4/4] ARM64: dts: TM2: comply to the samsung pinctrl
- naming convention
-Date: Fri, 6 Jan 2017 08:49:15 +0200
-Message-ID: <20170106064915.33zblfctcnrh55jg@kozik-lap>
-References: <20161230041421.24448-1-andi.shyti@samsung.com>
- <CGME20161230041427epcas1p135fd1703c0bb0cc47a60f4c619b49973@epcas1p1.samsung.com>
- <20161230041421.24448-5-andi.shyti@samsung.com>
+From: "Y.T. Tang" <yuantian.tang@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: Update QorIQ TMU thermal bindings
+Date: Fri, 6 Jan 2017 06:56:06 +0000
+Message-ID: <DB6PR0402MB283733DE2C198228CBDC7BB9F0630@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+References: <1483520271-3838-1-git-send-email-hongtao.jia@nxp.com>
+         <1483520271-3838-2-git-send-email-hongtao.jia@nxp.com>
+ <1483526274.17813.1.camel@buserror.net>
+ <AM4PR0401MB184304CF8DAB4FE6B6ECC13DEB600@AM4PR0401MB1843.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20161230041421.24448-5-andi.shyti@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <AM4PR0401MB184304CF8DAB4FE6B6ECC13DEB600@AM4PR0401MB1843.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Troy Jia <hongtao.jia@nxp.com>, Scott Wood <oss@buserror.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 30, 2016 at 01:14:21PM +0900, Andi Shyti wrote:
-> Change the PIN() macro definition so that it can use the macros
-> from pinctrl/samsung.h header file.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi |  25 +-
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 254 ++++++++++-----------
->  2 files changed, 133 insertions(+), 146 deletions(-)
-> 
-
-Thanks, applied (here and in 3/4 with fixed subject).
-
-Best regards,
-Krzysztof
+U2VlbXMgbGlrZSBUcm95J3MgZW1haWwgY2xpZW50IGhhcyBpc3N1ZXMgd2hpY2ggY2F1c2VzIGhp
+cyByZXBseSBpcyB1bnJlYWRhYmxlIGluIHBhdGNod29yay4NClBsZWFzZSBpZ25vcmUgaXQgaW4g
+cGF0Y2h3b3JrLiANCg0KUmVnYXJkcywNCll1YW50aWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gRnJvbTogVHJveSBKaWENCj4gU2VudDogVGh1cnNkYXksIEphbnVhcnkgMDUs
+IDIwMTcgMTA6MjkgQU0NCj4gVG86IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+OyBydWku
+emhhbmdAaW50ZWwuY29tOw0KPiBlZHViZXp2YWxAZ21haWwuY29tOyBZLlQuIFRhbmcgPHl1YW50
+aWFuLnRhbmdAbnhwLmNvbT47DQo+IHJvYmgrZHRAa2VybmVsLm9yZw0KPiBDYzogbGludXgtcG1A
+dmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUkU6IFtQQVRDSCAxLzNdIGR0LWJpbmRp
+bmdzOiBVcGRhdGUgUW9ySVEgVE1VIHRoZXJtYWwgYmluZGluZ3MNCj4gDQo+IA0KPiANCj4gPiAt
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IFNjb3R0IFdvb2QgW21haWx0bzpv
+c3NAYnVzZXJyb3IubmV0XQ0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFyeSAwNCwgMjAxNyA2
+OjM4IFBNDQo+ID4gVG86IFRyb3kgSmlhIDxob25ndGFvLmppYUBueHAuY29tPjsgcnVpLnpoYW5n
+QGludGVsLmNvbTsNCj4gPiBlZHViZXp2YWxAZ21haWwuY29tOyBZLlQuIFRhbmcgPHl1YW50aWFu
+LnRhbmdAbnhwLmNvbT47DQo+ID4gcm9iaCtkdEBrZXJuZWwub3JnDQo+ID4gQ2M6IGxpbnV4LXBt
+QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiA+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gZHQt
+YmluZGluZ3M6IFVwZGF0ZSBRb3JJUSBUTVUgdGhlcm1hbA0KPiA+IGJpbmRpbmdzDQo+ID4NCj4g
+PiBPbiBXZWQsIDIwMTctMDEtMDQgYXQgMTY6NTcgKzA4MDAsIEppYSBIb25ndGFvIHdyb3RlOg0K
+PiA+ID4gRm9yIGRpZmZlcmVudCB0eXBlcyBvZiBTb0MgdGhlIHNlbnNvciBpZCBhbmQgZW5kaWFu
+bmVzcyBtYXkgdmFyeS4NCj4gPiA+ICIjdGhlcm1hbC1zZW5zb3ItY2VsbHMiIGlzIHVzZWQgdG8g
+cHJvdmlkZSBzZW5zb3IgaWQgaW5mb3JtYXRpb24uDQo+ID4gPiAibGl0dGxlLWVuZGlhbiIgcHJv
+cGVydHkgaXMgdG8gdGVsbCB0aGUgZW5kaWFubmVzcyBvZiBUTVUuDQo+ID4gPg0KPiA+ID4gU2ln
+bmVkLW9mZi1ieTogSmlhIEhvbmd0YW8gPGhvbmd0YW8uamlhQG54cC5jb20+DQo+ID4gPiBBY2tl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiA+IC0tLQ0KPiA+ID4gwqBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4
+dCB8IDcNCj4gPiA+ICsrKysrKysNCj4gPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9u
+cygrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQNCj4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1hbC50eHQNCj4gPiA+IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhlcm1hbC50eHQNCj4g
+PiA+IGluZGV4IDY2MjIzZDUuLjIwY2E0ZWYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4dA0KPiA+ID4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhl
+cm1hbC50eHQNCj4gPiA+IEBAIC0xNyw2ICsxNywxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+PiA+ID4gwqAJY2FsaWJyYXRpb24gZGF0YSwgYXMgc3BlY2lmaWVkIGJ5IHRoZSBTb0MgcmVmZXJl
+bmNlIG1hbnVhbC4NCj4gPiA+IMKgCVRoZSBmaXJzdCBjZWxsIG9mIGVhY2ggcGFpciBpcyB0aGUg
+dmFsdWUgdG8gYmUgd3JpdHRlbiB0byBUVENGR1IsDQo+ID4gPiDCoAlhbmQgdGhlIHNlY29uZCBp
+cyB0aGUgdmFsdWUgdG8gYmUgd3JpdHRlbiB0byBUU0NGR1IuDQo+ID4gPiArLSAjdGhlcm1hbC1z
+ZW5zb3ItY2VsbHMgOiBNdXN0IGJlIDEuIFRoZSBzZW5zb3Igc3BlY2lmaWVyIGlzIHRoZQ0KPiBt
+b25pdG9yaW5nDQo+ID4gPiArCXNpdGUgSUQsIGFuZCByZXByZXNlbnRzIHRoZSAibiIgaW4gVFJJ
+VFNSbiBhbmQgVFJBVFNSbi4NCj4gPg0KPiA+IEkgYXNzdW1lIHRoZSBkcml2ZXIgd2lsbCBjb250
+aW51ZSB0byB3b3JrIHdpdGggZXhpc3RpbmcgZGV2aWNlIHRyZWVzDQo+ID4gd2hlcmUgdGhpcyBp
+bmZvcm1hdGlvbiBpcyBhYnNlbnQ/IMKgSWYgc28sIEFDSyBmb3IgdGhlIHdob2xlIHNlcmllcy4N
+Cj4gDQo+IFllcy4gVGhlIGRyaXZlciB3b3JrcyBmb3IgYWxsIGV4aXN0aW5nIGRldmljZSB0cmVl
+cy4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIEFDSy4NCj4gDQo+ID4NCj4gPiAtU2NvdHQNCg0K
