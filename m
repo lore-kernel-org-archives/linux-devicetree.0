@@ -1,138 +1,91 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v2 14/19] media: imx: Add Camera Interface subdev driver
-Date: Fri, 6 Jan 2017 10:42:34 -0800
-Message-ID: <119f0a16-ff23-e62b-5e90-3d56df7be894@gmail.com>
-References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
- <1483477049-19056-15-git-send-email-steve_longerbeam@mentor.com>
- <4a893d70-f34a-9fb1-401f-bcb954e3a2cb@mentor.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition
+ table
+Date: Fri, 6 Jan 2017 10:43:57 -0800
+Message-ID: <20170106184356.GH2630@atomide.com>
+References: <1483627851-17996-1-git-send-email-t.remmet@phytec.de>
+ <1483627851-17996-2-git-send-email-t.remmet@phytec.de>
+ <20170105153637.GA4310@atomide.com>
+ <20170105171845.GK4310@atomide.com>
+ <20170105175619.GA56877@google.com>
+ <1483694849.3634.6.camel@phytec.de>
+ <20170106160222.GC2630@atomide.com>
+ <CAHCN7xL2n0qsg61i85o7DczanMH1E=HWhNvqUtTH9UhEVBvd8g@mail.gmail.com>
+ <20170106161421.GD2630@atomide.com>
+ <20170106182052.GA127120@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <4a893d70-f34a-9fb1-401f-bcb954e3a2cb@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mchehab@kernel.org, gregkh@linuxfoundation.org, p.zabel@pengutronix.de
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170106182052.GA127120-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> [170106 10:21]:
+> On Fri, Jan 06, 2017 at 08:14:22AM -0800, Tony Lindgren wrote:
+> > * Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170106 08:06]:
+> > > On Fri, Jan 6, 2017 at 10:02 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > * Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> [170106 01:28]:
+> > > >> Am Donnerstag, den 05.01.2017, 09:56 -0800 schrieb Brian Norris:
+> > > >> > On Thu, Jan 05, 2017 at 09:18:45AM -0800, Tony Lindgren wrote:
+> > > >> > > I'm suggesting we leave the kernel nodes empty and let u-boot
+> > > >> > > populate them, so maybe you guys can discuss this on the related
+> > > >> > > lists.
+> > > >> > That's an option. I've worked with platforms that did something like
+> > > >> > this, and that's really one of the only ways you can handle putting
+> > > >> > partition information in the device tree. You're really hamstringing
+> > > >> > yourself when you put all the partition information in the device
+> > > >> > tree.
+> > > >> > And it's just dumb once that gets codified in the kernel source tree.
+> > > >> >
+> > > >>
+> > > >> In our case the bootloader does pass the partition table to the kernel.
+> > > >> So it gets overwritten anyway. This was just more for backup,
+> > > >> if someone uses a different bootloader. But I'm fine with removing the
+> > > >> nand partition table completely from the kernel device tree.
+> > > >> Same with the SPI nor partition table.
+> 
+> Ah, well if these are essentially just a backup, then why do they need
+> changed at all? To be more precise about my "dumb" statement: it seems
+> unwise to assume that all systems using a particular board will have the
+> same partition layout. So *relying* on the in-kernel DTS(I) files to
+> have a universal partition layout would likely cause problems.
+> 
+> I don't have much problem with keeping a sample layout there as a
+> backup, if you find it useful. But it seems like it will be hard to
+> argue that you can ever change it in the future.
+> 
+> Anyway, the ofpart mechanism is there, and it's fine to use it, but it's
+> up to you to understand the implications and manage the backwards
+> compatibility problems :)
+> 
+> > > >> I will send patches for this.
+> > > >
+> > > > OK thanks! Also thank you Brian for your comments.
+> > > >
+> > > 
+> > > Tony - I tested leaving the partition info as-is with the updates from
+> > > the bootloader and it works.  Would you prefer that I match Brian and
+> > > remove the partition table completely, or should I just leave my board
+> > > alone?
+> > > 
+> > > I am good either way.
+> > 
+> > OK. How about let's remove the partitions from kernel for v4.11 as
+> > clean-up then for cases where the bootloader might change them?
+> 
+> I don't have much stake in this but...if there were any systems using
+> the backup layout (i.e., the in-kernel partition layout), wouldn't that
+> break them? Is there a problem with just leaving them alone?
 
+Yeah I guess it depends on the device and it's bootloader versions.
 
-On 01/04/2017 06:55 AM, Vladimir Zapolskiy wrote:
-> On 01/03/2017 10:57 PM, Steve Longerbeam wrote:
->>
->> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
->> index d2a962c..fe9e992 100644
->> --- a/drivers/staging/media/imx/Makefile
->> +++ b/drivers/staging/media/imx/Makefile
->> @@ -8,4 +8,4 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-ic.o
->>   
->>   obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-csi.o
->>   obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-smfc.o
->> -
->> +obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-camif.o
-> obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-camif.o imx-csi.o imx-smfc.o
->
-> as an option.
+Regards,
 
-I prefer to keep on separate lines as explained earlier.
-
->
->> diff --git a/drivers/staging/media/imx/imx-camif.c b/drivers/staging/media/imx/imx-camif.c
->> new file mode 100644
->> index 0000000..3cf167e
->> --- /dev/null
->> +++ b/drivers/staging/media/imx/imx-camif.c
->> @@ -0,0 +1,1010 @@
->> +/*
->> + * Video Camera Capture Subdev for Freescale i.MX5/6 SOC
->> + *
->> + * Copyright (c) 2012-2016 Mentor Graphics Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +#include <linux/module.h>
->> +#include <linux/delay.h>
->> +#include <linux/fs.h>
->> +#include <linux/timer.h>
->> +#include <linux/sched.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pinctrl/consumer.h>
->> +#include <linux/of_platform.h>
->> +#include <media/v4l2-device.h>
->> +#include <media/v4l2-ioctl.h>
->> +#include <media/videobuf2-dma-contig.h>
->> +#include <media/v4l2-subdev.h>
->> +#include <media/v4l2-of.h>
->> +#include <media/v4l2-ctrls.h>
->> +#include <media/v4l2-event.h>
-> Please sort the list of headers alphabetically.
-
-done.
-
->> +#include <video/imx-ipu-v3.h>
->> +#include <media/imx.h>
->> +#include "imx-media.h"
->> +
->> +#define DEVICE_NAME "imx-media-camif"
-> I would propose to drop this macro.
-
-done.
-
->> +
->> +#define CAMIF_DQ_TIMEOUT        5000
-> Add a comment about time unit?
-
-actually that was ancient and no longer used, removed.
-
->
->> +
->> +struct camif_priv;
->> +
-> This is a leftover apparently.
-
-ditto, removed.
-
->> +
->> +	ret = v4l2_async_register_subdev(&priv->sd);
->> +	if (ret)
->> +		goto free_ctrls;
->> +
->> +	return 0;
->> +free_ctrls:
->> +	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
->> +	return ret;
-> A shorter version:
->
-> if (ret)
-> 	v4l2_ctrl_handler_free(&priv->ctrl_hdlr);
->
-> return ret;
-
-done.
-
->> +
->> +static struct platform_driver imx_camif_driver = {
->> +	.probe		= camif_probe,
->> +	.remove		= camif_remove,
->> +	.driver		= {
->> +		.name	= DEVICE_NAME,
->> +		.owner	= THIS_MODULE,
-> Please drop the owner assignment.
-
-done.
-
-
-Steve
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
