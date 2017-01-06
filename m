@@ -1,91 +1,146 @@
-From: linshunquan 00354166 <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v1] mtd: spi nor: modify the boot and flash type of FMC
-Date: Fri, 6 Jan 2017 17:12:11 +0800
-Message-ID: <1483693931-22249-1-git-send-email-linshunquan1@hisilicon.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: new qmp phy driver for
+ qcom-chipsets
+Date: Fri, 6 Jan 2017 15:17:01 +0530
+Message-ID: <e83564d4-d731-44dd-40d1-e36fa56f4920@codeaurora.org>
+References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
+ <20170106071834.GP10531@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linshunquan 00354166 <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170106071834.GP10531@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt@kernel.org, kishon@ti.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(1) The HiSilicon Flash Memory Controller(FMC) is a multi-functions
- device which supports SPI Nor flash controller, SPI nand Flash
- controller and parallel nand flash controller. So when we are prepare
- to operation SPI Nor, we should make sure the flash type is SPI Nor.
+Hi,
 
-(2) Make sure the boot type is Normal Type before initialize the SPI
-    Nor controller.
 
-Signed-off-by: linshunquan 00354166 <linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- drivers/mtd/spi-nor/hisi-sfc.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+On 01/06/2017 12:48 PM, Bjorn Andersson wrote:
+> On Tue 20 Dec 09:03 PST 2016, Vivek Gautam wrote:
+>
+>> diff --git a/drivers/phy/phy-qcom-qmp.c b/drivers/phy/phy-qcom-qmp.c
+> [..]
+>> +static int qcom_qmp_phy_poweron(struct phy *phy)
+> [..]
+>> +
+>> +err3:
+> Rather than naming your labels errX, it's idiomatic to give them
+> descriptive names, e.g. "disable_ref_clk" here.
+Sure will change these labels and any such occurrence further in the code.
 
-diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
-index 20378b0..7855024 100644
---- a/drivers/mtd/spi-nor/hisi-sfc.c
-+++ b/drivers/mtd/spi-nor/hisi-sfc.c
-@@ -32,6 +32,8 @@
- #define FMC_CFG_OP_MODE_MASK		BIT_MASK(0)
- #define FMC_CFG_OP_MODE_BOOT		0
- #define FMC_CFG_OP_MODE_NORMAL		1
-+#define FMC_CFG_OP_MODE_SEL(mode)      ((mode) & 0x1)
-+#define FMC_CFG_FLASH_SEL_SPI_NOR	(0x0 << 1)
- #define FMC_CFG_FLASH_SEL(type)		(((type) & 0x3) << 1)
- #define FMC_CFG_FLASH_SEL_MASK		0x6
- #define FMC_ECC_TYPE(type)		(((type) & 0x7) << 5)
-@@ -141,10 +143,36 @@ static int get_if_type(enum read_mode flash_read)
- 	return if_type;
- }
- 
-+static void spi_nor_switch_spi_type(struct hifmc_host *host)
-+{
-+	unsigned int reg;
-+
-+	reg = readl(host->regbase + FMC_CFG);
-+	if ((reg & FMC_CFG_FLASH_SEL_MASK)
-+		   	== FMC_CFG_FLASH_SEL_SPI_NOR)
-+		return;
-+
-+	/* if the flash type isn't spi nor, change it */
-+	reg &= ~FMC_CFG_FLASH_SEL_MASK;
-+	reg |= FMC_CFG_FLASH_SEL(0);
-+	writel(reg, host->regbase + FMC_CFG);
-+}
-+
- static void hisi_spi_nor_init(struct hifmc_host *host)
- {
- 	u32 reg;
- 
-+	/* switch the flash type to spi nor */
-+	spi_nor_switch_spi_type(host);
-+
-+	/* set the boot mode to normal */
-+	reg = readl(host->regbase + FMC_CFG);
-+	if ((reg & FMC_CFG_OP_MODE_MASK) == FMC_CFG_OP_MODE_BOOT) {
-+		reg |= FMC_CFG_OP_MODE_SEL(FMC_CFG_OP_MODE_NORMAL);
-+		writel(reg, host->regbase + FMC_CFG);
-+	}
-+
-+	/* set timming */
- 	reg = TIMING_CFG_TCSH(CS_HOLD_TIME)
- 		| TIMING_CFG_TCSS(CS_SETUP_TIME)
- 		| TIMING_CFG_TSHSL(CS_DESELECT_TIME);
-@@ -167,6 +195,8 @@ static int hisi_spi_nor_prep(struct spi_nor *nor, enum spi_nor_ops ops)
- 	if (ret)
- 		goto out;
- 
-+	spi_nor_switch_spi_type(host);
-+
- 	return 0;
- 
- out:
+>
+>> +	clk_disable_unprepare(qphy->ref_clk);
+>> +err2:
+>> +	regulator_disable(qphy->vddp_ref_clk);
+>> +err1:
+>> +	regulator_disable(qphy->vdda_pll);
+>> +err:
+>> +	regulator_disable(qphy->vdda_phy);
+>> +	return ret;
+>> +}
+> [..]
+>> +static int qcom_qmp_phy_com_init(struct qcom_qmp_phy *qphy)
+>> +{
+>> +	const struct qmp_phy_cfg *cfg = qphy->cfg;
+>> +	void __iomem *serdes = qphy->serdes;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&qphy->phy_mutex);
+>> +	if (qphy->init_count++) {
+>> +		mutex_unlock(&qphy->phy_mutex);
+>> +		return 0;
+>> +	}
+> As far as I can see phy_init() and phy_exit() already keep reference
+> count on the initialization and you only call this function from
+> phy_ops->init, so you should be able to drop this.
+This is an intermediary function that does the common block initialization.
+PHYs like PCIe have a separate common block (apart from SerDes)
+for all phy channels. We shouldn't program this common block
+multiple times for each channel. That's why this init_count.
+
+>
+> [..]
+>> +
+>> +/* PHY Initialization */
+>> +static int qcom_qmp_phy_init(struct phy *phy)
+>> +{
+> [..]
+>> +	/* phy power down delay; given in PCIE phy programming guide only */
+>> +	if (qphy->cfg->type == PHY_TYPE_PCIE)
+> Rather than basing this off "is this pcie" it's preferred if you have a
+> bool power_down_delay; (or optionally carrying the timeout value) to
+> control this.
+Sure, will modify this.
+
+>
+>> +		usleep_range(POWER_DOWN_DELAY_US_MIN, POWER_DOWN_DELAY_US_MAX);
+>> +
+>> +	/* start SerDes and Phy-Coding-Sublayer */
+>> +	qphy_setbits(pcs + QPHY_START_CTRL, cfg->start_ctrl);
+>> +
+>> +	/* Pull PHY out of reset state */
+>> +	qphy_clrbits(pcs + QPHY_SW_RESET, SW_RESET);
+>> +
+>> +	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>> +	mask = cfg->mask_pcs_ready;
+>> +
+>> +	ret = !mask ? 0 : readl_poll_timeout(status, val, !(val & mask), 1,
+>> +						PHY_INIT_COMPLETE_TIMEOUT);
+> I presume it's not okay to read the status register even once for pcie?
+> If it is you can skip the conditional as !(val & 0) will break the poll
+> after the first read.
+Yea, it is okay to read the status register for pcie.
+
+Will leave just readl_poll_timeout() that exits on !(val & mask).
+We anyways don't set mask_pcs_ready for pcie.
+
+> [..]
+>> +static int qcom_qmp_phy_exit(struct phy *phy)
+>> +{
+> [..]
+>> +}
+>> +
+>> +
+> Extra blank line
+Will remove it.
+>
+>> +static int qcom_qmp_phy_regulator_init(struct device *dev)
+> [..]
+>> +static
+>> +struct qmp_phy_desc *qcom_qmp_phy_create(struct platform_device *pdev, int id)
+>> +{
+> [..]
+>> +	phy_desc->pipe_clk = devm_clk_get(dev, prop_name);
+>> +	if (IS_ERR(phy_desc->pipe_clk)) {
+>> +		if (qphy->cfg->type == PHY_TYPE_PCIE ||
+>> +		    qphy->cfg->type == PHY_TYPE_USB3) {
+> Is this check adding any value?
+The USB3 and PCIe phys are PIPE based phys, and hence the pipe
+clock is mandatory for them. Other phys don't care about pipe clock.
+
+>
+>> +			ret = PTR_ERR(phy_desc->pipe_clk);
+>> +			if (ret != -EPROBE_DEFER)
+>> +				dev_err(dev,
+>> +					"failed to get lane%d pipe_clk, %d\n",
+>> +					id, ret);
+>> +			return ERR_PTR(ret);
+>> +		}
+>> +		phy_desc->pipe_clk = NULL;
+> Regards,
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Regards
+Vivek
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
