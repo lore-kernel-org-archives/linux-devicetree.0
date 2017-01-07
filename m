@@ -1,61 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
-Date: Sat, 7 Jan 2017 02:19:58 +0200
-Message-ID: <CAHp75Ve7zNN3m1ngLGi-81mFehKzZG07mh5H2T5+_k-=jJqqNA@mail.gmail.com>
-References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
- <73246c4a-504c-52d7-dde4-970a45dca0bd@mleia.com> <CAHp75Ve87TE3y6hg1bMxSFAPVcY3wPifGuvtpXNhBw5-eOnPrg@mail.gmail.com>
- <b5788d1d-c951-0fc3-eed8-88457df1f27e@mleia.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v2 05/19] ARM: dts: imx6-sabresd: add OV5642 and OV5640
+ camera sensors
+Date: Fri, 6 Jan 2017 16:25:14 -0800
+Message-ID: <e8f3329a-ff01-ae6d-a52d-32cb9bb10b2c@gmail.com>
+References: <1483477049-19056-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483477049-19056-6-git-send-email-steve_longerbeam@mentor.com>
+ <CAOMZO5CibSU45Cw1d8ZipiGSVfhCQ4uP4XiNuWTGLa5eHmC6Qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b5788d1d-c951-0fc3-eed8-88457df1f27e-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAOMZO5CibSU45Cw1d8ZipiGSVfhCQ4uP4XiNuWTGLa5eHmC6Qg@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 7, 2017 at 1:43 AM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
-> On 01/07/2017 12:45 AM, Andy Shevchenko wrote:
->> On Fri, Jan 6, 2017 at 11:46 PM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
->>>> +     if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
->>>
->>> IS_BUILTIN(CONFIG_OF) looks excessive, check for non-NULL dev->of_node
->>> should be sufficient.
->>
->> Sorry, but you missed the point.
->> This will enable compile time optimization and basically be collapsed to no-op.
->>
+
+
+On 01/04/2017 07:26 AM, Fabio Estevam wrote:
+> On Tue, Jan 3, 2017 at 6:57 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
 >
-> Good point, do you plan to add more "IS_BUILTIN(CONFIG_OF)" checks all
-> over the code to reduce the size of the built image?
+>> +       camera: ov5642@3c {
+>> +               compatible = "ovti,ov5642";
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&pinctrl_ov5642>;
+>> +               clocks = <&clks IMX6QDL_CLK_CKO>;
+>> +               clock-names = "xclk";
+>> +               reg = <0x3c>;
+>> +               xclk = <24000000>;
+>> +               DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+>> +               AVDD-supply = <&vgen5_reg>;  /* 2.8v, rev C board is VGEN3
+>> +                                               rev B board is VGEN5 */
+> Please use vgen3 so that by default we have the valid AVDD-supply for
+> revC boards which is more recent and more the users have access to.
 
-There is no black and white, don't be silly.
+done.
 
 >
->>>> +             }
->>>> +     } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
->>>> +             dev_dbg(dev, "ACPI slave is not supported yet\n");
->>>> +     }
->>>
->>> If so, then it might be better to drop else-if stub for now.
->>
->> Please, don't.
->>
+>> +       mipi_camera: ov5640@3c {
+>> +               compatible = "ovti,ov5640_mipi";
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&pinctrl_ov5640>;
+>> +               reg = <0x3c>;
+>> +               clocks = <&clks IMX6QDL_CLK_CKO>;
+>> +               clock-names = "xclk";
+>> +               xclk = <24000000>;
+>> +               DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+>> +               AVDD-supply = <&vgen5_reg>;  /* 2.8v, rev C board is VGEN3
+>> +                                               rev B board is VGEN5 */
+> Same here.
+
+done.
+
 >
-> Why do you ask for this stub to be added?
+>> +               pinctrl_ov5640: ov5640grp {
+>> +                       fsl,pins = <
+>> +                               MX6QDL_PAD_SD1_DAT2__GPIO1_IO19 0x80000000
+>> +                               MX6QDL_PAD_SD1_CLK__GPIO1_IO20  0x80000000
+> Please avoid all the 0x80000000 IOMUX settings and replace them by
+> their real values.
 
-1. Exactly the reason you asked above. Here is the code which has
-built differently on different platforms. x86 usually is not using
-CONFIG_OF, ARM doesn't ACPI (versus ARM64). Check GPIO library for
-existing examples.
-2. We might add that support later, but here is again, just no-op.
+yeah, finally got around to this, done!
 
-So, what is your strong argument here against that?
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Steve
