@@ -1,156 +1,85 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v3 1/2] backlight arcxcnn add support for ArcticSand
- devices
-Date: Fri, 06 Jan 2017 17:31:17 -0800
-Message-ID: <1483752677.2449.7.camel@perches.com>
-References: <1483735689-5452-1-git-send-email-olimpiu@arcticsand.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483735689-5452-1-git-send-email-olimpiu@arcticsand.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olimpiu Dejeu <olimpiu@arcticsand.com>, robh@kernel.org
-Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v3 01/24] [media] dt-bindings: Add bindings for i.MX media driver
+Date: Fri,  6 Jan 2017 18:11:19 -0800
+Message-ID: <1483755102-24785-2-git-send-email-steve_longerbeam@mentor.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-media-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-01-06 at 15:48 -0500, Olimpiu Dejeu wrote:
-> backlight: Add support for Arctic Sand LED backlight driver chips
-> This driver provides support for the Arctic Sand arc2c0608 chip, 
->     and provides a framework to support future devices.
+Add bindings documentation for the i.MX media driver.
 
-style trivia:
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+---
+ Documentation/devicetree/bindings/media/imx.txt | 57 +++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/imx.txt
 
-> diff --git a/drivers/video/backlight/arcxcnn_bl.c b/drivers/video/backlight/arcxcnn_bl.c
-[]
-> +static int arcxcnn_bl_update_status(struct backlight_device *bl)
-> +{
-> +	struct arcxcnn *lp = bl_get_data(bl);
-> +	u32 brightness = bl->props.brightness;
-> +
-> +	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
-> +		brightness = 0;
-> +
-> +	arcxcnn_set_brightness(lp, brightness);
-> +
-> +	/* set power-on/off/save modes */
-> +	if (bl->props.power == 0)
-> +		/* take out of standby */
-> +		arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY, 0);
-> +	else
-> +		 /* place in low-power standby mode */
-> +		arcxcnn_update_bit(lp, ARCXCNN_CMD,
-> +				ARCXCNN_CMD_STDBY, ARCXCNN_CMD_STDBY);
-
-This is generally smaller code using a temporary and
-a single call instead of two calls like:
-
-	int cmd;
-
-	...
-
-	if (bl->props.power == 0)
-		cmd = 0;		/* take out of standby */
-	else
-		cmd = ARCXCNN_CMD_STDBY;
-	arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY, cmd);
-
-or maybe
-
-	arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY,
-			   bl->props.power == 0 ? 0 : ARCXCNN_CMD_STDBY);
-
-> +static int arcxcnn_backlight_register(struct arcxcnn *lp)
-> +{
-> +	struct backlight_properties *props;
-> +	const char *name = lp->pdata->name ? : "arctic_bl";
-> +
-> +	props = devm_kzalloc(lp->dev, sizeof(*props), GFP_KERNEL);
-> +	if (!props)
-> +		return -ENOMEM;
-> +
-> +	memset(props, 0, sizeof(props));
-
-props has already been zeroed by devm_kzalloc and doesn't
-need to be memset to 0 again.
-
-> +	props->type = BACKLIGHT_PLATFORM;
-> +	props->max_brightness = MAX_BRIGHTNESS;
-> +
-> +	if (lp->pdata->initial_brightness > props->max_brightness)
-> +		lp->pdata->initial_brightness = props->max_brightness;
-> +
-> +	props->brightness = lp->pdata->initial_brightness;
-> +
-> +	lp->bl = devm_backlight_device_register(lp->dev, name, lp->dev, lp,
-> +				       &arcxcnn_bl_ops, props);
-> +
-
-This blank line above is generally not needed.
-
-> +	if (IS_ERR(lp->bl))
-> +		return PTR_ERR(lp->bl);
-
-the typical style is:
-
-	rtn = foo(...)
-	if (rtn < 0)
-		error_handler...
-
-> +static void arcxcnn_parse_dt(struct arcxcnn *lp)
-> +{
-> +	struct device *dev = lp->dev;
-> +	struct device_node *node = dev->of_node;
-> +	u32 prog_val, num_entry, entry, sources[ARCXCNN_LEDEN_BITS];
-> +	int ret;
-[]
-> +	ret = of_property_count_u32_elems(node, "led-sources");
-> +	if (ret < 0) {
-> +		lp->pdata->leden = ARCXCNN_LEDEN_MASK; /* all on is default */
-> +	} else {
-> +		num_entry = ret;
-> +		if (num_entry > ARCXCNN_LEDEN_BITS)
-> +			num_entry = ARCXCNN_LEDEN_BITS;
-> +
-> +		ret = of_property_read_u32_array(node, "led-sources", sources,
-> +					num_entry);
-> +		if (ret < 0) {
-> +			dev_err(dev, "led-sources node is invalid.\n");
-> +		} else {
-> +			u8 onbit;
-> +
-> +			lp->pdata->leden = 0;
-> +
-> +			/* for each enable in source, set bit in led enable */
-> +			for (entry = 0; entry < num_entry; entry++) {
-> +				onbit = 1 << sources[entry];
-> +				lp->pdata->leden |= onbit;
-> +			}
-> +		}
-> +	}
-> +}
-
-The cascading indentation can be avoided by using return;
-as necessary
-
-	ret = of_property_count_u32_elems(node, "led-sources");
-	if (ret < 0) {
-		lp->pdata->leden = ARCXCNN_LEDEN_MASK; /* all on is default */
-		return;
-	}
-
-	num_entry = min(ret, ARCXCNN_LEDEN_BITS);
-	ret = of_property_read_u32_array(node, "led-sources", sources, num_entry);
-	if (ret < 0) {
-		dev_err(dev, "led-sources node is invalid\n");
-		return;
-	}
-
-	lp->pdata->leden = 0;
-
-	/* for each enable in source, set bit in led enable */
-	for (entry = 0; entry < num_entry; entry++) {
-		u8 onbit = 1 << sources[entry];
-
-		lp->pdata->leden |= onbit;
-	}
+diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
+new file mode 100644
+index 0000000..254b64a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/imx.txt
+@@ -0,0 +1,57 @@
++Freescale i.MX Media Video Devices
++
++Video Media Controller node
++---------------------------
++
++This is the parent media controller node for video capture support.
++
++Required properties:
++- compatible : "fsl,imx-media";
++- ports      : Should contain a list of phandles pointing to camera
++  	       sensor interface ports of IPU devices
++
++
++fim child node
++--------------
++
++This is an optional child node of the ipu_csi port nodes. If present and
++available, it enables the Frame Interval Monitor. Its properties can be
++used to modify the method in which the FIM measures frame intervals.
++Refer to Documentation/media/v4l-drivers/imx.rst for more info on the
++Frame Interval Monitor.
++
++Optional properties:
++- fsl,input-capture-channel: an input capture channel and channel flags,
++			     specified as <chan flags>. The channel number
++			     must be 0 or 1. The flags can be
++			     IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, or
++			     IRQ_TYPE_EDGE_BOTH, and specify which input
++			     capture signal edge will trigger the input
++			     capture event. If an input capture channel is
++			     specified, the FIM will use this method to
++			     measure frame intervals instead of via the EOF
++			     interrupt. The input capture method is much
++			     preferred over EOF as it is not subject to
++			     interrupt latency errors. However it requires
++			     routing the VSYNC or FIELD output signals of
++			     the camera sensor to one of the i.MX input
++			     capture pads (SD1_DAT0, SD1_DAT1), which also
++			     gives up support for SD1.
++
++
++mipi_csi2 node
++--------------
++
++This is the device node for the MIPI CSI-2 Receiver, required for MIPI
++CSI-2 sensors.
++
++Required properties:
++- compatible	: "fsl,imx6-mipi-csi2";
++- reg           : physical base address and length of the register set;
++- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
++                  (the DPHY clock), video_27m, and eim_sel;
++- clock-names	: must contain "dphy", "cfg", "pix";
++
++Optional properties:
++- interrupts	: must contain two level-triggered interrupts,
++                  in order: 100 and 101;
+-- 
+2.7.4
