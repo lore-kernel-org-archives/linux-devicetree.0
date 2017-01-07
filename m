@@ -1,7 +1,7 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v3 04/24] ARM: dts: imx6qdl: add media device
-Date: Fri,  6 Jan 2017 18:11:22 -0800
-Message-ID: <1483755102-24785-5-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v3 09/24] ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
+Date: Fri,  6 Jan 2017 18:11:27 -0800
+Message-ID: <1483755102-24785-10-git-send-email-steve_longerbeam@mentor.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
@@ -10,41 +10,43 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengut
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
+The reset pin to the port expander chip (MAX7310) is controlled by a gpio,
+so define a reset-gpios property to control it. There are three MAX7310's
+on the SabreAuto CPU card (max7310_[abc]), but all use the same pin for
+their reset. Since all can't acquire the same pin, assign it to max7310_b,
+that chip is needed by more functions (usb and adv7180).
+
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- arch/arm/boot/dts/imx6q.dtsi   | 4 ++++
- arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++++++
- 2 files changed, 12 insertions(+)
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 9b2ca32..8867e78 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -458,3 +458,7 @@
- &vpu {
- 	compatible = "fsl,imx6q-vpu", "cnm,coda960";
- };
-+
-+&media0 {
-+	ports = <&ipu1_csi0>, <&ipu1_csi1>, <&ipu2_csi0>, <&ipu2_csi1>;
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 010388c..cbb42ec 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1296,5 +1296,13 @@
- 				};
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index cace88c..967c3b8 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -136,6 +136,9 @@
+ 				reg = <0x32>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_max7310>;
++				reset-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
  			};
+ 
+ 			max7310_c: gpio@34 {
+@@ -442,6 +445,12 @@
+ 			>;
  		};
-+
-+		media0: media@0 {
-+			compatible = "fsl,imx-media";
-+			ports = <&ipu1_csi0>, <&ipu1_csi1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "okay";
+ 
++		pinctrl_max7310: max7310grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD2_DAT0__GPIO1_IO15 0x1b0b0
++			>;
 +		};
- 	};
- };
++
+ 		pinctrl_pwm3: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
 -- 
 2.7.4
