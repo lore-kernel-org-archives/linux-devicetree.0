@@ -1,50 +1,94 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: add "rockchip,grf" property for RK3399 PMUCRU/CRU
-Date: Sat,  7 Jan 2017 21:05:13 +0800
-Message-ID: <1483794313-18195-1-git-send-email-zhengxing@rock-chips.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCHv2 net-next 11/16] net: mvpp2: handle misc PPv2.1/PPv2.2
+ differences
+Date: Sat, 7 Jan 2017 13:50:20 +0000
+Message-ID: <20170107135019.GM14217@n2100.armlinux.org.uk>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1482943592-12556-12-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20170107110351.GK14217@n2100.armlinux.org.uk>
+ <CAPv3WKeQ=fj2cKPyJ2NqCaAv55cOyWodujKwj3-v5iCrDYNcmA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPv3WKeQ=fj2cKPyJ2NqCaAv55cOyWodujKwj3-v5iCrDYNcmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmai>
 List-Id: devicetree@vger.kernel.org
 
-The structure rockchip_clk_provider needs to refer the GRF regmap
-in somewhere, if the CRU node has not "rockchip,grf" property,
-calling syscon_regmap_lookup_by_phandle will return an invaild GRF
-regmap, and the MUXGRF type clock will be not supported.
+On Sat, Jan 07, 2017 at 01:12:35PM +0100, Marcin Wojtas wrote:
+> In fact there is common SMI bus, but each port has its own register
+> set to control it (it's true at least for Neta and PP2). There is also
+> an option to use HW polling - every 1s hardware checks PHY over SMI
+> and updates MAC registers of each port independently. I was able to
+> use those successfully in other implementations.
+> 
+> However we are supposed to use libphy in Linux and I'm afraid we have
+> to use single instance that controls single SMI bus - I think current
+> implementation is a compromise between HW and libphy demands.
 
-Therefore, we need to add them.
+One of the "DT rules" is that DT only describes the hardware in an
+implementation independent way.  It should not describe a particular
+implementation's view of the hardware.
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+"libphy demands" sounds very much like an implementation dictating
+the DT description, which sounds to me very wrong and against the
+goals and purposes of DT.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Anyway, I don't think it's too bad - a possible solution here would
+be to have the existing MDIO driver as a library, which can be
+instantiated by the Neta and PP2 drivers.  This could be done in
+DT (taking dove as an example) as:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 92b731f..7790634 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1090,6 +1090,7 @@
- 	pmucru: pmu-clock-controller@ff750000 {
- 		compatible = "rockchip,rk3399-pmucru";
- 		reg = <0x0 0xff750000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		assigned-clocks = <&pmucru PLL_PPLL>;
-@@ -1099,6 +1100,7 @@
- 	cru: clock-controller@ff760000 {
- 		compatible = "rockchip,rk3399-cru";
- 		reg = <0x0 0xff760000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		assigned-clocks =
+                        eth: ethernet-ctrl@72000 {
+                                compatible = "marvell,orion-eth";
+				reg = <0x72000 0x4000>;
+				ranges = <0 0x72000 0 0x4000>;
+				...
+				mdio: mdio@4 {
+					compatible = "marvell,orion-mdio";
+					reg = <4>;
+					...
+					... phys ...
+				};
+			};
+
+I don't think that would require that big a change - and it could be
+done in a way that compatibility with the existing DT descriptions is
+maintained very cheaply.
+
+Now, I'm not suggesting that mdio@4 should be created by a platform
+device via marking ethernet-ctrl@72000 with "simple-bus", but it's
+something that should be created by the ethernet driver if present.
+The compatible string is there so we can identify that this is a
+mdio node, and which type of mdio it is (the Armada 8k has this type
+and a separate clause-45 xmdio implementation, and we need to
+distinguish those.)
+
+What that means is that we no longer have to worry about clocks and
+overlapping register regions and the like, and can deal with the
+ethernet driver wanting to access the SMI registers as well.
+
+We would need the ethernet driver to be capable of instantiation even
+with no ports enabled, so cases where the MDIO interface is used with
+other ethernet controllers continues to be supportable (eg, the
+Armada 8040 case where the slave CP110 ethernet controller is used
+with PHYs connected to the master CP110 ethernet controller's MDIO
+buses - which afaik aren't shared between the two CP110 dies.)
+
+However, I'd like to see libphy become more flexible and support
+hardware polled mode of operation, since libphy provides a nice
+library of functions for accessing various phy features (like setting
+the advertisment, EEE modes, flow control, etc.)  Even with hardware
+polling, we should still describe the PHY in DT, because PHY is part
+of the hardware description, and we need to know where it is in order
+to program these phy features.
+
 -- 
-2.7.4
-
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
