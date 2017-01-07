@@ -1,86 +1,108 @@
-From: vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v3 4/4] phy: qcom-qmp: new qmp phy driver for
- qcom-chipsets
-Date: Sun, 08 Jan 2017 00:11:14 +0530
-Message-ID: <2e93e810adbc252cd630d89bb753ec81@codeaurora.org>
-References: <1482253431-23160-1-git-send-email-vivek.gautam@codeaurora.org>
- <1482253431-23160-5-git-send-email-vivek.gautam@codeaurora.org>
- <20170106071834.GP10531@minitux>
- <e83564d4-d731-44dd-40d1-e36fa56f4920@codeaurora.org>
- <20170106211722.GT10531@minitux>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] ASoC: sunxi: Add support for audio codec in A23/H3 SoCs
+Date: Sun, 8 Jan 2017 03:00:40 +0800
+Message-ID: <CAGb2v65mo2g90QX6DMpw4dN4=fjccP2kp-NAbUPBzXYTtF8kMg@mail.gmail.com>
+References: <20161125123442.28410-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170106211722.GT10531@minitux>
+In-Reply-To: <20161125123442.28410-1-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-07 02:47, Bjorn Andersson wrote:
-> On Fri 06 Jan 01:47 PST 2017, Vivek Gautam wrote:
-> 
->> > > +static int qcom_qmp_phy_com_init(struct qcom_qmp_phy *qphy)
->> > > +{
->> > > +	const struct qmp_phy_cfg *cfg = qphy->cfg;
->> > > +	void __iomem *serdes = qphy->serdes;
->> > > +	int ret;
->> > > +
->> > > +	mutex_lock(&qphy->phy_mutex);
->> > > +	if (qphy->init_count++) {
->> > > +		mutex_unlock(&qphy->phy_mutex);
->> > > +		return 0;
->> > > +	}
->> > As far as I can see phy_init() and phy_exit() already keep reference
->> > count on the initialization and you only call this function from
->> > phy_ops->init, so you should be able to drop this.
->> This is an intermediary function that does the common block 
->> initialization.
->> PHYs like PCIe have a separate common block (apart from SerDes)
->> for all phy channels. We shouldn't program this common block
->> multiple times for each channel. That's why this init_count.
->> 
-> 
-> You're right!
-> 
-> Unfortunately it took me several minutes to wrap my head around the phy
-> vs multi-lane and I have a really hard time keeping "qcom_qmp_phy" and
-> "qmp_phy_desc" apart throughout the driver.
-> 
-> If I understand correctly the qcom_qmp_phy is the context representing 
-> a
-> "QMP block", while this is a PHY block it's not actually the phy in
-> Linux eyes. The qcom_phy_desc represents a "QMP lane", which in Linux
-> eyes is the phys, but as we think of QMP as the PHY this confused me.
+Hi Maxime,
 
-That's correct. The qcom_qmp_phy structure represents the QMP phy block
-as a whole and not the individual phy lane instances. These phy lanes
-are represented by qcom_phy_desc, and are the actual PHYs in Linux eyes.
+On Fri, Nov 25, 2016 at 8:34 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> Hi everyone,
+>
+> This is v2 of my Allwinner A23 and H3 audio codec support series.
+>
+> Changes since v1:
+>
+>   - Use DEFINE_RES_MEM for the analog path controls block resources.
+>   - Added Rob's ack.
+>
+> This series adds support for the audio codec found in Allwinner A23 and
+> H3 SoCs. The design and data paths are similar to the audio codec found
+> in earlier SoCs such as the A31. The analog audio paths are symmetrical
+> with left/right channels and down-mix selectors for mono differential
+> output.
+>
+> What deviates from previous SoCs is that the analog path controls have
+> been moved to a separate control bus, accessed through a message box
+> like register interface in the PRCM block. This necessitates writing
+> a separate component driver for it, which is then tied into the sound
+> card as an ASoC auxiliary device.
+>
+> Patch 1 adds the analog path controls block to the sun6i-prcm driver as
+> a sub-device, for the A23. The H3 currently does not use the PRCM driver.
+>
+> Patch 2 adds PCM and card support for the A23 codec to the sun4i-codec
+> driver.
+>
+> Patch 3 adds a device node for the analog path controls block to the A23
+> dtsi.
+>
+> Patch 4 adds a device node for the audio codec, and the phandle for the
+> analog path controls block to the A23 dtsi.
+>
+> Patch 5 enables the audio codec for the A23 Q8 tablets. On these tablets
+> the headphone output is driven in DC coupled, or "direct drive", mode.
+>
+> Patch 6 adds PCM and card support for the H3 codec to the sun4i-codec
+> driver.
+>
+> Patch 7 adds device nodes for the audio codec and analog path controls
+> block to the H3 dtsi.
+>
+> Patch 8 enables the audio codec on the Orange Pi PC. The audio output
+> jack on the board is tied to the line out pins on the SoC.
 
-> 
-> How about naming them "struct qmp" and "struct qmp_lane" (or possibly
-> qmp_phy) instead? That way we remove the confusion of QMP PHY vs Linux
-> PHY and we make the lane part explicit.
+All the driver bits are in. Can you pick up the dts patches?
 
-Sure, this sounds good to me - "struct qmp" and "struct qmp_phy" (will
-call the respective variables as qblk for qmp block (struct qmp) and
-qphy for struct qmp_phy).
-Thanks for pointing out. Will change them.
+Thanks
+ChenYu
 
-Regards
-Vivek
-
-> 
-> Regards,
-> Bjorn
-> 
+>
+>
+> Please take a look and let me know what you think.
+>
+> In addition, the sun4i-codec driver is getting pretty large. Maybe we
+> want to split the different parts into different files?
+>
+>
+> Regards
+> ChenYu
+>
+>
+> Chen-Yu Tsai (8):
+>   mfd: sun6i-prcm: Add codec analog controls sub-device for Allwinner
+>     A23
+>   ASoC: sun4i-codec: Add support for A23 codec
+>   ARM: dts: sun8i: Add codec analog path controls node in PRCM for
+>     A23/A33
+>   ARM: dts: sun8i-a23: Add device node for internal audio codec
+>   ARM: dts: sun8i-a23: q8-tablet: Enable internal audio codec
+>   ASoC: sun4i-codec: Add support for H3 codec
+>   ARM: dts: sun8i-h3: Add device nodes for audio codec and its analog
+>     controls
+>   ARM: dts: sun8i-h3: orange-pi-pc: Enable audio codec
+>
+>  .../devicetree/bindings/sound/sun4i-codec.txt      |  14 +-
+>  arch/arm/boot/dts/sun8i-a23-a33.dtsi               |   4 +
+>  arch/arm/boot/dts/sun8i-a23-q8-tablet.dts          |  23 +++
+>  arch/arm/boot/dts/sun8i-a23.dtsi                   |  16 ++
+>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   8 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  19 +++
+>  drivers/mfd/sun6i-prcm.c                           |  13 ++
+>  sound/soc/sunxi/sun4i-codec.c                      | 179 +++++++++++++++++++++
+>  8 files changed, 274 insertions(+), 2 deletions(-)
+>
 > --
-> To unsubscribe from this list: send the line "unsubscribe 
-> linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.10.2
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
