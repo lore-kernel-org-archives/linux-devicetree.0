@@ -1,52 +1,237 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v3 09/24] ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
-Date: Fri,  6 Jan 2017 18:11:27 -0800
-Message-ID: <1483755102-24785-10-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v3 06/24] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
+ camera sensors
+Date: Fri,  6 Jan 2017 18:11:24 -0800
+Message-ID: <1483755102-24785-7-git-send-email-steve_longerbeam@mentor.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-media-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-media-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The reset pin to the port expander chip (MAX7310) is controlled by a gpio,
-so define a reset-gpios property to control it. There are three MAX7310's
-on the SabreAuto CPU card (max7310_[abc]), but all use the same pin for
-their reset. Since all can't acquire the same pin, assign it to max7310_b,
-that chip is needed by more functions (usb and adv7180).
+Enables the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
+Both hang off the same i2c2 bus, so they require different (and non-
+default) i2c slave addresses.
+
+The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
+
+The OV5640 connects to the input port on the MIPI CSI-2 receiver on
+mipi_csi. It is set to transmit over MIPI virtual channel 1.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx6dl-sabrelite.dts   |   5 ++
+ arch/arm/boot/dts/imx6q-sabrelite.dts    |   6 ++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 118 +++++++++++++++++++++++++++++++
+ 3 files changed, 129 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index cace88c..967c3b8 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -136,6 +136,9 @@
- 				reg = <0x32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_max7310>;
-+				reset-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
- 			};
+diff --git a/arch/arm/boot/dts/imx6dl-sabrelite.dts b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+index 0f06ca5..fec2524 100644
+--- a/arch/arm/boot/dts/imx6dl-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+@@ -48,3 +48,8 @@
+ 	model = "Freescale i.MX6 DualLite SABRE Lite Board";
+ 	compatible = "fsl,imx6dl-sabrelite", "fsl,imx6dl";
+ };
++
++&ipu1_csi1_from_ipu1_csi1_mux {
++	data-lanes = <0 1>;
++	clock-lanes = <2>;
++};
+diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+index 66d10d8..9e2d26d 100644
+--- a/arch/arm/boot/dts/imx6q-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+@@ -52,3 +52,9 @@
+ &sata {
+ 	status = "okay";
+ };
++
++&ipu1_csi1_from_mipi_vc1 {
++	data-lanes = <0 1>;
++	clock-lanes = <2>;
++};
++
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 795b5a5..bca9fed 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -39,6 +39,8 @@
+  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
++
++#include <dt-bindings/clock/imx6qdl-clock.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
  
- 			max7310_c: gpio@34 {
-@@ -442,6 +445,12 @@
+@@ -96,6 +98,15 @@
+ 		};
+ 	};
+ 
++	mipi_xclk: mipi_xclk {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <22000000>;
++		clock-output-names = "mipi_pwm3";
++		pwms = <&pwm3 0 45>; /* 1 / 45 ns = 22 MHz */
++		status = "okay";
++	};
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 		pinctrl-names = "default";
+@@ -220,6 +231,22 @@
+ 	};
+ };
+ 
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++	data-shift = <12>; /* Lines 19:12 used */
++	hsync-active = <1>;
++	vync-active = <1>;
++};
++
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&ov5642_to_ipu1_csi0_mux>;
++};
++
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
++};
++
+ &audmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_audmux>;
+@@ -299,6 +326,52 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov5640: camera@40 {
++		compatible = "ovti,ov5640";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5640>;
++		clocks = <&mipi_xclk>;
++		clock-names = "xclk";
++		reg = <0x40>;
++		xclk = <22000000>;
++		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* NANDF_D5 */
++		pwdn-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ov5640_to_mipi_csi: endpoint@1 {
++				reg = <1>;
++				remote-endpoint = <&mipi_csi_from_mipi_sensor>;
++				data-lanes = <0 1>;
++				clock-lanes = <2>;
++			};
++		};
++	};
++
++	ov5642: camera@42 {
++		compatible = "ovti,ov5642";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5642>;
++		clocks = <&clks IMX6QDL_CLK_CKO2>;
++		clock-names = "xclk";
++		reg = <0x42>;
++		xclk = <24000000>;
++		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		pwdn-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++		gp-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
++
++		port {
++			ov5642_to_ipu1_csi0_mux: endpoint {
++				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++				bus-width = <8>;
++				hsync-active = <1>;
++				vsync-active = <1>;
++			};
++		};
++	};
+ };
+ 
+ &i2c3 {
+@@ -412,6 +485,23 @@
  			>;
  		};
  
-+		pinctrl_max7310: max7310grp {
++		pinctrl_ipu1_csi0: ipu1csi0grp {
 +			fsl,pins = <
-+				MX6QDL_PAD_SD2_DAT0__GPIO1_IO15 0x1b0b0
++				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19    0x1b0b0
++				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
++				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
++				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
++				MX6QDL_PAD_CSI0_DATA_EN__IPU1_CSI0_DATA_EN 0x1b0b0
 +			>;
 +		};
 +
- 		pinctrl_pwm3: pwm1grp {
+ 		pinctrl_j15: j15grp {
  			fsl,pins = <
- 				MX6QDL_PAD_SD4_DAT1__PWM3_OUT		0x1b0b1
+ 				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
+@@ -445,6 +535,22 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ov5640: ov5640grp {
++			fsl,pins = <
++				MX6QDL_PAD_NANDF_D5__GPIO2_IO05   0x000b0
++				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09 0x0b0b0
++			>;
++		};
++
++		pinctrl_ov5642: ov5642grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x1b0b0
++				MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x1b0b0
++				MX6QDL_PAD_GPIO_8__GPIO1_IO08   0x130b0
++				MX6QDL_PAD_GPIO_3__CCM_CLKO2    0x000b0
++			>;
++		};
++
+ 		pinctrl_pwm1: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
+@@ -601,3 +707,15 @@
+ 	vmmc-supply = <&reg_3p3v>;
+ 	status = "okay";
+ };
++
++&mipi_csi {
++        status = "okay";
++};
++
++/* Incoming port from sensor */
++&mipi_csi_from_mipi_sensor {
++        remote-endpoint = <&ov5640_to_mipi_csi>;
++        data-lanes = <0 1>;
++        clock-lanes = <2>;
++};
++
 -- 
 2.7.4
