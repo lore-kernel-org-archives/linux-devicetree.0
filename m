@@ -1,120 +1,45 @@
-From: Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 2/2] ARM: DT: add power-off support to linkstation lsgl and kuroboxpro
-Date: Sun,  8 Jan 2017 00:04:51 +0900
-Message-ID: <20170107150451.17912-3-rogershimizu@gmail.com>
-References: <20161227070611.14852-1-rogershimizu@gmail.com>
- <20170107150451.17912-1-rogershimizu@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170107150451.17912-1-rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Tandy <ryan-pRYBVO4bdZ33fQ9qLvQP4Q@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH] devicetree: bindings: Add vendor prefix for
+ Shenzhen Xunlong Software
+Date: Sun,  8 Jan 2017 00:13:18 +0800
+Message-ID: <20170107161318.8000-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBPFHYTBQKGQEPCOCQUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A few models of Linkstation / KuroBox has micro-controller which
-controls the power (as well as FAN, but not related here), while
-others not. So remove the restart-poweroff driver in linkstation
-common dtsi file, and specify the proper power driver in dts
-of each device.
+Shenzhen Xunlong Software CO.,Limited is a SBC vendor, which produces
+the "Orange Pi" series of SBCs.
 
-Devices need micro-controler to power-off:
-  - Linkstation LS-GL
-  - KuroBox Pro
-Device continues using original restart-poweroff driver:
-  - Linkstation LS-WTGL
+Add a vendor prefix for it. This prefix is already used in many
+Allwinner H3 boards.
 
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ryan Tandy <ryan-pRYBVO4bdZ33fQ9qLvQP4Q@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-
-Reported-by: Ryan Tandy <ryan-pRYBVO4bdZ33fQ9qLvQP4Q@public.gmane.org>
-Tested-by: Ryan Tandy <ryan-pRYBVO4bdZ33fQ9qLvQP4Q@public.gmane.org>
-Signed-off-by: Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
- arch/arm/boot/dts/orion5x-kuroboxpro.dts         |  8 ++++++++
- arch/arm/boot/dts/orion5x-linkstation-lsgl.dts   | 10 ++++++++++
- arch/arm/boot/dts/orion5x-linkstation-lswtgl.dts |  4 ++++
- arch/arm/boot/dts/orion5x-linkstation.dtsi       |  4 ----
- 4 files changed, 22 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/orion5x-kuroboxpro.dts b/arch/arm/boot/dts/orion5x-kuroboxpro.dts
-index 1a672b098d0b..aba38d802bda 100644
---- a/arch/arm/boot/dts/orion5x-kuroboxpro.dts
-+++ b/arch/arm/boot/dts/orion5x-kuroboxpro.dts
-@@ -60,6 +60,14 @@
- 				 <MBUS_ID(0x09, 0x00) 0 0xf2200000 0x800>,
- 				 <MBUS_ID(0x01, 0x0f) 0 0xf4000000 0x40000>,
- 				 <MBUS_ID(0x01, 0x1e) 0 0xfc000000 0x1000000>;
-+
-+		internal-regs {
-+			power_off {
-+				compatible = "linkstation,power-off";
-+				reg = <0x12100 0x100>;
-+				clocks = <&core_clk 0>;
-+			};
-+		};
- 	};
- 
- 	memory { /* 128 MB */
-diff --git a/arch/arm/boot/dts/orion5x-linkstation-lsgl.dts b/arch/arm/boot/dts/orion5x-linkstation-lsgl.dts
-index 51dc734cd5b9..370fc17a6dd9 100644
---- a/arch/arm/boot/dts/orion5x-linkstation-lsgl.dts
-+++ b/arch/arm/boot/dts/orion5x-linkstation-lsgl.dts
-@@ -56,6 +56,16 @@
- 	model = "Buffalo Linkstation Pro/Live";
- 	compatible = "buffalo,lsgl", "marvell,orion5x-88f5182", "marvell,orion5x";
- 
-+	soc {
-+		internal-regs {
-+			power_off {
-+				compatible = "linkstation,power-off";
-+				reg = <0x12100 0x100>;
-+				clocks = <&core_clk 0>;
-+			};
-+		};
-+	};
-+
- 	memory { /* 128 MB */
- 		device_type = "memory";
- 		reg = <0x00000000 0x8000000>;
-diff --git a/arch/arm/boot/dts/orion5x-linkstation-lswtgl.dts b/arch/arm/boot/dts/orion5x-linkstation-lswtgl.dts
-index 0eead400f427..571a71f5b7ad 100644
---- a/arch/arm/boot/dts/orion5x-linkstation-lswtgl.dts
-+++ b/arch/arm/boot/dts/orion5x-linkstation-lswtgl.dts
-@@ -59,6 +59,10 @@
- 		reg = <0x00000000 0x4000000>;
- 	};
- 
-+	restart_poweroff {
-+		compatible = "restart-poweroff";
-+	};
-+
- 	gpio_keys {
- 		power-on-switch {
- 			gpios = <&gpio0 8 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/orion5x-linkstation.dtsi b/arch/arm/boot/dts/orion5x-linkstation.dtsi
-index ed456ab35fd8..40770a8d4b36 100644
---- a/arch/arm/boot/dts/orion5x-linkstation.dtsi
-+++ b/arch/arm/boot/dts/orion5x-linkstation.dtsi
-@@ -57,10 +57,6 @@
- 				 <MBUS_ID(0x01, 0x0f) 0 0xf4000000 0x40000>;
- 	};
- 
--	restart_poweroff {
--		compatible = "restart-poweroff";
--	};
--
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4ec84b7a3c56..ddd4c6e5a468 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -329,6 +329,7 @@ x-powers	X-Powers
+ xes	Extreme Engineering Solutions (X-ES)
+ xillybus	Xillybus Ltd.
+ xlnx	Xilinx
++xunlong	Shenzhen Xunlong Software CO.,Limited
+ zarlink	Zarlink Semiconductor
+ zii	Zodiac Inflight Innovations
+ zte	ZTE Corp.
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
