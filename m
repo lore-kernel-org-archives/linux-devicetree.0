@@ -1,80 +1,92 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
-Date: Sat, 7 Jan 2017 03:24:40 +0200
-Message-ID: <3748130b-5321-12eb-ec75-e2637dd9fc54@mleia.com>
-References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
- <73246c4a-504c-52d7-dde4-970a45dca0bd@mleia.com>
- <CAHp75Ve87TE3y6hg1bMxSFAPVcY3wPifGuvtpXNhBw5-eOnPrg@mail.gmail.com>
- <b5788d1d-c951-0fc3-eed8-88457df1f27e@mleia.com>
- <CAHp75Ve7zNN3m1ngLGi-81mFehKzZG07mh5H2T5+_k-=jJqqNA@mail.gmail.com>
+From: "Peter Senna Tschudin" <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: =?utf-8?q?Re=3A?==?utf-8?q?_=5BPATCH?= V7 =?utf-8?q?1=2F4=5D?=
+ =?utf-8?q?_Documentation=2Fdevicetree=2Fbindings=3A?=
+ =?utf-8?q?_b850v3=5Flvds=5Fdp?=
+Date: Sat, 07 Jan 2017 01:29:52 +0000
+Message-ID: <74f0-58704480-5-27259840@173563636>
+References: <CAL_JsqJk=QZ20VmV5uE1ta2T0TEO3rvWFbiGsJpH1e3-ojnBfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75Ve7zNN3m1ngLGi-81mFehKzZG07mh5H2T5+_k-=jJqqNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+in-reply-to: <CAL_JsqJk=QZ20VmV5uE1ta2T0TEO3rvWFbiGsJpH1e3-ojnBfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?q?devicetree=40vger=2Ekernel=2Eorg?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?q?heiko=40sntech=2Ede?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?utf-8?q?linux-arm-kernel=40lists=2Einfradead=2Eorg?= <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, =?utf-8?q?kernel=40pengutronix=2Ede?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Fabio Este
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/2017 02:19 AM, Andy Shevchenko wrote:
-> On Sat, Jan 7, 2017 at 1:43 AM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
->> On 01/07/2017 12:45 AM, Andy Shevchenko wrote:
->>> On Fri, Jan 6, 2017 at 11:46 PM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
->>>>> +     if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
->>>>
->>>> IS_BUILTIN(CONFIG_OF) looks excessive, check for non-NULL dev->of_node
->>>> should be sufficient.
->>>
->>> Sorry, but you missed the point.
->>> This will enable compile time optimization and basically be collapsed to no-op.
->>>
->>
->> Good point, do you plan to add more "IS_BUILTIN(CONFIG_OF)" checks all
->> over the code to reduce the size of the built image?
+ 
+On 04 January, 2017 21:39 CET, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote: 
+ 
+> On Tue, Jan 3, 2017 at 5:34 PM, Peter Senna Tschudin
+> <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+> >  Hi Rob,
+> >
+> > Thank you for the review.
+> >
+> > On 03 January, 2017 23:51 CET, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >
+> >> On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin wrote:
+> >> > Devicetree bindings documentation for the GE B850v3 LVDS/DP++
+> >> > display bridge.
+> >> >
+> >> > Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> >> > Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+> >> > Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+> >> > Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> >> > Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> > Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> >> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+
+> >> > ---
+> >> > There was an Acked-by from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> for V6, but I changed
+> >> > the bindings to use i2c_new_secondary_device() so I removed it from the commit
+> >> > message.
+> >> >
+> >> >  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 ++++++++++++++++++++++
+> >>
+> >> Generally, bindings are not organized by vendor. Put in
+> >> bindings/display/bridge/... instead.
+> >
+> > Will change that.
+> >
+> >>
+> >> >  1 file changed, 39 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> >> > new file mode 100644
+> >> > index 0000000..1bc6ebf
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> >> > @@ -0,0 +1,39 @@
+> >> > +Driver for GE B850v3 LVDS/DP++ display bridge
+> >> > +
+> >> > +Required properties:
+> >> > +  - compatible : should be "ge,b850v3-lvds-dp".
+> >>
+> >> Isn't '-lvds-dp' redundant? The part# should be enough.
+> >
+> > b850v3 is the name of the product, this is why the proposed name. What about, b850v3-dp2 dp2 indicating the second DP output?
 > 
-> There is no black and white, don't be silly.
-> 
->>
->>>>> +             }
->>>>> +     } else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
->>>>> +             dev_dbg(dev, "ACPI slave is not supported yet\n");
->>>>> +     }
->>>>
->>>> If so, then it might be better to drop else-if stub for now.
->>>
->>> Please, don't.
->>>
->>
->> Why do you ask for this stub to be added?
-> 
-> 1. Exactly the reason you asked above. Here is the code which has
-> built differently on different platforms. x86 usually is not using
-> CONFIG_OF, ARM doesn't ACPI (versus ARM64). Check GPIO library for
-> existing examples.
+> Humm, b850v3 is the board name? This node should be the name of the bridge chip.
 
->From the context by the stub I mean dev_dbg() in i2c_slave_mode_detect()
-function, I don't see a connection to GPIO library, please clarify.
+>From the cover letter:
 
-> 2. We might add that support later, but here is again, just no-op.
-> 
-> So, what is your strong argument here against that?
-> 
+-- // --
+There are two physical bridges on the video signal pipeline: a STDP4028(LVDS to
+DP) and a STDP2690(DP to DP++).  The hardware and firmware made it complicated
+for this binding to comprise two device tree nodes, as the design goal is to
+configure both bridges based on the LVDS signal, which leave the driver
+powerless to control the video processing pipeline. The two bridges behaves as
+a single bridge, and the driver is only needed for telling the host about EDID /
+HPD, and for giving the host powers to ack interrupts. The video signal
+pipeline is as follows:
 
-When the support is ready for ACPI case, you'll remove the added
-dev_dbg(), and I don't see a good point by adding it temporarily.
+  Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+-- // --
 
-What is wrong with the approach of adding the ACPI case handling
-branch when it is ready and remove any kind of stubs right now?
-
-On ACPI platforms the function returns 'false' always, will the
-function work correctly (= corresponding to its description) as is?
-
-PS, if it is possible, please give up on arrogance in discussion.
-
---
-With best wishes,
-Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
