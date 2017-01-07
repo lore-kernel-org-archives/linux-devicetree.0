@@ -1,39 +1,35 @@
-From: YiPing Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH] of: remove redundant memset in overlay
-Date: Sat, 7 Jan 2017 19:04:27 +0800
-Message-ID: <1483787067-108430-1-git-send-email-xuyiping@hisilicon.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH RFC 0/4] Fix orion-mdio resource/interrupt issues indentified
+ while reviewing mvpp2
+Date: Sat, 7 Jan 2017 11:26:56 +0000
+Message-ID: <20170107112656.GL14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: XuYing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+This patch series fixes some issues identified while reviewing the
+mvpp2 driver changes recently posted by Thomas.  I've left the clock
+issue, and the question over whether this should be separate out of
+this series, concentrating on the resource size / interrupt issue.
 
-memset in of_build_overlay_info is redundant, the ovinfo has been
-zeroed in of_fill_overlay_info when error.
+This series updates the binding to reflect reality, and ensures that
+the driver will not try to access registers outside its binding.  It
+also ensures that it doesn't leave the interrupt enabled in hardware
+on probe failure.
 
-Signed-off-by: YiPing Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- drivers/of/overlay.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../devicetree/bindings/net/marvell-orion-mdio.txt      | 17 +++++++++++++++--
+ drivers/net/ethernet/marvell/mvmdio.c                   | 11 ++++++++++-
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 0d4cda7..4b1b6b3 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -314,7 +314,6 @@ static int of_build_overlay_info(struct of_overlay *ov,
- 
- 	cnt = 0;
- 	for_each_child_of_node(tree, node) {
--		memset(&ovinfo[cnt], 0, sizeof(*ovinfo));
- 		err = of_fill_overlay_info(ov, node, &ovinfo[cnt]);
- 		if (err == 0)
- 			cnt++;
 -- 
-1.9.1
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
