@@ -1,93 +1,156 @@
-From: "Peter Senna Tschudin" <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: =?utf-8?q?Re=3A?==?utf-8?q?_=5BPATCH?= V7 =?utf-8?q?1=2F4=5D?=
- =?utf-8?q?_Documentation=2Fdevicetree=2Fbindings=3A?=
- =?utf-8?q?_b850v3=5Flvds=5Fdp?=
-Date: Sat, 07 Jan 2017 01:29:52 +0000
-Message-ID: <74f0-58704480-5-27259840@173563636>
-References: <CAL_JsqJk=QZ20VmV5uE1ta2T0TEO3rvWFbiGsJpH1e3-ojnBfA@mail.gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3 1/2] backlight arcxcnn add support for ArcticSand
+ devices
+Date: Fri, 06 Jan 2017 17:31:17 -0800
+Message-ID: <1483752677.2449.7.camel@perches.com>
+References: <1483735689-5452-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-in-reply-to: <CAL_JsqJk=QZ20VmV5uE1ta2T0TEO3rvWFbiGsJpH1e3-ojnBfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?q?devicetree=40vger=2Ekernel=2Eorg?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?q?heiko=40sntech=2Ede?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?utf-8?q?linux-arm-kernel=40lists=2Einfradead=2Eorg?= <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, =?utf-8?q?kernel=40pengutronix=2Ede?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Fabio Este
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483735689-5452-1-git-send-email-olimpiu@arcticsand.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olimpiu Dejeu <olimpiu@arcticsand.com>, robh@kernel.org
+Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com
 List-Id: devicetree@vger.kernel.org
 
- 
-On 04 January, 2017 21:39 CET, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote: 
- 
-> On Tue, Jan 3, 2017 at 5:34 PM, Peter Senna Tschudin
-> <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
-> >  Hi Rob,
-> >
-> > Thank you for the review.
-> >
-> > On 03 January, 2017 23:51 CET, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >
-> >> On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin wrote:
-> >> > Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-> >> > display bridge.
-> >> >
-> >> > Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> >> > Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
-> >> > Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-> >> > Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> >> > Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> > Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> >> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+On Fri, 2017-01-06 at 15:48 -0500, Olimpiu Dejeu wrote:
+> backlight: Add support for Arctic Sand LED backlight driver chips
+> This driver provides support for the Arctic Sand arc2c0608 chip, 
+>     and provides a framework to support future devices.
 
-> >> > ---
-> >> > There was an Acked-by from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> for V6, but I changed
-> >> > the bindings to use i2c_new_secondary_device() so I removed it from the commit
-> >> > message.
-> >> >
-> >> >  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 ++++++++++++++++++++++
-> >>
-> >> Generally, bindings are not organized by vendor. Put in
-> >> bindings/display/bridge/... instead.
-> >
-> > Will change that.
-> >
-> >>
-> >> >  1 file changed, 39 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> >> > new file mode 100644
-> >> > index 0000000..1bc6ebf
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> >> > @@ -0,0 +1,39 @@
-> >> > +Driver for GE B850v3 LVDS/DP++ display bridge
-> >> > +
-> >> > +Required properties:
-> >> > +  - compatible : should be "ge,b850v3-lvds-dp".
-> >>
-> >> Isn't '-lvds-dp' redundant? The part# should be enough.
-> >
-> > b850v3 is the name of the product, this is why the proposed name. What about, b850v3-dp2 dp2 indicating the second DP output?
-> 
-> Humm, b850v3 is the board name? This node should be the name of the bridge chip.
+style trivia:
 
->From the cover letter:
+> diff --git a/drivers/video/backlight/arcxcnn_bl.c b/drivers/video/backlight/arcxcnn_bl.c
+[]
+> +static int arcxcnn_bl_update_status(struct backlight_device *bl)
+> +{
+> +	struct arcxcnn *lp = bl_get_data(bl);
+> +	u32 brightness = bl->props.brightness;
+> +
+> +	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
+> +		brightness = 0;
+> +
+> +	arcxcnn_set_brightness(lp, brightness);
+> +
+> +	/* set power-on/off/save modes */
+> +	if (bl->props.power == 0)
+> +		/* take out of standby */
+> +		arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY, 0);
+> +	else
+> +		 /* place in low-power standby mode */
+> +		arcxcnn_update_bit(lp, ARCXCNN_CMD,
+> +				ARCXCNN_CMD_STDBY, ARCXCNN_CMD_STDBY);
 
--- // --
-There are two physical bridges on the video signal pipeline: a STDP4028(LVDS to
-DP) and a STDP2690(DP to DP++).  The hardware and firmware made it complicated
-for this binding to comprise two device tree nodes, as the design goal is to
-configure both bridges based on the LVDS signal, which leave the driver
-powerless to control the video processing pipeline. The two bridges behaves as
-a single bridge, and the driver is only needed for telling the host about EDID /
-HPD, and for giving the host powers to ack interrupts. The video signal
-pipeline is as follows:
+This is generally smaller code using a temporary and
+a single call instead of two calls like:
 
-  Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
--- // --
+	int cmd;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	...
+
+	if (bl->props.power == 0)
+		cmd = 0;		/* take out of standby */
+	else
+		cmd = ARCXCNN_CMD_STDBY;
+	arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY, cmd);
+
+or maybe
+
+	arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY,
+			   bl->props.power == 0 ? 0 : ARCXCNN_CMD_STDBY);
+
+> +static int arcxcnn_backlight_register(struct arcxcnn *lp)
+> +{
+> +	struct backlight_properties *props;
+> +	const char *name = lp->pdata->name ? : "arctic_bl";
+> +
+> +	props = devm_kzalloc(lp->dev, sizeof(*props), GFP_KERNEL);
+> +	if (!props)
+> +		return -ENOMEM;
+> +
+> +	memset(props, 0, sizeof(props));
+
+props has already been zeroed by devm_kzalloc and doesn't
+need to be memset to 0 again.
+
+> +	props->type = BACKLIGHT_PLATFORM;
+> +	props->max_brightness = MAX_BRIGHTNESS;
+> +
+> +	if (lp->pdata->initial_brightness > props->max_brightness)
+> +		lp->pdata->initial_brightness = props->max_brightness;
+> +
+> +	props->brightness = lp->pdata->initial_brightness;
+> +
+> +	lp->bl = devm_backlight_device_register(lp->dev, name, lp->dev, lp,
+> +				       &arcxcnn_bl_ops, props);
+> +
+
+This blank line above is generally not needed.
+
+> +	if (IS_ERR(lp->bl))
+> +		return PTR_ERR(lp->bl);
+
+the typical style is:
+
+	rtn = foo(...)
+	if (rtn < 0)
+		error_handler...
+
+> +static void arcxcnn_parse_dt(struct arcxcnn *lp)
+> +{
+> +	struct device *dev = lp->dev;
+> +	struct device_node *node = dev->of_node;
+> +	u32 prog_val, num_entry, entry, sources[ARCXCNN_LEDEN_BITS];
+> +	int ret;
+[]
+> +	ret = of_property_count_u32_elems(node, "led-sources");
+> +	if (ret < 0) {
+> +		lp->pdata->leden = ARCXCNN_LEDEN_MASK; /* all on is default */
+> +	} else {
+> +		num_entry = ret;
+> +		if (num_entry > ARCXCNN_LEDEN_BITS)
+> +			num_entry = ARCXCNN_LEDEN_BITS;
+> +
+> +		ret = of_property_read_u32_array(node, "led-sources", sources,
+> +					num_entry);
+> +		if (ret < 0) {
+> +			dev_err(dev, "led-sources node is invalid.\n");
+> +		} else {
+> +			u8 onbit;
+> +
+> +			lp->pdata->leden = 0;
+> +
+> +			/* for each enable in source, set bit in led enable */
+> +			for (entry = 0; entry < num_entry; entry++) {
+> +				onbit = 1 << sources[entry];
+> +				lp->pdata->leden |= onbit;
+> +			}
+> +		}
+> +	}
+> +}
+
+The cascading indentation can be avoided by using return;
+as necessary
+
+	ret = of_property_count_u32_elems(node, "led-sources");
+	if (ret < 0) {
+		lp->pdata->leden = ARCXCNN_LEDEN_MASK; /* all on is default */
+		return;
+	}
+
+	num_entry = min(ret, ARCXCNN_LEDEN_BITS);
+	ret = of_property_read_u32_array(node, "led-sources", sources, num_entry);
+	if (ret < 0) {
+		dev_err(dev, "led-sources node is invalid\n");
+		return;
+	}
+
+	lp->pdata->leden = 0;
+
+	/* for each enable in source, set bit in led enable */
+	for (entry = 0; entry < num_entry; entry++) {
+		u8 onbit = 1 << sources[entry];
+
+		lp->pdata->leden |= onbit;
+	}
