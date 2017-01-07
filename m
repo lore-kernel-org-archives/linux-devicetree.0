@@ -1,83 +1,100 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v3 12/24] add mux and video interface bridge entity functions
-Date: Fri,  6 Jan 2017 18:11:30 -0800
-Message-ID: <1483755102-24785-13-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 24/24] ARM: imx_v6_v7_defconfig: Enable staging video4linux drivers
+Date: Fri,  6 Jan 2017 18:11:42 -0800
+Message-ID: <1483755102-24785-25-git-send-email-steve_longerbeam@mentor.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Enable imx v4l2 staging drivers. For video capture on i.MX, the
+video multiplexer subdev is required. On the SabreAuto, the ADV7180
+video decoder is required along with i2c-mux-gpio. The Sabrelite
+requires PWM clocks for the OV5640.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Increase max zoneorder to allow larger video buffer allocations.
+
+Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/media/uapi/mediactl/media-types.rst | 22 ++++++++++++++++++++++
- include/uapi/linux/media.h                        |  6 ++++++
- 2 files changed, 28 insertions(+)
+ arch/arm/configs/imx_v6_v7_defconfig | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/media/uapi/mediactl/media-types.rst b/Documentation/media/uapi/mediactl/media-types.rst
-index 3e03dc2..023be29 100644
---- a/Documentation/media/uapi/mediactl/media-types.rst
-+++ b/Documentation/media/uapi/mediactl/media-types.rst
-@@ -298,6 +298,28 @@ Types and flags used to represent the media graph elements
- 	  received on its sink pad and outputs the statistics data on
- 	  its source pad.
- 
-+    -  ..  row 29
-+
-+       ..  _MEDIA-ENT-F-MUX:
-+
-+       -  ``MEDIA_ENT_F_MUX``
-+
-+       - Video multiplexer. An entity capable of multiplexing must have at
-+         least two sink pads and one source pad, and must pass the video
-+         frame(s) received from the active sink pad to the source pad. Video
-+         frame(s) from the inactive sink pads are discarded.
-+
-+    -  ..  row 30
-+
-+       ..  _MEDIA-ENT-F-VID-IF-BRIDGE:
-+
-+       -  ``MEDIA_ENT_F_VID_IF_BRIDGE``
-+
-+       - Video interface bridge. A video interface bridge entity must have at
-+         least one sink pad and one source pad. It receives video frame(s) on
-+         its sink pad in one bus format (HDMI, eDP, MIPI CSI-2, ...) and
-+         converts them and outputs them on its source pad in another bus format
-+         (eDP, MIPI CSI-2, parallel, ...).
- 
- ..  tabularcolumns:: |p{5.5cm}|p{12.0cm}|
- 
-diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
-index 4890787..08a8bfa 100644
---- a/include/uapi/linux/media.h
-+++ b/include/uapi/linux/media.h
-@@ -105,6 +105,12 @@ struct media_device_info {
- #define MEDIA_ENT_F_PROC_VIDEO_STATISTICS	(MEDIA_ENT_F_BASE + 0x4006)
- 
- /*
-+ * Switch and bridge entitites
-+ */
-+#define MEDIA_ENT_F_MUX				(MEDIA_ENT_F_BASE + 0x5001)
-+#define MEDIA_ENT_F_VID_IF_BRIDGE		(MEDIA_ENT_F_BASE + 0x5002)
-+
-+/*
-  * Connectors
-  */
- /* It is a responsibility of the entity drivers to add connectors and links */
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index cbe7faf..b67b99f 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -51,6 +51,7 @@ CONFIG_PREEMPT_VOLUNTARY=y
+ CONFIG_AEABI=y
+ CONFIG_HIGHMEM=y
+ CONFIG_CMA=y
++CONFIG_FORCE_MAX_ZONEORDER=14
+ CONFIG_CMDLINE="noinitrd console=ttymxc0,115200"
+ CONFIG_KEXEC=y
+ CONFIG_CPU_FREQ=y
+@@ -174,13 +175,13 @@ CONFIG_INPUT_MISC=y
+ CONFIG_INPUT_MMA8450=y
+ CONFIG_SERIO_SERPORT=m
+ # CONFIG_LEGACY_PTYS is not set
+-# CONFIG_DEVKMEM is not set
+ CONFIG_SERIAL_IMX=y
+ CONFIG_SERIAL_IMX_CONSOLE=y
+ CONFIG_SERIAL_FSL_LPUART=y
+ CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
+ # CONFIG_I2C_COMPAT is not set
+ CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_MUX=y
+ CONFIG_I2C_MUX_GPIO=y
+ # CONFIG_I2C_HELPER_AUTO is not set
+ CONFIG_I2C_ALGOPCF=m
+@@ -194,11 +195,11 @@ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_MC9S08DZ60=y
+ CONFIG_GPIO_PCA953X=y
+ CONFIG_GPIO_STMPE=y
+-CONFIG_POWER_SUPPLY=y
+ CONFIG_POWER_RESET=y
+ CONFIG_POWER_RESET_IMX=y
+ CONFIG_POWER_RESET_SYSCON=y
+ CONFIG_POWER_RESET_SYSCON_POWEROFF=y
++CONFIG_POWER_SUPPLY=y
+ CONFIG_SENSORS_GPIO_FAN=y
+ CONFIG_SENSORS_IIO_HWMON=y
+ CONFIG_THERMAL=y
+@@ -221,14 +222,19 @@ CONFIG_REGULATOR_PFUZE100=y
+ CONFIG_MEDIA_SUPPORT=y
+ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_RC_SUPPORT=y
++CONFIG_MEDIA_CONTROLLER=y
++CONFIG_VIDEO_V4L2_SUBDEV_API=y
+ CONFIG_RC_DEVICES=y
+ CONFIG_IR_GPIO_CIR=y
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
+ CONFIG_V4L_PLATFORM_DRIVERS=y
++CONFIG_VIDEO_MULTIPLEXER=y
+ CONFIG_SOC_CAMERA=y
+ CONFIG_V4L_MEM2MEM_DRIVERS=y
+ CONFIG_VIDEO_CODA=y
++# CONFIG_MEDIA_SUBDRV_AUTOSELECT is not set
++CONFIG_VIDEO_ADV7180=m
+ CONFIG_SOC_CAMERA_OV2640=y
+ CONFIG_IMX_IPUV3_CORE=y
+ CONFIG_DRM=y
+@@ -338,6 +344,8 @@ CONFIG_FSL_EDMA=y
+ CONFIG_IMX_SDMA=y
+ CONFIG_MXS_DMA=y
+ CONFIG_STAGING=y
++CONFIG_STAGING_MEDIA=y
++CONFIG_COMMON_CLK_PWM=y
+ CONFIG_IIO=y
+ CONFIG_VF610_ADC=y
+ CONFIG_MPL3115=y
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
