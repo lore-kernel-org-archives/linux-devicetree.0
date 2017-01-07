@@ -1,77 +1,86 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 19/19] staging: iio: isl29028: remove legacy device tree
- binding
-Date: Sun, 8 Jan 2017 09:50:10 +0000
-Message-ID: <9cb901ec-8a8b-f37d-e0c4-2231ee33fc57@kernel.org>
-References: <1480817983-32359-1-git-send-email-masneyb@onstation.org>
- <1480817983-32359-20-git-send-email-masneyb@onstation.org>
- <927a9b4b-31e5-0f63-4526-97936a578648@kernel.org>
+Subject: Re: [PATCH 14/22] dt-bindings: power: supply: add AXP20X/AXP22X
+ battery DT binding
+Date: Sat, 7 Jan 2017 14:33:47 -0500
+Message-ID: <3155ba16-b51a-9306-6be4-0bdf4482a679@kernel.org>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-15-quentin.schulz@free-electrons.com>
+ <20170104132107.tciklylgqvhftb6f@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <927a9b4b-31e5-0f63-4526-97936a578648@kernel.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Brian Masney <masneyb@onstation.org>, linux-iio@vger.kernel.org
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ldewangan@nvidia.com, pmeerw@pmeerw.net, knaack.h@gmx.de, Mark Rutland <Mark.Rutland@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170104132107.tciklylgqvhftb6f@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, icenowy@aosc.xyz, pmeerw@pmeerw.net, knaack.h@gmx.de, maxime.ripard@free-electrons.com, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry all, appears some replies got stuck in my outbox and have just managed to send for some reason!
-
-Jonathan
-
-On 04/12/16 11:55, Jonathan Cameron wrote:
-> On 04/12/16 02:19, Brian Masney wrote:
->> The isl29028 staging driver contains a legacy binding of "isl,isl29028"
->> that is marked as legacy and to not use. There are no in tree references
->> to that binding. This patch removes the legacy binding in preparation
->> for moving the driver out of staging. Otherwise, we will have to support
->> this binding indefinitely.
-> Leave this be.  Given it exists there almost certainly device trees out there
-> using it. Lets not break them just to save on one line of code.
-> 
-> Supporting legacy bindings isn't exactly costly!
-> 
-> I'm happy with all the patches I haven't commented on. Just can't apply
-> them because they have dependencies on early patches that I have
-> raised questions on.
-> 
-> Another generally nice bit of cleanup.
-> 
-> Thanks,
-> 
-> Jonathan
+On 04/01/17 08:21, Rob Herring wrote:
+> On Mon, Jan 02, 2017 at 05:37:14PM +0100, Quentin Schulz wrote:
+>> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
 >>
->> Signed-off-by: Brian Masney <masneyb@onstation.org>
->> Cc: devicetree@vger.kernel.org
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <Mark.Rutland@arm.com>
+>> This patch adds the DT binding documentation for the battery power
+>> supply which gets various data from the PMIC, such as the battery status
+>> (charging, discharging, full, dead), current max limit, current current,
+>> battery capacity (in percentage), voltage max and min limits, current
+>> voltage and battery capacity (in Ah).
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 >> ---
->>  drivers/staging/iio/light/isl29028.c | 1 -
->>  1 file changed, 1 deletion(-)
+>>  .../bindings/power/supply/axp20x_battery.txt       | 27 ++++++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
 >>
->> diff --git a/drivers/staging/iio/light/isl29028.c b/drivers/staging/iio/light/isl29028.c
->> index ae6896f..6be9aa7 100644
->> --- a/drivers/staging/iio/light/isl29028.c
->> +++ b/drivers/staging/iio/light/isl29028.c
->> @@ -611,7 +611,6 @@ static const struct i2c_device_id isl29028_id[] = {
->>  MODULE_DEVICE_TABLE(i2c, isl29028_id);
->>  
->>  static const struct of_device_id isl29028_of_match[] = {
->> -	{ .compatible = "isl,isl29028", }, /* for backward compat., don't use */
->>  	{ .compatible = "isil,isl29028", },
->>  	{ },
->>  };
->>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt b/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
+>> new file mode 100644
+>> index 0000000..5489d0d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
+>> @@ -0,0 +1,27 @@
+>> +AXP20x and AXP22x battery power supply
+>> +
+>> +Required Properties:
+>> + - compatible, one of:
+>> +			"x-powers,axp209-battery-power-supply"
+>> +			"x-powers,axp221-battery-power-supply"
+>> + - io-channels: phandles to battery voltage, charge and discharge
+>> + currents ADC channels
+>> + - io-channel-names = "batt_v", "batt_chrg_i", "batt_dischrg_i";
+>> +
+>> +This node is a subnode of the axp20x/axp22x PMIC.
+>> +
+>> +The AXP20X and AXP22X can read the battery voltage, charge and discharge
+>> +currents of the battery by reading ADC channels from the AXP20X/AXP22X
+>> +ADC.
+>> +
+>> +Example:
+>> +
+>> +&axp209 {
+>> +	battery_power_supply: battery_power_supply {
 > 
+> Humm, I guess you power-supply is not sufficient, so 
+> 'battery-power-supply' and similar for ac.
+> 
+>> +		compatible = "x-powers,axp209-battery-power-supply";
+>> +		io-channels = <&axp209_adc 7>, <&axp209_adc 8>,
+>> +			<&axp209_adc 9>;
+>> +		io-channel-names = "batt_v", "batt_chrg_i",
+>> +			"batt_dischrg_i";
+Is this stuff fixed for the device?
+>> +	}
+>> +};
+>> -- 
+>> 2.9.3
+>>
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
 > the body of a message to majordomo@vger.kernel.org
