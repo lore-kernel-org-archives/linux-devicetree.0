@@ -1,132 +1,107 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 0/8] ASoC: sunxi: Add support for audio codec in
- A23/H3 SoCs
-Date: Sun, 8 Jan 2017 22:56:36 +0100
-Message-ID: <20170108215636.v3swmhetvzzce4r2@lukather>
-References: <20161125123442.28410-1-wens@csie.org>
- <CAGb2v65mo2g90QX6DMpw4dN4=fjccP2kp-NAbUPBzXYTtF8kMg@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v7 03/12] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Sun, 8 Jan 2017 22:55:03 +0100
+Message-ID: <68e4cb7d-989d-3935-88b5-ea2c6213dc31@axentia.se>
+References: <1483532187-28494-1-git-send-email-peda@axentia.se>
+ <1483532187-28494-4-git-send-email-peda@axentia.se>
+ <9e4ee54f-f781-8d3b-1c46-1549392a9f2f@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1316223069636193654=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v65mo2g90QX6DMpw4dN4=fjccP2kp-NAbUPBzXYTtF8kMg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9e4ee54f-f781-8d3b-1c46-1549392a9f2f@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2017-01-08 11:23, Jonathan Cameron wrote:
+> On 04/01/17 12:16, Peter Rosin wrote:
+>> Add a new minimalistic subsystem that handles multiplexer controllers.
+>> When multiplexers are used in various places in the kernel, and the
+>> same multiplexer controller can be used for several independent things,
+>> there should be one place to implement support for said multiplexer
+>> controller.
+>>
+>> A single multiplexer controller can also be used to control several
+>> parallel multiplexers, that are in turn used by different subsystems
+>> in the kernel, leading to a need to coordinate multiplexer accesses.
+>> The multiplexer subsystem handles this coordination.
+>>
+>> This new mux controller subsystem initially comes with a single backend
+>> driver that controls gpio based multiplexers. Even though not needed by
+>> this initial driver, the mux controller subsystem is prepared to handle
+>> chips with multiple (independent) mux controllers.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+>> ---
+>>  Documentation/driver-model/devres.txt |   8 +
+>>  MAINTAINERS                           |   2 +
+>>  drivers/Kconfig                       |   2 +
+>>  drivers/Makefile                      |   1 +
+>>  drivers/mux/Kconfig                   |  33 +++
+>>  drivers/mux/Makefile                  |   6 +
+>>  drivers/mux/mux-core.c                | 398 ++++++++++++++++++++++++++++++++++
+>>  drivers/mux/mux-gpio.c                | 120 ++++++++++
+>>  include/linux/mux.h                   | 244 +++++++++++++++++++++
+>>  9 files changed, 814 insertions(+)
+>>  create mode 100644 drivers/mux/Kconfig
+>>  create mode 100644 drivers/mux/Makefile
+>>  create mode 100644 drivers/mux/mux-core.c
+>>  create mode 100644 drivers/mux/mux-gpio.c
+>>  create mode 100644 include/linux/mux.h
+>>
+>> diff --git a/Documentation/driver-model/devres.txt b/Documentation/driver-model/devres.txt
+>> index dc51fb024190..1e9ae701a587 100644
+>> --- a/Documentation/driver-model/devres.txt
+>> +++ b/Documentation/driver-model/devres.txt
+>> @@ -332,6 +332,14 @@ MEM
+>>  MFD
+>>    devm_mfd_add_devices()
+>>  
+>> +MUX
+>> +  devm_mux_chip_alloc()
+>> +  devm_mux_chip_free()
+>> +  devm_mux_chip_register()
+>> +  devm_mux_chip_unregister()
+>> +  devm_mux_control_get()
+>> +  devm_mux_control_put()
+>> +
+>>  PER-CPU MEM
+>>    devm_alloc_percpu()
+>>    devm_free_percpu()
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 32abef2b6d05..ebe96f3e25a0 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -8442,6 +8442,8 @@ MULTIPLEXER SUBSYSTEM
+>>  M:	Peter Rosin <peda@axentia.se>
+>>  S:	Maintained
+>>  F:	Documentation/devicetree/bindings/mux/
+>> +F:	include/linux/mux.h
+>> +F:	drivers/mux/
+>>  
+>>  MULTISOUND SOUND DRIVER
+>>  M:	Andrew Veliath <andrewtv@usa.net>
+>> diff --git a/drivers/Kconfig b/drivers/Kconfig
+>> index e1e2066cecdb..993aeb65affa 100644
+>> --- a/drivers/Kconfig
+>> +++ b/drivers/Kconfig
+>> @@ -76,6 +76,8 @@ source "drivers/hwmon/Kconfig"
+>>  
+>>  source "drivers/thermal/Kconfig"
+>>  
+>> +source "drivers/mux/Kconfig"
+>> +
+> 
+> Why this location in the list?  I think the convention for new subystems is
+> to just go last in the list.
 
---===============1316223069636193654==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bro5salbxhtzstyb"
-Content-Disposition: inline
+Oh. I'll move it to the end...
 
+Thanks for all your acks/reviews!
 
---bro5salbxhtzstyb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jan 08, 2017 at 03:00:40AM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
->=20
-> On Fri, Nov 25, 2016 at 8:34 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> > Hi everyone,
-> >
-> > This is v2 of my Allwinner A23 and H3 audio codec support series.
-> >
-> > Changes since v1:
-> >
-> >   - Use DEFINE_RES_MEM for the analog path controls block resources.
-> >   - Added Rob's ack.
-> >
-> > This series adds support for the audio codec found in Allwinner A23 and
-> > H3 SoCs. The design and data paths are similar to the audio codec found
-> > in earlier SoCs such as the A31. The analog audio paths are symmetrical
-> > with left/right channels and down-mix selectors for mono differential
-> > output.
-> >
-> > What deviates from previous SoCs is that the analog path controls have
-> > been moved to a separate control bus, accessed through a message box
-> > like register interface in the PRCM block. This necessitates writing
-> > a separate component driver for it, which is then tied into the sound
-> > card as an ASoC auxiliary device.
-> >
-> > Patch 1 adds the analog path controls block to the sun6i-prcm driver as
-> > a sub-device, for the A23. The H3 currently does not use the PRCM drive=
-r.
-> >
-> > Patch 2 adds PCM and card support for the A23 codec to the sun4i-codec
-> > driver.
-> >
-> > Patch 3 adds a device node for the analog path controls block to the A23
-> > dtsi.
-> >
-> > Patch 4 adds a device node for the audio codec, and the phandle for the
-> > analog path controls block to the A23 dtsi.
-> >
-> > Patch 5 enables the audio codec for the A23 Q8 tablets. On these tablets
-> > the headphone output is driven in DC coupled, or "direct drive", mode.
-> >
-> > Patch 6 adds PCM and card support for the H3 codec to the sun4i-codec
-> > driver.
-> >
-> > Patch 7 adds device nodes for the audio codec and analog path controls
-> > block to the H3 dtsi.
-> >
-> > Patch 8 enables the audio codec on the Orange Pi PC. The audio output
-> > jack on the board is tied to the line out pins on the SoC.
->=20
-> All the driver bits are in. Can you pick up the dts patches?
-
-I just did.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---bro5salbxhtzstyb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYcrWQAAoJEBx+YmzsjxAgdhwQALwJa6IrqnZhqdMVHhvHW6UQ
-3ylcFrMGXdtVB3XG9u6R1nDq3WQw87ld9MKFunblQnf4oKGnKdz1f0rYKbgsoX3k
-EBRwsijMn6HUiT9tevyu6A1V7p5/CCJ/vsedTkl1LcRNFLQE7zOYWCuG9/RjFWYK
-VtKJ8Iqx5xsGH/b/gf1hB+9QPnzP0aOcrzrybzyAdCBVTX62DnDikgQiDvBSB6Zy
-7zfMgWg5ChEQAY/s6VoIENlL5VtdHftsZKA1eq7aN6Q//gGEOLkNRl/dJwbJXACo
-a16E2bqAGga/cMp1jFzH28iEkqhkbiEX8Jn24yJ73IfM8rsyX3Y+14HYw0b1BZDb
-iWH1bWahx8jzZPreddl0Kr0FFuuQr/tjZfcGiMXuKE2tVopyGAk1JMT1U/5uWlO+
-OLmxZIeVCjYItfT7W8WaPiWJdepHZnATDT96sfzfd647vCsGn3VZB6Kl1DO++1hq
-33e1AScqG+LR4aOOVNpRNilG7f9phyjtaXFm9sXY45QGZ77hGOY4PZgbOqYdIdtQ
-8CWBGveD75sBS/DxEJhXiDRIwaI0nDUwZmfLVrPzmI5cpFL/1IDXDIiuNC66taOJ
-rMr3Kg+6a7g3bVuJHGXzam8oAff4MgUu+ZLTmHhyDis1+RHaihA7wWSnnRLmJSmM
-CYMpbKCaka4N7PPHd+7a
-=t2vy
------END PGP SIGNATURE-----
-
---bro5salbxhtzstyb--
-
-
---===============1316223069636193654==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1316223069636193654==--
+Cheers,
+peda
