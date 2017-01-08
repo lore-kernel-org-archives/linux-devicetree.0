@@ -1,75 +1,163 @@
-From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] nfc: trf7970a: Prevent repeated polling from
- crashing the kernel
-Date: Sun, 8 Jan 2017 17:32:02 -0500
-Message-ID: <CAO7Z3WL9evhhOC2as_R2k4cxgTRHMxE7_2h3+cHUYvaL_m+b1Q@mail.gmail.com>
-References: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
- <1482380314-16440-3-git-send-email-geoff@kuvee.com> <20161224060141.GA9069@animalcreek.com>
- <CAO7Z3W+n85jbr8cmj3HJV1c+eL=oRh-XRy+O=iZ+mD=ov2WABA@mail.gmail.com>
- <20161224172439.GA15103@animalcreek.com> <CAO7Z3WJa0goJ-VXc7dvyz8imZtqby6QsC0QNH+uRAE8LhxqU2w@mail.gmail.com>
- <20170103163324.GA3184@animalcreek.com> <CAO7Z3WK5pF+q0vAoPPie8wXYQPigpGd7W8uQiGSgN79z4=W9uQ@mail.gmail.com>
- <20170103212136.GA9899@animalcreek.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH linux 2/6] hwmon: occ: Add sysfs interface
+Date: Mon, 09 Jan 2017 10:22:12 +1030
+Message-ID: <1483919532.2950.1.camel@aj.id.au>
+References: <1483120568-21082-1-git-send-email-eajames.ibm@gmail.com>
+         <1483120568-21082-3-git-send-email-eajames.ibm@gmail.com>
+         <20161230193404.GB8516@roeck-us.net>
+         <OFA812992D.D19B1368-ON002580A0.007A2966-862580A0.007A72F0@notes.na.collabserv.com>
+         <8b182766-32a0-9eb1-7917-14abf811cef5@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170103212136.GA9899-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Cc: linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Justin Bronder <justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-XBpeGEDaOSADCXVW28Vr"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <8b182766-32a0-9eb1-7917-14abf811cef5@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Edward James <eajames@us.ibm.com>
+Cc: corbet@lwn.net, devicetree@vger.kernel.org, eajames.ibm@gmail.com, jdelvare@suse.com, joel@jms.id.au, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 3, 2017 at 4:21 PM, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org> wrote:
-> On Tue, Jan 03, 2017 at 01:35:18PM -0500, Geoff Lansberry wrote:
->> On Tue, Jan 3, 2017 at 11:33 AM, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org> wrote:
->> > On Tue, Dec 27, 2016 at 09:18:32AM -0500, Geoff Lansberry wrote:
->
->> >> In the meantime - here is some more info about how we use it.
->> >>
->> >> We do use NFC structures.    I did find an interesting clue in that
->> >> there are certain bottles that cause neard to segfault,  I'm not sure
->> >> what is different about them.  We write a string, like
->> >> "coppola_chardonnay_2015" to the bottles.
->> >
->> > Off the top of my head, it could be the length of the text.
->> > It would be useful to compare the data that works to the data
->> > that doesn't work.  Can you install NXP's 'TagInfo' app on a
->> > smartphone and scan tags with working & non-working data?
->> > You can email the data from the app to yourself, edit out
->> > the cruft, and share here.
->>
->> The data is always the same - and the tags are all the same.  Only
->> difference is that the tag is physically different, and perhaps
->> orientation; distance from antenna to tag is fixed.
->
-> Interesting...  They're all type 2 tags, right?
 
-Yes type 2.
+--=-XBpeGEDaOSADCXVW28Vr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->
->> I can't even
->> write the tags at all, so reading them will show blank.   Also a minor
->> but significant detail, is that the tags are embedded in such a way
->> that the phone cannot get close enough to them to connect.
->
-> This section had me completely confused for a couple minutes until I realized
-> that you mean that you can read & write the tags using the trf7970a with
-> an attached antenna but not with your phone.  Is that correct?
+On Sat, 2017-01-07 at 09:15 -0800, Guenter Roeck wrote:
+> On 01/06/2017 02:17 PM, Edward James wrote:
+>=20
+> [ ... ]
+>=20
+> > > > +}
+> > > > +
+> > > > +static DEVICE_ATTR(online, S_IWUSR | S_IRUGO, show_occ_online,
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0store_occ_on=
+line);
+> > > > +
+> > > > +struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *=
+occ,
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0struct occ_sysfs_config *config)
+> > > > +{
+> > > > +=C2=A0=C2=A0=C2=A0struct occ_sysfs *hwmon =3D devm_kzalloc(dev, si=
+zeof(struct occ_sysfs),
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0GFP_KERNE=
+L);
+> > > > +=C2=A0=C2=A0=C2=A0int rc;
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0if (!hwmon)
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ERR_PTR(-ENOMEM);
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0hwmon->occ =3D occ;
+> > > > +=C2=A0=C2=A0=C2=A0hwmon->num_caps_fields =3D config->num_caps_fiel=
+ds;
+> > > > +=C2=A0=C2=A0=C2=A0hwmon->caps_names =3D config->caps_names;
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0dev_set_drvdata(dev, hwmon);
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0rc =3D device_create_file(dev, &dev_attr_online)=
+;
+> > > > +=C2=A0=C2=A0=C2=A0if (rc)
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ERR_PTR(rc);
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0return hwmon;
+> > > > +}
+> > > > +EXPORT_SYMBOL(occ_sysfs_start);
+> > > > +
+> > > > +int occ_sysfs_stop(struct device *dev, struct occ_sysfs *driver)
+> > > > +{
+> > > > +=C2=A0=C2=A0=C2=A0if (driver->dev) {
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0occ_remove_hwmon_attrs(driver)=
+;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0hwmon_device_unregister(driver=
+->dev);
+> > > > +=C2=A0=C2=A0=C2=A0}
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0device_remove_file(driver->dev, &dev_attr_online=
+);
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0devm_kfree(dev, driver);
+> > >=20
+> > > Thw point of using devm_ functions is not to require remove/free func=
+tions.
+> > > Something is completely wrong here if you need that call.
+> > >=20
+> > > Overall, this is architectually completely wrong. One does not regist=
+er
+> > > or instantiate drivers based on writing into sysfs attributes. Please
+> > > reconsider your approach.
+> >=20
+> > We had some trouble designing this driver because the BMC only has
+> > access to the OCC once the processor is powered on. This will happen
+> > sometime after the BMC boots (this driver runs only on the BMC). With
+> > no access to the OCC, we don't know what sensors are present on the
+> > system without a large static enumeration. Also any sysfs files created
+> > before we have OCC access won't be able to return any data.
+> >=20
+> > Instead of the "online" attribute, what do you think about using the
+> > "bind"/"unbind" API to probe the device from user space once the system
+> > is powered on? All the hwmon registration would take place in the probe
+> > function, it would just occur some time after boot.
+> >=20
+>=20
+> A more common approach would be to have a platform driver. That platform
+> driver would need a means to detect if the OCC is up and running, and
+> instantiate everything else once it is.
+>=20
+> A trigger from user space is problematic because there is no guarantee
+> that the OCC is really up (or that it even exists).
 
-Correct, due to the physical arrangement of the part the tag is embedded in.
+This is true in general, but for the BMC case we have more information:
+The host CPU power supply is controlled by several GPIOs from
+userspace. Once we receive the "power-good" signal for the host CPU we
+can bind the OCC driver and trigger the probe.
 
->
-> If so, try a tag that isn't embedded in something else and move it around
-> the back of the phone.  Try to find where it works best.  The phone
-> manufacturers are notorius for paying little attention to the NFC antenna
-> they put on their products.  For example, I have a Samsung S5 next to me
-> and it seems to work best around the center of the phone.  I've used others
-> where I had to use the upper-left or upper-right corner of the phone.
+Alternatively, in the style of your first para, we could push the host
+CPU state management into the kernel and expose a boot/reboot/power-off=20
+API to userspace. That would give us a place to hook calls for
+configuring and cleaning up any host-dependent drivers on the BMC.
 
-I can borrow a phone and try, I do have some other tags.  This will
-take me some time and
- I'm not optimistic that we will learn much, other than that the tag
-was not programmed when
-it does not work.   Don't wait on this answer.
->
-> Mark
-> --
+The solution to the host-power-state problem is also applicable to the
+OpenFSI patches that were recently sent out:
+
+https://lkml.org/lkml/2016/12/6/732
+
+The OpenFSI infra needs to re-scan for CFAMs when the host is powered
+up.
+
+>=20
+> An alternative might be to have the hwmon driver poll for the OCC,
+> but that would be a bit more difficult and might require a kernel thread
+> or maybe asynchronous probing.
+
+This was our thought as a fallback solution.
+
+Andrew
+
+>=20
+> Guenter
+>=20
+--=-XBpeGEDaOSADCXVW28Vr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCgAGBQJYctCsAAoJEJ0dnzgO5LT5z9MP/AhLhzP9udsCi8H/gcA42Wi/
+xEpQpFY1OMthJc7Sgwg9wDHSTlpunHsiUS37w1E95UjKXcOXVS/kAJYaHu8lBPtl
+O5S9i+G4ciuTbe7VslMc5elhnrDoGrz+BzahFGvspnAlgCe1Kp3sEiWNbDUTtrMV
+AdcmfSYFm2pRCt9vff+3fkRkFSrYNzbSQYVMpCOfBsXM6FBF+X8BZvP7DvnBqNpC
+XWDZuzLNSfD79ALXtqRSTby/QfgQmWivp3ykfDuCHTCqBrukMmDkFJ2zNbVo5XGa
+I27nAs8UvQ0BVX2GBfoDLNhXKYFI9elWVLucL4MFkXGdarz+HSeMavELIBrWieC5
+UXV1LQOtOFUNTiaB/x4DLv8Q+UvOvi3a20LICrY8Af/vWzakqA2uxcp1q9XhBHhg
+7hBcuEwowJAJvsf0KoOdiqz7NrWP53BGsBwonDYclczkiMoi/TRLz+qwQl5TxlwF
+65E0tJeP89tz95w2d58JsHmvWYrYV0lCGyt17DW7TPdsExkMowTuzo/4S9ZKrxQ0
+qWRndAuBq/knrHOs3ktSqJssXhiMHryjGDjRGl7XpEaBh092aayxhDxqNxWw7SDC
+EkRIz1mlxjYFr1mXRx1BQHmw6w5hVOGLjlaHsvy9rgG/T/GNLHuBZ53PHofur6ns
+354Qi5N7FCFkt2eQOiNi
+=Dhdn
+-----END PGP SIGNATURE-----
+
+--=-XBpeGEDaOSADCXVW28Vr--
+
