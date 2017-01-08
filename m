@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 4/4] MAINTAINERS: Extend ARM/Mediatek SoC support section
-Date: Sun,  8 Jan 2017 14:31:00 +0100
-Message-ID: <20170108133100.10428-5-afaerber@suse.de>
+Subject: [PATCH 1/4] Documentation: devicetree: Add vendor prefix for AsiaRF
+Date: Sun,  8 Jan 2017 14:30:57 +0100
+Message-ID: <20170108133100.10428-2-afaerber@suse.de>
 References: <20170108133100.10428-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,32 +10,26 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170108133100.10428-1-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Catch mt7623 and arm64 dts subdirectory.
-
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 93a983a..7f5a629 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1522,8 +1522,10 @@ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
- L:	linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/boot/dts/mt6*
-+F:	arch/arm/boot/dts/mt7*
- F:	arch/arm/boot/dts/mt8*
- F:	arch/arm/mach-mediatek/
-+F:	arch/arm64/boot/dts/mediatek/
- N:	mtk
- K:	mediatek
- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4ec84b7..01d222b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -34,6 +34,7 @@ armadeus	ARMadeus Systems SARL
+ arrow	Arrow Electronics
+ artesyn	Artesyn Embedded Technologies Inc.
+ asahi-kasei	Asahi Kasei Corp.
++asiarf	AsiaRF Co., Ltd.
+ aspeed	ASPEED Technology Inc.
+ atlas	Atlas Scientific LLC
+ atmel	Atmel Corporation
 -- 
 2.10.2
 
