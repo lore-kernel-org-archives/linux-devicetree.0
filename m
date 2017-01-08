@@ -1,38 +1,63 @@
-From: Ryan Tandy <ryan@nardis.ca>
-Subject: Re: [PATCH v4 1/2] power: reset: add linkstation-reset driver
-Date: Sun, 8 Jan 2017 09:02:09 -0800
-Message-ID: <20170108170209.GD573@kiwi.nardis.ca>
-References: <20161227070611.14852-1-rogershimizu@gmail.com>
- <20170107150451.17912-1-rogershimizu@gmail.com>
- <20170107150451.17912-2-rogershimizu@gmail.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH 2/2] media: rc: add driver for IR remote receiver on
+ MT7623 SoC
+Date: Sun, 8 Jan 2017 21:16:24 +0000
+Message-ID: <20170108211624.GB7866@gofer.mess.org>
+References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
+ <1483632384-8107-3-git-send-email-sean.wang@mediatek.com>
+ <20170105171240.GA9136@gofer.mess.org>
+ <1483687885.16976.19.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170107150451.17912-2-rogershimizu@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Roger Shimizu <rogershimizu@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Martin Michlmayr <tbm@cyrius.com>, Sylver Bruneau <sylver.bruneau@googlemail.com>, Herbert Valerio Riedel <hvr@gnu.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1483687885.16976.19.camel@mtkswgap22>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: mchehab@osg.samsung.com, hdegoede@redhat.com, hkallweit1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, andi.shyti@samsung.com, hverkuil@xs4all.nl, ivo.g.dimitrov.75@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+Hi Sean,
 
-On Sun, Jan 08, 2017 at 12:04:50AM +0900, Roger Shimizu wrote:
->+config POWER_RESET_LINKSTATION
->+	bool "Buffalo Linkstation and its variants reset driver"
->+	depends on OF_GPIO && PLAT_ORION
->+	help
->+	  This driver supports power off Buffalo Linkstation / KuroBox Pro
->+	  NAS and their variants by sending commands to the micro-controller
->+	  which controls the main power.
->+
->+	  Say Y if you have a Buffalo Linkstation / KuroBox Pro NAS.
->+
+On Fri, Jan 06, 2017 at 03:31:25PM +0800, Sean Wang wrote:
+> On Thu, 2017-01-05 at 17:12 +0000, Sean Young wrote:
+> > On Fri, Jan 06, 2017 at 12:06:24AM +0800, sean.wang@mediatek.com wrote:
+> > > +	/* Handle pulse and space until end of message */
+> > > +	for (i = 0 ; i < MTK_CHKDATA_SZ ; i++) {
+> > > +		val = mtk_r32(ir, MTK_CHKDATA_REG(i));
+> > > +		dev_dbg(ir->dev, "@reg%d=0x%08x\n", i, val);
+> > > +
+> > > +		for (j = 0 ; j < 4 ; j++) {
+> > > +			wid = (val & (0xff << j * 8)) >> j * 8;
+> > > +			rawir.pulse = !rawir.pulse;
+> > > +			rawir.duration = wid * (MTK_IR_SAMPLE + 1);
+> > > +			ir_raw_event_store_with_filter(ir->rc, &rawir);
+> > > +
+> > > +			if (MTK_IR_END(wid))
+> > > +				goto end_msg;
+> > > +		}
+> > > +	}
+> > 
+> > If I read this correctly, there is a maximum of 17 * 4 = 68 edges per
+> > IR message. The rc6 mce key 0 (scancode 0x800f0400) is 69 edges, so that
+> > won't work.
+> > 
+> Uh, this is related to hardware limitation. Maximum number hardware
+> holds indeed is only 68 edges as you said :( 
+> 
+> For the case, I will try change the logic into that the whole message 
+> is dropped if no end of message is seen within 68 counts to avoid
+> wasting CPU for decoding. 
 
-Would it make sense to mention something about these being the 
-ARM9/orion5x Linkstations? If I understand correctly, the older PPC 
-Linkstations have a single-byte poweroff command. (Maybe they could even 
-be supported by qnap-poweroff.)
+I'm not sure it is worthwhile dropping the IR in that case. The processing
+is minimal and it might be possible that we have just enough IR to decode
+a scancode even if the trailing end of message is missing. Note that
+the call to ir_raw_event_set_idle() will generate an timeout IR event, so
+there will always be an end of message marker.
 
-See arch/powerpc/platforms/embedded6xx/linkstation.c around line 123, 
-and arch/powerpc/platforms/embedded6xx/ls_uart.c.
+All I wanted to do was point out a limitation in case there is a
+workaround; if there is not then we might as well make do with the IR
+we do have.
+
+Thanks
+Sean
