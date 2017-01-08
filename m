@@ -1,58 +1,96 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 10/12] i2c: i2c-mux-simple: new driver
-Date: Sun, 8 Jan 2017 11:44:16 +0100
-Message-ID: <20170108104416.GA1983@katana>
-References: <1483532187-28494-1-git-send-email-peda@axentia.se>
- <1483532187-28494-11-git-send-email-peda@axentia.se>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH 14/22] dt-bindings: power: supply: add AXP20X/AXP22X
+ battery DT binding
+Date: Sun, 8 Jan 2017 11:48:09 +0100
+Message-ID: <4a8456e6-c6e9-73ac-0f5c-29e9faceb13c@free-electrons.com>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-15-quentin.schulz@free-electrons.com>
+ <20170104132107.tciklylgqvhftb6f@rob-hp-laptop>
+ <3155ba16-b51a-9306-6be4-0bdf4482a679@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483532187-28494-11-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3155ba16-b51a-9306-6be4-0bdf4482a679@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, icenowy@aosc.xyz, pmeerw@pmeerw.net, knaack.h@gmx.de, maxime.ripard@free-electrons.com, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jonathan,
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 07/01/2017 20:33, Jonathan Cameron wrote:
+> On 04/01/17 08:21, Rob Herring wrote:
+>> On Mon, Jan 02, 2017 at 05:37:14PM +0100, Quentin Schulz wrote:
+>>> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
+>>>
+>>> This patch adds the DT binding documentation for the battery power
+>>> supply which gets various data from the PMIC, such as the battery status
+>>> (charging, discharging, full, dead), current max limit, current current,
+>>> battery capacity (in percentage), voltage max and min limits, current
+>>> voltage and battery capacity (in Ah).
+>>>
+>>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>>> ---
+>>>  .../bindings/power/supply/axp20x_battery.txt       | 27 ++++++++++++++++++++++
+>>>  1 file changed, 27 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt b/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
+>>> new file mode 100644
+>>> index 0000000..5489d0d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
+>>> @@ -0,0 +1,27 @@
+>>> +AXP20x and AXP22x battery power supply
+>>> +
+>>> +Required Properties:
+>>> + - compatible, one of:
+>>> +			"x-powers,axp209-battery-power-supply"
+>>> +			"x-powers,axp221-battery-power-supply"
+>>> + - io-channels: phandles to battery voltage, charge and discharge
+>>> + currents ADC channels
+>>> + - io-channel-names = "batt_v", "batt_chrg_i", "batt_dischrg_i";
+>>> +
+>>> +This node is a subnode of the axp20x/axp22x PMIC.
+>>> +
+>>> +The AXP20X and AXP22X can read the battery voltage, charge and discharge
+>>> +currents of the battery by reading ADC channels from the AXP20X/AXP22X
+>>> +ADC.
+>>> +
+>>> +Example:
+>>> +
+>>> +&axp209 {
+>>> +	battery_power_supply: battery_power_supply {
+>>
+>> Humm, I guess you power-supply is not sufficient, so 
+>> 'battery-power-supply' and similar for ac.
+>>
+>>> +		compatible = "x-powers,axp209-battery-power-supply";
+>>> +		io-channels = <&axp209_adc 7>, <&axp209_adc 8>,
+>>> +			<&axp209_adc 9>;
+>>> +		io-channel-names = "batt_v", "batt_chrg_i",
+>>> +			"batt_dischrg_i";
+> Is this stuff fixed for the device?
 
-On Wed, Jan 04, 2017 at 01:16:25PM +0100, Peter Rosin wrote:
-> This is a generic simple i2c mux that uses the generic multiplexer
-> subsystem to do the muxing.
->=20
-> The user can select if the mux is to be mux-locked and parent-locked
-> as described in Documentation/i2c/i2c-topology.
->=20
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+If we don't mix the IIO channels order, it is. This driver only requires
+batt_v, batt_chrg_i and batt_dischrg_i so we've to keep them at that
+place in the list of IIO channels. Or as suggested by Rob and Chen-Yu, I
+can move all this inside the driver with iio_map and don't care anymore
+about the order.
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Thanks,
+Quentin
 
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIbBAEBAgAGBQJYchgAAAoJEBQN5MwUoCm2d20P921P3jRs7kz6hOqSBu1u/2s/
-/XSJbY+ag8/zGzM970hcRDyu8t+pKkF356EPhpMka2N9elbIBeeIS0H5tUPVLPTA
-Ii9Y665S19kWtxpTQ9JsK+V8Xg+CQ1RmA5pqbMe9oVScLH6li0A5zbCziQ7eigtB
-GNrZCeoW3EfF1DNQXM38GPYweH2h9iMT5ysDPnSxIvr/nohO+1wM9vRnPLTuDHpS
-ZF/ntBSLE0AFIRDBGJuO6hpN8qibqFiQIpmb+XPBKhwfPg8eHZq+T+9ZqNQc2DjP
-Ch/LvCVL7haNJtYv6woQOrfgcrk2uCK0xupuN9beD8puaamWU5EUJWBRJuFXHJTt
-eibalTmvDNTKAvkZkmgajxlh+ml5zqsUndA4W92b+4zBkVkLl1iBkHYbiyc48waV
-eG97xtfSILPXPP26YmPc9rSjBbsaVB11QfhHXWNlizVO38qKSI2zrbAx4zdvwPdG
-OyVzr8uBRDDWilqEhtuLnsBvNzv7Mfr2mFhuLOfdt4uNcHeYuCJ0slf+mvuyMgth
-HKiflIuItSzqBFsK/KFZf/wh0rghvYKeFnq8pxkKfXsZT4TswwJbGVT25nYoK5k2
-0RfJAqvGZi9UQLlKr//VpHncfQ/Mvu71bX0o8rufV3GGmZGUwZwoD2QPd2Ekpkg2
-P63GtUixrJKQz2ABL0o=
-=d3/+
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
+-- 
+Quentin Schulz, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
