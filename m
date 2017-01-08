@@ -1,401 +1,946 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
-Date: Sat, 7 Jan 2017 22:27:27 +0000
-Message-ID: <f5ca63e8-eba3-9946-a088-004261284709@kernel.org>
-References: <1483606546-13629-1-git-send-email-preid@electromag.com.au>
- <alpine.DEB.2.02.1701051004320.16779@pmeerw.net>
+Subject: Re: [PATCH v7 03/12] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Sun, 8 Jan 2017 10:23:31 +0000
+Message-ID: <9e4ee54f-f781-8d3b-1c46-1549392a9f2f@kernel.org>
+References: <1483532187-28494-1-git-send-email-peda@axentia.se>
+ <1483532187-28494-4-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1701051004320.16779-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483532187-28494-4-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/17 09:21, Peter Meerwald-Stadler wrote:
+On 04/01/17 12:16, Peter Rosin wrote:
+> Add a new minimalistic subsystem that handles multiplexer controllers.
+> When multiplexers are used in various places in the kernel, and the
+> same multiplexer controller can be used for several independent things,
+> there should be one place to implement support for said multiplexer
+> controller.
 > 
->> This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
->> ADC. Supports raw and trigger buffer access.
+> A single multiplexer controller can also be used to control several
+> parallel multiplexers, that are in turn used by different subsystems
+> in the kernel, leading to a need to coordinate multiplexer accesses.
+> The multiplexer subsystem handles this coordination.
 > 
-> comments below
+> This new mux controller subsystem initially comes with a single backend
+> driver that controls gpio based multiplexers. Even though not needed by
+> this initial driver, the mux controller subsystem is prepared to handle
+> chips with multiple (independent) mux controllers.
+> 
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Reviewed-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/driver-model/devres.txt |   8 +
+>  MAINTAINERS                           |   2 +
+>  drivers/Kconfig                       |   2 +
+>  drivers/Makefile                      |   1 +
+>  drivers/mux/Kconfig                   |  33 +++
+>  drivers/mux/Makefile                  |   6 +
+>  drivers/mux/mux-core.c                | 398 ++++++++++++++++++++++++++++++++++
+>  drivers/mux/mux-gpio.c                | 120 ++++++++++
+>  include/linux/mux.h                   | 244 +++++++++++++++++++++
+>  9 files changed, 814 insertions(+)
+>  create mode 100644 drivers/mux/Kconfig
+>  create mode 100644 drivers/mux/Makefile
+>  create mode 100644 drivers/mux/mux-core.c
+>  create mode 100644 drivers/mux/mux-gpio.c
+>  create mode 100644 include/linux/mux.h
+> 
+> diff --git a/Documentation/driver-model/devres.txt b/Documentation/driver-model/devres.txt
+> index dc51fb024190..1e9ae701a587 100644
+> --- a/Documentation/driver-model/devres.txt
+> +++ b/Documentation/driver-model/devres.txt
+> @@ -332,6 +332,14 @@ MEM
+>  MFD
+>    devm_mfd_add_devices()
 >  
->> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/adc/ti-tlc4541.txt     |  16 ++
->>  drivers/iio/adc/Kconfig                            |  11 +
->>  drivers/iio/adc/Makefile                           |   1 +
->>  drivers/iio/adc/ti-tlc4541.c                       | 266 +++++++++++++++++++++
->>  4 files changed, 294 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
->>  create mode 100644 drivers/iio/adc/ti-tlc4541.c
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
->> new file mode 100644
->> index 0000000..67caccd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
->> @@ -0,0 +1,16 @@
->> +* Texas Instruments' TLC4541
->> +
->> +Required properties:
->> + - compatible: Should be one of
->> +	* "ti,tlc4541"
->> + - reg: spi chip select number for the device
-> 
-> SPI
-> 
->> + - vref-supply: The regulator supply for ADC reference voltage
->> + - spi-max-frequency: Max SPI frequency to use (<= 200000)
->> +
->> +Example:
->> +adc@0 {
->> +	compatible = "ti,adc0832";
->> +	reg = <0>;
->> +	vref-supply = <&vdd_supply>;
->> +	spi-max-frequency = <200000>;
->> +};
->> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> index 99c0514..4dda3f0 100644
->> --- a/drivers/iio/adc/Kconfig
->> +++ b/drivers/iio/adc/Kconfig
->> @@ -525,6 +525,17 @@ config TI_AM335X_ADC
->>  	  To compile this driver as a module, choose M here: the module will be
->>  	  called ti_am335x_adc.
->>  
->> +config TI_TLC4541
->> +	tristate "Texas Instruments TLC4541 ADC driver"
->> +	depends on SPI
->> +	select IIO_BUFFER
->> +	select IIO_TRIGGERED_BUFFER
->> +	help
->> +	  Say yes here to build support for Texas Instruments TLC4541 ADC chip.
->> +
->> +	  This driver can also be built as a module. If so, the module will be
->> +	  called ti-tlc4541.
->> +
->>  config TWL4030_MADC
->>  	tristate "TWL4030 MADC (Monitoring A/D Converter)"
->>  	depends on TWL4030_CORE
->> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->> index 7a40c04..9bf2377 100644
->> --- a/drivers/iio/adc/Makefile
->> +++ b/drivers/iio/adc/Makefile
->> @@ -49,6 +49,7 @@ obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
->>  obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
->>  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
->>  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
->> +obj-$(CONFIG_TI_TLC4541) += ti-tlc4541.o
->>  obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
->>  obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
->>  obj-$(CONFIG_VF610_ADC) += vf610_adc.o
->> diff --git a/drivers/iio/adc/ti-tlc4541.c b/drivers/iio/adc/ti-tlc4541.c
->> new file mode 100644
->> index 0000000..a767707
->> --- /dev/null
->> +++ b/drivers/iio/adc/ti-tlc4541.c
->> @@ -0,0 +1,266 @@
->> +/*
->> + * TI tlc4541 ADC Driver
->> + *
->> + * Copyright (C) 2017 Phil Reid
->> + *
->> + * Datasheets can be found here:
->> + * http://www.ti.com/lit/gpn/tlc4541
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * The tlc4541 requires 24 clock cycles to start a transfer.
->> + * Conversion then takes 2.94us to complete before data is ready
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/iio/iio.h>
->> +#include <linux/iio/sysfs.h>
->> +#include <linux/iio/buffer.h>
->> +#include <linux/iio/trigger_consumer.h>
->> +#include <linux/iio/triggered_buffer.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/slab.h>
->> +#include <linux/spi/spi.h>
->> +#include <linux/sysfs.h>
->> +
->> +struct tlc4541_state {
->> +	struct spi_device               *spi;
->> +	struct regulator                *reg;
->> +	struct spi_transfer             scan_single_xfer[3];
->> +	struct spi_message              scan_single_msg;
->> +
->> +	/*
->> +	 * DMA (thus cache coherency maintenance) requires the
->> +	 * transfer buffers to live in their own cache lines.
->> +	 */
->> +	__be16                          rx_buf[2] ____cacheline_aligned;
->> +};
->> +
->> +struct tlc4541_chip_info {
->> +	const struct iio_chan_spec *channels;
->> +	unsigned int num_channels;
->> +};
->> +
->> +enum tlc4541_id {
->> +	TLC4541,
->> +};
->> +
->> +#define TLC4541_V_CHAN(index, bits) {                                 \
->> +		.type = IIO_VOLTAGE,                                  \
->> +		.indexed = 1,                                         \
-> 
-> no need if there is just one channel
-> 
->> +		.channel = index,                                     \
->> +		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
->> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
->> +		.address = index,                                     \
-> 
-> .address not needed
-> 
->> +		.scan_index = index,                                  \
->> +		.scan_type = {                                        \
->> +			.sign = 'u',                                  \
->> +			.realbits = (bits),                           \
->> +			.storagebits = 16,                            \
->> +			.endianness = IIO_BE,                         \
->> +		},                                                    \
->> +	}
->> +
->> +#define DECLARE_TLC4541_CHANNELS(name, bits) \
-> 
-> this flexibility is only needed when further chips are added; maybe start 
-> simple and only implement what is needed at first
-The only exception to keeping it simple as Peter has suggested would
-be if this was just the first of a series of patches and later ones would
-add the support for other devices.  If this is the case, please mention it
-in the patch description.
+> +MUX
+> +  devm_mux_chip_alloc()
+> +  devm_mux_chip_free()
+> +  devm_mux_chip_register()
+> +  devm_mux_chip_unregister()
+> +  devm_mux_control_get()
+> +  devm_mux_control_put()
+> +
+>  PER-CPU MEM
+>    devm_alloc_percpu()
+>    devm_free_percpu()
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32abef2b6d05..ebe96f3e25a0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8442,6 +8442,8 @@ MULTIPLEXER SUBSYSTEM
+>  M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/mux/
+> +F:	include/linux/mux.h
+> +F:	drivers/mux/
+>  
+>  MULTISOUND SOUND DRIVER
+>  M:	Andrew Veliath <andrewtv-Jdbf3xiKgS8@public.gmane.org>
+> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> index e1e2066cecdb..993aeb65affa 100644
+> --- a/drivers/Kconfig
+> +++ b/drivers/Kconfig
+> @@ -76,6 +76,8 @@ source "drivers/hwmon/Kconfig"
+>  
+>  source "drivers/thermal/Kconfig"
+>  
+> +source "drivers/mux/Kconfig"
+> +
 
-If the other device support doesn't show up reasonably soon after the initial
-driver, chances are someone will 'simplify' the code by removing this stuff.
+Why this location in the list?  I think the convention for new subystems is
+to just go last in the list.
 
-Jonathan
+>  source "drivers/watchdog/Kconfig"
+>  
+>  source "drivers/ssb/Kconfig"
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 060026a02f59..d089baa57965 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -112,6 +112,7 @@ obj-$(CONFIG_W1)		+= w1/
+>  obj-y				+= power/
+>  obj-$(CONFIG_HWMON)		+= hwmon/
+>  obj-$(CONFIG_THERMAL)		+= thermal/
+> +obj-$(CONFIG_MULTIPLEXER)	+= mux/
+>  obj-$(CONFIG_WATCHDOG)		+= watchdog/
+>  obj-$(CONFIG_MD)		+= md/
+>  obj-$(CONFIG_BT)		+= bluetooth/
+> diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+> new file mode 100644
+> index 000000000000..de5a35ffe7af
+> --- /dev/null
+> +++ b/drivers/mux/Kconfig
+> @@ -0,0 +1,33 @@
+> +#
+> +# Multiplexer devices
+> +#
+> +
+> +menuconfig MULTIPLEXER
+> +	bool "Multiplexer subsystem"
+> +	help
+> +	  Multiplexer controller subsystem. Multiplexers are used in a
+> +	  variety of settings, and this subsystem abstracts their use
+> +	  so that the rest of the kernel sees a common interface. When
+> +	  multiple parallel multiplexers are controlled by one single
+> +	  multiplexer controller, this subsystem also coordinates the
+> +	  multiplexer accesses.
+> +
+> +	  If unsure, say no.
+> +
+> +if MULTIPLEXER
+> +
+> +config MUX_GPIO
+> +	tristate "GPIO-controlled Multiplexer"
+> +	depends on OF && GPIOLIB
+> +	help
+> +	  GPIO-controlled Multiplexer controller.
+> +
+> +	  The driver builds a single multiplexer controller using a number
+> +	  of gpio pins. For N pins, there will be 2^N possible multiplexer
+> +	  states. The GPIO pins can be connected (by the hardware) to several
+> +	  multiplexers, which in that case will be operated in parallel.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called mux-gpio.
+> +
+> +endif
+> diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
+> new file mode 100644
+> index 000000000000..facc43da3648
+> --- /dev/null
+> +++ b/drivers/mux/Makefile
+> @@ -0,0 +1,6 @@
+> +#
+> +# Makefile for multiplexer devices.
+> +#
+> +
+> +obj-$(CONFIG_MULTIPLEXER)      	+= mux-core.o
+> +obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
+> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+> new file mode 100644
+> index 000000000000..21da15a264ad
+> --- /dev/null
+> +++ b/drivers/mux/mux-core.c
+> @@ -0,0 +1,398 @@
+> +/*
+> + * Multiplexer subsystem
+> + *
+> + * Copyright (C) 2016 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#define pr_fmt(fmt) "mux-core: " fmt
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/idr.h>
+> +#include <linux/module.h>
+> +#include <linux/mux.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/slab.h>
+> +
+> +static struct class mux_class = {
+> +	.name = "mux",
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int __init mux_init(void)
+> +{
+> +	return class_register(&mux_class);
+> +}
+> +
+> +static DEFINE_IDA(mux_ida);
+> +
+> +static void mux_chip_release(struct device *dev)
+> +{
+> +	struct mux_chip *mux_chip = to_mux_chip(dev);
+> +
+> +	ida_simple_remove(&mux_ida, mux_chip->id);
+> +	kfree(mux_chip);
+> +}
+> +
+> +static struct device_type mux_type = {
+> +	.name = "mux-chip",
+> +	.release = mux_chip_release,
+> +};
+> +
+> +struct mux_chip *mux_chip_alloc(struct device *dev,
+> +				unsigned int controllers, size_t sizeof_priv)
+> +{
+> +	struct mux_chip *mux_chip;
+> +	int i;
+> +
+> +	if (!dev || !controllers)
+> +		return NULL;
+> +
+> +	mux_chip = kzalloc(sizeof(*mux_chip) +
+> +			   controllers * sizeof(*mux_chip->mux) +
+> +			   sizeof_priv, GFP_KERNEL);
+> +	if (!mux_chip)
+> +		return NULL;
+> +
+> +	mux_chip->mux = (struct mux_control *)(mux_chip + 1);
+> +	mux_chip->dev.class = &mux_class;
+> +	mux_chip->dev.type = &mux_type;
+> +	mux_chip->dev.parent = dev;
+> +	mux_chip->dev.of_node = dev->of_node;
+> +	dev_set_drvdata(&mux_chip->dev, mux_chip);
+> +
+> +	mux_chip->id = ida_simple_get(&mux_ida, 0, 0, GFP_KERNEL);
+> +	if (mux_chip->id < 0) {
+> +		pr_err("muxchipX failed to get a device id\n");
+> +		kfree(mux_chip);
+> +		return NULL;
+> +	}
+> +	dev_set_name(&mux_chip->dev, "muxchip%d", mux_chip->id);
+> +
+> +	mux_chip->controllers = controllers;
+> +	for (i = 0; i < controllers; ++i) {
+> +		struct mux_control *mux = &mux_chip->mux[i];
+> +
+> +		mux->chip = mux_chip;
+> +		init_rwsem(&mux->lock);
+> +		mux->cached_state = -1;
+> +		mux->idle_state = -1;
+> +	}
+> +
+> +	device_initialize(&mux_chip->dev);
+> +
+> +	return mux_chip;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_alloc);
+> +
+> +static int mux_control_set(struct mux_control *mux, int state)
+> +{
+> +	int ret = mux->chip->ops->set(mux, state);
+> +
+> +	mux->cached_state = ret < 0 ? -1 : state;
+> +
+> +	return ret;
+> +}
+> +
+> +int mux_chip_register(struct mux_chip *mux_chip)
+> +{
+> +	int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < mux_chip->controllers; ++i) {
+> +		struct mux_control *mux = &mux_chip->mux[i];
+> +
+> +		if (mux->idle_state == mux->cached_state)
+> +			continue;
+> +
+> +		ret = mux_control_set(mux, mux->idle_state);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return device_add(&mux_chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_register);
+> +
+> +void mux_chip_unregister(struct mux_chip *mux_chip)
+> +{
+> +	device_del(&mux_chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_unregister);
+> +
+> +void mux_chip_free(struct mux_chip *mux_chip)
+> +{
+> +	if (!mux_chip)
+> +		return;
+> +
+> +	put_device(&mux_chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_free);
+> +
+> +static void devm_mux_chip_release(struct device *dev, void *res)
+> +{
+> +	struct mux_chip *mux_chip = *(struct mux_chip **)res;
+> +
+> +	mux_chip_free(mux_chip);
+> +}
+> +
+> +struct mux_chip *devm_mux_chip_alloc(struct device *dev,
+> +				     unsigned int controllers,
+> +				     size_t sizeof_priv)
+> +{
+> +	struct mux_chip **ptr, *mux_chip;
+> +
+> +	ptr = devres_alloc(devm_mux_chip_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mux_chip = mux_chip_alloc(dev, controllers, sizeof_priv);
+> +	if (IS_ERR(mux_chip)) {
+> +		devres_free(ptr);
+> +		return mux_chip;
+> +	}
+> +
+> +	*ptr = mux_chip;
+> +	devres_add(dev, ptr);
+> +
+> +	return mux_chip;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_alloc);
+> +
+> +static int devm_mux_chip_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct mux_chip **r = res;
+> +
+> +	if (!r || !*r) {
+> +		WARN_ON(!r || !*r);
+> +		return 0;
+> +	}
+> +
+> +	return *r == data;
+> +}
+> +
+> +void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip)
+> +{
+> +	WARN_ON(devres_release(dev, devm_mux_chip_release,
+> +			       devm_mux_chip_match, mux_chip));
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_free);
+> +
+> +static void devm_mux_chip_reg_release(struct device *dev, void *res)
+> +{
+> +	struct mux_chip *mux_chip = *(struct mux_chip **)res;
+> +
+> +	mux_chip_unregister(mux_chip);
+> +}
+> +
+> +int devm_mux_chip_register(struct device *dev,
+> +			   struct mux_chip *mux_chip)
+> +{
+> +	struct mux_chip **ptr;
+> +	int res;
+> +
+> +	ptr = devres_alloc(devm_mux_chip_reg_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return -ENOMEM;
+> +
+> +	res = mux_chip_register(mux_chip);
+> +	if (res) {
+> +		devres_free(ptr);
+> +		return res;
+> +	}
+> +
+> +	*ptr = mux_chip;
+> +	devres_add(dev, ptr);
+> +
+> +	return res;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_register);
+> +
+> +void devm_mux_chip_unregister(struct device *dev, struct mux_chip *mux_chip)
+> +{
+> +	WARN_ON(devres_release(dev, devm_mux_chip_reg_release,
+> +			       devm_mux_chip_match, mux_chip));
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_unregister);
+> +
+> +int mux_control_select(struct mux_control *mux, int state)
+> +{
+> +	int ret;
+> +
+> +	if (down_read_trylock(&mux->lock)) {
+> +		if (mux->cached_state == state)
+> +			return 0;
+> +
+> +		/* Sigh, the mux needs updating... */
+> +		up_read(&mux->lock);
+> +	}
+> +
+> +	/* ...or it's just contended. */
+> +	down_write(&mux->lock);
+> +
+> +	if (mux->cached_state == state) {
+> +		/*
+> +		 * Hmmm, someone else changed the mux to my liking.
+> +		 * That makes me wonder how long I waited for nothing?
+> +		 */
+> +		downgrade_write(&mux->lock);
+> +		return 0;
+> +	}
+> +
+> +	ret = mux_control_set(mux, state);
+> +	if (ret < 0) {
+> +		if (mux->idle_state != -1)
+> +			mux_control_set(mux, mux->idle_state);
+> +
+> +		up_write(&mux->lock);
+> +		return ret;
+> +	}
+> +
+> +	downgrade_write(&mux->lock);
+> +
+> +	return 1;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_select);
+> +
+> +int mux_control_deselect(struct mux_control *mux)
+> +{
+> +	int ret = 0;
+> +
+> +	if (mux->idle_state != -1 && mux->cached_state != mux->idle_state)
+> +		ret = mux_control_set(mux, mux->idle_state);
+> +
+> +	up_read(&mux->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_deselect);
+> +
+> +static int of_dev_node_match(struct device *dev, const void *data)
+> +{
+> +	return dev->of_node == data;
+> +}
+> +
+> +static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(&mux_class, NULL, np, of_dev_node_match);
+> +
+> +	return dev ? to_mux_chip(dev) : NULL;
+> +}
+> +
+> +struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct of_phandle_args args;
+> +	struct mux_chip *mux_chip;
+> +	unsigned int controller;
+> +	int index = 0;
+> +	int ret;
+> +
+> +	if (mux_name) {
+> +		index = of_property_match_string(np, "mux-control-names",
+> +						 mux_name);
+> +		if (index < 0)
+> +			return ERR_PTR(index);
+> +	}
+> +
+> +	ret = of_parse_phandle_with_args(np,
+> +					 "mux-controls", "#mux-control-cells",
+> +					 index, &args);
+> +	if (ret) {
+> +		dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+> +			np->full_name, mux_name ?: "", index);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	mux_chip = of_find_mux_chip_by_node(args.np);
+> +	of_node_put(args.np);
+> +	if (!mux_chip)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	if (args.args_count > 1 ||
+> +	    (!args.args_count && (mux_chip->controllers > 1))) {
+> +		dev_err(dev, "%s: wrong #mux-control-cells for %s\n",
+> +			np->full_name, args.np->full_name);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	controller = 0;
+> +	if (args.args_count)
+> +		controller = args.args[0];
+> +
+> +	if (controller >= mux_chip->controllers)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	get_device(&mux_chip->dev);
+> +	return &mux_chip->mux[controller];
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_get);
+> +
+> +void mux_control_put(struct mux_control *mux)
+> +{
+> +	put_device(&mux->chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_put);
+> +
+> +static void devm_mux_control_release(struct device *dev, void *res)
+> +{
+> +	struct mux_control *mux = *(struct mux_control **)res;
+> +
+> +	mux_control_put(mux);
+> +}
+> +
+> +struct mux_control *devm_mux_control_get(struct device *dev,
+> +					 const char *mux_name)
+> +{
+> +	struct mux_control **ptr, *mux;
+> +
+> +	ptr = devres_alloc(devm_mux_control_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mux = mux_control_get(dev, mux_name);
+> +	if (IS_ERR(mux)) {
+> +		devres_free(ptr);
+> +		return mux;
+> +	}
+> +
+> +	*ptr = mux;
+> +	devres_add(dev, ptr);
+> +
+> +	return mux;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_control_get);
+> +
+> +static int devm_mux_control_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct mux_control **r = res;
+> +
+> +	if (!r || !*r) {
+> +		WARN_ON(!r || !*r);
+> +		return 0;
+> +	}
+> +
+> +	return *r == data;
+> +}
+> +
+> +void devm_mux_control_put(struct device *dev, struct mux_control *mux)
+> +{
+> +	WARN_ON(devres_release(dev, devm_mux_control_release,
+> +			       devm_mux_control_match, mux));
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_control_put);
+> +
+> +subsys_initcall(mux_init);
+> +
+> +MODULE_DESCRIPTION("Multiplexer subsystem");
+> +MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mux/mux-gpio.c b/drivers/mux/mux-gpio.c
+> new file mode 100644
+> index 000000000000..76b52bc63470
+> --- /dev/null
+> +++ b/drivers/mux/mux-gpio.c
+> @@ -0,0 +1,120 @@
+> +/*
+> + * GPIO-controlled multiplexer driver
+> + *
+> + * Copyright (C) 2016 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/mux.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +
+> +struct mux_gpio {
+> +	struct gpio_descs *gpios;
+> +	int *val;
+> +};
+> +
+> +static int mux_gpio_set(struct mux_control *mux, int state)
+> +{
+> +	struct mux_gpio *mux_gpio = mux_chip_priv(mux->chip);
+> +	int i;
+> +
+> +	for (i = 0; i < mux_gpio->gpios->ndescs; i++)
+> +		mux_gpio->val[i] = (state >> i) & 1;
+> +
+> +	gpiod_set_array_value_cansleep(mux_gpio->gpios->ndescs,
+> +				       mux_gpio->gpios->desc,
+> +				       mux_gpio->val);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct mux_control_ops mux_gpio_ops = {
+> +	.set = mux_gpio_set,
+> +};
+> +
+> +static const struct of_device_id mux_gpio_dt_ids[] = {
+> +	{ .compatible = "mux-gpio", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mux_gpio_dt_ids);
+> +
+> +static int mux_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct mux_chip *mux_chip;
+> +	struct mux_gpio *mux_gpio;
+> +	int pins;
+> +	u32 idle_state;
+> +	int ret;
+> +
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	pins = gpiod_count(dev, "mux");
+> +	if (pins < 0)
+> +		return pins;
+> +
+> +	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux_gpio) +
+> +				       pins * sizeof(*mux_gpio->val));
+> +	if (!mux_chip)
+> +		return -ENOMEM;
+> +
+> +	mux_gpio = mux_chip_priv(mux_chip);
+> +	mux_gpio->val = (int *)(mux_gpio + 1);
+> +	mux_chip->ops = &mux_gpio_ops;
+> +
+> +	mux_gpio->gpios = devm_gpiod_get_array(dev, "mux", GPIOD_OUT_LOW);
+> +	if (IS_ERR(mux_gpio->gpios)) {
+> +		ret = PTR_ERR(mux_gpio->gpios);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get gpios\n");
+> +		return ret;
+> +	}
+> +	WARN_ON(pins != mux_gpio->gpios->ndescs);
+> +	mux_chip->mux->states = 1 << pins;
+> +
+> +	ret = device_property_read_u32(dev, "idle-state", &idle_state);
+> +	if (ret >= 0) {
+> +		if (idle_state >= mux_chip->mux->states) {
+> +			dev_err(dev, "invalid idle-state %u\n", idle_state);
+> +			return -EINVAL;
+> +		}
+> +
+> +		mux_chip->mux->idle_state = idle_state;
+> +	}
+> +
+> +	ret = devm_mux_chip_register(dev, mux_chip);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register mux-chip\n");
+> +		return ret;
+> +	}
+> +
+> +	dev_info(dev, "%u-way mux-controller registered\n",
+> +		 mux_chip->mux->states);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver mux_gpio_driver = {
+> +	.driver = {
+> +		.name = "mux-gpio",
+> +		.of_match_table	= of_match_ptr(mux_gpio_dt_ids),
+> +	},
+> +	.probe = mux_gpio_probe,
+> +};
+> +module_platform_driver(mux_gpio_driver);
+> +
+> +MODULE_DESCRIPTION("GPIO-controlled multiplexer driver");
+> +MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mux.h b/include/linux/mux.h
+> new file mode 100644
+> index 000000000000..3b9439927f11
+> --- /dev/null
+> +++ b/include/linux/mux.h
+> @@ -0,0 +1,244 @@
+> +/*
+> + * mux.h - definitions for the multiplexer interface
+> + *
+> + * Copyright (C) 2016 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _LINUX_MUX_H
+> +#define _LINUX_MUX_H
+> +
+> +#include <linux/device.h>
+> +#include <linux/rwsem.h>
+> +
+> +struct mux_chip;
+> +struct mux_control;
+> +struct platform_device;
+> +
+> +struct mux_control_ops {
+> +	int (*set)(struct mux_control *mux, int state);
+> +};
+> +
+> +/**
+> + * struct mux_control - Represents a mux controller.
+> + * @lock:		Protects the mux controller state.
+> + * @chip:		The mux chip that is handling this mux controller.
+> + * @states:		The number of mux controller states.
+> + * @cached_state:	The current mux controller state, or -1 if none.
+> + * @idle_state:		The mux controller state to use when inactive, or -1
+> + *			for none.
+> + */
+> +struct mux_control {
+> +	struct rw_semaphore lock; /* protects the state of the mux */
+> +
+> +	struct mux_chip *chip;
+> +
+> +	unsigned int states;
+> +	int cached_state;
+> +	int idle_state;
+> +};
+> +
+> +/**
+> + * struct mux_chip -	Represents a chip holding mux controllers.
+> + * @controllers:	Number of mux controllers handled by the chip.
+> + * @mux:		Array of mux controllers that is handled.
+> + * @dev:		Device structure.
+> + * @id:			Used to identify the device internally.
+> + * @ops:		Mux controller operations.
+> + */
+> +struct mux_chip {
+> +	unsigned int controllers;
+> +	struct mux_control *mux;
+> +	struct device dev;
+> +	int id;
+> +
+> +	const struct mux_control_ops *ops;
+> +};
+> +
+> +#define to_mux_chip(x) container_of((x), struct mux_chip, dev)
+> +
+> +/**
+> + * mux_chip_priv() - Get the extra memory reserved by mux_chip_alloc().
+> + * @mux_chip: The mux-chip to get the private memory from.
+> + *
+> + * Return: Pointer to the private memory reserved by the allocator.
+> + */
+> +static inline void *mux_chip_priv(struct mux_chip *mux_chip)
+> +{
+> +	return &mux_chip->mux[mux_chip->controllers];
+> +}
+> +
+> +/**
+> + * mux_chip_alloc() - Allocate a mux-chip.
+> + * @dev: The parent device implementing the mux interface.
+> + * @controllers: The number of mux controllers to allocate for this chip.
+> + * @sizeof_priv: Size of extra memory area for private use by the caller.
+> + *
+> + * Return: A pointer to the new mux-chip, NULL on failure.
+> + */
+> +struct mux_chip *mux_chip_alloc(struct device *dev,
+> +				unsigned int controllers, size_t sizeof_priv);
+> +
+> +/**
+> + * mux_chip_register() - Register a mux-chip, thus readying the controllers
+> + *			 for use.
+> + * @mux_chip: The mux-chip to register.
+> + *
+> + * Do not retry registration of the same mux-chip on failure. You should
+> + * instead put it away with mux_chip_free() and allocate a new one, if you
+> + * for some reason would like to retry registration.
+> + *
+> + * Return: Zero on success or a negative errno on error.
+> + */
+> +int mux_chip_register(struct mux_chip *mux_chip);
+> +
+> +/**
+> + * mux_chip_unregister() - Take the mux-chip off-line.
+> + * @mux_chip: The mux-chip to unregister.
+> + *
+> + * mux_chip_unregister() reverses the effects of mux_chip_register().
+> + * But not completely, you should not try to call mux_chip_register()
+> + * on a mux-chip that has been registered before.
+> + */
+> +void mux_chip_unregister(struct mux_chip *mux_chip);
+> +
+> +/**
+> + * mux_chip_free() - Free the mux-chip for good.
+> + * @mux_chip: The mux-chip to free.
+> + *
+> + * mux_chip_free() reverses the effects of mux_chip_alloc().
+> + */
+> +void mux_chip_free(struct mux_chip *mux_chip);
+> +
+> +/**
+> + * devm_mux_chip_alloc() - Resource-managed version of mux_chip_alloc().
+> + * @dev: The parent device implementing the mux interface.
+> + * @controllers: The number of mux controllers to allocate for this chip.
+> + * @sizeof_priv: Size of extra memory area for private use by the caller.
+> + *
+> + * See mux_chip_alloc() for more details.
+> + *
+> + * Return: A pointer to the new mux-chip, NULL on failure.
+> + */
+> +struct mux_chip *devm_mux_chip_alloc(struct device *dev,
+> +				     unsigned int controllers,
+> +				     size_t sizeof_priv);
+> +
+> +/**
+> + * devm_mux_chip_register() - Resource-managed version mux_chip_register().
+> + * @dev: The parent device implementing the mux interface.
+> + * @mux_chip: The mux-chip to register.
+> + *
+> + * See mux_chip_register() for more details.
+> + *
+> + * Return: Zero on success or a negative errno on error.
+> + */
+> +int devm_mux_chip_register(struct device *dev, struct mux_chip *mux_chip);
+> +
+> +/**
+> + * devm_mux_chip_unregister() - Resource-managed version mux_chip_unregister().
+> + * @dev: The device that originally registered the mux-chip.
+> + * @mux_chip: The mux-chip to unregister.
+> + *
+> + * See mux_chip_unregister() for more details.
+> + *
+> + * Note that you do not normally need to call this function.
+> + */
+> +void devm_mux_chip_unregister(struct device *dev, struct mux_chip *mux_chip);
+> +
+> +/**
+> + * devm_mux_chip_free() - Resource-managed version mux_chip_free().
+> + * @dev: The device that originally got the mux-chip.
+> + * @mux_chip: The mux-chip to free.
+> + *
+> + * See mux_chip_free() for more details.
+> + *
+> + * Note that you do not normally need to call this function.
+> + */
+> +void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip);
+> +
+> +/**
+> + * mux_control_select() - Select the given multiplexer state.
+> + * @mux: The mux-control to request a change of state from.
+> + * @state: The new requested state.
+> + *
+> + * Make sure to call mux_control_deselect() when the operation is complete and
+> + * the mux-control is free for others to use, but do not call
+> + * mux_control_deselect() if mux_control_select() fails.
+> + *
+> + * Return: 0 if the requested state was already active, or 1 it the
+> + * mux-control state was changed to the requested state. Or a negavive
+> + * errno on error.
+> + *
+> + * Note that the difference in return value of zero or one is of
+> + * questionable value; especially if the mux-control has several independent
+> + * consumers, which is something the consumers should perhaps not be making
+> + * assumptions about.
+> + */
+> +int mux_control_select(struct mux_control *mux, int state);
+> +
+> +/**
+> + * mux_control_deselect() - Deselect the previously selected multiplexer state.
+> + * @mux: The mux-control to deselect.
+> + *
+> + * Return: 0 on success and a negative errno on error. An error can only
+> + * occur if the mux has an idle state. Note that even if an error occurs, the
+> + * mux-control is unlocked for others to access.
+> + */
+> +int mux_control_deselect(struct mux_control *mux);
+> +
+> +/**
+> + * mux_control_get_index() - Get the index of the given mux controller
+> + * @mux: The mux-control to the the index for.
+> + *
+> + * Return: The index of the mux controller within the mux chip the mux
+> + * controller is a part of.
+> + */
+> +static inline unsigned int mux_control_get_index(struct mux_control *mux)
+> +{
+> +	return mux - mux->chip->mux;
+> +}
+> +
+> +/**
+> + * mux_control_get() - Get the mux-control for a device.
+> + * @dev: The device that needs a mux-control.
+> + * @mux_name: The name identifying the mux-control.
+> + *
+> + * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
+> + */
+> +struct mux_control *mux_control_get(struct device *dev, const char *mux_name);
+> +
+> +/**
+> + * mux_control_put() - Put away the mux-control for good.
+> + * @mux: The mux-control to put away.
+> + *
+> + * mux_control_put() reverses the effects of mux_control_get().
+> + */
+> +void mux_control_put(struct mux_control *mux);
+> +
+> +/**
+> + * devm_mux_control_get() - Get the mux-control for a device, with resource
+> + *			    management.
+> + * @dev: The device that needs a mux-control.
+> + * @mux_name: The name identifying the mux-control.
+> + *
+> + * Return: Pointer to the mux-control, or an ERR_PTR with a negative errno.
+> + */
+> +struct mux_control *devm_mux_control_get(struct device *dev,
+> +					 const char *mux_name);
+> +
+> +/**
+> + * devm_mux_control_put() - Resource-managed version mux_control_put().
+> + * @dev: The device that originally got the mux-control.
+> + * @mux: The mux-control to put away.
+> + *
+> + * Note that you do not normally need to call this function.
+> + */
+> +void devm_mux_control_put(struct device *dev, struct mux_control *mux);
+> +
+> +#endif /* _LINUX_MUX_H */
 > 
->> +const struct iio_chan_spec name ## _channels[] = { \
->> +	TLC4541_V_CHAN(0, bits), \
->> +	IIO_CHAN_SOFT_TIMESTAMP(1), \
->> +}
->> +
->> +static DECLARE_TLC4541_CHANNELS(tlc4541, 16);
->> +
->> +static const struct tlc4541_chip_info tlc4541_chip_info[] = {
->> +	[TLC4541] = {
->> +		.channels = tlc4541_channels,
->> +		.num_channels = ARRAY_SIZE(tlc4541_channels),
->> +	},
->> +};
->> +
->> +static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
->> +{
->> +	struct iio_poll_func *pf = p;
->> +	struct iio_dev *indio_dev = pf->indio_dev;
->> +	struct tlc4541_state *st = iio_priv(indio_dev);
->> +	u16 buf[8]; /* 2 bytes data + 6 bytes padding + 8 bytes timestamp */
->> +	int ret;
->> +
->> +	ret = spi_sync(st->spi, &st->scan_single_msg);
->> +	if (ret < 0)
->> +		goto done;
->> +
->> +	buf[0] = be16_to_cpu(st->rx_buf[0]);
-> 
-> endianness is set to IIO_BE in scan_type, so this conversion is not needed 
-> and maybe also buf and the copy can be avoided if rx_buf is large enough
-> 
->> +	iio_push_to_buffers_with_timestamp(indio_dev, buf,
->> +					   iio_get_time_ns(indio_dev));
->> +
->> +done:
->> +	iio_trigger_notify_done(indio_dev->trig);
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int tlc4541_get_range(struct tlc4541_state *st)
->> +{
->> +	int vref;
->> +
->> +	vref = regulator_get_voltage(st->reg);
->> +	if (vref < 0)
->> +		return vref;
->> +
->> +	vref /= 1000;
->> +
->> +	return vref;
->> +}
->> +
->> +static int tlc4541_read_raw(struct iio_dev *indio_dev,
->> +			    struct iio_chan_spec const *chan,
->> +			    int *val,
->> +			    int *val2,
->> +			    long m)
->> +{
->> +	int ret = 0;
->> +	struct tlc4541_state *st = iio_priv(indio_dev);
->> +
->> +	switch (m) {
->> +	case IIO_CHAN_INFO_RAW:
->> +		ret = iio_device_claim_direct_mode(indio_dev);
->> +		if (ret)
->> +			return ret;
->> +		ret = spi_sync(st->spi, &st->scan_single_msg);
->> +		iio_device_release_direct_mode(indio_dev);
->> +		if (ret < 0)
->> +			return ret;
->> +		*val = be16_to_cpu(st->rx_buf[0]);
-> 
-> on page 12 of the datasheet, the conversion results is in two registers? 
-> and rx_buf has two elements?
-> 
-> haven't investigated in detail -- maybe a comment would be good to detail 
-> operation?
-> 
->> +		return IIO_VAL_INT;
->> +	case IIO_CHAN_INFO_SCALE:
->> +		ret = tlc4541_get_range(st);
->> +		if (ret < 0)
->> +			return ret;
->> +		*val = ret;
->> +		*val2 = chan->scan_type.realbits;
->> +		return IIO_VAL_FRACTIONAL_LOG2;
->> +	}
->> +	return -EINVAL;
->> +}
->> +
->> +static const struct iio_info tlc4541_info = {
->> +	.read_raw = &tlc4541_read_raw,
->> +	.driver_module = THIS_MODULE,
->> +};
->> +
->> +static int tlc4541_probe(struct spi_device *spi)
->> +{
->> +	struct tlc4541_state *st;
->> +	struct iio_dev *indio_dev;
->> +	const struct tlc4541_chip_info *info;
->> +	int ret;
->> +	int8_t device_init = 0;
->> +
->> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
->> +	if (indio_dev == NULL)
->> +		return -ENOMEM;
->> +
->> +	st = iio_priv(indio_dev);
->> +
->> +	spi_set_drvdata(spi, indio_dev);
->> +
->> +	st->spi = spi;
->> +
->> +	info = &tlc4541_chip_info[spi_get_device_id(spi)->driver_data];
->> +
->> +	indio_dev->name = spi_get_device_id(spi)->name;
->> +	indio_dev->dev.parent = &spi->dev;
->> +	indio_dev->modes = INDIO_DIRECT_MODE;
->> +	indio_dev->channels = info->channels;
->> +	indio_dev->num_channels = info->num_channels;
->> +	indio_dev->info = &tlc4541_info;
->> +
->> +	/* perform reset */
->> +	spi_write(spi, &device_init, 1);
->> +
->> +	/* Setup default message */
->> +	st->scan_single_xfer[0].rx_buf = &st->rx_buf[0];
->> +	st->scan_single_xfer[0].len = 3;
->> +	st->scan_single_xfer[1].delay_usecs = 3;
->> +	st->scan_single_xfer[2].rx_buf = &st->rx_buf[0];
->> +	st->scan_single_xfer[2].len = 2;
->> +
->> +	spi_message_init(&st->scan_single_msg);
->> +	spi_message_add_tail(&st->scan_single_xfer[0], &st->scan_single_msg);
->> +	spi_message_add_tail(&st->scan_single_xfer[1], &st->scan_single_msg);
->> +	spi_message_add_tail(&st->scan_single_xfer[2], &st->scan_single_msg);
->> +
->> +	st->reg = devm_regulator_get(&spi->dev, "vref");
->> +	if (IS_ERR(st->reg))
->> +		return PTR_ERR(st->reg);
->> +
->> +	ret = regulator_enable(st->reg);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
->> +			&tlc4541_trigger_handler, NULL);
->> +	if (ret)
->> +		goto error_disable_reg;
->> +
->> +	ret = iio_device_register(indio_dev);
->> +	if (ret)
->> +		goto error_cleanup_buffer;
->> +
->> +	return 0;
->> +
->> +error_cleanup_buffer:
->> +	iio_triggered_buffer_cleanup(indio_dev);
->> +error_disable_reg:
->> +	regulator_disable(st->reg);
->> +
->> +	return ret;
->> +}
->> +
->> +static int tlc4541_remove(struct spi_device *spi)
->> +{
->> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
->> +	struct tlc4541_state *st = iio_priv(indio_dev);
->> +
->> +	iio_device_unregister(indio_dev);
->> +	iio_triggered_buffer_cleanup(indio_dev);
->> +	regulator_disable(st->reg);
->> +
->> +	return 0;
->> +}
->> +
->> +#ifdef CONFIG_OF
->> +
->> +static const struct of_device_id tlc4541_dt_ids[] = {
->> +	{ .compatible = "ti,tlc4541", },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, tlc4541_dt_ids);
->> +
->> +#endif
->> +
->> +static const struct spi_device_id tlc4541_id[] = {
->> +	{"tlc4541", TLC4541},
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(spi, tlc4541_id);
->> +
->> +static struct spi_driver tlc4541_driver = {
->> +	.driver = {
->> +		.name   = "tlc4541",
->> +		.of_match_table = of_match_ptr(tlc4541_dt_ids),
->> +	},
->> +	.probe          = tlc4541_probe,
->> +	.remove         = tlc4541_remove,
->> +	.id_table       = tlc4541_id,
->> +};
->> +module_spi_driver(tlc4541_driver);
->> +
->> +MODULE_AUTHOR("Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>");
->> +MODULE_DESCRIPTION("Texas Instruments TLC4541 ADC");
->> +MODULE_LICENSE("GPL v2");
->>
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
