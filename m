@@ -1,63 +1,47 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH 2/2] media: rc: add driver for IR remote receiver on
- MT7623 SoC
-Date: Sun, 8 Jan 2017 21:16:24 +0000
-Message-ID: <20170108211624.GB7866@gofer.mess.org>
-References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
- <1483632384-8107-3-git-send-email-sean.wang@mediatek.com>
- <20170105171240.GA9136@gofer.mess.org>
- <1483687885.16976.19.camel@mtkswgap22>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] devicetree: bindings: Add vendor prefix for
+ Shenzhen Xunlong Software
+Date: Sun, 8 Jan 2017 22:57:00 +0100
+Message-ID: <20170108215700.cfz7lofwr7coqbz3@lukather>
+References: <20170107161318.8000-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wpetcsoggkbob57d"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLPLZLBQKGQEHBTOKRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1483687885.16976.19.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: mchehab@osg.samsung.com, hdegoede@redhat.com, hkallweit1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, andi.shyti@samsung.com, hverkuil@xs4all.nl, ivo.g.dimitrov.75@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
+In-Reply-To: <20170107161318.8000-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
 
-On Fri, Jan 06, 2017 at 03:31:25PM +0800, Sean Wang wrote:
-> On Thu, 2017-01-05 at 17:12 +0000, Sean Young wrote:
-> > On Fri, Jan 06, 2017 at 12:06:24AM +0800, sean.wang@mediatek.com wrote:
-> > > +	/* Handle pulse and space until end of message */
-> > > +	for (i = 0 ; i < MTK_CHKDATA_SZ ; i++) {
-> > > +		val = mtk_r32(ir, MTK_CHKDATA_REG(i));
-> > > +		dev_dbg(ir->dev, "@reg%d=0x%08x\n", i, val);
-> > > +
-> > > +		for (j = 0 ; j < 4 ; j++) {
-> > > +			wid = (val & (0xff << j * 8)) >> j * 8;
-> > > +			rawir.pulse = !rawir.pulse;
-> > > +			rawir.duration = wid * (MTK_IR_SAMPLE + 1);
-> > > +			ir_raw_event_store_with_filter(ir->rc, &rawir);
-> > > +
-> > > +			if (MTK_IR_END(wid))
-> > > +				goto end_msg;
-> > > +		}
-> > > +	}
-> > 
-> > If I read this correctly, there is a maximum of 17 * 4 = 68 edges per
-> > IR message. The rc6 mce key 0 (scancode 0x800f0400) is 69 edges, so that
-> > won't work.
-> > 
-> Uh, this is related to hardware limitation. Maximum number hardware
-> holds indeed is only 68 edges as you said :( 
+--wpetcsoggkbob57d
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Sun, Jan 08, 2017 at 12:13:18AM +0800, Icenowy Zheng wrote:
+> Shenzhen Xunlong Software CO.,Limited is a SBC vendor, which produces
+> the "Orange Pi" series of SBCs.
 > 
-> For the case, I will try change the logic into that the whole message 
-> is dropped if no end of message is seen within 68 counts to avoid
-> wasting CPU for decoding. 
+> Add a vendor prefix for it. This prefix is already used in many
+> Allwinner H3 boards.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-I'm not sure it is worthwhile dropping the IR in that case. The processing
-is minimal and it might be possible that we have just enough IR to decode
-a scancode even if the trailing end of message is missing. Note that
-the call to ir_raw_event_set_idle() will generate an timeout IR event, so
-there will always be an end of message marker.
+Applied, thanks!
 
-All I wanted to do was point out a limitation in case there is a
-workaround; if there is not then we might as well make do with the IR
-we do have.
+Maxime
 
-Thanks
-Sean
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--wpetcsoggkbob57d--
