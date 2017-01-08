@@ -1,47 +1,61 @@
-From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: imx6q: Add mccmon6 board support
-Date: Sat, 7 Jan 2017 22:24:06 +0100
-Message-ID: <20170107222406.04428dfc@jawa>
-References: <1483440381-24268-1-git-send-email-lukma@denx.de>
-        <1483440381-24268-2-git-send-email-lukma@denx.de>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v5 5/5] arm64: dts: exynos: Add tm2 touchkey node
+Date: Sun, 8 Jan 2017 14:14:20 +0900
+Message-ID: <CAGTfZH35sx5v-XcxkDG7TVRmW8cLirAXRxA=kGZQDBnpw3vYhg@mail.gmail.com>
+References: <CGME20170106134356epcas1p1aee9f715c58b50f6056bf0b43b849497@epcas1p1.samsung.com>
+ <20170106134350.32428-1-andi.shyti@samsung.com> <20170106134350.32428-6-andi.shyti@samsung.com>
+ <CAGTfZH2QYQK190kYFbOMqJMFgH32548ra-VqzYwc5LVBJwqisA@mail.gmail.com>
+ <CAGTfZH347ZRve20cdGLwtuf6arRAJ4Ry+HQrTubDj-RGR=K9cA@mail.gmail.com>
+ <CAGTfZH1QtbieMxQzoPvxsP_3tSYBSuXe+wtq0uUs03mhcLFdXg@mail.gmail.com> <20170107124026.gl447hl5bucdflyk@jack.zhora.eu>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483440381-24268-2-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Zerlauth Karl (LWN)" <Karl.Zerlauth-JZopHpGcqKNWk0Htik3J/w@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170107124026.gl447hl5bucdflyk@jack.zhora.eu>
+Sender: linux-input-owner@vger.kernel.org
+To: Andi Shyti <andi@etezian.org>
+Cc: Andi Shyti <andi.shyti@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Jaechul Lee <jcsing.lee@samsung.com>, Jaechul Lee <galaxyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear All,
+Hi Andi,
 
-> From: Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>
-> 
-> This patch provides support for Liebherr's Monitor 6 board
-> (abverrated as mccmon6) to Linux kernel.
-> 
-> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-> ---
-> Changes for v3:
-> - Reorganize the dts file according to Shawn Guo's comments
-> 
-> Changes for v2:
-> - Reorganize the dts file according to Valdimir Zapolskiy's comments
+2017-01-07 21:40 GMT+09:00 Andi Shyti <andi@etezian.org>:
+> Hi Chanwoo,
+>
+>> >>> +       touchkey@20 {
+>> >>> +               compatible = "samsung,tm2-touchkey";
+>> >>> +               reg = <0x20>;
+>> >>> +               interrupt-parent = <&gpa3>;
+>> >>> +               interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+>> >>> +               vcc-supply = <&ldo32_reg>;
+>> >>> +               vdd-supply = <&ldo33_reg>;
+>> >>> +       };
+>> >>> +};
+>> >>> +
+>> >>>  &ldo31_reg {
+>> >>>         regulator-name = "TSP_VDD_1.85V_AP";
+>> >>>         regulator-min-microvolt = <1850000>;
+>>
+>> I repiled the touchkey driver against compatible name.
+>> Usually, when developing the device driver, we use the specific h/w name
+>> but in this patch, the touckey dt node uses the h/w board name instead of
+>> original touckhey name.
+>
+> this should be a device specifically done for the tm2 and we are
+> not sure who is the manufacturer of the device. In order to not
 
-Do you have any more comments for this DTS file?
+As I knew, this touchkey was made by Cypress semiconductor.
+But, for more correct information, you may try to find it.
 
+> assign the device to the wrong manufacturer, we preferred calling
+> it Samsung as it is in a Samsung device.
 
-Best regards,
+As you mentioned, Samsung made not this touchkey device. It is
+certainly wrong manufacturer. I have not seen to use the h/w board
+name as the peripheral device name.
 
-Lukasz Majewski
+I don't prefer to use the inaccurate manufacturer and device name.
 
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Chanwoo Choi
