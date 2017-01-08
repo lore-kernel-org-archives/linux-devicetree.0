@@ -1,40 +1,58 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH 08/22] power: supply: add AC power supply driver for
- AXP20X and AXP22X PMICs
-Date: Sun, 8 Jan 2017 11:41:58 +0100
-Message-ID: <4b893807-99c2-f0ba-9eec-d93c52c2f151@free-electrons.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-9-quentin.schulz@free-electrons.com>
- <d6661ff6-442c-5535-aec2-35066577f119@kernel.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v7 10/12] i2c: i2c-mux-simple: new driver
+Date: Sun, 8 Jan 2017 11:44:16 +0100
+Message-ID: <20170108104416.GA1983@katana>
+References: <1483532187-28494-1-git-send-email-peda@axentia.se>
+ <1483532187-28494-11-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d6661ff6-442c-5535-aec2-35066577f119@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, bonbons@linux-vserver.org, icenowy@aosc.xyz, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1483532187-28494-11-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9uYXRoYW4sCgpPbiAwNy8wMS8yMDE3IDIwOjMxLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Ogo+IE9uIDAyLzAxLzE3IDExOjM3LCBRdWVudGluIFNjaHVseiB3cm90ZToKWy4uLl0KPj4gKwkJ
-LyoKPj4gKwkJICogSUlPIGZyYW1ld29yayBnaXZlcyBtViBidXQgUG93ZXIgU3VwcGx5IGZyYW1l
-d29yayBnaXZlcyDCtVYuCj4+ICsJCSAqLwo+IHNpbmdsZSBsaW5lIGNvbW1lbnQgc3ludGF4IHRo
-cm91Z2hvdXQgb3Igd2UnbGwgaGF2ZSB0byBmYWNlIGEgcGF0Y2ggJ2ZpeGluZycgaXQuCgpJIGFj
-dHVhbGx5IGhhZCB0byBtYWtlIGl0IGEgbXVsdGlwbGUgbGluZXMgY29tbWVudCB0byBtYWtlIGNo
-ZWNrcGF0Y2gKaGFwcHkuIE1heWJlIHRoZXJlIGlzIHNvbWV0aGluZyB3aXRoIHRoZSBlbmNvZGlu
-ZyBvZiB0aGUgwrUgc3ltYm9sPyBJJ2xsCnJldHJ5IHdpdGggYSB1IGluc3RlYWQgYW5kIGxldCB5
-b3Uga25vdy4KClsuLi5dCgpUaGFua3MsClF1ZW50aW4KCi0tIApRdWVudGluIFNjaHVseiwgRnJl
-ZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8v
-ZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 04, 2017 at 01:16:25PM +0100, Peter Rosin wrote:
+> This is a generic simple i2c mux that uses the generic multiplexer
+> subsystem to do the muxing.
+>=20
+> The user can select if the mux is to be mux-locked and parent-locked
+> as described in Documentation/i2c/i2c-topology.
+>=20
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIbBAEBAgAGBQJYchgAAAoJEBQN5MwUoCm2d20P921P3jRs7kz6hOqSBu1u/2s/
+/XSJbY+ag8/zGzM970hcRDyu8t+pKkF356EPhpMka2N9elbIBeeIS0H5tUPVLPTA
+Ii9Y665S19kWtxpTQ9JsK+V8Xg+CQ1RmA5pqbMe9oVScLH6li0A5zbCziQ7eigtB
+GNrZCeoW3EfF1DNQXM38GPYweH2h9iMT5ysDPnSxIvr/nohO+1wM9vRnPLTuDHpS
+ZF/ntBSLE0AFIRDBGJuO6hpN8qibqFiQIpmb+XPBKhwfPg8eHZq+T+9ZqNQc2DjP
+Ch/LvCVL7haNJtYv6woQOrfgcrk2uCK0xupuN9beD8puaamWU5EUJWBRJuFXHJTt
+eibalTmvDNTKAvkZkmgajxlh+ml5zqsUndA4W92b+4zBkVkLl1iBkHYbiyc48waV
+eG97xtfSILPXPP26YmPc9rSjBbsaVB11QfhHXWNlizVO38qKSI2zrbAx4zdvwPdG
+OyVzr8uBRDDWilqEhtuLnsBvNzv7Mfr2mFhuLOfdt4uNcHeYuCJ0slf+mvuyMgth
+HKiflIuItSzqBFsK/KFZf/wh0rghvYKeFnq8pxkKfXsZT4TswwJbGVT25nYoK5k2
+0RfJAqvGZi9UQLlKr//VpHncfQ/Mvu71bX0o8rufV3GGmZGUwZwoD2QPd2Ekpkg2
+P63GtUixrJKQz2ABL0o=
+=d3/+
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
