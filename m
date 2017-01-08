@@ -1,96 +1,77 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH 14/22] dt-bindings: power: supply: add AXP20X/AXP22X
- battery DT binding
-Date: Sun, 8 Jan 2017 11:48:09 +0100
-Message-ID: <4a8456e6-c6e9-73ac-0f5c-29e9faceb13c@free-electrons.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-15-quentin.schulz@free-electrons.com>
- <20170104132107.tciklylgqvhftb6f@rob-hp-laptop>
- <3155ba16-b51a-9306-6be4-0bdf4482a679@kernel.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v7 00/12] mux controller abstraction and iio/i2c muxes
+Date: Sun, 8 Jan 2017 11:51:29 +0100
+Message-ID: <20170108105129.GB1983@katana>
+References: <1483532187-28494-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3155ba16-b51a-9306-6be4-0bdf4482a679@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, icenowy@aosc.xyz, pmeerw@pmeerw.net, knaack.h@gmx.de, maxime.ripard@free-electrons.com, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1483532187-28494-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
 
-On 07/01/2017 20:33, Jonathan Cameron wrote:
-> On 04/01/17 08:21, Rob Herring wrote:
->> On Mon, Jan 02, 2017 at 05:37:14PM +0100, Quentin Schulz wrote:
->>> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
->>>
->>> This patch adds the DT binding documentation for the battery power
->>> supply which gets various data from the PMIC, such as the battery status
->>> (charging, discharging, full, dead), current max limit, current current,
->>> battery capacity (in percentage), voltage max and min limits, current
->>> voltage and battery capacity (in Ah).
->>>
->>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>> ---
->>>  .../bindings/power/supply/axp20x_battery.txt       | 27 ++++++++++++++++++++++
->>>  1 file changed, 27 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt b/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
->>> new file mode 100644
->>> index 0000000..5489d0d
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
->>> @@ -0,0 +1,27 @@
->>> +AXP20x and AXP22x battery power supply
->>> +
->>> +Required Properties:
->>> + - compatible, one of:
->>> +			"x-powers,axp209-battery-power-supply"
->>> +			"x-powers,axp221-battery-power-supply"
->>> + - io-channels: phandles to battery voltage, charge and discharge
->>> + currents ADC channels
->>> + - io-channel-names = "batt_v", "batt_chrg_i", "batt_dischrg_i";
->>> +
->>> +This node is a subnode of the axp20x/axp22x PMIC.
->>> +
->>> +The AXP20X and AXP22X can read the battery voltage, charge and discharge
->>> +currents of the battery by reading ADC channels from the AXP20X/AXP22X
->>> +ADC.
->>> +
->>> +Example:
->>> +
->>> +&axp209 {
->>> +	battery_power_supply: battery_power_supply {
->>
->> Humm, I guess you power-supply is not sufficient, so 
->> 'battery-power-supply' and similar for ac.
->>
->>> +		compatible = "x-powers,axp209-battery-power-supply";
->>> +		io-channels = <&axp209_adc 7>, <&axp209_adc 8>,
->>> +			<&axp209_adc 9>;
->>> +		io-channel-names = "batt_v", "batt_chrg_i",
->>> +			"batt_dischrg_i";
-> Is this stuff fixed for the device?
+--rS8CxjVDS/+yyDmU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If we don't mix the IIO channels order, it is. This driver only requires
-batt_v, batt_chrg_i and batt_dischrg_i so we've to keep them at that
-place in the list of IIO channels. Or as suggested by Rob and Chen-Yu, I
-can move all this inside the driver with iio_map and don't care anymore
-about the order.
+Hi peda,
 
-Thanks,
-Quentin
+> One thing that I would like to do, but don't see a solution
+> for, is to move the mux control code that is present in
+> various drivers in drivers/i2c/muxes to this new minimalistic
+> muxing subsystem, thus converting all present i2c muxes (but
+> perhaps not gates and arbitrators) to be i2c-mux-simple muxes.
 
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+In a few lines, what is preventing that?
+
+> I'm using an rwsem to lock a mux, but that isn't really a
+> perfect fit. Is there a better locking primitive that I don't
+> know about that fits better? I had a mutex at one point, but
+> that didn't allow any concurrent accesses at all. At least
+> the rwsem allows concurrent access as long as all users
+> agree on the mux state, but I suspect that the rwsem will
+> degrade to the mutex situation pretty quickly if there is
+> any contention.
+
+Maybe ask this question in a seperate email thread on lkml cc-ing the
+locking gurus (with a pointer to this thread)?
+
+> Also, the "mux" name feels a bit ambitious, there are many muxes
+> in the world, and this tiny bit of code is probably not good
+> enough to be a nice fit for all...
+
+"... and it probably never will support anything other than
+AT-harddisks, as that's all I have..." ;))
+
+Thanks for this work!
+
+   Wolfram
+
+
+--rS8CxjVDS/+yyDmU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYchmxAAoJEBQN5MwUoCm2gFIP/0GpXL7VKltrawDMyuTZj01/
+Z8AsmTkIMEnoVXBYoKHVyr2BkNoYZtNlJ+NZQD0KeZUC9fKJzfJCTYTS7LEgwSs9
+67zMTOsfP2nK40gBjr6dR0aoOsxpYe0gaJtNR7Y3VFt0+ZqyumOsRKL8izpaugt2
+f3kR/yOP/7r8lwtYDBfFAssJAWxnOStnrTAv2gYmWscPzJJFK1S7kQzzUtpfzkJL
+fnnRm7yCQ+WGxTZxTAWyPaRVUjdFZmRsk3+jWMm5xrdeLeyp+csg+6FEqoe2dRy+
++xszr7HcBv5ueiP0cDTGJ7g1gSWCsxS6QyjBC8uZhsvK8GF66g7HUGJJupyoFjSX
+hsMDYfEVrrVC2IUjioyDn6J4d9XKsu0md0qWUlzoPzxuy+YRdb8tOQ41xMD9a9+m
+fX8Rk0MQ3UnSUhCXs8XanJ+E7Z5eHD3b0LA7CyAt+RrVBBlMAbzecKNecw12aj6+
+KfX4stC++AH/jZhb4ZGogmKBDEe24nAQWqLxuDRg8kZAzLhjIZUQ83QSZYUmcS0O
+UKEjesO/kHSlPjqJhcnzSmBk2LAdIZ86ccKVqHB23RqWDuRViMaSNQpbtvvo2E4/
+cHgcK96uhgNTLLWL4Xn0oYWWlM0rfl9Rtk1NR7qxb3ek0oLNYaTds0ylFMwVyY+p
+tbXixbqM1q+KK37bY1M1
+=Kqrn
+-----END PGP SIGNATURE-----
+
+--rS8CxjVDS/+yyDmU--
