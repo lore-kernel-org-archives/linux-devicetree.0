@@ -1,86 +1,36 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 3/4] ARM: dts: mt7623: Add Geek Force config
-Date: Sun,  8 Jan 2017 14:30:59 +0100
-Message-ID: <20170108133100.10428-4-afaerber@suse.de>
-References: <20170108133100.10428-1-afaerber@suse.de>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH RFC 0/4] SolidRun Hummingboard 2 support
+Date: Sun, 8 Jan 2017 15:02:01 +0000
+Message-ID: <20170108150201.GS14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170108133100.10428-1-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mediatek@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Lai <paul@asiarf.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAgICAgIHwgIDEgKwogYXJjaC9hcm0vYm9v
-dC9kdHMvbXQ3NjIzLWdlZWtmb3JjZS5kdHMgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDc4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9tdDc2MjMtZ2Vla2ZvcmNlLmR0cwoKZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZp
-bGUKaW5kZXggZmE2ODg0My4uZmMxZDRiZSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-TWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKQEAgLTk4Nyw2ICs5ODcs
-NyBAQCBkdGItJChDT05GSUdfQVJDSF9NRURJQVRFSykgKz0gXAogCW10NjU4OS1hcXVhcmlzNS5k
-dGIgXAogCW10NjU5Mi1ldmIuZHRiIFwKIAltdDc2MjMtZXZiLmR0YiBcCisJbXQ3NjIzLWdlZWtm
-b3JjZS5kdGIgXAogCW10ODEyNy1tb29zZS5kdGIgXAogCW10ODEzNS1ldmJwMS5kdGIKIGR0Yi0k
-KENPTkZJR19BUkNIX1pYKSArPSB6eDI5NjcwMi1hZDEuZHRiCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9tdDc2MjMtZ2Vla2ZvcmNlLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYy
-My1nZWVrZm9yY2UuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmFiNGNl
-Y2QKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2R0cy9tdDc2MjMtZ2Vla2ZvcmNl
-LmR0cwpAQCAtMCwwICsxLDc3IEBACisvKgorICogQ29weXJpZ2h0IChjKSAyMDE2LTIwMTcgQW5k
-cmVhcyBGw6RyYmVyCisgKgorICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4g
-dXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKKyAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBs
-aWNlbnNlLCBhdCB5b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAorICogbGljZW5zaW5n
-IG9ubHkgYXBwbGllcyB0byB0aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0IGFzIGEKKyAq
-IHdob2xlLgorICoKKyAqICBhKSBUaGlzIGZpbGUgaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiBy
-ZWRpc3RyaWJ1dGUgaXQgYW5kL29yCisgKiAgICAgbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBv
-ZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMKKyAqICAgICBwdWJsaXNoZWQgYnkg
-dGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUKKyAq
-ICAgICBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgorICoK
-KyAqICAgICBUaGlzIGZpbGUgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxs
-IGJlIHVzZWZ1bCwKKyAqICAgICBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZl
-biB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgorICogICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRO
-RVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKKyAqICAgICBHTlUgR2VuZXJh
-bCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgorICoKKyAqIE9yLCBhbHRlcm5hdGl2
-ZWx5LAorICoKKyAqICBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNo
-YXJnZSwgdG8gYW55IHBlcnNvbgorICogICAgIG9idGFpbmluZyBhIGNvcHkgb2YgdGhpcyBzb2Z0
-d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uCisgKiAgICAgZmlsZXMgKHRoZSAiU29m
-dHdhcmUiKSwgdG8gZGVhbCBpbiB0aGUgU29mdHdhcmUgd2l0aG91dAorICogICAgIHJlc3RyaWN0
-aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8gdXNlLAorICog
-ICAgIGNvcHksIG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2Us
-IGFuZC9vcgorICogICAgIHNlbGwgY29waWVzIG9mIHRoZSBTb2Z0d2FyZSwgYW5kIHRvIHBlcm1p
-dCBwZXJzb25zIHRvIHdob20gdGhlCisgKiAgICAgU29mdHdhcmUgaXMgZnVybmlzaGVkIHRvIGRv
-IHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcKKyAqICAgICBjb25kaXRpb25zOgorICoKKyAq
-ICAgICBUaGUgYWJvdmUgY29weXJpZ2h0IG5vdGljZSBhbmQgdGhpcyBwZXJtaXNzaW9uIG5vdGlj
-ZSBzaGFsbCBiZQorICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Igc3Vic3RhbnRpYWwg
-cG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgorICoKKyAqICAgICBUSEUgU09GVFdBUkUgSVMgUFJP
-VklERUQgIkFTIElTIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwKKyAqICAgICBFWFBS
-RVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJ
-RVMKKyAqICAgICBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQ
-VVJQT1NFIEFORAorICogICAgIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhF
-IEFVVEhPUlMgT1IgQ09QWVJJR0hUCisgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBD
-TEFJTSwgREFNQUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksCisgKiAgICAgV0hFVEhFUiBJTiBBTiBB
-Q1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HCisgKiAgICAgRlJP
-TSwgT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1IgVEhFIFVTRSBP
-UgorICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KKyAqLworCisvZHRzLXYx
-LzsKKworI2luY2x1ZGUgIm10NzYyMy5kdHNpIgorCisvIHsKKwltb2RlbCA9ICJBc2lhUkYgR2Vl
-ayBGb3JjZSI7CisJY29tcGF0aWJsZSA9ICJhc2lhcmYsZ2Vla2ZvcmNlIiwgIm1lZGlhdGVrLG10
-NzYyMyI7CisKKwlhbGlhc2VzIHsKKwkJc2VyaWFsMCA9ICZ1YXJ0MDsKKwkJc2VyaWFsMSA9ICZ1
-YXJ0MTsKKwkJc2VyaWFsMiA9ICZ1YXJ0MjsKKwl9OworCisJY2hvc2VuIHsKKwkJc3Rkb3V0LXBh
-dGggPSAic2VyaWFsMjoxMTUyMDBuOCI7CisJfTsKKworCW1lbW9yeSB7CisJCXJlZyA9IDwwIDB4
-ODAwMDAwMDAgMCAweDQwMDAwMDAwPjsKKwl9OworfTsKKworLyogb24gUmFzcGJlcnJ5IFBpIGNv
-bm5lY3RvciAqLworJnVhcnQwIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismdWFydDEgewor
-CXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZ1YXJ0MiB7CisJc3RhdHVzID0gIm9rYXkiOworfTsK
-LS0gCjIuMTAuMgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+These patches add support for SolidRun's Hummingboard 2 to mainline.
+The first is the official SolidRun DTS file supplied by Jon, the
+remainder are cleanups to it for mainline.
+
+These can be found in my HB2 branch.
+
+ arch/arm/boot/dts/Makefile                   |   2 +
+ arch/arm/boot/dts/imx6dl-hummingboard2.dts   |  52 +++
+ arch/arm/boot/dts/imx6q-hummingboard2.dts    |  60 +++
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 562 +++++++++++++++++++++++++++
+ 4 files changed, 676 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-hummingboard2.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-hummingboard2.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
