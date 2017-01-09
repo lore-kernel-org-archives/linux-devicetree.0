@@ -1,14 +1,14 @@
 From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 2/5] ARM: davinci_all_defconfig: Enable PWM modules
-Date: Mon, 9 Jan 2017 17:48:47 +0530
-Message-ID: <d55a2626-de7e-f1b0-8ada-4e24b555b889@ti.com>
+Subject: Re: [PATCH v2 1/5] ARM: davinci_all_defconfig: enable DA8xx pinconf
+Date: Mon, 9 Jan 2017 17:48:11 +0530
+Message-ID: <7614a34e-ad3b-dc8d-66f7-9c2c0e6cad6f@ti.com>
 References: <1483677228-2325-1-git-send-email-david@lechnology.com>
- <1483677228-2325-3-git-send-email-david@lechnology.com>
+ <1483677228-2325-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483677228-2325-3-git-send-email-david@lechnology.com>
+In-Reply-To: <1483677228-2325-2-git-send-email-david@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,10 +23,10 @@ Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilma
 List-Id: devicetree@vger.kernel.org
 
 On Friday 06 January 2017 10:03 AM, David Lechner wrote:
-> This enables PWM and the TI ECAP and EHRWPM modules. These are used on LEGO
+> This enables the DA8xx pinconf driver by default. It is needed by LEGO
 > MINDSTORMS EV3.
 
-Here too. Please resend with sign-off.
+Missing your sign-off. I cannot apply that myself. Please resend.
 
 Thanks,
 Sekhar
