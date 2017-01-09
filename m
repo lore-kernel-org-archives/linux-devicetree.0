@@ -1,70 +1,85 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 3/5] ARM: dts: keystone-k2hk: Add PSC reset controller node
-Date: Mon, 9 Jan 2017 13:43:56 -0600
-Message-ID: <20170109194358.27271-4-s-anna@ti.com>
-References: <20170109194358.27271-1-s-anna@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: sun4i-codec: Add "Right Mixer" to "Line
+ Out Mono Diff." route" to the asoc tree
+Date: Mon, 09 Jan 2017 20:01:18 +0000
+Message-ID: <E1cQg86-0006pr-TO@debutante>
+References: <20161107100703.5586-4-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170109194358.27271-1-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBJWYZ7BQKGQEMQBNQZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161107100703.5586-4-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Power Sleep Controller (PSC) module contains specific
-memory-mapped registers that can be used to perform reset
-management using specific bits for the DSPs available on the
-SoC. The PSC is defined using a syscon node, and the reset
-functionality is defined using a child syscon reset controller
-node.
+The patch
 
-Add this syscon reset controller node as well as the reset
-control data for the resets it supports for the 66AK2H SoCs.
+   ASoC: sun4i-codec: Add "Right Mixer" to "Line Out Mono Diff." route
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 19426bdedb72b965db0ebf2106e95e9eeb3b5935 Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Date: Sun, 8 Jan 2017 02:57:06 +0800
+Subject: [PATCH] ASoC: sun4i-codec: Add "Right Mixer" to "Line Out Mono Diff."
+ route
+
+The mono differential output for "Line Out" downmixes the stereo audio
+from the mixer, instead of just taking the left channel.
+
+Add a route from the "Right Mixer" to "Line Out Source Playback Route"
+through the "Mono Differential" path, so DAPM doesn't shut down
+everything if the left channel is muted.
+
+Fixes: 0f909f98d7cb ("ASoC: sun4i-codec: Add support for A31 Line Out
+		      playback")
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2hk.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ sound/soc/sunxi/sun4i-codec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index e0780f111537..a833db72fc61 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -8,6 +8,8 @@
-  * published by the Free Software Foundation.
-  */
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index 848af01692a0..c3aab10fa085 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -1058,6 +1058,7 @@ static const struct snd_soc_dapm_route sun6i_codec_codec_dapm_routes[] = {
+ 	{ "Line Out Source Playback Route", "Stereo", "Left Mixer" },
+ 	{ "Line Out Source Playback Route", "Stereo", "Right Mixer" },
+ 	{ "Line Out Source Playback Route", "Mono Differential", "Left Mixer" },
++	{ "Line Out Source Playback Route", "Mono Differential", "Right Mixer" },
+ 	{ "LINEOUT", NULL, "Line Out Source Playback Route" },
  
-+#include <dt-bindings/reset/ti-syscon.h>
-+
- / {
- 	compatible = "ti,k2hk", "ti,keystone";
- 	model = "Texas Instruments Keystone 2 Kepler/Hawking SoC";
-@@ -58,6 +60,24 @@
- 			};
- 		};
- 
-+		psc: power-sleep-controller@02350000 {
-+			pscrst: psc-reset-controller {
-+				compatible = "ti,k2hk-pscrst", "ti,syscon-reset";
-+				#reset-cells = <1>;
-+
-+				ti,reset-bits = <
-+					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 0: dsp0 */
-+					0xa40 8 0xa40 8 0x840 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 1: dsp1 */
-+					0xa44 8 0xa44 8 0x844 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 2: dsp2 */
-+					0xa48 8 0xa48 8 0x848 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 3: dsp3 */
-+					0xa4c 8 0xa4c 8 0x84c 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 4: dsp4 */
-+					0xa50 8 0xa50 8 0x850 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 5: dsp5 */
-+					0xa54 8 0xa54 8 0x854 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 6: dsp6 */
-+					0xa58 8 0xa58 8 0x858 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 7: dsp7 */
-+				>;
-+			};
-+		};
-+
- 		dspgpio0: keystone_dsp_gpio@02620240 {
- 			compatible = "ti,keystone-dsp-gpio";
- 			gpio-controller;
+ 	/* ADC Routes */
 -- 
-2.10.2
+2.11.0
