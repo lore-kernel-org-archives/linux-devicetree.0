@@ -1,48 +1,40 @@
-From: noman pouigt <variksla@gmail.com>
-Subject: gpio_key.c device tree question
-Date: Sun, 8 Jan 2017 19:42:19 -0800
-Message-ID: <CAES_P+_SWsRQZFRJU37FJuXPEcZPgADbcdN8-9EXKGL990XpDQ@mail.gmail.com>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
+Date: Sun, 8 Jan 2017 20:53:40 -0800
+Message-ID: <CAJ_EiSQYz2aEGiCv2npxmby0nHwmJJyR_jzY5wJOK98zp6Bvzg@mail.gmail.com>
+References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
+ <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
+ <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
+ <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
+ <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
+ <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
+ <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop> <CAPDyKFp2L7x=dV6O5XrA53-OOXE0sf+P3tNH93XGyzNheX9vjQ@mail.gmail.com>
+ <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
+ <CAJ_EiSRAQefYj+B3AKLb1EWXQUGccV=Z4op0T5sAdo3-vDVOhg@mail.gmail.com> <CACRpkdad7JXzxYfuB_XYdo2vuZmEt5iWgq79Va5cWwTaJc6Y5Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdad7JXzxYfuB_XYdo2vuZmEt5iWgq79Va5cWwTaJc6Y5Q@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Breck <liam@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Dec 30, 2016 at 12:05 AM, Linus Walleij
+<linus.walleij@linaro.org> wrote:
+> On Mon, Dec 19, 2016 at 1:01 AM, Matt Ranostay <matt@ranostay.consulting> wrote:
+>
+>> * SD8787 has a "powerdown" line, and CW1200 has a "powerup" line.. I
+>> know this is a simple logic inversion.
+>
+> If this is a GPIO line, the GPIO subsystem can flag a line for
+> inverted logic. GPIO_ACTIVE_LOW from device tree for example.
 
-I am trying to see how to disable the sub device nodes in
-gpio_keys device node.
+Slight ping on Ulf on this thread :).
 
-I have this in my base dtsi file:
+I do understand the inverted logic flag but that doesn't help if there
+are different logic states between various chipsets.
 
-#include "vendor_file.dtsi"
-
-        gpio_keys {
-                compatible = "gpio-keys";
-                input-name = "gpio-keys";
-                pinctrl-names = "gpio_key_active","gpio_key_suspend";
-                pinctrl-0 = <&key_active>;
-                pinctrl-1 = <&key_suspend>;
-                camera_snapshot {
-                        label = "camera_snapshot";
-                        //snip
-                };
-        };
-
-I have this in vendor_file.dtsi:
-       gpio_keys {
-               source_key_1 {
-                       label = "source_key_1";
-                       //snip
-               };
-       };
-
-In my current consolidated dtb file all nodes are getting
-added i.e. camera_snapshot and source_key_1. How
-can i remove camera_snapshot node from the
-gpio_keys device node or disable it?
-
-
-Thanks,
+>
+> Yours,
+> Linus Walleij
