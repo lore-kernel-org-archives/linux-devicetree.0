@@ -1,50 +1,50 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] serial: fsl-imx-uart.txt: Remove generic property
-Date: Mon,  9 Jan 2017 17:30:02 -0200
-Message-ID: <1483990202-19224-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 1/9] clk: stm32f4: Update DT bindings documentation
+Date: Mon, 9 Jan 2017 11:33:12 -0800
+Message-ID: <20170109193312.GN17126@codeaurora.org>
+References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
+ <1481638820-29324-2-git-send-email-gabriel.fernandez@st.com>
+ <20161222001051.GP8288@codeaurora.org>
+ <ccd14adb-9d10-ae9e-de6d-565418421968@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ccd14adb-9d10-ae9e-de6d-565418421968@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "kernel@stlinux.com" <kernel@stli>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+On 01/09, Alexandre Torgue wrote:
+> Hi Stephen,
+> 
+> On 12/22/2016 01:10 AM, Stephen Boyd wrote:
+> >On 12/13, gabriel.fernandez@st.com wrote:
+> >>From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> >>
+> >>Creation of dt include file for specific stm32f4 clocks.
+> >>These specific clocks are not derived from system clock (SYSCLOCK)
+> >>We should use index 1 to use these clocks in DT.
+> >>e.g. <&rcc 1 CLK_LSI>
+> >>
+> >>Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> >>Acked-by: Rob Herring <robh@kernel.org>
+> >>---
+> >
+> >Applied to clk-stm32f4 and merged into clk-next.
+> >
+> 
+> I'm preparing pull request branch for STM32 DT part. This patch is
+> also requested to build correctly DT patches. Do you know how could
+> we synchronize our pull request ?
+> 
 
-'uart-has-rtscts' is a generic serial property and it is described
-at Documentation/devicetree/bindings/serial/serial.txt, so remove it
-from the specific fsl-imx-uart binding documentation.
+clk-stm32f4 is stable and not going to be rebased, so you're good
+to base patches on it and send it off to arm-soc if the arm-soc
+maintainers agree to it. You can also base off an earlier part of
+the branch if you only need this first patch for example.
 
-While at it, add a note pointing to the serial.txt file, which
-contains the complete list of generic serial bindings.
-
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-index 1e82802..574c3a2 100644
---- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-@@ -6,11 +6,13 @@ Required properties:
- - interrupts : Should contain uart interrupt
- 
- Optional properties:
--- uart-has-rtscts : Indicate the uart has rts and cts
- - fsl,irda-mode : Indicate the uart supports irda mode
- - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
-                   in DCE mode by default.
- 
-+Please check Documentation/devicetree/bindings/serial/serial.txt
-+for the complete list of generic properties.
-+
- Note: Each uart controller should have an alias correctly numbered
- in "aliases" node.
- 
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
