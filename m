@@ -1,54 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
- names, pre-calibration, flipping and rotation
-Date: Mon, 9 Jan 2017 11:43:44 -0600
-Message-ID: <20170109174344.5kvijgyhusboftx3@rob-hp-laptop>
-References: <cover.1482936802.git.hns@goldelico.com>
- <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v1.1] ARM: multi_v7_defconfig: Enable power sequence for
+ Odroid U3
+Date: Mon, 9 Jan 2017 14:44:54 -0300
+Message-ID: <953e4035-114d-6aa0-df88-8263b56be18b@osg.samsung.com>
+References: <20170107085203.4431-5-krzk@kernel.org>
+ <20170107091651.10560-1-krzk@kernel.org>
+ <d8ee24b1-9d6b-e76f-b5ef-71706efbf9e5@osg.samsung.com>
+ <CAJKOXPdODg2gCXP-BCRhDZAc2+o1J7Ek9iLaYF7hn_R2mNiK3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Petr
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPdODg2gCXP-BCRhDZAc2+o1J7Ek9iLaYF7hn_R2mNiK3A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, linux-usb@vger.kernel.org, linux-pm@vger.kernel.org, hverkuil@xs4all.nl, Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2016 at 03:53:16PM +0100, H. Nikolaus Schaller wrote:
-> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
-> introduced common DT bindings for touchscreens [1] and a helper function to
-> parse the DT.
-> 
-> commit ed7c9870c9bc ("Input: of_touchscreen - add support for inverted / swapped axes")
-> added another helper for parsing axis inversion and swapping
-> and applying them to x and y coordinates.
-> 
-> Both helpers have been integrated to accommodate any orientation of the
-> touch panel in relation to the LCD.
-> 
-> A new feature is to introduce scaling the min/max ADC values to the screen
-> size.
-> 
-> This makes it possible to pre-calibrate the touch so that is (almost)
-> exactly matches the LCD pixel coordinates it is glued onto. This allows to
-> well enough operate the touch before a user space calibration step can
-> improve the precision.
-> 
-> Please note that the old ti,fuzz properties have been removed since they
-> are replaced by the common bindings touchscreen-fuzz-x/y/z.
-> 
-> Finally, calculate_pressure has been renamed to calculate_resistance
-> because that is what it is doing.
-> 
-> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../bindings/input/touchscreen/tsc2007.txt         |  20 ++--
+Hello Krzysztof,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 01/09/2017 02:38 PM, Krzysztof Kozlowski wrote:
+> On Mon, Jan 9, 2017 at 6:24 PM, Javier Martinez Canillas
+> <javier@osg.samsung.com> wrote:
+>> Hello Krzysztof,
+>>
+>> I think it would had been clearer if the subject prefix was "[PATCH v1.1 4/4]" :)
+> 
+> Ah, yes.
+> 
+>>
+>> On 01/07/2017 06:16 AM, Krzysztof Kozlowski wrote:
+>>> Odroid U3 needs a power sequence for lan9730, if it was enabled by
+>>> bootloader.  Also enable the USB3503 HSCI to USB2.0 driver (device
+>>> is present on Odroid U3).
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>>
+>>> ---
+>>>
+>>
+>> Do you think that makes sense to also enable GPIO_SYS for debugging
+>> purposes as you do in patch 3/4?
+> 
+> I like the GPIO_SYSFS interface because it is easy to use. However
+> now, after your question, I found this:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/470154.html
+> ARM/ARM64: defconfig: drop GPIO_SYSFS on multiplatforms
+> 
+> ... so instead I will drop it from exynos_defconfig.
+> 
 
->  drivers/input/touchscreen/tsc2007.c                | 120 +++++++++++++++++----
->  include/linux/i2c/tsc2007.h                        |   8 ++
->  3 files changed, 118 insertions(+), 30 deletions(-)
+Right, I forgot that using the GPIO sysfs interface is discouraged now and the
+new chardev/ioctl based should be used instead. So it makes sense to drop it.
+
+> Best regards,
+> Krzysztof
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
