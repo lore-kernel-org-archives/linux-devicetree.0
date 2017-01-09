@@ -1,72 +1,73 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
- for imx6sll
-Date: Mon, 9 Jan 2017 02:32:36 +0000
-Message-ID: <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
- <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v1 1/3] dt: bindings: add thermal device driver for zx2967
+Date: Mon, 9 Jan 2017 10:41:37 +0800
+Message-ID: <20170109024136.GJ20956@dragon>
+References: <1483767488-19778-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1483767488-19778-1-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jun.nie@linaro.org, gregkh@linuxfoundation.org, davem@davemloft.net, geert+renesas@glider.be, akpm@linux-foundation.org, mchehab@kernel.org, linux@roeck-us.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzEyXSBEb2N1bWVudDogZHQ6IGJpbmRpbmc6IGlt
-eDogdXBkYXRlIHBpbmN0cmwgZG9jDQo+IGZvciBpbXg2c2xsDQo+IA0KPiBPbiBUdWUsIERlYyAy
-NywgMjAxNiBhdCAxMDo0NyBBTSwgQmFpIFBpbmcgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0K
-PiANCj4gPiBBZGQgcGluY3RybCBiaW5kaW5nIGRvYyB1cGRhdGUgZm9yIGlteDZzbGwuDQo+ID4N
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4NCj4gDQo+IEkg
-aGF2ZSB0byBwdXNoIGJhY2sgb24gdGhpcyBhIGJpdC4NCj4gDQo+ID4gK1BsZWFzZSByZWZlciB0
-byBmc2wsaW14LXBpbmN0cmwudHh0IGluIHRoaXMgZGlyZWN0b3J5IGZvciBjb21tb24NCj4gPiAr
-YmluZGluZyBwYXJ0IGFuZCB1c2FnZS4NCj4gDQo+IEkgdW5kZXJzdGFuZCB0aGF0IGl0IGlzIGJ1
-aWxkaW5nIG9uIHRvcCBvZiB0aGUgb2xkIGkuTVggYmluZGluZ3MgYW5kIHRoYXQgaXQgaGFzDQo+
-IHNvbWUga2luZCBvZiAidHJhZGl0aW9uIiBjb21pbmcgd2l0aCBpdC4NCj4gDQo+IEF0IHRoZSBz
-YW1lIHRpbWUsIHRoZSBpLk1YIGJpbmRpbmdzIGNhbWUgYWJvdXQgYmVmb3JlIHdlIGhhZCB0aGUg
-Z2VuZXJpYyBwaW4NCj4gY29udHJvbCBiaW5kaW5ncyBkZWZpbmVkLg0KPiANCj4gPiArQ09ORklH
-IGJpdHMgZGVmaW5pdGlvbjoNCj4gPiArUEFEX0NUTF9MVkUgICAgICAgICAgICAgICAgICAgICgx
-IDw8IDIyKQ0KPiA+ICtQQURfQ1RMX0hZUyAgICAgICAgICAgICAgICAgICAgICgxIDw8IDE2KQ0K
-PiA+ICtQQURfQ1RMX1BVU18xMDBLX0RPV04gICAgICAgICAgICgwIDw8IDE0KQ0KPiA+ICtQQURf
-Q1RMX1BVU180N0tfVVAgICAgICAgICAgICAgICgxIDw8IDE0KQ0KPiA+ICtQQURfQ1RMX1BVU18x
-MDBLX1VQICAgICAgICAgICAgICgyIDw8IDE0KQ0KPiA+ICtQQURfQ1RMX1BVU18yMktfVVAgICAg
-ICAgICAgICAgICgzIDw8IDE0KQ0KPiA+ICtQQURfQ1RMX1BVRSAgICAgICAgICAgICAgICAgICAg
-ICgxIDw8IDEzKQ0KPiA+ICtQQURfQ1RMX1BLRSAgICAgICAgICAgICAgICAgICAgICgxIDw8IDEy
-KQ0KPiA+ICtQQURfQ1RMX09ERSAgICAgICAgICAgICAgICAgICAgICgxIDw8IDExKQ0KPiA+ICtQ
-QURfQ1RMX1NQRUVEX0xPVyAgICAgICAgICAgICAgICgwIDw8IDYpDQo+ID4gK1BBRF9DVExfU1BF
-RURfTUVEICAgICAgICAgICAgICAgKDEgPDwgNikNCj4gPiArUEFEX0NUTF9TUEVFRF9ISUdIICAg
-ICAgICAgICAgICAoMyA8PCA2KQ0KPiA+ICtQQURfQ1RMX0RTRV9ESVNBQkxFICAgICAgICAgICAg
-ICgwIDw8IDMpDQo+ID4gK1BBRF9DVExfRFNFXzI2MG9obSAgICAgICAgICAgICAgKDEgPDwgMykN
-Cj4gPiArUEFEX0NUTF9EU0VfMTMwb2htICAgICAgICAgICAgICAoMiA8PCAzKQ0KPiA+ICtQQURf
-Q1RMX0RTRV84N29obSAgICAgICAgICAgICAgICgzIDw8IDMpDQo+ID4gK1BBRF9DVExfRFNFXzY1
-b2htICAgICAgICAgICAgICAgKDQgPDwgMykNCj4gPiArUEFEX0NUTF9EU0VfNTJvaG0gICAgICAg
-ICAgICAgICAoNSA8PCAzKQ0KPiA+ICtQQURfQ1RMX0RTRV80M29obSAgICAgICAgICAgICAgICg2
-IDw8IDMpDQo+ID4gK1BBRF9DVExfRFNFXzM3b2htICAgICAgICAgICAgICAgKDcgPDwgMykNCj4g
-PiArUEFEX0NUTF9TUkVfRkFTVCAgICAgICAgICAgICAgICAoMSA8PCAwKQ0KPiA+ICtQQURfQ1RM
-X1NSRV9TTE9XICAgICAgICAgICAgICAgICgwIDw8IDApDQo+IA0KPiBBIHdob2xlIHNsZXcgb2Yg
-dGhlc2UgaWYgbm90IGFsbCBjb3JyZXNwb25kIHRvIHRoZSBnZW5lcmljIGJpbmRpbmdzLg0KPiAN
-Cj4gSSB3b3VsZCBjb25zaWRlciBhdWdtZW50aW5nIHRoZSBjb2RlIGluIHRoZSBkcml2ZXIgdG8g
-aGFuZGxlIHRoZSBnZW5lcmljDQo+IGJpbmRpbmdzICppbiBhZGRpdGlvbiogdG8gdGhlIG9sZCBs
-ZWdhY3kgYmluZGluZ3MsIGFuZCB1c2UgdGhvc2Ugb3ZlciB0aGVzZQ0KPiByYW5kb20gY3VzdG9t
-IGJpdHMuDQo+IA0KPiBSZWFkIGRyaXZlcnMgdXNpbmcgQ09ORklHX0dFTkVSSUNfUElOQ09ORiBh
-cyBhbiBpbnNwaXJhdGlvbi4NCj4gDQo+IEZvciBleGFtcGxlIHNlZSBjb21taXQNCj4gY2VmYmYx
-YTFiMjk1MzFhOTcwYmMyOTA4YTUwYTc1ZDY0NzRmY2MzOA0KPiAicGluY3RybDogc3VueGk6IFN1
-cHBvcnQgZ2VuZXJpYyBiaW5kaW5nIg0KPiBmcm9tIE1heGltZSBSaXBhcmQsIHdoZXJlIGhlIGRv
-ZXMgYSBzaW1pbGFyIHRoaW5nIGZvciBzdW54aS4NCg0KSSBoYXZlIGxvb2sgaW50byB0aGUgYWJv
-dmUgY29tbWl0IG9uIHVzaW5nIGdlbmVyaWMgYmluZGluZy4gQnV0IEkgdGhpbmsgdGhlIGdlbmVy
-aWMgcGluY29uZg0KaXMgbm90IHZlcnkgZWFzeSB0byBhZGQgaW4gaW14IHBpbmN0cmwgRHJpdmVy
-LiBpbXggcGluY3RybCB1c2UgYSBkaWZmZXJlbnQgd2F5IHRvIHBhcnNlIHRoZSBwaW4gY29uZmln
-dXJlLg0KIA0KRWFjaCBmc2wscGluIGVudHJ5ICBsb29rcyBsaWtlIDxQSU5fRlVOQ19JRCAgQ09O
-RklHPiBpbiBkdHMsIHRoZSBDT05GSUcgaXMgdGhlIHBhZCBzZXR0aW5nIHZhbHVlIGxpa2UNCnB1
-bGwtdXAsIG9wZW4tZHJhaW4sIGRyaXZlIHN0cmVuZ3RoIGV0Yy4gVGhlIGFib3ZlIGNvbmZpZyBi
-aXQgZGVmaW5pdGlvbiBpcyBzcGVjaWZpYyB0byBlYWNoIFNPQyBpbiB0aGUgUEFEIENUTCByZWdp
-c3Rlci4NCg0KSWYgd2Ugd2FudCBzZXQgdGhlIHBpbiBjb25maWcgdG8gZW5hYmxlIGh5c3RlcmVz
-aXMsIDQ3S09obSBQdWxsIFVwLCA1ME1oeiBzcGVlZCwgODBPaG0gZHJpdmVyIHN0cmVuZ3RoDQph
-bmQgRmFzdCBTbGV3IFJhdGUsIHRoZW4gdGhlIENPTkZJRyB2YWx1ZSBzaG91bGQgYmUgMHgxNzA1
-OSggT1JzIGNvcnJlc3BvbmRpbmcgYml0IGRlZmluaXRpb24pLiBUaGlzIHZhbHVlIHdpbGwgYmUg
-c2V0IGluDQpQQUQgQ1RMIHJlZ2lzdGVyIHRvIGNvbmZpZyB0aGUgY29ycmVzcG9uZGluZyBwaW4u
-DQoNCkJSDQpKYWNreSBCYWkNCg0KPiANCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoNCg==
+On Sat, Jan 07, 2017 at 01:38:06PM +0800, Baoyou Xie wrote:
+> This patch adds dt-binding documentation for zx2967 family thermal sensor.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+
+The patch subject is inappropriate.  The patch adds a bindings not
+device driver.
+
+> ---
+>  .../devicetree/bindings/thermal/zx2967-thermal.txt | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+> new file mode 100644
+> index 0000000..2633964
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+> @@ -0,0 +1,22 @@
+> +* ZTE zx2967 family Thermal
+> +
+> +Required Properties:
+> +- compatible: should be one of the following.
+> +    * zte,zx2967-thermal
+> +    * zte,zx296718-thermal
+
+We usually use specific SoC name in compatible string to specify the
+programming model for the hardware.  That said, I do not think we need
+"zte,zx2967-thermal".
+
+> +- reg: physical base address of the controller and length of memory mapped
+> +    region.
+> +- clocks : Pairs of phandle and specifier referencing the controller's clocks.
+> +- clock-names: "tempsensor_gate" for the topcrm clock.
+> +	       "tempsensor_pclk" for the apb clock.
+
+In the context of tempsensor device, the "tempsensor_" in the clock
+names are not really necessary.
+
+> +- #thermal-sensor-cells: must be 0.
+> +
+> +Example:
+> +
+> +	tempsensor: tempsensor@148a000 {
+> +		compatible = "zte,zx2967-thermal";
+
+"zte,zx296718-thermal"
+
+Shawn
+
+> +		reg = <0x0148a000 0x20>;
+> +		clocks = <&topcrm TEMPSENSOR_GATE>, <&audiocrm AUDIO_TS_PCLK>;
+> +		clock-names = "tempsensor_gate", "tempsensor_pclk";
+> +		#thermal-sensor-cells = <0>;
+> +	};
+> -- 
+> 2.7.4
+> 
