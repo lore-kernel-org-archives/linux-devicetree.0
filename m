@@ -1,54 +1,60 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/6] arm64: dts: apq8016-sbc: add support to hdmi audio
- via adv7533
-Date: Mon, 9 Jan 2017 11:39:51 -0800
-Message-ID: <20170109193951.GO17126@codeaurora.org>
-References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1483536902-21450-3-git-send-email-srinivas.kandagatla@linaro.org>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: gpio: Add binding documentation for
+ gpio-thunderx
+Date: Mon, 9 Jan 2017 11:44:22 -0800
+Message-ID: <a1b6c9da-5b19-c9a7-3774-0bc0e9dcdeb6@caviumnetworks.com>
+References: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
+ <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com>
+ <CACRpkdZ0xkhUC7_0A4uHxpGaU7BHgNp8TNuDPuPN9h6dDsQx4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483536902-21450-3-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZ0xkhUC7_0A4uHxpGaU7BHgNp8TNuDPuPN9h6dDsQx4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04, Srinivas Kandagatla wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> index 08bd5eb..5ab277f 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> @@ -85,6 +85,7 @@
->  				pinctrl-names = "default","sleep";
->  				pinctrl-0 = <&adv7533_int_active &adv7533_switch_active>;
->  				pinctrl-1 = <&adv7533_int_suspend &adv7533_switch_suspend>;
-> +				#sound-dai-cells = <1>;
->  
->  				ports {
->  					#address-cells = <1>;
-> @@ -285,6 +286,15 @@
->                          qcom,audio-routing =
->                                  "AMIC2", "MIC BIAS Internal2",
->                                  "AMIC3", "MIC BIAS External1";
-> +			external-dai-link@0 {
-> +				link-name = "ADV7533";
-> +				cpu { /* QUAT */
-> +					sound-dai = <&lpass MI2S_QUATERNARY>;
-> +				};
-> +				codec {
-> +					sound-dai = <&adv_bridge 0>;
-> +				};
-> +			};
->  
->                          internal-codec-playback-dai-link@0 {            /* I2S - Internal codec */
->                                  link-name = "WCD";
+On 01/09/2017 11:36 AM, Linus Walleij wrote:
+> On Sat, Jan 7, 2017 at 12:22 AM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>
+>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> (...)
+>
+>> +Optional Properties:
+>> +- compatible: "cavium,thunder-8890-gpio", unused as PCI driver binding is used.
+>> +- interrupt-controller: Marks the device node as an interrupt controller.
+>> +- #interrupt-cells: Must be present and have value of 2 if
+>> +                    "interrupt-controller" is present.
+>> +  - First cell is the GPIO pin number relative to the controller.
+>> +  - Second cell is triggering flags as defined in interrupts.txt.
+>
+> AFAICT this device has an optional list of interrupts as well?
+> One per pin even?
 
-The spacing is weird here. Did the internal-codec get added
-without tabs before?
+I'm not sure I understand your question.
+
+The GPIO hardware supports an interrupt on each pin.  The underlying 
+interrupt mechanism is via PCI MSI-X, which are fully discoverable by 
+the driver, so lack of device tree binding for the these underlying 
+MSI-X is fully appropriate.  On the other hand, users of the GPIO 
+interrupt pins need this "interrupt-controller" and "#interrupt-cells" 
+to be able to properly find and configure the proper interrupts.
+
+I said the "interrupt-controller" property was optional, because some 
+systems don't use GPIO interrupts and can function without specifying 
+that it is also an interrupt controller.
 
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>
+> Yours,
+> Linus Walleij
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
