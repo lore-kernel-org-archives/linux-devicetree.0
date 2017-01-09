@@ -1,48 +1,55 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/5] Reset Controller Nodes for TI Keystone platforms
-Date: Mon, 9 Jan 2017 12:08:01 -0800
-Message-ID: <efd6ca8e-8c5d-0e24-1cb9-ba412cec1fce@oracle.com>
-References: <20170109194358.27271-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170109194358.27271-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Davis <afd@ti.com>, linux-arm-kernel@lists.infradead.org
+From: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH linux v1 0/2] Support for ASPEED AST2400/AST2500 PWM and Fan Tach driver
+Date: Mon,  9 Jan 2017 13:59:33 -0800
+Message-ID: <20170109215935.30067-1-jaghu@google.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/9/2017 11:43 AM, Suman Anna wrote:
-> Hi Santosh,
->
-> This patch adds the reset controller nodes and the corresponding
-> reset data for TI Keystone 66AK2H, 66AK2L and 66AK2E SoCs. These
-> resets are for the DSPs on these SoCs, and are the last dependencies
-> before the keystone remoteproc driver can be added.
->
-> All these SoCs will use the ti-syscon-reset driver which is already
-> part of mainline kernel. The bindings for the same can be found in
-> Documentation/devicetree/bindings/reset/ti-syscon-reset.txt file.
-> Note that the other Keystone 66AK2G SoC will use a different TI-SCI
-> based reset driver, so will be submitted separately once the TI-SCI
-> dependencies make it into mainline.
->
-> Patches are based on top of 4.10-rc1 plus the MSM-RAM DT node series
-> that you have already picked up. Patch 1 enable the Reset Framework
-> for Keystone platforms, and remaining patches add the required DT
-> nodes.
->
-Ok. I will let this series be on list for a week or so for any
-comments. After that will pick this up and push it out to next.
+Support for ASPEED AST2400/AST2500 PWM and Fan Tach driver
 
-Regards,
-Santosh
+Support for ASPEED AST2400/AST2500 PWM and Fan Tach driver.
+The AST2400/AST2500 PWM controller can support 8 PWM output ports.
+The AST2400/AST2500 Fan Tach controller can support 16 tachometer inputs.
+There can be three different PWM clock types (Type M, N and O); Those three
+types just to have three independent PWM sources.
+The driver provides sysfs entries through which the user can configure the
+duty cycle for the particular PWM output port and read the fan rpm value for
+the particular tachometer input.
+Added devicetree binding documentation for AST2400/AST2500 PWM and Fan Tach
+support.
+
+Tested on Zaius board (which has AST2500 chip) and observed that when
+duty cycle is lowered then the fan speed is lowered and lower fan rpm value(
+corresponding to the duty cycle) is reported and when the duty cycle is
+increased then the fan speed increases and higher fan rpm value(corresponding
+to the duty cycle) is reported.
+
+Tested on AST2500 EVB board and observed the PWM output pulses come
+correctly based on the given settings using Logic Saleae Analyzer.
+
+Jaghathiswari Rankappagounder Natarajan (2):
+  Documentation: dt-bindings: Document bindings for aspeed pwm and fan
+    tach controller device driver
+  drivers: hwmon: hwmon driver for ASPEED AST2400/2500 PWM and Fan tach
+    controller
+
+ .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 153 ++++
+ Documentation/hwmon/aspeed-pwm-tacho               |  22 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/aspeed-pwm-tacho.c                   | 884 +++++++++++++++++++++
+ 5 files changed, 1069 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+ create mode 100644 Documentation/hwmon/aspeed-pwm-tacho
+ create mode 100644 drivers/hwmon/aspeed-pwm-tacho.c
+
+--
+2.11.0.390.gc69c2f50cf-goog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
