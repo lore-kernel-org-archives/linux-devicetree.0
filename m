@@ -1,101 +1,63 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 0/4] ARM: exynos: Fix Odroid U3 USB/LAN when TFTP booting
- (power sequence)
-Date: Mon, 9 Jan 2017 23:56:41 +0530
-Message-ID: <CANAwSgR7=cELNK9of5ngFTdhcxWn2KXL=R8tMsTKD7gecBcMYw@mail.gmail.com>
-References: <20170107085203.4431-1-krzk@kernel.org> <CANAwSgSEZvxHje65Kk13fvD9NZGB+iHCJtoGJdQrUdS42ei_WA@mail.gmail.com>
- <20170109181703.436gv7bq76xuv35q@kozik-lap>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] usb: musb: da8xx: Use the right dma controller
+Date: Mon, 9 Jan 2017 21:30:09 +0300
+Message-ID: <7dcfe848-a421-d409-0e9a-659c095e4e31@cogentembedded.com>
+References: <20170109163902.5268-1-abailon@baylibre.com>
+ <20170109163902.5268-2-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170109181703.436gv7bq76xuv35q@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, sre@kernel.org, Rob Herring <robh+dt@kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, hverkuil@xs4all.nl, Markus
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170109163902.5268-2-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, b-liu-l0cyMroinI0@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hello!
 
-On 9 January 2017 at 23:47, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Mon, Jan 09, 2017 at 11:34:48PM +0530, Anand Moon wrote:
->> Hi Krzysztof,
->>
->> On 7 January 2017 at 14:21, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> > Hi,
->> >
->> > Thanks to Markus Reichl, I got an Odroid U3 to work with. Thanks to Peter
->> > Chen, we got a power sequence generic library which solves my long
->> > standing Odroid U3 problem - no LAN9730 if it was enabled by bootloader.
->> >
->> > My previous attempts for this can be found here [0].
->> >
->> > This patchset is based on Peter's v11 of power sequence [1].
->> > Patchset is available also on my Github [2].
->> >
->> > More detailed analysis is described in patch 2/4 ("ARM: dts: exynos: Fix
->> > LAN9730 on Odroid U3 after tftpboot").
->> >
->> >
->>
->> [snip]
->>
->> On which u-boot should this be tested.
->>
->> On HK u-boot tftp boot is not supported.
->
-> ... so you gave an answer: you cannot test it on HK. How many other
-> U-Boot flavors you know? :)
->
+On 01/09/2017 07:38 PM, Alexandre Bailon wrote:
 
-u-boot mainline have tftp support enable, so I will try to test on this u-boot.
-
-Best Regards
--Anand
-
-> Best regards,
-> Krzysztof
+> da8xx driver is registering and using the cppi dma controller but actually,
+> the da8xx has a cppi41 dma controller.
+> Update the driver to register and use the cppi41 dma controller.
 >
+> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/usb/musb/da8xx.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
->> ----------------------------------------------------------
->> U-Boot 2010.12-00000-g9777ca6-dirty (Nov 26 2015 - 10:10:11) for Exynox4412
->>
->>
->> CPU: S5PC220 [Samsung SOC on SMP Platform Base on ARM CortexA9]
->> APLL = 1000MHz, MPLL = 800MHz
->> DRAM:  2 GiB
->>
->> PMIC VERSION : 0x00, CHIP REV : 2
->> TrustZone Enabled BSP
->> BL1 version: 20121128
->>
->>
->> Checking Boot Mode ... SDMMC
->> MMC Device 0: 14804 MB
->> MMC Device 1 not found
->> *** Warning - using default environment
->>
->> USB3503 NINT = OUTPUT LOW!
->> ModeKey Check... run normal_boot
->> No ethernet found.
->> Hit any key to stop autoboot:  0
->> Exynos4412 #
->> Exynos4412 #
->> Exynos4412 #
->> Exynos4412 # usb start
->> (Re)start USB...
->> USB0:   Exynos4412-ehci: init hccr 12580000 and hcor 12580010 hc_length 16
->> usb: usb_refclk_enable is active low: NO
->> ProTIP: If usb doesn't work - try playing with 'usb_invert_clken' environment
->> USB EHCI 1.00
->> scanning bus 0 for devices... EHCI timed out on TD - token=0x80008c80
->> EHCI fail timeout STS_ASS set
->>
->>       USB device not accepting new address (error=80000000)
->> EHCI fail timeout STS_ASS set
->> 1 USB Device(s) found
->>        scanning usb for storage devices... 0 Storage Device(s) found
->>        scanning usb for ethernet devices... 0 Ethernet Device(s) found
->> Exynos4412 #
->>
->> Best Regards
->> -Anand
+> diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+> index e89708d..74dcc07 100644
+> --- a/drivers/usb/musb/da8xx.c
+> +++ b/drivers/usb/musb/da8xx.c
+> @@ -458,14 +458,14 @@ static inline u8 get_vbus_power(struct device *dev)
+>  }
+>
+>  static const struct musb_platform_ops da8xx_ops = {
+> -	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
+
+    Grr, MUSB_DMA_CPPI is certainly wrong! There's no CPPI 3.0 support for 
+DA8xx. Where have this come from?
+
+> +	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
+>  	.init		= da8xx_musb_init,
+>  	.exit		= da8xx_musb_exit,
+>
+>  	.fifo_mode	= 2,
+> -#ifdef CONFIG_USB_TI_CPPI_DMA
+> -	.dma_init	= cppi_dma_controller_create,
+> -	.dma_exit	= cppi_dma_controller_destroy,
+
+    Likewise, WTF?
+    I suggest that you fix this crap in a separate commit, to be backported to 
+-stable if needed.
+
+[...]
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
