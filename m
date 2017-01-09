@@ -1,63 +1,49 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v1.1] ARM: multi_v7_defconfig: Enable power sequence for
- Odroid U3
-Date: Mon, 9 Jan 2017 14:44:54 -0300
-Message-ID: <953e4035-114d-6aa0-df88-8263b56be18b@osg.samsung.com>
-References: <20170107085203.4431-5-krzk@kernel.org>
- <20170107091651.10560-1-krzk@kernel.org>
- <d8ee24b1-9d6b-e76f-b5ef-71706efbf9e5@osg.samsung.com>
- <CAJKOXPdODg2gCXP-BCRhDZAc2+o1J7Ek9iLaYF7hn_R2mNiK3A@mail.gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: da850: Enable cppi41 dma for da850-lcdk
+Date: Mon, 9 Jan 2017 11:47:35 -0600
+Message-ID: <7b716770-f86a-4328-dda8-c48c78f9989c@lechnology.com>
+References: <20170109162449.5012-1-abailon@baylibre.com>
+ <20170109162449.5012-4-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdODg2gCXP-BCRhDZAc2+o1J7Ek9iLaYF7hn_R2mNiK3A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, linux-usb@vger.kernel.org, linux-pm@vger.kernel.org, hverkuil@xs4all.nl, Markus Reichl <m.reichl@fivetechno.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170109162449.5012-4-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On 01/09/2017 10:24 AM, Alexandre Bailon wrote:
+> This enable the cppi41 dma controller used by the usb otg for
+> the da850-lcdk board.
+>
+> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/da850-lcdk.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+> index afcb482..abb9b9d 100644
+> --- a/arch/arm/boot/dts/da850-lcdk.dts
+> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> @@ -167,6 +167,10 @@
+>  	status = "okay";
+>  };
+>
+> +&cppi41dma  {
 
-On 01/09/2017 02:38 PM, Krzysztof Kozlowski wrote:
-> On Mon, Jan 9, 2017 at 6:24 PM, Javier Martinez Canillas
-> <javier@osg.samsung.com> wrote:
->> Hello Krzysztof,
->>
->> I think it would had been clearer if the subject prefix was "[PATCH v1.1 4/4]" :)
-> 
-> Ah, yes.
-> 
->>
->> On 01/07/2017 06:16 AM, Krzysztof Kozlowski wrote:
->>> Odroid U3 needs a power sequence for lan9730, if it was enabled by
->>> bootloader.  Also enable the USB3503 HSCI to USB2.0 driver (device
->>> is present on Odroid U3).
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->>>
->>> ---
->>>
->>
->> Do you think that makes sense to also enable GPIO_SYS for debugging
->> purposes as you do in patch 3/4?
-> 
-> I like the GPIO_SYSFS interface because it is easy to use. However
-> now, after your question, I found this:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/470154.html
-> ARM/ARM64: defconfig: drop GPIO_SYSFS on multiplatforms
-> 
-> ... so instead I will drop it from exynos_defconfig.
-> 
+nit, there should only be one space before "{"
 
-Right, I forgot that using the GPIO sysfs interface is discouraged now and the
-new chardev/ioctl based should be used instead. So it makes sense to drop it.
+> +	status = "okay";
+> +};
+> +
+>  &aemif {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&nand_pins>;
+>
 
-> Best regards,
-> Krzysztof
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
