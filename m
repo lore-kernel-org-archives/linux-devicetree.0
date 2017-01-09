@@ -1,53 +1,41 @@
-From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 1/3][v3] dt-bindings: Add compatible for LS2088A QDS and RDB board
-Date: Mon, 9 Jan 2017 10:44:54 +0530
-Message-ID: <1483938896-2221-2-git-send-email-abhimanyu.saini@nxp.com>
-References: <1483938896-2221-1-git-send-email-abhimanyu.saini@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+Subject: [PATCH v11 1/3] of: Add vendor prefix for Lattice Semiconductor
+Date: Sun,  8 Jan 2017 22:23:44 -0700
+Message-ID: <1483939426-4941-1-git-send-email-joel@airwebreathe.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483938896-2221-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Cc: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+Lattice Semiconductor Corporation is a manufacturer of integrated
+circuits and IP products, including low-power FPGAs, video connectivity
+devices and millimeter wave wireless products.
+
+Website: http://latticesemi.com
+
+Signed-off-by: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 ---
-Changes for v2:
-	- reorganize LS2088A device tree to use common
-	  nodes from LS2080A device trees.
-	- Both LS2080A and LS2088A have same hardware
-	  controllers, so separate dt-binding patches for
-	  pcie, gpio, dspi, qspi are not required.
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/arm/fsl.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index d6ee9c6..75ad8c5 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -179,3 +179,14 @@ LS2080A ARMv8 based RDB Board
- Required root node properties:
-     - compatible = "fsl,ls2080a-rdb", "fsl,ls2080a";
- 
-+LS2088A SoC
-+Required root node properties:
-+    - compatible = "fsl,ls2088a";
-+
-+LS2088A ARMv8 based QDS Board
-+Required root node properties:
-+    - compatible = "fsl,ls2088a-qds", "fsl,ls2088a";
-+
-+LS2088A ARMv8 based RDB Board
-+Required root node properties:
-+    - compatible = "fsl,ls2088a-rdb", "fsl,ls2088a";
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4ec84b7..5f8e533 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -159,6 +159,7 @@ kosagi	Sutajio Ko-Usagi PTE Ltd.
+ kyo	Kyocera Corporation
+ lacie	LaCie
+ lantiq	Lantiq Semiconductor
++lattice	Lattice Semiconductor
+ lenovo	Lenovo Group Ltd.
+ lg	LG Corporation
+ licheepi	Lichee Pi
 -- 
-1.9.1
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
