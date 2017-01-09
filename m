@@ -1,72 +1,50 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH] Documentation: dt: reset: Revise typos in TI syscon reset
- example
-Date: Mon, 9 Jan 2017 13:28:14 -0600
-Message-ID: <20170109192814.26811-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] serial: fsl-imx-uart.txt: Remove generic property
+Date: Mon,  9 Jan 2017 17:30:02 -0200
+Message-ID: <1483990202-19224-1-git-send-email-festevam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix couple of typos in the example given in the TI syscon reset
-binding. The ti,reset-bits used for DSP0 are corrected to match
-the values that will be used in the actual DT node.
+From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
+'uart-has-rtscts' is a generic serial property and it is described
+at Documentation/devicetree/bindings/serial/serial.txt, so remove it
+from the specific fsl-imx-uart binding documentation.
+
+While at it, add a note pointing to the serial.txt file, which
+contains the complete list of generic serial bindings.
+
+Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
-Hi Philipp,
+ Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This is the Documentation part fix that goes along with
-the ti-syscon-reset fix that you have on your next branch.
-I will be submitting the DT nodes very soon
-
-regards
-Suman
-
- Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-index 164c7f34c451..21ba739b162e 100644
---- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-@@ -63,7 +63,7 @@ Example:
- --------
- The following example demonstrates a syscon node, the reset controller node
- using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
--Edison SoC.
-+66AK2E SoC.
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+index 1e82802..574c3a2 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+@@ -6,11 +6,13 @@ Required properties:
+ - interrupts : Should contain uart interrupt
  
- / {
- 	soc {
-@@ -71,13 +71,13 @@ Edison SoC.
- 			compatible = "syscon", "simple-mfd";
- 			reg = <0x02350000 0x1000>;
+ Optional properties:
+-- uart-has-rtscts : Indicate the uart has rts and cts
+ - fsl,irda-mode : Indicate the uart supports irda mode
+ - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+                   in DCE mode by default.
  
--			pscrst: psc-reset {
-+			pscrst: psc-reset-controller {
- 				compatible = "ti,k2e-pscrst", "ti,syscon-reset";
- 				#reset-cells = <1>;
++Please check Documentation/devicetree/bindings/serial/serial.txt
++for the complete list of generic properties.
++
+ Note: Each uart controller should have an alias correctly numbered
+ in "aliases" node.
  
- 				ti,reset-bits = <
--					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_SET|DEASSERT_CLEAR|STATUS_SET)   /* 0: pcrst-dsp0 */
--					0xa40 5 0xa44 3 0     0 (ASSERT_SET|DEASSERT_CLEAR|STATUS_NONE)  /* 1: pcrst-example */
-+					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR | DEASSERT_SET   | STATUS_CLEAR) /* 0: dsp0 */
-+					0xa40 5 0xa44 3 0     0 (ASSERT_SET   | DEASSERT_CLEAR | STATUS_NONE)  /* 1: example */
- 				>;
- 			};
- 		};
 -- 
-2.10.2
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
