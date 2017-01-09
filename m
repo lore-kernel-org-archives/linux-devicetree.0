@@ -1,54 +1,56 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/5] ARM: dts: keystone: Add PSC node
-Date: Mon, 9 Jan 2017 13:43:55 -0600
-Message-ID: <20170109194358.27271-3-s-anna@ti.com>
-References: <20170109194358.27271-1-s-anna@ti.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/5] Reset Controller Nodes for TI Keystone platforms
+Date: Mon, 9 Jan 2017 13:43:53 -0600
+Message-ID: <20170109194358.27271-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170109194358.27271-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Davis <afd@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Davis <afd-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Power Sleep Controller (PSC) module is responsible
-for the power and clock management for each of the peripherals
-present on the SoC. Represent this as a syscon node so that
-multiple users can leverage it for various functionalities.
+Hi Santosh,
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-[afd@ti.com: add simple-mfd compatible]
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/boot/dts/keystone.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+This patch adds the reset controller nodes and the corresponding
+reset data for TI Keystone 66AK2H, 66AK2L and 66AK2E SoCs. These
+resets are for the DSPs on these SoCs, and are the last dependencies
+before the keystone remoteproc driver can be added.
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 02708ba2d4f4..ec203d0a673d 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -83,6 +83,11 @@
- 			reg = <0x02310000 0x200>;
- 		};
- 
-+		psc: power-sleep-controller@02350000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x02350000 0x1000>;
-+		};
-+
- 		devctrl: device-state-control@02620000 {
- 			compatible = "ti,keystone-devctrl", "syscon";
- 			reg = <0x02620000 0x1000>;
+All these SoCs will use the ti-syscon-reset driver which is already
+part of mainline kernel. The bindings for the same can be found in
+Documentation/devicetree/bindings/reset/ti-syscon-reset.txt file.
+Note that the other Keystone 66AK2G SoC will use a different TI-SCI
+based reset driver, so will be submitted separately once the TI-SCI
+dependencies make it into mainline.
+
+Patches are based on top of 4.10-rc1 plus the MSM-RAM DT node series
+that you have already picked up. Patch 1 enable the Reset Framework
+for Keystone platforms, and remaining patches add the required DT
+nodes.
+
+regards
+Suman
+
+
+Suman Anna (5):
+  ARM: Keystone: Enable ARCH_HAS_RESET_CONTROLLER
+  ARM: dts: keystone: Add PSC node
+  ARM: dts: keystone-k2hk: Add PSC reset controller node
+  ARM: dts: keystone-k2l: Add PSC reset controller node
+  ARM: dts: keystone-k2e: Add PSC reset controller node
+
+ arch/arm/boot/dts/keystone-k2e.dtsi  | 13 +++++++++++++
+ arch/arm/boot/dts/keystone-k2hk.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2l.dtsi  | 16 ++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi      |  5 +++++
+ arch/arm/mach-keystone/Kconfig       |  1 +
+ 5 files changed, 55 insertions(+)
+
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
