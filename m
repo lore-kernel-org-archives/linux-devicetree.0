@@ -1,49 +1,47 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v4 1/9] clk: stm32f4: Update DT bindings documentation
-Date: Mon, 9 Jan 2017 17:28:56 +0100
-Message-ID: <ccd14adb-9d10-ae9e-de6d-565418421968@st.com>
-References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
- <1481638820-29324-2-git-send-email-gabriel.fernandez@st.com>
- <20161222001051.GP8288@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161222001051.GP8288@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Olivier BIDEAU <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ludovic BARRE <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] usb: musb: da8xx: Add DMA support
+Date: Mon,  9 Jan 2017 17:38:58 +0100
+Message-ID: <20170109163902.5268-1-abailon@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: b-liu-l0cyMroinI0@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+This series update musb driver to add DMA support to da8xx.
+To work correctly, the follwings patches are required:
+"dmaengine: cppi41: Add dma support to da8xx",
+"ARM: davinci: da850: Share the usb20 clock",
+"ARM: dts: da850: Enable cppi41 dma",
+"dmaengine: cppi41: PM runtime fixes"
 
-On 12/22/2016 01:10 AM, Stephen Boyd wrote:
-> On 12/13, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>
->> Creation of dt include file for specific stm32f4 clocks.
->> These specific clocks are not derived from system clock (SYSCLOCK)
->> We should use index 1 to use these clocks in DT.
->> e.g. <&rcc 1 CLK_LSI>
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
->
-> Applied to clk-stm32f4 and merged into clk-next.
->
+I haven't changed yet the davinci_all_defconfig to enable the DMA mode
+by default. I'm planning to do it once all the warnings happening during
+the teardwon will be fixed.
 
-I'm preparing pull request branch for STM32 DT part. This patch is also 
-requested to build correctly DT patches. Do you know how could we 
-synchronize our pull request ?
+The series has been tested on beaglebone black and omapl138-lcdk
+in both host mode (pendrive, headset, wifi, webcam) and device mode
+(MSC, CDC).
+Expect few warnings on omapl138-lcdk, I haven't noticed any issues.
 
-Thanks
-Alex
+Alexandre Bailon (4):
+  usb: musb: da8xx: Use the right dma controller
+  usb: musb: Add support of cppi41 dma controller for da8xx to Kconfig
+  usb: musb: Use shared irq
+  usb: musb: musb_cppi41: Workaround dma stall issue during teardown
+
+ drivers/dma/Kconfig            | 2 +-
+ drivers/usb/musb/Kconfig       | 4 ++--
+ drivers/usb/musb/da8xx.c       | 8 ++++----
+ drivers/usb/musb/musb_core.c   | 2 +-
+ drivers/usb/musb/musb_core.h   | 1 +
+ drivers/usb/musb/musb_cppi41.c | 4 ++++
+ 6 files changed, 13 insertions(+), 8 deletions(-)
+
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
