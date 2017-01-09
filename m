@@ -1,51 +1,54 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1.1] ARM: multi_v7_defconfig: Enable power sequence for
- Odroid U3
-Date: Mon, 9 Jan 2017 19:38:03 +0200
-Message-ID: <CAJKOXPdODg2gCXP-BCRhDZAc2+o1J7Ek9iLaYF7hn_R2mNiK3A@mail.gmail.com>
-References: <20170107085203.4431-5-krzk@kernel.org> <20170107091651.10560-1-krzk@kernel.org>
- <d8ee24b1-9d6b-e76f-b5ef-71706efbf9e5@osg.samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Mon, 9 Jan 2017 11:43:44 -0600
+Message-ID: <20170109174344.5kvijgyhusboftx3@rob-hp-laptop>
+References: <cover.1482936802.git.hns@goldelico.com>
+ <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d8ee24b1-9d6b-e76f-b5ef-71706efbf9e5-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Petr
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 9, 2017 at 6:24 PM, Javier Martinez Canillas
-<javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
-> Hello Krzysztof,
->
-> I think it would had been clearer if the subject prefix was "[PATCH v1.1 4/4]" :)
+On Wed, Dec 28, 2016 at 03:53:16PM +0100, H. Nikolaus Schaller wrote:
+> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
+> introduced common DT bindings for touchscreens [1] and a helper function to
+> parse the DT.
+> 
+> commit ed7c9870c9bc ("Input: of_touchscreen - add support for inverted / swapped axes")
+> added another helper for parsing axis inversion and swapping
+> and applying them to x and y coordinates.
+> 
+> Both helpers have been integrated to accommodate any orientation of the
+> touch panel in relation to the LCD.
+> 
+> A new feature is to introduce scaling the min/max ADC values to the screen
+> size.
+> 
+> This makes it possible to pre-calibrate the touch so that is (almost)
+> exactly matches the LCD pixel coordinates it is glued onto. This allows to
+> well enough operate the touch before a user space calibration step can
+> improve the precision.
+> 
+> Please note that the old ti,fuzz properties have been removed since they
+> are replaced by the common bindings touchscreen-fuzz-x/y/z.
+> 
+> Finally, calculate_pressure has been renamed to calculate_resistance
+> because that is what it is doing.
+> 
+> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../bindings/input/touchscreen/tsc2007.txt         |  20 ++--
 
-Ah, yes.
+Acked-by: Rob Herring <robh@kernel.org>
 
->
-> On 01/07/2017 06:16 AM, Krzysztof Kozlowski wrote:
->> Odroid U3 needs a power sequence for lan9730, if it was enabled by
->> bootloader.  Also enable the USB3503 HSCI to USB2.0 driver (device
->> is present on Odroid U3).
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> ---
->>
->
-> Do you think that makes sense to also enable GPIO_SYS for debugging
-> purposes as you do in patch 3/4?
-
-I like the GPIO_SYSFS interface because it is easy to use. However
-now, after your question, I found this:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/470154.html
-ARM/ARM64: defconfig: drop GPIO_SYSFS on multiplatforms
-
-... so instead I will drop it from exynos_defconfig.
-
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/input/touchscreen/tsc2007.c                | 120 +++++++++++++++++----
+>  include/linux/i2c/tsc2007.h                        |   8 ++
+>  3 files changed, 118 insertions(+), 30 deletions(-)
