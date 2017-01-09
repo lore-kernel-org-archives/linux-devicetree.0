@@ -1,25 +1,58 @@
-From: Kamal Ali Mohamed <mrkamalalimohamed01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: ATTENTION !
-Date: Mon, 9 Jan 2017 00:03:51 +0000 (UTC)
-Message-ID: <2061243689.1489900.1483920231155@mail.yahoo.com>
-References: <2061243689.1489900.1483920231155.ref@mail.yahoo.com>
-Reply-To: Kamal Ali Mohamed <mrkamalalimohamed-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: RE: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu
+ idle
+Date: Mon, 9 Jan 2017 01:47:21 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB49202C@CHN-SV-EXMX07.mchp-main.com>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+ <20170106065947.30631-2-wenyou.yang@atmel.com>
+ <20170106090517.txcoukisnx43cfqq@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170106090517.txcoukisnx43cfqq-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-Greetings to you and your families,
-
-I never want to disturb you at all but will like you give me your attention. I need a matured and capable hand in a business deal of $8, 500, 000.00 (Eight Million Five Hundred Thousand USA Dollars).I belief you are suitable to handle such project perfectly .Please answer me.For more details.All details shall be sent to you once I hear from you.Sorry if you received this letter in your spam, Due to recent connection error here in my country.
-
-Thanks and best regards,
-
-Mr.Kamal Ali Mohamed.
+SGkgQWxleGFuZHJlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFs
+ZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
+Y29tXQ0KPiBTZW50OiAyMDE3xOox1MI2yNUgMTc6MDUNCj4gVG86IFdlbnlvdSBZYW5nIC0gQTQx
+NTM1IDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPg0KPiBDYzogUnVzc2VsbCBLaW5nIDxsaW51
+eEBhcm0ubGludXgub3JnLnVrPjsgTmljb2xhcyBGZXJyZQ0KPiA8bmljb2xhcy5mZXJyZUBhdG1l
+bC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+
+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFdl
+bnlvdSBZYW5nIC0gQTQxNTM1DQo+IDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPjsgZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIEFSTTogYXQ5MTogZmx1c2ggdGhlIEwy
+IGNhY2hlIGJlZm9yZSBlbnRlcmluZyBjcHUgaWRsZQ0KPiANCj4gSGksDQo+IA0KPiBPbiAwNi8w
+MS8yMDE3IGF0IDE0OjU5OjQ1ICswODAwLCBXZW55b3UgWWFuZyB3cm90ZSA6DQo+ID4gRm9yIHRo
+ZSBTb0NzIHN1Y2ggYXMgU0FNQTVEMiBhbmQgU0FNQTVENCB3aGljaCBoYXZlIEwyIGNhY2hlLCBm
+bHVzaA0KPiA+IHRoZSBMMiBjYWNoZSBmaXJzdCBiZWZvcmUgZW50ZXJpbmcgdGhlIGNwdSBpZGxl
+Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVs
+LmNvbT4NCj4gPiAtLS0NCj4gPg0KPiA+ICBhcmNoL2FybS9tYWNoLWF0OTEvcG0uYyAgICAgICB8
+IDE5ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9tZW1vcnkvYXRtZWwtc2RyYW1j
+LmMgfCAgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+
+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYXQ5MS9wbS5jIGIvYXJjaC9hcm0vbWFjaC1h
+dDkxL3BtLmMgaW5kZXgNCj4gPiBiNDMzMmI3MjdlOWMuLjFhNjBkZWRlMWEwMSAxMDA2NDQNCj4g
+PiAtLS0gYS9hcmNoL2FybS9tYWNoLWF0OTEvcG0uYw0KPiA+ICsrKyBiL2FyY2gvYXJtL21hY2gt
+YXQ5MS9wbS5jDQo+ID4gQEAgLTI4OSw2ICsyODksMjQgQEAgc3RhdGljIHZvaWQgYXQ5MV9kZHJf
+c3RhbmRieSh2b2lkKQ0KPiA+ICAJCWF0OTFfcmFtY193cml0ZSgxLCBBVDkxX0REUlNEUkNfTFBS
+LCBzYXZlZF9scHIxKTsgIH0NCj4gPg0KPiA+ICtzdGF0aWMgdm9pZCBhdDkxX2Rkcl9jYWNoZV9z
+dGFuZGJ5KHZvaWQpIHsNCj4gPiArCXUzMiBzYXZlZF9scHI7DQo+ID4gKw0KPiA+ICsJZmx1c2hf
+Y2FjaGVfYWxsKCk7DQo+ID4gKwlvdXRlcl9kaXNhYmxlKCk7DQo+ID4gKw0KPiA+ICsJc2F2ZWRf
+bHByID0gYXQ5MV9yYW1jX3JlYWQoMCwgQVQ5MV9ERFJTRFJDX0xQUik7DQo+ID4gKwlhdDkxX3Jh
+bWNfd3JpdGUoMCwgQVQ5MV9ERFJTRFJDX0xQUiwgKHNhdmVkX2xwciAmDQo+ID4gKwkJCSh+QVQ5
+MV9ERFJTRFJDX0xQQ0IpKSB8DQo+IEFUOTFfRERSU0RSQ19MUENCX1NFTEZfUkVGUkVTSCk7DQo+
+ID4gKw0KPiA+ICsJY3B1X2RvX2lkbGUoKTsNCj4gPiArDQo+ID4gKwlhdDkxX3JhbWNfd3JpdGUo
+MCwgQVQ5MV9ERFJTRFJDX0xQUiwgc2F2ZWRfbHByKTsNCj4gPiArDQo+ID4gKwlvdXRlcl9yZXN1
+bWUoKTsNCj4gPiArfQ0KPiA+ICsNCj4gDQo+IFNlZW1zIGdvb2QgdG8gbWUuIERpZCB5b3UgbWVh
+c3VyZSB0aGUgYWRkZWQgbGF0ZW5jeSBvbiBzYW1hNWQzIGlmIHlvdSBhZGQgdGhlDQo+IGNhY2hl
+IG9wZXJhdGlvbnMgaW4gYXQ5MV9kZHJfc3RhbmRieSBpbnN0ZWFkIG9mIGhhdmluZyBhIG5ldyBm
+dW5jdGlvbj8NCg0KTm8sIEkgZGlkbid0LiBIb3cgdG8gbWVhc3VyZSBpdD8NCg0KDQpCZXN0IFJl
+Z2FyZHMsDQpXZW55b3UgWWFuZw0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
