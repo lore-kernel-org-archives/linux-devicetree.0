@@ -1,63 +1,77 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/3] power: supply: bq24735-charger: allow chargers to
- share the ac-detect gpio
-Date: Mon, 9 Jan 2017 19:55:48 +0100
-Message-ID: <CACRpkdbyzLwsK6bosbCZAniPNTU9PMp_8Wi7J0sQCjsh8RLPcw@mail.gmail.com>
-References: <1481673405-4547-1-git-send-email-peda@axentia.se>
- <1481673405-4547-4-git-send-email-peda@axentia.se> <20161214165921.jsatcznbljd7anqi@earth>
- <20161214170114.ckozfple475kqajh@earth> <e1667d9d-17bf-2fe5-8a65-af73b6507cbd@axentia.se>
- <CACRpkda+7XLBMo11vB_V030or3b+-LRufrziVVgct4Gr_2E+KQ@mail.gmail.com> <c3d66181-3076-0d0f-d74e-ec0205b3f547@axentia.se>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] usb: musb: da8xx: Use the right dma controller
+Date: Mon, 9 Jan 2017 11:06:19 -0800
+Message-ID: <20170109190619.GM2630@atomide.com>
+References: <20170109163902.5268-1-abailon@baylibre.com>
+ <20170109163902.5268-2-abailon@baylibre.com>
+ <7dcfe848-a421-d409-0e9a-659c095e4e31@cogentembedded.com>
+ <20170109184352.GL2630@atomide.com>
+ <5a002693-1ebf-550f-02df-b40e44f59751@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <c3d66181-3076-0d0f-d74e-ec0205b3f547@axentia.se>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Sebastian Reichel <sre@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5a002693-1ebf-550f-02df-b40e44f59751-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, b-liu-l0cyMroinI0@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 2, 2017 at 9:31 AM, Peter Rosin <peda@axentia.se> wrote:
-> On 2016-12-30 08:49, Linus Walleij wrote:
->> On Wed, Dec 14, 2016 at 6:41 PM, Peter Rosin <peda@axentia.se> wrote:
->>> On 2016-12-14 18:01, Sebastian Reichel wrote:
->>>> [of course I forgot to actually add gpio people, let's try again]
->>>>
->>>> On Wed, Dec 14, 2016 at 05:59:21PM +0100, Sebastian Reichel wrote:
->>>>> Hi,
->>>>>
->>>>> On Wed, Dec 14, 2016 at 12:56:45AM +0100, Peter Rosin wrote:
->>>>>> If several parallel bq24735 chargers have their ac-detect gpios wired
->>>>>> together (or if only one of the parallel bq24735 chargers have its
->>>>>> ac-detect pin wired to a gpio, and the others are assumed to react the
->>>>>> same), then all driver instances need to check the same gpio. But the
->>>>>> gpio subsystem does not allow sharing gpios, so handle that locally.
->>>>>
->>>>> Adding GPIO subsystem people to see if they can come up with
->>>>> something in the gpiod API for this usecase.
->>>
->>> Right, I don't like how my new code steps away from gpio descriptors.
->>
->> The issue of shared gpiods have come up over and over again.
->> For example the messy regulator code needs this too.
->>
->> It is better if we implement something like gpiod_get_shared()
->> in the gpiolib of these cases.
->>
->> Just put a refcount in struct gpio_desc in drivers/gpio/gpiolib.h
->> for this case I guess?
->
-> I actually tried that, but ran into atomicy issues with the
-> FLAG_REQUESTED bit and gave up. Didn't really try all that hard
-> though, but I simply didn't feel comfortable with going near such
-> fundamental designs...
+* Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> [170109 10:55]:
+> On 01/09/2017 09:43 PM, Tony Lindgren wrote:
+> 
+> > > > da8xx driver is registering and using the cppi dma controller but actually,
+> > > > the da8xx has a cppi41 dma controller.
+> > > > Update the driver to register and use the cppi41 dma controller.
+> > > > 
+> > > > Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > > > ---
+> > > >  drivers/usb/musb/da8xx.c | 8 ++++----
+> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+> > > > index e89708d..74dcc07 100644
+> > > > --- a/drivers/usb/musb/da8xx.c
+> > > > +++ b/drivers/usb/musb/da8xx.c
+> > > > @@ -458,14 +458,14 @@ static inline u8 get_vbus_power(struct device *dev)
+> > > >  }
+> > > > 
+> > > >  static const struct musb_platform_ops da8xx_ops = {
+> > > > -	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
+> > > 
+> > >    Grr, MUSB_DMA_CPPI is certainly wrong! There's no CPPI 3.0 support for
+> > > DA8xx. Where have this come from?
+> > > 
+> > > > +	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
+> > > >  	.init		= da8xx_musb_init,
+> > > >  	.exit		= da8xx_musb_exit,
+> > > > 
+> > > >  	.fifo_mode	= 2,
+> > > > -#ifdef CONFIG_USB_TI_CPPI_DMA
+> > > > -	.dma_init	= cppi_dma_controller_create,
+> > > > -	.dma_exit	= cppi_dma_controller_destroy,
+> > > 
+> > >    Likewise, WTF?
+> > >    I suggest that you fix this crap in a separate commit, to be backported
+> > > to -stable if needed.
+> > 
+> > Probably came from my DMA patch 7f6283ed6fe8 ("usb: musb: Set up function
+> 
+>    Too bad I missed it back then. Then certainly this should be fixed in a
+> separate patch. The first hunk was not a part of that commit, tho...
+> 
+> > pointers for DMA"). At that point I thought da8xxx.c and davinci.c are just
+> > separate attempts of the same driver.. Sorry the number of musb glue layers
+> > is just too confusing.
 
-Oh I see. Well if it is of any help that would make me nervous too.
+Maybe from f8e9f34f80a2 ("usb: musb: Fix up DMA related macros")?
 
-I would just remove the use of FLAG_REQUESTED altogether,
-redefine the flags in gpiolib.h from 0 and add a struct kref into the struct
-to deal with the refcounting.
+Sorry obviously I have no idea how the da8xx.c should be configured for DMA.
 
-That should do it. I think.
+Regards,
 
-Yours,
-Linus Walleij
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
