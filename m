@@ -1,50 +1,54 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: =?utf-8?B?5Zue5aSN77yaTXlpciBBTTQzN3gg?=
- =?utf-8?Q?Rico_board_support_=28DTS?= =?utf-8?Q?=29?= for Linux mainline 4.9
- and 4.4 Ti Processor SDK 03.02.00.05
-Date: Mon, 9 Jan 2017 11:37:48 -0800
-Message-ID: <20170109193747.GP2630@atomide.com>
-References: <201701051754.03159.ppisa@pikron.com>
- <cb3b5798-e82e-4bb4-932b-1c02ece5d3e4.sunny.guo@myirtech.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/6] arm64: dts: apq8016-sbc: add support to hdmi audio
+ via adv7533
+Date: Mon, 9 Jan 2017 11:39:51 -0800
+Message-ID: <20170109193951.GO17126@codeaurora.org>
+References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1483536902-21450-3-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cb3b5798-e82e-4bb4-932b-1c02ece5d3e4.sunny.guo-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sunny <sunny.guo-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org>
-Cc: Pavel Pisa <ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org>, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org
+In-Reply-To: <1483536902-21450-3-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 01/04, Srinivas Kandagatla wrote:
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> index 08bd5eb..5ab277f 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> @@ -85,6 +85,7 @@
+>  				pinctrl-names = "default","sleep";
+>  				pinctrl-0 = <&adv7533_int_active &adv7533_switch_active>;
+>  				pinctrl-1 = <&adv7533_int_suspend &adv7533_switch_suspend>;
+> +				#sound-dai-cells = <1>;
+>  
+>  				ports {
+>  					#address-cells = <1>;
+> @@ -285,6 +286,15 @@
+>                          qcom,audio-routing =
+>                                  "AMIC2", "MIC BIAS Internal2",
+>                                  "AMIC3", "MIC BIAS External1";
+> +			external-dai-link@0 {
+> +				link-name = "ADV7533";
+> +				cpu { /* QUAT */
+> +					sound-dai = <&lpass MI2S_QUATERNARY>;
+> +				};
+> +				codec {
+> +					sound-dai = <&adv_bridge 0>;
+> +				};
+> +			};
+>  
+>                          internal-codec-playback-dai-link@0 {            /* I2S - Internal codec */
+>                                  link-name = "WCD";
 
-* Sunny <sunny.guo-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org> [170109 02:36]:
-> Hello Pavel and Tony,
-> 
-> This is Sunny from MYIR , and working as the software manager on RICO board. Very glad to see the great work that Pavel has done ,and sincerely appriciated to all the contributions and share. 
-> 
-> Our Linux release is not in the mailline release currently, and updates is following TI official release , may with some latency due need some time to make the update on RICO . We are planning and working on next update on RICO linux which will happen on April to Linux 4.4 or above.
-> 
-> I will look into detail and make some testings.  We will talk to you later on how we can share and help the engineers to benefit from your contribution.
+The spacing is weird here. Did the internal-codec get added
+without tabs before?
 
-Please let's coordinate the work on linux-arm-kernel and linux-omap
-mailing lists to avoid duplicate work.
 
-It seems the basic dts file is pretty much ready to go, then
-it's easy to make incremental patches to that.
-
-So maybe try to get get your engineers involved on the lists
-too?
-
-And if you want the community people to help then making
-few devices available to play with might get you some extra
-help.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
