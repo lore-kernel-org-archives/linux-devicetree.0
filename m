@@ -1,94 +1,105 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Mon, 09 Jan 2017 08:37:25 +0100
-Message-ID: <5df95abe-0d5d-0c48-2840-5996260201de@samsung.com>
-References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
- <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
- <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
- <586F2BF3.8080400@samsung.com>
- <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
- <586F5728.1010800@samsung.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 5/5] i2c: mux: pca954x: Add irq_mask_en to delay
+ enabling irqs
+Date: Mon, 9 Jan 2017 08:54:08 +0100
+Message-ID: <c5b2eeef-4501-e866-4bb3-f02ada7d4604@axentia.se>
+References: <1483589463-35380-1-git-send-email-preid@electromag.com.au>
+ <1483589463-35380-6-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <586F5728.1010800-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Donghwa Lee <dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1483589463-35380-6-git-send-email-preid@electromag.com.au>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06.01.2017 09:36, Inki Dae wrote:
->
-> 2017년 01월 06일 17:18에 Andi Shyti 이(가) 쓴 글:
->> Hi Inki,
->>
->> Thanks for the reply, but...
->>
->>>>> +static const struct drm_display_mode default_mode = {
->>>>> +	.clock = 222372,
->>>>> +	.hdisplay = 1440,
->>>>> +	.hsync_start = 1440 + 1,
->>>>> +	.hsync_end = 1440 + 1 + 1,
->>>>> +	.htotal = 1440 + 1 + 1 + 1,
->>>>> +	.vdisplay = 2560,
->>>>> +	.vsync_start = 2560 + 1,
->>>>> +	.vsync_end = 2560 + 1 + 1,
->>>>> +	.vtotal = 2560 + 1 + 1 + 15,
->>>>> +	.vrefresh = 60,
->>>>> +	.flags = 0,
->>>>> +};
->>>> how is this working with tm2e? Are these values valid for both
->>>> the boards?
->>> We don't need to consider tm2e board with two reasones,
->>> 1. there is no tm2e board support in mainline
->>> 2. the panel on tm2 would be a little bit different from one on tm2e
->> ... this display in the Tizen Kernel is supported by both:
->> tm2 [1] and tm2e [2]. The only differences are:
-> Why tm2e dts file is in mainline? Seems communication miss with Chanwoo. :( 
->
->> TM2:
->>    clock-frequency = <14874444>;
->>    hactive = <1440>;
->>
->> TM2E:
->>    clock-frequency = <16523724>;
->>    hactive = <1600>;
->>
->> I don't know much about the differences you mention in point 2,
->> but it's a pity to drop support only because we don't want to put
->> in the dts the 'hactive', and 'clock-frequency' properties.
-> Anyway, tm2e board is already in mainline so Panel driver may need to identify what kinds of panel is probed to decide porch values. I think there are relevant registers in MCU of the Panel device to check version or similar thing.
+On 2017-01-05 05:11, Phil Reid wrote:
+> Unfortunately some hardware device will assert their irq line immediately
+> on power on and provide no mechanism to mask the irq. As the i2c muxes
+> provide no method to mask irq line this provides a work around by keeping
+> the parent irq masked until enough device drivers have loaded to service
+> all pending interrupts.
+> 
+> For example the the ltc1760 assert its SMBALERT irq immediately on power
+> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
+> device is registered irq are enabled and fire continuously as the second
+> device driver has not yet loaded. Setting this parameter to 0x3 while
+> delay the irq being enabled until both devices are ready.
+> 
+> Acked-by: Peter Rosin <peda@axentia.se>
 
-I think we can safely use different compatible string for tm2e - it uses
-different display IC controller - s6e3hf2, driver will provide timings
-based on it.
-As far as I examined available specs/docs there is no reliable register
-which can be used to safely distinguish it on runtime, but the docs I
-have are far from completeness.
+Ooops, too soon apparently, but the below nitpicks are not that important.
+Maybe Wolfram can fix it up instead of you sending a new version?
 
-Regards
-Andrzej
+Cheers,
+peda
 
->
-> Thanks.
->
->> Andi
->>
->> [1] https://git.tizen.org/cgit/platform/kernel/linux-exynos/tree/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts?h=tizen#n1284
->> [2] https://git.tizen.org/cgit/platform/kernel/linux-exynos/tree/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts?h=tizen#n1270
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> .
->>
->
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>  drivers/i2c/muxes/i2c-mux-pca954x.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> index 84fc767..581a75d 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> @@ -75,6 +75,19 @@ struct chip_desc {
+>  	} muxtype;
+>  };
+>  
+> +/*
+> + * irq_mask_enable: Provides a mechanism to work around hardware that asserts
+> + * their irq immediately on power on. It allows the enabling of the  irq to be
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+double space: "the  irq"
+
+> + * delayed until the corresponding bits in the the irq_mask are set thru
+> + * irq_unmask.
+> + * For example the the ltc1760 assert its SMBALERT irq immediately on power
+
+"the the"
+
+> + * on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
+> + * device is registered irq are enabled and fire continuously as the second
+> + * device driver has not yet loaded. Setting this parameter to 0x3 while
+> + * delay the irq being enabled until both devices are ready.
+> + * This workaround will not work if two devices share an interrupt on the
+> + * same bus segment.
+> + */
+>  struct pca954x {
+>  	const struct chip_desc *chip;
+>  
+> @@ -84,6 +97,7 @@ struct pca954x {
+>  
+>  	struct irq_domain *irq;
+>  	unsigned int irq_mask;
+> +	unsigned int irq_mask_enable;
+>  };
+>  
+>  /* Provide specs for the PCA954x types we know about */
+> @@ -270,9 +284,12 @@ static void pca954x_irq_unmask(struct irq_data *idata)
+>  	struct pca954x *data = irq_data_get_irq_chip_data(idata);
+>  	unsigned int pos = idata->hwirq;
+>  
+> -	if (!data->irq_mask)
+> +	if (!data->irq_mask_enable && !data->irq_mask)
+>  		enable_irq(data->client->irq);
+>  	data->irq_mask |= BIT(pos);
+> +	if (data->irq_mask_enable &&
+> +		(data->irq_mask & data->irq_mask) == data->irq_mask_enable)
+> +		enable_irq(data->client->irq);
+>  }
+>  
+>  static int pca954x_irq_set_type(struct irq_data *idata, unsigned int type)
+> @@ -395,6 +412,9 @@ static int pca954x_probe(struct i2c_client *client,
+>  	idle_disconnect_dt = of_node &&
+>  		of_property_read_bool(of_node, "i2c-mux-idle-disconnect");
+>  
+> +	of_property_read_u32(of_node, "nxp,irq-mask-enable",
+> +			     &data->irq_mask_enable);
+> +
+>  	ret = pca954x_irq_setup(muxc);
+>  	if (ret)
+>  		goto fail_del_adapters;
+> 
