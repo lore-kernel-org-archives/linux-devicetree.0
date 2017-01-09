@@ -1,52 +1,135 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to
- respect extra limits
-Date: Mon, 09 Jan 2017 12:07:41 +0100
-Message-ID: <1483960061.17582.27.camel@sipsolutions.net>
-References: <20170104175832.25996-1-zajec5@gmail.com>
-         <20170104175832.25996-4-zajec5@gmail.com>
-         <3fc87224-7f08-e365-7bbb-a4b8b5746e4f@broadcom.com>
-         <CACna6rxay9sC+QT2G4AfjWT1ERsNDzFQ620hNhVhr0FRHXJu=w@mail.gmail.com>
-         <e2bbce35-af09-adfa-09ea-e9fcf57b4d09@broadcom.com>
-         <CACna6rw22benfuw_7BSFw1wedavmMJWTo_hfPLCVa1t0kV+Aqg@mail.gmail.com>
-         <36d2dbd1-bcbe-021b-dd7f-068a5b9739ef@broadcom.com>
-         <CACna6rxS-JqyW3cXFMJR6Lp-+HdJjZfkwsVRMPGn5Q1z8av75w@mail.gmail.com>
-         <1483952320.17582.13.camel@sipsolutions.net>
-         <684d1aff-a9ce-ae42-0c11-5840d3a92daf@broadcom.com>
-         (sfid-20170109_120214_167212_462C1A4A)
+From: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+Date: Mon, 9 Jan 2017 11:14:48 +0000
+Message-ID: <AM5PR0401MB25451FAB56E697889FDA30309A640@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+References: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy@arm.com>
+	<DB6PR0402MB2694957C2D7C648CC342627FE69F0@DB6PR0402MB2694.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <684d1aff-a9ce-ae42-0c11-5840d3a92daf-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (sfid-20170109_120214_167212_462C1A4A)
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <DB6PR0402MB2694957C2D7C648CC342627FE69F0-2mNvjAGDOPn2WJ5A9zev/o3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-01-09 at 12:02 +0100, Arend Van Spriel wrote:
+Hi Robin,
 
-> > However, with the OF, I argued (succesfully it seems :P) that the
-> > sensible thing to do was to register with the DISABLED flag and
-> > thereby
-> > "permanently" disable the channels that OF didn't think were
-> > usable,
-> > but in this case now the driver has to adhere to the cfg80211 logic
-> > of
-> > preserving orig_flags forever.
+> -----Original Message-----
+> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Nipun Gupta
+> Sent: Sunday, December 18, 2016 2:37 AM
+> To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> foundation.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
+> <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> Subject: RE: [RFC PATCH] iommu/arm-smmu: Add global SMR masking
+> property
 > 
-> By adhere you mean we should not enable channes for which orig_flags
-> indicate DISABLED?
+> 
+> 
+> > -----Original Message-----
+> > From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> > bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Robin Murphy
+> > Sent: Friday, December 16, 2016 18:49
+> > To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > linux-arm- kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
+> > <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> > Subject: [RFC PATCH] iommu/arm-smmu: Add global SMR masking
+> property
+> >
+> > The current SMR masking support using a 2-cell iommu-specifier is
+> > primarily intended to handle individual masters with large and/or
+> > complex Stream ID assignments; it quickly gets a bit clunky in other
+> > SMR use-cases where we just want to consistently mask out the same
+> > part of every Stream ID (e.g. for MMU-500 configurations where the
+> > appended TBU number gets in the way unnecessarily). Let's add a new
+> > property to allow a single global mask value to better fit the latter situation.
+> >
+> > CC: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> 
+> Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
 
-Well, the regulatory code will "OR" in all the orig_flags after
-modifications. If you don't use any of the others before registering,
-and you don't use any other helpers other than the OF one that we know
-sets only DISABLED, then keeping only the DISABLED flag would be OK -
-however, it should *also* be OK to always keep *all* of the orig_flags,
-just like the normal regulatory code would?
+We have verified this patches with PCI and FSL-MC bus devices.
 
-johannes
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I do not see any comment on this patch, I know there were holidays around, can we assume this as accepted and we can develop u-boot patches.
+
+Thanks
+-Bharat
+
+> 
+> > Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >
+> > Compile-tested only...
+> >
+> >  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 8 ++++++++
+> >  drivers/iommu/arm-smmu.c                             | 4 +++-
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > index e862d1485205..98f5cbe5fdb4 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > @@ -60,6 +60,14 @@ conditions.
+> >                    aliases of secure registers have to be used during
+> >                    SMMU configuration.
+> >
+> > +- stream-match-mask : Specifies a fixed SMR mask value to combine with
+> > +                  the Stream ID value from every iommu-specifier. This
+> > +                  may be used instead of an "#iommu-cells" value of 2
+> > +                  when there is no need for per-master SMR masks, but
+> > +                  it is still desired to mask some portion of every
+> > +                  Stream ID (e.g. for certain MMU-500 configurations
+> > +                  given globally unique external IDs).
+> > +
+> >  ** Deprecated properties:
+> >
+> >  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index
+> > 8f7281444551..f1abcb7dde36 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -1534,13 +1534,15 @@ static int arm_smmu_domain_set_attr(struct
+> > iommu_domain *domain,
+> >
+> >  static int arm_smmu_of_xlate(struct device *dev, struct
+> > of_phandle_args *args)  {
+> > -	u32 fwid = 0;
+> > +	u32 mask, fwid = 0;
+> >
+> >  	if (args->args_count > 0)
+> >  		fwid |= (u16)args->args[0];
+> >
+> >  	if (args->args_count > 1)
+> >  		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
+> > +	else if (!of_property_read_u32(args->np, "stream-match-mask",
+> > &mask))
+> > +		fwid |= (u16)mask << SMR_MASK_SHIFT;
+> >
+> >  	return iommu_fwspec_add_ids(dev, &fwid, 1);  }
+> > --
+> > 2.10.2.dirty
+> >
+> > _______________________________________________
+> > iommu mailing list
+> > iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
