@@ -1,104 +1,98 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
-Date: Mon, 9 Jan 2017 14:36:55 +0100
-Message-ID: <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea@xs4all.nl>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1482307838-47415-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1482307838-47415-7-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <11494368.ZdobxT7gGY@avalon>
- <CAMuHMdXj-xBrnBXfYu6BeXr7Gfv4wogH4z610Ddq-BSyVS=-8Q@mail.gmail.com>
- <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH V2 3/5] Documetation: binding: modify the exynos5440 pcie
+ binding
+Date: Mon, 09 Jan 2017 19:06:43 +0530
+Message-ID: <c3b9b19a-1ece-6ec3-9127-aaeeac2c54a0@samsung.com>
+References: <20170104123435.30740-1-jh80.chung@samsung.com>
+ <CGME20170104123436epcas1p1040f1e074748fabe58af52eb0b833713@epcas1p1.samsung.com>
+ <20170104123435.30740-4-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Palosaari <crope@iki.fi>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170104123435.30740-4-jh80.chung@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2017 04:20 PM, Ramesh Shanmugasundaram wrote:
-> Hi Laurent, Geert,
-> 
-> Thanks for the review comments.
-> 
->>> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
->>>> Add binding documentation for Renesas R-Car Digital Radio Interface
->>>> (DRIF) controller.
->>>>
->>>> Signed-off-by: Ramesh Shanmugasundaram
->>>> <ramesh.shanmugasundaram@bp.renesas.com> ---
->>>>  .../devicetree/bindings/media/renesas,drif.txt     | 202
->> ++++++++++++++++++
->>>>  1 file changed, 202 insertions(+)
->>>>  create mode 100644
->>>> Documentation/devicetree/bindings/media/renesas,drif.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
->>>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new file
->>>> mode
->>>> 100644
->>>> index 0000000..1f3feaf
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
->>
->>>> +Optional properties of an internal channel when:
->>>> +     - It is the only enabled channel of the bond (or)
->>>> +     - If it acts as primary among enabled bonds
->>>> +--------------------------------------------------------
->>>> +- renesas,syncmd       : sync mode
->>>> +                      0 (Frame start sync pulse mode. 1-bit width
->> pulse
->>>> +                         indicates start of a frame)
->>>> +                      1 (L/R sync or I2S mode) (default)
->>>> +- renesas,lsb-first    : empty property indicates lsb bit is received
->>>> first.
->>>> +                      When not defined msb bit is received first
->>>> +(default)
->>>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1 for
->> low/high
+Hi Jaehoon,
 
-Shouldn't this be 'renesas,sync-active' instead of syncac-active?
+On 01/04/2017 06:04 PM, Jaehoon Chung wrote:
+> According to using PHY framework, updates the exynos5440-pcie binding.
+> For maintaining backward compatibility, leaves the current dt-binding.
+> (It should be deprecated.)
+>
+> Recommends to use the Phy Framework and "config" property to follow
+> the designware-pcie binding.
+> If you use the old way, can see "mssing *config* reg space" message.
+> Because the getting configuration space address from range is old way.
+>
+> NOTE: When use the "config" property, first name of 'reg-names' must be
+> set to "elbi". Otherwise driver can't maintain the backward capability.
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> ---
 
-I'm not sure if syncac is intended or if it is a typo.
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
->>>> +                      respectively. The default is 1 (active high)
->>>> +- renesas,dtdl         : delay between sync signal and start of
->> reception.
->>>> +                      The possible values are represented in 0.5 clock
->>>> +                      cycle units and the range is 0 to 4. The default
->>>> +                      value is 2 (i.e.) 1 clock cycle delay.
->>>> +- renesas,syncdl       : delay between end of reception and sync
->> signal
->>>> edge.
->>>> +                      The possible values are represented in 0.5 clock
->>>> +                      cycle units and the range is 0 to 4 & 6. The
->> default
->>>> +                      value is 0 (i.e.) no delay.
->>>
->>> Most of these properties are pretty similar to the video bus
->>> properties defined at the endpoint level in
->>> Documentation/devicetree/bindings/media/video-interfaces.txt. I
->>> believe it would make sense to use OF graph and try to standardize
->>> these properties similarly.
-
-Other than sync-active, is there really anything else that is similar? And
-even the sync-active isn't a good fit since here there is only one sync
-signal instead of two for video (h and vsync).
-
-Regards,
-
-	Hans
-
->> Note that the last two properties match the those in
->> Documentation/devicetree/bindings/spi/sh-msiof.txt.
->> We may want to use one DRIF channel as a plain SPI slave with the
->> (modified) MSIOF driver in the future.
-> 
-> Should I leave it as it is or modify these as in video-interfaces.txt? Shall we conclude on this please?
-> 
-> Thanks,
-> Ramesh
-> N�����r��y���b�X��ǧv�^�)޺{.n�+����{���bj)���w*jg��������ݢj/���z�ޖ��2�ޙ���&�)ߡ�a�����G���h��j:+v���w�٥
-> 
+> Changelog on V2:
+> - Describes more commit message
+> - Fixes the typos
+> - Adds the new example for using PHY framework
+> - Deprecated the old dt-binding description
+> - Removes 'phy-names'
+>
+>  .../bindings/pci/samsung,exynos5440-pcie.txt       | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+> index 4f9d23d..1d0af0e 100644
+> --- a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+> @@ -7,8 +7,19 @@ Required properties:
+>  - compatible: "samsung,exynos5440-pcie"
+>  - reg: base addresses and lengths of the pcie controller,
+>  	the phy controller, additional register for the phy controller.
+> +	(Registers for the phy controller are DEPRECATED.
+> +	 Use the PHY framework.)
+> +- reg-names : First name should be set to "elbi".
+> +	And use the "config" instead of getting the confgiruation address space
+> +	from "ranges".
+> +	NOTE: When use the "config" property, reg-names must be set.
+>  - interrupts: A list of interrupt outputs for level interrupt,
+>  	pulse interrupt, special interrupt.
+> +- phys: From PHY binding. Phandle for the Generic PHY.
+> +	Refer to Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +
+> +Other common properties refer to
+> +	Documentation/devicetree/binding/pci/designware-pcie.txt
+>
+>  Example:
+>
+> @@ -54,6 +65,24 @@ SoC specific DT Entry:
+>  		num-lanes = <4>;
+>  	};
+>
+> +With using PHY framework:
+> +	pcie_phy0: pcie-phy@270000 {
+> +		...
+> +		reg = <0x270000 0x1000>, <0x271000 0x40>;
+> +		regn-names = "phy", "block";
+> +		...
+> +	};
+> +
+> +	pcie@290000 {
+> +		...
+> +		reg = <0x290000 0x1000>, <0x40000000 0x1000>;
+> +		reg-names = "elbi", "config";
+> +		phys = <&pcie_phy0>;
+> +		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000
+> +			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>;
+> +		...
+> +	};
+> +
+>  Board specific DT Entry:
+>
+>  	pcie@290000 {
+>
