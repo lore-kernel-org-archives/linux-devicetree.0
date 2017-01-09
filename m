@@ -1,77 +1,72 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: musb: da8xx: Use the right dma controller
-Date: Mon, 9 Jan 2017 11:06:19 -0800
-Message-ID: <20170109190619.GM2630@atomide.com>
-References: <20170109163902.5268-1-abailon@baylibre.com>
- <20170109163902.5268-2-abailon@baylibre.com>
- <7dcfe848-a421-d409-0e9a-659c095e4e31@cogentembedded.com>
- <20170109184352.GL2630@atomide.com>
- <5a002693-1ebf-550f-02df-b40e44f59751@cogentembedded.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH] Documentation: dt: reset: Revise typos in TI syscon reset
+ example
+Date: Mon, 9 Jan 2017 13:28:14 -0600
+Message-ID: <20170109192814.26811-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5a002693-1ebf-550f-02df-b40e44f59751-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, b-liu-l0cyMroinI0@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> [170109 10:55]:
-> On 01/09/2017 09:43 PM, Tony Lindgren wrote:
-> 
-> > > > da8xx driver is registering and using the cppi dma controller but actually,
-> > > > the da8xx has a cppi41 dma controller.
-> > > > Update the driver to register and use the cppi41 dma controller.
-> > > > 
-> > > > Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > >  drivers/usb/musb/da8xx.c | 8 ++++----
-> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-> > > > index e89708d..74dcc07 100644
-> > > > --- a/drivers/usb/musb/da8xx.c
-> > > > +++ b/drivers/usb/musb/da8xx.c
-> > > > @@ -458,14 +458,14 @@ static inline u8 get_vbus_power(struct device *dev)
-> > > >  }
-> > > > 
-> > > >  static const struct musb_platform_ops da8xx_ops = {
-> > > > -	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
-> > > 
-> > >    Grr, MUSB_DMA_CPPI is certainly wrong! There's no CPPI 3.0 support for
-> > > DA8xx. Where have this come from?
-> > > 
-> > > > +	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
-> > > >  	.init		= da8xx_musb_init,
-> > > >  	.exit		= da8xx_musb_exit,
-> > > > 
-> > > >  	.fifo_mode	= 2,
-> > > > -#ifdef CONFIG_USB_TI_CPPI_DMA
-> > > > -	.dma_init	= cppi_dma_controller_create,
-> > > > -	.dma_exit	= cppi_dma_controller_destroy,
-> > > 
-> > >    Likewise, WTF?
-> > >    I suggest that you fix this crap in a separate commit, to be backported
-> > > to -stable if needed.
-> > 
-> > Probably came from my DMA patch 7f6283ed6fe8 ("usb: musb: Set up function
-> 
->    Too bad I missed it back then. Then certainly this should be fixed in a
-> separate patch. The first hunk was not a part of that commit, tho...
-> 
-> > pointers for DMA"). At that point I thought da8xxx.c and davinci.c are just
-> > separate attempts of the same driver.. Sorry the number of musb glue layers
-> > is just too confusing.
+Fix couple of typos in the example given in the TI syscon reset
+binding. The ti,reset-bits used for DSP0 are corrected to match
+the values that will be used in the actual DT node.
 
-Maybe from f8e9f34f80a2 ("usb: musb: Fix up DMA related macros")?
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+Hi Philipp,
 
-Sorry obviously I have no idea how the da8xx.c should be configured for DMA.
+This is the Documentation part fix that goes along with
+the ti-syscon-reset fix that you have on your next branch.
+I will be submitting the DT nodes very soon
 
-Regards,
+regards
+Suman
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+index 164c7f34c451..21ba739b162e 100644
+--- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
++++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+@@ -63,7 +63,7 @@ Example:
+ --------
+ The following example demonstrates a syscon node, the reset controller node
+ using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
+-Edison SoC.
++66AK2E SoC.
+ 
+ / {
+ 	soc {
+@@ -71,13 +71,13 @@ Edison SoC.
+ 			compatible = "syscon", "simple-mfd";
+ 			reg = <0x02350000 0x1000>;
+ 
+-			pscrst: psc-reset {
++			pscrst: psc-reset-controller {
+ 				compatible = "ti,k2e-pscrst", "ti,syscon-reset";
+ 				#reset-cells = <1>;
+ 
+ 				ti,reset-bits = <
+-					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_SET|DEASSERT_CLEAR|STATUS_SET)   /* 0: pcrst-dsp0 */
+-					0xa40 5 0xa44 3 0     0 (ASSERT_SET|DEASSERT_CLEAR|STATUS_NONE)  /* 1: pcrst-example */
++					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR | DEASSERT_SET   | STATUS_CLEAR) /* 0: dsp0 */
++					0xa40 5 0xa44 3 0     0 (ASSERT_SET   | DEASSERT_CLEAR | STATUS_NONE)  /* 1: example */
+ 				>;
+ 			};
+ 		};
+-- 
+2.10.2
