@@ -1,87 +1,133 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC 3/4] dt-bindings: correct marvell orion MDIO binding
- document
-Date: Mon, 9 Jan 2017 10:31:56 +0000
-Message-ID: <20170109103156.GA2147@leverpostej>
-References: <20170107112656.GL14217@n2100.armlinux.org.uk>
- <E1cPpAk-0005uJ-TM@rmk-PC.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <E1cPpAk-0005uJ-TM@rmk-PC.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH v2 3/3] arm64: dts: exynos5433-tm2: enable HDMI/TV path
+Date: Mon, 09 Jan 2017 11:40:37 +0100
+Message-ID: <1483958437-6572-3-git-send-email-a.hajda@samsung.com>
+References: <1483958437-6572-1-git-send-email-a.hajda@samsung.com>
+ <CGME20170109104055eucas1p20e90f616b4bb44b4759021885f560c08@eucas1p2.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1483958437-6572-1-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 07, 2017 at 11:28:30AM +0000, Russell King wrote:
-> Correct the Marvell Orion MDIO binding document to properly reflect the
-> cases where an interrupt is present.  Augment the examples to show this.
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+TV path consist of following interconnected components:
+- DECON_TV - display controller,
+- HDMI - video signal converter RGB / HDMI,
+- MHL - video signal converter HDMI / MHL,
+- DDC - i2c slave device for EDID reading (on hsi2c_11 bus).
 
-This looks fine to me.
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
+v2:
+  - replaced magic numbers with macros,
+  - removed assigned-clock properties from sii8620 -
+    PMU clock is already confgured in PMU node
+---
+ .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> ---
->  .../devicetree/bindings/net/marvell-orion-mdio.txt      | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt b/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
-> index 9417e54c26c0..ca733ff68ab9 100644
-> --- a/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
-> +++ b/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
-> @@ -7,7 +7,10 @@ interface.
->  
->  Required properties:
->  - compatible: "marvell,orion-mdio"
-> -- reg: address and length of the SMI register
-> +- reg: address and length of the MDIO registers.  When an interrupt is
-> +  not present, the length is the size of the SMI register (4 bytes)
-> +  otherwise it must be 0x84 bytes to cover the interrupt control
-> +  registers.
->  
->  Optional properties:
->  - interrupts: interrupt line number for the SMI error/done interrupt
-> @@ -17,7 +20,7 @@ The child nodes of the MDIO driver are the individual PHY devices
->  connected to this MDIO bus. They must have a "reg" property given the
->  PHY address on the MDIO bus.
->  
-> -Example at the SoC level:
-> +Example at the SoC level without an interrupt property:
->  
->  mdio {
->  	#address-cells = <1>;
-> @@ -26,6 +29,16 @@ mdio {
->  	reg = <0xd0072004 0x4>;
->  };
->  
-> +Example with an interrupt property:
-> +
-> +mdio {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "marvell,orion-mdio";
-> +	reg = <0xd0072004 0x84>;
-> +	interrupts = <30>;
-> +};
-> +
->  And at the board level:
->  
->  mdio {
-> -- 
-> 2.7.4
-> 
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+index 669bb1f..ca90e6a 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+@@ -281,6 +281,22 @@
+ 	};
+ };
+ 
++&decon_tv {
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			tv_to_hdmi: endpoint {
++				remote-endpoint = <&hdmi_to_tv>;
++			};
++		};
++	};
++};
++
+ &dsi {
+ 	status = "okay";
+ 	vddcore-supply = <&ldo6_reg>;
+@@ -304,6 +320,33 @@
+ 	};
+ };
+ 
++&hdmi {
++	hpd-gpios = <&gpa3 0 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++	vdd-supply = <&ldo6_reg>;
++	vdd_osc-supply = <&ldo7_reg>;
++	vdd_pll-supply = <&ldo6_reg>;
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			hdmi_to_tv: endpoint {
++				remote-endpoint = <&tv_to_hdmi>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			hdmi_to_mhl: endpoint {
++				remote-endpoint = <&mhl_to_hdmi>;
++			};
++		};
++	};
++};
++
+ &hsi2c_0 {
+ 	status = "okay";
+ 	clock-frequency = <2500000>;
+@@ -692,6 +735,28 @@
+ 	};
+ };
+ 
++&hsi2c_7 {
++	status = "okay";
++
++	sii8620@39 {
++		reg = <0x39>;
++		compatible = "sil,sii8620";
++		cvcc10-supply = <&ldo36_reg>;
++		iovcc18-supply = <&ldo34_reg>;
++		interrupt-parent = <&gpf0>;
++		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++		reset-gpios = <&gpv7 0 GPIO_ACTIVE_LOW>;
++		clocks = <&pmu_system_controller 0>;
++		clock-names = "xtal";
++
++		port {
++			mhl_to_hdmi: endpoint {
++				remote-endpoint = <&hdmi_to_mhl>;
++			};
++		};
++	};
++};
++
+ &hsi2c_8 {
+ 	status = "okay";
+ 
+@@ -735,6 +800,10 @@
+ 	};
+ };
+ 
++&hsi2c_11 {
++	status = "okay";
++};
++
+ &i2s0 {
+ 	status = "okay";
+ };
+-- 
+2.7.4
