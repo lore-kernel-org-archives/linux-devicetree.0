@@ -1,30 +1,49 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: da850: Enable cppi41 dma
-Date: Mon,  9 Jan 2017 17:24:46 +0100
-Message-ID: <20170109162449.5012-1-abailon@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v4 1/9] clk: stm32f4: Update DT bindings documentation
+Date: Mon, 9 Jan 2017 17:28:56 +0100
+Message-ID: <ccd14adb-9d10-ae9e-de6d-565418421968@st.com>
+References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
+ <1481638820-29324-2-git-send-email-gabriel.fernandez@st.com>
+ <20161222001051.GP8288@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161222001051.GP8288@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Olivier BIDEAU <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ludovic BARRE <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This series enable support of cppi41 for da850.
-The bindings and DT support are added in the series
-"dmaengine: cppi41: Add dma support to da8xx".
+Hi Stephen,
 
-Alexandre Bailon (3):
-  ARM: dts: da850: Add the cppi41 dma node
-  ARM: dts: da850: Add the cppi41 dma to the usb otg controller
-  ARM: dts: da850: Enable cppi41 dma for da850-lcdk
+On 12/22/2016 01:10 AM, Stephen Boyd wrote:
+> On 12/13, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> Creation of dt include file for specific stm32f4 clocks.
+>> These specific clocks are not derived from system clock (SYSCLOCK)
+>> We should use index 1 to use these clocks in DT.
+>> e.g. <&rcc 1 CLK_LSI>
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>
+> Applied to clk-stm32f4 and merged into clk-next.
+>
 
- arch/arm/boot/dts/da850-lcdk.dts |  4 ++++
- arch/arm/boot/dts/da850.dtsi     | 24 ++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+I'm preparing pull request branch for STM32 DT part. This patch is also 
+requested to build correctly DT patches. Do you know how could we 
+synchronize our pull request ?
 
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Alex
