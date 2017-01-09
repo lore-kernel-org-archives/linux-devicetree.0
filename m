@@ -1,78 +1,86 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 5/8] IIO: add bindings for STM32 timer trigger driver
-Date: Mon, 9 Jan 2017 12:04:48 -0600
-Message-ID: <20170109180448.f3pcpuarhcddo76b@rob-hp-laptop>
-References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
- <1483608344-9012-6-git-send-email-benjamin.gaignard@st.com>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: exynos: Fix Odroid U3 USB/LAN when TFTP booting
+ (power sequence)
+Date: Mon, 9 Jan 2017 23:34:48 +0530
+Message-ID: <CANAwSgSEZvxHje65Kk13fvD9NZGB+iHCJtoGJdQrUdS42ei_WA@mail.gmail.com>
+References: <20170107085203.4431-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483608344-9012-6-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170107085203.4431-1-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Markus
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 10:25:41AM +0100, Benjamin Gaignard wrote:
-> Define bindings for STM32 timer trigger
-> 
-> version 4:
-> - remove triggers enumeration from DT
-> - add reg parameter
-> 
-> version 3:
-> - change file name
-> - add cross reference with mfd bindings
-> 
-> version 2:
-> - only keep one compatible
-> - add DT parameters to set lists of the triggers:
->   one list describe the triggers created by the device
->   another one give the triggers accepted by the device
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../bindings/iio/timer/stm32-timer-trigger.txt     | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> new file mode 100644
-> index 0000000..36a6c4a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> @@ -0,0 +1,23 @@
-> +STMicroelectronics STM32 Timers IIO timer bindings
-> +
-> +Must be a sub-node of an STM32 Timers device tree node.
-> +See ../mfd/stm32-timers.txt for details about the parent node.
-> +
-> +Required parameters:
-> +- compatible:	Must be "st,stm32-timer-trigger".
-> +- reg:		Define triggers configuration of the hardware IP.
+Hi Krzysztof,
 
-Valid values? Not sure this makes sense for use of reg. reg should be 
-how you address or id a device.
+On 7 January 2017 at 14:21, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Hi,
+>
+> Thanks to Markus Reichl, I got an Odroid U3 to work with. Thanks to Peter
+> Chen, we got a power sequence generic library which solves my long
+> standing Odroid U3 problem - no LAN9730 if it was enabled by bootloader.
+>
+> My previous attempts for this can be found here [0].
+>
+> This patchset is based on Peter's v11 of power sequence [1].
+> Patchset is available also on my Github [2].
+>
+> More detailed analysis is described in patch 2/4 ("ARM: dts: exynos: Fix
+> LAN9730 on Odroid U3 after tftpboot").
+>
+>
 
-> +
-> +Example:
-> +	timers@40010000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "st,stm32-timers";
-> +		reg = <0x40010000 0x400>;
-> +		clocks = <&rcc 0 160>;
-> +		clock-names = "clk_int";
-> +
-> +		timer {
+[snip]
 
-This would also need an unit address.
+On which u-boot should this be tested.
 
-> +			compatible = "st,stm32-timer-trigger";
-> +			reg = <0>;
-> +		};
-> +	};
-> -- 
-> 1.9.1
-> 
+On HK u-boot tftp boot is not supported.
+----------------------------------------------------------
+U-Boot 2010.12-00000-g9777ca6-dirty (Nov 26 2015 - 10:10:11) for Exynox4412
+
+
+CPU: S5PC220 [Samsung SOC on SMP Platform Base on ARM CortexA9]
+APLL = 1000MHz, MPLL = 800MHz
+DRAM:  2 GiB
+
+PMIC VERSION : 0x00, CHIP REV : 2
+TrustZone Enabled BSP
+BL1 version: 20121128
+
+
+Checking Boot Mode ... SDMMC
+MMC Device 0: 14804 MB
+MMC Device 1 not found
+*** Warning - using default environment
+
+USB3503 NINT = OUTPUT LOW!
+ModeKey Check... run normal_boot
+No ethernet found.
+Hit any key to stop autoboot:  0
+Exynos4412 #
+Exynos4412 #
+Exynos4412 #
+Exynos4412 # usb start
+(Re)start USB...
+USB0:   Exynos4412-ehci: init hccr 12580000 and hcor 12580010 hc_length 16
+usb: usb_refclk_enable is active low: NO
+ProTIP: If usb doesn't work - try playing with 'usb_invert_clken' environment
+USB EHCI 1.00
+scanning bus 0 for devices... EHCI timed out on TD - token=0x80008c80
+EHCI fail timeout STS_ASS set
+
+      USB device not accepting new address (error=80000000)
+EHCI fail timeout STS_ASS set
+1 USB Device(s) found
+       scanning usb for storage devices... 0 Storage Device(s) found
+       scanning usb for ethernet devices... 0 Ethernet Device(s) found
+Exynos4412 #
+
+Best Regards
+-Anand
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
