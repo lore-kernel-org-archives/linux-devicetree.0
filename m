@@ -1,110 +1,112 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
-Date: Tue, 10 Jan 2017 01:09:28 +0200
-Message-ID: <4506041.7mPt4W6j0m@avalon>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com> <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] Documentation: dt-bindings: Add binding documentation for TI clkctrl clocks
+Date: Mon,  9 Jan 2017 15:42:26 -0800
+Message-ID: <20170109234226.9449-1-tony@atomide.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Hans,
+Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
+clock controller instance for each interconnect target module. The clkctrl
+controls functional and interface clocks for the module.
 
-On Monday 09 Jan 2017 14:36:55 Hans Verkuil wrote:
-> On 01/03/2017 04:20 PM, Ramesh Shanmugasundaram wrote:
-> >>> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
-> >>>> Add binding documentation for Renesas R-Car Digital Radio Interface
-> >>>> (DRIF) controller.
-> >>>> 
-> >>>> Signed-off-by: Ramesh Shanmugasundaram
-> >>>> <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> ---
-> >>>> 
-> >>>>  .../devicetree/bindings/media/renesas,drif.txt     | 202 +++++++++++++
-> >>>>  1 file changed, 202 insertions(+)
-> >>>>  create mode 100644
-> >>>> 
-> >>>> Documentation/devicetree/bindings/media/renesas,drif.txt
-> >>>> 
-> >>>> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
-> >>>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new file
-> >>>> mode 100644
-> >>>> index 0000000..1f3feaf
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> >>>> 
-> >>>> +Optional properties of an internal channel when:
-> >>>> +     - It is the only enabled channel of the bond (or)
-> >>>> +     - If it acts as primary among enabled bonds
-> >>>> +--------------------------------------------------------
-> >>>> +- renesas,syncmd       : sync mode
-> >>>> +                      0 (Frame start sync pulse mode. 1-bit width
-> >>>> pulse
-> >>>> +                         indicates start of a frame)
-> >>>> +                      1 (L/R sync or I2S mode) (default)
-> >>>> +- renesas,lsb-first    : empty property indicates lsb bit is received
-> >>>> first.
-> >>>> +                      When not defined msb bit is received first
-> >>>> +(default)
-> >>>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1 for
-> >>>> low/high
-> 
-> Shouldn't this be 'renesas,sync-active' instead of syncac-active?
-> 
-> I'm not sure if syncac is intended or if it is a typo.
-> 
-> >>>> +                      respectively. The default is 1 (active high)
-> >>>> +- renesas,dtdl         : delay between sync signal and start of
-> >>>> reception.
-> >>>> +                      The possible values are represented in 0.5 clock
-> >>>> +                      cycle units and the range is 0 to 4. The default
-> >>>> +                      value is 2 (i.e.) 1 clock cycle delay.
-> >>>> +- renesas,syncdl       : delay between end of reception and sync
-> >>>> signal edge.
-> >>>> +                      The possible values are represented in 0.5 clock
-> >>>> +                      cycle units and the range is 0 to 4 & 6. The
-> >>>> default
-> >>>> +                      value is 0 (i.e.) no delay.
-> >>> 
-> >>> Most of these properties are pretty similar to the video bus
-> >>> properties defined at the endpoint level in
-> >>> Documentation/devicetree/bindings/media/video-interfaces.txt. I
-> >>> believe it would make sense to use OF graph and try to standardize
-> >>> these properties similarly.
-> 
-> Other than sync-active, is there really anything else that is similar? And
-> even the sync-active isn't a good fit since here there is only one sync
-> signal instead of two for video (h and vsync).
+The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
+With this binding and a related clock device driver we can start moving the
+clkctrl clock handling to live in drivers/clk/ti.
 
-That's why I said similar, not identical :-) My point is that, if we consider 
-that we could connect multiple sources to the DRIF, using OF graph would make 
-sense, and the above properties should then be defined per endpoint. If we 
-define them per endpoint we should then also try standardize the ones that are 
-not really Renesas-specific (that's at least syncac-active). For the syncmd 
-and lsb-first properties, it could also make sense to query them from the 
-connected subdev at runtime, as they're similar in purpose to formats and 
-media bus configuration (struct v4l2_mbus_config).
+For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
+Mapping Summary" for example. It show one instance of a clkctrl clock
+controller with multiple clkctrl registers.
 
-I'm not an SDR expert, so I'd like to have your opinion on this.
+Note that this binding allows keeping the clockdomain related parts out of
+drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
+using a separate driver in drivers/soc/ti and genpd. If the clockdomain
+driver needs to know it's clocks, we can just set the the clkctrl device
+instances to be children of the related clockdomain device.
 
-> >> Note that the last two properties match the those in
-> >> Documentation/devicetree/bindings/spi/sh-msiof.txt.
-> >> We may want to use one DRIF channel as a plain SPI slave with the
-> >> (modified) MSIOF driver in the future.
-> > 
-> > Should I leave it as it is or modify these as in video-interfaces.txt?
-> > Shall we conclude on this please?
+On omap4 CM_L3INIT_USB_HOST_HS_CLKCTRL on omap5 has eight OPTFCLKEN bits.
+So we need to shift the clock index to avoid index conflict for the clock
+consumer binding with the next clkctrl offset on omap4.
 
+Cc: Paul Walmsley <paul@pwsan.com>
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+
+So here's what I was able to come up for the clkctr binding based on
+all we've discussed so far. Can you guys please take a look and see
+if it looks OK to you before we do the device driver?
+
+Also, does anybody have better suggestions for addressing the optional
+clocks in each clkctrl register?
+
+---
+ .../devicetree/bindings/clock/ti-clkctrl.txt       | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+new file mode 100644
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+@@ -0,0 +1,56 @@
++Texas Instruments clkctrl clock binding
++
++Texas Instruments SoCs can have a clkctrl clock controller for each
++interconnect target module. The clkctrl clock controller manages functional
++and interface clocks for each module. Each clkctrl controller can also
++gate one or more optional functional clocks for a module. The clkctrl
++clock controller is typical for omap3 and later variants.
++
++The clock consumers can specify the index of the clkctrl clock using
++the hardware offset from the clkctrl instance register space. The optional
++functional clocks can be specified by clkctrl hardware offset plus the
++index of the optional clock. Please see the Linux clock framework binding
++at Documentation/devicetree/bindings/clock/clock-bindings.txt.
++
++Required properties :
++- compatible : shall be "ti,clkctrl"
++- #clock-cells : shall contain 1
++
++Optional properties :
++- "ti,modulemode-auto" : list of clkctrl offsets using automatic gating
++
++Example: Clock controller node:
++
++&cm_l4per {
++	cm_l4per_clkctrl: clk@20 {
++		compatible = "ti,clkctrl";
++		reg = <0x20 0x1b0>;
++		#clock-cells = 1;
++		ti,modulemode-auto = <OMAP4_GPIO2_CLKCTRL>;
++	};
++};
++
++Example: Preprocessor helper macros in dt-bindings/ti-clkctrl.h
++
++#define OMAP4_CLKCTRL_OFFSET		0x20
++
++#define OMAP_CLKCTRL_INDEX(offset)		\
++	(((offset) - OMAP4_CLKCTRL_OFFSET) << 8)
++
++#define OMAP_CLKCTRL_OPT_INDEX(offset, optclk)	\
++	(OMAP_CLKCTRL_INDEX(offset) + (optclk))
++
++#define OMAP4_GPTIMER10_CLKTRL		OMAP_CLKCTRL_INDEX(0x28)
++#define OMAP4_GPTIMER11_CLKTRL		OMAP_CLKCTRL_INDEX(0x30)
++#define OMAP4_GPTIMER2_CLKTRL		OMAP_CLKCTRL_INDEX(0x38)
++...
++#define OMAP4_GPIO2_CLKCTRL		OMAP_CLKCTRL_INDEX(0x60)
++#define OMAP4_GPIO2_CLKCTRL_DBCLK	OMAP_CLKCTRL_OPT_INDEX(0x60, 1)
++...
++
++Example: Clock consumer node for GPIO2:
++
++&gpio2 {
++       clocks = <&cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL
++		 &cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL_DBCLK>;
++};
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
