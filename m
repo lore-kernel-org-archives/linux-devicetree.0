@@ -1,52 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] usb: musb: musb_cppi41: Workaround dma stall issue
- during teardown
-Date: Mon, 9 Jan 2017 21:34:10 +0300
-Message-ID: <511a1b59-82d8-4f29-98ce-273e3cc65797@cogentembedded.com>
-References: <20170109163902.5268-1-abailon@baylibre.com>
- <20170109163902.5268-5-abailon@baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 0/4] ARM: exynos: Fix Odroid U3 USB/LAN when TFTP booting
+ (power sequence)
+Date: Mon, 9 Jan 2017 20:35:22 +0200
+Message-ID: <20170109183522.wrha6twqlxiaxjed@kozik-lap>
+References: <20170107085203.4431-1-krzk@kernel.org>
+ <CANAwSgSEZvxHje65Kk13fvD9NZGB+iHCJtoGJdQrUdS42ei_WA@mail.gmail.com>
+ <20170109181703.436gv7bq76xuv35q@kozik-lap>
+ <CANAwSgR7=cELNK9of5ngFTdhcxWn2KXL=R8tMsTKD7gecBcMYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109163902.5268-5-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, b-liu-l0cyMroinI0@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANAwSgR7=cELNK9of5ngFTdhcxWn2KXL=R8tMsTKD7gecBcMYw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, sre@kernel.org, Rob Herring <robh+dt@kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.o>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Mon, Jan 09, 2017 at 11:56:41PM +0530, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> On 9 January 2017 at 23:47, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > On Mon, Jan 09, 2017 at 11:34:48PM +0530, Anand Moon wrote:
+> >> Hi Krzysztof,
+> >>
+> >> On 7 January 2017 at 14:21, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >> > Hi,
+> >> >
+> >> > Thanks to Markus Reichl, I got an Odroid U3 to work with. Thanks to Peter
+> >> > Chen, we got a power sequence generic library which solves my long
+> >> > standing Odroid U3 problem - no LAN9730 if it was enabled by bootloader.
+> >> >
+> >> > My previous attempts for this can be found here [0].
+> >> >
+> >> > This patchset is based on Peter's v11 of power sequence [1].
+> >> > Patchset is available also on my Github [2].
+> >> >
+> >> > More detailed analysis is described in patch 2/4 ("ARM: dts: exynos: Fix
+> >> > LAN9730 on Odroid U3 after tftpboot").
+> >> >
+> >> >
+> >>
+> >> [snip]
+> >>
+> >> On which u-boot should this be tested.
+> >>
+> >> On HK u-boot tftp boot is not supported.
+> >
+> > ... so you gave an answer: you cannot test it on HK. How many other
+> > U-Boot flavors you know? :)
+> >
+> 
+> u-boot mainline have tftp support enable, so I will try to test on this u-boot.
 
-On 01/09/2017 07:39 PM, Alexandre Bailon wrote:
+Yes, please try it. Some time ago I was using v2016.03-rc3 and now
+recent (~40 commits after v2017.01-rc2). Both are working fine however
+the configuration (partitions, default env settings etc) differs from HK
+so migration was not straightforward.
 
-> The dma may hung up if a teardown is initiated while an endpoint is still
-
-    The DMA may hang up...
-
-> active (Advisory 2.3.27 of da8xx errata).
-> To workaround this issue, add a delay before to initiate the teardown.
->
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-[...]
-> diff --git a/drivers/usb/musb/musb_cppi41.c b/drivers/usb/musb/musb_cppi41.c
-> index 1636385..8fdbc17 100644
-> --- a/drivers/usb/musb/musb_cppi41.c
-> +++ b/drivers/usb/musb/musb_cppi41.c
-> @@ -547,6 +547,10 @@ static int cppi41_dma_channel_abort(struct dma_channel *channel)
->  		}
->  	}
->
-> +	/* DA8xx Advisory 2.3.27: wait 250 ms before to start the teardown */
-> +	if (musb->io.quirks & MUSB_DA8XX)
-> +		mdelay(250);
-
-    This is a horrible workaround, not even msleep()...
-
-[...]
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
