@@ -1,63 +1,106 @@
-From: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to respect
- extra limits
-Date: Mon, 9 Jan 2017 12:02:07 +0100
-Message-ID: <684d1aff-a9ce-ae42-0c11-5840d3a92daf@broadcom.com>
-References: <20170104175832.25996-1-zajec5@gmail.com>
- <20170104175832.25996-4-zajec5@gmail.com>
- <3fc87224-7f08-e365-7bbb-a4b8b5746e4f@broadcom.com>
- <CACna6rxay9sC+QT2G4AfjWT1ERsNDzFQ620hNhVhr0FRHXJu=w@mail.gmail.com>
- <e2bbce35-af09-adfa-09ea-e9fcf57b4d09@broadcom.com>
- <CACna6rw22benfuw_7BSFw1wedavmMJWTo_hfPLCVa1t0kV+Aqg@mail.gmail.com>
- <36d2dbd1-bcbe-021b-dd7f-068a5b9739ef@broadcom.com>
- <CACna6rxS-JqyW3cXFMJR6Lp-+HdJjZfkwsVRMPGn5Q1z8av75w@mail.gmail.com>
- <1483952320.17582.13.camel@sipsolutions.net>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Mon, 9 Jan 2017 12:29:17 +0100
+Message-ID: <974d20f3-5133-0869-2a35-c1617bec5d6e@xs4all.nl>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+ <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+ <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+ <1479784905.8964.15.camel@mtksdaap41>
+ <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+ <1479866054.8964.21.camel@mtksdaap41> <1479894203.8964.29.camel@mtksdaap41>
+ <1483670099.18931.5.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483952320.17582.13.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483670099.18931.5.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9-1-2017 9:58, Johannes Berg wrote:
-> On Sat, 2017-01-07 at 13:58 +0100, Rafał Miłecki wrote:
+Hi Rick,
+
+On 01/06/2017 03:34 AM, Rick Chang wrote:
+> Hi Hans,
 > 
->>> I indeed prefer to talk about the driver instead of we. Indeed it
->>> is true due to the orig_flags behavior although that only seems to
->>> involve regulatory code. Could it be that brcmfmac undo that
->>> through the notifier?
->>
->> I guess you could touch orig_flags, but I don't know if it's
->> preferred way. This is probably question to Johannes & cfg80211 guys.
-> 
-> Right now - before the OF patch - there can't really be any orig_flags
-> with DISABLED since the driver doesn't set flags to DISABLED before
-> registering, does it? While registering, flags are copied to orig_flags
-> so the driver can register with flags like DFS or NO_IR already enabled
-> - say the firmware requires that - and they will never be overwritten
-> by cfg80211.
+> The dependence on [1] has been merged in 4.10, but [2] has not.Do you have 
+> any idea about this patch series? Should we wait for [2] or we could merge
+> the source code and dt-binding first?
 
-Actually, in brcmfmac we do set channels to DISABLED before registering.
-I was blissfully unaware of the orig_flags when I added the channel
-setup in our probe sequence.
+Looking at [2] I noticed that the last comment was July 4th. What is the reason
+it hasn't been merged yet?
 
-> Arguably, what the driver does today - before OF - isn't incorrect
-> either, since it simply doesn't care about anything it registered with
-> at all.
+If I know [2] will be merged for 4.11, then I am fine with merging this media
+patch series. The dependency of this patch on [2] is something Mauro can handle.
 
-Given the statement above I think brcmfmac is incorrect.
-
-> However, with the OF, I argued (succesfully it seems :P) that the
-> sensible thing to do was to register with the DISABLED flag and thereby
-> "permanently" disable the channels that OF didn't think were usable,
-> but in this case now the driver has to adhere to the cfg80211 logic of
-> preserving orig_flags forever.
-
-By adhere you mean we should not enable channes for which orig_flags
-indicate DISABLED?
+If [2] is not merged for 4.11, then I think it is better to wait until it is
+merged.
 
 Regards,
-Arend
+
+	Hans
+
+> 
+> Best Regards,
+> Rick
+> 
+> On Wed, 2016-11-23 at 17:43 +0800, Rick Chang wrote:
+>> On Wed, 2016-11-23 at 09:54 +0800, Rick Chang wrote:
+>>> Hi Hans,
+>>>
+>>> On Tue, 2016-11-22 at 13:43 +0100, Hans Verkuil wrote:
+>>>> On 22/11/16 04:21, Rick Chang wrote:
+>>>>> Hi Hans,
+>>>>>
+>>>>> On Mon, 2016-11-21 at 15:51 +0100, Hans Verkuil wrote:
+>>>>>> On 17/11/16 04:38, Rick Chang wrote:
+>>>>>>> Signed-off-by: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>>>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>>>> ---
+>>>>>>> This patch depends on:
+>>>>>>>   CCF "Add clock support for Mediatek MT2701"[1]
+>>>>>>>   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+>>>>>>>
+>>>>>>> [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+>>>>>>> [2] https://patchwork.kernel.org/patch/9164013/
+>>>>>>
+>>>>>> I assume that 1 & 2 will appear in 4.10? So this patch needs to go in
+>>>>>> after the
+>>>>>> other two are merged in 4.10?
+>>>>>>
+>>>>>> Regards,
+>>>>>>
+>>>>>> 	Hans
+>>>>>
+>>>>> [1] will appear in 4.10, but [2] will appear latter than 4.10.So this
+>>>>> patch needs to go in after [1] & [2] will be merged in 4.11.
+>>>>
+>>>> So what should I do? Merge the driver for 4.11 and wait with this patch
+>>>> until [2] is merged in 4.11? Does that sound reasonable?
+>>>>
+>>>> Regards,
+>>>>
+>>>> 	Hans
+>>>
+>>> What do you think about this? You merge the driver first and I send this
+>>> patch again after [1] & [2] is merged.
+>>
+>> BTW, to prevent merging conflict, the dtsi should be merged by mediatek
+>> SoC maintainer, Matthias.I think we can only take care on the driver
+>> part at this moment.
+>>
+> 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
