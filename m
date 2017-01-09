@@ -1,72 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: Add document bindings for
- mtk-cir
-Date: Mon, 9 Jan 2017 12:32:14 -0600
-Message-ID: <20170109183214.xonv52sn3fo4exqp@rob-hp-laptop>
-References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
- <1483632384-8107-2-git-send-email-sean.wang@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] usb: musb: musb_cppi41: Workaround dma stall issue
+ during teardown
+Date: Mon, 9 Jan 2017 21:34:10 +0300
+Message-ID: <511a1b59-82d8-4f29-98ce-273e3cc65797@cogentembedded.com>
+References: <20170109163902.5268-1-abailon@baylibre.com>
+ <20170109163902.5268-5-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483632384-8107-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170109163902.5268-5-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, b-liu-l0cyMroinI0@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 12:06:23AM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> This patch adds documentation for devicetree bindings for
-> Mediatek IR controller.
-> 
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/mtk-cir.txt          | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 linux-4.8.rc1_p0/Documentation/devicetree/bindings/media/mtk-cir.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mtk-cir.txt b/Documentation/devicetree/bindings/media/mtk-cir.txt
-> new file mode 100644
-> index 0000000..bbedd71
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mtk-cir.txt
-> @@ -0,0 +1,23 @@
-> +Device-Tree bindings for Mediatek IR controller found in Mediatek SoC family
-> +
-> +Required properties:
-> +- compatible	    : "mediatek,mt7623-ir"
-> +- clocks	    : list of clock specifiers, corresponding to
-> +		      entries in clock-names property;
-> +- clock-names	    : should contain "clk" entries;
-> +- interrupts	    : should contain IR IRQ number;
-> +- reg		    : should contain IO map address for IR.
-> +
-> +Optional properties:
-> +- linux,rc-map-name : Remote control map name.
+Hello!
 
-Would 'label' be appropriate here instead? If not, this needs to be 
-documented in a common location and explained better.
+On 01/09/2017 07:39 PM, Alexandre Bailon wrote:
 
-> +
-> +Example:
-> +
-> +cir: cir@0x10013000 {
+> The dma may hung up if a teardown is initiated while an endpoint is still
 
-Drop the '0x'.
+    The DMA may hang up...
 
-> +	compatible = "mediatek,mt7623-ir";
-> +	reg = <0 0x10013000 0 0x1000>;
-> +	interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
-> +	clocks = <&infracfg CLK_INFRA_IRRX>;
-> +	clock-names = "clk";
-> +	linux,rc-map-name = "rc-rc6-mce";
-> +};
-> -- 
-> 1.9.1
-> 
+> active (Advisory 2.3.27 of da8xx errata).
+> To workaround this issue, add a delay before to initiate the teardown.
+>
+> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+[...]
+> diff --git a/drivers/usb/musb/musb_cppi41.c b/drivers/usb/musb/musb_cppi41.c
+> index 1636385..8fdbc17 100644
+> --- a/drivers/usb/musb/musb_cppi41.c
+> +++ b/drivers/usb/musb/musb_cppi41.c
+> @@ -547,6 +547,10 @@ static int cppi41_dma_channel_abort(struct dma_channel *channel)
+>  		}
+>  	}
+>
+> +	/* DA8xx Advisory 2.3.27: wait 250 ms before to start the teardown */
+> +	if (musb->io.quirks & MUSB_DA8XX)
+> +		mdelay(250);
+
+    This is a horrible workaround, not even msleep()...
+
+[...]
+
+MBR, Sergei
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
