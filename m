@@ -1,34 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: gpio: Add binding documentation for gpio-thunderx
-Date: Mon, 9 Jan 2017 20:36:57 +0100
-Message-ID: <CACRpkdZ0xkhUC7_0A4uHxpGaU7BHgNp8TNuDPuPN9h6dDsQx4g@mail.gmail.com>
-References: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com> <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: =?utf-8?B?5Zue5aSN77yaTXlpciBBTTQzN3gg?=
+ =?utf-8?Q?Rico_board_support_=28DTS?= =?utf-8?Q?=29?= for Linux mainline 4.9
+ and 4.4 Ti Processor SDK 03.02.00.05
+Date: Mon, 9 Jan 2017 11:37:48 -0800
+Message-ID: <20170109193747.GP2630@atomide.com>
+References: <201701051754.03159.ppisa@pikron.com>
+ <cb3b5798-e82e-4bb4-932b-1c02ece5d3e4.sunny.guo@myirtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cb3b5798-e82e-4bb4-932b-1c02ece5d3e4.sunny.guo-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sunny <sunny.guo-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org>
+Cc: Pavel Pisa <ppisa-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org>, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 7, 2017 at 12:22 AM, David Daney <ddaney.cavm@gmail.com> wrote:
+Hi,
 
-> From: David Daney <david.daney@cavium.com>
->
-> Signed-off-by: David Daney <david.daney@cavium.com>
-(...)
+* Sunny <sunny.guo-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org> [170109 02:36]:
+> Hello Pavel and Tony,
+> 
+> This is Sunny from MYIR , and working as the software manager on RICO board. Very glad to see the great work that Pavel has done ,and sincerely appriciated to all the contributions and share. 
+> 
+> Our Linux release is not in the mailline release currently, and updates is following TI official release , may with some latency due need some time to make the update on RICO . We are planning and working on next update on RICO linux which will happen on April to Linux 4.4 or above.
+> 
+> I will look into detail and make some testings.  We will talk to you later on how we can share and help the engineers to benefit from your contribution.
 
-> +Optional Properties:
-> +- compatible: "cavium,thunder-8890-gpio", unused as PCI driver binding is used.
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells: Must be present and have value of 2 if
-> +                    "interrupt-controller" is present.
-> +  - First cell is the GPIO pin number relative to the controller.
-> +  - Second cell is triggering flags as defined in interrupts.txt.
+Please let's coordinate the work on linux-arm-kernel and linux-omap
+mailing lists to avoid duplicate work.
 
-AFAICT this device has an optional list of interrupts as well?
-One per pin even?
+It seems the basic dts file is pretty much ready to go, then
+it's easy to make incremental patches to that.
 
-Yours,
-Linus Walleij
+So maybe try to get get your engineers involved on the lists
+too?
+
+And if you want the community people to help then making
+few devices available to play with might get you some extra
+help.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
