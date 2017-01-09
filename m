@@ -1,340 +1,95 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 3/3] ARM: dts: stm32: Use clock DT binding definition on
- stm32f429 family
-Date: Mon, 9 Jan 2017 10:07:13 +0100
-Message-ID: <1483952833-14704-4-git-send-email-gabriel.fernandez@st.com>
-References: <1483952833-14704-1-git-send-email-gabriel.fernandez@st.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Mon, 09 Jan 2017 18:19:52 +0900
+Message-ID: <587355B8.2050701@samsung.com>
+References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
+ <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
+ <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
+ <586F2BF3.8080400@samsung.com>
+ <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
+ <586F5728.1010800@samsung.com>
+ <5df95abe-0d5d-0c48-2840-5996260201de@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483952833-14704-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gabriel.fernandez@st.com, ludovic.barre@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <5df95abe-0d5d-0c48-2840-5996260201de@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Andi Shyti <andi.shyti@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-
-This patch uses clock DT binding definition instead numerical values
-for stm32f429 board.
-
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts |  2 +-
- arch/arm/boot/dts/stm32f429.dtsi     | 66 +++++++++++++++++++-----------------
- 2 files changed, 36 insertions(+), 32 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 76f7206..4e31881 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -107,7 +107,7 @@
- 	usbotg_hs_phy: usbphy {
- 		#phy-cells = <0>;
- 		compatible = "usb-nop-xceiv";
--		clocks = <&rcc 0 30>;
-+		clocks = <&rcc 0 STM32F4_AHB1_CLOCK(OTGHSULPI)>;
- 		clock-names = "main_clk";
- 	};
- };
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 041e3fc..1bacdfb 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -49,6 +49,7 @@
- #include "armv7-m.dtsi"
- #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
- #include <dt-bindings/clock/stm32fx-clock.h>
-+#include <dt-bindings/mfd/stm32f4-rcc.h>
- 
- / {
- 	clocks {
-@@ -82,7 +83,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000000 0x400>;
- 			interrupts = <28>;
--			clocks = <&rcc 0 128>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM2)>;
- 			status = "disabled";
- 		};
- 
-@@ -90,7 +91,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000400 0x400>;
- 			interrupts = <29>;
--			clocks = <&rcc 0 129>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM3)>;
- 			status = "disabled";
- 		};
- 
-@@ -98,7 +99,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000800 0x400>;
- 			interrupts = <30>;
--			clocks = <&rcc 0 130>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM4)>;
- 			status = "disabled";
- 		};
- 
-@@ -106,14 +107,14 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000c00 0x400>;
- 			interrupts = <50>;
--			clocks = <&rcc 0 131>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM5)>;
- 		};
- 
- 		timer6: timer@40001000 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001000 0x400>;
- 			interrupts = <54>;
--			clocks = <&rcc 0 132>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM6)>;
- 			status = "disabled";
- 		};
- 
-@@ -121,7 +122,7 @@
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001400 0x400>;
- 			interrupts = <55>;
--			clocks = <&rcc 0 133>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM7)>;
- 			status = "disabled";
- 		};
- 
-@@ -129,7 +130,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
- 			interrupts = <38>;
--			clocks =  <&rcc 0 145>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART2)>;
- 			status = "disabled";
- 		};
- 
-@@ -137,7 +138,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004800 0x400>;
- 			interrupts = <39>;
--			clocks = <&rcc 0 146>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART3)>;
- 			status = "disabled";
- 			dmas = <&dma1 1 4 0x400 0x0>,
- 			       <&dma1 3 4 0x400 0x0>;
-@@ -148,7 +149,7 @@
- 			compatible = "st,stm32-uart";
- 			reg = <0x40004c00 0x400>;
- 			interrupts = <52>;
--			clocks = <&rcc 0 147>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART4)>;
- 			status = "disabled";
- 		};
- 
-@@ -156,7 +157,7 @@
- 			compatible = "st,stm32-uart";
- 			reg = <0x40005000 0x400>;
- 			interrupts = <53>;
--			clocks = <&rcc 0 148>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART5)>;
- 			status = "disabled";
- 		};
- 
-@@ -164,7 +165,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007800 0x400>;
- 			interrupts = <82>;
--			clocks = <&rcc 0 158>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART7)>;
- 			status = "disabled";
- 		};
- 
-@@ -172,7 +173,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40007c00 0x400>;
- 			interrupts = <83>;
--			clocks = <&rcc 0 159>;
-+			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART8)>;
- 			status = "disabled";
- 		};
- 
-@@ -180,7 +181,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <37>;
--			clocks = <&rcc 0 164>;
-+			clocks = <&rcc 0 STM32F4_APB2_CLOCK(USART1)>;
- 			status = "disabled";
- 			dmas = <&dma2 2 4 0x400 0x0>,
- 			       <&dma2 7 4 0x400 0x0>;
-@@ -191,7 +192,7 @@
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40011400 0x400>;
- 			interrupts = <71>;
--			clocks = <&rcc 0 165>;
-+			clocks = <&rcc 0 STM32F4_APB2_CLOCK(USART6)>;
- 			status = "disabled";
- 		};
- 
-@@ -226,7 +227,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x0 0x400>;
--				clocks = <&rcc 0 0>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOA)>;
- 				st,bank-name = "GPIOA";
- 			};
- 
-@@ -234,7 +235,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x400 0x400>;
--				clocks = <&rcc 0 1>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOB)>;
- 				st,bank-name = "GPIOB";
- 			};
- 
-@@ -242,7 +243,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x800 0x400>;
--				clocks = <&rcc 0 2>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOC)>;
- 				st,bank-name = "GPIOC";
- 			};
- 
-@@ -250,7 +251,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0xc00 0x400>;
--				clocks = <&rcc 0 3>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOD)>;
- 				st,bank-name = "GPIOD";
- 			};
- 
-@@ -258,7 +259,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1000 0x400>;
--				clocks = <&rcc 0 4>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOE)>;
- 				st,bank-name = "GPIOE";
- 			};
- 
-@@ -266,7 +267,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1400 0x400>;
--				clocks = <&rcc 0 5>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOF)>;
- 				st,bank-name = "GPIOF";
- 			};
- 
-@@ -274,7 +275,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1800 0x400>;
--				clocks = <&rcc 0 6>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOG)>;
- 				st,bank-name = "GPIOG";
- 			};
- 
-@@ -282,7 +283,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x1c00 0x400>;
--				clocks = <&rcc 0 7>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOH)>;
- 				st,bank-name = "GPIOH";
- 			};
- 
-@@ -290,7 +291,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x2000 0x400>;
--				clocks = <&rcc 0 8>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOI)>;
- 				st,bank-name = "GPIOI";
- 			};
- 
-@@ -298,7 +299,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x2400 0x400>;
--				clocks = <&rcc 0 9>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOJ)>;
- 				st,bank-name = "GPIOJ";
- 			};
- 
-@@ -306,7 +307,7 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				reg = <0x2800 0x400>;
--				clocks = <&rcc 0 10>;
-+				clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOK)>;
- 				st,bank-name = "GPIOK";
- 			};
- 
-@@ -384,7 +385,7 @@
- 				     <16>,
- 				     <17>,
- 				     <47>;
--			clocks = <&rcc 0 21>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(DMA1)>;
- 			#dma-cells = <4>;
- 		};
- 
-@@ -399,7 +400,7 @@
- 				     <68>,
- 				     <69>,
- 				     <70>;
--			clocks = <&rcc 0 22>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(DMA2)>;
- 			#dma-cells = <4>;
- 			st,mem2mem;
- 		};
-@@ -411,7 +412,9 @@
- 			interrupts = <61>;
- 			interrupt-names = "macirq";
- 			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
--			clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(ETHMAC)>,
-+					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACTX)>,
-+					<&rcc 0 STM32F4_AHB1_CLOCK(ETHMACRX)>;
- 			st,syscon = <&syscfg 0x4>;
- 			snps,pbl = <8>;
- 			snps,mixed-burst;
-@@ -422,7 +425,7 @@
- 			compatible = "snps,dwc2";
- 			reg = <0x40040000 0x40000>;
- 			interrupts = <77>;
--			clocks = <&rcc 0 29>;
-+			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(OTGHS)>;
- 			clock-names = "otg";
- 			status = "disabled";
- 		};
-@@ -431,12 +434,13 @@
- 			compatible = "st,stm32-rng";
- 			reg = <0x50060800 0x400>;
- 			interrupts = <80>;
--			clocks = <&rcc 0 38>;
-+			clocks = <&rcc 0 STM32F4_AHB2_CLOCK(RNG)>;
-+
- 		};
- 	};
- };
- 
- &systick {
--	clocks = <&rcc 1 0>;
-+	clocks = <&rcc 1 SYSTICK>;
- 	status = "okay";
- };
--- 
-1.9.1
+CgoyMDE364WEIDAx7JuUIDA57J28IDE2OjM37JeQIEFuZHJ6ZWogSGFqZGEg7J20KOqwgCkg7JO0
+IOq4gDoKPiBPbiAwNi4wMS4yMDE3IDA5OjM2LCBJbmtpIERhZSB3cm90ZToKPj4KPj4gMjAxN+uF
+hCAwMeyblCAwNuydvCAxNzoxOOyXkCBBbmRpIFNoeXRpIOydtCjqsIApIOyTtCDquIA6Cj4+PiBI
+aSBJbmtpLAo+Pj4KPj4+IFRoYW5rcyBmb3IgdGhlIHJlcGx5LCBidXQuLi4KPj4+Cj4+Pj4+PiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGRlZmF1bHRfbW9kZSA9IHsKPj4+
+Pj4+ICsJLmNsb2NrID0gMjIyMzcyLAo+Pj4+Pj4gKwkuaGRpc3BsYXkgPSAxNDQwLAo+Pj4+Pj4g
+KwkuaHN5bmNfc3RhcnQgPSAxNDQwICsgMSwKPj4+Pj4+ICsJLmhzeW5jX2VuZCA9IDE0NDAgKyAx
+ICsgMSwKPj4+Pj4+ICsJLmh0b3RhbCA9IDE0NDAgKyAxICsgMSArIDEsCj4+Pj4+PiArCS52ZGlz
+cGxheSA9IDI1NjAsCj4+Pj4+PiArCS52c3luY19zdGFydCA9IDI1NjAgKyAxLAo+Pj4+Pj4gKwku
+dnN5bmNfZW5kID0gMjU2MCArIDEgKyAxLAo+Pj4+Pj4gKwkudnRvdGFsID0gMjU2MCArIDEgKyAx
+ICsgMTUsCj4+Pj4+PiArCS52cmVmcmVzaCA9IDYwLAo+Pj4+Pj4gKwkuZmxhZ3MgPSAwLAo+Pj4+
+Pj4gK307Cj4+Pj4+IGhvdyBpcyB0aGlzIHdvcmtpbmcgd2l0aCB0bTJlPyBBcmUgdGhlc2UgdmFs
+dWVzIHZhbGlkIGZvciBib3RoCj4+Pj4+IHRoZSBib2FyZHM/Cj4+Pj4gV2UgZG9uJ3QgbmVlZCB0
+byBjb25zaWRlciB0bTJlIGJvYXJkIHdpdGggdHdvIHJlYXNvbmVzLAo+Pj4+IDEuIHRoZXJlIGlz
+IG5vIHRtMmUgYm9hcmQgc3VwcG9ydCBpbiBtYWlubGluZQo+Pj4+IDIuIHRoZSBwYW5lbCBvbiB0
+bTIgd291bGQgYmUgYSBsaXR0bGUgYml0IGRpZmZlcmVudCBmcm9tIG9uZSBvbiB0bTJlCj4+PiAu
+Li4gdGhpcyBkaXNwbGF5IGluIHRoZSBUaXplbiBLZXJuZWwgaXMgc3VwcG9ydGVkIGJ5IGJvdGg6
+Cj4+PiB0bTIgWzFdIGFuZCB0bTJlIFsyXS4gVGhlIG9ubHkgZGlmZmVyZW5jZXMgYXJlOgo+PiBX
+aHkgdG0yZSBkdHMgZmlsZSBpcyBpbiBtYWlubGluZT8gU2VlbXMgY29tbXVuaWNhdGlvbiBtaXNz
+IHdpdGggQ2hhbndvby4gOiggCj4+Cj4+PiBUTTI6Cj4+PiAgICBjbG9jay1mcmVxdWVuY3kgPSA8
+MTQ4NzQ0NDQ+Owo+Pj4gICAgaGFjdGl2ZSA9IDwxNDQwPjsKPj4+Cj4+PiBUTTJFOgo+Pj4gICAg
+Y2xvY2stZnJlcXVlbmN5ID0gPDE2NTIzNzI0PjsKPj4+ICAgIGhhY3RpdmUgPSA8MTYwMD47Cj4+
+Pgo+Pj4gSSBkb24ndCBrbm93IG11Y2ggYWJvdXQgdGhlIGRpZmZlcmVuY2VzIHlvdSBtZW50aW9u
+IGluIHBvaW50IDIsCj4+PiBidXQgaXQncyBhIHBpdHkgdG8gZHJvcCBzdXBwb3J0IG9ubHkgYmVj
+YXVzZSB3ZSBkb24ndCB3YW50IHRvIHB1dAo+Pj4gaW4gdGhlIGR0cyB0aGUgJ2hhY3RpdmUnLCBh
+bmQgJ2Nsb2NrLWZyZXF1ZW5jeScgcHJvcGVydGllcy4KPj4gQW55d2F5LCB0bTJlIGJvYXJkIGlz
+IGFscmVhZHkgaW4gbWFpbmxpbmUgc28gUGFuZWwgZHJpdmVyIG1heSBuZWVkIHRvIGlkZW50aWZ5
+IHdoYXQga2luZHMgb2YgcGFuZWwgaXMgcHJvYmVkIHRvIGRlY2lkZSBwb3JjaCB2YWx1ZXMuIEkg
+dGhpbmsgdGhlcmUgYXJlIHJlbGV2YW50IHJlZ2lzdGVycyBpbiBNQ1Ugb2YgdGhlIFBhbmVsIGRl
+dmljZSB0byBjaGVjayB2ZXJzaW9uIG9yIHNpbWlsYXIgdGhpbmcuCj4gCj4gSSB0aGluayB3ZSBj
+YW4gc2FmZWx5IHVzZSBkaWZmZXJlbnQgY29tcGF0aWJsZSBzdHJpbmcgZm9yIHRtMmUgLSBpdCB1
+c2VzCj4gZGlmZmVyZW50IGRpc3BsYXkgSUMgY29udHJvbGxlciAtIHM2ZTNoZjIsIGRyaXZlciB3
+aWxsIHByb3ZpZGUgdGltaW5ncwo+IGJhc2VkIG9uIGl0LgoKVXNpbmcgY29tcGF0YWJsZSBzdHJp
+bmcgd291bGRuJ3QgYmUgYSBnb29kIGlkZWEgYmVjYXVzZSBQYW5lbCBpcyBhIGRldmljZSBub3Qg
+c3BlY2lmaWMgdG8gYm9hcmQuCgo+IEFzIGZhciBhcyBJIGV4YW1pbmVkIGF2YWlsYWJsZSBzcGVj
+cy9kb2NzIHRoZXJlIGlzIG5vIHJlbGlhYmxlIHJlZ2lzdGVyCj4gd2hpY2ggY2FuIGJlIHVzZWQg
+dG8gc2FmZWx5IGRpc3Rpbmd1aXNoIGl0IG9uIHJ1bnRpbWUsIGJ1dCB0aGUgZG9jcyBJCj4gaGF2
+ZSBhcmUgZmFyIGZyb20gY29tcGxldGVuZXNzLgoKVGhlIGRhdGEgc2hlZXQgSSBhbSBzZWVpbmcg
+c2F5cyBhIFJERElEUyByZWdpc3RlciBkZXNjcmliZXMgbWFudWZhY3R1cmVyIGFuZCBtb2R1bGUg
+dmVyc2lvbiBpbmZvcm1hdGlvbi4gV2l0aCB0aGlzIHdlIGNvdWxkIGlkZW50aWZ5IHRoZSBQYW5l
+bCBkZXZpY2UuCk9mIGNvdXJzZSwgd2UgbWF5IG5lZWQgdG8gY2hlY2sgdGhlIHJlZ2lzdGVyIGhh
+cyByZWFsbHkgZGlmZmVyZW50IHZhbHVlcyBhY2NvcmRpbmcgdG8gYm9hcmQuCgpCZWxvdyBpcyB0
+aGUgdmVyc2lvbiBpbmZvcm1hdGlvbiBIb2VnZXVuIGNoZWNrZWQsCgpUTTIKWyAgICA0LjkwODY2
+Nl0gcGFuZWxfczZlM2hhMiAxMzkwMDAwMC5kc2kuMDogTWFudWZhY3R1cmUgZGF0ZTogMjAxNC0x
+MC0zMSAwNjo0MQpbICAgIDUuMDM1NzY4XSBwYW5lbF9zNmUzaGEyIDEzOTAwMDAwLmRzaS4wOiBJ
+ZDogNTAgMjAgMDkKClRNMmUKWyAgICA0LjkyOTI2NV0gcGFuZWxfczZlM2hhMiAxMzkwMDAwMC5k
+c2kuMDogTWFudWZhY3R1cmUgZGF0ZTogMjAxNC0wOS0wMyAwNjozMApbICAgIDUuMDU2Mjg3XSBw
+YW5lbF9zNmUzaGEyIDEzOTAwMDAwLmRzaS4wOiBJZDogNDAgNDAgMTQKCgpUaGFua3MuCgo+IAo+
+IFJlZ2FyZHMKPiBBbmRyemVqCj4gCj4+Cj4+IFRoYW5rcy4KPj4KPj4+IEFuZGkKPj4+Cj4+PiBb
+MV0gaHR0cHM6Ly9naXQudGl6ZW4ub3JnL2NnaXQvcGxhdGZvcm0va2VybmVsL2xpbnV4LWV4eW5v
+cy90cmVlL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLmR0cz9oPXRp
+emVuI24xMjg0Cj4+PiBbMl0gaHR0cHM6Ly9naXQudGl6ZW4ub3JnL2NnaXQvcGxhdGZvcm0va2Vy
+bmVsL2xpbnV4LWV4eW5vcy90cmVlL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0
+MzMtdG0yZS5kdHM/aD10aXplbiNuMTI3MAo+Pj4gLS0KPj4+IFRvIHVuc3Vic2NyaWJlIGZyb20g
+dGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+Pj4g
+dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPj4+IE1v
+cmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWlu
+Zm8uaHRtbAo+Pj4KPj4+IC4KPj4+Cj4+Cj4gCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRo
+aXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPiB0aGUg
+Ym9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFq
+b3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRt
+bAo+IAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
