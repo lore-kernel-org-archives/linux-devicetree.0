@@ -1,263 +1,66 @@
-From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] doc: DT: camss: Binding document for Qualcomm
- Camera subsystem driver
-Date: Mon, 9 Jan 2017 16:33:17 +0200
-Message-ID: <58739F2D.5020607@linaro.org>
-References: <1480085813-28235-1-git-send-email-todor.tomov@linaro.org>
- <20161130220350.q37rbo2biaeg2sad@rob-hp-laptop>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/3] ARM: configs: stm32: enable ADC driver
+Date: Mon, 9 Jan 2017 15:46:04 +0100
+Message-ID: <f28799ba-c6ca-4c54-37fa-b718c85207ad@st.com>
+References: <1480687022-12851-1-git-send-email-fabrice.gasnier@st.com>
+ <1480687022-12851-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161130220350.q37rbo2biaeg2sad@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1480687022-12851-2-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice GASNIER <fabrice.gasnier@st.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Fabrice
 
-Happy new year,
-And thank you for the review.
+On 12/02/2016 02:57 PM, Fabrice GASNIER wrote:
+> ADC driver depends on REGULATOR and IIO that are not yet selected.
+> Current hardware boards (like stm32f429i-eval) is using fixed
+> regulators.
+>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  arch/arm/configs/stm32_defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+> index a60b5cb..92ccc3c 100644
+> --- a/arch/arm/configs/stm32_defconfig
+> +++ b/arch/arm/configs/stm32_defconfig
+> @@ -49,6 +49,8 @@ CONFIG_SERIAL_STM32=y
+>  CONFIG_SERIAL_STM32_CONSOLE=y
+>  # CONFIG_HW_RANDOM is not set
+>  # CONFIG_HWMON is not set
+> +CONFIG_REGULATOR=y
+> +CONFIG_REGULATOR_FIXED_VOLTAGE=y
+>  # CONFIG_USB_SUPPORT is not set
+>  CONFIG_NEW_LEDS=y
+>  CONFIG_LEDS_CLASS=y
+> @@ -57,6 +59,9 @@ CONFIG_LEDS_TRIGGERS=y
+>  CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+>  CONFIG_DMADEVICES=y
+>  CONFIG_STM32_DMA=y
+> +CONFIG_IIO=y
+> +CONFIG_STM32_ADC_CORE=y
+> +CONFIG_STM32_ADC=y
+>  # CONFIG_FILE_LOCKING is not set
+>  # CONFIG_DNOTIFY is not set
+>  # CONFIG_INOTIFY_USER is not set
+>
 
-On 12/01/2016 12:03 AM, Rob Herring wrote:
-> On Fri, Nov 25, 2016 at 04:56:53PM +0200, Todor Tomov wrote:
->> Add DT binding document for Qualcomm Camera subsystem driver.
->>
->> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/qcom,camss.txt       | 196 +++++++++++++++++++++
->>  1 file changed, 196 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> new file mode 100644
->> index 0000000..76ad89a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> @@ -0,0 +1,196 @@
->> +Qualcomm Camera Subsystem
->> +
->> +* Properties
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain:
->> +		- "qcom,8x16-camss"
-> 
-> Don't use wildcards in compatible strings. One string per SoC.
+Applied on stm32-defconfig-for-v4.11
 
-Ok, I'll fix this.
+Thanks.
 
-> 
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Register ranges as listed in the reg-names property.
->> +- reg-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "csiphy0"
->> +		- "csiphy0_clk_mux"
->> +		- "csiphy1"
->> +		- "csiphy1_clk_mux"
->> +		- "csid0"
->> +		- "csid1"
->> +		- "ispif"
->> +		- "csi_clk_mux"
->> +		- "vfe0"
-> 
-> Kind of looks like the phy's should be separate nodes since each phy has 
-> its own register range, irq, clocks, etc.
-
-Yes, there are a lot of hardware resources here.
-I have decided to keep everything into a single platform device as this
-represents it better from system point of view.
-
-> 
->> +- interrupts:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Interrupts as listed in the interrupt-names property.
->> +- interrupt-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "csiphy0"
->> +		- "csiphy1"
->> +		- "csid0"
->> +		- "csid1"
->> +		- "ispif"
->> +		- "vfe0"
->> +- power-domains:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A phandle and power domain specifier pairs to the
->> +		    power domain which is responsible for collapsing
->> +		    and restoring power to the peripheral.
->> +- clocks:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A list of phandle and clock specifier pairs as listed
->> +		    in clock-names property.
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "camss_top_ahb_clk"
->> +		- "ispif_ahb_clk"
->> +		- "csiphy0_timer_clk"
->> +		- "csiphy1_timer_clk"
->> +		- "csi0_ahb_clk"
->> +		- "csi0_clk"
->> +		- "csi0_phy_clk"
->> +		- "csi0_pix_clk"
->> +		- "csi0_rdi_clk"
->> +		- "csi1_ahb_clk"
->> +		- "csi1_clk"
->> +		- "csi1_phy_clk"
->> +		- "csi1_pix_clk"
->> +		- "csi1_rdi_clk"
->> +		- "camss_ahb_clk"
->> +		- "camss_vfe_vfe_clk"
->> +		- "camss_csi_vfe_clk"
->> +		- "iface_clk"
->> +		- "bus_clk"
->> +- vdda-supply:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: A phandle to voltage supply for CSI2.
->> +- iommus:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A list of phandle and IOMMU specifier pairs.
->> +
->> +* Nodes
->> +
->> +- ports:
->> +	Usage: required
->> +	Definition: As described in video-interfaces.txt in same directory.
->> +	Properties:
->> +		- reg:
->> +			Usage: required
->> +			Value type: <u32>
->> +			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
->> +	Endpoint node properties:
->> +		- clock-lanes:
->> +			Usage: required
->> +			Value type: <u32>
->> +			Definition: The clock lane.
->> +		- data-lanes:
->> +			Usage: required
->> +			Value type: <prop-encoded-array>
->> +			Definition: An array of data lanes.
->> +		- qcom,settle-cnt:
-> 
-> This should go in phy node ideally.
-> 
->> +			Usage: required
->> +			Value type: <u32>
->> +			Definition: The settle count parameter for CSI PHY.
->> +
->> +* An Example
->> +
->> +	camss: camss@1b00000 {
->> +		compatible = "qcom,8x16-camss";
->> +		reg = <0x1b0ac00 0x200>,
->> +			<0x1b00030 0x4>,
->> +			<0x1b0b000 0x200>,
->> +			<0x1b00038 0x4>,
->> +			<0x1b08000 0x100>,
->> +			<0x1b08400 0x100>,
->> +			<0x1b0a000 0x500>,
->> +			<0x1b00020 0x10>,
->> +			<0x1b10000 0x1000>;
->> +		reg-names = "csiphy0",
->> +			"csiphy0_clk_mux",
->> +			"csiphy1",
->> +			"csiphy1_clk_mux",
->> +			"csid0",
->> +			"csid1",
->> +			"ispif",
->> +			"csi_clk_mux",
->> +			"vfe0";
->> +		interrupts = <GIC_SPI 78 0>,
->> +			<GIC_SPI 79 0>,
->> +			<GIC_SPI 51 0>,
->> +			<GIC_SPI 52 0>,
->> +			<GIC_SPI 55 0>,
->> +			<GIC_SPI 57 0>;
->> +		interrupt-names = "csiphy0",
->> +			"csiphy1",
->> +			"csid0",
->> +			"csid1",
->> +			"ispif",
->> +			"vfe0";
->> +		power-domains = <&gcc VFE_GDSC>;
->> +		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
->> +			<&gcc GCC_CAMSS_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_VFE0_CLK>,
->> +			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
->> +			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
->> +		clock-names = "camss_top_ahb_clk",
->> +			"ispif_ahb_clk",
->> +			"csiphy0_timer_clk",
->> +			"csiphy1_timer_clk",
->> +			"csi0_ahb_clk",
->> +			"csi0_clk",
->> +			"csi0_phy_clk",
->> +			"csi0_pix_clk",
->> +			"csi0_rdi_clk",
->> +			"csi1_ahb_clk",
->> +			"csi1_clk",
->> +			"csi1_phy_clk",
->> +			"csi1_pix_clk",
->> +			"csi1_rdi_clk",
->> +			"camss_ahb_clk",
->> +			"camss_vfe_vfe_clk",
->> +			"camss_csi_vfe_clk",
->> +			"iface_clk",
->> +			"bus_clk";
->> +		vdda-supply = <&pm8916_l2>;
->> +		iommus = <&apps_iommu 3>;
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			port@0 {
->> +				reg = <0>;
->> +				csiphy0_ep: endpoint {
->> +					clock-lanes = <1>;
->> +					data-lanes = <0 2>;
->> +					qcom,settle-cnt = <0xe>;
->> +					remote-endpoint = <&ov5645_ep>;
->> +				};
->> +			};
->> +		};
->> +	};
->> -- 
->> 1.9.1
->>
-
--- 
-Best regards,
-Todor Tomov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alex
