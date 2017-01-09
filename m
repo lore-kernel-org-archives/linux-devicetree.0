@@ -1,74 +1,51 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH net-next v4 2/2] net: stmmac: dwmac-meson8b: make the
- RGMII TX delay configurable
-Date: Mon, 9 Jan 2017 18:37:31 +0100
-Message-ID: <CAFBinCBDyBLtDZyawGGSNT2u71k9ALoSKcTAUm+PRKC+2yawzg@mail.gmail.com>
-References: <20161202233238.17561-1-martin.blumenstingl@googlemail.com>
- <20161217182119.4037-1-martin.blumenstingl@googlemail.com>
- <20161217182119.4037-3-martin.blumenstingl@googlemail.com>
- <20161218.104950.1013829528388480468.davem@davemloft.net> <CAFBinCDZ_mqt8q2rG6zDy8ke5sX6L+4sVYOOhWUdO3apwFiRYw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1.1] ARM: multi_v7_defconfig: Enable power sequence for
+ Odroid U3
+Date: Mon, 9 Jan 2017 19:38:03 +0200
+Message-ID: <CAJKOXPdODg2gCXP-BCRhDZAc2+o1J7Ek9iLaYF7hn_R2mNiK3A@mail.gmail.com>
+References: <20170107085203.4431-5-krzk@kernel.org> <20170107091651.10560-1-krzk@kernel.org>
+ <d8ee24b1-9d6b-e76f-b5ef-71706efbf9e5@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDZ_mqt8q2rG6zDy8ke5sX6L+4sVYOOhWUdO3apwFiRYw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d8ee24b1-9d6b-e76f-b5ef-71706efbf9e5-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-On Sun, Dec 18, 2016 at 5:13 PM, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> On Sun, Dec 18, 2016 at 4:49 PM, David Miller <davem@davemloft.net> wrote:
->> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> Date: Sat, 17 Dec 2016 19:21:19 +0100
->>
->>> Prior to this patch we were using a hardcoded RGMII TX clock delay of
->>> 2ns (= 1/4 cycle of the 125MHz RGMII TX clock). This value works for
->>> many boards, but unfortunately not for all (due to the way the actual
->>> circuit is designed, sometimes because the TX delay is enabled in the
->>> PHY, etc.). Making the TX delay on the MAC side configurable allows us
->>> to support all possible hardware combinations.
->>>
->>> This allows fixing a compatibility issue on some boards, where the
->>> RTL8211F PHY is configured to generate the TX delay. We can now turn
->>> off the TX delay in the MAC, because otherwise we would be applying the
->>> delay twice (which results in non-working TX traffic).
->>>
->>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->>> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
->>
->> Is this really the safest thing to do?
->>
->> If you say the existing hard-coded setting of 1/4 cycle works on most
->> boards, and what you're trying to do is override it with an OF
->> property value for boards where the existing setting does not work,
->> then you _must_ use a default value that corresponds to what the
->> existing code does not when you don't see this new OF property.
-> it's a bit more complicated in reality: 1/4 cycle works when the TX
-> delay of the RTL8211F PHY is turned off (until recently it was always
-> enabled for phy-mode RGMII).
+On Mon, Jan 9, 2017 at 6:24 PM, Javier Martinez Canillas
+<javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
+> Hello Krzysztof,
 >
->> So please retain the current behavior of the 1/4 cycle TX delay
->> setting when you don't see the amlogic,tx-delay-ns property.
->>
->> I really think you risk breaking existing boards by not doing so,
->> unless you can have this patch tested on every such board that exists
->> and I don't think you really can feasibly and rigorously do that.
-> there's a patch in my follow-up series which adds the 2ns to the .dts
-> for all RGMII based boards: [0] (and I would keep these even if we had
-> a default value, just to make it explicit and thus easier to
-> understand for other people).
-> however, we can add the 2ns default back (I can do this if you want -
-> Rob Herring was unhappy with the missing documentation of this default
-> value [1] - so note to myself: take care of that as well). but then we
-> have to decide when to apply this default value: only when we're in
-> RGMII mode or also in any of the RGMII_*ID modes?
+> I think it would had been clearer if the subject prefix was "[PATCH v1.1 4/4]" :)
+
+Ah, yes.
+
 >
-> please let me know how we should proceed
-gentle ping - what is your opinion on this?
+> On 01/07/2017 06:16 AM, Krzysztof Kozlowski wrote:
+>> Odroid U3 needs a power sequence for lan9730, if it was enabled by
+>> bootloader.  Also enable the USB3503 HSCI to USB2.0 driver (device
+>> is present on Odroid U3).
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> ---
+>>
+>
+> Do you think that makes sense to also enable GPIO_SYS for debugging
+> purposes as you do in patch 3/4?
 
+I like the GPIO_SYSFS interface because it is easy to use. However
+now, after your question, I found this:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/470154.html
+ARM/ARM64: defconfig: drop GPIO_SYSFS on multiplatforms
 
-Regards,
-Martin
+... so instead I will drop it from exynos_defconfig.
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
