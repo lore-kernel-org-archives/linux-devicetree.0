@@ -1,71 +1,74 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] arm64: allwinner: a64: Increase the MMC max frequency
-Date: Tue, 10 Jan 2017 01:01:20 +0800
-Message-ID: <CAGb2v67JoOAtHjMJboNUdCDX=+=Hf+zOWr234rT7GEiUmPb=nQ@mail.gmail.com>
-References: <cover.493dc67855a5f1837e875d37307319a03d14d1d0.1483980339.git-series.maxime.ripard@free-electrons.com>
- <3689701f93c8426bfa476e9a5f31c3642a8a898e.1483980339.git-series.maxime.ripard@free-electrons.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH net-next v4 2/2] net: stmmac: dwmac-meson8b: make the
+ RGMII TX delay configurable
+Date: Mon, 9 Jan 2017 18:37:31 +0100
+Message-ID: <CAFBinCBDyBLtDZyawGGSNT2u71k9ALoSKcTAUm+PRKC+2yawzg@mail.gmail.com>
+References: <20161202233238.17561-1-martin.blumenstingl@googlemail.com>
+ <20161217182119.4037-1-martin.blumenstingl@googlemail.com>
+ <20161217182119.4037-3-martin.blumenstingl@googlemail.com>
+ <20161218.104950.1013829528388480468.davem@davemloft.net> <CAFBinCDZ_mqt8q2rG6zDy8ke5sX6L+4sVYOOhWUdO3apwFiRYw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3689701f93c8426bfa476e9a5f31c3642a8a898e.1483980339.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCDZ_mqt8q2rG6zDy8ke5sX6L+4sVYOOhWUdO3apwFiRYw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 12:46 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> All the controllers can have a maximum frequency of 200MHz.
->
-> Since older SoCs cannot go that high, we cannot change the default maximum
-> frequency, but fortunately for us we have a property for that in the DT.
->
-> This also has the side effect of allowing to use the MMC HS200 mode for the
-> boards that support it (with either 1.2v or 1.8v IOs).
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
->  1 file changed, 3 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 8e149498e096..f46ae965cf5b 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -332,6 +332,7 @@
->                         resets = <&ccu RST_BUS_MMC0>;
->                         reset-names = "ahb";
->                         interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-> +                       max-frequency = <200000000>;
+Hi David,
 
-You also have to set one of MMC_CAP2_HS200* in the driver,
-or mmc-hs200-1_8v or mmc-hs200-1_2v in the device tree to
-actually use HS200, right?
+On Sun, Dec 18, 2016 at 5:13 PM, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> On Sun, Dec 18, 2016 at 4:49 PM, David Miller <davem@davemloft.net> wrote:
+>> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> Date: Sat, 17 Dec 2016 19:21:19 +0100
+>>
+>>> Prior to this patch we were using a hardcoded RGMII TX clock delay of
+>>> 2ns (= 1/4 cycle of the 125MHz RGMII TX clock). This value works for
+>>> many boards, but unfortunately not for all (due to the way the actual
+>>> circuit is designed, sometimes because the TX delay is enabled in the
+>>> PHY, etc.). Making the TX delay on the MAC side configurable allows us
+>>> to support all possible hardware combinations.
+>>>
+>>> This allows fixing a compatibility issue on some boards, where the
+>>> RTL8211F PHY is configured to generate the TX delay. We can now turn
+>>> off the TX delay in the MAC, because otherwise we would be applying the
+>>> delay twice (which results in non-working TX traffic).
+>>>
+>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>>> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+>>
+>> Is this really the safest thing to do?
+>>
+>> If you say the existing hard-coded setting of 1/4 cycle works on most
+>> boards, and what you're trying to do is override it with an OF
+>> property value for boards where the existing setting does not work,
+>> then you _must_ use a default value that corresponds to what the
+>> existing code does not when you don't see this new OF property.
+> it's a bit more complicated in reality: 1/4 cycle works when the TX
+> delay of the RTL8211F PHY is turned off (until recently it was always
+> enabled for phy-mode RGMII).
+>
+>> So please retain the current behavior of the 1/4 cycle TX delay
+>> setting when you don't see the amlogic,tx-delay-ns property.
+>>
+>> I really think you risk breaking existing boards by not doing so,
+>> unless you can have this patch tested on every such board that exists
+>> and I don't think you really can feasibly and rigorously do that.
+> there's a patch in my follow-up series which adds the 2ns to the .dts
+> for all RGMII based boards: [0] (and I would keep these even if we had
+> a default value, just to make it explicit and thus easier to
+> understand for other people).
+> however, we can add the 2ns default back (I can do this if you want -
+> Rob Herring was unhappy with the missing documentation of this default
+> value [1] - so note to myself: take care of that as well). but then we
+> have to decide when to apply this default value: only when we're in
+> RGMII mode or also in any of the RGMII_*ID modes?
+>
+> please let me know how we should proceed
+gentle ping - what is your opinion on this?
 
-ChenYu
 
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> @@ -345,6 +346,7 @@
->                         resets = <&ccu RST_BUS_MMC1>;
->                         reset-names = "ahb";
->                         interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +                       max-frequency = <200000000>;
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> @@ -358,6 +360,7 @@
->                         resets = <&ccu RST_BUS_MMC2>;
->                         reset-names = "ahb";
->                         interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +                       max-frequency = <200000000>;
->                         status = "disabled";
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> --
-> git-series 0.8.11
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Martin
