@@ -1,41 +1,54 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: davinci: da850: Share the usb20 clock
-Date: Mon,  9 Jan 2017 17:13:36 +0100
-Message-ID: <20170109161336.3759-2-abailon@baylibre.com>
-References: <20170109161336.3759-1-abailon@baylibre.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109161336.3759-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nsekhar-l0cyMroinI0@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 2/4] ARM: dts: exynos: Fix LAN9730 on Odroid U3 after
+ tftpboot
+Date: Mon, 9 Jan 2017 13:17:38 -0300
+Message-ID: <a145363b-4c88-ed27-839e-f71c9430dcf9@osg.samsung.com>
+References: <20170107085203.4431-1-krzk@kernel.org>
+ <20170107085203.4431-3-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170107085203.4431-3-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, linux-usb@vger.kernel.org, linux-pm@vger.kernel.org, hverkuil@xs4all.nl, Markus Reichl <m.reichl@fivetechno.de>
 List-Id: devicetree@vger.kernel.org
 
-On da850, the cppi41 dma controller and usb core are the usb20 clock.
-Currently, this clock can only be used by the da8xx musb glue driver.
-Update the usb20 clock to be requested by more than one user.
+Hello Krzysztof,
 
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/mach-davinci/da850.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 01/07/2017 05:52 AM, Krzysztof Kozlowski wrote:
+> The ethernet adapter LAN9730, after enabling in bootloader (e.g. for
+> tftpboot) requires reset during boot.  Otherwise it won't come up.
+> 
+> The schematics of Odroid U3 are detailed enough but after grabbing
+> knowledge also from other sources (like U-Boot) the overall design looks
+> like:
+> 1. LAN9730 is connected to HSIC0 and USB3503 to HSIC1 of EHCI controller.
+> 2. USB3503 comes with its own reset pin: gpx3-5.
+> 3. Reset pin of LAN9730 is pulled up to 3.3 V so it cannot be used.
+> 4. The supply of 3.3 V for LAN9730 is delivered from buck8.
+> 5. Buck8 state is a logical OR of registry value (through I2C command)
+>    and ENB8 pin.  The ENB8, not described in schematics, is in fact
+>    gpa1-1.
+> 6. Missing or wrongly timed reset of LAN9730 might result in missing of
+>    two devices: LAN9730 and USB3503. Without reset, LAN9730 will not
+>    come up, if it was enabled by bootloader.
+> 
+> To fix the issue use the generic power sequence driver and toggle the
+> ENB8 (buck8) pin.  Reset duration of 500 us was chosen by experiments
+> (shortest working time was 400 us).  This is an easiest way to fix the
+> long standing LAN9730 reset issue.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 1d873d1..57e8049 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -567,7 +567,7 @@ static struct clk_lookup da850_clks[] = {
- 	 */
- 	CLK(NULL,		"aemif",	&aemif_nand_clk),
- 	CLK("ohci-da8xx",	"usb11",	&usb11_clk),
--	CLK("musb-da8xx",	"usb20",	&usb20_clk),
-+	CLK(NULL,		"usb20",	&usb20_clk),
- 	CLK("spi_davinci.0",	NULL,		&spi0_clk),
- 	CLK("spi_davinci.1",	NULL,		&spi1_clk),
- 	CLK("vpif",		NULL,		&vpif_clk),
+Thanks for keep pushing a fix for this long standing issue.
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
 -- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
