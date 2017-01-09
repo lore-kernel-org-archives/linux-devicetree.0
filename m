@@ -1,29 +1,72 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v7 5/5] soc: zte: pm_domains: Add support for zx296718
-Date: Mon, 9 Jan 2017 10:16:36 +0800
-Message-ID: <20170109021634.GI20956@dragon>
-References: <1483694164-7668-1-git-send-email-baoyou.xie@linaro.org>
- <1483694164-7668-5-git-send-email-baoyou.xie@linaro.org>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
+ for imx6sll
+Date: Mon, 9 Jan 2017 02:32:36 +0000
+Message-ID: <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
+ <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483694164-7668-5-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, davem@davemloft.net, geert+renesas@glider.be, akpm@linux-foundation.org, mchehab@kernel.org, krzk@kernel.org, arnd@arndb.de, claudiu.manoil@nxp.com, amitdanielk@gmail.com, pankaj.dubey@samsung.com, yangbo.lu@nxp.com, scott.branden@broadcom.com, simon.horman@netronome.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 05:16:04PM +0800, Baoyou Xie wrote:
-> This patch introduces the power domain driver of zx296718
-> which belongs to zte's zx2967 family.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> Reviewed-by: Jun Nie <jun.nie@linaro.org>
-
-Except the need of PCU_DM_xxx enum (I'm not strong on that,so would
-leave it to author's decision), the patch series looks good to me.
-I'm going to queue it up for 4.11 after getting Rob's ACK on bindings.
-Let me know if anyone has any objections.
-
-Shawn
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzEyXSBEb2N1bWVudDogZHQ6IGJpbmRpbmc6IGlt
+eDogdXBkYXRlIHBpbmN0cmwgZG9jDQo+IGZvciBpbXg2c2xsDQo+IA0KPiBPbiBUdWUsIERlYyAy
+NywgMjAxNiBhdCAxMDo0NyBBTSwgQmFpIFBpbmcgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0K
+PiANCj4gPiBBZGQgcGluY3RybCBiaW5kaW5nIGRvYyB1cGRhdGUgZm9yIGlteDZzbGwuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4NCj4gDQo+IEkg
+aGF2ZSB0byBwdXNoIGJhY2sgb24gdGhpcyBhIGJpdC4NCj4gDQo+ID4gK1BsZWFzZSByZWZlciB0
+byBmc2wsaW14LXBpbmN0cmwudHh0IGluIHRoaXMgZGlyZWN0b3J5IGZvciBjb21tb24NCj4gPiAr
+YmluZGluZyBwYXJ0IGFuZCB1c2FnZS4NCj4gDQo+IEkgdW5kZXJzdGFuZCB0aGF0IGl0IGlzIGJ1
+aWxkaW5nIG9uIHRvcCBvZiB0aGUgb2xkIGkuTVggYmluZGluZ3MgYW5kIHRoYXQgaXQgaGFzDQo+
+IHNvbWUga2luZCBvZiAidHJhZGl0aW9uIiBjb21pbmcgd2l0aCBpdC4NCj4gDQo+IEF0IHRoZSBz
+YW1lIHRpbWUsIHRoZSBpLk1YIGJpbmRpbmdzIGNhbWUgYWJvdXQgYmVmb3JlIHdlIGhhZCB0aGUg
+Z2VuZXJpYyBwaW4NCj4gY29udHJvbCBiaW5kaW5ncyBkZWZpbmVkLg0KPiANCj4gPiArQ09ORklH
+IGJpdHMgZGVmaW5pdGlvbjoNCj4gPiArUEFEX0NUTF9MVkUgICAgICAgICAgICAgICAgICAgICgx
+IDw8IDIyKQ0KPiA+ICtQQURfQ1RMX0hZUyAgICAgICAgICAgICAgICAgICAgICgxIDw8IDE2KQ0K
+PiA+ICtQQURfQ1RMX1BVU18xMDBLX0RPV04gICAgICAgICAgICgwIDw8IDE0KQ0KPiA+ICtQQURf
+Q1RMX1BVU180N0tfVVAgICAgICAgICAgICAgICgxIDw8IDE0KQ0KPiA+ICtQQURfQ1RMX1BVU18x
+MDBLX1VQICAgICAgICAgICAgICgyIDw8IDE0KQ0KPiA+ICtQQURfQ1RMX1BVU18yMktfVVAgICAg
+ICAgICAgICAgICgzIDw8IDE0KQ0KPiA+ICtQQURfQ1RMX1BVRSAgICAgICAgICAgICAgICAgICAg
+ICgxIDw8IDEzKQ0KPiA+ICtQQURfQ1RMX1BLRSAgICAgICAgICAgICAgICAgICAgICgxIDw8IDEy
+KQ0KPiA+ICtQQURfQ1RMX09ERSAgICAgICAgICAgICAgICAgICAgICgxIDw8IDExKQ0KPiA+ICtQ
+QURfQ1RMX1NQRUVEX0xPVyAgICAgICAgICAgICAgICgwIDw8IDYpDQo+ID4gK1BBRF9DVExfU1BF
+RURfTUVEICAgICAgICAgICAgICAgKDEgPDwgNikNCj4gPiArUEFEX0NUTF9TUEVFRF9ISUdIICAg
+ICAgICAgICAgICAoMyA8PCA2KQ0KPiA+ICtQQURfQ1RMX0RTRV9ESVNBQkxFICAgICAgICAgICAg
+ICgwIDw8IDMpDQo+ID4gK1BBRF9DVExfRFNFXzI2MG9obSAgICAgICAgICAgICAgKDEgPDwgMykN
+Cj4gPiArUEFEX0NUTF9EU0VfMTMwb2htICAgICAgICAgICAgICAoMiA8PCAzKQ0KPiA+ICtQQURf
+Q1RMX0RTRV84N29obSAgICAgICAgICAgICAgICgzIDw8IDMpDQo+ID4gK1BBRF9DVExfRFNFXzY1
+b2htICAgICAgICAgICAgICAgKDQgPDwgMykNCj4gPiArUEFEX0NUTF9EU0VfNTJvaG0gICAgICAg
+ICAgICAgICAoNSA8PCAzKQ0KPiA+ICtQQURfQ1RMX0RTRV80M29obSAgICAgICAgICAgICAgICg2
+IDw8IDMpDQo+ID4gK1BBRF9DVExfRFNFXzM3b2htICAgICAgICAgICAgICAgKDcgPDwgMykNCj4g
+PiArUEFEX0NUTF9TUkVfRkFTVCAgICAgICAgICAgICAgICAoMSA8PCAwKQ0KPiA+ICtQQURfQ1RM
+X1NSRV9TTE9XICAgICAgICAgICAgICAgICgwIDw8IDApDQo+IA0KPiBBIHdob2xlIHNsZXcgb2Yg
+dGhlc2UgaWYgbm90IGFsbCBjb3JyZXNwb25kIHRvIHRoZSBnZW5lcmljIGJpbmRpbmdzLg0KPiAN
+Cj4gSSB3b3VsZCBjb25zaWRlciBhdWdtZW50aW5nIHRoZSBjb2RlIGluIHRoZSBkcml2ZXIgdG8g
+aGFuZGxlIHRoZSBnZW5lcmljDQo+IGJpbmRpbmdzICppbiBhZGRpdGlvbiogdG8gdGhlIG9sZCBs
+ZWdhY3kgYmluZGluZ3MsIGFuZCB1c2UgdGhvc2Ugb3ZlciB0aGVzZQ0KPiByYW5kb20gY3VzdG9t
+IGJpdHMuDQo+IA0KPiBSZWFkIGRyaXZlcnMgdXNpbmcgQ09ORklHX0dFTkVSSUNfUElOQ09ORiBh
+cyBhbiBpbnNwaXJhdGlvbi4NCj4gDQo+IEZvciBleGFtcGxlIHNlZSBjb21taXQNCj4gY2VmYmYx
+YTFiMjk1MzFhOTcwYmMyOTA4YTUwYTc1ZDY0NzRmY2MzOA0KPiAicGluY3RybDogc3VueGk6IFN1
+cHBvcnQgZ2VuZXJpYyBiaW5kaW5nIg0KPiBmcm9tIE1heGltZSBSaXBhcmQsIHdoZXJlIGhlIGRv
+ZXMgYSBzaW1pbGFyIHRoaW5nIGZvciBzdW54aS4NCg0KSSBoYXZlIGxvb2sgaW50byB0aGUgYWJv
+dmUgY29tbWl0IG9uIHVzaW5nIGdlbmVyaWMgYmluZGluZy4gQnV0IEkgdGhpbmsgdGhlIGdlbmVy
+aWMgcGluY29uZg0KaXMgbm90IHZlcnkgZWFzeSB0byBhZGQgaW4gaW14IHBpbmN0cmwgRHJpdmVy
+LiBpbXggcGluY3RybCB1c2UgYSBkaWZmZXJlbnQgd2F5IHRvIHBhcnNlIHRoZSBwaW4gY29uZmln
+dXJlLg0KIA0KRWFjaCBmc2wscGluIGVudHJ5ICBsb29rcyBsaWtlIDxQSU5fRlVOQ19JRCAgQ09O
+RklHPiBpbiBkdHMsIHRoZSBDT05GSUcgaXMgdGhlIHBhZCBzZXR0aW5nIHZhbHVlIGxpa2UNCnB1
+bGwtdXAsIG9wZW4tZHJhaW4sIGRyaXZlIHN0cmVuZ3RoIGV0Yy4gVGhlIGFib3ZlIGNvbmZpZyBi
+aXQgZGVmaW5pdGlvbiBpcyBzcGVjaWZpYyB0byBlYWNoIFNPQyBpbiB0aGUgUEFEIENUTCByZWdp
+c3Rlci4NCg0KSWYgd2Ugd2FudCBzZXQgdGhlIHBpbiBjb25maWcgdG8gZW5hYmxlIGh5c3RlcmVz
+aXMsIDQ3S09obSBQdWxsIFVwLCA1ME1oeiBzcGVlZCwgODBPaG0gZHJpdmVyIHN0cmVuZ3RoDQph
+bmQgRmFzdCBTbGV3IFJhdGUsIHRoZW4gdGhlIENPTkZJRyB2YWx1ZSBzaG91bGQgYmUgMHgxNzA1
+OSggT1JzIGNvcnJlc3BvbmRpbmcgYml0IGRlZmluaXRpb24pLiBUaGlzIHZhbHVlIHdpbGwgYmUg
+c2V0IGluDQpQQUQgQ1RMIHJlZ2lzdGVyIHRvIGNvbmZpZyB0aGUgY29ycmVzcG9uZGluZyBwaW4u
+DQoNCkJSDQpKYWNreSBCYWkNCg0KPiANCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoNCg==
