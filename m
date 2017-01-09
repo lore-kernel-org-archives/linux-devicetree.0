@@ -1,50 +1,48 @@
-From: Roger Shimizu <rogershimizu@gmail.com>
-Subject: Re: [PATCH v4 1/2] power: reset: add linkstation-reset driver
-Date: Mon, 9 Jan 2017 12:31:44 +0900
-Message-ID: <CAEQ9gEkvj++e7ch40cFqBy3KXg-a=pYnH7cwErMe2RDd2qzQJg@mail.gmail.com>
-References: <20161227070611.14852-1-rogershimizu@gmail.com>
- <20170107150451.17912-1-rogershimizu@gmail.com> <20170107150451.17912-2-rogershimizu@gmail.com>
- <20170108170209.GD573@kiwi.nardis.ca>
+From: noman pouigt <variksla@gmail.com>
+Subject: gpio_key.c device tree question
+Date: Sun, 8 Jan 2017 19:42:19 -0800
+Message-ID: <CAES_P+_SWsRQZFRJU37FJuXPEcZPgADbcdN8-9EXKGL990XpDQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170108170209.GD573@kiwi.nardis.ca>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ryan Tandy <ryan@nardis.ca>
-Cc: Andrew Lunn <andrew@lunn.ch>, Martin Michlmayr <tbm@cyrius.com>, Sylver Bruneau <sylver.bruneau@googlemail.com>, Herbert Valerio Riedel <hvr@gnu.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Ryan,
+Hello,
 
-Thanks for your comments!
+I am trying to see how to disable the sub device nodes in
+gpio_keys device node.
 
-On Mon, Jan 9, 2017 at 2:02 AM, Ryan Tandy <ryan@nardis.ca> wrote:
-> On Sun, Jan 08, 2017 at 12:04:50AM +0900, Roger Shimizu wrote:
->>
->> +config POWER_RESET_LINKSTATION
->> +       bool "Buffalo Linkstation and its variants reset driver"
->> +       depends on OF_GPIO && PLAT_ORION
->> +       help
->> +         This driver supports power off Buffalo Linkstation / KuroBox Pro
->> +         NAS and their variants by sending commands to the
->> micro-controller
->> +         which controls the main power.
->
-> Would it make sense to mention something about these being the ARM9/orion5x
-> Linkstations? If I understand correctly, the older PPC Linkstations have a
-> single-byte poweroff command. (Maybe they could even be supported by
-> qnap-poweroff.)
->
-> See arch/powerpc/platforms/embedded6xx/linkstation.c around line 123, and
-> arch/powerpc/platforms/embedded6xx/ls_uart.c.
+I have this in my base dtsi file:
 
-This driver, linkstation-reset, can also handle PPC Linkstation after
-it's converted to DT.
-I already considered this and mentioned in previous reply [0].
+#include "vendor_file.dtsi"
 
-[0] http://marc.info/?l=linux-pm&m=148216908031283
+        gpio_keys {
+                compatible = "gpio-keys";
+                input-name = "gpio-keys";
+                pinctrl-names = "gpio_key_active","gpio_key_suspend";
+                pinctrl-0 = <&key_active>;
+                pinctrl-1 = <&key_suspend>;
+                camera_snapshot {
+                        label = "camera_snapshot";
+                        //snip
+                };
+        };
 
-Cheers,
--- 
-Roger Shimizu, GMT +9 Tokyo
-PGP/GPG: 4096R/6C6ACD6417B3ACB1
+I have this in vendor_file.dtsi:
+       gpio_keys {
+               source_key_1 {
+                       label = "source_key_1";
+                       //snip
+               };
+       };
+
+In my current consolidated dtb file all nodes are getting
+added i.e. camera_snapshot and source_key_1. How
+can i remove camera_snapshot node from the
+gpio_keys device node or disable it?
+
+
+Thanks,
