@@ -1,98 +1,91 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/2] backlight arcxcnn devicetree bindings for
- ArcticSand
-Date: Mon, 9 Jan 2017 08:31:16 +0000
-Message-ID: <20170109083116.GA2155@dell>
-References: <1483735714-5500-1-git-send-email-olimpiu@arcticsand.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
+ Tree
+Date: Mon, 9 Jan 2017 08:36:38 +0000
+Message-ID: <20170109083638.GB2155@dell>
+References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
+ <20161226181153.11271-2-bjorn.andersson@linaro.org>
+ <20170104115424.GH27589@dell>
+ <20170104192608.GN10531@minitux>
+ <20170105074952.GG24225@dell>
+ <20170105163054.GO10531@minitux>
+ <20170106095349.GE9851@dell>
+ <20170106185422.GQ10531@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483735714-5500-1-git-send-email-olimpiu@arcticsand.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Cc: robh@kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com
+In-Reply-To: <20170106185422.GQ10531@minitux>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 06 Jan 2017, Olimpiu Dejeu wrote:
+On Fri, 06 Jan 2017, Bjorn Andersson wrote:
 
-> backlight: Add devicetree bindings for the Arctic Sand backlight driver
-> This patch provides devicetree bindings for the Arctic Sand
->     driver submitted in the previous patch
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
-> ---
+> On Fri 06 Jan 01:53 PST 2017, Lee Jones wrote:
 > 
-> v2 => v3:
-> - Version updated to match other patch in set. No other changes.
-> v1 => v2:
-> - Version updated to match other patch in set. No other changes.
+> > On Thu, 05 Jan 2017, Bjorn Andersson wrote:
+> > 
+> > > On Wed 04 Jan 23:49 PST 2017, Lee Jones wrote:
+> > > 
+> > > > On Wed, 04 Jan 2017, Bjorn Andersson wrote:
+> > > > 
+> > > > > On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
+> > > > > 
+> > > > > > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
+> > > > > > 
+> > > > > > > From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> > > > > > > 
+> > > > > > > Implement support for initialization of the lm3533 driver core and
+> > > > > > > probing child devices from Device Tree.
+> > > > > > > 
+> > > > > 
+> > > > > [..]
+> > > > > 
+> > > > > > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
+> > > > > > >  	lm3533_device_bl_init(lm3533);
+> > > > > > >  	lm3533_device_led_init(lm3533);
+> > > > > > >  
+> > > > > > > +	if (lm3533->dev->of_node) {
+> > > > > > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
+> > > > > > > +				     lm3533->dev);
+> > > > > > > +	}
+> > > > > > 
+> > > > > > I think it's save to call of_platform_populate(), even if !of_node.
+> > > > > > It will just fail and return an error code, which you are ignoring
+> > > > > > anyway.
+> > > > > > 
+> > > > > 
+> > > > > I thought so too, but that's apparently how you trigger probing children
+> > > > > of the root node. So we're stuck with a conditional.
+> > > > 
+> > > > Ah, so this is to protect against the case where DT is present, but a
+> > > > node for this device is not (or is disabled), so is left unprobed.
+> > > > Then the bind is initiated via I2C?  Or something else?
+> > > > 
+> > > 
+> > > In the event that a new lm3533 is spawned from sysfs we would not have
+> > > platform_data when entering lm3533_device_init() and just bail early.
+> > > 
+> > > Therefor, this issue would be limited to the odd case of lm3533 being
+> > > initiated from code (e.g. a board file) on a DT enabled system. In which
+> > > case it will create and probe new devices from the root of the DT.
+> > 
+> > Eewww, do we really want to support that?
+> > 
 > 
->  .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> As long as we support non-DT probing of the driver this is a possible
+> scenario. And with modern ARM being DT-centric I think that if anyone
+> uses this driver with a modern version of the Linux kernel it's likely
+> that they would have this kind of hybrid solution.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> new file mode 100644
-> index 0000000..a7b6ff2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> @@ -0,0 +1,33 @@
-> +Binding for ArcticSand arc2c0608 LED driver
-> +
-> +Required properties:
-> +- compatible: should be "arc,arc2c0608"
-> +- reg: slave address
-> +
-> +Optional properties:
-> +- default-brightness: brightness value on boot, value from: 0-4095
-> +- label: The name of the backlight device
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +- led-sources: List of enabled channels from 0 to 5.
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +
-> +- arc,led-config-0: setting for register ILED_CONFIG_0
-> +- arc,led-config-1: setting for register ILED_CONFIG_1
-> +- arc,dim-freq: PWM mode frequence setting (bits [3:0] used)
-> +- arc,comp-config: setting for register CONFIG_COMP
-> +- arc,filter-config: setting for register FILTER_CONFIG
-> +- arc,trim-config: setting for register IMAXTUNE
+> So, although ugly, I think we should keep this conditional and hope that
+> anyone using the driver will transition to use the DT binding.
 
-Nit: Don't you think this is easier to read?
-
-Required properties:
-- compatible:		should be "arc,arc2c0608"
-- reg:			slave address
-
-Optional properties:
-- default-brightness:	brightness value on boot, value from: 0-4095
-- label:		The name of the backlight device
-			See Documentation/devicetree/bindings/leds/common.txt
-- led-sources:		List of enabled channels from 0 to 5.
-			See Documentation/devicetree/bindings/leds/common.txt
-
-- arc,led-config-0:	setting for register ILED_CONFIG_0
-- arc,led-config-1:	setting for register ILED_CONFIG_1
-- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
-- arc,comp-config:	setting for register CONFIG_COMP
-- arc,filter-config:	setting for register FILTER_CONFIG
-- arc,trim-config:	setting for register IMAXTUNE
-
-> +
-> +Note: Optional properties not specified will default to values in IC EPROM
-> +
-> +Example:
-> +
-> +arc2c0608@30 {
-> +	compatible = "arc,arc2c0608";
-> +	reg = <0x30>;
-> +	default-brightness = <500>;
-> +	label = "lcd-backlight";
-> +	linux,default-trigger = "backlight";
-> +	led-sources = <0 1 2 5>;
-> +};
-> +
+Very well, but can you add a comment describing the reason for its
+existence with a view to removing it further down the line?
 
 -- 
 Lee Jones
