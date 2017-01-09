@@ -1,107 +1,51 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Mon, 09 Jan 2017 10:53:53 +0100
-Message-ID: <aeab26bc-76a8-0b4d-b5b9-b8602fcf2eb3@samsung.com>
-References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
- <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
- <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
- <586F2BF3.8080400@samsung.com>
- <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
- <586F5728.1010800@samsung.com>
- <5df95abe-0d5d-0c48-2840-5996260201de@samsung.com>
- <587355B8.2050701@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun6i: Add SPDIF to the Mele I7
+Date: Mon, 9 Jan 2017 11:03:14 +0100
+Message-ID: <20170109100314.lsl3v7m5au5vrkia@lukather>
+References: <20161220104038.22532-1-codekipper@gmail.com>
+ <20161220104038.22532-4-codekipper@gmail.com>
+ <CAGb2v66atehFNDu-G94_WoFXzCPfZev4xsGD8ghr7+_gx-PZJg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <587355B8.2050701@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, Andi Shyti <andi.shyti@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rmsvcpibftdp7cbw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBY57ZXBQKGQETQUIV3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66atehFNDu-G94_WoFXzCPfZev4xsGD8ghr7+_gx-PZJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkuMDEuMjAxNyAxMDoxOSwgSW5raSBEYWUgd3JvdGU6Cj4KPiAyMDE364WEIDAx7JuUIDA5
-7J28IDE2OjM37JeQIEFuZHJ6ZWogSGFqZGEg7J20KOqwgCkg7JO0IOq4gDoKPj4gT24gMDYuMDEu
-MjAxNyAwOTozNiwgSW5raSBEYWUgd3JvdGU6Cj4+PiAyMDE364WEIDAx7JuUIDA27J28IDE3OjE4
-7JeQIEFuZGkgU2h5dGkg7J20KOqwgCkg7JO0IOq4gDoKPj4+PiBIaSBJbmtpLAo+Pj4+Cj4+Pj4g
-VGhhbmtzIGZvciB0aGUgcmVwbHksIGJ1dC4uLgo+Pj4+Cj4+Pj4+Pj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBkZWZhdWx0X21vZGUgPSB7Cj4+Pj4+Pj4gKwkuY2xvY2sg
-PSAyMjIzNzIsCj4+Pj4+Pj4gKwkuaGRpc3BsYXkgPSAxNDQwLAo+Pj4+Pj4+ICsJLmhzeW5jX3N0
-YXJ0ID0gMTQ0MCArIDEsCj4+Pj4+Pj4gKwkuaHN5bmNfZW5kID0gMTQ0MCArIDEgKyAxLAo+Pj4+
-Pj4+ICsJLmh0b3RhbCA9IDE0NDAgKyAxICsgMSArIDEsCj4+Pj4+Pj4gKwkudmRpc3BsYXkgPSAy
-NTYwLAo+Pj4+Pj4+ICsJLnZzeW5jX3N0YXJ0ID0gMjU2MCArIDEsCj4+Pj4+Pj4gKwkudnN5bmNf
-ZW5kID0gMjU2MCArIDEgKyAxLAo+Pj4+Pj4+ICsJLnZ0b3RhbCA9IDI1NjAgKyAxICsgMSArIDE1
-LAo+Pj4+Pj4+ICsJLnZyZWZyZXNoID0gNjAsCj4+Pj4+Pj4gKwkuZmxhZ3MgPSAwLAo+Pj4+Pj4+
-ICt9Owo+Pj4+Pj4gaG93IGlzIHRoaXMgd29ya2luZyB3aXRoIHRtMmU/IEFyZSB0aGVzZSB2YWx1
-ZXMgdmFsaWQgZm9yIGJvdGgKPj4+Pj4+IHRoZSBib2FyZHM/Cj4+Pj4+IFdlIGRvbid0IG5lZWQg
-dG8gY29uc2lkZXIgdG0yZSBib2FyZCB3aXRoIHR3byByZWFzb25lcywKPj4+Pj4gMS4gdGhlcmUg
-aXMgbm8gdG0yZSBib2FyZCBzdXBwb3J0IGluIG1haW5saW5lCj4+Pj4+IDIuIHRoZSBwYW5lbCBv
-biB0bTIgd291bGQgYmUgYSBsaXR0bGUgYml0IGRpZmZlcmVudCBmcm9tIG9uZSBvbiB0bTJlCj4+
-Pj4gLi4uIHRoaXMgZGlzcGxheSBpbiB0aGUgVGl6ZW4gS2VybmVsIGlzIHN1cHBvcnRlZCBieSBi
-b3RoOgo+Pj4+IHRtMiBbMV0gYW5kIHRtMmUgWzJdLiBUaGUgb25seSBkaWZmZXJlbmNlcyBhcmU6
-Cj4+PiBXaHkgdG0yZSBkdHMgZmlsZSBpcyBpbiBtYWlubGluZT8gU2VlbXMgY29tbXVuaWNhdGlv
-biBtaXNzIHdpdGggQ2hhbndvby4gOiggCj4+Pgo+Pj4+IFRNMjoKPj4+PiAgICBjbG9jay1mcmVx
-dWVuY3kgPSA8MTQ4NzQ0NDQ+Owo+Pj4+ICAgIGhhY3RpdmUgPSA8MTQ0MD47Cj4+Pj4KPj4+PiBU
-TTJFOgo+Pj4+ICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDwxNjUyMzcyND47Cj4+Pj4gICAgaGFjdGl2
-ZSA9IDwxNjAwPjsKPj4+Pgo+Pj4+IEkgZG9uJ3Qga25vdyBtdWNoIGFib3V0IHRoZSBkaWZmZXJl
-bmNlcyB5b3UgbWVudGlvbiBpbiBwb2ludCAyLAo+Pj4+IGJ1dCBpdCdzIGEgcGl0eSB0byBkcm9w
-IHN1cHBvcnQgb25seSBiZWNhdXNlIHdlIGRvbid0IHdhbnQgdG8gcHV0Cj4+Pj4gaW4gdGhlIGR0
-cyB0aGUgJ2hhY3RpdmUnLCBhbmQgJ2Nsb2NrLWZyZXF1ZW5jeScgcHJvcGVydGllcy4KPj4+IEFu
-eXdheSwgdG0yZSBib2FyZCBpcyBhbHJlYWR5IGluIG1haW5saW5lIHNvIFBhbmVsIGRyaXZlciBt
-YXkgbmVlZCB0byBpZGVudGlmeSB3aGF0IGtpbmRzIG9mIHBhbmVsIGlzIHByb2JlZCB0byBkZWNp
-ZGUgcG9yY2ggdmFsdWVzLiBJIHRoaW5rIHRoZXJlIGFyZSByZWxldmFudCByZWdpc3RlcnMgaW4g
-TUNVIG9mIHRoZSBQYW5lbCBkZXZpY2UgdG8gY2hlY2sgdmVyc2lvbiBvciBzaW1pbGFyIHRoaW5n
-Lgo+PiBJIHRoaW5rIHdlIGNhbiBzYWZlbHkgdXNlIGRpZmZlcmVudCBjb21wYXRpYmxlIHN0cmlu
-ZyBmb3IgdG0yZSAtIGl0IHVzZXMKPj4gZGlmZmVyZW50IGRpc3BsYXkgSUMgY29udHJvbGxlciAt
-IHM2ZTNoZjIsIGRyaXZlciB3aWxsIHByb3ZpZGUgdGltaW5ncwo+PiBiYXNlZCBvbiBpdC4KPiBV
-c2luZyBjb21wYXRhYmxlIHN0cmluZyB3b3VsZG4ndCBiZSBhIGdvb2QgaWRlYSBiZWNhdXNlIFBh
-bmVsIGlzIGEgZGV2aWNlIG5vdCBzcGVjaWZpYyB0byBib2FyZC4KCkJ1dCBib3RoIHBhbmVscyBh
-cmUgZGlmZmVyZW50IGRldmljZXM6ClRNMiBoYXM6IEFNUzU2N0RKMDEgcGFuZWwgb24gUzZFM0hB
-MiBpbnRlcmZhY2UgKGNhbGxlZCBMREkvSUMpClRNMkUgaGFzIEFNQjU1OURFMDEgcGFuZWwgb24g
-UzZFM0hGMiBpbnRlcmZhY2UgKGNhbGxlZCBMREkvSUMpCgpXaHkgYXNzaWduaW5nIGRpZmZlcmVu
-dCBjb21wYXRpYmxlcyB0byBkaWZmZXJlbnQgZGV2aWNlcyBpcyBub3QgYSBnb29kIGlkZWE/Cgo+
-Cj4+IEFzIGZhciBhcyBJIGV4YW1pbmVkIGF2YWlsYWJsZSBzcGVjcy9kb2NzIHRoZXJlIGlzIG5v
-IHJlbGlhYmxlIHJlZ2lzdGVyCj4+IHdoaWNoIGNhbiBiZSB1c2VkIHRvIHNhZmVseSBkaXN0aW5n
-dWlzaCBpdCBvbiBydW50aW1lLCBidXQgdGhlIGRvY3MgSQo+PiBoYXZlIGFyZSBmYXIgZnJvbSBj
-b21wbGV0ZW5lc3MuCj4gVGhlIGRhdGEgc2hlZXQgSSBhbSBzZWVpbmcgc2F5cyBhIFJERElEUyBy
-ZWdpc3RlciBkZXNjcmliZXMgbWFudWZhY3R1cmVyIGFuZCBtb2R1bGUgdmVyc2lvbiBpbmZvcm1h
-dGlvbi4gV2l0aCB0aGlzIHdlIGNvdWxkIGlkZW50aWZ5IHRoZSBQYW5lbCBkZXZpY2UuCj4gT2Yg
-Y291cnNlLCB3ZSBtYXkgbmVlZCB0byBjaGVjayB0aGUgcmVnaXN0ZXIgaGFzIHJlYWxseSBkaWZm
-ZXJlbnQgdmFsdWVzIGFjY29yZGluZyB0byBib2FyZC4KPgo+IEJlbG93IGlzIHRoZSB2ZXJzaW9u
-IGluZm9ybWF0aW9uIEhvZWdldW4gY2hlY2tlZCwKPgo+IFRNMgo+IFsgICAgNC45MDg2NjZdIHBh
-bmVsX3M2ZTNoYTIgMTM5MDAwMDAuZHNpLjA6IE1hbnVmYWN0dXJlIGRhdGU6IDIwMTQtMTAtMzEg
-MDY6NDEKPiBbICAgIDUuMDM1NzY4XSBwYW5lbF9zNmUzaGEyIDEzOTAwMDAwLmRzaS4wOiBJZDog
-NTAgMjAgMDkKPgo+IFRNMmUKPiBbICAgIDQuOTI5MjY1XSBwYW5lbF9zNmUzaGEyIDEzOTAwMDAw
-LmRzaS4wOiBNYW51ZmFjdHVyZSBkYXRlOiAyMDE0LTA5LTAzIDA2OjMwCj4gWyAgICA1LjA1NjI4
-N10gcGFuZWxfczZlM2hhMiAxMzkwMDAwMC5kc2kuMDogSWQ6IDQwIDQwIDE0CgpUaGVyZSBpcyBk
-ZXNjcmlwdGlvbiBvZiBJRDEsIElEMiwgSUQzIHJlZ2lzdGVycyBpbiBzcGVjcyBvZiBib3RoIHBh
-bmVscywKSSBzZWUgbm8gcmVsaWFibGUgYml0cyB0byBkaXN0aW5ndWlzaCBwYW5lbHMuCkFuZCBy
-ZWx5aW5nIG9uIHJlYWQgdmFsdWVzIG9mIHJhbmRvbSBkZXZpY2VzIGRvZXMgbm90IHNlZW1zIHRv
-IG1lIHByb3Blcgpzb2x1dGlvbi4KClJlZ2FyZHMKQW5kcnplagoKCj4KPgo+IFRoYW5rcy4KPgo+
-PiBSZWdhcmRzCj4+IEFuZHJ6ZWoKPj4KPj4+IFRoYW5rcy4KPj4+Cj4+Pj4gQW5kaQo+Pj4+Cj4+
-Pj4gWzFdIGh0dHBzOi8vZ2l0LnRpemVuLm9yZy9jZ2l0L3BsYXRmb3JtL2tlcm5lbC9saW51eC1l
-eHlub3MvdHJlZS9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHM/
-aD10aXplbiNuMTI4NAo+Pj4+IFsyXSBodHRwczovL2dpdC50aXplbi5vcmcvY2dpdC9wbGF0Zm9y
-bS9rZXJuZWwvbGludXgtZXh5bm9zL3RyZWUvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5
-bm9zNTQzMy10bTJlLmR0cz9oPXRpemVuI24xMjcwCj4+Pj4gLS0KPj4+PiBUbyB1bnN1YnNjcmli
-ZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIg
-aW4KPj4+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9y
-Zwo+Pj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
-b3Jkb21vLWluZm8uaHRtbAo+Pj4+Cj4+Pj4gLgo+Pj4+Cj4+IC0tCj4+IFRvIHVuc3Vic2NyaWJl
-IGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBp
-bgo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+
-PiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9t
-by1pbmZvLmh0bWwKPj4KPj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+
+--rmsvcpibftdp7cbw
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Sun, Jan 08, 2017 at 03:16:22AM +0800, Chen-Yu Tsai wrote:
+> On Tue, Dec 20, 2016 at 6:40 PM,  <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> > Enable the S/PDIF transmitter that is present on the Mele I7.
+> >
+> > Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> 
+> This patch should be ready to be merged. The associated clk
+> and dtsi changes are already in Maxime's tree.
+
+Applied, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--rmsvcpibftdp7cbw--
