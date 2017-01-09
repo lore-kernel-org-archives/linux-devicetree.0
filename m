@@ -1,70 +1,882 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 4/4] usb: musb: musb_cppi41: Workaround dma stall issue during teardown
-Date: Mon,  9 Jan 2017 17:39:02 +0100
-Message-ID: <20170109163902.5268-5-abailon@baylibre.com>
-References: <20170109163902.5268-1-abailon@baylibre.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109163902.5268-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: b-liu-l0cyMroinI0@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCHv3 3/8] rtc: add STM32 RTC driver
+Date: Mon, 9 Jan 2017 17:46:52 +0100
+Message-ID: <b0d66d53-bb5f-8b12-bae9-4022fe28854c@st.com>
+References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
+ <1483623809-29937-4-git-send-email-amelie.delaunay@st.com>
+ <20170105173301.GA27341@linaro.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <rtc-linux+bncBC2IT2GSZUDRBCX5Z3BQKGQEYD4YSSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170105173301.GA27341-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The dma may hung up if a teardown is initiated while an endpoint is still
-active (Advisory 2.3.27 of da8xx errata).
-To workaround this issue, add a delay before to initiate the teardown.
+Hi,
 
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- drivers/usb/musb/da8xx.c       | 2 +-
- drivers/usb/musb/musb_core.h   | 1 +
- drivers/usb/musb/musb_cppi41.c | 4 ++++
- 3 files changed, 6 insertions(+), 1 deletion(-)
+Thanks for reviewing!
+Alexandre, could you please review this v3 and say when you plan to take 
+this driver in the cycle ?
 
-diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-index 74dcc07..3513284 100644
---- a/drivers/usb/musb/da8xx.c
-+++ b/drivers/usb/musb/da8xx.c
-@@ -458,7 +458,7 @@ static inline u8 get_vbus_power(struct device *dev)
- }
- 
- static const struct musb_platform_ops da8xx_ops = {
--	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
-+	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP | MUSB_DA8XX,
- 	.init		= da8xx_musb_init,
- 	.exit		= da8xx_musb_exit,
- 
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index ade902e..d129278 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -172,6 +172,7 @@ struct musb_io;
-  */
- struct musb_platform_ops {
- 
-+#define MUSB_DA8XX		BIT(7)
- #define MUSB_DMA_UX500		BIT(6)
- #define MUSB_DMA_CPPI41		BIT(5)
- #define MUSB_DMA_CPPI		BIT(4)
-diff --git a/drivers/usb/musb/musb_cppi41.c b/drivers/usb/musb/musb_cppi41.c
-index 1636385..8fdbc17 100644
---- a/drivers/usb/musb/musb_cppi41.c
-+++ b/drivers/usb/musb/musb_cppi41.c
-@@ -547,6 +547,10 @@ static int cppi41_dma_channel_abort(struct dma_channel *channel)
- 		}
- 	}
- 
-+	/* DA8xx Advisory 2.3.27: wait 250 ms before to start the teardown */
-+	if (musb->io.quirks & MUSB_DA8XX)
-+		mdelay(250);
-+
- 	tdbit = 1 << cppi41_channel->port_num;
- 	if (is_tx)
- 		tdbit <<= 16;
+Thanks,
+Amelie
+On 01/05/2017 06:33 PM, Mathieu Poirier wrote:
+> On Thu, Jan 05, 2017 at 02:43:24PM +0100, Amelie Delaunay wrote:
+>> This patch adds support for the STM32 RTC.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>  drivers/rtc/Kconfig     |  11 +
+>>  drivers/rtc/Makefile    |   1 +
+>>  drivers/rtc/rtc-stm32.c | 776 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 788 insertions(+)
+>>  create mode 100644 drivers/rtc/rtc-stm32.c
+>>
+>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+>> index e859d14..11eb28a 100644
+>> --- a/drivers/rtc/Kconfig
+>> +++ b/drivers/rtc/Kconfig
+>> @@ -1706,6 +1706,17 @@ config RTC_DRV_PIC32
+>>  	   This driver can also be built as a module. If so, the module
+>>  	   will be called rtc-pic32
+>>
+>> +config RTC_DRV_STM32
+>> +	tristate "STM32 RTC"
+>> +	select REGMAP_MMIO
+>> +	depends on ARCH_STM32 || COMPILE_TEST
+>> +	help
+>> +	   If you say yes here you get support for the STM32 On-Chip
+>> +	   Real Time Clock.
+>> +
+>> +	   This driver can also be built as a module, if so, the module
+>> +	   will be called "rtc-stm32".
+>> +
+>>  comment "HID Sensor RTC drivers"
+>>
+>>  config RTC_DRV_HID_SENSOR_TIME
+>> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+>> index 1ac694a..87bd9cc 100644
+>> --- a/drivers/rtc/Makefile
+>> +++ b/drivers/rtc/Makefile
+>> @@ -144,6 +144,7 @@ obj-$(CONFIG_RTC_DRV_SNVS)	+= rtc-snvs.o
+>>  obj-$(CONFIG_RTC_DRV_SPEAR)	+= rtc-spear.o
+>>  obj-$(CONFIG_RTC_DRV_STARFIRE)	+= rtc-starfire.o
+>>  obj-$(CONFIG_RTC_DRV_STK17TA8)	+= rtc-stk17ta8.o
+>> +obj-$(CONFIG_RTC_DRV_STM32) 	+= rtc-stm32.o
+>>  obj-$(CONFIG_RTC_DRV_STMP)	+= rtc-stmp3xxx.o
+>>  obj-$(CONFIG_RTC_DRV_ST_LPC)	+= rtc-st-lpc.o
+>>  obj-$(CONFIG_RTC_DRV_SUN4V)	+= rtc-sun4v.o
+>> diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+>> new file mode 100644
+>> index 0000000..fdd3a31
+>> --- /dev/null
+>> +++ b/drivers/rtc/rtc-stm32.c
+>> @@ -0,0 +1,776 @@
+>> +/*
+>> + * Copyright (C) Amelie Delaunay 2016
+>> + * Author:  Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+>> + * License terms:  GNU General Public License (GPL), version 2
+>> + */
+>> +
+>> +#include <linux/bcd.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/ioport.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/rtc.h>
+>> +#include <linux/spinlock.h>
+>> +
+>> +#define DRIVER_NAME "stm32_rtc"
+>> +
+>> +/* STM32 RTC registers */
+>> +#define STM32_RTC_TR		0x00
+>> +#define STM32_RTC_DR		0x04
+>> +#define STM32_RTC_CR		0x08
+>> +#define STM32_RTC_ISR		0x0C
+>> +#define STM32_RTC_PRER		0x10
+>> +#define STM32_RTC_ALRMAR	0x1C
+>> +#define STM32_RTC_WPR		0x24
+>> +
+>> +/* STM32_RTC_TR bit fields  */
+>> +#define STM32_RTC_TR_SEC_SHIFT		0
+>> +#define STM32_RTC_TR_SEC		GENMASK(6, 0)
+>> +#define STM32_RTC_TR_MIN_SHIFT		8
+>> +#define STM32_RTC_TR_MIN		GENMASK(14, 8)
+>> +#define STM32_RTC_TR_HOUR_SHIFT		16
+>> +#define STM32_RTC_TR_HOUR		GENMASK(21, 16)
+>> +
+>> +/* STM32_RTC_DR bit fields */
+>> +#define STM32_RTC_DR_DATE_SHIFT		0
+>> +#define STM32_RTC_DR_DATE		GENMASK(5, 0)
+>> +#define STM32_RTC_DR_MONTH_SHIFT	8
+>> +#define STM32_RTC_DR_MONTH		GENMASK(12, 8)
+>> +#define STM32_RTC_DR_WDAY_SHIFT		13
+>> +#define STM32_RTC_DR_WDAY		GENMASK(15, 13)
+>> +#define STM32_RTC_DR_YEAR_SHIFT		16
+>> +#define STM32_RTC_DR_YEAR		GENMASK(23, 16)
+>> +
+>> +/* STM32_RTC_CR bit fields */
+>> +#define STM32_RTC_CR_FMT		BIT(6)
+>> +#define STM32_RTC_CR_ALRAE		BIT(8)
+>> +#define STM32_RTC_CR_ALRAIE		BIT(12)
+>> +
+>> +/* STM32_RTC_ISR bit fields */
+>> +#define STM32_RTC_ISR_ALRAWF		BIT(0)
+>> +#define STM32_RTC_ISR_INITS		BIT(4)
+>> +#define STM32_RTC_ISR_RSF		BIT(5)
+>> +#define STM32_RTC_ISR_INITF		BIT(6)
+>> +#define STM32_RTC_ISR_INIT		BIT(7)
+>> +#define STM32_RTC_ISR_ALRAF		BIT(8)
+>> +
+>> +/* STM32_RTC_PRER bit fields */
+>> +#define STM32_RTC_PRER_PRED_S_SHIFT	0
+>> +#define STM32_RTC_PRER_PRED_S		GENMASK(14, 0)
+>> +#define STM32_RTC_PRER_PRED_A_SHIFT	16
+>> +#define STM32_RTC_PRER_PRED_A		GENMASK(22, 16)
+>> +
+>> +/* STM32_RTC_ALRMAR and STM32_RTC_ALRMBR bit fields */
+>> +#define STM32_RTC_ALRMXR_SEC_SHIFT	0
+>> +#define STM32_RTC_ALRMXR_SEC		GENMASK(6, 0)
+>> +#define STM32_RTC_ALRMXR_SEC_MASK	BIT(7)
+>> +#define STM32_RTC_ALRMXR_MIN_SHIFT	8
+>> +#define STM32_RTC_ALRMXR_MIN		GENMASK(14, 8)
+>> +#define STM32_RTC_ALRMXR_MIN_MASK	BIT(15)
+>> +#define STM32_RTC_ALRMXR_HOUR_SHIFT	16
+>> +#define STM32_RTC_ALRMXR_HOUR		GENMASK(21, 16)
+>> +#define STM32_RTC_ALRMXR_PM		BIT(22)
+>> +#define STM32_RTC_ALRMXR_HOUR_MASK	BIT(23)
+>> +#define STM32_RTC_ALRMXR_DATE_SHIFT	24
+>> +#define STM32_RTC_ALRMXR_DATE		GENMASK(29, 24)
+>> +#define STM32_RTC_ALRMXR_WDSEL		BIT(30)
+>> +#define STM32_RTC_ALRMXR_WDAY_SHIFT	24
+>> +#define STM32_RTC_ALRMXR_WDAY		GENMASK(27, 24)
+>> +#define STM32_RTC_ALRMXR_DATE_MASK	BIT(31)
+>> +
+>> +/* STM32_RTC_WPR key constants */
+>> +#define RTC_WPR_1ST_KEY			0xCA
+>> +#define RTC_WPR_2ND_KEY			0x53
+>> +#define RTC_WPR_WRONG_KEY		0xFF
+>> +
+>> +/*
+>> + * RTC registers are protected agains parasitic write access.
+>> + * PWR_CR_DBP bit must be set to enable write access to RTC registers.
+>> + */
+>> +/* STM32_PWR_CR */
+>> +#define PWR_CR				0x00
+>> +/* STM32_PWR_CR bit field */
+>> +#define PWR_CR_DBP			BIT(8)
+>> +
+>> +static struct regmap *dbp;
+>> +
+>> +struct stm32_rtc {
+>> +	struct rtc_device *rtc_dev;
+>> +	void __iomem *base;
+>> +	struct clk *ck_rtc;
+>> +	spinlock_t lock; /* Protects registers accesses */
+>> +	int irq_alarm;
+>> +};
+>> +
+>> +static void stm32_rtc_wpr_unlock(struct stm32_rtc *rtc)
+>> +{
+>> +	writel_relaxed(RTC_WPR_1ST_KEY, rtc->base + STM32_RTC_WPR);
+>> +	writel_relaxed(RTC_WPR_2ND_KEY, rtc->base + STM32_RTC_WPR);
+>> +}
+>> +
+>> +static void stm32_rtc_wpr_lock(struct stm32_rtc *rtc)
+>> +{
+>> +	writel_relaxed(RTC_WPR_WRONG_KEY, rtc->base + STM32_RTC_WPR);
+>> +}
+>> +
+>> +static int stm32_rtc_enter_init_mode(struct stm32_rtc *rtc)
+>> +{
+>> +	unsigned int isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> +
+>> +	if (!(isr & STM32_RTC_ISR_INITF)) {
+>> +		isr |= STM32_RTC_ISR_INIT;
+>> +		writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
+>> +
+>> +		/*
+>> +		 * It takes around 2 ck_rtc clock cycles to enter in
+>> +		 * initialization phase mode (and have INITF flag set). As
+>> +		 * slowest ck_rtc frequency may be 32kHz and highest should be
+>> +		 * 1MHz, we poll every 10 us with a timeout of 100ms.
+>> +		 */
+>> +		return readl_relaxed_poll_timeout_atomic(
+>> +					rtc->base + STM32_RTC_ISR,
+>> +					isr, (isr & STM32_RTC_ISR_INITF),
+>> +					10, 100000);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void stm32_rtc_exit_init_mode(struct stm32_rtc *rtc)
+>> +{
+>> +	unsigned int isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> +
+>> +	isr &= ~STM32_RTC_ISR_INIT;
+>> +	writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
+>> +}
+>> +
+>> +static int stm32_rtc_wait_sync(struct stm32_rtc *rtc)
+>> +{
+>> +	unsigned int isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> +
+>> +	isr &= ~STM32_RTC_ISR_RSF;
+>> +	writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
+>> +
+>> +	/*
+>> +	 * Wait for RSF to be set to ensure the calendar registers are
+>> +	 * synchronised, it takes around 2 ck_rtc clock cycles
+>> +	 */
+>> +	return readl_relaxed_poll_timeout_atomic(rtc->base + STM32_RTC_ISR,
+>> +						 isr,
+>> +						 (isr & STM32_RTC_ISR_RSF),
+>> +						 10, 100000);
+>> +}
+>> +
+>> +static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
+>> +{
+>> +	struct stm32_rtc *rtc = (struct stm32_rtc *)dev_id;
+>> +	unsigned int isr, cr;
+>> +
+>> +	mutex_lock(&rtc->rtc_dev->ops_lock);
+>> +
+>> +	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> +	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +
+>> +	if ((isr & STM32_RTC_ISR_ALRAF) &&
+>> +	    (cr & STM32_RTC_CR_ALRAIE)) {
+>> +		/* Alarm A flag - Alarm interrupt */
+>> +		dev_dbg(&rtc->rtc_dev->dev, "Alarm occurred\n");
+>> +
+>> +		/* Pass event to the kernel */
+>> +		rtc_update_irq(rtc->rtc_dev, 1, RTC_IRQF | RTC_AF);
+>> +
+>> +		/* Clear event flag, otherwise new events won't be received */
+>> +		writel_relaxed(isr & ~STM32_RTC_ISR_ALRAF,
+>> +			       rtc->base + STM32_RTC_ISR);
+>> +	}
+>> +
+>> +	mutex_unlock(&rtc->rtc_dev->ops_lock);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +/* Convert rtc_time structure from bin to bcd format */
+>> +static void tm2bcd(struct rtc_time *tm)
+>> +{
+>> +	tm->tm_sec = bin2bcd(tm->tm_sec);
+>> +	tm->tm_min = bin2bcd(tm->tm_min);
+>> +	tm->tm_hour = bin2bcd(tm->tm_hour);
+>> +
+>> +	tm->tm_mday = bin2bcd(tm->tm_mday);
+>> +	tm->tm_mon = bin2bcd(tm->tm_mon + 1);
+>> +	tm->tm_year = bin2bcd(tm->tm_year - 100);
+>> +	/*
+>> +	 * Number of days since Sunday
+>> +	 * - on kernel side, 0=Sunday...6=Saturday
+>> +	 * - on rtc side, 0=invalid,1=Monday...7=Sunday
+>> +	 */
+>> +	tm->tm_wday = (!tm->tm_wday) ? 7 : tm->tm_wday;
+>> +}
+>> +
+>> +/* Convert rtc_time structure from bcd to bin format */
+>> +static void bcd2tm(struct rtc_time *tm)
+>> +{
+>> +	tm->tm_sec = bcd2bin(tm->tm_sec);
+>> +	tm->tm_min = bcd2bin(tm->tm_min);
+>> +	tm->tm_hour = bcd2bin(tm->tm_hour);
+>> +
+>> +	tm->tm_mday = bcd2bin(tm->tm_mday);
+>> +	tm->tm_mon = bcd2bin(tm->tm_mon) - 1;
+>> +	tm->tm_year = bcd2bin(tm->tm_year) + 100;
+>> +	/*
+>> +	 * Number of days since Sunday
+>> +	 * - on kernel side, 0=Sunday...6=Saturday
+>> +	 * - on rtc side, 0=invalid,1=Monday...7=Sunday
+>> +	 */
+>> +	tm->tm_wday %= 7;
+>> +}
+>> +
+>> +static int stm32_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +	unsigned int tr, dr;
+>> +	unsigned long irqflags;
+>> +
+>> +	spin_lock_irqsave(&rtc->lock, irqflags);
+>> +
+>> +	/* Time and Date in BCD format */
+>> +	tr = readl_relaxed(rtc->base + STM32_RTC_TR);
+>> +	dr = readl_relaxed(rtc->base + STM32_RTC_DR);
+>> +
+>> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
+>> +
+>> +	tm->tm_sec = (tr & STM32_RTC_TR_SEC) >> STM32_RTC_TR_SEC_SHIFT;
+>> +	tm->tm_min = (tr & STM32_RTC_TR_MIN) >> STM32_RTC_TR_MIN_SHIFT;
+>> +	tm->tm_hour = (tr & STM32_RTC_TR_HOUR) >> STM32_RTC_TR_HOUR_SHIFT;
+>> +
+>> +	tm->tm_mday = (dr & STM32_RTC_DR_DATE) >> STM32_RTC_DR_DATE_SHIFT;
+>> +	tm->tm_mon = (dr & STM32_RTC_DR_MONTH) >> STM32_RTC_DR_MONTH_SHIFT;
+>> +	tm->tm_year = (dr & STM32_RTC_DR_YEAR) >> STM32_RTC_DR_YEAR_SHIFT;
+>> +	tm->tm_wday = (dr & STM32_RTC_DR_WDAY) >> STM32_RTC_DR_WDAY_SHIFT;
+>> +
+>> +	/* We don't report tm_yday and tm_isdst */
+>> +
+>> +	bcd2tm(tm);
+>> +
+>> +	if (rtc_valid_tm(tm) < 0) {
+>> +		dev_err(dev, "%s: rtc_time is not valid.\n", __func__);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stm32_rtc_set_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +	unsigned int tr, dr;
+>> +	unsigned long irqflags;
+>> +	int ret = 0;
+>> +
+>> +	if (rtc_valid_tm(tm) < 0) {
+>> +		dev_err(dev, "%s: rtc_time is not valid.\n", __func__);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	tm2bcd(tm);
+>> +
+>> +	/* Time in BCD format */
+>> +	tr = ((tm->tm_sec << STM32_RTC_TR_SEC_SHIFT) & STM32_RTC_TR_SEC) |
+>> +	     ((tm->tm_min << STM32_RTC_TR_MIN_SHIFT) & STM32_RTC_TR_MIN) |
+>> +	     ((tm->tm_hour << STM32_RTC_TR_HOUR_SHIFT) & STM32_RTC_TR_HOUR);
+>> +
+>> +	/* Date in BCD format */
+>> +	dr = ((tm->tm_mday << STM32_RTC_DR_DATE_SHIFT) & STM32_RTC_DR_DATE) |
+>> +	     ((tm->tm_mon << STM32_RTC_DR_MONTH_SHIFT) & STM32_RTC_DR_MONTH) |
+>> +	     ((tm->tm_year << STM32_RTC_DR_YEAR_SHIFT) & STM32_RTC_DR_YEAR) |
+>> +	     ((tm->tm_wday << STM32_RTC_DR_WDAY_SHIFT) & STM32_RTC_DR_WDAY);
+>> +
+>> +	spin_lock_irqsave(&rtc->lock, irqflags);
+>> +
+>> +	stm32_rtc_wpr_unlock(rtc);
+>> +
+>> +	ret = stm32_rtc_enter_init_mode(rtc);
+>> +	if (ret) {
+>> +		dev_err(dev, "Can't enter in init mode. Set time aborted.\n");
+>> +		goto end;
+>> +	}
+>> +
+>> +	writel_relaxed(tr, rtc->base + STM32_RTC_TR);
+>> +	writel_relaxed(dr, rtc->base + STM32_RTC_DR);
+>> +
+>> +	stm32_rtc_exit_init_mode(rtc);
+>> +
+>> +	ret = stm32_rtc_wait_sync(rtc);
+>> +end:
+>> +	stm32_rtc_wpr_lock(rtc);
+>> +
+>> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int stm32_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +	struct rtc_time *tm = &alrm->time;
+>> +	unsigned int alrmar, cr, isr;
+>> +	unsigned long irqflags;
+>> +
+>> +	spin_lock_irqsave(&rtc->lock, irqflags);
+>> +
+>> +	alrmar = readl_relaxed(rtc->base + STM32_RTC_ALRMAR);
+>> +	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> +
+>> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
+>> +
+>> +	if (alrmar & STM32_RTC_ALRMXR_DATE_MASK) {
+>> +		/*
+>> +		 * Date/day doesn't matter in Alarm comparison so alarm
+>> +		 * triggers every day
+>> +		 */
+>> +		tm->tm_mday = -1;
+>> +		tm->tm_wday = -1;
+>> +	} else {
+>> +		if (alrmar & STM32_RTC_ALRMXR_WDSEL) {
+>> +			/* Alarm is set to a day of week */
+>> +			tm->tm_mday = -1;
+>> +			tm->tm_wday = (alrmar & STM32_RTC_ALRMXR_WDAY) >>
+>> +				      STM32_RTC_ALRMXR_WDAY_SHIFT;
+>> +			tm->tm_wday %= 7;
+>> +		} else {
+>> +			/* Alarm is set to a day of month */
+>> +			tm->tm_wday = -1;
+>> +			tm->tm_mday = (alrmar & STM32_RTC_ALRMXR_DATE) >>
+>> +				       STM32_RTC_ALRMXR_DATE_SHIFT;
+>> +		}
+>> +	}
+>> +
+>> +	if (alrmar & STM32_RTC_ALRMXR_HOUR_MASK) {
+>> +		/* Hours don't matter in Alarm comparison */
+>> +		tm->tm_hour = -1;
+>> +	} else {
+>> +		tm->tm_hour = (alrmar & STM32_RTC_ALRMXR_HOUR) >>
+>> +			       STM32_RTC_ALRMXR_HOUR_SHIFT;
+>> +		if (alrmar & STM32_RTC_ALRMXR_PM)
+>> +			tm->tm_hour += 12;
+>> +	}
+>> +
+>> +	if (alrmar & STM32_RTC_ALRMXR_MIN_MASK) {
+>> +		/* Minutes don't matter in Alarm comparison */
+>> +		tm->tm_min = -1;
+>> +	} else {
+>> +		tm->tm_min = (alrmar & STM32_RTC_ALRMXR_MIN) >>
+>> +			      STM32_RTC_ALRMXR_MIN_SHIFT;
+>> +	}
+>> +
+>> +	if (alrmar & STM32_RTC_ALRMXR_SEC_MASK) {
+>> +		/* Seconds don't matter in Alarm comparison */
+>> +		tm->tm_sec = -1;
+>> +	} else {
+>> +		tm->tm_sec = (alrmar & STM32_RTC_ALRMXR_SEC) >>
+>> +			      STM32_RTC_ALRMXR_SEC_SHIFT;
+>> +	}
+>> +
+>> +	bcd2tm(tm);
+>> +
+>> +	alrm->enabled = (cr & STM32_RTC_CR_ALRAE) ? 1 : 0;
+>> +	alrm->pending = (isr & STM32_RTC_ISR_ALRAF) ? 1 : 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stm32_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +	unsigned long irqflags;
+>> +	unsigned int isr, cr;
+>> +
+>> +	spin_lock_irqsave(&rtc->lock, irqflags);
+>> +
+>> +	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +
+>> +	stm32_rtc_wpr_unlock(rtc);
+>> +
+>> +	/* We expose Alarm A to the kernel */
+>> +	if (enabled)
+>> +		cr |= (STM32_RTC_CR_ALRAIE | STM32_RTC_CR_ALRAE);
+>> +	else
+>> +		cr &= ~(STM32_RTC_CR_ALRAIE | STM32_RTC_CR_ALRAE);
+>> +	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
+>> +
+>> +	/* Clear event irqflags, otherwise new events won't be received */
+>> +	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> +	isr &= ~STM32_RTC_ISR_ALRAF;
+>> +	writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
+>> +
+>> +	stm32_rtc_wpr_lock(rtc);
+>> +
+>> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stm32_rtc_valid_alrm(struct stm32_rtc *rtc, struct rtc_time *tm)
+>> +{
+>> +	unsigned int cur_day, cur_mon, cur_year, cur_hour, cur_min, cur_sec;
+>> +	unsigned int dr = readl_relaxed(rtc->base + STM32_RTC_DR);
+>> +	unsigned int tr = readl_relaxed(rtc->base + STM32_RTC_TR);
+>> +
+>> +	cur_day = (dr & STM32_RTC_DR_DATE) >> STM32_RTC_DR_DATE_SHIFT;
+>> +	cur_mon = (dr & STM32_RTC_DR_MONTH) >> STM32_RTC_DR_MONTH_SHIFT;
+>> +	cur_year = (dr & STM32_RTC_DR_YEAR) >> STM32_RTC_DR_YEAR_SHIFT;
+>> +	cur_sec = (tr & STM32_RTC_TR_SEC) >> STM32_RTC_TR_SEC_SHIFT;
+>> +	cur_min = (tr & STM32_RTC_TR_MIN) >> STM32_RTC_TR_MIN_SHIFT;
+>> +	cur_hour = (tr & STM32_RTC_TR_HOUR) >> STM32_RTC_TR_HOUR_SHIFT;
+>> +
+>> +	/*
+>> +	 * Assuming current date is M-D-Y H:M:S.
+>> +	 * RTC alarm can't be set on a specific month and year.
+>> +	 * So the valid alarm range is:
+>> +	 *	M-D-Y H:M:S < alarm <= (M+1)-D-Y H:M:S
+>> +	 * with a specific case for December...
+>> +	 */
+>> +	if ((((tm->tm_year > cur_year) &&
+>> +	      (tm->tm_mon == 0x1) && (cur_mon == 0x12)) ||
+>> +	     ((tm->tm_year == cur_year) &&
+>> +	      (tm->tm_mon <= cur_mon + 1))) &&
+>> +	    ((tm->tm_mday < cur_day) ||
+>> +	     ((tm->tm_mday == cur_day) &&
+>> +	     ((tm->tm_hour < cur_hour) ||
+>> +	      ((tm->tm_hour == cur_hour) && (tm->tm_min < cur_min)) ||
+>> +	      ((tm->tm_hour == cur_hour) && (tm->tm_min == cur_min) &&
+>> +	       (tm->tm_sec <= cur_sec))))))
+>> +		return 0;
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int stm32_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +	struct rtc_time *tm = &alrm->time;
+>> +	unsigned long irqflags;
+>> +	unsigned int cr, isr, alrmar;
+>> +	int ret = 0;
+>> +
+>> +	if (rtc_valid_tm(tm)) {
+>> +		dev_err(dev, "Alarm time not valid.\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	tm2bcd(tm);
+>> +
+>> +	/*
+>> +	 * RTC alarm can't be set on a specific date, unless this date is
+>> +	 * up to the same day of month next month.
+>> +	 */
+>> +	if (stm32_rtc_valid_alrm(rtc, tm) < 0) {
+>> +		dev_err(dev, "Alarm can be set only on upcoming month.\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	alrmar = 0;
+>> +	/* tm_year and tm_mon are not used because not supported by RTC */
+>> +	alrmar |= (tm->tm_mday << STM32_RTC_ALRMXR_DATE_SHIFT) &
+>> +		  STM32_RTC_ALRMXR_DATE;
+>> +	/* 24-hour format */
+>> +	alrmar &= ~STM32_RTC_ALRMXR_PM;
+>> +	alrmar |= (tm->tm_hour << STM32_RTC_ALRMXR_HOUR_SHIFT) &
+>> +		  STM32_RTC_ALRMXR_HOUR;
+>> +	alrmar |= (tm->tm_min << STM32_RTC_ALRMXR_MIN_SHIFT) &
+>> +		  STM32_RTC_ALRMXR_MIN;
+>> +	alrmar |= (tm->tm_sec << STM32_RTC_ALRMXR_SEC_SHIFT) &
+>> +		  STM32_RTC_ALRMXR_SEC;
+>> +
+>> +	spin_lock_irqsave(&rtc->lock, irqflags);
+>> +
+>> +	stm32_rtc_wpr_unlock(rtc);
+>> +
+>> +	/* Disable Alarm */
+>> +	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +	cr &= ~STM32_RTC_CR_ALRAE;
+>> +	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
+>> +
+>> +	/*
+>> +	 * Poll Alarm write flag to be sure that Alarm update is allowed: it
+>> +	 * takes around 2 ck_rtc clock cycles
+>> +	 */
+>> +	ret = readl_relaxed_poll_timeout_atomic(rtc->base + STM32_RTC_ISR,
+>> +						isr,
+>> +						(isr & STM32_RTC_ISR_ALRAWF),
+>> +						10, 100000);
+>> +
+>> +	if (ret) {
+>> +		dev_err(dev, "Alarm update not allowed\n");
+>> +		goto end;
+>> +	}
+>> +
+>> +	/* Write to Alarm register */
+>> +	writel_relaxed(alrmar, rtc->base + STM32_RTC_ALRMAR);
+>> +
+>> +	if (alrm->enabled)
+>> +		stm32_rtc_alarm_irq_enable(dev, 1);
+>> +	else
+>> +		stm32_rtc_alarm_irq_enable(dev, 0);
+>> +
+>> +end:
+>> +	stm32_rtc_wpr_lock(rtc);
+>> +
+>> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct rtc_class_ops stm32_rtc_ops = {
+>> +	.read_time	= stm32_rtc_read_time,
+>> +	.set_time	= stm32_rtc_set_time,
+>> +	.read_alarm	= stm32_rtc_read_alarm,
+>> +	.set_alarm	= stm32_rtc_set_alarm,
+>> +	.alarm_irq_enable = stm32_rtc_alarm_irq_enable,
+>> +};
+>> +
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id stm32_rtc_of_match[] = {
+>> +	{ .compatible = "st,stm32-rtc" },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, stm32_rtc_of_match);
+>> +#endif
+>> +
+>> +static int stm32_rtc_init(struct platform_device *pdev,
+>> +			  struct stm32_rtc *rtc)
+>> +{
+>> +	unsigned int prer, pred_a, pred_s, pred_a_max, pred_s_max, cr;
+>> +	unsigned int rate;
+>> +	unsigned long irqflags;
+>> +	int ret = 0;
+>> +
+>> +	rate = clk_get_rate(rtc->ck_rtc);
+>> +
+>> +	/* Find prediv_a and prediv_s to obtain the 1Hz calendar clock */
+>> +	pred_a_max = STM32_RTC_PRER_PRED_A >> STM32_RTC_PRER_PRED_A_SHIFT;
+>> +	pred_s_max = STM32_RTC_PRER_PRED_S >> STM32_RTC_PRER_PRED_S_SHIFT;
+>> +
+>> +	for (pred_a = pred_a_max; pred_a >= 0; pred_a--) {
+>> +		pred_s = (rate / (pred_a + 1)) - 1;
+>> +
+>> +		if (((pred_s + 1) * (pred_a + 1)) == rate)
+>> +			break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Can't find a 1Hz, so give priority to RTC power consumption
+>> +	 * by choosing the higher possible value for prediv_a
+>> +	 */
+>> +	if ((pred_s > pred_s_max) || (pred_a > pred_a_max)) {
+>> +		pred_a = pred_a_max;
+>> +		pred_s = (rate / (pred_a + 1)) - 1;
+>> +
+>> +		dev_warn(&pdev->dev, "ck_rtc is %s\n",
+>> +			 (rate - ((pred_a + 1) * (pred_s + 1)) < 0) ?
+>> +			 "fast" : "slow");
+>> +	}
+>> +
+>> +	spin_lock_irqsave(&rtc->lock, irqflags);
+>> +
+>> +	stm32_rtc_wpr_unlock(rtc);
+>> +
+>> +	ret = stm32_rtc_enter_init_mode(rtc);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev,
+>> +			"Can't enter in init mode. Prescaler config failed.\n");
+>> +		goto end;
+>> +	}
+>> +
+>> +	prer = (pred_s << STM32_RTC_PRER_PRED_S_SHIFT) & STM32_RTC_PRER_PRED_S;
+>> +	writel_relaxed(prer, rtc->base + STM32_RTC_PRER);
+>> +	prer |= (pred_a << STM32_RTC_PRER_PRED_A_SHIFT) & STM32_RTC_PRER_PRED_A;
+>> +	writel_relaxed(prer, rtc->base + STM32_RTC_PRER);
+>> +
+>> +	/* Force 24h time format */
+>> +	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +	cr &= ~STM32_RTC_CR_FMT;
+>> +	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
+>> +
+>> +	stm32_rtc_exit_init_mode(rtc);
+>> +
+>> +	ret = stm32_rtc_wait_sync(rtc);
+>> +end:
+>> +	stm32_rtc_wpr_lock(rtc);
+>> +
+>> +	spin_unlock_irqrestore(&rtc->lock, irqflags);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int stm32_rtc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct stm32_rtc *rtc;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+>> +	if (!rtc)
+>> +		return -ENOMEM;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	rtc->base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(rtc->base))
+>> +		return PTR_ERR(rtc->base);
+>> +
+>> +	dbp = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "st,syscfg");
+>> +	if (IS_ERR(dbp)) {
+>> +		dev_err(&pdev->dev, "no st,syscfg\n");
+>> +		return PTR_ERR(dbp);
+>> +	}
+>> +
+>> +	spin_lock_init(&rtc->lock);
+>> +
+>> +	rtc->ck_rtc = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(rtc->ck_rtc)) {
+>> +		dev_err(&pdev->dev, "no ck_rtc clock");
+>> +		return PTR_ERR(rtc->ck_rtc);
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(rtc->ck_rtc);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, PWR_CR_DBP);
+>> +
+>> +	/*
+>> +	 * After a system reset, RTC_ISR.INITS flag can be read to check if
+>> +	 * the calendar has been initalized or not. INITS flag is reset by a
+>> +	 * power-on reset (no vbat, no power-supply). It is not reset if
+>> +	 * ck_rtc parent clock has changed (so RTC prescalers need to be
+>> +	 * changed). That's why we cannot rely on this flag to know if RTC
+>> +	 * init has to be done.
+>> +	 */
+>> +	ret = stm32_rtc_init(pdev, rtc);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	rtc->irq_alarm = platform_get_irq(pdev, 0);
+>> +	if (rtc->irq_alarm <= 0) {
+>> +		dev_err(&pdev->dev, "no alarm irq\n");
+>> +		ret = rtc->irq_alarm;
+>> +		goto err;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, rtc);
+>> +
+>> +	ret = device_init_wakeup(&pdev->dev, true);
+>> +	if (ret)
+>> +		dev_warn(&pdev->dev,
+>> +			 "alarm won't be able to wake up the system");
+>> +
+>> +	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
+>> +			&stm32_rtc_ops, THIS_MODULE);
+>> +	if (IS_ERR(rtc->rtc_dev)) {
+>> +		ret = PTR_ERR(rtc->rtc_dev);
+>> +		dev_err(&pdev->dev, "rtc device registration failed, err=%d\n",
+>> +			ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* Handle RTC alarm interrupts */
+>> +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq_alarm, NULL,
+>> +					stm32_rtc_alarm_irq,
+>> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+>> +					pdev->name, rtc);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "IRQ%d (alarm interrupt) already claimed\n",
+>> +			rtc->irq_alarm);
+>> +		goto err;
+>> +	}
+>> +
+>> +	/*
+>> +	 * If INITS flag is reset (calendar year field set to 0x00), calendar
+>> +	 * must be initialized
+>> +	 */
+>> +	if (!(readl_relaxed(rtc->base + STM32_RTC_ISR) & STM32_RTC_ISR_INITS))
+>> +		dev_warn(&pdev->dev, "Date/Time must be initialized\n");
+>> +
+>> +	return 0;
+>> +err:
+>> +	clk_disable_unprepare(rtc->ck_rtc);
+>> +
+>> +	regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
+>> +
+>> +	device_init_wakeup(&pdev->dev, false);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int __exit stm32_rtc_remove(struct platform_device *pdev)
+>> +{
+>> +	struct stm32_rtc *rtc = platform_get_drvdata(pdev);
+>> +	unsigned int cr;
+>> +
+>> +	/* Disable interrupts */
+>> +	stm32_rtc_wpr_unlock(rtc);
+>> +	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +	cr &= ~STM32_RTC_CR_ALRAIE;
+>> +	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
+>> +	stm32_rtc_wpr_lock(rtc);
+>> +
+>> +	clk_disable_unprepare(rtc->ck_rtc);
+>> +
+>> +	/* Enable backup domain write protection */
+>> +	regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
+>> +
+>> +	device_init_wakeup(&pdev->dev, false);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int stm32_rtc_suspend(struct device *dev)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +
+>> +	if (device_may_wakeup(dev))
+>> +		return enable_irq_wake(rtc->irq_alarm);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stm32_rtc_resume(struct device *dev)
+>> +{
+>> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
+>> +	int ret = 0;
+>> +
+>> +	ret = stm32_rtc_wait_sync(rtc);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (device_may_wakeup(dev))
+>> +		return disable_irq_wake(rtc->irq_alarm);
+>> +
+>> +	return ret;
+>> +}
+>> +#endif
+>> +
+>> +static SIMPLE_DEV_PM_OPS(stm32_rtc_pm_ops,
+>> +			 stm32_rtc_suspend, stm32_rtc_resume);
+>> +
+>> +static struct platform_driver stm32_rtc_driver = {
+>> +	.probe		= stm32_rtc_probe,
+>> +	.remove		= stm32_rtc_remove,
+>> +	.driver		= {
+>> +		.name	= DRIVER_NAME,
+>> +		.pm	= &stm32_rtc_pm_ops,
+>> +		.of_match_table = stm32_rtc_of_match,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(stm32_rtc_driver);
+>> +
+>> +MODULE_ALIAS("platform:" DRIVER_NAME);
+>> +MODULE_AUTHOR("Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>");
+>> +MODULE_DESCRIPTION("STMicroelectronics STM32 Real Time Clock driver");
+>> +MODULE_LICENSE("GPL v2");
+>
+> Looks much better now.
+>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+>> --
+>> 1.9.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 -- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
