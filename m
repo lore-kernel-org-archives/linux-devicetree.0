@@ -1,94 +1,101 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
- Tree
-Date: Mon, 9 Jan 2017 08:36:38 +0000
-Message-ID: <20170109083638.GB2155@dell>
-References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
- <20161226181153.11271-2-bjorn.andersson@linaro.org>
- <20170104115424.GH27589@dell>
- <20170104192608.GN10531@minitux>
- <20170105074952.GG24225@dell>
- <20170105163054.GO10531@minitux>
- <20170106095349.GE9851@dell>
- <20170106185422.GQ10531@minitux>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170106185422.GQ10531@minitux>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+From: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: am335x-phycore-som: Remove partition tables
+Date: Mon, 9 Jan 2017 09:37:30 +0100
+Message-ID: <1483951050-46588-1-git-send-email-t.remmet@phytec.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 06 Jan 2017, Bjorn Andersson wrote:
+As the bootloader passes the NAND and the SPI flash partition tables
+there is no need to keep them in the kernel device tree.
+Removed them.
 
-> On Fri 06 Jan 01:53 PST 2017, Lee Jones wrote:
-> 
-> > On Thu, 05 Jan 2017, Bjorn Andersson wrote:
-> > 
-> > > On Wed 04 Jan 23:49 PST 2017, Lee Jones wrote:
-> > > 
-> > > > On Wed, 04 Jan 2017, Bjorn Andersson wrote:
-> > > > 
-> > > > > On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
-> > > > > 
-> > > > > > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
-> > > > > > 
-> > > > > > > From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> > > > > > > 
-> > > > > > > Implement support for initialization of the lm3533 driver core and
-> > > > > > > probing child devices from Device Tree.
-> > > > > > > 
-> > > > > 
-> > > > > [..]
-> > > > > 
-> > > > > > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
-> > > > > > >  	lm3533_device_bl_init(lm3533);
-> > > > > > >  	lm3533_device_led_init(lm3533);
-> > > > > > >  
-> > > > > > > +	if (lm3533->dev->of_node) {
-> > > > > > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
-> > > > > > > +				     lm3533->dev);
-> > > > > > > +	}
-> > > > > > 
-> > > > > > I think it's save to call of_platform_populate(), even if !of_node.
-> > > > > > It will just fail and return an error code, which you are ignoring
-> > > > > > anyway.
-> > > > > > 
-> > > > > 
-> > > > > I thought so too, but that's apparently how you trigger probing children
-> > > > > of the root node. So we're stuck with a conditional.
-> > > > 
-> > > > Ah, so this is to protect against the case where DT is present, but a
-> > > > node for this device is not (or is disabled), so is left unprobed.
-> > > > Then the bind is initiated via I2C?  Or something else?
-> > > > 
-> > > 
-> > > In the event that a new lm3533 is spawned from sysfs we would not have
-> > > platform_data when entering lm3533_device_init() and just bail early.
-> > > 
-> > > Therefor, this issue would be limited to the odd case of lm3533 being
-> > > initiated from code (e.g. a board file) on a DT enabled system. In which
-> > > case it will create and probe new devices from the root of the DT.
-> > 
-> > Eewww, do we really want to support that?
-> > 
-> 
-> As long as we support non-DT probing of the driver this is a possible
-> scenario. And with modern ARM being DT-centric I think that if anyone
-> uses this driver with a modern version of the Linux kernel it's likely
-> that they would have this kind of hybrid solution.
-> 
-> So, although ugly, I think we should keep this conditional and hope that
-> anyone using the driver will transition to use the DT binding.
+Signed-off-by: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-phycore-som.dtsi | 58 -------------------------------
+ 1 file changed, 58 deletions(-)
 
-Very well, but can you add a comment describing the reason for its
-existence with a view to removing it further down the line?
-
+diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
+index 25f5449..14533ff 100644
+--- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
++++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
+@@ -211,43 +211,6 @@
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-
+-		partition@0 {
+-			label = "xload";
+-			reg = <0x0 0x20000>;
+-		};
+-		partition@1 {
+-			label = "xload_backup1";
+-			reg = <0x20000 0x20000>;
+-		};
+-		partition@2 {
+-			label = "xload_backup2";
+-			reg = <0x40000 0x20000>;
+-		};
+-		partition@3 {
+-			label = "xload_backup3";
+-			reg = <0x60000 0x20000>;
+-		};
+-		partition@4 {
+-			label = "barebox";
+-			reg = <0x80000 0x80000>;
+-		};
+-		partition@5 {
+-			label = "bareboxenv";
+-			reg = <0x100000 0x40000>;
+-		};
+-		partition@6 {
+-			label = "oftree";
+-			reg = <0x140000 0x40000>;
+-		};
+-		partition@7 {
+-			label = "kernel";
+-			reg = <0x180000 0x800000>;
+-		};
+-		partition@8 {
+-			label = "root";
+-			reg = <0x980000 0x0>;
+-		};
+ 	};
+ };
+ 
+@@ -358,26 +321,5 @@
+ 		status = "disabled";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-
+-		partition@0 {
+-			label = "xload";
+-			reg = <0x0 0x20000>;
+-		};
+-		partition@1 {
+-			label = "barebox";
+-			reg = <0x20000 0x80000>;
+-		};
+-		partition@2 {
+-			label = "bareboxenv";
+-			reg = <0xa0000 0x20000>;
+-		};
+-		partition@3 {
+-			label = "oftree";
+-			reg = <0xc0000 0x20000>;
+-		};
+-		partition@4 {
+-			label = "kernel";
+-			reg = <0xe0000 0x0>;
+-		};
+ 	};
+ };
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
