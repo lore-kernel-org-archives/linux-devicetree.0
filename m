@@ -1,62 +1,71 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: musb: da8xx: Use the right dma controller
-Date: Mon, 9 Jan 2017 21:30:09 +0300
-Message-ID: <7dcfe848-a421-d409-0e9a-659c095e4e31@cogentembedded.com>
-References: <20170109163902.5268-1-abailon@baylibre.com>
- <20170109163902.5268-2-abailon@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: Add document bindings for
+ mtk-cir
+Date: Mon, 9 Jan 2017 12:32:14 -0600
+Message-ID: <20170109183214.xonv52sn3fo4exqp@rob-hp-laptop>
+References: <1483632384-8107-1-git-send-email-sean.wang@mediatek.com>
+ <1483632384-8107-2-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109163902.5268-2-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483632384-8107-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, b-liu-l0cyMroinI0@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 01/09/2017 07:38 PM, Alexandre Bailon wrote:
-
-> da8xx driver is registering and using the cppi dma controller but actually,
-> the da8xx has a cppi41 dma controller.
-> Update the driver to register and use the cppi41 dma controller.
->
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Fri, Jan 06, 2017 at 12:06:23AM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> This patch adds documentation for devicetree bindings for
+> Mediatek IR controller.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/usb/musb/da8xx.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-> index e89708d..74dcc07 100644
-> --- a/drivers/usb/musb/da8xx.c
-> +++ b/drivers/usb/musb/da8xx.c
-> @@ -458,14 +458,14 @@ static inline u8 get_vbus_power(struct device *dev)
->  }
->
->  static const struct musb_platform_ops da8xx_ops = {
-> -	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
+>  .../devicetree/bindings/media/mtk-cir.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 linux-4.8.rc1_p0/Documentation/devicetree/bindings/media/mtk-cir.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mtk-cir.txt b/Documentation/devicetree/bindings/media/mtk-cir.txt
+> new file mode 100644
+> index 0000000..bbedd71
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mtk-cir.txt
+> @@ -0,0 +1,23 @@
+> +Device-Tree bindings for Mediatek IR controller found in Mediatek SoC family
+> +
+> +Required properties:
+> +- compatible	    : "mediatek,mt7623-ir"
+> +- clocks	    : list of clock specifiers, corresponding to
+> +		      entries in clock-names property;
+> +- clock-names	    : should contain "clk" entries;
+> +- interrupts	    : should contain IR IRQ number;
+> +- reg		    : should contain IO map address for IR.
+> +
+> +Optional properties:
+> +- linux,rc-map-name : Remote control map name.
 
-    Grr, MUSB_DMA_CPPI is certainly wrong! There's no CPPI 3.0 support for 
-DA8xx. Where have this come from?
+Would 'label' be appropriate here instead? If not, this needs to be 
+documented in a common location and explained better.
 
-> +	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
->  	.init		= da8xx_musb_init,
->  	.exit		= da8xx_musb_exit,
->
->  	.fifo_mode	= 2,
-> -#ifdef CONFIG_USB_TI_CPPI_DMA
-> -	.dma_init	= cppi_dma_controller_create,
-> -	.dma_exit	= cppi_dma_controller_destroy,
+> +
+> +Example:
+> +
+> +cir: cir@0x10013000 {
 
-    Likewise, WTF?
-    I suggest that you fix this crap in a separate commit, to be backported to 
--stable if needed.
+Drop the '0x'.
 
-[...]
-
-MBR, Sergei
-
+> +	compatible = "mediatek,mt7623-ir";
+> +	reg = <0 0x10013000 0 0x1000>;
+> +	interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
+> +	clocks = <&infracfg CLK_INFRA_IRRX>;
+> +	clock-names = "clk";
+> +	linux,rc-map-name = "rc-rc6-mce";
+> +};
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
