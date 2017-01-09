@@ -1,63 +1,52 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/6] arm64: dts: apq8016-sbc: add support to hdmi audio
- via adv7533
-Date: Mon, 9 Jan 2017 14:23:49 +0530
-Message-ID: <5888fad6-edfd-1b9a-f9d7-da0e6ed68afc@codeaurora.org>
-References: <1483536902-21450-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1483536902-21450-3-git-send-email-srinivas.kandagatla@linaro.org>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH V6 4/3] brcmfmac: use wiphy_read_of_freq_limits to
+ respect extra limits
+Date: Mon, 09 Jan 2017 09:58:40 +0100
+Message-ID: <1483952320.17582.13.camel@sipsolutions.net>
+References: <20170104175832.25996-1-zajec5@gmail.com>
+         <20170104175832.25996-4-zajec5@gmail.com>
+         <3fc87224-7f08-e365-7bbb-a4b8b5746e4f@broadcom.com>
+         <CACna6rxay9sC+QT2G4AfjWT1ERsNDzFQ620hNhVhr0FRHXJu=w@mail.gmail.com>
+         <e2bbce35-af09-adfa-09ea-e9fcf57b4d09@broadcom.com>
+         <CACna6rw22benfuw_7BSFw1wedavmMJWTo_hfPLCVa1t0kV+Aqg@mail.gmail.com>
+         <36d2dbd1-bcbe-021b-dd7f-068a5b9739ef@broadcom.com>
+         <CACna6rxS-JqyW3cXFMJR6Lp-+HdJjZfkwsVRMPGn5Q1z8av75w@mail.gmail.com>
+         (sfid-20170107_135821_344575_65D82F07)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483536902-21450-3-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rxS-JqyW3cXFMJR6Lp-+HdJjZfkwsVRMPGn5Q1z8av75w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org> (sfid-20170107_135821_344575_65D82F07)
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 2017-01-07 at 13:58 +0100, Rafał Miłecki wrote:
 
+> > I indeed prefer to talk about the driver instead of we. Indeed it
+> > is true due to the orig_flags behavior although that only seems to
+> > involve regulatory code. Could it be that brcmfmac undo that
+> > through the notifier?
+> 
+> I guess you could touch orig_flags, but I don't know if it's
+> preferred way. This is probably question to Johannes & cfg80211 guys.
 
-On 01/04/2017 07:04 PM, Srinivas Kandagatla wrote:
-> This patch adds support to hdmi audio via adv7533.
+Right now - before the OF patch - there can't really be any orig_flags
+with DISABLED since the driver doesn't set flags to DISABLED before
+registering, does it? While registering, flags are copied to orig_flags
+so the driver can register with flags like DFS or NO_IR already enabled
+- say the firmware requires that - and they will never be overwritten
+by cfg80211.
 
-Tested-by: Archit Taneja <architt@codeaurora.org>
+Arguably, what the driver does today - before OF - isn't incorrect
+either, since it simply doesn't care about anything it registered with
+at all.
 
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> index 08bd5eb..5ab277f 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> @@ -85,6 +85,7 @@
->  				pinctrl-names = "default","sleep";
->  				pinctrl-0 = <&adv7533_int_active &adv7533_switch_active>;
->  				pinctrl-1 = <&adv7533_int_suspend &adv7533_switch_suspend>;
-> +				#sound-dai-cells = <1>;
->
->  				ports {
->  					#address-cells = <1>;
-> @@ -285,6 +286,15 @@
->                          qcom,audio-routing =
->                                  "AMIC2", "MIC BIAS Internal2",
->                                  "AMIC3", "MIC BIAS External1";
-> +			external-dai-link@0 {
-> +				link-name = "ADV7533";
-> +				cpu { /* QUAT */
-> +					sound-dai = <&lpass MI2S_QUATERNARY>;
-> +				};
-> +				codec {
-> +					sound-dai = <&adv_bridge 0>;
-> +				};
-> +			};
->
->                          internal-codec-playback-dai-link@0 {            /* I2S - Internal codec */
->                                  link-name = "WCD";
->
+However, with the OF, I argued (succesfully it seems :P) that the
+sensible thing to do was to register with the DISABLED flag and thereby
+"permanently" disable the channels that OF didn't think were usable,
+but in this case now the driver has to adhere to the cfg80211 logic of
+preserving orig_flags forever.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+johannes
