@@ -1,119 +1,89 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 6/6] arm64: allwinner: a64: Increase the MMC max
- frequency
-Date: Tue, 10 Jan 2017 20:15:14 +0100
-Message-ID: <20170110191514.kgbesffn3xqltnol@lukather>
-References: <cover.493dc67855a5f1837e875d37307319a03d14d1d0.1483980339.git-series.maxime.ripard@free-electrons.com>
- <3689701f93c8426bfa476e9a5f31c3642a8a898e.1483980339.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v67JoOAtHjMJboNUdCDX=+=Hf+zOWr234rT7GEiUmPb=nQ@mail.gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
+Date: Tue, 10 Jan 2017 11:13:11 -0800
+Message-ID: <1b85a1aa-4382-03d0-7920-4f1fdfcbda76@gmail.com>
+References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
+ <e043cb00-9b8e-edec-0949-b23fbed6e2c5@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7247130931091763651=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v67JoOAtHjMJboNUdCDX=+=Hf+zOWr234rT7GEiUmPb=nQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Andre Przywara <andre.przywara@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e043cb00-9b8e-edec-0949-b23fbed6e2c5@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============7247130931091763651==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uvkf5zt67xpihfzl"
-Content-Disposition: inline
+
+On 01/04/2017 02:25 AM, Vladimir Zapolskiy wrote:
+> Hi Steve,
+>
+> On 01/02/2017 11:07 PM, Steve Longerbeam wrote:
+>> Add optional reset-gpios pin control. If present, de-assert the
+>> specified reset gpio pin to bring the chip out of reset.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Alexandre Courbot <gnurou@gmail.com>
+>> Cc: linux-gpio@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>   Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |  4 ++++
+>>   drivers/gpio/gpio-pca953x.c                             | 11 +++++++++++
+>>   2 files changed, 15 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+>> index 08dd15f..da54f4c 100644
+>> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+>> @@ -29,6 +29,10 @@ Required properties:
+>>   	onsemi,pca9654
+>>   	exar,xra1202
+>>   
+>> +Optional properties:
+>> + - reset-gpios: GPIO specification for the RESET input
+>> +
+>> +
+> Drop the surplus empty line above.
+
+done.
+
+>
+>>   Example:
+>>   
+>>   
+>> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+>> index d5d72d8..ca2ddea 100644
+>> --- a/drivers/gpio/gpio-pca953x.c
+>> +++ b/drivers/gpio/gpio-pca953x.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/of_platform.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/regulator/consumer.h>
+>> +#include <linux/gpio/consumer.h>
+>>   
+>>   #define PCA953X_INPUT		0
+>>   #define PCA953X_OUTPUT		1
+>> @@ -754,8 +755,18 @@ static int pca953x_probe(struct i2c_client *client,
+>>   		invert = pdata->invert;
+>>   		chip->names = pdata->names;
+>>   	} else {
+>> +		struct gpio_desc *reset_gpio;
+>> +
+>>   		chip->gpio_start = -1;
+>>   		irq_base = 0;
+>> +
+>> +		/* see if we need to de-assert a reset pin */
+>> +		reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+>> +						     GPIOD_OUT_LOW);
+>> +		if (IS_ERR(reset_gpio)) {
+>> +			dev_err(&client->dev, "request for reset pin failed\n");
+> I'm not confident that the error message is wanted here, you may consider either
+> to remove it or at least print it out if (PTR_ERR(reset_gpio) != -EPROBE_DEFER).
+
+no problem, I just removed it.
 
 
---uvkf5zt67xpihfzl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Jan 10, 2017 at 01:01:20AM +0800, Chen-Yu Tsai wrote:
-> On Tue, Jan 10, 2017 at 12:46 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > All the controllers can have a maximum frequency of 200MHz.
-> >
-> > Since older SoCs cannot go that high, we cannot change the default maxi=
-mum
-> > frequency, but fortunately for us we have a property for that in the DT.
-> >
-> > This also has the side effect of allowing to use the MMC HS200 mode for=
- the
-> > boards that support it (with either 1.2v or 1.8v IOs).
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
-> >  1 file changed, 3 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64=
-/boot/dts/allwinner/sun50i-a64.dtsi
-> > index 8e149498e096..f46ae965cf5b 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -332,6 +332,7 @@
-> >                         resets =3D <&ccu RST_BUS_MMC0>;
-> >                         reset-names =3D "ahb";
-> >                         interrupts =3D <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       max-frequency =3D <200000000>;
->=20
-> You also have to set one of MMC_CAP2_HS200* in the driver,
-> or mmc-hs200-1_8v or mmc-hs200-1_2v in the device tree to
-> actually use HS200, right?
-
-Yes, but that requires a board with 1.8V IOs to work properly, which
-not all board use, so it's probably best to enable it in the board
-DTS.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---uvkf5zt67xpihfzl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYdTK+AAoJEBx+YmzsjxAgq+oP/1OBvGLYw/SI/Ugdj9G3B0Nc
-mXEJsi6inDmPpgtUcS3CmiKv7ZhYwCkx1hEoBcLSGp+laQ55PNGWartAhYUC0bwu
-i3vUmlhuvcTa9xPKOz/VnU2hpKULT9NKuJ6AzjzIAfGwgYmaMRmYdAHUoQzPKNoP
-rjhjvEJjfjmfu5vPBnGbkyZXPf51qKqU7euP6poi1q/SwgoQW4KKCZAKMjO4ujTS
-ivpykZ4VwEL2FqBMiicoGxtC9rVQuqounGMOqFS3yWZu521DOTBMJOAXIeDp+3vx
-VcjutFOkoYV5JQqd7lOtgCt81uvx8umOX66QXLiaazWPESPr6E8gXkWgiH03FyvX
-4uPaR1U5MHmsFRzhLzllSwf5ybs2BepOuQjU4rRVfDna8hIS3a5pF5h4O9FpL8z0
-MFIEtc6c0RELq2uFyFmlEiAv+GqCDwQEgHUTECiMDAa7RTaQlvQnRq9aioN/uB/v
-Y0GYMwnoZHKeMYOoj6ldqeByxmZwj0soyaDZjSIcwX5in+XJol/UEiqifTLXPZd2
-2hUCsXf07vBlQGNQLpcx9+nREOfC7CQkWF3PbbcyKih9W3BigY5Zjawro8LxWyd0
-Ymj8Kgovn4UQD7eoQDJalpnVATwP8r9vIX1OvVQVxL99eeeretMtVp6e1W6l3MbE
-+/Ja2ROD/BeOr9HwMF6d
-=dys/
------END PGP SIGNATURE-----
-
---uvkf5zt67xpihfzl--
-
-
---===============7247130931091763651==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7247130931091763651==--
+Steve
