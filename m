@@ -1,47 +1,50 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: dts: sunxi: add dtsi file for V3s SoC
-Date: Tue, 10 Jan 2017 19:21:06 +0100
-Message-ID: <20170110182106.7q7uduxxqbzg4squ@lukather>
-References: <20170103151629.19447-1-icenowy@aosc.xyz>
- <20170103151629.19447-5-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6: Specify 'anatop-enable-bit' where
+ appropriate
+Date: Tue, 10 Jan 2017 10:24:18 -0800
+Message-ID: <CAHQ1cqHhiCO8nMmYd_6r0Zx-oycVGf_0wo7x17rxbuJujxftww@mail.gmail.com>
+References: <20170110163015.22444-1-andrew.smirnov@gmail.com>
+ <CAOMZO5CnwrPcney0qzQgex_aFXCrksmEocZ28nf54Kvcm2dq-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="u34jqn6krwdnlmfo"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE6M2TBQKGQEDQMX7DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170103151629.19447-5-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5CnwrPcney0qzQgex_aFXCrksmEocZ28nf54Kvcm2dq-w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andrey Yurovsky <yurovsky@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 10, 2017 at 9:28 AM, Fabio Estevam <festevam@gmail.com> wrote:
+> On Tue, Jan 10, 2017 at 2:30 PM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+>> ENABLE_LINREG bit is implemented by 3P0, 1P1 and 2P5 regulators on
+>> i.MX6. This property is present in similar code in Fresscale BSP and
+>> made its way upstream in imx6ul.dtsi, so this patch adds this property
+>> to the rest of i.MX6 family for completness.
+>
+> Please see:
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/patch/arch/arm/boot/dts/imx6ul.dtsi?id=27958ccdf29e9971732e02494b48be54b0691269
 
---u34jqn6krwdnlmfo
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Fabio:
 
-On Tue, Jan 03, 2017 at 11:16:28PM +0800, Icenowy Zheng wrote:
-> +			uart0_pins_a: uart0@0 {
-> +				pins = "PB8", "PB9";
-> +				function = "uart0";
-> +				bias-pull-up;
+I submitted a patch implementing this property to LKML as well, see
+https://www.spinics.net/lists/kernel/msg2418471.html
 
-Why do you need a pullup here?
+All of these patches are a part of a broader attempt to add PCIe
+support for i.MX7, and on that platform this is a part of a 1P0D
+regulator which supplies PCIe PHY.
 
-Looks good otherwise.
+I can rebase this patch set to take your commit into account, or else
+let's discuss the best way to allow setting ENABLE_LINREG.
 
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---u34jqn6krwdnlmfo--
+Thanks,
+Andrey Smirnov
