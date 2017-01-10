@@ -1,70 +1,147 @@
-From: Leonard Crestez <cdleonard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: alloc anywhere from memblock if range not specified
-Date: Tue, 10 Jan 2017 18:16:46 +0200
-Message-ID: <717b117d-9b8b-d4e9-6135-3c52afd635c8@gmail.com>
-References: <1456148744-7583-1-git-send-email-vinmenon@codeaurora.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu
+ idle
+Date: Tue, 10 Jan 2017 17:18:21 +0100
+Message-ID: <20170110161821.vp673jyfqx6s76pg@piout.net>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+ <20170106065947.30631-2-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456148744-7583-1-git-send-email-vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170106065947.30631-2-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, vinayakm.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+I though a bit more about it, and I don't really like the new compatible
+string. I don't feel this should be necessary.
 
-I have some trouble with this patch.
+What about the following:
 
-It seems the intention is to allow CMA to be placed in highmem. If the 
-CMA area is larger than highmem and no alloc-ranges is specified (just a 
-size) it is possible to end up allocating a area that spans from 
-multiple zones. This later breaks checks in cma_activate_area and makes 
-most dma allocations fail.
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index b4332b727e9c..0333aca63e44 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -53,6 +53,7 @@ extern void at91_pinctrl_gpio_resume(void);
+ static struct {
+ 	unsigned long uhp_udp_mask;
+ 	int memctrl;
++	bool has_l2_cache;
+ } at91_pm_data;
+ 
+ void __iomem *at91_ramc_base[2];
+@@ -267,6 +268,11 @@ static void at91_ddr_standby(void)
+ 	u32 lpr0, lpr1 = 0;
+ 	u32 saved_lpr0, saved_lpr1 = 0;
+ 
++	if (at91_pm_data.has_l2_cache) {
++		flush_cache_all();
++		outer_disable();
++	}
++
+ 	if (at91_ramc_base[1]) {
+ 		saved_lpr1 = at91_ramc_read(1, AT91_DDRSDRC_LPR);
+ 		lpr1 = saved_lpr1 & ~AT91_DDRSDRC_LPCB;
+@@ -287,6 +293,9 @@ static void at91_ddr_standby(void)
+ 	at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr0);
+ 	if (at91_ramc_base[1])
+ 		at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);
++
++	if (at91_pm_data.has_l2_cache)
++		outer_resume();
+ }
+ 
+ /* We manage both DDRAM/SDRAM controllers, we need more than one value
+ * to
+@@ -353,6 +362,11 @@ static __init void at91_dt_ramc(void)
+ 		return;
+ 	}
+ 
++	np = of_find_compatible_node(NULL, NULL, "arm,pl310-cache");
++	if (np)
++		at91_pm_data.has_l2_cache = true;
++	of_node_put(np);
++
+ 	at91_pm_set_standby(standby);
+ }
 
-Am I missing something or this a bug?
 
-On Mon, Feb 22, 2016 at 3:45 PM, Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
-wrote:
->
-> early_init_dt_alloc_reserved_memory_arch passes end as 0 to
-> __memblock_alloc_base, when limits are not specified. But
-> __memblock_alloc_base takes end value of 0 as MEMBLOCK_ALLOC_ACCESSIBLE
-> and limits the end to memblock.current_limit. This results in regions
-> never being placed in HIGHMEM area, for e.g. CMA.
-> Let __memblock_alloc_base allocate from anywhere in memory if limits are
-> not specified.
->
-> Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vinayak Menon <vinmenon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+This has the following benefits:
+ - everybody will have the fix, regardless of whether the dtb is updated
+ - has_l2_cache can be used later in at91_pm_suspend instead of calling
+   it unconditionnaly (I'll send a patch)
+
+
+On 06/01/2017 at 14:59:45 +0800, Wenyou Yang wrote :
+> For the SoCs such as SAMA5D2 and SAMA5D4 which have L2 cache,
+> flush the L2 cache first before entering the cpu idle.
+> 
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/of/of_reserved_mem.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 1a3556a..ed01c01 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -32,11 +32,13 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
->         phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
->         phys_addr_t *res_base)
->  {
-> +       phys_addr_t base;
->         /*
->          * We use __memblock_alloc_base() because memblock_alloc_base()
->          * panic()s on allocation failure.
->          */
-> -       phys_addr_t base = __memblock_alloc_base(size, align, end);
-> +       end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
-> +       base = __memblock_alloc_base(size, align, end);
->         if (!base)
->                 return -ENOMEM;
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member of the Code Aurora Forum, hosted by The Linux Foundation
->
+> 
+>  arch/arm/mach-at91/pm.c       | 19 +++++++++++++++++++
+>  drivers/memory/atmel-sdramc.c |  1 +
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+> index b4332b727e9c..1a60dede1a01 100644
+> --- a/arch/arm/mach-at91/pm.c
+> +++ b/arch/arm/mach-at91/pm.c
+> @@ -289,6 +289,24 @@ static void at91_ddr_standby(void)
+>  		at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);
+>  }
+>  
+> +static void at91_ddr_cache_standby(void)
+> +{
+> +	u32 saved_lpr;
+> +
+> +	flush_cache_all();
+> +	outer_disable();
+> +
+> +	saved_lpr = at91_ramc_read(0, AT91_DDRSDRC_LPR);
+> +	at91_ramc_write(0, AT91_DDRSDRC_LPR, (saved_lpr &
+> +			(~AT91_DDRSDRC_LPCB)) | AT91_DDRSDRC_LPCB_SELF_REFRESH);
+> +
+> +	cpu_do_idle();
+> +
+> +	at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr);
+> +
+> +	outer_resume();
+> +}
+> +
+>  /* We manage both DDRAM/SDRAM controllers, we need more than one value to
+>   * remember.
+>   */
+> @@ -324,6 +342,7 @@ static const struct of_device_id const ramc_ids[] __initconst = {
+>  	{ .compatible = "atmel,at91sam9260-sdramc", .data = at91sam9_sdram_standby },
+>  	{ .compatible = "atmel,at91sam9g45-ddramc", .data = at91_ddr_standby },
+>  	{ .compatible = "atmel,sama5d3-ddramc", .data = at91_ddr_standby },
+> +	{ .compatible = "atmel,sama5d4-ddramc", .data = at91_ddr_cache_standby },
+>  	{ /*sentinel*/ }
+>  };
+>  
+> diff --git a/drivers/memory/atmel-sdramc.c b/drivers/memory/atmel-sdramc.c
+> index b418b39af180..7e5c5c6c1348 100644
+> --- a/drivers/memory/atmel-sdramc.c
+> +++ b/drivers/memory/atmel-sdramc.c
+> @@ -48,6 +48,7 @@ static const struct of_device_id atmel_ramc_of_match[] = {
+>  	{ .compatible = "atmel,at91sam9260-sdramc", .data = &at91rm9200_caps, },
+>  	{ .compatible = "atmel,at91sam9g45-ddramc", .data = &at91sam9g45_caps, },
+>  	{ .compatible = "atmel,sama5d3-ddramc", .data = &sama5d3_caps, },
+> +	{ .compatible = "atmel,sama5d4-ddramc", .data = &sama5d3_caps, },
+>  	{},
+>  };
+>  
+> -- 
+> 2.11.0
+> 
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
