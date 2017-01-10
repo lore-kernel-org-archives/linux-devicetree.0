@@ -1,84 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 02/11] dmaengine: cppi41: Split out the interrupt handler
-Date: Tue, 10 Jan 2017 20:39:45 +0300
-Message-ID: <f7cf88bd-0d10-8c94-6490-46070d3c7949@cogentembedded.com>
-References: <20170109160656.3470-1-abailon@baylibre.com>
- <20170109160656.3470-3-abailon@baylibre.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH linux 2/6] hwmon: occ: Add sysfs interface
+Date: Tue, 10 Jan 2017 11:41:44 -0600
+Message-ID: <1484070104.21117.29.camel@kernel.crashing.org>
+References: <1483120568-21082-1-git-send-email-eajames.ibm@gmail.com>
+         <1483120568-21082-3-git-send-email-eajames.ibm@gmail.com>
+         <20161230193404.GB8516@roeck-us.net>
+         <OFA812992D.D19B1368-ON002580A0.007A2966-862580A0.007A72F0@notes.na.collabserv.com>
+         <8b182766-32a0-9eb1-7917-14abf811cef5@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109160656.3470-3-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <8b182766-32a0-9eb1-7917-14abf811cef5@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Edward James <eajames@us.ibm.com>
+Cc: andrew@aj.id.au, corbet@lwn.net, devicetree@vger.kernel.org, eajames.ibm@gmail.com, jdelvare@suse.com, joel@jms.id.au, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Sat, 2017-01-07 at 09:15 -0800, Guenter Roeck wrote:
+> > Instead of the "online" attribute, what do you think about using the
+> > "bind"/"unbind" API to probe the device from user space once the system
+> > is powered on? All the hwmon registration would take place in the probe
+> > function, it would just occur some time after boot.
+> > 
+> 
+> A more common approach would be to have a platform driver. That platform
+> driver would need a means to detect if the OCC is up and running, and
+> instantiate everything else once it is.
+> 
+> A trigger from user space is problematic because there is no guarantee
+> that the OCC is really up (or that it even exists).
+> 
+> An alternative might be to have the hwmon driver poll for the OCC,
+> but that would be a bit more difficult and might require a kernel thread
+> or maybe asynchronous probing.
 
-On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
+Hi Guenter !
 
-> The current interrupt handler do some actions specifics to am335x.
-> These actions should be made by the platform interrupt handler.
-> Split out the interrupt handler in two:
-> one for the am335x platform and a generic one.
->
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/dma/cppi41.c | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
-> index 25ee71d..42744ed 100644
-> --- a/drivers/dma/cppi41.c
-> +++ b/drivers/dma/cppi41.c
-> @@ -284,18 +284,11 @@ static u32 cppi41_pop_desc(struct cppi41_dd *cdd, unsigned queue_num)
->  	return desc;
->  }
->
-> -static irqreturn_t cppi41_irq(int irq, void *data)
-> +static irqreturn_t cppi41_irq(struct cppi41_dd *cdd)
->  {
-> -	struct cppi41_dd *cdd = data;
->  	struct cppi41_channel *c;
-> -	u32 status;
->  	int i;
->
-> -	status = cppi_readl(cdd->usbss_mem + USBSS_IRQ_STATUS);
-> -	if (!(status & USBSS_IRQ_PD_COMP))
-> -		return IRQ_NONE;
-> -	cppi_writel(status, cdd->usbss_mem + USBSS_IRQ_STATUS);
-> -
+I'm not sure I agree with you here ;-)
 
-    I fail to understand why non-CPPI 4.1 regs are used here (and that 
-positioning itself as an "abstract" CPPI 4.1 driver).
+I'm don't know how much background you got (I missed the beginning of
+the discussion) but basically this driver runs on the BMC (system
+controller) of the POWER9 server, the OCC is inside the POWER9 chip
+itself.
 
-[...]
-> @@ -351,6 +344,19 @@ static irqreturn_t cppi41_irq(int irq, void *data)
->  	return IRQ_HANDLED;
->  }
->
-> +static irqreturn_t am335x_cppi41_irq(int irq, void *data)
-> +{
-> +	struct cppi41_dd *cdd = data;
-> +	u32 status;
-> +
-> +	status = cppi_readl(cdd->usbss_mem + USBSS_IRQ_STATUS);
-> +	if (!(status & USBSS_IRQ_PD_COMP))
-> +		return IRQ_NONE;
-> +	cppi_writel(status, cdd->usbss_mem + USBSS_IRQ_STATUS);
-> +
-> +	return cppi41_irq(cdd);
-> +}
-> +
+So the presence/power state of the OCC doesn't depend on the BMC
+platform kernel code. The BMC userspace controls power up and down to the POWER9, and thus it's the one to know whether the remote is up.
 
-    IMHO this stuff just needs to move to the MUSB glue.
+If we were to create a "platform driver", all it would do is get input
+from userspace exactly like that sysfs file :-)
 
-[...]
+So if you don't like the sysfs file that registers/de-registers, which
+I sort-of understand, it's a bit of a hack (though a rather efficient
+one), I think the bind/unbind approach makes sense. However, I wonder
+whether the simplest and most efficient (remember this BMC has a really
+slow CPU) is an "online" file sysfs file, though rather than
+registering/de-registering the hwmon it would simply make it stop
+accessing the HW (and return some known "offline" values).
 
-MBR, Sergei
+Cheers,
+Ben.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
