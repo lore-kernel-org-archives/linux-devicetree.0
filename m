@@ -1,47 +1,67 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: dts: mt7623: Add initial Geek Force support
-Date: Tue, 10 Jan 2017 08:00:16 +0100
-Message-ID: <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
-References: <20170108133100.10428-1-afaerber@suse.de>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v11 2/8] power: add power sequence library
+Date: Tue, 10 Jan 2017 15:02:41 +0800
+Message-ID: <20170110070240.GA29454@b29397-desktop>
+References: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
+ <1483596119-27508-3-git-send-email-peter.chen@nxp.com>
+ <20170107085456.w5dhm7qadqa6tc7v@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170108133100.10428-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170107085456.w5dhm7qadqa6tc7v@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: mark.rutland@arm.com, Peter Chen <peter.chen@nxp.com>, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, sre@kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/01/2017 14:30, Andreas Färber wrote:
+On Sat, Jan 07, 2017 at 10:54:56AM +0200, Krzysztof Kozlowski wrote:
+> On Thu, Jan 05, 2017 at 02:01:53PM +0800, Peter Chen wrote:
+> > We have an well-known problem that the device needs to do some power
+> > sequence before it can be recognized by related host, the typical
+> > example like hard-wired mmc devices and usb devices.
+> > 
+> > This power sequence is hard to be described at device tree and handled by
+> > related host driver, so we have created a common power sequence
+> > library to cover this requirement. The core code has supplied
+> > some common helpers for host driver, and individual power sequence
+> > libraries handle kinds of power sequence for devices. The pwrseq
+> > librares always need to allocate extra instance for compatible
+> > string match.
+> > 
+> > pwrseq_generic is intended for general purpose of power sequence, which
+> > handles gpios and clocks currently, and can cover other controls in
+> > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > if only one power sequence is needed, else call of_pwrseq_on_list
+> > /of_pwrseq_off_list instead (eg, USB hub driver).
+> > 
+> > For new power sequence library, it can add its compatible string
+> > to pwrseq_of_match_table, then the pwrseq core will match it with
+> > DT's, and choose this library at runtime.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> > Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> > Tested-by: Matthias Kaehlcke <mka@chromium.org>
 > 
-> Andreas Färber (4):
->   Documentation: devicetree: Add vendor prefix for AsiaRF
->   Documentation: devicetree: arm: mediatek: Add Geek Force board
->   ARM: dts: mt7623: Add Geek Force config
->   MAINTAINERS: Extend ARM/Mediatek SoC support section
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Tested on Odroid U3 (reset sequence for LAN9730):
+> Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
 
-Hi,
+A nice ping...
 
-i need to NAK this series. the asiarf board is nothing more than the
-official MTK EVB with AsiaRF written on it. this board is already
-supported by linux (arch/arm/boot/dts/mt7623-evb.dts) please extend the
-EVB dts file nstead of adding a duplicate and letting the original bitrot.
+-- 
 
-	John
-
->  Documentation/devicetree/bindings/arm/mediatek.txt |  3 +
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  MAINTAINERS                                        |  2 +
->  arch/arm/boot/dts/Makefile                         |  1 +
->  arch/arm/boot/dts/mt7623-geekforce.dts             | 77 ++++++++++++++++++++++
->  5 files changed, 84 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt7623-geekforce.dts
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
