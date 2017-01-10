@@ -1,254 +1,115 @@
-From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [V2 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
-Date: Tue, 10 Jan 2017 15:55:15 +0800
-Message-ID: <1484034915-48879-2-git-send-email-puck.chen@hisilicon.com>
-References: <1484034915-48879-1-git-send-email-puck.chen@hisilicon.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: arasan: Add device tree binding
+ documentation
+Date: Tue, 10 Jan 2017 09:06:21 +0100
+Message-ID: <20170110090621.09d08cfa@bbrezillon>
+References: <1483930734-10309-1-git-send-email-punnaia@xilinx.com>
+        <20170110053605.yqclykdgi3tgndnp@rob-hp-laptop>
+        <03CA77BA8AF6F1469AEDFBDA1322A7B76424ECD2@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484034915-48879-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B76424ECD2-4lKfpRxZ5ekkx2a1wsGfbYg+Gb3gawCHQz34XiSyOiE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial dtsi file to support Hisilicon Hi3660 SoC with
-support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
+Hi Punnaiah,
 
-Also add dts file to support HiKey960 development board which
-based on Hi3660 SoC.
-The output console is earlycon "earlycon=pl011,0xfdf05000".
-And the con_init uart5 with a fixed clock, which already
-configured at bootloader.
+On Tue, 10 Jan 2017 06:03:25 +0000
+Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 
-When clock is available, the uart5 will be modified.
+> Hi Rob,
+>     
+>    Thanks for the review.
+> 
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > Sent: Tuesday, January 10, 2017 11:06 AM
+> > To: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org; computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> > boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org; marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> > richard-/L3Ra7n9ekc@public.gmane.org; cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-
+> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> > kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Punnaiah
+> > Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Subject: Re: [PATCH v7 1/2] mtd: arasan: Add device tree binding
+> > documentation
+> > 
+> > On Mon, Jan 09, 2017 at 08:28:53AM +0530, Punnaiah Choudary Kalluri wrote:  
+> > > This patch adds the dts binding document for arasan nand flash
+> > > controller.
+> > >
+> > > Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > > Changes in v7:
+> > > - Corrected the acronyms those should be in caps
+> > > changes in v6:
+> > > - Removed num-cs property
+> > > - Separated nandchip from nand controller
+> > > changes in v5:
+> > > - None
+> > > Changes in v4:
+> > > - Added num-cs property
+> > > - Added clock support
+> > > Changes in v3:
+> > > - None
+> > > Changes in v2:
+> > > - None
+> > > ---
+> > >  .../devicetree/bindings/mtd/arasan_nfc.txt         | 38  
+> > ++++++++++++++++++++++  
+> > >  1 file changed, 38 insertions(+)
+> > >  create mode 100644  
+> > Documentation/devicetree/bindings/mtd/arasan_nfc.txt  
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt  
+> > b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt  
+> > > new file mode 100644
+> > > index 0000000..f20adfc
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+> > > @@ -0,0 +1,38 @@
+> > > +Arasan NAND Flash Controller with ONFI 3.1 support
+> > > +
+> > > +Required properties:
+> > > +- compatible: Should be "arasan,nfc-v3p10"  
+> > 
+> > Needs a note that it must also have an SoC specific compatible string.
+> >   
+>   Sorry, I couldn't understand this comment. Could you elaborate it?
 
-Tested on HiKey960 Board.
+Arasan is an IP vendor, and those IPs are usually embedded in specific
+SoCs. I guess Rob was suggesting to define something like:
 
-Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  34 +++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 156 ++++++++++++++++++++++
- 3 files changed, 191 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+  compatible = "<soc-vendor>,<ip-revision>", "arasan,<ip-revision>";
 
-diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-index c8b8f80..7aee1f3 100644
---- a/arch/arm64/boot/dts/hisilicon/Makefile
-+++ b/arch/arm64/boot/dts/hisilicon/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
-+dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip07-d05.dtb
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-new file mode 100644
-index 0000000..bc5399d
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -0,0 +1,34 @@
-+/*
-+ * dts file for Hisilicon HiKey960 Development Board
-+ *
-+ * Copyright (C) 2016, Hisilicon Ltd.
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include "hi3660.dtsi"
-+
-+/ {
-+	model = "HiKey960";
-+	compatible = "hisilicon,hi3660";
-+
-+	aliases {
-+		serial5 = &uart5;       /* console UART */
-+	};
-+
-+	chosen {
-+		stdout-path = "serial5:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x00400000 0x0 0xbfe00000>;
-+	};
-+
-+	soc {
-+		uart5: uart@fdf05000 {
-+			status = "ok";
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-new file mode 100644
-index 0000000..7f9805c
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -0,0 +1,156 @@
-+/*
-+ * dts file for Hisilicon Hi3660 SoC
-+ *
-+ * Copyright (C) 2016, Hisilicon Ltd.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "hisilicon,hi3660";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu4>;
-+				};
-+				core1 {
-+					cpu = <&cpu5>;
-+				};
-+				core2 {
-+					cpu = <&cpu6>;
-+				};
-+				core3 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu4: cpu@100 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu5: cpu@101 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu6: cpu@102 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x102>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu7: cpu@103 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x103>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	gic: interrupt-controller@e82b0000 {
-+		compatible = "arm,gic-400";
-+		reg = <0x0 0xe82b1000 0 0x1000>, /* GICD */
-+		      <0x0 0xe82b2000 0 0x2000>, /* GICC */
-+		      <0x0 0xe82b4000 0 0x2000>, /* GICH */
-+		      <0x0 0xe82b6000 0 0x2000>; /* GICV */
-+		#address-cells = <0>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+		clock-frequency = <1920000>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		fixed_uart5: fixed_19_2M {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <19200000>;
-+			clock-output-names = "fixed:uart5";
-+		};
-+
-+		uart5: uart@fdf05000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfdf05000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&fixed_uart5 &fixed_uart5>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "ok";
-+		};
-+	};
-+};
--- 
-1.9.1
+This way you can differentiate minor changes/tweaks between each SoC
+(each SoC vendor usually enable/disable specific features based on
+their needs).
 
+> 
+> > > +- reg: Memory map for module access
+> > > +- interrupt-parent: Interrupt controller the interrupt is routed through
+> > > +- interrupts: Should contain the interrupt for the device
+> > > +- clock-name: List of input clocks - "clk_sys", "clk_flash"  
+> > 
+> > clk_ is redundant.
+> >   
+>   
+>  I have defined these clock names as per the controller data sheet.
+>  So, I feel it is fine to have them in sync with the datasheet.
+>   Please let me know if you still want me to change this.
+
+We already know this is a clock, hence the unneeded clk_ prefix. Please
+drop it.
+
+Thanks,
+
+Boris
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
