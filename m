@@ -1,72 +1,25 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
- Decoder
-Date: Tue, 10 Jan 2017 09:28:38 +0800
-Message-ID: <1484011718.10361.7.camel@mtksdaap41>
-References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
-         <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
-         <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
-         <1479784905.8964.15.camel@mtksdaap41>
-         <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
-         <1479866054.8964.21.camel@mtksdaap41> <1479894203.8964.29.camel@mtksdaap41>
-         <1483670099.18931.5.camel@mtksdaap41>
-         <974d20f3-5133-0869-2a35-c1617bec5d6e@xs4all.nl>
-         <c35bd06d-f012-1289-e765-02dc26b87e27@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: imx: Add ocotp node for imx6ul
+Date: Tue, 10 Jan 2017 09:35:18 +0800
+Message-ID: <20170110013514.GP20956@dragon>
+References: <1479344899-3141-1-git-send-email-ping.bai@nxp.com>
+ <1479344899-3141-3-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c35bd06d-f012-1289-e765-02dc26b87e27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1479344899-3141-3-git-send-email-ping.bai-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Mon, 2017-01-09 at 19:45 +0100, Matthias Brugger wrote:
+On Thu, Nov 17, 2016 at 09:08:19AM +0800, Bai Ping wrote:
+> Add ocotp node for i.MX6UL SOC.
 > 
-> On 09/01/17 12:29, Hans Verkuil wrote:
-> > Hi Rick,
-> >
-> > On 01/06/2017 03:34 AM, Rick Chang wrote:
-> >> Hi Hans,
-> >>
-> >> The dependence on [1] has been merged in 4.10, but [2] has not.Do you have
-> >> any idea about this patch series? Should we wait for [2] or we could merge
-> >> the source code and dt-binding first?
-> >
-> > Looking at [2] I noticed that the last comment was July 4th. What is the reason
-> > it hasn't been merged yet?
-> >
-> > If I know [2] will be merged for 4.11, then I am fine with merging this media
-> > patch series. The dependency of this patch on [2] is something Mauro can handle.
-> >
-> > If [2] is not merged for 4.11, then I think it is better to wait until it is
-> > merged.
-> >
-> 
-> I can't take [2] because there is no scpsys in the dts present. It seems 
-> that it got never posted.
-> 
-> Rick can you please follow-up with James and provide a patch which adds 
-> a scpsys node to the mt2701.dtsi?
-> 
+> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
 
-James sent three MT2701 dts patches [1] two weeks ago, these three
-patches include scpsys node. Please take a reference. And We will send
-new MT2701 ionmmu/smi dtsi node patch base on [1] later, thus you can
-accept and merge to 4.11.
-
-[1]
-https://patchwork.kernel.org/patch/9489991/
-https://patchwork.kernel.org/patch/9489985/
-https://patchwork.kernel.org/patch/9489989/
-
-Thanks,
-Eddie
-
-
+Applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
