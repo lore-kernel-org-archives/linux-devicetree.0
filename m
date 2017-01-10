@@ -1,94 +1,160 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 1/4] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Tue, 10 Jan 2017 23:06:22 +0200
-Message-ID: <6121545.d1oTkZXUdh@avalon>
-References: <cover.1483301745.git.peter.senna@collabora.com> <21ea1b0795bdaa30ca475d6ce675b620b2b644ed.1483301745.git.peter.senna@collabora.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
+Date: Tue, 10 Jan 2017 21:17:28 +0000
+Message-ID: <cc1c336e-3a1c-5985-ef75-ea58e00a0c1c@kernel.org>
+References: <1483606546-13629-1-git-send-email-preid@electromag.com.au>
+ <alpine.DEB.2.02.1701051004320.16779@pmeerw.net>
+ <d2b5f8fe-f9ce-bf9b-b5d8-facc10936290@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <21ea1b0795bdaa30ca475d6ce675b620b2b644ed.1483301745.git.peter.senna@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Peter Senna Tschudin <peter.senna@collabora.com>, airlied@linux.ie, architt@codeaurora.org, akpm@linux-foundation.org, daniel.vetter@ffwll.ch, davem@davemloft.net, devicetree@vger.kernel.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, javier@dowhile0.org, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d2b5f8fe-f9ce-bf9b-b5d8-facc10936290-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-Thank you for the patch.
-
-On Sunday 01 Jan 2017 21:24:29 Peter Senna Tschudin wrote:
-> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-> display bridge.
+On 10/01/17 06:26, Phil Reid wrote:
+> G'day Peter,
 > 
-> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
-> Cc: Martin Donnelly <martin.donnelly@ge.com>
-> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
-> ---
-> There was an Acked-by from Rob Herring <robh@kernel.org> for V6, but I
-> changed the bindings to use i2c_new_secondary_device() so I removed it from
-> the commit message.
+> Thanks for the review.
 > 
->  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> On 5/01/2017 17:21, Peter Meerwald-Stadler wrote:
+> <snip>
+>>> +
+>>> +#define TLC4541_V_CHAN(index, bits) {                                 \
+>>> +        .type = IIO_VOLTAGE,                                  \
+>>> +        .indexed = 1,                                         \
+>>
+>> no need if there is just one channel
+>>
+>>> +        .channel = index,                                     \
+>>> +        .info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
+>>> +        .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+>>> +        .address = index,                                     \
+>>
+>> .address not needed
+>>
+>>> +        .scan_index = index,                                  \
+>>> +        .scan_type = {                                        \
+>>> +            .sign = 'u',                                  \
+>>> +            .realbits = (bits),                           \
+>>> +            .storagebits = 16,                            \
+>>> +            .endianness = IIO_BE,                         \
+>>> +        },                                                    \
+>>> +    }
+>>> +
+>>> +#define DECLARE_TLC4541_CHANNELS(name, bits) \
+>>
+>> this flexibility is only needed when further chips are added; maybe start
+>> simple and only implement what is needed at first
+> I'll add the spec for to the TLC3541 which is a 14-bit version of this chip.
+> I don't have one to test, but it looks pretty straight forward.
 > 
-> diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt new file mode
-> 100644
-> index 0000000..1bc6ebf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> @@ -0,0 +1,39 @@
-> +Driver for GE B850v3 LVDS/DP++ display bridge
-> +
-> +Required properties:
-> +  - compatible : should be "ge,b850v3-lvds-dp".
-> +  - reg : should contain the main address which is used to ack the
-> +    interrupts and address for edid.
-> +  - reg-names : comma separeted list of register names. Valid values
-> +    are "main", and "edid".
-> +  - interrupt-parent : phandle of the interrupt controller that services
-> +    interrupts to the device
-> +  - interrupts : one interrupt should be described here, as in
-> +    <0 IRQ_TYPE_LEVEL_HIGH>.
-> +  - port : should describe the video signal connection between the host
-> +    and the bridge.
-
-A bridge has, by definition, (at least) one input and (at least) one output. 
-You should thus have (at least) two ports.
-
-> +Example:
-> +
-> +&mux2_i2c2 {
-> +	status = "okay";
-> +	clock-frequency = <100000>;
-> +
-> +	b850v3-lvds-dp-bridge@73  {
-> +		compatible = "ge,b850v3-lvds-dp";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg = <0x73 0x72>;
-> +		reg-names = "main", "edid";
-> +
-> +		interrupt-parent = <&gpio2>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		port {
-> +			b850v3_dp_bridge_in: endpoint {
-> +				remote-endpoint = <&lvds0_out>;
-> +			};
-> +		};
-> +	};
-> +};
-
--- 
-Regards,
-
-Laurent Pinchart
+>>
+>>> +const struct iio_chan_spec name ## _channels[] = { \
+>>> +    TLC4541_V_CHAN(0, bits), \
+>>> +    IIO_CHAN_SOFT_TIMESTAMP(1), \
+>>> +}
+>>> +
+>>> +static DECLARE_TLC4541_CHANNELS(tlc4541, 16);
+>>> +
+>>> +static const struct tlc4541_chip_info tlc4541_chip_info[] = {
+>>> +    [TLC4541] = {
+>>> +        .channels = tlc4541_channels,
+>>> +        .num_channels = ARRAY_SIZE(tlc4541_channels),
+>>> +    },
+>>> +};
+>>> +
+>>> +static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
+>>> +{
+>>> +    struct iio_poll_func *pf = p;
+>>> +    struct iio_dev *indio_dev = pf->indio_dev;
+>>> +    struct tlc4541_state *st = iio_priv(indio_dev);
+>>> +    u16 buf[8]; /* 2 bytes data + 6 bytes padding + 8 bytes timestamp */
+>>> +    int ret;
+>>> +
+>>> +    ret = spi_sync(st->spi, &st->scan_single_msg);
+>>> +    if (ret < 0)
+>>> +        goto done;
+>>> +
+>>> +    buf[0] = be16_to_cpu(st->rx_buf[0]);
+>>
+>> endianness is set to IIO_BE in scan_type, so this conversion is not needed
+>> and maybe also buf and the copy can be avoided if rx_buf is large enough
+> 
+> I was doing the conversion in IIO_CHAN_INFO_RAW as well.
+> Is it required there? I'm guessing yes.
+Yes. That path is outputting a human readable string so needs to be the write
+way around.
+> 
+>>
+>>> +    iio_push_to_buffers_with_timestamp(indio_dev, buf,
+>>> +                       iio_get_time_ns(indio_dev));
+>>> +
+>>> +done:
+>>> +    iio_trigger_notify_done(indio_dev->trig);
+>>> +    return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static int tlc4541_get_range(struct tlc4541_state *st)
+>>> +{
+>>> +    int vref;
+>>> +
+>>> +    vref = regulator_get_voltage(st->reg);
+>>> +    if (vref < 0)
+>>> +        return vref;
+>>> +
+>>> +    vref /= 1000;
+>>> +
+>>> +    return vref;
+>>> +}
+>>> +
+>>> +static int tlc4541_read_raw(struct iio_dev *indio_dev,
+>>> +                struct iio_chan_spec const *chan,
+>>> +                int *val,
+>>> +                int *val2,
+>>> +                long m)
+>>> +{
+>>> +    int ret = 0;
+>>> +    struct tlc4541_state *st = iio_priv(indio_dev);
+>>> +
+>>> +    switch (m) {
+>>> +    case IIO_CHAN_INFO_RAW:
+>>> +        ret = iio_device_claim_direct_mode(indio_dev);
+>>> +        if (ret)
+>>> +            return ret;
+>>> +        ret = spi_sync(st->spi, &st->scan_single_msg);
+>>> +        iio_device_release_direct_mode(indio_dev);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +        *val = be16_to_cpu(st->rx_buf[0]);
+>>
+>> on page 12 of the datasheet, the conversion results is in two registers?
+>> and rx_buf has two elements?
+>>
+>> haven't investigated in detail -- maybe a comment would be good to detail
+>> operation?
+> I set that to 4 bytes because I also use that for the dummy 24 clock cycles
+> at the beginning as well. I think that documentation is a bit misleading.
+> Possible due to the tlc3451 datasheet being  very similar. Those two registers
+> are 14 bits and 2 bits wide respectively. The SPI cycle time shows data is
+> available in the first 16 bits.
+> 
+> 
+>>
+>>> +        return IIO_VAL_INT;
+>>> +    case IIO_CHAN_INFO_SCALE:
+>>> +        ret = tlc4541_get_range(st);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +        *val = ret;
+>>> +        *val2 = chan->scan_type.realbits;
+>>> +        return IIO_VAL_FRACTIONAL_LOG2;
+>>> +    }
+>>> +    return -EINVAL;
+>>> +}
+> <snip>
+> 
+> 
