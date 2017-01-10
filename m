@@ -1,63 +1,49 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/3] arm64: dts: exynos: Add missing unit name to
- Exynos7 SoC node
-Date: Tue, 10 Jan 2017 20:47:28 +0200
-Message-ID: <20170110184728.2nff4r634ics4wb3@kozik-lap>
-References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
- <1484069912-6534-2-git-send-email-javier@osg.samsung.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v2 1/2] iio: distance: srf08: add trivial DT binding
+Date: Tue, 10 Jan 2017 19:47:44 +0100
+Message-ID: <20170110184744.GA15520@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484069912-6534-2-git-send-email-javier@osg.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, ktsai@capellamicro.com, wsa@the-dreams.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, mranostay@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Cc: ak@it-klinger.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 02:38:30PM -0300, Javier Martinez Canillas wrote:
-> This patch fixes the following DTC warning about a mismatch
-> between a device node reg property and its unit name:
-> 
-> Node /soc has a reg or ranges property, but no unit name
-> 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> ---
-> 
->  arch/arm64/boot/dts/exynos/exynos7.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> index 80aa60e38237..0d2fedc6ac2f 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> @@ -69,7 +69,7 @@
->  		method = "smc";
->  	};
->  
-> -	soc: soc {
-> +	soc: soc@0 {
+Add DT binding for devantech,srf08
+Add vendor devantech to vendor list
 
-This looks unnatural, like a fix just to silence the DTC. Mostly de do
-not enumerate soc node, although there are few exceptions.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+ Documentation/devicetree/bindings/vendor-prefixes.txt     | 1 +
+ 2 files changed, 2 insertions(+)
 
-I would prefer ignore the warning... however I am happy to hear other opinions.
-
-Best regards,
-Krzysztof
-
->  		compatible = "simple-bus";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -- 
-> 2.7.4
-> 
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 539874490492..86c6930c3c91 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -36,6 +36,7 @@ dallas,ds1775		Tiny Digital Thermometer and Thermostat
+ dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
+ dallas,ds4510		CPU Supervisor with Nonvolatile Memory and Programmable I/O
+ dallas,ds75		Digital Thermometer and Thermostat
++devantech,srf08		Devantech SRF08 ultrasonic ranger
+ dlg,da9053		DA9053: flexible system level PMIC with multicore support
+ dlg,da9063		DA9063: system PMIC for quad-core application processors
+ epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4696bb5c2198..80325e602403 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -65,6 +65,7 @@ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+ davicom	DAVICOM Semiconductor, Inc.
+ delta	Delta Electronics, Inc.
+ denx	Denx Software Engineering
++devantech	Devantech, Ltd.
+ digi	Digi International Inc.
+ digilent	Diglent, Inc.
+ dlg	Dialog Semiconductor
+-- 
+2.1.4
