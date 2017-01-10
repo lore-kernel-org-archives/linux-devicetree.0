@@ -1,108 +1,135 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 3/4] ARM: dts: stm32: stm32f7: Enable clocks for STM32F746
- boards
-Date: Tue, 10 Jan 2017 11:14:30 +0100
-Message-ID: <2c699f28-f554-e48a-34a0-e356f0bf7e2c@st.com>
-References: <1483711165-17149-1-git-send-email-gabriel.fernandez@st.com>
- <1483711165-17149-4-git-send-email-gabriel.fernandez@st.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: dts: mt7623: Add initial Geek Force support
+Date: Tue, 10 Jan 2017 11:18:51 +0100
+Message-ID: <3fecb422-8185-7ee0-c203-2bfdc4fd1393@phrozen.org>
+References: <20170108133100.10428-1-afaerber@suse.de>
+ <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
+ <d6bd3783-d124-9871-d3b4-93e366517895@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483711165-17149-4-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, ludovic.barre@st.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d6bd3783-d124-9871-d3b4-93e366517895-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel
+(resend, hit the wrong reply button)
 
-On 01/06/2017 02:59 PM, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On 10/01/2017 10:48, Andreas Färber wrote:
+> Hi,
 >
-> This patch enables clocks for STM32F746 boards.
+> Am 10.01.2017 um 08:00 schrieb John Crispin:
+>> On 08/01/2017 14:30, Andreas Färber wrote:
+>>>
+>>> Andreas Färber (4):
+>>>   Documentation: devicetree: Add vendor prefix for AsiaRF
+>>>   Documentation: devicetree: arm: mediatek: Add Geek Force board
+>>>   ARM: dts: mt7623: Add Geek Force config
+>>>   MAINTAINERS: Extend ARM/Mediatek SoC support section
+>>>
+>>
+>> Hi,
+>>
+>> i need to NAK this series. the asiarf board is nothing more than the
+>> official MTK EVB with AsiaRF written on it. this board is already
+>> supported by linux (arch/arm/boot/dts/mt7623-evb.dts) please extend the
+>> EVB dts file nstead of adding a duplicate and letting the original
+bitrot.
 >
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> ---
+> Well, I disagree.
 
-In commit header, "stm32f7" is not usefull.
-
-
->  arch/arm/boot/dts/stm32f746.dtsi | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-> index f321ffe..e05e131 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -43,6 +43,7 @@
->  #include "skeleton.dtsi"
->  #include "armv7-m.dtsi"
->  #include <dt-bindings/pinctrl/stm32f746-pinfunc.h>
-> +#include <dt-bindings/clock/stm32fx-clock.h>
-
-This patch depends on another series not yet merged (maybe "[PATCH-next 
-... is a better header ?
+reading the rest of the email you seem to be quite agro about this.
 
 >
->  / {
->  	clocks {
-> @@ -51,6 +52,24 @@
->  			compatible = "fixed-clock";
->  			clock-frequency = <0>;
->  		};
-> +
-> +		clk-lse {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32768>;
-> +		};
-> +
-> +		clk-lsi {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32000>;
-> +		};
-> +
-> +		clk_i2s_ckin: clk-i2s-ckin {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <48000000>;
-> +		};
->  	};
+> First of all I'm not letting "the original" bitrot, because I have
+> nothing to do with that .dts! If anyone is to blame for letting it
+> bitrot since February 2016, pick your own nose:
 >
->  	soc {
-> @@ -178,6 +197,11 @@
->  			interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
->  		};
 >
-> +		pwrcfg: power-config@40007000 {
-> +			compatible = "syscon";
-> +			reg = <0x40007000 0x400>;
-> +		};
-> +
->  		pin-controller {
->  			#address-cells = <1>;
->  			#size-cells = <1>;
-> @@ -291,9 +315,10 @@
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/log/arch/arm/boot/dts/mt7623-evb.dts
+
+what should i pick my nose about ? i made mt7623 work, then waited for
+4.10-rc1 to be out for clk-mt2701 so that i can continue adding the
+missing support
+
+
+> Second, I have no Mediatek documentation or even picture to identify any
+> similarities between my board and that Mediatek EVB, so no, I can't hack
+> on the -evb.dts file. I wrote my .dts from scratch, not even having
+> access to /proc/device-tree on its 3.10 kernel for comparison.
+
+ok, that info is most likely under NDA
+
 >
->  		rcc: rcc@40023800 {
->  			#clock-cells = <2>;
-> -			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
-> +			compatible = "st,stm32f746-rcc", "st,stm32-rcc";
->  			reg = <0x40023800 0x400>;
-> -			clocks = <&clk_hse>;
-> +			clocks = <&clk_hse>, <&clk_i2s_ckin>;
-> +			st,syscfg = <&pwrcfg>;
->  		};
->  	};
->  };
+> Third, by your argumentation we shouldn't be adding, e.g., Odroid .dts
+> files either because they were based on a Samsung SMDK, or .dts files
+> for Amlogic TV boxes because they're almost identical to reference
+> designs, etc.
+> Users need to know which .dts file to choose, so having a sane .dts
+> filename is warranted. Depending on how similar they are, one could
+> either #include the -evb.dts or factor out a shared .dtsi, but that
+> takes us back to the previous point of hardly anyone having access to
+> EVB information to identify such a subset. Therefore duplicating trivial
+> nodes is the method of choice for all practical purposes - mt7623.dtsi
+> is getting reused just fine.
 >
+
+in that case add a dtsi file for the EVB and include it in your geek
+board.dts and only update the compat string.
+
+> Comparing our two .dts files, mine has two more UART nodes enabled, the
+> U-Boot bootloader's baudrate set to actually get serial output, a
+> different board compatible string for identification, and I chose the
+> new dual-licensing header that is being requested for new DT files.
+
+1) at the time we adde this the uart support was not ready
+2) the bootloader i am using is a custom built one hence the random baudrate
+3) you can just updae the license if you want to, no problem
+
+> For lack of schematics I figured out UART1 by testing - continuity tests
+> for GND, console=ttySx,115200n8 and trial-and-error for RX/TX. Obviously
+> I can't do that for a board I don't have access to.
+> UART2 and UART0 pins were clear, but only UART2 was obvious from ttyMT2.
+
+you do have the EVB directly in front of you
+
+> Do you actually have access to a Geek Force board yourself, or what are
+> you basing your claims on? Mine looks different from the Indiegogo
+> picture and thus has different identification from that on
+> https://wikidevi.com/wiki/AsiaRF_WS2977 (WS3301, MT7623N RFB_V10).
+
+i dont need the geek board as i have the EVB and they are identical
+according to MTK
+
+> If you confirm the EVB's baudrate I can happily send that part your way.
+> I've seen 921600 on the Helio X20 96board for instance.
+
+see above
+
+> Also, none of what you've said justifies NAK'ing patch 4/4, which
+> applies to any mt7* and arm64 .dts, including yours.
+
+agreed, i never even mentioned 4/4
+
+> While we're at it, I noticed that mainline has a "mediatek,mt7623-eth"
+> network driver but no corresponding .dtsi node. Talk about bitrot...
+
+the idea is that we work together to make thins optimal. this is not a
+you or is right. this is about the FOSS peer review process. please dont
+be so agro.
+
+to me it seems suboptimal to support 2 dts files for the same board.
+
+	John
+
+
+>
+> Regards,
+> Andreas
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
