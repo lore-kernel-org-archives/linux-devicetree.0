@@ -1,64 +1,73 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: imx7s: Adjust anatop-enable-bit for 'reg_1p0d'
-Date: Tue, 10 Jan 2017 08:30:15 -0800
-Message-ID: <20170110163015.22444-3-andrew.smirnov@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH] regulator: anatop: Add support for "anatop-enable-bit"
+Date: Tue, 10 Jan 2017 08:30:14 -0800
+Message-ID: <20170110163015.22444-2-andrew.smirnov@gmail.com>
 References: <20170110163015.22444-1-andrew.smirnov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170110163015.22444-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170110163015.22444-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In PMU_REG_1P0Dn ENABLE_LINREG is bit 0. Bit 31 is called OVERRIDE and
-it serves the funtion of granting permission to GPC IP block to alter
-various other bit-fields of the register. The reason why this property,
-that trickeld here from Freescale BSP, is set up like that is because in
-the code it came from it is used in conjunction with a notifier handler
-for REGULATOR_EVENT_PRE_DO_ENABLE and REGULATOR_EVENT_PRE_DO_DISABLE
-events (not found in upstream kernel) that triggers GPC to start
-manipulating aforementioned other bitfields.
+Add code to support support for "anatop-enable-bit" device-tree
+property. This property translates to LINREG_ENABLE bit in real hardware
+and is present on 1p1, 2p5 and 3p0 regulators on i.MX6 and 1p0d regulator
+on i.MX7.
 
-Since:
-	a) none of the aforementioned machinery is implemented by
-	   upstream
-	b) using 'anatop-enable-bit' in that capacity is a bit of a
-	   semantic stretch
-
-simplify the situation by setting the value of 'anatop-enable-bit' to
-point to ENABLE_LINREG (same as i.MX6).
-
-Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: yurovsky@gmail.com
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 8ff2cbdd..c80d0db 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -509,7 +509,7 @@
- 					anatop-min-bit-val = <8>;
- 					anatop-min-voltage = <800000>;
- 					anatop-max-voltage = <1200000>;
--					anatop-enable-bit = <31>;
-+					anatop-enable-bit = <0>;
- 				};
- 			};
+Note: "anatop-enable-bit" has already found its way into upstream tree
+before this patch (probably not on purpose). See imx6ul.dtsi and
+imx7s.dtsi for concrete examples
+
+ .../devicetree/bindings/regulator/anatop-regulator.txt       |  1 +
+ drivers/regulator/anatop-regulator.c                         | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+index 37c4ea0..1d58c8c 100644
+--- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+@@ -14,6 +14,7 @@ Optional properties:
+ - anatop-delay-bit-shift: Bit shift for the step time register
+ - anatop-delay-bit-width: Number of bits used in the step time register
+ - vin-supply: The supply for this regulator
++- anatop-enable-bit: Regulator enable bit offset
  
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
+index 3a6d029..b041f27 100644
+--- a/drivers/regulator/anatop-regulator.c
++++ b/drivers/regulator/anatop-regulator.c
+@@ -301,7 +301,19 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+ 			return -EINVAL;
+ 		}
+ 	} else {
++		u32 enable_bit;
++
+ 		rdesc->ops = &anatop_rops;
++
++		if (!of_property_read_u32(np, "anatop-enable-bit",
++					  &enable_bit)) {
++			anatop_rops.enable  = regulator_enable_regmap;
++			anatop_rops.disable = regulator_disable_regmap;
++			anatop_rops.is_enabled = regulator_is_enabled_regmap;
++
++			rdesc->enable_reg = sreg->control_reg;
++			rdesc->enable_mask = BIT(enable_bit);
++		}
+ 	}
+ 
+ 	/* register regulator */
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
