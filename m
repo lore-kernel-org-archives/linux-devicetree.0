@@ -1,96 +1,65 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] gpio: pca953x: Add optional reset gpio control
-Date: Tue, 10 Jan 2017 22:01:18 +0200
-Message-ID: <CAHp75VfDfOV6L+xZAp1X1NRS_m+zSggfFCCw=GhkAsk0g=puLQ@mail.gmail.com>
-References: <1484076591-20834-1-git-send-email-steve_longerbeam@mentor.com> <1484076591-20834-2-git-send-email-steve_longerbeam@mentor.com>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: sun8i: add OTG function to Lichee Pi Zero
+Date: Tue, 10 Jan 2017 14:24:43 -0600
+Message-ID: <20170110202443.GC2479@uda0271908>
+References: <20170103152534.20118-1-icenowy@aosc.xyz>
+ <20170103152534.20118-5-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484076591-20834-2-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steve Longerbeam <steve_longerbeam@mentor.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170103152534.20118-5-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 9:29 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
-> Add optional reset-gpios pin control. If present, de-assert the
-> specified reset gpio pin to bring the chip out of reset.
->
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-
-
-> --
->
-> v2:
-> - Specify that reset signal to PCA953x chip is active low, in
->   binding doc.
-> - reorder includes in gpio-pca953x.c.
-> - remove dev_err() on devm_gpiod_get_optional() error return.
-
-This should go after delimiter.
-
-FWIW:
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
+On Tue, Jan 03, 2017 at 11:25:34PM +0800, Icenowy Zheng wrote:
+> Lichee Pi Zero features a USB OTG port.
+> 
+> Add support for it.
+> 
+> Note: in order to use the Host mode, the board must be powered via the
+> +5V and GND pins.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 4 ++++
->  drivers/gpio/gpio-pca953x.c                             | 9 +++++++++
->  2 files changed, 13 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> index 08dd15f..e639357 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-> @@ -29,6 +29,10 @@ Required properties:
->         onsemi,pca9654
->         exar,xra1202
->
-> +Optional properties:
-> + - reset-gpios: GPIO specification for the RESET input. This is an
-> +               active low signal to the PCA953x.
+>  arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+> index 0099affc6ce3..3d9168cbaeca 100644
+> --- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+> @@ -71,3 +71,13 @@
+>  	pinctrl-names = "default";
+>  	status = "okay";
+>  };
 > +
->  Example:
->
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index d5d72d8..d44232a 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -14,6 +14,7 @@
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/i2c.h>
->  #include <linux/platform_data/pca953x.h>
-> @@ -754,8 +755,16 @@ static int pca953x_probe(struct i2c_client *client,
->                 invert = pdata->invert;
->                 chip->names = pdata->names;
->         } else {
-> +               struct gpio_desc *reset_gpio;
+> +&usb_otg {
+> +	dr_mode = "otg";
+
+Why not set this default mode in dtsi instead?
+
+Regards,
+-Bin.
+
+> +	status = "okay";
+> +};
 > +
->                 chip->gpio_start = -1;
->                 irq_base = 0;
-> +
-> +               /* See if we need to de-assert a reset pin */
-> +               reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> +                                                    GPIOD_OUT_LOW);
-> +               if (IS_ERR(reset_gpio))
-> +                       return PTR_ERR(reset_gpio);
->         }
->
->         chip->client = client;
-> --
-> 2.7.4
->
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> +&usbphy {
+> +	usb0_id_det-gpio = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> -- 
+> 2.11.0
+> 
