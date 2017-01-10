@@ -1,51 +1,86 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v2 0/2] iio: distance: srf08: add IIO driver for us ranger
-Date: Tue, 10 Jan 2017 19:47:01 +0100
-Message-ID: <20170110184701.GA15501@andreas>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Remove unneeded unit names in
+ Exynos5433 nodes
+Date: Tue, 10 Jan 2017 20:51:09 +0200
+Message-ID: <20170110185109.n3x25yxbaarzikcd@kozik-lap>
+References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
+ <1484069912-6534-4-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, ktsai@capellamicro.com, wsa@the-dreams.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, mranostay@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
-Cc: ak@it-klinger.de
+In-Reply-To: <1484069912-6534-4-git-send-email-javier@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds IIO driver support for srf08 ultrasonic ranger
-devices.
+On Tue, Jan 10, 2017 at 02:38:32PM -0300, Javier Martinez Canillas wrote:
+> The "samsung,exynos5433-mipi-video-phy" and "samsung,exynos5250-dwusb3"
+> DT bindings don't specify a reg property for these nodes, so having a
+> unit name leads to the following DTC warnings:
+> 
+> Node /soc/video-phy@105c0710 has a unit name, but no reg property
+> Node /soc/usb@15400000 has a unit name, but no reg property
+> Node /soc/usb@15a00000 has a unit name, but no reg property
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
+> ---
+> 
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index 3695ddaf2e04..17e5dafd392c 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -706,7 +706,7 @@
+>  			interrupts = <GIC_PPI 9 0xf04>;
+>  		};
+>  
+> -		mipi_phy: video-phy@105c0710 {
+> +		mipi_phy: video-phy {
+>  			compatible = "samsung,exynos5433-mipi-video-phy";
+>  			#phy-cells = <1>;
+>  			samsung,pmu-syscon = <&pmu_system_controller>;
+> @@ -1285,7 +1285,7 @@
+>  			status = "disabled";
+>  		};
+>  
+> -		usbdrd30: usb@15400000  {
+> +		usbdrd30: usb-0  {
 
-The first patch add a trivial device tree binding for the device together
-with a new vendor devantech.
+How about "usbdrd" instead of "usb-0"? It would be still quite a generic
+description of a class.
 
-The second patch is the IIO driver which in turn is using I2C to talk to
-the device.
+>  			compatible = "samsung,exynos5250-dwusb3";
+>  			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
+>  				<&cmu_fsys CLK_SCLK_USBDRD30>;
+> @@ -1332,7 +1332,7 @@
+>  			status = "disabled";
+>  		};
+>  
+> -		usbhost30: usb@15a00000 {
+> +		usbhost30: usb-1 {
 
-Documentation about the sensor can be found here:
+usbhost?
 
-http://www.robot-electronics.co.uk/htm/srf08tech.html
+Best regards,
+Krzysztof
 
-Changes in v2:
-Lots of updates thanks to Peters really fast review within 30 minutes 
-after first submission of the driver.
-
-* Patch 2: "iio: distance: srf08: add IIO driver for us ranger"
-  - alphabetic order in Makefile
-  - use of u8 while accessing registers 
-  - avoid endianness problems with 16 bit values
-  - missing return value checks
-  - some explaining documentation added
-
-Andreas Klinger (2):
-  iio: distance: srf08: add trivial DT binding
-  iio: distance: srf08: add IIO driver for us ranger
-
- .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/iio/proximity/Kconfig                      |  15 +
- drivers/iio/proximity/Makefile                     |   1 +
- drivers/iio/proximity/srf08.c                      | 362 +++++++++++++++++++++
- 5 files changed, 380 insertions(+)
- create mode 100644 drivers/iio/proximity/srf08.c
-
--- 
-2.1.4
+>  			compatible = "samsung,exynos5250-dwusb3";
+>  			clocks = <&cmu_fsys CLK_ACLK_USBHOST30>,
+>  				<&cmu_fsys CLK_SCLK_USBHOST30>;
+> -- 
+> 2.7.4
+> 
