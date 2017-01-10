@@ -1,155 +1,198 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ARM: dts: at91: add devicetree for the Axentia
- TSE-850
-Date: Tue, 10 Jan 2017 10:52:56 +0100
-Message-ID: <b686fa42-bbfb-dec2-460f-ef00869bc12e@axentia.se>
-References: <1484035732-31635-1-git-send-email-peda@axentia.se>
- <1484035732-31635-2-git-send-email-peda@axentia.se>
- <20170110092928.hwd4l4k3eyagepco@piout.net>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 08/11] dmaengine: cppi41: Implement the glue for da8xx
+Date: Tue, 10 Jan 2017 15:35:51 +0530
+Message-ID: <53a40635-2652-64fc-b20d-1cd6d813eacb@ti.com>
+References: <20170109160656.3470-1-abailon@baylibre.com>
+ <20170109160656.3470-9-abailon@baylibre.com>
+ <fbc7f9f3-9b14-bc7f-0b40-15a6fedd48ea@ti.com>
+ <b3f902e0-ed08-dbee-52b8-e81afda082ac@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170110092928.hwd4l4k3eyagepco-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b3f902e0-ed08-dbee-52b8-e81afda082ac-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-10 10:29, Alexandre Belloni wrote:
-> Hi,
-> 
-> This needs a commit message, please add one.
-
-There's not all that much to say, but ok, I'll add something.
-
-> On 10/01/2017 at 09:08:51 +0100, Peter Rosin wrote :
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/axentia.txt |  19 ++
->>  MAINTAINERS                                       |   8 +
->>  arch/arm/boot/dts/Makefile                        |   1 +
->>  arch/arm/boot/dts/at91-linea.dtsi                 |  53 +++++
->>  arch/arm/boot/dts/at91-tse850-3.dts               | 274 ++++++++++++++++++++++
->>  5 files changed, 355 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/axentia.txt
->>  create mode 100644 arch/arm/boot/dts/at91-linea.dtsi
->>  create mode 100644 arch/arm/boot/dts/at91-tse850-3.dts
+On Tuesday 10 January 2017 03:08 PM, Alexandre Bailon wrote:
+> On 01/09/2017 07:08 PM, Grygorii Strashko wrote:
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/axentia.txt b/Documentation/devicetree/bindings/arm/axentia.txt
->> new file mode 100644
->> index 000000000000..ea3fb96ae465
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/axentia.txt
->> @@ -0,0 +1,19 @@
->> +Device tree bindings for Axentia ARM devices
->> +============================================
->> +
->> +Linea CPU module
->> +----------------
->> +
->> +Required root node properties:
->> +compatible = "axentia,linea",
->> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
->> +and following the rules from atmel-at91.txt for a sama5d31 SoC.
->> +
->> +
->> +TSE-850 v3 board
->> +----------------
->> +
->> +Required root node properties:
->> +compatible = "axentia,tse850v3", "axentia,linea",
->> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
->> +and following the rules from above for the axentia,linea CPU module.
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 97b78cc5aa51..5c2ea6e9cd7f 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2346,6 +2346,14 @@ S:	Maintained
->>  F:	Documentation/devicetree/bindings/sound/axentia,*
->>  F:	sound/soc/atmel/tse850-pcm5142.c
->>  
->> +AXENTIA ARM DEVICES
->> +M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/arm/axentia.txt
->> +F:	arch/arm/boot/dts/at91-linea.dtsi
->> +F:	arch/arm/boot/dts/at91-tse850-3.dts
->> +
-> 
-> I don't think you need to add yourself to MAINTAINERS for two DTs if
-> that is just to keep checkpatch happy, don't bother.
+>>
+>> On 01/09/2017 10:06 AM, Alexandre Bailon wrote:
+>>> The da8xx has a cppi41 dma controller.
+>>> This is add the glue layer required to make it work on da8xx,
+>>> as well some changes in driver (e.g to manage clock).
+>>>
+>>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  drivers/dma/cppi41.c | 95 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 95 insertions(+)
+>>>
+>>> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+>>> index 939398e..4318e53 100644
+>>> --- a/drivers/dma/cppi41.c
+>>> +++ b/drivers/dma/cppi41.c
+>>> @@ -1,3 +1,4 @@
+>>> +#include <linux/clk.h>
+>>>  #include <linux/delay.h>
+>>>  #include <linux/dmaengine.h>
+>>>  #include <linux/dma-mapping.h>
+>>> @@ -86,10 +87,19 @@
+>>>  
+>>>  #define USBSS_IRQ_PD_COMP	(1 <<  2)
+>>>  
+>>> +/* USB DA8XX */
+>>> +#define DA8XX_INTR_SRC_MASKED	0x38
+>>> +#define DA8XX_END_OF_INTR	0x3c
+>>> +
+>>> +#define DA8XX_QMGR_PENDING_MASK	(0xf << 24)
+>>> +
+>>> +
+>>> +
+>>>  /* Packet Descriptor */
+>>>  #define PD2_ZERO_LENGTH		(1 << 19)
+>>>  
+>>>  #define AM335X_CPPI41		0
+>>> +#define DA8XX_CPPI41		1
+>>>  
+>>>  struct cppi41_channel {
+>>>  	struct dma_chan chan;
+>>> @@ -158,6 +168,9 @@ struct cppi41_dd {
+>>>  
+>>>  	/* context for suspend/resume */
+>>>  	unsigned int dma_tdfdq;
+>>> +
+>>> +	/* da8xx clock */
+>>> +	struct clk *clk;
+>>>  };
+>>>  
+>>>  static struct chan_queues am335x_usb_queues_tx[] = {
+>>> @@ -232,6 +245,20 @@ static const struct chan_queues am335x_usb_queues_rx[] = {
+>>>  	[29] = { .submit = 30, .complete = 155},
+>>>  };
+>>>  
+>>> +static const struct chan_queues da8xx_usb_queues_tx[] = {
+>>> +	[0] = { .submit =  16, .complete = 24},
+>>> +	[1] = { .submit =  18, .complete = 24},
+>>> +	[2] = { .submit =  20, .complete = 24},
+>>> +	[3] = { .submit =  22, .complete = 24},
+>>> +};
+>>> +
+>>> +static const struct chan_queues da8xx_usb_queues_rx[] = {
+>>> +	[0] = { .submit =  1, .complete = 26},
+>>> +	[1] = { .submit =  3, .complete = 26},
+>>> +	[2] = { .submit =  5, .complete = 26},
+>>> +	[3] = { .submit =  7, .complete = 26},
+>>> +};
+>>> +
+>>>  struct cppi_glue_infos {
+>>>  	irqreturn_t (*isr)(int irq, void *data);
+>>>  	const struct chan_queues *queues_rx;
+>>> @@ -366,6 +393,26 @@ static irqreturn_t am335x_cppi41_irq(int irq, void *data)
+>>>  	return cppi41_irq(cdd);
+>>>  }
+>>>  
+>>> +static irqreturn_t da8xx_cppi41_irq(int irq, void *data)
+>>> +{
+>>> +	struct cppi41_dd *cdd = data;
+>>> +	u32 status;
+>>> +	u32 usbss_status;
+>>> +
+>>> +	status = cppi_readl(cdd->qmgr_mem + QMGR_PEND(0));
+>>> +	if (status & DA8XX_QMGR_PENDING_MASK)
+>>> +		cppi41_irq(cdd);
+>>> +	else
+>>> +		return IRQ_NONE;
+>>> +
+>>> +	/* Re-assert IRQ if there no usb core interrupts pending */
+>>> +	usbss_status = cppi_readl(cdd->usbss_mem + DA8XX_INTR_SRC_MASKED);
+>>> +	if (!usbss_status)
+>>> +		cppi_writel(0, cdd->usbss_mem + DA8XX_END_OF_INTR);
+>>> +
+>>> +	return IRQ_HANDLED;
+>>> +}
+>>> +
+>>>  static dma_cookie_t cppi41_tx_submit(struct dma_async_tx_descriptor *tx)
+>>>  {
+>>>  	dma_cookie_t cookie;
+>>> @@ -972,8 +1019,19 @@ static const struct cppi_glue_infos am335x_usb_infos = {
+>>>  	.platform = AM335X_CPPI41,
+>>>  };
+>>>  
+>>> +static const struct cppi_glue_infos da8xx_usb_infos = {
+>>> +	.isr = da8xx_cppi41_irq,
+>>> +	.queues_rx = da8xx_usb_queues_rx,
+>>> +	.queues_tx = da8xx_usb_queues_tx,
+>>> +	.td_queue = { .submit = 31, .complete = 0 },
+>>> +	.first_completion_queue = 24,
+>>> +	.qmgr_num_pend = 2,
+>>> +	.platform = DA8XX_CPPI41,
+>>> +};
+>>> +
+>>>  static const struct of_device_id cppi41_dma_ids[] = {
+>>>  	{ .compatible = "ti,am3359-cppi41", .data = &am335x_usb_infos},
+>>> +	{ .compatible = "ti,da8xx-cppi41", .data = &da8xx_usb_infos},
+>>>  	{},
+>>>  };
+>>>  MODULE_DEVICE_TABLE(of, cppi41_dma_ids);
+>>> @@ -995,6 +1053,13 @@ static int is_am335x_cppi41(struct device *dev)
+>>>  	return cdd->platform == AM335X_CPPI41;
+>>>  }
+>>>  
+>>> +static int is_da8xx_cppi41(struct device *dev)
+>>> +{
+>>> +	struct cppi41_dd *cdd = dev_get_drvdata(dev);
+>>> +
+>>> +	return cdd->platform == DA8XX_CPPI41;
+>>> +}
+>>> +
+>>>  #define CPPI41_DMA_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
+>>>  				BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
+>>>  				BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
+>>> @@ -1058,6 +1123,21 @@ static int cppi41_dma_probe(struct platform_device *pdev)
+>>>  	cdd->first_completion_queue = glue_info->first_completion_queue;
+>>>  	cdd->platform = glue_info->platform;
+>>>  
+>>> +	if (is_da8xx_cppi41(dev)) {
+>>> +		cdd->clk = devm_clk_get(&pdev->dev, "usb20");
+>>> +		ret = PTR_ERR_OR_ZERO(cdd->clk);
+>>> +		if (ret) {
+>>> +			dev_err(&pdev->dev, "failed to get clock\n");
+>>> +			goto err_clk_en;
+>>> +		}
+>>> +
+>>> +		ret = clk_prepare_enable(cdd->clk);
+>>> +		if (ret) {
+>>> +			dev_err(dev, "failed to enable clock\n");
+>>> +			goto err_clk_en;
+>>> +		}
+>>> +	}
+>>
+>> if this is functional clock then why not to use ./arch/arm/mach-davinci/pm_domain.c ?
+>> wouldn't it work for use if you will just rename "usb20" -> "fck" -
+>> so PM runtime should manage this clock for you?
+> As is, I don't think it will work.
+> The usb20 is shared by the cppi41 and the usb otg.
+> So, if we rename "usb20" to "fck", clk_get() won't be able to find the
+> clock.
+> But may be adding "usb20" to "con_ids" in
+> arch/arm/mach-davinci/pm_domain.c could work.
+> But I think it will require some changes in da8xx musb driver.
+> I will take look.
 
-There's also the benefit of the increased chances of me getting
-notified of changes. I don't mind...
+On DA8xx, CPPI 4.1 DMAengine is not an independent system resource, but
+embedded within the USB 2.0 controller. So, I think all that is needed
+is for MUSB DA8xx glue to trigger probe of CPPI 4.1 dmaengine driver
+when it is ready. I am not sure all this DA850-specific clock handling
+is really necessary.
 
->>  AZ6007 DVB DRIVERV
->>  M:	Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
->>  M:	Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 9a7375c388a8..7632849866de 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -48,6 +48,7 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
->>  	at91-kizbox2.dtb \
->>  	at91-sama5d2_xplained.dtb \
->>  	at91-sama5d3_xplained.dtb \
->> +	at91-tse850-3.dtb \
->>  	sama5d31ek.dtb \
->>  	sama5d33ek.dtb \
->>  	sama5d34ek.dtb \
->> diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
->> new file mode 100644
->> index 000000000000..646feb0daa81
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/at91-linea.dtsi
->> @@ -0,0 +1,53 @@
->> +/*
->> + * at91-linea.dtsi - Device Tree Include file for the Axentia Linea Module.
->> + *
->> + * Copyright (C) 2017 Axentia Technologies AB
->> + *
->> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> + *
->> + * Licensed under GPLv2 or later.
->> + */
->> +
->> +#include "sama5d31.dtsi"
->> +
->> +/ {
->> +	compatible = "axentia,linea",
->> +		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
->> +
->> +	memory {
->> +		reg = <0x20000000 0x4000000>;
->> +	};
->> +};
->> +
->> +&slow_xtal {
->> +	clock-frequency = <32768>;
->> +};
->> +
->> +&main_xtal {
->> +	clock-frequency = <12000000>;
->> +};
->> +
->> +&main {
->> +	clock-frequency = <12000000>;
->> +};
->> +
-> 
-> I don't think this is needed
-> 
-> 
+Even in DT, the CPPI 4.1 node should be a child node of USB 2.0 node.
 
-"this"? The &main frequency, or all of them?
-
-Cheers,
-peda
-
+Thanks,
+sekhar
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
