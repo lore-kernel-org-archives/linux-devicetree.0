@@ -1,67 +1,95 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH linux 2/6] hwmon: occ: Add sysfs interface
-Date: Tue, 10 Jan 2017 09:51:12 -0800
-Message-ID: <20170110175112.GA13904@roeck-us.net>
-References: <1483120568-21082-1-git-send-email-eajames.ibm@gmail.com>
- <1483120568-21082-3-git-send-email-eajames.ibm@gmail.com>
- <20161230193404.GB8516@roeck-us.net>
- <OFA812992D.D19B1368-ON002580A0.007A2966-862580A0.007A72F0@notes.na.collabserv.com>
- <8b182766-32a0-9eb1-7917-14abf811cef5@roeck-us.net>
- <1484070104.21117.29.camel@kernel.crashing.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Tue, 10 Jan 2017 17:52:19 +0000
+Message-ID: <20170110175219.GK527@arm.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+ <1483479056-15202-2-git-send-email-robdclark@gmail.com>
+ <20170105115528.GG679@arm.com>
+ <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
+ <20170105154950.GM679@arm.com>
+ <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484070104.21117.29.camel@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Edward James <eajames@us.ibm.com>, andrew@aj.id.au, corbet@lwn.net, devicetree@vger.kernel.org, eajames.ibm@gmail.com, jdelvare@suse.com, joel@jms.id.au, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
+In-Reply-To: <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sricharan R <sricharan@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 11:41:44AM -0600, Benjamin Herrenschmidt wrote:
-> On Sat, 2017-01-07 at 09:15 -0800, Guenter Roeck wrote:
-> > > Instead of the "online" attribute, what do you think about using the
-> > > "bind"/"unbind" API to probe the device from user space once the system
-> > > is powered on? All the hwmon registration would take place in the probe
-> > > function, it would just occur some time after boot.
-> > > 
-> > 
-> > A more common approach would be to have a platform driver. That platform
-> > driver would need a means to detect if the OCC is up and running, and
-> > instantiate everything else once it is.
-> > 
-> > A trigger from user space is problematic because there is no guarantee
-> > that the OCC is really up (or that it even exists).
-> > 
-> > An alternative might be to have the hwmon driver poll for the OCC,
-> > but that would be a bit more difficult and might require a kernel thread
-> > or maybe asynchronous probing.
-> 
-> Hi Guenter !
-> 
-> I'm not sure I agree with you here ;-)
-> 
-> I'm don't know how much background you got (I missed the beginning of
-> the discussion) but basically this driver runs on the BMC (system
-> controller) of the POWER9 server, the OCC is inside the POWER9 chip
-> itself.
-> 
-> So the presence/power state of the OCC doesn't depend on the BMC
-> platform kernel code. The BMC userspace controls power up and down to the POWER9, and thus it's the one to know whether the remote is up.
-> 
-> If we were to create a "platform driver", all it would do is get input
-> from userspace exactly like that sysfs file :-)
-> 
-> So if you don't like the sysfs file that registers/de-registers, which
-> I sort-of understand, it's a bit of a hack (though a rather efficient
-> one), I think the bind/unbind approach makes sense. However, I wonder
-> whether the simplest and most efficient (remember this BMC has a really
-> slow CPU) is an "online" file sysfs file, though rather than
-> registering/de-registering the hwmon it would simply make it stop
-> accessing the HW (and return some known "offline" values).
-> 
+Hi Rob,
 
-I don't like that too much either; it still looks like a hack.
-How about using bind/unbind then ?
+On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
+> On Thu, Jan 5, 2017 at 10:49 AM, Will Deacon <will.deacon@arm.com> wrote:
+> > On Thu, Jan 05, 2017 at 10:27:27AM -0500, Rob Clark wrote:
+> >> I'm not sure if the better solution then would be to have two fault
+> >> callbacks, one immediately from the IRQ and a later one from wq.  Or
+> >> let the driver handle the wq business and give it a way to tell the
+> >> IOMMU when to resume.
+> >>
+> >> I kinda think we should punt on the worker thread for now until we are
+> >> ready to resume faulting transactions, because I guess a strong chance
+> >> that whatever way we do it now will be wrong ;-)
+> >
+> > I guess what I'm after is for you to change the interrupt handlers to be
+> > threaded, like they are for SMMUv3. I *think* you can do that with a NULL
+> > thread_fn for now, and just call report_iommu_fault from the handler.
+> > The return value of that could, in theory, be used to queued the paging
+> > request and wake the paging thread in future.
+> 
+> If we only pass in the non-threaded irq fxn, I'm not really sure how
+> that changes anything.. or maybe I'm not understanding what you mean.
+> 
+> But yeah, I guess we could use request_threaded_irq() to get both IRQ
+> context notification and a later thread context notification rather
+> than doing the wq thing.  Either way the iommu API has to change
+> slightly.
+> 
+> >> > I wonder if this should also be predicated on the compatible string, so
+> >> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
+> >> > the compatible string isn't specific enough to identify an implementation
+> >> > with the required SS behaviour? On the other hand, it feels pretty
+> >> > redundant and a single "stalling works" property is all we need.
+> >>
+> >> We could also drop the property and key the behavior on specific
+> >> compat strings I guess.  Having both seems a bit odd.  Anyways, I'll
+> >> defer to DT folks about what the cleaner approach is.
+> >
+> > As Robin pointed out, we do need to be able to distinguish the integration
+> > of the device from the device itself. For example, MMU-9000 might be capable
+> > of stalling, but if it's bolted to a PCI RC, it's not safe to do so.
+> 
+> Hmm, well we install the fault handler on the iommu_domain..  perhaps
+> maybe a combo of dts property (or deciding based on more specific
+> compat string), plus extra param passed in to
+> iommu_set_fault_hander().  The dts property or compat string to
+> indicate whether the iommu (and how it is wired up) can handle stalls,
+> and enable_stall param when fault handler is registered to indicate
+> whether the device itself can cope.. if either can't do stalling, then
+> don't set CFCFG.
 
-Guenter
+I thought about this some more, and I think you're right. Having
+iommu_set_fault_handler take a flags parameter indicating that, for example,
+the fault handler can deal with paging, is all we need to implement the
+per-master opt-in functionality for stalling faults. There's no real
+requirement to standardise a generic firmware property for that (but
+we still need *something* that says stalling is usable on the SMMU --
+perhaps just the compatible string is ok).
+
+Taking this further, there's then no need for the threaded IRQ function
+in the SMMUv2 driver after all. Instead, we pass a continuation function
+pointer and opaque token from the SMMU driver to the fault handler in
+IRQ context (this will be in thread context for SMMUv3, but that should
+be fine). The fault handler can then stash these someplace, and signal
+a wakeup for its own threaded handler, which ultimately calls the SMMU
+continuation function with the opaque token as a parameter when it's done
+with the fault. I think that's enough to get things rolling without adding
+lots of infrastructure to the SMMU driver initially. If a pattern emerges
+amongst users of the interface, then we could consolidate some of the work
+handling back into IOMMU core.
+
+What do you think? It should all be pretty straightforward for what you
+want to do.
+
+Will
