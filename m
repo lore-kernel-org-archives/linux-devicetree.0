@@ -1,145 +1,160 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ARM: dts: at91: add devicetree for the Axentia
- TSE-850
-Date: Tue, 10 Jan 2017 10:29:28 +0100
-Message-ID: <20170110092928.hwd4l4k3eyagepco@piout.net>
-References: <1484035732-31635-1-git-send-email-peda@axentia.se>
- <1484035732-31635-2-git-send-email-peda@axentia.se>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
+Date: Tue, 10 Jan 2017 09:31:05 +0000
+Message-ID: <HK2PR06MB0545BF36C3DD2D4D1B951C3FC3670@HK2PR06MB0545.apcprd06.prod.outlook.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com>
+ <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea@xs4all.nl> <4506041.7mPt4W6j0m@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484035732-31635-2-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <4506041.7mPt4W6j0m@avalon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Laurent,
 
-This needs a commit message, please add one.
+> > >>> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
+> > >>>> Add binding documentation for Renesas R-Car Digital Radio
+> > >>>> Interface
+> > >>>> (DRIF) controller.
+> > >>>>
+> > >>>> Signed-off-by: Ramesh Shanmugasundaram
+> > >>>> <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> ---
+> > >>>>
+> > >>>>  .../devicetree/bindings/media/renesas,drif.txt     | 202
+> +++++++++++++
+> > >>>>  1 file changed, 202 insertions(+)  create mode 100644
+> > >>>>
+> > >>>> Documentation/devicetree/bindings/media/renesas,drif.txt
+> > >>>>
+> > >>>> diff --git
+> > >>>> a/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > >>>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new
+> > >>>> file mode 100644 index 0000000..1f3feaf
+> > >>>> --- /dev/null
+> > >>>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > >>>>
+> > >>>> +Optional properties of an internal channel when:
+> > >>>> +     - It is the only enabled channel of the bond (or)
+> > >>>> +     - If it acts as primary among enabled bonds
+> > >>>> +--------------------------------------------------------
+> > >>>> +- renesas,syncmd       : sync mode
+> > >>>> +                      0 (Frame start sync pulse mode. 1-bit
+> > >>>> +width
+> > >>>> pulse
+> > >>>> +                         indicates start of a frame)
+> > >>>> +                      1 (L/R sync or I2S mode) (default)
+> > >>>> +- renesas,lsb-first    : empty property indicates lsb bit is
+> received
+> > >>>> first.
+> > >>>> +                      When not defined msb bit is received first
+> > >>>> +(default)
+> > >>>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1 for
+> > >>>> low/high
+> >
+> > Shouldn't this be 'renesas,sync-active' instead of syncac-active?
+> >
+> > I'm not sure if syncac is intended or if it is a typo.
+> >
+> > >>>> +                      respectively. The default is 1 (active high=
+)
+> > >>>> +- renesas,dtdl         : delay between sync signal and start of
+> > >>>> reception.
+> > >>>> +                      The possible values are represented in 0.5
+> clock
+> > >>>> +                      cycle units and the range is 0 to 4. The
+> default
+> > >>>> +                      value is 2 (i.e.) 1 clock cycle delay.
+> > >>>> +- renesas,syncdl       : delay between end of reception and sync
+> > >>>> signal edge.
+> > >>>> +                      The possible values are represented in 0.5
+> clock
+> > >>>> +                      cycle units and the range is 0 to 4 & 6.
+> > >>>> + The
+> > >>>> default
+> > >>>> +                      value is 0 (i.e.) no delay.
+> > >>>
+> > >>> Most of these properties are pretty similar to the video bus
+> > >>> properties defined at the endpoint level in
+> > >>> Documentation/devicetree/bindings/media/video-interfaces.txt. I
+> > >>> believe it would make sense to use OF graph and try to standardize
+> > >>> these properties similarly.
+> >
+> > Other than sync-active, is there really anything else that is similar?
+> > And even the sync-active isn't a good fit since here there is only one
+> > sync signal instead of two for video (h and vsync).
+>=20
+> That's why I said similar, not identical :-) My point is that, if we
+> consider that we could connect multiple sources to the DRIF, using OF
+> graph would make sense, and the above properties should then be defined
+> per endpoint.
 
-On 10/01/2017 at 09:08:51 +0100, Peter Rosin wrote :
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/axentia.txt |  19 ++
->  MAINTAINERS                                       |   8 +
->  arch/arm/boot/dts/Makefile                        |   1 +
->  arch/arm/boot/dts/at91-linea.dtsi                 |  53 +++++
->  arch/arm/boot/dts/at91-tse850-3.dts               | 274 ++++++++++++++++++++++
->  5 files changed, 355 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/axentia.txt
->  create mode 100644 arch/arm/boot/dts/at91-linea.dtsi
->  create mode 100644 arch/arm/boot/dts/at91-tse850-3.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/axentia.txt b/Documentation/devicetree/bindings/arm/axentia.txt
-> new file mode 100644
-> index 000000000000..ea3fb96ae465
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/axentia.txt
-> @@ -0,0 +1,19 @@
-> +Device tree bindings for Axentia ARM devices
-> +============================================
-> +
-> +Linea CPU module
-> +----------------
-> +
-> +Required root node properties:
-> +compatible = "axentia,linea",
-> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
-> +and following the rules from atmel-at91.txt for a sama5d31 SoC.
-> +
-> +
-> +TSE-850 v3 board
-> +----------------
-> +
-> +Required root node properties:
-> +compatible = "axentia,tse850v3", "axentia,linea",
-> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
-> +and following the rules from above for the axentia,linea CPU module.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 97b78cc5aa51..5c2ea6e9cd7f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2346,6 +2346,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/sound/axentia,*
->  F:	sound/soc/atmel/tse850-pcm5142.c
->  
-> +AXENTIA ARM DEVICES
-> +M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/arm/axentia.txt
-> +F:	arch/arm/boot/dts/at91-linea.dtsi
-> +F:	arch/arm/boot/dts/at91-tse850-3.dts
-> +
+Thanks for the clarifications. I have some questions.
 
-I don't think you need to add yourself to MAINTAINERS for two DTs if
-that is just to keep checkpatch happy, don't bother.
+- Assuming two devices are interfaced with DRIF and they are represented us=
+ing two endpoints, the control signal related properties of DRIF might stil=
+l need to be same for both endpoints? For e.g. syncac-active cannot be diff=
+erent in both endpoints?
 
->  AZ6007 DVB DRIVERV
->  M:	Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
->  M:	Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 9a7375c388a8..7632849866de 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -48,6 +48,7 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
->  	at91-kizbox2.dtb \
->  	at91-sama5d2_xplained.dtb \
->  	at91-sama5d3_xplained.dtb \
-> +	at91-tse850-3.dtb \
->  	sama5d31ek.dtb \
->  	sama5d33ek.dtb \
->  	sama5d34ek.dtb \
-> diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
-> new file mode 100644
-> index 000000000000..646feb0daa81
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-linea.dtsi
-> @@ -0,0 +1,53 @@
-> +/*
-> + * at91-linea.dtsi - Device Tree Include file for the Axentia Linea Module.
-> + *
-> + * Copyright (C) 2017 Axentia Technologies AB
-> + *
-> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-> +
-> +#include "sama5d31.dtsi"
-> +
-> +/ {
-> +	compatible = "axentia,linea",
-> +		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
-> +
-> +	memory {
-> +		reg = <0x20000000 0x4000000>;
-> +	};
-> +};
-> +
-> +&slow_xtal {
-> +	clock-frequency = <32768>;
-> +};
-> +
-> +&main_xtal {
-> +	clock-frequency = <12000000>;
-> +};
-> +
-> +&main {
-> +	clock-frequency = <12000000>;
-> +};
-> +
+- I suppose "lsb-first", "dtdl" & "syncdl" may be defined per endpoint. How=
+ever, h/w manual says same register values needs to be programmed for both =
+the internal channels of a channel. Same with "syncmd" property.
 
-I don't think this is needed
+We could still define them as per endpoint property with a note that they n=
+eed to be same. But I am not sure if that is what you intended?
 
+ If we define them per endpoint we should then also try
+> standardize the ones that are not really Renesas-specific (that's at leas=
+t
+> syncac-active).
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+OK. I will call it "sync-active".
+
+ For the syncmd and lsb-first properties, it could also
+> make sense to query them from the connected subdev at runtime, as they're
+> similar in purpose to formats and media bus configuration (struct
+> v4l2_mbus_config).
+
+May I know in bit more detail about what you had in mind? Please correct me=
+ if my understanding is wrong here but when I looked at the code
+
+1) mbus_config is part of subdev_video_ops only. I assume we don't want to =
+support this as part of tuner subdev. The next closest is pad_ops with "str=
+uct v4l2_mbus_framefmt" but it is fully video specific config unless I come=
+ up with new MEDIA_BUS_FMT_xxxx in media-bus-format.h and use the code fiel=
+d? For e.g.
+=09
+#define MEDIA_BUS_FMT_SDR_I2S_PADHI_BE       0x7001
+#define MEDIA_BUS_FMT_SDR_I2S_PADHI_LE       0x7002
+
+2) The framework does not seem to mandate pad ops for all subdev. As the tu=
+ner can be any third party subdev, is it fair to assume that these properti=
+es can be queried from subdev?
+
+3) Assuming pad ops is not available on the subdev shouldn't we still need =
+a way to define these properties on DRIF DT?
+
+>=20
+> I'm not an SDR expert, so I'd like to have your opinion on this.
+>=20
+> > >> Note that the last two properties match the those in
+> > >> Documentation/devicetree/bindings/spi/sh-msiof.txt.
+> > >> We may want to use one DRIF channel as a plain SPI slave with the
+> > >> (modified) MSIOF driver in the future.
+> > >
+> > > Should I leave it as it is or modify these as in video-interfaces.txt=
+?
+> > > Shall we conclude on this please?
+>=20
+
+Thanks,
+Ramesh
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
