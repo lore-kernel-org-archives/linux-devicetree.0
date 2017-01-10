@@ -1,62 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
- stores scenario in vdma
-Date: Mon, 9 Jan 2017 23:35:40 -0600
-Message-ID: <20170110053540.qiowb4pfmwvwpkte@rob-hp-laptop>
-References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
- <1483771530-8545-3-git-send-email-appanad@xilinx.com>
+Subject: Re: [PATCH v3 4/5] dt: bindings: i2c-mux-pca954x: Add documentation
+ for i2c-mux-irq-mask-en
+Date: Mon, 9 Jan 2017 23:36:08 -0600
+Message-ID: <20170110053608.xhoe4xmtmcycaayn@rob-hp-laptop>
+References: <1483952576-5308-1-git-send-email-preid@electromag.com.au>
+ <1483952576-5308-5-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483771530-8545-3-git-send-email-appanad@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: mark.rutland@arm.com, moritz.fischer@ettus.com, Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, vinod.koul@intel.com, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, appanad@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1483952576-5308-5-git-send-email-preid@electromag.com.au>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: peda@axentia.se, wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 07, 2017 at 12:15:29PM +0530, Kedareswara rao Appana wrote:
-> When VDMA is configured for more than one frame in the h/w
-> for example h/w is configured for n number of frames and user
-> Submits n number of frames and triggered the DMA using issue_pending API.
-> In the current driver flow we are submitting one frame at a time
-> but we should submit all the n number of frames at one time as the h/w
-> Is configured for n number of frames.
+On Mon, Jan 09, 2017 at 05:02:55PM +0800, Phil Reid wrote:
+> Unfortunately some hardware device will assert their irq line immediately
+> on power on and provide no mechanism to mask the irq. As the i2c muxes
+> provide no method to mask irq line this provides a work around by keeping
+> the parent irq masked until enough device drivers have loaded to service
+> all pending interrupts.
 > 
-> This patch fixes this issue.
+> For example the the ltc1760 assert its SMBALERT irq immediately on power
+> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
+> device is registered irq are enabled and fire continuously as the second
+> device driver has not yet loaded. Setting this parameter to 0x3 while
+> delay the irq being enabled until both devices are ready.
 > 
-> Reviewed-by: Jose Abreu <joabreu@synopsys.com>
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> Acked-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 > ---
-> Changes for v5:
-> ---> Updated xlnx,fstore-config property to xlnx,fstore-enable
->      and updated description as suggested by Rob.
-> Changes for v4:
-> ---> Add Check for framestore configuration on Transmit case as well
->      as suggested by Jose Abreu.
-> ---> Modified the dev_dbg checks to dev_warn checks as suggested
->      by Jose Abreu.
-> Changes for v3:
-> ---> Added Checks for frame store configuration. If frame store
->      Configuration is not present at the h/w level and user
->      Submits less frames added debug prints in the driver as relevant.
-> Changes for v2:
-> ---> Fixed race conditions in the driver as suggested by Jose Abreu
-> ---> Fixed unnecessray if else checks in the vdma_start_transfer
->      as suggested by Laurent Pinchart.
-> 
->  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
->  2 files changed, 57 insertions(+), 23 deletions(-)
