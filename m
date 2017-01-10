@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: sunxi-ng: add support for V3s CCU
-Date: Tue, 10 Jan 2017 19:10:06 +0100
-Message-ID: <20170110181006.yrd6moy2mctzoc4c@lukather>
+Subject: Re: [PATCH 3/5] pinctrl: sunxi: add driver for V3s SoC
+Date: Tue, 10 Jan 2017 19:18:15 +0100
+Message-ID: <20170110181815.nuayyybfdp4d27bp@lukather>
 References: <20170103151629.19447-1-icenowy@aosc.xyz>
- <20170103151629.19447-3-icenowy@aosc.xyz>
+ <20170103151629.19447-4-icenowy@aosc.xyz>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lqelbqhf667falss"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB76G2TBQKGQEQ236ICY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="wrsu6zwgoydx4zyk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2GK2TBQKGQEAZHFIMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170103151629.19447-3-icenowy-ymACFijhrKM@public.gmane.org>
+In-Reply-To: <20170103151629.19447-4-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,25 +23,24 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX
 List-Id: devicetree@vger.kernel.org
 
 
---lqelbqhf667falss
+--wrsu6zwgoydx4zyk
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Tue, Jan 03, 2017 at 11:16:26PM +0800, Icenowy Zheng wrote:
-> V3s has a similar but cut-down CCU to H3.
+On Tue, Jan 03, 2017 at 11:16:27PM +0800, Icenowy Zheng wrote:
+> V3s SoC features only a pin controller (for the lack of CPUs part).
 > 
-> Add support for it.
+> Add a driver for this controller.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-It looks like there's nothing different but the clocks that you
-register with the H3, please just use the H3 driver.
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Thanks!
+Thanks,
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---lqelbqhf667falss--
+--wrsu6zwgoydx4zyk--
