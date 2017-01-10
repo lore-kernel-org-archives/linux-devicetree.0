@@ -1,45 +1,56 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Date: Tue, 10 Jan 2017 11:10:49 +0000
-Message-ID: <20170110111048.GA21598@arm.com>
-References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
- <20161228043734.27535-1-takahiro.akashi@linaro.org>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 11/11] dmaengine: cppi41: Fix teardown warnings
+Date: Tue, 10 Jan 2017 12:11:39 +0100
+Message-ID: <0bbd7f2b-0a15-de55-e054-958bfea048fe@baylibre.com>
+References: <20170109160656.3470-1-abailon@baylibre.com>
+ <20170109160656.3470-12-abailon@baylibre.com>
+ <72228045-8c2d-3ea4-3fbb-00477b47a80b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161228043734.27535-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <72228045-8c2d-3ea4-3fbb-00477b47a80b-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi James, Akashi,
-
-On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
-> From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+On 01/09/2017 07:46 PM, Sergei Shtylyov wrote:
+> On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
 > 
-> Add documentation for
-> 	linux,crashkernel-base and crashkernel-size,
-> 	linux,usable-memory-range
-> 	linux,elfcorehdr
-> used by arm64 kdump to decribe the kdump reserved area, and
-> the elfcorehdr's location within it.
+>> During the teardown of a RX channel, because there is only one
+>> completion queue available for RX channel, descriptor of another
+>> channel may be popped which will cause 2 warnings:
+>> - the first one because we popped a wrong descriptor
+>>   (neither the channel's descriptor, neither the teardown descriptor).
 > 
-> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: added "linux,crashkernel-base" and "-size" ]
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
+>    Neither ... nor.
+> 
+>> - the second one happen during the teardown of another channel,
+>>   because we can't find the channel descriptor
+>>   (that is, the one that caused the first warning).
+>> Use the teardown queue as completion queue during the teardown.
+> 
+>    Hm, what's a teardown queue? I don't remember this documented...
+> memory fade is always possible tho... :-)
+I guess your memory is right :-)
+There is no teardown queue. Though, we have to "allocate" an unassigned
+queue and populate it with free teardown descriptors.
+And when we are doing the teardown, we can select the queue to use for
+completion. In the driver, we have to configure both of them.
 
-I need an ack from Rob or Mark before I can merge this.
+Best regards,
+Alexandre
+> 
+>> Note that fix doesn't fix all the teardown warnings:
+>> I still get some when I run some corner case.
+>>
+>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> [...]
+> 
+> MBR, Sergei
+> 
 
-Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
