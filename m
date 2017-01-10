@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm: sunxi: add support for V3s SoC
-Date: Tue, 10 Jan 2017 19:09:26 +0100
-Message-ID: <20170110180926.ilqtygttpfgbetvu@lukather>
+Subject: Re: [PATCH 2/5] clk: sunxi-ng: add support for V3s CCU
+Date: Tue, 10 Jan 2017 19:10:06 +0100
+Message-ID: <20170110181006.yrd6moy2mctzoc4c@lukather>
 References: <20170103151629.19447-1-icenowy@aosc.xyz>
- <20170103151629.19447-2-icenowy@aosc.xyz>
+ <20170103151629.19447-3-icenowy@aosc.xyz>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5dvepi43xsfpbyv5"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV6G2TBQKGQERJVJ54Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="lqelbqhf667falss"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB76G2TBQKGQEQ236ICY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170103151629.19447-2-icenowy-ymACFijhrKM@public.gmane.org>
+In-Reply-To: <20170103151629.19447-3-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,41 +23,25 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX
 List-Id: devicetree@vger.kernel.org
 
 
---5dvepi43xsfpbyv5
+--lqelbqhf667falss
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Tue, Jan 03, 2017 at 11:16:25PM +0800, Icenowy Zheng wrote:
-> Allwinner V3s is a low-end single-core Cortex-A7 SoC, with 64MB
-> integrated DRAM, and several peripherals.
+On Tue, Jan 03, 2017 at 11:16:26PM +0800, Icenowy Zheng wrote:
+> V3s has a similar but cut-down CCU to H3.
+> 
+> Add support for it.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  Documentation/arm/sunxi/README | 4 ++++
->  arch/arm/mach-sunxi/sunxi.c    | 1 +
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-> index cd0243302bc1..91ec8f2055be 100644
-> --- a/Documentation/arm/sunxi/README
-> +++ b/Documentation/arm/sunxi/README
-> @@ -67,6 +67,10 @@ SunXi family
->          + Datasheet
->            http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
->  
-> +      - Allwinner V3s (sun8i)
-> +        + Datasheet
-> +          https://www.goprawn.com/forum/allwinner-cams/783-allwinner-v3s-soc-datasheet
-> +
 
-Please don't put random links in there, but at least something that we
-know will be there in a couple of weeks/monthes/years
+It looks like there's nothing different but the clocks that you
+register with the H3, please just use the H3 driver.
 
-Thanks,
+Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---5dvepi43xsfpbyv5--
+--lqelbqhf667falss--
