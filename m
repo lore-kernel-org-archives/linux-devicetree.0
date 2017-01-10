@@ -1,83 +1,65 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v5 1/2] ARM: dts: at91: add devicetree for the Axentia
- TSE-850
-Date: Tue, 10 Jan 2017 12:32:54 +0100
-Message-ID: <20170110113254.fusg25ilvekqll5f@piout.net>
-References: <1484035732-31635-1-git-send-email-peda@axentia.se>
- <1484035732-31635-2-git-send-email-peda@axentia.se>
- <20170110092928.hwd4l4k3eyagepco@piout.net>
- <b686fa42-bbfb-dec2-460f-ef00869bc12e@axentia.se>
- <20170110104248.iscurq55d7n26gfd@piout.net>
- <81d5b553-38db-5137-2eac-145cb2f76578@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 2/2] arm64: cacheinfo: add support to override cache levels via device tree
+Date: Tue, 10 Jan 2017 11:41:19 +0000
+Message-ID: <1484048479-19767-2-git-send-email-sudeep.holla@arm.com>
+References: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <81d5b553-38db-5137-2eac-145cb2f76578@axentia.se>
+In-Reply-To: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2017 at 12:21:42 +0100, Peter Rosin wrote :
-> On 2017-01-10 11:42, Alexandre Belloni wrote:
-> > On 10/01/2017 at 10:52:56 +0100, Peter Rosin wrote :
-> >> On 2017-01-10 10:29, Alexandre Belloni wrote:
-> >>> Hi,
-> >>>
-> >>> This needs a commit message, please add one.
-> >>
-> >> There's not all that much to say, but ok, I'll add something.
-> >>
-> > 
-> > It doesn't have to be long but it has to be present.
-> 
-> Does it really? There are quite a few examples to contradict that,
-> and checkpatch doesn't complain. That's no proof of course...
-> 
-> As I said, I'll add something.
-> 
+The cache hierarchy can be identified through Cache Level ID(CLIDR)
+architected system register. However in some cases it will provide
+only the number of cache levels that are integrated into the processor
+itself. In other words, it can't provide any information about the
+caches that are external and/or transparent.
 
-There is public shaming for maintainers taking patches without a commit
-message, that's enough for me to require a commit message ;)
+Some platforms require to export the information about all such external
+caches to the userspace applications via the sysfs interface.
 
-https://lwn.net/Articles/560392/
+This patch adds support to override the cache levels using device tree
+to take such external non-architected caches into account.
 
-> >>> On 10/01/2017 at 09:08:51 +0100, Peter Rosin wrote :
-> >> There's also the benefit of the increased chances of me getting
-> >> notified of changes. I don't mind...
-> >>
-> > 
-> > Do you expect changes coming from third parties? I'm fine with it
-> > anyway.
-> 
-> Ok, I'll remember this and blame you for everything :-)
-> 
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/arm64/kernel/cacheinfo.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Well, you can let it there, I was just not sure whether you were
-expecting to see patches or just trying to make checkpatch happy. As
-said, I'm fine with it.
-
-> >>>> +&main {
-> >>>> +	clock-frequency = <12000000>;
-> >>>> +};
-> >>>> +
-> >>>
-> >>> I don't think this is needed
-> >>>
-> >>>
-> >>
-> >> "this"? The &main frequency, or all of them?
-> >>
-> > 
-> > I meant just main
-> 
-> Ok, I'll test with that change and then resend. Thanks!
-> 
-> Cheers,
-> peda
-
+diff --git a/arch/arm64/kernel/cacheinfo.c b/arch/arm64/kernel/cacheinfo.c
+index 9617301f76b5..fe7738a8c5b1 100644
+--- a/arch/arm64/kernel/cacheinfo.c
++++ b/arch/arm64/kernel/cacheinfo.c
+@@ -84,7 +84,7 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+ 
+ static int __init_cache_level(unsigned int cpu)
+ {
+-	unsigned int ctype, level, leaves;
++	unsigned int ctype, level, leaves, of_level;
+ 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+ 
+ 	for (level = 1, leaves = 0; level <= MAX_CACHE_LEVEL; level++) {
+@@ -97,6 +97,17 @@ static int __init_cache_level(unsigned int cpu)
+ 		leaves += (ctype == CACHE_TYPE_SEPARATE) ? 2 : 1;
+ 	}
+ 
++	of_level = of_count_cache_levels(cpu);
++	if (level < of_level) {
++		/*
++		 * some external caches not specified in CLIDR_EL1
++		 * the information may be available in the device tree
++		 * only unified external caches are considered here
++		 */
++		leaves += (of_level - level);
++		level = of_level;
++	}
++
+ 	this_cpu_ci->num_levels = level;
+ 	this_cpu_ci->num_leaves = leaves;
+ 	return 0;
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.7.4
