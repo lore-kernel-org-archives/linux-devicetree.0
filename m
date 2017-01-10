@@ -1,111 +1,110 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] clk: hisilicon: Add clock driver for hi3660 SoC
-Date: Mon, 9 Jan 2017 16:22:24 -0800
-Message-ID: <20170110002224.GH17126@codeaurora.org>
-References: <1482978805-6981-1-git-send-email-zhangfei.gao@linaro.org>
- <1482978805-6981-3-git-send-email-zhangfei.gao@linaro.org>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] mmc: sunxi: Always set signal delay to 0 for A64
+Date: Tue, 10 Jan 2017 00:30:41 +0000
+Message-ID: <96ba5fd8-d551-5993-f347-202c47efec8c@arm.com>
+References: <cover.493dc67855a5f1837e875d37307319a03d14d1d0.1483980339.git-series.maxime.ripard@free-electrons.com>
+ <5eff19eec2b110bb643a38e7fef221208f585589.1483980339.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1482978805-6981-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <5eff19eec2b110bb643a38e7fef221208f585589.1483980339.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/29, Zhangfei Gao wrote:
-> Add clock drivers for hi3660 SoC, this driver controls the SoC
-> registers to supply different clocks to different IPs in the SoC.
+On 09/01/17 16:46, Maxime Ripard wrote:
+> Experience have shown that the using the  autocalibration could severely
+> degrade the performances of the MMC bus.
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Allwinner is using in its BSP a delay set to 0 for all the modes but HS400.
+> Remove the calibration code for now, and add comments to document our
+> findings.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
+>  drivers/mmc/host/sunxi-mmc.c | 50 ++++++++++++-------------------------
+>  1 file changed, 17 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> index b1d1303389a7..ea9552a0d820 100644
+> --- a/drivers/mmc/host/sunxi-mmc.c
+> +++ b/drivers/mmc/host/sunxi-mmc.c
+> @@ -683,41 +683,19 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
+>  
+>  static int sunxi_mmc_calibrate(struct sunxi_mmc_host *host, int reg_off)
+>  {
+> -	u32 reg = readl(host->reg_base + reg_off);
+> -	u32 delay;
+> -	unsigned long timeout;
+> -
+>  	if (!host->cfg->can_calibrate)
+>  		return 0;
+>  
+> -	reg &= ~(SDXC_CAL_DL_MASK << SDXC_CAL_DL_SW_SHIFT);
+> -	reg &= ~SDXC_CAL_DL_SW_EN;
+> -
+> -	writel(reg | SDXC_CAL_START, host->reg_base + reg_off);
+> -
+> -	dev_dbg(mmc_dev(host->mmc), "calibration started\n");
+> -
+> -	timeout = jiffies + HZ * SDXC_CAL_TIMEOUT;
+> -
+> -	while (!((reg = readl(host->reg_base + reg_off)) & SDXC_CAL_DONE)) {
+> -		if (time_before(jiffies, timeout))
+> -			cpu_relax();
+> -		else {
+> -			reg &= ~SDXC_CAL_START;
+> -			writel(reg, host->reg_base + reg_off);
+> -
+> -			return -ETIMEDOUT;
+> -		}
+> -	}
+> -
+> -	delay = (reg >> SDXC_CAL_DL_SHIFT) & SDXC_CAL_DL_MASK;
+> -
+> -	reg &= ~SDXC_CAL_START;
+> -	reg |= (delay << SDXC_CAL_DL_SW_SHIFT) | SDXC_CAL_DL_SW_EN;
+> -
+> -	writel(reg, host->reg_base + reg_off);
+> -
+> -	dev_dbg(mmc_dev(host->mmc), "calibration ended, reg is 0x%x\n", reg);
+> +	/*
+> +	 * FIXME:
+> +	 * This is not clear how the calibration is supposed to work
+> +	 * yet. The best rate have been obtained by simply setting the
+> +	 * delay to 0, as Allwinner does in its BSP.
+> +	 *
+> +	 * The only mode that doesn't have such a delay is HS400, that
+> +	 * is in itself a TODO.
+> +	 */
+> +	writel(SDXC_CAL_DL_SW_EN, host->reg_base + reg_off);
+>  
+>  	return 0;
+>  }
+> @@ -806,7 +784,13 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* TODO: enable calibrate on sdc2 SDXC_REG_DS_DL_REG of A64 */
+> +	/*
+> +	 * FIXME:
+> +	 *
+> +	 * In HS400 we'll also need to calibrate the data strobe
+> +	 * signal. This should only happen on the MMC2 controller (at
+> +	 * least on the A64 and older SoCs).
 
-Applied to clk-hi3660 and merged into clk-next. I took the
-liberty of using a function pointer in probe though so we don't
-need the enum anymore.
+Which older SoCs have this calibration register and a DS signal?
+Is that supposed to mean "other" SoCs?
 
----8<---
-diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
-index 4e752c632378..96a9697b06cf 100644
---- a/drivers/clk/hisilicon/clk-hi3660.c
-+++ b/drivers/clk/hisilicon/clk-hi3660.c
-@@ -14,14 +14,6 @@
- #include <linux/platform_device.h>
- #include "clk.h"
- 
--enum hi3660_clk_type {
--	HI3660_CRGCTRL = 1,
--	HI3660_PCTRL,
--	HI3660_PMUCTRL,
--	HI3660_SCTRL,
--	HI3660_IOMCU,
--};
--
- static const struct hisi_fixed_rate_clock hi3660_fixed_rate_clks[] = {
- 	{ HI3660_CLKIN_SYS, "clkin_sys", NULL, 0, 19200000, },
- 	{ HI3660_CLKIN_REF, "clkin_ref", NULL, 0, 32764, },
-@@ -533,15 +525,15 @@ static void hi3660_clk_crgctrl_init(struct device_node *np)
- 
- static const struct of_device_id hi3660_clk_match_table[] = {
- 	{ .compatible = "hisilicon,hi3660-crgctrl",
--	  .data = (void *)HI3660_CRGCTRL },
-+	  .data = hi3660_clk_crgctrl_init },
- 	{ .compatible = "hisilicon,hi3660-pctrl",
--	  .data = (void *)HI3660_PCTRL },
-+	  .data = hi3660_clk_pctrl_init },
- 	{ .compatible = "hisilicon,hi3660-pmuctrl",
--	  .data = (void *)HI3660_PMUCTRL },
-+	  .data = hi3660_clk_pmuctrl_init },
- 	{ .compatible = "hisilicon,hi3660-sctrl",
--	  .data = (void *)HI3660_SCTRL },
-+	  .data = hi3660_clk_sctrl_init },
- 	{ .compatible = "hisilicon,hi3660-iomcu",
--	  .data = (void *)HI3660_IOMCU },
-+	  .data = hi3660_clk_iomcu_init },
- 	{ }
- };
- 
-@@ -549,31 +541,14 @@ static int hi3660_clk_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = pdev->dev.of_node;
--	enum hi3660_clk_type type;
-+	void (*init_func)(struct device_node *np);
- 
--	type = (enum hi3660_clk_type)of_device_get_match_data(dev);
--	if (!type)
-+	init_func = of_device_get_match_data(dev);
-+	if (!init_func)
- 		return -ENODEV;
- 
--	switch (type) {
--	case HI3660_CRGCTRL:
--		hi3660_clk_crgctrl_init(np);
--		break;
--	case HI3660_PCTRL:
--		hi3660_clk_pctrl_init(np);
--		break;
--	case HI3660_PMUCTRL:
--		hi3660_clk_pmuctrl_init(np);
--		break;
--	case HI3660_SCTRL:
--		hi3660_clk_sctrl_init(np);
--		break;
--	case HI3660_IOMCU:
--		hi3660_clk_iomcu_init(np);
--		break;
--	default:
--		break;
--	}
-+	init_func(np);
-+
- 	return 0;
- }
- 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Other than that:
+
+Reviewed-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+
+Cheers,
+Andre.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
