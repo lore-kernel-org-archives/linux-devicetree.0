@@ -1,40 +1,42 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 1/2] ARM: dts: vf610-zii-dev-rev-b: Remove leftover
- PWM pingroup
-Date: Tue, 10 Jan 2017 15:52:22 +0800
-Message-ID: <20170110075221.GE20956@dragon>
-References: <20170110073555.12178-1-andrew.smirnov@gmail.com>
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [V2 1/2] document: dt: add binding for Hi3660 SoC
+Date: Tue, 10 Jan 2017 15:55:14 +0800
+Message-ID: <1484034915-48879-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170110073555.12178-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, cphealy@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2017 at 11:35:54PM -0800, Andrey Smirnov wrote:
-> Remove pwm0grp since it is:
-> 
-> 	a) Not referenced anywhere in the DTS file (unlike Tower board it
-> 	is based on, this board does not use/expose FTM0)
-> 
-> 	b) Configures PTB2 and PTB3 in a way that contradicts
-> 	pinctrl-mdio-mux
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Stefan Agner <stefan@agner.ch>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: andrew@lunn.ch
-> Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-> Cc: cphealy@gmail.com
-> Tested-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Add binding for hisilicon Hi3660 SoC and HiKey960 Board.
 
-Applied both, thanks.
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+index 7df79a7..6de2398 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+@@ -8,6 +8,10 @@ Hi6220 SoC
+ Required root node properties:
+ 	- compatible = "hisilicon,hi6220";
+ 
++Hi3660 SoC
++Required root node properties:
++	- compatible = "hisilicon,hi3660";
++
+ HiKey Board
+ Required root node properties:
+ 	- compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
