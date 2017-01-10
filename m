@@ -1,60 +1,59 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Tue, 10 Jan 2017 10:57:18 -0800
-Message-ID: <70691549-5354-beab-bd87-889e2a627ce6@gmail.com>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
- <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
- <CAHp75VeCKPy4B51P_N9Bp03zPUbRodKzitc-n16ZRKJWcEF4fA@mail.gmail.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Remove unneeded unit names in
+ Exynos5433 nodes
+Date: Tue, 10 Jan 2017 16:03:53 -0300
+Message-ID: <9ee4d297-51fd-fd37-e4e4-1a939a644201@osg.samsung.com>
+References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
+ <1484069912-6534-4-git-send-email-javier@osg.samsung.com>
+ <20170110185109.n3x25yxbaarzikcd@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VeCKPy4B51P_N9Bp03zPUbRodKzitc-n16ZRKJWcEF4fA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170110185109.n3x25yxbaarzikcd@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Krzysztof,
 
+On 01/10/2017 03:51 PM, Krzysztof Kozlowski wrote:
 
-On 01/03/2017 03:37 PM, Andy Shevchenko wrote:
-> On Mon, Jan 2, 2017 at 11:07 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Add optional reset-gpios pin control. If present, de-assert the
->> specified reset gpio pin to bring the chip out of reset.
->> --- a/drivers/gpio/gpio-pca953x.c
->> +++ b/drivers/gpio/gpio-pca953x.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/of_platform.h>
->>   #include <linux/acpi.h>
->>   #include <linux/regulator/consumer.h>
->> +#include <linux/gpio/consumer.h>
-> Please, try to put it somehow alphabetically ordered (yes, I see it's
-> not in general, but try to squeeze it into longest part which is
-> ordered).
+[snip]
 
-done.
+>>  
+>> -		usbdrd30: usb@15400000  {
+>> +		usbdrd30: usb-0  {
+> 
+> How about "usbdrd" instead of "usb-0"? It would be still quite a generic
+> description of a class.
+> 
+>>  			compatible = "samsung,exynos5250-dwusb3";
+>>  			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
+>>  				<&cmu_fsys CLK_SCLK_USBDRD30>;
+>> @@ -1332,7 +1332,7 @@
+>>  			status = "disabled";
+>>  		};
+>>  
+>> -		usbhost30: usb@15a00000 {
+>> +		usbhost30: usb-1 {
+> 
+> usbhost?
+> 
 
->
->>   #define PCA953X_INPUT          0
->>   #define PCA953X_OUTPUT         1
->> @@ -754,8 +755,18 @@ static int pca953x_probe(struct i2c_client *client,
->>                  invert = pdata->invert;
->>                  chip->names = pdata->names;
->>          } else {
->> +               struct gpio_desc *reset_gpio;
->> +
->>                  chip->gpio_start = -1;
->>                  irq_base = 0;
->> +
->> +               /* see if we need to de-assert a reset pin */
-> see -> See
+Indeed, these sounds better so I'll change for them.
 
-done.
-
-
-Steve
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
