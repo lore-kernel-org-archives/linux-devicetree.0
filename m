@@ -1,63 +1,90 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v6 2/2] ARM: sama5_defconfig: add support for the Axentia TSE-850 board
-Date: Tue, 10 Jan 2017 14:18:34 +0100
-Message-ID: <1484054314-6244-3-git-send-email-peda@axentia.se>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 0/2] Support for Axentia TSE-850
+Date: Tue, 10 Jan 2017 14:24:16 +0100
+Message-ID: <56099929-ab95-5020-a4d8-56b988581be1@atmel.com>
 References: <1484054314-6244-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484054314-6244-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484054314-6244-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Axentia TSE-850 is a SAMA5D3-based device designed to generate
-FM subcarrier signals.
+Le 10/01/2017 à 14:18, Peter Rosin a écrit :
+> Hi!
+> 
+> changes v5 -> v6
+> - drop the &main clock-frequency
+> - add some text to the commit messages
+> - make config additions modules
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- arch/arm/configs/sama5_defconfig | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index aca8625b6fc9..777c9e986425 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -131,7 +131,7 @@ CONFIG_GPIO_SYSFS=y
- CONFIG_POWER_SUPPLY=y
- CONFIG_BATTERY_ACT8945A=y
- CONFIG_POWER_RESET=y
--# CONFIG_HWMON is not set
-+CONFIG_SENSORS_JC42=m
- CONFIG_WATCHDOG=y
- CONFIG_AT91SAM9X_WATCHDOG=y
- CONFIG_SAMA5D4_WATCHDOG=y
-@@ -142,6 +142,7 @@ CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_ACT8865=y
- CONFIG_REGULATOR_ACT8945A=y
-+CONFIG_REGULATOR_PWM=m
- CONFIG_MEDIA_SUPPORT=y
- CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_V4L_PLATFORM_DRIVERS=y
-@@ -164,6 +165,7 @@ CONFIG_SND_ATMEL_SOC=y
- CONFIG_SND_ATMEL_SOC_WM8904=y
- # CONFIG_HID_GENERIC is not set
- CONFIG_SND_ATMEL_SOC_PDMIC=y
-+CONFIG_SND_ATMEL_SOC_TSE850_PCM5142=m
- CONFIG_USB=y
- CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
- CONFIG_USB_EHCI_HCD=y
-@@ -199,6 +201,9 @@ CONFIG_AT_XDMAC=y
- CONFIG_IIO=y
- CONFIG_AT91_ADC=y
- CONFIG_AT91_SAMA5D2_ADC=y
-+CONFIG_ENVELOPE_DETECTOR=m
-+CONFIG_DPOT_DAC=m
-+CONFIG_MCP4531=m
- CONFIG_PWM=y
- CONFIG_PWM_ATMEL=y
- CONFIG_PWM_ATMEL_HLCDC_PWM=y
+for the whole series.
+
+Thanks, best regards,
+
+> changes v4 -> v5
+> - comment from Rob about the memory node made me look closer and
+>   the memory size is actually updated by the bootloader, and that
+>   hid the fact that the entry was always faulty. This version
+>   specifies the correct memory size from the start, which is 64MB.
+> - ack from Rob
+> 
+> changes v3 -> v4
+> - rename files arch/arm/boot/dts/axentia-* to .../at91-*
+> - remove bootargs from at91-tse850-3.dts
+> - depend on the atmel ssc to register as a sound dai by itself
+> - bump copyright years
+> 
+> changes v2 -> v3
+> - document the new compatible strings prefixed with "axentia,".
+> 
+> changes v1 -> v2
+> - squash the fixup into the correct patch, sorry for the noise.
+> 
+> After finally having all essintial drivers upstreamed I would
+> like to have the dts and the defconfig also upstreamed.
+> 
+> The atmel-ssc/sound-dai change depends on a change that has been
+> sitting in the ASoC tree since mid-december, and I have been waiting
+> for it to hit linux-next before sending this, but it seems to take
+> longer than I anticipated. So, since I do not want this to in
+> turn miss the next merge window because of that wait I therefore
+> request that this is taken now even though it doesn't really work
+> w/o the ASoC "topic/atmel" branch as of 2016-12-15 [1]. It of course
+> builds cleanly even w/o those ASoC changes. That effectively means
+> that noone besides me should notice the inconsistency (I currently
+> have all affected devices under my control).
+> 
+> Cheers,
+> peda
+> 
+> [1] http://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/log/?h=topic/atmel
+> 
+> Peter Rosin (2):
+>   ARM: dts: at91: add devicetree for the Axentia TSE-850
+>   ARM: sama5_defconfig: add support for the Axentia TSE-850 board
+> 
+>  Documentation/devicetree/bindings/arm/axentia.txt |  19 ++
+>  MAINTAINERS                                       |   8 +
+>  arch/arm/boot/dts/Makefile                        |   1 +
+>  arch/arm/boot/dts/at91-linea.dtsi                 |  49 ++++
+>  arch/arm/boot/dts/at91-tse850-3.dts               | 274 ++++++++++++++++++++++
+>  arch/arm/configs/sama5_defconfig                  |   7 +-
+>  6 files changed, 357 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/axentia.txt
+>  create mode 100644 arch/arm/boot/dts/at91-linea.dtsi
+>  create mode 100644 arch/arm/boot/dts/at91-tse850-3.dts
+> 
+
+
 -- 
-2.1.4
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
