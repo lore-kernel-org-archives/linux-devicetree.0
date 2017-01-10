@@ -1,69 +1,63 @@
-From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property
- for RK3399 PMUCRU/CRU
-Date: Tue, 10 Jan 2017 10:45:48 -0800
-Message-ID: <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA@mail.gmail.com>
-References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
- <1484028930-20305-2-git-send-email-zhengxing@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/3] arm64: dts: exynos: Add missing unit name to
+ Exynos7 SoC node
+Date: Tue, 10 Jan 2017 20:47:28 +0200
+Message-ID: <20170110184728.2nff4r634ics4wb3@kozik-lap>
+References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
+ <1484069912-6534-2-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1484028930-20305-2-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484069912-6534-2-git-send-email-javier@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> The structure rockchip_clk_provider needs to refer the GRF regmap
-> in somewhere, if the CRU node has not "rockchip,grf" property,
-> calling syscon_regmap_lookup_by_phandle will return an invalid GRF
-> regmap, and the MUXGRF type clock will be not supported.
->
-> Therefore, we need to add them.
->
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Tue, Jan 10, 2017 at 02:38:30PM -0300, Javier Martinez Canillas wrote:
+> This patch fixes the following DTC warning about a mismatch
+> between a device node reg property and its unit name:
+> 
+> Node /soc has a reg or ranges property, but no unit name
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 > ---
->
-> Changes in v4:
-> - separte the binding patch
->
-> Changes in v3:
-> - add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
->
-> Changes in v2:
-> - referring pmugrf for PMUGRU
-> - fix the typo "invaild" in COMMIT message
->
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+> 
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index 80aa60e38237..0d2fedc6ac2f 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -69,7 +69,7 @@
+>  		method = "smc";
+>  	};
+>  
+> -	soc: soc {
+> +	soc: soc@0 {
 
-This seems fine to me, so:
+This looks unnatural, like a fix just to silence the DTC. Mostly de do
+not enumerate soc node, although there are few exceptions.
 
-Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+I would prefer ignore the warning... however I am happy to hear other opinions.
 
-...but I will say that before you actually add any real "MUXGRF"
-clocks on rk3399 you _might_ need to rework the code to make things
-truly "optional".  If it turns out that any existing clocks that
-already exist today already go through one of these muxes in the GRF
-and we've always been assuming one setting of the mux, we'll need to
-make sure we keep assuming that setting of the mux even if the "grf"
-isn't specified.
+Best regards,
+Krzysztof
 
-As I understand it, your motivation for this patch is to eventually be
-able to model the EDP reference clock which can either be xin24 or
-"edp osc".  Presumably the eDP "reference clock" isn't related to any
-of the pre-existing eDP clocks so that one should be safe.
-
--Doug
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -- 
+> 2.7.4
+> 
