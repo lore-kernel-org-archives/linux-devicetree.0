@@ -1,127 +1,67 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Tue, 10 Jan 2017 16:21:58 +0530
-Message-ID: <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v4 8/9] ARM: dts: stm32f4: Add external I2S clock
+Date: Tue, 10 Jan 2017 11:59:10 +0100
+Message-ID: <340234ae-8d01-82e0-8a29-06f401c20d75@st.com>
+References: <1481638820-29324-1-git-send-email-gabriel.fernandez@st.com>
+ <1481638820-29324-9-git-send-email-gabriel.fernandez@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1481638820-29324-9-git-send-email-gabriel.fernandez@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Olivier BIDEAU <olivier.bideau@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Ludovic BARRE <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Qualcomm chipsets have QMP phy controller that provides
-support to a number of controller, viz. PCIe, UFS, and USB.
-Adding dt binding information for the same.
+Hi
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
+On 12/13/2016 03:20 PM, Gabriel FERNANDEZ wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>
+> This patch adds an external I2S clock in the DT.
+> The I2S clock could be derived from an external I2S clock or by I2S pll.
+>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> ---
+>  arch/arm/boot/dts/stm32f429.dtsi | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index e4dae0e..7c7dfbd 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -68,6 +68,12 @@
+>  			compatible = "fixed-clock";
+>  			clock-frequency = <32000>;
+>  		};
+> +
+> +		clk_i2s_ckin: i2s-ckin {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <0>;
+> +		};
+>  	};
+>
+>  	soc {
+> @@ -362,7 +368,7 @@
+>  			#clock-cells = <2>;
+>  			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
+>  			reg = <0x40023800 0x400>;
+> -			clocks = <&clk_hse>;
+> +			clocks = <&clk_hse>, <&clk_i2s_ckin>;
+>  			st,syscfg = <&pwrcfg>;
+>  		};
+>
+>
+Applied on stm32-dt-for-v4.11
 
-Changes since v3:
- - Added #clock-cells = <1>, indicating that phy is a clock provider.
-
-Changes since v2:
- - Removed binding for "ref_clk_src" since we don't request this
-   clock in the driver.
- - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
- - Using 'phy' for the node name.
-
-Changes since v1:
- - New patch, forked out of the original driver patch:
-   "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
- - Added 'Acked-by' from Rob.
- - Updated bindings to include mem resource as a list of
-   offset - length pair for serdes block and for each lane.
- - Added a new binding for 'lane-offsets' that contains offsets
-   to tx, rx and pcs blocks from each lane base address.
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 76 ++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-new file mode 100644
-index 000000000000..6f510fe48f46
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -0,0 +1,76 @@
-+Qualcomm QMP PHY controller
-+===========================
-+
-+QMP phy controller supports physical layer functionality for a number of
-+controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-+
-+Required properties:
-+ - compatible: compatible list, contains:
-+	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-+	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
-+ - reg: list of offset and length pair of the PHY register sets.
-+	at index 0: offset and length of register set for PHY common
-+		    serdes block.
-+	from index 1 - N: offset and length of register set for each lane,
-+			  for N number of phy lanes (ports).
-+ - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
-+ - #phy-cells: must be 1
-+    - Cell after phy phandle should be the port (lane) number.
-+ - #clock-cells: must be 1
-+    - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
-+      interface (for pipe based PHYs). These clock are then gate-controlled
-+      by gcc.
-+ - clocks: a list of phandles and clock-specifier pairs,
-+	   one for each entry in clock-names.
-+ - clock-names: must be "cfg_ahb" for phy config clock,
-+			"aux" for phy aux clock,
-+			"ref" for 19.2 MHz ref clk,
-+			"pipe<port-number>" for pipe clock specific to
-+			each port/lane (Optional).
-+ - resets: a list of phandles and reset controller specifier pairs,
-+	   one for each entry in reset-names.
-+ - reset-names: must be "phy" for reset of phy block,
-+			"common" for phy common block reset,
-+			"cfg" for phy's ahb cfg block reset (Optional).
-+			"port<port-number>" for reset specific to
-+			each port/lane (Optional).
-+ - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-+ - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-+
-+Optional properties:
-+ - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
-+			pll block.
-+
-+Example:
-+	pcie_phy: phy@34000 {
-+		compatible = "qcom,msm8996-qmp-pcie-phy";
-+		reg = <0x034000 0x48f>,
-+			<0x035000 0x5bf>,
-+			<0x036000 0x5bf>,
-+			<0x037000 0x5bf>;
-+				/* tx, rx, pcs */
-+		lane-offsets = <0x0 0x200 0x400>;
-+		#phy-cells = <1>;
-+		#clock-cells = <1>;
-+
-+		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-+			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_CLKREF_CLK>,
-+			<&gcc GCC_PCIE_0_PIPE_CLK>,
-+			<&gcc GCC_PCIE_1_PIPE_CLK>,
-+			<&gcc GCC_PCIE_2_PIPE_CLK>;
-+		clock-names = "aux", "cfg_ahb", "ref",
-+				"pipe0", "pipe1", "pipe2";
-+
-+		vdda-phy-supply = <&pm8994_l28>;
-+		vdda-pll-supply = <&pm8994_l12>;
-+
-+		resets = <&gcc GCC_PCIE_PHY_BCR>,
-+			<&gcc GCC_PCIE_PHY_COM_BCR>,
-+			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>,
-+			<&gcc GCC_PCIE_0_PHY_BCR>,
-+			<&gcc GCC_PCIE_1_PHY_BCR>,
-+			<&gcc GCC_PCIE_2_PHY_BCR>;
-+		reset-names = "phy", "common", "cfg",
-+				"lane0", "lane1", "lane2";
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks
