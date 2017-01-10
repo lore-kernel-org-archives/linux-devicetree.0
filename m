@@ -1,119 +1,199 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Tue, 10 Jan 2017 14:20:13 -0500
-Message-ID: <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA@mail.gmail.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
-	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
-	<20170105115528.GG679@arm.com>
-	<CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
-	<20170105154950.GM679@arm.com>
-	<CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
-	<20170110175219.GK527@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
+Date: Tue, 10 Jan 2017 11:19:09 -0800
+Message-ID: <20170110191908.GV2630@atomide.com>
+References: <20161227172003.6517-1-tony@atomide.com>
+ <20161227172003.6517-2-tony@atomide.com>
+ <CAMuHMdVLbNXx23-wgLHcvktyHxWf6t75ggU3rM5A-DhtU9hn5w@mail.gmail.com>
+ <20170110153045.GS2630@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170110175219.GK527-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170110153045.GS2630@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 12:52 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
->> On Thu, Jan 5, 2017 at 10:49 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Thu, Jan 05, 2017 at 10:27:27AM -0500, Rob Clark wrote:
->> >> I'm not sure if the better solution then would be to have two fault
->> >> callbacks, one immediately from the IRQ and a later one from wq.  Or
->> >> let the driver handle the wq business and give it a way to tell the
->> >> IOMMU when to resume.
->> >>
->> >> I kinda think we should punt on the worker thread for now until we are
->> >> ready to resume faulting transactions, because I guess a strong chance
->> >> that whatever way we do it now will be wrong ;-)
->> >
->> > I guess what I'm after is for you to change the interrupt handlers to be
->> > threaded, like they are for SMMUv3. I *think* you can do that with a NULL
->> > thread_fn for now, and just call report_iommu_fault from the handler.
->> > The return value of that could, in theory, be used to queued the paging
->> > request and wake the paging thread in future.
->>
->> If we only pass in the non-threaded irq fxn, I'm not really sure how
->> that changes anything.. or maybe I'm not understanding what you mean.
->>
->> But yeah, I guess we could use request_threaded_irq() to get both IRQ
->> context notification and a later thread context notification rather
->> than doing the wq thing.  Either way the iommu API has to change
->> slightly.
->>
->> >> > I wonder if this should also be predicated on the compatible string, so
->> >> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
->> >> > the compatible string isn't specific enough to identify an implementation
->> >> > with the required SS behaviour? On the other hand, it feels pretty
->> >> > redundant and a single "stalling works" property is all we need.
->> >>
->> >> We could also drop the property and key the behavior on specific
->> >> compat strings I guess.  Having both seems a bit odd.  Anyways, I'll
->> >> defer to DT folks about what the cleaner approach is.
->> >
->> > As Robin pointed out, we do need to be able to distinguish the integration
->> > of the device from the device itself. For example, MMU-9000 might be capable
->> > of stalling, but if it's bolted to a PCI RC, it's not safe to do so.
->>
->> Hmm, well we install the fault handler on the iommu_domain..  perhaps
->> maybe a combo of dts property (or deciding based on more specific
->> compat string), plus extra param passed in to
->> iommu_set_fault_hander().  The dts property or compat string to
->> indicate whether the iommu (and how it is wired up) can handle stalls,
->> and enable_stall param when fault handler is registered to indicate
->> whether the device itself can cope.. if either can't do stalling, then
->> don't set CFCFG.
->
-> I thought about this some more, and I think you're right. Having
-> iommu_set_fault_handler take a flags parameter indicating that, for example,
-> the fault handler can deal with paging, is all we need to implement the
-> per-master opt-in functionality for stalling faults. There's no real
-> requirement to standardise a generic firmware property for that (but
-> we still need *something* that says stalling is usable on the SMMU --
-> perhaps just the compatible string is ok).
+* Tony Lindgren <tony@atomide.com> [170110 07:32]:
+> * Geert Uytterhoeven <geert@linux-m68k.org> [170110 06:09]:
+> > Hi Tony,
+> > 
+> > On Tue, Dec 27, 2016 at 6:19 PM, Tony Lindgren <tony@atomide.com> wrote:
+> > > Having the pin control framework call pin controller functions
+> > > before it's probe has finished is not nice as the pin controller
+> > > device driver does not yet have struct pinctrl_dev handle.
+> > >
+> > > Let's fix this issue by adding deferred work for late init. This is
+> > > needed to be able to add pinctrl generic helper functions that expect
+> > > to know struct pinctrl_dev handle. Note that we now need to call
+> > > create_pinctrl() directly as we don't want to add the pin controller
+> > > to the list of controllers until the hogs are claimed. We also need
+> > > to pass the pinctrl_dev to the device tree parser functions as they
+> > > otherwise won't find the right controller at this point.
+> > >
+> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > 
+> > I believe this patch causes a regression on r8a7740/armadillo, where the
+> > pin controller is also a GPIO controller, and lcd0 needs a hog
+> > (cfr. arch/arm/boot/dts/r8a7740-armadillo800eva.dts):
+> > 
+> > -GPIO line 176 (lcd0) hogged as output/high
+> > -sh-pfc e6050000.pfc: r8a7740_pfc handling gpio 0 -> 211
+> > +gpiochip_add_data: GPIOs 0..211 (r8a7740_pfc) failed to register
+> > +sh-pfc e6050000.pfc: failed to init GPIO chip, ignoring...
+> >  sh-pfc e6050000.pfc: r8a7740_pfc support registered
+> > 
+> > Hence all drivers using GPIOs fail to initialize because their GPIOs never
+> > become available.
+> > 
+> > Adding debug prints to the failure paths shows that the call to
+> > of_pinctrl_get() in of_gpiochip_add_pin_range() fails with -EPROBE_DEFER.
+> > Adding a debug print to the top of gpiochip_add_data() makes the problem go
+> > away, presumably because it introduces a delay that allows the delayed work
+> > to kick in...
+> 
+> OK. What if we added also an optional pinctrl function that the pin
+> controller driver could call to initialize hogs? Then the pin controller
+> driver could call it during or after probe as needed. That is after
+> there's a valid struct pinctrl_dev handle.
+...
+> We could also pass some flag if should always call pinctrl_late_init()
+> directly. But that does not remove the problem of struct pinctrl_dev handle
+> being uninitialized when the pin controller driver functionas are called.
 
-btw, it occurred to me that maybe it should be flags param to
-iommu_attach_device() (just in case fault handler not installed?)
-otoh stalling without a fault handler is silly, but I guess we need it
-to infer whether stalling can be supported by other devices on same
-iommu.. tbh I'm on a bit shaky ground when it comes to multiple
-devices per iommu since the SoC's I'm familiar with do it the other
-way around.  But I guess you have thought more about the multi-device
-case, so figured I should suggest it..
+Looks like we need both a flag and a way for the pin controller driver
+to start things.
 
-> Taking this further, there's then no need for the threaded IRQ function
-> in the SMMUv2 driver after all. Instead, we pass a continuation function
-> pointer and opaque token from the SMMU driver to the fault handler in
-> IRQ context (this will be in thread context for SMMUv3, but that should
-> be fine). The fault handler can then stash these someplace, and signal
-> a wakeup for its own threaded handler, which ultimately calls the SMMU
-> continuation function with the opaque token as a parameter when it's done
-> with the fault. I think that's enough to get things rolling without adding
-> lots of infrastructure to the SMMU driver initially. If a pattern emerges
-> amongst users of the interface, then we could consolidate some of the work
-> handling back into IOMMU core.
->
-> What do you think? It should all be pretty straightforward for what you
-> want to do.
+Below is an experimental fix to intorduce pinctrl_start() that I've
+tested with pinctrl-single. Then we should probably make all pin controller
+drivers call pinctrl_start() to properly fix the issue of struct pinctrl_dev
+handle not being initialized before driver functions are called.
 
-yeah, that makes sense to me..  I can give it a try.
+Or do you guys have any better ideas?
 
-BR,
--R
+Regards,
 
-> Will
+Tony
+
+8< --------------------------------
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1962,6 +1962,17 @@ static void pinctrl_late_init(struct work_struct *work)
+ 	pinctrl_init_device_debugfs(pctldev);
+ }
+ 
++int pinctrl_start(struct pinctrl_dev *pctldev)
++{
++       if (!IS_ERR(pctldev->p))
++               return -EEXIST;
++
++       pinctrl_late_init(&pctldev->late_init.work);
++
++       return 0;
++}
++EXPORT_SYMBOL_GPL(pinctrl_start);
++
+ /**
+  * pinctrl_register() - register a pin controller device
+  * @pctldesc: descriptor for this pin controller
+@@ -2035,9 +2046,14 @@ struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+ 	/*
+ 	 * If the device has hogs we want the probe() function of the driver
+ 	 * to complete before we go in and hog them and add the pin controller
+-	 * to the list of controllers. If it has no hogs, we can just complete
+-	 * the registration immediately.
++	 * to the list of controllers. If the pin controller driver initializes
++	 * hogs, or the pin controller instance has no hogs, we can just
++	 * complete the registration immediately.
+ 	 */
++
++	if (pctldesc->flags & PINCTRL_DRIVER_START)
++		return pctldev;
++
+ 	if (pinctrl_dt_has_hogs(pctldev))
+ 		schedule_delayed_work(&pctldev->late_init, 0);
+ 	else
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1741,6 +1741,7 @@ static int pcs_probe(struct platform_device *pdev)
+ 	pcs->desc.pmxops = &pcs_pinmux_ops;
+ 	if (PCS_HAS_PINCONF)
+ 		pcs->desc.confops = &pcs_pinconf_ops;
++	pcs->desc.flags = PINCTRL_DRIVER_START;
+ 	pcs->desc.owner = THIS_MODULE;
+ 
+ 	ret = pcs_allocate_pin_table(pcs);
+@@ -1754,6 +1755,10 @@ static int pcs_probe(struct platform_device *pdev)
+ 		goto free;
+ 	}
+ 
++	ret = pinctrl_start(pcs->pctl);
++	if (ret)
++		goto free;
++
+ 	ret = pcs_add_gpio_func(np, pcs);
+ 	if (ret < 0)
+ 		goto free;
+diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
+--- a/drivers/pinctrl/sh-pfc/pinctrl.c
++++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+@@ -815,7 +815,15 @@ int sh_pfc_register_pinctrl(struct sh_pfc *pfc)
+ 	pmx->pctl_desc.confops = &sh_pfc_pinconf_ops;
+ 	pmx->pctl_desc.pins = pmx->pins;
+ 	pmx->pctl_desc.npins = pfc->info->nr_pins;
++	pmx->pctl_desc.flags = PINCTRL_DRIVER_START;
+ 
+ 	pmx->pctl = devm_pinctrl_register(pfc->dev, &pmx->pctl_desc, pmx);
+-	return PTR_ERR_OR_ZERO(pmx->pctl);
++	if (IS_ERR(pmx->pctl))
++		return PTR_ERR(pmx->pctl);
++
++	ret = pinctrl_start(pmx->pctl);
++	if (ret)
++		return ret;
++
++	return 0;
+ }
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -104,6 +104,8 @@ struct pinctrl_ops {
+ 			     struct pinctrl_map *map, unsigned num_maps);
+ };
+ 
++#define PINCTRL_DRIVER_START		BIT(0)
++
+ /**
+  * struct pinctrl_desc - pin controller descriptor, register this to pin
+  * control subsystem
+@@ -112,6 +114,8 @@ struct pinctrl_ops {
+  *	this pin controller
+  * @npins: number of descriptors in the array, usually just ARRAY_SIZE()
+  *	of the pins field above
++ * @flags: Optional pin controller feature flags
++ *	handling is needed in the pin controller driver.
+  * @pctlops: pin control operation vtable, to support global concepts like
+  *	grouping of pins, this is optional.
+  * @pmxops: pinmux operations vtable, if you support pinmuxing in your driver
+@@ -129,6 +133,7 @@ struct pinctrl_desc {
+ 	const char *name;
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int npins;
++	unsigned int flags;
+ 	const struct pinctrl_ops *pctlops;
+ 	const struct pinmux_ops *pmxops;
+ 	const struct pinconf_ops *confops;
+@@ -149,6 +154,7 @@ extern struct pinctrl_dev *devm_pinctrl_register(struct device *dev,
+ 				void *driver_data);
+ extern void devm_pinctrl_unregister(struct device *dev,
+ 				struct pinctrl_dev *pctldev);
++extern int pinctrl_start(struct pinctrl_dev *pctldev);
+ 
+ extern bool pin_is_valid(struct pinctrl_dev *pctldev, int pin);
+ extern void pinctrl_add_gpio_range(struct pinctrl_dev *pctldev,
+-- 
+2.11.0
