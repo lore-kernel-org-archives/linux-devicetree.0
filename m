@@ -1,25 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] Documentation: devicetree: arm: mediatek: Add Geek
- Force board
-Date: Mon, 9 Jan 2017 23:36:01 -0600
-Message-ID: <20170110053601.csyvsdq7wgvex45i@rob-hp-laptop>
-References: <20170108133100.10428-1-afaerber@suse.de>
- <20170108133100.10428-3-afaerber@suse.de>
+Subject: Re: [PATCH] pinctrl: qcom: Add msm8998 pinctrl driver
+Date: Mon, 9 Jan 2017 23:36:20 -0600
+Message-ID: <20170110053620.n6auldzfm4cdth5j@rob-hp-laptop>
+References: <1483974019-8235-1-git-send-email-kimran@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170108133100.10428-3-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Lai <paul@asiarf.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1483974019-8235-1-git-send-email-kimran@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Imran Khan <kimran@codeaurora.org>
+Cc: andy.gross@linaro.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 08, 2017 at 02:30:58PM +0100, Andreas Färber wrote:
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+On Mon, Jan 09, 2017 at 08:30:17PM +0530, Imran Khan wrote:
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for msm8998.
+> 
+> Signed-off-by: Imran Khan <kimran@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/arm/mediatek.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/pinctrl/qcom,msm8998-pinctrl.txt      |  200 ++
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/pinctrl/qcom/Kconfig                       |    8 +
+>  drivers/pinctrl/qcom/Makefile                      |    1 +
+>  drivers/pinctrl/qcom/pinctrl-msm8998.c             | 1933 ++++++++++++++++++++
+>  4 files changed, 2142 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8998.c
