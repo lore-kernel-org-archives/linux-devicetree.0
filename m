@@ -1,97 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
-Date: Mon, 9 Jan 2017 23:35:35 -0600
-Message-ID: <20170110053535.yof5cloco4f7mofw@rob-hp-laptop>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
+Subject: Re: [PATCH v4 1/2] ARM: dts: at91: add devicetree for the Axentia
+ TSE-850
+Date: Mon, 9 Jan 2017 23:36:06 -0600
+Message-ID: <20170110053606.sqtnsbuawwa6s535@rob-hp-laptop>
+References: <1483951529-11738-1-git-send-email-peda@axentia.se>
+ <1483951529-11738-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+In-Reply-To: <1483951529-11738-2-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 06:11:31PM -0800, Steve Longerbeam wrote:
-> From: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> This driver can handle SoC internal and external video bus multiplexers,
-> controlled either by register bit fields or by a GPIO. The subdevice
-> passes through frame interval and mbus configuration of the active input
-> to the output side.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> --
-> 
-> - fixed a cut&paste error in vidsw_remove(): v4l2_async_register_subdev()
->   should be unregister.
-> 
-> - added media_entity_cleanup() and v4l2_device_unregister_subdev()
->   to vidsw_remove().
-> 
-> - there was a line left over from a previous iteration that negated
->   the new way of determining the pad count just before it which
->   has been removed (num_pads = of_get_child_count(np)).
-> 
-> - Philipp Zabel has developed a set of patches that allow adding
->   to the subdev async notifier waiting list using a chaining method
->   from the async registered callbacks (v4l2_of_subdev_registered()
->   and the prep patches for that). For now, I've removed the use of
->   v4l2_of_subdev_registered() for the vidmux driver's registered
->   callback. This doesn't affect the functionality of this driver,
->   but allows for it to be merged now, before adding the chaining
->   support.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+On Mon, Jan 09, 2017 at 09:45:28AM +0100, Peter Rosin wrote:
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
->  .../bindings/media/video-multiplexer.txt           |  59 +++
->  drivers/media/platform/Kconfig                     |   8 +
->  drivers/media/platform/Makefile                    |   2 +
->  drivers/media/platform/video-multiplexer.c         | 472 +++++++++++++++++++++
->  4 files changed, 541 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
->  create mode 100644 drivers/media/platform/video-multiplexer.c
+>  Documentation/devicetree/bindings/arm/axentia.txt |  19 ++
+>  MAINTAINERS                                       |   8 +
+>  arch/arm/boot/dts/Makefile                        |   1 +
+>  arch/arm/boot/dts/at91-linea.dtsi                 |  53 +++++
+>  arch/arm/boot/dts/at91-tse850-3.dts               | 274 ++++++++++++++++++++++
+>  5 files changed, 355 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/axentia.txt
+>  create mode 100644 arch/arm/boot/dts/at91-linea.dtsi
+>  create mode 100644 arch/arm/boot/dts/at91-tse850-3.dts
 > 
-> diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> diff --git a/Documentation/devicetree/bindings/arm/axentia.txt b/Documentation/devicetree/bindings/arm/axentia.txt
 > new file mode 100644
-> index 0000000..9d133d9
+> index 000000000000..ea3fb96ae465
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> @@ -0,0 +1,59 @@
-> +Video Multiplexer
-> +=================
+> +++ b/Documentation/devicetree/bindings/arm/axentia.txt
+> @@ -0,0 +1,19 @@
+> +Device tree bindings for Axentia ARM devices
+> +============================================
 > +
-> +Video multiplexers allow to select between multiple input ports. Video received
-> +on the active input port is passed through to the output port. Muxes described
-> +by this binding may be controlled by a syscon register bitfield or by a GPIO.
+> +Linea CPU module
+> +----------------
 > +
-> +Required properties:
-> +- compatible : should be "video-multiplexer"
+> +Required root node properties:
+> +compatible = "axentia,linea",
+> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +and following the rules from atmel-at91.txt for a sama5d31 SoC.
+> +
+> +
+> +TSE-850 v3 board
+> +----------------
+> +
+> +Required root node properties:
+> +compatible = "axentia,tse850v3", "axentia,linea",
+> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +and following the rules from above for the axentia,linea CPU module.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 97b78cc5aa51..5c2ea6e9cd7f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2346,6 +2346,14 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/sound/axentia,*
+>  F:	sound/soc/atmel/tse850-pcm5142.c
+>  
+> +AXENTIA ARM DEVICES
+> +M:	Peter Rosin <peda@axentia.se>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/arm/axentia.txt
+> +F:	arch/arm/boot/dts/at91-linea.dtsi
+> +F:	arch/arm/boot/dts/at91-tse850-3.dts
+> +
+>  AZ6007 DVB DRIVER
+>  M:	Mauro Carvalho Chehab <mchehab@s-opensource.com>
+>  M:	Mauro Carvalho Chehab <mchehab@kernel.org>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9a7375c388a8..7632849866de 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -48,6 +48,7 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
+>  	at91-kizbox2.dtb \
+>  	at91-sama5d2_xplained.dtb \
+>  	at91-sama5d3_xplained.dtb \
+> +	at91-tse850-3.dtb \
+>  	sama5d31ek.dtb \
+>  	sama5d33ek.dtb \
+>  	sama5d34ek.dtb \
+> diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
+> new file mode 100644
+> index 000000000000..20d982153a45
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-linea.dtsi
+> @@ -0,0 +1,53 @@
+> +/*
+> + * at91-linea.dtsi - Device Tree Include file for the Axentia Linea Module.
+> + *
+> + * Copyright (C) 2017 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda@axentia.se>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +#include "sama5d31.dtsi"
+> +
+> +/ {
+> +	compatible = "axentia,linea",
+> +		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +
+> +	memory {
 
-This should have an SoC/chip specific compatible string additionally. 
-Just need a note to that effect here, but i.MX will need a compat 
-string.
+memory@20000000 is preferred though if that causes bootloader problems 
+this is fine.
 
-> +- reg: should be register base of the register containing the control bitfield
-> +- bit-mask: bitmask of the control bitfield in the control register
-> +- bit-shift: bit offset of the control bitfield in the control register
-> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
-> +  may be given to switch between two inputs
-> +- #address-cells: should be <1>
-> +- #size-cells: should be <0>
-> +- port@*: at least three port nodes containing endpoints connecting to the
-> +  source and sink devices according to of_graph bindings. The last port is
-> +  the output port, all others are inputs.
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
