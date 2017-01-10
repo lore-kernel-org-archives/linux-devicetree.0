@@ -1,72 +1,82 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] hwmon: adc128d818: Support missing operation modes
-Date: Tue, 10 Jan 2017 09:17:33 -0800
-Message-ID: <20170110171733.GA15339@roeck-us.net>
-References: <20170106103817.11588-1-mail@alexanderkoch.net>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu
+ idle
+Date: Tue, 10 Jan 2017 18:22:28 +0100
+Message-ID: <20170110172228.lh5ahy4peuwmurr6@piout.net>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+ <20170106065947.30631-2-wenyou.yang@atmel.com>
+ <20170110161821.vp673jyfqx6s76pg@piout.net>
+ <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170106103817.11588-1-mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Koch <mail-y2PnNNZjvYd4VEKF+Mn3m16hYfS7NtTn@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Michael Hornung <mhornung.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@gmail.com>
+Cc: Wenyou Yang <wenyou.yang@atmel.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Wenyou Yang <wenyou.yang@microchip.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 11:38:13AM +0100, Alexander Koch wrote:
-> The ADC128D818 offers four different chip operation modes which vary in the
-> number and measurement types of the available input signals (see datasheet
-> sec. 8.4.1).
+On 10/01/2017 at 17:50:58 +0100, Jean-Jacques Hiblot wrote :
+> 2017-01-10 17:18 GMT+01:00 Alexandre Belloni
+> <alexandre.belloni@free-electrons.com>:
+> > I though a bit more about it, and I don't really like the new compatible
+> > string. I don't feel this should be necessary.
+> >
+> > What about the following:
+> >
+> > diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+> > index b4332b727e9c..0333aca63e44 100644
+> > --- a/arch/arm/mach-at91/pm.c
+> > +++ b/arch/arm/mach-at91/pm.c
+> > @@ -53,6 +53,7 @@ extern void at91_pinctrl_gpio_resume(void);
+> >  static struct {
+> >         unsigned long uhp_udp_mask;
+> >         int memctrl;
+> > +       bool has_l2_cache;
+> >  } at91_pm_data;
+> >
+> >  void __iomem *at91_ramc_base[2];
+> > @@ -267,6 +268,11 @@ static void at91_ddr_standby(void)
+> >         u32 lpr0, lpr1 = 0;
+> >         u32 saved_lpr0, saved_lpr1 = 0;
+> >
 > 
-> The current version of the driver only supports the default chip operation
-> mode (mode 0), providing seven analog values and a temperature reading.
-> 
-> This patch series adds support for operation modes 1-3, selectable through
-> the device tree attribute 'ti,mode':
-> 
->         adc1: adc128d818@1d {
->                 compatible = "ti,adc128d818";
->                 reg = <0x1d>;
->                 mode = <1>;
->         };
-> 
-> The changes are transparent as the driver defaults to keeping the currently
-> active operation mode if no mode is specified via device tree (which is
-> mode 0 on chip initialization).
-> 
-> 
-> Changes from v2:
->  - Omit device attribute refactoring (for checkpatch.pl), as requested by
->    maintainer
->  - Add vendor prefix 'ti,' for mode property in device tree
->  - Drop size indication for mode property in device tree
->  - Preserve chip operation mode if none specified in devicetree
->  - Fix missing '\n' in dev_err() calls
-> 
-> Changes from v1:
->  - Add bindings document as first patch
->  - Preserve logical atomicity of code changes
->  - Improve sysfs device node handling (use is_visible() instead of
->    duplicate attribute list)
->  - Add trivial code refactoring stage for checkpatch.pl to succeed
-> 
-> 
-> Alexander Koch (4):
->   devicetree: hwmon: Add bindings for ADC128D818
->   hwmon: adc128d818: Implement mode selection via dt
->   hwmon: adc128d818: Support operation modes 1-3
->   hwmon: adc128d818: Preserve operation mode
-> 
->  .../devicetree/bindings/hwmon/adc128d818.txt       |  39 ++++++
->  drivers/hwmon/adc128d818.c                         | 147 +++++++++++++++------
->  2 files changed, 149 insertions(+), 37 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adc128d818.txt
-> 
-Series applied to -next.
+> > +       if (at91_pm_data.has_l2_cache) {
+> > +               flush_cache_all();
+> what is the point of calling flush_cache_all() here ? Do we really
+> care that dirty data in L1 is written to DDR ? I may be missing
+> something but to me it's just extra latency.
 
-Thanks,
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree that this one is the main problem.
+
+> > +               outer_disable();
+> It seems to me that if there's no L2 cache, then outer_disable()  is a
+> no-op. It could be called unconditionally.
+
+It is not on sama5, it will jump to outer_disable which will at least
+save the context and restore it
+
+> > +       }
+> > +
+> >         if (at91_ramc_base[1]) {
+> >                 saved_lpr1 = at91_ramc_read(1, AT91_DDRSDRC_LPR);
+> >                 lpr1 = saved_lpr1 & ~AT91_DDRSDRC_LPCB;
+> > @@ -287,6 +293,9 @@ static void at91_ddr_standby(void)
+> >         at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr0);
+> >         if (at91_ramc_base[1])
+> >                 at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);
+> > +
+> > +       if (at91_pm_data.has_l2_cache)
+> > +               outer_resume();
+> 
+> same remark as for outer_disable()
+
+It is not either but this is a macro and I admit testing has_l2_cache is
+superfluous.
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
