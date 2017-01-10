@@ -1,48 +1,65 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Tue, 10 Jan 2017 11:10:23 -0800
-Message-ID: <84d21f6d-7d6b-dd05-98a1-739c1e4d8d58@gmail.com>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
- <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
- <CAHp75VeCKPy4B51P_N9Bp03zPUbRodKzitc-n16ZRKJWcEF4fA@mail.gmail.com>
- <7bfce806-7670-0bf3-bdf2-00aaf68b5b11@mentor.com>
- <CAHp75Vey4R8o+7h3DuBJ9FiciGSHfvRWjs_0d3ZWeTm+cB4WrA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] arm64: dts: exynos5433: add DECON_TV node
+Date: Tue, 10 Jan 2017 21:09:16 +0200
+Message-ID: <20170110190916.k3tek4zuvhggbuc6@kozik-lap>
+References: <CGME20170110082433eucas1p2f7cb7b0974987e2c8294509960468fd3@eucas1p2.samsung.com>
+ <1484036664-15951-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vey4R8o+7h3DuBJ9FiciGSHfvRWjs_0d3ZWeTm+cB4WrA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steve Longerbeam <steve_longerbeam@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484036664-15951-1-git-send-email-a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/04/2017 02:31 AM, Andy Shevchenko wrote:
+On Tue, Jan 10, 2017 at 09:24:22AM +0100, Andrzej Hajda wrote:
+> DECON_TV is 2nd display controller on Exynos5433, used in HDMI path
+> or 2nd DSI path.
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> 
+> Hi Krzysztof,
+> 
+> These patches are based on latest patches separating tm2 and tm2e and
+> touchscreen patches. I hope this is good base.
+> Thanks all for quick response/review.
+> 
+> Regards
+> Andrzej
+> 
+> v2:
+>   - replaced magic numbers with macros,
+>   - removed power domains,
+>   - removed 0x prefixes from node names
+> 
+> v3:
+>   - order nodes by address
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 43 ++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
 >
->>>> +               reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
->>>> +                                                    GPIOD_OUT_LOW);
->>> Shouldn't be _optional_exclusive?
->>> See this recent discussion https://patchwork.ozlabs.org/patch/706002/
->> There is no devm_gpiod_get_optional_exclusive(), probably you confuse
->> the function with devm_reset_control_get_optional_exclusive().
-> Perhaps it's time to add
-> drivers/reset/reset-gpio.c ?
 
-Yeah, looks like a GPIO based reset controller driver would need to be
-implemented in order to go this route. The max7310 nodes in
-imx6qdl-sabreauto.dtsi could then refer to that reset controller by the
-'resets' phandle.
+First, I applied your fix for unit addresses. Then I wanted to apply
+these... no, it does not apply.
 
-There are many many devices that would benefit from a GPIO reset
-controller, I count 143 nodes under arch/arm/boot/dts that specify a
-'reset-gpios' property.
+Okay, so maybe unit address confuses git-am (it is not that smart as
+cherry-pick etc) - let's try the other way. I applied these three
+patches, fixed that damned subject in each commit and I wanted to apply
+the fix for unit address. Nope. It won't apply.
 
-But I don't have the time to write such a driver. So I would propose just
-keeping the devm_gpiod_get_optional() call here. When such a gpio reset
-controller is written, the work can begin to convert all the gpio reset 
-users
-to make use of it.
+I do not know how you rebased your work.
 
-Steve
+As of now, the fix is applied. Please fix the subject and rebase.
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
