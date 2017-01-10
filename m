@@ -1,434 +1,113 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: [PATCH 2/2] iio: distance: srf08: add IIO driver for us ranger
-Date: Tue, 10 Jan 2017 16:28:04 +0100
-Message-ID: <20170110152804.GA29272@andreas>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
+Date: Tue, 10 Jan 2017 07:30:46 -0800
+Message-ID: <20170110153045.GS2630@atomide.com>
+References: <20161227172003.6517-1-tony@atomide.com>
+ <20161227172003.6517-2-tony@atomide.com>
+ <CAMuHMdVLbNXx23-wgLHcvktyHxWf6t75ggU3rM5A-DhtU9hn5w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ak-n176/SwNRljddJNmlsFzeA@public.gmane.org
+In-Reply-To: <CAMuHMdVLbNXx23-wgLHcvktyHxWf6t75ggU3rM5A-DhtU9hn5w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the IIO driver for devantech srf08 ultrasonic ranger which can be
-used to measure the distances to an object.
+* Geert Uytterhoeven <geert@linux-m68k.org> [170110 06:09]:
+> Hi Tony,
+> 
+> On Tue, Dec 27, 2016 at 6:19 PM, Tony Lindgren <tony@atomide.com> wrote:
+> > Having the pin control framework call pin controller functions
+> > before it's probe has finished is not nice as the pin controller
+> > device driver does not yet have struct pinctrl_dev handle.
+> >
+> > Let's fix this issue by adding deferred work for late init. This is
+> > needed to be able to add pinctrl generic helper functions that expect
+> > to know struct pinctrl_dev handle. Note that we now need to call
+> > create_pinctrl() directly as we don't want to add the pin controller
+> > to the list of controllers until the hogs are claimed. We also need
+> > to pass the pinctrl_dev to the device tree parser functions as they
+> > otherwise won't find the right controller at this point.
+> >
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> 
+> I believe this patch causes a regression on r8a7740/armadillo, where the
+> pin controller is also a GPIO controller, and lcd0 needs a hog
+> (cfr. arch/arm/boot/dts/r8a7740-armadillo800eva.dts):
+> 
+> -GPIO line 176 (lcd0) hogged as output/high
+> -sh-pfc e6050000.pfc: r8a7740_pfc handling gpio 0 -> 211
+> +gpiochip_add_data: GPIOs 0..211 (r8a7740_pfc) failed to register
+> +sh-pfc e6050000.pfc: failed to init GPIO chip, ignoring...
+>  sh-pfc e6050000.pfc: r8a7740_pfc support registered
+> 
+> Hence all drivers using GPIOs fail to initialize because their GPIOs never
+> become available.
+> 
+> Adding debug prints to the failure paths shows that the call to
+> of_pinctrl_get() in of_gpiochip_add_pin_range() fails with -EPROBE_DEFER.
+> Adding a debug print to the top of gpiochip_add_data() makes the problem go
+> away, presumably because it introduces a delay that allows the delayed work
+> to kick in...
 
-The sensor supports I2C with some registers.
+OK. What if we added also an optional pinctrl function that the pin
+controller driver could call to initialize hogs? Then the pin controller
+driver could call it during or after probe as needed. That is after
+there's a valid struct pinctrl_dev handle.
 
-Supported Features include:
-- read the distance in ranging mode in centimeters
-- output of the driver is directly the read value
-- together with the scale the driver delivers the distance in meters
-- only the first echo of the nearest object is delivered
-- set max gain register; userspace enters analogue value
-- set range registers; userspace enters range in millimeters in 43 mm steps
+> Jon's fix ("pinctrl: core: Fix panic when pinctrl devices with hogs are
+> unregistered") doesn't help, as it affects unregistration only.
+> 
+> > --- a/drivers/pinctrl/core.c
+> > +++ b/drivers/pinctrl/core.c
+> 
+> > @@ -1800,32 +1847,10 @@ struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+> >                 goto out_err;
+> >         }
+> >
+> > -       mutex_lock(&pinctrldev_list_mutex);
+> > -       list_add_tail(&pctldev->node, &pinctrldev_list);
+> > -       mutex_unlock(&pinctrldev_list_mutex);
+> > -
+> > -       pctldev->p = pinctrl_get(pctldev->dev);
+> > -
+> > -       if (!IS_ERR(pctldev->p)) {
+> > -               pctldev->hog_default =
+> > -                       pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
+> > -               if (IS_ERR(pctldev->hog_default)) {
+> > -                       dev_dbg(dev, "failed to lookup the default state\n");
+> > -               } else {
+> > -                       if (pinctrl_select_state(pctldev->p,
+> > -                                               pctldev->hog_default))
+> > -                               dev_err(dev,
+> > -                                       "failed to select default state\n");
+> > -               }
+> > -
+> > -               pctldev->hog_sleep =
+> > -                       pinctrl_lookup_state(pctldev->p,
+> > -                                                   PINCTRL_STATE_SLEEP);
+> > -               if (IS_ERR(pctldev->hog_sleep))
+> > -                       dev_dbg(dev, "failed to lookup the sleep state\n");
+> > -       }
+> > -
+> > -       pinctrl_init_device_debugfs(pctldev);
+> > +       if (pinctrl_dt_has_hogs(pctldev))
+> 
+> Changing the above line to "if (0 && pinctrl_dt_has_hogs(pctldev))"
+> fixes the issue for me.
+> 
+> > +               schedule_delayed_work(&pctldev->late_init, 0);
+> > +       else
+> > +               pinctrl_late_init(&pctldev->late_init.work);
+> >
+> >         return pctldev;
 
-Features not supported by this driver:
-- ranging mode in inches or in microseconds
-- ANN mode
-- change I2C address through this driver
-- light sensor
+We could also pass some flag if should always call pinctrl_late_init()
+directly. But that does not remove the problem of struct pinctrl_dev handle
+being uninitialized when the pin controller driver functionas are called.
 
-The driver was added in the directory "proximity" of the iio subsystem
-in absence of another directory named "distance".
-There is also a new submenu "distance"
+Regards,
 
-Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
----
- drivers/iio/proximity/Kconfig  |  15 ++
- drivers/iio/proximity/Makefile |   1 +
- drivers/iio/proximity/srf08.c  | 345 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 361 insertions(+)
- create mode 100644 drivers/iio/proximity/srf08.c
-
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index ef4c73db5b53..7b10a137702b 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -46,3 +46,18 @@ config SX9500
- 	  module will be called sx9500.
- 
- endmenu
-+
-+menu "Distance sensors"
-+
-+config SRF08
-+	tristate "Devantech SRF08 ultrasonic ranger sensor"
-+	depends on I2C
-+	help
-+	  Say Y here to build a driver for Devantech SRF08 ultrasonic
-+	  ranger sensor. This driver can be used to measure the distance
-+	  of objects.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called srf08.
-+
-+endmenu
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 9aadd9a8ee99..14d8fe4e5cae 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -6,3 +6,4 @@
- obj-$(CONFIG_AS3935)		+= as3935.o
- obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-+obj-$(CONFIG_SRF08)		+= srf08.o
-diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
-new file mode 100644
-index 000000000000..a888a230b419
---- /dev/null
-+++ b/drivers/iio/proximity/srf08.c
-@@ -0,0 +1,345 @@
-+/*
-+ * srf08.c - Support for Devantech SRF08 ultrasonic ranger
-+ *
-+ * Copyright (c) 2016 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License.  See the file COPYING in the main
-+ * directory of this archive for more details.
-+ *
-+ * For details about the device see:
-+ * http://www.robot-electronics.co.uk/htm/srf08tech.html
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/bitops.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+/* registers of SRF08 device */
-+#define SRF08_WRITE_COMMAND	0x00	/* Command Register */
-+#define SRF08_WRITE_MAX_GAIN	0x01	/* Max Gain Register: 0 .. 31 */
-+#define SRF08_WRITE_RANGE	0x02	/* Range Register: 0 .. 255 */
-+#define SRF08_READ_SW_REVISION	0x00	/* Software Revision */
-+#define SRF08_READ_LIGHT	0x01	/* Light Sensor during last echo */
-+#define SRF08_READ_ECHO_1_HIGH	0x02	/* range of first echo received */
-+#define SRF08_READ_ECHO_1_LOW	0x03	/* range of first echo received */
-+
-+#define SRF08_CMD_RANGING_CM	0x51	/* Ranging Mode - Result in cm */
-+
-+struct srf08_data {
-+	struct i2c_client	*client;
-+	int			gain;			/* max gain */
-+	int			range_mm;		/* range in mm */
-+	struct mutex		lock;
-+};
-+
-+static const int srf08_gain[] = {
-+	 94,  97, 100, 103, 107, 110, 114, 118,
-+	123, 128, 133, 139, 145, 152, 159, 168,
-+	177, 187, 199, 212, 227, 245, 265, 288,
-+	317, 352, 395, 450, 524, 626, 777, 1025 };
-+
-+static int srf08_read_ranging(struct srf08_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+	char cmd[2];
-+	int ret, i;
-+
-+	mutex_lock(&data->lock);
-+
-+	ret = i2c_smbus_write_byte_data(data->client,
-+			SRF08_WRITE_COMMAND, SRF08_CMD_RANGING_CM);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "write command - err: %d\n", ret);
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	}
-+
-+	/*
-+	 * normally after 65 ms the device should have the read value
-+	 * we round it up to 100 ms
-+	 */
-+	for (i = 0; i < 5; i++) {
-+
-+		ret = i2c_smbus_read_byte_data(data->client,
-+						SRF08_READ_SW_REVISION);
-+
-+		/* check if a valid version number is read */
-+		if ((ret < 255) && (ret > 0))
-+			break;
-+		msleep(20);
-+	}
-+
-+	if ((ret >= 255) || (ret <= 0)) {
-+		dev_err(&client->dev, "device not ready\n");
-+		mutex_unlock(&data->lock);
-+		return -EIO;
-+	}
-+
-+	memset(cmd, 0, sizeof(cmd));
-+
-+	for (i = 0; i < 2; i++) {
-+		ret = i2c_smbus_read_byte_data(data->client,
-+						SRF08_READ_ECHO_1_HIGH + i);
-+		cmd[i] = ret;
-+	}
-+
-+	mutex_unlock(&data->lock);
-+
-+	return (cmd[0] << 8 | cmd[1]);
-+}
-+
-+static int srf08_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *channel, int *val,
-+			    int *val2, long mask)
-+{
-+	struct srf08_data *data = iio_priv(indio_dev);
-+	s32 ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (channel->type == IIO_DISTANCE) {
-+			ret = srf08_read_ranging(data);
-+			*val = ret;
-+		} else {
-+			break;
-+		}
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		if (channel->type == IIO_DISTANCE) {
-+			/* 1 LSB is 1 cm */
-+			*val = 0;
-+			*val2 = 10000;
-+		} else {
-+			break;
-+		}
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static ssize_t srf08_show_range_mm_available(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	int i, len = 0;
-+
-+	for (i = 0; i < 256; i++)
-+		len += sprintf(buf + len, "%d ", (i + 1) * 43);
-+
-+	len += sprintf(buf + len, "\n");
-+
-+	return len;
-+}
-+
-+static IIO_DEVICE_ATTR(range_mm_available, S_IRUGO,
-+				srf08_show_range_mm_available, NULL, 0);
-+
-+static ssize_t srf08_show_range_mm(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct srf08_data *data = iio_priv(indio_dev);
-+	int len;
-+
-+	len = sprintf(buf, "%d\n", data->range_mm);
-+
-+	return len;
-+}
-+
-+static ssize_t srf08_write_range_mm(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t len)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct srf08_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	int ret, val;
-+	int regval = -1;
-+	int mod;
-+
-+	ret = kstrtoint(buf, 10, &val);
-+	if (ret)
-+		return ret;
-+
-+	regval = val / 43 - 1;
-+	mod = val % 43;
-+
-+	if (mod || (regval < 0) || (regval > 255))
-+		return -EINVAL;
-+
-+	mutex_lock(&data->lock);
-+
-+	ret = i2c_smbus_write_byte_data(data->client,
-+						SRF08_WRITE_RANGE, regval);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "write_range - err: %d\n", ret);
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	}
-+
-+	data->range_mm = val;
-+
-+	mutex_unlock(&data->lock);
-+
-+	return len;
-+}
-+
-+static IIO_DEVICE_ATTR(range_mm, S_IRUGO | S_IWUSR,
-+			srf08_show_range_mm, srf08_write_range_mm, 0);
-+
-+static ssize_t srf08_show_gain_available(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	int i, len = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(srf08_gain); i++)
-+		len += sprintf(buf + len, "%d ", srf08_gain[i]);
-+
-+	len += sprintf(buf + len, "\n");
-+
-+	return len;
-+}
-+
-+static IIO_DEVICE_ATTR(gain_available, S_IRUGO,
-+				srf08_show_gain_available, NULL, 0);
-+
-+static ssize_t srf08_show_gain(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct srf08_data *data = iio_priv(indio_dev);
-+	int len;
-+
-+	len = sprintf(buf, "%d\n", data->gain);
-+
-+	return len;
-+}
-+
-+static ssize_t srf08_write_gain(struct device *dev,
-+						struct device_attribute *attr,
-+						const char *buf, size_t len)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct srf08_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	int ret, val, i;
-+	int regval = -1;
-+
-+	ret = kstrtoint(buf, 10, &val);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(srf08_gain); i++)
-+		if (val == srf08_gain[i])
-+			regval = i;
-+
-+	if (regval == -1)
-+		return -EINVAL;
-+
-+	mutex_lock(&data->lock);
-+
-+	ret = i2c_smbus_write_byte_data(data->client,
-+						SRF08_WRITE_MAX_GAIN, regval);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "write_gain - err: %d\n", ret);
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	}
-+
-+	data->gain = val;
-+
-+	mutex_unlock(&data->lock);
-+
-+	return len;
-+}
-+
-+static IIO_DEVICE_ATTR(gain, S_IRUGO | S_IWUSR,
-+					srf08_show_gain, srf08_write_gain, 0);
-+
-+static struct attribute *srf08_attributes[] = {
-+	&iio_dev_attr_range_mm.dev_attr.attr,
-+	&iio_dev_attr_range_mm_available.dev_attr.attr,
-+	&iio_dev_attr_gain.dev_attr.attr,
-+	&iio_dev_attr_gain_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group srf08_attribute_group = {
-+	.attrs = srf08_attributes,
-+};
-+
-+static const struct iio_chan_spec srf08_channels[] = {
-+	{
-+		.type = IIO_DISTANCE,
-+		.info_mask_separate =
-+				BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static const struct iio_info srf08_info = {
-+	.read_raw = srf08_read_raw,
-+	.attrs = &srf08_attribute_group,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int srf08_probe(struct i2c_client *client,
-+					 const struct i2c_device_id *id)
-+{
-+	struct iio_dev *indio_dev;
-+	struct srf08_data *data;
-+
-+	if (!i2c_check_functionality(client->adapter,
-+					I2C_FUNC_SMBUS_READ_BYTE_DATA |
-+					I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
-+		return -ENODEV;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+
-+	/* set default values of device */
-+	data->gain = 1025;
-+	data->range_mm = 11008;
-+
-+	indio_dev->name = dev_name(&client->dev);
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->info = &srf08_info;
-+	indio_dev->channels = srf08_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(srf08_channels);
-+
-+	mutex_init(&data->lock);
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static const struct i2c_device_id srf08_id[] = {
-+	{ "srf08", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, srf08_id);
-+
-+static struct i2c_driver srf08_driver = {
-+	.driver = {
-+		.name	= "srf08",
-+	},
-+	.probe = srf08_probe,
-+	.id_table = srf08_id,
-+};
-+module_i2c_driver(srf08_driver);
-+
-+MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
-+MODULE_DESCRIPTION("Devantech SRF08 ultrasonic ranger driver");
-+MODULE_LICENSE("GPL");
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
