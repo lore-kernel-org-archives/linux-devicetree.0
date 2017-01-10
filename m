@@ -1,74 +1,154 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v5 2/2] ARM: sama5_defconfig: add support for the Axentia
- TSE-850 board
-Date: Tue, 10 Jan 2017 10:10:34 +0100
-Message-ID: <10e75ffd-d68b-97f2-2618-c5e92713f5b3@atmel.com>
-References: <1484035732-31635-1-git-send-email-peda@axentia.se>
- <1484035732-31635-3-git-send-email-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484035732-31635-3-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v5 2/5] powernv:stop: Uniformly rename power9 to arch300
+Date: Tue, 10 Jan 2017 14:37:01 +0530
+Message-ID: <1484039224-5630-3-git-send-email-ego@linux.vnet.ibm.com>
+References: <1484039224-5630-1-git-send-email-ego@linux.vnet.ibm.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1484039224-5630-1-git-send-email-ego@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Le 10/01/2017 à 09:08, Peter Rosin a écrit :
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-I know that most of the entries in this configuration file are direct
-additions to the kernel but what about moving some of your additions to
-modules?
+Balbir pointed out that in idle_book3s.S and powernv/idle.c some
+functions and variables had power9 in their names while some others
+had arch300.
 
-Regards,
+This patch uniformly renames all instances of "power9" in the
+variables/function/comments occuring in these files to "arch300" in
+order to make them consistent.
 
-> ---
->  arch/arm/configs/sama5_defconfig | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-> index aca8625b6fc9..bf5b3a73e38c 100644
-> --- a/arch/arm/configs/sama5_defconfig
-> +++ b/arch/arm/configs/sama5_defconfig
-> @@ -131,7 +131,7 @@ CONFIG_GPIO_SYSFS=y
->  CONFIG_POWER_SUPPLY=y
->  CONFIG_BATTERY_ACT8945A=y
->  CONFIG_POWER_RESET=y
-> -# CONFIG_HWMON is not set
-> +CONFIG_SENSORS_JC42=y
->  CONFIG_WATCHDOG=y
->  CONFIG_AT91SAM9X_WATCHDOG=y
->  CONFIG_SAMA5D4_WATCHDOG=y
-> @@ -142,6 +142,7 @@ CONFIG_REGULATOR=y
->  CONFIG_REGULATOR_FIXED_VOLTAGE=y
->  CONFIG_REGULATOR_ACT8865=y
->  CONFIG_REGULATOR_ACT8945A=y
-> +CONFIG_REGULATOR_PWM=y
->  CONFIG_MEDIA_SUPPORT=y
->  CONFIG_MEDIA_CAMERA_SUPPORT=y
->  CONFIG_V4L_PLATFORM_DRIVERS=y
-> @@ -164,6 +165,7 @@ CONFIG_SND_ATMEL_SOC=y
->  CONFIG_SND_ATMEL_SOC_WM8904=y
->  # CONFIG_HID_GENERIC is not set
->  CONFIG_SND_ATMEL_SOC_PDMIC=y
-> +CONFIG_SND_ATMEL_SOC_TSE850_PCM5142=y
->  CONFIG_USB=y
->  CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
->  CONFIG_USB_EHCI_HCD=y
-> @@ -199,6 +201,9 @@ CONFIG_AT_XDMAC=y
->  CONFIG_IIO=y
->  CONFIG_AT91_ADC=y
->  CONFIG_AT91_SAMA5D2_ADC=y
-> +CONFIG_ENVELOPE_DETECTOR=y
-> +CONFIG_DPOT_DAC=y
-> +CONFIG_MCP4531=y
->  CONFIG_PWM=y
->  CONFIG_PWM_ATMEL=y
->  CONFIG_PWM_ATMEL_HLCDC_PWM=y
-> 
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+---
+New patch in v5
 
+ arch/powerpc/include/asm/processor.h  |  2 +-
+ arch/powerpc/kernel/idle_book3s.S     | 13 +++++++------
+ arch/powerpc/platforms/powernv/idle.c |  6 +++---
+ arch/powerpc/platforms/powernv/smp.c  |  2 +-
+ drivers/cpuidle/cpuidle-powernv.c     |  2 +-
+ 5 files changed, 13 insertions(+), 12 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index c07c31b..4b47308 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -458,7 +458,7 @@ static inline unsigned long get_clean_sp(unsigned long sp, int is_32)
+ extern unsigned long power7_nap(int check_irq);
+ extern unsigned long power7_sleep(void);
+ extern unsigned long power7_winkle(void);
+-extern unsigned long power9_idle_stop(unsigned long stop_level);
++extern unsigned long arch300_idle_stop(unsigned long stop_level);
+ 
+ extern void flush_instruction_cache(void);
+ extern void hard_reset_now(void);
+diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
+index be90e2f..7f6657f 100644
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -106,8 +106,9 @@ core_idle_lock_held:
+ 
+ /*
+  * Pass requested state in r3:
+- *	r3 - PNV_THREAD_NAP/SLEEP/WINKLE in POWER8
+- *	   - Requested STOP state in POWER9
++ *	r3 - PNV_THREAD_NAP/SLEEP/WINKLE on ISA 2.07 or less
++	     (POWER7,POWER8)
++ *	   - Requested STOP state on ISA 3.0 CPUs
+  *
+  * To check IRQ_HAPPENED in r4
+  * 	0 - don't check
+@@ -357,7 +358,7 @@ ALT_FTR_SECTION_END_NESTED_IFSET(CPU_FTR_ARCH_207S, 66);		\
+ /*
+  * r3 - requested stop state
+  */
+-_GLOBAL(power9_idle_stop)
++_GLOBAL(arch300_idle_stop)
+ 	LOAD_REG_IMMEDIATE(r4, PSSCR_HV_TEMPLATE)
+ 	or	r4,r4,r3
+ 	mtspr	SPRN_PSSCR, r4
+@@ -377,7 +378,7 @@ _GLOBAL(pnv_restore_hyp_resource)
+ BEGIN_FTR_SECTION
+ 	ld	r2,PACATOC(r13);
+ 	/*
+-	 * POWER ISA 3. Use PSSCR to determine if we
++	 * POWER ISA 3.0. Use PSSCR to determine if we
+ 	 * are waking up from deep idle state
+ 	 */
+ 	LOAD_REG_ADDRBASE(r5,pnv_first_deep_stop_state)
+@@ -429,8 +430,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
+ /*
+  * Called if waking up from idle state which can cause either partial or
+  * complete hyp state loss.
+- * In POWER8, called if waking up from fastsleep or winkle
+- * In POWER9, called if waking up from stop state >= pnv_first_deep_stop_state
++ * In ISA 2.07 (POWER8),called if waking up from fastsleep or winkle
++ * In ISA 3.0, called if waking up from stop state >= pnv_first_deep_stop_state
+  *
+  * r13 - PACA
+  * cr3 - gt if waking up with partial/complete hypervisor state loss
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 479c256..c3a2fac 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -241,10 +241,10 @@ static DEVICE_ATTR(fastsleep_workaround_applyonce, 0600,
+ /*
+  * Used for ppc_md.power_save which needs a function with no parameters
+  */
+-static void power9_idle(void)
++static void arch300_idle(void)
+ {
+ 	/* Requesting stop state 0 */
+-	power9_idle_stop(0);
++	arch300_idle_stop(0);
+ }
+ /*
+  * First deep stop state. Used to figure out when to save/restore
+@@ -415,7 +415,7 @@ static int __init pnv_init_idle_states(void)
+ 	if (supported_cpuidle_states & OPAL_PM_NAP_ENABLED)
+ 		ppc_md.power_save = power7_idle;
+ 	else if (supported_cpuidle_states & OPAL_PM_STOP_INST_FAST)
+-		ppc_md.power_save = power9_idle;
++		ppc_md.power_save = arch300_idle;
+ 
+ out:
+ 	return 0;
+diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+index c789258..c931bb2 100644
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -183,7 +183,7 @@ static void pnv_smp_cpu_kill_self(void)
+ 		ppc64_runlatch_off();
+ 
+ 		if (cpu_has_feature(CPU_FTR_ARCH_300))
+-			srr1 = power9_idle_stop(pnv_deepest_stop_state);
++			srr1 = arch300_idle_stop(pnv_deepest_stop_state);
+ 		else if (idle_states & OPAL_PM_WINKLE_ENABLED)
+ 			srr1 = power7_winkle();
+ 		else if ((idle_states & OPAL_PM_SLEEP_ENABLED) ||
+diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
+index 7fe442c..a7f6528 100644
+--- a/drivers/cpuidle/cpuidle-powernv.c
++++ b/drivers/cpuidle/cpuidle-powernv.c
+@@ -102,7 +102,7 @@ static int stop_loop(struct cpuidle_device *dev,
+ 		     int index)
+ {
+ 	ppc64_runlatch_off();
+-	power9_idle_stop(stop_psscr_table[index]);
++	arch300_idle_stop(stop_psscr_table[index]);
+ 	ppc64_runlatch_on();
+ 	return index;
+ }
 -- 
-Nicolas Ferre
+1.9.4
