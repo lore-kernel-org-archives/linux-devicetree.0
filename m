@@ -1,65 +1,73 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 2/2] arm64: cacheinfo: add support to override cache levels via device tree
-Date: Tue, 10 Jan 2017 11:41:19 +0000
-Message-ID: <1484048479-19767-2-git-send-email-sudeep.holla@arm.com>
-References: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH 1/2] of: base: add support to get the number of cache levels
+Date: Tue, 10 Jan 2017 11:41:18 +0000
+Message-ID: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
 Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The cache hierarchy can be identified through Cache Level ID(CLIDR)
-architected system register. However in some cases it will provide
-only the number of cache levels that are integrated into the processor
-itself. In other words, it can't provide any information about the
-caches that are external and/or transparent.
+It is useful to have helper function just to get the number of cache
+levels for a given logical cpu. This patch adds the support for the
+same.
 
-Some platforms require to export the information about all such external
-caches to the userspace applications via the sysfs interface.
+It will be used on ARM64 platform where the device tree provides the
+information for the additional non-architected/transparent/external
+last level caches that are not integrated with the processors.
 
-This patch adds support to override the cache levels using device tree
-to take such external non-architected caches into account.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm64/kernel/cacheinfo.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/of/base.c  | 22 ++++++++++++++++++++++
+ include/linux/of.h |  1 +
+ 2 files changed, 23 insertions(+)
 
-diff --git a/arch/arm64/kernel/cacheinfo.c b/arch/arm64/kernel/cacheinfo.c
-index 9617301f76b5..fe7738a8c5b1 100644
---- a/arch/arm64/kernel/cacheinfo.c
-+++ b/arch/arm64/kernel/cacheinfo.c
-@@ -84,7 +84,7 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4bea3c797d6..f7a2b47b3c77 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2268,6 +2268,28 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ }
  
- static int __init_cache_level(unsigned int cpu)
- {
--	unsigned int ctype, level, leaves;
-+	unsigned int ctype, level, leaves, of_level;
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
- 
- 	for (level = 1, leaves = 0; level <= MAX_CACHE_LEVEL; level++) {
-@@ -97,6 +97,17 @@ static int __init_cache_level(unsigned int cpu)
- 		leaves += (ctype == CACHE_TYPE_SEPARATE) ? 2 : 1;
- 	}
- 
-+	of_level = of_count_cache_levels(cpu);
-+	if (level < of_level) {
-+		/*
-+		 * some external caches not specified in CLIDR_EL1
-+		 * the information may be available in the device tree
-+		 * only unified external caches are considered here
-+		 */
-+		leaves += (of_level - level);
-+		level = of_level;
+ /**
++ * of_count_cache_levels - Find the total number of cache levels for the
++ *			   given logical cpu
++ *
++ * @cpu: cpu number(logical index) for which cache levels is being counted
++ *
++ * Returns the total number of cache levels for the given logical cpu
++ */
++int of_count_cache_levels(unsigned int cpu)
++{
++	int level = 0;
++	struct device_node *np = of_cpu_device_node_get(cpu);
++
++	while (np) {
++		level++;
++		of_node_put(np);
++		np = of_find_next_cache_node(np);
 +	}
 +
- 	this_cpu_ci->num_levels = level;
- 	this_cpu_ci->num_leaves = leaves;
- 	return 0;
++	return level;
++}
++
++/**
+  * of_graph_parse_endpoint() - parse common endpoint node properties
+  * @node: pointer to endpoint device_node
+  * @endpoint: pointer to the OF endpoint data structure
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d72f01009297..c8597ae71ff3 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -280,6 +280,7 @@ extern struct device_node *of_get_child_by_name(const struct device_node *node,
+ 
+ /* cache lookup */
+ extern struct device_node *of_find_next_cache_node(const struct device_node *);
++extern int of_count_cache_levels(unsigned int cpu);
+ extern struct device_node *of_find_node_with_property(
+ 	struct device_node *from, const char *prop_name);
+ 
 -- 
 2.7.4
