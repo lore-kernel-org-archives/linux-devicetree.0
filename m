@@ -1,91 +1,155 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 0/4] ARM: dts: mt7623: Add initial Geek Force support
-Date: Tue, 10 Jan 2017 10:48:47 +0100
-Message-ID: <d6bd3783-d124-9871-d3b4-93e366517895@suse.de>
-References: <20170108133100.10428-1-afaerber@suse.de>
- <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ARM: dts: at91: add devicetree for the Axentia
+ TSE-850
+Date: Tue, 10 Jan 2017 10:52:56 +0100
+Message-ID: <b686fa42-bbfb-dec2-460f-ef00869bc12e@axentia.se>
+References: <1484035732-31635-1-git-send-email-peda@axentia.se>
+ <1484035732-31635-2-git-send-email-peda@axentia.se>
+ <20170110092928.hwd4l4k3eyagepco@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <john@phrozen.org>, linux-mediatek@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Paul Lai <paul@asiarf.com>, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170110092928.hwd4l4k3eyagepco-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am 10.01.2017 um 08:00 schrieb John Crispin:
-> On 08/01/2017 14:30, Andreas Färber wrote:
->>
->> Andreas Färber (4):
->>   Documentation: devicetree: Add vendor prefix for AsiaRF
->>   Documentation: devicetree: arm: mediatek: Add Geek Force board
->>   ARM: dts: mt7623: Add Geek Force config
->>   MAINTAINERS: Extend ARM/Mediatek SoC support section
->>
-> 
+On 2017-01-10 10:29, Alexandre Belloni wrote:
 > Hi,
 > 
-> i need to NAK this series. the asiarf board is nothing more than the
-> official MTK EVB with AsiaRF written on it. this board is already
-> supported by linux (arch/arm/boot/dts/mt7623-evb.dts) please extend the
-> EVB dts file nstead of adding a duplicate and letting the original bitrot.
+> This needs a commit message, please add one.
 
-Well, I disagree.
+There's not all that much to say, but ok, I'll add something.
 
-First of all I'm not letting "the original" bitrot, because I have
-nothing to do with that .dts! If anyone is to blame for letting it
-bitrot since February 2016, pick your own nose:
+> On 10/01/2017 at 09:08:51 +0100, Peter Rosin wrote :
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/axentia.txt |  19 ++
+>>  MAINTAINERS                                       |   8 +
+>>  arch/arm/boot/dts/Makefile                        |   1 +
+>>  arch/arm/boot/dts/at91-linea.dtsi                 |  53 +++++
+>>  arch/arm/boot/dts/at91-tse850-3.dts               | 274 ++++++++++++++++++++++
+>>  5 files changed, 355 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/axentia.txt
+>>  create mode 100644 arch/arm/boot/dts/at91-linea.dtsi
+>>  create mode 100644 arch/arm/boot/dts/at91-tse850-3.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/axentia.txt b/Documentation/devicetree/bindings/arm/axentia.txt
+>> new file mode 100644
+>> index 000000000000..ea3fb96ae465
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/axentia.txt
+>> @@ -0,0 +1,19 @@
+>> +Device tree bindings for Axentia ARM devices
+>> +============================================
+>> +
+>> +Linea CPU module
+>> +----------------
+>> +
+>> +Required root node properties:
+>> +compatible = "axentia,linea",
+>> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+>> +and following the rules from atmel-at91.txt for a sama5d31 SoC.
+>> +
+>> +
+>> +TSE-850 v3 board
+>> +----------------
+>> +
+>> +Required root node properties:
+>> +compatible = "axentia,tse850v3", "axentia,linea",
+>> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+>> +and following the rules from above for the axentia,linea CPU module.
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 97b78cc5aa51..5c2ea6e9cd7f 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2346,6 +2346,14 @@ S:	Maintained
+>>  F:	Documentation/devicetree/bindings/sound/axentia,*
+>>  F:	sound/soc/atmel/tse850-pcm5142.c
+>>  
+>> +AXENTIA ARM DEVICES
+>> +M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/arm/axentia.txt
+>> +F:	arch/arm/boot/dts/at91-linea.dtsi
+>> +F:	arch/arm/boot/dts/at91-tse850-3.dts
+>> +
+> 
+> I don't think you need to add yourself to MAINTAINERS for two DTs if
+> that is just to keep checkpatch happy, don't bother.
 
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/log/arch/arm/boot/dts/mt7623-evb.dts
+There's also the benefit of the increased chances of me getting
+notified of changes. I don't mind...
 
-Second, I have no Mediatek documentation or even picture to identify any
-similarities between my board and that Mediatek EVB, so no, I can't hack
-on the -evb.dts file. I wrote my .dts from scratch, not even having
-access to /proc/device-tree on its 3.10 kernel for comparison.
+>>  AZ6007 DVB DRIVERV
+>>  M:	Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+>>  M:	Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 9a7375c388a8..7632849866de 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -48,6 +48,7 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
+>>  	at91-kizbox2.dtb \
+>>  	at91-sama5d2_xplained.dtb \
+>>  	at91-sama5d3_xplained.dtb \
+>> +	at91-tse850-3.dtb \
+>>  	sama5d31ek.dtb \
+>>  	sama5d33ek.dtb \
+>>  	sama5d34ek.dtb \
+>> diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
+>> new file mode 100644
+>> index 000000000000..646feb0daa81
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/at91-linea.dtsi
+>> @@ -0,0 +1,53 @@
+>> +/*
+>> + * at91-linea.dtsi - Device Tree Include file for the Axentia Linea Module.
+>> + *
+>> + * Copyright (C) 2017 Axentia Technologies AB
+>> + *
+>> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>> + *
+>> + * Licensed under GPLv2 or later.
+>> + */
+>> +
+>> +#include "sama5d31.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "axentia,linea",
+>> +		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+>> +
+>> +	memory {
+>> +		reg = <0x20000000 0x4000000>;
+>> +	};
+>> +};
+>> +
+>> +&slow_xtal {
+>> +	clock-frequency = <32768>;
+>> +};
+>> +
+>> +&main_xtal {
+>> +	clock-frequency = <12000000>;
+>> +};
+>> +
+>> +&main {
+>> +	clock-frequency = <12000000>;
+>> +};
+>> +
+> 
+> I don't think this is needed
+> 
+> 
 
-Third, by your argumentation we shouldn't be adding, e.g., Odroid .dts
-files either because they were based on a Samsung SMDK, or .dts files
-for Amlogic TV boxes because they're almost identical to reference
-designs, etc.
-Users need to know which .dts file to choose, so having a sane .dts
-filename is warranted. Depending on how similar they are, one could
-either #include the -evb.dts or factor out a shared .dtsi, but that
-takes us back to the previous point of hardly anyone having access to
-EVB information to identify such a subset. Therefore duplicating trivial
-nodes is the method of choice for all practical purposes - mt7623.dtsi
-is getting reused just fine.
+"this"? The &main frequency, or all of them?
 
-Comparing our two .dts files, mine has two more UART nodes enabled, the
-U-Boot bootloader's baudrate set to actually get serial output, a
-different board compatible string for identification, and I chose the
-new dual-licensing header that is being requested for new DT files.
+Cheers,
+peda
 
-For lack of schematics I figured out UART1 by testing - continuity tests
-for GND, console=ttySx,115200n8 and trial-and-error for RX/TX. Obviously
-I can't do that for a board I don't have access to.
-UART2 and UART0 pins were clear, but only UART2 was obvious from ttyMT2.
-
-Do you actually have access to a Geek Force board yourself, or what are
-you basing your claims on? Mine looks different from the Indiegogo
-picture and thus has different identification from that on
-https://wikidevi.com/wiki/AsiaRF_WS2977 (WS3301, MT7623N RFB_V10).
-
-If you confirm the EVB's baudrate I can happily send that part your way.
-I've seen 921600 on the Helio X20 96board for instance.
-
-Also, none of what you've said justifies NAK'ing patch 4/4, which
-applies to any mt7* and arm64 .dts, including yours.
-
-While we're at it, I noticed that mainline has a "mediatek,mt7623-eth"
-network driver but no corresponding .dtsi node. Talk about bitrot...
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
