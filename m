@@ -1,159 +1,222 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
-Date: Tue, 10 Jan 2017 14:26:13 +0800
-Message-ID: <d2b5f8fe-f9ce-bf9b-b5d8-facc10936290@electromag.com.au>
-References: <1483606546-13629-1-git-send-email-preid@electromag.com.au>
- <alpine.DEB.2.02.1701051004320.16779@pmeerw.net>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
+ stores scenario in vdma
+Date: Tue, 10 Jan 2017 11:56:20 +0530
+Message-ID: <20170110062620.GZ3573@localhost>
+References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
+ <1483771530-8545-3-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1701051004320.16779-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483771530-8545-3-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-G'day Peter,
+On Sat, Jan 07, 2017 at 12:15:29PM +0530, Kedareswara rao Appana wrote:
+> When VDMA is configured for more than one frame in the h/w
+> for example h/w is configured for n number of frames and user
+> Submits n number of frames and triggered the DMA using issue_pending API.
 
-Thanks for the review.
+title case in middle if sentence, no commas, can you make it easier to read
+please..
 
-On 5/01/2017 17:21, Peter Meerwald-Stadler wrote:
-<snip>
->> +
->> +#define TLC4541_V_CHAN(index, bits) {                                 \
->> +		.type = IIO_VOLTAGE,                                  \
->> +		.indexed = 1,                                         \
->
-> no need if there is just one channel
->
->> +		.channel = index,                                     \
->> +		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
->> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
->> +		.address = index,                                     \
->
-> .address not needed
->
->> +		.scan_index = index,                                  \
->> +		.scan_type = {                                        \
->> +			.sign = 'u',                                  \
->> +			.realbits = (bits),                           \
->> +			.storagebits = 16,                            \
->> +			.endianness = IIO_BE,                         \
->> +		},                                                    \
->> +	}
->> +
->> +#define DECLARE_TLC4541_CHANNELS(name, bits) \
->
-> this flexibility is only needed when further chips are added; maybe start
-> simple and only implement what is needed at first
-I'll add the spec for to the TLC3541 which is a 14-bit version of this chip.
-I don't have one to test, but it looks pretty straight forward.
+> In the current driver flow we are submitting one frame at a time
+> but we should submit all the n number of frames at one time as the h/w
+> Is configured for n number of frames.
 
->
->> +const struct iio_chan_spec name ## _channels[] = { \
->> +	TLC4541_V_CHAN(0, bits), \
->> +	IIO_CHAN_SOFT_TIMESTAMP(1), \
->> +}
->> +
->> +static DECLARE_TLC4541_CHANNELS(tlc4541, 16);
->> +
->> +static const struct tlc4541_chip_info tlc4541_chip_info[] = {
->> +	[TLC4541] = {
->> +		.channels = tlc4541_channels,
->> +		.num_channels = ARRAY_SIZE(tlc4541_channels),
->> +	},
->> +};
->> +
->> +static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
->> +{
->> +	struct iio_poll_func *pf = p;
->> +	struct iio_dev *indio_dev = pf->indio_dev;
->> +	struct tlc4541_state *st = iio_priv(indio_dev);
->> +	u16 buf[8]; /* 2 bytes data + 6 bytes padding + 8 bytes timestamp */
->> +	int ret;
->> +
->> +	ret = spi_sync(st->spi, &st->scan_single_msg);
->> +	if (ret < 0)
->> +		goto done;
->> +
->> +	buf[0] = be16_to_cpu(st->rx_buf[0]);
->
-> endianness is set to IIO_BE in scan_type, so this conversion is not needed
-> and maybe also buf and the copy can be avoided if rx_buf is large enough
+s/Is/is
 
-I was doing the conversion in IIO_CHAN_INFO_RAW as well.
-Is it required there? I'm guessing yes.
-
->
->> +	iio_push_to_buffers_with_timestamp(indio_dev, buf,
->> +					   iio_get_time_ns(indio_dev));
->> +
->> +done:
->> +	iio_trigger_notify_done(indio_dev->trig);
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int tlc4541_get_range(struct tlc4541_state *st)
->> +{
->> +	int vref;
->> +
->> +	vref = regulator_get_voltage(st->reg);
->> +	if (vref < 0)
->> +		return vref;
->> +
->> +	vref /= 1000;
->> +
->> +	return vref;
->> +}
->> +
->> +static int tlc4541_read_raw(struct iio_dev *indio_dev,
->> +			    struct iio_chan_spec const *chan,
->> +			    int *val,
->> +			    int *val2,
->> +			    long m)
->> +{
->> +	int ret = 0;
->> +	struct tlc4541_state *st = iio_priv(indio_dev);
->> +
->> +	switch (m) {
->> +	case IIO_CHAN_INFO_RAW:
->> +		ret = iio_device_claim_direct_mode(indio_dev);
->> +		if (ret)
->> +			return ret;
->> +		ret = spi_sync(st->spi, &st->scan_single_msg);
->> +		iio_device_release_direct_mode(indio_dev);
->> +		if (ret < 0)
->> +			return ret;
->> +		*val = be16_to_cpu(st->rx_buf[0]);
->
-> on page 12 of the datasheet, the conversion results is in two registers?
-> and rx_buf has two elements?
->
-> haven't investigated in detail -- maybe a comment would be good to detail
-> operation?
-I set that to 4 bytes because I also use that for the dummy 24 clock cycles
-at the beginning as well. I think that documentation is a bit misleading.
-Possible due to the tlc3451 datasheet being  very similar. Those two registers
-are 14 bits and 2 bits wide respectively. The SPI cycle time shows data is
-available in the first 16 bits.
-
-
->
->> +		return IIO_VAL_INT;
->> +	case IIO_CHAN_INFO_SCALE:
->> +		ret = tlc4541_get_range(st);
->> +		if (ret < 0)
->> +			return ret;
->> +		*val = ret;
->> +		*val2 = chan->scan_type.realbits;
->> +		return IIO_VAL_FRACTIONAL_LOG2;
->> +	}
->> +	return -EINVAL;
->> +}
-<snip>
-
+> 
+> This patch fixes this issue.
+> 
+> Reviewed-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes for v5:
+> ---> Updated xlnx,fstore-config property to xlnx,fstore-enable
+>      and updated description as suggested by Rob.
+> Changes for v4:
+> ---> Add Check for framestore configuration on Transmit case as well
+>      as suggested by Jose Abreu.
+> ---> Modified the dev_dbg checks to dev_warn checks as suggested
+>      by Jose Abreu.
+> Changes for v3:
+> ---> Added Checks for frame store configuration. If frame store
+>      Configuration is not present at the h/w level and user
+>      Submits less frames added debug prints in the driver as relevant.
+> Changes for v2:
+> ---> Fixed race conditions in the driver as suggested by Jose Abreu
+> ---> Fixed unnecessray if else checks in the vdma_start_transfer
+>      as suggested by Laurent Pinchart.
+> 
+>  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
+>  drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
+>  2 files changed, 57 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> index a2b8bfa..e951c09 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> @@ -66,6 +66,8 @@ Optional child node properties:
+>  Optional child node properties for VDMA:
+>  - xlnx,genlock-mode: Tells Genlock synchronization is
+>  	enabled/disabled in hardware.
+> +- xlnx,fstore-enable: boolean; if defined, it indicates that controller
+> +	supports frame store configuration.
+>  Optional child node properties for AXI DMA:
+>  -dma-channels: Number of dma channels in child node.
+>  
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index be7eb41..0e9c02e 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -322,6 +322,7 @@ struct xilinx_dma_tx_descriptor {
+>   * @genlock: Support genlock mode
+>   * @err: Channel has errors
+>   * @idle: Check for channel idle
+> + * @has_fstoreen: Check for frame store configuration
+>   * @tasklet: Cleanup work after irq
+>   * @config: Device configuration info
+>   * @flush_on_fsync: Flush on Frame sync
+> @@ -353,6 +354,7 @@ struct xilinx_dma_chan {
+>  	bool genlock;
+>  	bool err;
+>  	bool idle;
+> +	bool has_fstoreen;
+>  	struct tasklet_struct tasklet;
+>  	struct xilinx_vdma_config config;
+>  	bool flush_on_fsync;
+> @@ -990,6 +992,27 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  	if (list_empty(&chan->pending_list))
+>  		return;
+>  
+> +	/*
+> +	 * Note: When VDMA is built with default h/w configuration
+> +	 * User should submit frames upto H/W configured.
+> +	 * If users submits less than h/w configured
+> +	 * VDMA engine tries to write to a invalid location
+> +	 * Results undefined behaviour/memory corruption.
+> +	 *
+> +	 * If user would like to submit frames less than h/w capable
+> +	 * On S2MM side please enable debug info 13 at the h/w level
+> +	 * On MM2S side please enable debug info 6 at the h/w level
+> +	 * It will allows the frame buffers numbers to be modified at runtime.
+> +	 */
+> +	if (!chan->has_fstoreen &&
+> +	     chan->desc_pendingcount < chan->num_frms) {
+> +		dev_warn(chan->dev, "Frame Store Configuration is not enabled at the\n");
+> +		dev_warn(chan->dev, "H/w level enable Debug info 13 or 6 at the h/w level\n");
+> +		dev_warn(chan->dev, "OR Submit the frames upto h/w Capable\n\r");
+> +
+> +		return;
+> +	}
+> +
+>  	desc = list_first_entry(&chan->pending_list,
+>  				struct xilinx_dma_tx_descriptor, node);
+>  	tail_desc = list_last_entry(&chan->pending_list,
+> @@ -1052,25 +1075,38 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  	if (chan->has_sg) {
+>  		dma_ctrl_write(chan, XILINX_DMA_REG_TAILDESC,
+>  				tail_segment->phys);
+> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> +		chan->desc_pendingcount = 0;
+>  	} else {
+>  		struct xilinx_vdma_tx_segment *segment, *last = NULL;
+> -		int i = 0;
+> +		int i = 0, j = 0;
+>  
+>  		if (chan->desc_submitcount < chan->num_frms)
+>  			i = chan->desc_submitcount;
+>  
+> -		list_for_each_entry(segment, &desc->segments, node) {
+> -			if (chan->ext_addr)
+> -				vdma_desc_write_64(chan,
+> -					XILINX_VDMA_REG_START_ADDRESS_64(i++),
+> -					segment->hw.buf_addr,
+> -					segment->hw.buf_addr_msb);
+> -			else
+> -				vdma_desc_write(chan,
+> -					XILINX_VDMA_REG_START_ADDRESS(i++),
+> -					segment->hw.buf_addr);
+> -
+> -			last = segment;
+> +		for (j = 0; j < chan->num_frms; ) {
+> +			list_for_each_entry(segment, &desc->segments, node) {
+> +				if (chan->ext_addr)
+> +					vdma_desc_write_64(chan,
+> +					  XILINX_VDMA_REG_START_ADDRESS_64(i++),
+> +					  segment->hw.buf_addr,
+> +					  segment->hw.buf_addr_msb);
+> +				else
+> +					vdma_desc_write(chan,
+> +					    XILINX_VDMA_REG_START_ADDRESS(i++),
+> +					    segment->hw.buf_addr);
+> +
+> +				last = segment;
+> +			}
+> +			list_del(&desc->node);
+> +			list_add_tail(&desc->node, &chan->active_list);
+> +			j++;
+> +			if (list_empty(&chan->pending_list) ||
+> +			    (i == chan->num_frms))
+> +				break;
+> +			desc = list_first_entry(&chan->pending_list,
+> +						struct xilinx_dma_tx_descriptor,
+> +						node);
+>  		}
+>  
+>  		if (!last)
+> @@ -1081,20 +1117,14 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  		vdma_desc_write(chan, XILINX_DMA_REG_FRMDLY_STRIDE,
+>  				last->hw.stride);
+>  		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
+> -	}
+>  
+> -	chan->idle = false;
+> -	if (!chan->has_sg) {
+> -		list_del(&desc->node);
+> -		list_add_tail(&desc->node, &chan->active_list);
+> -		chan->desc_submitcount++;
+> -		chan->desc_pendingcount--;
+> +		chan->desc_submitcount += j;
+> +		chan->desc_pendingcount -= j;
+>  		if (chan->desc_submitcount == chan->num_frms)
+>  			chan->desc_submitcount = 0;
+> -	} else {
+> -		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> -		chan->desc_pendingcount = 0;
+>  	}
+> +
+> +	chan->idle = false;
+>  }
+>  
+>  /**
+> @@ -1342,6 +1372,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+>  
+>  	chan->err = false;
+>  	chan->idle = true;
+> +	chan->desc_submitcount = 0;
+>  
+>  	return err;
+>  }
+> @@ -2315,6 +2346,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+>  	has_dre = of_property_read_bool(node, "xlnx,include-dre");
+>  
+>  	chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
+> +	chan->has_fstoreen = of_property_read_bool(node, "xlnx,fstore-enable");
+>  
+>  	err = of_property_read_u32(node, "xlnx,datawidth", &value);
+>  	if (err) {
+> -- 
+> 2.1.2
+> 
 
 -- 
-Regards
-Phil Reid
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
