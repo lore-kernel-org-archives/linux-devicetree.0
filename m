@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] pinctrl: sunxi: add driver for V3s SoC
-Date: Tue, 10 Jan 2017 19:18:15 +0100
-Message-ID: <20170110181815.nuayyybfdp4d27bp@lukather>
+Subject: Re: [PATCH 4/5] ARM: dts: sunxi: add dtsi file for V3s SoC
+Date: Tue, 10 Jan 2017 19:21:06 +0100
+Message-ID: <20170110182106.7q7uduxxqbzg4squ@lukather>
 References: <20170103151629.19447-1-icenowy@aosc.xyz>
- <20170103151629.19447-4-icenowy@aosc.xyz>
+ <20170103151629.19447-5-icenowy@aosc.xyz>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wrsu6zwgoydx4zyk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2GK2TBQKGQEAZHFIMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="u34jqn6krwdnlmfo"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE6M2TBQKGQEDQMX7DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170103151629.19447-4-icenowy-ymACFijhrKM@public.gmane.org>
+In-Reply-To: <20170103151629.19447-5-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,24 +23,25 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX
 List-Id: devicetree@vger.kernel.org
 
 
---wrsu6zwgoydx4zyk
+--u34jqn6krwdnlmfo
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Tue, Jan 03, 2017 at 11:16:27PM +0800, Icenowy Zheng wrote:
-> V3s SoC features only a pin controller (for the lack of CPUs part).
-> 
-> Add a driver for this controller.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+On Tue, Jan 03, 2017 at 11:16:28PM +0800, Icenowy Zheng wrote:
+> +			uart0_pins_a: uart0@0 {
+> +				pins = "PB8", "PB9";
+> +				function = "uart0";
+> +				bias-pull-up;
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Why do you need a pullup here?
 
-Thanks,
+Looks good otherwise.
+
+Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---wrsu6zwgoydx4zyk--
+--u34jqn6krwdnlmfo--
