@@ -1,97 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/2] mtd: arasan: Add device tree binding documentation
-Date: Mon, 9 Jan 2017 23:36:05 -0600
-Message-ID: <20170110053605.yqclykdgi3tgndnp@rob-hp-laptop>
-References: <1483930734-10309-1-git-send-email-punnaia@xilinx.com>
+Subject: Re: [PATCH v1 1/3] dt: bindings: add thermal device driver for zx2967
+Date: Mon, 9 Jan 2017 23:35:38 -0600
+Message-ID: <20170110053538.ouosxal5qecz3zmq@rob-hp-laptop>
+References: <1483767488-19778-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1483930734-10309-1-git-send-email-punnaia@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, michals@xilinx.com, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+In-Reply-To: <1483767488-19778-1-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, jun.nie@linaro.org, akpm@linux-foundation.org, geert+renesas@glider.be, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, edubezval@gmail.com, devicetree@vger.kernel.org, chen.chaokai@zte.com.cn, linux-arm-kernel@lists.infradead.org, wang.qiang01@zte.com.cn, rui.zhang@intel.com, mchehab@kernel.org, shawnguo@kernel.org, davem@davemloft.net, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2017 at 08:28:53AM +0530, Punnaiah Choudary Kalluri wrote:
-> This patch adds the dts binding document for arasan nand flash
-> controller.
+On Sat, Jan 07, 2017 at 01:38:06PM +0800, Baoyou Xie wrote:
+> This patch adds dt-binding documentation for zx2967 family thermal sensor.
 > 
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 > ---
-> Changes in v7:
-> - Corrected the acronyms those should be in caps 
-> changes in v6:
-> - Removed num-cs property
-> - Separated nandchip from nand controller
-> changes in v5:
-> - None
-> Changes in v4:
-> - Added num-cs property
-> - Added clock support
-> Changes in v3:
-> - None
-> Changes in v2:
-> - None
-> ---
->  .../devicetree/bindings/mtd/arasan_nfc.txt         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> new file mode 100644
-> index 0000000..f20adfc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
-> @@ -0,0 +1,38 @@
-> +Arasan NAND Flash Controller with ONFI 3.1 support
-> +
-> +Required properties:
-> +- compatible: Should be "arasan,nfc-v3p10"
+>  .../devicetree/bindings/thermal/zx2967-thermal.txt | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
 
-Needs a note that it must also have an SoC specific compatible string.
-
-> +- reg: Memory map for module access
-> +- interrupt-parent: Interrupt controller the interrupt is routed through
-> +- interrupts: Should contain the interrupt for the device
-> +- clock-name: List of input clocks - "clk_sys", "clk_flash"
-
-clk_ is redundant.
-
-> +	      (See clock bindings for details)
-> +- clocks: Clock phandles (see clock bindings for details)
-> +
-> +Optional properties:
-> +- arasan,has-mdma: Enables DMA support
-> +
-> +For NAND partition information please refer the below file
-> +Documentation/devicetree/bindings/mtd/partition.txt
-> +
-> +Example:
-> +	nand0: nand@ff100000 {
-> +		compatible = "arasan,nfc-v3p10"
-> +		reg = <0x0 0xff100000 0x1000>;
-> +		clock-name = "clk_sys", "clk_flash"
-> +		clocks = <&misc_clk &misc_clk>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 14 4>;
-> +		arasan,has-mdma;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>
-> +
-> +		nand@0 {
-> +			reg = <0>
-> +			partition@0 {
-> +				label = "filesystem";
-> +				reg = <0x0 0x0 0x1000000>;
-> +			};
-> +			(...)
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
