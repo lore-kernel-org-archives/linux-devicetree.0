@@ -1,27 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: gpio: Add binding documentation for
- gpio-thunderx
-Date: Mon, 9 Jan 2017 23:35:33 -0600
-Message-ID: <20170110053533.3wqywb34prxo47re@rob-hp-laptop>
-References: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
- <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com>
+Subject: Re: [PATCH] Documentation: display: fix wrong documentation paths
+Date: Mon, 9 Jan 2017 23:35:56 -0600
+Message-ID: <20170110053556.ezfcy7t7m6d36ke2@rob-hp-laptop>
+References: <1483823686-9361-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com>
+In-Reply-To: <1483823686-9361-1-git-send-email-yegorslists@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+To: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, airlied@linux.ie
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 03:22:58PM -0800, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+On Sat, Jan 07, 2017 at 10:14:45PM +0100, Yegor Yefremov wrote:
+> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
 > ---
->  .../devicetree/bindings/gpio/gpio-thunderx.txt     | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+>  Documentation/devicetree/bindings/display/arm,pl11x.txt                 | 2 +-
+>  Documentation/devicetree/bindings/display/bridge/analogix_dp.txt        | 2 +-
+>  Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt        | 2 +-
+>  Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt      | 2 +-
+>  Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt       | 2 +-
+>  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt            | 2 +-
+>  Documentation/devicetree/bindings/display/imx/ldb.txt                   | 2 +-
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
+>  Documentation/devicetree/bindings/display/msm/dsi.txt                   | 2 +-
+>  Documentation/devicetree/bindings/display/msm/edp.txt                   | 2 +-
+>  Documentation/devicetree/bindings/display/msm/hdmi.txt                  | 2 +-
+>  Documentation/devicetree/bindings/display/panel/samsung,ld9040.txt      | 2 +-
+>  Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.txt     | 2 +-
+>  .../devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt       | 2 +-
+>  Documentation/devicetree/bindings/display/tilcdc/panel.txt              | 2 +-
+>  15 files changed, 15 insertions(+), 15 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
