@@ -1,89 +1,119 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add optional reset gpio control
-Date: Tue, 10 Jan 2017 11:13:11 -0800
-Message-ID: <1b85a1aa-4382-03d0-7920-4f1fdfcbda76@gmail.com>
-References: <1483391271-17304-1-git-send-email-steve_longerbeam@mentor.com>
- <1483391271-17304-2-git-send-email-steve_longerbeam@mentor.com>
- <e043cb00-9b8e-edec-0949-b23fbed6e2c5@mentor.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Tue, 10 Jan 2017 14:20:13 -0500
+Message-ID: <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA@mail.gmail.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+	<1483479056-15202-2-git-send-email-robdclark@gmail.com>
+	<20170105115528.GG679@arm.com>
+	<CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
+	<20170105154950.GM679@arm.com>
+	<CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
+	<20170110175219.GK527@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e043cb00-9b8e-edec-0949-b23fbed6e2c5@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170110175219.GK527-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/04/2017 02:25 AM, Vladimir Zapolskiy wrote:
-> Hi Steve,
+On Tue, Jan 10, 2017 at 12:52 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Rob,
 >
-> On 01/02/2017 11:07 PM, Steve Longerbeam wrote:
->> Add optional reset-gpios pin control. If present, de-assert the
->> specified reset gpio pin to bring the chip out of reset.
+> On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
+>> On Thu, Jan 5, 2017 at 10:49 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Thu, Jan 05, 2017 at 10:27:27AM -0500, Rob Clark wrote:
+>> >> I'm not sure if the better solution then would be to have two fault
+>> >> callbacks, one immediately from the IRQ and a later one from wq.  Or
+>> >> let the driver handle the wq business and give it a way to tell the
+>> >> IOMMU when to resume.
+>> >>
+>> >> I kinda think we should punt on the worker thread for now until we are
+>> >> ready to resume faulting transactions, because I guess a strong chance
+>> >> that whatever way we do it now will be wrong ;-)
+>> >
+>> > I guess what I'm after is for you to change the interrupt handlers to be
+>> > threaded, like they are for SMMUv3. I *think* you can do that with a NULL
+>> > thread_fn for now, and just call report_iommu_fault from the handler.
+>> > The return value of that could, in theory, be used to queued the paging
+>> > request and wake the paging thread in future.
 >>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Alexandre Courbot <gnurou@gmail.com>
->> Cc: linux-gpio@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |  4 ++++
->>   drivers/gpio/gpio-pca953x.c                             | 11 +++++++++++
->>   2 files changed, 15 insertions(+)
+>> If we only pass in the non-threaded irq fxn, I'm not really sure how
+>> that changes anything.. or maybe I'm not understanding what you mean.
 >>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
->> index 08dd15f..da54f4c 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
->> @@ -29,6 +29,10 @@ Required properties:
->>   	onsemi,pca9654
->>   	exar,xra1202
->>   
->> +Optional properties:
->> + - reset-gpios: GPIO specification for the RESET input
->> +
->> +
-> Drop the surplus empty line above.
-
-done.
-
+>> But yeah, I guess we could use request_threaded_irq() to get both IRQ
+>> context notification and a later thread context notification rather
+>> than doing the wq thing.  Either way the iommu API has to change
+>> slightly.
+>>
+>> >> > I wonder if this should also be predicated on the compatible string, so
+>> >> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
+>> >> > the compatible string isn't specific enough to identify an implementation
+>> >> > with the required SS behaviour? On the other hand, it feels pretty
+>> >> > redundant and a single "stalling works" property is all we need.
+>> >>
+>> >> We could also drop the property and key the behavior on specific
+>> >> compat strings I guess.  Having both seems a bit odd.  Anyways, I'll
+>> >> defer to DT folks about what the cleaner approach is.
+>> >
+>> > As Robin pointed out, we do need to be able to distinguish the integration
+>> > of the device from the device itself. For example, MMU-9000 might be capable
+>> > of stalling, but if it's bolted to a PCI RC, it's not safe to do so.
+>>
+>> Hmm, well we install the fault handler on the iommu_domain..  perhaps
+>> maybe a combo of dts property (or deciding based on more specific
+>> compat string), plus extra param passed in to
+>> iommu_set_fault_hander().  The dts property or compat string to
+>> indicate whether the iommu (and how it is wired up) can handle stalls,
+>> and enable_stall param when fault handler is registered to indicate
+>> whether the device itself can cope.. if either can't do stalling, then
+>> don't set CFCFG.
 >
->>   Example:
->>   
->>   
->> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
->> index d5d72d8..ca2ddea 100644
->> --- a/drivers/gpio/gpio-pca953x.c
->> +++ b/drivers/gpio/gpio-pca953x.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/of_platform.h>
->>   #include <linux/acpi.h>
->>   #include <linux/regulator/consumer.h>
->> +#include <linux/gpio/consumer.h>
->>   
->>   #define PCA953X_INPUT		0
->>   #define PCA953X_OUTPUT		1
->> @@ -754,8 +755,18 @@ static int pca953x_probe(struct i2c_client *client,
->>   		invert = pdata->invert;
->>   		chip->names = pdata->names;
->>   	} else {
->> +		struct gpio_desc *reset_gpio;
->> +
->>   		chip->gpio_start = -1;
->>   		irq_base = 0;
->> +
->> +		/* see if we need to de-assert a reset pin */
->> +		reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
->> +						     GPIOD_OUT_LOW);
->> +		if (IS_ERR(reset_gpio)) {
->> +			dev_err(&client->dev, "request for reset pin failed\n");
-> I'm not confident that the error message is wanted here, you may consider either
-> to remove it or at least print it out if (PTR_ERR(reset_gpio) != -EPROBE_DEFER).
+> I thought about this some more, and I think you're right. Having
+> iommu_set_fault_handler take a flags parameter indicating that, for example,
+> the fault handler can deal with paging, is all we need to implement the
+> per-master opt-in functionality for stalling faults. There's no real
+> requirement to standardise a generic firmware property for that (but
+> we still need *something* that says stalling is usable on the SMMU --
+> perhaps just the compatible string is ok).
 
-no problem, I just removed it.
+btw, it occurred to me that maybe it should be flags param to
+iommu_attach_device() (just in case fault handler not installed?)
+otoh stalling without a fault handler is silly, but I guess we need it
+to infer whether stalling can be supported by other devices on same
+iommu.. tbh I'm on a bit shaky ground when it comes to multiple
+devices per iommu since the SoC's I'm familiar with do it the other
+way around.  But I guess you have thought more about the multi-device
+case, so figured I should suggest it..
 
+> Taking this further, there's then no need for the threaded IRQ function
+> in the SMMUv2 driver after all. Instead, we pass a continuation function
+> pointer and opaque token from the SMMU driver to the fault handler in
+> IRQ context (this will be in thread context for SMMUv3, but that should
+> be fine). The fault handler can then stash these someplace, and signal
+> a wakeup for its own threaded handler, which ultimately calls the SMMU
+> continuation function with the opaque token as a parameter when it's done
+> with the fault. I think that's enough to get things rolling without adding
+> lots of infrastructure to the SMMU driver initially. If a pattern emerges
+> amongst users of the interface, then we could consolidate some of the work
+> handling back into IOMMU core.
+>
+> What do you think? It should all be pretty straightforward for what you
+> want to do.
 
-Steve
+yeah, that makes sense to me..  I can give it a try.
+
+BR,
+-R
+
+> Will
