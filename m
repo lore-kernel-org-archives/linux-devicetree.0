@@ -1,145 +1,159 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3][v3] arm64: freescale: ls2080a: Split devicetree for
- code resuability
-Date: Tue, 10 Jan 2017 14:25:17 +0800
-Message-ID: <20170110062516.GZ20956@dragon>
-References: <1483938896-2221-1-git-send-email-abhimanyu.saini@nxp.com>
- <1483938896-2221-3-git-send-email-abhimanyu.saini@nxp.com>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
+Date: Tue, 10 Jan 2017 14:26:13 +0800
+Message-ID: <d2b5f8fe-f9ce-bf9b-b5d8-facc10936290@electromag.com.au>
+References: <1483606546-13629-1-git-send-email-preid@electromag.com.au>
+ <alpine.DEB.2.02.1701051004320.16779@pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483938896-2221-3-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1701051004320.16779-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2017 at 10:44:55AM +0530, Abhimanyu Saini wrote:
-> LS2088A and LS2080A are similar SoCs with a few differences like
-> ARM cores etc.
-> 
-> Reorganize the LS2080A device tree to move the common nodes to:
->         - fsl-ls208xa.dtsi
->         - fsl-ls208xa-rdb.dtsi
->         - fsl-ls208xa-qds.dtsi
+G'day Peter,
 
-These 3 new files are missing.
+Thanks for the review.
 
-> 
-> Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-> ---
-> Changes for v3:
->         - rename dts/dtsi files
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 154 +----
->  arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts | 106 +---
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi    | 715 +---------------------
->  3 files changed, 26 insertions(+), 949 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> index 8bc1f8f..3cf4a5c 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> @@ -1,8 +1,9 @@
->  /*
->   * Device Tree file for Freescale LS2080a QDS Board.
->   *
-> - * Copyright (C) 2015, Freescale Semiconductor
-> + * Copyright (C) 2015-17, Freescale Semiconductor
->   *
-> + * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
->   * Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   *
->   * This file is dual-licensed: you can use it either under the terms
+On 5/01/2017 17:21, Peter Meerwald-Stadler wrote:
+<snip>
+>> +
+>> +#define TLC4541_V_CHAN(index, bits) {                                 \
+>> +		.type = IIO_VOLTAGE,                                  \
+>> +		.indexed = 1,                                         \
+>
+> no need if there is just one channel
+>
+>> +		.channel = index,                                     \
+>> +		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
+>> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+>> +		.address = index,                                     \
+>
+> .address not needed
+>
+>> +		.scan_index = index,                                  \
+>> +		.scan_type = {                                        \
+>> +			.sign = 'u',                                  \
+>> +			.realbits = (bits),                           \
+>> +			.storagebits = 16,                            \
+>> +			.endianness = IIO_BE,                         \
+>> +		},                                                    \
+>> +	}
+>> +
+>> +#define DECLARE_TLC4541_CHANNELS(name, bits) \
+>
+> this flexibility is only needed when further chips are added; maybe start
+> simple and only implement what is needed at first
+I'll add the spec for to the TLC3541 which is a 14-bit version of this chip.
+I don't have one to test, but it looks pretty straight forward.
 
+>
+>> +const struct iio_chan_spec name ## _channels[] = { \
+>> +	TLC4541_V_CHAN(0, bits), \
+>> +	IIO_CHAN_SOFT_TIMESTAMP(1), \
+>> +}
+>> +
+>> +static DECLARE_TLC4541_CHANNELS(tlc4541, 16);
+>> +
+>> +static const struct tlc4541_chip_info tlc4541_chip_info[] = {
+>> +	[TLC4541] = {
+>> +		.channels = tlc4541_channels,
+>> +		.num_channels = ARRAY_SIZE(tlc4541_channels),
+>> +	},
+>> +};
+>> +
+>> +static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
+>> +{
+>> +	struct iio_poll_func *pf = p;
+>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>> +	struct tlc4541_state *st = iio_priv(indio_dev);
+>> +	u16 buf[8]; /* 2 bytes data + 6 bytes padding + 8 bytes timestamp */
+>> +	int ret;
+>> +
+>> +	ret = spi_sync(st->spi, &st->scan_single_msg);
+>> +	if (ret < 0)
+>> +		goto done;
+>> +
+>> +	buf[0] = be16_to_cpu(st->rx_buf[0]);
+>
+> endianness is set to IIO_BE in scan_type, so this conversion is not needed
+> and maybe also buf and the copy can be avoided if rx_buf is large enough
+
+I was doing the conversion in IIO_CHAN_INFO_RAW as well.
+Is it required there? I'm guessing yes.
+
+>
+>> +	iio_push_to_buffers_with_timestamp(indio_dev, buf,
+>> +					   iio_get_time_ns(indio_dev));
+>> +
+>> +done:
+>> +	iio_trigger_notify_done(indio_dev->trig);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int tlc4541_get_range(struct tlc4541_state *st)
+>> +{
+>> +	int vref;
+>> +
+>> +	vref = regulator_get_voltage(st->reg);
+>> +	if (vref < 0)
+>> +		return vref;
+>> +
+>> +	vref /= 1000;
+>> +
+>> +	return vref;
+>> +}
+>> +
+>> +static int tlc4541_read_raw(struct iio_dev *indio_dev,
+>> +			    struct iio_chan_spec const *chan,
+>> +			    int *val,
+>> +			    int *val2,
+>> +			    long m)
+>> +{
+>> +	int ret = 0;
+>> +	struct tlc4541_state *st = iio_priv(indio_dev);
+>> +
+>> +	switch (m) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		ret = iio_device_claim_direct_mode(indio_dev);
+>> +		if (ret)
+>> +			return ret;
+>> +		ret = spi_sync(st->spi, &st->scan_single_msg);
+>> +		iio_device_release_direct_mode(indio_dev);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +		*val = be16_to_cpu(st->rx_buf[0]);
+>
+> on page 12 of the datasheet, the conversion results is in two registers?
+> and rx_buf has two elements?
+>
+> haven't investigated in detail -- maybe a comment would be good to detail
+> operation?
+I set that to 4 bytes because I also use that for the dummy 24 clock cycles
+at the beginning as well. I think that documentation is a bit misleading.
+Possible due to the tlc3451 datasheet being  very similar. Those two registers
+are 14 bits and 2 bits wide respectively. The SPI cycle time shows data is
+available in the first 16 bits.
+
+
+>
+>> +		return IIO_VAL_INT;
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		ret = tlc4541_get_range(st);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +		*val = ret;
+>> +		*val2 = chan->scan_type.realbits;
+>> +		return IIO_VAL_FRACTIONAL_LOG2;
+>> +	}
+>> +	return -EINVAL;
+>> +}
 <snip>
 
-> -&sata0 {
-> -	status = "okay";
-> -};
-> -
-> -&sata1 {
-> -	status = "okay";
-> -};
-> -
-> -&usb0 {
-> -	status = "okay";
-> -};
-> -
-> -&usb1 {
-> -	status = "okay";
-> -};
-> +#include "fsl-ls208xa-qds.dtsi"
 
-Can we put such includes just at the beginning of the file (after
-licence section)?
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-> index 2ff46ca..d5224fb 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-> @@ -62,108 +62,4 @@
->  	};
->  };
->  
-
-<snip>
-
-> -&usb0 {
-> -	status = "okay";
-> -};
-> -
-> -&usb1 {
-> -	status = "okay";
-> -};
-> +#include "fsl-ls208xa-rdb.dtsi"
-
-Ditto
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index e5935f2..35801f3 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -1,8 +1,9 @@
->  /*
->   * Device Tree Include file for Freescale Layerscape-2080A family SoC.
->   *
-> - * Copyright (C) 2014-2015, Freescale Semiconductor
-> + * Copyright (C) 2014-2017, Freescale Semiconductor
->   *
-> + * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
->   * Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   *
->   * This file is dual-licensed: you can use it either under the terms
-> @@ -149,697 +150,25 @@
->  		};
->  	};
->  
-> -	memory@80000000 {
-> -		device_type = "memory";
-> -		reg = <0x00000000 0x80000000 0 0x80000000>;
-> -		      /* DRAM space - 1, size : 2 GB DRAM */
-> -	};
-
-<snip>
-
-> -	ddr1: memory-controller@1080000 {
-> -		compatible = "fsl,qoriq-memory-controller";
-> -		reg = <0x0 0x1080000 0x0 0x1000>;
-> -		interrupts = <0 17 0x4>;
-> -		little-endian;
-> -	};
-> +	#include "fsl-ls208xa.dtsi"
-
-Ditto
-
-Shawn
-
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards
+Phil Reid
