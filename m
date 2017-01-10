@@ -1,41 +1,33 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM, ARM64: dts: drop "arm,amba-bus" in favor of
- "simple-bus" part 3
-Date: Mon, 9 Jan 2017 19:11:53 -0800
-Message-ID: <20170110031153.GD22261@localhost>
-References: <1482853886-7932-1-git-send-email-yamada.masahiro@socionext.com>
+From: Milo Kim <woogyom.kim@gmail.com>
+Subject: Re: [PATCH resend v4 2/3] ARM: dts: imx6: Support Savageboard dual
+Date: Tue, 10 Jan 2017 13:31:38 +0900
+Message-ID: <02b61197-c906-c072-1ee9-d6324a55f01d@gmail.com>
+References: <20170104070436.3425-1-woogyom.kim@gmail.com>
+ <20170110032736.GX20956@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1482853886-7932-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170110032736.GX20956@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2016 at 12:51:26AM +0900, Masahiro Yamada wrote:
-> Tree-wide replacement was done by commit 2ef7d5f342c1 ("ARM, ARM64:
-> dts: drop "arm,amba-bus" in favor of "simple-bus"), then the 2nd
-> round by commit 15b7cc78f095 ("arm64: dts: drop "arm,amba-bus" in
-> favor of "simple-bus" part 2").
-> 
-> Here, some new users have appeared for Linux v4.10-rc1.  Eliminate
-> them now.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Hi Arnd, Olof,
-> 
-> Can you pick this up for v4.10 fixes?
-> 
-> If we carry arm,amba-bus until the release, we will need to
-> take more time to deprecate it.
 
-Applied to fixes for 4.10.
+On 01/10/2017 12:27 PM, Shawn Guo wrote:
+> On Wed, Jan 04, 2017 at 04:04:36PM +0900, Milo Kim wrote:
+>> Common savageboard DT file is used for board support.
+>> Add the vendor name and specify the dtb file for i.MX6Q build.
+>>
+>> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+>> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+>> ---
+>>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+> The bindings change should be ideally a separate patch.  But since Rob
+> seems to be fine with it this time, I just applied the whole series.
 
+Got it. Thanks for taking this.
 
-Thanks,
-
--Olof
+Best regards,
+Milo
