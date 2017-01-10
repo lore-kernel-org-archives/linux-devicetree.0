@@ -1,56 +1,68 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 11/11] dmaengine: cppi41: Fix teardown warnings
-Date: Tue, 10 Jan 2017 12:11:39 +0100
-Message-ID: <0bbd7f2b-0a15-de55-e054-958bfea048fe@baylibre.com>
-References: <20170109160656.3470-1-abailon@baylibre.com>
- <20170109160656.3470-12-abailon@baylibre.com>
- <72228045-8c2d-3ea4-3fbb-00477b47a80b@cogentembedded.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ARM: dts: at91: add devicetree for the Axentia
+ TSE-850
+Date: Tue, 10 Jan 2017 12:21:42 +0100
+Message-ID: <81d5b553-38db-5137-2eac-145cb2f76578@axentia.se>
+References: <1484035732-31635-1-git-send-email-peda@axentia.se>
+ <1484035732-31635-2-git-send-email-peda@axentia.se>
+ <20170110092928.hwd4l4k3eyagepco@piout.net>
+ <b686fa42-bbfb-dec2-460f-ef00869bc12e@axentia.se>
+ <20170110104248.iscurq55d7n26gfd@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <72228045-8c2d-3ea4-3fbb-00477b47a80b-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170110104248.iscurq55d7n26gfd-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/2017 07:46 PM, Sergei Shtylyov wrote:
-> On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
-> 
->> During the teardown of a RX channel, because there is only one
->> completion queue available for RX channel, descriptor of another
->> channel may be popped which will cause 2 warnings:
->> - the first one because we popped a wrong descriptor
->>   (neither the channel's descriptor, neither the teardown descriptor).
-> 
->    Neither ... nor.
-> 
->> - the second one happen during the teardown of another channel,
->>   because we can't find the channel descriptor
->>   (that is, the one that caused the first warning).
->> Use the teardown queue as completion queue during the teardown.
-> 
->    Hm, what's a teardown queue? I don't remember this documented...
-> memory fade is always possible tho... :-)
-I guess your memory is right :-)
-There is no teardown queue. Though, we have to "allocate" an unassigned
-queue and populate it with free teardown descriptors.
-And when we are doing the teardown, we can select the queue to use for
-completion. In the driver, we have to configure both of them.
-
-Best regards,
-Alexandre
-> 
->> Note that fix doesn't fix all the teardown warnings:
->> I still get some when I run some corner case.
+On 2017-01-10 11:42, Alexandre Belloni wrote:
+> On 10/01/2017 at 10:52:56 +0100, Peter Rosin wrote :
+>> On 2017-01-10 10:29, Alexandre Belloni wrote:
+>>> Hi,
+>>>
+>>> This needs a commit message, please add one.
 >>
->> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> [...]
+>> There's not all that much to say, but ok, I'll add something.
+>>
 > 
-> MBR, Sergei
-> 
+> It doesn't have to be long but it has to be present.
 
+Does it really? There are quite a few examples to contradict that,
+and checkpatch doesn't complain. That's no proof of course...
+
+As I said, I'll add something.
+
+>>> On 10/01/2017 at 09:08:51 +0100, Peter Rosin wrote :
+>> There's also the benefit of the increased chances of me getting
+>> notified of changes. I don't mind...
+>>
+> 
+> Do you expect changes coming from third parties? I'm fine with it
+> anyway.
+
+Ok, I'll remember this and blame you for everything :-)
+
+>>>> +&main {
+>>>> +	clock-frequency = <12000000>;
+>>>> +};
+>>>> +
+>>>
+>>> I don't think this is needed
+>>>
+>>>
+>>
+>> "this"? The &main frequency, or all of them?
+>>
+> 
+> I meant just main
+
+Ok, I'll test with that change and then resend. Thanks!
+
+Cheers,
+peda
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
