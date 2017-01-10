@@ -1,95 +1,100 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Tue, 10 Jan 2017 17:52:19 +0000
-Message-ID: <20170110175219.GK527@arm.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
- <1483479056-15202-2-git-send-email-robdclark@gmail.com>
- <20170105115528.GG679@arm.com>
- <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
- <20170105154950.GM679@arm.com>
- <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/11] dmaengine: cppi41: Implement the glue for da8xx
+Date: Tue, 10 Jan 2017 20:53:15 +0300
+Message-ID: <2d8b3a2b-859d-bfda-74cf-f22471927fc4@cogentembedded.com>
+References: <20170109160656.3470-1-abailon@baylibre.com>
+ <20170109160656.3470-9-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>
-Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sricharan R <sricharan@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170109160656.3470-9-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
 
-On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
-> On Thu, Jan 5, 2017 at 10:49 AM, Will Deacon <will.deacon@arm.com> wrote:
-> > On Thu, Jan 05, 2017 at 10:27:27AM -0500, Rob Clark wrote:
-> >> I'm not sure if the better solution then would be to have two fault
-> >> callbacks, one immediately from the IRQ and a later one from wq.  Or
-> >> let the driver handle the wq business and give it a way to tell the
-> >> IOMMU when to resume.
-> >>
-> >> I kinda think we should punt on the worker thread for now until we are
-> >> ready to resume faulting transactions, because I guess a strong chance
-> >> that whatever way we do it now will be wrong ;-)
-> >
-> > I guess what I'm after is for you to change the interrupt handlers to be
-> > threaded, like they are for SMMUv3. I *think* you can do that with a NULL
-> > thread_fn for now, and just call report_iommu_fault from the handler.
-> > The return value of that could, in theory, be used to queued the paging
-> > request and wake the paging thread in future.
-> 
-> If we only pass in the non-threaded irq fxn, I'm not really sure how
-> that changes anything.. or maybe I'm not understanding what you mean.
-> 
-> But yeah, I guess we could use request_threaded_irq() to get both IRQ
-> context notification and a later thread context notification rather
-> than doing the wq thing.  Either way the iommu API has to change
-> slightly.
-> 
-> >> > I wonder if this should also be predicated on the compatible string, so
-> >> > that the "arm,smmu-enable-stall" property is ignored (with a warning) if
-> >> > the compatible string isn't specific enough to identify an implementation
-> >> > with the required SS behaviour? On the other hand, it feels pretty
-> >> > redundant and a single "stalling works" property is all we need.
-> >>
-> >> We could also drop the property and key the behavior on specific
-> >> compat strings I guess.  Having both seems a bit odd.  Anyways, I'll
-> >> defer to DT folks about what the cleaner approach is.
-> >
-> > As Robin pointed out, we do need to be able to distinguish the integration
-> > of the device from the device itself. For example, MMU-9000 might be capable
-> > of stalling, but if it's bolted to a PCI RC, it's not safe to do so.
-> 
-> Hmm, well we install the fault handler on the iommu_domain..  perhaps
-> maybe a combo of dts property (or deciding based on more specific
-> compat string), plus extra param passed in to
-> iommu_set_fault_hander().  The dts property or compat string to
-> indicate whether the iommu (and how it is wired up) can handle stalls,
-> and enable_stall param when fault handler is registered to indicate
-> whether the device itself can cope.. if either can't do stalling, then
-> don't set CFCFG.
+> The da8xx has a cppi41 dma controller.
 
-I thought about this some more, and I think you're right. Having
-iommu_set_fault_handler take a flags parameter indicating that, for example,
-the fault handler can deal with paging, is all we need to implement the
-per-master opt-in functionality for stalling faults. There's no real
-requirement to standardise a generic firmware property for that (but
-we still need *something* that says stalling is usable on the SMMU --
-perhaps just the compatible string is ok).
+    It's called CPPI 4.1. :-)
 
-Taking this further, there's then no need for the threaded IRQ function
-in the SMMUv2 driver after all. Instead, we pass a continuation function
-pointer and opaque token from the SMMU driver to the fault handler in
-IRQ context (this will be in thread context for SMMUv3, but that should
-be fine). The fault handler can then stash these someplace, and signal
-a wakeup for its own threaded handler, which ultimately calls the SMMU
-continuation function with the opaque token as a parameter when it's done
-with the fault. I think that's enough to get things rolling without adding
-lots of infrastructure to the SMMU driver initially. If a pattern emerges
-amongst users of the interface, then we could consolidate some of the work
-handling back into IOMMU core.
+> This is add the glue layer required to make it work on da8xx,
+> as well some changes in driver (e.g to manage clock).
+>
+> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/dma/cppi41.c | 95 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>
+> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+> index 939398e..4318e53 100644
+> --- a/drivers/dma/cppi41.c
+> +++ b/drivers/dma/cppi41.c
+[...]
+> @@ -86,10 +87,19 @@
+>
+>  #define USBSS_IRQ_PD_COMP	(1 <<  2)
+>
+> +/* USB DA8XX */
+> +#define DA8XX_INTR_SRC_MASKED	0x38
+> +#define DA8XX_END_OF_INTR	0x3c
+> +
+> +#define DA8XX_QMGR_PENDING_MASK	(0xf << 24)
+> +
+> +
+> +
 
-What do you think? It should all be pretty straightforward for what you
-want to do.
+    One empty line is enough.
 
-Will
+>  /* Packet Descriptor */
+>  #define PD2_ZERO_LENGTH		(1 << 19)
+>
+>  #define AM335X_CPPI41		0
+> +#define DA8XX_CPPI41		1
+>
+>  struct cppi41_channel {
+>  	struct dma_chan chan;
+[...]
+> @@ -366,6 +393,26 @@ static irqreturn_t am335x_cppi41_irq(int irq, void *data)
+>  	return cppi41_irq(cdd);
+>  }
+>
+> +static irqreturn_t da8xx_cppi41_irq(int irq, void *data)
+> +{
+> +	struct cppi41_dd *cdd = data;
+> +	u32 status;
+> +	u32 usbss_status;
+> +
+> +	status = cppi_readl(cdd->qmgr_mem + QMGR_PEND(0));
+> +	if (status & DA8XX_QMGR_PENDING_MASK)
+> +		cppi41_irq(cdd);
+> +	else
+> +		return IRQ_NONE;
+
+    Seems correct...
+
+> +
+> +	/* Re-assert IRQ if there no usb core interrupts pending */
+> +	usbss_status = cppi_readl(cdd->usbss_mem + DA8XX_INTR_SRC_MASKED);
+> +	if (!usbss_status)
+> +		cppi_writel(0, cdd->usbss_mem + DA8XX_END_OF_INTR);
+
+    I don't understand this...
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static dma_cookie_t cppi41_tx_submit(struct dma_async_tx_descriptor *tx)
+>  {
+>  	dma_cookie_t cookie;
+[...]
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
