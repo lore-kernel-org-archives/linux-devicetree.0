@@ -1,38 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Documentation: display: fix wrong documentation paths
-Date: Mon, 9 Jan 2017 23:35:56 -0600
-Message-ID: <20170110053556.ezfcy7t7m6d36ke2@rob-hp-laptop>
-References: <1483823686-9361-1-git-send-email-yegorslists@googlemail.com>
+Subject: Re: [PATCH 1/4] clk: stm32f7: Add stm32f7 clock DT bindings for
+ STM32F746 boards
+Date: Mon, 9 Jan 2017 23:35:31 -0600
+Message-ID: <20170110053531.dp2xt3bpprzb76gi@rob-hp-laptop>
+References: <1483711165-17149-1-git-send-email-gabriel.fernandez@st.com>
+ <1483711165-17149-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1483823686-9361-1-git-send-email-yegorslists@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yegor Yefremov <yegorslists@googlemail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, airlied@linux.ie
+In-Reply-To: <1483711165-17149-2-git-send-email-gabriel.fernandez@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gabriel.fernandez@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 07, 2017 at 10:14:45PM +0100, Yegor Yefremov wrote:
-> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+On Fri, Jan 06, 2017 at 02:59:22PM +0100, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> This patch introduces the stm32f7 clock DT bindings.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 > ---
->  Documentation/devicetree/bindings/display/arm,pl11x.txt                 | 2 +-
->  Documentation/devicetree/bindings/display/bridge/analogix_dp.txt        | 2 +-
->  Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt        | 2 +-
->  Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt      | 2 +-
->  Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt       | 2 +-
->  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt            | 2 +-
->  Documentation/devicetree/bindings/display/imx/ldb.txt                   | 2 +-
->  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
->  Documentation/devicetree/bindings/display/msm/dsi.txt                   | 2 +-
->  Documentation/devicetree/bindings/display/msm/edp.txt                   | 2 +-
->  Documentation/devicetree/bindings/display/msm/hdmi.txt                  | 2 +-
->  Documentation/devicetree/bindings/display/panel/samsung,ld9040.txt      | 2 +-
->  Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.txt     | 2 +-
->  .../devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt       | 2 +-
->  Documentation/devicetree/bindings/display/tilcdc/panel.txt              | 2 +-
->  15 files changed, 15 insertions(+), 15 deletions(-)
+>  .../devicetree/bindings/clock/st,stm32-rcc.txt       | 20 ++++++++++++++++++++
+>  include/dt-bindings/clock/stm32fx-clock.h            | 20 ++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
