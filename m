@@ -1,147 +1,74 @@
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v5 1/5] powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
-Date: Tue, 10 Jan 2017 14:37:00 +0530
-Message-ID: <1484039224-5630-2-git-send-email-ego@linux.vnet.ibm.com>
-References: <1484039224-5630-1-git-send-email-ego@linux.vnet.ibm.com>
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1484039224-5630-1-git-send-email-ego@linux.vnet.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linuxppc-dev@lists.ozlabs.org
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v5 2/2] ARM: sama5_defconfig: add support for the Axentia
+ TSE-850 board
+Date: Tue, 10 Jan 2017 10:10:34 +0100
+Message-ID: <10e75ffd-d68b-97f2-2618-c5e92713f5b3@atmel.com>
+References: <1484035732-31635-1-git-send-email-peda@axentia.se>
+ <1484035732-31635-3-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484035732-31635-3-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Le 10/01/2017 à 09:08, Peter Rosin a écrit :
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 
-Currently all the low-power idle states are expected to wake up
-at reset vector 0x100. Which is why the macro IDLE_STATE_ENTER_SEQ
-that puts the CPU to an idle state and never returns.
+I know that most of the entries in this configuration file are direct
+additions to the kernel but what about moving some of your additions to
+modules?
 
-On ISA v3.0, when the ESL and EC bits in the PSSCR are zero, the CPU
-is expected to wake up at the next instruction of the idle
-instruction.
+Regards,
 
-This patch adds a new macro named IDLE_STATE_ENTER_SEQ_NORET for the
-no-return variant and reuses the name IDLE_STATE_ENTER_SEQ
-for a variant that allows resuming operation at the instruction next
-to the idle-instruction.
+> ---
+>  arch/arm/configs/sama5_defconfig | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
+> index aca8625b6fc9..bf5b3a73e38c 100644
+> --- a/arch/arm/configs/sama5_defconfig
+> +++ b/arch/arm/configs/sama5_defconfig
+> @@ -131,7 +131,7 @@ CONFIG_GPIO_SYSFS=y
+>  CONFIG_POWER_SUPPLY=y
+>  CONFIG_BATTERY_ACT8945A=y
+>  CONFIG_POWER_RESET=y
+> -# CONFIG_HWMON is not set
+> +CONFIG_SENSORS_JC42=y
+>  CONFIG_WATCHDOG=y
+>  CONFIG_AT91SAM9X_WATCHDOG=y
+>  CONFIG_SAMA5D4_WATCHDOG=y
+> @@ -142,6 +142,7 @@ CONFIG_REGULATOR=y
+>  CONFIG_REGULATOR_FIXED_VOLTAGE=y
+>  CONFIG_REGULATOR_ACT8865=y
+>  CONFIG_REGULATOR_ACT8945A=y
+> +CONFIG_REGULATOR_PWM=y
+>  CONFIG_MEDIA_SUPPORT=y
+>  CONFIG_MEDIA_CAMERA_SUPPORT=y
+>  CONFIG_V4L_PLATFORM_DRIVERS=y
+> @@ -164,6 +165,7 @@ CONFIG_SND_ATMEL_SOC=y
+>  CONFIG_SND_ATMEL_SOC_WM8904=y
+>  # CONFIG_HID_GENERIC is not set
+>  CONFIG_SND_ATMEL_SOC_PDMIC=y
+> +CONFIG_SND_ATMEL_SOC_TSE850_PCM5142=y
+>  CONFIG_USB=y
+>  CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
+>  CONFIG_USB_EHCI_HCD=y
+> @@ -199,6 +201,9 @@ CONFIG_AT_XDMAC=y
+>  CONFIG_IIO=y
+>  CONFIG_AT91_ADC=y
+>  CONFIG_AT91_SAMA5D2_ADC=y
+> +CONFIG_ENVELOPE_DETECTOR=y
+> +CONFIG_DPOT_DAC=y
+> +CONFIG_MCP4531=y
+>  CONFIG_PWM=y
+>  CONFIG_PWM_ATMEL=y
+>  CONFIG_PWM_ATMEL_HLCDC_PWM=y
+> 
 
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
-No changes from v4
 
- arch/powerpc/include/asm/cpuidle.h   |  5 ++++-
- arch/powerpc/kernel/exceptions-64s.S |  6 +++---
- arch/powerpc/kernel/idle_book3s.S    | 10 +++++-----
- 3 files changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/cpuidle.h b/arch/powerpc/include/asm/cpuidle.h
-index 3919332..0a3255b 100644
---- a/arch/powerpc/include/asm/cpuidle.h
-+++ b/arch/powerpc/include/asm/cpuidle.h
-@@ -21,7 +21,7 @@
- 
- /* Idle state entry routines */
- #ifdef	CONFIG_PPC_P7_NAP
--#define	IDLE_STATE_ENTER_SEQ(IDLE_INST)				\
-+#define IDLE_STATE_ENTER_SEQ(IDLE_INST)                         \
- 	/* Magic NAP/SLEEP/WINKLE mode enter sequence */	\
- 	std	r0,0(r1);					\
- 	ptesync;						\
-@@ -29,6 +29,9 @@
- 1:	cmpd	cr0,r0,r0;					\
- 	bne	1b;						\
- 	IDLE_INST;						\
-+
-+#define	IDLE_STATE_ENTER_SEQ_NORET(IDLE_INST)			\
-+	IDLE_STATE_ENTER_SEQ(IDLE_INST)                         \
- 	b	.
- #endif /* CONFIG_PPC_P7_NAP */
- 
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 1ba82ea..7aa8afc 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -381,12 +381,12 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
- 	lbz	r3,PACA_THREAD_IDLE_STATE(r13)
- 	cmpwi	r3,PNV_THREAD_NAP
- 	bgt	10f
--	IDLE_STATE_ENTER_SEQ(PPC_NAP)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_NAP)
- 	/* No return */
- 10:
- 	cmpwi	r3,PNV_THREAD_SLEEP
- 	bgt	2f
--	IDLE_STATE_ENTER_SEQ(PPC_SLEEP)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_SLEEP)
- 	/* No return */
- 
- 2:
-@@ -400,7 +400,7 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
- 	 */
- 	ori	r13,r13,1
- 	SET_PACA(r13)
--	IDLE_STATE_ENTER_SEQ(PPC_WINKLE)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_WINKLE)
- 	/* No return */
- 4:
- #endif
-diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
-index 72dac0b..be90e2f 100644
---- a/arch/powerpc/kernel/idle_book3s.S
-+++ b/arch/powerpc/kernel/idle_book3s.S
-@@ -205,7 +205,7 @@ pnv_enter_arch207_idle_mode:
- 	stb	r3,PACA_THREAD_IDLE_STATE(r13)
- 	cmpwi	cr3,r3,PNV_THREAD_SLEEP
- 	bge	cr3,2f
--	IDLE_STATE_ENTER_SEQ(PPC_NAP)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_NAP)
- 	/* No return */
- 2:
- 	/* Sleep or winkle */
-@@ -239,7 +239,7 @@ pnv_fastsleep_workaround_at_entry:
- 
- common_enter: /* common code for all the threads entering sleep or winkle */
- 	bgt	cr3,enter_winkle
--	IDLE_STATE_ENTER_SEQ(PPC_SLEEP)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_SLEEP)
- 
- fastsleep_workaround_at_entry:
- 	ori	r15,r15,PNV_CORE_IDLE_LOCK_BIT
-@@ -261,7 +261,7 @@ fastsleep_workaround_at_entry:
- enter_winkle:
- 	bl	save_sprs_to_stack
- 
--	IDLE_STATE_ENTER_SEQ(PPC_WINKLE)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_WINKLE)
- 
- /*
-  * r3 - requested stop state
-@@ -280,7 +280,7 @@ power_enter_stop:
- 	ld	r4,ADDROFF(pnv_first_deep_stop_state)(r5)
- 	cmpd	r3,r4
- 	bge	2f
--	IDLE_STATE_ENTER_SEQ(PPC_STOP)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_STOP)
- 2:
- /*
-  * Entering deep idle state.
-@@ -302,7 +302,7 @@ lwarx_loop_stop:
- 
- 	bl	save_sprs_to_stack
- 
--	IDLE_STATE_ENTER_SEQ(PPC_STOP)
-+	IDLE_STATE_ENTER_SEQ_NORET(PPC_STOP)
- 
- _GLOBAL(power7_idle)
- 	/* Now check if user or arch enabled NAP mode */
 -- 
-1.9.4
+Nicolas Ferre
