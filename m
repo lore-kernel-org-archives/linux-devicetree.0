@@ -1,67 +1,66 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v11 2/8] power: add power sequence library
-Date: Tue, 10 Jan 2017 15:02:41 +0800
-Message-ID: <20170110070240.GA29454@b29397-desktop>
-References: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
- <1483596119-27508-3-git-send-email-peter.chen@nxp.com>
- <20170107085456.w5dhm7qadqa6tc7v@kozik-lap>
+From: noman pouigt <variksla@gmail.com>
+Subject: Re: gpio_key.c device tree question
+Date: Mon, 9 Jan 2017 23:29:11 -0800
+Message-ID: <CAES_P+_L-7vLwBDqKy4L_1tNs0N2UTFHh2O+OLFYTE=Ky=zqmA@mail.gmail.com>
+References: <CAES_P+_SWsRQZFRJU37FJuXPEcZPgADbcdN8-9EXKGL990XpDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170107085456.w5dhm7qadqa6tc7v@kozik-lap>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: mark.rutland@arm.com, Peter Chen <peter.chen@nxp.com>, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, sre@kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAES_P+_SWsRQZFRJU37FJuXPEcZPgADbcdN8-9EXKGL990XpDQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 07, 2017 at 10:54:56AM +0200, Krzysztof Kozlowski wrote:
-> On Thu, Jan 05, 2017 at 02:01:53PM +0800, Peter Chen wrote:
-> > We have an well-known problem that the device needs to do some power
-> > sequence before it can be recognized by related host, the typical
-> > example like hard-wired mmc devices and usb devices.
-> > 
-> > This power sequence is hard to be described at device tree and handled by
-> > related host driver, so we have created a common power sequence
-> > library to cover this requirement. The core code has supplied
-> > some common helpers for host driver, and individual power sequence
-> > libraries handle kinds of power sequence for devices. The pwrseq
-> > librares always need to allocate extra instance for compatible
-> > string match.
-> > 
-> > pwrseq_generic is intended for general purpose of power sequence, which
-> > handles gpios and clocks currently, and can cover other controls in
-> > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > if only one power sequence is needed, else call of_pwrseq_on_list
-> > /of_pwrseq_off_list instead (eg, USB hub driver).
-> > 
-> > For new power sequence library, it can add its compatible string
-> > to pwrseq_of_match_table, then the pwrseq core will match it with
-> > DT's, and choose this library at runtime.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> > Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> 
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Tested on Odroid U3 (reset sequence for LAN9730):
-> Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+On Sun, Jan 8, 2017 at 7:42 PM, noman pouigt <variksla@gmail.com> wrote:
+> Hello,
+>
+> I am trying to see how to disable the sub device nodes in
+> gpio_keys device node.
+>
+> I have this in my base dtsi file:
+>
+> #include "vendor_file.dtsi"
+>
+>         gpio_keys {
+>                 compatible = "gpio-keys";
+>                 input-name = "gpio-keys";
+>                 pinctrl-names = "gpio_key_active","gpio_key_suspend";
+>                 pinctrl-0 = <&key_active>;
+>                 pinctrl-1 = <&key_suspend>;
+>                 camera_snapshot {
+>                         label = "camera_snapshot";
+>                         //snip
+>                 };
+>         };
+>
+> I have this in vendor_file.dtsi:
+>        gpio_keys {
+>                source_key_1 {
+>                        label = "source_key_1";
+>                        //snip
+>                };
+>        };
+>
+> In my current consolidated dtb file all nodes are getting
+> added i.e. camera_snapshot and source_key_1. How
+> can i remove camera_snapshot node from the
+> gpio_keys device node or disable it?
 
-A nice ping...
+This issue is fixed with below commit:
 
--- 
+commit 809d9516da73345cca587743b57e45e9095d851e
+Author: Laxman Dewangan <ldewangan@nvidia.com>
+Date:   Wed Jan 13 00:14:19 2016 -0800
 
-Best Regards,
-Peter Chen
+    Input: gpio-keys - allow disabling individual buttons in DT
+
+    Add support to disable buttons from DT via status property if given button
+    is not supported on given platforms. This will help re-using existing dtsi
+    files across multiple platforms.
+
+    Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+    Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>
+>
+> Thanks,
