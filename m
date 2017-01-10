@@ -1,99 +1,72 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
-Date: Tue, 10 Jan 2017 13:46:56 -0800
-Message-ID: <e8fa98c7-0dbc-7be7-be54-b2a9114bc289@synopsys.com>
-References: <cover.1479339900.git.johnyoun@synopsys.com>
- <1495076.fZ1uLW9fli@debian64>
- <dab2e32a-1bd0-2aa5-5a7a-61f2201786b4@synopsys.com>
- <19255165.1fIP7jmgm1@debian64>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <19255165.1fIP7jmgm1@debian64>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/2] add support to STM LSM6DS3-LSM6DSM 6-axis Mems sensor
+Date: Tue, 10 Jan 2017 22:55:17 +0100
+Message-ID: <20170110215519.960-1-lorenzo.bianconi@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/19/2016 6:49 AM, Christian Lamparter wrote:
-> Hello John, hello Felipe
-> 
-> On Monday, November 28, 2016 7:32:20 PM CET John Youn wrote:
->> On 11/22/2016 12:51 PM, Christian Lamparter wrote:
->>> On Monday, November 21, 2016 7:32:30 PM CET John Youn wrote:
->>>> On 11/21/2016 1:10 PM, Christian Lamparter wrote:
->>>>> On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
->>>>>> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
->>>>>>> On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
->>>>>>>> Also, perhaps you should allow that the compatible string can define the 
->>>>>>>> default.
->>>>>>>>
->>>>>>> I hoped you would say that :).
->>>>>>>
->>>>>>> I've attached a patch (on top of John Youn changes) [...]
->>>>>>> ---
->>>>>>> Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
->>>>>>> [...]
->>>>>>> @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
->>>>>>> +/* [...] */
->>>>>>> +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
->>>>>>> +	{
->>>>>>> +		.compatible = "amcc,dwc-otg",
->>>>>>> +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
->>>>>>> +	},
->>>>>>> +};
->>>> [...]
->>>>>>>> @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
->>>>>>>  	ret = device_property_read_string(hsotg->dev, "snps,ahb-burst", &str);
->>>>>>>  	if (ret < 0) {
->>>>>>> +		const struct of_device_id *match;
->>>>>>> +
->>>>>>> +		match = of_match_node(dwc2_compat_ahb_bursts, node);
->>>>>>> +		if (match)
->>>>>>> +			ret = (int)match->data;
->>>>>>> +
->>>> [...]
->>>>>> I'd prefer if you use the binding which requires no extra code in
->>>>>> dwc2.
->>>>> I'm fine with either option. However it think that this would require
->>>>> that either Mark or Rob would allow an exception to the "keep existing
->>>>> dts the way they are) and ack the following change to the canyonlands.dts. 
->>>> [...]
->>
->> Ok thanks for clearing that up. I understand.
->>
->> For now we can just set the property to "INCR16" based on the
->> compatible string. Perhaps in the future do this from a glue-layer
->> driver which binds to all compatible strings other than "snps,dwc2".
->>
->> I won't be able to do anything with this until next week though.
-> Ok, I think enough time has passed. I would like to see this
-> patch series (v3 [0]) being queued for 4.11+ together with
-> "usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg" [1].
-> 
-> Felipe, if you want I can resend the series and add the
-> "amcc,dwc-otg" patch to it as well. Just let me know what you
-> prefer here.
-> 
-> Regards,
-> Christian
-> 
-> [0] <https://urldefense.proofpoint.com/v2/url?u=https-3A__www.mail-2Darchive.com_linux-2Dusb-40vger.kernel.org_msg83401.html&d=DgICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=0VsY7UdB1d6feXmjAhNrI_qghu91wtaLLnO3I3Uw2os&m=9a_ZbkfhbOdNjPstQXQq2hm157AzXQX03qKZIddHarU&s=zb0Zx7ZwvnKxcbpCJ_RlLrt1JtzhwUm9DffIAn9oR3k&e= >
-> [1] <https://urldefense.proofpoint.com/v2/url?u=https-3A__www.spinics.net_lists_linux-2Dusb_msg149663.html&d=DgICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=0VsY7UdB1d6feXmjAhNrI_qghu91wtaLLnO3I3Uw2os&m=9a_ZbkfhbOdNjPstQXQq2hm157AzXQX03qKZIddHarU&s=23LsbEs2DjUVLrj4ifAU2LCzEi-U3wn1G1Nx9FBIxvw&e= >
-> 
+Changes since v3:
+- use I2C protocol instead of SMBus commands
+- allow reading of the scale/sampling frequency whilst buffered operation is
+  on going
+- move st_lsm6dsx_hw allocation/initialization in st_lsm6dsx_probe() in order
+  to avoid code duplication
+- introduce enum st_lsm6dsx_hw_id to be used as I2C/SPI driver_data instead of
+  the device name (string)
+- improve code documentation
 
-Hi Christian,
+Changes since v2:
+- improve code documentation
+- improve code readability
+- use spi_write() instead of spi_sync_transfer() in st_lsm6dsx_spi_write()
+- use SMBus commands instead of I2C protocol
+- use fifo_lock mutex to prevent concurrent access to hw FIFO instead of
+  disabling/enabling irq line in st_lsm6dsx_flush_fifo()
+- rename ring occurrences in buffer ones
 
-This should be fixed against the latest dwc2 param rework series [1]
-which i hope to get queued for 4.11. If you can give it a test, that
-would be great.
+Changes since v1:
+- add sw fifo support
+- drop trigger dependency
+- use iio_claim_direct_mode() routine instead of grabbing the mutex directly
+- use more unique prefix for all defines
+- use info_mask_shared_by_all element for sampling_frequency
+- use devm_iio_* routines
+- use of_match_ptr instead of access directly to of_match_table
+- fix device tree binding
+- rename st_lsm6dsx_dev in st_lsm6dsx_hw
+- cosmetics
 
-Regards,
-John
+Lorenzo Bianconi (2):
+  iio: imu: add support to lsm6dsx driver
+  Documentation: dt: iio: add st_lsm6dsx sensor device binding
 
-[1] https://www.spinics.net/lists/linux-usb/msg151693.html
+ .../devicetree/bindings/iio/imu/st_lsm6dsx.txt     |  24 +
+ drivers/iio/imu/Kconfig                            |   1 +
+ drivers/iio/imu/Makefile                           |   2 +
+ drivers/iio/imu/st_lsm6dsx/Kconfig                 |  23 +
+ drivers/iio/imu/st_lsm6dsx/Makefile                |   5 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h            | 142 +++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c     | 455 ++++++++++++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       | 673 +++++++++++++++++++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c        | 101 ++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c        | 118 ++++
+ 10 files changed, 1544 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/Kconfig
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/Makefile
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+
+-- 
+2.9.3
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
