@@ -1,337 +1,103 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v5 3/3] dmaengine: xilinx_dma: Fix race condition in the
- driver for multiple descriptor scenario
-Date: Tue, 10 Jan 2017 14:19:18 +0530
-Message-ID: <20170110084917.GA3573@localhost>
-References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
- <1483771530-8545-4-git-send-email-appanad@xilinx.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v7 5/8] IIO: add bindings for STM32 timer trigger driver
+Date: Tue, 10 Jan 2017 09:55:26 +0100
+Message-ID: <CA+M3ks713cwuaeBwrPett+KrbQC5-w0oyq7aSTrdHReWYVQRoQ@mail.gmail.com>
+References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
+ <1483608344-9012-6-git-send-email-benjamin.gaignard@st.com> <20170109180448.f3pcpuarhcddo76b@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1483771530-8545-4-git-send-email-appanad@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, Jose.Abreu@synopsys.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20170109180448.f3pcpuarhcddo76b@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.g>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 07, 2017 at 12:15:30PM +0530, Kedareswara rao Appana wrote:
-> When driver is handling AXI DMA SoftIP
-> When user submits multiple descriptors back to back on the S2MM(recv)
-> side with the current driver flow the last buffer descriptor next bd
-> points to a invalid location resulting the invalid data or errors in the
-> DMA engine.
+2017-01-09 19:04 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Thu, Jan 05, 2017 at 10:25:41AM +0100, Benjamin Gaignard wrote:
+>> Define bindings for STM32 timer trigger
+>>
+>> version 4:
+>> - remove triggers enumeration from DT
+>> - add reg parameter
+>>
+>> version 3:
+>> - change file name
+>> - add cross reference with mfd bindings
+>>
+>> version 2:
+>> - only keep one compatible
+>> - add DT parameters to set lists of the triggers:
+>>   one list describe the triggers created by the device
+>>   another one give the triggers accepted by the device
+>>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>> ---
+>>  .../bindings/iio/timer/stm32-timer-trigger.txt     | 23 +++++++++++++++=
++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-ti=
+mer-trigger.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-tri=
+gger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.=
+txt
+>> new file mode 100644
+>> index 0000000..36a6c4a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.tx=
+t
+>> @@ -0,0 +1,23 @@
+>> +STMicroelectronics STM32 Timers IIO timer bindings
+>> +
+>> +Must be a sub-node of an STM32 Timers device tree node.
+>> +See ../mfd/stm32-timers.txt for details about the parent node.
+>> +
+>> +Required parameters:
+>> +- compatible:        Must be "st,stm32-timer-trigger".
+>> +- reg:               Define triggers configuration of the hardware IP.
+>
+> Valid values? Not sure this makes sense for use of reg. reg should be
+> how you address or id a device.
 
-Can you rephrase this, it a bit hard to understand.
+I use reg like an id to distinguish device and get the right
+configuration inside
+the driver.
 
-> 
-> This patch fixes this issue by creating a BD Chain during
+>
+>> +
+>> +Example:
+>> +     timers@40010000 {
+>> +             #address-cells =3D <1>;
+>> +             #size-cells =3D <0>;
+>> +             compatible =3D "st,stm32-timers";
+>> +             reg =3D <0x40010000 0x400>;
+>> +             clocks =3D <&rcc 0 160>;
+>> +             clock-names =3D "clk_int";
+>> +
+>> +             timer {
+>
+> This would also need an unit address.
 
-whats a BD?
+Ok I will fix that
 
-> channel allocation itself and use those BD's.
-> 
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> ---
-> Changes for v5:
-> ---> None.
-> Changes for v4:
-> ---> None.
-> Changes for v3:
-> ---> None.
-> Changes for v2:
-> ---> None.
-> 
->  drivers/dma/xilinx/xilinx_dma.c | 133 +++++++++++++++++++++++++---------------
->  1 file changed, 83 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index 0e9c02e..af2159d 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -163,6 +163,7 @@
->  #define XILINX_DMA_BD_SOP		BIT(27)
->  #define XILINX_DMA_BD_EOP		BIT(26)
->  #define XILINX_DMA_COALESCE_MAX		255
-> +#define XILINX_DMA_NUM_DESCS		255
+>
+>> +                     compatible =3D "st,stm32-timer-trigger";
+>> +                     reg =3D <0>;
+>> +             };
+>> +     };
+>> --
+>> 1.9.1
+>>
 
-why 255?
 
->  #define XILINX_DMA_NUM_APP_WORDS	5
->  
->  /* Multi-Channel DMA Descriptor offsets*/
-> @@ -310,6 +311,7 @@ struct xilinx_dma_tx_descriptor {
->   * @pending_list: Descriptors waiting
->   * @active_list: Descriptors ready to submit
->   * @done_list: Complete descriptors
-> + * @free_seg_list: Free descriptors
->   * @common: DMA common channel
->   * @desc_pool: Descriptors pool
->   * @dev: The dma device
-> @@ -331,7 +333,9 @@ struct xilinx_dma_tx_descriptor {
->   * @desc_submitcount: Descriptor h/w submitted count
->   * @residue: Residue for AXI DMA
->   * @seg_v: Statically allocated segments base
-> + * @seg_p: Physical allocated segments base
->   * @cyclic_seg_v: Statically allocated segment base for cyclic transfers
-> + * @cyclic_seg_p: Physical allocated segments base for cyclic dma
->   * @start_transfer: Differentiate b/w DMA IP's transfer
->   */
->  struct xilinx_dma_chan {
-> @@ -342,6 +346,7 @@ struct xilinx_dma_chan {
->  	struct list_head pending_list;
->  	struct list_head active_list;
->  	struct list_head done_list;
-> +	struct list_head free_seg_list;
->  	struct dma_chan common;
->  	struct dma_pool *desc_pool;
->  	struct device *dev;
-> @@ -363,7 +368,9 @@ struct xilinx_dma_chan {
->  	u32 desc_submitcount;
->  	u32 residue;
->  	struct xilinx_axidma_tx_segment *seg_v;
-> +	dma_addr_t seg_p;
->  	struct xilinx_axidma_tx_segment *cyclic_seg_v;
-> +	dma_addr_t cyclic_seg_p;
->  	void (*start_transfer)(struct xilinx_dma_chan *chan);
->  	u16 tdest;
->  };
-> @@ -569,17 +576,31 @@ static struct xilinx_axidma_tx_segment *
->  xilinx_axidma_alloc_tx_segment(struct xilinx_dma_chan *chan)
->  {
->  	struct xilinx_axidma_tx_segment *segment;
-> -	dma_addr_t phys;
-> -
-> -	segment = dma_pool_zalloc(chan->desc_pool, GFP_ATOMIC, &phys);
-> -	if (!segment)
-> -		return NULL;
-> +	unsigned long flags;
->  
-> -	segment->phys = phys;
-> +	spin_lock_irqsave(&chan->lock, flags);
-> +	if (!list_empty(&chan->free_seg_list)) {
-> +		segment = list_first_entry(&chan->free_seg_list,
-> +					   struct xilinx_axidma_tx_segment,
-> +					   node);
-> +		list_del(&segment->node);
-> +	}
-> +	spin_unlock_irqrestore(&chan->lock, flags);
->  
->  	return segment;
->  }
->  
-> +static void xilinx_dma_clean_hw_desc(struct xilinx_axidma_desc_hw *hw)
-> +{
-> +	u32 next_desc = hw->next_desc;
-> +	u32 next_desc_msb = hw->next_desc_msb;
-> +
-> +	memset(hw, 0, sizeof(struct xilinx_axidma_desc_hw));
-> +
-> +	hw->next_desc = next_desc;
-> +	hw->next_desc_msb = next_desc_msb;
-> +}
-> +
->  /**
->   * xilinx_dma_free_tx_segment - Free transaction segment
->   * @chan: Driver specific DMA channel
-> @@ -588,7 +609,9 @@ xilinx_axidma_alloc_tx_segment(struct xilinx_dma_chan *chan)
->  static void xilinx_dma_free_tx_segment(struct xilinx_dma_chan *chan,
->  				struct xilinx_axidma_tx_segment *segment)
->  {
-> -	dma_pool_free(chan->desc_pool, segment, segment->phys);
-> +	xilinx_dma_clean_hw_desc(&segment->hw);
-> +
-> +	list_add_tail(&segment->node, &chan->free_seg_list);
->  }
->  
->  /**
-> @@ -713,16 +736,26 @@ static void xilinx_dma_free_descriptors(struct xilinx_dma_chan *chan)
->  static void xilinx_dma_free_chan_resources(struct dma_chan *dchan)
->  {
->  	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-> +	unsigned long flags;
->  
->  	dev_dbg(chan->dev, "Free all channel resources.\n");
->  
->  	xilinx_dma_free_descriptors(chan);
-> +
->  	if (chan->xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
-> -		xilinx_dma_free_tx_segment(chan, chan->cyclic_seg_v);
-> -		xilinx_dma_free_tx_segment(chan, chan->seg_v);
-> +		spin_lock_irqsave(&chan->lock, flags);
-> +		INIT_LIST_HEAD(&chan->free_seg_list);
-> +		spin_unlock_irqrestore(&chan->lock, flags);
-> +
-> +		/* Free Memory that is allocated for cyclic DMA Mode */
-> +		dma_free_coherent(chan->dev, sizeof(*chan->cyclic_seg_v),
-> +				  chan->cyclic_seg_v, chan->cyclic_seg_p);
-> +	}
-> +
-> +	if (chan->xdev->dma_config->dmatype != XDMA_TYPE_AXIDMA) {
-> +		dma_pool_destroy(chan->desc_pool);
-> +		chan->desc_pool = NULL;
->  	}
-> -	dma_pool_destroy(chan->desc_pool);
-> -	chan->desc_pool = NULL;
->  }
->  
->  /**
-> @@ -805,6 +838,7 @@ static void xilinx_dma_do_tasklet(unsigned long data)
->  static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
->  {
->  	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-> +	int i;
->  
->  	/* Has this channel already been allocated? */
->  	if (chan->desc_pool)
-> @@ -815,11 +849,30 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
->  	 * for meeting Xilinx VDMA specification requirement.
->  	 */
->  	if (chan->xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
-> -		chan->desc_pool = dma_pool_create("xilinx_dma_desc_pool",
-> -				   chan->dev,
-> -				   sizeof(struct xilinx_axidma_tx_segment),
-> -				   __alignof__(struct xilinx_axidma_tx_segment),
-> -				   0);
-> +		/* Allocate the buffer descriptors. */
-> +		chan->seg_v = dma_zalloc_coherent(chan->dev,
-> +						  sizeof(*chan->seg_v) *
-> +						  XILINX_DMA_NUM_DESCS,
-> +						  &chan->seg_p, GFP_KERNEL);
-> +		if (!chan->seg_v) {
-> +			dev_err(chan->dev,
-> +				"unable to allocate channel %d descriptors\n",
-> +				chan->id);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		for (i = 0; i < XILINX_DMA_NUM_DESCS; i++) {
-> +			chan->seg_v[i].hw.next_desc =
-> +			lower_32_bits(chan->seg_p + sizeof(*chan->seg_v) *
-> +				((i + 1) % XILINX_DMA_NUM_DESCS));
-> +			chan->seg_v[i].hw.next_desc_msb =
-> +			upper_32_bits(chan->seg_p + sizeof(*chan->seg_v) *
-> +				((i + 1) % XILINX_DMA_NUM_DESCS));
-> +			chan->seg_v[i].phys = chan->seg_p +
-> +				sizeof(*chan->seg_v) * i;
-> +			list_add_tail(&chan->seg_v[i].node,
-> +				      &chan->free_seg_list);
-> +		}
->  	} else if (chan->xdev->dma_config->dmatype == XDMA_TYPE_CDMA) {
->  		chan->desc_pool = dma_pool_create("xilinx_cdma_desc_pool",
->  				   chan->dev,
-> @@ -834,7 +887,8 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
->  				     0);
->  	}
->  
-> -	if (!chan->desc_pool) {
-> +	if (!chan->desc_pool &&
-> +	    (chan->xdev->dma_config->dmatype != XDMA_TYPE_AXIDMA)) {
->  		dev_err(chan->dev,
->  			"unable to allocate channel %d descriptor pool\n",
->  			chan->id);
-> @@ -843,22 +897,20 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
->  
->  	if (chan->xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
->  		/*
-> -		 * For AXI DMA case after submitting a pending_list, keep
-> -		 * an extra segment allocated so that the "next descriptor"
-> -		 * pointer on the tail descriptor always points to a
-> -		 * valid descriptor, even when paused after reaching taildesc.
-> -		 * This way, it is possible to issue additional
-> -		 * transfers without halting and restarting the channel.
-> -		 */
-> -		chan->seg_v = xilinx_axidma_alloc_tx_segment(chan);
-> -
-> -		/*
->  		 * For cyclic DMA mode we need to program the tail Descriptor
->  		 * register with a value which is not a part of the BD chain
->  		 * so allocating a desc segment during channel allocation for
->  		 * programming tail descriptor.
->  		 */
-> -		chan->cyclic_seg_v = xilinx_axidma_alloc_tx_segment(chan);
-> +		chan->cyclic_seg_v = dma_zalloc_coherent(chan->dev,
-> +					sizeof(*chan->cyclic_seg_v),
-> +					&chan->cyclic_seg_p, GFP_KERNEL);
-> +		if (!chan->cyclic_seg_v) {
-> +			dev_err(chan->dev,
-> +				"unable to allocate desc segment for cyclic DMA\n");
-> +			return -ENOMEM;
-> +		}
-> +		chan->cyclic_seg_v->phys = chan->cyclic_seg_p;
->  	}
->  
->  	dma_cookie_init(dchan);
-> @@ -1198,7 +1250,7 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
->  static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
->  {
->  	struct xilinx_dma_tx_descriptor *head_desc, *tail_desc;
-> -	struct xilinx_axidma_tx_segment *tail_segment, *old_head, *new_head;
-> +	struct xilinx_axidma_tx_segment *tail_segment;
->  	u32 reg;
->  
->  	if (chan->err)
-> @@ -1217,21 +1269,6 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
->  	tail_segment = list_last_entry(&tail_desc->segments,
->  				       struct xilinx_axidma_tx_segment, node);
->  
-> -	if (chan->has_sg && !chan->xdev->mcdma) {
-> -		old_head = list_first_entry(&head_desc->segments,
-> -					struct xilinx_axidma_tx_segment, node);
-> -		new_head = chan->seg_v;
-> -		/* Copy Buffer Descriptor fields. */
-> -		new_head->hw = old_head->hw;
-> -
-> -		/* Swap and save new reserve */
-> -		list_replace_init(&old_head->node, &new_head->node);
-> -		chan->seg_v = old_head;
-> -
-> -		tail_segment->hw.next_desc = chan->seg_v->phys;
-> -		head_desc->async_tx.phys = new_head->phys;
-> -	}
-> -
->  	reg = dma_ctrl_read(chan, XILINX_DMA_REG_DMACR);
->  
->  	if (chan->desc_pendingcount <= XILINX_DMA_COALESCE_MAX) {
-> @@ -1729,7 +1766,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
->  {
->  	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
->  	struct xilinx_dma_tx_descriptor *desc;
-> -	struct xilinx_axidma_tx_segment *segment = NULL, *prev = NULL;
-> +	struct xilinx_axidma_tx_segment *segment = NULL;
->  	u32 *app_w = (u32 *)context;
->  	struct scatterlist *sg;
->  	size_t copy;
-> @@ -1780,10 +1817,6 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
->  					       XILINX_DMA_NUM_APP_WORDS);
->  			}
->  
-> -			if (prev)
-> -				prev->hw.next_desc = segment->phys;
-> -
-> -			prev = segment;
->  			sg_used += copy;
->  
->  			/*
-> @@ -1797,7 +1830,6 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
->  	segment = list_first_entry(&desc->segments,
->  				   struct xilinx_axidma_tx_segment, node);
->  	desc->async_tx.phys = segment->phys;
-> -	prev->hw.next_desc = segment->phys;
->  
->  	/* For the last DMA_MEM_TO_DEV transfer, set EOP */
->  	if (chan->direction == DMA_MEM_TO_DEV) {
-> @@ -2341,6 +2373,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
->  	INIT_LIST_HEAD(&chan->pending_list);
->  	INIT_LIST_HEAD(&chan->done_list);
->  	INIT_LIST_HEAD(&chan->active_list);
-> +	INIT_LIST_HEAD(&chan->free_seg_list);
->  
->  	/* Retrieve the channel properties from the device tree */
->  	has_dre = of_property_read_bool(node, "xlnx,include-dre");
-> -- 
-> 2.1.2
-> 
 
--- 
-~Vinod
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
