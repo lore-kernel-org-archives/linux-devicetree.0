@@ -1,31 +1,145 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/5] Add support for the STM32F4 I2C
-Date: Tue, 10 Jan 2017 10:26:17 +0100
-Message-ID: <CACRpkdZFEZumzFBVtR43kZ4ZA2jA_kymfrsQeV1BBZ0x8sGSXg@mail.gmail.com>
-References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ARM: dts: at91: add devicetree for the Axentia
+ TSE-850
+Date: Tue, 10 Jan 2017 10:29:28 +0100
+Message-ID: <20170110092928.hwd4l4k3eyagepco@piout.net>
+References: <1484035732-31635-1-git-send-email-peda@axentia.se>
+ <1484035732-31635-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1483607246-14771-1-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484035732-31635-2-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 5, 2017 at 10:07 AM, M'boumba Cedric Madianga
-<cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi,
 
-> This patchset adds support for the I2C controller embedded in STM32F4xx SoC.
-> It enables I2C transfer in interrupt mode with Standard-mode and Fast-mode bus
-> speed.
+This needs a commit message, please add one.
 
-The whole series:
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 10/01/2017 at 09:08:51 +0100, Peter Rosin wrote :
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/axentia.txt |  19 ++
+>  MAINTAINERS                                       |   8 +
+>  arch/arm/boot/dts/Makefile                        |   1 +
+>  arch/arm/boot/dts/at91-linea.dtsi                 |  53 +++++
+>  arch/arm/boot/dts/at91-tse850-3.dts               | 274 ++++++++++++++++++++++
+>  5 files changed, 355 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/axentia.txt
+>  create mode 100644 arch/arm/boot/dts/at91-linea.dtsi
+>  create mode 100644 arch/arm/boot/dts/at91-tse850-3.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/axentia.txt b/Documentation/devicetree/bindings/arm/axentia.txt
+> new file mode 100644
+> index 000000000000..ea3fb96ae465
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/axentia.txt
+> @@ -0,0 +1,19 @@
+> +Device tree bindings for Axentia ARM devices
+> +============================================
+> +
+> +Linea CPU module
+> +----------------
+> +
+> +Required root node properties:
+> +compatible = "axentia,linea",
+> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +and following the rules from atmel-at91.txt for a sama5d31 SoC.
+> +
+> +
+> +TSE-850 v3 board
+> +----------------
+> +
+> +Required root node properties:
+> +compatible = "axentia,tse850v3", "axentia,linea",
+> +	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +and following the rules from above for the axentia,linea CPU module.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 97b78cc5aa51..5c2ea6e9cd7f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2346,6 +2346,14 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/sound/axentia,*
+>  F:	sound/soc/atmel/tse850-pcm5142.c
+>  
+> +AXENTIA ARM DEVICES
+> +M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/arm/axentia.txt
+> +F:	arch/arm/boot/dts/at91-linea.dtsi
+> +F:	arch/arm/boot/dts/at91-tse850-3.dts
+> +
 
-Looks perfect from my point of view now.
+I don't think you need to add yourself to MAINTAINERS for two DTs if
+that is just to keep checkpatch happy, don't bother.
 
-Yours,
-Linus Walleij
+>  AZ6007 DVB DRIVERV
+>  M:	Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+>  M:	Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9a7375c388a8..7632849866de 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -48,6 +48,7 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
+>  	at91-kizbox2.dtb \
+>  	at91-sama5d2_xplained.dtb \
+>  	at91-sama5d3_xplained.dtb \
+> +	at91-tse850-3.dtb \
+>  	sama5d31ek.dtb \
+>  	sama5d33ek.dtb \
+>  	sama5d34ek.dtb \
+> diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
+> new file mode 100644
+> index 000000000000..646feb0daa81
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-linea.dtsi
+> @@ -0,0 +1,53 @@
+> +/*
+> + * at91-linea.dtsi - Device Tree Include file for the Axentia Linea Module.
+> + *
+> + * Copyright (C) 2017 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +#include "sama5d31.dtsi"
+> +
+> +/ {
+> +	compatible = "axentia,linea",
+> +		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +
+> +	memory {
+> +		reg = <0x20000000 0x4000000>;
+> +	};
+> +};
+> +
+> +&slow_xtal {
+> +	clock-frequency = <32768>;
+> +};
+> +
+> +&main_xtal {
+> +	clock-frequency = <12000000>;
+> +};
+> +
+> +&main {
+> +	clock-frequency = <12000000>;
+> +};
+> +
+
+I don't think this is needed
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
