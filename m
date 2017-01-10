@@ -1,151 +1,80 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v7 3/4] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Tue, 10 Jan 2017 10:15:52 +0900
-Message-ID: <587435C8.2040901@samsung.com>
-References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105102012epcas1p4ddeb577ea84b5c2cdf7029666b2091c1@epcas1p4.samsung.com>
- <1483611609-23522-4-git-send-email-hoegeun.kwon@samsung.com>
- <20170106052239.5prkyj3v4x4qcc46@gangnam.samsung>
- <586F2BF3.8080400@samsung.com>
- <20170106081806.h4y7o57kjbibau6l@gangnam.samsung>
- <586F5728.1010800@samsung.com>
- <5df95abe-0d5d-0c48-2840-5996260201de@samsung.com>
- <587355B8.2050701@samsung.com>
- <aeab26bc-76a8-0b4d-b5b9-b8602fcf2eb3@samsung.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: Pine64: add MMC support
+Date: Tue, 10 Jan 2017 01:22:31 +0000
+Message-ID: <1484011353-21480-2-git-send-email-andre.przywara@arm.com>
+References: <1484011353-21480-1-git-send-email-andre.przywara@arm.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <aeab26bc-76a8-0b4d-b5b9-b8602fcf2eb3@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, Andi Shyti <andi.shyti@samsung.com>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, jh80.chung@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRB4XO2DBQKGQESFW2PQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1484011353-21480-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+All Pine64 boards connect an micro-SD card slot to the first MMC
+controller.
+Enable the respective DT node and specify the (always-on) regulator
+and card-detect pin.
+As a micro-SD slot does not feature a write-protect switch, we disable
+this feature.
 
+Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-2017년 01월 09일 18:53에 Andrzej Hajda 이(가) 쓴 글:
-> On 09.01.2017 10:19, Inki Dae wrote:
->>
->> 2017년 01월 09일 16:37에 Andrzej Hajda 이(가) 쓴 글:
->>> On 06.01.2017 09:36, Inki Dae wrote:
->>>> 2017년 01월 06일 17:18에 Andi Shyti 이(가) 쓴 글:
->>>>> Hi Inki,
->>>>>
->>>>> Thanks for the reply, but...
->>>>>
->>>>>>>> +static const struct drm_display_mode default_mode = {
->>>>>>>> +	.clock = 222372,
->>>>>>>> +	.hdisplay = 1440,
->>>>>>>> +	.hsync_start = 1440 + 1,
->>>>>>>> +	.hsync_end = 1440 + 1 + 1,
->>>>>>>> +	.htotal = 1440 + 1 + 1 + 1,
->>>>>>>> +	.vdisplay = 2560,
->>>>>>>> +	.vsync_start = 2560 + 1,
->>>>>>>> +	.vsync_end = 2560 + 1 + 1,
->>>>>>>> +	.vtotal = 2560 + 1 + 1 + 15,
->>>>>>>> +	.vrefresh = 60,
->>>>>>>> +	.flags = 0,
->>>>>>>> +};
->>>>>>> how is this working with tm2e? Are these values valid for both
->>>>>>> the boards?
->>>>>> We don't need to consider tm2e board with two reasones,
->>>>>> 1. there is no tm2e board support in mainline
->>>>>> 2. the panel on tm2 would be a little bit different from one on tm2e
->>>>> ... this display in the Tizen Kernel is supported by both:
->>>>> tm2 [1] and tm2e [2]. The only differences are:
->>>> Why tm2e dts file is in mainline? Seems communication miss with Chanwoo. :( 
->>>>
->>>>> TM2:
->>>>>    clock-frequency = <14874444>;
->>>>>    hactive = <1440>;
->>>>>
->>>>> TM2E:
->>>>>    clock-frequency = <16523724>;
->>>>>    hactive = <1600>;
->>>>>
->>>>> I don't know much about the differences you mention in point 2,
->>>>> but it's a pity to drop support only because we don't want to put
->>>>> in the dts the 'hactive', and 'clock-frequency' properties.
->>>> Anyway, tm2e board is already in mainline so Panel driver may need to identify what kinds of panel is probed to decide porch values. I think there are relevant registers in MCU of the Panel device to check version or similar thing.
->>> I think we can safely use different compatible string for tm2e - it uses
->>> different display IC controller - s6e3hf2, driver will provide timings
->>> based on it.
->> Using compatable string wouldn't be a good idea because Panel is a device not specific to board.
-> 
-> But both panels are different devices:
-> TM2 has: AMS567DJ01 panel on S6E3HA2 interface (called LDI/IC)
-> TM2E has AMB559DE01 panel on S6E3HF2 interface (called LDI/IC)
-> 
-> Why assigning different compatibles to different devices is not a good idea?
-
-Oops, I didn't know that these two panels are different so I thought using different compatiable string for same panel device is not good idea.
-
-This panel driver is no problem as-is. For tm2e board, it can be considered with a separated patch later.
-
-For this, these two boards have different MCU modules but just a little bit different so we could do either just adding compatible string to tm2e dts file and panel driver - maybe not reasonable due to different hardware name - or creating new panel driver even though source code is duplicated.
-
-Thanks.
-
-> 
->>
->>> As far as I examined available specs/docs there is no reliable register
->>> which can be used to safely distinguish it on runtime, but the docs I
->>> have are far from completeness.
->> The data sheet I am seeing says a RDDIDS register describes manufacturer and module version information. With this we could identify the Panel device.
->> Of course, we may need to check the register has really different values according to board.
->>
->> Below is the version information Hoegeun checked,
->>
->> TM2
->> [    4.908666] panel_s6e3ha2 13900000.dsi.0: Manufacture date: 2014-10-31 06:41
->> [    5.035768] panel_s6e3ha2 13900000.dsi.0: Id: 50 20 09
->>
->> TM2e
->> [    4.929265] panel_s6e3ha2 13900000.dsi.0: Manufacture date: 2014-09-03 06:30
->> [    5.056287] panel_s6e3ha2 13900000.dsi.0: Id: 40 40 14
-> 
-> There is description of ID1, ID2, ID3 registers in specs of both panels,
-> I see no reliable bits to distinguish panels.
-> And relying on read values of random devices does not seems to me proper
-> solution.
-> 
-> Regards
-> Andrzej
-> 
-> 
->>
->>
->> Thanks.
->>
->>> Regards
->>> Andrzej
->>>
->>>> Thanks.
->>>>
->>>>> Andi
->>>>>
->>>>> [1] https://git.tizen.org/cgit/platform/kernel/linux-exynos/tree/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts?h=tizen#n1284
->>>>> [2] https://git.tizen.org/cgit/platform/kernel/linux-exynos/tree/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts?h=tizen#n1270
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>>>> the body of a message to majordomo@vger.kernel.org
->>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>>
->>>>> .
->>>>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->>>
->>
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index cf91051..c680ed3 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -44,6 +44,8 @@
+ 
+ #include "sun50i-a64.dtsi"
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	model = "Pine64";
+ 	compatible = "pine64,pine64", "allwinner,sun50i-a64";
+@@ -55,6 +57,13 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
+ };
+ 
+ &ehci1 {
+@@ -71,6 +80,17 @@
+ 	bias-pull-up;
+ };
+ 
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	disable-wp;
++	bus-width = <4>;
++	status = "okay";
++};
++
+ &ohci1 {
+ 	status = "okay";
+ };
+-- 
+2.8.2
