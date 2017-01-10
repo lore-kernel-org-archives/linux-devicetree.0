@@ -1,139 +1,53 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 3/3] arm64: dts: exynos5433-tm2: enable HDMI/TV path
-Date: Tue, 10 Jan 2017 09:24:24 +0100
-Message-ID: <1484036664-15951-3-git-send-email-a.hajda@samsung.com>
-References: <1484036664-15951-1-git-send-email-a.hajda@samsung.com>
- <CGME20170110082434eucas1p2aa6d49ad0e77f9ed2a4d4d8c58f94307@eucas1p2.samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: gpio: Add binding documentation for gpio-thunderx
+Date: Tue, 10 Jan 2017 09:42:59 +0100
+Message-ID: <CACRpkdZRLk1ZfUexM_y_RPKuRzcsSmWBo9e9VhvFNEFXF4xF-A@mail.gmail.com>
+References: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
+ <1483744980-25898-2-git-send-email-ddaney.cavm@gmail.com> <CACRpkdZ0xkhUC7_0A4uHxpGaU7BHgNp8TNuDPuPN9h6dDsQx4g@mail.gmail.com>
+ <a1b6c9da-5b19-c9a7-3774-0bc0e9dcdeb6@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1484036664-15951-1-git-send-email-a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <a1b6c9da-5b19-c9a7-3774-0bc0e9dcdeb6-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TV path consist of following interconnected components:
-- DECON_TV - display controller,
-- HDMI - video signal converter RGB / HDMI,
-- MHL - video signal converter HDMI / MHL,
-- DDC - i2c slave device for EDID reading (on hsi2c_11 bus).
+On Mon, Jan 9, 2017 at 8:44 PM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> On 01/09/2017 11:36 AM, Linus Walleij wrote:
 
-Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-v2:
-  - replaced magic numbers with macros,
-  - removed assigned-clock properties from sii8620 -
-    PMU clock is already confgured in PMU node
----
- .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+>>> +Optional Properties:
+>>> +- compatible: "cavium,thunder-8890-gpio", unused as PCI driver binding
+>>> is used.
+>>> +- interrupt-controller: Marks the device node as an interrupt
+>>> controller.
+>>> +- #interrupt-cells: Must be present and have value of 2 if
+>>> +                    "interrupt-controller" is present.
+>>> +  - First cell is the GPIO pin number relative to the controller.
+>>> +  - Second cell is triggering flags as defined in interrupts.txt.
+>>
+>>
+>> AFAICT this device has an optional list of interrupts as well?
+>> One per pin even?
+>
+> I'm not sure I understand your question.
+>
+> The GPIO hardware supports an interrupt on each pin.  The underlying
+> interrupt mechanism is via PCI MSI-X, which are fully discoverable by the
+> driver, so lack of device tree binding for the these underlying MSI-X is
+> fully appropriate.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index 669bb1f..ca90e6a 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -281,6 +281,22 @@
- 	};
- };
- 
-+&decon_tv {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			tv_to_hdmi: endpoint {
-+				remote-endpoint = <&hdmi_to_tv>;
-+			};
-+		};
-+	};
-+};
-+
- &dsi {
- 	status = "okay";
- 	vddcore-supply = <&ldo6_reg>;
-@@ -304,6 +320,33 @@
- 	};
- };
- 
-+&hdmi {
-+	hpd-gpios = <&gpa3 0 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+	vdd-supply = <&ldo6_reg>;
-+	vdd_osc-supply = <&ldo7_reg>;
-+	vdd_pll-supply = <&ldo6_reg>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			hdmi_to_tv: endpoint {
-+				remote-endpoint = <&tv_to_hdmi>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			hdmi_to_mhl: endpoint {
-+				remote-endpoint = <&mhl_to_hdmi>;
-+			};
-+		};
-+	};
-+};
-+
- &hsi2c_0 {
- 	status = "okay";
- 	clock-frequency = <2500000>;
-@@ -692,6 +735,28 @@
- 	};
- };
- 
-+&hsi2c_7 {
-+	status = "okay";
-+
-+	sii8620@39 {
-+		reg = <0x39>;
-+		compatible = "sil,sii8620";
-+		cvcc10-supply = <&ldo36_reg>;
-+		iovcc18-supply = <&ldo34_reg>;
-+		interrupt-parent = <&gpf0>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		reset-gpios = <&gpv7 0 GPIO_ACTIVE_LOW>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "xtal";
-+
-+		port {
-+			mhl_to_hdmi: endpoint {
-+				remote-endpoint = <&hdmi_to_mhl>;
-+			};
-+		};
-+	};
-+};
-+
- &hsi2c_8 {
- 	status = "okay";
- 
-@@ -735,6 +800,10 @@
- 	};
- };
- 
-+&hsi2c_11 {
-+	status = "okay";
-+};
-+
- &i2s0 {
- 	status = "okay";
- };
--- 
-2.7.4
+Sorry I guess I'm just ignorant about how PCI works, that has never
+been my strongest subject admittedly.
 
+So what you're saying is that PCI devices do not need specifying
+interrupts not interrupt parents in the device tree?
+
+That's fine then.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
