@@ -1,160 +1,272 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
-Date: Tue, 10 Jan 2017 21:17:28 +0000
-Message-ID: <cc1c336e-3a1c-5985-ef75-ea58e00a0c1c@kernel.org>
-References: <1483606546-13629-1-git-send-email-preid@electromag.com.au>
- <alpine.DEB.2.02.1701051004320.16779@pmeerw.net>
- <d2b5f8fe-f9ce-bf9b-b5d8-facc10936290@electromag.com.au>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v7 05/12] mux: support simplified bindings for single-user
+ gpio mux
+Date: Tue, 10 Jan 2017 21:22:02 +0000
+Message-ID: <b7f15637-cba9-3d4a-190d-812771a85a86@kernel.org>
+References: <1483532187-28494-1-git-send-email-peda@axentia.se>
+ <1483532187-28494-6-git-send-email-peda@axentia.se>
+ <d89179f5-6ad6-3c40-cdb8-f49cf324e9ee@axentia.se>
+ <9652928a-5d54-5fa4-48ad-6df57bc8513c@kernel.org>
+ <60cd24a4-dd13-c5e8-c06d-bbd12a8e7e21@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d2b5f8fe-f9ce-bf9b-b5d8-facc10936290-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <60cd24a4-dd13-c5e8-c06d-bbd12a8e7e21@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/17 06:26, Phil Reid wrote:
-> G'day Peter,
+On 08/01/17 21:56, Peter Rosin wrote:
+> On 2017-01-08 11:28, Jonathan Cameron wrote:
+>> On 05/01/17 16:21, Peter Rosin wrote:
+>>> On 2017-01-04 13:16, Peter Rosin wrote:
+>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>> ---
+>>>>  drivers/mux/mux-core.c | 81 ++++++++++++++++++++++++++++++++++++++++++++++++--
+>>>>  drivers/mux/mux-gpio.c | 56 ++--------------------------------
+>>>>  include/linux/mux.h    |  7 +++++
+>>>>  3 files changed, 89 insertions(+), 55 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+>>>> index 21da15a264ad..d887ae1c0e55 100644
+>>>> --- a/drivers/mux/mux-core.c
+>>>> +++ b/drivers/mux/mux-core.c
+>>>> @@ -15,6 +15,7 @@
+>>>>  #include <linux/device.h>
+>>>>  #include <linux/err.h>
+>>>>  #include <linux/idr.h>
+>>>> +#include <linux/gpio/consumer.h>
+>>>>  #include <linux/module.h>
+>>>>  #include <linux/mux.h>
+>>>>  #include <linux/of.h>
+>>>> @@ -288,6 +289,63 @@ static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+>>>>  	return dev ? to_mux_chip(dev) : NULL;
+>>>>  }
+>>>>  
+>>>> +#ifdef CONFIG_MUX_GPIO
+>>>> +
+>>>> +static int mux_gpio_set(struct mux_control *mux, int state)
+>>>> +{
+>>>> +	struct mux_gpio *mux_gpio = mux_chip_priv(mux->chip);
+>>>> +	int i;
+>>>> +
+>>>> +	for (i = 0; i < mux_gpio->gpios->ndescs; i++)
+>>>> +		mux_gpio->val[i] = (state >> i) & 1;
+>>>> +
+>>>> +	gpiod_set_array_value_cansleep(mux_gpio->gpios->ndescs,
+>>>> +				       mux_gpio->gpios->desc,
+>>>> +				       mux_gpio->val);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct mux_control_ops mux_gpio_ops = {
+>>>> +	.set = mux_gpio_set,
+>>>> +};
+>>>> +
+>>>> +struct mux_chip *mux_gpio_alloc(struct device *dev)
+>>>> +{
+>>>> +	struct mux_chip *mux_chip;
+>>>> +	struct mux_gpio *mux_gpio;
+>>>> +	int pins;
+>>>> +	int ret;
+>>>> +
+>>>> +	pins = gpiod_count(dev, "mux");
+>>>> +	if (pins < 0)
+>>>> +		return ERR_PTR(pins);
+>>>> +
+>>>> +	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux_gpio) +
+>>>> +				       pins * sizeof(*mux_gpio->val));
+>>>> +	if (!mux_chip)
+>>>> +		return ERR_PTR(-ENOMEM);
+>>>> +
+>>>> +	mux_gpio = mux_chip_priv(mux_chip);
+>>>> +	mux_gpio->val = (int *)(mux_gpio + 1);
+>>>> +	mux_chip->ops = &mux_gpio_ops;
+>>>> +
+>>>> +	mux_gpio->gpios = devm_gpiod_get_array(dev, "mux", GPIOD_OUT_LOW);
+>>>> +	if (IS_ERR(mux_gpio->gpios)) {
+>>>> +		ret = PTR_ERR(mux_gpio->gpios);
+>>>> +		if (ret != -EPROBE_DEFER)
+>>>> +			dev_err(dev, "failed to get gpios\n");
+>>>> +		return ERR_PTR(ret);
+>>>> +	}
+>>>> +	WARN_ON(pins != mux_gpio->gpios->ndescs);
+>>>> +	mux_chip->mux->states = 1 << pins;
+>>>> +
+>>>> +	return mux_chip;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(mux_gpio_alloc);
+>>>> +
+>>>> +#endif /* CONFIG_MUX_GPIO */
+>>>> +
+>>>>  struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>>>>  {
+>>>>  	struct device_node *np = dev->of_node;
+>>>> @@ -307,9 +365,28 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>>>>  	ret = of_parse_phandle_with_args(np,
+>>>>  					 "mux-controls", "#mux-control-cells",
+>>>>  					 index, &args);
+>>>> +
+>>>> +#ifdef CONFIG_MUX_GPIO
+>>>> +	if (ret == -ENOENT && !mux_name && gpiod_count(dev, "mux") > 0) {
+>>>> +		mux_chip = mux_gpio_alloc(dev);
+>>>> +		if (!IS_ERR(mux_chip)) {
+>>>> +			ret = devm_mux_chip_register(dev, mux_chip);
+>>>> +			if (ret < 0) {
+>>>> +				dev_err(dev, "failed to register mux-chip\n");
+>>>> +				return ERR_PTR(ret);
+>>>> +			}
+>>>> +			get_device(&mux_chip->dev);
+>>>> +			return mux_chip->mux;
+>>>> +		}
+>>>> +
+>>>> +		ret = PTR_ERR(mux_chip);
+>>>> +	}
+>>>> +#endif
+>>>> +
+>>>>  	if (ret) {
+>>>> -		dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+>>>> -			np->full_name, mux_name ?: "", index);
+>>>> +		if (ret != -EPROBE_DEFER)
+>>>> +			dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+>>>> +				np->full_name, mux_name ?: "", index);
+>>>>  		return ERR_PTR(ret);
+>>>>  	}
+>>>>  
+>>>> diff --git a/drivers/mux/mux-gpio.c b/drivers/mux/mux-gpio.c
+>>>> index 76b52bc63470..8a7bfbc0c4bb 100644
+>>>> --- a/drivers/mux/mux-gpio.c
+>>>> +++ b/drivers/mux/mux-gpio.c
+>>>> @@ -11,37 +11,12 @@
+>>>>   */
+>>>>  
+>>>>  #include <linux/err.h>
+>>>> -#include <linux/gpio/consumer.h>
+>>>>  #include <linux/module.h>
+>>>>  #include <linux/mux.h>
+>>>>  #include <linux/of_platform.h>
+>>>>  #include <linux/platform_device.h>
+>>>>  #include <linux/property.h>
+>>>
+>>> Instead of moving the mux-gpio guts from mux-gpio.c to mux-core.c, I
+>>> will instead make CONFIG_MUX_GPIO a bool option (no module possible)
+>>> and call it from the mux-core. That will be cleaner and less of a
+>>> break of abstractions in my opinion.
+>> Hmm. I wonder if the balance is right here or whether we should just not have the
+>> simplified binding at all as it breaks the assumption that all muxes are of the
+>> same level...
+>>
+>> I like the binding, but it is causing significant complexity in here.
 > 
-> Thanks for the review.
+> Yes, in this patch it looks pretty bad. But with the suggested
+> changes it at least looks fine (apart from the remaining ifdef
+> in mux_control_get). But then there's of course the conceptual
+> badness of the core depending on a specific driver that you
+> mention...
 > 
-> On 5/01/2017 17:21, Peter Meerwald-Stadler wrote:
-> <snip>
->>> +
->>> +#define TLC4541_V_CHAN(index, bits) {                                 \
->>> +        .type = IIO_VOLTAGE,                                  \
->>> +        .indexed = 1,                                         \
->>
->> no need if there is just one channel
->>
->>> +        .channel = index,                                     \
->>> +        .info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
->>> +        .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
->>> +        .address = index,                                     \
->>
->> .address not needed
->>
->>> +        .scan_index = index,                                  \
->>> +        .scan_type = {                                        \
->>> +            .sign = 'u',                                  \
->>> +            .realbits = (bits),                           \
->>> +            .storagebits = 16,                            \
->>> +            .endianness = IIO_BE,                         \
->>> +        },                                                    \
->>> +    }
->>> +
->>> +#define DECLARE_TLC4541_CHANNELS(name, bits) \
->>
->> this flexibility is only needed when further chips are added; maybe start
->> simple and only implement what is needed at first
-> I'll add the spec for to the TLC3541 which is a 14-bit version of this chip.
-> I don't have one to test, but it looks pretty straight forward.
+> But. I expect that gpio based muxes will be in vast majority, and
+> giving them some extra freedoms is probably not wrong considering
+> the upside of the simpler binding.
 > 
+Difficult balance. As you are going to be the poor soul who has
+to maintain this I'm not that bothered either way ;)
+Probably worth gathering a few more opinions on this though if
+they are forthcoming.
+
+Jonathan
+>>>
+>>> Cheers,
+>>> Peter
+>>>
+>>>> -struct mux_gpio {
+>>>> -	struct gpio_descs *gpios;
+>>>> -	int *val;
+>>>> -};
+>>>> -
+>>>> -static int mux_gpio_set(struct mux_control *mux, int state)
+>>>> -{
+>>>> -	struct mux_gpio *mux_gpio = mux_chip_priv(mux->chip);
+>>>> -	int i;
+>>>> -
+>>>> -	for (i = 0; i < mux_gpio->gpios->ndescs; i++)
+>>>> -		mux_gpio->val[i] = (state >> i) & 1;
+>>>> -
+>>>> -	gpiod_set_array_value_cansleep(mux_gpio->gpios->ndescs,
+>>>> -				       mux_gpio->gpios->desc,
+>>>> -				       mux_gpio->val);
+>>>> -
+>>>> -	return 0;
+>>>> -}
+>>>> -
+>>>> -static const struct mux_control_ops mux_gpio_ops = {
+>>>> -	.set = mux_gpio_set,
+>>>> -};
+>>>> -
+>>>>  static const struct of_device_id mux_gpio_dt_ids[] = {
+>>>>  	{ .compatible = "mux-gpio", },
+>>>>  	{ /* sentinel */ }
+>>>> @@ -51,38 +26,13 @@ MODULE_DEVICE_TABLE(of, mux_gpio_dt_ids);
+>>>>  static int mux_gpio_probe(struct platform_device *pdev)
+>>>>  {
+>>>>  	struct device *dev = &pdev->dev;
+>>>> -	struct device_node *np = dev->of_node;
+>>>>  	struct mux_chip *mux_chip;
+>>>> -	struct mux_gpio *mux_gpio;
+>>>> -	int pins;
+>>>>  	u32 idle_state;
+>>>>  	int ret;
+>>>>  
+>>>> -	if (!np)
+>>>> -		return -ENODEV;
+>>>> -
+>>>> -	pins = gpiod_count(dev, "mux");
+>>>> -	if (pins < 0)
+>>>> -		return pins;
+>>>> -
+>>>> -	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux_gpio) +
+>>>> -				       pins * sizeof(*mux_gpio->val));
+>>>> -	if (!mux_chip)
+>>>> -		return -ENOMEM;
+>>>> -
+>>>> -	mux_gpio = mux_chip_priv(mux_chip);
+>>>> -	mux_gpio->val = (int *)(mux_gpio + 1);
+>>>> -	mux_chip->ops = &mux_gpio_ops;
+>>>> -
+>>>> -	mux_gpio->gpios = devm_gpiod_get_array(dev, "mux", GPIOD_OUT_LOW);
+>>>> -	if (IS_ERR(mux_gpio->gpios)) {
+>>>> -		ret = PTR_ERR(mux_gpio->gpios);
+>>>> -		if (ret != -EPROBE_DEFER)
+>>>> -			dev_err(dev, "failed to get gpios\n");
+>>>> -		return ret;
+>>>> -	}
+>>>> -	WARN_ON(pins != mux_gpio->gpios->ndescs);
+>>>> -	mux_chip->mux->states = 1 << pins;
+>>>> +	mux_chip = mux_gpio_alloc(dev);
+>>>> +	if (IS_ERR(mux_chip))
+>>>> +		return PTR_ERR(mux_chip);
+>>>>  
+>>>>  	ret = device_property_read_u32(dev, "idle-state", &idle_state);
+>>>>  	if (ret >= 0) {
+>>>> diff --git a/include/linux/mux.h b/include/linux/mux.h
+>>>> index 3b9439927f11..3bfee23cfb8c 100644
+>>>> --- a/include/linux/mux.h
+>>>> +++ b/include/linux/mux.h
+>>>> @@ -241,4 +241,11 @@ struct mux_control *devm_mux_control_get(struct device *dev,
+>>>>   */
+>>>>  void devm_mux_control_put(struct device *dev, struct mux_control *mux);
+>>>>  
+>>>> +struct mux_gpio {
+>>>> +	struct gpio_descs *gpios;
+>>>> +	int *val;
+>>>> +};
+>>>> +
+>>>> +struct mux_chip *mux_gpio_alloc(struct device *dev);
+>>>> +
+>>>>  #endif /* _LINUX_MUX_H */
+>>>>
+>>>
 >>
->>> +const struct iio_chan_spec name ## _channels[] = { \
->>> +    TLC4541_V_CHAN(0, bits), \
->>> +    IIO_CHAN_SOFT_TIMESTAMP(1), \
->>> +}
->>> +
->>> +static DECLARE_TLC4541_CHANNELS(tlc4541, 16);
->>> +
->>> +static const struct tlc4541_chip_info tlc4541_chip_info[] = {
->>> +    [TLC4541] = {
->>> +        .channels = tlc4541_channels,
->>> +        .num_channels = ARRAY_SIZE(tlc4541_channels),
->>> +    },
->>> +};
->>> +
->>> +static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
->>> +{
->>> +    struct iio_poll_func *pf = p;
->>> +    struct iio_dev *indio_dev = pf->indio_dev;
->>> +    struct tlc4541_state *st = iio_priv(indio_dev);
->>> +    u16 buf[8]; /* 2 bytes data + 6 bytes padding + 8 bytes timestamp */
->>> +    int ret;
->>> +
->>> +    ret = spi_sync(st->spi, &st->scan_single_msg);
->>> +    if (ret < 0)
->>> +        goto done;
->>> +
->>> +    buf[0] = be16_to_cpu(st->rx_buf[0]);
->>
->> endianness is set to IIO_BE in scan_type, so this conversion is not needed
->> and maybe also buf and the copy can be avoided if rx_buf is large enough
-> 
-> I was doing the conversion in IIO_CHAN_INFO_RAW as well.
-> Is it required there? I'm guessing yes.
-Yes. That path is outputting a human readable string so needs to be the write
-way around.
-> 
->>
->>> +    iio_push_to_buffers_with_timestamp(indio_dev, buf,
->>> +                       iio_get_time_ns(indio_dev));
->>> +
->>> +done:
->>> +    iio_trigger_notify_done(indio_dev->trig);
->>> +    return IRQ_HANDLED;
->>> +}
->>> +
->>> +static int tlc4541_get_range(struct tlc4541_state *st)
->>> +{
->>> +    int vref;
->>> +
->>> +    vref = regulator_get_voltage(st->reg);
->>> +    if (vref < 0)
->>> +        return vref;
->>> +
->>> +    vref /= 1000;
->>> +
->>> +    return vref;
->>> +}
->>> +
->>> +static int tlc4541_read_raw(struct iio_dev *indio_dev,
->>> +                struct iio_chan_spec const *chan,
->>> +                int *val,
->>> +                int *val2,
->>> +                long m)
->>> +{
->>> +    int ret = 0;
->>> +    struct tlc4541_state *st = iio_priv(indio_dev);
->>> +
->>> +    switch (m) {
->>> +    case IIO_CHAN_INFO_RAW:
->>> +        ret = iio_device_claim_direct_mode(indio_dev);
->>> +        if (ret)
->>> +            return ret;
->>> +        ret = spi_sync(st->spi, &st->scan_single_msg);
->>> +        iio_device_release_direct_mode(indio_dev);
->>> +        if (ret < 0)
->>> +            return ret;
->>> +        *val = be16_to_cpu(st->rx_buf[0]);
->>
->> on page 12 of the datasheet, the conversion results is in two registers?
->> and rx_buf has two elements?
->>
->> haven't investigated in detail -- maybe a comment would be good to detail
->> operation?
-> I set that to 4 bytes because I also use that for the dummy 24 clock cycles
-> at the beginning as well. I think that documentation is a bit misleading.
-> Possible due to the tlc3451 datasheet being  very similar. Those two registers
-> are 14 bits and 2 bits wide respectively. The SPI cycle time shows data is
-> available in the first 16 bits.
-> 
-> 
->>
->>> +        return IIO_VAL_INT;
->>> +    case IIO_CHAN_INFO_SCALE:
->>> +        ret = tlc4541_get_range(st);
->>> +        if (ret < 0)
->>> +            return ret;
->>> +        *val = ret;
->>> +        *val2 = chan->scan_type.realbits;
->>> +        return IIO_VAL_FRACTIONAL_LOG2;
->>> +    }
->>> +    return -EINVAL;
->>> +}
-> <snip>
-> 
 > 
