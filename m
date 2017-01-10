@@ -1,65 +1,92 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: sun8i: add OTG function to Lichee Pi Zero
-Date: Tue, 10 Jan 2017 14:24:43 -0600
-Message-ID: <20170110202443.GC2479@uda0271908>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-5-icenowy@aosc.xyz>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH V7 1/4] Documentation/devicetree/bindings: b850v3_lvds_dp
+Date: Tue, 10 Jan 2017 23:04:58 +0200
+Message-ID: <6276161.johxDync2u@avalon>
+References: <74f0-58704480-5-27259840@173563636>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170103152534.20118-5-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <74f0-58704480-5-27259840@173563636>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: Peter Senna Tschudin <peter.senna@collabora.co.uk>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Peter Senna Tschudin <peter.senna@gmail.com>, Takashi Iwai <tiwai@suse.com>, Yakir Yang <ykk@rock-chips.com>, Jiri Slaby <jslaby@suse.cz>, Martyn Welch <martyn.welch@collabora.co.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, Peter Senna Tschudin <peter.senna@collabora.com>, Javier Martinez Canillas <javier@dowhile0.org>, Thierry Reding <treding@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, martin.donnelly@ge.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2017 at 11:25:34PM +0800, Icenowy Zheng wrote:
-> Lichee Pi Zero features a USB OTG port.
-> 
-> Add support for it.
-> 
-> Note: in order to use the Host mode, the board must be powered via the
-> +5V and GND pins.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> ---
->  arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> index 0099affc6ce3..3d9168cbaeca 100644
-> --- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> @@ -71,3 +71,13 @@
->  	pinctrl-names = "default";
->  	status = "okay";
->  };
-> +
-> +&usb_otg {
-> +	dr_mode = "otg";
+Hi Peter,
 
-Why not set this default mode in dtsi instead?
+On Saturday 07 Jan 2017 01:29:52 Peter Senna Tschudin wrote:
+> On 04 January, 2017 21:39 CET, Rob Herring wrote:
+> > On Tue, Jan 3, 2017 at 5:34 PM, Peter Senna Tschudin wrote:
+> >> On 03 January, 2017 23:51 CET, Rob Herring <robh@kernel.org> wrote:
+> >>> On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin wrote:
+> >>>> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
+> >>>> display bridge.
+> >>>> 
+> >>>> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
+> >>>> Cc: Martin Donnelly <martin.donnelly@ge.com>
+> >>>> Cc: Javier Martinez Canillas <javier@dowhile0.org>
+> >>>> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> >>>> Cc: Rob Herring <robh@kernel.org>
+> >>>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> >>>> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+> >>>> ---
+> >>>> There was an Acked-by from Rob Herring <robh@kernel.org> for V6, but
+> >>>> I changed the bindings to use i2c_new_secondary_device() so I
+> >>>> removed it from the commit message.
+> >>>> 
+> >>>>  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 ++++++++++++++
+> >>> Generally, bindings are not organized by vendor. Put in
+> >>> bindings/display/bridge/... instead.
+> >> 
+> >> Will change that.
+> >> 
+> >>>>  1 file changed, 39 insertions(+)
+> >>>>  create mode 100644
+> >>>>  Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> >>>> 
+> >>>> diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> >>>> b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt new file
+> >>>> mode 100644
+> >>>> index 0000000..1bc6ebf
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+> >>>> @@ -0,0 +1,39 @@
+> >>>> +Driver for GE B850v3 LVDS/DP++ display bridge
+> >>>> +
+> >>>> +Required properties:
+> >>>> +  - compatible : should be "ge,b850v3-lvds-dp".
+> >>> 
+> >>> Isn't '-lvds-dp' redundant? The part# should be enough.
+> >> 
+> >> b850v3 is the name of the product, this is why the proposed name. What
+> >> about, b850v3-dp2 dp2 indicating the second DP output?
+> >
+> > Humm, b850v3 is the board name? This node should be the name of the bridge
+> > chip.
+>
+> From the cover letter:
+> 
+> -- // --
+> There are two physical bridges on the video signal pipeline: a STDP4028(LVDS
+> to DP) and a STDP2690(DP to DP++).  The hardware and firmware made it
+> complicated for this binding to comprise two device tree nodes, as the
+> design goal is to configure both bridges based on the LVDS signal, which
+> leave the driver powerless to control the video processing pipeline. The
+> two bridges behaves as a single bridge, and the driver is only needed for
+> telling the host about EDID / HPD, and for giving the host powers to ack
+> interrupts. The video signal pipeline is as follows:
+> 
+>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+> -- // --
 
+You forgot to prefix your patch series with [HACK] ;-)
+
+How about fixing the issues that make the two DT nodes solution difficult ? 
+What are they ?
+
+-- 
 Regards,
--Bin.
 
-> +	status = "okay";
-> +};
-> +
-> +&usbphy {
-> +	usb0_id_det-gpio = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +};
-> -- 
-> 2.11.0
-> 
+Laurent Pinchart
