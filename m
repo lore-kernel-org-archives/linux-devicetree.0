@@ -1,44 +1,36 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: clk: add rockchip,
- grf property for RK3399
-Date: Tue, 10 Jan 2017 10:34:41 -0800
-Message-ID: <CAD=FV=Wr0bOLaU2LnhXUSk8b7xaJC2+8ihRvx48Az=zy54Agdg@mail.gmail.com>
-References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
- <1484028930-20305-3-git-send-email-zhengxing@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 0/3] arm64: dts: exynos: Fix DTC warnings for Exynos
+ boards
+Date: Tue, 10 Jan 2017 20:42:34 +0200
+Message-ID: <20170110184234.rzxedwnvsun7cfk2@kozik-lap>
+References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484028930-20305-3-git-send-email-zhengxing@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xing Zheng <zhengxing@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jan 10, 2017 at 02:38:29PM -0300, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> This trivial series contains fixes for DTC warnings caused by mismatches
+> between unit names and reg properties in device tree nodes.
+> 
+> The patches shouldn't cause a functional change but have been just build
+> tested. I compared the generated DTB though to make sure that only these
+> nodes changed.
+> 
+> Best regards,
+> Javier
+> 
+> Changes since v1:
+>   - Fix subject line since I forgot the "exynos" prefix.
 
-On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing@rock-chips.com> wrote:
-> Add support for rockchip,grf property which is used for GRF muxes
-> on RK3399.
->
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-> ---
->
-> Changes in v4:
-> - update the decription for rockchip,grf property
->
-> Changes in v3: None
-> Changes in v2: None
->
->  Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+Thanks :)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Best regards,
+Krzysztof
