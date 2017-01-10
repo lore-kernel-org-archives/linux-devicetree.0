@@ -1,72 +1,70 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3] arm64: dts: rockchip: add "rockchip, grf" property for RK3399 PMUCRU/CRU
-Date: Tue, 10 Jan 2017 09:27:41 +0800
-Message-ID: <1484011661-13474-1-git-send-email-zhengxing@rock-chips.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Tue, 10 Jan 2017 09:28:38 +0800
+Message-ID: <1484011718.10361.7.camel@mtksdaap41>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+         <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+         <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+         <1479784905.8964.15.camel@mtksdaap41>
+         <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+         <1479866054.8964.21.camel@mtksdaap41> <1479894203.8964.29.camel@mtksdaap41>
+         <1483670099.18931.5.camel@mtksdaap41>
+         <974d20f3-5133-0869-2a35-c1617bec5d6e@xs4all.nl>
+         <c35bd06d-f012-1289-e765-02dc26b87e27@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c35bd06d-f012-1289-e765-02dc26b87e27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The structure rockchip_clk_provider needs to refer the GRF regmap
-in somewhere, if the CRU node has not "rockchip,grf" property,
-calling syscon_regmap_lookup_by_phandle will return an invalid GRF
-regmap, and the MUXGRF type clock will be not supported.
+Hi Matthias,
 
-Therefore, we need to add them.
+On Mon, 2017-01-09 at 19:45 +0100, Matthias Brugger wrote:
+> 
+> On 09/01/17 12:29, Hans Verkuil wrote:
+> > Hi Rick,
+> >
+> > On 01/06/2017 03:34 AM, Rick Chang wrote:
+> >> Hi Hans,
+> >>
+> >> The dependence on [1] has been merged in 4.10, but [2] has not.Do you have
+> >> any idea about this patch series? Should we wait for [2] or we could merge
+> >> the source code and dt-binding first?
+> >
+> > Looking at [2] I noticed that the last comment was July 4th. What is the reason
+> > it hasn't been merged yet?
+> >
+> > If I know [2] will be merged for 4.11, then I am fine with merging this media
+> > patch series. The dependency of this patch on [2] is something Mauro can handle.
+> >
+> > If [2] is not merged for 4.11, then I think it is better to wait until it is
+> > merged.
+> >
+> 
+> I can't take [2] because there is no scpsys in the dts present. It seems 
+> that it got never posted.
+> 
+> Rick can you please follow-up with James and provide a patch which adds 
+> a scpsys node to the mt2701.dtsi?
+> 
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+James sent three MT2701 dts patches [1] two weeks ago, these three
+patches include scpsys node. Please take a reference. And We will send
+new MT2701 ionmmu/smi dtsi node patch base on [1] later, thus you can
+accept and merge to 4.11.
 
-Changes in v3:
-- add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
+[1]
+https://patchwork.kernel.org/patch/9489991/
+https://patchwork.kernel.org/patch/9489985/
+https://patchwork.kernel.org/patch/9489989/
 
-Changes in v2:
-- referring pmugrf for PMUGRU
-- fix the typo "invaild" in COMMIT message
-
- Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt | 5 +++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi                        | 2 ++
- 2 files changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-index 3888dd3..f476b3d 100644
---- a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-@@ -13,6 +13,11 @@ Required Properties:
- - #clock-cells: should be 1.
- - #reset-cells: should be 1.
- 
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing pll rates are not changable, due to the missing pll lock status.
-+
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
- preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index c928015..081621b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1077,6 +1077,7 @@
- 	pmucru: pmu-clock-controller@ff750000 {
- 		compatible = "rockchip,rk3399-pmucru";
- 		reg = <0x0 0xff750000 0x0 0x1000>;
-+		rockchip,grf = <&pmugrf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		assigned-clocks = <&pmucru PLL_PPLL>;
-@@ -1086,6 +1087,7 @@
- 	cru: clock-controller@ff760000 {
- 		compatible = "rockchip,rk3399-cru";
- 		reg = <0x0 0xff760000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		assigned-clocks =
--- 
-2.7.4
+Thanks,
+Eddie
 
 
 --
