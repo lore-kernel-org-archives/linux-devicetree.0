@@ -1,41 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 01/11] dmaengine: cppi41: rename platform variables
-Date: Tue, 10 Jan 2017 20:35:45 +0300
-Message-ID: <4db00ec4-1940-00ea-4675-3839fc8bbb5e@cogentembedded.com>
-References: <20170109160656.3470-1-abailon@baylibre.com>
- <20170109160656.3470-2-abailon@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109160656.3470-2-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v2 0/3] arm64: dts: exynos: Fix DTC warnings for Exynos boards
+Date: Tue, 10 Jan 2017 14:38:29 -0300
+Message-ID: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hello Krzysztof,
 
-On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
+This trivial series contains fixes for DTC warnings caused by mismatches
+between unit names and reg properties in device tree nodes.
 
-> Currently, only the am335x is supported by the driver.
-> Though the driver has a glue layer to support different platforms,
-> some platform variable names are not prefixed with the platform name.
-> To facilitate the addition of a new platform,
-> rename some variables owned by the am335x glue.
->
-> Currently, only the am335x is supported by the driver.
-> Though the driver provide a glue layer that should be used to support
-> another platforms. Rename variable specifics to the am335x glue.
+The patches shouldn't cause a functional change but have been just build
+tested. I compared the generated DTB though to make sure that only these
+nodes changed.
 
-    You are repeating yourself. :-)
+Best regards,
+Javier
 
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-[...]
+Changes since v1:
+  - Fix subject line since I forgot the "exynos" prefix.
 
-MBR, Sergei
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Javier Martinez Canillas (3):
+  arm64: dts: exynos: Add missing unit name to Exynos7 SoC node
+  arm64: dts: exynos: Add missing unit name to Exynos5433 SoC node
+  arm64: dts: exynos: Remove unneeded unit names in Exynos5433 nodes
+
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 8 ++++----
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+-- 
+2.7.4
