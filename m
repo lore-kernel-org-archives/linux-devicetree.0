@@ -1,221 +1,30 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
- stores scenario in vdma
-Date: Tue, 10 Jan 2017 11:56:20 +0530
-Message-ID: <20170110062620.GZ3573@localhost>
-References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
- <1483771530-8545-3-git-send-email-appanad@xilinx.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3][v3] Add QorIQ LS2088A platform support
+Date: Tue, 10 Jan 2017 14:31:04 +0800
+Message-ID: <20170110063102.GA20956@dragon>
+References: <1483938896-2221-1-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483771530-8545-3-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1483938896-2221-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 07, 2017 at 12:15:29PM +0530, Kedareswara rao Appana wrote:
-> When VDMA is configured for more than one frame in the h/w
-> for example h/w is configured for n number of frames and user
-> Submits n number of frames and triggered the DMA using issue_pending API.
+On Mon, Jan 09, 2017 at 10:44:53AM +0530, Abhimanyu Saini wrote:
+> Abhimanyu Saini (3):
+>   dt-bindings: Add compatible for LS2088A QDS and RDB board
+>   arm64: freescale: ls2080a: Split devicetree for code resuability
 
-title case in middle if sentence, no commas, can you make it easier to read
-please..
+"arm64: dts: ls2080a: ..."
 
-> In the current driver flow we are submitting one frame at a time
-> but we should submit all the n number of frames at one time as the h/w
-> Is configured for n number of frames.
+>   arm64: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
 
-s/Is/is
+"arm64: dts: ls2088a: ..."
 
-> 
-> This patch fixes this issue.
-> 
-> Reviewed-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes for v5:
-> ---> Updated xlnx,fstore-config property to xlnx,fstore-enable
->      and updated description as suggested by Rob.
-> Changes for v4:
-> ---> Add Check for framestore configuration on Transmit case as well
->      as suggested by Jose Abreu.
-> ---> Modified the dev_dbg checks to dev_warn checks as suggested
->      by Jose Abreu.
-> Changes for v3:
-> ---> Added Checks for frame store configuration. If frame store
->      Configuration is not present at the h/w level and user
->      Submits less frames added debug prints in the driver as relevant.
-> Changes for v2:
-> ---> Fixed race conditions in the driver as suggested by Jose Abreu
-> ---> Fixed unnecessray if else checks in the vdma_start_transfer
->      as suggested by Laurent Pinchart.
-> 
->  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
->  drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
->  2 files changed, 57 insertions(+), 23 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> index a2b8bfa..e951c09 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> @@ -66,6 +66,8 @@ Optional child node properties:
->  Optional child node properties for VDMA:
->  - xlnx,genlock-mode: Tells Genlock synchronization is
->  	enabled/disabled in hardware.
-> +- xlnx,fstore-enable: boolean; if defined, it indicates that controller
-> +	supports frame store configuration.
->  Optional child node properties for AXI DMA:
->  -dma-channels: Number of dma channels in child node.
->  
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index be7eb41..0e9c02e 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -322,6 +322,7 @@ struct xilinx_dma_tx_descriptor {
->   * @genlock: Support genlock mode
->   * @err: Channel has errors
->   * @idle: Check for channel idle
-> + * @has_fstoreen: Check for frame store configuration
->   * @tasklet: Cleanup work after irq
->   * @config: Device configuration info
->   * @flush_on_fsync: Flush on Frame sync
-> @@ -353,6 +354,7 @@ struct xilinx_dma_chan {
->  	bool genlock;
->  	bool err;
->  	bool idle;
-> +	bool has_fstoreen;
->  	struct tasklet_struct tasklet;
->  	struct xilinx_vdma_config config;
->  	bool flush_on_fsync;
-> @@ -990,6 +992,27 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
->  	if (list_empty(&chan->pending_list))
->  		return;
->  
-> +	/*
-> +	 * Note: When VDMA is built with default h/w configuration
-> +	 * User should submit frames upto H/W configured.
-> +	 * If users submits less than h/w configured
-> +	 * VDMA engine tries to write to a invalid location
-> +	 * Results undefined behaviour/memory corruption.
-> +	 *
-> +	 * If user would like to submit frames less than h/w capable
-> +	 * On S2MM side please enable debug info 13 at the h/w level
-> +	 * On MM2S side please enable debug info 6 at the h/w level
-> +	 * It will allows the frame buffers numbers to be modified at runtime.
-> +	 */
-> +	if (!chan->has_fstoreen &&
-> +	     chan->desc_pendingcount < chan->num_frms) {
-> +		dev_warn(chan->dev, "Frame Store Configuration is not enabled at the\n");
-> +		dev_warn(chan->dev, "H/w level enable Debug info 13 or 6 at the h/w level\n");
-> +		dev_warn(chan->dev, "OR Submit the frames upto h/w Capable\n\r");
-> +
-> +		return;
-> +	}
-> +
->  	desc = list_first_entry(&chan->pending_list,
->  				struct xilinx_dma_tx_descriptor, node);
->  	tail_desc = list_last_entry(&chan->pending_list,
-> @@ -1052,25 +1075,38 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
->  	if (chan->has_sg) {
->  		dma_ctrl_write(chan, XILINX_DMA_REG_TAILDESC,
->  				tail_segment->phys);
-> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
-> +		chan->desc_pendingcount = 0;
->  	} else {
->  		struct xilinx_vdma_tx_segment *segment, *last = NULL;
-> -		int i = 0;
-> +		int i = 0, j = 0;
->  
->  		if (chan->desc_submitcount < chan->num_frms)
->  			i = chan->desc_submitcount;
->  
-> -		list_for_each_entry(segment, &desc->segments, node) {
-> -			if (chan->ext_addr)
-> -				vdma_desc_write_64(chan,
-> -					XILINX_VDMA_REG_START_ADDRESS_64(i++),
-> -					segment->hw.buf_addr,
-> -					segment->hw.buf_addr_msb);
-> -			else
-> -				vdma_desc_write(chan,
-> -					XILINX_VDMA_REG_START_ADDRESS(i++),
-> -					segment->hw.buf_addr);
-> -
-> -			last = segment;
-> +		for (j = 0; j < chan->num_frms; ) {
-> +			list_for_each_entry(segment, &desc->segments, node) {
-> +				if (chan->ext_addr)
-> +					vdma_desc_write_64(chan,
-> +					  XILINX_VDMA_REG_START_ADDRESS_64(i++),
-> +					  segment->hw.buf_addr,
-> +					  segment->hw.buf_addr_msb);
-> +				else
-> +					vdma_desc_write(chan,
-> +					    XILINX_VDMA_REG_START_ADDRESS(i++),
-> +					    segment->hw.buf_addr);
-> +
-> +				last = segment;
-> +			}
-> +			list_del(&desc->node);
-> +			list_add_tail(&desc->node, &chan->active_list);
-> +			j++;
-> +			if (list_empty(&chan->pending_list) ||
-> +			    (i == chan->num_frms))
-> +				break;
-> +			desc = list_first_entry(&chan->pending_list,
-> +						struct xilinx_dma_tx_descriptor,
-> +						node);
->  		}
->  
->  		if (!last)
-> @@ -1081,20 +1117,14 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
->  		vdma_desc_write(chan, XILINX_DMA_REG_FRMDLY_STRIDE,
->  				last->hw.stride);
->  		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
-> -	}
->  
-> -	chan->idle = false;
-> -	if (!chan->has_sg) {
-> -		list_del(&desc->node);
-> -		list_add_tail(&desc->node, &chan->active_list);
-> -		chan->desc_submitcount++;
-> -		chan->desc_pendingcount--;
-> +		chan->desc_submitcount += j;
-> +		chan->desc_pendingcount -= j;
->  		if (chan->desc_submitcount == chan->num_frms)
->  			chan->desc_submitcount = 0;
-> -	} else {
-> -		list_splice_tail_init(&chan->pending_list, &chan->active_list);
-> -		chan->desc_pendingcount = 0;
->  	}
-> +
-> +	chan->idle = false;
->  }
->  
->  /**
-> @@ -1342,6 +1372,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
->  
->  	chan->err = false;
->  	chan->idle = true;
-> +	chan->desc_submitcount = 0;
->  
->  	return err;
->  }
-> @@ -2315,6 +2346,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
->  	has_dre = of_property_read_bool(node, "xlnx,include-dre");
->  
->  	chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
-> +	chan->has_fstoreen = of_property_read_bool(node, "xlnx,fstore-enable");
->  
->  	err = of_property_read_u32(node, "xlnx,datawidth", &value);
->  	if (err) {
-> -- 
-> 2.1.2
-> 
-
--- 
-~Vinod
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
