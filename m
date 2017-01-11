@@ -1,65 +1,96 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: sunxi-ng: add support for V3s CCU
-Date: Thu, 12 Jan 2017 03:44:53 +0800
-Message-ID: <2714901484163893@web1g.yandex.ru>
-References: <20170103151629.19447-1-icenowy@aosc.xyz>
-	 <20170103151629.19447-3-icenowy@aosc.xyz>
-	 <20170110181006.yrd6moy2mctzoc4c@lukather> <2705031484163593@web1g.yandex.ru>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/5] mfd: lm3533: Support initialization from Device
+ Tree
+Date: Wed, 11 Jan 2017 11:55:21 -0800
+Message-ID: <20170111195521.GB10531@minitux>
+References: <20161226181153.11271-1-bjorn.andersson@linaro.org>
+ <20161226181153.11271-2-bjorn.andersson@linaro.org>
+ <20170104115424.GH27589@dell>
+ <20170104192608.GN10531@minitux>
+ <20170105074952.GG24225@dell>
+ <20170105163054.GO10531@minitux>
+ <20170106095349.GE9851@dell>
+ <20170106185422.GQ10531@minitux>
+ <20170109083638.GB2155@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBN4W3LBQKGQEQOM64TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2705031484163593-/w1NKm4lK9luio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170109083638.GB2155@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pavel Machek <pavel@ucw.cz>, Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon 09 Jan 00:36 PST 2017, Lee Jones wrote:
 
+> On Fri, 06 Jan 2017, Bjorn Andersson wrote:
+> 
+> > On Fri 06 Jan 01:53 PST 2017, Lee Jones wrote:
+> > 
+> > > On Thu, 05 Jan 2017, Bjorn Andersson wrote:
+> > > 
+> > > > On Wed 04 Jan 23:49 PST 2017, Lee Jones wrote:
+> > > > 
+> > > > > On Wed, 04 Jan 2017, Bjorn Andersson wrote:
+> > > > > 
+> > > > > > On Wed 04 Jan 03:54 PST 2017, Lee Jones wrote:
+> > > > > > 
+> > > > > > > On Mon, 26 Dec 2016, Bjorn Andersson wrote:
+> > > > > > > 
+> > > > > > > > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > > > > > > > 
+> > > > > > > > Implement support for initialization of the lm3533 driver core and
+> > > > > > > > probing child devices from Device Tree.
+> > > > > > > > 
+> > > > > > 
+> > > > > > [..]
+> > > > > > 
+> > > > > > > > @@ -512,6 +514,11 @@ static int lm3533_device_init(struct lm3533 *lm3533)
+> > > > > > > >  	lm3533_device_bl_init(lm3533);
+> > > > > > > >  	lm3533_device_led_init(lm3533);
+> > > > > > > >  
+> > > > > > > > +	if (lm3533->dev->of_node) {
+> > > > > > > > +		of_platform_populate(lm3533->dev->of_node, NULL, NULL,
+> > > > > > > > +				     lm3533->dev);
+> > > > > > > > +	}
+> > > > > > > 
+> > > > > > > I think it's save to call of_platform_populate(), even if !of_node.
+> > > > > > > It will just fail and return an error code, which you are ignoring
+> > > > > > > anyway.
+> > > > > > > 
+> > > > > > 
+> > > > > > I thought so too, but that's apparently how you trigger probing children
+> > > > > > of the root node. So we're stuck with a conditional.
+> > > > > 
+> > > > > Ah, so this is to protect against the case where DT is present, but a
+> > > > > node for this device is not (or is disabled), so is left unprobed.
+> > > > > Then the bind is initiated via I2C?  Or something else?
+> > > > > 
+> > > > 
+> > > > In the event that a new lm3533 is spawned from sysfs we would not have
+> > > > platform_data when entering lm3533_device_init() and just bail early.
+> > > > 
+> > > > Therefor, this issue would be limited to the odd case of lm3533 being
+> > > > initiated from code (e.g. a board file) on a DT enabled system. In which
+> > > > case it will create and probe new devices from the root of the DT.
+> > > 
+> > > Eewww, do we really want to support that?
+> > > 
+> > 
+> > As long as we support non-DT probing of the driver this is a possible
+> > scenario. And with modern ARM being DT-centric I think that if anyone
+> > uses this driver with a modern version of the Linux kernel it's likely
+> > that they would have this kind of hybrid solution.
+> > 
+> > So, although ugly, I think we should keep this conditional and hope that
+> > anyone using the driver will transition to use the DT binding.
+> 
+> Very well, but can you add a comment describing the reason for its
+> existence with a view to removing it further down the line?
+> 
 
-12.01.2017, 03:40, "Icenowy Zheng" <icenowy-ymACFijhrKM@public.gmane.org>:
-> 11.01.2017, 02:10, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->> =C2=A0On Tue, Jan 03, 2017 at 11:16:26PM +0800, Icenowy Zheng wrote:
->>> =C2=A0=C2=A0V3s has a similar but cut-down CCU to H3.
->>>
->>> =C2=A0=C2=A0Add support for it.
->>>
->>> =C2=A0=C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>
->> =C2=A0It looks like there's nothing different but the clocks that you
->> =C2=A0register with the H3, please just use the H3 driver.
->
-> Nope.
->
-> It has a different PLL (PLL_ISP) at different address, and some
-> different muxes.
+Sounds reasonable, I will prepare an updated patch with this.
 
-Forgot to mention the missing of PLL_DE and related misses.
-
->
->> =C2=A0Thanks!
->> =C2=A0Maxime
->>
->> =C2=A0--
->> =C2=A0Maxime Ripard, Free Electrons
->> =C2=A0Embedded Linux and Kernel engineering
->> =C2=A0http://free-electrons.com
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards,
+Bjorn
