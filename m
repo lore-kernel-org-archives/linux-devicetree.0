@@ -1,116 +1,151 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH] arm64: dts: exynos: Replace small letter of base
- address/offset on Exynos5433
-Date: Thu, 12 Jan 2017 06:30:45 +0900
-Message-ID: <CAGTfZH1172CkN_EqMvZNvn8_LYYATYgNnW9PJrL7ArPr2SPMVQ@mail.gmail.com>
-References: <CGME20170111005552epcas1p4a1f6ed88022b46544dec4b3801583267@epcas1p4.samsung.com>
- <1484096148-17120-1-git-send-email-cw00.choi@samsung.com> <20170111211503.6kwqaunb5mpe6eb2@rob-hp-laptop>
-Reply-To: cwchoi00@gmail.com
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Wed, 11 Jan 2017 15:34:41 -0600
+Message-ID: <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
+References: <20170104205536.15963-1-d-gerlach@ti.com> <20170104205536.15963-3-d-gerlach@ti.com>
+ <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop> <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170111211503.6kwqaunb5mpe6eb2@rob-hp-laptop>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Rutland <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, a.hajda@samsung.com, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-01-12 6:15 GMT+09:00 Rob Herring <robh@kernel.org>:
-> On Wed, Jan 11, 2017 at 09:55:48AM +0900, Chanwoo Choi wrote:
->> This patch replaces the small letter of base address, offset and hex val=
-ue
->> with the capital letter to keep the consistency on Exynos5433.
+On Mon, Jan 9, 2017 at 11:57 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
+> Rob,
 >
-> You mean the other way around, right?
-
-When I posted the dts patches, I got the comment that small letter is bette=
-r
-for base address/offset. (It doesn=E2=80=99t mean that all dts file in Linu=
-x Kernel
-have to use the small letter of base address and offset.)
-
-This dts uses the both capital and small letter for each base address/offse=
-t.
-Almost hex value already uses the small letter. If possible, I hope to use
-the one style (small letter).
-
+> On 01/09/2017 11:50 AM, Rob Herring wrote:
+>>
+>> On Wed, Jan 04, 2017 at 02:55:34PM -0600, Dave Gerlach wrote:
+>>>
+>>> Add a generic power domain implementation, TI SCI PM Domains, that
+>>> will hook into the genpd framework and allow the TI SCI protocol to
+>>> control device power states.
+>>>
+>>> Also, provide macros representing each device index as understood
+>>> by TI SCI to be used in the device node power-domain references.
+>>> These are identifiers for the K2G devices managed by the PMMC.
+>>>
+>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>>> ---
+>>> v2->v3:
+>>>         Update k2g_pds node docs to show it should be a child of pmmc
+>>> node.
+>>>         In early versions a phandle was used to point to pmmc and docs
+>>> still
+>>>         incorrectly showed this.
+>>>
+>>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59 ++++++++++++++
+>>>  MAINTAINERS                                        |  2 +
+>>>  include/dt-bindings/genpd/k2g.h                    | 90
+>>> ++++++++++++++++++++++
+>>>  3 files changed, 151 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>>  create mode 100644 include/dt-bindings/genpd/k2g.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>> b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>> new file mode 100644
+>>> index 000000000000..4c9064e512cb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>>> @@ -0,0 +1,59 @@
+>>> +Texas Instruments TI-SCI Generic Power Domain
+>>> +---------------------------------------------
+>>> +
+>>> +Some TI SoCs contain a system controller (like the PMMC, etc...) that is
+>>> +responsible for controlling the state of the IPs that are present.
+>>> +Communication between the host processor running an OS and the system
+>>> +controller happens through a protocol known as TI-SCI [1]. This pm
+>>> domain
+>>> +implementation plugs into the generic pm domain framework and makes use
+>>> of
+>>> +the TI SCI protocol power on and off each device when needed.
+>>> +
+>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>> +
+>>> +PM Domain Node
+>>> +==============
+>>> +The PM domain node represents the global PM domain managed by the PMMC,
+>>> +which in this case is the single implementation as documented by the
+>>> generic
+>>> +PM domain bindings in
+>>> Documentation/devicetree/bindings/power/power_domain.txt.
+>>> +Because this relies on the TI SCI protocol to communicate with the PMMC
+>>> it
+>>> +must be a child of the pmmc node.
+>>> +
+>>> +Required Properties:
+>>> +--------------------
+>>> +- compatible: should be "ti,sci-pm-domain"
+>>> +- #power-domain-cells: Must be 0.
+>>> +
+>>> +Example (K2G):
+>>> +-------------
+>>> +       pmmc: pmmc {
+>>> +               compatible = "ti,k2g-sci";
+>>> +               ...
+>>> +
+>>> +               k2g_pds: k2g_pds {
+>>> +                       compatible = "ti,sci-pm-domain";
+>>> +                       #power-domain-cells = <0>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +PM Domain Consumers
+>>> +===================
+>>> +Hardware blocks that require SCI control over their state must provide
+>>> +a reference to the sci-pm-domain they are part of and a unique device
+>>> +specific ID that identifies the device.
+>>> +
+>>> +Required Properties:
+>>> +--------------------
+>>> +- power-domains: phandle pointing to the corresponding PM domain node.
+>>> +- ti,sci-id: index representing the device id to be passed oevr SCI to
+>>> +            be used for device control.
+>>
+>>
+>> As I've already stated before, this goes in power-domain cells. When you
+>> have a single thing (i.e. node) that controls multiple things, then you
+>> you need to specify the ID for each of them in phandle args. This is how
+>> irqs, gpio, clocks, *everything* in DT works.
 >
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 14 +++++++-------
->>  1 file changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boo=
-t/dts/exynos/exynos5433.dtsi
->> index abaf6b4d599d..d7ed1a68b6fd 100644
->> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
->> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
->> @@ -231,7 +231,7 @@
->>               compatible =3D "arm,psci";
->>               method =3D "smc";
->>               cpu_off =3D <0x84000002>;
->> -             cpu_on =3D <0xC4000003>;
->> +             cpu_on =3D <0xc4000003>;
->>       };
->>
->>       reboot: syscon-reboot {
->> @@ -753,7 +753,7 @@
->>
->>               dsi: dsi@13900000 {
->>                       compatible =3D "samsung,exynos5433-mipi-dsi";
->> -                     reg =3D <0x13900000 0xC0>;
->> +                     reg =3D <0x13900000 0xc0>;
->>                       interrupts =3D <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
->>                       phys =3D <&mipi_phy 1>;
->>                       phy-names =3D "dsim";
->> @@ -880,9 +880,9 @@
->>                       iommus =3D <&sysmmu_jpeg>;
->>               };
->>
->> -             mfc: codec@152E0000 {
->> +             mfc: codec@152e0000 {
->>                       compatible =3D "samsung,exynos5433-mfc";
->> -                     reg =3D <0x152E0000 0x10000>;
->> +                     reg =3D <0x152e0000 0x10000>;
->>                       interrupts =3D <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
->>                       clock-names =3D "pclk", "aclk", "aclk_xiu";
->>                       clocks =3D <&cmu_mfc CLK_PCLK_MFC>,
->> @@ -914,7 +914,7 @@
->>
->>               sysmmu_gscl0: sysmmu@13c80000 {
->>                       compatible =3D "samsung,exynos-sysmmu";
->> -                     reg =3D <0x13C80000 0x1000>;
->> +                     reg =3D <0x13c80000 0x1000>;
->>                       interrupts =3D <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
->>                       clock-names =3D "aclk", "pclk";
->>                       clocks =3D <&cmu_gscl CLK_ACLK_SMMU_GSCL0>,
->> @@ -924,7 +924,7 @@
->>
->>               sysmmu_gscl1: sysmmu@13c90000 {
->>                       compatible =3D "samsung,exynos-sysmmu";
->> -                     reg =3D <0x13C90000 0x1000>;
->> +                     reg =3D <0x13c90000 0x1000>;
->>                       interrupts =3D <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
->>                       clock-names =3D "aclk", "pclk";
->>                       clocks =3D <&cmu_gscl CLK_ACLK_SMMU_GSCL1>,
->> @@ -934,7 +934,7 @@
->>
->>               sysmmu_gscl2: sysmmu@13ca0000 {
->>                       compatible =3D "samsung,exynos-sysmmu";
->> -                     reg =3D <0x13CA0000 0x1000>;
->> +                     reg =3D <0x13ca0000 0x1000>;
->>                       interrupts =3D <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>;
->>                       clock-names =3D "aclk", "pclk";
->>                       clocks =3D <&cmu_gscl CLK_ACLK_SMMU_GSCL2>,
->> --
->> 1.9.1
->>
+>
+> You think the reasoning for doing it this way provided by both Ulf and
+> myself on v2 [1] is not valid then?
+>
+> From Ulf:
+>
+> To me, the TI SCI ID, is similar to a "conid" for any another "device
+> resource" (like clock, pinctrl, regulator etc) which we can describe
+> in DT and assign to a device node. The only difference here, is that
+> we don't have common API to fetch the resource (like clk_get(),
+> regulator_get()), but instead we fetches the device's resource from
+> SoC specific code, via genpd's device ->attach() callback.
 
+Sorry, but that sounds like a kernel problem to me and has nothing to
+do with DT bindings.
 
+> From me:
+>
+> Yes, you've pretty much hit it on the head. It is not an index into a list
+> of genpds but rather identifies the device *within* a single genpd. It is a
+> property specific to each device that resides in a ti-sci-genpd, not a
+> mapping describing which genpd the device belongs to. The generic power
+> domain binding is concerned with mapping the device to a specific genpd,
+> which is does fine for us, but we have a sub mapping for devices that exist
+> inside a genpd which, we must describe as well, hence the ti,sci-id.
+>
+>
+> So to summarize, the genpd framework does interpret the phandle arg as an
+> index into multiple genpds, just as you've said other frameworks do, but
+> this is not what I am trying to do, we have multiple devices within this
+> *single* genpd, hence the need for the ti,sci-id property.
 
---=20
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Fix the genpd framework rather than work around it in DT.
+
+Rob
