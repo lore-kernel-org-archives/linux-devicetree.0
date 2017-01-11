@@ -1,294 +1,78 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [RESEND PATCH v5] arm64: dts: qcom: Add msm8916 CoreSight components
-Date: Wed, 11 Jan 2017 17:59:11 +0200
-Message-ID: <20170111155911.29216-1-georgi.djakov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, zhang.chunyan@linaro.org, iivanov.xz@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, georgi.djakov@linaro.org
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH 1/2] clk: vc5: Add bindings for IDT VersaClock 5P49V5923 and 5P49V5933
+Date: Wed, 11 Jan 2017 17:16:02 +0100
+Message-ID: <20170111161603.18905-1-marek.vasut@gmail.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: Marek Vasut <marek.vasut@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Add bindings for IDT VersaClock 5 5P49V5923 and 5P49V5933 chips.
+These are I2C clock generators with optional clock source from
+either XTal or dedicated clock generator and, depending on the
+model, two or more clock outputs.
 
-Add initial set of CoreSight components found on Qualcomm msm8916 and
-apq8016 based platforms, including the DragonBoard 410c board.
-
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
 ---
+ .../devicetree/bindings/clock/idt,versaclock5.txt  | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
 
-Changes since v4: (https://lkml.org/lkml/2016/11/17/533)
- * Move everything into the SoC dtsi file as suggested by Stephen Boyd.
- * Updated commit message.
- * Got Ack from Mathieu.
-
-Changes since v3: (https://lkml.org/lkml/2015/5/11/134)
- * Include msm8916-coresight.dtsi into msm8916.dtsi
-
-Changes since v2: (https://lkml.org/lkml/2015/4/29/242)
- * Added "1x" to "qcom,coresight-replicator" compatible string, to match what
-   devicetree bindings documentations says.
-
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 241 ++++++++++++++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index f8ff327667c5..014d76e7dddf 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8916.h>
- #include <dt-bindings/reset/qcom,gcc-msm8916.h>
-+#include <dt-bindings/clock/qcom,rpmcc.h>
- 
- / {
- 	model = "Qualcomm Technologies, Inc. MSM8916";
-@@ -856,6 +857,246 @@
- 				memory-region = <&mpss_mem>;
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+new file mode 100644
+index 000000000000..82ebed9a8a15
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+@@ -0,0 +1,43 @@
++Binding for IDT VersaClock5 programmable i2c clock generator.
 +
-+		tpiu@820000 {
-+			compatible = "arm,coresight-tpiu", "arm,primecell";
-+			reg = <0x820000 0x1000>;
++The IDT VersaClock5 are programmable i2c clock generators providing
++from 3 to 12 output clocks.
 +
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
++==I2C device node==
 +
-+			port {
-+				tpiu_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&replicator_out1>;
-+				};
-+			};
-+		};
++Required properties:
++- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933".
++- reg:		i2c device address, shall be 0x68 or 0x6a.
++- #clock-cells:	from common clock binding; shall be set to 1.
++- clocks:	from common clock binding; list of parent clock handles,
++		- 5p49v5923: (required) either or both of XTAL or CLKIN
++					reference clock.
++		- 5p49v5933: (optional) property not present (internal
++					Xtal used) or CLKIN reference
++					clock.
++- clock-names:	from common clock binding; clock input names, can be
++		- 5p49v5923: (required) either or both of "xin", "clkin".
++		- 5p49v5933: (optional) property not present or "clkin".
 +
-+		funnel@821000 {
-+			compatible = "arm,coresight-funnel", "arm,primecell";
-+			reg = <0x821000 0x1000>;
++==Example==
 +
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
++/* 25MHz reference crystal */
++ref25: ref25m {
++	compatible = "fixed-clock";
++	#clock-cells = <0>;
++	clock-frequency = <25000000>;
++};
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
++i2c-master-node {
 +
-+				/*
-+				 * Not described input ports:
-+				 * 0 - connected to Resource and Power Manger CPU ETM
-+				 * 1 - not-connected
-+				 * 2 - connected to Modem CPU ETM
-+				 * 3 - not-connected
-+				 * 5 - not-connected
-+				 * 6 - connected trought funnel to Wireless CPU ETM
-+				 * 7 - connected to STM component
-+				 */
++	/* IDT 5P49V5923 i2c clock generator */
++	vc5: clock-generator@6a {
++		compatible = "idt,5p49v5923";
++		reg = <0x6a>;
++		#clock-cells = <1>;
 +
-+				port@4 {
-+					reg = <4>;
-+					funnel0_in4: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&funnel1_out>;
-+					};
-+				};
-+				port@8 {
-+					reg = <0>;
-+					funnel0_out: endpoint {
-+						remote-endpoint = <&etf_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@824000 {
-+			compatible = "qcom,coresight-replicator1x", "arm,primecell";
-+			reg = <0x824000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					replicator_out0: endpoint {
-+						remote-endpoint = <&etr_in>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					replicator_out1: endpoint {
-+						remote-endpoint = <&tpiu_in>;
-+					};
-+				};
-+				port@2 {
-+					reg = <0>;
-+					replicator_in: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etf_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@825000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0x825000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					etf_out: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&funnel0_out>;
-+					};
-+				};
-+				port@1 {
-+					reg = <0>;
-+					etf_in: endpoint {
-+						remote-endpoint = <&replicator_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etr@826000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0x826000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			port {
-+				etr_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&replicator_out0>;
-+				};
-+			};
-+		};
-+
-+		funnel@841000 {	/* APSS funnel only 4 inputs are used */
-+			compatible = "arm,coresight-funnel", "arm,primecell";
-+			reg = <0x841000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel1_in0: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					funnel1_in1: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+				port@2 {
-+					reg = <2>;
-+					funnel1_in2: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+				port@3 {
-+					reg = <3>;
-+					funnel1_in3: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+				port@4 {
-+					reg = <0>;
-+					funnel1_out: endpoint {
-+						remote-endpoint = <&funnel0_in4>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@85c000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x85c000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU0>;
-+
-+			port {
-+				etm0_out: endpoint {
-+				remote-endpoint = <&funnel1_in0>;
-+				};
-+			};
-+		};
-+
-+		etm@85d000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x85d000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU1>;
-+
-+			port {
-+				etm1_out: endpoint {
-+					remote-endpoint = <&funnel1_in1>;
-+				};
-+			};
-+		};
-+
-+		etm@85e000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x85e000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU2>;
-+
-+			port {
-+				etm2_out: endpoint {
-+					remote-endpoint = <&funnel1_in2>;
-+				};
-+			};
-+		};
-+
-+		etm@85f000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x85f000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU3>;
-+
-+			port {
-+				etm3_out: endpoint {
-+					remote-endpoint = <&funnel1_in3>;
-+				};
-+			};
-+		};
- 	};
- 
- 	smd {
++		/* Connect XIN input to 25MHz reference */
++		clocks = <&ref25m>;
++		clock-names = "xin";
++	};
++};
+-- 
+2.11.0
