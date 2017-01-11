@@ -1,45 +1,51 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] arm64: dts: exynos: Replace small letter of base
- address/offset on Exynos5433
-Date: Wed, 11 Jan 2017 18:26:13 +0200
-Message-ID: <20170111162613.lxkc7k75f6q3fsz2@kozik-lap>
-References: <CGME20170111005552epcas1p4a1f6ed88022b46544dec4b3801583267@epcas1p4.samsung.com>
- <1484096148-17120-1-git-send-email-cw00.choi@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
+Date: Wed, 11 Jan 2017 08:28:08 -0800
+Message-ID: <20170111162808.GW2630@atomide.com>
+References: <20161227172003.6517-1-tony@atomide.com>
+ <20161227172003.6517-2-tony@atomide.com>
+ <CAMuHMdVLbNXx23-wgLHcvktyHxWf6t75ggU3rM5A-DhtU9hn5w@mail.gmail.com>
+ <20170110153045.GS2630@atomide.com>
+ <20170110191908.GV2630@atomide.com>
+ <CACRpkdaJmEcqMST30NRdtcLpEg5LhiAxOYsNDDUvYEYFjUBiHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484096148-17120-1-git-send-email-cw00.choi@samsung.com>
+In-Reply-To: <CACRpkdaJmEcqMST30NRdtcLpEg5LhiAxOYsNDDUvYEYFjUBiHA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, chanwoo@kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 09:55:48AM +0900, Chanwoo Choi wrote:
-> This patch replaces the small letter of base address, offset and hex value
-> with the capital letter to keep the consistency on Exynos5433.
+* Linus Walleij <linus.walleij@linaro.org> [170111 07:34]:
+> On Tue, Jan 10, 2017 at 8:19 PM, Tony Lindgren <tony@atomide.com> wrote:
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> > Below is an experimental fix to intorduce pinctrl_start() that I've
+> > tested with pinctrl-single. Then we should probably make all pin controller
+> > drivers call pinctrl_start() to properly fix the issue of struct pinctrl_dev
+> > handle not being initialized before driver functions are called.
 > 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> index abaf6b4d599d..d7ed1a68b6fd 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -231,7 +231,7 @@
->  		compatible = "arm,psci";
->  		method = "smc";
->  		cpu_off = <0x84000002>;
-> -		cpu_on = <0xC4000003>;
-> +		cpu_on = <0xc4000003>;
+> Hm I guess that could work, but can we keep pinctrl_register() with the old
+> semantics and add a separate pinctrl_register_and_defer()
+> for those who just wanna start it later by a separate call?
+> 
+> Then we don't need any special flags.
 
-There is no point of such "improvements". This is just unnecessary
-churn.
+OK I'll take a look.
 
-Sometimes such things are accepted as part of some bigger work (vide
-recent Andrzej's sysmmu for HDMI/TV). But on its own? No sense at all.
+> > Or do you guys have any better ideas?
+> 
+> Not really. So you mean revert the previous patch and apply something
+> like this instead?
 
-Best regards,
-Krzysztof
+Let me first take a look to see if we can fix it by making drivers using
+GENERIC_PINCTRL_GROUPS or GENERIC_PINMUX_FUNCTIONS register with
+pinctrl_register_and_defer(). I'll post a patch for that today.
+
+Then maybe for v4.12 we can attempt to move all pin controller drivers
+to using it so we can fix the problem for good.
+
+Regards,
+
+Tony
