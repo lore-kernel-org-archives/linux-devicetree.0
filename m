@@ -1,57 +1,99 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4 3/8] rtc: add STM32 RTC driver
-Date: Wed, 11 Jan 2017 14:04:38 +0100
-Message-ID: <20170111130438.GA9327@Red>
-References: <1484138905-5903-1-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jean-Jacques Hiblot <jjhiblot@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu idle
+Date: Wed, 11 Jan 2017 14:18:48 +0100
+Message-ID: <CACh+v5OEKZzLePwoo6wSf3ccA4e_wwV-FX0v+=vS2JTAK8ih5g@mail.gmail.com>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+ <20170106065947.30631-2-wenyou.yang@atmel.com>
+ <20170110161821.vp673jyfqx6s76pg@piout.net>
+ <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
+ <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
+ <CACh+v5M3tU4WHMqAX0zm2H=zzwc0+XChyG1tnH2aHxaacm6C=A@mail.gmail.com>
+ <20170111111814.GJ14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBD7YLCN32UNBB3W23DBQKGQED52Z6FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1484138905-5903-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170111111814.GJ14217@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Wenyou Yang <Wenyou.Yang@microchip.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 01:48:25PM +0100, Amelie Delaunay wrote:
-> This patch adds support for the STM32 RTC.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/rtc/Kconfig     |  11 +
->  drivers/rtc/Makefile    |   1 +
->  drivers/rtc/rtc-stm32.c | 727 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 739 insertions(+)
->  create mode 100644 drivers/rtc/rtc-stm32.c
-
-[...]
-> +/* STM32_PWR_CR */
-> +#define PWR_CR				0x00
-> +/* STM32_PWR_CR bit field */
-> +#define PWR_CR_DBP			BIT(8)
-> +
-> +static struct regmap *dbp;
-
-Hello
-
-Why using a global static struct ?
-You could alloc a private structure in probe for storing it and use platform_set_drvdata()
-
-Regards
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+MjAxNy0wMS0xMSAxMjoxOCBHTVQrMDE6MDAgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IDxsaW51
+eEBhcm1saW51eC5vcmcudWs+Ogo+IE9uIFdlZCwgSmFuIDExLCAyMDE3IGF0IDEyOjA1OjA1UE0g
+KzAxMDAsIEplYW4tSmFjcXVlcyBIaWJsb3Qgd3JvdGU6Cj4+IDIwMTctMDEtMTEgOToxNSBHTVQr
+MDE6MDAgIDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPjoKPj4gPiBIaSBKZWFuLUphY3F1ZXMs
+Cj4+ID4KPj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4gPj4gRnJvbTogSmVhbi1K
+YWNxdWVzIEhpYmxvdCBbbWFpbHRvOmpqaGlibG90QGdtYWlsLmNvbV0KPj4gPj4gU2VudDogMjAx
+N+W5tDHmnIgxMeaXpSAwOjUxCj4+ID4+IFRvOiBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJl
+LmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiA+PiBDYzogV2VueW91IFlhbmcgLSBBNDE1
+MzUgPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBNYXJrIFJ1dGxhbmQKPj4gPj4gPG1hcmsu
+cnV0bGFuZEBhcm0uY29tPjsgZGV2aWNldHJlZSA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+
+OyBSdXNzZWxsCj4+ID4+IEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcudWs+OyBXZW55b3UgWWFu
+ZyAtIEE0MTUzNQo+PiA+PiA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT47IE5pY29sYXMgRmVy
+cmUgPG5pY29sYXMuZmVycmVAYXRtZWwuY29tPjsKPj4gPj4gTGludXggS2VybmVsIE1haWxpbmcg
+TGlzdCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFJvYiBIZXJyaW5nCj4+ID4+IDxy
+b2JoK2R0QGtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
+Pj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIEFSTTogYXQ5MTogZmx1c2ggdGhlIEwyIGNh
+Y2hlIGJlZm9yZSBlbnRlcmluZyBjcHUgaWRsZQo+PiA+Pgo+PiA+PiAyMDE3LTAxLTEwIDE3OjE4
+IEdNVCswMTowMCBBbGV4YW5kcmUgQmVsbG9uaQo+PiA+PiA8YWxleGFuZHJlLmJlbGxvbmlAZnJl
+ZS1lbGVjdHJvbnMuY29tPjoKPj4gPj4gPiBJIHRob3VnaCBhIGJpdCBtb3JlIGFib3V0IGl0LCBh
+bmQgSSBkb24ndCByZWFsbHkgbGlrZSB0aGUgbmV3Cj4+ID4+ID4gY29tcGF0aWJsZSBzdHJpbmcu
+IEkgZG9uJ3QgZmVlbCB0aGlzIHNob3VsZCBiZSBuZWNlc3NhcnkuCj4+ID4+ID4KPj4gPj4gPiBX
+aGF0IGFib3V0IHRoZSBmb2xsb3dpbmc6Cj4+ID4+ID4KPj4gPj4gPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vbWFjaC1hdDkxL3BtLmMgYi9hcmNoL2FybS9tYWNoLWF0OTEvcG0uYyBpbmRleAo+PiA+
+PiA+IGI0MzMyYjcyN2U5Yy4uMDMzM2FjYTYzZTQ0IDEwMDY0NAo+PiA+PiA+IC0tLSBhL2FyY2gv
+YXJtL21hY2gtYXQ5MS9wbS5jCj4+ID4+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC1hdDkxL3BtLmMK
+Pj4gPj4gPiBAQCAtNTMsNiArNTMsNyBAQCBleHRlcm4gdm9pZCBhdDkxX3BpbmN0cmxfZ3Bpb19y
+ZXN1bWUodm9pZCk7ICBzdGF0aWMKPj4gPj4gPiBzdHJ1Y3Qgewo+PiA+PiA+ICAgICAgICAgdW5z
+aWduZWQgbG9uZyB1aHBfdWRwX21hc2s7Cj4+ID4+ID4gICAgICAgICBpbnQgbWVtY3RybDsKPj4g
+Pj4gPiArICAgICAgIGJvb2wgaGFzX2wyX2NhY2hlOwo+PiA+PiA+ICB9IGF0OTFfcG1fZGF0YTsK
+Pj4gPj4gPgo+PiA+PiA+ICB2b2lkIF9faW9tZW0gKmF0OTFfcmFtY19iYXNlWzJdOwo+PiA+PiA+
+IEBAIC0yNjcsNiArMjY4LDExIEBAIHN0YXRpYyB2b2lkIGF0OTFfZGRyX3N0YW5kYnkodm9pZCkK
+Pj4gPj4gPiAgICAgICAgIHUzMiBscHIwLCBscHIxID0gMDsKPj4gPj4gPiAgICAgICAgIHUzMiBz
+YXZlZF9scHIwLCBzYXZlZF9scHIxID0gMDsKPj4gPj4gPgo+PiA+Pgo+PiA+PiA+ICsgICAgICAg
+aWYgKGF0OTFfcG1fZGF0YS5oYXNfbDJfY2FjaGUpIHsKPj4gPj4gPiArICAgICAgICAgICAgICAg
+Zmx1c2hfY2FjaGVfYWxsKCk7Cj4+ID4+IHdoYXQgaXMgdGhlIHBvaW50IG9mIGNhbGxpbmcgZmx1
+c2hfY2FjaGVfYWxsKCkgaGVyZSA/IERvIHdlIHJlYWxseSBjYXJlIHRoYXQgZGlydHkKPj4gPj4g
+ZGF0YSBpbiBMMSBpcyB3cml0dGVuIHRvIEREUiA/IEkgbWF5IGJlIG1pc3Npbmcgc29tZXRoaW5n
+IGJ1dCB0byBtZSBpdCdzIGp1c3QgZXh0cmEKPj4gPj4gbGF0ZW5jeS4KPj4gPgo+PiA+IEFyZSB5
+b3UgbWVhbiB1c2Ugb3V0ZXJfZmx1c2hfYWxsKCkgdG8gZmx1c2ggYWxsIGNhY2hlIGxpbmVzIGlu
+IHRoZSBvdXRlciBjYWNoZSBvbmx5Pwo+Pgo+PiBZZXMgdGhhdCdzIHdoYXQgSSBtZWFudC4gWW91
+IHNlZSwgeW91IGRvbid0IGZsdXNoIHRoZSBjYWNoZSBmb3IKPj4gc2FtYTVkMyBzbyBpdCBzaG91
+bGRuJ3QgYmUgcmVxdWlyZWQgZWl0aGVyIGZvciBzYW01ZDQuIFlvdSBzaG91bGQgYmUKPj4gYWJs
+ZSB0byB0ZXN0IGl0IHF1aWNrbHkgYW5kIHNlZSBpZiBMMSBmbHVzaCBpcyBpbmRlZWQgcmVxdWly
+ZWQgYnkKPj4gcmVwbGFjaW5nICBmbHVzaF9jYWNoZV9hbGwoKSB3aXRoIG91dGVyX2ZsdXNoX2Fs
+bCgpLiBCVFcgaXMgaGlnaGx5Cj4+IHByb2JhYmxlIHRoYXQgTDIgY2FjaGUgZmx1c2ggaXMgZG9u
+ZSBpbiBvdXRlcl9kaXNhYmxlKCkgc28gY2FsbGluZwo+PiBvdXRlcl9mbHVzaF9hbGwoKSBpcyBw
+cm9iYWJseSBubyByZXF1aXJlZC4KPgo+IFBsZWFzZSBkb24ndC4gIFJlYWQgdGhlIGNvbW1lbnRz
+IGluIHRoZSBjb2RlLCBhbmQgdW5kZXJzdGFuZCB0aGUgQVBJcwo+IHRoYXQgeW91J3JlIHN1Z2dl
+c3RpbmcgcGVvcGxlIHVzZSBfYmVmb3JlXyBtYWtpbmcgdGhlIHN1Z2dlc3Rpb246Cj4KPiAvKioK
+PiAgKiBvdXRlcl9mbHVzaF9hbGwgLSBjbGVhbiBhbmQgaW52YWxpZGF0ZSBhbGwgY2FjaGUgbGlu
+ZXMgaW4gdGhlIG91dGVyIGNhY2hlCj4gICoKPiAgKiBOb3RlOiBkZXBlbmRpbmcgb24gaW1wbGVt
+ZW50YXRpb24sIHRoaXMgbWF5IG5vdCBiZSBhdG9taWMgLSBpdCBtdXN0Cj4gICogb25seSBiZSBj
+YWxsZWQgd2l0aCBpbnRlcnJ1cHRzIGRpc2FibGVkIGFuZCBubyBvdGhlciBhY3RpdmUgb3V0ZXIK
+PiAgKiBjYWNoZSBtYXN0ZXJzLgo+ICAqCj4gICogSXQgaXMgaW50ZW5kZWQgdGhhdCB0aGlzIGZ1
+bmN0aW9uIGlzIG9ubHkgdXNlZCBieSBpbXBsZW1lbnRhdGlvbnMKPiAgKiBuZWVkaW5nIHRvIG92
+ZXJyaWRlIHRoZSBvdXRlcl9jYWNoZS5kaXNhYmxlKCkgbWV0aG9kIGR1ZSB0byBzZWN1cml0eS4K
+PiAgKiAoU29tZSBpbXBsZW1lbnRhdGlvbnMgcGVyZm9ybSB0aGlzIGFzIGEgY2xlYW4gZm9sbG93
+ZWQgYnkgYW4gaW52YWxpZGF0ZS4pCj4gICovCj4KPiBTbywgb3V0ZXJfZmx1c2hfYWxsKCkgc2hv
+dWxkIG5vdCBiZSBjYWxsZWQgZXhjZXB0IGZyb20gTDIgY2FjaGUgY29kZQo+IGltcGxlbWVudGlu
+ZyB0aGUgb3V0ZXJfZGlzYWJsZSgpIGZ1bmN0aW9uIC0gaXQncyBub3QgaW50ZW5kZWQgZm9yCj4g
+cGxhdGZvcm1zIHRvIHVzZS4KCk9LLiBNeSBiYWQuIEkgZGlkbid0IHVuZGVyc3RhbmQgdGhlIGNv
+bW1lbnRzLgoKPgo+IFRoZXJlIGFyZSwgaG93ZXZlciwgc2FkbHkgdGhyZWUgdXNlcnMgb2Ygb3V0
+ZXJfZmx1c2hfYWxsKCkgd2hpY2ggaGF2ZQo+IGNyZXB0IGluIHRocm91Z2ggYXJtLXNvYywgdGhh
+dCBzaG91bGQgYmUgb3V0ZXJfZGlzYWJsZSgpIGluc3RlYWQuCj4KPiAtLQo+IFJNSydzIFBhdGNo
+IHN5c3RlbTogaHR0cDovL3d3dy5hcm1saW51eC5vcmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMvCj4g
+RlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNk1icHMgZG93
+biA0MDBrYnBzIHVwCj4gYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
