@@ -1,54 +1,63 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v7 2/4] drm/exynos: mic: Fix parse_dt function
-Date: Wed, 11 Jan 2017 14:33:26 +0900
-Message-ID: <5875C3A6.9040002@samsung.com>
-References: <1483611609-23522-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170105102012epcas5p308c2d3ed269d9bf76f76f1d38422eb54@epcas5p3.samsung.com>
- <1483611609-23522-3-git-send-email-hoegeun.kwon@samsung.com>
+From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v4 0/3] Add QorIQ LS2088A platform support
+Date: Wed, 11 Jan 2017 11:39:36 +0530
+Message-ID: <1484114979-4664-1-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1483611609-23522-3-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QXBwbGllZC4KClRoYW5rcy4KCjIwMTfrhYQgMDHsm5QgMDXsnbwgMTk6MjDsl5AgSG9lZ2V1biBL
-d29uIOydtCjqsIApIOyTtCDquIA6Cj4gVGhlIE9GIGdyYXBoIGlzIG5vdCBuZWNlc3NhcnkgYmVj
-YXVzZSB0aGUgcGFuZWwgaXMgYSBjaGlsZCBvZgo+IGRzaS4gdGhlcmVmb3JlLCB0aGUgcGFyc2Vf
-ZHQgZnVuY3Rpb24gb2YgZHNpIGRvZXMgbm90IG5lZWQgdG8KPiBjaGVjayB0aGUgcmVtb3RlX25v
-ZGUgY29ubmVjdGVkIHRvIHRoZSBwYW5lbC4gYW5kIHRoZSB3aG9sZQo+IHBhcnNlX2R0IGZ1bmN0
-aW9uIHNob3VsZCBiZSByZWZhY3RvcmVkIGxhdGVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhvZWdl
-dW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9k
-cm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgfCAyNSArKystLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQo+IAo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fbWljLmMKPiBpbmRleCBmZWQxYTk0Li5j
-ZjkzNjFhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9t
-aWMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9taWMuYwo+IEBA
-IC0yNjksMjggKzI2OSw5IEBAIHN0YXRpYyBpbnQgcGFyc2VfZHQoc3RydWN0IGV4eW5vc19taWMg
-Km1pYykKPiAgCQl9Cj4gIAkJbm9kZXNbaisrXSA9IHJlbW90ZV9ub2RlOwo+ICAKPiAtCQlzd2l0
-Y2ggKGkpIHsKPiAtCQljYXNlIEVORFBPSU5UX0RFQ09OX05PREU6Cj4gLQkJCS8qIGRlY29uIG5v
-ZGUgKi8KPiAtCQkJaWYgKG9mX2dldF9jaGlsZF9ieV9uYW1lKHJlbW90ZV9ub2RlLAo+IC0JCQkJ
-CQkiaTgwLWlmLXRpbWluZ3MiKSkKPiAtCQkJCW1pYy0+aTgwX21vZGUgPSAxOwo+IC0KPiAtCQkJ
-YnJlYWs7Cj4gLQkJY2FzZSBFTkRQT0lOVF9EU0lfTk9ERToKPiAtCQkJLyogcGFuZWwgbm9kZSAq
-Lwo+IC0JCQlyZW1vdGVfbm9kZSA9IGdldF9yZW1vdGVfbm9kZShyZW1vdGVfbm9kZSwgMSk7Cj4g
-LQkJCWlmICghcmVtb3RlX25vZGUpIHsKPiAtCQkJCXJldCA9IC1FUElQRTsKPiAtCQkJCWdvdG8g
-ZXhpdDsKPiAtCQkJfQo+IC0JCQlub2Rlc1tqKytdID0gcmVtb3RlX25vZGU7Cj4gLQo+IC0JCQli
-cmVhazsKPiAtCQlkZWZhdWx0Ogo+IC0JCQlEUk1fRVJST1IoIm1pYzogVW5rbm93biBlbmRwb2lu
-dCBmcm9tIE1JQyIpOwo+IC0JCQlicmVhazsKPiAtCQl9Cj4gKwkJaWYgKGkgPT0gRU5EUE9JTlRf
-REVDT05fTk9ERSAmJgo+ICsJCQlvZl9nZXRfY2hpbGRfYnlfbmFtZShyZW1vdGVfbm9kZSwgImk4
-MC1pZi10aW1pbmdzIikpCj4gKwkJCW1pYy0+aTgwX21vZGUgPSAxOwo+ICAJfQo+ICAKPiAgZXhp
-dDoKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patchset adds support for the QorIQ LS2088A SoC.
+LS2088A SoC is similar to LS2080A SoC with a few differences like it has A72 cores.
+
+This patchset
+        - reorganize LS2088A DTS/DTSI for code reuseability
+        - adds LS2088A device dtsi and dts files.
+
+Abhimanyu Saini (3):
+  dt-bindings: Add compatible for LS2088A QDS and RDB board
+  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
+  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
+
+Changes for v4:
+        - Incorporated Shawn's comments by reorganizing
+          DTSI, moving all #include to the top and,
+        - add missing files
+Changes for v3:
+        - rename dts/dtsi files
+Changes for v2:
+        - reorganize LS2088A device tree to use common
+          nodes from LS2080A device trees.
+        - Both LS2080A and LS2088A have same hardware
+          controllers, so separate dt-binding patches for
+          pcie, gpio, dspi, qspi are not required.
+
+ Documentation/devicetree/bindings/arm/fsl.txt      |  11 +
+ arch/arm64/boot/dts/freescale/Makefile             |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts  | 155 +---
+ arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts  | 110 +--
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 859 ++-------------------
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts  |  65 ++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts  |  65 ++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi     | 153 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 196 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 151 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     | 753 ++++++++++++++++++
+ 11 files changed, 1486 insertions(+), 1034 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
