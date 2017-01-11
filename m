@@ -1,60 +1,67 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCHv3 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Wed, 11 Jan 2017 21:55:48 +0100
-Message-ID: <95cb4240-e77b-5eaa-1920-4d9e26028038@gmail.com>
-References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
- <20170106041517.9589-1-chris.packham@alliedtelesis.co.nz>
- <20170106041517.9589-4-chris.packham@alliedtelesis.co.nz>
- <CACRpkdaC+USN7YhZo49LAL9sorMxbTfhQbT5NrAu5D=Q1DHnnA@mail.gmail.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Wed, 11 Jan 2017 15:59:30 -0500
+Message-ID: <CAF6AEGvGWu+OMED52_Mphpd1K=2QAeeuPV8RaRzL9S+N4YOh2Q@mail.gmail.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+ <1483479056-15202-2-git-send-email-robdclark@gmail.com> <20170105115528.GG679@arm.com>
+ <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
+ <20170105154950.GM679@arm.com> <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
+ <20170110175219.GK527@arm.com> <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA@mail.gmail.com>
+ <20170111093606.GA12388@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdaC+USN7YhZo49LAL9sorMxbTfhQbT5NrAu5D=Q1DHnnA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170111093606.GA12388-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2017 03:44 PM, Linus Walleij wrote:
-> On Fri, Jan 6, 2017 at 5:15 AM, Chris Packham
-> <chris.packham@alliedtelesis.co.nz> wrote:
->
->> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+On Wed, Jan 11, 2017 at 4:36 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Jan 10, 2017 at 02:20:13PM -0500, Rob Clark wrote:
+>> On Tue, Jan 10, 2017 at 12:52 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
+>> >> Hmm, well we install the fault handler on the iommu_domain..  perhaps
+>> >> maybe a combo of dts property (or deciding based on more specific
+>> >> compat string), plus extra param passed in to
+>> >> iommu_set_fault_hander().  The dts property or compat string to
+>> >> indicate whether the iommu (and how it is wired up) can handle stalls,
+>> >> and enable_stall param when fault handler is registered to indicate
+>> >> whether the device itself can cope.. if either can't do stalling, then
+>> >> don't set CFCFG.
+>> >
+>> > I thought about this some more, and I think you're right. Having
+>> > iommu_set_fault_handler take a flags parameter indicating that, for example,
+>> > the fault handler can deal with paging, is all we need to implement the
+>> > per-master opt-in functionality for stalling faults. There's no real
+>> > requirement to standardise a generic firmware property for that (but
+>> > we still need *something* that says stalling is usable on the SMMU --
+>> > perhaps just the compatible string is ok).
 >>
->> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
->> from Marvell.
->>
->> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>> btw, it occurred to me that maybe it should be flags param to
+>> iommu_attach_device() (just in case fault handler not installed?)
+>> otoh stalling without a fault handler is silly, but I guess we need it
+>> to infer whether stalling can be supported by other devices on same
+>> iommu.. tbh I'm on a bit shaky ground when it comes to multiple
+>> devices per iommu since the SoC's I'm familiar with do it the other
+>> way around.  But I guess you have thought more about the multi-device
+>> case, so figured I should suggest it..
 >
-> I am waiting for an ACK or comment from the maintainers on
-> this patch. Sebastian?
+> I don't think it works at attach time, because the stalling property belongs
+> to the domain, rather than the individual devices within it. Similarly, I
+> don't think we should allow this property to be toggled once devices have
+> been attached.
+>
 
-Sorry for the ignorance.
+hmm, I was more thinking of cases where drivers for particular devices
+need some work (ie. like potentially disabling hw hang detect during
+faults).. I guess we could have three levels, that all have to be true
+in order to enable stall: smmu, domain (pass flags in to
+iommu_domain_alloc()??), and device (iommu_attach_device())?
 
-I don't have the patch to reply to inline, but:
-
-- In the driver MPP_MODE2, spi0 there is a typo "csk" instead of "sck".
-- MPP_MODE5 binding "dev","bootcs" and driver "dev","bootcs0" differ.
-- MPP_MODE6 binding "gpio" and driver "gpo" differ.
-- MPP_MODE17 binding "dev","clk" and driver "dev","clkout" differ.
-- MPP_MODE19 binding mentiones "dev","rb" but driver does not.
-- MPP_MODE20 binding "gpio" and driver "gpo" differ.
-- MPP_MODE20 binding "dev","we" and driver "dev","we0" differ.
-- MPP_MODE21 through MPP_MODE30 binding "gpio" and driver "gpo" differ.
-- remove spaces before "0,     0" in mv98dx3236_mpp_gpio_ranges.
-
-Most of it is cosmetic stuff, so if you fix it feel free to add my
-
-Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-
-Sebastian
+BR,
+-R
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
