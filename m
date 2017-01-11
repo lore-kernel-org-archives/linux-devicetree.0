@@ -1,63 +1,60 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 08/11] dmaengine: cppi41: Implement the glue for da8xx
-Date: Wed, 11 Jan 2017 15:05:38 +0530
-Message-ID: <7fd758c4-ce43-e644-7d70-bb7a5d25651f@ti.com>
-References: <20170109160656.3470-1-abailon@baylibre.com>
- <20170109160656.3470-9-abailon@baylibre.com>
- <fbc7f9f3-9b14-bc7f-0b40-15a6fedd48ea@ti.com>
- <b3f902e0-ed08-dbee-52b8-e81afda082ac@baylibre.com>
- <53a40635-2652-64fc-b20d-1cd6d813eacb@ti.com>
- <43b9585d-a22f-a2ff-15d4-5d878bd1586a@baylibre.com>
- <20170110154929.GU2630@atomide.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Wed, 11 Jan 2017 09:36:07 +0000
+Message-ID: <20170111093606.GA12388@arm.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+ <1483479056-15202-2-git-send-email-robdclark@gmail.com>
+ <20170105115528.GG679@arm.com>
+ <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
+ <20170105154950.GM679@arm.com>
+ <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
+ <20170110175219.GK527@arm.com>
+ <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170110154929.GU2630-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 January 2017 09:19 PM, Tony Lindgren wrote:
-> * Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [170110 07:23]:
->> On 01/10/2017 11:05 AM, Sekhar Nori wrote:
->>> On DA8xx, CPPI 4.1 DMAengine is not an independent system resource, but
->>> embedded within the USB 2.0 controller. So, I think all that is needed
->>> is for MUSB DA8xx glue to trigger probe of CPPI 4.1 dmaengine driver
->>> when it is ready. I am not sure all this DA850-specific clock handling
->>> is really necessary.
->> Actually, we have a circular dependency.
->> USB core tries to get DMA channels during the probe, which fails because
->> CPPI 4.1 driver is not ready.
->> But it will never be ready because the USB clock must be enabled before
->> DMA driver probe, what will not happen because USB driver have disabled
->> the clock when probe failed.
->>
->> Someone in the office suggested me to use the component API,
->> that could help me to probe the DMA from the USB probe.
->>
->> Another way to workaround the dependency would be to do defer the
->> function calls that access to hardware to avoid to control clock from
->> DMA driver.
+On Tue, Jan 10, 2017 at 02:20:13PM -0500, Rob Clark wrote:
+> On Tue, Jan 10, 2017 at 12:52 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
+> >> Hmm, well we install the fault handler on the iommu_domain..  perhaps
+> >> maybe a combo of dts property (or deciding based on more specific
+> >> compat string), plus extra param passed in to
+> >> iommu_set_fault_hander().  The dts property or compat string to
+> >> indicate whether the iommu (and how it is wired up) can handle stalls,
+> >> and enable_stall param when fault handler is registered to indicate
+> >> whether the device itself can cope.. if either can't do stalling, then
+> >> don't set CFCFG.
+> >
+> > I thought about this some more, and I think you're right. Having
+> > iommu_set_fault_handler take a flags parameter indicating that, for example,
+> > the fault handler can deal with paging, is all we need to implement the
+> > per-master opt-in functionality for stalling faults. There's no real
+> > requirement to standardise a generic firmware property for that (but
+> > we still need *something* that says stalling is usable on the SMMU --
+> > perhaps just the compatible string is ok).
 > 
-> Or you really have some wrapper IP block around musb and cppi41 just
-> like am335x has.
-> 
-> See drivers/usb/musb/musb_am335x.c and compatible properties for
-> "ti,am33xx-usb" and it's children in am33xx.dtsi.
+> btw, it occurred to me that maybe it should be flags param to
+> iommu_attach_device() (just in case fault handler not installed?)
+> otoh stalling without a fault handler is silly, but I guess we need it
+> to infer whether stalling can be supported by other devices on same
+> iommu.. tbh I'm on a bit shaky ground when it comes to multiple
+> devices per iommu since the SoC's I'm familiar with do it the other
+> way around.  But I guess you have thought more about the multi-device
+> case, so figured I should suggest it..
 
-This looks like what will will need to da850 too.
+I don't think it works at attach time, because the stalling property belongs
+to the domain, rather than the individual devices within it. Similarly, I
+don't think we should allow this property to be toggled once devices have
+been attached.
 
-Alexandre,
-
-If the wrapper is going to work, can you see if it will end up breaking
-DT compatibility once introduced? If yes, I suggest reverting the usb1
-DT node in da850-lcdk.dts so we don't get into a DT compatibility
-problem once v4.10 releases.
-
-Thanks,
-Sekhar
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
