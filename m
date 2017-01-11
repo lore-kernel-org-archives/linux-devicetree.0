@@ -1,71 +1,35 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH] Documentation: dt: reset: Revise typos in TI syscon reset
- example
-Date: Wed, 11 Jan 2017 15:49:28 -0600
-Message-ID: <5fa2bd27-5356-1f2f-8f92-3d0d3dcaa2b4@ti.com>
-References: <20170109192814.26811-1-s-anna@ti.com>
- <20170111211520.w3sy5pkvjydiwvcs@rob-hp-laptop>
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Adding DT support for TI HECC module
+Date: Wed, 11 Jan 2017 22:50:32 +0100
+Message-ID: <CAGm1_kvWXfZ_f3PPL1VJj8AhBf59Pax_GFHDVdejuMBRDu9y6Q@mail.gmail.com>
+References: <1484143521-4898-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170111211520.w3sy5pkvjydiwvcs@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484143521-4898-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andrey Skvortsov <andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, hs-ynQEQJNshbs@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2017 03:15 PM, Rob Herring wrote:
-> On Mon, Jan 09, 2017 at 01:28:14PM -0600, Suman Anna wrote:
->> Fix couple of typos in the example given in the TI syscon reset
->> binding. The ti,reset-bits used for DSP0 are corrected to match
->> the values that will be used in the actual DT node.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> Hi Philipp,
->>
->> This is the Documentation part fix that goes along with
->> the ti-syscon-reset fix that you have on your next branch.
->> I will be submitting the DT nodes very soon
->>
->> regards
->> Suman
->>
->>  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
->> index 164c7f34c451..21ba739b162e 100644
->> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
->> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
->> @@ -63,7 +63,7 @@ Example:
->>  --------
->>  The following example demonstrates a syscon node, the reset controller node
->>  using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
->> -Edison SoC.
->> +66AK2E SoC.
->>  
->>  / {
->>  	soc {
->> @@ -71,13 +71,13 @@ Edison SoC.
->>  			compatible = "syscon", "simple-mfd";
->>  			reg = <0x02350000 0x1000>;
->>  
->> -			pscrst: psc-reset {
->> +			pscrst: psc-reset-controller {
-> 
-> Really, this should be just 'reset-controller'.
+On Wed, Jan 11, 2017 at 3:05 PM,  <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>
+> This is an attempt to revive DT support for TI HECC that was started in 2015.
+>
+> I haven't changed much because not all questions could be fully answered:
+>
+> * Should HECC use "am3505" as compatible?
 
-Thanks Rob, I will fix this patch and the DTS patches as well.
+I mean "ti,am3505-hecc"
 
-regards
-Suman
+> * What should be done to the offsets (ti,scc-ram-offset, ti,hecc-ram-offset, ti,mbx-offset)?
+
+First submission and related comments:
+http://comments.gmane.org/gmane.linux.can/8616
+
+Yegor
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
