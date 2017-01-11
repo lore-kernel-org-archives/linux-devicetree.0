@@ -1,69 +1,81 @@
-From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v11 01/12] dt-bindings: display: mediatek: update supported chips
-Date: Wed, 11 Jan 2017 14:51:02 +0800
-Message-ID: <1484117473-46644-2-git-send-email-yt.shen@mediatek.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v11 02/12] drm/mediatek: add helpers for coverting from the
+ generic components
+Date: Wed, 11 Jan 2017 14:51:03 +0800
+Message-ID: <1484117473-46644-3-git-send-email-yt.shen@mediatek.com>
 References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484117473-46644-1-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add decriptions about supported chips, including MT2701 & MT8173
-
-Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 2 ++
- Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt  | 2 ++
- 2 files changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index db6e77e..acf61f1 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -40,6 +40,7 @@ Required properties (all function blocks):
- 	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
- 	"mediatek,<chip>-disp-mutex" - display mutex
- 	"mediatek,<chip>-disp-od"    - overdrive
-+  the supported chips are mt2701 and mt8173.
- - reg: Physical base address and length of the function block register space
- - interrupts: The interrupt signal from the function block (required, except for
-   merge and split function blocks).
-@@ -54,6 +55,7 @@ Required properties (DMA function blocks):
- 	"mediatek,<chip>-disp-ovl"
- 	"mediatek,<chip>-disp-rdma"
- 	"mediatek,<chip>-disp-wdma"
-+  the supported chips are mt2701 and mt8173.
- - larb: Should contain a phandle pointing to the local arbiter device as defined
-   in Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
- - iommus: Should point to the respective IOMMU block with master port as
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-index 2b1585a..fadf327 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-@@ -7,6 +7,7 @@ channel output.
- 
- Required properties:
- - compatible: "mediatek,<chip>-dsi"
-+  the supported chips are mt2701 and mt8173.
- - reg: Physical base address and length of the controller's registers
- - interrupts: The interrupt signal from the function block.
- - clocks: device clocks
-@@ -25,6 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
- 
- Required properties:
- - compatible: "mediatek,<chip>-mipi-tx"
-+  the supported chips are mt2701 and mt8173.
- - reg: Physical base address and length of the controller's registers
- - clocks: PLL reference clock
- - clock-output-names: name of the output clock line to the DSI encoder
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ZGVmaW5lIGhlbHBlcnMgZm9yIGNvbnZlcnRpbmcgZnJvbSAnbXRrX2RkcF9jb21wJyB0byAnbXRr
+X2Rpc3Bfb3ZsJwpkZWZpbmUgaGVscGVycyBmb3IgY29udmVydGluZyBmcm9tICdtdGtfZGRwX2Nv
+bXAnIHRvICdtdGtfZGlzcF9yZG1hJwoKU2lnbmVkLW9mZi1ieTogWVQgU2hlbiA8eXQuc2hlbkBt
+ZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5j
+ICB8IDE1ICsrKysrKysrKy0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNw
+X3JkbWEuYyB8IDE1ICsrKysrKysrKy0tLS0tLQogMiBmaWxlcyBjaGFuZ2VkLCAxOCBpbnNlcnRp
+b25zKCspLCAxMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bf
+b3ZsLmMKaW5kZXggYzcwMzEwMi4uY2UyNzU5ZiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX292bC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZGlzcF9vdmwuYwpAQCAtNTcsNiArNTcsMTEgQEAgc3RydWN0IG10a19kaXNwX292bCB7CiAJ
+c3RydWN0IGRybV9jcnRjCQkJKmNydGM7CiB9OwogCitzdGF0aWMgaW5saW5lIHN0cnVjdCBtdGtf
+ZGlzcF9vdmwgKmNvbXBfdG9fb3ZsKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApCit7CisJcmV0
+dXJuIGNvbnRhaW5lcl9vZihjb21wLCBzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsLCBkZHBfY29tcCk7Cit9
+CisKIHN0YXRpYyBpcnFyZXR1cm5fdCBtdGtfZGlzcF9vdmxfaXJxX2hhbmRsZXIoaW50IGlycSwg
+dm9pZCAqZGV2X2lkKQogewogCXN0cnVjdCBtdGtfZGlzcF9vdmwgKnByaXYgPSBkZXZfaWQ7CkBA
+IC03NiwyMCArODEsMTggQEAgc3RhdGljIGlycXJldHVybl90IG10a19kaXNwX292bF9pcnFfaGFu
+ZGxlcihpbnQgaXJxLCB2b2lkICpkZXZfaWQpCiBzdGF0aWMgdm9pZCBtdGtfb3ZsX2VuYWJsZV92
+Ymxhbmsoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwKIAkJCQkgIHN0cnVjdCBkcm1fY3J0YyAq
+Y3J0YykKIHsKLQlzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsICpwcml2ID0gY29udGFpbmVyX29mKGNvbXAs
+IHN0cnVjdCBtdGtfZGlzcF9vdmwsCi0JCQkJCQkgZGRwX2NvbXApOworCXN0cnVjdCBtdGtfZGlz
+cF9vdmwgKm92bCA9IGNvbXBfdG9fb3ZsKGNvbXApOwogCi0JcHJpdi0+Y3J0YyA9IGNydGM7CisJ
+b3ZsLT5jcnRjID0gY3J0YzsKIAl3cml0ZWwoMHgwLCBjb21wLT5yZWdzICsgRElTUF9SRUdfT1ZM
+X0lOVFNUQSk7CiAJd3JpdGVsX3JlbGF4ZWQoT1ZMX0ZNRV9DUExfSU5ULCBjb21wLT5yZWdzICsg
+RElTUF9SRUdfT1ZMX0lOVEVOKTsKIH0KIAogc3RhdGljIHZvaWQgbXRrX292bF9kaXNhYmxlX3Zi
+bGFuayhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKQogewotCXN0cnVjdCBtdGtfZGlzcF9vdmwg
+KnByaXYgPSBjb250YWluZXJfb2YoY29tcCwgc3RydWN0IG10a19kaXNwX292bCwKLQkJCQkJCSBk
+ZHBfY29tcCk7CisJc3RydWN0IG10a19kaXNwX292bCAqb3ZsID0gY29tcF90b19vdmwoY29tcCk7
+CiAKLQlwcml2LT5jcnRjID0gTlVMTDsKKwlvdmwtPmNydGMgPSBOVUxMOwogCXdyaXRlbF9yZWxh
+eGVkKDB4MCwgY29tcC0+cmVncyArIERJU1BfUkVHX09WTF9JTlRFTik7CiB9CiAKZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCmluZGV4IDBkZjA1ZjkuLjIxZWZmNmYgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMKKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYwpAQCAtNDksNiArNDksMTEg
+QEAgc3RydWN0IG10a19kaXNwX3JkbWEgewogCXN0cnVjdCBkcm1fY3J0YwkJCSpjcnRjOwogfTsK
+IAorc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2Rpc3BfcmRtYSAqY29tcF90b19yZG1hKHN0cnVj
+dCBtdGtfZGRwX2NvbXAgKmNvbXApCit7CisJcmV0dXJuIGNvbnRhaW5lcl9vZihjb21wLCBzdHJ1
+Y3QgbXRrX2Rpc3BfcmRtYSwgZGRwX2NvbXApOworfQorCiBzdGF0aWMgaXJxcmV0dXJuX3QgbXRr
+X2Rpc3BfcmRtYV9pcnFfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpkZXZfaWQpCiB7CiAJc3RydWN0
+IG10a19kaXNwX3JkbWEgKnByaXYgPSBkZXZfaWQ7CkBAIC03NywyMCArODIsMTggQEAgc3RhdGlj
+IHZvaWQgcmRtYV91cGRhdGVfYml0cyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25l
+ZCBpbnQgcmVnLAogc3RhdGljIHZvaWQgbXRrX3JkbWFfZW5hYmxlX3ZibGFuayhzdHJ1Y3QgbXRr
+X2RkcF9jb21wICpjb21wLAogCQkJCSAgIHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKIHsKLQlzdHJ1
+Y3QgbXRrX2Rpc3BfcmRtYSAqcHJpdiA9IGNvbnRhaW5lcl9vZihjb21wLCBzdHJ1Y3QgbXRrX2Rp
+c3BfcmRtYSwKLQkJCQkJCSAgZGRwX2NvbXApOworCXN0cnVjdCBtdGtfZGlzcF9yZG1hICpyZG1h
+ID0gY29tcF90b19yZG1hKGNvbXApOwogCi0JcHJpdi0+Y3J0YyA9IGNydGM7CisJcmRtYS0+Y3J0
+YyA9IGNydGM7CiAJcmRtYV91cGRhdGVfYml0cyhjb21wLCBESVNQX1JFR19SRE1BX0lOVF9FTkFC
+TEUsIFJETUFfRlJBTUVfRU5EX0lOVCwKIAkJCSBSRE1BX0ZSQU1FX0VORF9JTlQpOwogfQogCiBz
+dGF0aWMgdm9pZCBtdGtfcmRtYV9kaXNhYmxlX3ZibGFuayhzdHJ1Y3QgbXRrX2RkcF9jb21wICpj
+b21wKQogewotCXN0cnVjdCBtdGtfZGlzcF9yZG1hICpwcml2ID0gY29udGFpbmVyX29mKGNvbXAs
+IHN0cnVjdCBtdGtfZGlzcF9yZG1hLAotCQkJCQkJICBkZHBfY29tcCk7CisJc3RydWN0IG10a19k
+aXNwX3JkbWEgKnJkbWEgPSBjb21wX3RvX3JkbWEoY29tcCk7CiAKLQlwcml2LT5jcnRjID0gTlVM
+TDsKKwlyZG1hLT5jcnRjID0gTlVMTDsKIAlyZG1hX3VwZGF0ZV9iaXRzKGNvbXAsIERJU1BfUkVH
+X1JETUFfSU5UX0VOQUJMRSwgUkRNQV9GUkFNRV9FTkRfSU5ULCAwKTsKIH0KIAotLSAKMS45LjEK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
