@@ -1,99 +1,122 @@
-From: Jean-Jacques Hiblot <jjhiblot@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu idle
-Date: Wed, 11 Jan 2017 14:18:48 +0100
-Message-ID: <CACh+v5OEKZzLePwoo6wSf3ccA4e_wwV-FX0v+=vS2JTAK8ih5g@mail.gmail.com>
-References: <20170106065947.30631-1-wenyou.yang@atmel.com>
- <20170106065947.30631-2-wenyou.yang@atmel.com>
- <20170110161821.vp673jyfqx6s76pg@piout.net>
- <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
- <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
- <CACh+v5M3tU4WHMqAX0zm2H=zzwc0+XChyG1tnH2aHxaacm6C=A@mail.gmail.com>
- <20170111111814.GJ14217@n2100.armlinux.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] arm64: allwinner: a64: Increase the MMC max
+ frequency
+Date: Wed, 11 Jan 2017 14:38:04 +0100
+Message-ID: <20170111133804.m73q5u54qs3qhwe2@lukather>
+References: <cover.493dc67855a5f1837e875d37307319a03d14d1d0.1483980339.git-series.maxime.ripard@free-electrons.com>
+ <3689701f93c8426bfa476e9a5f31c3642a8a898e.1483980339.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v67JoOAtHjMJboNUdCDX=+=Hf+zOWr234rT7GEiUmPb=nQ@mail.gmail.com>
+ <20170110191514.kgbesffn3xqltnol@lukather>
+ <CAGb2v64vU5soFybaurCKu1HE9FNo=-NGiy33ZVeoR6E7m4kk6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170111111814.GJ14217@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Wenyou Yang <Wenyou.Yang@microchip.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kvv63k6iutwmeidz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64vU5soFybaurCKu1HE9FNo=-NGiy33ZVeoR6E7m4kk6w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNy0wMS0xMSAxMjoxOCBHTVQrMDE6MDAgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IDxsaW51
-eEBhcm1saW51eC5vcmcudWs+Ogo+IE9uIFdlZCwgSmFuIDExLCAyMDE3IGF0IDEyOjA1OjA1UE0g
-KzAxMDAsIEplYW4tSmFjcXVlcyBIaWJsb3Qgd3JvdGU6Cj4+IDIwMTctMDEtMTEgOToxNSBHTVQr
-MDE6MDAgIDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPjoKPj4gPiBIaSBKZWFuLUphY3F1ZXMs
-Cj4+ID4KPj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4gPj4gRnJvbTogSmVhbi1K
-YWNxdWVzIEhpYmxvdCBbbWFpbHRvOmpqaGlibG90QGdtYWlsLmNvbV0KPj4gPj4gU2VudDogMjAx
-N+W5tDHmnIgxMeaXpSAwOjUxCj4+ID4+IFRvOiBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJl
-LmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiA+PiBDYzogV2VueW91IFlhbmcgLSBBNDE1
-MzUgPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBNYXJrIFJ1dGxhbmQKPj4gPj4gPG1hcmsu
-cnV0bGFuZEBhcm0uY29tPjsgZGV2aWNldHJlZSA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+
-OyBSdXNzZWxsCj4+ID4+IEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcudWs+OyBXZW55b3UgWWFu
-ZyAtIEE0MTUzNQo+PiA+PiA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT47IE5pY29sYXMgRmVy
-cmUgPG5pY29sYXMuZmVycmVAYXRtZWwuY29tPjsKPj4gPj4gTGludXggS2VybmVsIE1haWxpbmcg
-TGlzdCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFJvYiBIZXJyaW5nCj4+ID4+IDxy
-b2JoK2R0QGtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-Pj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIEFSTTogYXQ5MTogZmx1c2ggdGhlIEwyIGNh
-Y2hlIGJlZm9yZSBlbnRlcmluZyBjcHUgaWRsZQo+PiA+Pgo+PiA+PiAyMDE3LTAxLTEwIDE3OjE4
-IEdNVCswMTowMCBBbGV4YW5kcmUgQmVsbG9uaQo+PiA+PiA8YWxleGFuZHJlLmJlbGxvbmlAZnJl
-ZS1lbGVjdHJvbnMuY29tPjoKPj4gPj4gPiBJIHRob3VnaCBhIGJpdCBtb3JlIGFib3V0IGl0LCBh
-bmQgSSBkb24ndCByZWFsbHkgbGlrZSB0aGUgbmV3Cj4+ID4+ID4gY29tcGF0aWJsZSBzdHJpbmcu
-IEkgZG9uJ3QgZmVlbCB0aGlzIHNob3VsZCBiZSBuZWNlc3NhcnkuCj4+ID4+ID4KPj4gPj4gPiBX
-aGF0IGFib3V0IHRoZSBmb2xsb3dpbmc6Cj4+ID4+ID4KPj4gPj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vbWFjaC1hdDkxL3BtLmMgYi9hcmNoL2FybS9tYWNoLWF0OTEvcG0uYyBpbmRleAo+PiA+
-PiA+IGI0MzMyYjcyN2U5Yy4uMDMzM2FjYTYzZTQ0IDEwMDY0NAo+PiA+PiA+IC0tLSBhL2FyY2gv
-YXJtL21hY2gtYXQ5MS9wbS5jCj4+ID4+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC1hdDkxL3BtLmMK
-Pj4gPj4gPiBAQCAtNTMsNiArNTMsNyBAQCBleHRlcm4gdm9pZCBhdDkxX3BpbmN0cmxfZ3Bpb19y
-ZXN1bWUodm9pZCk7ICBzdGF0aWMKPj4gPj4gPiBzdHJ1Y3Qgewo+PiA+PiA+ICAgICAgICAgdW5z
-aWduZWQgbG9uZyB1aHBfdWRwX21hc2s7Cj4+ID4+ID4gICAgICAgICBpbnQgbWVtY3RybDsKPj4g
-Pj4gPiArICAgICAgIGJvb2wgaGFzX2wyX2NhY2hlOwo+PiA+PiA+ICB9IGF0OTFfcG1fZGF0YTsK
-Pj4gPj4gPgo+PiA+PiA+ICB2b2lkIF9faW9tZW0gKmF0OTFfcmFtY19iYXNlWzJdOwo+PiA+PiA+
-IEBAIC0yNjcsNiArMjY4LDExIEBAIHN0YXRpYyB2b2lkIGF0OTFfZGRyX3N0YW5kYnkodm9pZCkK
-Pj4gPj4gPiAgICAgICAgIHUzMiBscHIwLCBscHIxID0gMDsKPj4gPj4gPiAgICAgICAgIHUzMiBz
-YXZlZF9scHIwLCBzYXZlZF9scHIxID0gMDsKPj4gPj4gPgo+PiA+Pgo+PiA+PiA+ICsgICAgICAg
-aWYgKGF0OTFfcG1fZGF0YS5oYXNfbDJfY2FjaGUpIHsKPj4gPj4gPiArICAgICAgICAgICAgICAg
-Zmx1c2hfY2FjaGVfYWxsKCk7Cj4+ID4+IHdoYXQgaXMgdGhlIHBvaW50IG9mIGNhbGxpbmcgZmx1
-c2hfY2FjaGVfYWxsKCkgaGVyZSA/IERvIHdlIHJlYWxseSBjYXJlIHRoYXQgZGlydHkKPj4gPj4g
-ZGF0YSBpbiBMMSBpcyB3cml0dGVuIHRvIEREUiA/IEkgbWF5IGJlIG1pc3Npbmcgc29tZXRoaW5n
-IGJ1dCB0byBtZSBpdCdzIGp1c3QgZXh0cmEKPj4gPj4gbGF0ZW5jeS4KPj4gPgo+PiA+IEFyZSB5
-b3UgbWVhbiB1c2Ugb3V0ZXJfZmx1c2hfYWxsKCkgdG8gZmx1c2ggYWxsIGNhY2hlIGxpbmVzIGlu
-IHRoZSBvdXRlciBjYWNoZSBvbmx5Pwo+Pgo+PiBZZXMgdGhhdCdzIHdoYXQgSSBtZWFudC4gWW91
-IHNlZSwgeW91IGRvbid0IGZsdXNoIHRoZSBjYWNoZSBmb3IKPj4gc2FtYTVkMyBzbyBpdCBzaG91
-bGRuJ3QgYmUgcmVxdWlyZWQgZWl0aGVyIGZvciBzYW01ZDQuIFlvdSBzaG91bGQgYmUKPj4gYWJs
-ZSB0byB0ZXN0IGl0IHF1aWNrbHkgYW5kIHNlZSBpZiBMMSBmbHVzaCBpcyBpbmRlZWQgcmVxdWly
-ZWQgYnkKPj4gcmVwbGFjaW5nICBmbHVzaF9jYWNoZV9hbGwoKSB3aXRoIG91dGVyX2ZsdXNoX2Fs
-bCgpLiBCVFcgaXMgaGlnaGx5Cj4+IHByb2JhYmxlIHRoYXQgTDIgY2FjaGUgZmx1c2ggaXMgZG9u
-ZSBpbiBvdXRlcl9kaXNhYmxlKCkgc28gY2FsbGluZwo+PiBvdXRlcl9mbHVzaF9hbGwoKSBpcyBw
-cm9iYWJseSBubyByZXF1aXJlZC4KPgo+IFBsZWFzZSBkb24ndC4gIFJlYWQgdGhlIGNvbW1lbnRz
-IGluIHRoZSBjb2RlLCBhbmQgdW5kZXJzdGFuZCB0aGUgQVBJcwo+IHRoYXQgeW91J3JlIHN1Z2dl
-c3RpbmcgcGVvcGxlIHVzZSBfYmVmb3JlXyBtYWtpbmcgdGhlIHN1Z2dlc3Rpb246Cj4KPiAvKioK
-PiAgKiBvdXRlcl9mbHVzaF9hbGwgLSBjbGVhbiBhbmQgaW52YWxpZGF0ZSBhbGwgY2FjaGUgbGlu
-ZXMgaW4gdGhlIG91dGVyIGNhY2hlCj4gICoKPiAgKiBOb3RlOiBkZXBlbmRpbmcgb24gaW1wbGVt
-ZW50YXRpb24sIHRoaXMgbWF5IG5vdCBiZSBhdG9taWMgLSBpdCBtdXN0Cj4gICogb25seSBiZSBj
-YWxsZWQgd2l0aCBpbnRlcnJ1cHRzIGRpc2FibGVkIGFuZCBubyBvdGhlciBhY3RpdmUgb3V0ZXIK
-PiAgKiBjYWNoZSBtYXN0ZXJzLgo+ICAqCj4gICogSXQgaXMgaW50ZW5kZWQgdGhhdCB0aGlzIGZ1
-bmN0aW9uIGlzIG9ubHkgdXNlZCBieSBpbXBsZW1lbnRhdGlvbnMKPiAgKiBuZWVkaW5nIHRvIG92
-ZXJyaWRlIHRoZSBvdXRlcl9jYWNoZS5kaXNhYmxlKCkgbWV0aG9kIGR1ZSB0byBzZWN1cml0eS4K
-PiAgKiAoU29tZSBpbXBsZW1lbnRhdGlvbnMgcGVyZm9ybSB0aGlzIGFzIGEgY2xlYW4gZm9sbG93
-ZWQgYnkgYW4gaW52YWxpZGF0ZS4pCj4gICovCj4KPiBTbywgb3V0ZXJfZmx1c2hfYWxsKCkgc2hv
-dWxkIG5vdCBiZSBjYWxsZWQgZXhjZXB0IGZyb20gTDIgY2FjaGUgY29kZQo+IGltcGxlbWVudGlu
-ZyB0aGUgb3V0ZXJfZGlzYWJsZSgpIGZ1bmN0aW9uIC0gaXQncyBub3QgaW50ZW5kZWQgZm9yCj4g
-cGxhdGZvcm1zIHRvIHVzZS4KCk9LLiBNeSBiYWQuIEkgZGlkbid0IHVuZGVyc3RhbmQgdGhlIGNv
-bW1lbnRzLgoKPgo+IFRoZXJlIGFyZSwgaG93ZXZlciwgc2FkbHkgdGhyZWUgdXNlcnMgb2Ygb3V0
-ZXJfZmx1c2hfYWxsKCkgd2hpY2ggaGF2ZQo+IGNyZXB0IGluIHRocm91Z2ggYXJtLXNvYywgdGhh
-dCBzaG91bGQgYmUgb3V0ZXJfZGlzYWJsZSgpIGluc3RlYWQuCj4KPiAtLQo+IFJNSydzIFBhdGNo
-IHN5c3RlbTogaHR0cDovL3d3dy5hcm1saW51eC5vcmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMvCj4g
-RlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNk1icHMgZG93
-biA0MDBrYnBzIHVwCj4gYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--kvv63k6iutwmeidz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Jan 11, 2017 at 02:44:00PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Jan 11, 2017 at 3:15 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Tue, Jan 10, 2017 at 01:01:20AM +0800, Chen-Yu Tsai wrote:
+> >> On Tue, Jan 10, 2017 at 12:46 AM, Maxime Ripard
+> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> > All the controllers can have a maximum frequency of 200MHz.
+> >> >
+> >> > Since older SoCs cannot go that high, we cannot change the default m=
+aximum
+> >> > frequency, but fortunately for us we have a property for that in the=
+ DT.
+> >> >
+> >> > This also has the side effect of allowing to use the MMC HS200 mode =
+for the
+> >> > boards that support it (with either 1.2v or 1.8v IOs).
+> >> >
+> >> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> > ---
+> >> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
+> >> >  1 file changed, 3 insertions(+), 0 deletions(-)
+> >> >
+> >> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/ar=
+m64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> > index 8e149498e096..f46ae965cf5b 100644
+> >> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> > @@ -332,6 +332,7 @@
+> >> >                         resets =3D <&ccu RST_BUS_MMC0>;
+> >> >                         reset-names =3D "ahb";
+> >> >                         interrupts =3D <GIC_SPI 60 IRQ_TYPE_LEVEL_HI=
+GH>;
+> >> > +                       max-frequency =3D <200000000>;
+> >>
+> >> You also have to set one of MMC_CAP2_HS200* in the driver,
+> >> or mmc-hs200-1_8v or mmc-hs200-1_2v in the device tree to
+> >> actually use HS200, right?
+> >
+> > Yes, but that requires a board with 1.8V IOs to work properly, which
+> > not all board use, so it's probably best to enable it in the board
+> > DTS.
+>=20
+> It's limited by the vqmmc regulator. Either way the host controller
+> supports it right?
+
+Yes, but if the card supports HS200 with 1.8V, and the controller
+reports it too, the core will pick that mode and will try to switch to
+it, which in turn will fail, making the card initialisation fail as
+well.
+
+We basically have two choices: either we ask all the boards that
+support it to set mmc-hs200-1_8v in their DTS, or we set it in the
+DTSI and we have the boards set no-1-8-v in their DTS if they do not
+support those modes.
+
+The first case is just the more convenient, because so far we've only
+seen one non-upstream (yet) board that supports 1.8V IOs. All the
+other do not.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--kvv63k6iutwmeidz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYdjU4AAoJEBx+YmzsjxAgrdIP/3J/ENwL7bYGh4hvZKHkxTcI
+2gEEFDhgQqwqRQjrxexuTdXoWBN6FnHoHl83CX/6HVq7aVD5EXKl4V7jsK95mJJc
+EnAbBRcZnvVjWA0YP+uHgO0wC21FLwTDG1JwfOKJVfBKJlELSqvu2Tn3S5ATTj59
+RtuN+oC9yzc606cQcbu6Z7z8Nxwmatr84KdK7wMJfDcTaOgVsSRpEFB3ewua1uSp
++7MsLnxNOX9ZQPQ+W2hLIwMKEvbFBk8O/iDApRlY5CtmhycLifUXs0jz38nQ8DxT
+nMxl91GJdevcNvHOMLzclApAg1zQ9YAu2J5HfwI6epFykSyswA8dpgAQ94K3YQAO
+ChG/Lfov+xBy+NevoPBb4RpAbWTZU5x8qTwhSL0JQQp5ESoR1XWiE00QmTXjsY9k
+yE/Hzk5HaUMkprdiSnv2ZIb0cGN4DWj1BMMAQPT6ydj4c7avv82d8OXAbOVrWsCI
+aWN769yseDgCRBRvHSpvmtCssOa/8DUpOEnOwtDgsyjBhqJfLbdc9cY5Pnidruk3
+sXj2/79JuPZWkip+IrtG/MfjW121HAUB+bZXSqG1hh20SHgtkKzOMDAJ+wdAXV5H
+eAFupS5I25PRfe/ulqAItpD35xxfa0DEl10UKLJtRP6eIJ4iX5V6hpEJmQxVo2vQ
+3dw72PzP2mzA1DnQaCOo
+=9kty
+-----END PGP SIGNATURE-----
+
+--kvv63k6iutwmeidz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
