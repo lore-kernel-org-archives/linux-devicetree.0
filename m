@@ -1,162 +1,64 @@
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 4/5] Input: mpr121 - use matrix keypad helper API
-Date: Thu, 12 Jan 2017 02:42:28 +0900
-Message-ID: <1484156549-26585-5-git-send-email-akinobu.mita@gmail.com>
-References: <1484156549-26585-1-git-send-email-akinobu.mita@gmail.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1484156549-26585-1-git-send-email-akinobu.mita@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 0/4] Amlogic Meson SAR ADC support
+Date: Wed, 11 Jan 2017 18:43:30 +0100
+Message-ID: <20170111174334.24343-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert to use matrix_kaypad_build_keymap() helper.
+This series add support for the SAR ADC on Amlogic Meson GXBB, GXL and
+GXM SoCs.
+The hardware on GXBB provides 10-bit ADC results, while GXL and GXM are
+providing 12-bit results. Support for older SoCs (Meson8b and Meson8)
+can be added with little effort, most of which is testing I guess (I
+don't have any pre-GXBB hardware so I can't say).
 
-This is preparation for adding device tree support.  This change enables
-to share code between legacy platform data probe and device tree probe.
+A new set of clocks had to be added to the GXBB clock controller (used
+by the GXBB/GXL/GXM SoCs) which are required to get the ADC working.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- drivers/input/keyboard/Kconfig           |  1 +
- drivers/input/keyboard/mpr121_touchkey.c | 64 +++++++++++++++++++++-----------
- 2 files changed, 43 insertions(+), 22 deletions(-)
+The ADC itself can sample multiple channels at the same time and allows
+capturing multiple samples (which can be used for filtering/averaging).
+The ADC results are stored inside a FIFO register. More details on what
+the driver supports (or doesn't) can be found in the description of
+patch #3.
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index cbd75cf..b436e71 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -407,6 +407,7 @@ config KEYBOARD_MCS
- config KEYBOARD_MPR121
- 	tristate "Freescale MPR121 Touchkey"
- 	depends on I2C
-+	select INPUT_MATRIXKMAP
- 	help
- 	  Say Y here if you have Freescale MPR121 touchkey controller
- 	  chip in your system.
-diff --git a/drivers/input/keyboard/mpr121_touchkey.c b/drivers/input/keyboard/mpr121_touchkey.c
-index c809f70..7e85512 100644
---- a/drivers/input/keyboard/mpr121_touchkey.c
-+++ b/drivers/input/keyboard/mpr121_touchkey.c
-@@ -20,6 +20,7 @@
- #include <linux/bitops.h>
- #include <linux/interrupt.h>
- #include <linux/i2c/mpr121_touchkey.h>
-+#include <linux/input/matrix_keypad.h>
- 
- /* Register definitions */
- #define ELE_TOUCH_STATUS_0_ADDR	0x0
-@@ -61,7 +62,6 @@ struct mpr121_touchkey {
- 	struct input_dev	*input_dev;
- 	unsigned int		statusbits;
- 	unsigned int		keycount;
--	u16			keycodes[MPR121_MAX_KEY_COUNT];
- };
- 
- struct mpr121_init_register {
-@@ -88,6 +88,7 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
- 	struct input_dev *input = mpr121->input_dev;
- 	unsigned int bit_changed;
- 	unsigned int key_num;
-+	const unsigned short *keycode = input->keycode;
- 	int reg;
- 
- 	reg = i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_1_ADDR);
-@@ -114,7 +115,7 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
- 			continue;
- 
- 		pressed = reg & (1 << key_num);
--		key_val = mpr121->keycodes[key_num];
-+		key_val = keycode[key_num];
- 
- 		input_event(input, EV_MSC, MSC_SCAN, key_num);
- 		input_report_key(input, key_val, pressed);
-@@ -196,23 +197,46 @@ static int mpr_touchkey_probe(struct i2c_client *client,
- {
- 	const struct mpr121_platform_data *pdata =
- 			dev_get_platdata(&client->dev);
-+	struct device *dev = &client->dev;
-+	unsigned int keymap_size;
-+	struct matrix_keymap_data *keymap_data;
- 	struct mpr121_touchkey *mpr121;
- 	struct input_dev *input_dev;
- 	int error;
- 	int i;
- 
--	if (!pdata) {
--		dev_err(&client->dev, "no platform data defined\n");
--		return -EINVAL;
--	}
-+	if (pdata) {
-+		uint32_t *keymap;
- 
--	if (!pdata->keymap || !pdata->keymap_size) {
--		dev_err(&client->dev, "missing keymap data\n");
--		return -EINVAL;
--	}
-+		if (!pdata->keymap || !pdata->keymap_size) {
-+			dev_err(dev, "missing keymap data\n");
-+			return -EINVAL;
-+		}
-+
-+		if (pdata->keymap_size > MPR121_MAX_KEY_COUNT) {
-+			dev_err(dev, "too many keys defined\n");
-+			return -EINVAL;
-+		}
-+
-+		keymap_size = pdata->keymap_size;
-+
-+		keymap = devm_kcalloc(dev, keymap_size,
-+				sizeof(keymap_data->keymap[0]), GFP_KERNEL);
-+		if (!keymap)
-+			return -ENOMEM;
- 
--	if (pdata->keymap_size > MPR121_MAX_KEY_COUNT) {
--		dev_err(&client->dev, "too many keys defined\n");
-+		for (i = 0; i < keymap_size; i++)
-+			keymap[i] = KEY(0, i, pdata->keymap[i]);
-+
-+		keymap_data = devm_kzalloc(dev, sizeof(*keymap_data),
-+					GFP_KERNEL);
-+		if (!keymap_data)
-+			return -ENOMEM;
-+
-+		keymap_data->keymap_size = keymap_size;
-+		keymap_data->keymap = keymap;
-+	} else {
-+		dev_err(&client->dev, "no platform data defined\n");
- 		return -EINVAL;
- 	}
- 
-@@ -232,22 +256,18 @@ static int mpr_touchkey_probe(struct i2c_client *client,
- 
- 	mpr121->client = client;
- 	mpr121->input_dev = input_dev;
--	mpr121->keycount = pdata->keymap_size;
-+	mpr121->keycount = keymap_size;
- 
- 	input_dev->name = "Freescale MPR121 Touchkey";
- 	input_dev->id.bustype = BUS_I2C;
- 	input_dev->dev.parent = &client->dev;
--	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_REP);
-+	input_dev->evbit[0] = BIT_MASK(EV_REP);
- 	input_set_capability(input_dev, EV_MSC, MSC_SCAN);
- 
--	input_dev->keycode = mpr121->keycodes;
--	input_dev->keycodesize = sizeof(mpr121->keycodes[0]);
--	input_dev->keycodemax = mpr121->keycount;
--
--	for (i = 0; i < pdata->keymap_size; i++) {
--		input_set_capability(input_dev, EV_KEY, pdata->keymap[i]);
--		mpr121->keycodes[i] = pdata->keymap[i];
--	}
-+	error = matrix_keypad_build_keymap(keymap_data, NULL, 1, keymap_size,
-+						NULL, input_dev);
-+	if (error)
-+		return error;
- 
- 	error = mpr121_phys_init(pdata, mpr121, client);
- 	if (error) {
+The code is based on the public S805 (Meson8b) and S905 (GXBB)
+datasheets, as well as by reading (various versions of) the vendor
+driver and by inspecting the registers on the vendor kernels of my
+testing-hardware.
+
+Typical use-cases for the ADC on the Meson GX SoCs are:
+- adc-keys ("ADC attached resistor ladder buttons")
+- SoC temperature measurement (not supported by this driver yet as
+  the system firmware does this already and provides the values via the
+  SCPI protocol)
+- "version-strapping" (different resistor values are used to indicate
+  the board-revision)
+- and of course typical ADC measurements
+
+
+Martin Blumenstingl (4):
+  Documentation: dt-bindings: add the Amlogic Meson SAR ADC
+    documentation
+  clk: gxbb: add the SAR ADC clocks and expose them
+  iio: adc: add a driver for the SAR ADC found in Amlogic Meson SoCs
+  ARM64: dts: meson: meson-gx: add the SAR ADC
+
+ .../bindings/iio/adc/amlogic,meson-saradc.txt      |  31 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  10 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  10 +
+ drivers/clk/meson/gxbb.c                           |  48 ++
+ drivers/clk/meson/gxbb.h                           |   9 +-
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/meson_saradc.c                     | 860 +++++++++++++++++++++
+ include/dt-bindings/clock/gxbb-clkc.h              |   4 +
+ 10 files changed, 990 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+ create mode 100644 drivers/iio/adc/meson_saradc.c
+
 -- 
-2.7.4
-
+2.11.0
