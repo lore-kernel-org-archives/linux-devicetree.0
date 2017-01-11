@@ -1,61 +1,37 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v8 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
- device on TM2 board
-Date: Wed, 11 Jan 2017 08:46:34 +0100
-Message-ID: <f292435b-8faa-d2e9-17f6-99a4d00173c5@samsung.com>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas1p4b29b1308a0b8088afd46a475770d4b00@epcas1p4.samsung.com>
- <1484116439-7275-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 0/4] TI DA8xx/OMAPL13x/AM17xx/AM18xx/66AK2x UART
+Date: Wed, 11 Jan 2017 09:06:30 +0100
+Message-ID: <20170111080630.GA28580@kroah.com>
+References: <1483642460-6891-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1484116439-7275-4-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, krzk@kernel.org, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, inki.dae@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1483642460-6891-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Jiri Slaby <jslaby@suse.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11.01.2017 07:33, Hoegeun Kwon wrote:
-> From: Hyungwon Hwang <human.hwang@samsung.com>
->
-> This patch add the panel device tree node for S6E3HA2 display
-> controller to TM2 dts.
->
-> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> index ddba2f8..6d362f9 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> @@ -18,6 +18,18 @@
->  	compatible = "samsung,tm2", "samsung,exynos5433";
->  };
->  
-> +&dsi {
-> +	panel@0 {
-> +		compatible = "samsung,s6e3ha2";
-> +		reg = <0>;
-> +		vdd3-supply = <&ldo27_reg>;
-> +		vci-supply = <&ldo28_reg>;
-> +		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
-> +		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
-> +		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
-The same here (as in 1st comment) , te-gpios should be dropper - decon
-uses hw-trigger.
+On Thu, Jan 05, 2017 at 12:54:16PM -0600, David Lechner wrote:
+> This series adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx/66AK2x
+> UART. These SoCs have a non-standard register for UART power management that
+> needs special handling in the UART driver.
+> 
+> Greg, the first two patches will need to go through your tree. Sekhar and
+> Santosh will pick up the 3 and 4 patches respectively.
 
-Regards
-Andrzej
-> +	};
-> +};
-> +
->  &hsi2c_9 {
->  	status = "okay";
->  
+Ok, I've now taken those two.
+
+thanks,
+
+greg k-h
