@@ -1,103 +1,353 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Wed, 11 Jan 2017 09:21:19 +0100
-Message-ID: <20170111082119.GA26387@kroah.com>
-References: <1480458434-22523-1-git-send-email-fancer.lancer@gmail.com>
- <1481638971-6247-1-git-send-email-fancer.lancer@gmail.com>
- <1481638971-6247-2-git-send-email-fancer.lancer@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Wed, 11 Jan 2017 09:22:08 +0100
+Message-ID: <20170111082208.vzu7xgpd4eakyldl@pengutronix.de>
+References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
+ <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1481638971-6247-2-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1483607246-14771-3-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2016 at 05:22:50PM +0300, Serge Semin wrote:
-> +struct idt_89hpesx_dev {
-> +	u32 eesize;
-> +	bool eero;
-> +	u8 eeaddr;
-> +
-> +	u8 inieecmd;
-> +	u8 inicsrcmd;
-> +	u8 iniccode;
-> +
-> +	atomic_t csr;
+Hello Cedric,
 
-Why is this an atomic_t and not just a "normal" u32 or u64?  I don't see
-the need for an atomic variable at all here, do you?
+On Thu, Jan 05, 2017 at 10:07:23AM +0100, M'boumba Cedric Madianga wrote:
+> +/*
+> + * In standard mode:
+> + * SCL period = SCL high period = SCL low period = CCR * I2C parent clk period
+> + *
+> + * In fast mode:
+> + * If Duty = 0; SCL high period = 1  * CCR * I2C parent clk period
+> + *		SCL low period  = 2  * CCR * I2C parent clk period
+> + * If Duty = 1; SCL high period = 9  * CCR * I2C parent clk period
+> + *		SCL low period  = 16 * CCR * I2C parent clk period
+s/  \*/ */ several times
 
+> + * In order to reach 400 kHz with lower I2C parent clk frequencies we always set
+> + * Duty = 1
+> + *
+> + * For both modes, we have CCR = SCL period * I2C parent clk frequency
+> + * with scl_period = 5 microseconds in Standard mode and scl_period = 1
+s/mode/Mode/
 
-> +
-> +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
-> +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
-> +	struct mutex smb_mtx;
-> +
-> +	struct i2c_client *client;
-> +
-> +	struct bin_attribute *ee_file;
-> +	struct dentry *csr_dir;
-> +	struct dentry *csr_file;
-> +};
+> + * microsecond in Fast Mode in order to satisfy scl_high and scl_low periods
+> + * constraints defined by i2c bus specification
 
-<snip>
+I don't understand scl_period = 1 µs for Fast Mode. For a bus freqency
+of 400 kHz we need low + high = 2.5 µs. Is there a factor 10 missing
+somewhere?
 
+> + */
+> +static struct stm32f4_i2c_timings i2c_timings[] = {
+> [...]
 > +
-> +static int idt_create_dbgfs_files(struct idt_89hpesx_dev *pdev)
+> +/**
+> + * stm32f4_i2c_hw_config() - Prepare I2C block
+> + * @i2c_dev: Controller's private data
+> + */
+> +static int stm32f4_i2c_hw_config(struct stm32f4_i2c_dev *i2c_dev)
 > +{
-> +	struct device *dev = &pdev->client->dev;
-> +	struct i2c_client *cli = pdev->client;
-> +	char fname[CSRNAME_LEN];
+> +	void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +	int ret = 0;
 > +
-> +	/* Initialize basic value of CSR debugfs dentries */
-> +	pdev->csr_dir = NULL;
-> +	pdev->csr_file = NULL;
+> +	/* Disable I2C */
+> +	stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_PE);
 > +
-> +	/* Return failure if root directory doesn't exist */
-> +	if (!csr_dbgdir) {
-> +		dev_dbg(dev, "No Debugfs root directory");
-> +		return -EINVAL;
+> +	ret = stm32f4_i2c_set_periph_clk_freq(i2c_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	stm32f4_i2c_set_rise_time(i2c_dev);
+> +
+> +	stm32f4_i2c_set_speed_mode(i2c_dev);
+> +
+> +	stm32f4_i2c_set_filter(i2c_dev);
+> +
+> +	/* Enable I2C */
+> +	stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_PE);
+
+This function is called after a hw reset, so there should be no need to
+use clr_bits and set_bits because the value read from hw should be
+known.
+
+> +	return ret;
+
+return 0;
+
+> +}
+> +
+> +static int stm32f4_i2c_wait_free_bus(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	u32 status;
+> +	int ret;
+> +
+> +	ret = readl_relaxed_poll_timeout(i2c_dev->base + STM32F4_I2C_SR2,
+> +					 status,
+> +					 !(status & STM32F4_I2C_SR2_BUSY),
+> +					 10, 1000);
+> +	if (ret) {
+> +		dev_dbg(i2c_dev->dev, "bus not free\n");
+> +		ret = -EBUSY;
 > +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_write_ byte() - Write a byte in the data register
+> + * @i2c_dev: Controller's private data
+> + * @byte: Data to write in the register
+> + */
+> +static void stm32f4_i2c_write_byte(struct stm32f4_i2c_dev *i2c_dev, u8 byte)
+> +{
+> +	writel_relaxed(byte, i2c_dev->base + STM32F4_I2C_DR);
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_write_msg() - Fill the data register in write mode
+> + * @i2c_dev: Controller's private data
+> + *
+> + * This function fills the data register with I2C transfer buffer
+> + */
+> +static void stm32f4_i2c_write_msg(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +
+> +	stm32f4_i2c_write_byte(i2c_dev, *msg->buf++);
+> +	msg->count--;
+> +}
+> +
+> +static void stm32f4_i2c_read_msg(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +	u32 rbuf;
+> +
+> +	rbuf = readl_relaxed(i2c_dev->base + STM32F4_I2C_DR);
+> +	*msg->buf++ = rbuf & 0xff;
 
-If debugfs is not enabled, don't error out, just keep going, it should
-never stop kernel code from running properly.
+This is unnecessary. buf has an 8 bit wide type so
 
-Also, this test isn't really doing what you think it is doing...
+	*msg->buf++ = rbuf;
 
-> +	/* Create Debugfs directory for CSR file */
-> +	snprintf(fname, CSRNAME_LEN, "%d-%04hx", cli->adapter->nr, cli->addr);
-> +	pdev->csr_dir = debugfs_create_dir(fname, csr_dbgdir);
-> +	if (IS_ERR_OR_NULL(pdev->csr_dir)) {
-> +		dev_err(dev, "Failed to create CSR node directory");
-> +		return -EINVAL;
+has the same effect. (ISTR this is something I already pointed out
+earlier?)
 
-Again, don't do this, you really don't care if debugfs worked or not.
+> +	msg->count--;
+> +}
+> +
+> +static void stm32f4_i2c_terminate_xfer(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +	void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
+> +
+> +	stm32f4_i2c_disable_irq(i2c_dev);
+> +
+> +	reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +	if (msg->stop)
+> +		stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
+> +	else
+> +		stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
+> +
+> +	complete(&i2c_dev->complete);
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_handle_write() - Handle FIFO empty interrupt in case of write
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_handle_write(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +	void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
+> +
+> +	if (msg->count) {
+> +		stm32f4_i2c_write_msg(i2c_dev);
+> +		if (!msg->count) {
+> +			/* Disable buffer interrupts for RXNE/TXE events */
+> +			stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_ITBUFEN);
+> +		}
+> +	} else {
+> +		stm32f4_i2c_terminate_xfer(i2c_dev);
+
+Is stm32f4_i2c_terminate_xfer also called when arbitration is lost? If
+yes, is it then right to set STM32F4_I2C_CR1_STOP or
+STM32F4_I2C_CR1_START?
 
 > +	}
+> +}
 > +
-> +	/* Create Debugfs file for CSR read/write operations */
-> +	pdev->csr_file = debugfs_create_file(cli->name, 0600,
-> +		pdev->csr_dir, pdev, &csr_dbgfs_ops);
-> +	if (IS_ERR_OR_NULL(pdev->csr_file)) {
-> +		dev_err(dev, "Failed to create CSR dbgfs-node");
-> +		debugfs_remove_recursive(pdev->csr_dir);
-> +		return -EINVAL;
+> +/**
+> + * stm32f4_i2c_handle_read() - Handle FIFO empty interrupt in case of read
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_handle_read(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +	void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR2;
+> +
+> +	switch (msg->count) {
+> +	case 1:
+> +		stm32f4_i2c_disable_irq(i2c_dev);
+> +		stm32f4_i2c_read_msg(i2c_dev);
+> +		complete(&i2c_dev->complete);
+> +		break;
+> +	/*
+> +	 * For 2 or 3-byte reception, we do not have to read the data register
+> +	 * when RXNE occurs as we have to wait for byte transferred finished
 
-Same here, just create the file and move on.
+it's hard to understand because if you don't know the hardware the
+meaning of RXNE is unknown.
 
+> +	 * event before reading data. So, here we just disable buffer
+> +	 * interrupt in order to avoid another system preemption due to RXNE
+> +	 * event
+> +	 */
+> +	case 2:
+> +	case 3:
+> +		stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR2_ITBUFEN);
+> +		break;
+> +	/* For N byte reception with N > 3 we directly read data register */
+> +	default:
+> +		stm32f4_i2c_read_msg(i2c_dev);
 > +	}
+> +}
 > +
-> +	dev_dbg(dev, "Debugfs-files created");
+> +/**
+> + * stm32f4_i2c_handle_rx_btf() - Handle byte transfer finished interrupt
+> + * in case of read
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_handle_rx_btf(struct stm32f4_i2c_dev *i2c_dev)
+> +{
 
-You do know about ftrace, right?  Please remove all of these
-"trace-like" debugging lines, they aren't needed for anyone.
+btf is a hw-related name. Maybe better use _done which is easier to
+understand?
 
-thanks,
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +	void __iomem *reg;
+> +	u32 mask;
+> +	int i;
+> +
+> +	switch (msg->count) {
+> +	case 2:
+> +		/*
+> +		 * In order to correctly send the Stop or Repeated Start
+> +		 * condition on the I2C bus, the STOP/START bit has to be set
+> +		 * before reading the last two bytes.
+> +		 * After that, we could read the last two bytes, disable
+> +		 * remaining interrupts and notify the end of xfer to the
+> +		 * client
 
-greg k-h
+This is surprising. I didn't recheck the manual, but that looks very
+uncomfortable. How does this work, when I only want to read a single
+byte? Same problem for ACK below.
+
+> +		 */
+> +		reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +		if (msg->stop)
+> +			stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
+> +		else
+> +			stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
+> +
+> +		for (i = 2; i > 0; i--)
+> +			stm32f4_i2c_read_msg(i2c_dev);
+> +
+> +		reg = i2c_dev->base + STM32F4_I2C_CR2;
+> +		mask = STM32F4_I2C_CR2_ITEVTEN | STM32F4_I2C_CR2_ITERREN;
+> +		stm32f4_i2c_clr_bits(reg, mask);
+> +
+> +		complete(&i2c_dev->complete);
+> +		break;
+> +	case 3:
+> +		/*
+> +		 * In order to correctly send the ACK on the I2C bus for the
+> +		 * last two bytes, we have to set ACK bit before reading the
+> +		 * third last data byte
+> +		 */
+> +		reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +		stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_ACK);
+> +		stm32f4_i2c_read_msg(i2c_dev);
+> +		break;
+> +	default:
+> +		stm32f4_i2c_read_msg(i2c_dev);
+> +	}
+> +}
+> +
+> +/**
+> + * stm32f4_i2c_handle_rx_addr() - Handle address matched interrupt in case of
+> + * master receiver
+> + * @i2c_dev: Controller's private data
+> + */
+> +static void stm32f4_i2c_handle_rx_addr(struct stm32f4_i2c_dev *i2c_dev)
+> +{
+> +	struct stm32f4_i2c_msg *msg = &i2c_dev->msg;
+> +	void __iomem *reg;
+> +
+> +	switch (msg->count) {
+> +	case 0:
+> +		stm32f4_i2c_terminate_xfer(i2c_dev);
+> +		/* Clear ADDR flag */
+> +		readl_relaxed(i2c_dev->base + STM32F4_I2C_SR2);
+> +		break;
+> +	case 1:
+> +		/*
+> +		 * Single byte reception:
+
+This also happens for the last byte of a 5 byte transfer, right?
+
+> +		 * Enable NACK, clear ADDR flag and generate STOP or RepSTART
+> +		 */
+> +		reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +		stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_ACK);
+> +		readl_relaxed(i2c_dev->base + STM32F4_I2C_SR2);
+> +		if (msg->stop)
+> +			stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_STOP);
+> +		else
+> +			stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
+> +		break;
+> +	case 2:
+> +		/*
+> +		 * 2-byte reception:
+> +		 * Enable NACK and set POS
+
+What is POS?
+
+> +		 */
+> +		reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +		stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_ACK);
+> +		stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_POS);
+
+You could get rid of this, when caching the value of CR1. Would save two
+register reads here. This doesn't work for all registers, but it should
+be possible to apply for most of them, maybe enough to get rid of the
+clr_bits and set_bits function.
+
+> +		readl_relaxed(i2c_dev->base + STM32F4_I2C_SR2);
+> +		break;
+> +
+> +	default:
+> +		/* N-byte reception: Enable ACK */
+> +		reg = i2c_dev->base + STM32F4_I2C_CR1;
+> +		stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_ACK);
+
+Do you need to set ACK for each byte transferred?
+
+I stopp reviewing here because of -ENOTIME on my side but don't want to
+delay discussion, so sent my comments up to here already now.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
