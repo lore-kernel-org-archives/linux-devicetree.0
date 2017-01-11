@@ -1,83 +1,81 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] arm64: dts: exynos: Replace small letter of base
- address/offset on Exynos5433
-Date: Wed, 11 Jan 2017 09:55:48 +0900
-Message-ID: <1484096148-17120-1-git-send-email-cw00.choi@samsung.com>
-References: <CGME20170111005552epcas1p4a1f6ed88022b46544dec4b3801583267@epcas1p4.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, cw00.choi@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, chanwoo@kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property
+ for RK3399 PMUCRU/CRU
+Date: Wed, 11 Jan 2017 09:04:24 +0800
+Message-ID: <58758498.40309@rock-chips.com>
+References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
+ <1484028930-20305-2-git-send-email-zhengxing@rock-chips.com>
+ <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch replaces the small letter of base address, offset and hex value
-with the capital letter to keep the consistency on Exynos5433.
+Hi Doug,
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+On 2017年01月11日 02:45, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> The structure rockchip_clk_provider needs to refer the GRF regmap
+>> in somewhere, if the CRU node has not "rockchip,grf" property,
+>> calling syscon_regmap_lookup_by_phandle will return an invalid GRF
+>> regmap, and the MUXGRF type clock will be not supported.
+>>
+>> Therefore, we need to add them.
+>>
+>> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>> Changes in v4:
+>> - separte the binding patch
+>>
+>> Changes in v3:
+>> - add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
+>>
+>> Changes in v2:
+>> - referring pmugrf for PMUGRU
+>> - fix the typo "invaild" in COMMIT message
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
+>>   1 file changed, 2 insertions(+)
+> This seems fine to me, so:
+>
+> Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>
+> ...but I will say that before you actually add any real "MUXGRF"
+> clocks on rk3399 you _might_ need to rework the code to make things
+> truly "optional".  If it turns out that any existing clocks that
+> already exist today already go through one of these muxes in the GRF
+> and we've always been assuming one setting of the mux, we'll need to
+> make sure we keep assuming that setting of the mux even if the "grf"
+> isn't specified.
+>
+> As I understand it, your motivation for this patch is to eventually be
+> able to model the EDP reference clock which can either be xin24 or
+> "edp osc".  Presumably the eDP "reference clock" isn't related to any
+> of the pre-existing eDP clocks so that one should be safe.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index abaf6b4d599d..d7ed1a68b6fd 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -231,7 +231,7 @@
- 		compatible = "arm,psci";
- 		method = "smc";
- 		cpu_off = <0x84000002>;
--		cpu_on = <0xC4000003>;
-+		cpu_on = <0xc4000003>;
- 	};
- 
- 	reboot: syscon-reboot {
-@@ -753,7 +753,7 @@
- 
- 		dsi: dsi@13900000 {
- 			compatible = "samsung,exynos5433-mipi-dsi";
--			reg = <0x13900000 0xC0>;
-+			reg = <0x13900000 0xc0>;
- 			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&mipi_phy 1>;
- 			phy-names = "dsim";
-@@ -880,9 +880,9 @@
- 			iommus = <&sysmmu_jpeg>;
- 		};
- 
--		mfc: codec@152E0000 {
-+		mfc: codec@152e0000 {
- 			compatible = "samsung,exynos5433-mfc";
--			reg = <0x152E0000 0x10000>;
-+			reg = <0x152e0000 0x10000>;
- 			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "pclk", "aclk", "aclk_xiu";
- 			clocks = <&cmu_mfc CLK_PCLK_MFC>,
-@@ -914,7 +914,7 @@
- 
- 		sysmmu_gscl0: sysmmu@13c80000 {
- 			compatible = "samsung,exynos-sysmmu";
--			reg = <0x13C80000 0x1000>;
-+			reg = <0x13c80000 0x1000>;
- 			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "aclk", "pclk";
- 			clocks = <&cmu_gscl CLK_ACLK_SMMU_GSCL0>,
-@@ -924,7 +924,7 @@
- 
- 		sysmmu_gscl1: sysmmu@13c90000 {
- 			compatible = "samsung,exynos-sysmmu";
--			reg = <0x13C90000 0x1000>;
-+			reg = <0x13c90000 0x1000>;
- 			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "aclk", "pclk";
- 			clocks = <&cmu_gscl CLK_ACLK_SMMU_GSCL1>,
-@@ -934,7 +934,7 @@
- 
- 		sysmmu_gscl2: sysmmu@13ca0000 {
- 			compatible = "samsung,exynos-sysmmu";
--			reg = <0x13CA0000 0x1000>;
-+			reg = <0x13ca0000 0x1000>;
- 			interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "aclk", "pclk";
- 			clocks = <&cmu_gscl CLK_ACLK_SMMU_GSCL2>,
+Hmm... I had intended to use this patch for EDP reference clock, but we 
+don't need to change the parent
+clock (see the BUG: 61664).
+
+I just woud like to add this patch to avoid getting some unavailable 
+MUXGRF clock and need to debug it again,
+if we support it one day in future.
+
+Thanks.
+
 -- 
-1.9.1
+- Xing Zheng
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
