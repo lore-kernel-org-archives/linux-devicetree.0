@@ -1,110 +1,48 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: [PATCH v3 4/7] power: bq27xxx_battery: add BQ27425 chip id
-Date: Tue, 10 Jan 2017 22:20:00 -0800
-Message-ID: <20170111062003.10110-5-matt@ranostay.consulting>
-References: <20170111062003.10110-1-matt@ranostay.consulting>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170111062003.10110-1-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v8 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
+ device on TM2 board
+Date: Wed, 11 Jan 2017 15:33:59 +0900
+Message-ID: <1484116439-7275-4-git-send-email-hoegeun.kwon@samsung.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas1p4b29b1308a0b8088afd46a475770d4b00@epcas1p4.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: krzk@kernel.org, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, andi.shyti@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
----
- drivers/power/supply/bq27xxx_battery.c     | 23 ++++++++++++++++++++++-
- drivers/power/supply/bq27xxx_battery_i2c.c |  2 +-
- include/linux/power/bq27xxx_battery.h      |  3 ++-
- 3 files changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 7272d1e024f9..7475a5f31c53 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -259,6 +259,25 @@ static u8 bq27xxx_regs[][BQ27XXX_REG_MAX] = {
- 		[BQ27XXX_REG_DCAP] = 0x3c,
- 		[BQ27XXX_REG_AP] = 0x18,
- 	},
-+	[BQ27425] = {
-+		[BQ27XXX_REG_CTRL] = 0x00,
-+		[BQ27XXX_REG_TEMP] = 0x02,
-+		[BQ27XXX_REG_INT_TEMP] = 0x1e,
-+		[BQ27XXX_REG_VOLT] = 0x04,
-+		[BQ27XXX_REG_AI] = 0x10,
-+		[BQ27XXX_REG_FLAGS] = 0x06,
-+		[BQ27XXX_REG_TTE] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTF] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_NAC] = 0x08,
-+		[BQ27XXX_REG_FCC] = 0x0e,
-+		[BQ27XXX_REG_CYCT] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_AE] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_SOC] = 0x1c,
-+		[BQ27XXX_REG_DCAP] = 0x3c,
-+		[BQ27XXX_REG_AP] = 0x18,
-+	},
- };
- 
- static enum power_supply_property bq27000_battery_props[] = {
-@@ -427,6 +446,7 @@ static struct {
- 	BQ27XXX_PROP(BQ27541, bq27541_battery_props),
- 	BQ27XXX_PROP(BQ27545, bq27545_battery_props),
- 	BQ27XXX_PROP(BQ27421, bq27421_battery_props),
-+	BQ27XXX_PROP(BQ27425, bq27421_battery_props),
- };
- 
- static DEFINE_MUTEX(bq27xxx_list_lock);
-@@ -682,6 +702,7 @@ static bool bq27xxx_battery_overtemp(struct bq27xxx_device_info *di, u16 flags)
- 		return flags & (BQ27XXX_FLAG_OTC | BQ27XXX_FLAG_OTD);
- 	case BQ27530:
- 	case BQ27421:
-+	case BQ27425:
- 		return flags & BQ27XXX_FLAG_OT;
- 	default:
- 		return false;
-@@ -693,7 +714,7 @@ static bool bq27xxx_battery_overtemp(struct bq27xxx_device_info *di, u16 flags)
-  */
- static bool bq27xxx_battery_undertemp(struct bq27xxx_device_info *di, u16 flags)
- {
--	if (di->chip == BQ27530 || di->chip == BQ27421)
-+	if (di->chip == BQ27530 || di->chip == BQ27421 || di->chip == BQ27425)
- 		return flags & BQ27XXX_FLAG_UT;
- 
- 	return false;
-diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
-index 5c5c3a6f9923..27143230839a 100644
---- a/drivers/power/supply/bq27xxx_battery_i2c.c
-+++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-@@ -159,9 +159,9 @@ static const struct i2c_device_id bq27xxx_i2c_id_table[] = {
- 	{ "bq27742", BQ27541 },
- 	{ "bq27545", BQ27545 },
- 	{ "bq27421", BQ27421 },
--	{ "bq27425", BQ27421 },
- 	{ "bq27441", BQ27421 },
- 	{ "bq27621", BQ27421 },
-+	{ "bq27425", BQ27425 },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
-diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
-index bed9557b69e7..14ecac158150 100644
---- a/include/linux/power/bq27xxx_battery.h
-+++ b/include/linux/power/bq27xxx_battery.h
-@@ -9,7 +9,8 @@ enum bq27xxx_chip {
- 	BQ27530, /* bq27530, bq27531 */
- 	BQ27541, /* bq27541, bq27542, bq27546, bq27742 */
- 	BQ27545, /* bq27545 */
--	BQ27421, /* bq27421, bq27425, bq27441, bq27621 */
-+	BQ27421, /* bq27421, bq27441, bq27621 */
-+	BQ27425, /* bq27425 */
- };
- 
- /**
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSHl1bmd3b24gSHdhbmcgPGh1bWFuLmh3YW5nQHNhbXN1bmcuY29tPgoKVGhpcyBwYXRj
+aCBhZGQgdGhlIHBhbmVsIGRldmljZSB0cmVlIG5vZGUgZm9yIFM2RTNIQTIgZGlzcGxheQpjb250
+cm9sbGVyIHRvIFRNMiBkdHMuCgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8aHVtYW4u
+aHdhbmdAc2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
+c2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1
+bmcuY29tPgpTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5n
+LmNvbT4KVGVzdGVkLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4KLS0t
+CiBhcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMgfCAxMiArKysr
+KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTIuZHRzIGIvYXJjaC9hcm02
+NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTIuZHRzCmluZGV4IGRkYmEyZjguLjZkMzYy
+ZjkgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0y
+LmR0cworKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi5kdHMK
+QEAgLTE4LDYgKzE4LDE4IEBACiAJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHRtMiIsICJzYW1zdW5n
+LGV4eW5vczU0MzMiOwogfTsKIAorJmRzaSB7CisJcGFuZWxAMCB7CisJCWNvbXBhdGlibGUgPSAi
+c2Ftc3VuZyxzNmUzaGEyIjsKKwkJcmVnID0gPDA+OworCQl2ZGQzLXN1cHBseSA9IDwmbGRvMjdf
+cmVnPjsKKwkJdmNpLXN1cHBseSA9IDwmbGRvMjhfcmVnPjsKKwkJcmVzZXQtZ3Bpb3MgPSA8Jmdw
+ZzAgMCBHUElPX0FDVElWRV9MT1c+OworCQllbmFibGUtZ3Bpb3MgPSA8JmdwZjEgNSBHUElPX0FD
+VElWRV9ISUdIPjsKKwkJdGUtZ3Bpb3MgPSA8JmdwZjEgMyBHUElPX0FDVElWRV9ISUdIPjsKKwl9
+OworfTsKKwogJmhzaTJjXzkgewogCXN0YXR1cyA9ICJva2F5IjsKIAotLSAKMS45LjEKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
