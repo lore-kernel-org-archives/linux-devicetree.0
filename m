@@ -1,66 +1,58 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
-Date: Wed, 11 Jan 2017 10:31:06 -0800
-Message-ID: <20170111183106.GY2630@atomide.com>
-References: <20161227172003.6517-1-tony@atomide.com>
- <20161227172003.6517-2-tony@atomide.com>
- <CAMuHMdVLbNXx23-wgLHcvktyHxWf6t75ggU3rM5A-DhtU9hn5w@mail.gmail.com>
- <20170110153045.GS2630@atomide.com>
- <20170110191908.GV2630@atomide.com>
- <CACRpkdaJmEcqMST30NRdtcLpEg5LhiAxOYsNDDUvYEYFjUBiHA@mail.gmail.com>
- <20170111162808.GW2630@atomide.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2] PCI: rockchip: Add quirk to disable RC's ASPM L0s
+Date: Wed, 11 Jan 2017 10:38:56 -0800
+Message-ID: <20170111183855.GA85547@google.com>
+References: <1481543487-33152-1-git-send-email-shawn.lin@rock-chips.com>
+ <20170111182822.GC14532@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170111162808.GW2630@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+In-Reply-To: <20170111182822.GC14532@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Wenrui Li <wenrui.li@rock-chips.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [170111 08:29]:
-> * Linus Walleij <linus.walleij@linaro.org> [170111 07:34]:
-> > On Tue, Jan 10, 2017 at 8:19 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > 
-> > > Below is an experimental fix to intorduce pinctrl_start() that I've
-> > > tested with pinctrl-single. Then we should probably make all pin controller
-> > > drivers call pinctrl_start() to properly fix the issue of struct pinctrl_dev
-> > > handle not being initialized before driver functions are called.
-> > 
-> > Hm I guess that could work, but can we keep pinctrl_register() with the old
-> > semantics and add a separate pinctrl_register_and_defer()
-> > for those who just wanna start it later by a separate call?
-> > 
-> > Then we don't need any special flags.
++ Heiko
+
+On Wed, Jan 11, 2017 at 12:28:22PM -0600, Bjorn Helgaas wrote:
+> On Mon, Dec 12, 2016 at 07:51:27PM +0800, Shawn Lin wrote:
+> > diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+> > index f2dca7b..35988fc 100644
+> > --- a/drivers/pci/host/pcie-rockchip.c
+> > +++ b/drivers/pci/host/pcie-rockchip.c
+> > @@ -140,6 +140,8 @@
+> >  #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+> >  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+> >  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+> > +#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
+> > +#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+> >  #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+> >  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+> >  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+> > @@ -653,6 +655,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> >  	status &= ~PCIE_RC_CONFIG_THP_CAP_NEXT_MASK;
+> >  	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_THP_CAP);
+> >  
+> > +	/* Clear L0s from RC's link cap */
+> > +	if (of_property_read_bool(dev->of_node, "apsm-no-l0s")) {
 > 
-> OK I'll take a look.
-> 
-> > > Or do you guys have any better ideas?
-> > 
-> > Not really. So you mean revert the previous patch and apply something
-> > like this instead?
-> 
-> Let me first take a look to see if we can fix it by making drivers using
-> GENERIC_PINCTRL_GROUPS or GENERIC_PINMUX_FUNCTIONS register with
-> pinctrl_register_and_defer(). I'll post a patch for that today.
+> Did you test this?  This string ("apsm-no-l0s") doesn't match the
+> "aspm-no-l0s" documented above.  The current tree doesn't contain either
+> string in any DTS.
 
-Yeah we can fix this by reverting the late_init parts of the earlier
-attempt and introducing a new pinctrl_register_and_init() for controllers
-to use:
+Ha, wow. FWIW in the tree I'm using, I have both this patch and a DTS
+patch that uses the matching (but improperly-spelled) property. So *I*
+have tested it. But I obviously didn't read it well enough. Or maybe I'm
+mildly dyslexic?
 
-extern int pinctrl_register_and_init(struct pinctrl_desc *pctldesc,
-				     struct device *dev, void *driver_data,
-				     struct pinctrl_dev **pctldev);
+Notably, Shawn sent a NON-matching DTS patch already here:
 
-> Then maybe for v4.12 we can attempt to move all pin controller drivers
-> to using it so we can fix the problem for good.
+https://patchwork.kernel.org/patch/9477651/
 
-And that will also make converting existing drivers to use it later on
-trivial.
-
-Will post a patch shortly after some more testing.
+So this definitely needs to get straightened out. Preferably by
+s/apsm/aspm/ in this patch.
 
 Regards,
-
-Tony
+Brian
