@@ -1,114 +1,50 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 08/11] dmaengine: cppi41: Implement the glue for da8xx
-Date: Wed, 11 Jan 2017 10:24:28 +0100
-Message-ID: <6faef671-bde6-6073-c42f-f37062b6490c@baylibre.com>
-References: <20170109160656.3470-1-abailon@baylibre.com>
- <20170109160656.3470-9-abailon@baylibre.com>
- <2d8b3a2b-859d-bfda-74cf-f22471927fc4@cogentembedded.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/2] media: rc: add driver for IR remote receiver on
+ MT7623 SoC
+Date: Wed, 11 Jan 2017 17:27:19 +0800
+Message-ID: <1484126839.4057.32.camel@mtkswgap22>
+References: <CGME20170110120828epcas4p42482b7920c7a7dabd4c7794959f6d264@epcas4p4.samsung.com>
+         <201701102015.fSM15CvI%fengguang.wu@intel.com>
+         <20170110224543.uuoa7ofkvolz6inp@gangnam.samsung>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2d8b3a2b-859d-bfda-74cf-f22471927fc4-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170110224543.uuoa7ofkvolz6inp@gangnam.samsung>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, mchehab@osg.samsung.com, hdegoede@redhat.com, hkallweit1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, hverkuil@xs4all.nl, sean@mess.org, ivo.g.dimitrov.75@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2017 06:53 PM, Sergei Shtylyov wrote:
-> On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
-> 
->> The da8xx has a cppi41 dma controller.
-> 
->    It's called CPPI 4.1. :-)
-> 
->> This is add the glue layer required to make it work on da8xx,
->> as well some changes in driver (e.g to manage clock).
->>
->> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  drivers/dma/cppi41.c | 95
->> ++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 95 insertions(+)
->>
->> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
->> index 939398e..4318e53 100644
->> --- a/drivers/dma/cppi41.c
->> +++ b/drivers/dma/cppi41.c
-> [...]
->> @@ -86,10 +87,19 @@
->>
->>  #define USBSS_IRQ_PD_COMP    (1 <<  2)
->>
->> +/* USB DA8XX */
->> +#define DA8XX_INTR_SRC_MASKED    0x38
->> +#define DA8XX_END_OF_INTR    0x3c
->> +
->> +#define DA8XX_QMGR_PENDING_MASK    (0xf << 24)
->> +
->> +
->> +
-> 
->    One empty line is enough.
-> 
->>  /* Packet Descriptor */
->>  #define PD2_ZERO_LENGTH        (1 << 19)
->>
->>  #define AM335X_CPPI41        0
->> +#define DA8XX_CPPI41        1
->>
->>  struct cppi41_channel {
->>      struct dma_chan chan;
-> [...]
->> @@ -366,6 +393,26 @@ static irqreturn_t am335x_cppi41_irq(int irq,
->> void *data)
->>      return cppi41_irq(cdd);
->>  }
->>
->> +static irqreturn_t da8xx_cppi41_irq(int irq, void *data)
->> +{
->> +    struct cppi41_dd *cdd = data;
->> +    u32 status;
->> +    u32 usbss_status;
->> +
->> +    status = cppi_readl(cdd->qmgr_mem + QMGR_PEND(0));
->> +    if (status & DA8XX_QMGR_PENDING_MASK)
->> +        cppi41_irq(cdd);
->> +    else
->> +        return IRQ_NONE;
-> 
->    Seems correct...
-> 
->> +
->> +    /* Re-assert IRQ if there no usb core interrupts pending */
->> +    usbss_status = cppi_readl(cdd->usbss_mem + DA8XX_INTR_SRC_MASKED);
->> +    if (!usbss_status)
->> +        cppi_writel(0, cdd->usbss_mem + DA8XX_END_OF_INTR);
-> 
->    I don't understand this...
-Well, it might not be necessary anymore.
-I had an issue with teardown. After a teardown, USB were not working
-anymore.
-It was because an interrupt was fired on teardown completion  but
-because the completion queue was empty, interrupt was ignored by the
-interrupt handler. And in USB driver, because the interrupt was not
-fired by USB core, then interrupt was ignored and never re-asserted.
+okay, I will continue to work based on your changes unless someone else
+has concerns
 
-But I guess the change I made in patch 11 should prevent this issue.
+On Wed, 2017-01-11 at 07:45 +0900, Andi Shyti wrote:
+> Hi Sean,
 > 
->> +
->> +    return IRQ_HANDLED;
->> +}
->> +
->>  static dma_cookie_t cppi41_tx_submit(struct dma_async_tx_descriptor *tx)
->>  {
->>      dma_cookie_t cookie;
-> [...]
+> >    include/linux/compiler.h:253:8: sparse: attribute 'no_sanitize_address': unknown attribute
+> > >> drivers/media/rc/mtk-cir.c:215:41: sparse: too many arguments for function devm_rc_allocate_device
+> >    drivers/media/rc/mtk-cir.c: In function 'mtk_ir_probe':
+> >    drivers/media/rc/mtk-cir.c:215:11: error: too many arguments to function 'devm_rc_allocate_device'
+> >      ir->rc = devm_rc_allocate_device(dev, RC_DRIVER_IR_RAW);
+> >               ^~~~~~~~~~~~~~~~~~~~~~~
+> >    In file included from drivers/media/rc/mtk-cir.c:22:0:
+> >    include/media/rc-core.h:213:16: note: declared here
+> >     struct rc_dev *devm_rc_allocate_device(struct device *dev);
+> >                    ^~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > vim +/devm_rc_allocate_device +215 drivers/media/rc/mtk-cir.c
+> > 
+> >    209		ir->base = devm_ioremap_resource(dev, res);
+> >    210		if (IS_ERR(ir->base)) {
+> >    211			dev_err(dev, "failed to map registers\n");
+> >    212			return PTR_ERR(ir->base);
+> >    213		}
+> >    214	
+> >  > 215		ir->rc = devm_rc_allocate_device(dev, RC_DRIVER_IR_RAW);
 > 
-> MBR, Sergei
+> this error comes because the patches I pointed out have not been
+> applied yet. I guess you can ignore them as long as you tested
+> yours on top those patches.
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Andi
