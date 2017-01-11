@@ -1,72 +1,31 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] ARM: sunxi: Convert pinctrl nodes to generic bindings
-Date: Wed, 11 Jan 2017 15:41:10 +0100
-Message-ID: <CACRpkdYNjQaVFLDQWDFSWrtACi4+gkK9n4JEWSfpwkzW0G_Erw@mail.gmail.com>
-References: <cover.7edc6c25be8a5e2efdda6a82e102dbf7ece6aa64.1476200742.git-series.maxime.ripard@free-electrons.com>
- <e32d044d2d967f24f12d83eea50e7f14f2ae1073.1476200742.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v67_4iriM2WS33hUWzNZY8R2WvGjqzntGBPGmNkr1Ryr_w@mail.gmail.com>
- <58723369-50ad-1792-9be1-c277eb719044@arm.com> <20170105153556.pzec5jjuz7pmvsmn@lukather>
- <dfd7242d-6b16-6091-979f-0bff85a20806@arm.com> <20170109111630.pcsjmc5l4v7vi2rm@lukather>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCHv3 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Wed, 11 Jan 2017 15:44:37 +0100
+Message-ID: <CACRpkdaC+USN7YhZo49LAL9sorMxbTfhQbT5NrAu5D=Q1DHnnA@mail.gmail.com>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <20170106041517.9589-1-chris.packham@alliedtelesis.co.nz> <20170106041517.9589-4-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109111630.pcsjmc5l4v7vi2rm@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170106041517.9589-4-chris.packham@alliedtelesis.co.nz>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 9, 2017 at 12:16 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Jan 06, 2017 at 01:17:21AM +0000, Andr=C3=A9 Przywara wrote:
->> > On Wed, Jan 04, 2017 at 02:16:23AM +0000, Andr=C3=A9 Przywara wrote:
->> >> So can I ask that we start taking this seriously and stop doing thing=
-s
->> >> which prevent Allwinner boards from being supported properly?
->> >> Which would first involve dropping this very patch?
->> >
->> > The driver still supports the old binding.
->>
->> Yes, a _current_ version of the driver supports both bindings, but older
->> versions *require* the older binding and bail out if various
->> allwinner,xxx properties are missing - as in those proposed new DTs:
->>
->> 4.9 kernel with sunxi/for-next .dtb:
->> sun8i-h3-pinctrl 1c20800.pinctrl: missing allwinner,function property in
->> node uart0
->> sun8i-h3-pinctrl 1c20800.pinctrl: missing allwinner,function property in
->> node mmc0
->> sunxi-mmc: probe of 1c0f000.mmc failed with error -22
+On Fri, Jan 6, 2017 at 5:15 AM, Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+
+> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
 >
-> This is seriously getting out of control. We already come to great
-> length (and sometimes a painful amount of hacks) to satisfy a few
-> individuals with a theorical interest in backward compatibility (and
-> apparently, we're even the only one doing so, even more platforms
-> choosing to not support that as we speak), there's seriously no reason
-> to support forward compatibility as well. This has *never* been a
-> thing, never has been documented nor advertised, I don't know why it
-> should be one more thing to carry on our shoulders.
+> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
+> from Marvell.
+>
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-I agree.
-
-We have too much standardization burden to maintain already as it is.
-
-And AFAICT the Allwinner support is a hacker/community/enthusiast
-effort without vendor backing.
-
-We should be aware that the strong push toward DT standardization
-was due to mess in the vendor trees, and as for the ambition to ship
-DTBs with products, that is for people producing products to do,
-not for the community. Community support can very well use attached
-DTB files on the kernel from my point of view, I don't see why
-ArchLinuxARM and others should have to standardize and support
-DTB file in flash images, very ambitious if they do but definately
-not their problem.
+I am waiting for an ACK or comment from the maintainers on
+this patch. Sebastian?
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
