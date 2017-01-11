@@ -1,52 +1,258 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 11 Jan 2017 16:42:00 +0100
-Message-ID: <20170111154200.xcxdlnnakyttumzw@pengutronix.de>
-References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
- <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
- <20170111082208.vzu7xgpd4eakyldl@pengutronix.de>
- <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
- <CAOAejn2cDzPgqvWZf7ASvtST+aDeaAebf=1aMWA9Zd8CDg4pmA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v3] ARM: dts: qcom: Add apq8064 CoreSight components
+Date: Wed, 11 Jan 2017 17:50:21 +0200
+Message-ID: <20170111155021.28273-1-georgi.djakov@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn2cDzPgqvWZf7ASvtST+aDeaAebf=1aMWA9Zd8CDg4pmA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, zhang.chunyan@linaro.org, iivanov.xz@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Cedric,
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
 
-On Wed, Jan 11, 2017 at 03:20:41PM +0100, M'boumba Cedric Madianga wrote:
-> >
-> >> +              */
-> >> +             reg = i2c_dev->base + STM32F4_I2C_CR1;
-> >> +             stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_ACK);
-> >> +             stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_POS);
-> >
-> > You could get rid of this, when caching the value of CR1. Would save two
-> > register reads here. This doesn't work for all registers, but it should
-> > be possible to apply for most of them, maybe enough to get rid of the
-> > clr_bits and set_bits function.
-> 
-> I agree at many places I could save registers read by not using
-> clr_bits and set_bits function when the registers in question has been
-> already read.
-> But it is not enough to get rid of the clr_bits and set_bits function.
-> For example when calling stm32f4_i2c_terminate_xfer(), the CR1
-> register is never read before so set_bits function is useful.
+Add initial set of CoreSight components found on Qualcomm apq8064 based
+platforms, including the IFC6410 board.
 
-I didn't double check the manual, but I would expect that CR1 isn't
-modified by hardware. So you can cache the result in the driver data
-structure and do the necessary modifications with that one.
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+Changes since v2 (https://lkml.org/lkml/2016/11/21/522)
+ * Rebase to linux-next
 
-Best regards
-Uwe
+Changes since v1 (https://lkml.org/lkml/2016/11/17/474)
+ * Moved everything into the SoC dtsi file as suggested by Stephen Boyd.
+ * Updated commit message.
+ * Got Ack from Mathieu.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 189 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 185 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 407a4610f4a7..4b77075ef731 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -28,7 +28,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		CPU0: cpu@0 {
+ 			compatible = "qcom,krait";
+ 			enable-method = "qcom,kpss-acc-v1";
+ 			device_type = "cpu";
+@@ -39,7 +39,7 @@
+ 			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+-		cpu@1 {
++		CPU1: cpu@1 {
+ 			compatible = "qcom,krait";
+ 			enable-method = "qcom,kpss-acc-v1";
+ 			device_type = "cpu";
+@@ -50,7 +50,7 @@
+ 			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+-		cpu@2 {
++		CPU2: cpu@2 {
+ 			compatible = "qcom,krait";
+ 			enable-method = "qcom,kpss-acc-v1";
+ 			device_type = "cpu";
+@@ -61,7 +61,7 @@
+ 			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+-		cpu@3 {
++		CPU3: cpu@3 {
+ 			compatible = "qcom,krait";
+ 			enable-method = "qcom,kpss-acc-v1";
+ 			device_type = "cpu";
+@@ -1420,6 +1420,187 @@
+ 				};
+ 			};
+ 		};
++
++		etb@1a01000 {
++			compatible = "coresight-etb10", "arm,primecell";
++			reg = <0x1a01000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			port {
++				etb_in: endpoint {
++					slave-mode;
++					remote-endpoint = <&replicator_out0>;
++				};
++			};
++		};
++
++		tpiu@1a03000 {
++			compatible = "arm,coresight-tpiu", "arm,primecell";
++			reg = <0x1a03000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			port {
++				tpiu_in: endpoint {
++					slave-mode;
++					remote-endpoint = <&replicator_out1>;
++				};
++			};
++		};
++
++		replicator {
++			compatible = "arm,coresight-replicator";
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					replicator_out0: endpoint {
++						remote-endpoint = <&etb_in>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					replicator_out1: endpoint {
++						remote-endpoint = <&tpiu_in>;
++					};
++				};
++				port@2 {
++					reg = <0>;
++					replicator_in: endpoint {
++						slave-mode;
++						remote-endpoint = <&funnel_out>;
++					};
++				};
++			};
++		};
++
++		funnel@1a04000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x1a04000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/*
++				 * Not described input ports:
++				 * 2 - connected to STM component
++				 * 3 - not-connected
++				 * 6 - not-connected
++				 * 7 - not-connected
++				 */
++				port@0 {
++					reg = <0>;
++					funnel_in0: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm0_out>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					funnel_in1: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm1_out>;
++					};
++				};
++				port@4 {
++					reg = <4>;
++					funnel_in4: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm2_out>;
++					};
++				};
++				port@5 {
++					reg = <5>;
++					funnel_in5: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm3_out>;
++					};
++				};
++				port@8 {
++					reg = <0>;
++					funnel_out: endpoint {
++						remote-endpoint = <&replicator_in>;
++					};
++				};
++			};
++		};
++
++		etm@1a1c000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0x1a1c000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU0>;
++
++			port {
++				etm0_out: endpoint {
++					remote-endpoint = <&funnel_in0>;
++				};
++			};
++		};
++
++		etm@1a1d000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0x1a1d000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU1>;
++
++			port {
++				etm1_out: endpoint {
++					remote-endpoint = <&funnel_in1>;
++				};
++			};
++		};
++
++		etm@1a1e000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0x1a1e000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU2>;
++
++			port {
++				etm2_out: endpoint {
++					remote-endpoint = <&funnel_in4>;
++				};
++			};
++		};
++
++		etm@1a1f000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0x1a1f000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU3>;
++
++			port {
++				etm3_out: endpoint {
++					remote-endpoint = <&funnel_in5>;
++				};
++			};
++		};
+ 	};
+ };
+ #include "qcom-apq8064-pins.dtsi"
