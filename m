@@ -1,80 +1,371 @@
-From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCHv3 3/8] rtc: add STM32 RTC driver
-Date: Wed, 11 Jan 2017 11:07:16 +0100
-Message-ID: <1feb3a23-7450-2b5c-9c1c-c7ecacd7fa17@st.com>
-References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
- <1483623809-29937-4-git-send-email-amelie.delaunay@st.com>
- <20170111000803.mlie6kizcsj2o7lh@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <rtc-linux+bncBC2IT2GSZUDRBY4H3DBQKGQEEXXVFNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170111000803.mlie6kizcsj2o7lh-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v4] ARM64: dts: meson-gx: Add reserved memory zone and usable memory range
+Date: Wed, 11 Jan 2017 11:10:14 +0100
+Message-ID: <1484129414-23325-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xypron.glpk@gmx.de, khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
+this patch adds this reserved zone and redefines the usable memory range.
 
-On 01/11/2017 01:08 AM, Alexandre Belloni wrote:
-> Looks good to me, however...
->
->
-> On 05/01/2017 at 14:43:24 +0100, Amelie Delaunay wrote :
->> +struct stm32_rtc {
->> +	struct rtc_device *rtc_dev;
->> +	void __iomem *base;
->> +	struct clk *ck_rtc;
->> +	spinlock_t lock; /* Protects registers accesses */
->
-> This spinlock seems to be useless, the rtc ops_lock is already
-> protecting everywhere it is taken.
->
-After having a deeper look on ops_lock, it seems this one is sufficient, 
-so I'll remove all spinlock uses in this driver.
->> +	int irq_alarm;
->> +};
->> +
->
-> [...]
->
->> +static int stm32_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
->> +{
->> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
->> +	struct rtc_time *tm = &alrm->time;
->> +	unsigned long irqflags;
->> +	unsigned int cr, isr, alrmar;
->> +	int ret = 0;
->> +
->> +	if (rtc_valid_tm(tm)) {
->> +		dev_err(dev, "Alarm time not valid.\n");
->> +		return -EINVAL;
->
-> This will never happen, tm is already checked multiple times (up to
-> three) in the core before this function can be called.
->
-You're right. I'll remove all rtc_valid_tm calls.
->> +	}
->> +
->
-> You don't need to resend the whole series, just this patch. I'll take
-> 2/8 and 3/8, the other ones can go through the stm32 tree.
->
-Thanks for reviewing. I send a v4 for this patch right now.
+The memory node is also moved from the dtsi files into the proper dts files
+to handle variants memory sizes.
 
+This patch also fixes the memory sizes for the following platforms :
+- gxl-s905x-p212 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
+- gxm-s912-q201 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
+- gxl-s905d-p231 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
+- gxl-nexbox-a95x : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi       |  5 -----
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi                 | 12 ++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts       |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts           |  9 +++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts           |  9 +++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi          |  5 -----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts  |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts   |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  9 +++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dts      |  9 +++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts       |  6 +++++-
+ arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts       |  9 +++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts       |  9 +++++++++
+ 17 files changed, 106 insertions(+), 18 deletions(-)
+
+Changes since resent v2 at [4]:
+- Fix invalid comment of useable memory attributes
+
+Changes since original v2 at [3]:
+- Typo in commit 2GiB -> 1GiB, 4GiB -> 2GiB
+
+Changes since v2 at [2]:
+- Moved all memory node out of dtsi
+- Added comment about useable memory
+- Fixed comment about secmon reserved zone
+
+Changes since v1 at [1] :
+- Renamed reg into linux,usable-memory to ovveride u-boot memory
+- only kept secmon memory zone
+
+[1] http://lkml.kernel.org/r/20161212101801.28491-1-narmstrong@baylibre.com
+[2] http://lkml.kernel.org/r/1483105232-6242-1-git-send-email-narmstrong@baylibre.com
+[3] http://lkml.kernel.org/r/1484128128-22454-1-git-send-email-narmstrong@baylibre.com
+[4] http://lkml.kernel.org/r/1484128540-22662-1-git-send-email-narmstrong@baylibre.com
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+index 7a078be..360ec0d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+@@ -54,11 +54,6 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@0 {
+-		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
+-	};
+-
+ 	vddio_boot: regulator-vddio_boot {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VDDIO_BOOT";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index eada0b5..66677b5 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -55,6 +55,18 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/* 2MiB reserved for ARM Trusted Firmware (BL31) */
++		secmon: secmon {
++			reg = <0x0 0x10000000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <0x2>;
+ 		#size-cells = <0x0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 4cbd626..54ffbff 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -62,7 +62,11 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ 
+ 	leds {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 238fbea..1b474ba 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -61,7 +61,11 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ 
+ 	usb_otg_pwr: regulator-usb-pwrs {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+index 03e3d76..af7b151 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+@@ -49,6 +49,15 @@
+ / {
+ 	compatible = "amlogic,p200", "amlogic,meson-gxbb";
+ 	model = "Amlogic Meson GXBB P200 Development Board";
++
++	memory@0 {
++		device_type = "memory";
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
++	};
+ };
+ 
+ &i2c_B {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+index 39bb037..215096c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+@@ -49,4 +49,13 @@
+ / {
+ 	compatible = "amlogic,p201", "amlogic,meson-gxbb";
+ 	model = "Amlogic Meson GXBB P201 Development Board";
++
++	memory@0 {
++		device_type = "memory";
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 4a96e0f..8052a39 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -53,11 +53,6 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@0 {
+-		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
+-	};
+-
+ 	usb_pwr: regulator-usb-pwrs {
+ 		compatible = "regulator-fixed";
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+index 62fb496..8d6cfb9 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+@@ -50,6 +50,10 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+index 9a9663a..543e03a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+@@ -50,6 +50,10 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+index 2fe167b..9a76fb5 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+@@ -50,6 +50,10 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+index cea4a3e..ac874ac 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+@@ -60,7 +60,11 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ 
+ 	vddio_card: gpio-regulator {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+index f66939c..2e2b821 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+@@ -49,6 +49,15 @@
+ / {
+ 	compatible = "amlogic,p230", "amlogic,s905d", "amlogic,meson-gxl";
+ 	model = "Amlogic Meson GXL (S905D) P230 Development Board";
++
++	memory@0 {
++		device_type = "memory";
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
++	};
+ };
+ 
+ /* P230 has exclusive choice between internal or external PHY */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dts
+index 95992cf..d252da9 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dts
+@@ -49,6 +49,15 @@
+ / {
+ 	compatible = "amlogic,p231", "amlogic,s905d", "amlogic,meson-gxl";
+ 	model = "Amlogic Meson GXL (S905D) P231 Development Board";
++
++	memory@0 {
++		device_type = "memory";
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
++	};
+ };
+ 
+ /* P231 has only internal PHY port */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+index 9639f01..86f7db0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+@@ -59,7 +59,11 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index 5a337d3..2b65e06 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -62,7 +62,11 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+ 	};
+ 
+ 	vddio_boot: regulator-vddio-boot {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+index 5dbc660..cdfe618 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+@@ -49,6 +49,15 @@
+ / {
+ 	compatible = "amlogic,q200", "amlogic,s912", "amlogic,meson-gxm";
+ 	model = "Amlogic Meson GXM (S912) Q200 Development Board";
++
++	memory@0 {
++		device_type = "memory";
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
++	};
+ };
+ 
+ /* Q200 has exclusive choice between internal or external PHY */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
+index 95e11d7..9047ffa 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
+@@ -49,6 +49,15 @@
+ / {
+ 	compatible = "amlogic,q201", "amlogic,s912", "amlogic,meson-gxm";
+ 	model = "Amlogic Meson GXM (S912) Q201 Development Board";
++
++	memory@0 {
++		device_type = "memory";
++		/*
++		 * The first 16MiB of the DDR memory zone
++		 * is reserved to the Hardware ROM Firmware
++		 */
++		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
++	};
+ };
+ 
+ /* Q201 has only internal PHY port */
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1.9.1
