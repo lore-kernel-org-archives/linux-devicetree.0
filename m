@@ -1,48 +1,44 @@
-From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v4 1/3] dt-bindings: Add compatible for LS2088A QDS and RDB board
-Date: Wed, 11 Jan 2017 11:39:37 +0530
-Message-ID: <1484114979-4664-2-git-send-email-abhimanyu.saini@nxp.com>
-References: <1484114979-4664-1-git-send-email-abhimanyu.saini@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484114979-4664-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: [PATCH v3 6/7] devicetree: power: bq27xxx: add monitored battery documentation
+Date: Tue, 10 Jan 2017 22:20:02 -0800
+Message-ID: <20170111062003.10110-7-matt@ranostay.consulting>
+References: <20170111062003.10110-1-matt@ranostay.consulting>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170111062003.10110-1-matt@ranostay.consulting>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sre@kernel.org, tony@atomide.com, Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Depends-On: http://marc.info/?l=linux-pm&m=148392292830015&w=2
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
 ---
- Documentation/devicetree/bindings/arm/fsl.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Documentation/devicetree/bindings/power/supply/bq27xxx.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index d6ee9c6..75ad8c5 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -179,3 +179,14 @@ LS2080A ARMv8 based RDB Board
- Required root node properties:
-     - compatible = "fsl,ls2080a-rdb", "fsl,ls2080a";
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+index b0c95ef63e68..0472a2db0f13 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
++++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+@@ -28,9 +28,17 @@ Required properties:
+  * "ti,bq27621" - BQ27621
+ - reg: integer, i2c address of the device.
  
-+LS2088A SoC
-+Required root node properties:
-+    - compatible = "fsl,ls2088a";
++Optional properties:
++- monitored-battery: phandle of battery information devicetree node
 +
-+LS2088A ARMv8 based QDS Board
-+Required root node properties:
-+    - compatible = "fsl,ls2088a-qds", "fsl,ls2088a";
++  See Documentation/devicetree/bindings/power/supply/battery.txt
++  If any of the referenced battery properties are set, then all must be.
 +
-+LS2088A ARMv8 based RDB Board
-+Required root node properties:
-+    - compatible = "fsl,ls2088a-rdb", "fsl,ls2088a";
+ Example:
+ 
+ bq27510g3 {
+     compatible = "ti,bq27510g3";
+     reg = <0x55>;
++
++    monitored-battery = <&bat>;
+ };
 -- 
-1.9.1
+2.10.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
