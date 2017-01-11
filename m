@@ -1,37 +1,68 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 0/4] TI DA8xx/OMAPL13x/AM17xx/AM18xx/66AK2x UART
-Date: Wed, 11 Jan 2017 09:06:30 +0100
-Message-ID: <20170111080630.GA28580@kroah.com>
-References: <1483642460-6891-1-git-send-email-david@lechnology.com>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] arm64: dts: exynos5433: add DECON_TV node
+Date: Wed, 11 Jan 2017 09:07:52 +0100
+Message-ID: <fa80edf3-51ea-48a2-f14e-0619885aa4c3@samsung.com>
+References: <CGME20170110082433eucas1p2f7cb7b0974987e2c8294509960468fd3@eucas1p2.samsung.com>
+ <1484036664-15951-1-git-send-email-a.hajda@samsung.com>
+ <20170110171114.unajua37bbosxuey@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1483642460-6891-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Jiri Slaby <jslaby@suse.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, linux-serial@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20170110171114.unajua37bbosxuey@kozik-lap>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2017 at 12:54:16PM -0600, David Lechner wrote:
-> This series adds a new UART port type for TI DA8xx/OMAPL13x/AM17xx/AM18xx/66AK2x
-> UART. These SoCs have a non-standard register for UART power management that
-> needs special handling in the UART driver.
-> 
-> Greg, the first two patches will need to go through your tree. Sekhar and
-> Santosh will pick up the 3 and 4 patches respectively.
+On 10.01.2017 18:11, Krzysztof Kozlowski wrote:
+> On Tue, Jan 10, 2017 at 09:24:22AM +0100, Andrzej Hajda wrote:
+>> DECON_TV is 2nd display controller on Exynos5433, used in HDMI path
+>> or 2nd DSI path.
+>>
+>> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>> Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Tested-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>
+>> Hi Krzysztof,
+>>
+>> These patches are based on latest patches separating tm2 and tm2e and
+>> touchscreen patches. I hope this is good base.
+>> Thanks all for quick response/review.
+>>
+> Thanks for fixing the issues. Also thank you for trying to fix the
+> subject. However this is not a full fix. Please run:
+> $ git log --oneline arch/arm64/boot/dts/exynos/
+>
+> Why I am asking about this? I am trying to have it consistent so
+> going through history would be easier. Of course we might discuss what
+> prefix should be used. Some other platforms use "arm64: dts:
+> architecture:", some use "arm64: dts: specific_chip_family:". For exynos
+> we are trying to keep it just "exynos". Anyway regardless of the chosen
+> prefix itself, after choosing some pattern, the consistency helps.
+>
+> When people keep sending patches with wrong title, then after every
+> git-am I have to amend the commit and fix it. It is not difficult but
+> annoying.
+>
+> Actually before I did not complain about it... but recently (this cycle)
+> a lot of Samsung folks are sending wrong subjects. Weird.
 
-Ok, I've now taken those two.
+I agree that consistency is good, so next time maybe it would be better
+to just simply write which prefix to use, instead of advising to dig
+into samsung-soc for help :)
 
-thanks,
+>
+> So just use the command and look at history.
 
-greg k-h
+Good point.
+
+Regards
+Andrzej
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
