@@ -1,86 +1,35 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property for RK3399 PMUCRU/CRU
-Date: Wed, 11 Jan 2017 02:12:58 +0100
-Message-ID: <1799437.apf7OqdtKq@phil>
-References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com> <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA@mail.gmail.com> <58758498.40309@rock-chips.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property
+ for RK3399 PMUCRU/CRU
+Date: Wed, 11 Jan 2017 10:02:49 +0800
+Message-ID: <58759249.4020808@rock-chips.com>
+References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
+ <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA@mail.gmail.com>
+ <58758498.40309@rock-chips.com> <1799437.apf7OqdtKq@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58758498.40309-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1799437.apf7OqdtKq@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Doug Anderson <dianders@google.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Jianqun Xu <jay.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 11. Januar 2017, 09:04:24 CET schrieb Xing Zheng:
-> Hi Doug,
-> 
-> On 2017年01月11日 02:45, Doug Anderson wrote:
-> > Hi,
-> > 
-> > On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org> 
-wrote:
-> >> The structure rockchip_clk_provider needs to refer the GRF regmap
-> >> in somewhere, if the CRU node has not "rockchip,grf" property,
-> >> calling syscon_regmap_lookup_by_phandle will return an invalid GRF
-> >> regmap, and the MUXGRF type clock will be not supported.
-> >> 
-> >> Therefore, we need to add them.
-> >> 
-> >> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> ---
-> >> 
-> >> Changes in v4:
-> >> - separte the binding patch
-> >> 
-> >> Changes in v3:
-> >> - add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
-> >> 
-> >> Changes in v2:
-> >> - referring pmugrf for PMUGRU
-> >> - fix the typo "invaild" in COMMIT message
-> >> 
-> >>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
-> >>   1 file changed, 2 insertions(+)
-> > 
-> > This seems fine to me, so:
-> > 
-> > Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > 
-> > ...but I will say that before you actually add any real "MUXGRF"
-> > clocks on rk3399 you _might_ need to rework the code to make things
-> > truly "optional".  If it turns out that any existing clocks that
-> > already exist today already go through one of these muxes in the GRF
-> > and we've always been assuming one setting of the mux, we'll need to
-> > make sure we keep assuming that setting of the mux even if the "grf"
-> > isn't specified.
-> > 
-> > As I understand it, your motivation for this patch is to eventually be
-> > able to model the EDP reference clock which can either be xin24 or
-> > "edp osc".  Presumably the eDP "reference clock" isn't related to any
-> > of the pre-existing eDP clocks so that one should be safe.
-> 
-> Hmm... I had intended to use this patch for EDP reference clock, but we
-> don't need to change the parent
-> clock (see the BUG: 61664).
+Hi Heiko,
 
-Yep that sounds ok. As I said in my replies, we don't support the edp in the 
-mainline kernel yet, so nothing old can break here :-)
+On 2017年01月11日 09:12, Heiko Stuebner wrote:
+>> I just woud like to add this patch to avoid getting some unavailable
+>> MUXGRF clock and need to debug it again,
+>> if we support it one day in future.
+> could you just check, if we have any other grf-based muxes that we may need in
+> the future. Right now I only see pclkin_isp1_wrapper describing such a mux,
+> but it would be cool if you could check again.
+>
+>
+OK, we will check these.  :)
 
+Thanks.
 
-> I just woud like to add this patch to avoid getting some unavailable
-> MUXGRF clock and need to debug it again,
-> if we support it one day in future.
-
-could you just check, if we have any other grf-based muxes that we may need in 
-the future. Right now I only see pclkin_isp1_wrapper describing such a mux, 
-but it would be cool if you could check again.
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+- Xing Zheng
