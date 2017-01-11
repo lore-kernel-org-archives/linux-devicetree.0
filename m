@@ -1,19 +1,16 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: sun8i: add OTG function to Lichee Pi Zero
-Date: Wed, 11 Jan 2017 14:33:26 -0600
-Message-ID: <20170111203326.GB16865@uda0271908>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-5-icenowy@aosc.xyz>
- <20170110202443.GC2479@uda0271908>
- <2733831484164533@web1g.yandex.ru>
- <20170111200811.GA16865@uda0271908>
- <418251484165614@web21h.yandex.ru>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCHv3 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Wed, 11 Jan 2017 21:55:48 +0100
+Message-ID: <95cb4240-e77b-5eaa-1920-4d9e26028038@gmail.com>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+ <20170106041517.9589-1-chris.packham@alliedtelesis.co.nz>
+ <20170106041517.9589-4-chris.packham@alliedtelesis.co.nz>
+ <CACRpkdaC+USN7YhZo49LAL9sorMxbTfhQbT5NrAu5D=Q1DHnnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <418251484165614@web21h.yandex.ru>
+In-Reply-To: <CACRpkdaC+USN7YhZo49LAL9sorMxbTfhQbT5NrAu5D=Q1DHnnA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,93 +20,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 04:13:34AM +0800, Icenowy Zheng wrote:
-> =
+On 01/11/2017 03:44 PM, Linus Walleij wrote:
+> On Fri, Jan 6, 2017 at 5:15 AM, Chris Packham
+> <chris.packham@alliedtelesis.co.nz> wrote:
+>
+>> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+>>
+>> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
+>> from Marvell.
+>>
+>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>
+> I am waiting for an ACK or comment from the maintainers on
+> this patch. Sebastian?
 
-> =
+Sorry for the ignorance.
 
-> 12.01.2017, 04:08, "Bin Liu" <b-liu@ti.com>:
-> > On Thu, Jan 12, 2017 at 03:55:33AM +0800, Icenowy Zheng wrote:
-> >> =A011.01.2017, 04:24, "Bin Liu" <b-liu@ti.com>:
-> >> =A0> On Tue, Jan 03, 2017 at 11:25:34PM +0800, Icenowy Zheng wrote:
-> >> =A0>> =A0Lichee Pi Zero features a USB OTG port.
-> >> =A0>>
-> >> =A0>> =A0Add support for it.
-> >> =A0>>
-> >> =A0>> =A0Note: in order to use the Host mode, the board must be powere=
-d via the
-> >> =A0>> =A0+5V and GND pins.
-> >> =A0>>
-> >> =A0>> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> >> =A0>> =A0---
-> >> =A0>> =A0=A0arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 10 +++++++=
-+++
-> >> =A0>> =A0=A01 file changed, 10 insertions(+)
-> >> =A0>>
-> >> =A0>> =A0diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/=
-arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> >> =A0>> =A0index 0099affc6ce3..3d9168cbaeca 100644
-> >> =A0>> =A0--- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> >> =A0>> =A0+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> >> =A0>> =A0@@ -71,3 +71,13 @@
-> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pinctrl-names =3D "default";
-> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0status =3D "okay";
-> >> =A0>> =A0=A0};
-> >> =A0>> =A0+
-> >> =A0>> =A0+&usb_otg {
-> >> =A0>> =A0+ dr_mode =3D "otg";
-> >> =A0>
-> >> =A0> Why not set this default mode in dtsi instead?
-> >> =A0>
-> >> =A0> Regards,
-> >> =A0> -Bin.
-> >>
-> >> =A0There's possibly boards which do not have OTG functions.
-> >
-> > That is board specific.
-> >
-> > You'd better to define the default dr_mode which the musb _controller_
-> > supports in the dtsi, and then override it in a specific board dts if
-> > necessary.
-> =
+I don't have the patch to reply to inline, but:
 
-> Is there MUSB controllers which do not support a certain mode?
+- In the driver MPP_MODE2, spi0 there is a typo "csk" instead of "sck".
+- MPP_MODE5 binding "dev","bootcs" and driver "dev","bootcs0" differ.
+- MPP_MODE6 binding "gpio" and driver "gpo" differ.
+- MPP_MODE17 binding "dev","clk" and driver "dev","clkout" differ.
+- MPP_MODE19 binding mentiones "dev","rb" but driver does not.
+- MPP_MODE20 binding "gpio" and driver "gpo" differ.
+- MPP_MODE20 binding "dev","we" and driver "dev","we0" differ.
+- MPP_MODE21 through MPP_MODE30 binding "gpio" and driver "gpo" differ.
+- remove spaces before "0,     0" in mv98dx3236_mpp_gpio_ranges.
 
-I am not aware of any. That is why I recommended to set "otg" in dtsi,
-then override it in board dts if a port is specically designed to
-host-only or device-only mode.
+Most of it is cosmetic stuff, so if you fix it feel free to add my
 
-> =
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-> (I remembered my omap3-n900 which do not work under OTG mode...)
-
-I belive it is n900 board specific. omap3 itself doesn't have such
-limitation, AFAIK.
-
-Regards,
--Bin.
-
-> =
-
-> >
-> > Regards,
-> > -Bin.
-> >
-> >> =A0Even the official CDR design of V3s uses the USB controller to
-> >> =A0connect a UVC webcam to make the design a dual-cam design
-> >> =A0(V3s itself has a CSI).
-> >>
-> >> =A0>
-> >> =A0>> =A0+ status =3D "okay";
-> >> =A0>> =A0+};
-> >> =A0>> =A0+
-> >> =A0>> =A0+&usbphy {
-> >> =A0>> =A0+ usb0_id_det-gpio =3D <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> >> =A0>> =A0+ status =3D "okay";
-> >> =A0>> =A0+};
-> >> =A0>> =A0--
-> >> =A0>> =A02.11.0
+Sebastian
