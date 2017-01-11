@@ -1,7 +1,7 @@
 From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH 2/4] arm: dts: mt2701: Add iommu/smi device node
-Date: Wed, 11 Jan 2017 16:38:42 +0800
-Message-ID: <1484123924-8946-3-git-send-email-erin.lo@mediatek.com>
+Subject: [PATCH 1/4] arm: dts: mt2701: Add spi device node
+Date: Wed, 11 Jan 2017 16:38:41 +0800
+Message-ID: <1484123924-8946-2-git-send-email-erin.lo@mediatek.com>
 References: <1484123924-8946-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,116 +9,68 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1484123924-8946-1-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Honghui Zhang <honghui.zhang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Leilk Liu <leilk.liu@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+From: Leilk Liu <leilk.liu@mediatek.com>
 
-Add the device node of iommu and smi for MT2701.
+Add spi device node for MT2701.
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 ---
- arch/arm/boot/dts/mt2701.dtsi | 54 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm/boot/dts/mt2701.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index eb4c6fd..87be52c 100644
+index bdf8954..eb4c6fd 100644
 --- a/arch/arm/boot/dts/mt2701.dtsi
 +++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -17,6 +17,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/mt2701-resets.h>
-+#include <dt-bindings/memory/mt2701-larb-port.h>
- #include "skeleton64.dtsi"
- #include "mt2701-pinfunc.h"
- 
-@@ -161,6 +162,16 @@
- 		clock-names = "system-clk", "rtc-clk";
+@@ -227,6 +227,45 @@
+ 		status = "disabled";
  	};
  
-+	smi_common: smi@1000c000 {
-+		compatible = "mediatek,mt2701-smi-common";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_SMI>,
-+			 <&mmsys CLK_MM_SMI_COMMON>,
-+			 <&infracfg CLK_INFRA_SMI>;
-+		clock-names = "apb", "smi", "async";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
++	spi0: spi@1100a000 {
++		compatible = "mediatek,mt2701-spi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0 0x1100a000 0 0x100>;
++		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
++			 <&topckgen CLK_TOP_SPI0_SEL>,
++			 <&pericfg CLK_PERI_SPI0>;
++		clock-names = "parent-clk", "sel-clk", "spi-clk";
++		status = "disabled";
 +	};
 +
- 	sysirq: interrupt-controller@10200100 {
- 		compatible = "mediatek,mt2701-sysirq",
- 			     "mediatek,mt6577-sysirq";
-@@ -170,6 +181,16 @@
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
-+	iommu: mmsys_iommu@10205000 {
-+		compatible = "mediatek,mt2701-m4u";
-+		reg = <0 0x10205000 0 0x1000>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_M4U>;
-+		clock-names = "bclk";
-+		mediatek,larbs = <&larb0 &larb1 &larb2>;
-+		#iommu-cells = <1>;
++	spi1: spi@11016000 {
++		compatible = "mediatek,mt2701-spi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0 0x11016000 0 0x100>;
++		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
++			 <&topckgen CLK_TOP_SPI1_SEL>,
++			 <&pericfg CLK_PERI_SPI1>;
++		clock-names = "parent-clk", "sel-clk", "spi-clk";
++		status = "disabled";
 +	};
 +
- 	apmixedsys: syscon@10209000 {
- 		compatible = "mediatek,mt2701-apmixedsys", "syscon";
- 		reg = <0 0x10209000 0 0x1000>;
-@@ -272,18 +293,51 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	larb0: larb@14010000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x14010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larbidx = <0>;
-+		clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+			 <&mmsys CLK_MM_SMI_LARB0>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
++	spi2: spi@11017000 {
++		compatible = "mediatek,mt2701-spi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0 0x11017000 0 0x1000>;
++		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
++			 <&topckgen CLK_TOP_SPI2_SEL>,
++			 <&pericfg CLK_PERI_SPI2>;
++		clock-names = "parent-clk", "sel-clk", "spi-clk";
++		status = "disabled";
 +	};
 +
- 	imgsys: syscon@15000000 {
- 		compatible = "mediatek,mt2701-imgsys", "syscon";
- 		reg = <0 0x15000000 0 0x1000>;
- 		#clock-cells = <1>;
- 	};
- 
-+	larb2: larb@15001000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x15001000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larbidx = <2>;
-+		clocks = <&imgsys CLK_IMG_SMI_COMM>,
-+			 <&imgsys CLK_IMG_SMI_COMM>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+	};
-+
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt2701-vdecsys", "syscon";
- 		reg = <0 0x16000000 0 0x1000>;
- 		#clock-cells = <1>;
- 	};
- 
-+	larb1: larb@16010000 {
-+		compatible = "mediatek,mt2701-smi-larb";
-+		reg = <0 0x16010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larbidx = <1>;
-+		clocks = <&vdecsys CLK_VDEC_CKGEN>,
-+			 <&vdecsys CLK_VDEC_LARB>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
-+	};
-+
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt2701-hifsys", "syscon";
- 		reg = <0 0x1a000000 0 0x1000>;
+ 	mmsys: syscon@14000000 {
+ 		compatible = "mediatek,mt2701-mmsys", "syscon";
+ 		reg = <0 0x14000000 0 0x1000>;
 -- 
 1.9.1
