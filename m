@@ -1,131 +1,104 @@
-From: <Wenyou.Yang@microchip.com>
-Subject: RE: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu
- idle
-Date: Wed, 11 Jan 2017 08:15:53 +0000
-Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
-References: <20170106065947.30631-1-wenyou.yang@atmel.com>
- <20170106065947.30631-2-wenyou.yang@atmel.com>
- <20170110161821.vp673jyfqx6s76pg@piout.net>
- <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
+Date: Wed, 11 Jan 2017 09:21:19 +0100
+Message-ID: <20170111082119.GA26387@kroah.com>
+References: <1480458434-22523-1-git-send-email-fancer.lancer@gmail.com>
+ <1481638971-6247-1-git-send-email-fancer.lancer@gmail.com>
+ <1481638971-6247-2-git-send-email-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: jjhiblot@gmail.com, alexandre.belloni@free-electrons.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1481638971-6247-2-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmVhbi1KYWNxdWVzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IEplYW4tSmFjcXVlcyBIaWJsb3QgW21haWx0bzpqamhpYmxvdEBnbWFpbC5jb21dDQo+IFNlbnQ6
-IDIwMTflubQx5pyIMTHml6UgMDo1MQ0KPiBUbzogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRy
-ZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbT4NCj4gQ2M6IFdlbnlvdSBZYW5nIC0gQTQxNTM1
-IDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxh
-bmRAYXJtLmNvbT47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgUnVz
-c2VsbA0KPiBLaW5nIDxsaW51eEBhcm0ubGludXgub3JnLnVrPjsgV2VueW91IFlhbmcgLSBBNDE1
-MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBOaWNvbGFzIEZlcnJlIDxuaWNvbGFz
-LmZlcnJlQGF0bWVsLmNvbT47DQo+IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3Jn
-PjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMS8zXSBBUk06IGF0OTE6IGZsdXNoIHRoZSBMMiBjYWNoZSBiZWZvcmUgZW50ZXJpbmcg
-Y3B1IGlkbGUNCj4gDQo+IDIwMTctMDEtMTAgMTc6MTggR01UKzAxOjAwIEFsZXhhbmRyZSBCZWxs
-b25pDQo+IDxhbGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVsZWN0cm9ucy5jb20+Og0KPiA+IEkgdGhv
-dWdoIGEgYml0IG1vcmUgYWJvdXQgaXQsIGFuZCBJIGRvbid0IHJlYWxseSBsaWtlIHRoZSBuZXcN
-Cj4gPiBjb21wYXRpYmxlIHN0cmluZy4gSSBkb24ndCBmZWVsIHRoaXMgc2hvdWxkIGJlIG5lY2Vz
-c2FyeS4NCj4gPg0KPiA+IFdoYXQgYWJvdXQgdGhlIGZvbGxvd2luZzoNCj4gPg0KPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9tYWNoLWF0OTEvcG0uYyBiL2FyY2gvYXJtL21hY2gtYXQ5MS9wbS5j
-IGluZGV4DQo+ID4gYjQzMzJiNzI3ZTljLi4wMzMzYWNhNjNlNDQgMTAwNjQ0DQo+ID4gLS0tIGEv
-YXJjaC9hcm0vbWFjaC1hdDkxL3BtLmMNCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLWF0OTEvcG0u
-Yw0KPiA+IEBAIC01Myw2ICs1Myw3IEBAIGV4dGVybiB2b2lkIGF0OTFfcGluY3RybF9ncGlvX3Jl
-c3VtZSh2b2lkKTsgIHN0YXRpYw0KPiA+IHN0cnVjdCB7DQo+ID4gICAgICAgICB1bnNpZ25lZCBs
-b25nIHVocF91ZHBfbWFzazsNCj4gPiAgICAgICAgIGludCBtZW1jdHJsOw0KPiA+ICsgICAgICAg
-Ym9vbCBoYXNfbDJfY2FjaGU7DQo+ID4gIH0gYXQ5MV9wbV9kYXRhOw0KPiA+DQo+ID4gIHZvaWQg
-X19pb21lbSAqYXQ5MV9yYW1jX2Jhc2VbMl07DQo+ID4gQEAgLTI2Nyw2ICsyNjgsMTEgQEAgc3Rh
-dGljIHZvaWQgYXQ5MV9kZHJfc3RhbmRieSh2b2lkKQ0KPiA+ICAgICAgICAgdTMyIGxwcjAsIGxw
-cjEgPSAwOw0KPiA+ICAgICAgICAgdTMyIHNhdmVkX2xwcjAsIHNhdmVkX2xwcjEgPSAwOw0KPiA+
-DQo+IA0KPiA+ICsgICAgICAgaWYgKGF0OTFfcG1fZGF0YS5oYXNfbDJfY2FjaGUpIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgZmx1c2hfY2FjaGVfYWxsKCk7DQo+IHdoYXQgaXMgdGhlIHBvaW50IG9m
-IGNhbGxpbmcgZmx1c2hfY2FjaGVfYWxsKCkgaGVyZSA/IERvIHdlIHJlYWxseSBjYXJlIHRoYXQg
-ZGlydHkNCj4gZGF0YSBpbiBMMSBpcyB3cml0dGVuIHRvIEREUiA/IEkgbWF5IGJlIG1pc3Npbmcg
-c29tZXRoaW5nIGJ1dCB0byBtZSBpdCdzIGp1c3QgZXh0cmENCj4gbGF0ZW5jeS4NCg0KQXJlIHlv
-dSBtZWFuIHVzZSBvdXRlcl9mbHVzaF9hbGwoKSB0byBmbHVzaCBhbGwgY2FjaGUgbGluZXMgaW4g
-dGhlIG91dGVyIGNhY2hlIG9ubHk/DQoNCj4gPiArICAgICAgICAgICAgICAgb3V0ZXJfZGlzYWJs
-ZSgpOw0KPiBJdCBzZWVtcyB0byBtZSB0aGF0IGlmIHRoZXJlJ3Mgbm8gTDIgY2FjaGUsIHRoZW4g
-b3V0ZXJfZGlzYWJsZSgpICBpcyBhIG5vLW9wLiBJdA0KPiBjb3VsZCBiZSBjYWxsZWQgdW5jb25k
-aXRpb25hbGx5Lg0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiAgICAgICAgIGlmIChhdDkxX3Jh
-bWNfYmFzZVsxXSkgew0KPiA+ICAgICAgICAgICAgICAgICBzYXZlZF9scHIxID0gYXQ5MV9yYW1j
-X3JlYWQoMSwgQVQ5MV9ERFJTRFJDX0xQUik7DQo+ID4gICAgICAgICAgICAgICAgIGxwcjEgPSBz
-YXZlZF9scHIxICYgfkFUOTFfRERSU0RSQ19MUENCOyBAQCAtMjg3LDYNCj4gPiArMjkzLDkgQEAg
-c3RhdGljIHZvaWQgYXQ5MV9kZHJfc3RhbmRieSh2b2lkKQ0KPiA+ICAgICAgICAgYXQ5MV9yYW1j
-X3dyaXRlKDAsIEFUOTFfRERSU0RSQ19MUFIsIHNhdmVkX2xwcjApOw0KPiA+ICAgICAgICAgaWYg
-KGF0OTFfcmFtY19iYXNlWzFdKQ0KPiA+ICAgICAgICAgICAgICAgICBhdDkxX3JhbWNfd3JpdGUo
-MSwgQVQ5MV9ERFJTRFJDX0xQUiwgc2F2ZWRfbHByMSk7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYg
-KGF0OTFfcG1fZGF0YS5oYXNfbDJfY2FjaGUpDQo+ID4gKyAgICAgICAgICAgICAgIG91dGVyX3Jl
-c3VtZSgpOw0KPiANCj4gc2FtZSByZW1hcmsgYXMgZm9yIG91dGVyX2Rpc2FibGUoKQ0KPiANCj4g
-SmVhbi1KYWNxdWVzDQo+IA0KPiA+ICB9DQo+ID4NCj4gPiAgLyogV2UgbWFuYWdlIGJvdGggRERS
-QU0vU0RSQU0gY29udHJvbGxlcnMsIHdlIG5lZWQgbW9yZSB0aGFuIG9uZQ0KPiA+IHZhbHVlDQo+
-ID4gICogdG8NCj4gPiBAQCAtMzUzLDYgKzM2MiwxMSBAQCBzdGF0aWMgX19pbml0IHZvaWQgYXQ5
-MV9kdF9yYW1jKHZvaWQpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybjsNCj4gPiAgICAgICAg
-IH0NCj4gPg0KPiA+ICsgICAgICAgbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBO
-VUxMLCAiYXJtLHBsMzEwLWNhY2hlIik7DQo+ID4gKyAgICAgICBpZiAobnApDQo+ID4gKyAgICAg
-ICAgICAgICAgIGF0OTFfcG1fZGF0YS5oYXNfbDJfY2FjaGUgPSB0cnVlOw0KPiA+ICsgICAgICAg
-b2Zfbm9kZV9wdXQobnApOw0KPiA+ICsNCj4gPiAgICAgICAgIGF0OTFfcG1fc2V0X3N0YW5kYnko
-c3RhbmRieSk7DQo+ID4gIH0NCj4gPg0KPiA+DQo+ID4gVGhpcyBoYXMgdGhlIGZvbGxvd2luZyBi
-ZW5lZml0czoNCj4gPiAgLSBldmVyeWJvZHkgd2lsbCBoYXZlIHRoZSBmaXgsIHJlZ2FyZGxlc3Mg
-b2Ygd2hldGhlciB0aGUgZHRiIGlzDQo+ID4gdXBkYXRlZA0KPiA+ICAtIGhhc19sMl9jYWNoZSBj
-YW4gYmUgdXNlZCBsYXRlciBpbiBhdDkxX3BtX3N1c3BlbmQgaW5zdGVhZCBvZiBjYWxsaW5nDQo+
-ID4gICAgaXQgdW5jb25kaXRpb25uYWx5IChJJ2xsIHNlbmQgYSBwYXRjaCkNCj4gPg0KPiA+DQo+
-ID4gT24gMDYvMDEvMjAxNyBhdCAxNDo1OTo0NSArMDgwMCwgV2VueW91IFlhbmcgd3JvdGUgOg0K
-PiA+PiBGb3IgdGhlIFNvQ3Mgc3VjaCBhcyBTQU1BNUQyIGFuZCBTQU1BNUQ0IHdoaWNoIGhhdmUg
-TDIgY2FjaGUsIGZsdXNoDQo+ID4+IHRoZSBMMiBjYWNoZSBmaXJzdCBiZWZvcmUgZW50ZXJpbmcg
-dGhlIGNwdSBpZGxlLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2Vu
-eW91LnlhbmdAYXRtZWwuY29tPg0KPiA+PiAtLS0NCj4gPj4NCj4gPj4gIGFyY2gvYXJtL21hY2gt
-YXQ5MS9wbS5jICAgICAgIHwgMTkgKysrKysrKysrKysrKysrKysrKw0KPiA+PiAgZHJpdmVycy9t
-ZW1vcnkvYXRtZWwtc2RyYW1jLmMgfCAgMSArDQo+ID4+ICAyIGZpbGVzIGNoYW5nZWQsIDIwIGlu
-c2VydGlvbnMoKykNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYXQ5MS9w
-bS5jIGIvYXJjaC9hcm0vbWFjaC1hdDkxL3BtLmMgaW5kZXgNCj4gPj4gYjQzMzJiNzI3ZTljLi4x
-YTYwZGVkZTFhMDEgMTAwNjQ0DQo+ID4+IC0tLSBhL2FyY2gvYXJtL21hY2gtYXQ5MS9wbS5jDQo+
-ID4+ICsrKyBiL2FyY2gvYXJtL21hY2gtYXQ5MS9wbS5jDQo+ID4+IEBAIC0yODksNiArMjg5LDI0
-IEBAIHN0YXRpYyB2b2lkIGF0OTFfZGRyX3N0YW5kYnkodm9pZCkNCj4gPj4gICAgICAgICAgICAg
-ICBhdDkxX3JhbWNfd3JpdGUoMSwgQVQ5MV9ERFJTRFJDX0xQUiwgc2F2ZWRfbHByMSk7ICB9DQo+
-ID4+DQo+ID4+ICtzdGF0aWMgdm9pZCBhdDkxX2Rkcl9jYWNoZV9zdGFuZGJ5KHZvaWQpIHsNCj4g
-Pj4gKyAgICAgdTMyIHNhdmVkX2xwcjsNCj4gPj4gKw0KPiA+PiArICAgICBmbHVzaF9jYWNoZV9h
-bGwoKTsNCj4gPj4gKyAgICAgb3V0ZXJfZGlzYWJsZSgpOw0KPiA+PiArDQo+ID4+ICsgICAgIHNh
-dmVkX2xwciA9IGF0OTFfcmFtY19yZWFkKDAsIEFUOTFfRERSU0RSQ19MUFIpOw0KPiA+PiArICAg
-ICBhdDkxX3JhbWNfd3JpdGUoMCwgQVQ5MV9ERFJTRFJDX0xQUiwgKHNhdmVkX2xwciAmDQo+ID4+
-ICsgICAgICAgICAgICAgICAgICAgICAofkFUOTFfRERSU0RSQ19MUENCKSkgfA0KPiA+PiArIEFU
-OTFfRERSU0RSQ19MUENCX1NFTEZfUkVGUkVTSCk7DQo+ID4+ICsNCj4gPj4gKyAgICAgY3B1X2Rv
-X2lkbGUoKTsNCj4gPj4gKw0KPiA+PiArICAgICBhdDkxX3JhbWNfd3JpdGUoMCwgQVQ5MV9ERFJT
-RFJDX0xQUiwgc2F2ZWRfbHByKTsNCj4gPj4gKw0KPiA+PiArICAgICBvdXRlcl9yZXN1bWUoKTsN
-Cj4gPj4gK30NCj4gPj4gKw0KPiA+PiAgLyogV2UgbWFuYWdlIGJvdGggRERSQU0vU0RSQU0gY29u
-dHJvbGxlcnMsIHdlIG5lZWQgbW9yZSB0aGFuIG9uZQ0KPiB2YWx1ZSB0bw0KPiA+PiAgICogcmVt
-ZW1iZXIuDQo+ID4+ICAgKi8NCj4gPj4gQEAgLTMyNCw2ICszNDIsNyBAQCBzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBjb25zdCByYW1jX2lkc1tdDQo+IF9faW5pdGNvbnN0ID0gew0K
-PiA+PiAgICAgICB7IC5jb21wYXRpYmxlID0gImF0bWVsLGF0OTFzYW05MjYwLXNkcmFtYyIsIC5k
-YXRhID0NCj4gYXQ5MXNhbTlfc2RyYW1fc3RhbmRieSB9LA0KPiA+PiAgICAgICB7IC5jb21wYXRp
-YmxlID0gImF0bWVsLGF0OTFzYW05ZzQ1LWRkcmFtYyIsIC5kYXRhID0gYXQ5MV9kZHJfc3RhbmRi
-eSB9LA0KPiA+PiAgICAgICB7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDMtZGRyYW1jIiwg
-LmRhdGEgPQ0KPiA+PiBhdDkxX2Rkcl9zdGFuZGJ5IH0sDQo+ID4+ICsgICAgIHsgLmNvbXBhdGli
-bGUgPSAiYXRtZWwsc2FtYTVkNC1kZHJhbWMiLCAuZGF0YSA9DQo+ID4+ICsgYXQ5MV9kZHJfY2Fj
-aGVfc3RhbmRieSB9LA0KPiA+PiAgICAgICB7IC8qc2VudGluZWwqLyB9DQo+ID4+ICB9Ow0KPiA+
-Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZW1vcnkvYXRtZWwtc2RyYW1jLmMNCj4gPj4g
-Yi9kcml2ZXJzL21lbW9yeS9hdG1lbC1zZHJhbWMuYyBpbmRleCBiNDE4YjM5YWYxODAuLjdlNWM1
-YzZjMTM0OA0KPiA+PiAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9tZW1vcnkvYXRtZWwtc2Ry
-YW1jLmMNCj4gPj4gKysrIGIvZHJpdmVycy9tZW1vcnkvYXRtZWwtc2RyYW1jLmMNCj4gPj4gQEAg
-LTQ4LDYgKzQ4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfcmFt
-Y19vZl9tYXRjaFtdDQo+ID0gew0KPiA+PiAgICAgICB7IC5jb21wYXRpYmxlID0gImF0bWVsLGF0
-OTFzYW05MjYwLXNkcmFtYyIsIC5kYXRhID0NCj4gJmF0OTFybTkyMDBfY2FwcywgfSwNCj4gPj4g
-ICAgICAgeyAuY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxc2FtOWc0NS1kZHJhbWMiLCAuZGF0YSA9
-DQo+ICZhdDkxc2FtOWc0NV9jYXBzLCB9LA0KPiA+PiAgICAgICB7IC5jb21wYXRpYmxlID0gImF0
-bWVsLHNhbWE1ZDMtZGRyYW1jIiwgLmRhdGEgPSAmc2FtYTVkM19jYXBzLA0KPiA+PiB9LA0KPiA+
-PiArICAgICB7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDQtZGRyYW1jIiwgLmRhdGEgPSAm
-c2FtYTVkM19jYXBzLA0KPiA+PiArIH0sDQo+ID4+ICAgICAgIHt9LA0KPiA+PiAgfTsNCj4gPj4N
-Cj4gPj4gLS0NCj4gPj4gMi4xMS4wDQo+ID4+DQo+ID4NCj4gPiAtLQ0KPiA+IEFsZXhhbmRyZSBC
-ZWxsb25pLCBGcmVlIEVsZWN0cm9ucw0KPiA+IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5n
-aW5lZXJpbmcNCj4gPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tDQo+ID4NCj4gPiBfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsDQo=
+On Tue, Dec 13, 2016 at 05:22:50PM +0300, Serge Semin wrote:
+> +struct idt_89hpesx_dev {
+> +	u32 eesize;
+> +	bool eero;
+> +	u8 eeaddr;
+> +
+> +	u8 inieecmd;
+> +	u8 inicsrcmd;
+> +	u8 iniccode;
+> +
+> +	atomic_t csr;
+
+Why is this an atomic_t and not just a "normal" u32 or u64?  I don't see
+the need for an atomic variable at all here, do you?
+
+
+> +
+> +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
+> +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
+> +	struct mutex smb_mtx;
+> +
+> +	struct i2c_client *client;
+> +
+> +	struct bin_attribute *ee_file;
+> +	struct dentry *csr_dir;
+> +	struct dentry *csr_file;
+> +};
+
+<snip>
+
+> +
+> +static int idt_create_dbgfs_files(struct idt_89hpesx_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->client->dev;
+> +	struct i2c_client *cli = pdev->client;
+> +	char fname[CSRNAME_LEN];
+> +
+> +	/* Initialize basic value of CSR debugfs dentries */
+> +	pdev->csr_dir = NULL;
+> +	pdev->csr_file = NULL;
+> +
+> +	/* Return failure if root directory doesn't exist */
+> +	if (!csr_dbgdir) {
+> +		dev_dbg(dev, "No Debugfs root directory");
+> +		return -EINVAL;
+> +	}
+
+If debugfs is not enabled, don't error out, just keep going, it should
+never stop kernel code from running properly.
+
+Also, this test isn't really doing what you think it is doing...
+
+> +	/* Create Debugfs directory for CSR file */
+> +	snprintf(fname, CSRNAME_LEN, "%d-%04hx", cli->adapter->nr, cli->addr);
+> +	pdev->csr_dir = debugfs_create_dir(fname, csr_dbgdir);
+> +	if (IS_ERR_OR_NULL(pdev->csr_dir)) {
+> +		dev_err(dev, "Failed to create CSR node directory");
+> +		return -EINVAL;
+
+Again, don't do this, you really don't care if debugfs worked or not.
+
+> +	}
+> +
+> +	/* Create Debugfs file for CSR read/write operations */
+> +	pdev->csr_file = debugfs_create_file(cli->name, 0600,
+> +		pdev->csr_dir, pdev, &csr_dbgfs_ops);
+> +	if (IS_ERR_OR_NULL(pdev->csr_file)) {
+> +		dev_err(dev, "Failed to create CSR dbgfs-node");
+> +		debugfs_remove_recursive(pdev->csr_dir);
+> +		return -EINVAL;
+
+Same here, just create the file and move on.
+
+> +	}
+> +
+> +	dev_dbg(dev, "Debugfs-files created");
+
+You do know about ftrace, right?  Please remove all of these
+"trace-like" debugging lines, they aren't needed for anyone.
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
