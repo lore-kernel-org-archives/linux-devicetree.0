@@ -1,27 +1,80 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: zte: add bindings document for
- zx2967 power domain controller
-Date: Wed, 11 Jan 2017 16:23:12 +0800
-Message-ID: <20170111082310.GA23874@dragon>
-References: <1483694164-7668-1-git-send-email-baoyou.xie@linaro.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 3/5] ARM: davinci_all_defconfig: enable iio and ADS7950
+Date: Wed, 11 Jan 2017 13:53:59 +0530
+Message-ID: <b29c37b2-382c-dbab-966b-4463e3127676@ti.com>
+References: <1483677228-2325-1-git-send-email-david@lechnology.com>
+ <1483677228-2325-4-git-send-email-david@lechnology.com>
+ <cb9455bc-2658-9826-823b-2aa845237fed@ti.com>
+ <01ec2c94-46e0-3534-94e8-bd92f78b70ec@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483694164-7668-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, claudiu.manoil-3arQi8VN3Tc@public.gmane.org, amitdanielk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yangbo.lu-3arQi8VN3Tc@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, simon.horman-wFxRvT7yatFl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <01ec2c94-46e0-3534-94e8-bd92f78b70ec@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 05:16:00PM +0800, Baoyou Xie wrote:
-> This patch adds device tree bindings document for ZTE zx2967
-> family power domain controller.
+On Tuesday 10 January 2017 09:13 PM, David Lechner wrote:
+> On 01/09/2017 06:29 AM, Sekhar Nori wrote:
+>> On Friday 06 January 2017 10:03 AM, David Lechner wrote:
+>>> This enables the iio subsystem and the TI ADS7950 driver. This is
+>>> used by
+>>> LEGO MINDSTORMS EV3, which has an ADS7957 chip.
+>>
+>> Can you add your sign-off?
+>>
+>>> ---
+>>>
+>>> The CONFIG_TI_ADS7950 driver is currently in iio/testing, so some
+>>> coordination
+>>> may be needed before picking up this patch.
+>>>
+>>>  arch/arm/configs/davinci_all_defconfig | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/arch/arm/configs/davinci_all_defconfig
+>>> b/arch/arm/configs/davinci_all_defconfig
+>>> index 2b1967a..a899876 100644
+>>> --- a/arch/arm/configs/davinci_all_defconfig
+>>> +++ b/arch/arm/configs/davinci_all_defconfig
+>>> @@ -200,6 +200,13 @@ CONFIG_TI_EDMA=y
+>>>  CONFIG_MEMORY=y
+>>>  CONFIG_TI_AEMIF=m
+>>>  CONFIG_DA8XX_DDRCTL=y
+>>> +CONFIG_IIO=m
+>>> +CONFIG_IIO_BUFFER_CB=m
+>>> +CONFIG_IIO_SW_DEVICE=m
+>>> +CONFIG_IIO_SW_TRIGGER=m
+>>
+>>> +CONFIG_TI_ADS7950=m
+>>
+>> Can you separate this from rest of the patch. I would like to enable
+>> this option only after I can find the symbol in linux-next.
 > 
-> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Will resend without CONFIG_TI_ADS7950
+> 
+>>
+>>> +CONFIG_IIO_HRTIMER_TRIGGER=m
+>>> +CONFIG_IIO_SYSFS_TRIGGER=m
+>>
+>> Need CONFIG_IIO_TRIGGER=y also for these two options to take effect.
+> 
+> CONFIG_IIO_TRIGGER is selected by IIO_TRIGGERED_BUFFER [=m] && IIO [=m]
+> && IIO_BUFFER [=y], so save_defconfig does not pick it up.
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I do remember I did not see these two modules did not get enabled in
+.config after 'make davinci_all_defconfig'. Will check what I may have
+missed.
+
+Thanks,
+Sekhar
