@@ -1,57 +1,217 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv3 3/8] rtc: add STM32 RTC driver
-Date: Wed, 11 Jan 2017 11:50:12 +0100
-Message-ID: <20170111105012.ut6jxlmlf3qv37li@piout.net>
-References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
- <1483623809-29937-4-git-send-email-amelie.delaunay@st.com>
- <20170111000803.mlie6kizcsj2o7lh@piout.net>
- <1feb3a23-7450-2b5c-9c1c-c7ecacd7fa17@st.com>
- <20170111101708.ujcgo7kpyywymyzp@piout.net>
- <ff7a532e-a2a7-920a-29d9-e8a82d6ed915@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jean-Jacques Hiblot <jjhiblot@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu idle
+Date: Wed, 11 Jan 2017 12:05:05 +0100
+Message-ID: <CACh+v5M3tU4WHMqAX0zm2H=zzwc0+XChyG1tnH2aHxaacm6C=A@mail.gmail.com>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com> <20170106065947.30631-2-wenyou.yang@atmel.com>
+ <20170110161821.vp673jyfqx6s76pg@piout.net> <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
+ <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBZE33DBQKGQEAUEHWSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <ff7a532e-a2a7-920a-29d9-e8a82d6ed915-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <Wenyou.Yang@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2017 at 11:42:50 +0100, Amelie DELAUNAY wrote :
-> 
-> On 01/11/2017 11:17 AM, Alexandre Belloni wrote:
-> > On 11/01/2017 at 11:07:16 +0100, Amelie DELAUNAY wrote :
-> > > > This will never happen, tm is already checked multiple times (up to
-> > > > three) in the core before this function can be called.
-> > > > 
-> > > You're right. I'll remove all rtc_valid_tm calls.
-> > 
-> > You can keep the one in read_time
-> > 
-> Even if rtc_valid_tm is called just after rtc->ops->read_time() in
-> __rtc_read_time ?
+2017-01-11 9:15 GMT+01:00  <Wenyou.Yang@microchip.com>:
+> Hi Jean-Jacques,
+>
+>> -----Original Message-----
+>> From: Jean-Jacques Hiblot [mailto:jjhiblot@gmail.com]
+>> Sent: 2017=E5=B9=B41=E6=9C=8811=E6=97=A5 0:51
+>> To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+>> Cc: Wenyou Yang - A41535 <Wenyou.Yang@microchip.com>; Mark Rutland
+>> <mark.rutland@arm.com>; devicetree <devicetree@vger.kernel.org>; Russell
+>> King <linux@arm.linux.org.uk>; Wenyou Yang - A41535
+>> <Wenyou.Yang@microchip.com>; Nicolas Ferre <nicolas.ferre@atmel.com>;
+>> Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Rob Herring
+>> <robh+dt@kernel.org>; linux-arm-kernel@lists.infradead.org
+>> Subject: Re: [PATCH 1/3] ARM: at91: flush the L2 cache before entering c=
+pu idle
+>>
+>> 2017-01-10 17:18 GMT+01:00 Alexandre Belloni
+>> <alexandre.belloni@free-electrons.com>:
+>> > I though a bit more about it, and I don't really like the new
+>> > compatible string. I don't feel this should be necessary.
+>> >
+>> > What about the following:
+>> >
+>> > diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c index
+>> > b4332b727e9c..0333aca63e44 100644
+>> > --- a/arch/arm/mach-at91/pm.c
+>> > +++ b/arch/arm/mach-at91/pm.c
+>> > @@ -53,6 +53,7 @@ extern void at91_pinctrl_gpio_resume(void);  static
+>> > struct {
+>> >         unsigned long uhp_udp_mask;
+>> >         int memctrl;
+>> > +       bool has_l2_cache;
+>> >  } at91_pm_data;
+>> >
+>> >  void __iomem *at91_ramc_base[2];
+>> > @@ -267,6 +268,11 @@ static void at91_ddr_standby(void)
+>> >         u32 lpr0, lpr1 =3D 0;
+>> >         u32 saved_lpr0, saved_lpr1 =3D 0;
+>> >
+>>
+>> > +       if (at91_pm_data.has_l2_cache) {
+>> > +               flush_cache_all();
+>> what is the point of calling flush_cache_all() here ? Do we really care =
+that dirty
+>> data in L1 is written to DDR ? I may be missing something but to me it's=
+ just extra
+>> latency.
+>
+> Are you mean use outer_flush_all() to flush all cache lines in the outer =
+cache only?
 
-Ah yes, I forgot it was added, you can remove all of them.
+Yes that's what I meant. You see, you don't flush the cache for
+sama5d3 so it shouldn't be required either for sam5d4. You should be
+able to test it quickly and see if L1 flush is indeed required by
+replacing  flush_cache_all() with outer_flush_all(). BTW is highly
+probable that L2 cache flush is done in outer_disable() so calling
+outer_flush_all() is probably no required.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+However the more I think on it, the more I wonder about the reason why
+L2 flushing is required or to put it differently: is flusing the L2
+cache the correct thing to do or just a workaround ?
+Could it be that L2 is doing some maintenance operation when DDR
+enters self refresh? In that case maybe a simple cache sync could be
+used.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>
+>> > +               outer_disable();
+>> It seems to me that if there's no L2 cache, then outer_disable()  is a n=
+o-op. It
+>> could be called unconditionally.
+>> > +       }
+>> > +
+>> >         if (at91_ramc_base[1]) {
+>> >                 saved_lpr1 =3D at91_ramc_read(1, AT91_DDRSDRC_LPR);
+>> >                 lpr1 =3D saved_lpr1 & ~AT91_DDRSDRC_LPCB; @@ -287,6
+>> > +293,9 @@ static void at91_ddr_standby(void)
+>> >         at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr0);
+>> >         if (at91_ramc_base[1])
+>> >                 at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);
+>> > +
+>> > +       if (at91_pm_data.has_l2_cache)
+>> > +               outer_resume();
+>>
+>> same remark as for outer_disable()
+>>
+>> Jean-Jacques
+>>
+>> >  }
+>> >
+>> >  /* We manage both DDRAM/SDRAM controllers, we need more than one
+>> > value
+>> >  * to
+>> > @@ -353,6 +362,11 @@ static __init void at91_dt_ramc(void)
+>> >                 return;
+>> >         }
+>> >
+>> > +       np =3D of_find_compatible_node(NULL, NULL, "arm,pl310-cache");
+>> > +       if (np)
+>> > +               at91_pm_data.has_l2_cache =3D true;
+>> > +       of_node_put(np);
+>> > +
+>> >         at91_pm_set_standby(standby);
+>> >  }
+>> >
+>> >
+>> > This has the following benefits:
+>> >  - everybody will have the fix, regardless of whether the dtb is
+>> > updated
+>> >  - has_l2_cache can be used later in at91_pm_suspend instead of callin=
+g
+>> >    it unconditionnaly (I'll send a patch)
+>> >
+>> >
+>> > On 06/01/2017 at 14:59:45 +0800, Wenyou Yang wrote :
+>> >> For the SoCs such as SAMA5D2 and SAMA5D4 which have L2 cache, flush
+>> >> the L2 cache first before entering the cpu idle.
+>> >>
+>> >> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+>> >> ---
+>> >>
+>> >>  arch/arm/mach-at91/pm.c       | 19 +++++++++++++++++++
+>> >>  drivers/memory/atmel-sdramc.c |  1 +
+>> >>  2 files changed, 20 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c index
+>> >> b4332b727e9c..1a60dede1a01 100644
+>> >> --- a/arch/arm/mach-at91/pm.c
+>> >> +++ b/arch/arm/mach-at91/pm.c
+>> >> @@ -289,6 +289,24 @@ static void at91_ddr_standby(void)
+>> >>               at91_ramc_write(1, AT91_DDRSDRC_LPR, saved_lpr1);  }
+>> >>
+>> >> +static void at91_ddr_cache_standby(void) {
+>> >> +     u32 saved_lpr;
+>> >> +
+>> >> +     flush_cache_all();
+>> >> +     outer_disable();
+>> >> +
+>> >> +     saved_lpr =3D at91_ramc_read(0, AT91_DDRSDRC_LPR);
+>> >> +     at91_ramc_write(0, AT91_DDRSDRC_LPR, (saved_lpr &
+>> >> +                     (~AT91_DDRSDRC_LPCB)) |
+>> >> + AT91_DDRSDRC_LPCB_SELF_REFRESH);
+>> >> +
+>> >> +     cpu_do_idle();
+>> >> +
+>> >> +     at91_ramc_write(0, AT91_DDRSDRC_LPR, saved_lpr);
+>> >> +
+>> >> +     outer_resume();
+>> >> +}
+>> >> +
+>> >>  /* We manage both DDRAM/SDRAM controllers, we need more than one
+>> value to
+>> >>   * remember.
+>> >>   */
+>> >> @@ -324,6 +342,7 @@ static const struct of_device_id const ramc_ids[]
+>> __initconst =3D {
+>> >>       { .compatible =3D "atmel,at91sam9260-sdramc", .data =3D
+>> at91sam9_sdram_standby },
+>> >>       { .compatible =3D "atmel,at91sam9g45-ddramc", .data =3D at91_dd=
+r_standby },
+>> >>       { .compatible =3D "atmel,sama5d3-ddramc", .data =3D
+>> >> at91_ddr_standby },
+>> >> +     { .compatible =3D "atmel,sama5d4-ddramc", .data =3D
+>> >> + at91_ddr_cache_standby },
+>> >>       { /*sentinel*/ }
+>> >>  };
+>> >>
+>> >> diff --git a/drivers/memory/atmel-sdramc.c
+>> >> b/drivers/memory/atmel-sdramc.c index b418b39af180..7e5c5c6c1348
+>> >> 100644
+>> >> --- a/drivers/memory/atmel-sdramc.c
+>> >> +++ b/drivers/memory/atmel-sdramc.c
+>> >> @@ -48,6 +48,7 @@ static const struct of_device_id atmel_ramc_of_matc=
+h[]
+>> =3D {
+>> >>       { .compatible =3D "atmel,at91sam9260-sdramc", .data =3D
+>> &at91rm9200_caps, },
+>> >>       { .compatible =3D "atmel,at91sam9g45-ddramc", .data =3D
+>> &at91sam9g45_caps, },
+>> >>       { .compatible =3D "atmel,sama5d3-ddramc", .data =3D &sama5d3_ca=
+ps,
+>> >> },
+>> >> +     { .compatible =3D "atmel,sama5d4-ddramc", .data =3D &sama5d3_ca=
+ps,
+>> >> + },
+>> >>       {},
+>> >>  };
+>> >>
+>> >> --
+>> >> 2.11.0
+>> >>
+>> >
+>> > --
+>> > Alexandre Belloni, Free Electrons
+>> > Embedded Linux and Kernel engineering
+>> > http://free-electrons.com
+>> >
+>> > _______________________________________________
+>> > linux-arm-kernel mailing list
+>> > linux-arm-kernel@lists.infradead.org
+>> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
