@@ -1,115 +1,69 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v11 00/12] MT2701 DRM support
-Date: Wed, 11 Jan 2017 14:51:01 +0800
-Message-ID: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
+From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v11 01/12] dt-bindings: display: mediatek: update supported chips
+Date: Wed, 11 Jan 2017 14:51:02 +0800
+Message-ID: <1484117473-46644-2-git-send-email-yt.shen@mediatek.com>
+References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484117473-46644-1-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBNVDI3MDEgRFJNIHN1cHBvcnQgUEFUQ0ggdjEwLCBiYXNlZCBvbiA0LjEwLXJjMS4K
-V2UgYWRkIERTSSBpbnRlcnJ1cHQgY29udHJvbCwgdHJhbnNmZXIgZnVuY3Rpb24gZm9yIE1JUEkg
-RFNJIHBhbmVsIHN1cHBvcnQuCk1vc3QgY29kZXMgYXJlIHRoZSBzYW1lLCBleGNlcHQgc29tZSBy
-ZWdpc3RlciBjaGFuZ2VkLgoKRm9yIGV4YW1wbGU6CiAtIERJU1BfT1ZMIGFkZHJlc3Mgb2Zmc2V0
-IGNoYW5nZWQsIGNvbG9yIGZvcm1hdCBkZWZpbml0aW9uIGNoYW5nZWQuCiAtIERJU1BfUkRNQSBm
-aWZvIHNpemUgY2hhbmdlZC4KIC0gRElTUF9DT0xPUiBvZmZzZXQgY2hhbmdlZC4KIC0gTUlQSV9U
-WCBzZXR0aW5nIGNoYW5nZWQuCgpXZSBhZGQgYSBuZXcgY29tcG9uZW50IEREUF9DT01QT05FTlRf
-QkxTLCBhbmQgdGhlIGNvbm5lY3Rpb25zIGFyZSB1cGRhdGVkLgpPVkwgLT4gUkRNQSAtPiBDT0xP
-UiAtPiBCTFMgLT4gRFNJClJETUEgLT4gRFBJCkFuZCB3ZSBoYXZlIHNoYWRvdyByZWdpc3RlciBz
-dXBwb3J0IGluIE1UMjcwMS4KCkNoYW5nZXMgc2luY2UgdjEwOgotIEFkZCBiaW5kaW5nIGRlc2Ny
-aXB0aW9ucyBmb3IgbmV3bHkgYWRkZWQgYmluZGluZ3MKLSBSZW1vdmUgY29sb3IgZGF0YSBwb2lu
-dGVyIGZyb20gZ2VuZXJpYyBtdGtfZGRwX2NvbXAKLSBSZW1vdmUgImRybS9tZWRpYXRlazogYWRk
-IG1pcGlfdHggZGF0YSByYXRlIGNoZWNrIiBmcm9tIHRoZSBwYXRjaCBzZXJpZXMKLSBSZW1vdmUg
-ImRybS9tZWRpYXRlazogYWRkIGRzaSB1bHAgbW9kZSBjb250cm9sIiBmcm9tIHRoZSBwYXRjaCBz
-ZXJpZXMKLSBVcGRhdGUgZGVzY3JpcHRpb25zIGZvciAiZHJtL21lZGlhdGVrOiBhZGQgbm9uLWNv
-bnRpbnVvdXMgY2xvY2sgbW9kZSBhbmQgRU9UIHBhY2tldCBjb250cm9sIgotIEZpeCBEU0kgZGlz
-YWJsZSBmbG93CgpDaGFuZ2VzIHNpbmNlIHY5OgotIFNwbGl0IERTSSBwYXRjaGVzIGludG8gc21h
-bGxlciBwYXJ0cwotIFVzZSBhIHJlYWwgbGludXggZXJybm8gZm9yIHJldHVybiB2YWx1ZQotIEFk
-ZCBlcnJvciBoYW5kbGluZyBpbiBtdGtfb3V0cHV0X2RzaV9lbmFibGUoKQotIFJlbW92ZSB1bnVz
-ZWQgY2hhbmdlcyBhbmQgcmVkdW5kYW50IGRlbGF5cwotIEFkZCBoZWxwZXJzIGFuZCBtYWNyb3Mg
-Zm9yIGNvbmZpZ3VyYXRpb24KLSBDb21iaW5lICJkcm0vbWVkaWF0ZWs6IHJlbmFtZSBtYWNyb3Ms
-IGFkZCBjaGlwIHByZWZpeCIgYW5kICJkcm0vbWVkaWF0ZWs6IGFkZCAqZHJpdmVyX2RhdGEgZm9y
-IGRpZmZlcmVudCBoYXJkd2FyZSBzZXR0aW5nIgoKQ2hhbmdlcyBzaW5jZSB2ODoKLSBlbmFibGUg
-MyBEU0kgaW50ZXJydXB0cyBvbmx5Ci0gbW92ZSBtdGtfZHNpX3dhaXRfZm9yX2lycV9kb25lKCkg
-dG8gdGhlIHBhdGNoIG9mIGlycSBjb250cm9sCi0gdXNlIHRoZSBuYW1lIEJMUyBpbiBEUk0gZHJp
-dmVyIHBhcnQKLSBtb3ZlIEJMUyBkZWNsYXJhdGlvbiB0byBhIHNlcGFyYXRlIHBhdGNoCi0gdXBk
-YXRlIG10a19kc2lfc3dpdGNoX3RvX2NtZF9tb2RlKCkKLSB1cGRhdGUgbXRrX291dHB1dF9kc2lf
-ZW5hYmxlKCkgYW5kIG10a19vdXRwdXRfZHNpX2Rpc2FibGUoKQoKQ2hhbmdlcyBzaW5jZSB2NzoK
-LSBSZW1vdmUgcmVkdW5kYW50IGNvZGVzCi0gTW92ZSB0aGUgZGVmaW5pdGlvbiBvZiBERFBfQ09N
-UE9ORU5UX0JMUyB0byBwYXRjaCBvZiAiZHJtL21lZGlhdGVrOiB1cGRhdGUgZGlzcGxheSBtb2R1
-bGUgY29ubmVjdGlvbnMiCi0gTW92ZSBfZHNpX2lycV93YWl0X3F1ZXVlIGludG8gcGxhdGZvcm0g
-ZHJpdmVyIGRhdGEKLSBNb3ZlIG10a19kc2lfaXJxX2RhdGFfY2xlYXIoKSB0byBwYXRjaCBvZiAi
-ZHJtL21lZGlhdGVrOiBhZGQgZHNpIGludGVycnVwdCBjb250cm9sIgotIEFkZCBtb3JlIGRlc2Ny
-aXB0aW9ucyBpbiB0aGUgY29tbWl0IG1lc3NhZ2VzCgpDaGFuZ2VzIHNpbmNlIHY2OgotIENoYW5n
-ZSBkYXRhIHR5cGUgb2YgaXJxX2RhdGEgdG8gdTMyCi0gUmV3cml0ZSBtdGtfZHNpX2hvc3RfdHJh
-bnNmZXIoKSBmb3Igc2ltcGxpZnkKLSBNb3ZlIHNvbWUgTUlQSV9UWCBjb25maWcgdG8gcGF0Y2gg
-b2YgImRybS9tZWRpYXRlazogYWRkICpkcml2ZXJfZGF0YSBmb3IgZGlmZmVyZW50IGhhcmR3YXJl
-IHNldHRpbmdzIi4KLSBSZW1vdmUgZGV2aWNlIHRyZWUgZnJvbSB0aGlzIHBhdGNoIHNlcmllcwoK
-Q2hhbmdlcyBzaW5jZSB2NToKLSBSZW1vdmUgRFBJIGRldmljZSB0cmVlIGFuZCBjb21wYXRpYmxl
-IHN0cmluZwotIFVzZSBvbmUgd2FpdCBxdWV1ZSB0byBoYW5kbGUgaW50ZXJydXB0IHN0YXR1cwot
-IFVwZGF0ZSB0aGUgaW50ZXJydXB0IGNoZWNrIGZsb3cgYW5kIERTSV9JTlRfQUxMX0JJVFMKLSBV
-c2Ugc2FtZSBmdW5jdGlvbiBmb3IgaG9zdCByZWFkL3dyaXRlIGNvbW1hbmQKLSB2YXJpb3VzIGZp
-eGVzCgpDaGFuZ2VzIHNpbmNlIHY0OgotIEFkZCBtZXNzYWdlcyB3aGVuIHRpbWVvdXQgaW4gbXRr
-X2Rpc3BfbXV0ZXhfYWNxdWlyZSgpCi0gQWRkIGRlc2NyaXB0aW9ucyBmb3IgRElTUF9SRUdfTVVU
-RVggcmVnaXN0ZXJzCi0gTW92ZSBjb25uZWN0aW9uIHNldHRpbmdzIGZvciBkaXNwbGF5IG1vZHVs
-ZXMgdG8gYSBzZXBhcmF0ZSBwYXRjaAotIFJlbW92ZSAnbXQyNzAxLWRpc3Atd2RtYScgYmVjYXVz
-ZSBpdCBpcyB1bnVzZWQKLSBNb3ZlIGNsZWFuaW5nIHVwIGFuZCByZW5hbWluZyB0byBhIHNlcGFy
-YXRlIHBhdGNoCi0gVXNlIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZV90aW1lb3V0KCkgdG8gcmVw
-bGFjZSBwb2xsaW5nCi0gUmVtb3ZlIGlycV9udW0gZnJvbSBtdGtfZHNpIHN0cnVjdHVyZQotIFJl
-bW92ZSByZWR1bmRhbnQgYW5kIGRlYnVnIGNvZGVzCgpDaGFuZ2VzIHNpbmNlIHYzOgotIEFkZCBE
-U0kgc3VwcG9ydCBmb3IgTUlQSSBEU0kgcGFuZWxzCi0gVXBkYXRlIEJMUyBiaW5kaW5nIHRvIFBX
-TSBub2RlcwotIFJlbW92ZSB1Zm9lIGRldmljZSBub2RlcwotIFJlbW92ZSByZWR1bmRhbnQgcGFy
-ZW50aGVzZXMKLSBSZW1vdmUgZ2xvYmFsIHZhcmlhYmxlIGluaXRpYWxpemF0aW9uCgpDaGFuZ2Vz
-IHNpbmNlIHYyOgotIFJlbmFtZSBtdGtfZGRwX211eF9zZWwgdG8gbXRrX2RkcF9zb3V0X3NlbAot
-IFVwZGF0ZSBtdDI3MDFfbXRrX2RkcF9leHQgY29tcG9uZW50cwotIENoYW5nZWQgdG8gcHJlZml4
-IG5hbWluZwotIFJlb3JkZXIgdGhlIHBhdGNoIHNlcmllcwotIFVzZSBvZl9kZXZpY2VfZ2V0X21h
-dGNoX2RhdGEoKSB0byBnZXQgZHJpdmVyIHByaXZhdGUgZGF0YQotIFVzZSBpb3BvbGwgbWFjcm9z
-IHRvIGltcGxlbWVudCBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkKLSBSZW1vdmVkIGVtcHR5IGRl
-dmljZSB0cmVlIG5vZGVzCgpDaGFuZ2VzIHNpbmNlIHYxOgotIFJlbW92ZWQgQkxTIGJpbmRpbmdz
-IGFuZCBjb2Rlcywgd2hpY2ggYmVsb25nIHRvIHB3bSBkcml2ZXIKLSBNb3ZlZCBtdGtfZGlzcF9t
-dXRleF9hY3F1aXJlKCkganVzdCBiZWZvcmUgbXRrX2NydGNfZGRwX2NvbmZpZygpCi0gU3BsaXQg
-cGF0Y2ggaW50byBzbWFsbGVyIHBhcnRzCi0gQWRkZWQgY29uc3Qga2V5d29yZCB0byBjb25zdGFu
-dCBzdHJ1Y3R1cmUKLSBSZW1vdmVkIGNvZGVzIGZvciBzcGVjaWFsIG1lbW9yeSBhbGlnbgoKVGhh
-bmtzLAp5dC5zaGVuCgpZVCBTaGVuICgxMCk6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IG1lZGlh
-dGVrOiB1cGRhdGUgc3VwcG9ydGVkIGNoaXBzCiAgZHJtL21lZGlhdGVrOiBhZGQgaGVscGVycyBm
-b3IgY292ZXJ0aW5nIGZyb20gdGhlIGdlbmVyaWMgY29tcG9uZW50cwogIGRybS9tZWRpYXRlazog
-YWRkICpkcml2ZXJfZGF0YSBmb3IgZGlmZmVyZW50IGhhcmR3YXJlIHNldHRpbmdzCiAgZHJtL21l
-ZGlhdGVrOiBhZGQgc2hhZG93IHJlZ2lzdGVyIHN1cHBvcnQKICBkcm0vbWVkaWF0ZWs6IGFkZCBC
-TFMgY29tcG9uZW50CiAgZHJtL21lZGlhdGVrOiB1cGRhdGUgZGlzcGxheSBtb2R1bGUgY29ubmVj
-dGlvbnMKICBkcm0vbWVkaWF0ZWs6IGNsZWFuaW5nIHVwIGFuZCByZWZpbmUKICBkcm0vbWVkaWF0
-ZWs6IGFkZCBub24tY29udGludW91cyBjbG9jayBtb2RlIGFuZCBFT1QgcGFja2V0IGNvbnRyb2wK
-ICBkcm0vbWVkaWF0ZWs6IHVwZGF0ZSBEU0kgc3ViIGRyaXZlciBmbG93IGZvciBzZW5kaW5nIGNv
-bW1hbmRzIHRvIHBhbmVsCiAgZHJtL21lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgTWVkaWF0ZWsg
-U29DIE1UMjcwMQoKc2hhb21pbmcgY2hlbiAoMik6CiAgZHJtL21lZGlhdGVrOiBhZGQgZHNpIGlu
-dGVycnVwdCBjb250cm9sCiAgZHJtL21lZGlhdGVrOiBhZGQgZHNpIHRyYW5zZmVyIGZ1bmN0aW9u
-CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAg
-IDIgKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICAg
-fCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jICAgICAgICAg
-ICAgfCAgNjQgKysrLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYyAg
-ICAgICAgICAgfCAgMzkgKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
-YyAgICAgICAgICAgIHwgIDc1ICsrLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcC5jICAgICAgICAgICAgIHwgMTM4ICsrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2RkcC5oICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2RkcF9jb21wLmMgICAgICAgIHwgIDY5ICsrKy0KIGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgICAgICAgIHwgIDU0ICsrLQogZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICAgICAgICAgICAgfCAgIDkgKwogZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgICAgICAgICAgfCA0MTQgKysr
-KysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlfdHgu
-YyAgICAgICAgICAgICB8ICAzOCArLQogMTMgZmlsZXMgY2hhbmdlZCwgNzUwIGluc2VydGlvbnMo
-KyksIDE1OCBkZWxldGlvbnMoLSkKCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Add decriptions about supported chips, including MT2701 & MT8173
+
+Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 2 ++
+ Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt  | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+index db6e77e..acf61f1 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+@@ -40,6 +40,7 @@ Required properties (all function blocks):
+ 	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+ 	"mediatek,<chip>-disp-mutex" - display mutex
+ 	"mediatek,<chip>-disp-od"    - overdrive
++  the supported chips are mt2701 and mt8173.
+ - reg: Physical base address and length of the function block register space
+ - interrupts: The interrupt signal from the function block (required, except for
+   merge and split function blocks).
+@@ -54,6 +55,7 @@ Required properties (DMA function blocks):
+ 	"mediatek,<chip>-disp-ovl"
+ 	"mediatek,<chip>-disp-rdma"
+ 	"mediatek,<chip>-disp-wdma"
++  the supported chips are mt2701 and mt8173.
+ - larb: Should contain a phandle pointing to the local arbiter device as defined
+   in Documentation/devicetree/bindings/soc/mediatek/mediatek,smi-larb.txt
+ - iommus: Should point to the respective IOMMU block with master port as
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+index 2b1585a..fadf327 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+@@ -7,6 +7,7 @@ channel output.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-dsi"
++  the supported chips are mt2701 and mt8173.
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+@@ -25,6 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-mipi-tx"
++  the supported chips are mt2701 and mt8173.
+ - reg: Physical base address and length of the controller's registers
+ - clocks: PLL reference clock
+ - clock-output-names: name of the output clock line to the DSI encoder
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
