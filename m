@@ -1,808 +1,501 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCHv4 3/8] rtc: add STM32 RTC driver
-Date: Wed, 11 Jan 2017 13:48:25 +0100
-Message-ID: <1484138905-5903-1-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v1 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
+Date: Wed, 11 Jan 2017 20:53:00 +0800
+Message-ID: <4a7d32dc-5d5a-9428-7b18-367850b130f6@electromag.com.au>
+References: <1484117471-67082-1-git-send-email-preid@electromag.com.au>
+ <5f800162-a404-09fa-ce1b-c95f5b73ac56@electromag.com.au>
+ <alpine.DEB.2.02.1701111007240.12204@pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC2IT2GSZUDRBJ6T3DBQKGQEIW37QRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1701111007240.12204-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the STM32 RTC.
+G'day Peter,
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
----
- drivers/rtc/Kconfig     |  11 +
- drivers/rtc/Makefile    |   1 +
- drivers/rtc/rtc-stm32.c | 727 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 739 insertions(+)
- create mode 100644 drivers/rtc/rtc-stm32.c
+Thanks for reviewing.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e859d14..11eb28a 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1706,6 +1706,17 @@ config RTC_DRV_PIC32
- 	   This driver can also be built as a module. If so, the module
- 	   will be called rtc-pic32
- 
-+config RTC_DRV_STM32
-+	tristate "STM32 RTC"
-+	select REGMAP_MMIO
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	help
-+	   If you say yes here you get support for the STM32 On-Chip
-+	   Real Time Clock.
-+
-+	   This driver can also be built as a module, if so, the module
-+	   will be called "rtc-stm32".
-+
- comment "HID Sensor RTC drivers"
- 
- config RTC_DRV_HID_SENSOR_TIME
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 1ac694a..87bd9cc 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -144,6 +144,7 @@ obj-$(CONFIG_RTC_DRV_SNVS)	+= rtc-snvs.o
- obj-$(CONFIG_RTC_DRV_SPEAR)	+= rtc-spear.o
- obj-$(CONFIG_RTC_DRV_STARFIRE)	+= rtc-starfire.o
- obj-$(CONFIG_RTC_DRV_STK17TA8)	+= rtc-stk17ta8.o
-+obj-$(CONFIG_RTC_DRV_STM32) 	+= rtc-stm32.o
- obj-$(CONFIG_RTC_DRV_STMP)	+= rtc-stmp3xxx.o
- obj-$(CONFIG_RTC_DRV_ST_LPC)	+= rtc-st-lpc.o
- obj-$(CONFIG_RTC_DRV_SUN4V)	+= rtc-sun4v.o
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-new file mode 100644
-index 0000000..f49226e
---- /dev/null
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -0,0 +1,727 @@
-+/*
-+ * Copyright (C) Amelie Delaunay 2016
-+ * Author:  Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#include <linux/bcd.h>
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/ioport.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/rtc.h>
-+
-+#define DRIVER_NAME "stm32_rtc"
-+
-+/* STM32 RTC registers */
-+#define STM32_RTC_TR		0x00
-+#define STM32_RTC_DR		0x04
-+#define STM32_RTC_CR		0x08
-+#define STM32_RTC_ISR		0x0C
-+#define STM32_RTC_PRER		0x10
-+#define STM32_RTC_ALRMAR	0x1C
-+#define STM32_RTC_WPR		0x24
-+
-+/* STM32_RTC_TR bit fields  */
-+#define STM32_RTC_TR_SEC_SHIFT		0
-+#define STM32_RTC_TR_SEC		GENMASK(6, 0)
-+#define STM32_RTC_TR_MIN_SHIFT		8
-+#define STM32_RTC_TR_MIN		GENMASK(14, 8)
-+#define STM32_RTC_TR_HOUR_SHIFT		16
-+#define STM32_RTC_TR_HOUR		GENMASK(21, 16)
-+
-+/* STM32_RTC_DR bit fields */
-+#define STM32_RTC_DR_DATE_SHIFT		0
-+#define STM32_RTC_DR_DATE		GENMASK(5, 0)
-+#define STM32_RTC_DR_MONTH_SHIFT	8
-+#define STM32_RTC_DR_MONTH		GENMASK(12, 8)
-+#define STM32_RTC_DR_WDAY_SHIFT		13
-+#define STM32_RTC_DR_WDAY		GENMASK(15, 13)
-+#define STM32_RTC_DR_YEAR_SHIFT		16
-+#define STM32_RTC_DR_YEAR		GENMASK(23, 16)
-+
-+/* STM32_RTC_CR bit fields */
-+#define STM32_RTC_CR_FMT		BIT(6)
-+#define STM32_RTC_CR_ALRAE		BIT(8)
-+#define STM32_RTC_CR_ALRAIE		BIT(12)
-+
-+/* STM32_RTC_ISR bit fields */
-+#define STM32_RTC_ISR_ALRAWF		BIT(0)
-+#define STM32_RTC_ISR_INITS		BIT(4)
-+#define STM32_RTC_ISR_RSF		BIT(5)
-+#define STM32_RTC_ISR_INITF		BIT(6)
-+#define STM32_RTC_ISR_INIT		BIT(7)
-+#define STM32_RTC_ISR_ALRAF		BIT(8)
-+
-+/* STM32_RTC_PRER bit fields */
-+#define STM32_RTC_PRER_PRED_S_SHIFT	0
-+#define STM32_RTC_PRER_PRED_S		GENMASK(14, 0)
-+#define STM32_RTC_PRER_PRED_A_SHIFT	16
-+#define STM32_RTC_PRER_PRED_A		GENMASK(22, 16)
-+
-+/* STM32_RTC_ALRMAR and STM32_RTC_ALRMBR bit fields */
-+#define STM32_RTC_ALRMXR_SEC_SHIFT	0
-+#define STM32_RTC_ALRMXR_SEC		GENMASK(6, 0)
-+#define STM32_RTC_ALRMXR_SEC_MASK	BIT(7)
-+#define STM32_RTC_ALRMXR_MIN_SHIFT	8
-+#define STM32_RTC_ALRMXR_MIN		GENMASK(14, 8)
-+#define STM32_RTC_ALRMXR_MIN_MASK	BIT(15)
-+#define STM32_RTC_ALRMXR_HOUR_SHIFT	16
-+#define STM32_RTC_ALRMXR_HOUR		GENMASK(21, 16)
-+#define STM32_RTC_ALRMXR_PM		BIT(22)
-+#define STM32_RTC_ALRMXR_HOUR_MASK	BIT(23)
-+#define STM32_RTC_ALRMXR_DATE_SHIFT	24
-+#define STM32_RTC_ALRMXR_DATE		GENMASK(29, 24)
-+#define STM32_RTC_ALRMXR_WDSEL		BIT(30)
-+#define STM32_RTC_ALRMXR_WDAY_SHIFT	24
-+#define STM32_RTC_ALRMXR_WDAY		GENMASK(27, 24)
-+#define STM32_RTC_ALRMXR_DATE_MASK	BIT(31)
-+
-+/* STM32_RTC_WPR key constants */
-+#define RTC_WPR_1ST_KEY			0xCA
-+#define RTC_WPR_2ND_KEY			0x53
-+#define RTC_WPR_WRONG_KEY		0xFF
-+
-+/*
-+ * RTC registers are protected agains parasitic write access.
-+ * PWR_CR_DBP bit must be set to enable write access to RTC registers.
-+ */
-+/* STM32_PWR_CR */
-+#define PWR_CR				0x00
-+/* STM32_PWR_CR bit field */
-+#define PWR_CR_DBP			BIT(8)
-+
-+static struct regmap *dbp;
-+
-+struct stm32_rtc {
-+	struct rtc_device *rtc_dev;
-+	void __iomem *base;
-+	struct clk *ck_rtc;
-+	int irq_alarm;
-+};
-+
-+static void stm32_rtc_wpr_unlock(struct stm32_rtc *rtc)
-+{
-+	writel_relaxed(RTC_WPR_1ST_KEY, rtc->base + STM32_RTC_WPR);
-+	writel_relaxed(RTC_WPR_2ND_KEY, rtc->base + STM32_RTC_WPR);
-+}
-+
-+static void stm32_rtc_wpr_lock(struct stm32_rtc *rtc)
-+{
-+	writel_relaxed(RTC_WPR_WRONG_KEY, rtc->base + STM32_RTC_WPR);
-+}
-+
-+static int stm32_rtc_enter_init_mode(struct stm32_rtc *rtc)
-+{
-+	unsigned int isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
-+
-+	if (!(isr & STM32_RTC_ISR_INITF)) {
-+		isr |= STM32_RTC_ISR_INIT;
-+		writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
-+
-+		/*
-+		 * It takes around 2 ck_rtc clock cycles to enter in
-+		 * initialization phase mode (and have INITF flag set). As
-+		 * slowest ck_rtc frequency may be 32kHz and highest should be
-+		 * 1MHz, we poll every 10 us with a timeout of 100ms.
-+		 */
-+		return readl_relaxed_poll_timeout_atomic(
-+					rtc->base + STM32_RTC_ISR,
-+					isr, (isr & STM32_RTC_ISR_INITF),
-+					10, 100000);
-+	}
-+
-+	return 0;
-+}
-+
-+static void stm32_rtc_exit_init_mode(struct stm32_rtc *rtc)
-+{
-+	unsigned int isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
-+
-+	isr &= ~STM32_RTC_ISR_INIT;
-+	writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
-+}
-+
-+static int stm32_rtc_wait_sync(struct stm32_rtc *rtc)
-+{
-+	unsigned int isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
-+
-+	isr &= ~STM32_RTC_ISR_RSF;
-+	writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
-+
-+	/*
-+	 * Wait for RSF to be set to ensure the calendar registers are
-+	 * synchronised, it takes around 2 ck_rtc clock cycles
-+	 */
-+	return readl_relaxed_poll_timeout_atomic(rtc->base + STM32_RTC_ISR,
-+						 isr,
-+						 (isr & STM32_RTC_ISR_RSF),
-+						 10, 100000);
-+}
-+
-+static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
-+{
-+	struct stm32_rtc *rtc = (struct stm32_rtc *)dev_id;
-+	unsigned int isr, cr;
-+
-+	mutex_lock(&rtc->rtc_dev->ops_lock);
-+
-+	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
-+	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
-+
-+	if ((isr & STM32_RTC_ISR_ALRAF) &&
-+	    (cr & STM32_RTC_CR_ALRAIE)) {
-+		/* Alarm A flag - Alarm interrupt */
-+		dev_dbg(&rtc->rtc_dev->dev, "Alarm occurred\n");
-+
-+		/* Pass event to the kernel */
-+		rtc_update_irq(rtc->rtc_dev, 1, RTC_IRQF | RTC_AF);
-+
-+		/* Clear event flag, otherwise new events won't be received */
-+		writel_relaxed(isr & ~STM32_RTC_ISR_ALRAF,
-+			       rtc->base + STM32_RTC_ISR);
-+	}
-+
-+	mutex_unlock(&rtc->rtc_dev->ops_lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Convert rtc_time structure from bin to bcd format */
-+static void tm2bcd(struct rtc_time *tm)
-+{
-+	tm->tm_sec = bin2bcd(tm->tm_sec);
-+	tm->tm_min = bin2bcd(tm->tm_min);
-+	tm->tm_hour = bin2bcd(tm->tm_hour);
-+
-+	tm->tm_mday = bin2bcd(tm->tm_mday);
-+	tm->tm_mon = bin2bcd(tm->tm_mon + 1);
-+	tm->tm_year = bin2bcd(tm->tm_year - 100);
-+	/*
-+	 * Number of days since Sunday
-+	 * - on kernel side, 0=Sunday...6=Saturday
-+	 * - on rtc side, 0=invalid,1=Monday...7=Sunday
-+	 */
-+	tm->tm_wday = (!tm->tm_wday) ? 7 : tm->tm_wday;
-+}
-+
-+/* Convert rtc_time structure from bcd to bin format */
-+static void bcd2tm(struct rtc_time *tm)
-+{
-+	tm->tm_sec = bcd2bin(tm->tm_sec);
-+	tm->tm_min = bcd2bin(tm->tm_min);
-+	tm->tm_hour = bcd2bin(tm->tm_hour);
-+
-+	tm->tm_mday = bcd2bin(tm->tm_mday);
-+	tm->tm_mon = bcd2bin(tm->tm_mon) - 1;
-+	tm->tm_year = bcd2bin(tm->tm_year) + 100;
-+	/*
-+	 * Number of days since Sunday
-+	 * - on kernel side, 0=Sunday...6=Saturday
-+	 * - on rtc side, 0=invalid,1=Monday...7=Sunday
-+	 */
-+	tm->tm_wday %= 7;
-+}
-+
-+static int stm32_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+	unsigned int tr, dr;
-+
-+	/* Time and Date in BCD format */
-+	tr = readl_relaxed(rtc->base + STM32_RTC_TR);
-+	dr = readl_relaxed(rtc->base + STM32_RTC_DR);
-+
-+	tm->tm_sec = (tr & STM32_RTC_TR_SEC) >> STM32_RTC_TR_SEC_SHIFT;
-+	tm->tm_min = (tr & STM32_RTC_TR_MIN) >> STM32_RTC_TR_MIN_SHIFT;
-+	tm->tm_hour = (tr & STM32_RTC_TR_HOUR) >> STM32_RTC_TR_HOUR_SHIFT;
-+
-+	tm->tm_mday = (dr & STM32_RTC_DR_DATE) >> STM32_RTC_DR_DATE_SHIFT;
-+	tm->tm_mon = (dr & STM32_RTC_DR_MONTH) >> STM32_RTC_DR_MONTH_SHIFT;
-+	tm->tm_year = (dr & STM32_RTC_DR_YEAR) >> STM32_RTC_DR_YEAR_SHIFT;
-+	tm->tm_wday = (dr & STM32_RTC_DR_WDAY) >> STM32_RTC_DR_WDAY_SHIFT;
-+
-+	/* We don't report tm_yday and tm_isdst */
-+
-+	bcd2tm(tm);
-+
-+	return 0;
-+}
-+
-+static int stm32_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+	unsigned int tr, dr;
-+	int ret = 0;
-+
-+	tm2bcd(tm);
-+
-+	/* Time in BCD format */
-+	tr = ((tm->tm_sec << STM32_RTC_TR_SEC_SHIFT) & STM32_RTC_TR_SEC) |
-+	     ((tm->tm_min << STM32_RTC_TR_MIN_SHIFT) & STM32_RTC_TR_MIN) |
-+	     ((tm->tm_hour << STM32_RTC_TR_HOUR_SHIFT) & STM32_RTC_TR_HOUR);
-+
-+	/* Date in BCD format */
-+	dr = ((tm->tm_mday << STM32_RTC_DR_DATE_SHIFT) & STM32_RTC_DR_DATE) |
-+	     ((tm->tm_mon << STM32_RTC_DR_MONTH_SHIFT) & STM32_RTC_DR_MONTH) |
-+	     ((tm->tm_year << STM32_RTC_DR_YEAR_SHIFT) & STM32_RTC_DR_YEAR) |
-+	     ((tm->tm_wday << STM32_RTC_DR_WDAY_SHIFT) & STM32_RTC_DR_WDAY);
-+
-+	stm32_rtc_wpr_unlock(rtc);
-+
-+	ret = stm32_rtc_enter_init_mode(rtc);
-+	if (ret) {
-+		dev_err(dev, "Can't enter in init mode. Set time aborted.\n");
-+		goto end;
-+	}
-+
-+	writel_relaxed(tr, rtc->base + STM32_RTC_TR);
-+	writel_relaxed(dr, rtc->base + STM32_RTC_DR);
-+
-+	stm32_rtc_exit_init_mode(rtc);
-+
-+	ret = stm32_rtc_wait_sync(rtc);
-+end:
-+	stm32_rtc_wpr_lock(rtc);
-+
-+	return ret;
-+}
-+
-+static int stm32_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+	struct rtc_time *tm = &alrm->time;
-+	unsigned int alrmar, cr, isr;
-+
-+	alrmar = readl_relaxed(rtc->base + STM32_RTC_ALRMAR);
-+	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
-+	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
-+
-+	if (alrmar & STM32_RTC_ALRMXR_DATE_MASK) {
-+		/*
-+		 * Date/day doesn't matter in Alarm comparison so alarm
-+		 * triggers every day
-+		 */
-+		tm->tm_mday = -1;
-+		tm->tm_wday = -1;
-+	} else {
-+		if (alrmar & STM32_RTC_ALRMXR_WDSEL) {
-+			/* Alarm is set to a day of week */
-+			tm->tm_mday = -1;
-+			tm->tm_wday = (alrmar & STM32_RTC_ALRMXR_WDAY) >>
-+				      STM32_RTC_ALRMXR_WDAY_SHIFT;
-+			tm->tm_wday %= 7;
-+		} else {
-+			/* Alarm is set to a day of month */
-+			tm->tm_wday = -1;
-+			tm->tm_mday = (alrmar & STM32_RTC_ALRMXR_DATE) >>
-+				       STM32_RTC_ALRMXR_DATE_SHIFT;
-+		}
-+	}
-+
-+	if (alrmar & STM32_RTC_ALRMXR_HOUR_MASK) {
-+		/* Hours don't matter in Alarm comparison */
-+		tm->tm_hour = -1;
-+	} else {
-+		tm->tm_hour = (alrmar & STM32_RTC_ALRMXR_HOUR) >>
-+			       STM32_RTC_ALRMXR_HOUR_SHIFT;
-+		if (alrmar & STM32_RTC_ALRMXR_PM)
-+			tm->tm_hour += 12;
-+	}
-+
-+	if (alrmar & STM32_RTC_ALRMXR_MIN_MASK) {
-+		/* Minutes don't matter in Alarm comparison */
-+		tm->tm_min = -1;
-+	} else {
-+		tm->tm_min = (alrmar & STM32_RTC_ALRMXR_MIN) >>
-+			      STM32_RTC_ALRMXR_MIN_SHIFT;
-+	}
-+
-+	if (alrmar & STM32_RTC_ALRMXR_SEC_MASK) {
-+		/* Seconds don't matter in Alarm comparison */
-+		tm->tm_sec = -1;
-+	} else {
-+		tm->tm_sec = (alrmar & STM32_RTC_ALRMXR_SEC) >>
-+			      STM32_RTC_ALRMXR_SEC_SHIFT;
-+	}
-+
-+	bcd2tm(tm);
-+
-+	alrm->enabled = (cr & STM32_RTC_CR_ALRAE) ? 1 : 0;
-+	alrm->pending = (isr & STM32_RTC_ISR_ALRAF) ? 1 : 0;
-+
-+	return 0;
-+}
-+
-+static int stm32_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+	unsigned int isr, cr;
-+
-+	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
-+
-+	stm32_rtc_wpr_unlock(rtc);
-+
-+	/* We expose Alarm A to the kernel */
-+	if (enabled)
-+		cr |= (STM32_RTC_CR_ALRAIE | STM32_RTC_CR_ALRAE);
-+	else
-+		cr &= ~(STM32_RTC_CR_ALRAIE | STM32_RTC_CR_ALRAE);
-+	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
-+
-+	/* Clear event flag, otherwise new events won't be received */
-+	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
-+	isr &= ~STM32_RTC_ISR_ALRAF;
-+	writel_relaxed(isr, rtc->base + STM32_RTC_ISR);
-+
-+	stm32_rtc_wpr_lock(rtc);
-+
-+	return 0;
-+}
-+
-+static int stm32_rtc_valid_alrm(struct stm32_rtc *rtc, struct rtc_time *tm)
-+{
-+	unsigned int cur_day, cur_mon, cur_year, cur_hour, cur_min, cur_sec;
-+	unsigned int dr = readl_relaxed(rtc->base + STM32_RTC_DR);
-+	unsigned int tr = readl_relaxed(rtc->base + STM32_RTC_TR);
-+
-+	cur_day = (dr & STM32_RTC_DR_DATE) >> STM32_RTC_DR_DATE_SHIFT;
-+	cur_mon = (dr & STM32_RTC_DR_MONTH) >> STM32_RTC_DR_MONTH_SHIFT;
-+	cur_year = (dr & STM32_RTC_DR_YEAR) >> STM32_RTC_DR_YEAR_SHIFT;
-+	cur_sec = (tr & STM32_RTC_TR_SEC) >> STM32_RTC_TR_SEC_SHIFT;
-+	cur_min = (tr & STM32_RTC_TR_MIN) >> STM32_RTC_TR_MIN_SHIFT;
-+	cur_hour = (tr & STM32_RTC_TR_HOUR) >> STM32_RTC_TR_HOUR_SHIFT;
-+
-+	/*
-+	 * Assuming current date is M-D-Y H:M:S.
-+	 * RTC alarm can't be set on a specific month and year.
-+	 * So the valid alarm range is:
-+	 *	M-D-Y H:M:S < alarm <= (M+1)-D-Y H:M:S
-+	 * with a specific case for December...
-+	 */
-+	if ((((tm->tm_year > cur_year) &&
-+	      (tm->tm_mon == 0x1) && (cur_mon == 0x12)) ||
-+	     ((tm->tm_year == cur_year) &&
-+	      (tm->tm_mon <= cur_mon + 1))) &&
-+	    ((tm->tm_mday > cur_day) ||
-+	     ((tm->tm_mday == cur_day) &&
-+	     ((tm->tm_hour > cur_hour) ||
-+	      ((tm->tm_hour == cur_hour) && (tm->tm_min > cur_min)) ||
-+	      ((tm->tm_hour == cur_hour) && (tm->tm_min == cur_min) &&
-+	       (tm->tm_sec >= cur_sec))))))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static int stm32_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+	struct rtc_time *tm = &alrm->time;
-+	unsigned int cr, isr, alrmar;
-+	int ret = 0;
-+
-+	tm2bcd(tm);
-+
-+	/*
-+	 * RTC alarm can't be set on a specific date, unless this date is
-+	 * up to the same day of month next month.
-+	 */
-+	if (stm32_rtc_valid_alrm(rtc, tm) < 0) {
-+		dev_err(dev, "Alarm can be set only on upcoming month.\n");
-+		return -EINVAL;
-+	}
-+
-+	alrmar = 0;
-+	/* tm_year and tm_mon are not used because not supported by RTC */
-+	alrmar |= (tm->tm_mday << STM32_RTC_ALRMXR_DATE_SHIFT) &
-+		  STM32_RTC_ALRMXR_DATE;
-+	/* 24-hour format */
-+	alrmar &= ~STM32_RTC_ALRMXR_PM;
-+	alrmar |= (tm->tm_hour << STM32_RTC_ALRMXR_HOUR_SHIFT) &
-+		  STM32_RTC_ALRMXR_HOUR;
-+	alrmar |= (tm->tm_min << STM32_RTC_ALRMXR_MIN_SHIFT) &
-+		  STM32_RTC_ALRMXR_MIN;
-+	alrmar |= (tm->tm_sec << STM32_RTC_ALRMXR_SEC_SHIFT) &
-+		  STM32_RTC_ALRMXR_SEC;
-+
-+	stm32_rtc_wpr_unlock(rtc);
-+
-+	/* Disable Alarm */
-+	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
-+	cr &= ~STM32_RTC_CR_ALRAE;
-+	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
-+
-+	/*
-+	 * Poll Alarm write flag to be sure that Alarm update is allowed: it
-+	 * takes around 2 ck_rtc clock cycles
-+	 */
-+	ret = readl_relaxed_poll_timeout_atomic(rtc->base + STM32_RTC_ISR,
-+						isr,
-+						(isr & STM32_RTC_ISR_ALRAWF),
-+						10, 100000);
-+
-+	if (ret) {
-+		dev_err(dev, "Alarm update not allowed\n");
-+		goto end;
-+	}
-+
-+	/* Write to Alarm register */
-+	writel_relaxed(alrmar, rtc->base + STM32_RTC_ALRMAR);
-+
-+	if (alrm->enabled)
-+		stm32_rtc_alarm_irq_enable(dev, 1);
-+	else
-+		stm32_rtc_alarm_irq_enable(dev, 0);
-+
-+end:
-+	stm32_rtc_wpr_lock(rtc);
-+
-+	return ret;
-+}
-+
-+static const struct rtc_class_ops stm32_rtc_ops = {
-+	.read_time	= stm32_rtc_read_time,
-+	.set_time	= stm32_rtc_set_time,
-+	.read_alarm	= stm32_rtc_read_alarm,
-+	.set_alarm	= stm32_rtc_set_alarm,
-+	.alarm_irq_enable = stm32_rtc_alarm_irq_enable,
-+};
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id stm32_rtc_of_match[] = {
-+	{ .compatible = "st,stm32-rtc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, stm32_rtc_of_match);
-+#endif
-+
-+static int stm32_rtc_init(struct platform_device *pdev,
-+			  struct stm32_rtc *rtc)
-+{
-+	unsigned int prer, pred_a, pred_s, pred_a_max, pred_s_max, cr;
-+	unsigned int rate;
-+	int ret = 0;
-+
-+	rate = clk_get_rate(rtc->ck_rtc);
-+
-+	/* Find prediv_a and prediv_s to obtain the 1Hz calendar clock */
-+	pred_a_max = STM32_RTC_PRER_PRED_A >> STM32_RTC_PRER_PRED_A_SHIFT;
-+	pred_s_max = STM32_RTC_PRER_PRED_S >> STM32_RTC_PRER_PRED_S_SHIFT;
-+
-+	for (pred_a = pred_a_max; pred_a >= 0; pred_a--) {
-+		pred_s = (rate / (pred_a + 1)) - 1;
-+
-+		if (((pred_s + 1) * (pred_a + 1)) == rate)
-+			break;
-+	}
-+
-+	/*
-+	 * Can't find a 1Hz, so give priority to RTC power consumption
-+	 * by choosing the higher possible value for prediv_a
-+	 */
-+	if ((pred_s > pred_s_max) || (pred_a > pred_a_max)) {
-+		pred_a = pred_a_max;
-+		pred_s = (rate / (pred_a + 1)) - 1;
-+
-+		dev_warn(&pdev->dev, "ck_rtc is %s\n",
-+			 (rate - ((pred_a + 1) * (pred_s + 1)) < 0) ?
-+			 "fast" : "slow");
-+	}
-+
-+	stm32_rtc_wpr_unlock(rtc);
-+
-+	ret = stm32_rtc_enter_init_mode(rtc);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Can't enter in init mode. Prescaler config failed.\n");
-+		goto end;
-+	}
-+
-+	prer = (pred_s << STM32_RTC_PRER_PRED_S_SHIFT) & STM32_RTC_PRER_PRED_S;
-+	writel_relaxed(prer, rtc->base + STM32_RTC_PRER);
-+	prer |= (pred_a << STM32_RTC_PRER_PRED_A_SHIFT) & STM32_RTC_PRER_PRED_A;
-+	writel_relaxed(prer, rtc->base + STM32_RTC_PRER);
-+
-+	/* Force 24h time format */
-+	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
-+	cr &= ~STM32_RTC_CR_FMT;
-+	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
-+
-+	stm32_rtc_exit_init_mode(rtc);
-+
-+	ret = stm32_rtc_wait_sync(rtc);
-+end:
-+	stm32_rtc_wpr_lock(rtc);
-+
-+	return ret;
-+}
-+
-+static int stm32_rtc_probe(struct platform_device *pdev)
-+{
-+	struct stm32_rtc *rtc;
-+	struct resource *res;
-+	int ret;
-+
-+	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rtc->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rtc->base))
-+		return PTR_ERR(rtc->base);
-+
-+	dbp = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "st,syscfg");
-+	if (IS_ERR(dbp)) {
-+		dev_err(&pdev->dev, "no st,syscfg\n");
-+		return PTR_ERR(dbp);
-+	}
-+
-+	rtc->ck_rtc = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(rtc->ck_rtc)) {
-+		dev_err(&pdev->dev, "no ck_rtc clock");
-+		return PTR_ERR(rtc->ck_rtc);
-+	}
-+
-+	ret = clk_prepare_enable(rtc->ck_rtc);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, PWR_CR_DBP);
-+
-+	/*
-+	 * After a system reset, RTC_ISR.INITS flag can be read to check if
-+	 * the calendar has been initalized or not. INITS flag is reset by a
-+	 * power-on reset (no vbat, no power-supply). It is not reset if
-+	 * ck_rtc parent clock has changed (so RTC prescalers need to be
-+	 * changed). That's why we cannot rely on this flag to know if RTC
-+	 * init has to be done.
-+	 */
-+	ret = stm32_rtc_init(pdev, rtc);
-+	if (ret)
-+		goto err;
-+
-+	rtc->irq_alarm = platform_get_irq(pdev, 0);
-+	if (rtc->irq_alarm <= 0) {
-+		dev_err(&pdev->dev, "no alarm irq\n");
-+		ret = rtc->irq_alarm;
-+		goto err;
-+	}
-+
-+	platform_set_drvdata(pdev, rtc);
-+
-+	ret = device_init_wakeup(&pdev->dev, true);
-+	if (ret)
-+		dev_warn(&pdev->dev,
-+			 "alarm won't be able to wake up the system");
-+
-+	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
-+			&stm32_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rtc->rtc_dev)) {
-+		ret = PTR_ERR(rtc->rtc_dev);
-+		dev_err(&pdev->dev, "rtc device registration failed, err=%d\n",
-+			ret);
-+		goto err;
-+	}
-+
-+	/* Handle RTC alarm interrupts */
-+	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq_alarm, NULL,
-+					stm32_rtc_alarm_irq,
-+					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					pdev->name, rtc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "IRQ%d (alarm interrupt) already claimed\n",
-+			rtc->irq_alarm);
-+		goto err;
-+	}
-+
-+	/*
-+	 * If INITS flag is reset (calendar year field set to 0x00), calendar
-+	 * must be initialized
-+	 */
-+	if (!(readl_relaxed(rtc->base + STM32_RTC_ISR) & STM32_RTC_ISR_INITS))
-+		dev_warn(&pdev->dev, "Date/Time must be initialized\n");
-+
-+	return 0;
-+err:
-+	clk_disable_unprepare(rtc->ck_rtc);
-+
-+	regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
-+
-+	device_init_wakeup(&pdev->dev, false);
-+
-+	return ret;
-+}
-+
-+static int __exit stm32_rtc_remove(struct platform_device *pdev)
-+{
-+	struct stm32_rtc *rtc = platform_get_drvdata(pdev);
-+	unsigned int cr;
-+
-+	/* Disable interrupts */
-+	stm32_rtc_wpr_unlock(rtc);
-+	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
-+	cr &= ~STM32_RTC_CR_ALRAIE;
-+	writel_relaxed(cr, rtc->base + STM32_RTC_CR);
-+	stm32_rtc_wpr_lock(rtc);
-+
-+	clk_disable_unprepare(rtc->ck_rtc);
-+
-+	/* Enable backup domain write protection */
-+	regmap_update_bits(dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
-+
-+	device_init_wakeup(&pdev->dev, false);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int stm32_rtc_suspend(struct device *dev)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		return enable_irq_wake(rtc->irq_alarm);
-+
-+	return 0;
-+}
-+
-+static int stm32_rtc_resume(struct device *dev)
-+{
-+	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	ret = stm32_rtc_wait_sync(rtc);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (device_may_wakeup(dev))
-+		return disable_irq_wake(rtc->irq_alarm);
-+
-+	return ret;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(stm32_rtc_pm_ops,
-+			 stm32_rtc_suspend, stm32_rtc_resume);
-+
-+static struct platform_driver stm32_rtc_driver = {
-+	.probe		= stm32_rtc_probe,
-+	.remove		= stm32_rtc_remove,
-+	.driver		= {
-+		.name	= DRIVER_NAME,
-+		.pm	= &stm32_rtc_pm_ops,
-+		.of_match_table = stm32_rtc_of_match,
-+	},
-+};
-+
-+module_platform_driver(stm32_rtc_driver);
-+
-+MODULE_ALIAS("platform:" DRIVER_NAME);
-+MODULE_AUTHOR("Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 Real Time Clock driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+On 11/01/2017 17:17, Peter Meerwald-Stadler wrote:
+> On Wed, 11 Jan 2017, Phil Reid wrote:
+>
+>> Oops, title should be PATCH V2.
+>>
+>> On 11/01/2017 14:51, Phil Reid wrote:
+>>> This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
+>>> ADC. Supports raw and trigger buffer access.
+>>> Also supports the tlc3541 14-bit device, which has not been tested.
+>>> Implementation of the tlc3541 is fairly straight forward thou.
+>
+> comments below
+>
+>>
+>>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+>>> ---
+>>>
+>>> Notes:
+>>>     Changes from v1:
+>>>     - Add tlc3541 support and chan spec.
+>>>     - remove fields that where already 0 from TLC4541_V_CHAN macro
+>>>     - Increase rx_buf size in tlc4541_state to avoid copy in
+>>> tlc4541_trigger_handle
+>>>     - Remove erroneous be16_to_cpu in tlc4541_trigger_handle
+>>>     - Docs/binding: spi -> SPI & add ti,tlc3541
+>>>
+>>>     I haven't add Rob's Ack due to adding a new compatible string.
+>>>
+>>>     I tried to ".index = 1" from the spec as suggested by Peter, but that
+>>> didn't
+>>>     seem to work. Perhaps remove of .channel was the intended target.
+>
+> the only between index = 0/1 should be that the channel is called
+> in_voltage0_raw vs in_voltage_raw in sysfs -- maybe there is an issue in
+> iio_readdev?
+I'll write something tomorrow to test this a bit more using libiio.
+
+I did also notice iio_info reported the channel differently as well.
+ From memory:
+Without indexed it didn't output the format the same either.
+  (input, index: 0, format: be:U16/16>>0)
+became just
+  (input)
+
+I'll have to check what version of libiio I'm using as well.
+
+>
+>>>     Example output from iio_readdev
+>>>
+>>>     with ".index = 1"
+>>>     root@cyclone5:~# mkdir /sys/kernel/config/iio/triggers/hrtimer/hr1
+>>>     root@cyclone5:~# iio_readdev -t hr1 -b 32 -s 10 tlc4541 | hexdump
+>>>     WARNING: High-speed mode not enabled
+>>>     0000000 af00 0000 0000 0000 b922 ca99 93da 1492
+>>>     0000010 a800 00ff 0000 0000 b246 cb30 93da 1492
+>>>     0000020 a900 0000 0000 0000 4f9c cbc9 93da 1492
+>>>     0000030 aa00 00ff 0000 0000 bd2c cc61 93da 1492
+>>>     0000040 aa00 00ff 0000 0000 544c ccfa 93da 1492
+>>>     0000050 ab00 00ff 0000 0000 e806 cd92 93da 1492
+>>>     0000060 a900 00ff 0000 0000 846c ce2b 93da 1492
+>>>     0000070 ab00 0000 0000 0000 2efc cec8 93da 1492
+>>>     0000080 a800 00ff 0000 0000 b090 cf5c 93da 1492
+>>>     0000090 a900 00ff 0000 0000 476a cff5 93da 1492
+>>>
+>>>     without .index
+>>>     root@cyclone5:~# mkdir /sys/kernel/config/iio/triggers/hrtimer/hr1
+>>>     root@cyclone5:~# iio_readdev -t hr1 -b 32 -s 10 tlc4541 | hexdump
+>>>     WARNING: High-speed mode not enabled
+>>>     0000000 6db0 eeb6 93e3 1492 35e0 ef4f 93e3 1492
+>>>     0000010 4b34 efe5 93e3 1492 e9f2 f07d 93e3 1492
+>>>     0000020 6182 f116 93e3 1492 090a f1af 93e3 1492
+>>>     0000030 409c f249 93e3 1492 6c1a f2e0 93e3 1492
+>>>     0000040 cd02 f378 93e3 1492 9582 f411 93e3 1492
+>>>
+>>>  .../devicetree/bindings/iio/adc/ti-tlc4541.txt     |  17 ++
+>>>  drivers/iio/adc/Kconfig                            |  11 +
+>>>  drivers/iio/adc/Makefile                           |   1 +
+>>>  drivers/iio/adc/ti-tlc4541.c                       | 276
+>>> +++++++++++++++++++++
+>>>  4 files changed, 305 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+>>>  create mode 100644 drivers/iio/adc/ti-tlc4541.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+>>> b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+>>> new file mode 100644
+>>> index 0000000..e1de2bd
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+>>> @@ -0,0 +1,17 @@
+>>> +* Texas Instruments' TLC4541
+>>> +
+>>> +Required properties:
+>>> + - compatible: Should be one of
+>>> +	* "ti,tlc4541"
+>>> +	* "ti,tlc3541"
+>>> +	- reg: SPI chip select number for the device
+>>> + - vref-supply: The regulator supply for ADC reference voltage
+>>> + - spi-max-frequency: Max SPI frequency to use (<= 200000)
+>>> +
+>>> +Example:
+>>> +adc@0 {
+>>> +	compatible = "ti,adc0832";
+>
+> pasto here, should be ti,tlc4541 probably
+yes
+
+>
+>>> +	reg = <0>;
+>>> +	vref-supply = <&vdd_supply>;
+>>> +	spi-max-frequency = <200000>;
+>>> +};
+>>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>>> index 99c0514..4dda3f0 100644
+>>> --- a/drivers/iio/adc/Kconfig
+>>> +++ b/drivers/iio/adc/Kconfig
+>>> @@ -525,6 +525,17 @@ config TI_AM335X_ADC
+>>>  	  To compile this driver as a module, choose M here: the module will
+>>> be
+>>>  	  called ti_am335x_adc.
+>>>
+>>> +config TI_TLC4541
+>>> +	tristate "Texas Instruments TLC4541 ADC driver"
+>>> +	depends on SPI
+>>> +	select IIO_BUFFER
+>>> +	select IIO_TRIGGERED_BUFFER
+>>> +	help
+>>> +	  Say yes here to build support for Texas Instruments TLC4541 ADC
+>
+> mention TLC3541 here as well?
+ok
+>
+>>> chip.
+>>> +
+>>> +	  This driver can also be built as a module. If so, the module will be
+>>> +	  called ti-tlc4541.
+>>> +
+>>>  config TWL4030_MADC
+>>>  	tristate "TWL4030 MADC (Monitoring A/D Converter)"
+>>>  	depends on TWL4030_CORE
+>>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>>> index 7a40c04..9bf2377 100644
+>>> --- a/drivers/iio/adc/Makefile
+>>> +++ b/drivers/iio/adc/Makefile
+>>> @@ -49,6 +49,7 @@ obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+>>>  obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+>>>  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+>>>  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
+>>> +obj-$(CONFIG_TI_TLC4541) += ti-tlc4541.o
+>>>  obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
+>>>  obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
+>>>  obj-$(CONFIG_VF610_ADC) += vf610_adc.o
+>>> diff --git a/drivers/iio/adc/ti-tlc4541.c b/drivers/iio/adc/ti-tlc4541.c
+>>> new file mode 100644
+>>> index 0000000..a0cd5e1
+>>> --- /dev/null
+>>> +++ b/drivers/iio/adc/ti-tlc4541.c
+>>> @@ -0,0 +1,276 @@
+>>> +/*
+>>> + * TI tlc4541 ADC Driver
+>>> + *
+>>> + * Copyright (C) 2017 Phil Reid
+>>> + *
+>>> + * Datasheets can be found here:
+>>> + * http://www.ti.com/lit/gpn/tlc3541
+>>> + * http://www.ti.com/lit/gpn/tlc4541
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + *
+>>> + * The tlc4541 requires 24 clock cycles to start a transfer.
+>>> + * Conversion then takes 2.94us to complete before data is ready
+>>> + * Data is returned MSB first.
+>>> + */
+>>> +
+>>> +#include <linux/delay.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/err.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/iio/iio.h>
+>>> +#include <linux/iio/sysfs.h>
+>>> +#include <linux/iio/buffer.h>
+>>> +#include <linux/iio/trigger_consumer.h>
+>>> +#include <linux/iio/triggered_buffer.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/regulator/consumer.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/spi/spi.h>
+>>> +#include <linux/sysfs.h>
+>>> +
+>>> +struct tlc4541_state {
+>>> +	struct spi_device               *spi;
+>>> +	struct regulator                *reg;
+>>> +	struct spi_transfer             scan_single_xfer[3];
+>>> +	struct spi_message              scan_single_msg;
+>>> +
+>>> +	/*
+>>> +	 * DMA (thus cache coherency maintenance) requires the
+>>> +	 * transfer buffers to live in their own cache lines.
+>>> +	 * 2 bytes data + 6 bytes padding + 8 bytes timestamp when
+>>> +	 * call iio_push_to_buffers_with_timestamp.
+>>> +	 */
+>>> +	__be16                          rx_buf[8] ____cacheline_aligned;
+>>> +};
+>>> +
+>>> +struct tlc4541_chip_info {
+>>> +	const struct iio_chan_spec *channels;
+>>> +	unsigned int num_channels;
+>>> +};
+>>> +
+>>> +enum tlc4541_id {
+>>> +	TLC3541,
+>>> +	TLC4541,
+>>> +};
+>>> +
+>>> +#define TLC4541_V_CHAN(bits, bitshift) {                              \
+>>> +		.type = IIO_VOLTAGE,                                  \
+>>> +		.indexed = 1,                                         \
+>
+> shouldn't be needed
+>
+>>> +		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
+>>> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+>>> +		.scan_type = {                                        \
+>>> +			.sign = 'u',                                  \
+>>> +			.realbits = (bits),                           \
+>>> +			.storagebits = 16,                            \
+>>> +			.shift = bitshift,                            \
+>
+> (bitshift)
+ok
+>
+>>> +			.endianness = IIO_BE,                         \
+>>> +		},                                                    \
+>>> +	}
+>>> +
+>>> +#define DECLARE_TLC4541_CHANNELS(name, bits, bitshift) \
+>>> +const struct iio_chan_spec name ## _channels[] = { \
+>>> +	TLC4541_V_CHAN(bits, bitshift), \
+>>> +	IIO_CHAN_SOFT_TIMESTAMP(1), \
+>>> +}
+>>> +
+>>> +static DECLARE_TLC4541_CHANNELS(tlc4541, 16, 0);
+>>> +static DECLARE_TLC4541_CHANNELS(tlc3541, 14, 2);
+>
+> maybe always keep the chip variants in the same order, the enum has 3541
+> first
+ok
+>
+>>> +
+>>> +static const struct tlc4541_chip_info tlc4541_chip_info[] = {
+>>> +	[TLC4541] = {
+>>> +		.channels = tlc4541_channels,
+>>> +		.num_channels = ARRAY_SIZE(tlc4541_channels),
+>>> +	},
+>>> +	[TLC3541] = {
+>>> +		.channels = tlc3541_channels,
+>>> +		.num_channels = ARRAY_SIZE(tlc3541_channels),
+>>> +	},
+>>> +};
+>>> +
+>>> +static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
+>>> +{
+>>> +	struct iio_poll_func *pf = p;
+>>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>>> +	struct tlc4541_state *st = iio_priv(indio_dev);
+>>> +	int ret;
+>>> +
+>>> +	ret = spi_sync(st->spi, &st->scan_single_msg);
+>>> +	if (ret < 0)
+>>> +		goto done;
+>>> +
+>>> +	iio_push_to_buffers_with_timestamp(indio_dev, st->rx_buf,
+>>> +					   iio_get_time_ns(indio_dev));
+>>> +
+>>> +done:
+>>> +	iio_trigger_notify_done(indio_dev->trig);
+>>> +	return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static int tlc4541_get_range(struct tlc4541_state *st)
+>>> +{
+>>> +	int vref;
+>>> +
+>>> +	vref = regulator_get_voltage(st->reg);
+>>> +	if (vref < 0)
+>>> +		return vref;
+>>> +
+>>> +	vref /= 1000;
+>>> +
+>>> +	return vref;
+>>> +}
+>>> +
+>>> +static int tlc4541_read_raw(struct iio_dev *indio_dev,
+>>> +			    struct iio_chan_spec const *chan,
+>>> +			    int *val,
+>>> +			    int *val2,
+>>> +			    long m)
+>>> +{
+>>> +	int ret = 0;
+>>> +	struct tlc4541_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	switch (m) {
+>>> +	case IIO_CHAN_INFO_RAW:
+>>> +		ret = iio_device_claim_direct_mode(indio_dev);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		ret = spi_sync(st->spi, &st->scan_single_msg);
+>>> +		iio_device_release_direct_mode(indio_dev);
+>>> +		if (ret < 0)
+>>> +			return ret;
+>>> +		*val = be16_to_cpu(st->rx_buf[0]);
+>>> +		*val = *val >> chan->scan_type.shift;
+>>> +		*val &= GENMASK(chan->scan_type.realbits - 1, 0);
+>
+> is the GENMASK() necessary?, the trigger handler doesn't do it
+Copied behaviour from another driver. eg ad7887.c
+
+Looking at iio_channel_convert in libiio I think it looks to be doing the same
+thing to the data from the trigger handle.
+
+
+>
+>>> +		return IIO_VAL_INT;
+>>> +	case IIO_CHAN_INFO_SCALE:
+>>> +		ret = tlc4541_get_range(st);
+>>> +		if (ret < 0)
+>>> +			return ret;
+>>> +		*val = ret;
+>>> +		*val2 = chan->scan_type.realbits;
+>>> +		return IIO_VAL_FRACTIONAL_LOG2;
+>>> +	}
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +static const struct iio_info tlc4541_info = {
+>>> +	.read_raw = &tlc4541_read_raw,
+>>> +	.driver_module = THIS_MODULE,
+>>> +};
+>>> +
+>>> +static int tlc4541_probe(struct spi_device *spi)
+>>> +{
+>>> +	struct tlc4541_state *st;
+>>> +	struct iio_dev *indio_dev;
+>>> +	const struct tlc4541_chip_info *info;
+>>> +	int ret;
+>>> +	int8_t device_init = 0;
+>>> +
+>>> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>
+> wondering what happens to the cache aligned rx_buf here?
+I don't know I just copied cache align from one of the other iio drivers.
+There's multiple hits with the ____cacheline_aligned keyword.
+
+>
+>>> +	if (indio_dev == NULL)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	st = iio_priv(indio_dev);
+>>> +
+>>> +	spi_set_drvdata(spi, indio_dev);
+>>> +
+>>> +	st->spi = spi;
+>>> +
+>>> +	info = &tlc4541_chip_info[spi_get_device_id(spi)->driver_data];
+>>> +
+>>> +	indio_dev->name = spi_get_device_id(spi)->name;
+>>> +	indio_dev->dev.parent = &spi->dev;
+>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>>> +	indio_dev->channels = info->channels;
+>>> +	indio_dev->num_channels = info->num_channels;
+>>> +	indio_dev->info = &tlc4541_info;
+>>> +
+>>> +	/* perform reset */
+>>> +	spi_write(spi, &device_init, 1);
+>>> +
+>>> +	/* Setup default message */
+>>> +	st->scan_single_xfer[0].rx_buf = &st->rx_buf[0];
+>>> +	st->scan_single_xfer[0].len = 3;
+>>> +	st->scan_single_xfer[1].delay_usecs = 3;
+>>> +	st->scan_single_xfer[2].rx_buf = &st->rx_buf[0];
+>>> +	st->scan_single_xfer[2].len = 2;
+>>> +
+>>> +	spi_message_init(&st->scan_single_msg);
+>>> +	spi_message_add_tail(&st->scan_single_xfer[0], &st->scan_single_msg);
+>>> +	spi_message_add_tail(&st->scan_single_xfer[1], &st->scan_single_msg);
+>>> +	spi_message_add_tail(&st->scan_single_xfer[2], &st->scan_single_msg);
+>>> +
+>>> +	st->reg = devm_regulator_get(&spi->dev, "vref");
+>>> +	if (IS_ERR(st->reg))
+>>> +		return PTR_ERR(st->reg);
+>>> +
+>>> +	ret = regulator_enable(st->reg);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>>> +			&tlc4541_trigger_handler, NULL);
+>>> +	if (ret)
+>>> +		goto error_disable_reg;
+>>> +
+>>> +	ret = iio_device_register(indio_dev);
+>>> +	if (ret)
+>>> +		goto error_cleanup_buffer;
+>>> +
+>>> +	return 0;
+>>> +
+>>> +error_cleanup_buffer:
+>>> +	iio_triggered_buffer_cleanup(indio_dev);
+>>> +error_disable_reg:
+>>> +	regulator_disable(st->reg);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int tlc4541_remove(struct spi_device *spi)
+>>> +{
+>>> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>>> +	struct tlc4541_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	iio_device_unregister(indio_dev);
+>>> +	iio_triggered_buffer_cleanup(indio_dev);
+>>> +	regulator_disable(st->reg);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_OF
+>
+> maybe drop the newlines here?
+ok
+>
+>>> +
+>>> +static const struct of_device_id tlc4541_dt_ids[] = {
+>>> +	{ .compatible = "ti,tlc3541", },
+>>> +	{ .compatible = "ti,tlc4541", },
+>>> +	{}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, tlc4541_dt_ids);
+>>> +
+>>> +#endif
+>>> +
+>>> +static const struct spi_device_id tlc4541_id[] = {
+>>> +	{"tlc3541", TLC3541},
+>>> +	{"tlc4541", TLC4541},
+>>> +	{}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(spi, tlc4541_id);
+>>> +
+>>> +static struct spi_driver tlc4541_driver = {
+>>> +	.driver = {
+>>> +		.name   = "tlc4541",
+>>> +		.of_match_table = of_match_ptr(tlc4541_dt_ids),
+>>> +	},
+>>> +	.probe          = tlc4541_probe,
+>>> +	.remove         = tlc4541_remove,
+>>> +	.id_table       = tlc4541_id,
+>>> +};
+>>> +module_spi_driver(tlc4541_driver);
+>>> +
+>>> +MODULE_AUTHOR("Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>");
+>>> +MODULE_DESCRIPTION("Texas Instruments TLC4541 ADC");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+>>
+>>
+>>
+>
+
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards
+Phil Reid
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
