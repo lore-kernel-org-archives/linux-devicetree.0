@@ -1,411 +1,115 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v1 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
-Date: Wed, 11 Jan 2017 14:51:11 +0800
-Message-ID: <1484117471-67082-1-git-send-email-preid@electromag.com.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v11 00/12] MT2701 DRM support
+Date: Wed, 11 Jan 2017 14:51:01 +0800
+Message-ID: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
-ADC. Supports raw and trigger buffer access.
-Also supports the tlc3541 14-bit device, which has not been tested.
-Implementation of the tlc3541 is fairly straight forward thou.
-
-Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
----
-
-Notes:
-    Changes from v1:
-    - Add tlc3541 support and chan spec.
-    - remove fields that where already 0 from TLC4541_V_CHAN macro
-    - Increase rx_buf size in tlc4541_state to avoid copy in tlc4541_trigger_handle
-    - Remove erroneous be16_to_cpu in tlc4541_trigger_handle
-    - Docs/binding: spi -> SPI & add ti,tlc3541
-    
-    I haven't add Rob's Ack due to adding a new compatible string.
-    
-    I tried to ".index = 1" from the spec as suggested by Peter, but that didn't
-    seem to work. Perhaps remove of .channel was the intended target.
-    
-    Example output from iio_readdev
-    
-    with ".index = 1"
-    root@cyclone5:~# mkdir /sys/kernel/config/iio/triggers/hrtimer/hr1
-    root@cyclone5:~# iio_readdev -t hr1 -b 32 -s 10 tlc4541 | hexdump
-    WARNING: High-speed mode not enabled
-    0000000 af00 0000 0000 0000 b922 ca99 93da 1492
-    0000010 a800 00ff 0000 0000 b246 cb30 93da 1492
-    0000020 a900 0000 0000 0000 4f9c cbc9 93da 1492
-    0000030 aa00 00ff 0000 0000 bd2c cc61 93da 1492
-    0000040 aa00 00ff 0000 0000 544c ccfa 93da 1492
-    0000050 ab00 00ff 0000 0000 e806 cd92 93da 1492
-    0000060 a900 00ff 0000 0000 846c ce2b 93da 1492
-    0000070 ab00 0000 0000 0000 2efc cec8 93da 1492
-    0000080 a800 00ff 0000 0000 b090 cf5c 93da 1492
-    0000090 a900 00ff 0000 0000 476a cff5 93da 1492
-    
-    without .index
-    root@cyclone5:~# mkdir /sys/kernel/config/iio/triggers/hrtimer/hr1
-    root@cyclone5:~# iio_readdev -t hr1 -b 32 -s 10 tlc4541 | hexdump
-    WARNING: High-speed mode not enabled
-    0000000 6db0 eeb6 93e3 1492 35e0 ef4f 93e3 1492
-    0000010 4b34 efe5 93e3 1492 e9f2 f07d 93e3 1492
-    0000020 6182 f116 93e3 1492 090a f1af 93e3 1492
-    0000030 409c f249 93e3 1492 6c1a f2e0 93e3 1492
-    0000040 cd02 f378 93e3 1492 9582 f411 93e3 1492
-
- .../devicetree/bindings/iio/adc/ti-tlc4541.txt     |  17 ++
- drivers/iio/adc/Kconfig                            |  11 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/ti-tlc4541.c                       | 276 +++++++++++++++++++++
- 4 files changed, 305 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
- create mode 100644 drivers/iio/adc/ti-tlc4541.c
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
-new file mode 100644
-index 0000000..e1de2bd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
-@@ -0,0 +1,17 @@
-+* Texas Instruments' TLC4541
-+
-+Required properties:
-+ - compatible: Should be one of
-+	* "ti,tlc4541"
-+	* "ti,tlc3541"
-+	- reg: SPI chip select number for the device
-+ - vref-supply: The regulator supply for ADC reference voltage
-+ - spi-max-frequency: Max SPI frequency to use (<= 200000)
-+
-+Example:
-+adc@0 {
-+	compatible = "ti,adc0832";
-+	reg = <0>;
-+	vref-supply = <&vdd_supply>;
-+	spi-max-frequency = <200000>;
-+};
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 99c0514..4dda3f0 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -525,6 +525,17 @@ config TI_AM335X_ADC
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ti_am335x_adc.
- 
-+config TI_TLC4541
-+	tristate "Texas Instruments TLC4541 ADC driver"
-+	depends on SPI
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	help
-+	  Say yes here to build support for Texas Instruments TLC4541 ADC chip.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called ti-tlc4541.
-+
- config TWL4030_MADC
- 	tristate "TWL4030 MADC (Monitoring A/D Converter)"
- 	depends on TWL4030_CORE
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 7a40c04..9bf2377 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
- obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
- obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
- obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
-+obj-$(CONFIG_TI_TLC4541) += ti-tlc4541.o
- obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
- obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
- obj-$(CONFIG_VF610_ADC) += vf610_adc.o
-diff --git a/drivers/iio/adc/ti-tlc4541.c b/drivers/iio/adc/ti-tlc4541.c
-new file mode 100644
-index 0000000..a0cd5e1
---- /dev/null
-+++ b/drivers/iio/adc/ti-tlc4541.c
-@@ -0,0 +1,276 @@
-+/*
-+ * TI tlc4541 ADC Driver
-+ *
-+ * Copyright (C) 2017 Phil Reid
-+ *
-+ * Datasheets can be found here:
-+ * http://www.ti.com/lit/gpn/tlc3541
-+ * http://www.ti.com/lit/gpn/tlc4541
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * The tlc4541 requires 24 clock cycles to start a transfer.
-+ * Conversion then takes 2.94us to complete before data is ready
-+ * Data is returned MSB first.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/spi/spi.h>
-+#include <linux/sysfs.h>
-+
-+struct tlc4541_state {
-+	struct spi_device               *spi;
-+	struct regulator                *reg;
-+	struct spi_transfer             scan_single_xfer[3];
-+	struct spi_message              scan_single_msg;
-+
-+	/*
-+	 * DMA (thus cache coherency maintenance) requires the
-+	 * transfer buffers to live in their own cache lines.
-+	 * 2 bytes data + 6 bytes padding + 8 bytes timestamp when
-+	 * call iio_push_to_buffers_with_timestamp.
-+	 */
-+	__be16                          rx_buf[8] ____cacheline_aligned;
-+};
-+
-+struct tlc4541_chip_info {
-+	const struct iio_chan_spec *channels;
-+	unsigned int num_channels;
-+};
-+
-+enum tlc4541_id {
-+	TLC3541,
-+	TLC4541,
-+};
-+
-+#define TLC4541_V_CHAN(bits, bitshift) {                              \
-+		.type = IIO_VOLTAGE,                                  \
-+		.indexed = 1,                                         \
-+		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+		.scan_type = {                                        \
-+			.sign = 'u',                                  \
-+			.realbits = (bits),                           \
-+			.storagebits = 16,                            \
-+			.shift = bitshift,                            \
-+			.endianness = IIO_BE,                         \
-+		},                                                    \
-+	}
-+
-+#define DECLARE_TLC4541_CHANNELS(name, bits, bitshift) \
-+const struct iio_chan_spec name ## _channels[] = { \
-+	TLC4541_V_CHAN(bits, bitshift), \
-+	IIO_CHAN_SOFT_TIMESTAMP(1), \
-+}
-+
-+static DECLARE_TLC4541_CHANNELS(tlc4541, 16, 0);
-+static DECLARE_TLC4541_CHANNELS(tlc3541, 14, 2);
-+
-+static const struct tlc4541_chip_info tlc4541_chip_info[] = {
-+	[TLC4541] = {
-+		.channels = tlc4541_channels,
-+		.num_channels = ARRAY_SIZE(tlc4541_channels),
-+	},
-+	[TLC3541] = {
-+		.channels = tlc3541_channels,
-+		.num_channels = ARRAY_SIZE(tlc3541_channels),
-+	},
-+};
-+
-+static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct tlc4541_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = spi_sync(st->spi, &st->scan_single_msg);
-+	if (ret < 0)
-+		goto done;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, st->rx_buf,
-+					   iio_get_time_ns(indio_dev));
-+
-+done:
-+	iio_trigger_notify_done(indio_dev->trig);
-+	return IRQ_HANDLED;
-+}
-+
-+static int tlc4541_get_range(struct tlc4541_state *st)
-+{
-+	int vref;
-+
-+	vref = regulator_get_voltage(st->reg);
-+	if (vref < 0)
-+		return vref;
-+
-+	vref /= 1000;
-+
-+	return vref;
-+}
-+
-+static int tlc4541_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val,
-+			    int *val2,
-+			    long m)
-+{
-+	int ret = 0;
-+	struct tlc4541_state *st = iio_priv(indio_dev);
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+		ret = spi_sync(st->spi, &st->scan_single_msg);
-+		iio_device_release_direct_mode(indio_dev);
-+		if (ret < 0)
-+			return ret;
-+		*val = be16_to_cpu(st->rx_buf[0]);
-+		*val = *val >> chan->scan_type.shift;
-+		*val &= GENMASK(chan->scan_type.realbits - 1, 0);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = tlc4541_get_range(st);
-+		if (ret < 0)
-+			return ret;
-+		*val = ret;
-+		*val2 = chan->scan_type.realbits;
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	}
-+	return -EINVAL;
-+}
-+
-+static const struct iio_info tlc4541_info = {
-+	.read_raw = &tlc4541_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int tlc4541_probe(struct spi_device *spi)
-+{
-+	struct tlc4541_state *st;
-+	struct iio_dev *indio_dev;
-+	const struct tlc4541_chip_info *info;
-+	int ret;
-+	int8_t device_init = 0;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	if (indio_dev == NULL)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	st->spi = spi;
-+
-+	info = &tlc4541_chip_info[spi_get_device_id(spi)->driver_data];
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = info->channels;
-+	indio_dev->num_channels = info->num_channels;
-+	indio_dev->info = &tlc4541_info;
-+
-+	/* perform reset */
-+	spi_write(spi, &device_init, 1);
-+
-+	/* Setup default message */
-+	st->scan_single_xfer[0].rx_buf = &st->rx_buf[0];
-+	st->scan_single_xfer[0].len = 3;
-+	st->scan_single_xfer[1].delay_usecs = 3;
-+	st->scan_single_xfer[2].rx_buf = &st->rx_buf[0];
-+	st->scan_single_xfer[2].len = 2;
-+
-+	spi_message_init(&st->scan_single_msg);
-+	spi_message_add_tail(&st->scan_single_xfer[0], &st->scan_single_msg);
-+	spi_message_add_tail(&st->scan_single_xfer[1], &st->scan_single_msg);
-+	spi_message_add_tail(&st->scan_single_xfer[2], &st->scan_single_msg);
-+
-+	st->reg = devm_regulator_get(&spi->dev, "vref");
-+	if (IS_ERR(st->reg))
-+		return PTR_ERR(st->reg);
-+
-+	ret = regulator_enable(st->reg);
-+	if (ret)
-+		return ret;
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+			&tlc4541_trigger_handler, NULL);
-+	if (ret)
-+		goto error_disable_reg;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto error_cleanup_buffer;
-+
-+	return 0;
-+
-+error_cleanup_buffer:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+error_disable_reg:
-+	regulator_disable(st->reg);
-+
-+	return ret;
-+}
-+
-+static int tlc4541_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct tlc4541_state *st = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	regulator_disable(st->reg);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+
-+static const struct of_device_id tlc4541_dt_ids[] = {
-+	{ .compatible = "ti,tlc3541", },
-+	{ .compatible = "ti,tlc4541", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, tlc4541_dt_ids);
-+
-+#endif
-+
-+static const struct spi_device_id tlc4541_id[] = {
-+	{"tlc3541", TLC3541},
-+	{"tlc4541", TLC4541},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, tlc4541_id);
-+
-+static struct spi_driver tlc4541_driver = {
-+	.driver = {
-+		.name   = "tlc4541",
-+		.of_match_table = of_match_ptr(tlc4541_dt_ids),
-+	},
-+	.probe          = tlc4541_probe,
-+	.remove         = tlc4541_remove,
-+	.id_table       = tlc4541_id,
-+};
-+module_spi_driver(tlc4541_driver);
-+
-+MODULE_AUTHOR("Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>");
-+MODULE_DESCRIPTION("Texas Instruments TLC4541 ADC");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBNVDI3MDEgRFJNIHN1cHBvcnQgUEFUQ0ggdjEwLCBiYXNlZCBvbiA0LjEwLXJjMS4K
+V2UgYWRkIERTSSBpbnRlcnJ1cHQgY29udHJvbCwgdHJhbnNmZXIgZnVuY3Rpb24gZm9yIE1JUEkg
+RFNJIHBhbmVsIHN1cHBvcnQuCk1vc3QgY29kZXMgYXJlIHRoZSBzYW1lLCBleGNlcHQgc29tZSBy
+ZWdpc3RlciBjaGFuZ2VkLgoKRm9yIGV4YW1wbGU6CiAtIERJU1BfT1ZMIGFkZHJlc3Mgb2Zmc2V0
+IGNoYW5nZWQsIGNvbG9yIGZvcm1hdCBkZWZpbml0aW9uIGNoYW5nZWQuCiAtIERJU1BfUkRNQSBm
+aWZvIHNpemUgY2hhbmdlZC4KIC0gRElTUF9DT0xPUiBvZmZzZXQgY2hhbmdlZC4KIC0gTUlQSV9U
+WCBzZXR0aW5nIGNoYW5nZWQuCgpXZSBhZGQgYSBuZXcgY29tcG9uZW50IEREUF9DT01QT05FTlRf
+QkxTLCBhbmQgdGhlIGNvbm5lY3Rpb25zIGFyZSB1cGRhdGVkLgpPVkwgLT4gUkRNQSAtPiBDT0xP
+UiAtPiBCTFMgLT4gRFNJClJETUEgLT4gRFBJCkFuZCB3ZSBoYXZlIHNoYWRvdyByZWdpc3RlciBz
+dXBwb3J0IGluIE1UMjcwMS4KCkNoYW5nZXMgc2luY2UgdjEwOgotIEFkZCBiaW5kaW5nIGRlc2Ny
+aXB0aW9ucyBmb3IgbmV3bHkgYWRkZWQgYmluZGluZ3MKLSBSZW1vdmUgY29sb3IgZGF0YSBwb2lu
+dGVyIGZyb20gZ2VuZXJpYyBtdGtfZGRwX2NvbXAKLSBSZW1vdmUgImRybS9tZWRpYXRlazogYWRk
+IG1pcGlfdHggZGF0YSByYXRlIGNoZWNrIiBmcm9tIHRoZSBwYXRjaCBzZXJpZXMKLSBSZW1vdmUg
+ImRybS9tZWRpYXRlazogYWRkIGRzaSB1bHAgbW9kZSBjb250cm9sIiBmcm9tIHRoZSBwYXRjaCBz
+ZXJpZXMKLSBVcGRhdGUgZGVzY3JpcHRpb25zIGZvciAiZHJtL21lZGlhdGVrOiBhZGQgbm9uLWNv
+bnRpbnVvdXMgY2xvY2sgbW9kZSBhbmQgRU9UIHBhY2tldCBjb250cm9sIgotIEZpeCBEU0kgZGlz
+YWJsZSBmbG93CgpDaGFuZ2VzIHNpbmNlIHY5OgotIFNwbGl0IERTSSBwYXRjaGVzIGludG8gc21h
+bGxlciBwYXJ0cwotIFVzZSBhIHJlYWwgbGludXggZXJybm8gZm9yIHJldHVybiB2YWx1ZQotIEFk
+ZCBlcnJvciBoYW5kbGluZyBpbiBtdGtfb3V0cHV0X2RzaV9lbmFibGUoKQotIFJlbW92ZSB1bnVz
+ZWQgY2hhbmdlcyBhbmQgcmVkdW5kYW50IGRlbGF5cwotIEFkZCBoZWxwZXJzIGFuZCBtYWNyb3Mg
+Zm9yIGNvbmZpZ3VyYXRpb24KLSBDb21iaW5lICJkcm0vbWVkaWF0ZWs6IHJlbmFtZSBtYWNyb3Ms
+IGFkZCBjaGlwIHByZWZpeCIgYW5kICJkcm0vbWVkaWF0ZWs6IGFkZCAqZHJpdmVyX2RhdGEgZm9y
+IGRpZmZlcmVudCBoYXJkd2FyZSBzZXR0aW5nIgoKQ2hhbmdlcyBzaW5jZSB2ODoKLSBlbmFibGUg
+MyBEU0kgaW50ZXJydXB0cyBvbmx5Ci0gbW92ZSBtdGtfZHNpX3dhaXRfZm9yX2lycV9kb25lKCkg
+dG8gdGhlIHBhdGNoIG9mIGlycSBjb250cm9sCi0gdXNlIHRoZSBuYW1lIEJMUyBpbiBEUk0gZHJp
+dmVyIHBhcnQKLSBtb3ZlIEJMUyBkZWNsYXJhdGlvbiB0byBhIHNlcGFyYXRlIHBhdGNoCi0gdXBk
+YXRlIG10a19kc2lfc3dpdGNoX3RvX2NtZF9tb2RlKCkKLSB1cGRhdGUgbXRrX291dHB1dF9kc2lf
+ZW5hYmxlKCkgYW5kIG10a19vdXRwdXRfZHNpX2Rpc2FibGUoKQoKQ2hhbmdlcyBzaW5jZSB2NzoK
+LSBSZW1vdmUgcmVkdW5kYW50IGNvZGVzCi0gTW92ZSB0aGUgZGVmaW5pdGlvbiBvZiBERFBfQ09N
+UE9ORU5UX0JMUyB0byBwYXRjaCBvZiAiZHJtL21lZGlhdGVrOiB1cGRhdGUgZGlzcGxheSBtb2R1
+bGUgY29ubmVjdGlvbnMiCi0gTW92ZSBfZHNpX2lycV93YWl0X3F1ZXVlIGludG8gcGxhdGZvcm0g
+ZHJpdmVyIGRhdGEKLSBNb3ZlIG10a19kc2lfaXJxX2RhdGFfY2xlYXIoKSB0byBwYXRjaCBvZiAi
+ZHJtL21lZGlhdGVrOiBhZGQgZHNpIGludGVycnVwdCBjb250cm9sIgotIEFkZCBtb3JlIGRlc2Ny
+aXB0aW9ucyBpbiB0aGUgY29tbWl0IG1lc3NhZ2VzCgpDaGFuZ2VzIHNpbmNlIHY2OgotIENoYW5n
+ZSBkYXRhIHR5cGUgb2YgaXJxX2RhdGEgdG8gdTMyCi0gUmV3cml0ZSBtdGtfZHNpX2hvc3RfdHJh
+bnNmZXIoKSBmb3Igc2ltcGxpZnkKLSBNb3ZlIHNvbWUgTUlQSV9UWCBjb25maWcgdG8gcGF0Y2gg
+b2YgImRybS9tZWRpYXRlazogYWRkICpkcml2ZXJfZGF0YSBmb3IgZGlmZmVyZW50IGhhcmR3YXJl
+IHNldHRpbmdzIi4KLSBSZW1vdmUgZGV2aWNlIHRyZWUgZnJvbSB0aGlzIHBhdGNoIHNlcmllcwoK
+Q2hhbmdlcyBzaW5jZSB2NToKLSBSZW1vdmUgRFBJIGRldmljZSB0cmVlIGFuZCBjb21wYXRpYmxl
+IHN0cmluZwotIFVzZSBvbmUgd2FpdCBxdWV1ZSB0byBoYW5kbGUgaW50ZXJydXB0IHN0YXR1cwot
+IFVwZGF0ZSB0aGUgaW50ZXJydXB0IGNoZWNrIGZsb3cgYW5kIERTSV9JTlRfQUxMX0JJVFMKLSBV
+c2Ugc2FtZSBmdW5jdGlvbiBmb3IgaG9zdCByZWFkL3dyaXRlIGNvbW1hbmQKLSB2YXJpb3VzIGZp
+eGVzCgpDaGFuZ2VzIHNpbmNlIHY0OgotIEFkZCBtZXNzYWdlcyB3aGVuIHRpbWVvdXQgaW4gbXRr
+X2Rpc3BfbXV0ZXhfYWNxdWlyZSgpCi0gQWRkIGRlc2NyaXB0aW9ucyBmb3IgRElTUF9SRUdfTVVU
+RVggcmVnaXN0ZXJzCi0gTW92ZSBjb25uZWN0aW9uIHNldHRpbmdzIGZvciBkaXNwbGF5IG1vZHVs
+ZXMgdG8gYSBzZXBhcmF0ZSBwYXRjaAotIFJlbW92ZSAnbXQyNzAxLWRpc3Atd2RtYScgYmVjYXVz
+ZSBpdCBpcyB1bnVzZWQKLSBNb3ZlIGNsZWFuaW5nIHVwIGFuZCByZW5hbWluZyB0byBhIHNlcGFy
+YXRlIHBhdGNoCi0gVXNlIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZV90aW1lb3V0KCkgdG8gcmVw
+bGFjZSBwb2xsaW5nCi0gUmVtb3ZlIGlycV9udW0gZnJvbSBtdGtfZHNpIHN0cnVjdHVyZQotIFJl
+bW92ZSByZWR1bmRhbnQgYW5kIGRlYnVnIGNvZGVzCgpDaGFuZ2VzIHNpbmNlIHYzOgotIEFkZCBE
+U0kgc3VwcG9ydCBmb3IgTUlQSSBEU0kgcGFuZWxzCi0gVXBkYXRlIEJMUyBiaW5kaW5nIHRvIFBX
+TSBub2RlcwotIFJlbW92ZSB1Zm9lIGRldmljZSBub2RlcwotIFJlbW92ZSByZWR1bmRhbnQgcGFy
+ZW50aGVzZXMKLSBSZW1vdmUgZ2xvYmFsIHZhcmlhYmxlIGluaXRpYWxpemF0aW9uCgpDaGFuZ2Vz
+IHNpbmNlIHYyOgotIFJlbmFtZSBtdGtfZGRwX211eF9zZWwgdG8gbXRrX2RkcF9zb3V0X3NlbAot
+IFVwZGF0ZSBtdDI3MDFfbXRrX2RkcF9leHQgY29tcG9uZW50cwotIENoYW5nZWQgdG8gcHJlZml4
+IG5hbWluZwotIFJlb3JkZXIgdGhlIHBhdGNoIHNlcmllcwotIFVzZSBvZl9kZXZpY2VfZ2V0X21h
+dGNoX2RhdGEoKSB0byBnZXQgZHJpdmVyIHByaXZhdGUgZGF0YQotIFVzZSBpb3BvbGwgbWFjcm9z
+IHRvIGltcGxlbWVudCBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkKLSBSZW1vdmVkIGVtcHR5IGRl
+dmljZSB0cmVlIG5vZGVzCgpDaGFuZ2VzIHNpbmNlIHYxOgotIFJlbW92ZWQgQkxTIGJpbmRpbmdz
+IGFuZCBjb2Rlcywgd2hpY2ggYmVsb25nIHRvIHB3bSBkcml2ZXIKLSBNb3ZlZCBtdGtfZGlzcF9t
+dXRleF9hY3F1aXJlKCkganVzdCBiZWZvcmUgbXRrX2NydGNfZGRwX2NvbmZpZygpCi0gU3BsaXQg
+cGF0Y2ggaW50byBzbWFsbGVyIHBhcnRzCi0gQWRkZWQgY29uc3Qga2V5d29yZCB0byBjb25zdGFu
+dCBzdHJ1Y3R1cmUKLSBSZW1vdmVkIGNvZGVzIGZvciBzcGVjaWFsIG1lbW9yeSBhbGlnbgoKVGhh
+bmtzLAp5dC5zaGVuCgpZVCBTaGVuICgxMCk6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IG1lZGlh
+dGVrOiB1cGRhdGUgc3VwcG9ydGVkIGNoaXBzCiAgZHJtL21lZGlhdGVrOiBhZGQgaGVscGVycyBm
+b3IgY292ZXJ0aW5nIGZyb20gdGhlIGdlbmVyaWMgY29tcG9uZW50cwogIGRybS9tZWRpYXRlazog
+YWRkICpkcml2ZXJfZGF0YSBmb3IgZGlmZmVyZW50IGhhcmR3YXJlIHNldHRpbmdzCiAgZHJtL21l
+ZGlhdGVrOiBhZGQgc2hhZG93IHJlZ2lzdGVyIHN1cHBvcnQKICBkcm0vbWVkaWF0ZWs6IGFkZCBC
+TFMgY29tcG9uZW50CiAgZHJtL21lZGlhdGVrOiB1cGRhdGUgZGlzcGxheSBtb2R1bGUgY29ubmVj
+dGlvbnMKICBkcm0vbWVkaWF0ZWs6IGNsZWFuaW5nIHVwIGFuZCByZWZpbmUKICBkcm0vbWVkaWF0
+ZWs6IGFkZCBub24tY29udGludW91cyBjbG9jayBtb2RlIGFuZCBFT1QgcGFja2V0IGNvbnRyb2wK
+ICBkcm0vbWVkaWF0ZWs6IHVwZGF0ZSBEU0kgc3ViIGRyaXZlciBmbG93IGZvciBzZW5kaW5nIGNv
+bW1hbmRzIHRvIHBhbmVsCiAgZHJtL21lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgTWVkaWF0ZWsg
+U29DIE1UMjcwMQoKc2hhb21pbmcgY2hlbiAoMik6CiAgZHJtL21lZGlhdGVrOiBhZGQgZHNpIGlu
+dGVycnVwdCBjb250cm9sCiAgZHJtL21lZGlhdGVrOiBhZGQgZHNpIHRyYW5zZmVyIGZ1bmN0aW9u
+CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAg
+IDIgKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICAg
+fCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jICAgICAgICAg
+ICAgfCAgNjQgKysrLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYyAg
+ICAgICAgICAgfCAgMzkgKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
+YyAgICAgICAgICAgIHwgIDc1ICsrLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcC5jICAgICAgICAgICAgIHwgMTM4ICsrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcC5oICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZHJtX2RkcF9jb21wLmMgICAgICAgIHwgIDY5ICsrKy0KIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgICAgICAgIHwgIDU0ICsrLQogZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICAgICAgICAgICAgfCAgIDkgKwogZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgICAgICAgICAgfCA0MTQgKysr
+KysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlfdHgu
+YyAgICAgICAgICAgICB8ICAzOCArLQogMTMgZmlsZXMgY2hhbmdlZCwgNzUwIGluc2VydGlvbnMo
+KyksIDE1OCBkZWxldGlvbnMoLSkKCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
