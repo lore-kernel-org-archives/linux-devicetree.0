@@ -1,347 +1,311 @@
-From: eajames.ibm@gmail.com
-Subject: [PATCH linux v2 4/6] hwmon: occ: Add callbacks for parsing P8 OCC datastructures
-Date: Wed, 11 Jan 2017 12:10:35 -0600
-Message-ID: <1484158237-10014-5-git-send-email-eajames.ibm@gmail.com>
-References: <1484158237-10014-1-git-send-email-eajames.ibm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484158237-10014-1-git-send-email-eajames.ibm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
+Date: Wed, 11 Jan 2017 19:22:34 +0100
+Message-ID: <2481217.sGcrUo83EX@debian64>
+References: <cover.1479339900.git.johnyoun@synopsys.com> <1822229.eVKB2DLXUI@debian64> <f2b75acc-4773-e420-53ff-a77d0c9bce31@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f2b75acc-4773-e420-53ff-a77d0c9bce31-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+On Tuesday, January 10, 2017 3:23:24 PM CET John Youn wrote:
+> On 1/10/2017 3:03 PM, Christian Lamparter wrote:
+> > On Tuesday, January 10, 2017 1:46:56 PM CET John Youn wrote:
+> >> On 12/19/2016 6:49 AM, Christian Lamparter wrote:
+> >>> (Lot's of old stuff, that doesn't matter anymore)
+> > 
+> > Hello John,
+> >  
+> >> This should be fixed against the latest dwc2 param rework series [1]
+> >> which i hope to get queued for 4.11. If you can give it a test, that
+> >> would be great.
+> > 
+> > oh Ok. I see you added it to
+> > "[PATCH 16/21] usb: dwc2: Remove platform static params" [0].
+> > Yes, I think this should work nicely. Thank you very much for
+> > your time, even though it's just for like "one old board" :-).
+> 
+> No problem. Sorry for the delay getting the param stuff sorted.
+> 
+> > 
+> > Do you have a public git tree with your patches that I can
+> > clone/checkout?  If not, I'll take some time on the weekend
+> > for this and write back on monday. But yeah, this should 
+> > work.
+> Yes check here on branch 'next'
+> 
+> https://github.com/synopsys-usb/linux.git
+Ok thanks. I cloned it and built a new kernel for the thing. 
 
-Add functions to parse the data structures that are specific to the OCC on
-the POWER8 processor. These are the sensor data structures, including
-temperature, frequency, power, and "caps."
+>From the (attached) bootlog:
+GAHBCFG   @0xD1210008 : 0x0000002E
+0x2E = Bit 5 | (Bit 3 | Bit 2 | Bit 1)
+     = GAHBCFG_DMA_EN |
+       (GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT)
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+I've attached an old 1GiB USB-Stick to the dwc2 managed port
+and it does work as expected. The same goes for a usb-3.0 HDD
+and a USB 2.0 11n WLAN stick. (All while the DWC SATA is
+copying data).
+
+Tested-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+
+Again, thank you for your work!
+
+Regards,
+Christian
 ---
- Documentation/hwmon/occ    |   9 ++
- drivers/hwmon/occ/occ_p8.c | 254 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ_p8.h |  31 ++++++
- 3 files changed, 294 insertions(+)
- create mode 100644 drivers/hwmon/occ/occ_p8.c
- create mode 100644 drivers/hwmon/occ/occ_p8.h
+These are the kernel messages.
 
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-index d0bdf06..143951e 100644
---- a/Documentation/hwmon/occ
-+++ b/Documentation/hwmon/occ
-@@ -25,6 +25,15 @@ Currently, all versions of the OCC support four types of sensor data: power,
- temperature, frequency, and "caps," which indicate limits and thresholds used
- internally on the OCC.
- 
-+The format for the POWER8 OCC sensor data can be found in the P8 OCC
-+specification:
-+github.com/open-power/docs/blob/master/occ/OCC_OpenPwr_FW_Interfaces.pdf
-+This document provides the details of the OCC sensors: power, frequency,
-+temperature, and caps. These sensor formats are specific to the POWER8 OCC. A
-+number of data structures, such as command format, response headers, and the
-+like, are also defined in this specification, and are common to both POWER8 and
-+POWER9 OCCs.
-+
- sysfs Entries
- -------------
- 
-diff --git a/drivers/hwmon/occ/occ_p8.c b/drivers/hwmon/occ/occ_p8.c
-new file mode 100644
-index 0000000..6673da2
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_p8.c
-@@ -0,0 +1,254 @@
-+/*
-+ * occ_p8.c - OCC hwmon driver
-+ *
-+ * This file contains the Power8-specific methods and data structures for
-+ * the OCC hwmon driver.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <asm/unaligned.h>
-+#include <linux/hwmon.h>
-+
-+#include "occ.h"
-+#include "occ_p8.h"
-+
-+/* P8 OCC sensor data format */
-+struct p8_occ_sensor {
-+	u16 sensor_id;
-+	u16 value;
-+};
-+
-+struct p8_power_sensor {
-+	u16 sensor_id;
-+	u32 update_tag;
-+	u32 accumulator;
-+	u16 value;
-+};
-+
-+struct p8_caps_sensor {
-+	u16 curr_powercap;
-+	u16 curr_powerreading;
-+	u16 norm_powercap;
-+	u16 max_powercap;
-+	u16 min_powercap;
-+	u16 user_powerlimit;
-+};
-+
-+static const u32 p8_sensor_hwmon_configs[MAX_OCC_SENSOR_TYPE] = {
-+	HWMON_I_INPUT | HWMON_I_LABEL,	/* freq: value | label */
-+	HWMON_T_INPUT | HWMON_T_LABEL,	/* temp: value | label */
-+	/* power: value | label | accumulator | update_tag */
-+	HWMON_P_INPUT | HWMON_P_LABEL | HWMON_P_AVERAGE |
-+		HWMON_P_AVERAGE_INTERVAL,
-+	/* caps: curr | max | min | norm | user */
-+	HWMON_P_CAP | HWMON_P_CAP_MAX | HWMON_P_CAP_MIN | HWMON_P_MAX |
-+		HWMON_P_ALARM,
-+};
-+
-+void p8_parse_sensor(u8 *data, void *sensor, int sensor_type, int off,
-+		     int snum)
-+{
-+	switch (sensor_type) {
-+	case FREQ:
-+	case TEMP:
-+	{
-+		struct p8_occ_sensor *os =
-+			&(((struct p8_occ_sensor *)sensor)[snum]);
-+
-+		os->sensor_id = be16_to_cpu(get_unaligned((u16 *)&data[off]));
-+		os->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 2]));
-+	}
-+		break;
-+	case POWER:
-+	{
-+		struct p8_power_sensor *ps =
-+			&(((struct p8_power_sensor *)sensor)[snum]);
-+
-+		ps->sensor_id = be16_to_cpu(get_unaligned((u16 *)&data[off]));
-+		ps->update_tag =
-+			be32_to_cpu(get_unaligned((u32 *)&data[off + 2]));
-+		ps->accumulator =
-+			be32_to_cpu(get_unaligned((u32 *)&data[off + 6]));
-+		ps->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 10]));
-+	}
-+		break;
-+	case CAPS:
-+	{
-+		struct p8_caps_sensor *cs =
-+			&(((struct p8_caps_sensor *)sensor)[snum]);
-+
-+		cs->curr_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off]));
-+		cs->curr_powerreading =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 2]));
-+		cs->norm_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 4]));
-+		cs->max_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 6]));
-+		cs->min_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 8]));
-+		cs->user_powerlimit =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 10]));
-+	}
-+		break;
-+	};
-+}
-+
-+void *p8_alloc_sensor(int sensor_type, int num_sensors)
-+{
-+	switch (sensor_type) {
-+	case FREQ:
-+	case TEMP:
-+		return kcalloc(num_sensors, sizeof(struct p8_occ_sensor),
-+			       GFP_KERNEL);
-+	case POWER:
-+		return kcalloc(num_sensors, sizeof(struct p8_power_sensor),
-+			       GFP_KERNEL);
-+	case CAPS:
-+		return kcalloc(num_sensors, sizeof(struct p8_caps_sensor),
-+			       GFP_KERNEL);
-+	default:
-+		return NULL;
-+	}
-+}
-+
-+int p8_get_sensor(struct occ *driver, int sensor_type, int sensor_num,
-+		  u32 hwmon, long *val)
-+{
-+	int rc = 0;
-+	void *sensor;
-+
-+	if (sensor_type == POWER) {
-+		if (hwmon == hwmon_power_cap || hwmon == hwmon_power_cap_max ||
-+		    hwmon == hwmon_power_cap_min || hwmon == hwmon_power_max ||
-+		    hwmon == hwmon_power_alarm)
-+			sensor_type = CAPS;
-+	}
-+
-+	sensor = occ_get_sensor(driver, sensor_type);
-+	if (!sensor)
-+		return -ENODEV;
-+
-+	switch (sensor_type) {
-+	case FREQ:
-+	case TEMP:
-+	{
-+		struct p8_occ_sensor *os =
-+			&(((struct p8_occ_sensor *)sensor)[sensor_num]);
-+
-+		if (hwmon == hwmon_in_input || hwmon == hwmon_temp_input)
-+			*val = os->value;
-+		else if (hwmon == hwmon_in_label || hwmon == hwmon_temp_label)
-+			*val = os->sensor_id;
-+		else
-+			rc = -EOPNOTSUPP;
-+	}
-+		break;
-+	case POWER:
-+	{
-+		struct p8_power_sensor *ps =
-+			&(((struct p8_power_sensor *)sensor)[sensor_num]);
-+
-+		switch (hwmon) {
-+		case hwmon_power_input:
-+			*val = ps->value;
-+			break;
-+		case hwmon_power_label:
-+			*val = ps->sensor_id;
-+			break;
-+		case hwmon_power_average:
-+			*val = ps->accumulator;
-+			break;
-+		case hwmon_power_average_interval:
-+			*val = ps->update_tag;
-+			break;
-+		default:
-+			rc = -EOPNOTSUPP;
-+		}
-+	}
-+		break;
-+	case CAPS:
-+	{
-+		struct p8_caps_sensor *cs =
-+			&(((struct p8_caps_sensor *)sensor)[sensor_num]);
-+
-+		switch (hwmon) {
-+		case hwmon_power_cap:
-+			*val = cs->curr_powercap;
-+			break;
-+		case hwmon_power_cap_max:
-+			*val = cs->max_powercap;
-+			break;
-+		case hwmon_power_cap_min:
-+			*val = cs->min_powercap;
-+			break;
-+		case hwmon_power_max:
-+			*val = cs->norm_powercap;
-+			break;
-+		case hwmon_power_alarm:
-+			*val = cs->user_powerlimit;
-+			break;
-+		default:
-+			rc = -EOPNOTSUPP;
-+		}
-+	}
-+		break;
-+	default:
-+		rc = -EINVAL;
-+	}
-+
-+	return rc;
-+}
-+
-+static const struct occ_ops p8_ops = {
-+	.parse_sensor = p8_parse_sensor,
-+	.alloc_sensor = p8_alloc_sensor,
-+	.get_sensor = p8_get_sensor,
-+};
-+
-+static const struct occ_config p8_config = {
-+	.command_addr = 0xFFFF6000,
-+	.response_addr = 0xFFFF7000,
-+};
-+
-+const u32 *p8_get_sensor_hwmon_configs()
-+{
-+	return p8_sensor_hwmon_configs;
-+}
-+EXPORT_SYMBOL(p8_get_sensor_hwmon_configs);
-+
-+struct occ *p8_occ_start(struct device *dev, void *bus,
-+			 struct occ_bus_ops *bus_ops)
-+{
-+	return occ_start(dev, bus, bus_ops, &p8_ops, &p8_config);
-+}
-+EXPORT_SYMBOL(p8_occ_start);
-+
-+int p8_occ_stop(struct occ *occ)
-+{
-+	return occ_stop(occ);
-+}
-+EXPORT_SYMBOL(p8_occ_stop);
-+
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("P8 OCC sensors");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ_p8.h b/drivers/hwmon/occ/occ_p8.h
-new file mode 100644
-index 0000000..54ce907
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_p8.h
-@@ -0,0 +1,31 @@
-+/*
-+ * occ_p8.h - OCC hwmon driver
-+ *
-+ * This file contains Power8-specific function prototypes
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __OCC_P8_H__
-+#define __OCC_P8_H__
-+
-+#include "scom.h"
-+
-+struct device;
-+
-+const u32 *p8_get_sensor_hwmon_configs(void);
-+struct occ *p8_occ_start(struct device *dev, void *bus,
-+			 struct occ_bus_ops *bus_ops);
-+int p8_occ_stop(struct occ *occ);
-+
-+#endif /* __OCC_P8_H__ */
--- 
-1.9.1
+dwc2 4bff80000.usbotg: mapped PA bff80000 to VA d1210000
+dwc2 4bff80000.usbotg: registering common handler for irq35
+dwc2 4bff80000.usbotg: Forcing mode to host
+dwc2 4bff80000.usbotg: Core Release: 2.90a (snpsid=4f54290a)
+dwc2 4bff80000.usbotg: Forcing mode to host
+dwc2 4bff80000.usbotg: DWC OTG HCD INIT
+dwc2 4bff80000.usbotg: hcfg=00000200
+dwc2 4bff80000.usbotg: dwc2_core_init(ca890810)
+dwc2 4bff80000.usbotg: HS UTMI+ PHY selected
+dwc2 4bff80000.usbotg: Internal DMA Mode
+dwc2 4bff80000.usbotg: host_dma:1 dma_desc_enable:0
+dwc2 4bff80000.usbotg: Using Buffer DMA mode
+dwc2 4bff80000.usbotg: Host Mode
+dwc2 4bff80000.usbotg: DWC OTG Controller
+dwc2 4bff80000.usbotg: new USB bus registered, assigned bus number 1
+dwc2 4bff80000.usbotg: irq 35, io mem 0x00000000
+dwc2 4bff80000.usbotg: DWC OTG HCD START
+dwc2 4bff80000.usbotg: dwc2_core_host_init(ca890810)
+dwc2 4bff80000.usbotg: Initializing HCFG.FSLSPClkSel to 00000000
+dwc2 4bff80000.usbotg: initial grxfsiz=00000213
+dwc2 4bff80000.usbotg: new grxfsiz=00000213
+dwc2 4bff80000.usbotg: initial gnptxfsiz=01000213
+dwc2 4bff80000.usbotg: new gnptxfsiz=01000213
+dwc2 4bff80000.usbotg: initial hptxfsiz=01000313
+dwc2 4bff80000.usbotg: new hptxfsiz=01000313
+dwc2 4bff80000.usbotg: dwc2_core_host_init: Halt channel 0
+dwc2 4bff80000.usbotg: dwc2_core_host_init: Halt channel 1
+dwc2 4bff80000.usbotg: dwc2_core_host_init: Halt channel 2
+dwc2 4bff80000.usbotg: dwc2_core_host_init: Halt channel 3
+dwc2 4bff80000.usbotg: Init: Port Power? op_state=9
+dwc2 4bff80000.usbotg: Init: Power Port (0)
+dwc2 4bff80000.usbotg: dwc2_enable_host_interrupts()
+dwc2 4bff80000.usbotg: DWC OTG HCD Has Root Hub
+dwc2 4bff80000.usbotg: DWC OTG HCD EP RESET: bEndpointAddress=0x81
+hub 1-0:1.0: USB hub found
+dwc2 4bff80000.usbotg: GetHubDescriptor
+hub 1-0:1.0: 1 port detected
+dwc2 4bff80000.usbotg: GetHubStatus
+dwc2 4bff80000.usbotg: SetPortFeature
+dwc2 4bff80000.usbotg: 
+dwc2 4bff80000.usbotg: ************************************************************
+dwc2 4bff80000.usbotg: HCD State:
+dwc2 4bff80000.usbotg:   Num channels: 4
+dwc2 4bff80000.usbotg:   Channel 0:
+dwc2 4bff80000.usbotg:     dev_addr: 0, ep_num: 0, ep_is_in: 0
+dwc2 4bff80000.usbotg:     speed: 0
+dwc2 4bff80000.usbotg:     ep_type: 0
+dwc2 4bff80000.usbotg:     max_packet: 0
+dwc2 4bff80000.usbotg:     data_pid_start: 0
+dwc2 4bff80000.usbotg:     multi_count: 0
+dwc2 4bff80000.usbotg:     xfer_started: 0
+dwc2 4bff80000.usbotg:     xfer_buf:   (null)
+dwc2 4bff80000.usbotg:     xfer_dma: 00000000
+dwc2 4bff80000.usbotg:     xfer_len: 0
+dwc2 4bff80000.usbotg:     xfer_count: 0
+dwc2 4bff80000.usbotg:     halt_on_queue: 0
+dwc2 4bff80000.usbotg:     halt_pending: 0
+dwc2 4bff80000.usbotg:     halt_status: 0
+dwc2 4bff80000.usbotg:     do_split: 0
+dwc2 4bff80000.usbotg:     complete_split: 0
+dwc2 4bff80000.usbotg:     hub_addr: 0
+dwc2 4bff80000.usbotg:     hub_port: 0
+dwc2 4bff80000.usbotg:     xact_pos: 0
+dwc2 4bff80000.usbotg:     requests: 0
+dwc2 4bff80000.usbotg:     qh:   (null)
+dwc2 4bff80000.usbotg:   Channel 1:
+dwc2 4bff80000.usbotg:     dev_addr: 0, ep_num: 0, ep_is_in: 0
+dwc2 4bff80000.usbotg:     speed: 0
+dwc2 4bff80000.usbotg:     ep_type: 0
+dwc2 4bff80000.usbotg:     max_packet: 0
+dwc2 4bff80000.usbotg:     data_pid_start: 0
+dwc2 4bff80000.usbotg:     multi_count: 0
+dwc2 4bff80000.usbotg:     xfer_started: 0
+dwc2 4bff80000.usbotg:     xfer_buf:   (null)
+dwc2 4bff80000.usbotg:     xfer_dma: 00000000
+dwc2 4bff80000.usbotg:     xfer_len: 0
+dwc2 4bff80000.usbotg:     xfer_count: 0
+dwc2 4bff80000.usbotg:     halt_on_queue: 0
+dwc2 4bff80000.usbotg:     halt_pending: 0
+dwc2 4bff80000.usbotg:     halt_status: 0
+dwc2 4bff80000.usbotg:     do_split: 0
+dwc2 4bff80000.usbotg:     complete_split: 0
+dwc2 4bff80000.usbotg:     hub_addr: 0
+dwc2 4bff80000.usbotg:     hub_port: 0
+dwc2 4bff80000.usbotg:     xact_pos: 0
+dwc2 4bff80000.usbotg:     requests: 0
+dwc2 4bff80000.usbotg:     qh:   (null)
+dwc2 4bff80000.usbotg:   Channel 2:
+dwc2 4bff80000.usbotg:     dev_addr: 0, ep_num: 0, ep_is_in: 0
+dwc2 4bff80000.usbotg:     speed: 0
+dwc2 4bff80000.usbotg:     ep_type: 0
+dwc2 4bff80000.usbotg:     max_packet: 0
+dwc2 4bff80000.usbotg:     data_pid_start: 0
+dwc2 4bff80000.usbotg:     multi_count: 0
+dwc2 4bff80000.usbotg:     xfer_started: 0
+dwc2 4bff80000.usbotg:     xfer_buf:   (null)
+dwc2 4bff80000.usbotg:     xfer_dma: 00000000
+dwc2 4bff80000.usbotg:     xfer_len: 0
+dwc2 4bff80000.usbotg:     xfer_count: 0
+dwc2 4bff80000.usbotg:     halt_on_queue: 0
+dwc2 4bff80000.usbotg:     halt_pending: 0
+dwc2 4bff80000.usbotg:     halt_status: 0
+dwc2 4bff80000.usbotg:     do_split: 0
+dwc2 4bff80000.usbotg:     complete_split: 0
+dwc2 4bff80000.usbotg:     hub_addr: 0
+dwc2 4bff80000.usbotg:     hub_port: 0
+dwc2 4bff80000.usbotg:     xact_pos: 0
+dwc2 4bff80000.usbotg:     requests: 0
+dwc2 4bff80000.usbotg:     qh:   (null)
+dwc2 4bff80000.usbotg:   Channel 3:
+dwc2 4bff80000.usbotg:     dev_addr: 0, ep_num: 0, ep_is_in: 0
+dwc2 4bff80000.usbotg:     speed: 0
+dwc2 4bff80000.usbotg:     ep_type: 0
+dwc2 4bff80000.usbotg:     max_packet: 0
+dwc2 4bff80000.usbotg:     data_pid_start: 0
+dwc2 4bff80000.usbotg:     multi_count: 0
+dwc2 4bff80000.usbotg:     xfer_started: 0
+dwc2 4bff80000.usbotg:     xfer_buf:   (null)
+dwc2 4bff80000.usbotg:     xfer_dma: 00000000
+dwc2 4bff80000.usbotg:     xfer_len: 0
+dwc2 4bff80000.usbotg:     xfer_count: 0
+dwc2 4bff80000.usbotg:     halt_on_queue: 0
+dwc2 4bff80000.usbotg:     halt_pending: 0
+dwc2 4bff80000.usbotg:     halt_status: 0
+dwc2 4bff80000.usbotg:     do_split: 0
+dwc2 4bff80000.usbotg:     complete_split: 0
+dwc2 4bff80000.usbotg:     hub_addr: 0
+dwc2 4bff80000.usbotg:     hub_port: 0
+dwc2 4bff80000.usbotg:     xact_pos: 0
+dwc2 4bff80000.usbotg:     requests: 0
+dwc2 4bff80000.usbotg:     qh:   (null)
+dwc2 4bff80000.usbotg:   non_periodic_channels: 0
+dwc2 4bff80000.usbotg:   periodic_channels: 0
+dwc2 4bff80000.usbotg:   periodic_usecs: 0
+dwc2 4bff80000.usbotg:   NP Tx Req Queue Space Avail: 8
+dwc2 4bff80000.usbotg:   NP Tx FIFO Space Avail: 256
+dwc2 4bff80000.usbotg:   P Tx Req Queue Space Avail: 8
+dwc2 4bff80000.usbotg:   P Tx FIFO Space Avail: 256
+dwc2 4bff80000.usbotg: Core Global Registers
+dwc2 4bff80000.usbotg: GOTGCTL   @0xD1210000 : 0x001E0001
+dwc2 4bff80000.usbotg: GOTGINT   @0xD1210004 : 0x00080000
+dwc2 4bff80000.usbotg: GAHBCFG   @0xD1210008 : 0x0000002E
+dwc2 4bff80000.usbotg: GUSBCFG   @0xD121000C : 0x20001708
+dwc2 4bff80000.usbotg: GRSTCTL   @0xD1210010 : 0x80000000
+dwc2 4bff80000.usbotg: GINTSTS   @0xD1210014 : 0x05000025
+dwc2 4bff80000.usbotg: GINTMSK   @0xD1210018 : 0xF3000806
+dwc2 4bff80000.usbotg: GRXSTSR   @0xD121001C : 0x025B34D8
+dwc2 4bff80000.usbotg: GRXFSIZ   @0xD1210024 : 0x00000213
+dwc2 4bff80000.usbotg: GNPTXFSIZ         @0xD1210028 : 0x01000213
+dwc2 4bff80000.usbotg: GNPTXSTS  @0xD121002C : 0x00080100
+dwc2 4bff80000.usbotg: GI2CCTL   @0xD1210030 : 0x00000000
+dwc2 4bff80000.usbotg: GPVNDCTL  @0xD1210034 : 0x00000000
+dwc2 4bff80000.usbotg: GGPIO     @0xD1210038 : 0x00000000
+dwc2 4bff80000.usbotg: GUID      @0xD121003C : 0x00000000
+dwc2 4bff80000.usbotg: GSNPSID   @0xD1210040 : 0x4F54290A
+dwc2 4bff80000.usbotg: GHWCFG1   @0xD1210044 : 0x00000000
+dwc2 4bff80000.usbotg: GHWCFG2   @0xD1210048 : 0x228CC850
+dwc2 4bff80000.usbotg: GHWCFG3   @0xD121004C : 0x07FA0CE8
+dwc2 4bff80000.usbotg: GHWCFG4   @0xD1210050 : 0x09F04011
+dwc2 4bff80000.usbotg: GLPMCFG   @0xD1210054 : 0x00000000
+dwc2 4bff80000.usbotg: GPWRDN    @0xD1210058 : 0x00000000
+dwc2 4bff80000.usbotg: GDFIFOCFG         @0xD121005C : 0x00000000
+dwc2 4bff80000.usbotg: HPTXFSIZ  @0xD1210100 : 0x01000313
+dwc2 4bff80000.usbotg: PCGCTL    @0xD1210E00 : 0x00000000
+dwc2 4bff80000.usbotg: Host Global Registers
+dwc2 4bff80000.usbotg: HCFG      @0xD1210400 : 0x00000200
+dwc2 4bff80000.usbotg: HFIR      @0xD1210404 : 0x0000EA60
+dwc2 4bff80000.usbotg: HFNUM     @0xD1210408 : 0xEA603FFF
+dwc2 4bff80000.usbotg: HPTXSTS   @0xD1210410 : 0x00080100
+dwc2 4bff80000.usbotg: HAINT     @0xD1210414 : 0x00000000
+dwc2 4bff80000.usbotg: HAINTMSK  @0xD1210418 : 0x00000000
+dwc2 4bff80000.usbotg: HPRT0     @0xD1210440 : 0x00021403
+dwc2 4bff80000.usbotg: Host Channel 0 Specific Registers
+dwc2 4bff80000.usbotg: HCCHAR    @0xD1210500 : 0x00000000
+dwc2 4bff80000.usbotg: HCSPLT    @0xD1210504 : 0x00000000
+dwc2 4bff80000.usbotg: HCINT     @0xD1210508 : 0x00000002
+dwc2 4bff80000.usbotg: HCINTMSK  @0xD121050C : 0x00000000
+dwc2 4bff80000.usbotg: HCTSIZ    @0xD1210510 : 0x00000000
+dwc2 4bff80000.usbotg: HCDMA     @0xD1210514 : 0x8D289912
+dwc2 4bff80000.usbotg: Host Channel 1 Specific Registers
+dwc2 4bff80000.usbotg: HCCHAR    @0xD1210520 : 0x00000000
+dwc2 4bff80000.usbotg: HCSPLT    @0xD1210524 : 0x00000000
+dwc2 4bff80000.usbotg: HCINT     @0xD1210528 : 0x00000002
+dwc2 4bff80000.usbotg: HCINTMSK  @0xD121052C : 0x00000000
+dwc2 4bff80000.usbotg: HCTSIZ    @0xD1210530 : 0x00000000
+dwc2 4bff80000.usbotg: HCDMA     @0xD1210534 : 0xBBC5AD7A
+dwc2 4bff80000.usbotg: Host Channel 2 Specific Registers
+dwc2 4bff80000.usbotg: HCCHAR    @0xD1210540 : 0x00000000
+dwc2 4bff80000.usbotg: HCSPLT    @0xD1210544 : 0x00000000
+dwc2 4bff80000.usbotg: HCINT     @0xD1210548 : 0x00000002
+dwc2 4bff80000.usbotg: HCINTMSK  @0xD121054C : 0x00000000
+dwc2 4bff80000.usbotg: HCTSIZ    @0xD1210550 : 0x00000000
+dwc2 4bff80000.usbotg: HCDMA     @0xD1210554 : 0xC7D821B3
+dwc2 4bff80000.usbotg: Host Channel 3 Specific Registers
+dwc2 4bff80000.usbotg: HCCHAR    @0xD1210560 : 0x00000000
+dwc2 4bff80000.usbotg: HCSPLT    @0xD1210564 : 0x00000000
+dwc2 4bff80000.usbotg: HCINT     @0xD1210568 : 0x00000002
+dwc2 4bff80000.usbotg: HCINTMSK  @0xD121056C : 0x00000000
+dwc2 4bff80000.usbotg: HCTSIZ    @0xD1210570 : 0x00000000
+dwc2 4bff80000.usbotg: HCDMA     @0xD1210574 : 0x7DEDDB55
+dwc2 4bff80000.usbotg: ************************************************************
+dwc2 4bff80000.usbotg: 
+dwc2 4bff80000.usbotg: gintsts=05000025  gintmsk=f3000806
+dwc2 4bff80000.usbotg: ++OTG Interrupt gotgint=80000 [a_host]
+dwc2 4bff80000.usbotg:  ++OTG Interrupt: Debounce Done++
+dwc2 4bff80000.usbotg: ClearPortFeature USB_PORT_FEAT_C_CONNECTION
+root@lede:/tmp# dwc2 4bff80000.usbotg: SetPortFeature
+dwc2 4bff80000.usbotg: SetPortFeature - USB_PORT_FEAT_RESET
+dwc2 4bff80000.usbotg: In host mode, hprt0=00021501
+dwc2 4bff80000.usbotg: gintsts=05000021  gintmsk=f3000806
+dwc2 4bff80000.usbotg: ClearPortFeature USB_PORT_FEAT_C_RESET
+usb 1-1: new high-speed USB device number 2 using dwc2
+dwc2 4bff80000.usbotg: SetPortFeature
+dwc2 4bff80000.usbotg: SetPortFeature - USB_PORT_FEAT_RESET
+dwc2 4bff80000.usbotg: In host mode, hprt0=00001101
+dwc2 4bff80000.usbotg: gintsts=05000029  gintmsk=f3000806
+dwc2 4bff80000.usbotg: gintsts=05000029  gintmsk=f3000806
+dwc2 4bff80000.usbotg: ClearPortFeature USB_PORT_FEAT_C_RESET
+dwc2 4bff80000.usbotg: DWC OTG HCD EP DISABLE: bEndpointAddress=0x00, ep->hcpriv=ca80e6c0
+dwc2 4bff80000.usbotg: DWC OTG HCD EP DISABLE: bEndpointAddress=0x00, ep->hcpriv=  (null)
+dwc2 4bff80000.usbotg: DWC OTG HCD EP RESET: bEndpointAddress=0x00
+dwc2 4bff80000.usbotg: DWC OTG HCD HUB STATUS DATA: Root port status changed
+dwc2 4bff80000.usbotg:   port_connect_status_change: 0
+dwc2 4bff80000.usbotg:   port_reset_change: 0
+dwc2 4bff80000.usbotg:   port_enable_change: 1
+dwc2 4bff80000.usbotg:   port_suspend_change: 0
+dwc2 4bff80000.usbotg:   port_over_current_change: 0
+dwc2 4bff80000.usbotg: DWC OTG HCD EP RESET: bEndpointAddress=0x81
+dwc2 4bff80000.usbotg: DWC OTG HCD EP RESET: bEndpointAddress=0x02
+usb-storage 1-1:1.0: USB Mass Storage device detected
+scsi host2: usb-storage 1-1:1.0
+dwc2 4bff80000.usbotg: ClearPortFeature USB_PORT_FEAT_C_ENABLE
+scsi 2:0:0:0: Direct-Access              FlashPen Fancy   1100 PQ: 0 ANSI: 0 CCS
+sd 2:0:0:0: [sda] 1957888 512-byte logical blocks: (1.00 GB/956 MiB)
+sd 2:0:0:0: [sda] Write Protect is off
+sd 2:0:0:0: [sda] Mode Sense: 43 00 00 00
+sd 2:0:0:0: [sda] No Caching mode page found
+sd 2:0:0:0: [sda] Assuming drive cache: write through
+ sda: sda1
+sd 2:0:0:0: [sda] Attached SCSI removable disk
+random: crng init done
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
