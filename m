@@ -1,221 +1,111 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM64: dts: meson-gx: Add reserved memory zone and
- usable memory range
-Date: Wed, 11 Jan 2017 10:19:39 +0100
-Message-ID: <2c750258-22ba-883f-6cd3-e87e7a73eafe@baylibre.com>
-References: <1483105232-6242-1-git-send-email-narmstrong@baylibre.com>
- <5c99bc3d-58ae-0434-4b68-bc0445f928ad@gmx.de>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 08/11] dmaengine: cppi41: Implement the glue for da8xx
+Date: Wed, 11 Jan 2017 10:24:28 +0100
+Message-ID: <6faef671-bde6-6073-c42f-f37062b6490c@baylibre.com>
+References: <20170109160656.3470-1-abailon@baylibre.com>
+ <20170109160656.3470-9-abailon@baylibre.com>
+ <2d8b3a2b-859d-bfda-74cf-f22471927fc4@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5c99bc3d-58ae-0434-4b68-bc0445f928ad-Mmb7MZpHnFY@public.gmane.org>
+In-Reply-To: <2d8b3a2b-859d-bfda-74cf-f22471927fc4-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/30/2016 03:51 PM, Heinrich Schuchardt wrote:
-> On 12/30/2016 02:40 PM, Neil Armstrong wrote:
->> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
->> this patch adds this reserved zone and redefines the usable memory range.
+On 01/10/2017 06:53 PM, Sergei Shtylyov wrote:
+> On 01/09/2017 07:06 PM, Alexandre Bailon wrote:
+> 
+>> The da8xx has a cppi41 dma controller.
+> 
+>    It's called CPPI 4.1. :-)
+> 
+>> This is add the glue layer required to make it work on da8xx,
+>> as well some changes in driver (e.g to manage clock).
 >>
->> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 >> ---
->> Changes since v1 at [1] :
->>  - Renamed reg into linux,usable-memory to ovveride u-boot memory
->>  - only kept secmon memory zone
+>>  drivers/dma/cppi41.c | 95
+>> ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 95 insertions(+)
 >>
->>  [1] http://lkml.kernel.org/r/20161212101801.28491-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+>> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+>> index 939398e..4318e53 100644
+>> --- a/drivers/dma/cppi41.c
+>> +++ b/drivers/dma/cppi41.c
+> [...]
+>> @@ -86,10 +87,19 @@
 >>
->>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi       |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi                 | 12 ++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts       |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi          |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts  |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts   |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  2 +-
->>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts       |  2 +-
->>  11 files changed, 22 insertions(+), 10 deletions(-)
+>>  #define USBSS_IRQ_PD_COMP    (1 <<  2)
 >>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->> index 7a078be..ca3c7fa 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
->> @@ -56,7 +56,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  
->>  	vddio_boot: regulator-vddio_boot {
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index eada0b5..7f244b5 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -55,6 +55,18 @@
->>  	#address-cells = <2>;
->>  	#size-cells = <2>;
->>  
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
+>> +/* USB DA8XX */
+>> +#define DA8XX_INTR_SRC_MASKED    0x38
+>> +#define DA8XX_END_OF_INTR    0x3c
 >> +
->> +		/* global autoconfigured region for contiguous allocations */
-> 
-> This comment does not make sense here. It is what you would write over a
-> compatible to "shared-dma-pool" region. Cf. hi6220-hikey.dts
-> 
-> I suggest you use
-> /* Amlogic Meson GXBB/GXL/GXM secure monitor reserved memory */
-> instead.
-
-Yes, will fix this in a similar manner.
-
-> 
-> Doesn't firmware/meson/meson_sm.c already reserve a communication area
-> to secmon with quite a different address range?
-> So where is this new region secmon set up? And where is it used?
-
-Yes, it gets the memory zone from the secure monitor and reserves it, only if enabled and very late.
-
-
-Neil
-> 
-> Best regards
-> 
-> Heinrich
-> 
->> +		secmon: secmon {
->> +			reg = <0x0 0x10000000 0x0 0x200000>;
->> +			no-map;
->> +		};
->> +	};
+>> +#define DA8XX_QMGR_PENDING_MASK    (0xf << 24)
 >> +
->>  	cpus {
->>  		#address-cells = <0x2>;
->>  		#size-cells = <0x0>;
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
->> index 4cbd626..c7f008a 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
->> @@ -62,7 +62,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x40000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
->>  	};
->>  
->>  	leds {
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
->> index 238fbea..546cbe4 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
->> @@ -61,7 +61,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  
->>  	usb_otg_pwr: regulator-usb-pwrs {
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
->> index 4a96e0f..1fdf6da 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
->> @@ -55,7 +55,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x40000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
->>  	};
->>  
->>  	usb_pwr: regulator-usb-pwrs {
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
->> index 62fb496..6ac5c89 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
->> @@ -50,6 +50,6 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  };
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
->> index 9a9663a..58be8b4 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
->> @@ -50,6 +50,6 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x40000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x3f000000>;
->>  	};
->>  };
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
->> index 2fe167b..010cb29 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
->> @@ -50,6 +50,6 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  };
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
->> index cea4a3e..fb4a89b 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
->> @@ -60,7 +60,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  
->>  	vddio_card: gpio-regulator {
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
->> index 9639f01..908894c 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
->> @@ -59,7 +59,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  };
->>  
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
->> index 5a337d3..2077385 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
->> @@ -62,7 +62,7 @@
->>  
->>  	memory@0 {
->>  		device_type = "memory";
->> -		reg = <0x0 0x0 0x0 0x80000000>;
->> +		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
->>  	};
->>  
->>  	vddio_boot: regulator-vddio-boot {
+>> +
+>> +
+> 
+>    One empty line is enough.
+> 
+>>  /* Packet Descriptor */
+>>  #define PD2_ZERO_LENGTH        (1 << 19)
 >>
+>>  #define AM335X_CPPI41        0
+>> +#define DA8XX_CPPI41        1
+>>
+>>  struct cppi41_channel {
+>>      struct dma_chan chan;
+> [...]
+>> @@ -366,6 +393,26 @@ static irqreturn_t am335x_cppi41_irq(int irq,
+>> void *data)
+>>      return cppi41_irq(cdd);
+>>  }
+>>
+>> +static irqreturn_t da8xx_cppi41_irq(int irq, void *data)
+>> +{
+>> +    struct cppi41_dd *cdd = data;
+>> +    u32 status;
+>> +    u32 usbss_status;
+>> +
+>> +    status = cppi_readl(cdd->qmgr_mem + QMGR_PEND(0));
+>> +    if (status & DA8XX_QMGR_PENDING_MASK)
+>> +        cppi41_irq(cdd);
+>> +    else
+>> +        return IRQ_NONE;
+> 
+>    Seems correct...
+> 
+>> +
+>> +    /* Re-assert IRQ if there no usb core interrupts pending */
+>> +    usbss_status = cppi_readl(cdd->usbss_mem + DA8XX_INTR_SRC_MASKED);
+>> +    if (!usbss_status)
+>> +        cppi_writel(0, cdd->usbss_mem + DA8XX_END_OF_INTR);
+> 
+>    I don't understand this...
+Well, it might not be necessary anymore.
+I had an issue with teardown. After a teardown, USB were not working
+anymore.
+It was because an interrupt was fired on teardown completion  but
+because the completion queue was empty, interrupt was ignored by the
+interrupt handler. And in USB driver, because the interrupt was not
+fired by USB core, then interrupt was ignored and never re-asserted.
+
+But I guess the change I made in patch 11 should prevent this issue.
+> 
+>> +
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+>>  static dma_cookie_t cppi41_tx_submit(struct dma_async_tx_descriptor *tx)
+>>  {
+>>      dma_cookie_t cookie;
+> [...]
+> 
+> MBR, Sergei
 > 
 
 --
