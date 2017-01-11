@@ -1,61 +1,79 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
-Date: Wed, 11 Jan 2017 09:36:07 +0000
-Message-ID: <20170111093606.GA12388@arm.com>
-References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
- <1483479056-15202-2-git-send-email-robdclark@gmail.com>
- <20170105115528.GG679@arm.com>
- <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
- <20170105154950.GM679@arm.com>
- <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
- <20170110175219.GK527@arm.com>
- <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v8 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
+ device on TM2 board
+Date: Wed, 11 Jan 2017 10:39:33 +0100
+Message-ID: <581db2a8-e357-a3ba-9464-fa8f83f95c09@samsung.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas1p4b29b1308a0b8088afd46a475770d4b00@epcas1p4.samsung.com>
+ <1484116439-7275-4-git-send-email-hoegeun.kwon@samsung.com>
+ <f292435b-8faa-d2e9-17f6-99a4d00173c5@samsung.com>
+ <5875EF69.1070803@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <5875EF69.1070803@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>, krzk@kernel.org, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 02:20:13PM -0500, Rob Clark wrote:
-> On Tue, Jan 10, 2017 at 12:52 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
-> >> Hmm, well we install the fault handler on the iommu_domain..  perhaps
-> >> maybe a combo of dts property (or deciding based on more specific
-> >> compat string), plus extra param passed in to
-> >> iommu_set_fault_hander().  The dts property or compat string to
-> >> indicate whether the iommu (and how it is wired up) can handle stalls,
-> >> and enable_stall param when fault handler is registered to indicate
-> >> whether the device itself can cope.. if either can't do stalling, then
-> >> don't set CFCFG.
-> >
-> > I thought about this some more, and I think you're right. Having
-> > iommu_set_fault_handler take a flags parameter indicating that, for example,
-> > the fault handler can deal with paging, is all we need to implement the
-> > per-master opt-in functionality for stalling faults. There's no real
-> > requirement to standardise a generic firmware property for that (but
-> > we still need *something* that says stalling is usable on the SMMU --
-> > perhaps just the compatible string is ok).
-> 
-> btw, it occurred to me that maybe it should be flags param to
-> iommu_attach_device() (just in case fault handler not installed?)
-> otoh stalling without a fault handler is silly, but I guess we need it
-> to infer whether stalling can be supported by other devices on same
-> iommu.. tbh I'm on a bit shaky ground when it comes to multiple
-> devices per iommu since the SoC's I'm familiar with do it the other
-> way around.  But I guess you have thought more about the multi-device
-> case, so figured I should suggest it..
+On 11.01.2017 09:40, Inki Dae wrote:
+>
+> 2017년 01월 11일 16:46에 Andrzej Hajda 이(가) 쓴 글:
+>> On 11.01.2017 07:33, Hoegeun Kwon wrote:
+>>> From: Hyungwon Hwang <human.hwang@samsung.com>
+>>>
+>>> This patch add the panel device tree node for S6E3HA2 display
+>>> controller to TM2 dts.
+>>>
+>>> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> ---
+>>>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+>>> index ddba2f8..6d362f9 100644
+>>> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+>>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+>>> @@ -18,6 +18,18 @@
+>>>  	compatible = "samsung,tm2", "samsung,exynos5433";
+>>>  };
+>>>  
+>>> +&dsi {
+>>> +	panel@0 {
+>>> +		compatible = "samsung,s6e3ha2";
+>>> +		reg = <0>;
+>>> +		vdd3-supply = <&ldo27_reg>;
+>>> +		vci-supply = <&ldo28_reg>;
+>>> +		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
+>>> +		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
+>>> +		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
+>> The same here (as in 1st comment) , te-gpios should be dropper - decon
+>> uses hw-trigger.
+> Reasonable to remove te-gpios property but this change would make MIPI-DSI driver probing to be failed so MIPI-DSI driver should be fixed together.
+>
+> Thanks.
 
-I don't think it works at attach time, because the stalling property belongs
-to the domain, rather than the individual devices within it. Similarly, I
-don't think we should allow this property to be toggled once devices have
-been attached.
+OK, I forgot it was not yet ported to mainline.
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Andrzej
+
+>
+>> Regards
+>> Andrzej
+>>> +	};
+>>> +};
+>>> +
+>>>  &hsi2c_9 {
+>>>  	status = "okay";
+>>>  
+>>
+>>
+>>
+>
