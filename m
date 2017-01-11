@@ -1,12 +1,13 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: Re: [PATCH 2/5] clk: sunxi-ng: add support for V3s CCU
-Date: Wed, 11 Jan 2017 11:55:16 +0800
-Message-ID: <20170111065524.tILSH8cS@smtp1p.mail.yandex.net>
+Subject: Re: Re: [PATCH 4/5] ARM: dts: sunxi: add dtsi file for
+ V3s SoC
+Date: Wed, 11 Jan 2017 11:56:32 +0800
+Message-ID: <20170111065638.uW1SQ7Kq@smtp3m.mail.yandex.net>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBNWZ23BQKGQEBSKPBJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB7WZ23BQKGQEEE2GXDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,21 +20,21 @@ Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kerne
 List-Id: devicetree@vger.kernel.org
 
 
-2017=E5=B9=B41=E6=9C=8811=E6=97=A5 02:10=E4=BA=8E Maxime Ripard <maxime.rip=
+2017=E5=B9=B41=E6=9C=8811=E6=97=A5 02:21=E4=BA=8E Maxime Ripard <maxime.rip=
 ard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Tue, Jan 03, 2017 at 11:16:26PM +0800, Icenowy Zheng wrote:=20
-> > V3s has a similar but cut-down CCU to H3.=20
-> >=20
-> > Add support for it.=20
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> On Tue, Jan 03, 2017 at 11:16:28PM +0800, Icenowy Zheng wrote:=20
+> > + uart0_pins_a: uart0@0 {=20
+> > + pins =3D "PB8", "PB9";=20
+> > + function =3D "uart0";=20
+> > + bias-pull-up;=20
 >
-> It looks like there's nothing different but the clocks that you=20
-> register with the H3, please just use the H3 driver.=20
+> Why do you need a pullup here?=20
 
-USB gate part is different, and many things have gone.
+I think TX needs one, but RX do not need.
 
+>
+> Looks good otherwise.=20
 >
 > Thanks!=20
 > Maxime=20
