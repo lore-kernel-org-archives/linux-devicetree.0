@@ -1,77 +1,83 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv3 3/8] rtc: add STM32 RTC driver
-Date: Wed, 11 Jan 2017 01:08:03 +0100
-Message-ID: <20170111000803.mlie6kizcsj2o7lh@piout.net>
-References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
- <1483623809-29937-4-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBB3XO2XBQKGQEIAJ6NRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1483623809-29937-4-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] arm64: dts: exynos: Replace small letter of base
+ address/offset on Exynos5433
+Date: Wed, 11 Jan 2017 09:55:48 +0900
+Message-ID: <1484096148-17120-1-git-send-email-cw00.choi@samsung.com>
+References: <CGME20170111005552epcas1p4a1f6ed88022b46544dec4b3801583267@epcas1p4.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, cw00.choi@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, chanwoo@kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Looks good to me, however...
+This patch replaces the small letter of base address, offset and hex value
+with the capital letter to keep the consistency on Exynos5433.
 
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-On 05/01/2017 at 14:43:24 +0100, Amelie Delaunay wrote :
-> +struct stm32_rtc {
-> +	struct rtc_device *rtc_dev;
-> +	void __iomem *base;
-> +	struct clk *ck_rtc;
-> +	spinlock_t lock; /* Protects registers accesses */
-
-This spinlock seems to be useless, the rtc ops_lock is already
-protecting everywhere it is taken.
-
-> +	int irq_alarm;
-> +};
-> +
-
-[...]
-
-> +static int stm32_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct stm32_rtc *rtc = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alrm->time;
-> +	unsigned long irqflags;
-> +	unsigned int cr, isr, alrmar;
-> +	int ret = 0;
-> +
-> +	if (rtc_valid_tm(tm)) {
-> +		dev_err(dev, "Alarm time not valid.\n");
-> +		return -EINVAL;
-
-This will never happen, tm is already checked multiple times (up to
-three) in the core before this function can be called.
-
-> +	}
-> +
-
-You don't need to resend the whole series, just this patch. I'll take
-2/8 and 3/8, the other ones can go through the stm32 tree.
-
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index abaf6b4d599d..d7ed1a68b6fd 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -231,7 +231,7 @@
+ 		compatible = "arm,psci";
+ 		method = "smc";
+ 		cpu_off = <0x84000002>;
+-		cpu_on = <0xC4000003>;
++		cpu_on = <0xc4000003>;
+ 	};
+ 
+ 	reboot: syscon-reboot {
+@@ -753,7 +753,7 @@
+ 
+ 		dsi: dsi@13900000 {
+ 			compatible = "samsung,exynos5433-mipi-dsi";
+-			reg = <0x13900000 0xC0>;
++			reg = <0x13900000 0xc0>;
+ 			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&mipi_phy 1>;
+ 			phy-names = "dsim";
+@@ -880,9 +880,9 @@
+ 			iommus = <&sysmmu_jpeg>;
+ 		};
+ 
+-		mfc: codec@152E0000 {
++		mfc: codec@152e0000 {
+ 			compatible = "samsung,exynos5433-mfc";
+-			reg = <0x152E0000 0x10000>;
++			reg = <0x152e0000 0x10000>;
+ 			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "pclk", "aclk", "aclk_xiu";
+ 			clocks = <&cmu_mfc CLK_PCLK_MFC>,
+@@ -914,7 +914,7 @@
+ 
+ 		sysmmu_gscl0: sysmmu@13c80000 {
+ 			compatible = "samsung,exynos-sysmmu";
+-			reg = <0x13C80000 0x1000>;
++			reg = <0x13c80000 0x1000>;
+ 			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "aclk", "pclk";
+ 			clocks = <&cmu_gscl CLK_ACLK_SMMU_GSCL0>,
+@@ -924,7 +924,7 @@
+ 
+ 		sysmmu_gscl1: sysmmu@13c90000 {
+ 			compatible = "samsung,exynos-sysmmu";
+-			reg = <0x13C90000 0x1000>;
++			reg = <0x13c90000 0x1000>;
+ 			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "aclk", "pclk";
+ 			clocks = <&cmu_gscl CLK_ACLK_SMMU_GSCL1>,
+@@ -934,7 +934,7 @@
+ 
+ 		sysmmu_gscl2: sysmmu@13ca0000 {
+ 			compatible = "samsung,exynos-sysmmu";
+-			reg = <0x13CA0000 0x1000>;
++			reg = <0x13ca0000 0x1000>;
+ 			interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "aclk", "pclk";
+ 			clocks = <&cmu_gscl CLK_ACLK_SMMU_GSCL2>,
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1.9.1
