@@ -1,28 +1,32 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add Fujitsu Ltd. vendor prefix
-Date: Wed, 11 Jan 2017 15:15:09 -0600
-Message-ID: <20170111211509.rvimsbsxbo45cdok@rob-hp-laptop>
-References: <20170110213222.14045-1-marek.vasut@gmail.com>
+Subject: Re: [PATCH] serial: fsl-imx-uart.txt: Remove generic property
+Date: Wed, 11 Jan 2017 15:15:11 -0600
+Message-ID: <20170111211511.qqd3dmh7ykbp52h2@rob-hp-laptop>
+References: <1483990202-19224-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170110213222.14045-1-marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1483990202-19224-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 10:32:22PM +0100, Marek Vasut wrote:
-> The vendor prefix for Fujitsu is used in the tree, but it's
-> still missing from the documentation, so add it. Fujitsu Ltd.
-> is a japanese ICT company, http://www.fujitsu.com
+On Mon, Jan 09, 2017 at 05:30:02PM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 > 
-> Signed-off-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 'uart-has-rtscts' is a generic serial property and it is described
+> at Documentation/devicetree/bindings/serial/serial.txt, so remove it
+> from the specific fsl-imx-uart binding documentation.
+> 
+> While at it, add a note pointing to the serial.txt file, which
+> contains the complete list of generic serial bindings.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
 Applied, thanks.
 
