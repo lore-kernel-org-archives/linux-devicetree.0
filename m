@@ -1,88 +1,57 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: Add LEGO MINDSTORMS EV3 dts
-Date: Wed, 11 Jan 2017 16:12:52 +0530
-Message-ID: <e8136b8a-b8f7-7b1b-693a-955dc17f1de9@ti.com>
-References: <1483677228-2325-1-git-send-email-david@lechnology.com>
- <1483677228-2325-6-git-send-email-david@lechnology.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv3 3/8] rtc: add STM32 RTC driver
+Date: Wed, 11 Jan 2017 11:50:12 +0100
+Message-ID: <20170111105012.ut6jxlmlf3qv37li@piout.net>
+References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
+ <1483623809-29937-4-git-send-email-amelie.delaunay@st.com>
+ <20170111000803.mlie6kizcsj2o7lh@piout.net>
+ <1feb3a23-7450-2b5c-9c1c-c7ecacd7fa17@st.com>
+ <20170111101708.ujcgo7kpyywymyzp@piout.net>
+ <ff7a532e-a2a7-920a-29d9-e8a82d6ed915@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483677228-2325-6-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBZE33DBQKGQEAUEHWSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <ff7a532e-a2a7-920a-29d9-e8a82d6ed915-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 06 January 2017 10:03 AM, David Lechner wrote:
+On 11/01/2017 at 11:42:50 +0100, Amelie DELAUNAY wrote :
+> 
+> On 01/11/2017 11:17 AM, Alexandre Belloni wrote:
+> > On 11/01/2017 at 11:07:16 +0100, Amelie DELAUNAY wrote :
+> > > > This will never happen, tm is already checked multiple times (up to
+> > > > three) in the core before this function can be called.
+> > > > 
+> > > You're right. I'll remove all rtc_valid_tm calls.
+> > 
+> > You can keep the one in read_time
+> > 
+> Even if rtc_valid_tm is called just after rtc->ops->read_time() in
+> __rtc_read_time ?
 
-> +	beeper {
-> +		compatible = "pwm-beeper";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&ehrpwm0b_pins>, <&amp_pins>;
-> +		pwms = <&ehrpwm0 1 0 0>;
-> +		enable-gpios = <&gpio 111 GPIO_ACTIVE_HIGH>;
+Ah yes, I forgot it was added, you can remove all of them.
 
-Since the enable-gpios binding for pwm beeper is still not accepted, can
-you drop the property or the node itself (if that makes more sense)?
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> +&spi0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi0_pins>, <&spi0_cs0_pin>, <&spi0_cs3_pin>;
-> +
-> +	flash@0 {
-> +		compatible = "n25q128a13", "jedec,spi-nor";
-> +		reg = <0>;
-> +		spi-max-frequency = <50000000>;
-> +		ti,spi-wdelay = <8>;
-> +
-> +		/* Partitions are based on the official firmware from LEGO */
-> +		partitions {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			partition@0 {
-> +				label = "U-Boot";
-> +				reg = <0 0x40000>;
-> +			};
-> +
-> +			partition@40000 {
-> +				label = "U-Boot Env";
-> +				reg = <0x40000 0x10000>;
-> +			};
-> +
-> +			partition@50000 {
-> +				label = "Kernel";
-> +				reg = <0x50000 0x200000>;
-> +			};
-> +
-> +			partition@250000 {
-> +				label = "Filesystem";
-> +				reg = <0x250000 0xa50000>;
-> +			};
-> +
-> +			partition@cb0000 {
-> +				label = "Storage";
-> +				reg = <0xcb0000 0x2f0000>;
-> +			};
-> +		};
-> +	};
-> +
-> +	adc@3 {
-> +		compatible = "ti-ads7957";
-
-So looks like this works because of_register_spi_device() sets up
-modalias of spi device from compatible string. I am fine with it, just
-highlighting it here to make sure this is acceptable practice. I did not
-really find any precedence for using SPI device name as compatible
-property in existing DTS files.
-
-> +		reg = <3>;
-> +		spi-max-frequency = <10000000>;
-> +		refin-supply = <&adc_ref>;
-> +	};
-
-Rest of the patch looks good to me.
-
-Thanks,
-Sekhar
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
