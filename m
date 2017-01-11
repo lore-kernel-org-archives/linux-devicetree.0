@@ -1,50 +1,45 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] gpio: Add gpio driver support for ThunderX and OCTEON-TX
-Date: Wed, 11 Jan 2017 16:07:24 +0100
-Message-ID: <CACRpkdYDM4EnyumV0_Sq+_QWq=mBRMEFayb5E+ZycYnrfuxcKA@mail.gmail.com>
-References: <1483744980-25898-1-git-send-email-ddaney.cavm@gmail.com>
- <1483744980-25898-3-git-send-email-ddaney.cavm@gmail.com> <CACRpkdaOQM7=mDTA1K92N5P=jjaCyhsSw5DGL+bnXE_GOYw82Q@mail.gmail.com>
- <245af7b3-cfb7-e606-f1b8-f68b2ec0b8d1@caviumnetworks.com>
+Subject: Re: [PATCH] pinctrl: qcom: Add msm8998 pinctrl driver
+Date: Wed, 11 Jan 2017 16:12:47 +0100
+Message-ID: <CACRpkdZKd5AOPGwr3k2R5U3dOYEmbrmrZG3WiDNBOYnpU9Snyw@mail.gmail.com>
+References: <1483974019-8235-1-git-send-email-kimran@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <245af7b3-cfb7-e606-f1b8-f68b2ec0b8d1@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Marc Zyngier <marc.zyngier@arm.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1483974019-8235-1-git-send-email-kimran@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Imran Khan <kimran@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 9, 2017 at 9:02 PM, David Daney <ddaney@caviumnetworks.com> wrote:
+On Mon, Jan 9, 2017 at 4:00 PM, Imran Khan <kimran@codeaurora.org> wrote:
 
->> if (test_bit(line, gpio->invert_mask))
->>    return !(read_bits & BIT(bank_bit));
->> else
->>    return !!(read_bits & BIT(bank_bit));
->>
->> OK maybe not much clearer but seems clearer to me.
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for msm8998.
 >
-> As I really dislike the "!!" idiom, would you settle for:
->
->  if (test_bit(line, gpio->invert_mask))
->     return (read_bits & BIT(bank_bit)) == 0;
->  else
->     return (read_bits & BIT(bank_bit)) != 0;
+> Signed-off-by: Imran Khan <kimran@codeaurora.org>
 
-Not the biggest issue in the world. But I maintain a huge stack
-of GPIO drivers and it drives me crazy that each one has to bear
-the mark of the authors habits rather than mine.
+You need review from the Qcom pinctrl maintainer Bjorn Andersson
+for this patch.
 
->> I think this is overkill. Use hierarchical irqdomain.
->
-> I will look into it.  I suspect it will require more lines of driver code to
-> implement it than what I have here (that does actually work).
 
-I understand. But at the same time, the kernel needs to have the
-right idea of what it is dealing with here.
++#define NORTH  0x500000
++#define WEST   0x100000
++#define EAST   0x900000
+(...)
+> +static const struct msm_pingroup msm8998_groups[] = {
+> +       PINGROUP(0, EAST, blsp_spi1, blsp_uart1_a, blsp_uim1_a, NA, NA, NA, NA,
+(...)
+> +       PINGROUP(6, WEST, blsp_spi8, blsp_uart8_a, blsp_i2c8, NA, NA, NA, NA,
+(...)
+> +       PINGROUP(35, NORTH, pci_e0, jitter_bist, NA, NA, NA, NA, NA, NA, NA),
+(...)
 
-The generic IRQ handling code will take a shorter fastpath if
-you are using hierarchical irqdomain (I think?) but I can't claim
-to be an expert. When in doubt, consult Marc Z.
+No south? :)
+
+Are these the left/right/top edges of the chip or a reference
+to x86 bridges terminology? It warrants that you add a comment
+to the driver file explaining what it means.
 
 Yours,
 Linus Walleij
