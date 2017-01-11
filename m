@@ -1,34 +1,87 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv3 3/8] rtc: add STM32 RTC driver
-Date: Wed, 11 Jan 2017 11:17:08 +0100
-Message-ID: <20170111101708.ujcgo7kpyywymyzp@piout.net>
-References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
- <1483623809-29937-4-git-send-email-amelie.delaunay@st.com>
- <20170111000803.mlie6kizcsj2o7lh@piout.net>
- <1feb3a23-7450-2b5c-9c1c-c7ecacd7fa17@st.com>
+From: hoegeun kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v8 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
+ device on TM2 board
+Date: Wed, 11 Jan 2017 19:23:15 +0900
+Message-ID: <94285a63-68df-494c-872b-41c5810a3251@samsung.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas1p4b29b1308a0b8088afd46a475770d4b00@epcas1p4.samsung.com>
+ <1484116439-7275-4-git-send-email-hoegeun.kwon@samsung.com>
+ <f292435b-8faa-d2e9-17f6-99a4d00173c5@samsung.com>
+ <5875EF69.1070803@samsung.com>
+ <581db2a8-e357-a3ba-9464-fa8f83f95c09@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1feb3a23-7450-2b5c-9c1c-c7ecacd7fa17-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <581db2a8-e357-a3ba-9464-fa8f83f95c09@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, krzk@kernel.org, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2017 at 11:07:16 +0100, Amelie DELAUNAY wrote :
-> > This will never happen, tm is already checked multiple times (up to
-> > three) in the core before this function can be called.
-> > 
-> You're right. I'll remove all rtc_valid_tm calls.
 
-You can keep the one in read_time
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 01/11/2017 06:39 PM, Andrzej Hajda wrote:
+> On 11.01.2017 09:40, Inki Dae wrote:
+>> 2017년 01월 11일 16:46에 Andrzej Hajda 이(가) 쓴 글:
+>>> On 11.01.2017 07:33, Hoegeun Kwon wrote:
+>>>> From: Hyungwon Hwang <human.hwang@samsung.com>
+>>>>
+>>>> This patch add the panel device tree node for S6E3HA2 display
+>>>> controller to TM2 dts.
+>>>>
+>>>> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+>>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>>>> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> ---
+>>>>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 12 ++++++++++++
+>>>>   1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+>>>> index ddba2f8..6d362f9 100644
+>>>> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+>>>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+>>>> @@ -18,6 +18,18 @@
+>>>>   	compatible = "samsung,tm2", "samsung,exynos5433";
+>>>>   };
+>>>>   
+>>>> +&dsi {
+>>>> +	panel@0 {
+>>>> +		compatible = "samsung,s6e3ha2";
+>>>> +		reg = <0>;
+>>>> +		vdd3-supply = <&ldo27_reg>;
+>>>> +		vci-supply = <&ldo28_reg>;
+>>>> +		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
+>>>> +		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
+>>>> +		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
+>>> The same here (as in 1st comment) , te-gpios should be dropper - decon
+>>> uses hw-trigger.
+>> Reasonable to remove te-gpios property but this change would make MIPI-DSI driver probing to be failed so MIPI-DSI driver should be fixed together.
+>>
+>> Thanks.
+> OK, I forgot it was not yet ported to mainline.
+>
+> Regards
+> Andrzej
+
+I received a reply while I was writing the mail.
+so, how about removing te-gpios later?
+
+Best Regards,
+Hoegeun
+
+>
+>>> Regards
+>>> Andrzej
+>>>> +	};
+>>>> +};
+>>>> +
+>>>>   &hsi2c_9 {
+>>>>   	status = "okay";
+>>>>   
+>>>
+>>>
+>
+>
