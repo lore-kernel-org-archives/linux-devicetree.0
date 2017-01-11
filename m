@@ -1,113 +1,442 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] dt: bindings: Add support for CSI1 bus
-Date: Wed, 11 Jan 2017 23:06:48 +0100
-Message-ID: <20170111220648.GE29366@amd>
-References: <20161228183036.GA13139@amd>
- <20170103203854.gyyfzxbnnxl3flov@rob-hp-laptop>
- <20170104085420.GN3958@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vmttodhTwj0NAgWp"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170104085420.GN3958@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] pinctrl: core: Fix regression caused by delayed work for hogs
+Date: Wed, 11 Jan 2017 14:13:34 -0800
+Message-ID: <20170111221334.26194-1-tony@atomide.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
+Commit df61b366af26 ("pinctrl: core: Use delayed work for hogs") caused a
+regression at least with sh-pfc that is also a GPIO controller as
+noted by Geert Uytterhoeven <geert@linux-m68k.org>.
 
---vmttodhTwj0NAgWp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As the original pinctrl_register() has issues calling pin controller
+driver functions early before the controller has finished registering,
+we can't just revert commit df61b366af26. That would break the drivers
+using GENERIC_PINCTRL_GROUPS or GENERIC_PINMUX_FUNCTIONS.
 
-Hi!
+So let's fix the issue with the following steps as a single patch:
 
-> Thanks for the review.
->=20
-> On Tue, Jan 03, 2017 at 02:38:54PM -0600, Rob Herring wrote:
-> > On Wed, Dec 28, 2016 at 07:30:36PM +0100, Pavel Machek wrote:
-> > > From: Sakari Ailus <sakari.ailus@iki.fi>
-> > >=20
-> > > In the vast majority of cases the bus type is known to the driver(s)
-> > > since a receiver or transmitter can only support a single one. There
-> > > are cases however where different options are possible.
-> >=20
-> > What cases specifically?
->=20
-> The existing V4L2 OF support tries to figure out the bus type and parse t=
-he
-> bus parameters based on that. This does not scale too well as there are
-> multiple serial busses that share common properties.
->=20
-> Some hardware also supports multiple types of busses on the same interfac=
-es.
+1. Revert the late_init parts of commit df61b366af26.
 
-Ok, I'll include that in the changelog.
+   The late_init clearly won't work and we have to just give up
+   on fixing pinctrl_register() for GENERIC_PINCTRL_GROUPS and
+   GENERIC_PINMUX_FUNCTIONS.
 
-> > As in MIPI CSI2?
->=20
-> Yeah, I guess it'd make sense to make this explicit.
+2. Split pinctrl_register() into two parts
 
-Ok.
+   By splitting pinctrl_register() into pinctrl_init_controller()
+   and pinctrl_create_and_start() we have better control over when
+   it's safe to call pinctrl_create().
 
-> > >    should be the combined length of data-lanes and clock-lanes proper=
-ties.
-> > > -  If the lane-polarities property is omitted, the value must be inte=
-rpreted
-> > > -  as 0 (normal). This property is valid for serial busses only.
-> >=20
-> > Why is this removed?
->=20
-> Must have been by mistake. :-)
+3. Introduce a new pinctrl_register_and_init() function
 
-Fixed.
+   As suggested by Linus Walleij <linus.walleij@linaro.org>, we
+   can just introduce a new function for the controllers that need
+   pinctrl_create() called later.
 
-> > > -
-> > > +- clock-inv: Clock or strobe signal inversion.
-> > > +  Possible values: 0 -- not inverted; 1 -- inverted
-> >=20
-> > "invert" assumes I know what is normal and I do not. Define what is=20
-> > "normal" and name the property the opposite of that. If normal is data=
-=20
-> > shifted on clock rising edge, then call the the property=20
-> > "clock-shift-falling-edge" for example..
->=20
-> The hardware documentation says this is the "strobe/clock inversion contr=
-ol
-> signal". I'm not entirely sure whether this is just signal polarity (it's=
- a
-> differential signal) or inversion of an internal signal of the CCP2 block.
->=20
-> It might make sense to make this a private property for the OMAP 3 ISP
-> instead. If it's seen elsewhere, then think about it again. I doubt it
-> would, as CCP2 is an old bus that's used on Nokia N9, N950 and N900.
->=20
-> As strobe is included, I'd add that to the name. Say,
-> "ti,clock-strobe-inv".
+4. Convert the four known problem cases to use new function
 
-Hmm. N900 does not use inversion. Would it make sense to simply
-hardcode it to "not-inverted" for now?
+   Let's convert pinctrl-imx, pinctrl-single, sh-pfc and ti-iodelay
+   to use the new function to fix the issues. The rest of the drivers
+   can be converted later. Let's also update Documentation/pinctrl.txt
+   accordingly because of the known issues with pinctrl_register().
 
-Device tree changes are PITA :-(.
-									Pavel
+Fixes: df61b366af26 ("pinctrl: core: Use delayed work for hogs")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Gary Bisson <gary.bisson@boundarydevices.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ Documentation/pinctrl.txt               |   4 +-
+ drivers/pinctrl/core.c                  | 201 ++++++++++++++++++++++----------
+ drivers/pinctrl/core.h                  |   2 -
+ drivers/pinctrl/freescale/pinctrl-imx.c |   8 +-
+ drivers/pinctrl/pinctrl-single.c        |   5 +-
+ drivers/pinctrl/sh-pfc/pinctrl.c        |   4 +-
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c |   5 +-
+ include/linux/pinctrl/pinctrl.h         |  15 +++
+ 8 files changed, 165 insertions(+), 79 deletions(-)
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---vmttodhTwj0NAgWp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlh2rHgACgkQMOfwapXb+vITxwCfSenSbDT7Dide4oxVGkZF+CKS
-LysAn3XHfclzgaHCHaWe6s+2BxX2FQS0
-=KR7I
------END PGP SIGNATURE-----
-
---vmttodhTwj0NAgWp--
+diff --git a/Documentation/pinctrl.txt b/Documentation/pinctrl.txt
+--- a/Documentation/pinctrl.txt
++++ b/Documentation/pinctrl.txt
+@@ -79,9 +79,7 @@ int __init foo_probe(void)
+ {
+ 	struct pinctrl_dev *pctl;
+ 
+-	pctl = pinctrl_register(&foo_desc, <PARENT>, NULL);
+-	if (!pctl)
+-		pr_err("could not register foo pin driver\n");
++	return pinctrl_register_and_init(&foo_desc, <PARENT>, NULL, &pctl);
+ }
+ 
+ To enable the pinctrl subsystem and the subgroups for PINMUX and PINCONF and
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1905,59 +1905,14 @@ static int pinctrl_check_ops(struct pinctrl_dev *pctldev)
+ }
+ 
+ /**
+- * pinctrl_late_init() - finish pin controller device registration
+- * @work: work struct
+- */
+-static void pinctrl_late_init(struct work_struct *work)
+-{
+-	struct pinctrl_dev *pctldev;
+-
+-	pctldev = container_of(work, struct pinctrl_dev, late_init.work);
+-
+-	/*
+-	 * If the pin controller does NOT have hogs, this will report an
+-	 * error and we skip over this entire branch. This is why we can
+-	 * call this function directly when we do not have hogs on the
+-	 * device.
+-	 */
+-	pctldev->p = create_pinctrl(pctldev->dev, pctldev);
+-	if (!IS_ERR(pctldev->p)) {
+-		kref_get(&pctldev->p->users);
+-		pctldev->hog_default =
+-			pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
+-		if (IS_ERR(pctldev->hog_default)) {
+-			dev_dbg(pctldev->dev,
+-				"failed to lookup the default state\n");
+-		} else {
+-			if (pinctrl_select_state(pctldev->p,
+-						 pctldev->hog_default))
+-				dev_err(pctldev->dev,
+-					"failed to select default state\n");
+-		}
+-
+-		pctldev->hog_sleep =
+-			pinctrl_lookup_state(pctldev->p,
+-					     PINCTRL_STATE_SLEEP);
+-		if (IS_ERR(pctldev->hog_sleep))
+-			dev_dbg(pctldev->dev,
+-				"failed to lookup the sleep state\n");
+-	}
+-
+-	mutex_lock(&pinctrldev_list_mutex);
+-	list_add_tail(&pctldev->node, &pinctrldev_list);
+-	mutex_unlock(&pinctrldev_list_mutex);
+-
+-	pinctrl_init_device_debugfs(pctldev);
+-}
+-
+-/**
+- * pinctrl_register() - register a pin controller device
++ * pinctrl_init_controller() - init a pin controller device
+  * @pctldesc: descriptor for this pin controller
+  * @dev: parent device for this pin controller
+  * @driver_data: private pin controller data for this pin controller
+  */
+-struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+-				    struct device *dev, void *driver_data)
++struct pinctrl_dev *pinctrl_init_controller(struct pinctrl_desc *pctldesc,
++					    struct device *dev,
++					    void *driver_data)
+ {
+ 	struct pinctrl_dev *pctldev;
+ 	int ret;
+@@ -1983,7 +1938,6 @@ struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+ 	INIT_RADIX_TREE(&pctldev->pin_function_tree, GFP_KERNEL);
+ #endif
+ 	INIT_LIST_HEAD(&pctldev->gpio_ranges);
+-	INIT_DELAYED_WORK(&pctldev->late_init, pinctrl_late_init);
+ 	pctldev->dev = dev;
+ 	mutex_init(&pctldev->mutex);
+ 
+@@ -2018,17 +1972,6 @@ struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+ 		goto out_err;
+ 	}
+ 
+-	/*
+-	 * If the device has hogs we want the probe() function of the driver
+-	 * to complete before we go in and hog them and add the pin controller
+-	 * to the list of controllers. If it has no hogs, we can just complete
+-	 * the registration immediately.
+-	 */
+-	if (pinctrl_dt_has_hogs(pctldev))
+-		schedule_delayed_work(&pctldev->late_init, 0);
+-	else
+-		pinctrl_late_init(&pctldev->late_init.work);
+-
+ 	return pctldev;
+ 
+ out_err:
+@@ -2036,8 +1979,107 @@ struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+ 	kfree(pctldev);
+ 	return ERR_PTR(ret);
+ }
++
++static int pinctrl_create_and_start(struct pinctrl_dev *pctldev)
++{
++	pctldev->p = create_pinctrl(pctldev->dev, pctldev);
++	if (!IS_ERR(pctldev->p)) {
++		kref_get(&pctldev->p->users);
++		pctldev->hog_default =
++			pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
++		if (IS_ERR(pctldev->hog_default)) {
++			dev_dbg(pctldev->dev,
++				"failed to lookup the default state\n");
++		} else {
++			if (pinctrl_select_state(pctldev->p,
++						pctldev->hog_default))
++				dev_err(pctldev->dev,
++					"failed to select default state\n");
++		}
++
++		pctldev->hog_sleep =
++			pinctrl_lookup_state(pctldev->p,
++						    PINCTRL_STATE_SLEEP);
++		if (IS_ERR(pctldev->hog_sleep))
++			dev_dbg(pctldev->dev,
++				"failed to lookup the sleep state\n");
++	}
++
++	mutex_lock(&pinctrldev_list_mutex);
++	list_add_tail(&pctldev->node, &pinctrldev_list);
++	mutex_unlock(&pinctrldev_list_mutex);
++
++	pinctrl_init_device_debugfs(pctldev);
++
++	return 0;
++}
++
++/**
++ * pinctrl_register() - register a pin controller device
++ * @pctldesc: descriptor for this pin controller
++ * @dev: parent device for this pin controller
++ * @driver_data: private pin controller data for this pin controller
++ *
++ * Note that pinctrl_register() is known to have problems as the pin
++ * controller driver functions are called before the driver has a
++ * struct pinctrl_dev handle. To avoid issues later on, please use the
++ * new pinctrl_register_and_init() below instead.
++ */
++struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
++				    struct device *dev, void *driver_data)
++{
++	struct pinctrl_dev *pctldev;
++	int error;
++
++	pctldev = pinctrl_init_controller(pctldesc, dev, driver_data);
++	if (IS_ERR(pctldev))
++		return pctldev;
++
++	error = pinctrl_create_and_start(pctldev);
++	if (error) {
++		mutex_destroy(&pctldev->mutex);
++		kfree(pctldev);
++
++		return ERR_PTR(error);
++	}
++
++	return pctldev;
++
++}
+ EXPORT_SYMBOL_GPL(pinctrl_register);
+ 
++int pinctrl_register_and_init(struct pinctrl_desc *pctldesc,
++			      struct device *dev, void *driver_data,
++			      struct pinctrl_dev **pctldev)
++{
++	struct pinctrl_dev *p;
++	int error;
++
++	p = pinctrl_init_controller(pctldesc, dev, driver_data);
++	if (IS_ERR(p))
++		return PTR_ERR(p);
++
++	/*
++	 * We have pinctrl_start() call functions in the pin controller
++	 * driver with create_pinctrl() for at least dt_node_to_map(). So
++	 * let's make sure pctldev is properly initialized for the
++	 * pin controller driver before we do anything.
++	 */
++	*pctldev = p;
++
++	error = pinctrl_create_and_start(p);
++	if (error) {
++		mutex_destroy(&p->mutex);
++		kfree(p);
++		*pctldev = NULL;
++
++		return error;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pinctrl_register_and_init);
++
+ /**
+  * pinctrl_unregister() - unregister pinmux
+  * @pctldev: pin controller to unregister
+@@ -2052,7 +2094,6 @@ void pinctrl_unregister(struct pinctrl_dev *pctldev)
+ 	if (pctldev == NULL)
+ 		return;
+ 
+-	cancel_delayed_work_sync(&pctldev->late_init);
+ 	mutex_lock(&pctldev->mutex);
+ 	pinctrl_remove_device_debugfs(pctldev);
+ 	mutex_unlock(&pctldev->mutex);
+@@ -2134,6 +2175,42 @@ struct pinctrl_dev *devm_pinctrl_register(struct device *dev,
+ EXPORT_SYMBOL_GPL(devm_pinctrl_register);
+ 
+ /**
++ * devm_pinctrl_register_and_init() - Resource managed pinctrl register and init
++ * @dev: parent device for this pin controller
++ * @pctldesc: descriptor for this pin controller
++ * @driver_data: private pin controller data for this pin controller
++ *
++ * Returns an error pointer if pincontrol register failed. Otherwise
++ * it returns valid pinctrl handle.
++ *
++ * The pinctrl device will be automatically released when the device is unbound.
++ */
++int devm_pinctrl_register_and_init(struct device *dev,
++				   struct pinctrl_desc *pctldesc,
++				   void *driver_data,
++				   struct pinctrl_dev **pctldev)
++{
++	struct pinctrl_dev **ptr;
++	int error;
++
++	ptr = devres_alloc(devm_pinctrl_dev_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return -ENOMEM;
++
++	error = pinctrl_register_and_init(pctldesc, dev, driver_data, pctldev);
++	if (error) {
++		devres_free(ptr);
++		return error;
++	}
++
++	*ptr = *pctldev;
++	devres_add(dev, ptr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_pinctrl_register_and_init);
++
++/**
+  * devm_pinctrl_unregister() - Resource managed version of pinctrl_unregister().
+  * @dev: device for which which resource was allocated
+  * @pctldev: the pinctrl device to unregister.
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -37,7 +37,6 @@ struct pinctrl_gpio_range;
+  * @p: result of pinctrl_get() for this device
+  * @hog_default: default state for pins hogged by this device
+  * @hog_sleep: sleep state for pins hogged by this device
+- * @late_init: delayed work for pin controller to finish registration
+  * @mutex: mutex taken on each pin controller specific action
+  * @device_root: debugfs root for this device
+  */
+@@ -60,7 +59,6 @@ struct pinctrl_dev {
+ 	struct pinctrl *p;
+ 	struct pinctrl_state *hog_default;
+ 	struct pinctrl_state *hog_sleep;
+-	struct delayed_work late_init;
+ 	struct mutex mutex;
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *device_root;
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -774,11 +774,11 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+ 	ipctl->info = info;
+ 	ipctl->dev = info->dev;
+ 	platform_set_drvdata(pdev, ipctl);
+-	ipctl->pctl = devm_pinctrl_register(&pdev->dev,
+-					    imx_pinctrl_desc, ipctl);
+-	if (IS_ERR(ipctl->pctl)) {
++	ret = devm_pinctrl_register_and_init(&pdev->dev,
++					     imx_pinctrl_desc, ipctl,
++					     &ipctl->pctl);
++	if (ret) {
+ 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
+-		ret = PTR_ERR(ipctl->pctl);
+ 		goto free;
+ 	}
+ 
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1747,10 +1747,9 @@ static int pcs_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto free;
+ 
+-	pcs->pctl = pinctrl_register(&pcs->desc, pcs->dev, pcs);
+-	if (IS_ERR(pcs->pctl)) {
++	ret = pinctrl_register_and_init(&pcs->desc, pcs->dev, pcs, &pcs->pctl);
++	if (ret) {
+ 		dev_err(pcs->dev, "could not register single pinctrl driver\n");
+-		ret = PTR_ERR(pcs->pctl);
+ 		goto free;
+ 	}
+ 
+diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
+--- a/drivers/pinctrl/sh-pfc/pinctrl.c
++++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+@@ -816,6 +816,6 @@ int sh_pfc_register_pinctrl(struct sh_pfc *pfc)
+ 	pmx->pctl_desc.pins = pmx->pins;
+ 	pmx->pctl_desc.npins = pfc->info->nr_pins;
+ 
+-	pmx->pctl = devm_pinctrl_register(pfc->dev, &pmx->pctl_desc, pmx);
+-	return PTR_ERR_OR_ZERO(pmx->pctl);
++	return devm_pinctrl_register_and_init(pfc->dev, &pmx->pctl_desc, pmx,
++					      &pmx->pctl);
+ }
+diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -891,10 +891,9 @@ static int ti_iodelay_probe(struct platform_device *pdev)
+ 	iod->desc.name = dev_name(dev);
+ 	iod->desc.owner = THIS_MODULE;
+ 
+-	iod->pctl = pinctrl_register(&iod->desc, dev, iod);
+-	if (!iod->pctl) {
++	ret = pinctrl_register_and_init(&iod->desc, dev, iod, &iod->pctl);
++	if (ret) {
+ 		dev_err(dev, "Failed to register pinctrl\n");
+-		ret = -ENODEV;
+ 		goto exit_out;
+ 	}
+ 
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -141,12 +141,27 @@ struct pinctrl_desc {
+ };
+ 
+ /* External interface to pin controller */
++
++extern int pinctrl_register_and_init(struct pinctrl_desc *pctldesc,
++				     struct device *dev, void *driver_data,
++				     struct pinctrl_dev **pctldev);
++
++/* Please use pinctrl_register_and_init() instead */
+ extern struct pinctrl_dev *pinctrl_register(struct pinctrl_desc *pctldesc,
+ 				struct device *dev, void *driver_data);
++
+ extern void pinctrl_unregister(struct pinctrl_dev *pctldev);
++
++extern int devm_pinctrl_register_and_init(struct device *dev,
++				struct pinctrl_desc *pctldesc,
++				void *driver_data,
++				struct pinctrl_dev **pctldev);
++
++/* Please use devm_pinctrl_register_and_init() instead */
+ extern struct pinctrl_dev *devm_pinctrl_register(struct device *dev,
+ 				struct pinctrl_desc *pctldesc,
+ 				void *driver_data);
++
+ extern void devm_pinctrl_unregister(struct device *dev,
+ 				struct pinctrl_dev *pctldev);
+ 
+-- 
+2.11.0
