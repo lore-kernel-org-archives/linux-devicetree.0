@@ -1,46 +1,70 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 3/3] iio: adc: ti-ads7950: Change regulator matching string to "vref"
-Date: Wed, 11 Jan 2017 11:52:51 -0600
-Message-ID: <1484157171-15571-4-git-send-email-david@lechnology.com>
-References: <1484157171-15571-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484157171-15571-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Cc: David Lechner <david@lechnology.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+From: eajames.ibm@gmail.com
+Subject: [PATCH linux v2 0/6] drivers: hwmon: Add On-Chip Controller driver
+Date: Wed, 11 Jan 2017 12:10:31 -0600
+Message-ID: <1484158237-10014-1-git-send-email-eajames.ibm@gmail.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This changes the reference voltage regulator matching string from "refin"
-to "vref". This is to be consistent with other A/DC chips that also use
-"vref-supply" in their device tree bindings.
+From: "Edward A. James" <eajames@us.ibm.com>
 
-Signed-off-by: David Lechner <david@lechnology.com>
----
- drivers/iio/adc/ti-ads7950.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This patchset adds a hwmon driver to support the OCC (On-Chip Controller)
+on the IBM POWER8 and POWER9 processors, from a BMC (Baseboard Management
+Controller). The OCC is an embedded processor that provides real time
+power and thermal monitoring.
 
-diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-index b587fa6..16a0663 100644
---- a/drivers/iio/adc/ti-ads7950.c
-+++ b/drivers/iio/adc/ti-ads7950.c
-@@ -411,15 +411,15 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	spi_message_init_with_transfers(&st->scan_single_msg,
- 					st->scan_single_xfer, 3);
- 
--	st->reg = devm_regulator_get(&spi->dev, "refin");
-+	st->reg = devm_regulator_get(&spi->dev, "vref");
- 	if (IS_ERR(st->reg)) {
--		dev_err(&spi->dev, "Failed get get regulator \"refin\"\n");
-+		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
- 		return PTR_ERR(st->reg);
- 	}
- 
- 	ret = regulator_enable(st->reg);
- 	if (ret) {
--		dev_err(&spi->dev, "Failed to enable regulator \"refin\"\n");
-+		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
- 		return ret;
- 	}
- 
+The driver provides an interface on a BMC to poll OCC sensor data, set
+user power caps, and perform some basic OCC error handling. It interfaces
+with userspace through hwmon.
+
+The driver is currently functional only for the OCC on POWER8 chips.
+Communicating with the POWER9 OCC requries FSI support.
+
+Edward A. James (6):
+  hwmon: Add core On-Chip Controller support for POWER CPUs
+  hwmon: occ: Add sysfs interface
+  hwmon: occ: Add I2C transport implementation for SCOM operations
+  hwmon: occ: Add callbacks for parsing P8 OCC datastructures
+  hwmon: occ: Add hwmon implementation for the P8 OCC
+  hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+
+ Documentation/devicetree/bindings/hwmon/occ.txt |  13 +
+ Documentation/hwmon/occ                         | 114 +++++
+ drivers/hwmon/Kconfig                           |   2 +
+ drivers/hwmon/Makefile                          |   1 +
+ drivers/hwmon/occ/Kconfig                       |  29 ++
+ drivers/hwmon/occ/Makefile                      |   2 +
+ drivers/hwmon/occ/occ.c                         | 533 ++++++++++++++++++++++++
+ drivers/hwmon/occ/occ.h                         |  83 ++++
+ drivers/hwmon/occ/occ_p8.c                      | 254 +++++++++++
+ drivers/hwmon/occ/occ_p8.h                      |  31 ++
+ drivers/hwmon/occ/occ_p9.c                      | 314 ++++++++++++++
+ drivers/hwmon/occ/occ_p9.h                      |  31 ++
+ drivers/hwmon/occ/occ_scom_i2c.c                |  73 ++++
+ drivers/hwmon/occ/occ_scom_i2c.h                |  26 ++
+ drivers/hwmon/occ/occ_sysfs.c                   | 274 ++++++++++++
+ drivers/hwmon/occ/occ_sysfs.h                   |  44 ++
+ drivers/hwmon/occ/p8_occ_i2c.c                  | 123 ++++++
+ drivers/hwmon/occ/scom.h                        |  47 +++
+ 18 files changed, 1994 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/occ.c
+ create mode 100644 drivers/hwmon/occ/occ.h
+ create mode 100644 drivers/hwmon/occ/occ_p8.c
+ create mode 100644 drivers/hwmon/occ/occ_p8.h
+ create mode 100644 drivers/hwmon/occ/occ_p9.c
+ create mode 100644 drivers/hwmon/occ/occ_p9.h
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+ create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
+ create mode 100644 drivers/hwmon/occ/scom.h
+
 -- 
-2.7.4
+1.9.1
