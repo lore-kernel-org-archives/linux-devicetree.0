@@ -1,44 +1,81 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 0/5] Reset Controller Nodes for TI Keystone platforms
-Date: Wed, 11 Jan 2017 19:48:38 -0600
-Message-ID: <20170112014843.19569-1-s-anna@ti.com>
+Subject: [PATCH v2 3/5] ARM: dts: keystone-k2hk: Add PSC reset controller node
+Date: Wed, 11 Jan 2017 19:48:41 -0600
+Message-ID: <20170112014843.19569-4-s-anna@ti.com>
+References: <20170112014843.19569-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170112014843.19569-1-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Suman Anna <s-anna@ti.com>
+Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Davis <afd@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
+The Power Sleep Controller (PSC) module contains specific
+memory-mapped registers that can be used to perform reset
+management using specific bits for the DSPs available on the
+SoC. The PSC is defined using a syscon node, and the reset
+functionality is defined using a child syscon reset controller
+node.
 
-This is a slightly updated patch series for the reset controller nodes for
-TI Keystone2 SoCs. The only change is to rename the reset controller nodes
-from "psc-reset-controller" to just "reset-controller" following Rob Herring's
-comment on the Documentation update patch [1]. There are no changes to the first
-2 patches. I have already posted a v2 for the Documentation update as well.
-Please pick this up instead of the v1 series [2].
+Add this syscon reset controller node as well as the reset
+control data for the resets it supports for the 66AK2H SoCs.
 
-regards
-Suman
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+v2: change reset node name from psc-reset-controller to reset-controller
 
-[1] https://www.spinics.net/lists/arm-kernel/msg553646.html
-[2] https://www.spinics.net/lists/arm-kernel/msg552911.html
-
-
-Suman Anna (5):
-  ARM: Keystone: Enable ARCH_HAS_RESET_CONTROLLER
-  ARM: dts: keystone: Add PSC node
-  ARM: dts: keystone-k2hk: Add PSC reset controller node
-  ARM: dts: keystone-k2l: Add PSC reset controller node
-  ARM: dts: keystone-k2e: Add PSC reset controller node
-
- arch/arm/boot/dts/keystone-k2e.dtsi  | 13 +++++++++++++
  arch/arm/boot/dts/keystone-k2hk.dtsi | 20 ++++++++++++++++++++
- arch/arm/boot/dts/keystone-k2l.dtsi  | 16 ++++++++++++++++
- arch/arm/boot/dts/keystone.dtsi      |  5 +++++
- arch/arm/mach-keystone/Kconfig       |  1 +
- 5 files changed, 55 insertions(+)
+ 1 file changed, 20 insertions(+)
 
+diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
+index e0780f111537..69d449430511 100644
+--- a/arch/arm/boot/dts/keystone-k2hk.dtsi
++++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
+@@ -8,6 +8,8 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#include <dt-bindings/reset/ti-syscon.h>
++
+ / {
+ 	compatible = "ti,k2hk", "ti,keystone";
+ 	model = "Texas Instruments Keystone 2 Kepler/Hawking SoC";
+@@ -58,6 +60,24 @@
+ 			};
+ 		};
+ 
++		psc: power-sleep-controller@02350000 {
++			pscrst: reset-controller {
++				compatible = "ti,k2hk-pscrst", "ti,syscon-reset";
++				#reset-cells = <1>;
++
++				ti,reset-bits = <
++					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 0: dsp0 */
++					0xa40 8 0xa40 8 0x840 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 1: dsp1 */
++					0xa44 8 0xa44 8 0x844 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 2: dsp2 */
++					0xa48 8 0xa48 8 0x848 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 3: dsp3 */
++					0xa4c 8 0xa4c 8 0x84c 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 4: dsp4 */
++					0xa50 8 0xa50 8 0x850 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 5: dsp5 */
++					0xa54 8 0xa54 8 0x854 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 6: dsp6 */
++					0xa58 8 0xa58 8 0x858 8 (ASSERT_CLEAR | DEASSERT_SET | STATUS_CLEAR) /* 7: dsp7 */
++				>;
++			};
++		};
++
+ 		dspgpio0: keystone_dsp_gpio@02620240 {
+ 			compatible = "ti,keystone-dsp-gpio";
+ 			gpio-controller;
 -- 
 2.10.2
