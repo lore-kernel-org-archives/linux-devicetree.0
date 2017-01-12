@@ -1,43 +1,83 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
-Date: Thu, 12 Jan 2017 10:31:30 -0600
-Message-ID: <1484238690.2492.47.camel@kernel.crashing.org>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
-         <20170112002910.3650-4-cyrilbur@gmail.com>
-         <20170112074750.GB23943@kroah.com> <1484216163.11416.8.camel@gmail.com>
-         <20170112103038.GA19239@kroah.com>
-         <1484234867.2492.39.camel@kernel.crashing.org>
-         <20170112160051.GB8095@kroah.com>
-         <1484237253.2492.43.camel@kernel.crashing.org>
-         <20170112162619.GB10283@kroah.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH 4/5] ARM: dts: sunxi: add dtsi file for
+ V3s SoC
+Date: Thu, 12 Jan 2017 17:52:44 +0100
+Message-ID: <20170112165244.js3qrgo2nbazycmn@lukather>
+References: <20170111065638.uW1SQ7Kq@smtp3m.mail.yandex.net>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170112162619.GB10283-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qxnx2rqhqsueymlf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZ7I33BQKGQEBVE4FYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170111065638.uW1SQ7Kq-jDEamKawf7I0PDqKvflMoHmW9unr2Ajn@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-01-12 at 17:26 +0100, Greg KH wrote:
-> I think, you can change things after access_ok() happens, there used to
-> be bugs in that area a few years ago.  I think we fixed them by moving
-> the offending drivers to use copy_*() instead.
 
-Ok, I'm surprised though, we still have a metric ton of code,
-especially in filesystems, who do access_ok. Generally the idea here is
-that the enforcement is done by the MMU normally via the permission in
-the page tables. access_ok() is simply needed to make sure we access
-the portion of the page tables representing user space, not kernel
-space, and that is a pretty fixed dichotomy.
+--qxnx2rqhqsueymlf
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Anyway, this is academic, I agree that copy_to/from_... is nicer.
+On Wed, Jan 11, 2017 at 11:56:32AM +0800, Icenowy Zheng wrote:
+>=20
+> 2017=E5=B9=B41=E6=9C=8811=E6=97=A5 02:21=E4=BA=8E Maxime Ripard <maxime.r=
+ipard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > On Tue, Jan 03, 2017 at 11:16:28PM +0800, Icenowy Zheng wrote:=20
+> > > + uart0_pins_a: uart0@0 {=20
+> > > + pins =3D "PB8", "PB9";=20
+> > > + function =3D "uart0";=20
+> > > + bias-pull-up;=20
+> >
+> > Why do you need a pullup here?=20
+>=20
+> I think TX needs one, but RX do not need.
 
-Cheers,
-Ben.
+That's (at best) board specific. So it belongs in the DTS if it's
+truely needed.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--qxnx2rqhqsueymlf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYd7RcAAoJEBx+YmzsjxAglHsP/1iGJ4qSTY3ycawKuawt3Ia3
+0Gk8MiC1+Vd9sy6p02hb3lVaF1zMMH3rXEmAAZSNt5tl+BTu+S9h75uV2t3iZmS3
+JjjYLgPnU95IoG1mOGFqoDQieG/EeiADzLl9g1DyNlqJkAQWZw1yNHK+kF9k/sgc
+fV5QAQtROl9UFB5vpN9zPeIWHwDheo/gfU+uvKRlWd8YbALSKZq8Lg7T63t5mcCC
+pQfnYBJK22EGp0igcDxEn1sFqRpF/Y/mH5+lhexXo+9Leek7oauppDsBBgUJ3d3i
+rbxD75j5+cwBzC69QUr0bebizO0YYKoTY4Hwd2KWyV4KN8Qq+uab7jbeNQ5PnRBY
+iv6CoTj2xxFgFpBqvG8pCnhASVe7XTcMxCNmfwMiBhP11GXV4WXq8B1P5nh5YEpV
+rUVDCNsTNuYDUozRc4oyT8KzOnXvmOYU2ETttweptWjUO3N4H7f/HgkN595cJPXO
+68+uaqmhjZ/gMa2oyIhgmwWaksO8SApXoK291Z5/Jj8qFPaZxoScatxK4O0t36yM
+aJ+8GBDEWjBp1UWQDHZYftqiDHzqXbIflHsABEMc0SIY17lsto3LxvmT5tZ+urZI
+Hxhbj/lPwG/vtkaj4LGX5QXiqxQmW3ASON7WMEDvegyKwSL0yfng2DyWf9JjtA1+
+ee73ZDJUxniBuiJq6onZ
+=KBl8
+-----END PGP SIGNATURE-----
+
+--qxnx2rqhqsueymlf--
