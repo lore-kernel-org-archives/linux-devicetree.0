@@ -1,45 +1,108 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Adding DT support for TI HECC module
-Date: Wed, 11 Jan 2017 16:47:58 -0800
-Message-ID: <20170112004757.GZ2630@atomide.com>
-References: <1484143521-4898-1-git-send-email-yegorslists@googlemail.com>
- <CAGm1_kvWXfZ_f3PPL1VJj8AhBf59Pax_GFHDVdejuMBRDu9y6Q@mail.gmail.com>
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property
+ for RK3399 PMUCRU/CRU
+Date: Wed, 11 Jan 2017 16:50:10 -0800
+Message-ID: <CAD=FV=WMQ22G67YoQx2t7J6_ZuB3sUjVjXh-0KhPEO_6zbiyUQ@mail.gmail.com>
+References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
+ <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA@mail.gmail.com>
+ <8683375.pL9J7LxuT0@diego> <1523574.hS8CXi1tTP@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGm1_kvWXfZ_f3PPL1VJj8AhBf59Pax_GFHDVdejuMBRDu9y6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andrey Skvortsov <andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, hs-ynQEQJNshbs@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1523574.hS8CXi1tTP@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Jianqun Xu <jay.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170111 13:52]:
-> On Wed, Jan 11, 2017 at 3:05 PM,  <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> > From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> >
-> > This is an attempt to revive DT support for TI HECC that was started in 2015.
-> >
-> > I haven't changed much because not all questions could be fully answered:
-> >
-> > * Should HECC use "am3505" as compatible?
-> 
-> I mean "ti,am3505-hecc"
+Hi,
 
-Yeah it should use the device name for the driver.
+On Tue, Jan 10, 2017 at 11:58 AM, Heiko St=C3=BCbner <heiko@sntech.de> wrot=
+e:
+> Hi Doug,
+>
+> Am Dienstag, 10. Januar 2017, 20:46:12 schrieb Heiko St=C3=BCbner:
+>> Am Dienstag, 10. Januar 2017, 10:45:48 schrieb Doug Anderson:
+>> > Hi,
+>> >
+>> > On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing@rock-chips.com>
+>>
+>> wrote:
+>> > > The structure rockchip_clk_provider needs to refer the GRF regmap
+>> > > in somewhere, if the CRU node has not "rockchip,grf" property,
+>> > > calling syscon_regmap_lookup_by_phandle will return an invalid GRF
+>> > > regmap, and the MUXGRF type clock will be not supported.
+>> > >
+>> > > Therefore, we need to add them.
+>> > >
+>> > > Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+>> > > ---
+>> > >
+>> > > Changes in v4:
+>> > > - separte the binding patch
+>> > >
+>> > > Changes in v3:
+>> > > - add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
+>> > >
+>> > > Changes in v2:
+>> > > - referring pmugrf for PMUGRU
+>> > > - fix the typo "invaild" in COMMIT message
+>> > >
+>> > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
+>> > >  1 file changed, 2 insertions(+)
+>> >
+>> > This seems fine to me, so:
+>> >
+>> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>> >
+>> > ...but I will say that before you actually add any real "MUXGRF"
+>> > clocks on rk3399 you _might_ need to rework the code to make things
+>> > truly "optional".  If it turns out that any existing clocks that
+>> > already exist today already go through one of these muxes in the GRF
+>> > and we've always been assuming one setting of the mux, we'll need to
+>> > make sure we keep assuming that setting of the mux even if the "grf"
+>> > isn't specified.
+>>
+>> I guess I see that a bit more relaxed :-) .
+>>
+>> I.e. the GRF being optional is a remnant of syscons not being available =
+when
+>> the clocks get set up- so were coming in later or not at all. For the
+>> rk3288 I converted, there we never really had the case of the GRF missin=
+g.
+>>
+>> And the GRF mux for the vcodec now present is not being used by anything=
+ yet
+>> (neither driver nor binding), so no old devicetree can break.
+>>
+>> > As I understand it, your motivation for this patch is to eventually be
+>> > able to model the EDP reference clock which can either be xin24 or
+>> > "edp osc".  Presumably the eDP "reference clock" isn't related to any
+>> > of the pre-existing eDP clocks so that one should be safe.
+>>
+>> Same here, so far we don't even have edp or even any other graphical out=
+put
+>> on the rk3399, so again there is no old devicetree that could break when
+>> the grf is not specified.
+>
+> reading all of the above again, it feels like you essentially also said
+> similar things already in your original reply and I misread some of it.
+>
+> But again, I don't see the need for any more code right now, as hopefully=
+ the
+> simple stuff we currently only support does not have any grf-based muxes =
+in
+> it. Xing + Rockchip people, please correct me if I'm wrong here :-)
 
-> > * What should be done to the offsets (ti,scc-ram-offset, ti,hecc-ram-offset, ti,mbx-offset)?
+Right.  I have no objection to Xing's patch.  I just want to make sure
+that if it's listed as "Optional" that it's really optional.
 
-The devicetree maintainers need to ack the binding doc. Maybe
-send that as a first patch?
+I was worried that we would introduce some GRF-based mux in the
+_middle_ of some existing clock tree because we simply didn't model
+the mux before and assumed one particular setting.  If nothing like
+that ever happens then we're fine.
 
-Regards,
+Sorry to be so confusing.
 
-Tony
-
-> First submission and related comments:
-> http://comments.gmane.org/gmane.linux.can/8616
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
