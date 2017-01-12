@@ -1,111 +1,74 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Thu, 12 Jan 2017 00:55:35 +0100
-Message-ID: <20170111235535.nfvr6vzorm5unyjr@earth>
-References: <20161228183036.GA13139@amd>
- <20170111225335.GA21553@amd>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uzj3uac3twnfssco"
+From: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/4] Documentation: dt: mailbox: Add Aspeed ast2400/2500 bindings
+Date: Thu, 12 Jan 2017 11:29:07 +1100
+Message-ID: <20170112002910.3650-2-cyrilbur@gmail.com>
+References: <20170112002910.3650-1-cyrilbur@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170111225335.GA21553@amd>
+In-Reply-To: <20170112002910.3650-1-cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/mailbox/aspeed-mbox.txt    | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt
 
---uzj3uac3twnfssco
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt b/Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt
+new file mode 100644
+index 000000000000..633cd534d91c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt
+@@ -0,0 +1,44 @@
++ASpeed Mailbox Driver
++=====================
++
++The ASpeed mailbox allows for communication between different
++processors. The mailbox on the ASpeed ast2400 and ast2500 is a set of
++16 single byte data registers along with interrupt and configuration
++registers directly on the SoC. These are memory mapped on the aspeed
++and can be accessed via the SuperIO registers on the other processor.
++
++Device Node:
++============
++This represents the mailbox on the Soc.
++
++As the mailbox registers sit on the LPC bus, it makes most sense for
++the device to be within the LPC host node. See
++Documentation/devicetree/bindings/mfd/aspeed-lpc.txt for more
++information. This does not have to be the case, provided the reg
++property can give the full address of the mbox registers.
++
++Required Properties:
++--------------------
++- compatible:	Should be one of the following,
++				"aspeed,ast2400-mbox" for ast2400 SoCs
++				"aspeed,ast2500-mbox" for ast2500 SoCs
++
++- reg:			Contains the mailbox address register range (base
++				address and length). Keeping in mind that if the node
++				exists within the LPC host node and that base is
++				relative to that.
++
++- interrupts:	Contains interrupt information for the mailbox device.
++
++- #mbox-cells:	Common property, should be 1.
++
++Example:
++--------
++
++mbox: mbox@180 {
++	compatible = "aspeed,ast2400-mbox";
++	reg = <0x180 0x5c>;
++	interrupts = <46>;
++	#mbox-cells = <1>;
++};
++
+-- 
+2.11.0
 
-Hi,
-
-On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
-> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
->=20
-> In the vast majority of cases the bus type is known to the driver(s)
-> since a receiver or transmitter can only support a single one. There
-> are cases however where different options are possible.
->=20
-> The existing V4L2 OF support tries to figure out the bus type and
-> parse the bus parameters based on that. This does not scale too well
-> as there are multiple serial busses that share common properties.
->=20
-> Some hardware also supports multiple types of busses on the same
-> interfaces.
->=20
-> Document the CSI1/CCP2 property strobe. It signifies the clock or
-> strobe mode.
-> =20
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
->=20
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt=
- b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index 9cd2a36..08c4498 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -76,6 +76,11 @@ Optional endpoint properties
->    mode horizontal and vertical synchronization signals are provided to t=
-he
->    slave device (data source) by the master device (data sink). In the ma=
-ster
->    mode the data source device is also the source of the synchronization =
-signals.
-> +- bus-type: data bus type. Possible values are:
-> +  0 - MIPI CSI2
-> +  1 - parallel / Bt656
-> +  2 - MIPI CSI1
-> +  3 - CCP2
->  - bus-width: number of data lines actively used, valid for the parallel =
-busses.
->  - data-shift: on the parallel data busses, if bus-width is used to speci=
-fy the
->    number of data lines, data-shift can be used to specify which data lin=
-es are
-> @@ -112,7 +117,8 @@ Optional endpoint properties
->    should be the combined length of data-lanes and clock-lanes properties.
->    If the lane-polarities property is omitted, the value must be interpre=
-ted
->    as 0 (normal). This property is valid for serial busses only.
-> -
-> +- strobe: Whether the clock signal is used as clock or strobe. Used
-> +  with CCP2, for instance.
-> =20
->  Example
->  -------
->=20
->=20
-
-Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
--- Sebastian
-
---uzj3uac3twnfssco
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlh2xfQACgkQ2O7X88g7
-+pqUcRAAohcSG0pZG3VUvbB+aSuTXNbICPuoMQkCbkoFcQwwebLjYwYw0Tg6ZRXw
-7TIxh4E9UQrmvdX3hGqskd4tYbeZNTyKOzk4Ck2C3s2MTc/7+bfarx2B32lepa3Y
-Ss54vVO+GKKduzF2eV6SbcthInyMgYmT2XN/YhzQZ7gEtwpuIEc5mfDPBMrLJlxP
-u5tJW0x5lOhp44z63HPibqU4Cj0z1LtkuZB7HxdHEsYX6trcUqqZTclaWbVIvq7Y
-6r5STNDXLJFWWAcfaOaZdIUMtcM3z4YwwEHuBsK1SzYKqr2IQL8Qy36aN9HCbdzo
-KZ1aEkiDJS1Sy7NMqCqV3HgUKFg6siS20606py8W40gHfc0VMYcc+60WLYRrj9C2
-82UTU6MsW9/xsyPDpr3nD2l2lMzbkYBdkPgxDq6UliXUD6+jnwD4QHmCei3eBXMM
-lPfhtoBmUXZ37NK5niQMBny5WtfBhI78l+ihIvSID/+i9iqjkfkS9kgYaana6cLX
-mkzvu8Mo45qA4dzsLUqy0JTvuBXzouZ/1b1ObJQlOEoCpCIuoeaCmOSVk02oKB5e
-deGBFMn9pk2X7atf8jL3LrpN8N4eGp9y2w4lUO5rAkH1hfGmXME+tLGnm4LBtJfS
-QxrNogH+SffqDvXVdAujEoMpFroPYnqvjn+wovdFfKQOlviJpto=
-=/s8l
------END PGP SIGNATURE-----
-
---uzj3uac3twnfssco--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
