@@ -1,40 +1,78 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: dts: mt7623: Add initial Geek Force support
-Date: Thu, 12 Jan 2017 09:23:14 +0100
-Message-ID: <0bd6567e-1c5b-0ff6-d044-57d25e1a40d2@phrozen.org>
-References: <20170108133100.10428-1-afaerber@suse.de>
- <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
- <d6bd3783-d124-9871-d3b4-93e366517895@suse.de>
- <3fecb422-8185-7ee0-c203-2bfdc4fd1393@phrozen.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V2 1/2] clk: vc5: Add bindings for IDT VersaClock
+ 5P49V5923 and 5P49V5933
+Date: Thu, 12 Jan 2017 09:25:23 +0100
+Message-ID: <CAMuHMdWTGyRc82fPZ-k28=-2PzpkQooKPcB9OF0BctDuw7qbZA@mail.gmail.com>
+References: <20170112010324.28068-1-marek.vasut@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3fecb422-8185-7ee0-c203-2bfdc4fd1393-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170112010324.28068-1-marek.vasut@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-clk <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi Marek,
 
-had a look last night why the ethernet dtsi was not added and it
-obviously was not added as we were waiting for the clk-mt2701 to be
-merged. the ethernet dtsi will have phandles pointing at the clk nodes
-which did not exist at the time. same is true for the PWM code.
+On Thu, Jan 12, 2017 at 2:03 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+> Add bindings for IDT VersaClock 5 5P49V5923 and 5P49V5933 chips.
+> These are I2C clock generators with optional clock source from
+> either XTal or dedicated clock generator and, depending on the
+> model, two or more clock outputs.
+>
+> Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+> V2: Add mapping between the clock specifier and physical pins of the chip
+> ---
+>  .../devicetree/bindings/clock/idt,versaclock5.txt  | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> new file mode 100644
+> index 000000000000..87e9c47a89a3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> @@ -0,0 +1,65 @@
 
-i sat down last night and worked out what pending patches i still have
-for mt7623 and out of the ~80 required to get v4.4 working i only need
-around 10 for v4.10-rc1.
+> +==Mapping between clock specifier and physical pins==
+> +
+> +When referencing the provided clock in the DT using phandle and
+> +clock specifier, the following mapping applies:
+> +
+> +5P49V5923:
+> +       0 -- OUT0_SEL_I2CB
+> +       1 -- OUT1
+> +       2 -- OUT2
+> +
+> +5P49V5933:
+> +       0 -- OUT0_SEL_I2CB
+> +       1 -- OUT1
+> +       2 -- OUT4
 
-i started to rebase these patches last night and will have time to test
-them tomorrow or early next week. as the pwrap node alone is around 200
-lines of devicetree we need to figure out a way to add this to the dts
-files without duplicating it. i'll try to post a series early next week
-that we can then discuss and rebase your geekboard patches on.
+I'm a bit puzzled by the use of "OUT4".
+According to the datasheets, both '5923 and '5933 have OUT1 and OUT2.
+The '5933 datasheet has a single reference to OUT4 ("The OUT1 to OUT4 clock
+outputs"), but that may be a copy and paste error from a datasheet for a part
+with 4 outputs.
 
-	John
+Apart from that:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
