@@ -1,13 +1,15 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: sunxi-ng: add support for V3s CCU
-Date: Fri, 13 Jan 2017 01:31:41 +0800
-Message-ID: <20170112203149.VhtuR9dM@smtp3j.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add dts for the Beelink
+ X2 STB
+Date: Thu, 12 Jan 2017 18:39:06 +0100
+Message-ID: <CAEKpxBk-PJb70s-kPur86mW1OYLvuGg3oXQkyH94+2qGZhon4Q@mail.gmail.com>
+References: <20170112171135.7822-1-codekipper@gmail.com> <20170112172813.cbwqfpjlprkxdzcp@lukather>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBD7333BQKGQE2SLBVGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBO7633BQKGQEYE6P4SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170112172813.cbwqfpjlprkxdzcp@lukather>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -15,62 +17,217 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "	linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "	linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "	linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-2017=E5=B9=B41=E6=9C=8813=E6=97=A5 01:19=E4=BA=8E Maxime Ripard <maxime.rip=
-ard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+On 12 January 2017 at 18:28, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
 >
-> On Thu, Jan 12, 2017 at 03:44:53AM +0800, Icenowy Zheng wrote:=20
-> >=20
-> >=20
-> > 12.01.2017, 03:40, "Icenowy Zheng" <icenowy-ymACFijhrKM@public.gmane.org>:=20
-> > > 11.01.2017, 02:10, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=
-:=20
-> > >> =C2=A0On Tue, Jan 03, 2017 at 11:16:26PM +0800, Icenowy Zheng wrote:=
-=20
-> > >>> =C2=A0=C2=A0V3s has a similar but cut-down CCU to H3.=20
-> > >>>=20
-> > >>> =C2=A0=C2=A0Add support for it.=20
-> > >>>=20
-> > >>> =C2=A0=C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
-> > >>=20
-> > >> =C2=A0It looks like there's nothing different but the clocks that yo=
-u=20
-> > >> =C2=A0register with the H3, please just use the H3 driver.=20
-> > >=20
-> > > Nope.=20
-> > >=20
-> > > It has a different PLL (PLL_ISP) at different address, and some=20
-> > > different muxes.=20
-> >=20
-> > Forgot to mention the missing of PLL_DE and related misses.=20
+> On Thu, Jan 12, 2017 at 06:11:35PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> The Beelink X2 is an STB based on the Allwinner H3 SoC with a uSD slot,
+>> 2 USB ports( 1 * USB-2 Host, 1 USB OTG), a 10/100M ethernet port using the
+>> SoC's integrated PHY, Wifi via a RTL8189ETV sdio wifi chip, HDMI, an IR
+>> receiver, 1 LEDs and an optical S/PDIF connector.
+>>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile                |   1 +
+>>  arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 187 ++++++++++++++++++++++++++++++
+>>  2 files changed, 188 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 78a94b747059..75960b1468a4 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -857,6 +857,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>>       sun8i-a83t-cubietruck-plus.dtb \
+>>       sun8i-h2-plus-orangepi-zero.dtb \
+>>       sun8i-h3-bananapi-m2-plus.dtb \
+>> +     sun8i-h3-beelink-x2.dtb \
+>>       sun8i-h3-nanopi-m1.dtb  \
+>>       sun8i-h3-nanopi-neo.dtb \
+>>       sun8i-h3-orangepi-2.dtb \
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+>> new file mode 100644
+>> index 000000000000..bc5aed52cb1d
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+>> @@ -0,0 +1,187 @@
+>> +/*
+>> + * Copyright (C) 2017 Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun8i-h3.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> +     model = "Beelink X2";
+>> +     compatible = "roofull,beelink-x2", "allwinner,sun8i-h3";
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +             /* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
+>> +             ethernet1 = &rtl8189ftv;
+>> +     };
+>> +
+>> +     chosen {
+>> +             stdout-path = "serial0:115200n8";
+>> +     };
+>> +
+>> +     leds {
+>> +             compatible = "gpio-leds";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&pwr_led_x2>;
 >
-> Those are not conflicting, it's just a slightly different set of=20
-> clocks.=20
-
-If saying so, we can have only one ccu driver, and make every ccu register =
-different set ;-)
-
-V3s itself is a totally different SoC with H3.
-
-The relationship of V3s and H3 can be farther than the relationship of A33 =
-and H3=F0=9F=98=83
-
+> Please drop all the pinctrl nodes for the GPIOs. They're useless, and
+> will be harmful when we'll switch to a stricter pinctrl driver.
 >
-> So there's really nothing undoable.=20
+ACK
+>> +
+>> +             pwr_led {
+>> +                     label = "beelink-x2:red:pwr";
+>> +                     gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
+>> +                     default-state = "on";
+>> +             };
+>> +     };
+>> +
+>> +     gpio_keys {
+>> +             compatible = "gpio-keys";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&sw_r_x2>;
+>> +
+>> +             sw4 {
+>> +                     label = "power";
+>> +                     linux,code = <BTN_0>;
 >
-> Maxime=20
+> Should that be BTN_0 then if the label is that one?
 >
-> --=20
-> Maxime Ripard, Free Electrons=20
-> Embedded Linux and Kernel engineering=20
-> http://free-electrons.com=20
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+ACK
+>> +                     gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+>> +             };
+>> +     };
+>> +
+>> +     wifi_pwrseq: wifi_pwrseq {
+>> +             compatible = "mmc-pwrseq-simple";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&wifi_en_x2>;
+>> +             reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+>> +     };
+>> +};
+>> +
+>> +&ehci1 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&ir {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&ir_pins_a>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc0 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+>> +     vmmc-supply = <&reg_vcc3v3>;
+>> +     bus-width = <4>;
+>> +     cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+>> +     cd-inverted;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc1 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc1_pins_a>;
+>> +     vmmc-supply = <&reg_vcc3v3>;
+>> +     bus-width = <4>;
+>> +     non-removable;
+>> +     status = "okay";
+>> +
+>> +     /*
+>> +      * Explicitly define the sdio device, so that we can add an ethernet
+>> +      * alias for it (which e.g. makes u-boot set a mac-address).
+>> +      */
+>> +     rtl8189ftv: sdio_wifi@1 {
+>> +             reg = <1>;
+>> +     };
+>> +};
+>> +
+>> +&mmc2 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc2_8bit_pins>;
+>> +     vmmc-supply = <&reg_vcc3v3>;
+>> +     bus-width = <8>;
+>> +     non-removable;
+>> +     cap-mmc-hw-reset;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc2_8bit_pins {
+>> +     /* Increase drive strength for DDR modes */
+>> +     drive-strength = <40>;
+>
+> Have you actually tested that it was needed?
+>
+I'll confess that I've rushed this one as I just wanted to verify my
+spdif changes. I'll respin this,
+BR,
+CK
+>> +     /* eMMC is missing pull-ups */
+>> +     bias-pull-up;
+>
+> This is already enabled in the DTSI.
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
