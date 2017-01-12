@@ -1,169 +1,77 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] pinctrl: qcom: Add msm8998 pinctrl driver
-Date: Thu, 12 Jan 2017 08:20:37 -0800
-Message-ID: <20170112162037.GA27322@minitux>
-References: <1483974019-8235-1-git-send-email-kimran@codeaurora.org>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
+Date: Thu, 12 Jan 2017 17:27:04 +0100
+Message-ID: <20170112162704.GC10283@kroah.com>
+References: <20170112002910.3650-1-cyrilbur@gmail.com>
+ <20170112002910.3650-4-cyrilbur@gmail.com>
+ <20170112074750.GB23943@kroah.com>
+ <1484216163.11416.8.camel@gmail.com>
+ <1484235315.2492.41.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483974019-8235-1-git-send-email-kimran@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Imran Khan <kimran@codeaurora.org>
-Cc: andy.gross@linaro.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+In-Reply-To: <1484235315.2492.41.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 09 Jan 07:00 PST 2017, Imran Khan wrote:
+On Thu, Jan 12, 2017 at 09:35:15AM -0600, Benjamin Herrenschmidt wrote:
+> On Thu, 2017-01-12 at 21:16 +1100, Cyril Bur wrote:
+> > My aim here was to only have one process playing with the LPC mapping
+> > registers at a time.
+> > 
+> > > Again, use UIO, it will save you from yourself...
+> > > 
+> > 
+> > Thank-you! This is the first I've heard of UIO and I'll investigate
+> > furthur!
+> 
+> Greg, I don't think UIO is the answer here either. Note, this isn't an
+> exploit so much as root shooting itself in the foot as this driver
+> should never be accessed by anybody but root, but see below.
+> 
+> This is a BMC, ie, the system controller of a x86 or POWER based
+> system.
+> 
+> The LPC controller controls the LPC bus which is mastered by the "host"
+> (ie. the x86 or PPC) and acts as a slave on the BMC side.
+> 
+> It has a bunch of registers that need to be configured in more/less
+> system specific ways by the BMC, but more so, it has a pair of
+> registers that allow "mapping" of a region of the BMC physical address 
+> space into the host address space.
+> 
+> This is by definition dangerous to configure since it gives you a
+> window to any part of the BMC, kernel space, any IOs, etc... however it
+> needs to be configured by a userspace daemon which communicates with
+> the host via a mailbox in order to map either different portions of the
+> system flash controller address space or reserved memory.
+> 
+> So in fact it should be done by the kernel, not userspace.
+> 
+> What Cyril needs to do to make it more secure is:
+> 
+>   - For random register accesses, white list what registers
+> specifically are allowed (and if necessary filter values). These
+> registers aren't dangerous from the BMC perspective and need to be set
+> appropriately for the host to operate correctly.
+> 
+>   - For the mapping of the LPC FW space <-> BMC space, use ioctl's to
+> explicit establish the mapping  to a portion of the flash (and nowhere
+> else) or one of the known reserved memory areas. IE, dont have
+> userspace just pass raw physical addresses through, but tell the kernel
+> driver what portion (offset/size) of what area (flash space or reserved
+> memory region) to configure the HW window for.
 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8998.c b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-[..]
-> +
-> +#define NORTH	0x500000
-> +#define WEST	0x100000
-> +#define EAST	0x900000
+Yes, something more needs to be documented here, as what was proposed
+isn't acceptable at all.
 
-So the control registers are now laid out in 3 non-contiguous ranges?
-Please move them to the top of the file.
+thanks,
 
-> +#define REG_SIZE 0x1000
-
-Just inline 0x1000 in the macro below.
-
-> +#define PINGROUP(id, base, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
-> +	{					        \
-> +		.name = "gpio" #id,			\
-> +		.pins = gpio##id##_pins,		\
-> +		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-> +		.funcs = (int[]){			\
-> +			msm_mux_gpio, /* gpio mode */	\
-> +			msm_mux_##f1,			\
-> +			msm_mux_##f2,			\
-> +			msm_mux_##f3,			\
-> +			msm_mux_##f4,			\
-> +			msm_mux_##f5,			\
-> +			msm_mux_##f6,			\
-> +			msm_mux_##f7,			\
-> +			msm_mux_##f8,			\
-> +			msm_mux_##f9			\
-> +		},				        \
-> +		.nfuncs = 10,				\
-> +		.ctl_reg = base + REG_SIZE * id,	\
-> +		.io_reg = base + 0x4 + REG_SIZE * id,		\
-> +		.intr_cfg_reg = base + 0x8 + REG_SIZE * id,	\
-> +		.intr_status_reg = base + 0xc + REG_SIZE * id,	\
-> +		.intr_target_reg = base + 0x8 + REG_SIZE * id,	\
-> +		.mux_bit = 2,			\
-> +		.pull_bit = 0,			\
-> +		.drv_bit = 6,			\
-> +		.oe_bit = 9,			\
-> +		.in_bit = 0,			\
-> +		.out_bit = 1,			\
-> +		.intr_enable_bit = 0,		\
-> +		.intr_status_bit = 0,		\
-> +		.intr_target_bit = 5,		\
-> +		.intr_target_kpss_val = 3,  \
-> +		.intr_raw_status_bit = 4,	\
-> +		.intr_polarity_bit = 1,		\
-> +		.intr_detection_bit = 2,	\
-> +		.intr_detection_width = 2,	\
-> +	}
-> +
-> +#define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
-> +	{					        \
-> +		.name = #pg_name,			\
-> +		.pins = pg_name##_pins,			\
-> +		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-> +		.ctl_reg = ctl,				\
-> +		.io_reg = 0,				\
-> +		.intr_cfg_reg = 0,			\
-> +		.intr_status_reg = 0,			\
-> +		.intr_target_reg = 0,			\
-> +		.mux_bit = -1,				\
-> +		.pull_bit = pull,			\
-> +		.drv_bit = drv,				\
-> +		.oe_bit = -1,				\
-> +		.in_bit = -1,				\
-> +		.out_bit = -1,				\
-> +		.intr_enable_bit = -1,			\
-> +		.intr_status_bit = -1,			\
-> +		.intr_target_bit = -1,			\
-> +		.intr_raw_status_bit = -1,		\
-> +		.intr_polarity_bit = -1,		\
-> +		.intr_detection_bit = -1,		\
-> +		.intr_detection_width = -1,		\
-> +	}
-> +
-> +#define UFS_RESET(pg_name, offset)				\
-> +	{					        \
-> +		.name = #pg_name,			\
-> +		.pins = pg_name##_pins,			\
-> +		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-> +		.ctl_reg = offset,			\
-> +		.io_reg = offset + 0x4,			\
-> +		.intr_cfg_reg = 0,			\
-> +		.intr_status_reg = 0,			\
-> +		.intr_target_reg = 0,			\
-> +		.mux_bit = -1,				\
-> +		.pull_bit = 3,				\
-> +		.drv_bit = 0,				\
-> +		.oe_bit = -1,				\
-> +		.in_bit = -1,				\
-> +		.out_bit = 0,				\
-> +		.intr_enable_bit = -1,			\
-> +		.intr_status_bit = -1,			\
-> +		.intr_target_bit = -1,			\
-> +		.intr_raw_status_bit = -1,		\
-> +		.intr_polarity_bit = -1,		\
-> +		.intr_detection_bit = -1,		\
-> +		.intr_detection_width = -1,		\
-> +	}
-
-Please add an empty line here.
-
-> +static const struct pinctrl_pin_desc msm8998_pins[] = {
-[..]
-> +enum msm8998_functions {
-[..]
-> +	msm_mux_phase_flag6,
-> +	msm_mux_phase_flag29,
-> +	msm_mux_phase_flag30,
-> +	msm_mux_phase_flag31,
-
-With the Qualcomm pinctrl driver it's possible to specify configuration
-in DT for a subset of pins of a group. So I think you should squash the
-"phase_flag"s and "atest_char" into one group each.
-
-> +	msm_mux_pa_indicator,
-> +	msm_mux_ssbi1,
-> +	msm_mux_isense_dbg,
-> +	msm_mux_mss_lte,
-> +	msm_mux_gpio,
-> +	msm_mux_NA,
-> +};
-[..]
-> +static const struct msm_pingroup msm8998_groups[] = {
-> +	PINGROUP(0, EAST, blsp_spi1, blsp_uart1_a, blsp_uim1_a, NA, NA, NA, NA,
-> +		 NA, NA),
-
-Please do ignore the 80-char "rule" and skip the line break on
-these - it makes the table easier to read.
-
-[..]
-> +};
-> +
-> +static const struct msm_pinctrl_soc_data msm8998_pinctrl = {
-> +	.pins = msm8998_pins,
-> +	.npins = ARRAY_SIZE(msm8998_pins),
-> +	.functions = msm8998_functions,
-> +	.nfunctions = ARRAY_SIZE(msm8998_functions),
-> +	.groups = msm8998_groups,
-> +	.ngroups = ARRAY_SIZE(msm8998_groups),
-> +	.ngpios = 153,
-
-ngpios is 150
-
-> +};
-> +
-
-Regards,
-Bjorn
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
