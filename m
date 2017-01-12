@@ -1,239 +1,113 @@
-Return-Path: <SRS0=RtcA=ZC=gmail.com=eddie.cai.linux@kernel.org>
+Return-Path: <SRS0=zRAX=Y2=google.com=djkurtz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <40159140.kOHBSj8v8b@phil>
-References: <1484791919-4665-1-git-send-email-eddie.cai@rock-chips.com>
- <1484791919-4665-3-git-send-email-eddie.cai@rock-chips.com> <40159140.kOHBSj8v8b@phil>
-From: Eddie Cai <eddie.cai.linux@gmail.com>
-Date: Fri, 20 Jan 2017 14:42:53 +0800
-Message-ID: <CAJrj+DP8vYd=+OrPVwpWqzG935EC5Utty+4vFVKEDe92vxZ4Gw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add dts for RK3288-Tinker board
-Content-Type: multipart/alternative; boundary=001a114ac30e995c1a054680f599
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Eddie Cai <eddie.cai@rock-chips.com>
+Sender: djkurtz@google.com
+In-Reply-To: <1470279438-60372-1-git-send-email-bibby.hsieh@mediatek.com>
+References: <1470279438-60372-1-git-send-email-bibby.hsieh@mediatek.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Date: Thu, 12 Jan 2017 12:42:21 +0800
+Message-ID: <CAGS+omANoCvW4xFkd6Hy9wJFhcda8TTxZBXhsW_Yb0kbgvmqYA@mail.gmail.com>
+Subject: Re: [PATCH v5] arm64: dts: mt8173: add mmsel clocks for 4K support
+Content-Type: multipart/alternative; boundary=001a113a98c400d9b10545de59ea
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, James Liao <jamesjj.liao@mediatek.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, YH Huang <yh.huang@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "dawei.chien@mediatek.com" <dawei.chien@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Junzhi Zhao <junzhi.zhao@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
---001a114ac30e995c1a054680f599
+--001a113a98c400d9b10545de59ea
 Content-Type: text/plain; charset=UTF-8
 
-2017-01-19 17:58 GMT+08:00 Heiko Stuebner <heiko@sntech.de>:
+Hi Matthias,
 
-> Hi Eddie,
+On Thu, Aug 4, 2016 at 10:57 AM, Bibby Hsieh <bibby.hsieh@mediatek.com>
+wrote:
+> To support HDMI 4K resolution, mmsys need clcok
+> mm_sel to be 400MHz.
 >
-> Am Donnerstag, 19. Januar 2017, 10:11:59 CET schrieb Eddie Cai:
-> > This patch add basic support for RK3288-Tinker board. We can boot in to
-> > rootfs with this patch.
-> >
-> > Signed-off-by: Eddie Cai <eddie.cai@rock-chips.com>
+> The board .dts file should override the clock rate
+> property with the higher VENCPLL frequency the board
+> supports HDMI 4K resolution.
 >
-> looks good in general, just some small question down below.
->
-> [...]
->
-> > +     /*
-> > +      * NOTE: vcc_sd isn't hooked up on v1.0 boards where power comes
-> from
-> > +      * vcc_io directly.  Those boards won't be able to power cycle SD
-> cards
-> > +      * but it shouldn't hurt to toggle this pin there anyway.
-> > +      */
->
-> just to clarify, later board will have that pin connected, right?
->
-Copy from rk3288-evb.dtsi. forgot to delete it. I will remove it next
-version
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
->
-> > +     vcc_sd: sdmmc-regulator {
-> > +             compatible = "regulator-fixed";
-> > +             gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&sdmmc_pwr>;
-> > +             regulator-name = "vcc_sd";
-> > +             regulator-min-microvolt = <3300000>;
-> > +             regulator-max-microvolt = <3300000>;
-> > +             startup-delay-us = <100000>;
-> > +             vin-supply = <&vcc_io>;
-> > +     };
-> > +};
->
-> [...]
->
-> > +&hdmi {
-> > +     #address-cells = <1>;
-> > +     #size-cells = <0>;
-> > +     #sound-dai-cells = <0>;
-> > +     ddc-i2c-bus = <&i2c5>;
-> > +     status = "okay";
-> > +     /* Don't use vopl for HDMI */
-> > +     ports {
-> > +             hdmi_in: port {
-> > +                     /delete-node/ endpoint@1;
-> > +             };
->
-> what is the reason for this? You enable both VOPs below and the linux
-> display
-> subsystem should be able to select an appropriate VOP for output just fine
-> on
-> its own. So there should be no reason for capping the hdmi's connection to
-> one
-> of the vops.
->
-The VOP big support 4k display. is designed for HDMI  4K display. VOP
-little is for other display(eDP, LVDS, Mipi etc)
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
 
->
-> > +     };
-> > +};
->
-> [...]
->
-> > +&usb_host0_ehci {
-> > +     no-relinquish-port;
->
-> This seems like an unused/undocumented property
->
-I will remove it next version
 
+It looks like this patch was lost.  It is actually a prerequisite for MTK
+4k HDMI support, which already landed in v4.9.
+
+See the email thread entitled:
+[PATCH v5 0/3] MT8173 HDMI 4K support <https://lkml.org/lkml/2016/9/28/893>
+
+Or these three:
+
+0d2200794f0a drm/mediatek: modify the factor to make the pll_rate set in
+the 1G-2G range
+968253bd7caa drm/mediatek: enhance the HDMI driving current
+d542b7c473f0 drm/mediatek: do mtk_hdmi_send_infoframe after HDMI clock
+enable
+
+
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
+>  1 file changed, 2 insertions(+)
 >
-> > +     status = "okay";
-> > +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 78529e4..c3f32f3 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -690,6 +690,8 @@
+>                         compatible = "mediatek,mt8173-mmsys", "syscon";
+>                         reg = <0 0x14000000 0 0x1000>;
+>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +                       assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
+> +                       assigned-clock-rates = <400000000>;
+>                         #clock-cells = <1>;
+>                 };
 >
-> [...]
->
-> > +&vopl {
-> > +     status = "okay";
-> > +     /* Don't use vopl for HDMI */
-> > +     vopl_out: port {
-> > +             /delete-node/ endpoint@0;
-> > +     };
->
-> see comment at the hdmi node
->
-> > +};
->
->
-> Thanks
-> Heiko
+> --
+> 1.7.9.5
 >
 
---001a114ac30e995c1a054680f599
+--001a113a98c400d9b10545de59ea
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">2017-01-19 17:58 GMT+08:00 Heiko Stuebner <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:heiko@sntech.de" target=3D"_blank">heiko@sntech.de</a>&gt;</span=
->:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;b=
-order-left:1px solid rgb(204,204,204);padding-left:1ex">Hi Eddie,<br>
-<span class=3D"gmail-"><br>
-Am Donnerstag, 19. Januar 2017, 10:11:59 CET schrieb Eddie Cai:<br>
-&gt; This patch add basic support for RK3288-Tinker board. We can boot in t=
-o<br>
-&gt; rootfs with this patch.<br>
-&gt;<br>
-&gt; Signed-off-by: Eddie Cai &lt;<a href=3D"mailto:eddie.cai@rock-chips.co=
-m">eddie.cai@rock-chips.com</a>&gt;<br>
-<br>
-</span>looks good in general, just some small question down below.<br>
-<br>
-[...]<br>
-<span class=3D"gmail-"><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/*<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 * NOTE: vcc_sd isn&#39;t hooked up on v1.0 board=
-s where power comes from<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 * vcc_io directly.=C2=A0 Those boards won&#39;t =
-be able to power cycle SD cards<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 * but it shouldn&#39;t hurt to toggle this pin t=
-here anyway.<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 */<br>
-<br>
-</span>just to clarify, later board will have that pin connected, right?<br=
-></blockquote><div>Copy from rk3288-evb.dtsi. forgot to delete it. I will r=
-emove it next version =C2=A0=C2=A0</div><blockquote class=3D"gmail_quote" s=
-tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
-ding-left:1ex">
-<span class=3D"gmail-"><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0vcc_sd: sdmmc-regulator {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
-regulator-fixed&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0gpio =3D &lt;&amp;gpi=
-o7 11 GPIO_ACTIVE_LOW&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &qu=
-ot;default&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&am=
-p;sdmmc_pwr&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator-name =3D &q=
-uot;vcc_sd&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator-min-microvo=
-lt =3D &lt;3300000&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator-max-microvo=
-lt =3D &lt;3300000&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0startup-delay-us =3D =
-&lt;100000&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0vin-supply =3D &lt;&a=
-mp;vcc_io&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +};<br>
-<br>
-</span>[...]<br>
-<span class=3D"gmail-"><br>
-&gt; +&amp;hdmi {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0#address-cells =3D &lt;1&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0#size-cells =3D &lt;0&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0#sound-dai-cells =3D &lt;0&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ddc-i2c-bus =3D &lt;&amp;i2c5&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/* Don&#39;t use vopl for HDMI */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ports {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0hdmi_in: port {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0/delete-node/ endpoint@1;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-<br>
-</span>what is the reason for this? You enable both VOPs below and the linu=
-x display<br>
-subsystem should be able to select an appropriate VOP for output just fine =
-on<br>
-its own. So there should be no reason for capping the hdmi&#39;s connection=
- to one<br>
-of the vops.<br></blockquote><div>The VOP big support 4k display. is design=
-ed for HDMI =C2=A04K display. VOP little is for other display(eDP, LVDS, Mi=
-pi etc)</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px =
-0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +};<br>
-<br>
-[...]<br>
-<br>
-&gt; +&amp;usb_host0_ehci {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0no-relinquish-port;<br>
-<br>
-This seems like an unused/undocumented property<br></blockquote><div>I will=
- remove it next version=C2=A0</div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
-&gt; +};<br>
-<br>
-[...]<br>
-<span class=3D"gmail-"><br>
-&gt; +&amp;vopl {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/* Don&#39;t use vopl for HDMI */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0vopl_out: port {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/delete-node/ endpoin=
-t@0;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-<br>
-</span>see comment at the hdmi node<br>
-<br>
-&gt; +};<br>
-<br>
-<br>
-Thanks<br>
-<span class=3D"gmail-HOEnZb"><font color=3D"#888888">Heiko<br>
-</font></span></blockquote></div><br></div></div>
+<div dir=3D"ltr">Hi Matthias,<br><br>On Thu, Aug 4, 2016 at 10:57 AM, Bibby=
+ Hsieh &lt;<a href=3D"mailto:bibby.hsieh@mediatek.com">bibby.hsieh@mediatek=
+.com</a>&gt; wrote:<br>&gt; To support HDMI 4K resolution, mmsys need clcok=
+<br>&gt; mm_sel to be 400MHz.<br>&gt;<br>&gt; The board .dts file should ov=
+erride the clock rate<br>&gt; property with the higher VENCPLL frequency th=
+e board<br>&gt; supports HDMI 4K resolution.<br><div><div>&gt;<br>&gt; Sign=
+ed-off-by: Bibby Hsieh &lt;<a href=3D"mailto:bibby.hsieh@mediatek.com">bibb=
+y.hsieh@mediatek.com</a>&gt;</div><div><br></div><div>Reviewed-by: Daniel K=
+urtz &lt;<a href=3D"mailto:djkurtz@chromium.org">djkurtz@chromium.org</a>&g=
+t;<br></div><div><br></div><div><br>It looks like this patch was lost.=C2=
+=A0 It is actually a prerequisite for MTK 4k HDMI support, which already la=
+nded in v4.9.<div><br></div><div>See the email thread entitled: =C2=A0<div>=
+<a href=3D"https://lkml.org/lkml/2016/9/28/893">[PATCH v5 0/3] MT8173 HDMI =
+4K support</a></div><div><br></div><div>Or these three:</div><div><br></div=
+><div><div>0d2200794f0a drm/mediatek: modify the factor to make the pll_rat=
+e set in the 1G-2G range</div><div>968253bd7caa drm/mediatek: enhance the H=
+DMI driving current</div><div>d542b7c473f0 drm/mediatek: do mtk_hdmi_send_i=
+nfoframe after HDMI clock enable</div></div><div><br></div><div><br></div><=
+/div>&gt; ---<br>&gt; =C2=A0arch/arm64/boot/dts/mediatek/mt8173.dtsi | =C2=
+=A0 =C2=A02 ++<br>&gt; =C2=A01 file changed, 2 insertions(+)<br>&gt;<br>&gt=
+; diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/d=
+ts/mediatek/mt8173.dtsi<br>&gt; index 78529e4..c3f32f3 100644<br>&gt; --- a=
+/arch/arm64/boot/dts/mediatek/mt8173.dtsi<br>&gt; +++ b/arch/arm64/boot/dts=
+/mediatek/mt8173.dtsi<br>&gt; @@ -690,6 +690,8 @@<br>&gt; =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatib=
+le =3D &quot;mediatek,mt8173-mmsys&quot;, &quot;syscon&quot;;<br>&gt; =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 reg =3D &lt;0 0x14000000 0 0x1000&gt;;<br>&gt; =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 power-domain=
+s =3D &lt;&amp;scpsys MT8173_POWER_DOMAIN_MM&gt;;<br>&gt; + =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 assigned-clo=
+cks =3D &lt;&amp;topckgen CLK_TOP_MM_SEL&gt;;<br>&gt; + =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 assigned-clock-=
+rates =3D &lt;400000000&gt;;<br>&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 #clock-cells =3D &lt;1&gt;;<b=
+r>&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>&gt;<b=
+r>&gt; --<br>&gt; 1.7.9.5<br>&gt;</div></div></div>
 
---001a114ac30e995c1a054680f599--
+--001a113a98c400d9b10545de59ea--
