@@ -1,79 +1,80 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Thu, 12 Jan 2017 14:06:03 +0200
-Message-ID: <20170112120603.6gwtpwhyuaynvlj3@tarshish>
-References: <20161228183036.GA13139@amd>
- <20170111225335.GA21553@amd>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2][UPDATE] of: base: add support to get the number of
+ cache levels
+Date: Thu, 12 Jan 2017 07:24:53 -0600
+Message-ID: <CAL_Jsq+wawaXeFPnmYw++YMiMzMm+9nSn498Dj7KsGzkfndfog@mail.gmail.com>
+References: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
+ <1484049616-22388-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170111225335.GA21553@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484049616-22388-1-git-send-email-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tan Xiaojun <tanxiaojun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Tue, Jan 10, 2017 at 6:00 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> It is useful to have helper function just to get the number of cache
+> levels for a given logical cpu. This patch adds the support for the
+> same.
+>
+> It will be used on ARM64 platform where the device tree provides the
+> information for the additional non-architected/transparent/external
+> last level caches that are not integrated with the processors.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/of/base.c  | 23 +++++++++++++++++++++++
+>  include/linux/of.h |  1 +
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d4bea3c797d6..80e557eca858 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/slab.h>
+> @@ -2268,6 +2269,28 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+>  }
+>
+>  /**
+> + * of_count_cache_levels - Find the total number of cache levels for the
+> + *                        given logical cpu
+> + *
+> + * @cpu: cpu number(logical index) for which cache levels is being counted
+> + *
+> + * Returns the total number of cache levels for the given logical cpu
+> + */
+> +int of_count_cache_levels(unsigned int cpu)
+> +{
+> +       int level = 0;
+> +       struct device_node *np = of_cpu_device_node_get(cpu);
+> +
+> +       while (np) {
+> +               level++;
 
-On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
-> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> 
-> In the vast majority of cases the bus type is known to the driver(s)
-> since a receiver or transmitter can only support a single one. There
-> are cases however where different options are possible.
-> 
-> The existing V4L2 OF support tries to figure out the bus type and
-> parse the bus parameters based on that. This does not scale too well
-> as there are multiple serial busses that share common properties.
-> 
-> Some hardware also supports multiple types of busses on the same
-> interfaces.
-> 
-> Document the CSI1/CCP2 property strobe. It signifies the clock or
-> strobe mode.
->  
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index 9cd2a36..08c4498 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -76,6 +76,11 @@ Optional endpoint properties
->    mode horizontal and vertical synchronization signals are provided to the
->    slave device (data source) by the master device (data sink). In the master
->    mode the data source device is also the source of the synchronization signals.
-> +- bus-type: data bus type. Possible values are:
-> +  0 - MIPI CSI2
-> +  1 - parallel / Bt656
+This will return 1 if you have a cpu node and no cache nodes. Are you
+assuming the cpu has a cache?
 
-Why not have separate values for parallel and BT.656?
+Perhaps you should just find the last level cache node and then just
+read "cache-level".
 
-baruch
-
-> +  2 - MIPI CSI1
-> +  3 - CCP2
->  - bus-width: number of data lines actively used, valid for the parallel busses.
->  - data-shift: on the parallel data busses, if bus-width is used to specify the
->    number of data lines, data-shift can be used to specify which data lines are
-> @@ -112,7 +117,8 @@ Optional endpoint properties
->    should be the combined length of data-lanes and clock-lanes properties.
->    If the lane-polarities property is omitted, the value must be interpreted
->    as 0 (normal). This property is valid for serial busses only.
-> -
-> +- strobe: Whether the clock signal is used as clock or strobe. Used
-> +  with CCP2, for instance.
->  
->  Example
->  -------
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
