@@ -1,7 +1,7 @@
 From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 5/6] fbdev/ssd1307fb: clear screen in probe
-Date: Thu, 12 Jan 2017 13:16:31 +0200
-Message-ID: <143ff7d742184fe9bfc968ea8cfee25d23578168.1484219137.git.jsarha@ti.com>
+Subject: [PATCH 4/6] fbdev/ssd1307fb: add support to enable VBAT
+Date: Thu, 12 Jan 2017 13:16:30 +0200
+Message-ID: <cf61820cc8ed0210346710c3318748b3b647f697.1484219137.git.jsarha@ti.com>
 References: <cover.1484219137.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,32 +14,76 @@ List-Id: devicetree@vger.kernel.org
 
 From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 
-SSD1306 does not clear the panel's framebuffer automatically, even if a
-HW reset happens, so we need to do that at probe time before enabling
-the panel.
+SSD1306 needs VBAT when it is wired in charge pump configuration. This
+patch adds support to the driver to enable VBAT regulator at init time.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 ---
- drivers/video/fbdev/ssd1307fb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/ssd1307fb.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 616a6a3..5c87ae4 100644
+index 89372af..616a6a3 100644
 --- a/drivers/video/fbdev/ssd1307fb.c
 +++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -441,9 +441,8 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
+@@ -16,6 +16,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/pwm.h>
+ #include <linux/uaccess.h>
++#include <linux/regulator/consumer.h>
  
--	/* Clear the screen if we could not give reset at probe time */
--	if (!par->reset)
--		ssd1307fb_update_display(par);
-+	/* Clear the screen */
-+	ssd1307fb_update_display(par);
+ #define SSD1307FB_DATA			0x40
+ #define SSD1307FB_COMMAND		0x80
+@@ -74,6 +75,7 @@ struct ssd1307fb_par {
+ 	struct pwm_device *pwm;
+ 	u32 pwm_period;
+ 	struct gpio_desc *reset;
++	struct regulator *vbat_reg;
+ 	u32 seg_remap;
+ 	u32 vcomh;
+ 	u32 width;
+@@ -574,6 +576,14 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 		goto fb_alloc_error;
+ 	}
  
- 	/* Turn on the display */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_DISPLAY_ON);
++	par->vbat_reg = devm_regulator_get_optional(&client->dev, "vbat");
++	if (IS_ERR(par->vbat_reg)) {
++		dev_err(&client->dev, "failed to get VBAT regulator: %ld\n",
++			PTR_ERR(par->vbat_reg));
++		ret = PTR_ERR(par->vbat_reg);
++		goto fb_alloc_error;
++	}
++
+ 	if (of_property_read_u32(node, "solomon,width", &par->width))
+ 		par->width = 96;
+ 
+@@ -658,9 +668,15 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 		udelay(4);
+ 	}
+ 
++	ret = regulator_enable(par->vbat_reg);
++	if (ret) {
++		dev_err(&client->dev, "failed to enable VBAT: %d\n", ret);
++		goto reset_oled_error;
++	}
++
+ 	ret = ssd1307fb_init(par);
+ 	if (ret)
+-		goto reset_oled_error;
++		goto regulator_enable_error;
+ 
+ 	ret = register_framebuffer(info);
+ 	if (ret) {
+@@ -693,6 +709,8 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 		pwm_disable(par->pwm);
+ 		pwm_put(par->pwm);
+ 	};
++regulator_enable_error:
++	regulator_disable(par->vbat_reg);
+ reset_oled_error:
+ 	fb_deferred_io_cleanup(info);
+ fb_alloc_error:
 -- 
 1.9.1
 
