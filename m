@@ -1,65 +1,45 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 12 Jan 2017 12:25:31 +0100
-Message-ID: <CAOAejn1OfcHpj7s4VOrv3wHEBGuShXzJcu3OEgwi8k3_HAjqvQ@mail.gmail.com>
-References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
- <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
- <20170111082208.vzu7xgpd4eakyldl@pengutronix.de> <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
- <CAOAejn2cDzPgqvWZf7ASvtST+aDeaAebf=1aMWA9Zd8CDg4pmA@mail.gmail.com> <20170111154200.xcxdlnnakyttumzw@pengutronix.de>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/6] fbdev/ssd1307fb: Some changes and improvement
+Date: Thu, 12 Jan 2017 13:27:39 +0200
+Message-ID: <147628d9-07cf-85b2-560f-fdc37155fda5@ti.com>
+References: <cover.1484219137.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170111154200.xcxdlnnakyttumzw@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1484219137.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+I did not notice the latest update on MAINTAINERS when sending this
+series. Added Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> to loop.
 
-2017-01-11 16:42 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutron=
-ix.de>:
-> Hello Cedric,
->
-> On Wed, Jan 11, 2017 at 03:20:41PM +0100, M'boumba Cedric Madianga wrote:
->> >
->> >> +              */
->> >> +             reg =3D i2c_dev->base + STM32F4_I2C_CR1;
->> >> +             stm32f4_i2c_clr_bits(reg, STM32F4_I2C_CR1_ACK);
->> >> +             stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_POS);
->> >
->> > You could get rid of this, when caching the value of CR1. Would save t=
-wo
->> > register reads here. This doesn't work for all registers, but it shoul=
-d
->> > be possible to apply for most of them, maybe enough to get rid of the
->> > clr_bits and set_bits function.
->>
->> I agree at many places I could save registers read by not using
->> clr_bits and set_bits function when the registers in question has been
->> already read.
->> But it is not enough to get rid of the clr_bits and set_bits function.
->> For example when calling stm32f4_i2c_terminate_xfer(), the CR1
->> register is never read before so set_bits function is useful.
->
-> I didn't double check the manual, but I would expect that CR1 isn't
-> modified by hardware. So you can cache the result in the driver data
-> structure and do the necessary modifications with that one.
 
-CR1 is modified by hardware to clear some bits set by software during
-the communication.
+On 01/12/17 13:16, Jyri Sarha wrote:
+> We needed these changes for couple of our evm. Everything else is quite
+> straight forward, but removing the reset-active-low dts property is a
+> questionable at least in theory. However, in practice if anyone was
+> using the property in their device-tree blobs, they have never been
+> able to get desired effect with mainline kernel.
+> 
+> Jyri Sarha (3):
+>   fbdev: ssd1307fb: Start to use gpiod API for reset gpio
+>   fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
+>   fbdev: ssd1307fb: Make reset gpio devicetree property optional
+> 
+> Tomi Valkeinen (3):
+>   fbdev/ssd1307fb: add support to enable VBAT
+>   fbdev/ssd1307fb: clear screen in probe
+>   fbdev/ssd1307fb: add support to enable VBAT
+> 
+>  .../devicetree/bindings/display/ssd1307fb.txt      |  5 +-
+>  drivers/video/fbdev/ssd1307fb.c                    | 55 ++++++++++++++--------
+>  2 files changed, 38 insertions(+), 22 deletions(-)
+> 
 
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
-
-Best regards,
-
-Cedric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
