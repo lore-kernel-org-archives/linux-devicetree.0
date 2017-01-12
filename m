@@ -1,68 +1,110 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2] Documentation: dt: reset: Revise typos in TI syscon reset
- example
-Date: Wed, 11 Jan 2017 19:22:17 -0600
-Message-ID: <20170112012217.18115-1-s-anna@ti.com>
-References: <20170109192814.26811-1-s-anna@ti.com>
+From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: RE: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu
+ idle
+Date: Thu, 12 Jan 2017 01:25:22 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB497F2B@CHN-SV-EXMX07.mchp-main.com>
+References: <20170106065947.30631-1-wenyou.yang@atmel.com>
+ <20170106065947.30631-2-wenyou.yang@atmel.com>
+ <20170110161821.vp673jyfqx6s76pg@piout.net>
+ <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
+ <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
+ <CACh+v5M3tU4WHMqAX0zm2H=zzwc0+XChyG1tnH2aHxaacm6C=A@mail.gmail.com>
+ <20170111111814.GJ14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170109192814.26811-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170111111814.GJ14217-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jjhiblot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix couple of typos in the example given in the TI syscon reset
-binding. The ti,reset-bits used for DSP0 are corrected to match
-the values that will be used in the actual DT node.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
-v2: Address Rob Herring's comment to change the reset node name
-    from "psc-reset" to "reset-controller"
-    
- Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-index 164c7f34c451..c516d24959f2 100644
---- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-@@ -63,7 +63,7 @@ Example:
- --------
- The following example demonstrates a syscon node, the reset controller node
- using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
--Edison SoC.
-+66AK2E SoC.
- 
- / {
- 	soc {
-@@ -71,13 +71,13 @@ Edison SoC.
- 			compatible = "syscon", "simple-mfd";
- 			reg = <0x02350000 0x1000>;
- 
--			pscrst: psc-reset {
-+			pscrst: reset-controller {
- 				compatible = "ti,k2e-pscrst", "ti,syscon-reset";
- 				#reset-cells = <1>;
- 
- 				ti,reset-bits = <
--					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_SET|DEASSERT_CLEAR|STATUS_SET)   /* 0: pcrst-dsp0 */
--					0xa40 5 0xa44 3 0     0 (ASSERT_SET|DEASSERT_CLEAR|STATUS_NONE)  /* 1: pcrst-example */
-+					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR | DEASSERT_SET   | STATUS_CLEAR) /* 0: dsp0 */
-+					0xa40 5 0xa44 3 0     0 (ASSERT_SET   | DEASSERT_CLEAR | STATUS_NONE)  /* 1: example */
- 				>;
- 			};
- 		};
--- 
-2.10.2
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUnVzc2VsbCBLaW5nIC0g
+QVJNIExpbnV4IFttYWlsdG86bGludXhAYXJtbGludXgub3JnLnVrXQ0KPiBTZW50OiAyMDE35bm0
+MeaciDEx5pelIDE5OjE4DQo+IFRvOiBKZWFuLUphY3F1ZXMgSGlibG90IDxqamhpYmxvdEBnbWFp
+bC5jb20+DQo+IENjOiBXZW55b3UgWWFuZyAtIEE0MTUzNSA8V2VueW91LllhbmdAbWljcm9jaGlw
+LmNvbT47IEFsZXhhbmRyZSBCZWxsb25pDQo+IDxhbGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVsZWN0
+cm9ucy5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gZGV2aWNl
+dHJlZSA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBOaWNvbGFzIEZlcnJlDQo+IDxuaWNv
+bGFzLmZlcnJlQGF0bWVsLmNvbT47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0K
+PiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcm9iaCtkdCA8cm9iaCtkdEBrZXJuZWwub3JnPjsg
+bGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIDEvM10gQVJNOiBhdDkxOiBmbHVzaCB0aGUgTDIgY2FjaGUgYmVmb3JlIGVudGVyaW5n
+IGNwdSBpZGxlDQo+IA0KPiBPbiBXZWQsIEphbiAxMSwgMjAxNyBhdCAxMjowNTowNVBNICswMTAw
+LCBKZWFuLUphY3F1ZXMgSGlibG90IHdyb3RlOg0KPiA+IDIwMTctMDEtMTEgOToxNSBHTVQrMDE6
+MDAgIDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPjoNCj4gPiA+IEhpIEplYW4tSmFjcXVlcywN
+Cj4gPiA+DQo+ID4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+PiBGcm9tOiBK
+ZWFuLUphY3F1ZXMgSGlibG90IFttYWlsdG86ampoaWJsb3RAZ21haWwuY29tXQ0KPiA+ID4+IFNl
+bnQ6IDIwMTflubQx5pyIMTHml6UgMDo1MQ0KPiA+ID4+IFRvOiBBbGV4YW5kcmUgQmVsbG9uaSA8
+YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPg0KPiA+ID4+IENjOiBXZW55b3Ug
+WWFuZyAtIEE0MTUzNSA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT47IE1hcmsgUnV0bGFuZA0K
+PiA+ID4+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnPjsNCj4gPiA+PiBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcu
+dWs+OyBXZW55b3UgWWFuZyAtIEE0MTUzNQ0KPiA+ID4+IDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAu
+Y29tPjsgTmljb2xhcyBGZXJyZQ0KPiA+ID4+IDxuaWNvbGFzLmZlcnJlQGF0bWVsLmNvbT47IExp
+bnV4IEtlcm5lbCBNYWlsaW5nIExpc3QNCj4gPiA+PiA8bGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZz47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiA+ID4+IGxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+MS8zXSBBUk06IGF0OTE6IGZsdXNoIHRoZSBMMiBjYWNoZSBiZWZvcmUNCj4gPiA+PiBlbnRlcmlu
+ZyBjcHUgaWRsZQ0KPiA+ID4+DQo+ID4gPj4gMjAxNy0wMS0xMCAxNzoxOCBHTVQrMDE6MDAgQWxl
+eGFuZHJlIEJlbGxvbmkNCj4gPiA+PiA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
+Y29tPjoNCj4gPiA+PiA+IEkgdGhvdWdoIGEgYml0IG1vcmUgYWJvdXQgaXQsIGFuZCBJIGRvbid0
+IHJlYWxseSBsaWtlIHRoZSBuZXcNCj4gPiA+PiA+IGNvbXBhdGlibGUgc3RyaW5nLiBJIGRvbid0
+IGZlZWwgdGhpcyBzaG91bGQgYmUgbmVjZXNzYXJ5Lg0KPiA+ID4+ID4NCj4gPiA+PiA+IFdoYXQg
+YWJvdXQgdGhlIGZvbGxvd2luZzoNCj4gPiA+PiA+DQo+ID4gPj4gPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vbWFjaC1hdDkxL3BtLmMgYi9hcmNoL2FybS9tYWNoLWF0OTEvcG0uYw0KPiA+ID4+ID4g
+aW5kZXgNCj4gPiA+PiA+IGI0MzMyYjcyN2U5Yy4uMDMzM2FjYTYzZTQ0IDEwMDY0NA0KPiA+ID4+
+ID4gLS0tIGEvYXJjaC9hcm0vbWFjaC1hdDkxL3BtLmMNCj4gPiA+PiA+ICsrKyBiL2FyY2gvYXJt
+L21hY2gtYXQ5MS9wbS5jDQo+ID4gPj4gPiBAQCAtNTMsNiArNTMsNyBAQCBleHRlcm4gdm9pZCBh
+dDkxX3BpbmN0cmxfZ3Bpb19yZXN1bWUodm9pZCk7DQo+ID4gPj4gPiBzdGF0aWMgc3RydWN0IHsN
+Cj4gPiA+PiA+ICAgICAgICAgdW5zaWduZWQgbG9uZyB1aHBfdWRwX21hc2s7DQo+ID4gPj4gPiAg
+ICAgICAgIGludCBtZW1jdHJsOw0KPiA+ID4+ID4gKyAgICAgICBib29sIGhhc19sMl9jYWNoZTsN
+Cj4gPiA+PiA+ICB9IGF0OTFfcG1fZGF0YTsNCj4gPiA+PiA+DQo+ID4gPj4gPiAgdm9pZCBfX2lv
+bWVtICphdDkxX3JhbWNfYmFzZVsyXTsgQEAgLTI2Nyw2ICsyNjgsMTEgQEAgc3RhdGljDQo+ID4g
+Pj4gPiB2b2lkIGF0OTFfZGRyX3N0YW5kYnkodm9pZCkNCj4gPiA+PiA+ICAgICAgICAgdTMyIGxw
+cjAsIGxwcjEgPSAwOw0KPiA+ID4+ID4gICAgICAgICB1MzIgc2F2ZWRfbHByMCwgc2F2ZWRfbHBy
+MSA9IDA7DQo+ID4gPj4gPg0KPiA+ID4+DQo+ID4gPj4gPiArICAgICAgIGlmIChhdDkxX3BtX2Rh
+dGEuaGFzX2wyX2NhY2hlKSB7DQo+ID4gPj4gPiArICAgICAgICAgICAgICAgZmx1c2hfY2FjaGVf
+YWxsKCk7DQo+ID4gPj4gd2hhdCBpcyB0aGUgcG9pbnQgb2YgY2FsbGluZyBmbHVzaF9jYWNoZV9h
+bGwoKSBoZXJlID8gRG8gd2UgcmVhbGx5DQo+ID4gPj4gY2FyZSB0aGF0IGRpcnR5IGRhdGEgaW4g
+TDEgaXMgd3JpdHRlbiB0byBERFIgPyBJIG1heSBiZSBtaXNzaW5nDQo+ID4gPj4gc29tZXRoaW5n
+IGJ1dCB0byBtZSBpdCdzIGp1c3QgZXh0cmEgbGF0ZW5jeS4NCj4gPiA+DQo+ID4gPiBBcmUgeW91
+IG1lYW4gdXNlIG91dGVyX2ZsdXNoX2FsbCgpIHRvIGZsdXNoIGFsbCBjYWNoZSBsaW5lcyBpbiB0
+aGUgb3V0ZXIgY2FjaGUNCj4gb25seT8NCj4gPg0KPiA+IFllcyB0aGF0J3Mgd2hhdCBJIG1lYW50
+LiBZb3Ugc2VlLCB5b3UgZG9uJ3QgZmx1c2ggdGhlIGNhY2hlIGZvcg0KPiA+IHNhbWE1ZDMgc28g
+aXQgc2hvdWxkbid0IGJlIHJlcXVpcmVkIGVpdGhlciBmb3Igc2FtNWQ0LiBZb3Ugc2hvdWxkIGJl
+DQo+ID4gYWJsZSB0byB0ZXN0IGl0IHF1aWNrbHkgYW5kIHNlZSBpZiBMMSBmbHVzaCBpcyBpbmRl
+ZWQgcmVxdWlyZWQgYnkNCj4gPiByZXBsYWNpbmcgIGZsdXNoX2NhY2hlX2FsbCgpIHdpdGggb3V0
+ZXJfZmx1c2hfYWxsKCkuIEJUVyBpcyBoaWdobHkNCj4gPiBwcm9iYWJsZSB0aGF0IEwyIGNhY2hl
+IGZsdXNoIGlzIGRvbmUgaW4gb3V0ZXJfZGlzYWJsZSgpIHNvIGNhbGxpbmcNCj4gPiBvdXRlcl9m
+bHVzaF9hbGwoKSBpcyBwcm9iYWJseSBubyByZXF1aXJlZC4NCj4gDQo+IFBsZWFzZSBkb24ndC4g
+IFJlYWQgdGhlIGNvbW1lbnRzIGluIHRoZSBjb2RlLCBhbmQgdW5kZXJzdGFuZCB0aGUgQVBJcyB0
+aGF0DQo+IHlvdSdyZSBzdWdnZXN0aW5nIHBlb3BsZSB1c2UgX2JlZm9yZV8gbWFraW5nIHRoZSBz
+dWdnZXN0aW9uOg0KPiANCj4gLyoqDQo+ICAqIG91dGVyX2ZsdXNoX2FsbCAtIGNsZWFuIGFuZCBp
+bnZhbGlkYXRlIGFsbCBjYWNoZSBsaW5lcyBpbiB0aGUgb3V0ZXIgY2FjaGUNCj4gICoNCj4gICog
+Tm90ZTogZGVwZW5kaW5nIG9uIGltcGxlbWVudGF0aW9uLCB0aGlzIG1heSBub3QgYmUgYXRvbWlj
+IC0gaXQgbXVzdA0KPiAgKiBvbmx5IGJlIGNhbGxlZCB3aXRoIGludGVycnVwdHMgZGlzYWJsZWQg
+YW5kIG5vIG90aGVyIGFjdGl2ZSBvdXRlcg0KPiAgKiBjYWNoZSBtYXN0ZXJzLg0KPiAgKg0KPiAg
+KiBJdCBpcyBpbnRlbmRlZCB0aGF0IHRoaXMgZnVuY3Rpb24gaXMgb25seSB1c2VkIGJ5IGltcGxl
+bWVudGF0aW9ucw0KPiAgKiBuZWVkaW5nIHRvIG92ZXJyaWRlIHRoZSBvdXRlcl9jYWNoZS5kaXNh
+YmxlKCkgbWV0aG9kIGR1ZSB0byBzZWN1cml0eS4NCj4gICogKFNvbWUgaW1wbGVtZW50YXRpb25z
+IHBlcmZvcm0gdGhpcyBhcyBhIGNsZWFuIGZvbGxvd2VkIGJ5IGFuIGludmFsaWRhdGUuKSAgKi8N
+Cj4gDQo+IFNvLCBvdXRlcl9mbHVzaF9hbGwoKSBzaG91bGQgbm90IGJlIGNhbGxlZCBleGNlcHQg
+ZnJvbSBMMiBjYWNoZSBjb2RlDQo+IGltcGxlbWVudGluZyB0aGUgb3V0ZXJfZGlzYWJsZSgpIGZ1
+bmN0aW9uIC0gaXQncyBub3QgaW50ZW5kZWQgZm9yIHBsYXRmb3JtcyB0byB1c2UuDQo+IA0KPiBU
+aGVyZSBhcmUsIGhvd2V2ZXIsIHNhZGx5IHRocmVlIHVzZXJzIG9mIG91dGVyX2ZsdXNoX2FsbCgp
+IHdoaWNoIGhhdmUgY3JlcHQgaW4NCj4gdGhyb3VnaCBhcm0tc29jLCB0aGF0IHNob3VsZCBiZSBv
+dXRlcl9kaXNhYmxlKCkgaW5zdGVhZC4NCg0KSGVyZSwgb3V0ZXJfZmx1c2hfYWxsKCkgc2hvdWxk
+IG5vdCBiZSBjYWxsZWQsIGNhbGxpbmcgb3V0ZXJfZGlzYWJsZSgpIGlzIGVub3VnaC4gSXMgaXQg
+cmlnaHQ/DQoNCkluIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBsMmNfZGlzYWJsZSh2b2lkKSBvZiBp
+biBtbS9jYWNoZS1sMngwLmMsIHRoZSBvdXRlcl9jYWNoZS5mbHVzaF9hbGwoKSBpcyBjYWxsZWQu
+DQoNCj4gDQo+IC0tDQo+IFJNSydzIFBhdGNoIHN5c3RlbTogaHR0cDovL3d3dy5hcm1saW51eC5v
+cmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMvDQo+IEZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxp
+bmU6IGN1cnJlbnRseSBhdCA5LjZNYnBzIGRvd24gNDAwa2JwcyB1cA0KPiBhY2NvcmRpbmcgdG8g
+c3BlZWR0ZXN0Lm5ldC4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
