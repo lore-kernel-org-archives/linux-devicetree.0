@@ -1,40 +1,65 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Thu, 12 Jan 2017 13:11:49 -0500
-Message-ID: <20170112181149.29035-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v2 2/2] arm64: cacheinfo: add support to override cache levels via device tree
+Date: Thu, 12 Jan 2017 18:29:32 +0000
+Message-ID: <1484245772-31511-2-git-send-email-sudeep.holla@arm.com>
+References: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that all the clocks in the boot loader are disabled before booting
-the kernel, and the mstp driver has been fixed for RZ/A1, here is a typo
-that was missed during original testing.
+The cache hierarchy can be identified through Cache Level ID(CLIDR)
+architected system register. However in some cases it will provide
+only the number of cache levels that are integrated into the processor
+itself. In other words, it can't provide any information about the
+caches that are external and/or transparent.
 
-Fixes: 7c8522b7047c ("ARM: dts: r7s72100: add sdhi clock to device tree")
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Some platforms require to export the information about all such external
+caches to the userspace applications via the sysfs interface.
+
+This patch adds support to override the cache levels using device tree
+to take such external non-architected caches into account.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- include/dt-bindings/clock/r7s72100-clock.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/cacheinfo.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index 29e01ed..318ab14 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -46,6 +46,6 @@
- 
- /* MSTP12 */
- #define R7S72100_CLK_SDHI0	3
--#define R7S72100_CLK_SDHI1	2
-+#define R7S72100_CLK_SDHI1	1
- 
- #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
--- 
-2.10.1
+diff --git a/arch/arm64/kernel/cacheinfo.c b/arch/arm64/kernel/cacheinfo.c
+index 9617301f76b5..3f2250fc391b 100644
+--- a/arch/arm64/kernel/cacheinfo.c
++++ b/arch/arm64/kernel/cacheinfo.c
+@@ -84,7 +84,7 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
 
+ static int __init_cache_level(unsigned int cpu)
+ {
+-	unsigned int ctype, level, leaves;
++	unsigned int ctype, level, leaves, of_level;
+ 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
 
+ 	for (level = 1, leaves = 0; level <= MAX_CACHE_LEVEL; level++) {
+@@ -97,6 +97,17 @@ static int __init_cache_level(unsigned int cpu)
+ 		leaves += (ctype == CACHE_TYPE_SEPARATE) ? 2 : 1;
+ 	}
+
++	of_level = of_find_last_cache_level(cpu);
++	if (level < of_level) {
++		/*
++		 * some external caches not specified in CLIDR_EL1
++		 * the information may be available in the device tree
++		 * only unified external caches are considered here
++		 */
++		leaves += (of_level - level);
++		level = of_level;
++	}
++
+ 	this_cpu_ci->num_levels = level;
+ 	this_cpu_ci->num_leaves = leaves;
+ 	return 0;
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
