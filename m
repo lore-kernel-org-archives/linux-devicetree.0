@@ -1,155 +1,49 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
-Date: Thu, 12 Jan 2017 11:51:55 +0800
-Message-ID: <86fa08f8-8c4f-8ca6-5880-02d4df937011@electromag.com.au>
-References: <1484117471-67082-1-git-send-email-preid@electromag.com.au>
- <5f800162-a404-09fa-ce1b-c95f5b73ac56@electromag.com.au>
- <alpine.DEB.2.02.1701111007240.12204@pmeerw.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1701111007240.12204-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3] mmc: sh_mmcif: Document r7s72100 DT bindings
+Date: Wed, 11 Jan 2017 23:14:52 -0500
+Message-ID: <20170112041452.14136-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2017 17:17, Peter Meerwald-Stadler wrote:
-> On Wed, 11 Jan 2017, Phil Reid wrote:
->
->> Oops, title should be PATCH V2.
->>
->> On 11/01/2017 14:51, Phil Reid wrote:
->>> This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
->>> ADC. Supports raw and trigger buffer access.
->>> Also supports the tlc3541 14-bit device, which has not been tested.
->>> Implementation of the tlc3541 is fairly straight forward thou.
->
-> comments below
->
->>
->>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
->>> ---
->>>
->>> Notes:
->>>     Changes from v1:
->>>     - Add tlc3541 support and chan spec.
->>>     - remove fields that where already 0 from TLC4541_V_CHAN macro
->>>     - Increase rx_buf size in tlc4541_state to avoid copy in
->>> tlc4541_trigger_handle
->>>     - Remove erroneous be16_to_cpu in tlc4541_trigger_handle
->>>     - Docs/binding: spi -> SPI & add ti,tlc3541
->>>
->>>     I haven't add Rob's Ack due to adding a new compatible string.
->>>
->>>     I tried to ".index = 1" from the spec as suggested by Peter, but that
->>> didn't
->>>     seem to work. Perhaps remove of .channel was the intended target.
->
-> the only between index = 0/1 should be that the channel is called
-> in_voltage0_raw vs in_voltage_raw in sysfs -- maybe there is an issue in
-> iio_readdev?
->
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Did a little more testing and the problem looks to be in libiio.
+---
+v3:
+* added list of how many interrupts each SOC has
+v2:
+* added interrupt description
+---
+ Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-Here's the output from iio and list of sysfs files when "indexed = 1"
-         iio:device8: tlc4541 (buffer capable)
-                 2 channels found:
-                         voltage0:  (input, index: 0, format: be:U16/16>>0)
-                         2 channel-specific attributes found:
-                                 attr 0: raw value: 174
-                                 attr 1: scale value: 0.076293945
-                         timestamp:  (input, index: 1, format: le:S64/64>>0)
-                 1 device-specific attributes found:
-                                 attr 0: current_timestamp_clock value: realtime
-
-root@cyclone5:~# ls /sys/bus/iio/devices/iio\:device8/*
-/sys/bus/iio/devices/iio:device8/current_timestamp_clock  /sys/bus/iio/devices/iio:device8/in_voltage_scale
-/sys/bus/iio/devices/iio:device8/dev                      /sys/bus/iio/devices/iio:device8/name
-/sys/bus/iio/devices/iio:device8/in_voltage0_raw          /sys/bus/iio/devices/iio:device8/uevent
-
-/sys/bus/iio/devices/iio:device8/buffer:
-enable     length     watermark
-
-/sys/bus/iio/devices/iio:device8/of_node:
-#io-channel-cells  enable-dma         name               reg                spi-max-frequency
-compatible         linux,phandle      phandle            spi-cpha           vref-supply
-
-/sys/bus/iio/devices/iio:device8/power:
-autosuspend_delay_ms    control                 runtime_active_time     runtime_status          runtime_suspended_time
-
-/sys/bus/iio/devices/iio:device8/scan_elements:
-in_timestamp_en     in_timestamp_index  in_timestamp_type   in_voltage0_en      in_voltage0_index   in_voltage0_type
-
-/sys/bus/iio/devices/iio:device8/subsystem:
-devices            drivers            drivers_autoprobe  drivers_probe      uevent
-
-/sys/bus/iio/devices/iio:device8/trigger:
-current_trigger
-
-And the same when "indexed = 0"
-
-         iio:device8: tlc4541 (buffer capable)
-                 2 channels found:
-                         voltage:  (input)
-                         2 channel-specific attributes found:
-                                 attr 0: raw value: 173
-                                 attr 1: scale value: 0.076293945
-                         timestamp:  (input, index: 1, format: le:S64/64>>0)
-                 1 device-specific attributes found:
-                                 attr 0: current_timestamp_clock value: realtime
-
-root@cyclone5:~# ls /sys/bus/iio/devices/iio\:device8/*
-/sys/bus/iio/devices/iio:device8/current_timestamp_clock  /sys/bus/iio/devices/iio:device8/in_voltage_scale
-/sys/bus/iio/devices/iio:device8/dev                      /sys/bus/iio/devices/iio:device8/name
-/sys/bus/iio/devices/iio:device8/in_voltage_raw           /sys/bus/iio/devices/iio:device8/uevent
-
-/sys/bus/iio/devices/iio:device8/buffer:
-enable     length     watermark
-
-/sys/bus/iio/devices/iio:device8/of_node:
-#io-channel-cells  enable-dma         name               reg                spi-max-frequency
-compatible         linux,phandle      phandle            spi-cpha           vref-supply
-
-/sys/bus/iio/devices/iio:device8/power:
-autosuspend_delay_ms    control                 runtime_active_time     runtime_status          runtime_suspended_time
-
-/sys/bus/iio/devices/iio:device8/scan_elements:
-in_timestamp_en     in_timestamp_index  in_timestamp_type   in_voltage_en       in_voltage_index    in_voltage_type
-
-/sys/bus/iio/devices/iio:device8/subsystem:
-devices            drivers            drivers_autoprobe  drivers_probe      uevent
-
-/sys/bus/iio/devices/iio:device8/trigger:
-current_trigger
-
-The iio scope application also does not allow the tlc4541 channel to be selected when "indexed = 0".
-
-I've had a bit of play with some test apps but it looks like to me libiio is not parsing the
-scan_elements folder correctly when the channels are not indexed.
-Haven't located exactly where as yet.
-
-So is the correct path here to fix libiio?
-
-I'm using libiio from git build a few weeks ago, I'll try updating to see if it fixes anything.
-Last commit was:
-9838779 - Paul Cercueil       , 3 weeks ago  : Local backend: Return scan result even if 0 devices
-
-
-
-
-
-
-
+diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+index e4ba92aa..c32dc5a 100644
+--- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
++++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+@@ -8,6 +8,7 @@ Required properties:
+ 
+ - compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif" as a
+   fallback. Examples with <soctype> are:
++	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+ 	- "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+ 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+ 	- "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
+@@ -17,6 +18,13 @@ Required properties:
+ 	- "renesas,mmcif-r8a7794" for the MMCIF found in r8a7794 SoCs
+ 	- "renesas,mmcif-sh73a0" for the MMCIF found in sh73a0 SoCs
+ 
++- interrupts: Some SoCs have only 1 shared interrupt, while others have either
++  2 or 3 individual interrupts (error, int, card detect). Below is the number
++  of interrupts for each SoC:
++    1: r8a73a4, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
++    2: r8a7740, sh73a0
++    3: r7s72100
++
+ - clocks: reference to the functional clock
+ 
+ - dmas: reference to the DMA channels, one per channel name listed in the
 -- 
-Regards
-Phil Reid
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.1
