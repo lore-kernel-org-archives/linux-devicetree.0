@@ -1,65 +1,134 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
- for imx6sll
-Date: Thu, 12 Jan 2017 02:57:20 +0000
-Message-ID: <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
- <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
- <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
+From: Steve Longerbeam <steve_longerbeam@mentor.com>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Wed, 11 Jan 2017 19:22:54 -0800
+Message-ID: <afe51f5f-03dd-4092-9ec0-297afb1453c7@mentor.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <CAJ+vNU2zU++Xam_UpDPfmSQhauhhS3_z8L-+ww6o-D9brWhiwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAJ+vNU2zU++Xam_UpDPfmSQhauhhS3_z8L-+ww6o-D9brWhiwA@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Tim Harvey <tharvey@gateworks.com>, Steve Longerbeam <slongerbeam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, mchehab@kernel.org, bparrot@ti.com, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, tiffany.lin@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzEyXSBEb2N1bWVudDogZHQ6IGJpbmRpbmc6IGlt
-eDogdXBkYXRlIHBpbmN0cmwgZG9jDQo+IGZvciBpbXg2c2xsDQo+IA0KPiBPbiBNb24sIEphbiA5
-LCAyMDE3IGF0IDM6MzIgQU0sIEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT4gd3JvdGU6DQo+
-IA0KPiA+IEkgaGF2ZSBsb29rIGludG8gdGhlIGFib3ZlIGNvbW1pdCBvbiB1c2luZyBnZW5lcmlj
-IGJpbmRpbmcuIEJ1dCBJDQo+ID4gdGhpbmsgdGhlIGdlbmVyaWMgcGluY29uZiBpcyBub3QgdmVy
-eSBlYXN5IHRvIGFkZCBpbiBpbXggcGluY3RybCBEcml2ZXIuIGlteA0KPiBwaW5jdHJsIHVzZSBh
-IGRpZmZlcmVudCB3YXkgdG8gcGFyc2UgdGhlIHBpbiBjb25maWd1cmUuDQo+IA0KPiBPSyBhdGxl
-YXN0IEkgbmVlZCBhbiBpbmRpY2F0aW9uIGZyb20gb25lIG9mIHRoZSBpLk1YIG1haW50YWluZXJz
-IGhvdyB0aGV5DQo+IHdhbnQgdG8gcHJvY2VlZC4NCj4gDQo+ID4gRWFjaCBmc2wscGluIGVudHJ5
-ICBsb29rcyBsaWtlIDxQSU5fRlVOQ19JRCAgQ09ORklHPiBpbiBkdHMsIHRoZQ0KPiA+IENPTkZJ
-RyBpcyB0aGUgcGFkIHNldHRpbmcgdmFsdWUgbGlrZSBwdWxsLXVwLCBvcGVuLWRyYWluLCBkcml2
-ZSBzdHJlbmd0aCBldGMuDQo+IFRoZSBhYm92ZSBjb25maWcgYml0IGRlZmluaXRpb24gaXMgc3Bl
-Y2lmaWMgdG8gZWFjaCBTT0MgaW4gdGhlIFBBRCBDVEwgcmVnaXN0ZXIuDQo+ID4NCj4gPiBJZiB3
-ZSB3YW50IHNldCB0aGUgcGluIGNvbmZpZyB0byBlbmFibGUgaHlzdGVyZXNpcywgNDdLT2htIFB1
-bGwgVXAsDQo+ID4gNTBNaHogc3BlZWQsIDgwT2htIGRyaXZlciBzdHJlbmd0aCBhbmQgRmFzdCBT
-bGV3IFJhdGUsIHRoZW4gdGhlIENPTkZJRw0KPiB2YWx1ZSBzaG91bGQgYmUgMHgxNzA1OSggT1Jz
-IGNvcnJlc3BvbmRpbmcgYml0IGRlZmluaXRpb24pLg0KPiANCj4gSHlzdGVyZXNpcyBpcyBhbiBp
-bnB1dCBwcm9wZXJ0eSBhbmQgZG9lcyBub3QgbWFrZSBzZW5zZSBvbiBzb21ldGhpbmcgdGhhdA0K
-PiBuZWVkIGRyaXZlIHN0cmVuZ3RoIGFuZCBzbGV3IHJhdGUgY29uZmlndXJhdGlvbiB3aGljaCBh
-cmUgb3V0cHV0IHByb3BlcnRpZXMuDQo+IChJIGd1ZXNzIHlvdSBtZWFuIDgwbUEgZHJpdmUgc3Ry
-ZW5ndGguKQ0KPiANCg0KRm9yIHNvbWUgYmktZGlyZWN0aW9uIHBpbnMsIGxpa2UgU0QgREFUQSBw
-aW4sIHdlIG1heSBuZWVkIHRvIGVuYWJsZSB0aGUgaHlzdGVyZXNpcyBjb25maWd1cmF0aW9uLg0K
-DQo+IEFjdHVhbGx5IHN1Y2ggb3h5bW9yb25pYyBzZXR0aW5ncyBpcyBhIGdvb2QgcmVhc29uIHRv
-IG1pZ3JhdGUgdG8gZ2VuZXJpYw0KPiBiaW5kaW5ncyBiZWNhdXNlIHdoZW4geW91IGRlc2NyaWJl
-IHN0dWZmIHdpdGggZ2VuZXJpYyBzdHJpbmdzIHlvdSBzZWUgYmV0dGVyDQo+IHdoYXQgaXMgZ29p
-bmcgb24sIGFuZCB3ZSBjYW4gYWRkIHNhbml0eSBjaGVja3MgdG8gY2FzZXMgbGlrZSB0aGlzIGlu
-IHRoZSBnZW5lcmljDQo+IGNvZGUgd2hlcmUgaXQgd291bGQgaW5kZWVkIGJlIHZhbGlkIHRvIGFz
-ayB3aHkgdGhpcyBjb21iaW5hdGlvbiBvZiBzZXR0aW5ncyBpcw0KPiBiZWluZyBtYWRlLg0KPiAN
-Cg0KQW5vdGhlciB0aGluZyBpcyB0aGF0IHdlIGNhbiB1c2UgYSBwaW5zLXRvb2wgcHJvZ3JhbSBk
-ZXZlbG9wZWQgYnkgTlhQIHRvIGdlbmVyYXRlIHRoZSBwaW5jdHJsIGNvbmZpZ3VyYXRpb24gY29k
-ZSB0aGF0IGNhbg0KYmUgdXNlZCBkaXJlY3RseSBpbiBkdHMuIFRoaXMgdGlueSBwcm9ncmFtIGNh
-biBhdm9pZCBwaW4gZnVuY3Rpb24gY29uZmxpY3QuIEFzIG9uIGkuTVgsIHRoZXJlIGFyZSBzbyBt
-YXkgcGlucywgZWFjaCBwaW4gY2FuIGJlIHVzZWQNCmZvciB1cCA4ICBmdW5jdGlvbi4gQ29uZmln
-dXJpbmcgdGhlIHBpbnMgaXMgYSB0aW1lLWNvbnN1bWluZyB3b3JrLiAgVGhpcyB0b29scyBpcyB2
-ZXJ5IHVzZWZ1bCBmb3IgY3VzdG9tZXIgdG8gZ2VuZXJhdGUgdGhlIGR0cyBjb2RlLiAgDQoNClVz
-aW5nIGdlbmVyaWMgcGluY29uZiBpcyBhbm90aGVyIG9wdGlvbiwgYnV0IGl0IG1heSBuZWVkIG1v
-cmUgdGltZSB0byBhZGQgaXQgYW5kIG1vcmUgd29yayB0byBkby4gIEZvciBub3csIEkgdGhpbmsg
-d2UgY2FuIHN0aWxsIGtlZXAgdGhlIGxlZ2FjeSBtZXRob2Q/DQogDQo+ID4gVGhpcyB2YWx1ZSB3
-aWxsIGJlIHNldCBpbg0KPiA+IFBBRCBDVEwgcmVnaXN0ZXIgdG8gY29uZmlnIHRoZSBjb3JyZXNw
-b25kaW5nIHBpbi4NCj4gDQo+IFllcz8gVGhhdCBpcyBjb21tb24uIEl0IGxvb2tzIGxpa2UgdGhh
-dCBpbiBEVDoNCj4gDQo+IHsNCj4gICAgaW5wdXQtc2NobWl0dC1lbmFibGU7DQo+ICAgIGJpYXMt
-cHVsbC11cCA9IDw0NzAwMD47DQo+ICAgIHNsZXctcmF0ZSA9IDw1MDAwMDAwMD47DQo+ICAgIGRy
-aXZlLXN0cmVuZ3RoID0gPDgwMDAwPjsNCj4gfTsNCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxs
-ZWlqDQo=
+Hi Tim,
+
+
+On 01/11/2017 03:14 PM, Tim Harvey wrote:
+>
+> <snip>
+>
+> Hi Steve,
+>
+> I took a stab at testing this today on a gw51xx which has an adv7180
+> hooked up as follows:
+> - i2c3@0x20
+> - 8bit data bus from DAT12 to DAT19, HSYNC, VSYNC, PIXCLK on CSI0 pads
+> (CSI0_IPU1)
+> - PWRDWN# on MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20
+> - IRQ# on MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23
+> - all three analog inputs available to off-board connector
+>
+> My patch to the imx6qdl-gw51xx dtsi is:
+
+As long as you used the patch to imx6qdl-sabreauto.dtsti that adds
+the adv7180 support as a guide, you should be ok here.
+
+> <snip>
+>
+>
+>
+> On an IMX6Q I'm getting the following when the adv7180 module loads:
+> [   12.862477] adv7180 2-0020: chip found @ 0x20 (21a8000.i2c)
+> [   12.907767] imx-media: Registered subdev adv7180 2-0020
+> [   12.907793] imx-media soc:media@0: Entity type for entity adv7180
+> 2-0020 was not initialized!
+> [   12.907867] imx-media: imx_media_create_link: adv7180 2-0020:0 ->
+> ipu1_csi0_mux:1
+>
+> Is the warning that adv7180 was not initialized expected and or an issue?
+
+Yeah it's still a bug in the adv7180 driver, needs fixing.
+
+>
+> Now that your driver is hooking into the current media framework, I'm
+> not at all clear on how to link and configure the media entities.
+
+It's all documented at Documentation/media/v4l-drivers/imx.rst.
+Follow the SabreAuto pipeline setup example.
+
+
+
+> <snip>
+>
+>
+> Additionally I've found that on an IMX6S/IMX6DL we crash while
+> registering the media-ic subdev's:
+> [    3.975473] imx-media: Registered subdev ipu1_csi1_mux
+> [    3.980921] imx-media: Registered subdev ipu1_csi0_mux
+> [    4.003205] imx-media: Registered subdev ipu1_ic_prpenc
+> [    4.025373] imx-media: Registered subdev ipu1_ic_prpvf
+> [    4.037944] ------------[ cut here ]------------
+> [    4.042571] Kernel BUG at c06717dc [verbose debug info unavailable]
+> [    4.048845] Internal error: Oops - BUG: 0 [#1] SMP ARM
+> [    4.053990] Modules linked in:
+> [    4.057076] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+> 4.9.0-rc6-00524-g84dad6e-dirty #446
+> [    4.065260] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> ...
+> [    4.296250] [<c0671780>] (v4l2_subdev_init) from [<c06fb02c>]
+> (imx_ic_probe+0x94/0x1ac)
+> [    4.304271] [<c06faf98>] (imx_ic_probe) from [<c05173d8>]
+> (platform_drv_probe+0x54/0xb8)
+> [    4.312373]  r9:c0d5e858 r8:00000000 r7:fffffdfb r6:c0e5dbf8
+> r5:da603810 r4:c16738d8
+> [    4.320129] [<c0517384>] (platform_drv_probe) from [<c0515978>]
+> (driver_probe_device+0x20c/0x2c0)
+> [    4.329010]  r7:c0e5dbf8 r6:00000000 r5:da603810 r4:c16738d8
+> [    4.334681] [<c051576c>] (driver_probe_device) from [<c0515af4>]
+> (__driver_attach+0xc8/0xcc)
+> [    4.343129]  r9:c0d5e858 r8:00000000 r7:00000000 r6:da603844
+> r5:c0e5dbf8 r4:da603810
+> [    4.350889] [<c0515a2c>] (__driver_attach) from [<c0513adc>]
+> (bus_for_each_dev+0x74/0xa8)
+> [    4.359078]  r7:00000000 r6:c0515a2c r5:c0e5dbf8 r4:00000000
+> [    4.364753] [<c0513a68>] (bus_for_each_dev) from [<c05151d4>]
+> (driver_attach+0x20/0x28)
+>
+> I assume there is an iteration that needs a test on a missing pointer
+> only available on chips with both IPU's or PRP
+
+Yep, I only have quad boards here so I haven't gotten around to
+testing on S/DL.
+
+But it looks like I forgot to clear out the csi subdev pointer array before
+passing it to imx_media_of_parse(). I think that might explain the OOPS
+above. Try this patch:
+
+diff --git a/drivers/staging/media/imx/imx-media-dev.c 
+b/drivers/staging/media/imx/imx-media-dev.c
+index 357654d..0cf2d61 100644
+--- a/drivers/staging/media/imx/imx-media-dev.c
++++ b/drivers/staging/media/imx/imx-media-dev.c
+@@ -379,7 +379,7 @@ static int imx_media_probe(struct platform_device *pdev)
+  {
+         struct device *dev = &pdev->dev;
+         struct device_node *node = dev->of_node;
+-       struct imx_media_subdev *csi[4];
++       struct imx_media_subdev *csi[4] = {0};
+         struct imx_media_dev *imxmd;
+         int ret;
+
+
+Steve
