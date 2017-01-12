@@ -1,33 +1,103 @@
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: Isn't gen3 peripheral bus 32-bit?
-Date: Thu, 12 Jan 2017 10:42:54 +0300
-Message-ID: <3453a281-7e5b-aca7-ee56-04da8534ae0d@cogentembedded.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
+Date: Thu, 12 Jan 2017 08:47:50 +0100
+Message-ID: <20170112074750.GB23943@kroah.com>
+References: <20170112002910.3650-1-cyrilbur@gmail.com>
+ <20170112002910.3650-4-cyrilbur@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Artemi Ivanov <artemi.ivanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170112002910.3650-4-cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Thu, Jan 12, 2017 at 11:29:09AM +1100, Cyril Bur wrote:
+> +static ssize_t lpc_ctrl_read(struct file *file, char __user *buf,
+> +				size_t count, loff_t *ppos)
+> +{
+> +	if (!access_ok(VERIFY_WRITE, buf, count))
+> +		return -EFAULT;
+> +
+> +	return -EPERM;
+> +}
+> +
+> +static ssize_t lpc_ctrl_write(struct file *file, const char __user *buf,
+> +				size_t count, loff_t *ppos)
+> +{
+> +	if (!access_ok(VERIFY_READ, buf, count))
+> +		return -EFAULT;
+> +
+> +	return -EPERM;
+> +}
 
-R-Car GEN3 PCIe modules have 32-bit connect to internal AXI bus.
+Those functions don't actually do anything, so why even include them?
 
-Could please somebody with lowlevel hardware knowledge answer, if this
-is PCIe module limitation, or internal bus limitation.
+And don't call access_ok(), it's racy and no driver should ever do that.
 
-Depending on that, different modification of renesas/r8a779[56].dtsi
-files is needed: either
-- wrap only pcie nodes into 32-bit sub-node of /soc, or
-- turn entire /soc subtree to 32-bit.
+> +static long lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
+> +		unsigned long param)
+> +{
+> +	long rc;
+> +	struct lpc_mapping map;
+> +	struct lpc_ctrl *lpc_ctrl = file_lpc_ctrl(file);
+> +	void __user *p = (void __user *)param;
+> +
+> +	switch (cmd) {
+> +	case LPC_CTRL_IOCTL_SIZE:
+> +		return copy_to_user(p, &lpc_ctrl->size,
+> +			sizeof(lpc_ctrl->size)) ? -EFAULT : 0;
+> +	case LPC_CTRL_IOCTL_MAP:
+> +		if (copy_from_user(&map, p, sizeof(map)))
+> +			return -EFAULT;
+> +
+> +
+> +		/*
+> +		 * The top half of HICR7 is the MSB of the BMC address of the
+> +		 * mapping.
+> +		 * The bottom half of HICR7 is the MSB of the HOST LPC
+> +		 * firmware space address of the mapping.
+> +		 *
+> +		 * The 1 bits in the top of half of HICR8 represent the bits
+> +		 * (in the requested address) that should be ignored and
+> +		 * replaced with those from the top half of HICR7.
+> +		 * The 1 bits in the bottom half of HICR8 represent the bits
+> +		 * (in the requested address) that should be kept and pass
+> +		 * into the BMC address space.
+> +		 */
+> +
+> +		rc = regmap_write(lpc_ctrl->regmap, HICR7,
+> +				(lpc_ctrl->base | (map.hostaddr >> 16)));
+> +		if (rc)
+> +			return rc;
+> +
+> +		rc = regmap_write(lpc_ctrl->regmap, HICR8,
+> +			(~(map.size - 1)) | ((map.size >> 16) - 1));
 
+Look Ma, a kernel exploit!
 
-Problem I'm trying to solve is related to DMA ranges handling.
-Architecture code needs explicit information on DMA range
-limitations caused by interconnect. See [1] thread for details.
+{sigh}
 
-Nikita
+Your assignment is to go find a whiteboard/blackboard/whatever and write
+on it 100 times:
+	All input is evil.
 
-[1] https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg10449.html
+I want to see the picture of that before you send any more kernel patches.
+
+> +static int lpc_ctrl_release(struct inode *inode, struct file *file)
+> +{
+> +	atomic_dec(&lpc_ctrl_open_count);
+
+Totally unneeded and unnecessary, why do you care?
+
+Again, use UIO, it will save you from yourself...
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
