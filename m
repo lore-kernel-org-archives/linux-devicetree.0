@@ -1,39 +1,42 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/2] clocksource: Add renesas-ostm timer driver
-Date: Thu, 12 Jan 2017 13:59:50 -0500
-Message-ID: <20170112185952.2780-1-chris.brandt@renesas.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] i2c: mux: pca954x: Add interrupt controller
+ support
+Date: Thu, 12 Jan 2017 20:15:14 +0100
+Message-ID: <20170112191514.dpusqnbqahayx6j3@ninjato>
+References: <1483952576-5308-1-git-send-email-preid@electromag.com.au>
+ <1483952576-5308-4-git-send-email-preid@electromag.com.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483952576-5308-4-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new clocksource driver that uses the OS Timer
-(OSTM) that exists in the R7S72100 (RZ/A1) SoC.
+On Mon, Jan 09, 2017 at 05:02:54PM +0800, Phil Reid wrote:
+> Various muxes can aggregate multiple interrupts from each i2c bus.
+> All of the muxes with interrupt support combine the active low irq lines
+> using an internal 'and' function and generate a combined active low
+> output. The muxes do provide the ability to read a control register to
+> determine which irq is active. By making the mux an irq controller isr
+> latency can potentially be reduced by reading the status register and
+> then only calling the registered isr on that bus segment.
+> 
+> As there is no irq masking on the mux irq are disabled until irq_unmask is
+> called at least once.
+> 
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 
-The operation of the driver was tested with a simple user application
-that does multiple calls to nanosleep() and gettimeofday().
+Is the ack from Peda here forgotten or still missing?
 
-The purpose of adding this driver is to get better time keeping
-accuracy over the default MTU2 clocksource timer.
+@peda: Once you are happy, do you want to take these patches via your
+shiny new mux-tree or do you prefer if I pick them?
 
+Regards,
 
-Chris Brandt (2):
-  dt-bindings: document renesas-ostm timer
-  clocksource: Add renesas-ostm timer driver
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  36 ++
- arch/arm/mach-shmobile/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |  12 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/renesas-ostm.c                 | 389 +++++++++++++++++++++
- 5 files changed, 439 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
- create mode 100644 drivers/clocksource/renesas-ostm.c
-
--- 
-2.10.1
-
+   Wolfram
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
