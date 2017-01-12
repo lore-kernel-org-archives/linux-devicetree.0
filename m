@@ -1,108 +1,74 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: sun8i: add OTG function to Lichee Pi Zero
-Date: Thu, 12 Jan 2017 08:50:14 -0600
-Message-ID: <20170112145014.GC16865@uda0271908>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-5-icenowy@aosc.xyz>
- <20170110202443.GC2479@uda0271908>
- <2733831484164533@web1g.yandex.ru>
- <20170111200811.GA16865@uda0271908>
- <20170111210638.ppdnpzdd2l6x4lyo@lukather>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC 1/3] iommu/arm-smmu: Add support to opt-in to stalling
+Date: Thu, 12 Jan 2017 15:17:18 +0000
+Message-ID: <20170112151717.GB13843@arm.com>
+References: <1483479056-15202-1-git-send-email-robdclark@gmail.com>
+ <1483479056-15202-2-git-send-email-robdclark@gmail.com>
+ <20170105115528.GG679@arm.com>
+ <CAF6AEGsUdZALAQTozmxPV8Os=3pG7ay=1Oqtctx99FV9_4SX7Q@mail.gmail.com>
+ <20170105154950.GM679@arm.com>
+ <CAF6AEGuUidGEONzh92SYg9V2gE812oq_0CoZt-Zv7=bzb3FN3A@mail.gmail.com>
+ <20170110175219.GK527@arm.com>
+ <CAF6AEGsCJ6L-wmBHFYy2jfQ1bfq_d2wmiWVUXno344US9ikLVA@mail.gmail.com>
+ <20170111093606.GA12388@arm.com>
+ <CAF6AEGvGWu+OMED52_Mphpd1K=2QAeeuPV8RaRzL9S+N4YOh2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170111210638.ppdnpzdd2l6x4lyo@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAF6AEGvGWu+OMED52_Mphpd1K=2QAeeuPV8RaRzL9S+N4YOh2Q@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sricharan R <sricharan@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 10:06:38PM +0100, Maxime Ripard wrote:
-> On Wed, Jan 11, 2017 at 02:08:11PM -0600, Bin Liu wrote:
-> > On Thu, Jan 12, 2017 at 03:55:33AM +0800, Icenowy Zheng wrote:
-> > > =
+On Wed, Jan 11, 2017 at 03:59:30PM -0500, Rob Clark wrote:
+> On Wed, Jan 11, 2017 at 4:36 AM, Will Deacon <will.deacon@arm.com> wrote:
+> > On Tue, Jan 10, 2017 at 02:20:13PM -0500, Rob Clark wrote:
+> >> On Tue, Jan 10, 2017 at 12:52 PM, Will Deacon <will.deacon@arm.com> wrote:
+> >> > On Fri, Jan 06, 2017 at 11:26:49AM -0500, Rob Clark wrote:
+> >> >> Hmm, well we install the fault handler on the iommu_domain..  perhaps
+> >> >> maybe a combo of dts property (or deciding based on more specific
+> >> >> compat string), plus extra param passed in to
+> >> >> iommu_set_fault_hander().  The dts property or compat string to
+> >> >> indicate whether the iommu (and how it is wired up) can handle stalls,
+> >> >> and enable_stall param when fault handler is registered to indicate
+> >> >> whether the device itself can cope.. if either can't do stalling, then
+> >> >> don't set CFCFG.
+> >> >
+> >> > I thought about this some more, and I think you're right. Having
+> >> > iommu_set_fault_handler take a flags parameter indicating that, for example,
+> >> > the fault handler can deal with paging, is all we need to implement the
+> >> > per-master opt-in functionality for stalling faults. There's no real
+> >> > requirement to standardise a generic firmware property for that (but
+> >> > we still need *something* that says stalling is usable on the SMMU --
+> >> > perhaps just the compatible string is ok).
+> >>
+> >> btw, it occurred to me that maybe it should be flags param to
+> >> iommu_attach_device() (just in case fault handler not installed?)
+> >> otoh stalling without a fault handler is silly, but I guess we need it
+> >> to infer whether stalling can be supported by other devices on same
+> >> iommu.. tbh I'm on a bit shaky ground when it comes to multiple
+> >> devices per iommu since the SoC's I'm familiar with do it the other
+> >> way around.  But I guess you have thought more about the multi-device
+> >> case, so figured I should suggest it..
+> >
+> > I don't think it works at attach time, because the stalling property belongs
+> > to the domain, rather than the individual devices within it. Similarly, I
+> > don't think we should allow this property to be toggled once devices have
+> > been attached.
+> >
+> 
+> hmm, I was more thinking of cases where drivers for particular devices
+> need some work (ie. like potentially disabling hw hang detect during
+> faults).. I guess we could have three levels, that all have to be true
+> in order to enable stall: smmu, domain (pass flags in to
+> iommu_domain_alloc()??), and device (iommu_attach_device())?
 
-> > > =
+Hooking iommu_set_fault_handler, as you originally suggested, is the best
+way to set the flag on the domain. I think we just need to enforce that
+iommu_set_fault_handler is called prior to attaching devices to a domain,
+so that the IOMMU driver can configure the domain appropriately on the
+first attach.
 
-> > > 11.01.2017, 04:24, "Bin Liu" <b-liu@ti.com>:
-> > > > On Tue, Jan 03, 2017 at 11:25:34PM +0800, Icenowy Zheng wrote:
-> > > >> =A0Lichee Pi Zero features a USB OTG port.
-> > > >>
-> > > >> =A0Add support for it.
-> > > >>
-> > > >> =A0Note: in order to use the Host mode, the board must be powered =
-via the
-> > > >> =A0+5V and GND pins.
-> > > >>
-> > > >> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> > > >> =A0---
-> > > >> =A0=A0arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 10 ++++++++++
-> > > >> =A0=A01 file changed, 10 insertions(+)
-> > > >>
-> > > >> =A0diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/ar=
-ch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> > > >> =A0index 0099affc6ce3..3d9168cbaeca 100644
-> > > >> =A0--- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> > > >> =A0+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> > > >> =A0@@ -71,3 +71,13 @@
-> > > >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pinctrl-names =3D "default";
-> > > >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0status =3D "okay";
-> > > >> =A0=A0};
-> > > >> =A0+
-> > > >> =A0+&usb_otg {
-> > > >> =A0+ dr_mode =3D "otg";
-> > > >
-> > > > Why not set this default mode in dtsi instead?
-> > > >
-> > > > Regards,
-> > > > -Bin.
-> > > =
-
-> > > There's possibly boards which do not have OTG functions.
-> > =
-
-> > That is board specific.
-> =
-
-> Exactly, and this is why it should be done in the board DT.
-
-I am just suggesting based on the common practice. If a .dtsi exists for
-a family, the .dtsi describes the device and common properties for all
-possible boards, and each board .dts adds or overrides its specific
-implementation. Kernel has many devices/boards done in this way - define
-the default dr_mode in .dtsi.
-
-In this case, I suggest to set the common dr_mode in .dtsi, then each
-board .dts only overrides it if the implementation is different. =
-
-
-> =
-
-> The controller in the Allwinner SoCs do not handle directly the ID pin
-> and VBUS, but rather rely on a GPIO to do so.
-> =
-
-> So boards with OTG will need setup anyway, at least to tell which
-> GPIOs are used. There's no point in enforcing a default if it doesn't
-> work by default.
-
-Then define a default which supposes to work for most boards.
-
-Why I suggest this, is because defining a default dr_mode which works
-for most cases in dtsi could prevent a little surprise in MUSB function.
-If someone designs a new board but forgets to define dr_mode in the new
-board DT, the MUSB driver will default to org mode, which might not be
-intended.
-
-Regards,
--Bin.
+Will
