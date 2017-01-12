@@ -1,88 +1,155 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: power/supply: Update TPS65217 properties
-Date: Thu, 12 Jan 2017 04:47:04 +0100
-Message-ID: <20170112034704.4lgilyic5cj4nrxs@earth>
-References: <20161209062833.5768-1-woogyom.kim@gmail.com>
- <20161209062833.5768-4-woogyom.kim@gmail.com>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v1 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
+Date: Thu, 12 Jan 2017 11:51:55 +0800
+Message-ID: <86fa08f8-8c4f-8ca6-5880-02d4df937011@electromag.com.au>
+References: <1484117471-67082-1-git-send-email-preid@electromag.com.au>
+ <5f800162-a404-09fa-ce1b-c95f5b73ac56@electromag.com.au>
+ <alpine.DEB.2.02.1701111007240.12204@pmeerw.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="s6a6e5z2na24jt6b"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161209062833.5768-4-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1701111007240.12204-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/01/2017 17:17, Peter Meerwald-Stadler wrote:
+> On Wed, 11 Jan 2017, Phil Reid wrote:
+>
+>> Oops, title should be PATCH V2.
+>>
+>> On 11/01/2017 14:51, Phil Reid wrote:
+>>> This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
+>>> ADC. Supports raw and trigger buffer access.
+>>> Also supports the tlc3541 14-bit device, which has not been tested.
+>>> Implementation of the tlc3541 is fairly straight forward thou.
+>
+> comments below
+>
+>>
+>>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+>>> ---
+>>>
+>>> Notes:
+>>>     Changes from v1:
+>>>     - Add tlc3541 support and chan spec.
+>>>     - remove fields that where already 0 from TLC4541_V_CHAN macro
+>>>     - Increase rx_buf size in tlc4541_state to avoid copy in
+>>> tlc4541_trigger_handle
+>>>     - Remove erroneous be16_to_cpu in tlc4541_trigger_handle
+>>>     - Docs/binding: spi -> SPI & add ti,tlc3541
+>>>
+>>>     I haven't add Rob's Ack due to adding a new compatible string.
+>>>
+>>>     I tried to ".index = 1" from the spec as suggested by Peter, but that
+>>> didn't
+>>>     seem to work. Perhaps remove of .channel was the intended target.
+>
+> the only between index = 0/1 should be that the channel is called
+> in_voltage0_raw vs in_voltage_raw in sysfs -- maybe there is an issue in
+> iio_readdev?
+>
 
---s6a6e5z2na24jt6b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Did a little more testing and the problem looks to be in libiio.
 
-Hi Milo,
 
-On Fri, Dec 09, 2016 at 03:28:32PM +0900, Milo Kim wrote:
-> Add interrupt specifiers for USB and AC charger input. Interrupt numbers
-> are from the datasheet.
-> Fix wrong property for compatible string.
->=20
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
-> ---
->  .../devicetree/bindings/power/supply/tps65217_charger.txt          | 7 +=
-+++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/tps65217_char=
-ger.txt b/Documentation/devicetree/bindings/power/supply/tps65217_charger.t=
-xt
-> index 98d131a..a11072c 100644
-> --- a/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
-> @@ -2,11 +2,16 @@ TPS65217 Charger
-> =20
->  Required Properties:
->  -compatible: "ti,tps65217-charger"
-> +-interrupts: TPS65217 interrupt numbers for the AC and USB charger input=
- change.
-> +             Should be <0> for the USB charger and <1> for the AC adapte=
-r.
-> +-interrupt-names: Should be "USB" and "AC"
-> =20
->  This node is a subnode of the tps65217 PMIC.
-> =20
->  Example:
-> =20
->  	tps65217-charger {
-> -		compatible =3D "ti,tps65090-charger";
-> +		compatible =3D "ti,tps65217-charger";
-> +		interrupts =3D <0>, <1>;
-> +		interrupt-names =3D "USB", "AC";
->  	};
+Here's the output from iio and list of sysfs files when "indexed = 1"
+         iio:device8: tlc4541 (buffer capable)
+                 2 channels found:
+                         voltage0:  (input, index: 0, format: be:U16/16>>0)
+                         2 channel-specific attributes found:
+                                 attr 0: raw value: 174
+                                 attr 1: scale value: 0.076293945
+                         timestamp:  (input, index: 1, format: le:S64/64>>0)
+                 1 device-specific attributes found:
+                                 attr 0: current_timestamp_clock value: realtime
 
-Thanks, I queued this into power-supply's for-next branch.
+root@cyclone5:~# ls /sys/bus/iio/devices/iio\:device8/*
+/sys/bus/iio/devices/iio:device8/current_timestamp_clock  /sys/bus/iio/devices/iio:device8/in_voltage_scale
+/sys/bus/iio/devices/iio:device8/dev                      /sys/bus/iio/devices/iio:device8/name
+/sys/bus/iio/devices/iio:device8/in_voltage0_raw          /sys/bus/iio/devices/iio:device8/uevent
 
--- Sebastian
+/sys/bus/iio/devices/iio:device8/buffer:
+enable     length     watermark
 
---s6a6e5z2na24jt6b
-Content-Type: application/pgp-signature; name="signature.asc"
+/sys/bus/iio/devices/iio:device8/of_node:
+#io-channel-cells  enable-dma         name               reg                spi-max-frequency
+compatible         linux,phandle      phandle            spi-cpha           vref-supply
 
------BEGIN PGP SIGNATURE-----
+/sys/bus/iio/devices/iio:device8/power:
+autosuspend_delay_ms    control                 runtime_active_time     runtime_status          runtime_suspended_time
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlh2/DUACgkQ2O7X88g7
-+pqcBRAAnvd9Z8Hpx0wKiHt+qcH+EsAiLrUPDI4Ax5jcMSwgG1zaoP8oxnquFUIo
-3SSXTHgBcCZyT1oHjdH41kTVn5N73rInmt2zaaHrpMfz3c19rUQAi0ACSmszRL/o
-D9CmKu0yNBC0kPK1xk1IP74VR8rm2ddILs56SN/GhtIp3ztES3AiobkCJW4V3HVB
-3WRpA7yzeuHD8pxq9cUPzQ9A4Y1+MzI4pQhcoOaAeoZighXGawn9wfiwT/jWKUP4
-3K4alPi26L/SVBMLmTV1RBVnc8ZfTzIjeu8vI5IgIyAecTgEp9u9GgJNlGRWe1Jo
-xRG2KuFxjQNQq1/818yXeXl/TYZps/QjyUov5Dx5wY2W26q1YOD9T+uJVXNh5E1T
-MzusSOck5DOP0wW2dnfqFcIocI+rkft/fIr7KoeDQS2c4MVRZdrs6Kymw18QtR+p
-o4GrohJNhUPoLAa8voEk9EY8i5HG5Vpo9rXdR4M1bw3+3IfxsyJu5+J2A8nunqcU
-hCooAIHL8x5lW97fJVf2RcP1MLyl4zqrQV1ZrgeqJvp7ZIhLW2UX6pZ1I4+csmfC
-phznoWdKyTQTLGyCIZlnirKM8lHsOhvj6I91l14pKiEJBW6xAG4pKtvtQTHSMSAL
-NhTtSW5vPI1LCsqfBArTNS1hxHNKlwJeb2qfHipn4GoosVFmMFw=
-=K9zX
------END PGP SIGNATURE-----
+/sys/bus/iio/devices/iio:device8/scan_elements:
+in_timestamp_en     in_timestamp_index  in_timestamp_type   in_voltage0_en      in_voltage0_index   in_voltage0_type
 
---s6a6e5z2na24jt6b--
+/sys/bus/iio/devices/iio:device8/subsystem:
+devices            drivers            drivers_autoprobe  drivers_probe      uevent
+
+/sys/bus/iio/devices/iio:device8/trigger:
+current_trigger
+
+And the same when "indexed = 0"
+
+         iio:device8: tlc4541 (buffer capable)
+                 2 channels found:
+                         voltage:  (input)
+                         2 channel-specific attributes found:
+                                 attr 0: raw value: 173
+                                 attr 1: scale value: 0.076293945
+                         timestamp:  (input, index: 1, format: le:S64/64>>0)
+                 1 device-specific attributes found:
+                                 attr 0: current_timestamp_clock value: realtime
+
+root@cyclone5:~# ls /sys/bus/iio/devices/iio\:device8/*
+/sys/bus/iio/devices/iio:device8/current_timestamp_clock  /sys/bus/iio/devices/iio:device8/in_voltage_scale
+/sys/bus/iio/devices/iio:device8/dev                      /sys/bus/iio/devices/iio:device8/name
+/sys/bus/iio/devices/iio:device8/in_voltage_raw           /sys/bus/iio/devices/iio:device8/uevent
+
+/sys/bus/iio/devices/iio:device8/buffer:
+enable     length     watermark
+
+/sys/bus/iio/devices/iio:device8/of_node:
+#io-channel-cells  enable-dma         name               reg                spi-max-frequency
+compatible         linux,phandle      phandle            spi-cpha           vref-supply
+
+/sys/bus/iio/devices/iio:device8/power:
+autosuspend_delay_ms    control                 runtime_active_time     runtime_status          runtime_suspended_time
+
+/sys/bus/iio/devices/iio:device8/scan_elements:
+in_timestamp_en     in_timestamp_index  in_timestamp_type   in_voltage_en       in_voltage_index    in_voltage_type
+
+/sys/bus/iio/devices/iio:device8/subsystem:
+devices            drivers            drivers_autoprobe  drivers_probe      uevent
+
+/sys/bus/iio/devices/iio:device8/trigger:
+current_trigger
+
+The iio scope application also does not allow the tlc4541 channel to be selected when "indexed = 0".
+
+I've had a bit of play with some test apps but it looks like to me libiio is not parsing the
+scan_elements folder correctly when the channels are not indexed.
+Haven't located exactly where as yet.
+
+So is the correct path here to fix libiio?
+
+I'm using libiio from git build a few weeks ago, I'll try updating to see if it fixes anything.
+Last commit was:
+9838779 - Paul Cercueil       , 3 weeks ago  : Local backend: Return scan result even if 0 devices
+
+
+
+
+
+
+
+-- 
+Regards
+Phil Reid
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
