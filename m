@@ -1,63 +1,122 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 6/6] fbdev/ssd1307fb: add support to enable VBAT
-Date: Thu, 12 Jan 2017 15:46:54 +0200
-Message-ID: <e193efee-c1e2-cb86-68ae-4ddeb138d007@ti.com>
-References: <cover.1484219137.git.jsarha@ti.com>
- <c394e52447ed45fff9672eb3e3bb6729bea87ee7.1484219137.git.jsarha@ti.com>
- <d06c3a64-7627-2553-84e5-491a5acbe0de@ti.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 12 Jan 2017 14:47:42 +0100
+Message-ID: <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
+References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
+ <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
+ <20170111082208.vzu7xgpd4eakyldl@pengutronix.de> <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
+ <20170111153940.dtxzvtdici3r7l54@pengutronix.de> <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
+ <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d06c3a64-7627-2553-84e5-491a5acbe0de-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
+Sender: linux-i2c-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/17 14:05, Tomi Valkeinen wrote:
-> On 12/01/17 13:16, Jyri Sarha wrote:
->> From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+2017-01-12 13:03 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutron=
+ix.de>:
+> Hello Cedric,
+>
+> On Thu, Jan 12, 2017 at 12:23:12PM +0100, M'boumba Cedric Madianga wrote:
+>> 2017-01-11 16:39 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengut=
+ronix.de>:
+>> > On Wed, Jan 11, 2017 at 02:58:44PM +0100, M'boumba Cedric Madianga wro=
+te:
+>> >> 2017-01-11 9:22 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@peng=
+utronix.de>:
+>> >> > This is surprising. I didn't recheck the manual, but that looks ver=
+y
+>> >> > uncomfortable.
+>> >>
+>> >> I agree but this exactly the hardware way of working described in the
+>> >> reference manual.
+>> >
+>> > IMHO that's a hw bug. This makes it for example impossible to implemen=
+t
+>> > SMBus block transfers (I think).
 >>
->> SSD1306 needs VBAT when it is wired in charge pump configuration. This
->> patch adds support to the driver to enable VBAT regulator at init time.
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->> Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
->> index 6617df6..209d931 100644
->> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
->> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
->> @@ -16,6 +16,7 @@ Required properties:
->>  Optional properties:
->>    - reset-gpios: The GPIO used to reset the OLED display, if available. See
->>                   Documentation/devicetree/bindings/gpio/gpio.txt for details.
->> +  - vbat-supply: The supply for VBAT
->>    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
->>                                to segment mapping
->>    - solomon,com-seq: Display uses sequential COM pin configuration
->>
-> 
-> It's rather confusing to have two patches with identical subjects and
-> descs (this and 4). And there's even an unrelated patch in between this
-> and the driver change...
-> 
+>> This is not correct.
+>> Setting STOP/START bit does not mean the the pulse will be sent right no=
+w.
+>> Here we have just to prepare the hardware for the 2 next pulse but the
+>> STOP/START/ACK pulse will be generated at the right time as required
+>> by I2C specification.
+>> So SMBus block transfer will be possible.
+>
+> A block transfer consists of a byte that specifies the count of bytes
+> yet to come. So the device sends for example:
+>
+>         0x01 0xab
+>
+> So when you read the 1 in the first byte it's already too late to set
+> STOP to get it after the 2nd byte.
+>
+> Not sure I got all the required details right, though.
 
-Argh. I wonder how did this even happen. Something weird must have been
-going on... there is only one such patch in branch I cherry-picked these
-patches from. These last patches did not give me any errors and compiled
-fine, so did not look too carefully at the results. Anyway, I'll squash
-this into the earlier patch with the same subject in version 2 series.
+Ok I understand your use case but I always think that the harware manages i=
+t.
+If I take the above example, the I2C SMBus block read transaction will
+be as below:
+S Addr Wr [A] Comm [A]
+           S Addr Rd [A] [Count] A [Data1] A [Data2] NA P
+
+The first message is a single byte-transmission so there is no problem.
+
+The second message is a N-byte reception with N =3D 3
+
+When the I2C controller has finished to send the device address (S
+Addr Rd), the ADDR flag is set and an interrupt is raised.
+In the routine that handles ADDR event, we set ACK bit in order to
+generate ACK pulse as soon as a data byte is received in the shift
+register and then we clear the ADDR flag.
+Please note that the SCL line is stretched low until ADDR flag is cleared.
+So, as far I understand, the device could not sent any data as long as
+the SCL line is stretched low. Right ?
+
+Then, as soon as the SCL line is high, the device could send the first
+data byte (Count).
+When this byte is received in the shift register, an ACK is
+automatically generated as defined during adress match phase and the
+data byte is pushed in DR (data register).
+Then, an interrupt is raised as RXNE (RX not empty) flag is set.
+In the routine that handles RXNE event, as N=3D3, we just clear all
+buffer interrupts in order to avoid another system preemption due to
+RXNE event but we does not read the data in DR.
+
+After receiving the ACK, the device could send the second data byte (Data1)=
+.
+When this byte is received in the shift register, an ACK is
+automatically generated.
+As the first data byte has not been read yet in DR, the BTF (Byte
+Transfer Finihed) flag is set and an interrupt is raised.
+So, in that case, the SCL line is also streched low as long as the
+data register has not been read.
+In the routine that handle BTF event, we enable NACK in order to
+generate this pulse as soon as the last data byte will be received and
+then we read DR register ([Count])
+At this moment, SCL line is released and the device could send the
+last data byte.
+
+After receiving the ACK, the device could send the third and last data
+byte (Data2)
+When this byte is received in the shift register, a NACK is
+automatically generated as we enable it as explained above.
+As the second data byte  (Data1) has not been read yet in DR, the BTF
+flag is set again and an interrupt is raised.
+The SCL line is stretched low and in that way we could set the STOP
+bit to generate this pulse.
+Then we run 2 consecutives read of DR to retrieve [Data1] and [Data2]
+and to set SCL high.
+
+So, thanks to SCL stretching, it seems that NA and P will be generated
+at the right time.
+
+Please let me know if it is not correct.
 
 Best regards,
-Jyri
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cedric
