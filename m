@@ -1,32 +1,39 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] i2c: do not enable fall back to Host Notify by default
-Date: Thu, 12 Jan 2017 19:41:01 +0100
-Message-ID: <20170112184101.slxulrvreq7zl2pc@ninjato>
-References: <20170105045722.GA17958@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170105045722.GA17958@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 2/3] ARM: dts: r7s72100: add ostm to device tree
+Date: Thu, 12 Jan 2017 14:01:07 -0500
+Message-ID: <20170112190108.2856-3-chris.brandt@renesas.com>
+References: <20170112190108.2856-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170112190108.2856-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 08:57:22PM -0800, Dmitry Torokhov wrote:
-> Falling back unconditionally to HostNotify as primary client's interrupt
-> breaks some drivers which alter their functionality depending on whether
-> interrupt is present or not, so let's introduce a board flag telling I2C
-> core explicitly if we want wired interrupt or HostNotify-based one:
-> I2C_CLIENT_HOST_NOTIFY.
-> 
-> For DT-based systems we introduce "host-notify" property that we convert
-> to I2C_CLIENT_HOST_NOTIFY board flag.
-> 
-> Tested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ arch/arm/boot/dts/r7s72100.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Applied to for-current, thanks!
-
-How do we handle driver fixes? Shall I take them via I2C to have the
-dependency clear? Or can they go seperately?
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index d5946df..247bbe0 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -505,4 +505,15 @@
+ 		cap-sdio-irq;
+ 		status = "disabled";
+ 	};
++
++	ostm: ostm@fcfec000 {
++		compatible = "renesas,ostm-r7s72100", "renesas,ostm";
++		reg = <0xfcfec000 0x30>,
++		      <0xfcfec400 0x30>;
++		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING
++			      GIC_SPI 103 IRQ_TYPE_EDGE_RISING>;
++
++		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>, <&mstp5_clks R7S72100_CLK_OSTM1>;
++		status = "disabled";
++	};
+ };
+-- 
+2.10.1
