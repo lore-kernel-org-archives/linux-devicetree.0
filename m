@@ -1,47 +1,44 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 2/5] ARM: dts: keystone: Add PSC node
-Date: Wed, 11 Jan 2017 19:48:40 -0600
-Message-ID: <20170112014843.19569-3-s-anna@ti.com>
-References: <20170112014843.19569-1-s-anna@ti.com>
+Subject: [PATCH v2 0/5] Reset Controller Nodes for TI Keystone platforms
+Date: Wed, 11 Jan 2017 19:48:38 -0600
+Message-ID: <20170112014843.19569-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170112014843.19569-1-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Suman Anna <s-anna@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The Power Sleep Controller (PSC) module is responsible
-for the power and clock management for each of the peripherals
-present on the SoC. Represent this as a syscon node so that
-multiple users can leverage it for various functionalities.
+Hi Santosh,
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-[afd@ti.com: add simple-mfd compatible]
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
-v2: No changes
+This is a slightly updated patch series for the reset controller nodes for
+TI Keystone2 SoCs. The only change is to rename the reset controller nodes
+from "psc-reset-controller" to just "reset-controller" following Rob Herring's
+comment on the Documentation update patch [1]. There are no changes to the first
+2 patches. I have already posted a v2 for the Documentation update as well.
+Please pick this up instead of the v1 series [2].
 
- arch/arm/boot/dts/keystone.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+regards
+Suman
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 02708ba2d4f4..ec203d0a673d 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -83,6 +83,11 @@
- 			reg = <0x02310000 0x200>;
- 		};
- 
-+		psc: power-sleep-controller@02350000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x02350000 0x1000>;
-+		};
-+
- 		devctrl: device-state-control@02620000 {
- 			compatible = "ti,keystone-devctrl", "syscon";
- 			reg = <0x02620000 0x1000>;
+[1] https://www.spinics.net/lists/arm-kernel/msg553646.html
+[2] https://www.spinics.net/lists/arm-kernel/msg552911.html
+
+
+Suman Anna (5):
+  ARM: Keystone: Enable ARCH_HAS_RESET_CONTROLLER
+  ARM: dts: keystone: Add PSC node
+  ARM: dts: keystone-k2hk: Add PSC reset controller node
+  ARM: dts: keystone-k2l: Add PSC reset controller node
+  ARM: dts: keystone-k2e: Add PSC reset controller node
+
+ arch/arm/boot/dts/keystone-k2e.dtsi  | 13 +++++++++++++
+ arch/arm/boot/dts/keystone-k2hk.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2l.dtsi  | 16 ++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi      |  5 +++++
+ arch/arm/mach-keystone/Kconfig       |  1 +
+ 5 files changed, 55 insertions(+)
+
 -- 
 2.10.2
