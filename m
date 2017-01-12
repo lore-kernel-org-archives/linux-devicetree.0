@@ -1,41 +1,65 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v2 0/5] Reset Controller Nodes for TI Keystone platforms
-Date: Wed, 11 Jan 2017 18:28:20 -0800
-Message-ID: <e5b84f7c-fb55-25f2-8079-47b4a7ecde1a@oracle.com>
-References: <20170112014843.19569-1-s-anna@ti.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
+ for imx6sll
+Date: Thu, 12 Jan 2017 02:57:20 +0000
+Message-ID: <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
+ <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
+ <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
+ <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170112014843.19569-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Davis <afd@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/11/17 5:48 PM, Suman Anna wrote:
-> Hi Santosh,
->
-> This is a slightly updated patch series for the reset controller nodes for
-> TI Keystone2 SoCs. The only change is to rename the reset controller nodes
-> from "psc-reset-controller" to just "reset-controller" following Rob Herring's
-> comment on the Documentation update patch [1]. There are no changes to the first
-> 2 patches. I have already posted a v2 for the Documentation update as well.
-> Please pick this up instead of the v1 series [2].
->
-I haven't picked up V1 so no worries. Even V2 I won't apply for another
-week to give some more time if there are any more comments on the
-bindings.
-
-Thanks for following up.
-
-Regards,
-Santosh
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzEyXSBEb2N1bWVudDogZHQ6IGJpbmRpbmc6IGlt
+eDogdXBkYXRlIHBpbmN0cmwgZG9jDQo+IGZvciBpbXg2c2xsDQo+IA0KPiBPbiBNb24sIEphbiA5
+LCAyMDE3IGF0IDM6MzIgQU0sIEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT4gd3JvdGU6DQo+
+IA0KPiA+IEkgaGF2ZSBsb29rIGludG8gdGhlIGFib3ZlIGNvbW1pdCBvbiB1c2luZyBnZW5lcmlj
+IGJpbmRpbmcuIEJ1dCBJDQo+ID4gdGhpbmsgdGhlIGdlbmVyaWMgcGluY29uZiBpcyBub3QgdmVy
+eSBlYXN5IHRvIGFkZCBpbiBpbXggcGluY3RybCBEcml2ZXIuIGlteA0KPiBwaW5jdHJsIHVzZSBh
+IGRpZmZlcmVudCB3YXkgdG8gcGFyc2UgdGhlIHBpbiBjb25maWd1cmUuDQo+IA0KPiBPSyBhdGxl
+YXN0IEkgbmVlZCBhbiBpbmRpY2F0aW9uIGZyb20gb25lIG9mIHRoZSBpLk1YIG1haW50YWluZXJz
+IGhvdyB0aGV5DQo+IHdhbnQgdG8gcHJvY2VlZC4NCj4gDQo+ID4gRWFjaCBmc2wscGluIGVudHJ5
+ICBsb29rcyBsaWtlIDxQSU5fRlVOQ19JRCAgQ09ORklHPiBpbiBkdHMsIHRoZQ0KPiA+IENPTkZJ
+RyBpcyB0aGUgcGFkIHNldHRpbmcgdmFsdWUgbGlrZSBwdWxsLXVwLCBvcGVuLWRyYWluLCBkcml2
+ZSBzdHJlbmd0aCBldGMuDQo+IFRoZSBhYm92ZSBjb25maWcgYml0IGRlZmluaXRpb24gaXMgc3Bl
+Y2lmaWMgdG8gZWFjaCBTT0MgaW4gdGhlIFBBRCBDVEwgcmVnaXN0ZXIuDQo+ID4NCj4gPiBJZiB3
+ZSB3YW50IHNldCB0aGUgcGluIGNvbmZpZyB0byBlbmFibGUgaHlzdGVyZXNpcywgNDdLT2htIFB1
+bGwgVXAsDQo+ID4gNTBNaHogc3BlZWQsIDgwT2htIGRyaXZlciBzdHJlbmd0aCBhbmQgRmFzdCBT
+bGV3IFJhdGUsIHRoZW4gdGhlIENPTkZJRw0KPiB2YWx1ZSBzaG91bGQgYmUgMHgxNzA1OSggT1Jz
+IGNvcnJlc3BvbmRpbmcgYml0IGRlZmluaXRpb24pLg0KPiANCj4gSHlzdGVyZXNpcyBpcyBhbiBp
+bnB1dCBwcm9wZXJ0eSBhbmQgZG9lcyBub3QgbWFrZSBzZW5zZSBvbiBzb21ldGhpbmcgdGhhdA0K
+PiBuZWVkIGRyaXZlIHN0cmVuZ3RoIGFuZCBzbGV3IHJhdGUgY29uZmlndXJhdGlvbiB3aGljaCBh
+cmUgb3V0cHV0IHByb3BlcnRpZXMuDQo+IChJIGd1ZXNzIHlvdSBtZWFuIDgwbUEgZHJpdmUgc3Ry
+ZW5ndGguKQ0KPiANCg0KRm9yIHNvbWUgYmktZGlyZWN0aW9uIHBpbnMsIGxpa2UgU0QgREFUQSBw
+aW4sIHdlIG1heSBuZWVkIHRvIGVuYWJsZSB0aGUgaHlzdGVyZXNpcyBjb25maWd1cmF0aW9uLg0K
+DQo+IEFjdHVhbGx5IHN1Y2ggb3h5bW9yb25pYyBzZXR0aW5ncyBpcyBhIGdvb2QgcmVhc29uIHRv
+IG1pZ3JhdGUgdG8gZ2VuZXJpYw0KPiBiaW5kaW5ncyBiZWNhdXNlIHdoZW4geW91IGRlc2NyaWJl
+IHN0dWZmIHdpdGggZ2VuZXJpYyBzdHJpbmdzIHlvdSBzZWUgYmV0dGVyDQo+IHdoYXQgaXMgZ29p
+bmcgb24sIGFuZCB3ZSBjYW4gYWRkIHNhbml0eSBjaGVja3MgdG8gY2FzZXMgbGlrZSB0aGlzIGlu
+IHRoZSBnZW5lcmljDQo+IGNvZGUgd2hlcmUgaXQgd291bGQgaW5kZWVkIGJlIHZhbGlkIHRvIGFz
+ayB3aHkgdGhpcyBjb21iaW5hdGlvbiBvZiBzZXR0aW5ncyBpcw0KPiBiZWluZyBtYWRlLg0KPiAN
+Cg0KQW5vdGhlciB0aGluZyBpcyB0aGF0IHdlIGNhbiB1c2UgYSBwaW5zLXRvb2wgcHJvZ3JhbSBk
+ZXZlbG9wZWQgYnkgTlhQIHRvIGdlbmVyYXRlIHRoZSBwaW5jdHJsIGNvbmZpZ3VyYXRpb24gY29k
+ZSB0aGF0IGNhbg0KYmUgdXNlZCBkaXJlY3RseSBpbiBkdHMuIFRoaXMgdGlueSBwcm9ncmFtIGNh
+biBhdm9pZCBwaW4gZnVuY3Rpb24gY29uZmxpY3QuIEFzIG9uIGkuTVgsIHRoZXJlIGFyZSBzbyBt
+YXkgcGlucywgZWFjaCBwaW4gY2FuIGJlIHVzZWQNCmZvciB1cCA4ICBmdW5jdGlvbi4gQ29uZmln
+dXJpbmcgdGhlIHBpbnMgaXMgYSB0aW1lLWNvbnN1bWluZyB3b3JrLiAgVGhpcyB0b29scyBpcyB2
+ZXJ5IHVzZWZ1bCBmb3IgY3VzdG9tZXIgdG8gZ2VuZXJhdGUgdGhlIGR0cyBjb2RlLiAgDQoNClVz
+aW5nIGdlbmVyaWMgcGluY29uZiBpcyBhbm90aGVyIG9wdGlvbiwgYnV0IGl0IG1heSBuZWVkIG1v
+cmUgdGltZSB0byBhZGQgaXQgYW5kIG1vcmUgd29yayB0byBkby4gIEZvciBub3csIEkgdGhpbmsg
+d2UgY2FuIHN0aWxsIGtlZXAgdGhlIGxlZ2FjeSBtZXRob2Q/DQogDQo+ID4gVGhpcyB2YWx1ZSB3
+aWxsIGJlIHNldCBpbg0KPiA+IFBBRCBDVEwgcmVnaXN0ZXIgdG8gY29uZmlnIHRoZSBjb3JyZXNw
+b25kaW5nIHBpbi4NCj4gDQo+IFllcz8gVGhhdCBpcyBjb21tb24uIEl0IGxvb2tzIGxpa2UgdGhh
+dCBpbiBEVDoNCj4gDQo+IHsNCj4gICAgaW5wdXQtc2NobWl0dC1lbmFibGU7DQo+ICAgIGJpYXMt
+cHVsbC11cCA9IDw0NzAwMD47DQo+ICAgIHNsZXctcmF0ZSA9IDw1MDAwMDAwMD47DQo+ICAgIGRy
+aXZlLXN0cmVuZ3RoID0gPDgwMDAwPjsNCj4gfTsNCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxs
+ZWlqDQo=
