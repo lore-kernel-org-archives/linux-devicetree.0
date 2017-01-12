@@ -1,134 +1,88 @@
-From: Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Wed, 11 Jan 2017 19:22:54 -0800
-Message-ID: <afe51f5f-03dd-4092-9ec0-297afb1453c7@mentor.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <CAJ+vNU2zU++Xam_UpDPfmSQhauhhS3_z8L-+ww6o-D9brWhiwA@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: power/supply: Update TPS65217 properties
+Date: Thu, 12 Jan 2017 04:47:04 +0100
+Message-ID: <20170112034704.4lgilyic5cj4nrxs@earth>
+References: <20161209062833.5768-1-woogyom.kim@gmail.com>
+ <20161209062833.5768-4-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAJ+vNU2zU++Xam_UpDPfmSQhauhhS3_z8L-+ww6o-D9brWhiwA@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Tim Harvey <tharvey@gateworks.com>, Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, mchehab@kernel.org, bparrot@ti.com, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, tiffany.lin@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s6a6e5z2na24jt6b"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161209062833.5768-4-woogyom.kim@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
 
+--s6a6e5z2na24jt6b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/11/2017 03:14 PM, Tim Harvey wrote:
->
-> <snip>
->
-> Hi Steve,
->
-> I took a stab at testing this today on a gw51xx which has an adv7180
-> hooked up as follows:
-> - i2c3@0x20
-> - 8bit data bus from DAT12 to DAT19, HSYNC, VSYNC, PIXCLK on CSI0 pads
-> (CSI0_IPU1)
-> - PWRDWN# on MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20
-> - IRQ# on MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23
-> - all three analog inputs available to off-board connector
->
-> My patch to the imx6qdl-gw51xx dtsi is:
+Hi Milo,
 
-As long as you used the patch to imx6qdl-sabreauto.dtsti that adds
-the adv7180 support as a guide, you should be ok here.
+On Fri, Dec 09, 2016 at 03:28:32PM +0900, Milo Kim wrote:
+> Add interrupt specifiers for USB and AC charger input. Interrupt numbers
+> are from the datasheet.
+> Fix wrong property for compatible string.
+>=20
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+> ---
+>  .../devicetree/bindings/power/supply/tps65217_charger.txt          | 7 +=
++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/tps65217_char=
+ger.txt b/Documentation/devicetree/bindings/power/supply/tps65217_charger.t=
+xt
+> index 98d131a..a11072c 100644
+> --- a/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
+> @@ -2,11 +2,16 @@ TPS65217 Charger
+> =20
+>  Required Properties:
+>  -compatible: "ti,tps65217-charger"
+> +-interrupts: TPS65217 interrupt numbers for the AC and USB charger input=
+ change.
+> +             Should be <0> for the USB charger and <1> for the AC adapte=
+r.
+> +-interrupt-names: Should be "USB" and "AC"
+> =20
+>  This node is a subnode of the tps65217 PMIC.
+> =20
+>  Example:
+> =20
+>  	tps65217-charger {
+> -		compatible =3D "ti,tps65090-charger";
+> +		compatible =3D "ti,tps65217-charger";
+> +		interrupts =3D <0>, <1>;
+> +		interrupt-names =3D "USB", "AC";
+>  	};
 
-> <snip>
->
->
->
-> On an IMX6Q I'm getting the following when the adv7180 module loads:
-> [   12.862477] adv7180 2-0020: chip found @ 0x20 (21a8000.i2c)
-> [   12.907767] imx-media: Registered subdev adv7180 2-0020
-> [   12.907793] imx-media soc:media@0: Entity type for entity adv7180
-> 2-0020 was not initialized!
-> [   12.907867] imx-media: imx_media_create_link: adv7180 2-0020:0 ->
-> ipu1_csi0_mux:1
->
-> Is the warning that adv7180 was not initialized expected and or an issue?
+Thanks, I queued this into power-supply's for-next branch.
 
-Yeah it's still a bug in the adv7180 driver, needs fixing.
+-- Sebastian
 
->
-> Now that your driver is hooking into the current media framework, I'm
-> not at all clear on how to link and configure the media entities.
+--s6a6e5z2na24jt6b
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It's all documented at Documentation/media/v4l-drivers/imx.rst.
-Follow the SabreAuto pipeline setup example.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlh2/DUACgkQ2O7X88g7
++pqcBRAAnvd9Z8Hpx0wKiHt+qcH+EsAiLrUPDI4Ax5jcMSwgG1zaoP8oxnquFUIo
+3SSXTHgBcCZyT1oHjdH41kTVn5N73rInmt2zaaHrpMfz3c19rUQAi0ACSmszRL/o
+D9CmKu0yNBC0kPK1xk1IP74VR8rm2ddILs56SN/GhtIp3ztES3AiobkCJW4V3HVB
+3WRpA7yzeuHD8pxq9cUPzQ9A4Y1+MzI4pQhcoOaAeoZighXGawn9wfiwT/jWKUP4
+3K4alPi26L/SVBMLmTV1RBVnc8ZfTzIjeu8vI5IgIyAecTgEp9u9GgJNlGRWe1Jo
+xRG2KuFxjQNQq1/818yXeXl/TYZps/QjyUov5Dx5wY2W26q1YOD9T+uJVXNh5E1T
+MzusSOck5DOP0wW2dnfqFcIocI+rkft/fIr7KoeDQS2c4MVRZdrs6Kymw18QtR+p
+o4GrohJNhUPoLAa8voEk9EY8i5HG5Vpo9rXdR4M1bw3+3IfxsyJu5+J2A8nunqcU
+hCooAIHL8x5lW97fJVf2RcP1MLyl4zqrQV1ZrgeqJvp7ZIhLW2UX6pZ1I4+csmfC
+phznoWdKyTQTLGyCIZlnirKM8lHsOhvj6I91l14pKiEJBW6xAG4pKtvtQTHSMSAL
+NhTtSW5vPI1LCsqfBArTNS1hxHNKlwJeb2qfHipn4GoosVFmMFw=
+=K9zX
+-----END PGP SIGNATURE-----
 
-
-> <snip>
->
->
-> Additionally I've found that on an IMX6S/IMX6DL we crash while
-> registering the media-ic subdev's:
-> [    3.975473] imx-media: Registered subdev ipu1_csi1_mux
-> [    3.980921] imx-media: Registered subdev ipu1_csi0_mux
-> [    4.003205] imx-media: Registered subdev ipu1_ic_prpenc
-> [    4.025373] imx-media: Registered subdev ipu1_ic_prpvf
-> [    4.037944] ------------[ cut here ]------------
-> [    4.042571] Kernel BUG at c06717dc [verbose debug info unavailable]
-> [    4.048845] Internal error: Oops - BUG: 0 [#1] SMP ARM
-> [    4.053990] Modules linked in:
-> [    4.057076] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
-> 4.9.0-rc6-00524-g84dad6e-dirty #446
-> [    4.065260] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> ...
-> [    4.296250] [<c0671780>] (v4l2_subdev_init) from [<c06fb02c>]
-> (imx_ic_probe+0x94/0x1ac)
-> [    4.304271] [<c06faf98>] (imx_ic_probe) from [<c05173d8>]
-> (platform_drv_probe+0x54/0xb8)
-> [    4.312373]  r9:c0d5e858 r8:00000000 r7:fffffdfb r6:c0e5dbf8
-> r5:da603810 r4:c16738d8
-> [    4.320129] [<c0517384>] (platform_drv_probe) from [<c0515978>]
-> (driver_probe_device+0x20c/0x2c0)
-> [    4.329010]  r7:c0e5dbf8 r6:00000000 r5:da603810 r4:c16738d8
-> [    4.334681] [<c051576c>] (driver_probe_device) from [<c0515af4>]
-> (__driver_attach+0xc8/0xcc)
-> [    4.343129]  r9:c0d5e858 r8:00000000 r7:00000000 r6:da603844
-> r5:c0e5dbf8 r4:da603810
-> [    4.350889] [<c0515a2c>] (__driver_attach) from [<c0513adc>]
-> (bus_for_each_dev+0x74/0xa8)
-> [    4.359078]  r7:00000000 r6:c0515a2c r5:c0e5dbf8 r4:00000000
-> [    4.364753] [<c0513a68>] (bus_for_each_dev) from [<c05151d4>]
-> (driver_attach+0x20/0x28)
->
-> I assume there is an iteration that needs a test on a missing pointer
-> only available on chips with both IPU's or PRP
-
-Yep, I only have quad boards here so I haven't gotten around to
-testing on S/DL.
-
-But it looks like I forgot to clear out the csi subdev pointer array before
-passing it to imx_media_of_parse(). I think that might explain the OOPS
-above. Try this patch:
-
-diff --git a/drivers/staging/media/imx/imx-media-dev.c 
-b/drivers/staging/media/imx/imx-media-dev.c
-index 357654d..0cf2d61 100644
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -379,7 +379,7 @@ static int imx_media_probe(struct platform_device *pdev)
-  {
-         struct device *dev = &pdev->dev;
-         struct device_node *node = dev->of_node;
--       struct imx_media_subdev *csi[4];
-+       struct imx_media_subdev *csi[4] = {0};
-         struct imx_media_dev *imxmd;
-         int ret;
-
-
-Steve
+--s6a6e5z2na24jt6b--
