@@ -1,148 +1,150 @@
-From: christopher.lee.bostic@gmail.com
-Subject: [PATCH v2 00/18] FSI device driver introduction
-Date: Thu, 12 Jan 2017 15:54:51 -0600
-Message-ID: <1484258091-78752-1-git-send-email-christopher.lee.bostic@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: joel@jms.id.au, jk@ozlabs.org, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@us.ibm.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] PCI: rockchip: Add quirk to disable RC's ASPM L0s
+Date: Thu, 12 Jan 2017 15:57:40 -0600
+Message-ID: <20170112215740.GF8312@bhelgaas-glaptop.roam.corp.google.com>
+References: <1484185997-55685-1-git-send-email-shawn.lin@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484185997-55685-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic@us.ibm.com>
+On Thu, Jan 12, 2017 at 09:53:17AM +0800, Shawn Lin wrote:
+> Rockchip's RC outputs 100MHz reference clock but there are
+> two methods for PHY to generate it.
+> 
+> (1)One of them is to use system PLL to generate 100MHz clock and
+> the PHY will relock it and filter signal noise then outputs the
+> reference clock.
+> 
+> (2)Another way is to share Soc's 24MHZ crystal oscillator with
+> PHY and force PHY's DLL to generate 100MHz internally.
+> 
+> When using case(2), the exit from L0s doesn't work fine occasionally
+> due to the broken design of RC receiver's logical circuit. So even if
+> we use extended-synch, it still fails for PHY to relock the bits from
+> FTS sometimes. This will hang the system.
+> 
+> Maybe we could argue that why not use case(1) to avoid it? The reason
+> is that as we could see the reference clock is derived from system PLL
+> and the path from it to PHY isn't so clean which means there are some
+> noise introduced by power-domain and other buses can't be filterd out
+> by PHY and we could see noise from the frequency spectrum by
+> oscilloscope. This makes the TX compatibility test a little difficult
+> to pass the spec. So case(1) and case(2) are both used indeed now. If
+> using case(2), we should disable RC's L0s support, and that is why we
+> need this property to indicate this quirk.
+> 
+> Also after checking quirk.c, I noticed there is already a quirk for
+> disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
+> shouldn't do that as mentioned above that case(1) could still works fine
+> with L0s.
+> 
+> Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Introduction of the IBM 'Flexible Support Interface' (FSI) bus device
-driver. FSI is a high fan out serial bus consisting of a clock and a serial
-data line capable of running at speeds up to 166 MHz.
+I applied this to pci/host-rockchip for v4.11.  I added Brian's Reviewed-by
+and Rob's Acked-by, since you didn't change anything substantive.
 
-This set provides the basic framework to add FSI extensions to the
-Linux bus and device models. Master specific implementations are
-defined to utilize the core FSI function.
+I assume there's no way to automatically discover whether the system is
+using the 24MHz oscillator?  If there is a way, we should use that instead
+of requiring a DT property.
 
-In Linux, we have a core FSI "bus type", along with drivers for FSI
-masters and engines.
+I reworded the changelog; I hope it still make sense:
 
-The FSI master drivers expose a read/write interface to the bus address
-space. The master drivers are under drivers/fsi/fsi-master-*.c.
+    PCI: rockchip: Disable RC's ASPM L0s based on DT "aspm-no-l0s"
+    
+    Rockchip's RC produces a 100MHz reference clock but there are two methods
+    for the PHY to generate it:
+    
+      (1) Use the system PLL to generate a 100MHz clock.  The PHY will relock
+          it, filter signal noise, and output the reference clock.  ASPM L0s
+          works correctly, but circuit noise issues make it difficult to pass
+	  the TX compatibility test.
+    
+      (2) Share the SoC's 24MHZ crystal oscillator with the PHY and force the
+          PHY's PLL to generate 100MHz internally.  In this case, exit from
+          ASPM L0s sometimes fails due to a design error in the RC receiver
+          circuit.  Even if we use extended-synch, the PHY sometimes fails to
+          relock the bits from FTS, which will hang the system.
+    
+    We want the flexibility to use both clocking methods, so add a DT property,
+    "aspm-no-l0s".  If that's present, disable L0s to avoid the issues with
+    case (2).
+    
+    [bhelgaas: changelog]
+    Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+    Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+    Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+    Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+    Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The core handles probing and discovery of slaves and slave
-engines, using those read/write interfaces. It is responsible for
-creating the endpoint Linux devices corresponding to the discovered
-engines on each slave.
-
-Slave engines are identified by an 'engine' type, and an optional
-version. Engine, a.k.a. client, drivers are matched and bound to these
-engines during discovery.
-
-This patch set does not include extended FSI function such as:
-    *  Hub master support
-    *  Cascaded master support
-    *  Application layer hot plug notification
-    *  Application layer FSI bus status interface
-
-Common FSI terminology:
-
-* Master
-    Controller of the FSI bus.  Only the master is allowed to control the
-    clock line and is the initiator of all transactions on a bus.
-
-* Slave
-    The receiver or target of a master initiated transaction.  The slave
-    cannot initiate communications on a bus and must respond to any
-    master requests for data.
-
-* CFAM
-    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
-    ASIC residing in any device requiring FSI communications. CFAMs
-    consist of an array of hardware 'engines' used for various purposes.
-    I2C masters, UARTs, General Purpose IO hardware are common types of
-    these engines.
-
-* Configuration Space / Table
-    A table contained at the beginning of each CFAM address space.
-    This table lists information such as the CFAM's ID, which engine types
-    and versions it has available, as well as its addressing range.
-
-* FSI Engine driver
-    A device driver that registers with the FSI core so that it can access
-    devices it owns on an FSI bus.
-
-
-Chris Bostic (8):
-  drivers/fsi: Kick off master scan via sysfs
-  drivers/fsi: Set up links for slave communication
-  drivers/fsi: Set slave SMODE to init communication
-  drivers/fsi: Remove all scanned devices during master unregister
-  drivers/fsi: Add FSI bus documentation
-  drivers/fsi: Add documentation for GPIO based FSI master
-  drivers/fsi: Document FSI master sysfs files in ABI
-  drivers/fsi: Add GPIO based FSI master
-
-Jeremy Kerr (10):
-  drivers/fsi: Add empty fsi bus definitions
-  drivers/fsi: Add device & driver definitions
-  drivers/fsi: add driver to device matches
-  drivers/fsi: Add fsi master definition
-  drivers/fsi: Add slave definition
-  drivers/fsi: Add empty master scan
-  drivers/fsi: Add FSI crc calculators to library
-  drivers/fsi: Implement slave initialisation
-  drivers/fsi: scan slaves & register devices
-  drivers/fsi: Add device read/write/peek functions
-
-Changes for v2:
-    - Change from atomic global for master number to ida simple
-      interface.
-    - Add valid pointer checks on register and unregister utils.
-    - Move CRC calculation utilities out of driver to lib path.
-    - Clean up white space issues.
-    - Remove added list management of master devices and use
-      instead the device_for_each_child method available in the
-      bus.
-    - Add new patch to document FSI bus functionality.
-    - Add new patch documenting FSI gpio master.
-    - Rearrage patch set to have documentation earlier than code
-      implementing it.
-    - Document all comptible strings used in device tree bindings.
-    - Elaborate documentation definition of FSI GPIO master.
-    - Describe in more detail what each GPIO FSI master pin is for.
-    - Re-order compatible strings in example binding so that most
-      specific device comes first.
-    - Indicate proper activation order of all FSI GPIO master pins.
-    - Fix an unmatched '>' bracket in the example for binding.
-    - Bracket each element of the example bindings individually.
-    - Add new patch documenting sysfs-bus-fsi attributes.
-    - Merge FSI GPIO master init into probe function.
-    - Set pin initial values at time of pin request.
-    - Assign value of master->master.dev at probe time.
-    - Use get_optional interfac for all optional GPIO pins.
-
-
- Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
- .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  71 +++
- Documentation/devicetree/bindings/fsi/fsi.txt      |  54 +++
- drivers/Kconfig                                    |   2 +
- drivers/Makefile                                   |   1 +
- drivers/fsi/Kconfig                                |  23 +
- drivers/fsi/Makefile                               |   3 +
- drivers/fsi/fsi-core.c                             | 494 +++++++++++++++++++
- drivers/fsi/fsi-master-gpio.c                      | 530 +++++++++++++++++++++
- drivers/fsi/fsi-master.h                           |  39 ++
- include/linux/crc-fsi.h                            |  29 ++
- include/linux/fsi.h                                |  60 +++
- lib/Makefile                                       |   1 +
- lib/crc-fsi.c                                      |  39 ++
- 14 files changed, 1352 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
- create mode 100644 drivers/fsi/Kconfig
- create mode 100644 drivers/fsi/Makefile
- create mode 100644 drivers/fsi/fsi-core.c
- create mode 100644 drivers/fsi/fsi-master-gpio.c
- create mode 100644 drivers/fsi/fsi-master.h
- create mode 100644 include/linux/crc-fsi.h
- create mode 100644 include/linux/fsi.h
- create mode 100644 lib/crc-fsi.c
-
--- 
-1.8.2.2
+> ---
+> 
+> Changes in v3:
+> - fix misspelled aspm for the property name
+> 
+> Changes in v2:
+> - drop the quirk prefix
+> 
+>  Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 2 ++
+>  drivers/pci/host/pcie-rockchip.c                        | 9 +++++++++
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> index 71aeda1..1453a73 100644
+> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> @@ -43,6 +43,8 @@ Required properties:
+>  - interrupt-map-mask and interrupt-map: standard PCI properties
+>  
+>  Optional Property:
+> +- aspm-no-l0s: RC won't support ASPM L0s. This property is needed if
+> +	using 24MHz OSC for RC's PHY.
+>  - ep-gpios: contain the entry for pre-reset gpio
+>  - num-lanes: number of lanes to use
+>  - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
+> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+> index f2dca7b..140cdc7 100644
+> --- a/drivers/pci/host/pcie-rockchip.c
+> +++ b/drivers/pci/host/pcie-rockchip.c
+> @@ -140,6 +140,8 @@
+>  #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+>  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+>  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+> +#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
+> +#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+>  #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+>  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+>  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+> @@ -653,6 +655,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+>  	status &= ~PCIE_RC_CONFIG_THP_CAP_NEXT_MASK;
+>  	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_THP_CAP);
+>  
+> +	/* Clear L0s from RC's link cap */
+> +	if (of_property_read_bool(dev->of_node, "aspm-no-l0s")) {
+> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LINK_CAP);
+> +		status &= ~PCIE_RC_CONFIG_LINK_CAP_L0S;
+> +		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LINK_CAP);
+> +	}
+> +
+>  	rockchip_pcie_write(rockchip, 0x0, PCIE_RC_BAR_CONF);
+>  
+>  	rockchip_pcie_write(rockchip,
+> -- 
+> 1.9.1
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
