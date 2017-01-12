@@ -1,44 +1,54 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] i2c: mux: pca954x: Add interrupt controller
- support
-Date: Thu, 12 Jan 2017 20:15:14 +0100
-Message-ID: <20170112191514.dpusqnbqahayx6j3@ninjato>
-References: <1483952576-5308-1-git-send-email-preid@electromag.com.au>
- <1483952576-5308-4-git-send-email-preid@electromag.com.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Thu, 12 Jan 2017 20:57:50 +0100
+Message-ID: <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483952576-5308-4-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170112181149.29035-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2017 at 05:02:54PM +0800, Phil Reid wrote:
-> Various muxes can aggregate multiple interrupts from each i2c bus.
-> All of the muxes with interrupt support combine the active low irq lines
-> using an internal 'and' function and generate a combined active low
-> output. The muxes do provide the ability to read a control register to
-> determine which irq is active. By making the mux an irq controller isr
-> latency can potentially be reduced by reading the status register and
-> then only calling the registered isr on that bus segment.
-> 
-> As there is no irq masking on the mux irq are disabled until irq_unmask is
-> called at least once.
-> 
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Hi Chris,
 
-Is the ack from Peda here forgotten or still missing?
+On Thu, Jan 12, 2017 at 7:11 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Now that all the clocks in the boot loader are disabled before booting
+> the kernel, and the mstp driver has been fixed for RZ/A1, here is a typo
+> that was missed during original testing.
+>
+> Fixes: 7c8522b7047c ("ARM: dts: r7s72100: add sdhi clock to device tree")
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  include/dt-bindings/clock/r7s72100-clock.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+> index 29e01ed..318ab14 100644
+> --- a/include/dt-bindings/clock/r7s72100-clock.h
+> +++ b/include/dt-bindings/clock/r7s72100-clock.h
+> @@ -46,6 +46,6 @@
+>
+>  /* MSTP12 */
+>  #define R7S72100_CLK_SDHI0     3
+> -#define R7S72100_CLK_SDHI1     2
+> +#define R7S72100_CLK_SDHI1     1
 
-@peda: Once you are happy, do you want to take these patches via your
-shiny new mux-tree or do you prefer if I pick them?
+This is strange. There are two SDHI channels, but the STBCR12 documentation
+(all versions up to rev. 3.00) says the register has MSTP bits for four SD
+host interfaces?
 
-Regards,
+Can you please enlighten me? Thanks!
 
-   Wolfram
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
