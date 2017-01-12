@@ -1,206 +1,106 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: [PATCH v5 3/3] Bluetooth: btusb: Configure Marvell to use one of the pins for oob wakeup
-Date: Thu, 12 Jan 2017 10:01:07 -0800
-Message-ID: <20170112180107.63244-3-rajatja@google.com>
-References: <20170112180107.63244-1-rajatja@google.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 2/2] Support for DW CSI-2 Host IPK
+Date: Thu, 12 Jan 2017 19:06:41 +0100
+Message-ID: <f1ea65b3-dbad-fd6c-d2c4-33abc3a66890@xs4all.nl>
+References: <cover.1481548484.git.roliveir@synopsys.com>
+ <bf2f0a6730e4a74d64e04575859d6b195f65b368.1481554324.git.roliveir@synopsys.com>
+ <eb89af79-f868-ceba-ac69-558bac77613d@xs4all.nl>
+ <8823670a-8456-87d0-3265-cb427e3445eb@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170112180107.63244-1-rajatja@google.com>
+In-Reply-To: <8823670a-8456-87d0-3265-cb427e3445eb@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Brian Norris <briannorris@google.com>, linux-kernel@vger.kernel.org
-Cc: Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Cc: davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, laurent.pinchart+renesas@ideasonboard.com, arnd@arndb.de, sudipm.mukherjee@gmail.com, tiffany.lin@mediatek.com, minghsiu.tsai@mediatek.com, jean-christophe.trotin@st.com, andrew-ct.chen@mediatek.com, simon.horman@netronome.com, songjun.wu@microchip.com, bparrot@ti.com, CARLOS.PALMINHA@synopsys.com, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell devices may have many gpio pins, and hence for wakeup
-on these out-of-band pins, the chip needs to be told which pin is
-to be used for wakeup, using an hci command.
+On 01/12/2017 06:43 PM, Ramiro Oliveira wrote:
+> Hi Hans,
+> 
+> Thank you for your feedback.
+> 
+> On 1/11/2017 11:54 AM, Hans Verkuil wrote:
+>> Hi Ramiro,
+>>
+>> See my review comments below:
+>>
+>> On 12/12/16 16:00, Ramiro Oliveira wrote:
+>>> Add support for the DesignWare CSI-2 Host IP Prototyping Kit
+>>>
+>>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+> 
+> [snip]
 
-Thus, we read the pin number etc from the device tree node and send
-a command to the chip.
+>>> +
+>>> +static int vid_dev_subdev_s_power(struct v4l2_subdev *sd, int on)
+>>> +{
+>>> +    return 0;
+>>> +}
+>>
+>> Just drop this empty function, shouldn't be needed.
+>>
+> 
+> When I start my system I'm hoping all the subdevs have s_power registered. If it
+> doesn't exist should I change the way I handle it, or will the core handle it
+> for me?
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v5: same as v5
-v4: same as v3
-v3: * remove the Marvell specific id table and check
-    * Add reference to marvell-bt-8xxx.txt in btusb.txt
-    * Add "Reviewed-by" and "Acked-by"    
-v2: Fix the binding document to specify to use "wakeup" interrupt-name
+If it isn't provided, then it is just skipped. The general rule is that
+you only provide these ops if they do something useful.
 
- Documentation/devicetree/bindings/net/btusb.txt    |  3 ++
- .../{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} | 46 +++++++++++++++----
- drivers/bluetooth/btusb.c                          | 51 ++++++++++++++++++++++
- 3 files changed, 92 insertions(+), 8 deletions(-)
- rename Documentation/devicetree/bindings/net/{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} (50%)
+> 
+>>> +
+>>> +static int vid_dev_subdev_registered(struct v4l2_subdev *sd)
+>>> +{
+>>> +    struct video_device_dev *vid_dev = v4l2_get_subdevdata(sd);
+>>> +    struct vb2_queue *q = &vid_dev->vb_queue;
+>>> +    struct video_device *vfd = &vid_dev->ve.vdev;
+>>> +    int ret;
+>>> +
+>>> +    memset(vfd, 0, sizeof(*vfd));
+>>> +
+>>> +    strlcpy(vfd->name, VIDEO_DEVICE_NAME, sizeof(vfd->name));
+>>> +
+>>> +    vfd->fops = &vid_dev_fops;
+>>> +    vfd->ioctl_ops = &vid_dev_ioctl_ops;
+>>> +    vfd->v4l2_dev = sd->v4l2_dev;
+>>> +    vfd->minor = -1;
+>>> +    vfd->release = video_device_release_empty;
+>>> +    vfd->queue = q;
+>>> +
+>>> +    INIT_LIST_HEAD(&vid_dev->vidq.active);
+>>> +    init_waitqueue_head(&vid_dev->vidq.wq);
+>>> +    memset(q, 0, sizeof(*q));
+>>> +    q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+>>> +    q->io_modes = VB2_MMAP | VB2_USERPTR;
+>>
+>> Add VB2_DMABUF and VB2_READ.
+>>
+> 
+> I'll add them, but I'm not using them, is it standard procedure to add them all
+> even if they aren't used?
 
-diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
-index 2c0355c85972..01fa2d4188d4 100644
---- a/Documentation/devicetree/bindings/net/btusb.txt
-+++ b/Documentation/devicetree/bindings/net/btusb.txt
-@@ -10,6 +10,9 @@ Required properties:
- 
- 		  "usb1286,204e" (Marvell 8997)
- 
-+Also, vendors that use btusb may have device additional properties, e.g:
-+Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-+
- Optional properties:
- 
-   - interrupt-parent: phandle of the parent interrupt controller
-diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-similarity index 50%
-rename from Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-rename to Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-index 6a9a63cb0543..9be1059ff03f 100644
---- a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-+++ b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-@@ -1,16 +1,21 @@
--Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
-+Marvell 8897/8997 (sd8897/sd8997) bluetooth devices (SDIO or USB based)
- ------
-+The 8997 devices supports multiple interfaces. When used on SDIO interfaces,
-+the btmrvl driver is used and when used on USB interface, the btusb driver is
-+used.
- 
- Required properties:
- 
-   - compatible : should be one of the following:
--	* "marvell,sd8897-bt"
--	* "marvell,sd8997-bt"
-+	* "marvell,sd8897-bt" (for SDIO)
-+	* "marvell,sd8997-bt" (for SDIO)
-+	* "usb1286,204e"      (for USB)
- 
- Optional properties:
- 
-   - marvell,cal-data: Calibration data downloaded to the device during
- 		      initialization. This is an array of 28 values(u8).
-+		      This is only applicable to SDIO devices.
- 
-   - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth chip.
- 		        firmware will use the pin to wakeup host system (u16).
-@@ -18,10 +23,15 @@ Optional properties:
- 		      platform. The value will be configured to firmware. This
- 		      is needed to work chip's sleep feature as expected (u16).
-   - interrupt-parent: phandle of the parent interrupt controller
--  - interrupts : interrupt pin number to the cpu. Driver will request an irq based
--		 on this interrupt number. During system suspend, the irq will be
--		 enabled so that the bluetooth chip can wakeup host platform under
--		 certain condition. During system resume, the irq will be disabled
-+  - interrupt-names: Used only for USB based devices (See below)
-+  - interrupts : specifies the interrupt pin number to the cpu. For SDIO, the
-+		 driver will use the first interrupt specified in the interrupt
-+		 array. For USB based devices, the driver will use the interrupt
-+		 named "wakeup" from the interrupt-names and interrupt arrays.
-+		 The driver will request an irq based on this interrupt number.
-+		 During system suspend, the irq will be enabled so that the
-+		 bluetooth chip can wakeup host platform under certain
-+		 conditions. During system resume, the irq will be disabled
- 		 to make sure unnecessary interrupt is not received.
- 
- Example:
-@@ -29,7 +39,9 @@ Example:
- IRQ pin 119 is used as system wakeup source interrupt.
- wakeup pin 13 and gap 100ms are configured so that firmware can wakeup host
- using this device side pin and wakeup latency.
--calibration data is also available in below example.
-+
-+Example for SDIO device follows (calibration data is also available in
-+below example).
- 
- &mmc3 {
- 	status = "okay";
-@@ -54,3 +66,21 @@ calibration data is also available in below example.
- 		marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
- 	};
- };
-+
-+Example for USB device:
-+
-+&usb_host1_ohci {
-+    status = "okay";
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+
-+    mvl_bt1: bt@1 {
-+	compatible = "usb1286,204e";
-+	reg = <1>;
-+	interrupt-parent = <&gpio0>;
-+	interrupt-names = "wakeup";
-+	interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
-+	marvell,wakeup-pin = /bits/ 16 <0x0d>;
-+	marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
-+    };
-+};
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 0a777bb407b1..a1079c19b96f 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2343,6 +2343,50 @@ static int btusb_shutdown_intel(struct hci_dev *hdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+/* Configure an out-of-band gpio as wake-up pin, if specified in device tree */
-+static int marvell_config_oob_wake(struct hci_dev *hdev)
-+{
-+	struct sk_buff *skb;
-+	struct btusb_data *data = hci_get_drvdata(hdev);
-+	struct device *dev = &data->udev->dev;
-+	u16 pin, gap, opcode;
-+	int ret;
-+	u8 cmd[5];
-+
-+	/* Move on if no wakeup pin specified */
-+	if (of_property_read_u16(dev->of_node, "marvell,wakeup-pin", &pin) ||
-+	    of_property_read_u16(dev->of_node, "marvell,wakeup-gap-ms", &gap))
-+		return 0;
-+
-+	/* Vendor specific command to configure a GPIO as wake-up pin */
-+	opcode = hci_opcode_pack(0x3F, 0x59);
-+	cmd[0] = opcode & 0xFF;
-+	cmd[1] = opcode >> 8;
-+	cmd[2] = 2; /* length of parameters that follow */
-+	cmd[3] = pin;
-+	cmd[4] = gap; /* time in ms, for which wakeup pin should be asserted */
-+
-+	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
-+	if (!skb) {
-+		bt_dev_err(hdev, "%s: No memory\n", __func__);
-+		return -ENOMEM;
-+	}
-+
-+	memcpy(skb_put(skb, sizeof(cmd)), cmd, sizeof(cmd));
-+	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
-+
-+	ret = btusb_send_frame(hdev, skb);
-+	if (ret) {
-+		bt_dev_err(hdev, "%s: configuration failed\n", __func__);
-+		kfree_skb(skb);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- static int btusb_set_bdaddr_marvell(struct hci_dev *hdev,
- 				    const bdaddr_t *bdaddr)
- {
-@@ -2918,6 +2962,13 @@ static int btusb_probe(struct usb_interface *intf,
- 	err = btusb_config_oob_wake(hdev);
- 	if (err)
- 		goto out_free_dev;
-+
-+	/* Marvell devices may need a specific chip configuration */
-+	if (id->driver_info & BTUSB_MARVELL && data->oob_wake_irq) {
-+		err = marvell_config_oob_wake(hdev);
-+		if (err)
-+			goto out_free_dev;
-+	}
- #endif
- 	if (id->driver_info & BTUSB_CW6622)
- 		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
--- 
-2.11.0.390.gc69c2f50cf-goog
+You may not use them, but others might. And it doesn't cost anything to add them.
+
+> 
+>>> +    q->ops = &vb2_video_qops;
+>>> +    q->mem_ops = &vb2_vmalloc_memops;
+>>
+>> Why is vmalloc used? Can't you use dma_contig or dma_sg and avoid having to copy
+>> the image data? That's a really bad design given the amount of video data that
+>> you have to copy.
+>>
+> 
+> When I started development, the arch I was using (ARC) didn't support
+> dma_contig, so I was forced to use vmalloc.
+> 
+> Since then things have changed and I'm already using dma_contig, however it
+> wasn't included in this patch. I'll add it to the next patch.
+
+Ah, good. If you are switching to dma_contig, then remove VB2_USERPTR.
+VB2_DMABUF should be used instead.
+
+Regards,
+
+	Hans
