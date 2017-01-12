@@ -1,84 +1,141 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH V2 0/5] PCI: exynos: use the PHY generic framework
-Date: Thu, 12 Jan 2017 15:01:26 -0600
-Message-ID: <20170112210126.GD8312@bhelgaas-glaptop.roam.corp.google.com>
-References: <CGME20170104123435epcas1p182b241236048160fb81ac473a74540da@epcas1p1.samsung.com>
- <20170104123435.30740-1-jh80.chung@samsung.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 12 Jan 2017 22:10:04 +0100
+Message-ID: <20170112211004.z3wylc7vrubulc3x@pengutronix.de>
+References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
+ <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
+ <20170111082208.vzu7xgpd4eakyldl@pengutronix.de>
+ <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
+ <20170111153940.dtxzvtdici3r7l54@pengutronix.de>
+ <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
+ <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
+ <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
+ <20170112174902.j52foglkdouyz36n@pengutronix.de>
+ <CAOAejn3tPi0fjy+t-UhMTvAq7LfdKJJdbcLw2su1-YAGDZMxew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170104123435.30740-1-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, kishon@ti.com, jingoohan1@gmail.com, vivek.gautam@codeaurora.org, pankaj.dubey@samsung.com, alim.akhtar@samsung.com, cpgs@samsung.com
+In-Reply-To: <CAOAejn3tPi0fjy+t-UhMTvAq7LfdKJJdbcLw2su1-YAGDZMxew@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 04, 2017 at 09:34:30PM +0900, Jaehoon Chung wrote:
-> This patchset is for using PHY generic framework.
-> Current pci-exyons doesn't use the phy framework since there haven't been on
-> PHY subsystem when Exynos5440 had been upstremed.
-> The not using PHY framework make the difficult to upstream the other
-> Exynos SoCs.
-> 
-> Before upstreaming the other Exynos SoCs, it's goal what make to use the PHY framework.
-> 
-> This patchset has the below modifications:
-> 1) Introduces the phy-pcie-pcie
-> 2) Handles Phy controller from PHY framework for pci-exynos
-> 3) Modifies the dt-binding of pci-exynos
-> - The using the getting configuration space address from ranges is old.
-> - Deprecated the old way.
-> 4) Maintains the backward compatibility
-> 
-> NOTE: These patches based on below patches:
-> 	http://patchwork.ozlabs.org/patch/706998/
-> 	http://patchwork.ozlabs.org/patch/706997/
-> 	http://patchwork.ozlabs.org/patch/706995/
-> 	http://patchwork.ozlabs.org/patch/706994/
-> 	http://patchwork.ozlabs.org/patch/703530/
-> 	- This patch should be conflicted. so fixes the manually.
-> 	http://patchwork.ozlabs.org/patch/708414/
-> 
-> Changelog on V2:
-> - Keep current codes for backward compatibility
-> - Fixes some typos
-> - Split the patches for removing the dependency
-> - Removes the unnecessary codes
-> - Change the patch's sequence
-> - Based on latest PCI git repository.(next branch)
-> 
-> Jaehoon Chung (5):
->   Documetation: samsung-phy: add the exynos-pcie-phy binding
->   phy: phy-exynos-pcie: Add support for Exynos PCIe phy
->   Documetation: binding: modify the exynos5440 pcie binding
->   PCI: exynos: support the using PHY generic framework
->   ARM: dts: exynos5440: support the phy-pcie node for pcie
+On Thu, Jan 12, 2017 at 09:58:23PM +0100, M'boumba Cedric Madianga wrote:
+> 2017-01-12 18:49 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutroni=
+x.de>:
+> > On Thu, Jan 12, 2017 at 02:47:42PM +0100, M'boumba Cedric Madianga wrot=
+e:
+> >> 2017-01-12 13:03 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutr=
+onix.de>:
+> >> > Hello Cedric,
+> >> >
+> >> > On Thu, Jan 12, 2017 at 12:23:12PM +0100, M'boumba Cedric Madianga w=
+rote:
+> >> >> 2017-01-11 16:39 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@peng=
+utronix.de>:
+> >> >> > On Wed, Jan 11, 2017 at 02:58:44PM +0100, M'boumba Cedric Madiang=
+a wrote:
+> >> >> >> 2017-01-11 9:22 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pe=
+ngutronix.de>:
+> >> >> >> > This is surprising. I didn't recheck the manual, but that look=
+s very
+> >> >> >> > uncomfortable.
+> >> >> >>
+> >> >> >> I agree but this exactly the hardware way of working described i=
+n the
+> >> >> >> reference manual.
+> >> >> >
+> >> >> > IMHO that's a hw bug. This makes it for example impossible to imp=
+lement
+> >> >> > SMBus block transfers (I think).
+> >> >>
+> >> >> This is not correct.
+> >> >> Setting STOP/START bit does not mean the the pulse will be sent rig=
+ht now.
+> >> >> Here we have just to prepare the hardware for the 2 next pulse but =
+the
+> >> >> STOP/START/ACK pulse will be generated at the right time as required
+> >> >> by I2C specification.
+> >> >> So SMBus block transfer will be possible.
+> >> >
+> >> > A block transfer consists of a byte that specifies the count of bytes
+> >> > yet to come. So the device sends for example:
+> >> >
+> >> >         0x01 0xab
+> >> >
+> >> > So when you read the 1 in the first byte it's already too late to set
+> >> > STOP to get it after the 2nd byte.
+> >> >
+> >> > Not sure I got all the required details right, though.
+> >>
+> >> Ok I understand your use case but I always think that the harware mana=
+ges it.
+> >> If I take the above example, the I2C SMBus block read transaction will
+> >> be as below:
+> >> S Addr Wr [A] Comm [A]
+> >>            S Addr Rd [A] [Count] A [Data1] A [Data2] NA P
+> >>
+> >> The first message is a single byte-transmission so there is no problem.
+> >>
+> >> The second message is a N-byte reception with N =3D 3
+> >>
+> >> When the I2C controller has finished to send the device address (S
+> >> Addr Rd), the ADDR flag is set and an interrupt is raised.
+> >> In the routine that handles ADDR event, we set ACK bit in order to
+> >> generate ACK pulse as soon as a data byte is received in the shift
+> >> register and then we clear the ADDR flag.
+> >> Please note that the SCL line is stretched low until ADDR flag is clea=
+red.
+> >> So, as far I understand, the device could not sent any data as long as
+> >> the SCL line is stretched low. Right ?
+> >>
+> >> Then, as soon as the SCL line is high, the device could send the first
+> >> data byte (Count).
+> >> When this byte is received in the shift register, an ACK is
+> >> automatically generated as defined during adress match phase and the
+> >> data byte is pushed in DR (data register).
+> >> Then, an interrupt is raised as RXNE (RX not empty) flag is set.
+> >> In the routine that handles RXNE event, as N=3D3, we just clear all
+> >> buffer interrupts in order to avoid another system preemption due to
+> >> RXNE event but we does not read the data in DR.
+> >
+> > In my example I want to receive a block of length 1, so only two bytes
+> > are read, a 1 (the length) and the data byte (0xab in my example). I
+> > think that as soon as you read the 1 it's already to late to schedule
+> > the NA after the next byte?
+> =
 
-Since you're going to update this, please fix the typos in the above,
-e.g., s/Documetation/Documentation/.
+> Not really. This 2-byte reception is also correctly managed.
+> Indeed, in this case, when the controller has sent the device address,
+> the ADDR flag is set and an interrupt is raised.
+> So, as long as the ADDR flag is not cleared, the SCL line is stretched
+> low and the device could not send any data.
+> During this address match phase, for a 2-byte reception, we enable
+> NACK and set POS bit (ACK/NACK position).
+> As POS=3D1, the NACK will be sent for the next byte which will be
+> received in the shift register instead of the current one.
+> So in this example, the next byte will be the last one.
+> After that, we clear the ADDR flag and the device is allowed to send data.
 
-In addition, please run "git log --oneline" on the files you're
-changing and make your subject lines consistent in style and
-capitalization with previous ones, e.g., use "PCIe" consistently.
-"Modify the ..." contains no useful information.  Of course a patch
-modifies something -- please tell us what the modification is useful
-for.
+I didn't follow, but if you are convinced it works that's good. I wonder
+if it simplifies the driver if POS=3D1 is used and so ACK/NACK can be
+setup later?
 
->  .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 +++
->  .../devicetree/bindings/phy/samsung-phy.txt        |  17 ++
->  arch/arm/boot/dts/exynos5440.dtsi                  |  34 ++-
->  drivers/pci/host/pci-exynos.c                      |  61 ++++-
->  drivers/phy/Kconfig                                |   9 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-exynos-pcie.c                      | 280 +++++++++++++++++++++
->  7 files changed, 408 insertions(+), 23 deletions(-)
->  create mode 100644 drivers/phy/phy-exynos-pcie.c
-> 
-> -- 
-> 2.10.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
