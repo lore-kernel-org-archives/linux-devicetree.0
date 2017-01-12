@@ -1,7 +1,7 @@
 From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 6/6] fbdev/ssd1307fb: add support to enable VBAT
-Date: Thu, 12 Jan 2017 13:16:32 +0200
-Message-ID: <c394e52447ed45fff9672eb3e3bb6729bea87ee7.1484219137.git.jsarha@ti.com>
+Subject: [PATCH 2/6] fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
+Date: Thu, 12 Jan 2017 13:16:28 +0200
+Message-ID: <fa1702eb759e06667196be94e088a95b212237b0.1484219137.git.jsarha@ti.com>
 References: <cover.1484219137.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,34 @@ To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Remove reset-active-low from the devicetree binding document. The actual
+implementation has never been there in the driver code and there is no
+reason to add it because the gpiod API supports gpio flags, including
+GPIO_ACTIVE_LOW, directly trough its own devicetree binding.
 
-SSD1306 needs VBAT when it is wired in charge pump configuration. This
-patch adds support to the driver to enable VBAT regulator at init time.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/display/ssd1307fb.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-index 6617df6..209d931 100644
+index eb31ed4..4aee67f 100644
 --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
 +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-@@ -16,6 +16,7 @@ Required properties:
+@@ -8,14 +8,14 @@ Required properties:
+          0x3c or 0x3d
+   - pwm: Should contain the pwm to use according to the OF device tree PWM
+          specification [0]. Only required for the ssd1307.
+-  - reset-gpios: Should contain the GPIO used to reset the OLED display
++  - reset-gpios: Should contain the GPIO used to reset the OLED display. See
++                 Documentation/devicetree/bindings/gpio/gpio.txt for details.
+   - solomon,height: Height in pixel of the screen driven by the controller
+   - solomon,width: Width in pixel of the screen driven by the controller
+   - solomon,page-offset: Offset of pages (band of 8 pixels) that the screen is
+     mapped to.
+ 
  Optional properties:
-   - reset-gpios: The GPIO used to reset the OLED display, if available. See
-                  Documentation/devicetree/bindings/gpio/gpio.txt for details.
-+  - vbat-supply: The supply for VBAT
+-  - reset-active-low: Is the reset gpio is active on physical low?
    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
                                to segment mapping
    - solomon,com-seq: Display uses sequential COM pin configuration
