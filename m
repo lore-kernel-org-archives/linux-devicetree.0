@@ -1,150 +1,132 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] PCI: rockchip: Add quirk to disable RC's ASPM L0s
-Date: Thu, 12 Jan 2017 15:57:40 -0600
-Message-ID: <20170112215740.GF8312@bhelgaas-glaptop.roam.corp.google.com>
-References: <1484185997-55685-1-git-send-email-shawn.lin@rock-chips.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 04/12] driver: clk: imx: Add clock driver for imx6sll
+Date: Thu, 12 Jan 2017 14:05:36 -0800
+Message-ID: <20170112220536.GP17126@codeaurora.org>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <1482832070-22668-5-git-send-email-ping.bai@nxp.com>
+ <20170110003753.GM17126@codeaurora.org>
+ <AM3PR04MB5307CB38AA904535AF8D80D87670@AM3PR04MB530.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484185997-55685-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <AM3PR04MB5307CB38AA904535AF8D80D87670@AM3PR04MB530.eurprd04.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmai>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 09:53:17AM +0800, Shawn Lin wrote:
-> Rockchip's RC outputs 100MHz reference clock but there are
-> two methods for PHY to generate it.
+On 01/10, Jacky Bai wrote:
 > 
-> (1)One of them is to use system PLL to generate 100MHz clock and
-> the PHY will relock it and filter signal noise then outputs the
-> reference clock.
+> > 
+> > > +#include <linux/types.h>
+> > > +
+> > > +#include "clk.h"
+> > > +
+> > > +#define CCM_ANALOG_PLL_BYPASS		(0x1 << 16)
+> > > +#define BM_CCM_CCDR_MMDC_CH0_MASK	(0x2 << 16)
+> > > +#define CCDR	0x4
+> > > +#define xPLL_CLR(offset)		 (offset + 0x8)
+> > > +
+> > > +static const char *pll_bypass_src_sels[] = { "osc", "dummy", };
+> > 
+> > All these should be const char * const unless something is wrong.
 > 
-> (2)Another way is to share Soc's 24MHZ crystal oscillator with
-> PHY and force PHY's DLL to generate 100MHz internally.
-> 
-> When using case(2), the exit from L0s doesn't work fine occasionally
-> due to the broken design of RC receiver's logical circuit. So even if
-> we use extended-synch, it still fails for PHY to relock the bits from
-> FTS sometimes. This will hang the system.
-> 
-> Maybe we could argue that why not use case(1) to avoid it? The reason
-> is that as we could see the reference clock is derived from system PLL
-> and the path from it to PHY isn't so clean which means there are some
-> noise introduced by power-domain and other buses can't be filterd out
-> by PHY and we could see noise from the frequency spectrum by
-> oscilloscope. This makes the TX compatibility test a little difficult
-> to pass the spec. So case(1) and case(2) are both used indeed now. If
-> using case(2), we should disable RC's L0s support, and that is why we
-> need this property to indicate this quirk.
-> 
-> Also after checking quirk.c, I noticed there is already a quirk for
-> disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
-> shouldn't do that as mentioned above that case(1) could still works fine
-> with L0s.
-> 
-> Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> If changed to 'const char * const', it vill has argument type mismatch error, as imx_clk_* wrapper function
+> has argument type 'const char *'. 
 
-I applied this to pci/host-rockchip for v4.11.  I added Brian's Reviewed-by
-and Rob's Acked-by, since you didn't change anything substantive.
+Hmm that's unfortunate.
 
-I assume there's no way to automatically discover whether the system is
-using the 24MHz oscillator?  If there is a way, we should use that instead
-of requiring a DT property.
+> 
+> > 
+> > > +static const char *pll1_bypass_sels[] = { "pll1", "pll1_bypass_src",
+> > > +}; static const char *pll2_bypass_sels[] = { "pll2",
+> > > +"pll2_bypass_src", }; static const char *pll3_bypass_sels[] = {
+> > > +"pll3", "pll3_bypass_src", }; static const char *pll4_bypass_sels[] =
+> > > +{ "pll4", "pll4_bypass_src", }; static const char *pll5_bypass_sels[]
+> > > += { "pll5", "pll5_bypass_src", }; static const char
+> > > +*pll6_bypass_sels[] = { "pll6", "pll6_bypass_src", };
+> > [...]
+> > > +	clks[IMX6SLL_CLK_USDHC3]	= imx_clk_gate2("usdhc3",
+> > 	"usdhc3_podf",	 base + 0x80,	6);
+> > > +
+> > > +	/* mask handshake of mmdc */
+> > > +	writel_relaxed(BM_CCM_CCDR_MMDC_CH0_MASK, base + CCDR);
+> > > +
+> > > +	for (i = 0; i < ARRAY_SIZE(clks); i++)
+> > > +		if (IS_ERR(clks[i]))
+> > > +			pr_err("i.MX6SLL clk %d: register failed with %ld\n", i,
+> > > +PTR_ERR(clks[i]));
+> > > +
+> > > +	clk_data.clks = clks;
+> > > +	clk_data.clk_num = ARRAY_SIZE(clks);
+> > > +	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+> > > +
+> > > +	/* set perclk to from OSC */
+> > > +	clk_set_parent(clks[IMX6SLL_CLK_PERCLK_SEL],
+> > clks[IMX6SLL_CLK_OSC]);
+> > 
+> > Can this be done with assigned-clocks in DT?
+> 
+> Ok, I will move it to assigned-clocks in DT.
+> 
+> > 
+> > > +
+> > > +	for (i = 0; i < ARRAY_SIZE(clks_init_on); i++)
+> > > +		clk_prepare_enable(clks[clks_init_on[i]]);
+> > 
+> > Critical clocks?
+> 
+> Yes, these clocks must be always on. 
+> 
+> > 
+> > > +
+> > > +	if (IS_ENABLED(CONFIG_USB_MXS_PHY)) {
+> > > +		clk_prepare_enable(clks[IMX6SLL_CLK_USBPHY1_GATE]);
+> > > +		clk_prepare_enable(clks[IMX6SLL_CLK_USBPHY2_GATE]);
+> > 
+> > The phy driver can't enable these?
+> 
+> The reason why we enable these two clks here is in below commit
+> commit a5120e89e7e187a91852896f586876c7a2030804
+> Author: Peter Chen <peter.chen@freescale.com>
+> Date:   Fri Jan 18 10:38:05 2013 +0800
+>       ARM i.MX6: change mxs usbphy clock usage
+> 
 
-I reworded the changelog; I hope it still make sense:
+So can we mark these clks with CLK_IS_CRITICAL flag then instead?
+Or are they disabled out of the bootloader?
 
-    PCI: rockchip: Disable RC's ASPM L0s based on DT "aspm-no-l0s"
-    
-    Rockchip's RC produces a 100MHz reference clock but there are two methods
-    for the PHY to generate it:
-    
-      (1) Use the system PLL to generate a 100MHz clock.  The PHY will relock
-          it, filter signal noise, and output the reference clock.  ASPM L0s
-          works correctly, but circuit noise issues make it difficult to pass
-	  the TX compatibility test.
-    
-      (2) Share the SoC's 24MHZ crystal oscillator with the PHY and force the
-          PHY's PLL to generate 100MHz internally.  In this case, exit from
-          ASPM L0s sometimes fails due to a design error in the RC receiver
-          circuit.  Even if we use extended-synch, the PHY sometimes fails to
-          relock the bits from FTS, which will hang the system.
-    
-    We want the flexibility to use both clocking methods, so add a DT property,
-    "aspm-no-l0s".  If that's present, disable L0s to avoid the issues with
-    case (2).
-    
-    [bhelgaas: changelog]
-    Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-    Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-    Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-    Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-    Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> > > +	}
+> > > +
+> > > +	/* Lower the AHB clock rate before changing the clock source. */
+> > > +	clk_set_rate(clks[IMX6SLL_CLK_AHB], 99000000);
+> > > +
+> > > +	/* Change periph_pre clock to pll2_bus to adjust AXI rate to 264MHz */
+> > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH_CLK2_SEL],
+> > clks[IMX6SLL_CLK_PLL3_USB_OTG]);
+> > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH],
+> > clks[IMX6SLL_CLK_PERIPH_CLK2]);
+> > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH_PRE],
+> > clks[IMX6SLL_CLK_PLL2_BUS]);
+> > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH],
+> > > +clks[IMX6SLL_CLK_PERIPH_PRE]);
+> > > +
+> > > +	clk_set_rate(clks[IMX6SLL_CLK_AHB], 132000000);
+> > 
+> > assigned-clocks for rates now? Or perhaps we shouldn't be exposing these as
+> > clks if they have some sort of complicated rate sequence switch that we can't
+> > guarantee with the clk_ops we have today.
+> 
+> These clks will be used by some peripherals, so we need to expose these clocks.
+> And the above parent and rate swith sequence is not very easy to be handled in assigned-clocks,
+> So we leave it in this place. 
+> 
 
-> ---
-> 
-> Changes in v3:
-> - fix misspelled aspm for the property name
-> 
-> Changes in v2:
-> - drop the quirk prefix
-> 
->  Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 2 ++
->  drivers/pci/host/pcie-rockchip.c                        | 9 +++++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> index 71aeda1..1453a73 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -43,6 +43,8 @@ Required properties:
->  - interrupt-map-mask and interrupt-map: standard PCI properties
->  
->  Optional Property:
-> +- aspm-no-l0s: RC won't support ASPM L0s. This property is needed if
-> +	using 24MHz OSC for RC's PHY.
->  - ep-gpios: contain the entry for pre-reset gpio
->  - num-lanes: number of lanes to use
->  - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
-> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-> index f2dca7b..140cdc7 100644
-> --- a/drivers/pci/host/pcie-rockchip.c
-> +++ b/drivers/pci/host/pcie-rockchip.c
-> @@ -140,6 +140,8 @@
->  #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
->  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
->  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
-> +#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
-> +#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
->  #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
->  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
->  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
-> @@ -653,6 +655,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
->  	status &= ~PCIE_RC_CONFIG_THP_CAP_NEXT_MASK;
->  	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_THP_CAP);
->  
-> +	/* Clear L0s from RC's link cap */
-> +	if (of_property_read_bool(dev->of_node, "aspm-no-l0s")) {
-> +		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LINK_CAP);
-> +		status &= ~PCIE_RC_CONFIG_LINK_CAP_L0S;
-> +		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LINK_CAP);
-> +	}
-> +
->  	rockchip_pcie_write(rockchip, 0x0, PCIE_RC_BAR_CONF);
->  
->  	rockchip_pcie_write(rockchip,
-> -- 
-> 1.9.1
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How do we guarantee that the rate switch doesn't happen later on,
+requiring this coordinated sequence of clk operations?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
