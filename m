@@ -1,31 +1,33 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
-Date: Thu, 12 Jan 2017 08:43:12 +0100
-Message-ID: <20170112074312.GA23943@kroah.com>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
- <20170112002910.3650-4-cyrilbur@gmail.com>
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: Isn't gen3 peripheral bus 32-bit?
+Date: Thu, 12 Jan 2017 10:42:54 +0300
+Message-ID: <3453a281-7e5b-aca7-ee56-04da8534ae0d@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170112002910.3650-4-cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Artemi Ivanov <artemi.ivanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 11:29:09AM +1100, Cyril Bur wrote:
-> This driver exposes a reserved chunk of BMC ram to userspace as well as
-> an ioctl interface to control the BMC<->HOST mapping of the LPC bus.
-> This allows for a communication channel between the BMC and the host
+Hi
 
-Why not make this a UIO driver?  Why does it have to be a character
-device?
+R-Car GEN3 PCIe modules have 32-bit connect to internal AXI bus.
 
-thanks,
+Could please somebody with lowlevel hardware knowledge answer, if this
+is PCIe module limitation, or internal bus limitation.
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Depending on that, different modification of renesas/r8a779[56].dtsi
+files is needed: either
+- wrap only pcie nodes into 32-bit sub-node of /soc, or
+- turn entire /soc subtree to 32-bit.
+
+
+Problem I'm trying to solve is related to DMA ranges handling.
+Architecture code needs explicit information on DMA range
+limitations caused by interconnect. See [1] thread for details.
+
+Nikita
+
+[1] https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg10449.html
