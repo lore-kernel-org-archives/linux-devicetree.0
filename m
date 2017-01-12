@@ -1,49 +1,104 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3] mmc: sh_mmcif: Document r7s72100 DT bindings
-Date: Wed, 11 Jan 2017 23:14:52 -0500
-Message-ID: <20170112041452.14136-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH v7 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161601 erratum
+Date: Thu, 12 Jan 2017 12:23:14 +0800
+Message-ID: <6c33e4e9-6472-4738-aea2-55dcaab3a94f@huawei.com>
+References: <1483772858-10380-1-git-send-email-dingtianhong@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1483772858-10380-1-git-send-email-dingtianhong@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Hi Marc:
 
----
-v3:
-* added list of how many interrupts each SOC has
-v2:
-* added interrupt description
----
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+How about this v7, if any suggestions very grateful.
 
-diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-index e4ba92aa..c32dc5a 100644
---- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-+++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-@@ -8,6 +8,7 @@ Required properties:
- 
- - compatible: should be "renesas,mmcif-<soctype>", "renesas,sh-mmcif" as a
-   fallback. Examples with <soctype> are:
-+	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
- 	- "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
- 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
- 	- "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
-@@ -17,6 +18,13 @@ Required properties:
- 	- "renesas,mmcif-r8a7794" for the MMCIF found in r8a7794 SoCs
- 	- "renesas,mmcif-sh73a0" for the MMCIF found in sh73a0 SoCs
- 
-+- interrupts: Some SoCs have only 1 shared interrupt, while others have either
-+  2 or 3 individual interrupts (error, int, card detect). Below is the number
-+  of interrupts for each SoC:
-+    1: r8a73a4, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
-+    2: r8a7740, sh73a0
-+    3: r7s72100
-+
- - clocks: reference to the functional clock
- 
- - dmas: reference to the DMA channels, one per channel name listed in the
--- 
-2.10.1
+Thanks.
+Ding
+
+On 2017/1/7 15:07, Ding Tianhong wrote:
+> Erratum Hisilicon-161601 says that the ARM generic timer counter "has the
+> potential to contain an erroneous value when the timer value changes".
+> Accesses to TVAL (both read and write) are also affected due to the implicit counter
+> read.  Accesses to CVAL are not affected.
+> 
+> The workaround is to reread the system count registers until the value of the second
+> read is larger than the first one by less than 32, the system counter can be guaranteed
+> not to return wrong value twice by back-to-back read and the error value is always larger
+> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
+> 
+> v2: Introducing a new generic erratum handling mechanism for fsl,a008585 and hisilicon,161601.
+>     Significant rework based on feedback, including seperate the fsl erratum a008585
+>     to another patch, update the erratum name and remove unwanted code.
+> 
+> v3: Introducing the erratum_workaround_set_sne generic function for fsl erratum a008585
+>     and make the #define __fsl_a008585_read_reg to be private to the .c file instead of
+>     being globally visible. After discussion with Marc and Will, a consensus decision was
+>     made to remove the commandline parameter for enabling fsl,erratum-a008585 erratum,
+>     and make some generic name more specific, export timer_unstable_counter_workaround
+>     for module access.
+>     
+>     Significant rework based on feedback, including fix some alignment problem, make the
+>     #define __hisi_161601_read_reg to be private to the .c file instead of being globally
+>     visible, add more accurate annotation and modify a bit of logical format to enable
+>     arch_timer_read_ool_enabled, remove the kernel commandline parameter
+>     clocksource.arm_arch_timer.hisilicon-161601.
+> 
+>     Introduce a generic aquick framework for erratum in ACPI mode.
+> 
+> v4: rename the quirk handler parameter to make it more generic, and
+>     avoid break loop when handling the quirk becasue it need to
+>     support multi quirks handler.
+> 
+>     update some data structures for acpi mode. 
+> 
+> v5: Adapt the new kernel-parameters.txt for latest kernel version.
+>     Set the retries of reread system counter to 50, because it is possible 
+>     that some interrupts may lead to more than twice read errors and break the loop,
+>     it will trigger the warning, so we set the number of retries far beyond the number of
+>     iterations the loop has been observed to take.
+> 
+> v6: The last 2 patches in the previous version about the ACPI mode will conflict witch Fuwei's
+>     GTDT patches, so remove the ACPI part and only support the DT base code for this patch set.
+> 
+>     We have trigger a bug when select the CONFIG_FUNCTION_GRAPH_TRACER and enable function_graph
+>     to /sys/kernel/debug/tracing/current_tracer, the system will stall into an endless loop, it looks
+>     like that the ftrace_graph_caller will be related to xxx.read_cntvct_el0 and read the system counter
+>     again, so mark the xxx.read_cntvct_el0 with notrace to fix the problem.
+> 
+> v7: Introduce a new general config symbol named CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND to enable the workaround
+>     for any chips which has similar arch timer erratum just like "fsl,erratum_a008585" and "hisilicon,erratum_161601",
+>     modify the struct arch_timer_erratum_workaround to be compatible different chip erratum more easily, and
+>     reconstruction some code base on the new config symbol and struct, thanks to Marc's suggestion. 
+> 
+> Ding Tianhong (4):
+>   arm64: arch_timer: Add device tree binding for hisilicon-161601
+>     erratum
+>   arm64: arch_timer: Introduce a generic erratum handing mechanism for
+>     fsl-a008585
+>   arm64: arch_timer: Work around Erratum Hisilicon-161601
+>   arm64: arch timer: Add timer erratum property for Hip05-d02 and
+>     Hip06-d03
+> 
+>  Documentation/admin-guide/kernel-parameters.txt    |   9 --
+>  Documentation/arm64/silicon-errata.txt             |   1 +
+>  .../devicetree/bindings/arm/arch_timer.txt         |   8 ++
+>  arch/arm64/boot/dts/hisilicon/hip05.dtsi           |   1 +
+>  arch/arm64/boot/dts/hisilicon/hip06.dtsi           |   1 +
+>  arch/arm64/include/asm/arch_timer.h                |  38 ++----
+>  drivers/clocksource/Kconfig                        |  18 +++
+>  drivers/clocksource/arm_arch_timer.c               | 150 +++++++++++++++------
+>  8 files changed, 152 insertions(+), 74 deletions(-)
+> 
