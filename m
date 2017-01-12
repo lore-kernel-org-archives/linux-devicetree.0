@@ -1,80 +1,66 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
-Date: Wed, 11 Jan 2017 20:43:02 -0800
-Message-ID: <CAJ_EiSQaE4FcLdf_8t8=6cNCZ+nAWhqqANKbfEp7VW02=Kj-RA@mail.gmail.com>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
- <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
- <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
- <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
- <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
- <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
- <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop> <CAPDyKFp2L7x=dV6O5XrA53-OOXE0sf+P3tNH93XGyzNheX9vjQ@mail.gmail.com>
- <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
- <CAJ_EiSRAQefYj+B3AKLb1EWXQUGccV=Z4op0T5sAdo3-vDVOhg@mail.gmail.com>
- <CACRpkdad7JXzxYfuB_XYdo2vuZmEt5iWgq79Va5cWwTaJc6Y5Q@mail.gmail.com>
- <CAJ_EiSQYz2aEGiCv2npxmby0nHwmJJyR_jzY5wJOK98zp6Bvzg@mail.gmail.com> <CAPDyKFp5j5ZqJkavCSYwWQ7nKtjOqCTv=ubhjYRsSEJUw07e3Q@mail.gmail.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v5] arm64: dts: mt8173: add mmsel clocks for 4K support
+Date: Thu, 12 Jan 2017 12:50:44 +0800
+Message-ID: <CAGS+omAZvHmSz6bJcvisC1LZgxwbd-HzvYMDrHXzfkY3mZZEsw@mail.gmail.com>
+References: <1470279438-60372-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFp5j5ZqJkavCSYwWQ7nKtjOqCTv=ubhjYRsSEJUw07e3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470279438-60372-1-git-send-email-bibby.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, James Liao <jamesjj.liao@mediatek.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 2:55 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 9 January 2017 at 05:53, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
->> On Fri, Dec 30, 2016 at 12:05 AM, Linus Walleij
->> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Mon, Dec 19, 2016 at 1:01 AM, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
->>>
->>>> * SD8787 has a "powerdown" line, and CW1200 has a "powerup" line.. I
->>>> know this is a simple logic inversion.
->>>
->>> If this is a GPIO line, the GPIO subsystem can flag a line for
->>> inverted logic. GPIO_ACTIVE_LOW from device tree for example.
->>
->> Slight ping on Ulf on this thread :).
->
-> Thanks, sorry for the delay!
->
->>
->> I do understand the inverted logic flag but that doesn't help if there
->> are different logic states between various chipsets.
->
-> For cw1200 (I looked at code from an old ST-Ericsson vendor tree), the
-> sequence is as follows:
->
-> 1) Enable clock/power to the card/chip.
-> 2) Assert GPIO pin. I assume this also can be done before the
-> clock/power is enabled.
-> 3) Wait some time (~50ms).
-> 4) De-assert GPIO pin.
-> 5) Wait some time (~20ms)
-> 6) Assert GPIO pin.
-> 7) Wait some time (~32ms).
->
-> At power off, the GPIO pin is de-asserted and of course also the
-> clock/power is disabled. Just to make sure we have all the relevant
-> logic.
->
-> Looking at mmc pwrseq simple, perhaps we can extend this to deal with
-> GPIOs that needs to be *toggled*, as this is not just reset GPIOs.
-> Then we also need to deal with the delays in-between the toggling.
+Hi Matthias,
 
-Wouldn't we need to have a per chip function for each device
-supported? As well document gpios? I suspect we'd need an array of
-gpios defined in device tree since different devices will likely have
-various numbers of pins to toggle
+(Trying again to send plain text email)...
 
-- Matt
+On Thu, Aug 4, 2016 at 10:57 AM, Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
+> To support HDMI 4K resolution, mmsys need clcok
+> mm_sel to be 400MHz.
+>
+> The board .dts file should override the clock rate
+> property with the higher VENCPLL frequency the board
+> supports HDMI 4K resolution.
+>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+
+
+It looks like this patch was lost.  It is actually a prerequisite for
+MTK 4k HDMI support, which already landed in v4.9.
+
+See the email thread entitled:
+[PATCH v5 0/3] MT8173 HDMI 4K support <https://lkml.org/lkml/2016/9/28/893>
+
+Or these three:
+
+0d2200794f0a drm/mediatek: modify the factor to make the pll_rate set
+in the 1G-2G range
+968253bd7caa drm/mediatek: enhance the HDMI driving current
+d542b7c473f0 drm/mediatek: do mtk_hdmi_send_infoframe after HDMI clock enable
+
+-Dan
+
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
+>  1 file changed, 2 insertions(+)
 >
-> Thoughts?
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 78529e4..c3f32f3 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -690,6 +690,8 @@
+>                         compatible = "mediatek,mt8173-mmsys", "syscon";
+>                         reg = <0 0x14000000 0 0x1000>;
+>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +                       assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
+> +                       assigned-clock-rates = <400000000>;
+>                         #clock-cells = <1>;
+>                 };
 >
-> Kind regards
-> Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> 1.7.9.5
+>
