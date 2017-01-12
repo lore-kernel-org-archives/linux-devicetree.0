@@ -1,121 +1,72 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 12 Jan 2017 18:49:02 +0100
-Message-ID: <20170112174902.j52foglkdouyz36n@pengutronix.de>
-References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
- <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
- <20170111082208.vzu7xgpd4eakyldl@pengutronix.de>
- <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
- <20170111153940.dtxzvtdici3r7l54@pengutronix.de>
- <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
- <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
- <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Rajat Jain <rajatja@google.com>
+Subject: [PATCH v5 1/3] Bluetooth: btusb: Use an error label for error paths
+Date: Thu, 12 Jan 2017 10:01:05 -0800
+Message-ID: <20170112180107.63244-1-rajatja@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Brian Norris <briannorris@google.com>, linux-kernel@vger.kernel.org
+Cc: Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 02:47:42PM +0100, M'boumba Cedric Madianga wrote:
-> 2017-01-12 13:03 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutroni=
-x.de>:
-> > Hello Cedric,
-> >
-> > On Thu, Jan 12, 2017 at 12:23:12PM +0100, M'boumba Cedric Madianga wrot=
-e:
-> >> 2017-01-11 16:39 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutr=
-onix.de>:
-> >> > On Wed, Jan 11, 2017 at 02:58:44PM +0100, M'boumba Cedric Madianga w=
-rote:
-> >> >> 2017-01-11 9:22 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengu=
-tronix.de>:
-> >> >> > This is surprising. I didn't recheck the manual, but that looks v=
-ery
-> >> >> > uncomfortable.
-> >> >>
-> >> >> I agree but this exactly the hardware way of working described in t=
-he
-> >> >> reference manual.
-> >> >
-> >> > IMHO that's a hw bug. This makes it for example impossible to implem=
-ent
-> >> > SMBus block transfers (I think).
-> >>
-> >> This is not correct.
-> >> Setting STOP/START bit does not mean the the pulse will be sent right =
-now.
-> >> Here we have just to prepare the hardware for the 2 next pulse but the
-> >> STOP/START/ACK pulse will be generated at the right time as required
-> >> by I2C specification.
-> >> So SMBus block transfer will be possible.
-> >
-> > A block transfer consists of a byte that specifies the count of bytes
-> > yet to come. So the device sends for example:
-> >
-> >         0x01 0xab
-> >
-> > So when you read the 1 in the first byte it's already too late to set
-> > STOP to get it after the 2nd byte.
-> >
-> > Not sure I got all the required details right, though.
-> =
+Use a label to remove the repetetive cleanup, for error cases.
 
-> Ok I understand your use case but I always think that the harware manages=
- it.
-> If I take the above example, the I2C SMBus block read transaction will
-> be as below:
-> S Addr Wr [A] Comm [A]
->            S Addr Rd [A] [Count] A [Data1] A [Data2] NA P
-> =
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+---
+v5: same as v4
+v4: same as v3
+v3: Added Brian's "Reviewed-by"
+v2: same as v1
 
-> The first message is a single byte-transmission so there is no problem.
-> =
+ drivers/bluetooth/btusb.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-> The second message is a N-byte reception with N =3D 3
-> =
-
-> When the I2C controller has finished to send the device address (S
-> Addr Rd), the ADDR flag is set and an interrupt is raised.
-> In the routine that handles ADDR event, we set ACK bit in order to
-> generate ACK pulse as soon as a data byte is received in the shift
-> register and then we clear the ADDR flag.
-> Please note that the SCL line is stretched low until ADDR flag is cleared.
-> So, as far I understand, the device could not sent any data as long as
-> the SCL line is stretched low. Right ?
-> =
-
-> Then, as soon as the SCL line is high, the device could send the first
-> data byte (Count).
-> When this byte is received in the shift register, an ACK is
-> automatically generated as defined during adress match phase and the
-> data byte is pushed in DR (data register).
-> Then, an interrupt is raised as RXNE (RX not empty) flag is set.
-> In the routine that handles RXNE event, as N=3D3, we just clear all
-> buffer interrupts in order to avoid another system preemption due to
-> RXNE event but we does not read the data in DR.
-
-In my example I want to receive a block of length 1, so only two bytes
-are read, a 1 (the length) and the data byte (0xab in my example). I
-think that as soon as you read the 1 it's already to late to schedule
-the NA after the next byte?
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 2f633df9f4e6..ce22cefceed1 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2991,18 +2991,15 @@ static int btusb_probe(struct usb_interface *intf,
+ 		err = usb_set_interface(data->udev, 0, 0);
+ 		if (err < 0) {
+ 			BT_ERR("failed to set interface 0, alt 0 %d", err);
+-			hci_free_dev(hdev);
+-			return err;
++			goto out_free_dev;
+ 		}
+ 	}
+ 
+ 	if (data->isoc) {
+ 		err = usb_driver_claim_interface(&btusb_driver,
+ 						 data->isoc, data);
+-		if (err < 0) {
+-			hci_free_dev(hdev);
+-			return err;
+-		}
++		if (err < 0)
++			goto out_free_dev;
+ 	}
+ 
+ #ifdef CONFIG_BT_HCIBTUSB_BCM
+@@ -3016,14 +3013,16 @@ static int btusb_probe(struct usb_interface *intf,
+ #endif
+ 
+ 	err = hci_register_dev(hdev);
+-	if (err < 0) {
+-		hci_free_dev(hdev);
+-		return err;
+-	}
++	if (err < 0)
++		goto out_free_dev;
+ 
+ 	usb_set_intfdata(intf, data);
+ 
+ 	return 0;
++
++out_free_dev:
++	hci_free_dev(hdev);
++	return err;
+ }
+ 
+ static void btusb_disconnect(struct usb_interface *intf)
+-- 
+2.11.0.390.gc69c2f50cf-goog
