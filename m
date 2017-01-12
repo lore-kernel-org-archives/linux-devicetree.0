@@ -1,63 +1,138 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/2] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Thu, 12 Jan 2017 11:15:27 +0100
-Message-ID: <CAPDyKFoVaoC=1VP4g0kC+1i1pNfTfRezyOGmkALXCFZFoUBFEQ@mail.gmail.com>
-References: <1484215490-7494-1-git-send-email-yong.mao@mediatek.com> <1484215490-7494-3-git-send-email-yong.mao@mediatek.com>
+From: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
+Date: Thu, 12 Jan 2017 21:16:03 +1100
+Message-ID: <1484216163.11416.8.camel@gmail.com>
+References: <20170112002910.3650-1-cyrilbur@gmail.com>
+         <20170112002910.3650-4-cyrilbur@gmail.com>
+         <20170112074750.GB23943@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1484215490-7494-3-git-send-email-yong.mao@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Yong Mao <yong.mao@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chaotian Jing <chaotian.jing@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170112074750.GB23943-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
--trimmed cc list (future wise, I suggest you be more careful whom to
-keep on cc/to)
+On Thu, 2017-01-12 at 08:47 +0100, Greg KH wrote:
+> On Thu, Jan 12, 2017 at 11:29:09AM +1100, Cyril Bur wrote:
+> > +static ssize_t lpc_ctrl_read(struct file *file, char __user *buf,
+> > +				size_t count, loff_t *ppos)
+> > +{
+> > +	if (!access_ok(VERIFY_WRITE, buf, count))
+> > +		return -EFAULT;
+> > +
+> > +	return -EPERM;
+> > +}
+> > +
+> > +static ssize_t lpc_ctrl_write(struct file *file, const char __user *buf,
+> > +				size_t count, loff_t *ppos)
+> > +{
+> > +	if (!access_ok(VERIFY_READ, buf, count))
+> > +		return -EFAULT;
+> > +
+> > +	return -EPERM;
+> > +}
+> 
 
-On 12 January 2017 at 11:04, Yong Mao <yong.mao@mediatek.com> wrote:
-> From: yong mao <yong.mao@mediatek.com>
->
-> Add description for hs200-cmd-int-delay
-> Add description for hs400-cmd-int-delay
-> Add description for cmd-resp-sel
->
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+Hello Greg,
 
-The changes to DTS bindings should come prior the actual code change
-using the bindings. Please make this patch 1 instead.
+> Those functions don't actually do anything, so why even include them?
+> 
 
-Otherwise this looks good to me.
+Apologies, I should be more careful with what I send.
 
-Kind regards
-Uffe
+> And don't call access_ok(), it's racy and no driver should ever do that.
+> 
 
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |    6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 0120c7f..2dbb3b0 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -21,6 +21,9 @@ Optional properties:
->  - assigned-clocks: PLL of the source clock
->  - assigned-clock-parents: parent of source clock, used for HS400 mode to get 400Mhz source clock
->  - hs400-ds-delay: HS400 DS delay setting
-> +- hs200-cmd-int-delay: HS200 command internal delay setting
-> +- hs400-cmd-int-delay: HS400 command internal delay setting
-> +- cmd-resp-sel: command response sample selection
->
->  Examples:
->  mmc0: mmc@11230000 {
-> @@ -38,4 +41,7 @@ mmc0: mmc@11230000 {
->         assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
->         assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL_D2>;
->         hs400-ds-delay = <0x14015>;
-> +       hs200-cmd-int-delay = <26>;
-> +       hs400-cmd-int-delay = <14>;
-> +       cmd-resp-sel = <0>; /* 0: rising, 1: falling */
->  };
-> --
-> 1.7.9.5
->
+Oh, duly noted. I'll be sure to check out how and why. Perhaps it
+would be wise that no driver actually do that, I'm quite sure I used
+other drivers as examples of best practice.
+
+> > +static long lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
+> > +		unsigned long param)
+> > +{
+> > +	long rc;
+> > +	struct lpc_mapping map;
+> > +	struct lpc_ctrl *lpc_ctrl = file_lpc_ctrl(file);
+> > +	void __user *p = (void __user *)param;
+> > +
+> > +	switch (cmd) {
+> > +	case LPC_CTRL_IOCTL_SIZE:
+> > +		return copy_to_user(p, &lpc_ctrl->size,
+> > +			sizeof(lpc_ctrl->size)) ? -EFAULT : 0;
+> > +	case LPC_CTRL_IOCTL_MAP:
+> > +		if (copy_from_user(&map, p, sizeof(map)))
+> > +			return -EFAULT;
+> > +
+> > +
+> > +		/*
+> > +		 * The top half of HICR7 is the MSB of the BMC address of the
+> > +		 * mapping.
+> > +		 * The bottom half of HICR7 is the MSB of the HOST LPC
+> > +		 * firmware space address of the mapping.
+> > +		 *
+> > +		 * The 1 bits in the top of half of HICR8 represent the bits
+> > +		 * (in the requested address) that should be ignored and
+> > +		 * replaced with those from the top half of HICR7.
+> > +		 * The 1 bits in the bottom half of HICR8 represent the bits
+> > +		 * (in the requested address) that should be kept and pass
+> > +		 * into the BMC address space.
+> > +		 */
+> > +
+> > +		rc = regmap_write(lpc_ctrl->regmap, HICR7,
+> > +				(lpc_ctrl->base | (map.hostaddr >> 16)));
+> > +		if (rc)
+> > +			return rc;
+> > +
+> > +		rc = regmap_write(lpc_ctrl->regmap, HICR8,
+> > +			(~(map.size - 1)) | ((map.size >> 16) - 1));
+> 
+> Look Ma, a kernel exploit!
+> 
+
+So 'evil' input here could allow the host to control the bmc,
+personally I file that under 'stupid' input. Also, stupid but not
+accidental, I don't believe one could accidentally come up with such
+input, although you never know what silly things human beings sometimes
+do. For what its worth, I'm not even sure that can happen but I'll
+grant you the benifit of the doubt.
+
+> {sigh}
+> 
+> Your assignment is to go find a whiteboard/blackboard/whatever and write
+> on it 100 times:
+> 	All input is evil.
+> 
+> I want to see the picture of that before you send any more kernel patches.
+> 
+> > +static int lpc_ctrl_release(struct inode *inode, struct file *file)
+> > +{
+> > +	atomic_dec(&lpc_ctrl_open_count);
+> 
+> Totally unneeded and unnecessary, why do you care?
+> 
+
+My aim here was to only have one process playing with the LPC mapping
+registers at a time.
+
+> Again, use UIO, it will save you from yourself...
+> 
+
+Thank-you! This is the first I've heard of UIO and I'll investigate
+furthur!
+
+
+
+Sincerely,
+
+Cyril
+
+> thanks,
+> 
+> greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
