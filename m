@@ -1,73 +1,240 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
-Date: Thu, 12 Jan 2017 19:01:22 +0200
-Message-ID: <1484240482.2133.92.camel@linux.intel.com>
-References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
-         <73246c4a-504c-52d7-dde4-970a45dca0bd@mleia.com>
-         <CAHp75Ve87TE3y6hg1bMxSFAPVcY3wPifGuvtpXNhBw5-eOnPrg@mail.gmail.com>
-         <b5788d1d-c951-0fc3-eed8-88457df1f27e@mleia.com>
-         <CAHp75Ve7zNN3m1ngLGi-81mFehKzZG07mh5H2T5+_k-=jJqqNA@mail.gmail.com>
-         <3748130b-5321-12eb-ec75-e2637dd9fc54@mleia.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB
+Date: Thu, 12 Jan 2017 18:11:35 +0100
+Message-ID: <20170112171135.7822-1-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3748130b-5321-12eb-ec75-e2637dd9fc54@mleia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBSPR33BQKGQE6OI5GEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-01-07 at 03:24 +0200, Vladimir Zapolskiy wrote:
-> On 01/07/2017 02:19 AM, Andy Shevchenko wrote:
-> > On Sat, Jan 7, 2017 at 1:43 AM, Vladimir Zapolskiy <vz@mleia.com>
-> > wrote:
-> > > On 01/07/2017 12:45 AM, Andy Shevchenko wrote:
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> > > > +             }
-> > > > > > +     } else if (IS_BUILTIN(CONFIG_ACPI) &&
-> > > > > > ACPI_HANDLE(dev)) {
-> > > > > > +             dev_dbg(dev, "ACPI slave is not supported
-> > > > > > yet\n");
-> > > > > > +     }
-> > > > > 
-> > > > > If so, then it might be better to drop else-if stub for now.
-> > > > 
-> > > > Please, don't.
-> > > > 
-> > > 
-> > > Why do you ask for this stub to be added?
-> > 
-> > 1. Exactly the reason you asked above. Here is the code which has
-> > built differently on different platforms. x86 usually is not using
-> > CONFIG_OF, ARM doesn't ACPI (versus ARM64). Check GPIO library for
-> > existing examples.
-> 
-> From the context by the stub I mean dev_dbg() in
-> i2c_slave_mode_detect()
-> function, I don't see a connection to GPIO library, please clarify.
+The Beelink X2 is an STB based on the Allwinner H3 SoC with a uSD slot,
+2 USB ports( 1 * USB-2 Host, 1 USB OTG), a 10/100M ethernet port using the
+SoC's integrated PHY, Wifi via a RTL8189ETV sdio wifi chip, HDMI, an IR
+receiver, 1 LEDs and an optical S/PDIF connector.
 
-I agree that is not good proof for using IS_ENABLED/IS_BUILTIN macro.
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                |   1 +
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 187 ++++++++++++++++++++++++++++++
+ 2 files changed, 188 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
 
-> > 2. We might add that support later, but here is again, just no-op.
-> > 
-> > So, what is your strong argument here against that?
-> 
-> When the support is ready for ACPI case, you'll remove the added
-> dev_dbg(), and I don't see a good point by adding it temporarily.
-
-It would remind me to look at it at some point.
-
-> What is wrong with the approach of adding the ACPI case handling
-> branch when it is ready and remove any kind of stubs right now?
-
-I will not object. Here is maintainer, let him speak.
-
-> On ACPI platforms the function returns 'false' always, will the
-> function work correctly (= corresponding to its description) as is?
-
-Yes.
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 78a94b747059..75960b1468a4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -857,6 +857,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
++	sun8i-h3-beelink-x2.dtb \
+ 	sun8i-h3-nanopi-m1.dtb	\
+ 	sun8i-h3-nanopi-neo.dtb \
+ 	sun8i-h3-orangepi-2.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+new file mode 100644
+index 000000000000..bc5aed52cb1d
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -0,0 +1,187 @@
++/*
++ * Copyright (C) 2017 Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Beelink X2";
++	compatible = "roofull,beelink-x2", "allwinner,sun8i-h3";
++
++	aliases {
++		serial0 = &uart0;
++		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
++		ethernet1 = &rtl8189ftv;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwr_led_x2>;
++
++		pwr_led {
++			label = "beelink-x2:red:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			default-state = "on";
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_x2>;
++
++		sw4 {
++			label = "power";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_en_x2>;
++		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++	};
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	/*
++	 * Explicitly define the sdio device, so that we can add an ethernet
++	 * alias for it (which e.g. makes u-boot set a mac-address).
++	 */
++	rtl8189ftv: sdio_wifi@1 {
++		reg = <1>;
++	};
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_8bit_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	status = "okay";
++};
++
++&mmc2_8bit_pins {
++	/* Increase drive strength for DDR modes */
++	drive-strength = <40>;
++	/* eMMC is missing pull-ups */
++	bias-pull-up;
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&r_pio {
++	pwr_led_x2: led_pins@0 {
++		pins = "PL10";
++		function = "gpio_out";
++	};
++
++	sw_r_x2: key_pins@0 {
++		pins = "PL3";
++		function = "gpio_in";
++	};
++
++	wifi_en_x2: wifi_en_pin {
++		pins = "PL7";
++		function = "gpio_out";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "okay";
++};
++
++&usbphy {
++	/* USB VBUS is on as long as VCC-IO is on */
++	status = "okay";
++};
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.11.0
