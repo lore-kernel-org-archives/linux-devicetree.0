@@ -1,108 +1,107 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property
- for RK3399 PMUCRU/CRU
-Date: Wed, 11 Jan 2017 16:50:10 -0800
-Message-ID: <CAD=FV=WMQ22G67YoQx2t7J6_ZuB3sUjVjXh-0KhPEO_6zbiyUQ@mail.gmail.com>
-References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
- <CAD=FV=Wwu3q_LqwYUWcJQRvp5neVOS9szgsYFONWTRJ0X8hRTA@mail.gmail.com>
- <8683375.pL9J7LxuT0@diego> <1523574.hS8CXi1tTP@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523574.hS8CXi1tTP@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Jianqun Xu <jay.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2 1/2] clk: vc5: Add bindings for IDT VersaClock 5P49V5923 and 5P49V5933
+Date: Thu, 12 Jan 2017 02:03:23 +0100
+Message-ID: <20170112010324.28068-1-marek.vasut@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add bindings for IDT VersaClock 5 5P49V5923 and 5P49V5933 chips.
+These are I2C clock generators with optional clock source from
+either XTal or dedicated clock generator and, depending on the
+model, two or more clock outputs.
 
-On Tue, Jan 10, 2017 at 11:58 AM, Heiko St=C3=BCbner <heiko@sntech.de> wrot=
-e:
-> Hi Doug,
->
-> Am Dienstag, 10. Januar 2017, 20:46:12 schrieb Heiko St=C3=BCbner:
->> Am Dienstag, 10. Januar 2017, 10:45:48 schrieb Doug Anderson:
->> > Hi,
->> >
->> > On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing@rock-chips.com>
->>
->> wrote:
->> > > The structure rockchip_clk_provider needs to refer the GRF regmap
->> > > in somewhere, if the CRU node has not "rockchip,grf" property,
->> > > calling syscon_regmap_lookup_by_phandle will return an invalid GRF
->> > > regmap, and the MUXGRF type clock will be not supported.
->> > >
->> > > Therefore, we need to add them.
->> > >
->> > > Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
->> > > ---
->> > >
->> > > Changes in v4:
->> > > - separte the binding patch
->> > >
->> > > Changes in v3:
->> > > - add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
->> > >
->> > > Changes in v2:
->> > > - referring pmugrf for PMUGRU
->> > > - fix the typo "invaild" in COMMIT message
->> > >
->> > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
->> > >  1 file changed, 2 insertions(+)
->> >
->> > This seems fine to me, so:
->> >
->> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
->> >
->> > ...but I will say that before you actually add any real "MUXGRF"
->> > clocks on rk3399 you _might_ need to rework the code to make things
->> > truly "optional".  If it turns out that any existing clocks that
->> > already exist today already go through one of these muxes in the GRF
->> > and we've always been assuming one setting of the mux, we'll need to
->> > make sure we keep assuming that setting of the mux even if the "grf"
->> > isn't specified.
->>
->> I guess I see that a bit more relaxed :-) .
->>
->> I.e. the GRF being optional is a remnant of syscons not being available =
-when
->> the clocks get set up- so were coming in later or not at all. For the
->> rk3288 I converted, there we never really had the case of the GRF missin=
-g.
->>
->> And the GRF mux for the vcodec now present is not being used by anything=
- yet
->> (neither driver nor binding), so no old devicetree can break.
->>
->> > As I understand it, your motivation for this patch is to eventually be
->> > able to model the EDP reference clock which can either be xin24 or
->> > "edp osc".  Presumably the eDP "reference clock" isn't related to any
->> > of the pre-existing eDP clocks so that one should be safe.
->>
->> Same here, so far we don't even have edp or even any other graphical out=
-put
->> on the rk3399, so again there is no old devicetree that could break when
->> the grf is not specified.
->
-> reading all of the above again, it feels like you essentially also said
-> similar things already in your original reply and I misread some of it.
->
-> But again, I don't see the need for any more code right now, as hopefully=
- the
-> simple stuff we currently only support does not have any grf-based muxes =
-in
-> it. Xing + Rockchip people, please correct me if I'm wrong here :-)
+Signed-off-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+V2: Add mapping between the clock specifier and physical pins of the chip
+---
+ .../devicetree/bindings/clock/idt,versaclock5.txt  | 65 ++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
 
-Right.  I have no objection to Xing's patch.  I just want to make sure
-that if it's listed as "Optional" that it's really optional.
+diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+new file mode 100644
+index 000000000000..87e9c47a89a3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+@@ -0,0 +1,65 @@
++Binding for IDT VersaClock5 programmable i2c clock generator.
++
++The IDT VersaClock5 are programmable i2c clock generators providing
++from 3 to 12 output clocks.
++
++==I2C device node==
++
++Required properties:
++- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933".
++- reg:		i2c device address, shall be 0x68 or 0x6a.
++- #clock-cells:	from common clock binding; shall be set to 1.
++- clocks:	from common clock binding; list of parent clock handles,
++		- 5p49v5923: (required) either or both of XTAL or CLKIN
++					reference clock.
++		- 5p49v5933: (optional) property not present (internal
++					Xtal used) or CLKIN reference
++					clock.
++- clock-names:	from common clock binding; clock input names, can be
++		- 5p49v5923: (required) either or both of "xin", "clkin".
++		- 5p49v5933: (optional) property not present or "clkin".
++
++==Mapping between clock specifier and physical pins==
++
++When referencing the provided clock in the DT using phandle and
++clock specifier, the following mapping applies:
++
++5P49V5923:
++	0 -- OUT0_SEL_I2CB
++	1 -- OUT1
++	2 -- OUT2
++
++5P49V5933:
++	0 -- OUT0_SEL_I2CB
++	1 -- OUT1
++	2 -- OUT4
++
++==Example==
++
++/* 25MHz reference crystal */
++ref25: ref25m {
++	compatible = "fixed-clock";
++	#clock-cells = <0>;
++	clock-frequency = <25000000>;
++};
++
++i2c-master-node {
++
++	/* IDT 5P49V5923 i2c clock generator */
++	vc5: clock-generator@6a {
++		compatible = "idt,5p49v5923";
++		reg = <0x6a>;
++		#clock-cells = <1>;
++
++		/* Connect XIN input to 25MHz reference */
++		clocks = <&ref25m>;
++		clock-names = "xin";
++	};
++};
++
++/* Consumer referencing the 5P49V5923 pin OUT1 */
++consumer {
++	...
++	clocks = <&vc5 1>;
++	...
++}
+-- 
+2.11.0
 
-I was worried that we would introduce some GRF-based mux in the
-_middle_ of some existing clock tree because we simply didn't model
-the mux before and assumed one particular setting.  If nothing like
-that ever happens then we're fine.
-
-Sorry to be so confusing.
-
--Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
