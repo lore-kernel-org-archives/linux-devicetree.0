@@ -1,122 +1,87 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 12 Jan 2017 14:47:42 +0100
-Message-ID: <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
-References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
- <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
- <20170111082208.vzu7xgpd4eakyldl@pengutronix.de> <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
- <20170111153940.dtxzvtdici3r7l54@pengutronix.de> <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
- <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v5 3/3] dmaengine: xilinx_dma: Fix race condition in the
+ driver for multiple descriptor scenario
+Date: Thu, 12 Jan 2017 14:19:49 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A6662F1@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
+ <1483771530-8545-4-git-send-email-appanad@xilinx.com>
+ <20170110084917.GA3573@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
-Sender: linux-i2c-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170110084917.GA3573@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-01-12 13:03 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutron=
-ix.de>:
-> Hello Cedric,
->
-> On Thu, Jan 12, 2017 at 12:23:12PM +0100, M'boumba Cedric Madianga wrote:
->> 2017-01-11 16:39 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengut=
-ronix.de>:
->> > On Wed, Jan 11, 2017 at 02:58:44PM +0100, M'boumba Cedric Madianga wro=
-te:
->> >> 2017-01-11 9:22 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@peng=
-utronix.de>:
->> >> > This is surprising. I didn't recheck the manual, but that looks ver=
-y
->> >> > uncomfortable.
->> >>
->> >> I agree but this exactly the hardware way of working described in the
->> >> reference manual.
->> >
->> > IMHO that's a hw bug. This makes it for example impossible to implemen=
-t
->> > SMBus block transfers (I think).
->>
->> This is not correct.
->> Setting STOP/START bit does not mean the the pulse will be sent right no=
-w.
->> Here we have just to prepare the hardware for the 2 next pulse but the
->> STOP/START/ACK pulse will be generated at the right time as required
->> by I2C specification.
->> So SMBus block transfer will be possible.
->
-> A block transfer consists of a byte that specifies the count of bytes
-> yet to come. So the device sends for example:
->
->         0x01 0xab
->
-> So when you read the 1 in the first byte it's already too late to set
-> STOP to get it after the 2nd byte.
->
-> Not sure I got all the required details right, though.
+Hi Vinod,
 
-Ok I understand your use case but I always think that the harware manages i=
-t.
-If I take the above example, the I2C SMBus block read transaction will
-be as below:
-S Addr Wr [A] Comm [A]
-           S Addr Rd [A] [Count] A [Data1] A [Data2] NA P
+	Thanks for the review...   =20
 
-The first message is a single byte-transmission so there is no problem.
+> On Sat, Jan 07, 2017 at 12:15:30PM +0530, Kedareswara rao Appana wrote:
+> > When driver is handling AXI DMA SoftIP When user submits multiple
+> > descriptors back to back on the S2MM(recv) side with the current
+> > driver flow the last buffer descriptor next bd points to a invalid
+> > location resulting the invalid data or errors in the DMA engine.
+>=20
+> Can you rephrase this, it a bit hard to understand.
 
-The second message is a N-byte reception with N =3D 3
+When DMA is receiving packets h/w expects the descriptors
+Should be in the form of a ring (I mean h/w buffer descriptor
+Next descriptor field should always point to valid address
+So that when DMA engine go and fetch that next descriptor it always=20
+Sees a valid address).
 
-When the I2C controller has finished to send the device address (S
-Addr Rd), the ADDR flag is set and an interrupt is raised.
-In the routine that handles ADDR event, we set ACK bit in order to
-generate ACK pulse as soon as a data byte is received in the shift
-register and then we clear the ADDR flag.
-Please note that the SCL line is stretched low until ADDR flag is cleared.
-So, as far I understand, the device could not sent any data as long as
-the SCL line is stretched low. Right ?
+But with the current driver implementation when user queues
+Multiple descriptors the last descriptor next descriptor field
+Pointing to an invalid location causing data corruption or=20
+Errors from the DMA h/w engine...
 
-Then, as soon as the SCL line is high, the device could send the first
-data byte (Count).
-When this byte is received in the shift register, an ACK is
-automatically generated as defined during adress match phase and the
-data byte is pushed in DR (data register).
-Then, an interrupt is raised as RXNE (RX not empty) flag is set.
-In the routine that handles RXNE event, as N=3D3, we just clear all
-buffer interrupts in order to avoid another system preemption due to
-RXNE event but we does not read the data in DR.
+To avoid this issue creating a Buffer descriptor Chain during=20
+Channel allocation and using those buffer descriptors for processing
+User requested data.
 
-After receiving the ACK, the device could send the second data byte (Data1)=
-.
-When this byte is received in the shift register, an ACK is
-automatically generated.
-As the first data byte has not been read yet in DR, the BTF (Byte
-Transfer Finihed) flag is set and an interrupt is raised.
-So, in that case, the SCL line is also streched low as long as the
-data register has not been read.
-In the routine that handle BTF event, we enable NACK in order to
-generate this pulse as soon as the last data byte will be received and
-then we read DR register ([Count])
-At this moment, SCL line is released and the device could send the
-last data byte.
+Please let me know if the above explanation is not clear will explain in de=
+tail....
 
-After receiving the ACK, the device could send the third and last data
-byte (Data2)
-When this byte is received in the shift register, a NACK is
-automatically generated as we enable it as explained above.
-As the second data byte  (Data1) has not been read yet in DR, the BTF
-flag is set again and an interrupt is raised.
-The SCL line is stretched low and in that way we could set the STOP
-bit to generate this pulse.
-Then we run 2 consecutives read of DR to retrieve [Data1] and [Data2]
-and to set SCL high.
+>=20
+> >
+> > This patch fixes this issue by creating a BD Chain during
+>=20
+> whats a BD?
 
-So, thanks to SCL stretching, it seems that NA and P will be generated
-at the right time.
+Buffer descriptor.
 
-Please let me know if it is not correct.
+>=20
+> > channel allocation itself and use those BD's.
+> >
+> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> > ---
+> >
+> >  drivers/dma/xilinx/xilinx_dma.c | 133
+> > +++++++++++++++++++++++++---------------
+> >  1 file changed, 83 insertions(+), 50 deletions(-)
+> >
+> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> > b/drivers/dma/xilinx/xilinx_dma.c index 0e9c02e..af2159d 100644
+> > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > @@ -163,6 +163,7 @@
+> >  #define XILINX_DMA_BD_SOP		BIT(27)
+> >  #define XILINX_DMA_BD_EOP		BIT(26)
+> >  #define XILINX_DMA_COALESCE_MAX		255
+> > +#define XILINX_DMA_NUM_DESCS		255
+>=20
+> why 255?
 
-Best regards,
+It is not an h/w limitation=20
+Allocating 255 descriptors (Each descriptor is capable of sending 7MB data)
+So roughly using allocated descriptors DMA engine can transfer 1GB data
+And in the driver we are reusing the allocated descriptors when they are fr=
+ee.
 
-Cedric
+Regards,
+Kedar.
