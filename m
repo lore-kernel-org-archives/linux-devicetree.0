@@ -1,45 +1,72 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/6] fbdev/ssd1307fb: Some changes and improvement
-Date: Thu, 12 Jan 2017 13:27:39 +0200
-Message-ID: <147628d9-07cf-85b2-560f-fdc37155fda5@ti.com>
-References: <cover.1484219137.git.jsarha@ti.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 12 Jan 2017 13:03:09 +0100
+Message-ID: <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
+References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
+ <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
+ <20170111082208.vzu7xgpd4eakyldl@pengutronix.de>
+ <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
+ <20170111153940.dtxzvtdici3r7l54@pengutronix.de>
+ <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1484219137.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-I did not notice the latest update on MAINTAINERS when sending this
-series. Added Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> to loop.
+Hello Cedric,
 
+On Thu, Jan 12, 2017 at 12:23:12PM +0100, M'boumba Cedric Madianga wrote:
+> 2017-01-11 16:39 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutroni=
+x.de>:
+> > On Wed, Jan 11, 2017 at 02:58:44PM +0100, M'boumba Cedric Madianga wrot=
+e:
+> >> 2017-01-11 9:22 GMT+01:00 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutro=
+nix.de>:
+> >> > This is surprising. I didn't recheck the manual, but that looks very
+> >> > uncomfortable.
+> >>
+> >> I agree but this exactly the hardware way of working described in the
+> >> reference manual.
+> >
+> > IMHO that's a hw bug. This makes it for example impossible to implement
+> > SMBus block transfers (I think).
+> =
 
-On 01/12/17 13:16, Jyri Sarha wrote:
-> We needed these changes for couple of our evm. Everything else is quite
-> straight forward, but removing the reset-active-low dts property is a
-> questionable at least in theory. However, in practice if anyone was
-> using the property in their device-tree blobs, they have never been
-> able to get desired effect with mainline kernel.
-> 
-> Jyri Sarha (3):
->   fbdev: ssd1307fb: Start to use gpiod API for reset gpio
->   fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
->   fbdev: ssd1307fb: Make reset gpio devicetree property optional
-> 
-> Tomi Valkeinen (3):
->   fbdev/ssd1307fb: add support to enable VBAT
->   fbdev/ssd1307fb: clear screen in probe
->   fbdev/ssd1307fb: add support to enable VBAT
-> 
->  .../devicetree/bindings/display/ssd1307fb.txt      |  5 +-
->  drivers/video/fbdev/ssd1307fb.c                    | 55 ++++++++++++++--------
->  2 files changed, 38 insertions(+), 22 deletions(-)
-> 
+> This is not correct.
+> Setting STOP/START bit does not mean the the pulse will be sent right now.
+> Here we have just to prepare the hardware for the 2 next pulse but the
+> STOP/START/ACK pulse will be generated at the right time as required
+> by I2C specification.
+> So SMBus block transfer will be possible.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A block transfer consists of a byte that specifies the count of bytes
+yet to come. So the device sends for example:
+
+	0x01 0xab
+
+So when you read the 1 in the first byte it's already too late to set
+STOP to get it after the 2nd byte.
+
+Not sure I got all the required details right, though.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
