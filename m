@@ -1,7 +1,7 @@
 From: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/4] Documentation: dt: mailbox: Add Aspeed ast2400/2500 bindings
-Date: Thu, 12 Jan 2017 11:29:07 +1100
-Message-ID: <20170112002910.3650-2-cyrilbur@gmail.com>
+Subject: [PATCH 2/4] Documentation: dt: misc: Add Aspeed ast2400/2500 LPC Control bindings
+Date: Thu, 12 Jan 2017 11:29:08 +1100
+Message-ID: <20170112002910.3650-3-cyrilbur@gmail.com>
 References: <20170112002910.3650-1-cyrilbur@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170112002910.3650-1-cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,58 +12,92 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/mailbox/aspeed-mbox.txt    | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt
+ .../devicetree/bindings/misc/aspeed-lpc-ctrl.txt   | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
 
-diff --git a/Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt b/Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
 new file mode 100644
-index 000000000000..633cd534d91c
+index 000000000000..f84ac83211ec
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/aspeed-mbox.txt
-@@ -0,0 +1,44 @@
-+ASpeed Mailbox Driver
-+=====================
++++ b/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
+@@ -0,0 +1,78 @@
++ASpeed LPC Control
++==================
++This binding defines the LPC control for ASpeed SoCs. Partitions of
++the LPC bus can be access by other processors on the system, address
++ranges on the bus can map accesses from another processor to regions
++of the ASpeed SoC memory space.
 +
-+The ASpeed mailbox allows for communication between different
-+processors. The mailbox on the ASpeed ast2400 and ast2500 is a set of
-+16 single byte data registers along with interrupt and configuration
-+registers directly on the SoC. These are memory mapped on the aspeed
-+and can be accessed via the SuperIO registers on the other processor.
++Reserved Memory:
++================
++The driver provides functionality to map the LPC bus to a region of
++ASpeed ram. A phandle to a reserved memory node must be provided so
++that the driver can safely use this region.
++
++Flash:
++======
++The driver provides functionality to unmap the LPC bus from ASpeed
++RAM, historically the default mapping has been to the SPI flash
++controller on the ASpeed SoC, a phandle to this node should be
++supplied.
 +
 +Device Node:
 +============
-+This represents the mailbox on the Soc.
 +
-+As the mailbox registers sit on the LPC bus, it makes most sense for
-+the device to be within the LPC host node. See
-+Documentation/devicetree/bindings/mfd/aspeed-lpc.txt for more
-+information. This does not have to be the case, provided the reg
-+property can give the full address of the mbox registers.
++As LPC bus configuration registers are at the start of the LPC bus
++memory space, it makes most sense for the device to be within the LPC
++host node. See Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
++for more information. This does not have to be the case, provided the
++reg property can give the full address of the LPC bus.
 +
-+Required Properties:
++Required properties:
 +--------------------
-+- compatible:	Should be one of the following,
-+				"aspeed,ast2400-mbox" for ast2400 SoCs
-+				"aspeed,ast2500-mbox" for ast2500 SoCs
 +
-+- reg:			Contains the mailbox address register range (base
-+				address and length). Keeping in mind that if the node
-+				exists within the LPC host node and that base is
-+				relative to that.
++- compatible:		"aspeed,ast2400-lpc-ctrl" for ASpeed ast2400 SoCs
++					"aspeed,ast2500-lpc-ctrl" for ASpeed ast2500 SoCs
 +
-+- interrupts:	Contains interrupt information for the mailbox device.
++- reg:				Location and size of the configuration registers
++					for the LPC bus. Note that if the device node is
++					within the LPC host node then base is relative to
++					that.
 +
-+- #mbox-cells:	Common property, should be 1.
++- memory-region:	phandle of the reserved memory region
++- flash:			phandle of the SPI flash controller
 +
 +Example:
 +--------
 +
-+mbox: mbox@180 {
-+	compatible = "aspeed,ast2400-mbox";
-+	reg = <0x180 0x5c>;
-+	interrupts = <46>;
-+	#mbox-cells = <1>;
++reserved-memory {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	...
++
++	flash_memory: region@54000000 {
++		compatible = "aspeed,ast2400-lpc-ctrl";
++		no-map;
++		reg = <0x54000000 0x04000000>; /* 64M */
++	};
++};
++
++host_pnor: spi@1e630000 {
++	reg = < 0x1e630000 0x18
++			0x30000000 0x02000000 >;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "aspeed,ast2400-smc";
++
++	...
++
++};
++
++lpc-ctrl@0 {
++	compatible = "aspeed,ast2400-lpc-ctrl";
++	memory-region = <&flash_memory>;
++	flash = <&host_pnor>;
++	reg = <0x0 0x80>;
 +};
 +
 -- 
