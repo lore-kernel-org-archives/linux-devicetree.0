@@ -1,72 +1,80 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCHv3 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Thu, 12 Jan 2017 09:13:44 +0000
-Message-ID: <d87cd5081b604cbc8f0142d57854fced@svr-chch-ex1.atlnz.lc>
-References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
- <20170106041517.9589-1-chris.packham@alliedtelesis.co.nz>
- <20170106041517.9589-4-chris.packham@alliedtelesis.co.nz>
- <CACRpkdaC+USN7YhZo49LAL9sorMxbTfhQbT5NrAu5D=Q1DHnnA@mail.gmail.com>
- <95cb4240-e77b-5eaa-1920-4d9e26028038@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 00/11] add support for VBUS max current and min
+ voltage limits AXP20X and AXP22X PMICs
+Date: Thu, 12 Jan 2017 10:28:21 +0100
+Message-ID: <20170112092821.5xkgpsbbsxaz3s7h@lukather>
+References: <20161209110419.28981-1-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2hkznrjrpqtzmxz7"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161209110419.28981-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/17 09:56, Sebastian Hesselbarth wrote:
-> On 01/11/2017 03:44 PM, Linus Walleij wrote:
->> On Fri, Jan 6, 2017 at 5:15 AM, Chris Packham
->> <chris.packham@alliedtelesis.co.nz> wrote:
->>
->>> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->>>
->>> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
->>> from Marvell.
->>>
->>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>
->> I am waiting for an ACK or comment from the maintainers on
->> this patch. Sebastian?
->
-> Sorry for the ignorance.
->
-> I don't have the patch to reply to inline, but:
->
-> - In the driver MPP_MODE2, spi0 there is a typo "csk" instead of "sck".
-> - MPP_MODE5 binding "dev","bootcs" and driver "dev","bootcs0" differ.
-> - MPP_MODE6 binding "gpio" and driver "gpo" differ.
-> - MPP_MODE17 binding "dev","clk" and driver "dev","clkout" differ.
-> - MPP_MODE19 binding mentiones "dev","rb" but driver does not.
-> - MPP_MODE20 binding "gpio" and driver "gpo" differ.
-> - MPP_MODE20 binding "dev","we" and driver "dev","we0" differ.
-> - MPP_MODE21 through MPP_MODE30 binding "gpio" and driver "gpo" differ.
-> - remove spaces before "0,     0" in mv98dx3236_mpp_gpio_ranges.
->
-> Most of it is cosmetic stuff, so if you fix it feel free to add my
->
-> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-Hi Sebastian,
+--2hkznrjrpqtzmxz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hopefully I can get a v4 out with the above fixed soon.
+On Fri, Dec 09, 2016 at 12:04:08PM +0100, Quentin Schulz wrote:
+> The X-Powers AXP209 and AXP20X PMICs are able to set a limit for the
+> VBUS power supply for both max current and min voltage supplied. This
+> series of patch adds the possibility to set these limits from sysfs.
+>=20
+> Also, the AXP223 PMIC shares most of its behaviour with the AXP221 but
+> the former can set the VBUS power supply max current to 100mA, unlike
+> the latter. The AXP223 VBUS power supply driver used to probe on the
+> AXP221 compatible. This series of patch introduces a new compatible for
+> the AXP223 to be able to set the current max limit to 100mA.
+>=20
+> With that new compatible, boards having the AXP223 see their DT updated
+> to use the VBUS power supply driver with the correct compatible.
+>=20
+> This series of patch also migrates from of_device_is_compatible function
+> to the data field of of_device_id to identify the compatible used to
+> probe. This improves the code readability.
+>=20
+> Mostly cosmetic changes in v2 and adding volatile and writeable regs to
+> AXP20X and AXP22X MFD cells for the VBUS power supply driver.
 
-One point on "gpio" vs "gpo" this one isn't a typo. Some of these pins 
-can be driven as outputs but can't be used as inputs. From a pinctrl 
-driver point of view there is no difference but I did want to convey 
-that from a system design point of view if you really need something to 
-be an input you shouldn't use one of these pins. This is also noted in 
-the datasheets so it doesn't necessarily need repeating. If you still 
-want me to use "gpio" in the code and binding I'm happy to do so.
+Applied all the DT patches. I also fixed all the prefixes. Please make
+sure to look at what prefixes are used by a given subsystem next time.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--2hkznrjrpqtzmxz7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYd0wxAAoJEBx+YmzsjxAgbF0P/1vHq7i3wdH65f4cQuhTC4Wr
+Ab2X8ioNNguS+pD413sZ6g00q1+pt1ifvYb321PkgMe1NtOfaof6+qLoQIFb8IxA
+N5+7hyGiTSuXoJnxwv7kWxCxOjIkmblSVKbyfdoY+/g3kx7zDUCdMzOo2fOnM/O6
+M56n06h3UMNpirqSW+v6Mk2MCQP6KJiZtXuD3CJXT8X4L3+EO29FGhNgGAkVoZIu
+sSKX7RpoAvfMkJ1rQ+Kt1wQpssbWcACtgbzfLnYu9fOI9ybr0LxU2Z3uOc8bWleL
+MfVnhhYUJkaSovNkSO13++ZIHOhhPJqzucbyYCv79w5BKRvYBgpcYrarjtMZqbOr
+y1xnfSlJRQ+rpEPCQeDqCWBbmgFlvqSzJ4vro3aKhcwSlKflYPZ5cBAAv9AX6Q/0
+QSgGt6CWQoDuU72VPzk5BV2vOjDcfWaL7X9ZtVASWBqwz59pDRpxCKLRy9/Lhg66
+GuceOmrXNmJnbr+6+rUdmt+037ObFALC0i7B6NDLl76j0p3Cfpp2r/ZzrIyZhp4m
+ANmZ9HuaaEa0Iq4lu+Cb8Uxj8OTdsQrJmM570zqsOD48MmBCGDi8/rjV8wpzYv/I
+fHveEFBuJauIC/qUx/hKqxnlaXmN7R3tEiUDe5S2v3HCwIv5ZWMKa5bp6TKjqd/I
+IzeP8ufvJgkD22ZfrMu0
+=T7Yu
+-----END PGP SIGNATURE-----
+
+--2hkznrjrpqtzmxz7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
