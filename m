@@ -1,106 +1,40 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 2/2] Support for DW CSI-2 Host IPK
-Date: Thu, 12 Jan 2017 19:06:41 +0100
-Message-ID: <f1ea65b3-dbad-fd6c-d2c4-33abc3a66890@xs4all.nl>
-References: <cover.1481548484.git.roliveir@synopsys.com>
- <bf2f0a6730e4a74d64e04575859d6b195f65b368.1481554324.git.roliveir@synopsys.com>
- <eb89af79-f868-ceba-ac69-558bac77613d@xs4all.nl>
- <8823670a-8456-87d0-3265-cb427e3445eb@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8823670a-8456-87d0-3265-cb427e3445eb@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Cc: davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, laurent.pinchart+renesas@ideasonboard.com, arnd@arndb.de, sudipm.mukherjee@gmail.com, tiffany.lin@mediatek.com, minghsiu.tsai@mediatek.com, jean-christophe.trotin@st.com, andrew-ct.chen@mediatek.com, simon.horman@netronome.com, songjun.wu@microchip.com, bparrot@ti.com, CARLOS.PALMINHA@synopsys.com, Sakari Ailus <sakari.ailus@iki.fi>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Thu, 12 Jan 2017 13:11:49 -0500
+Message-ID: <20170112181149.29035-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2017 06:43 PM, Ramiro Oliveira wrote:
-> Hi Hans,
-> 
-> Thank you for your feedback.
-> 
-> On 1/11/2017 11:54 AM, Hans Verkuil wrote:
->> Hi Ramiro,
->>
->> See my review comments below:
->>
->> On 12/12/16 16:00, Ramiro Oliveira wrote:
->>> Add support for the DesignWare CSI-2 Host IP Prototyping Kit
->>>
->>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> 
-> [snip]
+Now that all the clocks in the boot loader are disabled before booting
+the kernel, and the mstp driver has been fixed for RZ/A1, here is a typo
+that was missed during original testing.
 
->>> +
->>> +static int vid_dev_subdev_s_power(struct v4l2_subdev *sd, int on)
->>> +{
->>> +    return 0;
->>> +}
->>
->> Just drop this empty function, shouldn't be needed.
->>
-> 
-> When I start my system I'm hoping all the subdevs have s_power registered. If it
-> doesn't exist should I change the way I handle it, or will the core handle it
-> for me?
+Fixes: 7c8522b7047c ("ARM: dts: r7s72100: add sdhi clock to device tree")
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ include/dt-bindings/clock/r7s72100-clock.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If it isn't provided, then it is just skipped. The general rule is that
-you only provide these ops if they do something useful.
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index 29e01ed..318ab14 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -46,6 +46,6 @@
+ 
+ /* MSTP12 */
+ #define R7S72100_CLK_SDHI0	3
+-#define R7S72100_CLK_SDHI1	2
++#define R7S72100_CLK_SDHI1	1
+ 
+ #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
+-- 
+2.10.1
 
-> 
->>> +
->>> +static int vid_dev_subdev_registered(struct v4l2_subdev *sd)
->>> +{
->>> +    struct video_device_dev *vid_dev = v4l2_get_subdevdata(sd);
->>> +    struct vb2_queue *q = &vid_dev->vb_queue;
->>> +    struct video_device *vfd = &vid_dev->ve.vdev;
->>> +    int ret;
->>> +
->>> +    memset(vfd, 0, sizeof(*vfd));
->>> +
->>> +    strlcpy(vfd->name, VIDEO_DEVICE_NAME, sizeof(vfd->name));
->>> +
->>> +    vfd->fops = &vid_dev_fops;
->>> +    vfd->ioctl_ops = &vid_dev_ioctl_ops;
->>> +    vfd->v4l2_dev = sd->v4l2_dev;
->>> +    vfd->minor = -1;
->>> +    vfd->release = video_device_release_empty;
->>> +    vfd->queue = q;
->>> +
->>> +    INIT_LIST_HEAD(&vid_dev->vidq.active);
->>> +    init_waitqueue_head(&vid_dev->vidq.wq);
->>> +    memset(q, 0, sizeof(*q));
->>> +    q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
->>> +    q->io_modes = VB2_MMAP | VB2_USERPTR;
->>
->> Add VB2_DMABUF and VB2_READ.
->>
-> 
-> I'll add them, but I'm not using them, is it standard procedure to add them all
-> even if they aren't used?
 
-You may not use them, but others might. And it doesn't cost anything to add them.
-
-> 
->>> +    q->ops = &vb2_video_qops;
->>> +    q->mem_ops = &vb2_vmalloc_memops;
->>
->> Why is vmalloc used? Can't you use dma_contig or dma_sg and avoid having to copy
->> the image data? That's a really bad design given the amount of video data that
->> you have to copy.
->>
-> 
-> When I started development, the arch I was using (ARC) didn't support
-> dma_contig, so I was forced to use vmalloc.
-> 
-> Since then things have changed and I'm already using dma_contig, however it
-> wasn't included in this patch. I'll add it to the next patch.
-
-Ah, good. If you are switching to dma_contig, then remove VB2_USERPTR.
-VB2_DMABUF should be used instead.
-
-Regards,
-
-	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
