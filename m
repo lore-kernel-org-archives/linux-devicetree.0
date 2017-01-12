@@ -1,447 +1,1356 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/2] mmc: mediatek: Use data tune for CMD line tune
-Date: Thu, 12 Jan 2017 11:39:06 +0100
-Message-ID: <CAPDyKFq0_WpCAAmUDfaKApq7=tdpjNqL896FC=QPfGgE9JaEHA@mail.gmail.com>
-References: <1484215490-7494-1-git-send-email-yong.mao@mediatek.com>
- <1484215490-7494-2-git-send-email-yong.mao@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 11/37] PCI: dwc: Split pcie-designware.c into host and core  files
+Date: Thu, 12 Jan 2017 15:56:00 +0530
+Message-ID: <1484216786-17292-12-git-send-email-kishon@ti.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484215490-7494-2-git-send-email-yong.mao@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yong Mao <yong.mao@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484216786-17292-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 12 January 2017 at 11:04, Yong Mao <yong.mao@mediatek.com> wrote:
-> From: yong mao <yong.mao@mediatek.com>
->
-> CMD response CRC error may cause cannot boot up
-> Change to use data tune for CMD line
-> Separate cmd internal delay for HS200/HS400 mode
+Split pcie-designware.c into pcie-designware-host.c that contains
+the host specific parts of the driver and pcie-designware.c that
+contains the parts used by both host driver and endpoint driver.
 
-Please try to work a little bit on improving the change log. Moreover
-as this is a fix for a regression (it seems like so?), please try to
-make that clear.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/dwc/Makefile               |    2 +-
+ drivers/pci/dwc/pcie-designware-host.c |  619 ++++++++++++++++++++++++++++++++
+ drivers/pci/dwc/pcie-designware.c      |  613 +------------------------------
+ drivers/pci/dwc/pcie-designware.h      |    8 +
+ 4 files changed, 634 insertions(+), 608 deletions(-)
+ create mode 100644 drivers/pci/dwc/pcie-designware-host.c
 
->
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts |    3 +
-
-Changes to the DTS files should be a separate change. Please split it
-into its own patch.
-
->  drivers/mmc/host/mtk-sd.c                   |  169 +++++++++++++++++++++++----
->  2 files changed, 149 insertions(+), 23 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index 0ecaad4..29c3100 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -134,6 +134,9 @@
->         bus-width = <8>;
->         max-frequency = <50000000>;
->         cap-mmc-highspeed;
-> +       hs200-cmd-int-delay = <26>;
-> +       hs400-cmd-int-delay = <14>;
-> +       cmd-resp-sel = <0>; /* 0: rising, 1: falling */
->         vmmc-supply = <&mt6397_vemc_3v3_reg>;
->         vqmmc-supply = <&mt6397_vio18_reg>;
->         non-removable;
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 80ba034..93eb395 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -75,6 +75,7 @@
->  #define MSDC_PATCH_BIT1  0xb4
->  #define MSDC_PAD_TUNE    0xec
->  #define PAD_DS_TUNE      0x188
-> +#define PAD_CMD_TUNE     0x18c
->  #define EMMC50_CFG0      0x208
->
->  /*--------------------------------------------------------------------------*/
-> @@ -210,12 +211,17 @@
->  #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)  /* RW */
->  #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)  /* RW */
->
-> -#define MSDC_PAD_TUNE_DATRRDLY   (0x1f <<  8)  /* RW */
-> -#define MSDC_PAD_TUNE_CMDRDLY    (0x1f << 16)  /* RW */
-> +#define MSDC_PAD_TUNE_DATWRDLY    (0x1f <<  0)  /* RW */
-> +#define MSDC_PAD_TUNE_DATRRDLY    (0x1f <<  8) /* RW */
-> +#define MSDC_PAD_TUNE_CMDRDLY     (0x1f << 16)  /* RW */
-> +#define MSDC_PAD_TUNE_CMDRRDLY    (0x1f << 22)  /* RW */
-
-Is there a white space change somewhere here? I don't see any changes
-to MSDC_PAD_TUNE_DATRRDLY and MSDC_PAD_TUNE_CMDRDLY.
-
-> +#define MSDC_PAD_TUNE_CLKTDLY     (0x1f << 27)  /* RW */
->
-> -#define PAD_DS_TUNE_DLY1         (0x1f << 2)   /* RW */
-> -#define PAD_DS_TUNE_DLY2         (0x1f << 7)   /* RW */
-> -#define PAD_DS_TUNE_DLY3         (0x1f << 12)  /* RW */
-> +#define PAD_DS_TUNE_DLY1          (0x1f << 2)   /* RW */
-> +#define PAD_DS_TUNE_DLY2          (0x1f << 7)   /* RW */
-> +#define PAD_DS_TUNE_DLY3          (0x1f << 12)  /* RW */
-> +
-
-Ditto.
-
-> +#define PAD_CMD_TUNE_RX_DLY3      (0x1f << 1)   /* RW */
->
->  #define EMMC50_CFG_PADCMD_LATCHCK (0x1 << 0)   /* RW */
->  #define EMMC50_CFG_CRCSTS_EDGE    (0x1 << 3)   /* RW */
-> @@ -236,7 +242,9 @@
->  #define CMD_TIMEOUT         (HZ/10 * 5)        /* 100ms x5 */
->  #define DAT_TIMEOUT         (HZ    * 5)        /* 1000ms x5 */
->
-> -#define PAD_DELAY_MAX  32 /* PAD delay cells */
-> +#define PAD_DELAY_MAX            32 /* PAD delay cells */
-
-Ditto.
-
-> +#define ENOUGH_MARGIN_MIN        12 /* Enough Margin */
-> +#define PREFER_START_POS_MAX     4  /* Prefer start position */
->  /*--------------------------------------------------------------------------*/
->  /* Descriptor Structure                                                     */
->  /*--------------------------------------------------------------------------*/
-> @@ -284,12 +292,14 @@ struct msdc_save_para {
->         u32 patch_bit0;
->         u32 patch_bit1;
->         u32 pad_ds_tune;
-> +       u32 pad_cmd_tune;
->         u32 emmc50_cfg0;
->  };
->
->  struct msdc_tune_para {
->         u32 iocon;
->         u32 pad_tune;
-> +       u32 pad_cmd_tune;
->  };
->
->  struct msdc_delay_phase {
-> @@ -331,6 +341,9 @@ struct msdc_host {
->         unsigned char timing;
->         bool vqmmc_enabled;
->         u32 hs400_ds_delay;
-> +       u32 hs200_cmd_int_delay; /* cmd internal delay for HS200/SDR104 */
-> +       u32 hs400_cmd_int_delay; /* cmd internal delay for HS400 */
-> +       u32 hs200_cmd_resp_sel; /* cmd response sample selection */
->         bool hs400_mode;        /* current eMMC will run at hs400 mode */
->         struct msdc_save_para save_para; /* used when gate HCLK */
->         struct msdc_tune_para def_tune_para; /* default tune setting */
-> @@ -596,12 +609,21 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
->          */
->         if (host->sclk <= 52000000) {
->                 writel(host->def_tune_para.iocon, host->base + MSDC_IOCON);
-> -               writel(host->def_tune_para.pad_tune, host->base + MSDC_PAD_TUNE);
-> +               writel(host->def_tune_para.pad_tune,
-> +                      host->base + MSDC_PAD_TUNE);
-
-Please don't change code just because you feel like doing it. This is
-a completely unessarry change and it makes it harder for me to review.
-
-Can you go thorugh the complete patch and make sure to undo all
-similar changes, there are more of them.
-
->         } else {
-> -               writel(host->saved_tune_para.iocon, host->base + MSDC_IOCON);
-> -               writel(host->saved_tune_para.pad_tune, host->base + MSDC_PAD_TUNE);
-> +               writel(host->saved_tune_para.iocon,
-> +                      host->base + MSDC_IOCON);
-> +               writel(host->saved_tune_para.pad_tune,
-> +                      host->base + MSDC_PAD_TUNE);
-> +               writel(host->saved_tune_para.pad_cmd_tune,
-> +                      host->base + PAD_CMD_TUNE);
->         }
->
-> +       if (timing == MMC_TIMING_MMC_HS400)
-> +               sdr_set_field(host->base + PAD_CMD_TUNE,
-> +                             MSDC_PAD_TUNE_CMDRRDLY,
-> +                             host->hs400_cmd_int_delay);
->         dev_dbg(host->dev, "sclk: %d, timing: %d\n", host->sclk, timing);
->  }
->
-> @@ -1302,7 +1324,8 @@ static struct msdc_delay_phase get_best_delay(struct msdc_host *host, u32 delay)
->                         len_final = len;
->                 }
->                 start += len ? len : 1;
-> -               if (len >= 8 && start_final < 4)
-> +               if (len >= ENOUGH_MARGIN_MIN &&
-> +                   start_final < PREFER_START_POS_MAX)
->                         break;
->         }
->
-> @@ -1325,48 +1348,128 @@ static int msdc_tune_response(struct mmc_host *mmc, u32 opcode)
->         struct msdc_host *host = mmc_priv(mmc);
->         u32 rise_delay = 0, fall_delay = 0;
->         struct msdc_delay_phase final_rise_delay, final_fall_delay = { 0,};
-> +       struct msdc_delay_phase internal_delay_phase;
->         u8 final_delay, final_maxlen;
-> +       u32 internal_delay = 0;
->         int cmd_err;
-> -       int i;
-> +       int i, j;
->
-> +       if (mmc->ios.timing == MMC_TIMING_MMC_HS200 ||
-> +           mmc->ios.timing == MMC_TIMING_UHS_SDR104)
-> +               sdr_set_field(host->base + MSDC_PAD_TUNE,
-> +                             MSDC_PAD_TUNE_CMDRRDLY,
-> +                             host->hs200_cmd_int_delay);
->         sdr_clr_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
->         for (i = 0 ; i < PAD_DELAY_MAX; i++) {
->                 sdr_set_field(host->base + MSDC_PAD_TUNE,
->                               MSDC_PAD_TUNE_CMDRDLY, i);
-> -               mmc_send_tuning(mmc, opcode, &cmd_err);
-> -               if (!cmd_err)
-> -                       rise_delay |= (1 << i);
-> +               for (j = 0; j < 3; j++) {
-
-Any reason to why looping three times makes sense? Maybe add a comment?
-
-> +                       mmc_send_tuning(mmc, opcode, &cmd_err);
-> +                       if (!cmd_err) {
-> +                               rise_delay |= (1 << i);
-> +                       } else {
-> +                               rise_delay &= ~(1 << i);
-> +                               break;
-> +                       }
-> +               }
->         }
->         final_rise_delay = get_best_delay(host, rise_delay);
->         /* if rising edge has enough margin, then do not scan falling edge */
-> -       if (final_rise_delay.maxlen >= 10 ||
-> -           (final_rise_delay.start == 0 && final_rise_delay.maxlen >= 4))
-> +       if (final_rise_delay.maxlen >= ENOUGH_MARGIN_MIN &&
-> +           final_rise_delay.start < PREFER_START_POS_MAX)
-
-This looks like clean-ups, as you are converting from magic numbers to
-defines. Please make this kind of changes separately.
-
->                 goto skip_fall;
->
->         sdr_set_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
->         for (i = 0; i < PAD_DELAY_MAX; i++) {
->                 sdr_set_field(host->base + MSDC_PAD_TUNE,
->                               MSDC_PAD_TUNE_CMDRDLY, i);
-> -               mmc_send_tuning(mmc, opcode, &cmd_err);
-> -               if (!cmd_err)
-> -                       fall_delay |= (1 << i);
-> +               for (j = 0; j < 3; j++) {
-
-3?
-
-> +                       mmc_send_tuning(mmc, opcode, &cmd_err);
-> +                       if (!cmd_err) {
-> +                               fall_delay |= (1 << i);
-> +                       } else {
-> +                               fall_delay &= ~(1 << i);
-> +                               break;
-> +                       };
-> +               }
->         }
->         final_fall_delay = get_best_delay(host, fall_delay);
->
->  skip_fall:
->         final_maxlen = max(final_rise_delay.maxlen, final_fall_delay.maxlen);
-> +       if (final_fall_delay.maxlen >= ENOUGH_MARGIN_MIN &&
-> +           final_fall_delay.start < PREFER_START_POS_MAX)
-> +               final_maxlen = final_fall_delay.maxlen;
->         if (final_maxlen == final_rise_delay.maxlen) {
->                 sdr_clr_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
-> -               sdr_set_field(host->base + MSDC_PAD_TUNE, MSDC_PAD_TUNE_CMDRDLY,
-> +               sdr_set_field(host->base + MSDC_PAD_TUNE,
-> +                             MSDC_PAD_TUNE_CMDRDLY,
->                               final_rise_delay.final_phase);
->                 final_delay = final_rise_delay.final_phase;
->         } else {
->                 sdr_set_bits(host->base + MSDC_IOCON, MSDC_IOCON_RSPL);
-> -               sdr_set_field(host->base + MSDC_PAD_TUNE, MSDC_PAD_TUNE_CMDRDLY,
-> +               sdr_set_field(host->base + MSDC_PAD_TUNE,
-> +                             MSDC_PAD_TUNE_CMDRDLY,
->                               final_fall_delay.final_phase);
->                 final_delay = final_fall_delay.final_phase;
->         }
-> +       if (host->hs200_cmd_int_delay)
-> +               goto skip_internal;
->
-> +       for (i = 0; i < PAD_DELAY_MAX; i++) {
-> +               sdr_set_field(host->base + MSDC_PAD_TUNE,
-> +                             MSDC_PAD_TUNE_CMDRRDLY, i);
-> +               mmc_send_tuning(mmc, opcode, &cmd_err);
-> +               if (!cmd_err)
-> +                       internal_delay |= (1 << i);
-> +       }
-> +       dev_info(host->dev, "Final internal delay: 0x%x\n", internal_delay);
-
-I don't think dev_info() is what you want, right? Perhaps dev_dbg(),
-anything at all.
-
-> +       internal_delay_phase = get_best_delay(host, internal_delay);
-> +       sdr_set_field(host->base + MSDC_PAD_TUNE, MSDC_PAD_TUNE_CMDRRDLY,
-> +                     internal_delay_phase.final_phase);
-> +skip_internal:
-> +       dev_info(host->dev, "Final cmd pad delay: %x\n", final_delay);
-
-I don't think dev_info() is what you want, right? Perhaps dev_dbg(),
-anything at all.
-
-> +       return final_delay == 0xff ? -EIO : 0;
-> +}
-> +
-> +static int hs400_tune_response(struct mmc_host *mmc, u32 opcode)
-> +{
-> +       struct msdc_host *host = mmc_priv(mmc);
-> +       u32 cmd_delay = 0;
-> +       struct msdc_delay_phase final_cmd_delay = { 0,};
-> +       u8 final_delay;
-> +       int cmd_err;
-> +       int i, j;
-> +
-> +       /* select EMMC50 PAD CMD tune */
-> +       sdr_set_bits(host->base + PAD_CMD_TUNE, BIT(0));
-> +
-> +       if (mmc->ios.timing == MMC_TIMING_MMC_HS200 ||
-> +           mmc->ios.timing == MMC_TIMING_UHS_SDR104)
-> +               sdr_set_field(host->base + MSDC_PAD_TUNE,
-> +                             MSDC_PAD_TUNE_CMDRRDLY,
-> +                             host->hs200_cmd_int_delay);
-> +       sdr_set_field(host->base + MSDC_IOCON, MSDC_IOCON_RSPL,
-> +                     host->hs200_cmd_resp_sel);
-> +       for (i = 0 ; i < PAD_DELAY_MAX; i++) {
-> +               sdr_set_field(host->base + PAD_CMD_TUNE,
-> +                             PAD_CMD_TUNE_RX_DLY3, i);
-> +               for (j = 0; j < 3; j++) {
-
-3?
-
-> +                       mmc_send_tuning(mmc, opcode, &cmd_err);
-> +                       if (!cmd_err) {
-> +                               cmd_delay |= (1 << i);
-> +                       } else {
-> +                               cmd_delay &= ~(1 << i);
-> +                               break;
-> +                       }
-> +               }
-> +       }
-> +       final_cmd_delay = get_best_delay(host, cmd_delay);
-> +       sdr_set_field(host->base + PAD_CMD_TUNE, PAD_CMD_TUNE_RX_DLY3,
-> +                     final_cmd_delay.final_phase);
-> +       final_delay = final_cmd_delay.final_phase;
-> +
-> +       dev_info(host->dev, "Final cmd pad delay: %x\n", final_delay);
-
-dev_info() -> dev_dbg() or remove it.
-
->         return final_delay == 0xff ? -EIO : 0;
->  }
->
-> @@ -1389,7 +1492,7 @@ static int msdc_tune_data(struct mmc_host *mmc, u32 opcode)
->         }
->         final_rise_delay = get_best_delay(host, rise_delay);
->         /* if rising edge has enough margin, then do not scan falling edge */
-> -       if (final_rise_delay.maxlen >= 10 ||
-> +       if (final_rise_delay.maxlen >= ENOUGH_MARGIN_MIN ||
-
-Clean up. Move to separate change.
-
->             (final_rise_delay.start == 0 && final_rise_delay.maxlen >= 4))
->                 goto skip_fall;
->
-> @@ -1422,6 +1525,7 @@ static int msdc_tune_data(struct mmc_host *mmc, u32 opcode)
->                 final_delay = final_fall_delay.final_phase;
->         }
->
-> +       dev_info(host->dev, "Final data pad delay: %x\n", final_delay);
-
-dev_info() -> dev_dbg() or remove it.
-
->         return final_delay == 0xff ? -EIO : 0;
->  }
->
-> @@ -1430,10 +1534,13 @@ static int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
->         struct msdc_host *host = mmc_priv(mmc);
->         int ret;
->
-> +       if (host->hs400_mode)
-> +               ret = hs400_tune_response(mmc, opcode);
-> +       else
->         ret = msdc_tune_response(mmc, opcode);
-
-Because of the new else clause, seems like above needs an intendation.
-
->         if (ret == -EIO) {
->                 dev_err(host->dev, "Tune response fail!\n");
-> -               return ret;
-> +               goto out;
-
-Not needed, remove the label and this change.
-
->         }
->         if (host->hs400_mode == false) {
->                 ret = msdc_tune_data(mmc, opcode);
-> @@ -1443,6 +1550,8 @@ static int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
->
->         host->saved_tune_para.iocon = readl(host->base + MSDC_IOCON);
->         host->saved_tune_para.pad_tune = readl(host->base + MSDC_PAD_TUNE);
-> +       host->saved_tune_para.pad_cmd_tune = readl(host->base + PAD_CMD_TUNE);
-> +out:
->         return ret;
->  }
->
-> @@ -1553,6 +1662,18 @@ static int msdc_drv_probe(struct platform_device *pdev)
->                 dev_dbg(&pdev->dev, "hs400-ds-delay: %x\n",
->                         host->hs400_ds_delay);
->
-> +       if (!of_property_read_u32(pdev->dev.of_node, "hs200-cmd-int-delay",
-> +                                 &host->hs200_cmd_int_delay))
-> +               dev_dbg(&pdev->dev, "host->hs200-cmd-int-delay: %x\n",
-> +                       host->hs200_cmd_int_delay);
-> +       if (!of_property_read_u32(pdev->dev.of_node, "hs400-cmd-int-delay",
-> +                                 &host->hs400_cmd_int_delay))
-> +               dev_dbg(&pdev->dev, "host->hs400-cmd-int-delay: %x\n",
-> +                       host->hs400_cmd_int_delay);
-> +       if (!of_property_read_u32(pdev->dev.of_node, "cmd-resp-sel",
-> +                                 &host->hs200_cmd_resp_sel))
-> +               dev_dbg(&pdev->dev, "host->hs200_cmd-resp-sel: %x\n",
-> +                       host->hs200_cmd_resp_sel);
-
-I suggest you take the oppotunity to move the MTK DTS parsing into its
-own function, include the existing parsing of the "hs400-ds-delay".
-This improve the readablitity of the code.
-
->         host->dev = &pdev->dev;
->         host->mmc = mmc;
->         host->src_clk_freq = clk_get_rate(host->src_clk);
-> @@ -1663,6 +1784,7 @@ static void msdc_save_reg(struct msdc_host *host)
->         host->save_para.patch_bit0 = readl(host->base + MSDC_PATCH_BIT);
->         host->save_para.patch_bit1 = readl(host->base + MSDC_PATCH_BIT1);
->         host->save_para.pad_ds_tune = readl(host->base + PAD_DS_TUNE);
-> +       host->save_para.pad_cmd_tune = readl(host->base + PAD_CMD_TUNE);
->         host->save_para.emmc50_cfg0 = readl(host->base + EMMC50_CFG0);
->  }
->
-> @@ -1675,6 +1797,7 @@ static void msdc_restore_reg(struct msdc_host *host)
->         writel(host->save_para.patch_bit0, host->base + MSDC_PATCH_BIT);
->         writel(host->save_para.patch_bit1, host->base + MSDC_PATCH_BIT1);
->         writel(host->save_para.pad_ds_tune, host->base + PAD_DS_TUNE);
-> +       writel(host->save_para.pad_cmd_tune, host->base + PAD_CMD_TUNE);
->         writel(host->save_para.emmc50_cfg0, host->base + EMMC50_CFG0);
->  }
->
-> --
-> 1.7.9.5
->
-
-Kind regards
-Uffe
+diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+index 7d27c14..3b57e55 100644
+--- a/drivers/pci/dwc/Makefile
++++ b/drivers/pci/dwc/Makefile
+@@ -1,4 +1,4 @@
+-obj-$(CONFIG_PCIE_DW) += pcie-designware.o
++obj-$(CONFIG_PCIE_DW) += pcie-designware.o pcie-designware-host.o
+ obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+ obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+diff --git a/drivers/pci/dwc/pcie-designware-host.c b/drivers/pci/dwc/pcie-designware-host.c
+new file mode 100644
+index 0000000..e7eb653
+--- /dev/null
++++ b/drivers/pci/dwc/pcie-designware-host.c
+@@ -0,0 +1,619 @@
++/*
++ * Synopsys Designware PCIe host controller driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * Author: Jingoo Han <jg1.han@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/irqdomain.h>
++#include <linux/of_address.h>
++#include <linux/of_pci.h>
++#include <linux/pci_regs.h>
++#include <linux/platform_device.h>
++
++#include "pcie-designware.h"
++
++static struct pci_ops dw_pcie_ops;
++
++static int dw_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
++			       u32 *val)
++{
++	struct dw_pcie *pci;
++
++	if (pp->ops->rd_own_conf)
++		return pp->ops->rd_own_conf(pp, where, size, val);
++
++	pci = to_dw_pcie_from_pp(pp);
++	return dw_pcie_read(pci->dbi_base + where, size, val);
++}
++
++static int dw_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
++			       u32 val)
++{
++	struct dw_pcie *pci;
++
++	if (pp->ops->wr_own_conf)
++		return pp->ops->wr_own_conf(pp, where, size, val);
++
++	pci = to_dw_pcie_from_pp(pp);
++	return dw_pcie_write(pci->dbi_base + where, size, val);
++}
++
++static struct irq_chip dw_msi_irq_chip = {
++	.name = "PCI-MSI",
++	.irq_enable = pci_msi_unmask_irq,
++	.irq_disable = pci_msi_mask_irq,
++	.irq_mask = pci_msi_mask_irq,
++	.irq_unmask = pci_msi_unmask_irq,
++};
++
++/* MSI int handler */
++irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
++{
++	unsigned long val;
++	int i, pos, irq;
++	irqreturn_t ret = IRQ_NONE;
++
++	for (i = 0; i < MAX_MSI_CTRLS; i++) {
++		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS + i * 12, 4,
++				    (u32 *)&val);
++		if (val) {
++			ret = IRQ_HANDLED;
++			pos = 0;
++			while ((pos = find_next_bit(&val, 32, pos)) != 32) {
++				irq = irq_find_mapping(pp->irq_domain,
++						       i * 32 + pos);
++				dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_STATUS +
++						    i * 12, 4, 1 << pos);
++				generic_handle_irq(irq);
++				pos++;
++			}
++		}
++	}
++
++	return ret;
++}
++
++void dw_pcie_msi_init(struct pcie_port *pp)
++{
++	u64 msi_target;
++
++	pp->msi_data = __get_free_pages(GFP_KERNEL, 0);
++	msi_target = virt_to_phys((void *)pp->msi_data);
++
++	/* program the msi_data */
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
++			    (u32)(msi_target & 0xffffffff));
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
++			    (u32)(msi_target >> 32 & 0xffffffff));
++}
++
++static void dw_pcie_msi_clear_irq(struct pcie_port *pp, int irq)
++{
++	unsigned int res, bit, val;
++
++	res = (irq / 32) * 12;
++	bit = irq % 32;
++	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
++	val &= ~(1 << bit);
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
++}
++
++static void clear_irq_range(struct pcie_port *pp, unsigned int irq_base,
++			    unsigned int nvec, unsigned int pos)
++{
++	unsigned int i;
++
++	for (i = 0; i < nvec; i++) {
++		irq_set_msi_desc_off(irq_base, i, NULL);
++		/* Disable corresponding interrupt on MSI controller */
++		if (pp->ops->msi_clear_irq)
++			pp->ops->msi_clear_irq(pp, pos + i);
++		else
++			dw_pcie_msi_clear_irq(pp, pos + i);
++	}
++
++	bitmap_release_region(pp->msi_irq_in_use, pos, order_base_2(nvec));
++}
++
++static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
++{
++	unsigned int res, bit, val;
++
++	res = (irq / 32) * 12;
++	bit = irq % 32;
++	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
++	val |= 1 << bit;
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
++}
++
++static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
++{
++	int irq, pos0, i;
++	struct pcie_port *pp;
++
++	pp = (struct pcie_port *)msi_desc_to_pci_sysdata(desc);
++	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
++				       order_base_2(no_irqs));
++	if (pos0 < 0)
++		goto no_valid_irq;
++
++	irq = irq_find_mapping(pp->irq_domain, pos0);
++	if (!irq)
++		goto no_valid_irq;
++
++	/*
++	 * irq_create_mapping (called from dw_pcie_host_init) pre-allocates
++	 * descs so there is no need to allocate descs here. We can therefore
++	 * assume that if irq_find_mapping above returns non-zero, then the
++	 * descs are also successfully allocated.
++	 */
++
++	for (i = 0; i < no_irqs; i++) {
++		if (irq_set_msi_desc_off(irq, i, desc) != 0) {
++			clear_irq_range(pp, irq, i, pos0);
++			goto no_valid_irq;
++		}
++		/*Enable corresponding interrupt in MSI interrupt controller */
++		if (pp->ops->msi_set_irq)
++			pp->ops->msi_set_irq(pp, pos0 + i);
++		else
++			dw_pcie_msi_set_irq(pp, pos0 + i);
++	}
++
++	*pos = pos0;
++	desc->nvec_used = no_irqs;
++	desc->msi_attrib.multiple = order_base_2(no_irqs);
++
++	return irq;
++
++no_valid_irq:
++	*pos = pos0;
++	return -ENOSPC;
++}
++
++static void dw_msi_setup_msg(struct pcie_port *pp, unsigned int irq, u32 pos)
++{
++	struct msi_msg msg;
++	u64 msi_target;
++
++	if (pp->ops->get_msi_addr)
++		msi_target = pp->ops->get_msi_addr(pp);
++	else
++		msi_target = virt_to_phys((void *)pp->msi_data);
++
++	msg.address_lo = (u32)(msi_target & 0xffffffff);
++	msg.address_hi = (u32)(msi_target >> 32 & 0xffffffff);
++
++	if (pp->ops->get_msi_data)
++		msg.data = pp->ops->get_msi_data(pp, pos);
++	else
++		msg.data = pos;
++
++	pci_write_msi_msg(irq, &msg);
++}
++
++static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
++			    struct msi_desc *desc)
++{
++	int irq, pos;
++	struct pcie_port *pp = pdev->bus->sysdata;
++
++	if (desc->msi_attrib.is_msix)
++		return -EINVAL;
++
++	irq = assign_irq(1, desc, &pos);
++	if (irq < 0)
++		return irq;
++
++	dw_msi_setup_msg(pp, irq, pos);
++
++	return 0;
++}
++
++static int dw_msi_setup_irqs(struct msi_controller *chip, struct pci_dev *pdev,
++			     int nvec, int type)
++{
++#ifdef CONFIG_PCI_MSI
++	int irq, pos;
++	struct msi_desc *desc;
++	struct pcie_port *pp = pdev->bus->sysdata;
++
++	/* MSI-X interrupts are not supported */
++	if (type == PCI_CAP_ID_MSIX)
++		return -EINVAL;
++
++	WARN_ON(!list_is_singular(&pdev->dev.msi_list));
++	desc = list_entry(pdev->dev.msi_list.next, struct msi_desc, list);
++
++	irq = assign_irq(nvec, desc, &pos);
++	if (irq < 0)
++		return irq;
++
++	dw_msi_setup_msg(pp, irq, pos);
++
++	return 0;
++#else
++	return -EINVAL;
++#endif
++}
++
++static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
++{
++	struct irq_data *data = irq_get_irq_data(irq);
++	struct msi_desc *msi = irq_data_get_msi_desc(data);
++	struct pcie_port *pp = (struct pcie_port *)msi_desc_to_pci_sysdata(msi);
++
++	clear_irq_range(pp, irq, 1, data->hwirq);
++}
++
++static struct msi_controller dw_pcie_msi_chip = {
++	.setup_irq = dw_msi_setup_irq,
++	.setup_irqs = dw_msi_setup_irqs,
++	.teardown_irq = dw_msi_teardown_irq,
++};
++
++static int dw_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
++			   irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &dw_msi_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
++
++	return 0;
++}
++
++static const struct irq_domain_ops msi_domain_ops = {
++	.map = dw_pcie_msi_map,
++};
++
++int dw_pcie_host_init(struct pcie_port *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct device *dev = pci->dev;
++	struct device_node *np = dev->of_node;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct pci_bus *bus, *child;
++	struct resource *cfg_res;
++	int i, ret;
++	LIST_HEAD(res);
++	struct resource_entry *win, *tmp;
++
++	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
++	if (cfg_res) {
++		pp->cfg0_size = resource_size(cfg_res) / 2;
++		pp->cfg1_size = resource_size(cfg_res) / 2;
++		pp->cfg0_base = cfg_res->start;
++		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
++	} else if (!pp->va_cfg0_base) {
++		dev_err(dev, "missing *config* reg space\n");
++	}
++
++	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
++	if (ret)
++		return ret;
++
++	ret = devm_request_pci_bus_resources(dev, &res);
++	if (ret)
++		goto error;
++
++	/* Get the I/O and memory ranges from DT */
++	resource_list_for_each_entry_safe(win, tmp, &res) {
++		switch (resource_type(win->res)) {
++		case IORESOURCE_IO:
++			ret = pci_remap_iospace(win->res, pp->io_base);
++			if (ret) {
++				dev_warn(dev, "error %d: failed to map resource %pR\n",
++					 ret, win->res);
++				resource_list_destroy_entry(win);
++			} else {
++				pp->io = win->res;
++				pp->io->name = "I/O";
++				pp->io_size = resource_size(pp->io);
++				pp->io_bus_addr = pp->io->start - win->offset;
++			}
++			break;
++		case IORESOURCE_MEM:
++			pp->mem = win->res;
++			pp->mem->name = "MEM";
++			pp->mem_size = resource_size(pp->mem);
++			pp->mem_bus_addr = pp->mem->start - win->offset;
++			break;
++		case 0:
++			pp->cfg = win->res;
++			pp->cfg0_size = resource_size(pp->cfg) / 2;
++			pp->cfg1_size = resource_size(pp->cfg) / 2;
++			pp->cfg0_base = pp->cfg->start;
++			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
++			break;
++		case IORESOURCE_BUS:
++			pp->busn = win->res;
++			break;
++		}
++	}
++
++	if (!pci->dbi_base) {
++		pci->dbi_base = devm_ioremap(dev, pp->cfg->start,
++					     resource_size(pp->cfg));
++		if (!pci->dbi_base) {
++			dev_err(dev, "error with ioremap\n");
++			ret = -ENOMEM;
++			goto error;
++		}
++	}
++
++	pp->mem_base = pp->mem->start;
++
++	if (!pp->va_cfg0_base) {
++		pp->va_cfg0_base = devm_ioremap(dev, pp->cfg0_base,
++						pp->cfg0_size);
++		if (!pp->va_cfg0_base) {
++			dev_err(dev, "error with ioremap in function\n");
++			ret = -ENOMEM;
++			goto error;
++		}
++	}
++
++	if (!pp->va_cfg1_base) {
++		pp->va_cfg1_base = devm_ioremap(dev, pp->cfg1_base,
++						pp->cfg1_size);
++		if (!pp->va_cfg1_base) {
++			dev_err(dev, "error with ioremap\n");
++			ret = -ENOMEM;
++			goto error;
++		}
++	}
++
++	ret = of_property_read_u32(np, "num-viewport", &pci->num_viewport);
++	if (ret)
++		pci->num_viewport = 2;
++
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		if (!pp->ops->msi_host_init) {
++			pp->irq_domain = irq_domain_add_linear(dev->of_node,
++						MAX_MSI_IRQS, &msi_domain_ops,
++						&dw_pcie_msi_chip);
++			if (!pp->irq_domain) {
++				dev_err(dev, "irq domain init failed\n");
++				ret = -ENXIO;
++				goto error;
++			}
++
++			for (i = 0; i < MAX_MSI_IRQS; i++)
++				irq_create_mapping(pp->irq_domain, i);
++		} else {
++			ret = pp->ops->msi_host_init(pp, &dw_pcie_msi_chip);
++			if (ret < 0)
++				goto error;
++		}
++	}
++
++	if (pp->ops->host_init)
++		pp->ops->host_init(pp);
++
++	pp->root_bus_nr = pp->busn->start;
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		bus = pci_scan_root_bus_msi(dev, pp->root_bus_nr,
++					    &dw_pcie_ops, pp, &res,
++					    &dw_pcie_msi_chip);
++		dw_pcie_msi_chip.dev = dev;
++	} else
++		bus = pci_scan_root_bus(dev, pp->root_bus_nr, &dw_pcie_ops,
++					pp, &res);
++	if (!bus) {
++		ret = -ENOMEM;
++		goto error;
++	}
++
++	if (pp->ops->scan_bus)
++		pp->ops->scan_bus(pp);
++
++#ifdef CONFIG_ARM
++	/* support old dtbs that incorrectly describe IRQs */
++	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
++#endif
++
++	pci_bus_size_bridges(bus);
++	pci_bus_assign_resources(bus);
++
++	list_for_each_entry(child, &bus->children, node)
++		pcie_bus_configure_settings(child);
++
++	pci_bus_add_devices(bus);
++	return 0;
++
++error:
++	pci_free_resource_list(&res);
++	return ret;
++}
++
++static int dw_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
++				 u32 devfn, int where, int size, u32 *val)
++{
++	int ret, type;
++	u32 busdev, cfg_size;
++	u64 cpu_addr;
++	void __iomem *va_cfg_base;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	if (pp->ops->rd_other_conf)
++		return pp->ops->rd_other_conf(pp, bus, devfn, where, size, val);
++
++	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
++		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
++
++	if (bus->parent->number == pp->root_bus_nr) {
++		type = PCIE_ATU_TYPE_CFG0;
++		cpu_addr = pp->cfg0_base;
++		cfg_size = pp->cfg0_size;
++		va_cfg_base = pp->va_cfg0_base;
++	} else {
++		type = PCIE_ATU_TYPE_CFG1;
++		cpu_addr = pp->cfg1_base;
++		cfg_size = pp->cfg1_size;
++		va_cfg_base = pp->va_cfg1_base;
++	}
++
++	dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
++				  type, cpu_addr,
++				  busdev, cfg_size);
++	ret = dw_pcie_read(va_cfg_base + where, size, val);
++	if (pci->num_viewport <= 2)
++		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
++					  PCIE_ATU_TYPE_IO, pp->io_base,
++					  pp->io_bus_addr, pp->io_size);
++
++	return ret;
++}
++
++static int dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
++				 u32 devfn, int where, int size, u32 val)
++{
++	int ret, type;
++	u32 busdev, cfg_size;
++	u64 cpu_addr;
++	void __iomem *va_cfg_base;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	if (pp->ops->wr_other_conf)
++		return pp->ops->wr_other_conf(pp, bus, devfn, where, size, val);
++
++	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
++		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
++
++	if (bus->parent->number == pp->root_bus_nr) {
++		type = PCIE_ATU_TYPE_CFG0;
++		cpu_addr = pp->cfg0_base;
++		cfg_size = pp->cfg0_size;
++		va_cfg_base = pp->va_cfg0_base;
++	} else {
++		type = PCIE_ATU_TYPE_CFG1;
++		cpu_addr = pp->cfg1_base;
++		cfg_size = pp->cfg1_size;
++		va_cfg_base = pp->va_cfg1_base;
++	}
++
++	dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
++				  type, cpu_addr,
++				  busdev, cfg_size);
++	ret = dw_pcie_write(va_cfg_base + where, size, val);
++	if (pci->num_viewport <= 2)
++		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
++					  PCIE_ATU_TYPE_IO, pp->io_base,
++					  pp->io_bus_addr, pp->io_size);
++
++	return ret;
++}
++
++static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
++				int dev)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	/* If there is no link, then there is no device */
++	if (bus->number != pp->root_bus_nr) {
++		if (!dw_pcie_link_up(pci))
++			return 0;
++	}
++
++	/* access only one slot on each root port */
++	if (bus->number == pp->root_bus_nr && dev > 0)
++		return 0;
++
++	return 1;
++}
++
++static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
++			   int size, u32 *val)
++{
++	struct pcie_port *pp = bus->sysdata;
++
++	if (!dw_pcie_valid_device(pp, bus, PCI_SLOT(devfn))) {
++		*val = 0xffffffff;
++		return PCIBIOS_DEVICE_NOT_FOUND;
++	}
++
++	if (bus->number == pp->root_bus_nr)
++		return dw_pcie_rd_own_conf(pp, where, size, val);
++
++	return dw_pcie_rd_other_conf(pp, bus, devfn, where, size, val);
++}
++
++static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
++			   int where, int size, u32 val)
++{
++	struct pcie_port *pp = bus->sysdata;
++
++	if (!dw_pcie_valid_device(pp, bus, PCI_SLOT(devfn)))
++		return PCIBIOS_DEVICE_NOT_FOUND;
++
++	if (bus->number == pp->root_bus_nr)
++		return dw_pcie_wr_own_conf(pp, where, size, val);
++
++	return dw_pcie_wr_other_conf(pp, bus, devfn, where, size, val);
++}
++
++static struct pci_ops dw_pcie_ops = {
++	.read = dw_pcie_rd_conf,
++	.write = dw_pcie_wr_conf,
++};
++
++void dw_pcie_setup_rc(struct pcie_port *pp)
++{
++	u32 val;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	dw_pcie_setup(pci);
++
++	/* setup RC BARs */
++	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
++	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
++
++	/* setup interrupt pins */
++	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
++	val &= 0xffff00ff;
++	val |= 0x00000100;
++	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
++
++	/* setup bus numbers */
++	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
++	val &= 0xff000000;
++	val |= 0x00010100;
++	dw_pcie_writel_dbi(pci, PCI_PRIMARY_BUS, val);
++
++	/* setup command register */
++	val = dw_pcie_readl_dbi(pci, PCI_COMMAND);
++	val &= 0xffff0000;
++	val |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
++		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
++	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
++
++	/*
++	 * If the platform provides ->rd_other_conf, it means the platform
++	 * uses its own address translation component rather than ATU, so
++	 * we should not program the ATU here.
++	 */
++	if (!pp->ops->rd_other_conf) {
++		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
++					  PCIE_ATU_TYPE_MEM, pp->mem_base,
++					  pp->mem_bus_addr, pp->mem_size);
++		if (pci->num_viewport > 2)
++			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
++						  PCIE_ATU_TYPE_IO, pp->io_base,
++						  pp->io_bus_addr, pp->io_size);
++	}
++
++	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
++
++	/* program correct class for RC */
++	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
++
++	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
++	val |= PORT_LOGIC_SPEED_CHANGE;
++	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
++}
+diff --git a/drivers/pci/dwc/pcie-designware.c b/drivers/pci/dwc/pcie-designware.c
+index ff04074..fb020ee 100644
+--- a/drivers/pci/dwc/pcie-designware.c
++++ b/drivers/pci/dwc/pcie-designware.c
+@@ -11,17 +11,9 @@
+  * published by the Free Software Foundation.
+  */
+ 
+-#include <linux/irq.h>
+-#include <linux/irqdomain.h>
+-#include <linux/kernel.h>
+-#include <linux/msi.h>
+-#include <linux/of_address.h>
+-#include <linux/of_pci.h>
+-#include <linux/pci.h>
+-#include <linux/pci_regs.h>
+-#include <linux/platform_device.h>
+-#include <linux/types.h>
+ #include <linux/delay.h>
++#include <linux/of.h>
++#include <linux/types.h>
+ 
+ #include "pcie-designware.h"
+ 
+@@ -31,8 +23,6 @@
+ #define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
+ #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
+ 
+-static struct pci_ops dw_pcie_ops;
+-
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+ {
+ 	if ((uintptr_t)addr & (size - 1)) {
+@@ -102,33 +92,8 @@ static void dw_pcie_writel_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+ 	dw_pcie_writel_dbi(pci, offset + reg, val);
+ }
+ 
+-static int dw_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+-			       u32 *val)
+-{
+-	struct dw_pcie *pci;
+-
+-	if (pp->ops->rd_own_conf)
+-		return pp->ops->rd_own_conf(pp, where, size, val);
+-
+-	pci = to_dw_pcie_from_pp(pp);
+-	return dw_pcie_read(pci->dbi_base + where, size, val);
+-}
+-
+-static int dw_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
+-			       u32 val)
+-{
+-	struct dw_pcie *pci;
+-
+-	if (pp->ops->wr_own_conf)
+-		return pp->ops->wr_own_conf(pp, where, size, val);
+-
+-	pci = to_dw_pcie_from_pp(pp);
+-	return dw_pcie_write(pci->dbi_base + where, size, val);
+-}
+-
+-static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+-				      int type, u64 cpu_addr, u64 pci_addr,
+-				      u32 size)
++void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
++			       u64 cpu_addr, u64 pci_addr, u32 size)
+ {
+ 	u32 retries, val;
+ 
+@@ -186,220 +151,6 @@ static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+ 	dev_err(pci->dev, "iATU is not being enabled\n");
+ }
+ 
+-static struct irq_chip dw_msi_irq_chip = {
+-	.name = "PCI-MSI",
+-	.irq_enable = pci_msi_unmask_irq,
+-	.irq_disable = pci_msi_mask_irq,
+-	.irq_mask = pci_msi_mask_irq,
+-	.irq_unmask = pci_msi_unmask_irq,
+-};
+-
+-/* MSI int handler */
+-irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+-{
+-	unsigned long val;
+-	int i, pos, irq;
+-	irqreturn_t ret = IRQ_NONE;
+-
+-	for (i = 0; i < MAX_MSI_CTRLS; i++) {
+-		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS + i * 12, 4,
+-				    (u32 *)&val);
+-		if (val) {
+-			ret = IRQ_HANDLED;
+-			pos = 0;
+-			while ((pos = find_next_bit(&val, 32, pos)) != 32) {
+-				irq = irq_find_mapping(pp->irq_domain,
+-						       i * 32 + pos);
+-				dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_STATUS +
+-						    i * 12, 4, 1 << pos);
+-				generic_handle_irq(irq);
+-				pos++;
+-			}
+-		}
+-	}
+-
+-	return ret;
+-}
+-
+-void dw_pcie_msi_init(struct pcie_port *pp)
+-{
+-	u64 msi_target;
+-
+-	pp->msi_data = __get_free_pages(GFP_KERNEL, 0);
+-	msi_target = virt_to_phys((void *)pp->msi_data);
+-
+-	/* program the msi_data */
+-	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
+-			    (u32)(msi_target & 0xffffffff));
+-	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4,
+-			    (u32)(msi_target >> 32 & 0xffffffff));
+-}
+-
+-static void dw_pcie_msi_clear_irq(struct pcie_port *pp, int irq)
+-{
+-	unsigned int res, bit, val;
+-
+-	res = (irq / 32) * 12;
+-	bit = irq % 32;
+-	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
+-	val &= ~(1 << bit);
+-	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
+-}
+-
+-static void clear_irq_range(struct pcie_port *pp, unsigned int irq_base,
+-			    unsigned int nvec, unsigned int pos)
+-{
+-	unsigned int i;
+-
+-	for (i = 0; i < nvec; i++) {
+-		irq_set_msi_desc_off(irq_base, i, NULL);
+-		/* Disable corresponding interrupt on MSI controller */
+-		if (pp->ops->msi_clear_irq)
+-			pp->ops->msi_clear_irq(pp, pos + i);
+-		else
+-			dw_pcie_msi_clear_irq(pp, pos + i);
+-	}
+-
+-	bitmap_release_region(pp->msi_irq_in_use, pos, order_base_2(nvec));
+-}
+-
+-static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
+-{
+-	unsigned int res, bit, val;
+-
+-	res = (irq / 32) * 12;
+-	bit = irq % 32;
+-	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
+-	val |= 1 << bit;
+-	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
+-}
+-
+-static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+-{
+-	int irq, pos0, i;
+-	struct pcie_port *pp;
+-
+-	pp  = (struct pcie_port *)msi_desc_to_pci_sysdata(desc);
+-	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
+-				       order_base_2(no_irqs));
+-	if (pos0 < 0)
+-		goto no_valid_irq;
+-
+-	irq = irq_find_mapping(pp->irq_domain, pos0);
+-	if (!irq)
+-		goto no_valid_irq;
+-
+-	/*
+-	 * irq_create_mapping (called from dw_pcie_host_init) pre-allocates
+-	 * descs so there is no need to allocate descs here. We can therefore
+-	 * assume that if irq_find_mapping above returns non-zero, then the
+-	 * descs are also successfully allocated.
+-	 */
+-
+-	for (i = 0; i < no_irqs; i++) {
+-		if (irq_set_msi_desc_off(irq, i, desc) != 0) {
+-			clear_irq_range(pp, irq, i, pos0);
+-			goto no_valid_irq;
+-		}
+-		/*Enable corresponding interrupt in MSI interrupt controller */
+-		if (pp->ops->msi_set_irq)
+-			pp->ops->msi_set_irq(pp, pos0 + i);
+-		else
+-			dw_pcie_msi_set_irq(pp, pos0 + i);
+-	}
+-
+-	*pos = pos0;
+-	desc->nvec_used = no_irqs;
+-	desc->msi_attrib.multiple = order_base_2(no_irqs);
+-
+-	return irq;
+-
+-no_valid_irq:
+-	*pos = pos0;
+-	return -ENOSPC;
+-}
+-
+-static void dw_msi_setup_msg(struct pcie_port *pp, unsigned int irq, u32 pos)
+-{
+-	struct msi_msg msg;
+-	u64 msi_target;
+-
+-	if (pp->ops->get_msi_addr)
+-		msi_target = pp->ops->get_msi_addr(pp);
+-	else
+-		msi_target = virt_to_phys((void *)pp->msi_data);
+-
+-	msg.address_lo = (u32)(msi_target & 0xffffffff);
+-	msg.address_hi = (u32)(msi_target >> 32 & 0xffffffff);
+-
+-	if (pp->ops->get_msi_data)
+-		msg.data = pp->ops->get_msi_data(pp, pos);
+-	else
+-		msg.data = pos;
+-
+-	pci_write_msi_msg(irq, &msg);
+-}
+-
+-static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
+-			    struct msi_desc *desc)
+-{
+-	int irq, pos;
+-	struct pcie_port *pp = pdev->bus->sysdata;
+-
+-	if (desc->msi_attrib.is_msix)
+-		return -EINVAL;
+-
+-	irq = assign_irq(1, desc, &pos);
+-	if (irq < 0)
+-		return irq;
+-
+-	dw_msi_setup_msg(pp, irq, pos);
+-
+-	return 0;
+-}
+-
+-static int dw_msi_setup_irqs(struct msi_controller *chip, struct pci_dev *pdev,
+-			     int nvec, int type)
+-{
+-#ifdef CONFIG_PCI_MSI
+-	int irq, pos;
+-	struct msi_desc *desc;
+-	struct pcie_port *pp = pdev->bus->sysdata;
+-
+-	/* MSI-X interrupts are not supported */
+-	if (type == PCI_CAP_ID_MSIX)
+-		return -EINVAL;
+-
+-	WARN_ON(!list_is_singular(&pdev->dev.msi_list));
+-	desc = list_entry(pdev->dev.msi_list.next, struct msi_desc, list);
+-
+-	irq = assign_irq(nvec, desc, &pos);
+-	if (irq < 0)
+-		return irq;
+-
+-	dw_msi_setup_msg(pp, irq, pos);
+-
+-	return 0;
+-#else
+-	return -EINVAL;
+-#endif
+-}
+-
+-static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
+-{
+-	struct irq_data *data = irq_get_irq_data(irq);
+-	struct msi_desc *msi = irq_data_get_msi_desc(data);
+-	struct pcie_port *pp = (struct pcie_port *)msi_desc_to_pci_sysdata(msi);
+-
+-	clear_irq_range(pp, irq, 1, data->hwirq);
+-}
+-
+-static struct msi_controller dw_pcie_msi_chip = {
+-	.setup_irq = dw_msi_setup_irq,
+-	.setup_irqs = dw_msi_setup_irqs,
+-	.teardown_irq = dw_msi_teardown_irq,
+-};
+-
+ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+ {
+ 	int retries;
+@@ -430,19 +181,6 @@ int dw_pcie_link_up(struct dw_pcie *pci)
+ 		(!(val & PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING)));
+ }
+ 
+-static int dw_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
+-			   irq_hw_number_t hwirq)
+-{
+-	irq_set_chip_and_handler(irq, &dw_msi_irq_chip, handle_simple_irq);
+-	irq_set_chip_data(irq, domain->host_data);
+-
+-	return 0;
+-}
+-
+-static const struct irq_domain_ops msi_domain_ops = {
+-	.map = dw_pcie_msi_map,
+-};
+-
+ static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+ {
+ 	u32 val;
+@@ -454,303 +192,11 @@ static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+ 	return 0;
+ }
+ 
+-int dw_pcie_host_init(struct pcie_port *pp)
+-{
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct device *dev = pci->dev;
+-	struct device_node *np = dev->of_node;
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct pci_bus *bus, *child;
+-	struct resource *cfg_res;
+-	int i, ret;
+-	LIST_HEAD(res);
+-	struct resource_entry *win, *tmp;
+-
+-	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+-	if (cfg_res) {
+-		pp->cfg0_size = resource_size(cfg_res) / 2;
+-		pp->cfg1_size = resource_size(cfg_res) / 2;
+-		pp->cfg0_base = cfg_res->start;
+-		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+-	} else if (!pp->va_cfg0_base) {
+-		dev_err(dev, "missing *config* reg space\n");
+-	}
+-
+-	ret = of_pci_get_host_bridge_resources(np, 0, 0xff, &res, &pp->io_base);
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_request_pci_bus_resources(dev, &res);
+-	if (ret)
+-		goto error;
+-
+-	/* Get the I/O and memory ranges from DT */
+-	resource_list_for_each_entry_safe(win, tmp, &res) {
+-		switch (resource_type(win->res)) {
+-		case IORESOURCE_IO:
+-			ret = pci_remap_iospace(win->res, pp->io_base);
+-			if (ret) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
+-					 ret, win->res);
+-				resource_list_destroy_entry(win);
+-			} else {
+-				pp->io = win->res;
+-				pp->io->name = "I/O";
+-				pp->io_size = resource_size(pp->io);
+-				pp->io_bus_addr = pp->io->start - win->offset;
+-			}
+-			break;
+-		case IORESOURCE_MEM:
+-			pp->mem = win->res;
+-			pp->mem->name = "MEM";
+-			pp->mem_size = resource_size(pp->mem);
+-			pp->mem_bus_addr = pp->mem->start - win->offset;
+-			break;
+-		case 0:
+-			pp->cfg = win->res;
+-			pp->cfg0_size = resource_size(pp->cfg) / 2;
+-			pp->cfg1_size = resource_size(pp->cfg) / 2;
+-			pp->cfg0_base = pp->cfg->start;
+-			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
+-			break;
+-		case IORESOURCE_BUS:
+-			pp->busn = win->res;
+-			break;
+-		}
+-	}
+-
+-	if (!pp->dbi_base) {
+-		pp->dbi_base = devm_ioremap(dev, pp->cfg->start,
+-					resource_size(pp->cfg));
+-		if (!pp->dbi_base) {
+-			dev_err(dev, "error with ioremap\n");
+-			ret = -ENOMEM;
+-			goto error;
+-		}
+-	}
+-
+-	pp->mem_base = pp->mem->start;
+-
+-	if (!pp->va_cfg0_base) {
+-		pp->va_cfg0_base = devm_ioremap(dev, pp->cfg0_base,
+-						pp->cfg0_size);
+-		if (!pp->va_cfg0_base) {
+-			dev_err(dev, "error with ioremap in function\n");
+-			ret = -ENOMEM;
+-			goto error;
+-		}
+-	}
+-
+-	if (!pp->va_cfg1_base) {
+-		pp->va_cfg1_base = devm_ioremap(dev, pp->cfg1_base,
+-						pp->cfg1_size);
+-		if (!pp->va_cfg1_base) {
+-			dev_err(dev, "error with ioremap\n");
+-			ret = -ENOMEM;
+-			goto error;
+-		}
+-	}
+-
+-	ret = of_property_read_u32(np, "num-viewport", &pci->num_viewport);
+-	if (ret)
+-		pci->num_viewport = 2;
+-
+-	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		if (!pp->ops->msi_host_init) {
+-			pp->irq_domain = irq_domain_add_linear(dev->of_node,
+-						MAX_MSI_IRQS, &msi_domain_ops,
+-						&dw_pcie_msi_chip);
+-			if (!pp->irq_domain) {
+-				dev_err(dev, "irq domain init failed\n");
+-				ret = -ENXIO;
+-				goto error;
+-			}
+-
+-			for (i = 0; i < MAX_MSI_IRQS; i++)
+-				irq_create_mapping(pp->irq_domain, i);
+-		} else {
+-			ret = pp->ops->msi_host_init(pp, &dw_pcie_msi_chip);
+-			if (ret < 0)
+-				goto error;
+-		}
+-	}
+-
+-	if (pp->ops->host_init)
+-		pp->ops->host_init(pp);
+-
+-	pp->root_bus_nr = pp->busn->start;
+-	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		bus = pci_scan_root_bus_msi(dev, pp->root_bus_nr,
+-					    &dw_pcie_ops, pp, &res,
+-					    &dw_pcie_msi_chip);
+-		dw_pcie_msi_chip.dev = dev;
+-	} else
+-		bus = pci_scan_root_bus(dev, pp->root_bus_nr, &dw_pcie_ops,
+-					pp, &res);
+-	if (!bus) {
+-		ret = -ENOMEM;
+-		goto error;
+-	}
+-
+-	if (pp->ops->scan_bus)
+-		pp->ops->scan_bus(pp);
+-
+-#ifdef CONFIG_ARM
+-	/* support old dtbs that incorrectly describe IRQs */
+-	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+-#endif
+-
+-	pci_bus_size_bridges(bus);
+-	pci_bus_assign_resources(bus);
+-
+-	list_for_each_entry(child, &bus->children, node)
+-		pcie_bus_configure_settings(child);
+-
+-	pci_bus_add_devices(bus);
+-	return 0;
+-
+-error:
+-	pci_free_resource_list(&res);
+-	return ret;
+-}
+-
+-static int dw_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+-				 u32 devfn, int where, int size, u32 *val)
+-{
+-	int ret, type;
+-	u32 busdev, cfg_size;
+-	u64 cpu_addr;
+-	void __iomem *va_cfg_base;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-
+-	if (pp->ops->rd_other_conf)
+-		return pp->ops->rd_other_conf(pp, bus, devfn, where, size, val);
+-
+-	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+-		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+-
+-	if (bus->parent->number == pp->root_bus_nr) {
+-		type = PCIE_ATU_TYPE_CFG0;
+-		cpu_addr = pp->cfg0_base;
+-		cfg_size = pp->cfg0_size;
+-		va_cfg_base = pp->va_cfg0_base;
+-	} else {
+-		type = PCIE_ATU_TYPE_CFG1;
+-		cpu_addr = pp->cfg1_base;
+-		cfg_size = pp->cfg1_size;
+-		va_cfg_base = pp->va_cfg1_base;
+-	}
+-
+-	dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-				  type, cpu_addr,
+-				  busdev, cfg_size);
+-	ret = dw_pcie_read(va_cfg_base + where, size, val);
+-	if (pci->num_viewport <= 2)
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-					  PCIE_ATU_TYPE_IO, pp->io_base,
+-					  pp->io_bus_addr, pp->io_size);
+-
+-	return ret;
+-}
+-
+-static int dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+-				 u32 devfn, int where, int size, u32 val)
+-{
+-	int ret, type;
+-	u32 busdev, cfg_size;
+-	u64 cpu_addr;
+-	void __iomem *va_cfg_base;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-
+-	if (pp->ops->wr_other_conf)
+-		return pp->ops->wr_other_conf(pp, bus, devfn, where, size, val);
+-
+-	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+-		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+-
+-	if (bus->parent->number == pp->root_bus_nr) {
+-		type = PCIE_ATU_TYPE_CFG0;
+-		cpu_addr = pp->cfg0_base;
+-		cfg_size = pp->cfg0_size;
+-		va_cfg_base = pp->va_cfg0_base;
+-	} else {
+-		type = PCIE_ATU_TYPE_CFG1;
+-		cpu_addr = pp->cfg1_base;
+-		cfg_size = pp->cfg1_size;
+-		va_cfg_base = pp->va_cfg1_base;
+-	}
+-
+-	dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-				  type, cpu_addr,
+-				  busdev, cfg_size);
+-	ret = dw_pcie_write(va_cfg_base + where, size, val);
+-	if (pci->num_viewport <= 2)
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-					  PCIE_ATU_TYPE_IO, pp->io_base,
+-					  pp->io_bus_addr, pp->io_size);
+-
+-	return ret;
+-}
+-
+-static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
+-				int dev)
+-{
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-
+-	/* If there is no link, then there is no device */
+-	if (bus->number != pp->root_bus_nr) {
+-		if (!dw_pcie_link_up(pci))
+-			return 0;
+-	}
+-
+-	/* access only one slot on each root port */
+-	if (bus->number == pp->root_bus_nr && dev > 0)
+-		return 0;
+-
+-	return 1;
+-}
+-
+-static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+-			   int size, u32 *val)
+-{
+-	struct pcie_port *pp = bus->sysdata;
+-
+-	if (!dw_pcie_valid_device(pp, bus, PCI_SLOT(devfn))) {
+-		*val = 0xffffffff;
+-		return PCIBIOS_DEVICE_NOT_FOUND;
+-	}
+-
+-	if (bus->number == pp->root_bus_nr)
+-		return dw_pcie_rd_own_conf(pp, where, size, val);
+-
+-	return dw_pcie_rd_other_conf(pp, bus, devfn, where, size, val);
+-}
+-
+-static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+-			   int where, int size, u32 val)
+-{
+-	struct pcie_port *pp = bus->sysdata;
+-
+-	if (!dw_pcie_valid_device(pp, bus, PCI_SLOT(devfn)))
+-		return PCIBIOS_DEVICE_NOT_FOUND;
+-
+-	if (bus->number == pp->root_bus_nr)
+-		return dw_pcie_wr_own_conf(pp, where, size, val);
+-
+-	return dw_pcie_wr_other_conf(pp, bus, devfn, where, size, val);
+-}
+-
+-static struct pci_ops dw_pcie_ops = {
+-	.read = dw_pcie_rd_conf,
+-	.write = dw_pcie_wr_conf,
+-};
+-
+-void dw_pcie_setup_rc(struct pcie_port *pp)
++void dw_pcie_setup(struct dw_pcie *pci)
+ {
+ 	int ret;
+-	u32 lanes;
+ 	u32 val;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	u32 lanes;
+ 	struct device *dev = pci->dev;
+ 	struct device_node *np = dev->of_node;
+ 
+@@ -803,51 +249,4 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 		break;
+ 	}
+ 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+-
+-	/* setup RC BARs */
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+-
+-	/* setup interrupt pins */
+-	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+-	val &= 0xffff00ff;
+-	val |= 0x00000100;
+-	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+-
+-	/* setup bus numbers */
+-	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+-	val &= 0xff000000;
+-	val |= 0x00010100;
+-	dw_pcie_writel_dbi(pci, PCI_PRIMARY_BUS, val);
+-
+-	/* setup command register */
+-	val = dw_pcie_readl_dbi(pci, PCI_COMMAND);
+-	val &= 0xffff0000;
+-	val |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+-		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+-	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+-
+-	/*
+-	 * If the platform provides ->rd_other_conf, it means the platform
+-	 * uses its own address translation component rather than ATU, so
+-	 * we should not program the ATU here.
+-	 */
+-	if (!pp->ops->rd_other_conf) {
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+-					  PCIE_ATU_TYPE_MEM, pp->mem_base,
+-					  pp->mem_bus_addr, pp->mem_size);
+-		if (pci->num_viewport > 2)
+-			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
+-						  PCIE_ATU_TYPE_IO, pp->io_base,
+-						  pp->io_bus_addr, pp->io_size);
+-	}
+-
+-	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+-
+-	/* program correct class for RC */
+-	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+-
+-	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+-	val |= PORT_LOGIC_SPEED_CHANGE;
+-	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+ }
+diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-designware.h
+index 491fbe3..808d17b 100644
+--- a/drivers/pci/dwc/pcie-designware.h
++++ b/drivers/pci/dwc/pcie-designware.h
+@@ -14,6 +14,10 @@
+ #ifndef _PCIE_DESIGNWARE_H
+ #define _PCIE_DESIGNWARE_H
+ 
++#include <linux/irq.h>
++#include <linux/msi.h>
++#include <linux/pci.h>
++
+ /* Parameters for the waiting for link up routine */
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+@@ -167,4 +171,8 @@ struct dw_pcie {
+ void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val);
+ int dw_pcie_link_up(struct dw_pcie *pci);
+ int dw_pcie_wait_for_link(struct dw_pcie *pci);
++void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
++			       int type, u64 cpu_addr, u64 pci_addr,
++			       u32 size);
++void dw_pcie_setup(struct dw_pcie *pci);
+ #endif /* _PCIE_DESIGNWARE_H */
+-- 
+1.7.9.5
