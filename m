@@ -1,41 +1,68 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
-Date: Thu, 12 Jan 2017 10:07:33 -0600
-Message-ID: <1484237253.2492.43.camel@kernel.crashing.org>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
-         <20170112002910.3650-4-cyrilbur@gmail.com>
-         <20170112074750.GB23943@kroah.com> <1484216163.11416.8.camel@gmail.com>
-         <20170112103038.GA19239@kroah.com>
-         <1484234867.2492.39.camel@kernel.crashing.org>
-         <20170112160051.GB8095@kroah.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Thu, 12 Jan 2017 17:17:47 +0100
+Message-ID: <CAOAejn1MWjW5h+EvCtt3aLPAQfndro6PhLTZTRs95VTOfRBJxQ@mail.gmail.com>
+References: <1483607246-14771-1-git-send-email-cedric.madianga@gmail.com>
+ <1483607246-14771-3-git-send-email-cedric.madianga@gmail.com>
+ <20170111082208.vzu7xgpd4eakyldl@pengutronix.de> <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
+ <20170111153940.dtxzvtdici3r7l54@pengutronix.de> <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170112160051.GB8095-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-01-12 at 17:00 +0100, Greg KH wrote:
-> > How so ? I mean, access_ok followed by __get/__put_user is still a
-> > classic, what's wrong with it ?
-> 
-> No "normal" driver should do that, just call copy_to/from_user and be
-> done with it.  That way all of the proper locking and validation checks
-> like this are done correctly for you.  Why would a driver ever call the
-> "raw" __get/__put_user functions?
+>>> > I don't understand scl_period =3D 1 =C2=B5s for Fast Mode. For a bus =
+freqency
+>>> > of 400 kHz we need low + high =3D 2.5 =C2=B5s. Is there a factor 10 m=
+issing
+>>> > somewhere?
+>>>
+>>> As CCR =3D SCL_period * I2C parent clk frequency with minimal freq =3D
+>>> 2Mhz and SCL_period =3D 1 we have:
+>>> CCR =3D 1 * 2Mhz =3D 2.
+>>> But to compute, scl_low and scl_high in Fast mode, we have to do the
+>>> following thing as Duty=3D1:
+>>> scl_high =3D 9 * CCR * I2C parent clk period
+>>> scl_low =3D 16 * CCR * I2C parent clk period
+>>> In our example:
+>>> scl_high =3D 9 * 2 * 0,0000005 =3D 0,000009 sec =3D 9 =C2=B5s
+>>> scl_low =3D 16 * 2 * 0.0000005 =3D 0,000016 sec =3D 16 =C2=B5s
+>>> So low + high =3D 27 =C2=B5s > 2,5 =C2=B5s
+>>
+>> For me 9 =C2=B5s + 16 =C2=B5s is 25 =C2=B5s, resulting in 40 kHz. That's=
+ why I wondered
+>> if there is a factor 10 missing somewhere.
+>
+> Hum ok. I am going to double-check what is wrong because when I check
+> with the scope I always reach 400Khz for SCL.
+> I will let you know.
 
-I supposed historically it was considered faster for some things :-)
+There is one point I miss here that is described in the reference manual:
+To reach the 400 kHz maximum I=C2=B2C fast mode clock, the I2C parent rate
+must be a multiple of 10 MHz.
+So, contrary to what we said in a previous thread, 400 kHz could not
+be reached with low frequencies.
+In that way, we could compute CCR with duty =3D 0 by default.
+So, I find another formula very close to the first one I pushed in the
+first version:
 
-Not a huge deal, and yes it's probably cleaner, I was just wondering
-what was "racy" about access_ok() that I might have missed...
+In fast mode, we compute CCR with duty =3D 0:
+t_scl_high =3D CCR * I2C parent clk period
+t_scl_low =3D 2 *CCR * I2C parent clk period
+So, CCR =3D I2C parent rate / 400 kHz / 3
 
-Cheers,
-Ben.
+For example with parent rate =3D 40 MHz:
+CCR =3D 40000000 / 400000 / 3 =3D 33.333333333 =3D 33
+t_scl_high =3D 33 * (1 / 2000000) =3D 825 ns > 600 ns
+t_scl_low =3D 2 * 16 * (1 / 2000000) =3D 1650 ns > 1300 ns
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It seems ok now.
+
+Best regards,
+
+Cedric
