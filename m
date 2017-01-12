@@ -1,39 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3] mmc: sh_mmcif: Document r7s72100 DT bindings
-Date: Thu, 12 Jan 2017 08:36:10 +0100
-Message-ID: <CAMuHMdW2Gx+t2uQUmYkQQoD7tB5us+CFXXpU1J3OW2Lzbsv77Q@mail.gmail.com>
-References: <20170112041452.14136-1-chris.brandt@renesas.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH linux v2 2/6] hwmon: occ: Add sysfs interface
+Date: Thu, 12 Jan 2017 15:39:56 +0800
+Message-ID: <201701121526.IGSXKGUP%fengguang.wu@intel.com>
+References: <1484158237-10014-3-git-send-email-eajames.ibm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170112041452.14136-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484158237-10014-3-git-send-email-eajames.ibm@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: eajames.ibm@gmail.com
+Cc: kbuild-all@01.org, linux@roeck-us.net, devicetree@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Hi Edward,
 
-On Thu, Jan 12, 2017 at 5:14 AM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
->
-> ---
-> v3:
-> * added list of how many interrupts each SOC has
-> v2:
-> * added interrupt description
+[auto build test WARNING on hwmon/hwmon-next]
+[also build test WARNING on v4.10-rc3 next-20170111]
+[cannot apply to linux/master]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Thanks or the update!
+url:    https://github.com/0day-ci/linux/commits/eajames-ibm-gmail-com/hwmon-Add-core-On-Chip-Controller-support-for-POWER-CPUs/20170112-150440
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+coccinelle warnings: (new ones prefixed by >>)
 
-                        Geert
+>> drivers/hwmon/occ/occ_sysfs.c:265:9-16: WARNING: ERR_CAST can be used with hwmon -> dev
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Please review and possibly fold the followup patch.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
