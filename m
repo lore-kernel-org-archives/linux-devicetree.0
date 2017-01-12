@@ -1,39 +1,39 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] Documentation: dt: reset: Revise typos in TI syscon
- reset example
-Date: Thu, 12 Jan 2017 11:54:05 +0100
-Message-ID: <1484218445.2376.10.camel@pengutronix.de>
-References: <20170109192814.26811-1-s-anna@ti.com>
- <20170112012217.18115-1-s-anna@ti.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/6] fbdev/ssd1307fb: Some changes and improvement
+Date: Thu, 12 Jan 2017 13:16:26 +0200
+Message-ID: <cover.1484219137.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170112012217.18115-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 11.01.2017, 19:22 -0600 schrieb Suman Anna:
-> Fix couple of typos in the example given in the TI syscon reset
-> binding. The ti,reset-bits used for DSP0 are corrected to match
-> the values that will be used in the actual DT node.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> v2: Address Rob Herring's comment to change the reset node name
->     from "psc-reset" to "reset-controller"
+We needed these changes for couple of our evm. Everything else is quite
+straight forward, but removing the reset-active-low dts property is a
+questionable at least in theory. However, in practice if anyone was
+using the property in their device-tree blobs, they have never been
+able to get desired effect with mainline kernel.
 
-I've applied the patch, thank you.
+Jyri Sarha (3):
+  fbdev: ssd1307fb: Start to use gpiod API for reset gpio
+  fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
+  fbdev: ssd1307fb: Make reset gpio devicetree property optional
 
-regards
-Philipp
+Tomi Valkeinen (3):
+  fbdev/ssd1307fb: add support to enable VBAT
+  fbdev/ssd1307fb: clear screen in probe
+  fbdev/ssd1307fb: add support to enable VBAT
+
+ .../devicetree/bindings/display/ssd1307fb.txt      |  5 +-
+ drivers/video/fbdev/ssd1307fb.c                    | 55 ++++++++++++++--------
+ 2 files changed, 38 insertions(+), 22 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
