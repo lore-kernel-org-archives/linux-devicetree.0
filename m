@@ -1,46 +1,67 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers/misc: Add ASpeed LPC control driver
-Date: Thu, 12 Jan 2017 09:27:47 -0600
-Message-ID: <1484234867.2492.39.camel@kernel.crashing.org>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
-         <20170112002910.3650-4-cyrilbur@gmail.com>
-         <20170112074750.GB23943@kroah.com> <1484216163.11416.8.camel@gmail.com>
-         <20170112103038.GA19239@kroah.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2][UPDATE] of: base: add support to get the number of
+ cache levels
+Date: Thu, 12 Jan 2017 15:28:20 +0000
+Message-ID: <14f13c99-2fa4-b195-59f8-ddd9ec5b4037@arm.com>
+References: <1484048479-19767-1-git-send-email-sudeep.holla@arm.com>
+ <1484049616-22388-1-git-send-email-sudeep.holla@arm.com>
+ <CAL_Jsq+wawaXeFPnmYw++YMiMzMm+9nSn498Dj7KsGzkfndfog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170112103038.GA19239-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAL_Jsq+wawaXeFPnmYw++YMiMzMm+9nSn498Dj7KsGzkfndfog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-01-12 at 11:30 +0100, Greg KH wrote:
-> > > And don't call access_ok(), it's racy and no driver should ever do that.
-> > > 
-> > 
-> > Oh, duly noted. I'll be sure to check out how and why. Perhaps it
-> > would be wise that no driver actually do that, I'm quite sure I used
-> > other drivers as examples of best practice.
+
+
+On 12/01/17 13:24, Rob Herring wrote:
+> On Tue, Jan 10, 2017 at 6:00 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> It is useful to have helper function just to get the number of cache
+>> levels for a given logical cpu. This patch adds the support for the
+>> same.
+>>
+>> It will be used on ARM64 platform where the device tree provides the
+>> information for the additional non-architected/transparent/external
+>> last level caches that are not integrated with the processors.
+>>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/of/base.c  | 23 +++++++++++++++++++++++
+>>  include/linux/of.h |  1 +
+>>  2 files changed, 24 insertions(+)
+>>
+
+[...]
+
+>> +int of_count_cache_levels(unsigned int cpu)
+>> +{
+>> +       int level = 0;
+>> +       struct device_node *np = of_cpu_device_node_get(cpu);
+>> +
+>> +       while (np) {
+>> +               level++;
 > 
-> You did?  Please point me at that code so we can fix them up properly.
-> Cargo-cult coding is not a good thing, but it happens, so if we can at
-> least provide clean code to fixate on, it's good overall for everyone.
+> This will return 1 if you have a cpu node and no cache nodes. Are you
+> assuming the cpu has a cache?
+> 
 
-How so ? I mean, access_ok followed by __get/__put_user is still a
-classic, what's wrong with it ?
+Ah right, that's completely wrong assumption.
 
-The test performed by access_ok tests whether the address hits the
-kernel/userspace limit, that limit doesn't change afaik, so there is no
-race there, and avoids repeatedly testing it for series of subsequent
-__get_user or __put_user.
+> Perhaps you should just find the last level cache node and then just
+> read "cache-level".
+> 
 
-What's wrong with them ?
+Yes, sounds better. I will update accordingly. Thanks for the suggestion.
 
-Cheers,
-Ben.
-
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
