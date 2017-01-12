@@ -1,109 +1,117 @@
-From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: RE: [PATCH 1/3] ARM: at91: flush the L2 cache before entering cpu
- idle
-Date: Thu, 12 Jan 2017 01:25:22 +0000
-Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB497F2B@CHN-SV-EXMX07.mchp-main.com>
-References: <20170106065947.30631-1-wenyou.yang@atmel.com>
- <20170106065947.30631-2-wenyou.yang@atmel.com>
- <20170110161821.vp673jyfqx6s76pg@piout.net>
- <CACh+v5NX9Da__zXtnVGgbO9wYAzEJy-8rjVPHdQx_F6QDk+xZg@mail.gmail.com>
- <F9F4555C4E01D7469D37975B62D0EFBB496BE4@CHN-SV-EXMX07.mchp-main.com>
- <CACh+v5M3tU4WHMqAX0zm2H=zzwc0+XChyG1tnH2aHxaacm6C=A@mail.gmail.com>
- <20170111111814.GJ14217@n2100.armlinux.org.uk>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] arm64: dts: rockchip: add "rockchip, grf" property for RK3399 PMUCRU/CRU
+Date: Thu, 12 Jan 2017 02:28:02 +0100
+Message-ID: <1637274.yXLKltLVD2@phil>
+References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com> <1523574.hS8CXi1tTP@diego> <CAD=FV=WMQ22G67YoQx2t7J6_ZuB3sUjVjXh-0KhPEO_6zbiyUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170111111814.GJ14217-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAD=FV=WMQ22G67YoQx2t7J6_ZuB3sUjVjXh-0KhPEO_6zbiyUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jjhiblot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUnVzc2VsbCBLaW5nIC0g
-QVJNIExpbnV4IFttYWlsdG86bGludXhAYXJtbGludXgub3JnLnVrXQ0KPiBTZW50OiAyMDE35bm0
-MeaciDEx5pelIDE5OjE4DQo+IFRvOiBKZWFuLUphY3F1ZXMgSGlibG90IDxqamhpYmxvdEBnbWFp
-bC5jb20+DQo+IENjOiBXZW55b3UgWWFuZyAtIEE0MTUzNSA8V2VueW91LllhbmdAbWljcm9jaGlw
-LmNvbT47IEFsZXhhbmRyZSBCZWxsb25pDQo+IDxhbGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVsZWN0
-cm9ucy5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gZGV2aWNl
-dHJlZSA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBOaWNvbGFzIEZlcnJlDQo+IDxuaWNv
-bGFzLmZlcnJlQGF0bWVsLmNvbT47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0K
-PiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcm9iaCtkdCA8cm9iaCtkdEBrZXJuZWwub3JnPjsg
-bGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIIDEvM10gQVJNOiBhdDkxOiBmbHVzaCB0aGUgTDIgY2FjaGUgYmVmb3JlIGVudGVyaW5n
-IGNwdSBpZGxlDQo+IA0KPiBPbiBXZWQsIEphbiAxMSwgMjAxNyBhdCAxMjowNTowNVBNICswMTAw
-LCBKZWFuLUphY3F1ZXMgSGlibG90IHdyb3RlOg0KPiA+IDIwMTctMDEtMTEgOToxNSBHTVQrMDE6
-MDAgIDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAuY29tPjoNCj4gPiA+IEhpIEplYW4tSmFjcXVlcywN
-Cj4gPiA+DQo+ID4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+PiBGcm9tOiBK
-ZWFuLUphY3F1ZXMgSGlibG90IFttYWlsdG86ampoaWJsb3RAZ21haWwuY29tXQ0KPiA+ID4+IFNl
-bnQ6IDIwMTflubQx5pyIMTHml6UgMDo1MQ0KPiA+ID4+IFRvOiBBbGV4YW5kcmUgQmVsbG9uaSA8
-YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29tPg0KPiA+ID4+IENjOiBXZW55b3Ug
-WWFuZyAtIEE0MTUzNSA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT47IE1hcmsgUnV0bGFuZA0K
-PiA+ID4+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnPjsNCj4gPiA+PiBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcu
-dWs+OyBXZW55b3UgWWFuZyAtIEE0MTUzNQ0KPiA+ID4+IDxXZW55b3UuWWFuZ0BtaWNyb2NoaXAu
-Y29tPjsgTmljb2xhcyBGZXJyZQ0KPiA+ID4+IDxuaWNvbGFzLmZlcnJlQGF0bWVsLmNvbT47IExp
-bnV4IEtlcm5lbCBNYWlsaW5nIExpc3QNCj4gPiA+PiA8bGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZz47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiA+ID4+IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-MS8zXSBBUk06IGF0OTE6IGZsdXNoIHRoZSBMMiBjYWNoZSBiZWZvcmUNCj4gPiA+PiBlbnRlcmlu
-ZyBjcHUgaWRsZQ0KPiA+ID4+DQo+ID4gPj4gMjAxNy0wMS0xMCAxNzoxOCBHTVQrMDE6MDAgQWxl
-eGFuZHJlIEJlbGxvbmkNCj4gPiA+PiA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
-Y29tPjoNCj4gPiA+PiA+IEkgdGhvdWdoIGEgYml0IG1vcmUgYWJvdXQgaXQsIGFuZCBJIGRvbid0
-IHJlYWxseSBsaWtlIHRoZSBuZXcNCj4gPiA+PiA+IGNvbXBhdGlibGUgc3RyaW5nLiBJIGRvbid0
-IGZlZWwgdGhpcyBzaG91bGQgYmUgbmVjZXNzYXJ5Lg0KPiA+ID4+ID4NCj4gPiA+PiA+IFdoYXQg
-YWJvdXQgdGhlIGZvbGxvd2luZzoNCj4gPiA+PiA+DQo+ID4gPj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vbWFjaC1hdDkxL3BtLmMgYi9hcmNoL2FybS9tYWNoLWF0OTEvcG0uYw0KPiA+ID4+ID4g
-aW5kZXgNCj4gPiA+PiA+IGI0MzMyYjcyN2U5Yy4uMDMzM2FjYTYzZTQ0IDEwMDY0NA0KPiA+ID4+
-ID4gLS0tIGEvYXJjaC9hcm0vbWFjaC1hdDkxL3BtLmMNCj4gPiA+PiA+ICsrKyBiL2FyY2gvYXJt
-L21hY2gtYXQ5MS9wbS5jDQo+ID4gPj4gPiBAQCAtNTMsNiArNTMsNyBAQCBleHRlcm4gdm9pZCBh
-dDkxX3BpbmN0cmxfZ3Bpb19yZXN1bWUodm9pZCk7DQo+ID4gPj4gPiBzdGF0aWMgc3RydWN0IHsN
-Cj4gPiA+PiA+ICAgICAgICAgdW5zaWduZWQgbG9uZyB1aHBfdWRwX21hc2s7DQo+ID4gPj4gPiAg
-ICAgICAgIGludCBtZW1jdHJsOw0KPiA+ID4+ID4gKyAgICAgICBib29sIGhhc19sMl9jYWNoZTsN
-Cj4gPiA+PiA+ICB9IGF0OTFfcG1fZGF0YTsNCj4gPiA+PiA+DQo+ID4gPj4gPiAgdm9pZCBfX2lv
-bWVtICphdDkxX3JhbWNfYmFzZVsyXTsgQEAgLTI2Nyw2ICsyNjgsMTEgQEAgc3RhdGljDQo+ID4g
-Pj4gPiB2b2lkIGF0OTFfZGRyX3N0YW5kYnkodm9pZCkNCj4gPiA+PiA+ICAgICAgICAgdTMyIGxw
-cjAsIGxwcjEgPSAwOw0KPiA+ID4+ID4gICAgICAgICB1MzIgc2F2ZWRfbHByMCwgc2F2ZWRfbHBy
-MSA9IDA7DQo+ID4gPj4gPg0KPiA+ID4+DQo+ID4gPj4gPiArICAgICAgIGlmIChhdDkxX3BtX2Rh
-dGEuaGFzX2wyX2NhY2hlKSB7DQo+ID4gPj4gPiArICAgICAgICAgICAgICAgZmx1c2hfY2FjaGVf
-YWxsKCk7DQo+ID4gPj4gd2hhdCBpcyB0aGUgcG9pbnQgb2YgY2FsbGluZyBmbHVzaF9jYWNoZV9h
-bGwoKSBoZXJlID8gRG8gd2UgcmVhbGx5DQo+ID4gPj4gY2FyZSB0aGF0IGRpcnR5IGRhdGEgaW4g
-TDEgaXMgd3JpdHRlbiB0byBERFIgPyBJIG1heSBiZSBtaXNzaW5nDQo+ID4gPj4gc29tZXRoaW5n
-IGJ1dCB0byBtZSBpdCdzIGp1c3QgZXh0cmEgbGF0ZW5jeS4NCj4gPiA+DQo+ID4gPiBBcmUgeW91
-IG1lYW4gdXNlIG91dGVyX2ZsdXNoX2FsbCgpIHRvIGZsdXNoIGFsbCBjYWNoZSBsaW5lcyBpbiB0
-aGUgb3V0ZXIgY2FjaGUNCj4gb25seT8NCj4gPg0KPiA+IFllcyB0aGF0J3Mgd2hhdCBJIG1lYW50
-LiBZb3Ugc2VlLCB5b3UgZG9uJ3QgZmx1c2ggdGhlIGNhY2hlIGZvcg0KPiA+IHNhbWE1ZDMgc28g
-aXQgc2hvdWxkbid0IGJlIHJlcXVpcmVkIGVpdGhlciBmb3Igc2FtNWQ0LiBZb3Ugc2hvdWxkIGJl
-DQo+ID4gYWJsZSB0byB0ZXN0IGl0IHF1aWNrbHkgYW5kIHNlZSBpZiBMMSBmbHVzaCBpcyBpbmRl
-ZWQgcmVxdWlyZWQgYnkNCj4gPiByZXBsYWNpbmcgIGZsdXNoX2NhY2hlX2FsbCgpIHdpdGggb3V0
-ZXJfZmx1c2hfYWxsKCkuIEJUVyBpcyBoaWdobHkNCj4gPiBwcm9iYWJsZSB0aGF0IEwyIGNhY2hl
-IGZsdXNoIGlzIGRvbmUgaW4gb3V0ZXJfZGlzYWJsZSgpIHNvIGNhbGxpbmcNCj4gPiBvdXRlcl9m
-bHVzaF9hbGwoKSBpcyBwcm9iYWJseSBubyByZXF1aXJlZC4NCj4gDQo+IFBsZWFzZSBkb24ndC4g
-IFJlYWQgdGhlIGNvbW1lbnRzIGluIHRoZSBjb2RlLCBhbmQgdW5kZXJzdGFuZCB0aGUgQVBJcyB0
-aGF0DQo+IHlvdSdyZSBzdWdnZXN0aW5nIHBlb3BsZSB1c2UgX2JlZm9yZV8gbWFraW5nIHRoZSBz
-dWdnZXN0aW9uOg0KPiANCj4gLyoqDQo+ICAqIG91dGVyX2ZsdXNoX2FsbCAtIGNsZWFuIGFuZCBp
-bnZhbGlkYXRlIGFsbCBjYWNoZSBsaW5lcyBpbiB0aGUgb3V0ZXIgY2FjaGUNCj4gICoNCj4gICog
-Tm90ZTogZGVwZW5kaW5nIG9uIGltcGxlbWVudGF0aW9uLCB0aGlzIG1heSBub3QgYmUgYXRvbWlj
-IC0gaXQgbXVzdA0KPiAgKiBvbmx5IGJlIGNhbGxlZCB3aXRoIGludGVycnVwdHMgZGlzYWJsZWQg
-YW5kIG5vIG90aGVyIGFjdGl2ZSBvdXRlcg0KPiAgKiBjYWNoZSBtYXN0ZXJzLg0KPiAgKg0KPiAg
-KiBJdCBpcyBpbnRlbmRlZCB0aGF0IHRoaXMgZnVuY3Rpb24gaXMgb25seSB1c2VkIGJ5IGltcGxl
-bWVudGF0aW9ucw0KPiAgKiBuZWVkaW5nIHRvIG92ZXJyaWRlIHRoZSBvdXRlcl9jYWNoZS5kaXNh
-YmxlKCkgbWV0aG9kIGR1ZSB0byBzZWN1cml0eS4NCj4gICogKFNvbWUgaW1wbGVtZW50YXRpb25z
-IHBlcmZvcm0gdGhpcyBhcyBhIGNsZWFuIGZvbGxvd2VkIGJ5IGFuIGludmFsaWRhdGUuKSAgKi8N
-Cj4gDQo+IFNvLCBvdXRlcl9mbHVzaF9hbGwoKSBzaG91bGQgbm90IGJlIGNhbGxlZCBleGNlcHQg
-ZnJvbSBMMiBjYWNoZSBjb2RlDQo+IGltcGxlbWVudGluZyB0aGUgb3V0ZXJfZGlzYWJsZSgpIGZ1
-bmN0aW9uIC0gaXQncyBub3QgaW50ZW5kZWQgZm9yIHBsYXRmb3JtcyB0byB1c2UuDQo+IA0KPiBU
-aGVyZSBhcmUsIGhvd2V2ZXIsIHNhZGx5IHRocmVlIHVzZXJzIG9mIG91dGVyX2ZsdXNoX2FsbCgp
-IHdoaWNoIGhhdmUgY3JlcHQgaW4NCj4gdGhyb3VnaCBhcm0tc29jLCB0aGF0IHNob3VsZCBiZSBv
-dXRlcl9kaXNhYmxlKCkgaW5zdGVhZC4NCg0KSGVyZSwgb3V0ZXJfZmx1c2hfYWxsKCkgc2hvdWxk
-IG5vdCBiZSBjYWxsZWQsIGNhbGxpbmcgb3V0ZXJfZGlzYWJsZSgpIGlzIGVub3VnaC4gSXMgaXQg
-cmlnaHQ/DQoNCkluIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBsMmNfZGlzYWJsZSh2b2lkKSBvZiBp
-biBtbS9jYWNoZS1sMngwLmMsIHRoZSBvdXRlcl9jYWNoZS5mbHVzaF9hbGwoKSBpcyBjYWxsZWQu
-DQoNCj4gDQo+IC0tDQo+IFJNSydzIFBhdGNoIHN5c3RlbTogaHR0cDovL3d3dy5hcm1saW51eC5v
-cmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMvDQo+IEZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxp
-bmU6IGN1cnJlbnRseSBhdCA5LjZNYnBzIGRvd24gNDAwa2JwcyB1cA0KPiBhY2NvcmRpbmcgdG8g
-c3BlZWR0ZXN0Lm5ldC4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
+Am Mittwoch, 11. Januar 2017, 16:50:10 CET schrieb Doug Anderson:
+> Hi,
+> 
+> On Tue, Jan 10, 2017 at 11:58 AM, Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> > Hi Doug,
+> > 
+> > Am Dienstag, 10. Januar 2017, 20:46:12 schrieb Heiko Stübner:
+> >> Am Dienstag, 10. Januar 2017, 10:45:48 schrieb Doug Anderson:
+> >> > Hi,
+> >> > 
+> >> > On Mon, Jan 9, 2017 at 10:15 PM, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> 
+> >> wrote:
+> >> > > The structure rockchip_clk_provider needs to refer the GRF regmap
+> >> > > in somewhere, if the CRU node has not "rockchip,grf" property,
+> >> > > calling syscon_regmap_lookup_by_phandle will return an invalid GRF
+> >> > > regmap, and the MUXGRF type clock will be not supported.
+> >> > > 
+> >> > > Therefore, we need to add them.
+> >> > > 
+> >> > > Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> > > ---
+> >> > > 
+> >> > > Changes in v4:
+> >> > > - separte the binding patch
+> >> > > 
+> >> > > Changes in v3:
+> >> > > - add optional roperty rockchip,grf in rockchip,rk3399-cru.txt
+> >> > > 
+> >> > > Changes in v2:
+> >> > > - referring pmugrf for PMUGRU
+> >> > > - fix the typo "invaild" in COMMIT message
+> >> > > 
+> >> > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
+> >> > >  1 file changed, 2 insertions(+)
+> >> > 
+> >> > This seems fine to me, so:
+> >> > 
+> >> > Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> > 
+> >> > ...but I will say that before you actually add any real "MUXGRF"
+> >> > clocks on rk3399 you _might_ need to rework the code to make things
+> >> > truly "optional".  If it turns out that any existing clocks that
+> >> > already exist today already go through one of these muxes in the GRF
+> >> > and we've always been assuming one setting of the mux, we'll need to
+> >> > make sure we keep assuming that setting of the mux even if the "grf"
+> >> > isn't specified.
+> >> 
+> >> I guess I see that a bit more relaxed :-) .
+> >> 
+> >> I.e. the GRF being optional is a remnant of syscons not being available
+> >> when the clocks get set up- so were coming in later or not at all. For
+> >> the rk3288 I converted, there we never really had the case of the GRF
+> >> missing.
+> >> 
+> >> And the GRF mux for the vcodec now present is not being used by anything
+> >> yet (neither driver nor binding), so no old devicetree can break.
+> >> 
+> >> > As I understand it, your motivation for this patch is to eventually be
+> >> > able to model the EDP reference clock which can either be xin24 or
+> >> > "edp osc".  Presumably the eDP "reference clock" isn't related to any
+> >> > of the pre-existing eDP clocks so that one should be safe.
+> >> 
+> >> Same here, so far we don't even have edp or even any other graphical
+> >> output
+> >> on the rk3399, so again there is no old devicetree that could break when
+> >> the grf is not specified.
+> > 
+> > reading all of the above again, it feels like you essentially also said
+> > similar things already in your original reply and I misread some of it.
+> > 
+> > But again, I don't see the need for any more code right now, as hopefully
+> > the simple stuff we currently only support does not have any grf-based
+> > muxes in it. Xing + Rockchip people, please correct me if I'm wrong here
+> > :-)
+> Right.  I have no objection to Xing's patch.  I just want to make sure
+> that if it's listed as "Optional" that it's really optional.
+> 
+> I was worried that we would introduce some GRF-based mux in the
+> _middle_ of some existing clock tree because we simply didn't model
+> the mux before and assumed one particular setting.  If nothing like
+> that ever happens then we're fine.
+
+Thankfully the clock diagrams on the old socs were pretty verbose, listing all
+grf-based clocks as well. For example the rk3288 seems to have two and it
+seems I've been carrying dummy definitions for those from the time I did the
+initial clock tree [0].
+
+And thankfully grf-based clocks somehow always only get used for more
+"esotheric" components like vcodec and iep on the rk3288 :-) .
+
+
+Heiko
+
+[0] https://github.com/mmind/linux-rockchip/blob/devel/workbench/drivers/clk/rockchip/clk-rk3288.c
+lines 371 and 799 .. looks like I'll need to add the iep clock as well
+at some point.
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
