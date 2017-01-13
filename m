@@ -1,25 +1,26 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCHv4 0/5] Support for Marvell switches with integrated CPUs
-Date: Fri, 13 Jan 2017 22:12:15 +1300
-Message-ID: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Subject: [PATCHv4 1/5] clk: mvebu: support for 98DX3236 SoC
+Date: Fri, 13 Jan 2017 22:12:16 +1300
+Message-ID: <20170113091222.7132-2-chris.packham@alliedtelesis.co.nz>
+References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brand <chris.brand@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, Sudeep Holla <sudeep.holla@arm.com>, Juri Lelli <juri.lelli@arm.com>, Thomas Petazzoni <thomas.>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The 98DX3236, 98DX3336 and 98DX4251 are a set of switch ASICs with
-integrated CPUs. They CPU block is common within these product lines and
-(as far as I can tell/have been told) is based on the Armada XP. There
-are a few differences due to the fact they have to squeeze the CPU into
-the same package as the switch.
+The 98DX3236, 98DX3336, 98DX4521 and variants have a different TCLK from
+the Armada XP (200MHz vs 250MHz). The CPU core clock is fixed at 800MHz.
 
-This series is starting to settle down now. The only major change is in
-"arm: mvebu: support for SMP on 98DX3336 SoC" the other changes are
-generally cosmetic or collecting acks.
+The clock gating options are a subset of those on the Armada XP.
 
-Chris Packham (4):
-  clk: mvebu: support for 98DX3236 SoC
+The core clock divider is different to the Armada XP also.
+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+
+Notes:
     Changes in v2:
     - Update devicetree binding documentation for new compatible string
     Changes in v3:
@@ -28,294 +29,215 @@ Chris Packham (4):
     - Document mv98dx3236-corediv-clock binding
     Changes in v4:
     - None
-  arm: mvebu: support for SMP on 98DX3336 SoC
-    Changes in v2:
-    - Document new enable-method value
-    - Correct some references from 98DX4521 to 98DX3236
-    Changes in v3:
-    - Simplify mv98dx3236_resume_init by using of_io_request_and_map()
-    Changes in v4:
-    - integrate changes into platsmp.c instead of new init call
-    - avoid duplicated code.
-    - fix error return
-    - Collect ack from Rob
-  arm: mvebu: Add device tree for 98DX3236 SoCs
-    Changes in v2:
-    - Update devicetree binding documentation to reflect that 98DX3336 and
-      984251 are supersets of 98DX3236.
-    - disable crypto block
-    - disable sdio for 98DX3236, enable for 98DX4251
-    Changes in v3:
-    - fix typo 4521 -> 4251
-    - document prestera bindings
-    - rework corediv-clock binding
-    - add label to packet processor node
-    - add new compatible string for DFX server
-    Changes in v4:
-    - Collect ack from Rob
-  arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
 
-Kalyan Kinthada (1):
-  pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-    Changes in v2:
-    - include sdio support for the 98DX4251
-    Changes in v3:
-    - None
-    Changes in v4:
-    - Correct some discrepencies between binding and driver.
-    - Collect acks from Rob and Sebastian
-    
- Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
- .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  |  18 ++
- .../devicetree/bindings/arm/marvell/98dx3236.txt   |  23 ++
- .../bindings/clock/mvebu-corediv-clock.txt         |   1 +
- .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   1 +
- .../devicetree/bindings/net/marvell,prestera.txt   |  50 ++++
- .../pinctrl/marvell,armada-98dx3236-pinctrl.txt    |  46 ++++
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi          | 254 +++++++++++++++++++++
- arch/arm/boot/dts/armada-xp-98dx3336.dtsi          |  76 ++++++
- arch/arm/boot/dts/armada-xp-98dx4251.dtsi          |  90 ++++++++
- arch/arm/boot/dts/db-dxbc2.dts                     | 159 +++++++++++++
- arch/arm/boot/dts/db-xc3-24g4xg.dts                | 155 +++++++++++++
- arch/arm/mach-mvebu/platsmp.c                      |  86 +++++++
- drivers/clk/mvebu/armada-xp.c                      |  42 ++++
- drivers/clk/mvebu/clk-corediv.c                    |  23 ++
- drivers/clk/mvebu/clk-cpu.c                        |  31 ++-
- drivers/pinctrl/mvebu/pinctrl-armada-xp.c          | 156 +++++++++++++
- 17 files changed, 1210 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236.txt
- create mode 100644 Documentation/devicetree/bindings/net/marvell,prestera.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
- create mode 100644 arch/arm/boot/dts/armada-xp-98dx3236.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-98dx3336.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-98dx4251.dtsi
- create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
- create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
+ .../bindings/clock/mvebu-corediv-clock.txt         |  1 +
+ .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |  1 +
+ drivers/clk/mvebu/armada-xp.c                      | 42 ++++++++++++++++++++++
+ drivers/clk/mvebu/clk-corediv.c                    | 23 ++++++++++++
+ drivers/clk/mvebu/clk-cpu.c                        | 31 ++++++++++++++--
+ 5 files changed, 96 insertions(+), 2 deletions(-)
 
-inter-diff to v3:
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-index d4e6ecdfc853..b5bd23992fdf 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-@@ -28,10 +28,10 @@ mpp13         13       gpio, intr(out), dev(ad15)
- mpp14         14       gpio, i2c0(sck)
- mpp15         15       gpio, i2c0(sda)
- mpp16         16       gpio, dev(oe)
--mpp17         17       gpio, dev(clk)
-+mpp17         17       gpio, dev(clkout)
- mpp18         18       gpio, uart1(txd)
- mpp19         19       gpio, uart1(rxd), dev(rb)
--mpp20         20       gpio, dev(we)
-+mpp20         20       gpio, dev(we0)
- mpp21         21       gpio, dev(ad0)
- mpp22         22       gpio, dev(ad1)
- mpp23         23       gpio, dev(ad2)
-diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
-index 2a2dd8324fb8..6c6497e80a7b 100644
---- a/arch/arm/mach-mvebu/Makefile
-+++ b/arch/arm/mach-mvebu/Makefile
-@@ -7,7 +7,6 @@ obj-$(CONFIG_MACH_MVEBU_ANY)	 += system-controller.o mvebu-soc-id.o
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+index 520562a7dc2a..c7b4e3a6b2c6 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+@@ -7,6 +7,7 @@ Required properties:
+ - compatible : must be "marvell,armada-370-corediv-clock",
+ 		       "marvell,armada-375-corediv-clock",
+ 		       "marvell,armada-380-corediv-clock",
++                       "marvell,mv98dx3236-corediv-clock",
  
- ifeq ($(CONFIG_MACH_MVEBU_V7),y)
- obj-y				 += cpu-reset.o board-v7.o coherency.o coherency_ll.o pmsu.o pmsu_ll.o
--obj-y				 += pmsu-98dx3236.o
- 
- obj-$(CONFIG_PM)		 += pm.o pm-board.o
- obj-$(CONFIG_SMP)		 += platsmp.o headsmp.o platsmp-a9.o headsmp-a9.o
-diff --git a/arch/arm/mach-mvebu/common.h b/arch/arm/mach-mvebu/common.h
-index 099dabf23461..6b775492cfad 100644
---- a/arch/arm/mach-mvebu/common.h
-+++ b/arch/arm/mach-mvebu/common.h
-@@ -27,5 +27,4 @@ void __iomem *mvebu_get_scu_base(void);
- 
- int mvebu_pm_suspend_init(void (*board_pm_enter)(void __iomem *sdram_reg,
- 							u32 srcmd));
--void mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr);
- #endif
-diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
-index 3c9ab9a008ad..59be3ca0464f 100644
---- a/arch/arm/mach-mvebu/platsmp.c
-+++ b/arch/arm/mach-mvebu/platsmp.c
-@@ -182,12 +182,57 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
- #endif
- };
- 
-+CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
-+		      &armada_xp_smp_ops);
-+
-+struct resume_controller {
-+	u32 resume_control;
-+	u32 resume_boot_addr;
-+};
-+
-+static const struct resume_controller mv98dx3336_resume_controller = {
-+	.resume_control = 0x08,
-+	.resume_boot_addr = 0x04,
-+};
-+
-+static const struct of_device_id of_mv98dx3236_resume_table[] = {
-+	{
-+		.compatible = "marvell,98dx3336-resume-ctrl",
-+		.data = (void *)&mv98dx3336_resume_controller,
-+	},
-+	{ /* end of list */ },
-+};
-+
-+static int mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
-+{
-+	const struct of_device_id *match;
-+	struct device_node *np;
-+	void __iomem *base;
-+	struct resume_controller *rc;
-+
-+	WARN_ON(hw_cpu != 1);
-+
-+	np = of_find_matching_node_and_match(NULL, of_mv98dx3236_resume_table,
-+					     &match);
-+	if (!np)
-+		return -ENODEV;
-+
-+	base = of_io_request_and_map(np, 0, of_node_full_name(np));
-+	rc = (struct resume_controller *)match->data;
-+	of_node_put(np);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	writel(0, base + rc->resume_control);
-+	writel(virt_to_phys(boot_addr), base + rc->resume_boot_addr);
-+
-+	return 0;
-+}
-+
- static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
- 	int ret, hw_cpu;
- 
--	pr_info("Booting CPU %d\n", cpu);
--
- 	hw_cpu = cpu_logical_map(cpu);
- 	set_secondary_cpu_clock(hw_cpu);
- 	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
-@@ -212,7 +257,7 @@ static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
- 	return 0;
+ - reg : must be the register address of Core Divider control register
+ - #clock-cells : from common clock binding; shall be set to 1
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+index 99c214660bdc..7f28506eaee7 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+@@ -3,6 +3,7 @@ Device Tree Clock bindings for cpu clock of Marvell EBU platforms
+ Required properties:
+ - compatible : shall be one of the following:
+ 	"marvell,armada-xp-cpu-clock" - cpu clocks for Armada XP
++	"marvell,mv98dx3236-cpu-clock" - cpu clocks for 98DX3236 SoC
+ - reg : Address and length of the clock complex register set, followed
+         by address and length of the PMU DFS registers
+ - #clock-cells : should be set to 1.
+diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
+index b3094315a3c0..0413bf8284e0 100644
+--- a/drivers/clk/mvebu/armada-xp.c
++++ b/drivers/clk/mvebu/armada-xp.c
+@@ -52,6 +52,12 @@ static u32 __init axp_get_tclk_freq(void __iomem *sar)
+ 	return 250000000;
  }
  
--struct smp_operations mv98dx3236_smp_ops __initdata = {
-+static const struct smp_operations mv98dx3236_smp_ops __initconst = {
- 	.smp_init_cpus		= armada_xp_smp_init_cpus,
- 	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
- 	.smp_boot_secondary	= mv98dx3236_boot_secondary,
-@@ -223,7 +268,5 @@ struct smp_operations mv98dx3236_smp_ops __initdata = {
- #endif
++/* MV98DX3236 TCLK frequency is fixed to 200MHz */
++static u32 __init mv98dx3236_get_tclk_freq(void __iomem *sar)
++{
++	return 200000000;
++}
++
+ static const u32 axp_cpu_freqs[] __initconst = {
+ 	1000000000,
+ 	1066000000,
+@@ -89,6 +95,12 @@ static u32 __init axp_get_cpu_freq(void __iomem *sar)
+ 	return cpu_freq;
+ }
+ 
++/* MV98DX3236 CLK frequency is fixed to 800MHz */
++static u32 __init mv98dx3236_get_cpu_freq(void __iomem *sar)
++{
++	return 800000000;
++}
++
+ static const int axp_nbclk_ratios[32][2] __initconst = {
+ 	{0, 1}, {1, 2}, {2, 2}, {2, 2},
+ 	{1, 2}, {1, 2}, {1, 1}, {2, 3},
+@@ -158,6 +170,14 @@ static const struct coreclk_soc_desc axp_coreclks = {
+ 	.num_ratios = ARRAY_SIZE(axp_coreclk_ratios),
  };
  
--CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
--		      &armada_xp_smp_ops);
- CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
- 		      &mv98dx3236_smp_ops);
-diff --git a/arch/arm/mach-mvebu/pmsu-98dx3236.c b/arch/arm/mach-mvebu/pmsu-98dx3236.c
-deleted file mode 100644
-index 1052674dd439..000000000000
---- a/arch/arm/mach-mvebu/pmsu-98dx3236.c
-+++ /dev/null
-@@ -1,52 +0,0 @@
--/**
-- * CPU resume support for 98DX3236 internal CPU (a.k.a. MSYS).
-- */
--
--#define pr_fmt(fmt) "mv98dx3236-resume: " fmt
--
--#include <linux/kernel.h>
--#include <linux/init.h>
--#include <linux/of_address.h>
--#include <linux/io.h>
--#include "common.h"
--
--static void __iomem *mv98dx3236_resume_base;
--#define MV98DX3236_CPU_RESUME_CTRL_OFFSET	0x08
--#define MV98DX3236_CPU_RESUME_ADDR_OFFSET	0x04
--
--static const struct of_device_id of_mv98dx3236_resume_table[] = {
--	{.compatible = "marvell,98dx3336-resume-ctrl",},
--	{ /* end of list */ },
--};
--
--void mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
--{
--	WARN_ON(hw_cpu != 1);
--
--	writel(0, mv98dx3236_resume_base + MV98DX3236_CPU_RESUME_CTRL_OFFSET);
--	writel(virt_to_phys(boot_addr), mv98dx3236_resume_base +
--	       MV98DX3236_CPU_RESUME_ADDR_OFFSET);
--}
--
--static int __init mv98dx3236_resume_init(void)
--{
--	struct device_node *np;
--	void __iomem *base;
--
--	np = of_find_matching_node(NULL, of_mv98dx3236_resume_table);
--	if (!np)
--		return 0;
--
--	base = of_io_request_and_map(np, 0, of_node_full_name(np));
--	if (IS_ERR(base)) {
--		pr_err("unable to map registers\n");
--		of_node_put(np);
--		return PTR_ERR(mv98dx3236_resume_base);
--	}
--
--	mv98dx3236_resume_base = base;
--	of_node_put(np);
--	return 0;
--}
--
--early_initcall(mv98dx3236_resume_init);
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-index 554eeae8cd21..9601d662c7f5 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-@@ -374,8 +374,8 @@ static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
- 		 MPP_VAR_FUNCTION(0x2, "spi0", "miso",       V_98DX3236_PLUS),
- 		 MPP_VAR_FUNCTION(0x4, "dev", "ad9",         V_98DX3236_PLUS)),
- 	MPP_MODE(2,
--		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
--		 MPP_VAR_FUNCTION(0x2, "spi0", "csk",        V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x2, "spi0", "sck",        V_98DX3236_PLUS),
- 		 MPP_VAR_FUNCTION(0x4, "dev", "ad10",        V_98DX3236_PLUS)),
- 	MPP_MODE(3,
- 		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
-@@ -390,7 +390,7 @@ static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
- 		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
- 		 MPP_VAR_FUNCTION(0x1, "pex", "rsto",        V_98DX3236_PLUS),
- 		 MPP_VAR_FUNCTION(0x2, "sd0", "cmd",         V_98DX4251),
--		 MPP_VAR_FUNCTION(0x4, "dev", "bootcs0",     V_98DX3236_PLUS)),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "bootcs",      V_98DX3236_PLUS)),
- 	MPP_MODE(6,
- 		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
- 		 MPP_VAR_FUNCTION(0x2, "sd0", "clk",         V_98DX4251),
-@@ -442,7 +442,8 @@ static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
- 		 MPP_VAR_FUNCTION(0x3, "uart1", "txd",       V_98DX3236_PLUS)),
- 	MPP_MODE(19,
- 		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
--		 MPP_VAR_FUNCTION(0x3, "uart1", "rxd",       V_98DX3236_PLUS)),
-+		 MPP_VAR_FUNCTION(0x3, "uart1", "rxd",       V_98DX3236_PLUS),
-+		 MPP_VAR_FUNCTION(0x4, "dev", "rb",          V_98DX3236_PLUS)),
- 	MPP_MODE(20,
- 		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
- 		 MPP_VAR_FUNCTION(0x4, "dev", "we0",         V_98DX3236_PLUS)),
-@@ -548,7 +549,7 @@ static struct mvebu_mpp_ctrl mv98dx3236_mpp_controls[] = {
++static const struct coreclk_soc_desc mv98dx3236_coreclks = {
++	.get_tclk_freq = mv98dx3236_get_tclk_freq,
++	.get_cpu_freq = mv98dx3236_get_cpu_freq,
++	.get_clk_ratio = NULL,
++	.ratios = NULL,
++	.num_ratios = 0,
++};
++
+ /*
+  * Clock Gating Control
+  */
+@@ -195,6 +215,15 @@ static const struct clk_gating_soc_desc axp_gating_desc[] __initconst = {
+ 	{ }
  };
  
- static struct pinctrl_gpio_range mv98dx3236_mpp_gpio_ranges[] = {
--	MPP_GPIO_RANGE(0,   0,  0, 32),
-+	MPP_GPIO_RANGE(0, 0, 0, 32),
++static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initconst = {
++	{ "ge1", NULL, 3, 0 },
++	{ "ge0", NULL, 4, 0 },
++	{ "pex00", NULL, 5, 0 },
++	{ "sdio", NULL, 17, 0 },
++	{ "xor0", NULL, 22, 0 },
++	{ }
++};
++
+ static void __init axp_clk_init(struct device_node *np)
+ {
+ 	struct device_node *cgnp =
+@@ -206,3 +235,16 @@ static void __init axp_clk_init(struct device_node *np)
+ 		mvebu_clk_gating_setup(cgnp, axp_gating_desc);
+ }
+ CLK_OF_DECLARE(axp_clk, "marvell,armada-xp-core-clock", axp_clk_init);
++
++static void __init mv98dx3236_clk_init(struct device_node *np)
++{
++	struct device_node *cgnp =
++		of_find_compatible_node(NULL, NULL, "marvell,armada-xp-gating-clock");
++
++	mvebu_coreclk_setup(np, &mv98dx3236_coreclks);
++
++	if (cgnp)
++		mvebu_clk_gating_setup(cgnp, mv98dx3236_gating_desc);
++}
++CLK_OF_DECLARE(mv98dx3236_clk, "marvell,mv98dx3236-core-clock",
++	       mv98dx3236_clk_init);
+diff --git a/drivers/clk/mvebu/clk-corediv.c b/drivers/clk/mvebu/clk-corediv.c
+index d1e5863d3375..8491979f4096 100644
+--- a/drivers/clk/mvebu/clk-corediv.c
++++ b/drivers/clk/mvebu/clk-corediv.c
+@@ -71,6 +71,10 @@ static const struct clk_corediv_desc mvebu_corediv_desc[] = {
+ 	{ .mask = 0x3f, .offset = 8, .fieldbit = 1 }, /* NAND clock */
  };
  
- static int armada_xp_pinctrl_suspend(struct platform_device *pdev,
++static const struct clk_corediv_desc mv98dx3236_corediv_desc[] = {
++	{ .mask = 0x0f, .offset = 6, .fieldbit = 26 }, /* NAND clock */
++};
++
+ #define to_corediv_clk(p) container_of(p, struct clk_corediv, hw)
+ 
+ static int clk_corediv_is_enabled(struct clk_hw *hwclk)
+@@ -232,6 +236,18 @@ static const struct clk_corediv_soc_desc armada375_corediv_soc = {
+ 	.ratio_offset = 0x4,
+ };
+ 
++static const struct clk_corediv_soc_desc mv98dx3236_corediv_soc = {
++	.descs = mv98dx3236_corediv_desc,
++	.ndescs = ARRAY_SIZE(mv98dx3236_corediv_desc),
++	.ops = {
++		.recalc_rate = clk_corediv_recalc_rate,
++		.round_rate = clk_corediv_round_rate,
++		.set_rate = clk_corediv_set_rate,
++	},
++	.ratio_reload = BIT(10),
++	.ratio_offset = 0x8,
++};
++
+ static void __init
+ mvebu_corediv_clk_init(struct device_node *node,
+ 		       const struct clk_corediv_soc_desc *soc_desc)
+@@ -313,3 +329,10 @@ static void __init armada380_corediv_clk_init(struct device_node *node)
+ }
+ CLK_OF_DECLARE(armada380_corediv_clk, "marvell,armada-380-corediv-clock",
+ 	       armada380_corediv_clk_init);
++
++static void __init mv98dx3236_corediv_clk_init(struct device_node *node)
++{
++	return mvebu_corediv_clk_init(node, &mv98dx3236_corediv_soc);
++}
++CLK_OF_DECLARE(mv98dx3236_corediv_clk, "marvell,mv98dx3236-corediv-clock",
++	       mv98dx3236_corediv_clk_init);
+diff --git a/drivers/clk/mvebu/clk-cpu.c b/drivers/clk/mvebu/clk-cpu.c
+index 5837eb8a212f..3b8f0e14fa01 100644
+--- a/drivers/clk/mvebu/clk-cpu.c
++++ b/drivers/clk/mvebu/clk-cpu.c
+@@ -165,7 +165,9 @@ static const struct clk_ops cpu_ops = {
+ 	.set_rate = clk_cpu_set_rate,
+ };
+ 
+-static void __init of_cpu_clk_setup(struct device_node *node)
++/* Add parameter to allow this to support different clock operations. */
++static void __init _of_cpu_clk_setup(struct device_node *node,
++			const struct clk_ops *cpu_clk_ops)
+ {
+ 	struct cpu_clk *cpuclk;
+ 	void __iomem *clock_complex_base = of_iomap(node, 0);
+@@ -218,7 +220,7 @@ static void __init of_cpu_clk_setup(struct device_node *node)
+ 		cpuclk[cpu].hw.init = &init;
+ 
+ 		init.name = cpuclk[cpu].clk_name;
+-		init.ops = &cpu_ops;
++		init.ops = cpu_clk_ops;
+ 		init.flags = 0;
+ 		init.parent_names = &cpuclk[cpu].parent_name;
+ 		init.num_parents = 1;
+@@ -243,5 +245,30 @@ static void __init of_cpu_clk_setup(struct device_node *node)
+ 	iounmap(clock_complex_base);
+ }
+ 
++/* Use this function to call the generic setup with the correct
++ * clock operation
++ */
++static void __init of_cpu_clk_setup(struct device_node *node)
++{
++	_of_cpu_clk_setup(node, &cpu_ops);
++}
++
+ CLK_OF_DECLARE(armada_xp_cpu_clock, "marvell,armada-xp-cpu-clock",
+ 					 of_cpu_clk_setup);
++
++/* Define the clock and operations for the mv98dx3236 - it cannot perform
++ * any operations.
++ */
++static const struct clk_ops mv98dx3236_cpu_ops = {
++	.recalc_rate = NULL,
++	.round_rate = NULL,
++	.set_rate = NULL,
++};
++
++static void __init of_mv98dx3236_cpu_clk_setup(struct device_node *node)
++{
++	_of_cpu_clk_setup(node, &mv98dx3236_cpu_ops);
++}
++
++CLK_OF_DECLARE(mv98dx3236_cpu_clock, "marvell,mv98dx3236-cpu-clock",
++					 of_mv98dx3236_cpu_clk_setup);
 -- 
 2.11.0.24.ge6920cf
-
