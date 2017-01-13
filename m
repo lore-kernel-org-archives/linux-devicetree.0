@@ -1,101 +1,79 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] mtd: spi-nor: don't claim mr25h40 to be JEDEC compatible
-Date: Fri, 13 Jan 2017 19:42:34 +0100
-Message-ID: <CAMuHMdXJi9hJrY0ZV37gejp2XC6fkuLF7i7BqX4CUYTB7j_q1A@mail.gmail.com>
-References: <20170113093509.25737-1-u.kleine-koenig@pengutronix.de>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] i2c: mux: pca954x: Add interrupt controller
+ support
+Date: Fri, 13 Jan 2017 19:54:17 +0100
+Message-ID: <20170113185417.GA1449@katana>
+References: <1483952576-5308-1-git-send-email-preid@electromag.com.au>
+ <1483952576-5308-4-git-send-email-preid@electromag.com.au>
+ <383ee3cb-b452-259f-486f-682ea9526708@axentia.se>
+ <1284b1c8-bb90-fbd9-53a2-0c36f2597b29@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113093509.25737-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1284b1c8-bb90-fbd9-53a2-0c36f2597b29-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
 
-CC devicetree
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 13, 2017 at 10:35 AM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Commit edd0c8f4932d ("mtd: spi-nor: Add support for mr25h40") made it
-> possible to use a mr25h40 by writing
->
->         compatible =3D "mr25h40", "jedec,spi-nor";
 
-No vendor prefix?
+> >BTW, what does client->irq =3D=3D 0 represent?
+>=20
+> This one I'm fairly confident on. Initially I had "client->irq < 0"
+> Which caused problems with an i2c mux that doesn't have irq's defined in =
+the dt.
+>=20
+> This commit seems to confirm that.
+> commit dab472eb931b ("i2c / ACPI: Use 0 to indicate that device does not =
+have interrupt assigned")
 
->
-> in a device tree. This chip however isn't JEDEC compatible however, so
-> change the chip string and add a compatible entry to bless
->
->         compatible =3D "mr25h40-nonjedec";
->
-> as the right way.
+In the Linux Kernel, 0 means no irq so one can write:
 
-This whole "-nonjedec" business looks wrong to me.
-If the device is called "mr25h40", its compatible value should be
-"everspin,mr25h40". Adding some (in)compatibility indicator violates the
-spirit of compatible values, IMHO.
+	if (!irq) ...
 
-> Fixes: edd0c8f4932d ("mtd: spi-nor: Add support for mr25h40")
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/mtd/devices/m25p80.c  | 1 +
->  drivers/mtd/spi-nor/spi-nor.c | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index 9cf7fcd28034..bd0c335692d2 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -304,6 +304,7 @@ static const struct spi_device_id m25p_ids[] =3D {
->         {"m25p05-nonjedec"},    {"m25p10-nonjedec"},    {"m25p20-nonjedec=
-"},
->         {"m25p40-nonjedec"},    {"m25p80-nonjedec"},    {"m25p16-nonjedec=
-"},
->         {"m25p32-nonjedec"},    {"m25p64-nonjedec"},    {"m25p128-nonjede=
-c"},
-> +       {"mr25h40-nonjedec"},
->
->         { },
->  };
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.=
-c
-> index bbdbbd763c9d..3a8042fe44f0 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -825,7 +825,7 @@ static const struct flash_info spi_nor_ids[] =3D {
->         /* Everspin */
->         { "mr25h256", CAT25_INFO( 32 * 1024, 1, 256, 2, SPI_NOR_NO_ERASE =
-| SPI_NOR_NO_FR) },
->         { "mr25h10",  CAT25_INFO(128 * 1024, 1, 256, 3, SPI_NOR_NO_ERASE =
-| SPI_NOR_NO_FR) },
-> -       { "mr25h40",  CAT25_INFO(512 * 1024, 1, 256, 3, SPI_NOR_NO_ERASE =
-| SPI_NOR_NO_FR) },
-> +       { "mr25h40-nonjedec",  CAT25_INFO(512 * 1024, 1, 256, 3, SPI_NOR_=
-NO_ERASE | SPI_NOR_NO_FR) },
->
->         /* Fujitsu */
->         { "mb85rs1mt", INFO(0x047f27, 0, 128 * 1024, 1, SPI_NOR_NO_ERASE)=
- },
-> --
-> 2.11.0
+There used to be NO_IRQ per arch but this is converted over, although it
+takes a lot of time... If there is a HW IRQ0, it needs to be remapped.
+But since we rely on irq_desc these days and not irq numbers, this is
+easy.
 
-Gr{oetje,eeting}s,
+At least this was the transition a few years ago, but I don't think
+something essential has changed. Please enlighten me, if so.
 
-                        Geert
+Regards,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+   Wolfram
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYeSJZAAoJEBQN5MwUoCm2kEAP/iDnVBMuXXzptnBfHv2EGTJd
+EEqpMeIuk6Dcm7UJQh2SrfSKK6H3gFhQGxocCtiF4EPyDczLTDolMdlDqoBO1xHu
+3WODCgDzrMwx3KQgtVtAfqWSLDP5nHc6RKh5K/alqd/8CWkyU8O1s+EdzRgkbdWB
+60Lwvlp9RmtqMVrC82Vd804v4v3TI1sCU8adr8gKvNEMx2VySl6osbBwhGMeY8W3
+769ByLZcdLU6uWjzDQveKVJsiszH1DHqzCeCSMsLvqTm0nldMH0shnXVy23+dx+R
+iUY+dirMvMhJiEQMISYJsbKMsHgin+WCr0Wuc1KgTNcjF4Yb3Vicl395KoWsvmMV
+sbu7k6Nc4ATMB6RyoortgZ8hURe2Dhc6Qqtu4lLYNWiv5wVmuYDaE5bL3ZJgVSRi
+eYGDTOaj5fDL2+yzDoqKe3HczyUU5i2lH+Q3KL8t5EiY+nNd6iHOhnENUdrw2xQp
+36xJ3W5rzmedNNN1fHHagQNTvJ15btqOorp3B1nzOTUBg9P+QZgXCEIqeK+lJ4B4
+mTlsgtPYLtalF6fj8LUPrpposmTxEsDEq2mC+18ao0iCD/6IEVDBgZqdIf8whi2N
+FOXJ2ZgU4VIzsznZ3bV0PkCL/i7ZJVnz5eNJsOsvshtbPywSPSqphLIwy3FTHCzP
+dqX7X55W65XGlW8TSmFE
+=UiFk
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
