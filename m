@@ -1,107 +1,78 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v5 3/3] dmaengine: xilinx_dma: Fix race condition in the
- driver for multiple descriptor scenario
-Date: Fri, 13 Jan 2017 11:06:27 +0530
-Message-ID: <20170113053627.GQ3573@localhost>
-References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
- <1483771530-8545-4-git-send-email-appanad@xilinx.com>
- <20170110084917.GA3573@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A6662F1@XAP-PVEXMBX01.xlnx.xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A6662F1@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Subject: [PATCH v3 1/2] devicetree: document new marvell-8xxx and pwrseq-sd8787 options
+Date: Thu, 12 Jan 2017 21:29:36 -0800
+Message-ID: <20170113052937.12538-2-matt@ranostay.consulting>
+References: <20170113052937.12538-1-matt@ranostay.consulting>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170113052937.12538-1-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 02:19:49PM +0000, Appana Durga Kedareswara Rao wrote:
-> Hi Vinod,
-> 
-> 	Thanks for the review...    
-> 
-> > On Sat, Jan 07, 2017 at 12:15:30PM +0530, Kedareswara rao Appana wrote:
-> > > When driver is handling AXI DMA SoftIP When user submits multiple
-> > > descriptors back to back on the S2MM(recv) side with the current
-> > > driver flow the last buffer descriptor next bd points to a invalid
-> > > location resulting the invalid data or errors in the DMA engine.
-> > 
-> > Can you rephrase this, it a bit hard to understand.
-> 
-> When DMA is receiving packets h/w expects the descriptors
-> Should be in the form of a ring (I mean h/w buffer descriptor
-> Next descriptor field should always point to valid address
-> So that when DMA engine go and fetch that next descriptor it always 
-> Sees a valid address).
->
-> 
-> But with the current driver implementation when user queues
-> Multiple descriptors the last descriptor next descriptor field
-> Pointing to an invalid location causing data corruption or 
-> Errors from the DMA h/w engine...
-> 
-> To avoid this issue creating a Buffer descriptor Chain during 
-> Channel allocation and using those buffer descriptors for processing
-> User requested data.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+---
+ .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt          | 14 ++++++++++++++
+ .../devicetree/bindings/net/wireless/marvell-8xxx.txt      |  7 ++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
 
-Is it not doable to to modify the next pointer to point to subsequent
-transaction. IOW you are modifying tail descriptor to point to subsequent
-descriptor.
-
-Btw how and when does DMA stop, assuming it is circular it never would,
-isn't there a valid/stop flag associated with a descriptor which tells DMA
-engine what to do next
-
-
-Btw there is something wrong with your MUA perhaps line are titlecased for
-no reason. This is typically behavious of non linux tool which may not be
-great tool for this work.
-
-> 
-> Please let me know if the above explanation is not clear will explain in detail....
-> 
-> > 
-> > >
-> > > This patch fixes this issue by creating a BD Chain during
-> > 
-> > whats a BD?
-> 
-> Buffer descriptor.
-
-Thats nowhere mentioned..
-
-> 
-> > 
-> > > channel allocation itself and use those BD's.
-> > >
-> > > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> > > ---
-> > >
-> > >  drivers/dma/xilinx/xilinx_dma.c | 133
-> > > +++++++++++++++++++++++++---------------
-> > >  1 file changed, 83 insertions(+), 50 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > > b/drivers/dma/xilinx/xilinx_dma.c index 0e9c02e..af2159d 100644
-> > > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > > @@ -163,6 +163,7 @@
-> > >  #define XILINX_DMA_BD_SOP		BIT(27)
-> > >  #define XILINX_DMA_BD_EOP		BIT(26)
-> > >  #define XILINX_DMA_COALESCE_MAX		255
-> > > +#define XILINX_DMA_NUM_DESCS		255
-> > 
-> > why 255?
-> 
-> It is not an h/w limitation 
-> Allocating 255 descriptors (Each descriptor is capable of sending 7MB data)
-> So roughly using allocated descriptors DMA engine can transfer 1GB data
-> And in the driver we are reusing the allocated descriptors when they are free.
-> 
-> Regards,
-> Kedar.
-
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+new file mode 100644
+index 000000000000..1b658351629b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+@@ -0,0 +1,14 @@
++* Marvell SD8787 power sequence provider
++
++Required properties:
++- compatible: must be "mmc-pwrseq-sd8787".
++- pwndn-gpio: contains a power down GPIO specifier.
++- reset-gpio: contains a reset GPIO specifier.
++
++Example:
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-sd8787";
++		pwrdn-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
++		reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
++	}
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index 980b16df74c3..0854451ff91d 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -1,4 +1,4 @@
+-Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
++Marvell 8787/8897/8997 (sd8787/sd8897/sd8997/pcie8997) SDIO/PCIE devices
+ ------
+ 
+ This node provides properties for controlling the Marvell SDIO/PCIE wireless device.
+@@ -8,6 +8,7 @@ connects the device to the system.
+ Required properties:
+ 
+   - compatible : should be one of the following:
++	* "marvell,sd8787"
+ 	* "marvell,sd8897"
+ 	* "marvell,sd8997"
+ 	* "pci11ab,2b42"
+@@ -34,6 +35,9 @@ Optional properties:
+ 		 so that the wifi chip can wakeup host platform under certain condition.
+ 		 during system resume, the irq will be disabled to make sure
+ 		 unnecessary interrupt is not received.
++  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
++  - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
++		 for documentation of MMC power sequence bindings.
+ 
+ Example:
+ 
+@@ -46,6 +50,7 @@ so that firmware can wakeup host using this device side pin.
+ &mmc3 {
+ 	status = "okay";
+ 	vmmc-supply = <&wlan_en_reg>;
++	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
 -- 
-~Vinod
+2.10.2
