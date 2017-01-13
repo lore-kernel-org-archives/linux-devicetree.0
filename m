@@ -1,82 +1,202 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: davinci_all_defconfig: enable iio and ADS7950
-Date: Fri, 13 Jan 2017 17:54:35 +0530
-Message-ID: <3c4f8952-0a64-fc49-bd87-452dbbf7a946@ti.com>
-References: <1483677228-2325-1-git-send-email-david@lechnology.com>
- <1483677228-2325-4-git-send-email-david@lechnology.com>
- <cb9455bc-2658-9826-823b-2aa845237fed@ti.com>
- <01ec2c94-46e0-3534-94e8-bd92f78b70ec@lechnology.com>
- <b29c37b2-382c-dbab-966b-4463e3127676@ti.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/8] Add PWM and IIO timer drivers for STM32
+Date: Fri, 13 Jan 2017 13:30:27 +0100
+Message-ID: <CA+M3ks6CK7PtqrMUC=Hpy8kELyo3hT9mjn-hkUq-Na8D0ySaSQ@mail.gmail.com>
+References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
+ <20170105144953.GT24225@dell> <CA+M3ks43GYEQo6Sev9oB5RfSF3fYNLixESSceXpu2CtKPnpB1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b29c37b2-382c-dbab-966b-4463e3127676-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CA+M3ks43GYEQo6Sev9oB5RfSF3fYNLixESSceXpu2CtKPnpB1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 January 2017 01:53 PM, Sekhar Nori wrote:
-> On Tuesday 10 January 2017 09:13 PM, David Lechner wrote:
->> On 01/09/2017 06:29 AM, Sekhar Nori wrote:
->>> On Friday 06 January 2017 10:03 AM, David Lechner wrote:
->>>> This enables the iio subsystem and the TI ADS7950 driver. This is
->>>> used by
->>>> LEGO MINDSTORMS EV3, which has an ADS7957 chip.
->>>
->>> Can you add your sign-off?
->>>
->>>> ---
->>>>
->>>> The CONFIG_TI_ADS7950 driver is currently in iio/testing, so some
->>>> coordination
->>>> may be needed before picking up this patch.
->>>>
->>>>  arch/arm/configs/davinci_all_defconfig | 7 +++++++
->>>>  1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/arch/arm/configs/davinci_all_defconfig
->>>> b/arch/arm/configs/davinci_all_defconfig
->>>> index 2b1967a..a899876 100644
->>>> --- a/arch/arm/configs/davinci_all_defconfig
->>>> +++ b/arch/arm/configs/davinci_all_defconfig
->>>> @@ -200,6 +200,13 @@ CONFIG_TI_EDMA=y
->>>>  CONFIG_MEMORY=y
->>>>  CONFIG_TI_AEMIF=m
->>>>  CONFIG_DA8XX_DDRCTL=y
->>>> +CONFIG_IIO=m
->>>> +CONFIG_IIO_BUFFER_CB=m
->>>> +CONFIG_IIO_SW_DEVICE=m
->>>> +CONFIG_IIO_SW_TRIGGER=m
->>>
->>>> +CONFIG_TI_ADS7950=m
->>>
->>> Can you separate this from rest of the patch. I would like to enable
->>> this option only after I can find the symbol in linux-next.
+2017-01-06 8:58 GMT+01:00 Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> 2017-01-05 15:49 GMT+01:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>> On Thu, 05 Jan 2017, Benjamin Gaignard wrote:
 >>
->> Will resend without CONFIG_TI_ADS7950
->>
+>>> version 7:
+>>> - rebase on v4.10-rc2
+>>> - remove iio_device code from driver and keep only the trigger part
+
+Version 7 got ACK for MFD (binding and driver), PWM (bindings), IIO (driver=
+).
+
+I would like to progress on this series but I there is still 2 blocking poi=
+nts:
+1) usage of reg in IIO driver as an hardware block index, Rob does it
+sound reasonable for you ?
+2) PWM driver haven't receive comments (neither ack), Thierry do you
+think you will be able to find time to review it ?
+
+Benjamin
+
 >>>
->>>> +CONFIG_IIO_HRTIMER_TRIGGER=m
->>>> +CONFIG_IIO_SYSFS_TRIGGER=m
+>>> version 6:
+>>> - rename stm32-gptimer in stm32-timers.
+>>> - change "st,stm32-gptimer" compatible to "st,stm32-timers".
+>>> - modify "st,breakinput" parameter in pwm part.
+>>> - split DT patch in 2
 >>>
->>> Need CONFIG_IIO_TRIGGER=y also for these two options to take effect.
+>>> version 5:
+>>> - fix comments done on version 4
+>>> - rebased on kernel 4.9-rc8
+>>> - change nodes names and re-order then by addresses
+>>>
+>>> version 4:
+>>> - fix comments done on version 3
+>>> - don't use interrupts anymore in IIO timer
+>>> - detect hardware capabilities at probe time to simplify binding
+>>>
+>>> version 3:
+>>> - no change on mfd and pwm divers patches
+>>> - add cross reference between bindings
+>>> - change compatible to "st,stm32-timer-trigger"
+>>> - fix attributes access rights
+>>> - use string instead of int for master_mode and slave_mode
+>>> - document device attributes in sysfs-bus-iio-timer-stm32
+>>> - update DT with the new compatible
+>>>
+>>> version 2:
+>>> - keep only one compatible per driver
+>>> - use DT parameters to describe hardware block configuration:
+>>>   - pwm channels, complementary output, counter size, break input
+>>>   - triggers accepted and create by IIO timers
+>>> - change DT to limite use of reference to the node
+>>> - interrupt is now in IIO timer driver
+>>> - rename stm32-mfd-timer to stm32-timers (for general purpose timer)
+>>>
+>>> The following patches enable PWM and IIO Timer features for STM32 platf=
+orms.
+>>>
+>>> Those two features are mixed into the registers of the same hardware bl=
+ock
+>>> (named general purpose timer) which lead to introduce a multifunctions =
+driver
+>>> on the top of them to be able to share the registers.
+>>>
+>>> In STM32f4 14 instances of timer hardware block exist, even if they all=
+ have
+>>> the same register mapping they could have a different number of pwm cha=
+nnels
+>>> and/or different triggers capabilities. We use various parameters in DT=
+ to
+>>> describe the differences between hardware blocks
+>>>
+>>> The MFD (stm32-timers.c) takes care of clock and register mapping
+>>> by using regmap. stm32_timers structure is provided to its sub-node to
+>>> share those information.
+>>>
+>>> PWM driver is implemented into pwm-stm32.c. Depending of the instance w=
+e may
+>>> have up to 4 channels, sometime with complementary outputs or 32 bits c=
+ounter
+>>> instead of 16 bits. Some hardware blocks may also have a break input fu=
+nction
+>>> which allows to stop pwm depending of a level, defined in devicetree, o=
+n an
+>>> external pin.
+>>>
+>>> IIO timer driver (stm32-timer-trigger.c and stm32-timer-trigger.h) defi=
+ne a list
+>>> of hardware triggers usable by hardware blocks like ADC, DAC or other t=
+imers.
+>>>
+>>> The matrix of possible connections between blocks is quite complex so w=
+e use
+>>> trigger names and is_stm32_iio_timer_trigger() function to be sure that
+>>> triggers are valid and configure the IPs.
+>>>
+>>> At run time IIO timer hardware blocks can configure (through "master_mo=
+de"
+>>> IIO device attribute) which internal signal (counter enable, reset,
+>>> comparison block, etc...) is used to generate the trigger.
+>>>
+>>> Benjamin Gaignard (8):
+>>>   MFD: add bindings for STM32 Timers driver
+>>>   MFD: add STM32 Timers driver
+>>>   PWM: add pwm-stm32 DT bindings
+>>>   PWM: add PWM driver for STM32 plaftorm
+>>>   IIO: add bindings for STM32 timer trigger driver
+>>>   IIO: add STM32 timer trigger driver
+>>>   ARM: dts: stm32: add Timers driver for stm32f429 MCU
+>>>   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
 >>
->> CONFIG_IIO_TRIGGER is selected by IIO_TRIGGERED_BUFFER [=m] && IIO [=m]
->> && IIO_BUFFER [=y], so save_defconfig does not pick it up.
-> 
-> I do remember I did not see these two modules did not get enabled in
-> .config after 'make davinci_all_defconfig'. Will check what I may have
-> missed.
+>> Any reason why you've dropped all your Acks?
+>>
+>> I don't really want to review it again if little is different.
+>>
+>> How much MFD related code has changed since the last review?
+>
+> All my apologies I forgot to add your Acks for MFD parts.
+>
+> Sorry for that
+>
+>>
+>>>  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
+>>>  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
+>>>  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
+>>>  .../devicetree/bindings/pwm/pwm-stm32.txt          |  33 ++
+>>>  arch/arm/boot/dts/stm32f429.dtsi                   | 275 +++++++++++++
+>>>  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
+>>>  drivers/iio/Kconfig                                |   1 -
+>>>  drivers/iio/trigger/Kconfig                        |  10 +
+>>>  drivers/iio/trigger/Makefile                       |   1 +
+>>>  drivers/iio/trigger/stm32-timer-trigger.c          | 340 +++++++++++++=
++++
+>>>  drivers/mfd/Kconfig                                |  11 +
+>>>  drivers/mfd/Makefile                               |   2 +
+>>>  drivers/mfd/stm32-timers.c                         |  80 ++++
+>>>  drivers/pwm/Kconfig                                |   9 +
+>>>  drivers/pwm/Makefile                               |   1 +
+>>>  drivers/pwm/pwm-stm32.c                            | 434 +++++++++++++=
+++++++++
+>>>  include/linux/iio/timer/stm32-timer-trigger.h      |  62 +++
+>>>  include/linux/mfd/stm32-timers.h                   |  71 ++++
+>>>  18 files changed, 1455 insertions(+), 1 deletion(-)
+>>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+>>>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-t=
+imer-trigger.txt
+>>>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.=
+txt
+>>>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>>>  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
+>>>  create mode 100644 drivers/mfd/stm32-timers.c
+>>>  create mode 100644 drivers/pwm/pwm-stm32.c
+>>>  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
+>>>  create mode 100644 include/linux/mfd/stm32-timers.h
+>>>
+>>
+>> --
+>> Lee Jones
+>> Linaro STMicroelectronics Landing Team Lead
+>> Linaro.org =E2=94=82 Open source software for ARM SoCs
+>> Follow Linaro: Facebook | Twitter | Blog
+>
+>
+>
+> --
+> Benjamin Gaignard
+>
+> Graphic Study Group
+>
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+>
+> Follow Linaro: Facebook | Twitter | Blog
 
-So IIO_TRIGGERED_BUFFER is not selected in my tree because I dont have
-the ADS7950 driver enabled. Same thing with IIO_BUFFER.
 
-Can you try this patch over my tree?
 
-Thanks,
-Sekhar
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
