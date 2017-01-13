@@ -1,47 +1,63 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: [PATCH RFC v2 0/4] SolidRun Hummingboard 2 support
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
 Date: Fri, 13 Jan 2017 14:44:49 +0000
-Message-ID: <20170113144449.GQ14217@n2100.armlinux.org.uk>
+Message-ID: <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
+ <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Jon Nettleton <jon@solid-run.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These patches add support for SolidRun's Hummingboard 2 to mainline.
-The first is the official SolidRun DTS file supplied by Jon, the
-remainder are cleanups to it for mainline.
-
-These can be found in my HB2 branch.
-
-Version 2 updated by Jon from comments received on previous posting.
-
-The series can be found at:
-
-  git://git.armlinux.org.uk/~rmk/linux-arm.git hb2
-
- arch/arm/boot/dts/Makefile                   |   2 +
- arch/arm/boot/dts/imx6dl-hummingboard2.dts   |  52 +++
- arch/arm/boot/dts/imx6q-hummingboard2.dts    |  60 +++
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 555 +++++++++++++++++++++++++++
- 4 files changed, 669 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-hummingboard2.dts
- create mode 100644 arch/arm/boot/dts/imx6q-hummingboard2.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+SGkgR2VlcnQsDQoNCk9uIFRodXJzZGF5LCBKYW51YXJ5IDEyLCAyMDE3LCBHZWVydCBVeXR0ZXJo
+b2V2ZW4gd3JvdGU6DQo+IFRoaXMgaXMgc3RyYW5nZS4gVGhlcmUgYXJlIHR3byBTREhJIGNoYW5u
+ZWxzLCBidXQgdGhlIFNUQkNSMTINCj4gZG9jdW1lbnRhdGlvbiAoYWxsIHZlcnNpb25zIHVwIHRv
+IHJldi4gMy4wMCkgc2F5cyB0aGUgcmVnaXN0ZXIgaGFzIE1TVFANCj4gYml0cyBmb3IgZm91ciBT
+RCBob3N0IGludGVyZmFjZXM/DQo+IA0KPiBDYW4geW91IHBsZWFzZSBlbmxpZ2h0ZW4gbWU/IFRo
+YW5rcyENCg0KSWYgeW91IGxvb2sgaW4gdGhlIHJldiAzLjAwIG1hbnVhbCBmb3IgUlovQTFILCBp
+biBzZWN0aW9uDQoiNTAuMy4yIENhcmQgRGV0ZWN0L1dyaXRlIFByb3RlY3QiLCBpdCBzYXlzOg0K
+DQoNCiogUG93ZXItRG93biBtb2RlIGF0IENhcmQgcmVtb3ZhbA0KICBTRCBIb3N0IEludGVyZmFj
+ZSBtb2R1bGUgaXMgaGFsdGVkIGJ5IHRoZSBNU1RQMTIzIGJpdCB0byBNU1RQMTIwIGJpdCBpbiBT
+dGFuZGJ5IENvbnRyb2wgUmVnaXN0ZXIgMTINCiAgKFNUQkNSMTIpLiBJZiB0aGVzZSBiaXRzIG9m
+IGVhY2ggY2hhbm5lbCBpbiBTVEJDUjEyIGFyZSBzZXQgdG8gMTAsIGxvdyBwb3dlciBjb25zdW1w
+dGlvbiBpcyBhY2hpZXZlZCBhdCBDYXJkDQogIHJlbW92YWwuIFNlZSBzZWN0aW9uIDU1LCBQb3dl
+ci1Eb3duIE1vZGVzDQoNCg0KU28sIHRoZXJlIGFyZSAyIGNsb2NrIHNvdXJjZXMgZm9yIGVhY2gg
+U0RISSBjaGFubmVsLCBhbmQgdGhlIHNldHRpbmcNCk9wdGlvbnMgYXJlOg0KICBTRCBIb3N0IElu
+dGVyZmFjZSAwIE1vZHVsZSBTdG9wDQogIDAwOiBTRCBIb3N0IEludGVyZmFjZSAwIE1vZHVsZSBy
+dW5zLg0KICAwMTogU2V0dGluZyBwcm9oaWJpdGVkLg0KICAxMDogT25seSBjYXJkIGRldGVjdCBi
+bG9jayBpbiBTRCBIb3N0IEludGVyZmFjZSAwIE1vZHVsZSBydW5zLg0KICAxMTogQ2xvY2sgc3Vw
+cGx5IHRvIFNEIEhvc3QgSW50ZXJmYWNlIDAgTW9kdWxlIGlzIGhhbHRlZA0KDQpQcmV2aW91c2x5
+IEkndmUgYmVlbiBydW5uaW5nIHdpdGggJzAwJyBiZWNhdXNlIEkgd2FzIHR1cm5pbmcgRVZFUllU
+SElORyBvbg0KaW4gdS1ib290Lg0KWWVzdGVyZGF5LCBJIHRlc3RlZCB3aXRoIGp1c3QgJzEwJyBh
+bmQgdGhpbmdzIHNlZW0gdG8gd29yayBPSw0KZm9yIG1lLg0KDQpTaW5jZSB0aGUgc2hfbW9iaWxl
+X3NkaGkvdG1pbyBkcml2ZXIgb25seSBhbGxvd3MgZm9yIDEgY2xvY2sgcGVyIGNoYW5uZWwsDQon
+MTAnIGlzIG15IG9ubHkgY2hvaWNlIGZvciB0aGUgRFQuDQoNCkhvd2V2ZXIsIGxvb2tpbmcgYXQg
+YSBwcmV2aW91cyBCU1AgZm9yIFJaL0ExLCB0aGUgZHJpdmVyIA0KYXJjaC9hcm0vbWFjaC1zaG1v
+YmlsZS9jbG9jay1yN3M3MjEwMC5jIGhhZCB0aGlzOg0KDQoNCnN0YXRpYyBzdHJ1Y3QgY2xrIG1z
+dHBfY2xrc1tNU1RQX05SXSA9IHsNCiAgICAgICAgW01TVFAxMjNdID0gU0hfQ0xLX01TVFA4KCZw
+ZXJpcGhlcmFsMV9jbGssIFNUQkNSMTIsIDMsIDApLCAvKiBTREhJMDAgKi8NCiAgICAgICAgW01T
+VFAxMjJdID0gU0hfQ0xLX01TVFA4KCZwZXJpcGhlcmFsMV9jbGssIFNUQkNSMTIsIDIsDQogICAg
+ICAgICAgICAgICAgICAgICAgICBDTEtfRU5BQkxFX09OX0lOSVQpLCAgICAgICAgICAgICAgICAg
+ICAgICAgLyogU0RISTAxICovDQogICAgICAgIFtNU1RQMTIxXSA9IFNIX0NMS19NU1RQOCgmcGVy
+aXBoZXJhbDFfY2xrLCBTVEJDUjEyLCAxLCAwKSwgLyogU0RISTEwICovDQogICAgICAgIFtNU1RQ
+MTIwXSA9IFNIX0NMS19NU1RQOCgmcGVyaXBoZXJhbDFfY2xrLCBTVEJDUjEyLCAwLA0KICAgICAg
+ICAgICAgICAgIENMS19FTkFCTEVfT05fSU5JVCksICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIC8qIFNESEkxMSAqLw0KDQoNCkJ1dC4uLnRoYXQgd291bGQgbWFrZSBtZSB0aGluayBvbiBi
+b290IGl0IHdvdWxkIGJlIHNldCB0byAnMDEnIChzZXR0aW5nIHByb2hpYml0ZWQpLg0KDQoNCkkn
+bSBnb2luZyB0byB0cnkgYW5kIGZpbmQgaWYgInNldHRpbmcgcHJvaGliaXRlZCIgcmVhbGx5IGp1
+c3QgbWVhbnM6DQoieW91IGNhbiBzZXQgaXQgdGhpcyB3YXkuLi5idXQgbm90aGluZyBpcyByZWFs
+bHkgZ29pbmcgdG8gd29yayB1bmxlc3MgeW91DQplbmFibGUgdGhlIG90aGVyIGNsb2NrIi4NCg0K
+SWYgdGhhdCBpcyB0aGUgY2FzZSwgaXMgdGhlcmUgYSBEVCBlcXVpdmFsZW50IHRvICJDTEtfRU5B
+QkxFX09OX0lOSVQiIHRoYXQNCkkgY2FuIGRvIGZvciBNU1RQMTIwKFNESEkxMSkgYW5kIE1TVFAx
+MjAoU0RISTAxKSBzbyB0aGV5IGFyZSBib3RoIGNsZWFyZWQNCm9uIGJvb3Q/Pz8NCg0KDQpUaGFu
+a3MsDQpDaHJpcw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
