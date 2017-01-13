@@ -1,140 +1,46 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Tue, 31 Jan 2017 14:54:53 -0800
-Message-ID: <87d1f2kfgi.fsf@eliezer.anholt.net>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
- <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec>
- <87r33j85ap.fsf@eliezer.anholt.net> <20170131213132.GC872@mithrandir.ba.sec>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Fri, 13 Jan 2017 17:56:59 +0000
+Message-ID: <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
+ <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
+ <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+ <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0858028808=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170131213132.GC872@mithrandir.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0858028808==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Thierry Reding <thierry.reding@gmail.com> writes:
-
-> [ Unknown signature status ]
-> On Tue, Jan 31, 2017 at 10:15:10AM -0800, Eric Anholt wrote:
->> Thierry Reding <thierry.reding@gmail.com> writes:
->>=20
->> > [ Unknown signature status ]
->> > On Tue, Jan 31, 2017 at 09:38:53AM -0500, Sean Paul wrote:
->> >> On Tue, Jan 31, 2017 at 09:54:49AM +0100, Thierry Reding wrote:
->> >> > On Tue, Jan 31, 2017 at 09:01:07AM +0900, Inki Dae wrote:
->> >> > >=20
->> >> > >=20
->> >> > > 2017=EB=85=84 01=EC=9B=94 24=EC=9D=BC 10:50=EC=97=90 Hoegeun Kwon=
- =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
->> >> > > > Dear Thierry,
->> >> > > >=20
->> >> > > > Could you please review this patch?
->> >> > >=20
->> >> > > Thierry, I think this patch has been reviewed enough but no comme=
-nt
->> >> > > from you. Seems you are busy. I will pick up this.
->> >> >=20
->> >> > Sorry, but that's not how it works. This patch has gone through 8
->> >> > revisions within 4 weeks, and I tend to ignore patches like that un=
-til
->> >> > the dust settles.
->> >> >=20
->> >>=20
->> >> Seems like the dust was pretty settled. It was posted on 1/11, pinged=
- on 1/24,
->> >> and picked up on 1/31. I don't think it's unreasonable to take it thr=
-ough
->> >> another tree after that.
->> >>=20
->> >> I wonder if drm_panel would benefit from the -misc group maintainersh=
-ip model
->> >> as drm_bridge does. By spreading out the workload, the high-maintenan=
-ce
->> >> patches would hopefully find someone to shepherd them through.
->> >
->> > Except that nobody except me really cares. If we let people take patch=
-es
->> > through separate trees or group-maintained trees they'll likely go in
->> > without too much thought. DRM panel is somewhat different from core DRM
->> > in this regard because its infrastructure is minimal and there's little
->> > outside the panel-simple driver. So we're still at a stage where we ne=
-ed
->> > to fine-tune what drivers should look like and how we can improve.
->>=20
->> I would love to care and participate in review, but with the structure
->> of your tree you're the only one whose review counts, so I don't
->> participate.
->
-> Really? What exactly do you think is special about the structure of my
-> tree? I require patches to be on dri-devel (I pick them up from the
-> patchwork instance at freedesktop.org), the tree is publicly available
-> and reviewed-by tags get picked up automatically by patchwork.
->
-> The panel tree works exactly like any other maintainer tree. And my
-> review is *not* the only one that counts. I appreciate every Reviewed-by
-> tag I see on panel patches because it means that I don't have to look as
-> closely as I have to otherwise.
->
-> It is true that I am responsible for those patches, that's why I get to
-> have the final word on whether or not a patch gets applied. And that's
-> no different from any other maintainer tree either.
-
-If me reviewing a patch isn't part of unblocking that patch getting in,
-then I won't bother because all I could end up doing is punishing the
-developer of the patch.  Contributors have a hard enough time already.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliRFb0ACgkQtdYpNtH8
-nuiP1hAAuoWkYiJW8f7XTNzO+DloPyrsfTKZ9fXUWl/Oq9dejAelYsSG5udR+Wmk
-lHYsTb0dyWuQlck0zT5MA7SQoaGUiJJ3otrR7qcWjryc2Pgq7l0qlOrvQlCkKNIW
-kjO+v/p52Hfp0rm6VUOGhJhVupzyTV6pNh+9IGjxzECfV4QEftq0twTSHa1cqXK/
-QoQG7tjqA/2pnVr0KQTcBXGeSlP36MoXKM+4d+5lO3Q7LLU/mxbgvSFpqW9+Ifeu
-Zk/DsCoj7tB3pj6/qlLT4bxvajPeQ7Iznw88CdhNzLmhG4ms5ZWCA23JupSf5IA6
-RgT2cLQDqYyvu/WspKiZEVtcnSf/MSXPMvnc8krYOxEnwdO0Br1dpmzM3I/BsjQP
-GadRyztd3I8yQzIQ3sQsUDTjpLVA4gISUt3SVStTysqfbccXwMjMOdcdq5nQ3+Yo
-iUva/C5+p8t4hlSjp9vGH8JdhwvR5IYpOQVOBPuh3vy7vPZhf1hk/dcAsZIJ/nGm
-5yPMMgBTXsCr8KhdY/wBMRx+dWLYs7VmDQoHVzwtg74K6eA5Uf2EaI55mfIaThWz
-ZfTU700WRvBmAHhfU58wwPKcw2RXVBWnuBdaHFq5I54+1ub2351iu7mEGK1YZJ/o
-VZE/5PZv4tuTKAdSo66reb9E1cabzR+4OoKeBEW7sfYI3vngNwE=
-=H/ra
------END PGP SIGNATURE-----
---=-=-=--
-
---===============0858028808==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0858028808==--
+SGkgR2VlcnQsDQoNCk9uIEZyaWRheSwgSmFudWFyeSAxMywgMjAxNywgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOg0KPiA+IEluIHNoX21vYmlsZV9zZGhpLmMsIGNhbiB3ZSBjaGFuZ2Ugc2hfbW9i
+aWxlX3NkaGlfcHJvYmUoKSBzbyB0aGF0IGlmDQo+ID4gdGhlcmUgYXJlIDIgY2xvY2tzIHNwZWNp
+ZmllZCAoaW4gRFQgb3IgcGxhdGZvcm0gZGF0YSksIGl0DQo+ID4gYXV0b21hdGljYWxseSBlbmFi
+bGVzIHRoZSAybmQgY2xvY2sgKGZvcmV2ZXIpIGFuZCBqdXN0IHVzZXMgdGhlIDFzdA0KPiBjbG9j
+ayBhcyB0aGUgb24vb2ZmIGNsb2NrPw0KPiANCj4gT2YgY291cnNlIHRoZSBkcml2ZXIgY2FuIGhh
+bmRsZSB0aGUgc2Vjb25kIGludGVycnVwdCwgaWYgeW91IHVwZGF0ZSB0aGUNCj4gYmluZGluZywg
+YW5kIGFkZCBzdXBwb3J0IGNvZGUgZm9yIHRoYXQuLi4NCg0KT2YgY291cnNlIG15IGlkZWEgaXMg
+dGhhdCBJIHdvdWxkIG9ubHkgaGF2ZSB0byB1cGRhdGUgdGhlIGJpbmRpbmdzIGZvcg0KUlovQTEu
+Li5ub3QgYW55IG90aGVyIGRldmljZS4NCg0KTXkgb25seSBxdWVzdGlvbiBpcywgdG9kYXkgc2hf
+bW9iaWxlX3NkaGkuYyB1c2VzIHRoaXM6DQoNCiAgIHByaXYtPmNsayA9IGRldm1fY2xrX2dldCgm
+cGRldi0+ZGV2LCBOVUxMKTsNCg0KdG8gZ2V0IHRoZSBjbG9jay4gQnV0IGlmIHRoZXJlIGlzIGEg
+Mm5kIGNsb2NrLi4uaG93IGRvIEkga25vdyB0aGUNCnN0cmluZyBpZCBuYW1lIHRvIGxvb2sgdG8g
+cmVwbGFjZSBOVUxMIHdpdGg/Pw0KDQoNCk9yLi4uZm9yIHRoZSBSWi9BMSBkdHNpLCBzaG91bGQg
+SSBqdXN0IGdpdmUgdGhlIDIgY2xvY2tzIG5hbWVzOg0KDQoJCWNsb2NrcyA9IDwmbXN0cDEyX2Ns
+a3MgUjdTNzIxMDBfQ0xLX1NESEkwMCwNCgkJCQkmbXN0cDEyX2Nsa3MgUjdTNzIxMDBfQ0xLX1NE
+SEkwMT47DQoJCWNsb2NrLW5hbWVzID0gImNvcmUiLCAiY2QiOw0KDQoNCmFuZCB0aGVuIGluIHRo
+ZSBjb2RlIGRvOg0KDQoJc3RydWN0ICpjZF9jbGs7DQoJY2RfY2xrID0gZGV2bV9jbGtfZ2V0KCZw
+ZGV2LT5kZXYsICJjZCIpOw0KCWlmIChjZF9jbGspIHsNCgkJY2xrX3ByZXBhcmVfZW5hYmxlKGNk
+X2Nsayk7DQoJfQ0KDQoNCg0KICAodGhpcyBzaW1wbGUgMS1saW5lIGZpeCBwYXRjaCBpcyBnZXR0
+aW5nIGEgbG90IG1vcmUgY29tcGxpY2F0ZWQpDQoNCg0KVGhhbmtzLA0KQ2hyaXMNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
