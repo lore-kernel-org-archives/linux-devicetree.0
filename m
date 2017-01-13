@@ -1,118 +1,253 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Fri, 13 Jan 2017 12:47:52 +0300
-Message-ID: <20170113094752.GA9404@mobilestation>
-References: <1480458434-22523-1-git-send-email-fancer.lancer@gmail.com>
- <1481638971-6247-1-git-send-email-fancer.lancer@gmail.com>
- <1481638971-6247-2-git-send-email-fancer.lancer@gmail.com>
- <20170111082119.GA26387@kroah.com>
- <20170112225417.GA21220@mobilestation>
- <20170113072235.GA12825@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170113072235.GA12825-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 1/2] iio: adc: Add Maxim MAX11100 driver
+Date: Fri, 13 Jan 2017 10:50:37 +0100
+Message-ID: <1484301038-16386-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484301038-16386-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 08:22:35AM +0100, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Fri, Jan 13, 2017 at 01:54:17AM +0300, Serge Semin wrote:
-> > On Wed, Jan 11, 2017 at 09:21:19AM +0100, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> > > > +	/* Return failure if root directory doesn't exist */
-> > > > +	if (!csr_dbgdir) {
-> > > > +		dev_dbg(dev, "No Debugfs root directory");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > 
-> > > If debugfs is not enabled, don't error out, just keep going, it should
-> > > never stop kernel code from running properly.
-> > > 
-> > > Also, this test isn't really doing what you think it is doing...
-> > > 
-> > 
-> > I see, it must be replaced with IS_ERR_OR_NULL() test.
-> 
-> No!  That's a pain, when the debugfs interface was created its goal was
-> to make it _easy_ to use, not hard.  IS_ERR_OR_NULL() is hard, and
-> messy, don't do that.
-> 
-> > But I don't think,
-> > it would be good to get rid of dev_dbg() completely here. In case if
-> > debugging is enabled, user would understand why csr-node isn't created within
-> > DebugFS directory. I don't see the reasoning why one shouldn't know a source
-> > of possible problems.
-> > (See the next comment as continue of the discussion)
-> 
-> Why would a user care about debugfs?
-> 
-> > > > +	/* Create Debugfs directory for CSR file */
-> > > > +	snprintf(fname, CSRNAME_LEN, "%d-%04hx", cli->adapter->nr, cli->addr);
-> > > > +	pdev->csr_dir = debugfs_create_dir(fname, csr_dbgdir);
-> > > > +	if (IS_ERR_OR_NULL(pdev->csr_dir)) {
-> > > > +		dev_err(dev, "Failed to create CSR node directory");
-> > > > +		return -EINVAL;
-> > > 
-> > > Again, don't do this, you really don't care if debugfs worked or not.
-> > > 
-> > 
-> > Actually the driver doesn't stop the kernel code from running, if it finds out
-> > any problem with DebugFS CSR-node creation. The function just logs the error
-> > and return error status. Take a look the place the method is called:
-> > 1489        /* Create debugfs files */
-> > 1490        (void)idt_create_dbgfs_files(pdev);
-> > The initialization code doesn't check the return value at all, so the driver
-> > will proceed with further code.
-> > Why did I make the function with return value? Because it's a good style to
-> > always return a status of function code execution if it may fail, but only
-> > caller will decide whether to check the return value or not.
-> 
-> There is only one type of error that a debugfs call can return, and that
-> is if debugfs is not enabled in the build.  That's it, you don't need to
-> care about any of that.
-> 
-> > Regarding the error printing. In case if the code gets to this check, one can
-> > be sure the DebugFS works properly, so in case if the driver failed to create
-> > the corresponding sub-directory or node, it is really error to have any failure
-> > at this point, and a user should be notified. But still the driver won't stop
-> > functioning, since the caller doesn't check the return value.
-> > 
-> > Hopefully you'll understand my point.
-> 
-> Please understand mine, debugfs is supposed to be easy to use, you are
-> not testing things properly here, and when you are, it doesn't matter.
-> Just call the functions, save the return results if you need to (for
-> dentries and the like), and move on.  No error handling needed AT ALL!
-> 
-> Yes, it feels "odd" for kernel code, but remember, this is only for
-> debugging.  Your code should not have any different codepaths for if the
-> debugging logic worked or not.  It doesn't care at all.  So please, make
-> it simple.
-> 
-> > > > +	dev_dbg(dev, "Debugfs-files created");
-> > > 
-> > > You do know about ftrace, right?  Please remove all of these
-> > > "trace-like" debugging lines, they aren't needed for anyone.
-> > > 
-> > 
-> > Ok, I'll remove all these prints, even though I do find these prints being
-> > handy to have initialization process printed on debugging stage.
-> 
-> Then use ftrace, that is what it is there for, don't roll your own
-> driver-specific-functionality please.
-> 
-> thanks,
-> 
-> greg k-h
+From: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 
-Ok, I see your point and do as you say.
+Add iio driver for Maxim MAX11100 single-channel ADC.
 
-Thanks,
-Serge
+Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Tested-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+ drivers/iio/adc/Kconfig    |   9 +++
+ drivers/iio/adc/Makefile   |   1 +
+ drivers/iio/adc/max11100.c | 187 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 197 insertions(+)
+ create mode 100644 drivers/iio/adc/max11100.c
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 38bc319..c32bc7a 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -307,6 +307,15 @@ config MAX1027
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called max1027.
+ 
++config MAX11100
++	tristate "Maxim max11100 ADC driver"
++	depends on SPI_MASTER
++	help
++	  Say yes here to build support for Maxim max11100 SPI ADC
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called max11100.
++
+ config MAX1363
+ 	tristate "Maxim max1363 ADC driver"
+ 	depends on I2C
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index d36c4be..5684369 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -31,6 +31,7 @@ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+ obj-$(CONFIG_LTC2485) += ltc2485.o
+ obj-$(CONFIG_MAX1027) += max1027.o
++obj-$(CONFIG_MAX11100) += max11100.o
+ obj-$(CONFIG_MAX1363) += max1363.o
+ obj-$(CONFIG_MCP320X) += mcp320x.o
+ obj-$(CONFIG_MCP3422) += mcp3422.o
+diff --git a/drivers/iio/adc/max11100.c b/drivers/iio/adc/max11100.c
+new file mode 100644
+index 0000000..78e2a45
+--- /dev/null
++++ b/drivers/iio/adc/max11100.c
+@@ -0,0 +1,187 @@
++/*
++ * iio/adc/max11100.c
++ * Maxim max11100 ADC Driver with IIO interface
++ *
++ * Copyright (C) 2016 Renesas Electronics Corporation
++ * Copyright (C) 2016 Jacopo Mondi
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regulator/consumer.h>
++#include <linux/spi/spi.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/driver.h>
++
++/*
++ * LSB is the ADC single digital step
++ * 1 LSB = (vref_mv / 2 ^ 16)
++ *
++ * LSB is used to calculate analog voltage value
++ * from the number of ADC steps count
++ *
++ * Ain = (count * LSB)
++ */
++#define MAX11100_LSB_DIV		(1 << 16)
++
++struct max11100_state {
++	const struct max11100_chip_desc *desc;
++	struct regulator *vref_reg;
++	struct spi_device *spi;
++};
++
++static struct iio_chan_spec max11100_channels[] = {
++	{ /* [0] */
++		.type = IIO_VOLTAGE,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE),
++	},
++};
++
++static struct max11100_chip_desc {
++	unsigned int num_chan;
++	const struct iio_chan_spec *channels;
++} max11100_desc = {
++	.num_chan = ARRAY_SIZE(max11100_channels),
++	.channels = max11100_channels,
++};
++
++static int max11100_read_single(struct iio_dev *indio_dev, int *val)
++{
++	int ret;
++	struct max11100_state *state = iio_priv(indio_dev);
++	uint8_t buffer[3];
++
++	ret = spi_read(state->spi, buffer, sizeof(buffer));
++	if (ret) {
++		dev_err(&indio_dev->dev, "SPI transfer failed\n");
++		return ret;
++	}
++
++	/* the first 8 bits sent out from ADC must be 0s */
++	if (buffer[0]) {
++		dev_err(&indio_dev->dev, "Invalid value: buffer[0] != 0\n");
++		return -EINVAL;
++	}
++
++	*val = (buffer[1] << 8) | buffer[2];
++
++	return 0;
++}
++
++static int max11100_read_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int *val, int *val2, long info)
++{
++	int ret, vref_uv;
++	struct max11100_state *state = iio_priv(indio_dev);
++
++	switch (info) {
++	case IIO_CHAN_INFO_RAW:
++		ret = max11100_read_single(indio_dev, val);
++		if (ret)
++			return ret;
++
++		return IIO_VAL_INT;
++
++	case IIO_CHAN_INFO_SCALE:
++		vref_uv = regulator_get_voltage(state->vref_reg);
++		if (vref_uv < 0)
++			/* dummy regulator "get_voltage" returns -EINVAL */
++			return -EINVAL;
++
++		*val =  vref_uv / 1000;
++		*val2 = MAX11100_LSB_DIV;
++		return IIO_VAL_FRACTIONAL;
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info max11100_info = {
++	.driver_module = THIS_MODULE,
++	.read_raw = max11100_read_raw,
++};
++
++static int max11100_probe(struct spi_device *spi)
++{
++	int ret;
++	struct iio_dev *indio_dev;
++	struct max11100_state *state;
++
++	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*state));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	spi_set_drvdata(spi, indio_dev);
++
++	state = iio_priv(indio_dev);
++	state->spi = spi;
++	state->desc = &max11100_desc;
++
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->dev.of_node = spi->dev.of_node;
++	indio_dev->info = &max11100_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = state->desc->channels;
++	indio_dev->num_channels = state->desc->num_chan;
++
++	state->vref_reg = devm_regulator_get(&spi->dev, "vref");
++	if (IS_ERR(state->vref_reg))
++		return PTR_ERR(state->vref_reg);
++
++	ret = regulator_enable(state->vref_reg);
++	if (ret)
++		return ret;
++
++	ret = iio_device_register(indio_dev);
++	if (ret)
++		goto disable_regulator;
++
++	return 0;
++
++disable_regulator:
++	regulator_disable(state->vref_reg);
++
++	return ret;
++}
++
++static int max11100_remove(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev = spi_get_drvdata(spi);
++	struct max11100_state *state = iio_priv(indio_dev);
++
++	regulator_disable(state->vref_reg);
++
++	iio_device_unregister(indio_dev);
++
++	return 0;
++}
++
++static const struct of_device_id max11100_ids[] = {
++	{.compatible = "maxim,max11100"},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, max11100_ids);
++
++static struct spi_driver max11100_driver = {
++	.driver = {
++		.name	= "max11100",
++		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(max11100_ids),
++	},
++	.probe		= max11100_probe,
++	.remove		= max11100_remove,
++};
++
++module_spi_driver(max11100_driver);
++
++MODULE_AUTHOR("Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>");
++MODULE_DESCRIPTION("Maxim max11100 ADC Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
