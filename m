@@ -1,56 +1,64 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Fri, 13 Jan 2017 17:16:32 +0000
-Message-ID: <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170112181149.29035-1-chris.brandt@renesas.com>
- <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
- <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH 05/37] PCI: dwc: Add platform_set_drvdata
+Date: Fri, 13 Jan 2017 17:16:15 +0000
+Message-ID: <dbaae6f0-f76f-1558-5a49-a17530459cdb@synopsys.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-6-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1484216786-17292-6-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, nsekhar@ti.com, Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Murali Karicheri <m-karicheri2@ti.com>, Minghuan Lian <minghuan.Lian@freescale.com>, Mingkai Hu <mingkai.hu@freescale.com>, Roy Zang <tie-fei.zang@freescale.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Niklas Cassel <niklas.cassel@axis.com>, Jesper Nilsson <jesper.nilsson@axis.com>, Zhou Wang <wangzhou1@hisilicon.com>, Gabrie
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCg0KPiA+IEJ1dC4uLnRoYXQgd291bGQgbWFrZSBtZSB0aGluayBvbiBib290
-IGl0IHdvdWxkIGJlIHNldCB0byAnMDEnIChzZXR0aW5nIHByb2hpYml0ZWQpLg0KPiANCj4gWWVh
-aCwgcnVubmluZyB3aXRoIGVuYWJsZWQgU0RISSBjb3JlIGFuZCBkaXNhYmxlZCBjYXJkIGRldGVj
-dCBzb3VuZHMgc2lsbHkuDQoNCkkganVzdCBkaWQgc29tZSB0ZXN0aW5nIGFuZCB3aXRoIG9ubHkg
-MSBjbG9jayBlbmFibGVkICgnMDEnKSwgdGhlIGNvcmUgd29ya3MgYnV0DQpjYXJkIGRldGVjdCBk
-b2Vzbid0IHdvcmsuIElmIHlvdSBib290IHdpdGggdGhlIGNhcmQgaW4sIHlvdSBjYW4gcmVhZCBp
-dCBmaW5lLCBidXQNCmlmIHlvdSBwdWxsIGl0Li4ubm8gcmVtb3ZhbCBpcyBkZXRlY3RlZC4NCkFz
-IHNvb24gYXMgSSB0dXJuIHRoZSBvdGhlciBjbG9jayBvbiAoJzAwJyksIGNhcmQgZGV0ZWN0IG1h
-Z2ljYWxseSBzdGFydHMgd29ya2luZy4NCg0KU28gZnJvbSBteSBleHBlcmltZW50czoNCg0KICAw
-MDogU0QgSG9zdCBJbnRlcmZhY2UgMSBNb2R1bGUgcnVucy4NCiAgICAgID4+IGV2ZXJ5dGhpbmcg
-d29ya3MNCg0KICAwMTogU2V0dGluZyBwcm9oaWJpdGVkLg0KICAgICAgPj4gY29yZSBydW5zLCBi
-dXQgbm8gY2FyZCBkZXRlY3QNCg0KICAxMDogT25seSBjYXJkIGRldGVjdCBibG9jayBpbiBTRCBI
-b3N0IEludGVyZmFjZSAxIE1vZHVsZSBydW5zLg0KICAgICAgPj4gU0RISSBhZGRyZXNzIHNwYWNl
-IGFsbCAwMHMgKGNvcmUgbm90IHJ1bm5pbmcpDQoNCiAgMTE6IENsb2NrIHN1cHBseSB0byBTRCBI
-b3N0IEludGVyZmFjZSAxIE1vZHVsZSBpcyBoYWx0ZWQNCiAgICAgID4+IG5vdGhpbmcgd29ya3Mg
-KG9mIGNvdXJzZSkNCg0KDQo+IFNvIHR5cGljYWxseSB5b3Ugd2FudCB0byB1c2UgMTAgd2hlbiBp
-ZGxlLCBhbmQgMDAgd2hlbiBhY3RpdmUuDQoNCkkgd29uZGVyIGlmIHRoYXQgd291bGQgbWVhbiB0
-aGUgc3lzdGVtIHdvdWxkIGdldCBhIENEIGludGVycnVwdC4gT2YgY291cnNlDQppZiBubyBJU1Ig
-cmVnaXN0ZXJlZCAoU0RISSBub3QgZW5hYmxlZCksIHRoZSBrZXJuZWwgd291bGQgdGhyb3cgaXQg
-YXdheS4NCg0KDQo+IE5vIHRoZXJlIGlzbid0LiBUaGF0J3MgYW5vdGhlciByZWFzb24gd2h5IGEg
-ZnVsbC1mbGVkZ2VkIGNsb2NrIGRyaXZlciB3aXRoDQo+IHRhYmxlcyBpbiBDIGlzIGEgYmV0dGVy
-IGlkZWEgdGhhbiB0cnlpbmcgdG8gZGVzY3JpYmUgYWxsIGNsb2NrcyBpbiBEVC4NCj4gVGhlIG5l
-dyBDUEcvTVNTUiBiYXNlZCBkcml2ZXIgKHJlbmVzYXMtY3BnLW1zc3IuYykgc3VwcG9ydHMgImNy
-aXRpY2FsDQo+IG1vZHVsZSBjbG9ja3MiIHRocm91Z2ggQ0xLX0VOQUJMRV9IQU5EX09GRi4gVW5m
-b3J0dW5hdGVseSB0aGF0IGZsYWcgaGFzbid0DQo+IG1hZGUgaXQgdXBzdHJlYW0sIHNvIEkgcmVh
-bGx5IHNob3VsZCBjb252ZXJ0IHRoZSBkcml2ZXIgdG8gdXNlIHRoZSBuZXcNCj4gQ0xLX0lTX0NS
-SVRJQ0FMIGluc3RlYWQuLi4NCg0KU28gYmFzaWNhbGx5IGF0IHRoZSBtb21lbnQgeW91J3JlIHRl
-bGwgbWUgaXQncyBnb2luZyB0byBzdGF5IGJyb2tlICh1bmxlc3MgaXQncw0KZW5hYmxlZCBpbiB1
-LWJvb3QpLg0KDQoNCkluIHNoX21vYmlsZV9zZGhpLmMsIGNhbiB3ZSBjaGFuZ2Ugc2hfbW9iaWxl
-X3NkaGlfcHJvYmUoKSBzbyB0aGF0IGlmIHRoZXJlDQphcmUgMiBjbG9ja3Mgc3BlY2lmaWVkIChp
-biBEVCBvciBwbGF0Zm9ybSBkYXRhKSwgaXQgYXV0b21hdGljYWxseSBlbmFibGVzDQp0aGUgMm5k
-IGNsb2NrIChmb3JldmVyKSBhbmQganVzdCB1c2VzIHRoZSAxc3QgY2xvY2sgYXMgdGhlIG9uL29m
-ZiBjbG9jaz8NCg0KDQoNCkNocmlzDQoNCg0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Hi,
+
+Às 10:25 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
+> Add platform_set_drvdata in all designware based drivers to store the
+> private data structure of the driver so that dev_set_drvdata can be
+> used to get back private data pointer in add_pcie_port/host_init.
+> This is in preparation for splitting struct pcie_port into core and
+> host only structures. After the split pcie_port will not be part of
+> the driver's private data structure and *container_of* used now
+> to get the private data pointer cannot be used.
+> 
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Murali Karicheri <m-karicheri2@ti.com>
+> Cc: Minghuan Lian <minghuan.Lian@freescale.com>
+> Cc: Mingkai Hu <mingkai.hu@freescale.com>
+> Cc: Roy Zang <tie-fei.zang@freescale.com>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Niklas Cassel <niklas.cassel@axis.com>
+> Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+> Cc: Joao Pinto <Joao.Pinto@synopsys.com>
+> Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> Cc: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Cc: Pratyush Anand <pratyush.anand@gmail.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/dwc/pci-dra7xx.c           |    3 ++-
+>  drivers/pci/dwc/pci-exynos.c           |    3 ++-
+>  drivers/pci/dwc/pci-imx6.c             |    3 ++-
+>  drivers/pci/dwc/pci-keystone.c         |    2 ++
+>  drivers/pci/dwc/pci-layerscape.c       |    2 ++
+>  drivers/pci/dwc/pcie-armada8k.c        |    2 ++
+>  drivers/pci/dwc/pcie-artpec6.c         |    2 ++
+>  drivers/pci/dwc/pcie-designware-plat.c |    2 ++
+>  drivers/pci/dwc/pcie-hisi.c            |    2 ++
+>  drivers/pci/dwc/pcie-qcom.c            |    2 ++
+>  drivers/pci/dwc/pcie-spear13xx.c       |    3 ++-
+>  11 files changed, 22 insertions(+), 4 deletions(-)
+> 
+
+This is an example of a change that could be merged with another patch that
+gives it more meaning, like I wrote in the review of patch 9/37.
+
+Thanks,
+Joao
