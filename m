@@ -1,106 +1,50 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Fri, 13 Jan 2017 08:22:35 +0100
-Message-ID: <20170113072235.GA12825@kroah.com>
-References: <1480458434-22523-1-git-send-email-fancer.lancer@gmail.com>
- <1481638971-6247-1-git-send-email-fancer.lancer@gmail.com>
- <1481638971-6247-2-git-send-email-fancer.lancer@gmail.com>
- <20170111082119.GA26387@kroah.com>
- <20170112225417.GA21220@mobilestation>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Fri, 13 Jan 2017 08:26:50 +0100
+Message-ID: <20170113072650.orx6vl2orqfakcuk@pengutronix.de>
+References: <20170111082208.vzu7xgpd4eakyldl@pengutronix.de>
+ <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
+ <20170111153940.dtxzvtdici3r7l54@pengutronix.de>
+ <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
+ <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
+ <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
+ <20170112174902.j52foglkdouyz36n@pengutronix.de>
+ <CAOAejn3tPi0fjy+t-UhMTvAq7LfdKJJdbcLw2su1-YAGDZMxew@mail.gmail.com>
+ <20170112211004.z3wylc7vrubulc3x@pengutronix.de>
+ <CAOAejn1HAU5spQeXmYPH4XH0L5bGuoFgguozwMp=uLKcXDEPEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170112225417.GA21220@mobilestation>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAOAejn1HAU5spQeXmYPH4XH0L5bGuoFgguozwMp=uLKcXDEPEw@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 01:54:17AM +0300, Serge Semin wrote:
-> On Wed, Jan 11, 2017 at 09:21:19AM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > +	/* Return failure if root directory doesn't exist */
-> > > +	if (!csr_dbgdir) {
-> > > +		dev_dbg(dev, "No Debugfs root directory");
-> > > +		return -EINVAL;
-> > > +	}
-> > 
-> > If debugfs is not enabled, don't error out, just keep going, it should
-> > never stop kernel code from running properly.
-> > 
-> > Also, this test isn't really doing what you think it is doing...
-> > 
-> 
-> I see, it must be replaced with IS_ERR_OR_NULL() test.
+Hello,
 
-No!  That's a pain, when the debugfs interface was created its goal was
-to make it _easy_ to use, not hard.  IS_ERR_OR_NULL() is hard, and
-messy, don't do that.
+On Thu, Jan 12, 2017 at 10:28:20PM +0100, M'boumba Cedric Madianga wrote:
+> Please see below a quote from datasheet that clearly described how to handle
+> For 2-byte reception:
+> ● Wait until ADDR = 1 (SCL stretched low until the ADDR flag is cleared)
+> ● Set ACK low, set POS high
+> ● Clear ADDR flag
+> ● Wait until BTF = 1 (Data 1 in DR, Data2 in shift register, SCL
+> stretched low until a data1 is read)
+> ● Set STOP high
+> ● Read data 1 and 2
 
-> But I don't think,
-> it would be good to get rid of dev_dbg() completely here. In case if
-> debugging is enabled, user would understand why csr-node isn't created within
-> DebugFS directory. I don't see the reasoning why one shouldn't know a source
-> of possible problems.
-> (See the next comment as continue of the discussion)
+The problem is that you only know that you have a 2 byte transfer after
+you read the first byte (and it's a 1). (But note that this is
+irrelevant for the patch as the driver doesn't claim to support this
+kind of transfer.)
 
-Why would a user care about debugfs?
+Best regards
+Uwe
 
-> > > +	/* Create Debugfs directory for CSR file */
-> > > +	snprintf(fname, CSRNAME_LEN, "%d-%04hx", cli->adapter->nr, cli->addr);
-> > > +	pdev->csr_dir = debugfs_create_dir(fname, csr_dbgdir);
-> > > +	if (IS_ERR_OR_NULL(pdev->csr_dir)) {
-> > > +		dev_err(dev, "Failed to create CSR node directory");
-> > > +		return -EINVAL;
-> > 
-> > Again, don't do this, you really don't care if debugfs worked or not.
-> > 
-> 
-> Actually the driver doesn't stop the kernel code from running, if it finds out
-> any problem with DebugFS CSR-node creation. The function just logs the error
-> and return error status. Take a look the place the method is called:
-> 1489        /* Create debugfs files */
-> 1490        (void)idt_create_dbgfs_files(pdev);
-> The initialization code doesn't check the return value at all, so the driver
-> will proceed with further code.
-> Why did I make the function with return value? Because it's a good style to
-> always return a status of function code execution if it may fail, but only
-> caller will decide whether to check the return value or not.
-
-There is only one type of error that a debugfs call can return, and that
-is if debugfs is not enabled in the build.  That's it, you don't need to
-care about any of that.
-
-> Regarding the error printing. In case if the code gets to this check, one can
-> be sure the DebugFS works properly, so in case if the driver failed to create
-> the corresponding sub-directory or node, it is really error to have any failure
-> at this point, and a user should be notified. But still the driver won't stop
-> functioning, since the caller doesn't check the return value.
-> 
-> Hopefully you'll understand my point.
-
-Please understand mine, debugfs is supposed to be easy to use, you are
-not testing things properly here, and when you are, it doesn't matter.
-Just call the functions, save the return results if you need to (for
-dentries and the like), and move on.  No error handling needed AT ALL!
-
-Yes, it feels "odd" for kernel code, but remember, this is only for
-debugging.  Your code should not have any different codepaths for if the
-debugging logic worked or not.  It doesn't care at all.  So please, make
-it simple.
-
-> > > +	dev_dbg(dev, "Debugfs-files created");
-> > 
-> > You do know about ftrace, right?  Please remove all of these
-> > "trace-like" debugging lines, they aren't needed for anyone.
-> > 
-> 
-> Ok, I'll remove all these prints, even though I do find these prints being
-> handy to have initialization process printed on debugging stage.
-
-Then use ftrace, that is what it is there for, don't roll your own
-driver-specific-functionality please.
-
-thanks,
-
-greg k-h
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
