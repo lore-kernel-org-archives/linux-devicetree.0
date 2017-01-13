@@ -1,94 +1,47 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: dts: mt2701: Sort DT nodes by register address
-Date: Fri, 13 Jan 2017 15:38:44 +0100
-Message-ID: <bcc5c785-be25-d63b-3041-ae0009a9dc72@gmail.com>
-References: <1482904006-44232-1-git-send-email-jamesjj.liao@mediatek.com>
- <1482904006-44232-2-git-send-email-jamesjj.liao@mediatek.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: [PATCH RFC v2 0/4] SolidRun Hummingboard 2 support
+Date: Fri, 13 Jan 2017 14:44:49 +0000
+Message-ID: <20170113144449.GQ14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482904006-44232-2-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Jon Nettleton <jon@solid-run.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+These patches add support for SolidRun's Hummingboard 2 to mainline.
+The first is the official SolidRun DTS file supplied by Jon, the
+remainder are cleanups to it for mainline.
 
+These can be found in my HB2 branch.
 
-On 28/12/16 06:46, James Liao wrote:
-> This patch rearrange MT2701 DT nodes to keep them in ascending order.
->
-> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/mt2701.dtsi | 36 ++++++++++++++++++------------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 7eab6f4..73f4b7c 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -96,24 +96,6 @@
->  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->  	};
->
-> -	pio: pinctrl@10005000 {
-> -		compatible = "mediatek,mt2701-pinctrl";
-> -		reg = <0 0x1000b000 0 0x1000>;
-> -		mediatek,pctl-regmap = <&syscfg_pctl_a>;
-> -		pins-are-numbered;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
+Version 2 updated by Jon from comments received on previous posting.
 
-Applied the whole series. I fixed the unit address of pio to 1000b000 
-and it's order in the file.
+The series can be found at:
 
-Please check v4.10-next/dts32
+  git://git.armlinux.org.uk/~rmk/linux-arm.git hb2
 
-Thanks,
-Mathias
+ arch/arm/boot/dts/Makefile                   |   2 +
+ arch/arm/boot/dts/imx6dl-hummingboard2.dts   |  52 +++
+ arch/arm/boot/dts/imx6q-hummingboard2.dts    |  60 +++
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 555 +++++++++++++++++++++++++++
+ 4 files changed, 669 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-hummingboard2.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-hummingboard2.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
 
-> -
-> -	syscfg_pctl_a: syscfg@10005000 {
-> -		compatible = "mediatek,mt2701-pctl-a-syscfg", "syscon";
-> -		reg = <0 0x10005000 0 0x1000>;
-> -	};
-> -
->  	topckgen: syscon@10000000 {
->  		compatible = "mediatek,mt2701-topckgen", "syscon";
->  		reg = <0 0x10000000 0 0x1000>;
-> @@ -134,6 +116,24 @@
->  		#reset-cells = <1>;
->  	};
->
-> +	pio: pinctrl@10005000 {
-> +		compatible = "mediatek,mt2701-pinctrl";
-> +		reg = <0 0x1000b000 0 0x1000>;
-> +		mediatek,pctl-regmap = <&syscfg_pctl_a>;
-> +		pins-are-numbered;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	syscfg_pctl_a: syscfg@10005000 {
-> +		compatible = "mediatek,mt2701-pctl-a-syscfg", "syscon";
-> +		reg = <0 0x10005000 0 0x1000>;
-> +	};
-> +
->  	watchdog: watchdog@10007000 {
->  		compatible = "mediatek,mt2701-wdt",
->  			     "mediatek,mt6589-wdt";
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
