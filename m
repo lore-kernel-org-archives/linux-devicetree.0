@@ -1,83 +1,138 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ASoC: es8328-i2c: Add compatible for ES8388
-Date: Fri, 13 Jan 2017 17:43:45 +0100
-Message-ID: <3724319.rPxRAuBZBQ@phil>
-References: <20170113161452.14313-1-romain.perier@collabora.com> <20170113161452.14313-2-romain.perier@collabora.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH 11/37] PCI: dwc: Split pcie-designware.c into host and
+ core files
+Date: Fri, 13 Jan 2017 16:49:44 +0000
+Message-ID: <4a89fb45-af84-d660-5ef0-12227b141cda@synopsys.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-12-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113161452.14313-2-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484216786-17292-12-git-send-email-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
+=C0s 10:26 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
+> Split pcie-designware.c into pcie-designware-host.c that contains
+> the host specific parts of the driver and pcie-designware.c that
+> contains the parts used by both host driver and endpoint driver.
+> =
 
-Am Freitag, 13. Januar 2017, 17:14:49 CET schrieb Romain Perier:
-> This commit adds a compatible string for everest,es8388. This is
-> an audio codec that is compatible with es8328.
-> 
-> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
->  sound/soc/codecs/es8328-i2c.c                      | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/es8328.txt
-> b/Documentation/devicetree/bindings/sound/es8328.txt index 30ea8a3..33fbf05
-> 100644
-> --- a/Documentation/devicetree/bindings/sound/es8328.txt
-> +++ b/Documentation/devicetree/bindings/sound/es8328.txt
-> @@ -4,7 +4,7 @@ This device supports both I2C and SPI.
-> 
->  Required properties:
-> 
-> -  - compatible : "everest,es8328"
-> +  - compatible  : Should be "everest,es8328" or "everest,es8388"
->    - DVDD-supply : Regulator providing digital core supply voltage 1.8 -
-> 3.6V - AVDD-supply : Regulator providing analog supply voltage 3.3V
->    - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
-> diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
-> index 2d05b5d..09ae67f 100644
-> --- a/sound/soc/codecs/es8328-i2c.c
-> +++ b/sound/soc/codecs/es8328-i2c.c
-> @@ -19,13 +19,14 @@
->  #include "es8328.h"
-> 
->  static const struct i2c_device_id es8328_id[] = {
-> -	{ "es8328", 0 },
-> +	{ "es8328", "es8388", 0 },
+>  drivers/pci/dwc/Makefile               |    2 +-
+>  drivers/pci/dwc/pcie-designware-host.c |  619 ++++++++++++++++++++++++++=
+++++++
+>  drivers/pci/dwc/pcie-designware.c      |  613 +-------------------------=
+-----
+>  drivers/pci/dwc/pcie-designware.h      |    8 +
+>  4 files changed, 634 insertions(+), 608 deletions(-)
+>  create mode 100644 drivers/pci/dwc/pcie-designware-host.c
+> =
 
-that looks strange or I'm just blind.
+> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+> index 7d27c14..3b57e55 100644
+> --- a/drivers/pci/dwc/Makefile
+> +++ b/drivers/pci/dwc/Makefile
+> @@ -1,4 +1,4 @@
 
-struct i2c_device_id {
-        char name[I2C_NAME_SIZE];
-        kernel_ulong_t driver_data;     /* Data private to the driver */
-};
+(snip...)
 
-so shouldn't this be
+> -static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+> -				      int type, u64 cpu_addr, u64 pci_addr,
+> -				      u32 size)
+> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> +			       u64 cpu_addr, u64 pci_addr, u32 size)
+>  {
+>  	u32 retries, val;
+>  =
 
- static const struct i2c_device_id es8328_id[] = {
- 	{ "es8328", 0 },
-+	{ "es8388", 0 },
+> @@ -186,220 +151,6 @@ static void dw_pcie_prog_outbound_atu(struct dw_pci=
+e *pci, int index,
+>  	dev_err(pci->dev, "iATU is not being enabled\n");
+>  }
 
-instead?
+Kishon, iATU only makes sense in The Root Complex (host), so it should be i=
+nside
+the pcie-designware-host.
 
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, es8328_id);
-> 
->  static const struct of_device_id es8328_of_match[] = {
->  	{ .compatible = "everest,es8328", },
-> +	{ .compatible = "everest,es8388", },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, es8328_of_match);
+>  =
+
+> -static struct irq_chip dw_msi_irq_chip =3D {
+> -	.name =3D "PCI-MSI",
+> -	.irq_enable =3D pci_msi_unmask_irq,
+> -	.irq_disable =3D pci_msi_mask_irq,
+> -	.irq_mask =3D pci_msi_mask_irq,
+> -	.irq_unmask =3D pci_msi_unmask_irq,
+> -};
+> -
+
+(snip...)
+
+> -
+> -static const struct irq_domain_ops msi_domain_ops =3D {
+> -	.map =3D dw_pcie_msi_map,
+> -};
+> -
+>  static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+> @@ -454,303 +192,11 @@ static u8 dw_pcie_iatu_unroll_enabled(struct dw_pc=
+ie *pci)
+>  	return 0;
+>  }
+
+Kishon, iATU only makes sense in The Root Complex (host), so it should be i=
+nside
+the pcie-designware-host.
+
+(snip...)
+
+> diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-des=
+ignware.h
+> index 491fbe3..808d17b 100644
+> --- a/drivers/pci/dwc/pcie-designware.h
+> +++ b/drivers/pci/dwc/pcie-designware.h
+> @@ -14,6 +14,10 @@
+>  #ifndef _PCIE_DESIGNWARE_H
+>  #define _PCIE_DESIGNWARE_H
+>  =
+
+> +#include <linux/irq.h>
+> +#include <linux/msi.h>
+> +#include <linux/pci.h>
+> +
+>  /* Parameters for the waiting for link up routine */
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+> @@ -167,4 +171,8 @@ struct dw_pcie {
+>  void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val);
+>  int dw_pcie_link_up(struct dw_pcie *pci);
+>  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+> +			       int type, u64 cpu_addr, u64 pci_addr,
+> +			       u32 size);
+> +void dw_pcie_setup(struct dw_pcie *pci);
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kishon, iATU only makes sense in The Root Complex (host), so it should be i=
+nside
+the pcie-designware-host as static.
+
+>  #endif /* _PCIE_DESIGNWARE_H */
+> =
+
+
+Thanks,
+Joao
