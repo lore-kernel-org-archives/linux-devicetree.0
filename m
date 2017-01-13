@@ -1,206 +1,106 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] mmc: pwrseq: add support for Marvell SD8787 chip
-Date: Fri, 13 Jan 2017 15:16:25 +0800
-Message-ID: <cd669d08-0db4-57e4-478b-2b200ccef6f1@rock-chips.com>
-References: <20170113052937.12538-1-matt@ranostay.consulting>
- <20170113052937.12538-3-matt@ranostay.consulting>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
+Date: Fri, 13 Jan 2017 08:22:35 +0100
+Message-ID: <20170113072235.GA12825@kroah.com>
+References: <1480458434-22523-1-git-send-email-fancer.lancer@gmail.com>
+ <1481638971-6247-1-git-send-email-fancer.lancer@gmail.com>
+ <1481638971-6247-2-git-send-email-fancer.lancer@gmail.com>
+ <20170111082119.GA26387@kroah.com>
+ <20170112225417.GA21220@mobilestation>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113052937.12538-3-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170112225417.GA21220@mobilestation>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017/1/13 13:29, Matt Ranostay wrote:
-> Allow power sequencing for the Marvell SD8787 Wifi/BT chip.
-> This can be abstracted to other chipsets if needed in the future.
->
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> ---
->  drivers/mmc/core/Kconfig         |  10 ++++
->  drivers/mmc/core/Makefile        |   1 +
->  drivers/mmc/core/pwrseq_sd8787.c | 117 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 128 insertions(+)
->  create mode 100644 drivers/mmc/core/pwrseq_sd8787.c
->
-> diff --git a/drivers/mmc/core/Kconfig b/drivers/mmc/core/Kconfig
-> index cdfa8520a4b1..fc1ecdaaa9ca 100644
-> --- a/drivers/mmc/core/Kconfig
-> +++ b/drivers/mmc/core/Kconfig
-> @@ -12,6 +12,16 @@ config PWRSEQ_EMMC
->  	  This driver can also be built as a module. If so, the module
->  	  will be called pwrseq_emmc.
->
-> +config PWRSEQ_SD8787
-> +	tristate "HW reset support for SD8787 BT + Wifi module"
-> +	depends on OF && (MWIFIEX || BT_MRVL_SDIO)
-> +	help
-> +	  This selects hardware reset support for the SD8787 BT + Wifi
-> +	  module. By default this option is set to n.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called pwrseq_sd8787.
-> +
+On Fri, Jan 13, 2017 at 01:54:17AM +0300, Serge Semin wrote:
+> On Wed, Jan 11, 2017 at 09:21:19AM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > +	/* Return failure if root directory doesn't exist */
+> > > +	if (!csr_dbgdir) {
+> > > +		dev_dbg(dev, "No Debugfs root directory");
+> > > +		return -EINVAL;
+> > > +	}
+> > 
+> > If debugfs is not enabled, don't error out, just keep going, it should
+> > never stop kernel code from running properly.
+> > 
+> > Also, this test isn't really doing what you think it is doing...
+> > 
+> 
+> I see, it must be replaced with IS_ERR_OR_NULL() test.
 
-I don't like this way, as we have a chance to list lots
-configure options here. wifi A,B,C,D...Z, all of them need a
-new section here if needed?
+No!  That's a pain, when the debugfs interface was created its goal was
+to make it _easy_ to use, not hard.  IS_ERR_OR_NULL() is hard, and
+messy, don't do that.
 
-Instead, could you just extent pwrseq_simple.c and add you
-.compatible = "mmc-pwrseq-sd8787", "mmc-pwrseq-simple"?
+> But I don't think,
+> it would be good to get rid of dev_dbg() completely here. In case if
+> debugging is enabled, user would understand why csr-node isn't created within
+> DebugFS directory. I don't see the reasoning why one shouldn't know a source
+> of possible problems.
+> (See the next comment as continue of the discussion)
 
+Why would a user care about debugfs?
 
->  config PWRSEQ_SIMPLE
->  	tristate "Simple HW reset support for MMC"
->  	default y
-> diff --git a/drivers/mmc/core/Makefile b/drivers/mmc/core/Makefile
-> index b2a257dc644f..0f81464fa824 100644
-> --- a/drivers/mmc/core/Makefile
-> +++ b/drivers/mmc/core/Makefile
-> @@ -10,6 +10,7 @@ mmc_core-y			:= core.o bus.o host.o \
->  				   quirks.o slot-gpio.o
->  mmc_core-$(CONFIG_OF)		+= pwrseq.o
->  obj-$(CONFIG_PWRSEQ_SIMPLE)	+= pwrseq_simple.o
-> +obj-$(CONFIG_PWRSEQ_SD8787)	+= pwrseq_sd8787.o
->  obj-$(CONFIG_PWRSEQ_EMMC)	+= pwrseq_emmc.o
->  mmc_core-$(CONFIG_DEBUG_FS)	+= debugfs.o
->  obj-$(CONFIG_MMC_BLOCK)		+= mmc_block.o
-> diff --git a/drivers/mmc/core/pwrseq_sd8787.c b/drivers/mmc/core/pwrseq_sd8787.c
-> new file mode 100644
-> index 000000000000..f4080fe6439e
-> --- /dev/null
-> +++ b/drivers/mmc/core/pwrseq_sd8787.c
-> @@ -0,0 +1,117 @@
-> +/*
-> + * pwrseq_sd8787.c - power sequence support for Marvell SD8787 BT + Wifi chip
-> + *
-> + * Copyright (C) 2016 Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> + *
-> + * Based on the original work pwrseq_simple.c
-> + *  Copyright (C) 2014 Linaro Ltd
-> + *  Author: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +
-> +#include <linux/mmc/host.h>
-> +
-> +#include "pwrseq.h"
-> +
-> +struct mmc_pwrseq_sd8787 {
-> +	struct mmc_pwrseq pwrseq;
-> +	struct gpio_desc *reset_gpio;
-> +	struct gpio_desc *pwrdn_gpio;
-> +};
-> +
-> +#define to_pwrseq_sd8787(p) container_of(p, struct mmc_pwrseq_sd8787, pwrseq)
-> +
-> +static void mmc_pwrseq_sd8787_pre_power_on(struct mmc_host *host)
-> +{
-> +	struct mmc_pwrseq_sd8787 *pwrseq = to_pwrseq_sd8787(host->pwrseq);
-> +
-> +	gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
-> +
-> +	msleep(300);
-> +	gpiod_set_value_cansleep(pwrseq->pwrdn_gpio, 1);
-> +}
-> +
-> +static void mmc_pwrseq_sd8787_power_off(struct mmc_host *host)
-> +{
-> +	struct mmc_pwrseq_sd8787 *pwrseq = to_pwrseq_sd8787(host->pwrseq);
-> +
-> +	gpiod_set_value_cansleep(pwrseq->pwrdn_gpio, 0);
-> +	gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
-> +}
-> +
-> +static const struct mmc_pwrseq_ops mmc_pwrseq_sd8787_ops = {
-> +	.pre_power_on = mmc_pwrseq_sd8787_pre_power_on,
-> +	.power_off = mmc_pwrseq_sd8787_power_off,
-> +};
-> +
-> +static const struct of_device_id mmc_pwrseq_sd8787_of_match[] = {
-> +	{ .compatible = "mmc-pwrseq-sd8787",},
-> +	{/* sentinel */},
-> +};
-> +MODULE_DEVICE_TABLE(of, mmc_pwrseq_sd8787_of_match);
-> +
-> +static int mmc_pwrseq_sd8787_probe(struct platform_device *pdev)
-> +{
-> +	struct mmc_pwrseq_sd8787 *pwrseq;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	pwrseq = devm_kzalloc(dev, sizeof(*pwrseq), GFP_KERNEL);
-> +	if (!pwrseq)
-> +		return -ENOMEM;
-> +
-> +	pwrseq->pwrdn_gpio = devm_gpiod_get(dev, "pwrdn", GPIOD_OUT_LOW);
-> +	if (IS_ERR(pwrseq->pwrdn_gpio))
-> +		return PTR_ERR(pwrseq->pwrdn_gpio);
-> +
-> +	pwrseq->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(pwrseq->reset_gpio))
-> +		return PTR_ERR(pwrseq->reset_gpio);
-> +
-> +	pwrseq->pwrseq.dev = dev;
-> +	pwrseq->pwrseq.ops = &mmc_pwrseq_sd8787_ops;
-> +	pwrseq->pwrseq.owner = THIS_MODULE;
-> +	platform_set_drvdata(pdev, pwrseq);
-> +
-> +	return mmc_pwrseq_register(&pwrseq->pwrseq);
-> +}
-> +
-> +static int mmc_pwrseq_sd8787_remove(struct platform_device *pdev)
-> +{
-> +	struct mmc_pwrseq_sd8787 *pwrseq = platform_get_drvdata(pdev);
-> +
-> +	mmc_pwrseq_unregister(&pwrseq->pwrseq);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver mmc_pwrseq_sd8787_driver = {
-> +	.probe = mmc_pwrseq_sd8787_probe,
-> +	.remove = mmc_pwrseq_sd8787_remove,
-> +	.driver = {
-> +		.name = "pwrseq_sd8787",
-> +		.of_match_table = mmc_pwrseq_sd8787_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(mmc_pwrseq_sd8787_driver);
-> +MODULE_LICENSE("GPL v2");
->
+> > > +	/* Create Debugfs directory for CSR file */
+> > > +	snprintf(fname, CSRNAME_LEN, "%d-%04hx", cli->adapter->nr, cli->addr);
+> > > +	pdev->csr_dir = debugfs_create_dir(fname, csr_dbgdir);
+> > > +	if (IS_ERR_OR_NULL(pdev->csr_dir)) {
+> > > +		dev_err(dev, "Failed to create CSR node directory");
+> > > +		return -EINVAL;
+> > 
+> > Again, don't do this, you really don't care if debugfs worked or not.
+> > 
+> 
+> Actually the driver doesn't stop the kernel code from running, if it finds out
+> any problem with DebugFS CSR-node creation. The function just logs the error
+> and return error status. Take a look the place the method is called:
+> 1489        /* Create debugfs files */
+> 1490        (void)idt_create_dbgfs_files(pdev);
+> The initialization code doesn't check the return value at all, so the driver
+> will proceed with further code.
+> Why did I make the function with return value? Because it's a good style to
+> always return a status of function code execution if it may fail, but only
+> caller will decide whether to check the return value or not.
 
+There is only one type of error that a debugfs call can return, and that
+is if debugfs is not enabled in the build.  That's it, you don't need to
+care about any of that.
 
--- 
-Best Regards
-Shawn Lin
+> Regarding the error printing. In case if the code gets to this check, one can
+> be sure the DebugFS works properly, so in case if the driver failed to create
+> the corresponding sub-directory or node, it is really error to have any failure
+> at this point, and a user should be notified. But still the driver won't stop
+> functioning, since the caller doesn't check the return value.
+> 
+> Hopefully you'll understand my point.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please understand mine, debugfs is supposed to be easy to use, you are
+not testing things properly here, and when you are, it doesn't matter.
+Just call the functions, save the return results if you need to (for
+dentries and the like), and move on.  No error handling needed AT ALL!
+
+Yes, it feels "odd" for kernel code, but remember, this is only for
+debugging.  Your code should not have any different codepaths for if the
+debugging logic worked or not.  It doesn't care at all.  So please, make
+it simple.
+
+> > > +	dev_dbg(dev, "Debugfs-files created");
+> > 
+> > You do know about ftrace, right?  Please remove all of these
+> > "trace-like" debugging lines, they aren't needed for anyone.
+> > 
+> 
+> Ok, I'll remove all these prints, even though I do find these prints being
+> handy to have initialization process printed on debugging stage.
+
+Then use ftrace, that is what it is there for, don't roll your own
+driver-specific-functionality please.
+
+thanks,
+
+greg k-h
