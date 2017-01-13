@@ -1,81 +1,87 @@
-From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: RE: [PATCHv5 3/8] rtc: add STM32 RTC driver
-Date: Fri, 13 Jan 2017 08:47:37 +0000
-Message-ID: <be3a19059b2e4e0a9bfb8d0c3292dac4@SFHDAG3NODE2.st.com>
-References: <1484142403-11556-1-git-send-email-amelie.delaunay@st.com>
- <20170113003840.u6uxt7u4qsit3oqt@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v2 6/6] arm: dts: mt2701: Add thermal device node.
+Date: Fri, 13 Jan 2017 16:42:58 +0800
+Message-ID: <1484296978-18572-7-git-send-email-erin.lo@mediatek.com>
+References: <1484296978-18572-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC2IT2GSZUDRBNVI4LBQKGQE3NR2EGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170113003840.u6uxt7u4qsit3oqt-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484296978-18572-1-git-send-email-erin.lo@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Dawei Chien <dawei.chien@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+From: Dawei Chien <dawei.chien@mediatek.com>
 
-> This didn't apply cleanly, please check rtc-next. I don't think I made any mistake
-> as the issue was only in Kconfig. You probably based your patches on 4.9
-> instead of 4.10-rc1.
-Sorry for this inconvenience. You're right, my patches were based on 4.9 to be tested on stm32f4 family.
-No mistake found in your conflict resolution in Kconfig.
+Add thermal controller device nodes for MT2701.
 
-I'm going to send a new patch to fix warnings introduced by my driver on rtc-next.
+Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+---
+ arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-Regards,
-Amelie
-
-> -----Original Message-----
-> From: Alexandre Belloni [mailto:alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org]
-> Sent: vendredi 13 janvier 2017 01:39
-> To: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>; Rob Herring
-> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Maxime
-> Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Alexandre TORGUE
-> <alexandre.torgue-qxv4g6HH51o@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; rtc-
-> linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Gabriel FERNANDEZ
-> <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-> Subject: Re: [PATCHv5 3/8] rtc: add STM32 RTC driver
-> 
-> On 11/01/2017 at 14:46:43 +0100, Amelie Delaunay wrote :
-> > This patch adds support for the STM32 RTC.
-> >
-> > Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-> > ---
-> >  drivers/rtc/Kconfig     |  11 +
-> >  drivers/rtc/Makefile    |   1 +
-> >  drivers/rtc/rtc-stm32.c | 727
-> > ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 739 insertions(+)
-> >  create mode 100644 drivers/rtc/rtc-stm32.c
-> >
-> 
-> This didn't apply cleanly, please check rtc-next. I don't think I made any mistake
-> as the issue was only in Kconfig. You probably based your patches on 4.9
-> instead of 4.10-rc1.
-> 
-> 
-> --
-> Alexandre Belloni, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 3847f70..c43d5f8 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -89,6 +89,36 @@
+ 		clock-output-names = "rtc32k";
+ 	};
+ 
++	thermal-zones {
++		cpu_thermal: cpu_thermal {
++			polling-delay-passive = <1000>; /* milliseconds */
++			polling-delay = <1000>; /* milliseconds */
++
++			thermal-sensors = <&thermal 0>;
++			sustainable-power = <1000>;
++
++			trips {
++				threshold: trip-point@0 {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				target: trip-point@1 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu_crit: cpu_crit@0 {
++					temperature = <115000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupt-parent = <&gic>;
+@@ -270,6 +300,19 @@
+ 		status = "disabled";
+ 	};
+ 
++	thermal: thermal@1100b000 {
++		#thermal-sensor-cells = <0>;
++		compatible = "mediatek,mt2701-thermal";
++		reg = <0 0x1100b000 0 0x1000>;
++		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
++		clock-names = "therm", "auxadc";
++		resets = <&pericfg 0x10>;
++		reset-names = "therm";
++		mediatek,auxadc = <&auxadc>;
++		mediatek,apmixedsys = <&apmixedsys>;
++	};
++
+ 	nandc: nfi@1100d000 {
+ 		compatible = "mediatek,mt2701-nfc";
+ 		reg = <0 0x1100d000 0 0x1000>;
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1.9.1
