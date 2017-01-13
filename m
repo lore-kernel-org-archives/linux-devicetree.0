@@ -1,113 +1,102 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 1/7] devicetree: power: add battery state machine
- documentation
-Date: Fri, 13 Jan 2017 19:33:53 +0100
-Message-ID: <20170113183353.u3ug46gi66kaivjd@earth>
-References: <20170111062003.10110-1-matt@ranostay.consulting>
- <20170111062003.10110-2-matt@ranostay.consulting>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] mtd: spi-nor: don't claim mr25h40 to be JEDEC compatible
+Date: Fri, 13 Jan 2017 19:42:34 +0100
+Message-ID: <CAMuHMdXJi9hJrY0ZV37gejp2XC6fkuLF7i7BqX4CUYTB7j_q1A@mail.gmail.com>
+References: <20170113093509.25737-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hthd7sbsaxsxgu6i"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170111062003.10110-2-matt@ranostay.consulting>
-Sender: linux-pm-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170113093509.25737-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Uwe,
 
---hthd7sbsaxsxgu6i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+CC devicetree
 
-Hi,
+On Fri, Jan 13, 2017 at 10:35 AM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Commit edd0c8f4932d ("mtd: spi-nor: Add support for mr25h40") made it
+> possible to use a mr25h40 by writing
+>
+>         compatible =3D "mr25h40", "jedec,spi-nor";
 
-On Tue, Jan 10, 2017 at 10:19:57PM -0800, Matt Ranostay wrote:
-> Documentation on battery properties that can be defined for
-> fine tuning fuel gauge state machines.
->=20
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+No vendor prefix?
+
+>
+> in a device tree. This chip however isn't JEDEC compatible however, so
+> change the chip string and add a compatible entry to bless
+>
+>         compatible =3D "mr25h40-nonjedec";
+>
+> as the right way.
+
+This whole "-nonjedec" business looks wrong to me.
+If the device is called "mr25h40", its compatible value should be
+"everspin,mr25h40". Adding some (in)compatibility indicator violates the
+spirit of compatible values, IMHO.
+
+> Fixes: edd0c8f4932d ("mtd: spi-nor: Add support for mr25h40")
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/power/supply/battery.txt     | 20 ++++++++++++++=
-++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/batter=
-y.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b=
-/Documentation/devicetree/bindings/power/supply/battery.txt
-> new file mode 100644
-> index 000000000000..a6ca761e0a29
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -0,0 +1,20 @@
-> +Battery State Machine Support
+>  drivers/mtd/devices/m25p80.c  | 1 +
+>  drivers/mtd/spi-nor/spi-nor.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+> index 9cf7fcd28034..bd0c335692d2 100644
+> --- a/drivers/mtd/devices/m25p80.c
+> +++ b/drivers/mtd/devices/m25p80.c
+> @@ -304,6 +304,7 @@ static const struct spi_device_id m25p_ids[] =3D {
+>         {"m25p05-nonjedec"},    {"m25p10-nonjedec"},    {"m25p20-nonjedec=
+"},
+>         {"m25p40-nonjedec"},    {"m25p80-nonjedec"},    {"m25p16-nonjedec=
+"},
+>         {"m25p32-nonjedec"},    {"m25p64-nonjedec"},    {"m25p128-nonjede=
+c"},
+> +       {"mr25h40-nonjedec"},
+>
+>         { },
+>  };
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.=
+c
+> index bbdbbd763c9d..3a8042fe44f0 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -825,7 +825,7 @@ static const struct flash_info spi_nor_ids[] =3D {
+>         /* Everspin */
+>         { "mr25h256", CAT25_INFO( 32 * 1024, 1, 256, 2, SPI_NOR_NO_ERASE =
+| SPI_NOR_NO_FR) },
+>         { "mr25h10",  CAT25_INFO(128 * 1024, 1, 256, 3, SPI_NOR_NO_ERASE =
+| SPI_NOR_NO_FR) },
+> -       { "mr25h40",  CAT25_INFO(512 * 1024, 1, 256, 3, SPI_NOR_NO_ERASE =
+| SPI_NOR_NO_FR) },
+> +       { "mr25h40-nonjedec",  CAT25_INFO(512 * 1024, 1, 256, 3, SPI_NOR_=
+NO_ERASE | SPI_NOR_NO_FR) },
+>
+>         /* Fujitsu */
+>         { "mb85rs1mt", INFO(0x047f27, 0, 128 * 1024, 1, SPI_NOR_NO_ERASE)=
+ },
+> --
+> 2.11.0
 
-Let's also add a mandatory compatible string. This binding
-is only relevant for dumb batteries, since other ones can
-self-identify. I suggest
+Gr{oetje,eeting}s,
 
-compatible =3D "fixed-battery"
+                        Geert
 
-> +Optional Properties
-> + - nominal-microvolt: dead battery voltage in microvolts
-> + - design-microwatt-hours: battery design mWh in microwatts
-> + - design-microamp-hours: battery design mAh in microamps
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-I think we should mandate the property name of the phandle in the
-generic binding instead of each potential fuel-gauge/charger.
-Maybe something like the following paragraph:
-
-Batteries are supposed to be referenced by chargers and/or
-fuel-gauges using a phandle. The phandle's property should
-be named "monitored-battery".
-
-> +Example:
-> +
-> +	bat: battery@0 {
-> +		nominal-microvolt =3D <3700000>;
-> +		design-microwatt-hours =3D <5290000>;
-> +		design-microamp-hours =3D <1430000>;
-> +	};
-> +
-> +	charger: charger@0 {
-> +		...
-> +		monitored-battery =3D <&bat>;
-> +		...
-> +	};
-
-Let's also add a fuel-gauge to the example to avoid any confusion
-between fuel-gauge and battery.
-
-fuel_gauge: fuel-gauge {
-    ...
-    monitored-battery =3D <&bat>;
-    ...
-};
-
--- Sebastian
-
---hthd7sbsaxsxgu6i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlh5HY4ACgkQ2O7X88g7
-+prnyRAAnMsO/j9bMr1CN0fkniT+G6/Qd+zu4b68K+D6rkO3jrZB55Dh8EHLSgqH
-MNs7yN2SWvZPgqtaou2e0FNK2aZ12tzJT1VJf2LIhzigCuKTVUHsosQmD6ijLAY0
-Es5wQzKG2dE/BgZBbKdxRW5g/Av7EBd0mjFpn5v4Bd311eWU1N5tbRstIAZXR9nq
-++bURfHuQzAlLDqU/XUg1MVdk8b8wZE97Zj9R2nglzuvUpVUbm+mwyEufDhJFQNj
-RMxzZkkEPvDJ9hYBtNGxKpiyVwPrOm6DMh9e4miR5d23brqoSxtcuIkVIYHGxYzC
-UXinDzZ3rJTvAIp163+TWFSCHNL0Su0nyO0tYAKK58hxVNc2Z3fCQeqAXqq4uA8b
-MNqEbAzxsK3qwPmnAREvgzq2UKugAKpQz6SOwOPXhfaYw5S6s3Bg1EPUreLYq8PQ
-YX1Tyxqj/OXhRsFgisfykSib4oW8UjSkZY3PCq4glwbhZhRCpnpG+SlFI31mJQc5
-4jhXxYQWH0Oj5GdSZm6VgGZCHbqX1YqGGo80LcAFYRfhxTnslNo22fBPO7+mw77Z
-xKrre40JUq6MGEuhemMgy3lZxi7wuVWnH7q5DaNAXj6KY68zuw9ifuI9YRvnpI9k
-BJwxwYQpzcRNW8ZMMeq67hMi7X5rZ2krecmrZ+6TLqVkDJATIEg=
-=+9Go
------END PGP SIGNATURE-----
-
---hthd7sbsaxsxgu6i--
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
