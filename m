@@ -1,90 +1,54 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Fri, 13 Jan 2017 15:17:47 +0100
-Message-ID: <20170113151747.6bc85245@bbrezillon>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
-        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
+From: Christopher Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 18/18] insert build break
+Date: Fri, 13 Jan 2017 08:22:12 -0600
+Message-ID: <CAA0LjjUw7ocuvmQ+gt=Y9Y6=BOV_MSgX_i0TqO3OFXanyxHyxg@mail.gmail.com>
+References: <1484260655-80477-1-git-send-email-christopher.lee.bostic@gmail.com>
+ <20170113071545.GB12441@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guochun Mao <guochun.mao@mediatek.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170113071545.GB12441-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Open List OF Flattened dev tree bindings <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Moderated list: ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Jan 2017 15:13:29 +0800
-Guochun Mao <guochun.mao@mediatek.com> wrote:
+On Fri, Jan 13, 2017 at 1:15 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Thu, Jan 12, 2017 at 04:37:35PM -0600, christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+>>
+>> Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+>
+> I can not accept patches that have no changelog text, and this one is
+> very odd:
+>
+>> ---
+>>  drivers/fsi/fsi-core.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+>> index 28b82d1..db09836 100644
+>> --- a/drivers/fsi/fsi-core.c
+>> +++ b/drivers/fsi/fsi-core.c
+>> @@ -42,6 +42,7 @@
+>>
+>>  static DEFINE_IDA(master_ida);
+>>
+>> +
+>
+> Huh?
+>
+> Did something go wrong with your scripts?
 
-> Add Mediatek nor flash node.
-> 
-> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
->  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
->  2 files changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> index 082ca88..85e5ae8 100644
-> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> @@ -24,6 +24,31 @@
->  	};
->  };
->  
-> +&nor_flash {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&nor_pins_default>;
-> +	status = "okay";
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +	};
-> +};
-> +
-> +&pio {
-> +	nor_pins_default: nor {
-> +		pins1 {
-> +			pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
-> +				 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
-> +				 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
-> +				 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
-> +				 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
-> +				 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
-> +			drive-strength = <MTK_DRIVE_4mA>;
-> +			bias-pull-up;
-> +		};
-> +	};
-> +};
-> +
->  &uart0 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index bdf8954..1eefce4 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -227,6 +227,18 @@
->  		status = "disabled";
->  	};
->  
-> +	nor_flash: spi@11014000 {
-> +		compatible = "mediatek,mt2701-nor",
-> +			     "mediatek,mt8173-nor";
+Yes, had an error when sending out... Will correct this when I send
+out version 3 today.
 
-Why define both here? Is "mediatek,mt8173-nor" really providing a
-subset of the features supported by "mediatek,mt2701-nor"?
+Sorry for the confusion.
+-Chris
 
-> +		reg = <0 0x11014000 0 0xe0>;
-> +		clocks = <&pericfg CLK_PERI_FLASH>,
-> +			 <&topckgen CLK_TOP_FLASH_SEL>;
-> +		clock-names = "spi", "sf";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
->  	mmsys: syscon@14000000 {
->  		compatible = "mediatek,mt2701-mmsys", "syscon";
->  		reg = <0 0x14000000 0 0x1000>;
+>
+> greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
