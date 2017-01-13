@@ -1,112 +1,95 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 04/12] driver: clk: imx: Add clock driver for imx6sll
-Date: Fri, 13 Jan 2017 03:04:37 +0000
-Message-ID: <AM3PR04MB53027B627AE8CEC6D7D0D1B87780@AM3PR04MB530.eurprd04.prod.outlook.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-5-git-send-email-ping.bai@nxp.com>
- <20170110003753.GM17126@codeaurora.org>
- <AM3PR04MB5307CB38AA904535AF8D80D87670@AM3PR04MB530.eurprd04.prod.outlook.com>
- <20170112220536.GP17126@codeaurora.org>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
+Date: Thu, 12 Jan 2017 19:12:51 -0800
+Message-ID: <CAJ_EiSSbPnKXyXjnUhWCu9kRQX45-uePcV_3VrsZtbHcwdfV4A@mail.gmail.com>
+References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
+ <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
+ <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
+ <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting>
+ <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
+ <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
+ <20161209180930.nsy2ys66q2thbxpx@rob-hp-laptop> <CAPDyKFp2L7x=dV6O5XrA53-OOXE0sf+P3tNH93XGyzNheX9vjQ@mail.gmail.com>
+ <CAJ_EiST_kSDn=ypnnZJJJ-wmB7Avp+MT7uK00H+aDhQGc4Yddg@mail.gmail.com>
+ <CAJ_EiSRAQefYj+B3AKLb1EWXQUGccV=Z4op0T5sAdo3-vDVOhg@mail.gmail.com>
+ <CACRpkdad7JXzxYfuB_XYdo2vuZmEt5iWgq79Va5cWwTaJc6Y5Q@mail.gmail.com>
+ <CAJ_EiSQYz2aEGiCv2npxmby0nHwmJJyR_jzY5wJOK98zp6Bvzg@mail.gmail.com>
+ <CAPDyKFp5j5ZqJkavCSYwWQ7nKtjOqCTv=ubhjYRsSEJUw07e3Q@mail.gmail.com>
+ <CAJ_EiSQaE4FcLdf_8t8=6cNCZ+nAWhqqANKbfEp7VW02=Kj-RA@mail.gmail.com> <CAPDyKFpm_B0aSQ2sY6yz9eYGzp1sokLVt0uk5K-9UkU=gYOOEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170112220536.GP17126@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFpm_B0aSQ2sY6yz9eYGzp1sokLVt0uk5K-9UkU=gYOOEw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Breck <liam@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v2 04/12] driver: clk: imx: Add clock driver for imx6sll
-> 
-> > > > +
-> > > > +static const char *pll_bypass_src_sels[] = { "osc", "dummy", };
-> > >
-> > > All these should be const char * const unless something is wrong.
-> >
-> > If changed to 'const char * const', it vill has argument type mismatch
-> > error, as imx_clk_* wrapper function has argument type 'const char *'.
-> 
-> Hmm that's unfortunate.
-> 
-> >
-> > >
-> > > > +
-> > > > +	for (i = 0; i < ARRAY_SIZE(clks_init_on); i++)
-> > > > +		clk_prepare_enable(clks[clks_init_on[i]]);
-> > >
-> > > Critical clocks?
-> >
-> > Yes, these clocks must be always on.
-> >
-> > >
-> > > > +
-> > > > +	if (IS_ENABLED(CONFIG_USB_MXS_PHY)) {
-> > > > +		clk_prepare_enable(clks[IMX6SLL_CLK_USBPHY1_GATE]);
-> > > > +		clk_prepare_enable(clks[IMX6SLL_CLK_USBPHY2_GATE]);
-> > >
-> > > The phy driver can't enable these?
-> >
-> > The reason why we enable these two clks here is in below commit commit
-> > a5120e89e7e187a91852896f586876c7a2030804
-> > Author: Peter Chen <peter.chen@freescale.com>
-> > Date:   Fri Jan 18 10:38:05 2013 +0800
-> >       ARM i.MX6: change mxs usbphy clock usage
-> >
-> 
-> So can we mark these clks with CLK_IS_CRITICAL flag then instead?
-> Or are they disabled out of the bootloader?
-> 
+On Thu, Jan 12, 2017 at 7:57 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 12 January 2017 at 05:43, Matt Ranostay <matt@ranostay.consulting> wrote:
+>> On Wed, Jan 11, 2017 at 2:55 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>> On 9 January 2017 at 05:53, Matt Ranostay <matt@ranostay.consulting> wrote:
+>>>> On Fri, Dec 30, 2016 at 12:05 AM, Linus Walleij
+>>>> <linus.walleij@linaro.org> wrote:
+>>>>> On Mon, Dec 19, 2016 at 1:01 AM, Matt Ranostay <matt@ranostay.consulting> wrote:
+>>>>>
+>>>>>> * SD8787 has a "powerdown" line, and CW1200 has a "powerup" line.. I
+>>>>>> know this is a simple logic inversion.
+>>>>>
+>>>>> If this is a GPIO line, the GPIO subsystem can flag a line for
+>>>>> inverted logic. GPIO_ACTIVE_LOW from device tree for example.
+>>>>
+>>>> Slight ping on Ulf on this thread :).
+>>>
+>>> Thanks, sorry for the delay!
+>>>
+>>>>
+>>>> I do understand the inverted logic flag but that doesn't help if there
+>>>> are different logic states between various chipsets.
+>>>
+>>> For cw1200 (I looked at code from an old ST-Ericsson vendor tree), the
+>>> sequence is as follows:
+>>>
+>>> 1) Enable clock/power to the card/chip.
+>>> 2) Assert GPIO pin. I assume this also can be done before the
+>>> clock/power is enabled.
+>>> 3) Wait some time (~50ms).
+>>> 4) De-assert GPIO pin.
+>>> 5) Wait some time (~20ms)
+>>> 6) Assert GPIO pin.
+>>> 7) Wait some time (~32ms).
+>>>
+>>> At power off, the GPIO pin is de-asserted and of course also the
+>>> clock/power is disabled. Just to make sure we have all the relevant
+>>> logic.
+>>>
+>>> Looking at mmc pwrseq simple, perhaps we can extend this to deal with
+>>> GPIOs that needs to be *toggled*, as this is not just reset GPIOs.
+>>> Then we also need to deal with the delays in-between the toggling.
+>>
+>> Wouldn't we need to have a per chip function for each device
+>> supported? As well document gpios? I suspect we'd need an array of
+>
+> I was hoping to avoid this, but the more I look at it, it seems inevitable.
+>
+>> gpios defined in device tree since different devices will likely have
+>> various numbers of pins to toggle
+>
+> Maybe we can think of a clever way to combine cw1200 with your case?
+> Perhaps a "mmc pwrseq toggle". :-) If not, please go ahead an repost a
+> device specific mmc pwrseq for your case.
 
-Sure, using 'CLK_IS_CRITICAL'  should be ok for clks_init_on clocks.  But for  USBPHY*_GATE, it is
-only enabled when CONIG_USB_MXC_PHY is true.  And another concern is if we need to add CLK_IS_CRITICAL
-flag to clks_init_on clocks, we may need to add new wrapper function to register these critical clock. It is not very good.
+I think the best solution for now. We can merge the two solutions
+latter down the road.
 
- > >
-> > > > +	}
-> > > > +
-> > > > +	/* Lower the AHB clock rate before changing the clock source. */
-> > > > +	clk_set_rate(clks[IMX6SLL_CLK_AHB], 99000000);
-> > > > +
-> > > > +	/* Change periph_pre clock to pll2_bus to adjust AXI rate to 264MHz */
-> > > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH_CLK2_SEL],
-> > > clks[IMX6SLL_CLK_PLL3_USB_OTG]);
-> > > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH],
-> > > clks[IMX6SLL_CLK_PERIPH_CLK2]);
-> > > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH_PRE],
-> > > clks[IMX6SLL_CLK_PLL2_BUS]);
-> > > > +	clk_set_parent(clks[IMX6SLL_CLK_PERIPH],
-> > > > +clks[IMX6SLL_CLK_PERIPH_PRE]);
-> > > > +
-> > > > +	clk_set_rate(clks[IMX6SLL_CLK_AHB], 132000000);
-> > >
-> > > assigned-clocks for rates now? Or perhaps we shouldn't be exposing
-> > > these as clks if they have some sort of complicated rate sequence
-> > > switch that we can't guarantee with the clk_ops we have today.
-> >
-> > These clks will be used by some peripherals, so we need to expose these
-> clocks.
-> > And the above parent and rate swith sequence is not very easy to be
-> > handled in assigned-clocks, So we leave it in this place.
-> >
-> 
-> How do we guarantee that the rate switch doesn't happen later on, requiring
-> this coordinated sequence of clk operations?
-> 
+Thanks,
 
-This clock sequence is used for increasing the AXI and AHB bus clock rate. In normal
-use, it is very rarely that we need to change them again. If we really need to change
-AXI and AHB bus clock later, a similar sequence must be used to do this.
+Matt
 
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux
-> Foundation Collaborative Project
+>
+> I realize this would be a good opportunity for me to work on enabling
+> support for cw1200 on ux500, but as the implementation of the
+> clock/power control also needs to be up-streamed, I am quite far from
+> being done.
+>
+> Kind regards
+> Uffe
