@@ -1,133 +1,62 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: sun8i: add OTG function to Lichee Pi Zero
-Date: Fri, 13 Jan 2017 15:00:13 -0600
-Message-ID: <20170113210013.GA28184@uda0271908>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-5-icenowy@aosc.xyz>
- <20170110202443.GC2479@uda0271908>
- <2733831484164533@web1g.yandex.ru>
- <20170111200811.GA16865@uda0271908>
- <20170111210638.ppdnpzdd2l6x4lyo@lukather>
- <20170112145014.GC16865@uda0271908>
- <20170112173938.5am5njwrbs6p62br@lukather>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 02/24] ARM: dts: imx6qdl: Add compatible, clocks, irqs
+ to MIPI CSI-2 node
+Date: Fri, 13 Jan 2017 14:40:48 -0800
+Message-ID: <45d7d776-6c1d-47aa-a640-e16b549c75d2@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-3-git-send-email-steve_longerbeam@mentor.com>
+ <1484308678.31475.24.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170112173938.5am5njwrbs6p62br@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484308678.31475.24.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 06:39:38PM +0100, Maxime Ripard wrote:
-> Hi Bin,
-> =
 
-> On Thu, Jan 12, 2017 at 08:50:14AM -0600, Bin Liu wrote:
-> > On Wed, Jan 11, 2017 at 10:06:38PM +0100, Maxime Ripard wrote:
-> > > On Wed, Jan 11, 2017 at 02:08:11PM -0600, Bin Liu wrote:
-> > > > On Thu, Jan 12, 2017 at 03:55:33AM +0800, Icenowy Zheng wrote:
-> > > > > =
 
-> > > > > =
+On 01/13/2017 03:57 AM, Philipp Zabel wrote:
+> Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
+>> Add to the MIPI CSI2 receiver node: compatible string, interrupt sources,
+>> clocks.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> ---
+>>   arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+>> index 53e6e63..42926e9 100644
+>> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+>> @@ -1125,7 +1125,14 @@
+>>   			};
+>>   
+>>   			mipi_csi: mipi@021dc000 {
+>> +				compatible = "fsl,imx6-mipi-csi2";
+>>   				reg = <0x021dc000 0x4000>;
+>> +				interrupts = <0 100 0x04>, <0 101 0x04>;
+>> +				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
+>> +					 <&clks IMX6QDL_CLK_VIDEO_27M>,
+>> +					 <&clks IMX6QDL_CLK_EIM_SEL>;
+> I think the latter should be EIM_PODF
 
-> > > > > 11.01.2017, 04:24, "Bin Liu" <b-liu@ti.com>:
-> > > > > > On Tue, Jan 03, 2017 at 11:25:34PM +0800, Icenowy Zheng wrote:
-> > > > > >> =A0Lichee Pi Zero features a USB OTG port.
-> > > > > >>
-> > > > > >> =A0Add support for it.
-> > > > > >>
-> > > > > >> =A0Note: in order to use the Host mode, the board must be powe=
-red via the
-> > > > > >> =A0+5V and GND pins.
-> > > > > >>
-> > > > > >> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> > > > > >> =A0---
-> > > > > >> =A0=A0arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 10 +++++=
-+++++
-> > > > > >> =A0=A01 file changed, 10 insertions(+)
-> > > > > >>
-> > > > > >> =A0diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts =
-b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> > > > > >> =A0index 0099affc6ce3..3d9168cbaeca 100644
-> > > > > >> =A0--- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> > > > > >> =A0+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> > > > > >> =A0@@ -71,3 +71,13 @@
-> > > > > >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pinctrl-names =3D "default";
-> > > > > >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0status =3D "okay";
-> > > > > >> =A0=A0};
-> > > > > >> =A0+
-> > > > > >> =A0+&usb_otg {
-> > > > > >> =A0+ dr_mode =3D "otg";
-> > > > > >
-> > > > > > Why not set this default mode in dtsi instead?
-> > > > > >
-> > > > > > Regards,
-> > > > > > -Bin.
-> > > > > =
+done.
 
-> > > > > There's possibly boards which do not have OTG functions.
-> > > > =
+>
+>> +				clock-names = "dphy", "cfg", "pix";
+> and I'm not sure dphy is the right name for this one. Is that the pll
+> ref input?
 
-> > > > That is board specific.
-> > > =
+I believe this naming came from FSL's mipi csi-2 driver. It is the "hsi_tx"
+clock (presumably for the MIPI HSI controller) whose parents are selected
+by the CDCDR register as PLL3_120M or PLL2_PFD2. I have no clue whether
+this is indeed also used as the clock for the MIPI CSI-2 D-PHY, but 
+according
+to FSL naming convention it might be.
 
-> > > Exactly, and this is why it should be done in the board DT.
-> > =
 
-> > I am just suggesting based on the common practice. If a .dtsi exists for
-> > a family, the .dtsi describes the device and common properties for all
-> > possible boards, and each board .dts adds or overrides its specific
-> > implementation. Kernel has many devices/boards done in this way - define
-> > the default dr_mode in .dtsi.
-> > =
-
-> > In this case, I suggest to set the common dr_mode in .dtsi, then each
-> > board .dts only overrides it if the implementation is different. =
-
-> > =
-
-> > > =
-
-> > > The controller in the Allwinner SoCs do not handle directly the ID pin
-> > > and VBUS, but rather rely on a GPIO to do so.
-> > > =
-
-> > > So boards with OTG will need setup anyway, at least to tell which
-> > > GPIOs are used. There's no point in enforcing a default if it doesn't
-> > > work by default.
-> > =
-
-> > Then define a default which supposes to work for most boards.
-> > =
-
-> > Why I suggest this, is because defining a default dr_mode which works
-> > for most cases in dtsi could prevent a little surprise in MUSB function.
-> > If someone designs a new board but forgets to define dr_mode in the new
-> > board DT, the MUSB driver will default to org mode, which might not be
-> > intended.
-> =
-
-> The point is that there is no sensible default. Some boards don't have
-> an ID pin and no VBUS (peripheral), some don't have an ID pin but VBUS
-> (host), and some have an ID pin but no controllable VBUS, some have an
-> ID pin and a controllable VBUS, but we have no idea which GPIOs are
-> used.
-> =
-
-> There's no way we can have something that works on most cases.
-
-Ok, understood.
-
-Regards,
--Bin.
+Steve
