@@ -1,34 +1,63 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 0/2] Add support rockchip,grf property for RK3399 PMU/GRU
-Date: Fri, 13 Jan 2017 20:10:54 +0100
-Message-ID: <3210111.1N6x2AkRMx@phil>
-References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 03/10] devicetree: bindings: add bindings for ahci-da850
+Date: Fri, 13 Jan 2017 13:25:31 -0600
+Message-ID: <35ff358d-9b17-b2be-38d8-6a51cdddc1a1@lechnology.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-4-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xing Zheng <zhengxing@rock-chips.com>
-Cc: dianders@google.com, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Elaine Zhang <zhangqing@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484311084-31547-4-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 10. Januar 2017, 14:15:28 CET schrieb Xing Zheng:
-> Hi,
->   The structure rockchip_clk_provider needs to refer the GRF regmap
-> in somewhere, if the CRU node has not "rockchip,grf" property,
-> calling syscon_regmap_lookup_by_phandle will return an invalid GRF
-> regmap, and the MUXGRF type clock will be not supported.
-> 
-> Therefore, we need to add them.
-> 
-> Thanks.
+On 01/13/2017 06:37 AM, Bartosz Golaszewski wrote:
+> Add DT bindings for the TI DA850 AHCI SATA controller.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/ata/ahci-da850.txt          | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
+>
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+> new file mode 100644
+> index 0000000..d07c241
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+> @@ -0,0 +1,21 @@
+> +Device tree binding for the TI DA850 AHCI SATA Controller
+> +---------------------------------------------------------
+> +
+> +Required properties:
+> +  - compatible: must be "ti,da850-ahci"
+> +  - reg: physical base addresses and sizes of the controller's register areas
+> +  - interrupts: interrupt specifier (refer to the interrupt binding)
+> +
+> +Optional properties:
+> +  - clocks: clock specifier (refer to the common clock binding)
+> +  - da850,clk_multiplier: the multiplier for the reference clock needed
+> +                          for 1.5GHz PLL output
 
-applied both for 4.11
+A clock multiplier property seems redundant if you are specifying a 
+clock. It should be possible to get the rate from the clock to determine 
+which multiplier is needed.
 
-binding-change is in my clock-branch (so that dt-binding doc changes stay 
-together) and the dts change is of course in the dts64 branch.
+> +
+> +Example:
+> +
+> +	sata: ahci@0x218000 {
+> +		compatible = "ti,da850-ahci";
+> +		reg = <0x218000 0x2000>, <0x22c018 0x4>;
+> +		interrupts = <67>;
+> +		da850,clk_multiplier = <7>;
+> +	};
+>
 
-
-Thanks
-Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
