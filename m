@@ -1,48 +1,116 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 5/5] fbdev/ssd1307fb: clear screen in probe
-Date: Fri, 13 Jan 2017 12:35:49 +0200
-Message-ID: <ac6aa17b8cff892f15a726cdd17487e42dc7ad66.1484303628.git.jsarha@ti.com>
-References: <cover.1484303628.git.jsarha@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Fri, 13 Jan 2017 11:17:56 +0000
+Message-ID: <20170113111756.GC26120@leverpostej>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043734.27535-1-takahiro.akashi@linaro.org>
+ <20170112153944.GB12249@leverpostej>
+ <20170113091339.GK20972@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170113091339.GK20972-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+To: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+On Fri, Jan 13, 2017 at 06:13:49PM +0900, AKASHI Takahiro wrote:
+> On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
+> > On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
+> > > +linux,crashkernel-base
+> > > +linux,crashkernel-size
+> > > +----------------------
+> > > +
+> > > +These properties (currently used on PowerPC and arm64) indicates
+> > > +the base address and the size, respectively, of the reserved memory
+> > > +range for crash dump kernel.
+> > 
+> > From this description, it's not clear to me what the (expected)
+> > consumers of this property are, nor what is expected to provide it.
+> > 
+> > In previous rounds of review, I had assumed that this was used to
+> > describe a preference to the first kernel as to what region of memory
+> > should be used for a subsequent kdump kernel. Looking around, I'm not
+> > sure if I was correct in that assessment.
+> > 
+> > I see that arch/powerpc seems to consume this property to configure
+> > crashk_res, but it also rewrites it based on crashk_res, presumably for
+> > the benefit of userspace. It's not clear to me how on powerpc the kdump
+> > kernel knows its memory range -- is more DT modification done in the
+> > kernel and/or userspace?
+> 
+> I don't believe that powerpc will rewrite the property any way.
+> As far as I know from *the source code*, powerpc kernel retrieves
+> the memory range for crash dump kernel from a kernel command line, i.e.
+> crashkernel=, and then exposes it through DT to userspace (assuming
+> kexec-tools).
 
-SSD1306 does not clear the panel's framebuffer automatically, even if a
-HW reset happens, so we need to do that at probe time before enabling
-the panel.
+The rewriting I describe is in export_crashk_values() in
+arch/powerpc/kernel/machine_kexec.c, where the code deletes existing the
+properties, and adds new ones, to the DT exposed to userspace.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
- drivers/video/fbdev/ssd1307fb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+So I think we're just quibbling over the definition of "rewrite".
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 616a6a3..5c87ae4 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -441,9 +441,8 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
- 	if (ret < 0)
- 		return ret;
- 
--	/* Clear the screen if we could not give reset at probe time */
--	if (!par->reset)
--		ssd1307fb_update_display(par);
-+	/* Clear the screen */
-+	ssd1307fb_update_display(par);
- 
- 	/* Turn on the display */
- 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_DISPLAY_ON);
--- 
-1.9.1
+> > arm64 we should either ensure that /proc/iomem is consistently usable
+> > (and have userspace consistently use it), or we should expose a new file
+> > specifically to expose this information.
+> 
+> The thing that I had in my mind when adding this property is that
+> /proc/iomem would be obsolete in the future, then we should have
+> an alternative in hand.
 
+Ok.
+
+My disagreement is with using the DT as a channel to convey information
+from the kernel to userspace.
+
+I'm more than happy for a new file or other mechanism to express this
+information. For example, we could add
+/sys/kernel/kexec_crash_{base,size} or similar.
+
+
+> > Further, I do not think we need this property. It makes more sense to me
+> > for the preference of a a region to be described to the *first* kernel
+> > using the command line consistently.
+> > 
+> > So I think we should drop this property, and not use it on arm64. Please
+> > document this as powerpc only.
+> 
+> OK, but if we drop the property from arm64 code, we have no reason
+> to leave its description in this patch.
+> (In fact, there are a few more (undocumented) properties that only ppc
+> uses for kdump.)
+
+I'm happy to drop it, then.
+
+> > > +linux,usable-memory-range
+> > > +-------------------------
+> > > +
+> > > +This property (currently used only on arm64) holds the memory range,
+> > > +the base address and the size, which can be used as system ram on
+> > > +the *current* kernel. Note that, if this property is present, any memory
+> > > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > > +memory" in EFI memory map should be ignored.
+> > 
+> > Could you please replace this with:
+> > 
+> >   This property (arm64 only) holds a base address and size, describing a
+> >   limited region in which memory may be considered available for use by
+> >   the kernel. Memory outside of this range is not available for use.
+> >   
+> >   This property describes a limitation: memory within this range is only
+> >   valid when also described through another mechanism that the kernel
+> >   would otherwise use to determine available memory (e.g. memory nodes
+> >   or the EFI memory map). Valid memory may be sparse within the range.
+> 
+> Sure.
+
+Cheers!
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
