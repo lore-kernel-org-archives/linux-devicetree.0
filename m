@@ -1,74 +1,96 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Fri, 13 Jan 2017 10:54:17 +0100
-Message-ID: <2fca7ac2-9a88-19b1-28c5-5192b9c4a2bc@gmail.com>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
- <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: fix GbE tx link
+ breakage
+Date: Fri, 13 Jan 2017 10:55:09 +0100
+Message-ID: <1484301309.8168.7.camel@baylibre.com>
+References: <1482319894-656-1-git-send-email-jbrunet@baylibre.com>
+         <m2r3476atl.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m2r3476atl.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13.01.2017 10:12, Chris Packham wrote:
-> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->
-> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
-> from Marvell.
->
-> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
->
-> Notes:
->     Changes in v2:
->     - include sdio support for the 98DX4251
->     Changes in v3:
->     - None
->     Changes in v4:
->     - Correct some discrepencies between binding and driver.
+On Thu, 2017-01-12 at 16:52 -0800, Kevin Hilman wrote:
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+> 
+> > 
+> > OdroidC2 GbE link breaks under heavy tx transfer. This happens even
+> > if the
+> > MAC does not enable Energy Efficient Ethernet (No Low Power state
+> > Idle on
+> > the Tx path). The problem seems to come from the phy Rx path,
+> > entering the
+> > LPI state.
+> > 
+> > Disabling EEE advertisement on the phy prevent this feature to be
+> > negociated with the link partner and solve the issue.
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> > 
+> > This patch is based on Linus recent master branch [0]
+> > This patch depends on the series [1] which has been merged in this
+> > branch.
+> > 
+> > 0: ba6d973f78eb ("Merge
+> > git://git.kernel.org/pub/scm/linux/kernel/git/davem/net")
+> > 1: http://lkml.kernel.org/r/1480326409-25419-1-git-send-email-jbrun
+> > et@baylibre.com
+> >    Fix integration of eee-broken-modes
+> >    
+> >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 12
+> > ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> > b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> > index 238fbeacd330..d8933e9e9a5a 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> > @@ -147,6 +147,18 @@
+> >  	status = "okay";
+> >  	pinctrl-0 = <&eth_rgmii_pins>;
+> >  	pinctrl-names = "default";
+> > +	phy-handle = <&eth_phy0>;
+> > +
+> > +	mdio {
+> > +		compatible = "snps,dwmac-mdio";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		eth_phy0: ethernet-phy@0 {
+> > +			reg = <0>;
+> > +			eee-broken-1000t;
+> > +		};
+> > +	};
+> 
+> There's already an MDIO node in the meson-gx.dtsi (using the same
+> compatible), shouldn't you just override that and add the new
+> properties?
 
-Well, unfortunately I still see differences between the "gpio" in
-the binding and "gpo" in the driver.
+Hum, yeah in the changes queued from 4.11, right ?
+But not in the latest rc from Linus. Since this is a fix, it was
+actually target for this branch.
 
-Please go back to that list I sent you yesterday and fix them all.
+I guess you'd prefer to avoid merge conflicts when the 4.10 is tagged.
+How do you want to handle this ?
 
-[...]
-> diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-> new file mode 100644
-> index 000000000000..b5bd23992fdf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
-> @@ -0,0 +1,46 @@
-[...]
-> +mpp6          6        gpio, sd0(clk), dev(a2)
+> 
+> What would make things easier is if the names were like Martin used
+> in
+> his reset patch, so that when I merge them together it's not a major
+> conflict.
 
-e.g. this is "gpio" ...
+Sure, no problem. I'll change it to match what has been done by Martin.
 
-[...]
-> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-> index e4ea71a9d985..9601d662c7f5 100644
-> --- a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-> @@ -49,6 +49,10 @@ enum armada_xp_variant {
-[...]
-> +	MPP_MODE(6,
-> +		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
-
-... but here it is "gpo".
-
-Sebastian
+> 
+> Thanks,
+> 
+> Kevin
+> 
+> [1] https://patchwork.kernel.org/patch/9459409/
