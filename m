@@ -1,181 +1,171 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Fri, 13 Jan 2017 13:25:47 -0600
-Message-ID: <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com> <20170104205536.15963-3-d-gerlach@ti.com>
- <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop> <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
- <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com> <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 07/10] sata: ahci_da850: add support for the
+ da850,clk_multiplier DT property
+Date: Fri, 13 Jan 2017 13:29:36 -0600
+Message-ID: <357b3929-cf5c-43ce-753e-03ccd7583f18@lechnology.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-8-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484311084-31547-8-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 9:27 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
-> Rob,
+On 01/13/2017 06:38 AM, Bartosz Golaszewski wrote:
+> Currently the clock multiplier is hardcoded in the driver for
+> the da850-evm board. Make it configurable over DT, but keep the
+> previous value as default in case the property is missing.
 >
-> On 01/11/2017 03:34 PM, Rob Herring wrote:
->>
->> On Mon, Jan 9, 2017 at 11:57 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
->>>
->>> Rob,
->>>
->>> On 01/09/2017 11:50 AM, Rob Herring wrote:
->>>>
->>>>
->>>> On Wed, Jan 04, 2017 at 02:55:34PM -0600, Dave Gerlach wrote:
->>>>>
->>>>>
->>>>> Add a generic power domain implementation, TI SCI PM Domains, that
->>>>> will hook into the genpd framework and allow the TI SCI protocol to
->>>>> control device power states.
->>>>>
->>>>> Also, provide macros representing each device index as understood
->>>>> by TI SCI to be used in the device node power-domain references.
->>>>> These are identifiers for the K2G devices managed by the PMMC.
->>>>>
->>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>>>> ---
->>>>> v2->v3:
->>>>>         Update k2g_pds node docs to show it should be a child of pmmc
->>>>> node.
->>>>>         In early versions a phandle was used to point to pmmc and docs
->>>>> still
->>>>>         incorrectly showed this.
->>>>>
->>>>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59 ++++++++++++++
->>>>>  MAINTAINERS                                        |  2 +
->>>>>  include/dt-bindings/genpd/k2g.h                    | 90
->>>>> ++++++++++++++++++++++
->>>>>  3 files changed, 151 insertions(+)
->>>>>  create mode 100644
->>>>> Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>  create mode 100644 include/dt-bindings/genpd/k2g.h
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>> b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>> new file mode 100644
->>>>> index 000000000000..4c9064e512cb
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>> @@ -0,0 +1,59 @@
->>>>> +Texas Instruments TI-SCI Generic Power Domain
->>>>> +---------------------------------------------
->>>>> +
->>>>> +Some TI SoCs contain a system controller (like the PMMC, etc...) that
->>>>> is
->>>>> +responsible for controlling the state of the IPs that are present.
->>>>> +Communication between the host processor running an OS and the system
->>>>> +controller happens through a protocol known as TI-SCI [1]. This pm
->>>>> domain
->>>>> +implementation plugs into the generic pm domain framework and makes
->>>>> use
->>>>> of
->>>>> +the TI SCI protocol power on and off each device when needed.
->>>>> +
->>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->>>>> +
->>>>> +PM Domain Node
->>>>> +==============
->>>>> +The PM domain node represents the global PM domain managed by the
->>>>> PMMC,
->>>>> +which in this case is the single implementation as documented by the
->>>>> generic
->>>>> +PM domain bindings in
->>>>> Documentation/devicetree/bindings/power/power_domain.txt.
->>>>> +Because this relies on the TI SCI protocol to communicate with the
->>>>> PMMC
->>>>> it
->>>>> +must be a child of the pmmc node.
->>>>> +
->>>>> +Required Properties:
->>>>> +--------------------
->>>>> +- compatible: should be "ti,sci-pm-domain"
->>>>> +- #power-domain-cells: Must be 0.
->>>>> +
->>>>> +Example (K2G):
->>>>> +-------------
->>>>> +       pmmc: pmmc {
->>>>> +               compatible = "ti,k2g-sci";
->>>>> +               ...
->>>>> +
->>>>> +               k2g_pds: k2g_pds {
->>>>> +                       compatible = "ti,sci-pm-domain";
->>>>> +                       #power-domain-cells = <0>;
->>>>> +               };
->>>>> +       };
->>>>> +
->>>>> +PM Domain Consumers
->>>>> +===================
->>>>> +Hardware blocks that require SCI control over their state must provide
->>>>> +a reference to the sci-pm-domain they are part of and a unique device
->>>>> +specific ID that identifies the device.
->>>>> +
->>>>> +Required Properties:
->>>>> +--------------------
->>>>> +- power-domains: phandle pointing to the corresponding PM domain node.
->>>>> +- ti,sci-id: index representing the device id to be passed oevr SCI to
->>>>> +            be used for device control.
->>>>
->>>>
->>>>
->>>> As I've already stated before, this goes in power-domain cells. When you
->>>> have a single thing (i.e. node) that controls multiple things, then you
->>>> you need to specify the ID for each of them in phandle args. This is how
->>>> irqs, gpio, clocks, *everything* in DT works.
->>>
->>>
->>>
->>> You think the reasoning for doing it this way provided by both Ulf and
->>> myself on v2 [1] is not valid then?
->>>
->>> From Ulf:
->>>
->>> To me, the TI SCI ID, is similar to a "conid" for any another "device
->>> resource" (like clock, pinctrl, regulator etc) which we can describe
->>> in DT and assign to a device node. The only difference here, is that
->>> we don't have common API to fetch the resource (like clk_get(),
->>> regulator_get()), but instead we fetches the device's resource from
->>> SoC specific code, via genpd's device ->attach() callback.
->>
->>
->> Sorry, but that sounds like a kernel problem to me and has nothing to
->> do with DT bindings.
->>
->>> From me:
->>>
->>> Yes, you've pretty much hit it on the head. It is not an index into a
->>> list
->>> of genpds but rather identifies the device *within* a single genpd. It is
->>> a
->>> property specific to each device that resides in a ti-sci-genpd, not a
->>> mapping describing which genpd the device belongs to. The generic power
->>> domain binding is concerned with mapping the device to a specific genpd,
->>> which is does fine for us, but we have a sub mapping for devices that
->>> exist
->>> inside a genpd which, we must describe as well, hence the ti,sci-id.
->>>
->>>
->>> So to summarize, the genpd framework does interpret the phandle arg as an
->>> index into multiple genpds, just as you've said other frameworks do, but
->>> this is not what I am trying to do, we have multiple devices within this
->>> *single* genpd, hence the need for the ti,sci-id property.
->>
->>
->> Fix the genpd framework rather than work around it in DT.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/ata/ahci_da850.c | 83 +++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 75 insertions(+), 8 deletions(-)
 >
+> diff --git a/drivers/ata/ahci_da850.c b/drivers/ata/ahci_da850.c
+> index bb9eb4c..cd04caf 100644
+> --- a/drivers/ata/ahci_da850.c
+> +++ b/drivers/ata/ahci_da850.c
+> @@ -28,17 +28,70 @@
+>  #define SATA_PHY_TXSWING(x)	((x) << 19)
+>  #define SATA_PHY_ENPLL(x)	((x) << 31)
 >
-> I still disagree that this has nothing to do with DT bindings, as the
-> current DT binding represents something different already. I am trying to
-> extend it to give me additional information needed for our platforms. Are
-> you saying that we should break what the current DT binding already
-> represents to mean something else?
+> +struct da850_sata_mpy_mapping {
+> +	unsigned int multiplier;
+> +	unsigned int regval;
+> +};
+> +
+> +static const struct da850_sata_mpy_mapping da850_sata_mpy_table[] = {
+> +	{
+> +		.multiplier	= 5,
+> +		.regval		= 0x01,
+> +	},
+> +	{
+> +		.multiplier	= 6,
+> +		.regval		= 0x02,
+> +	},
+> +	{
+> +		.multiplier	= 8,
+> +		.regval		= 0x04,
+> +	},
+> +	{
+> +		.multiplier	= 10,
+> +		.regval		= 0x05,
+> +	},
+> +	{
+> +		.multiplier	= 12,
+> +		.regval		= 0x06,
+> +	},
+> +	/* TODO Add 12.5 multiplier. */
 
-No idea because what's the current binding? From the patch, looks like
-a new binding to me.
+Looks like you should be using an enum here for the multiplier field.
 
-Rob
+> +	{
+> +		.multiplier	= 15,
+> +		.regval		= 0x08,
+> +	},
+> +	{
+> +		.multiplier	= 20,
+> +		.regval		= 0x09,
+> +	},
+> +	{
+> +		.multiplier	= 25,
+> +		.regval		= 0x0a,
+> +	}
+> +};
+> +
+> +static const struct da850_sata_mpy_mapping *
+> +da850_sata_get_mpy(unsigned int multiplier)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(da850_sata_mpy_table); i++)
+> +		if (da850_sata_mpy_table[i].multiplier == multiplier)
+> +			return &da850_sata_mpy_table[i];
+> +
+> +	return NULL;
+> +}
+> +
+>  /*
+>   * The multiplier needed for 1.5GHz PLL output.
+>   *
+> - * NOTE: This is currently hardcoded to be suitable for 100MHz crystal
+> - * frequency (which is used by DA850 EVM board) and may need to be changed
+> - * if you would like to use this driver on some other board.
+> + * This is the default value suitable for the 100MHz crystal frequency
+> + * used by DA850 EVM board, which doesn't use DT.
+
+As I said in a reply on another patch, it seems like it would be better 
+to use a clock that represents the crystal and use clk_get_rate() and 
+calculate the multiplier from that.
+
+For example, we have done something like this in 
+usb20_phy_clk_set_parent() in arch/arm/mach-davinci/usb-da8xx.c.
+
+>   */
+> -#define DA850_SATA_CLK_MULTIPLIER	7
+> +#define DA850_SATA_CLK_MULTIPLIER_DEFAULT	15
+>
+>  static void da850_sata_init(struct device *dev, void __iomem *pwrdn_reg,
+> -			    void __iomem *ahci_base)
+> +			    void __iomem *ahci_base,
+> +			    const struct da850_sata_mpy_mapping *mpy)
+>  {
+>  	unsigned int val;
+>
+> @@ -47,7 +100,7 @@ static void da850_sata_init(struct device *dev, void __iomem *pwrdn_reg,
+>  	val &= ~BIT(0);
+>  	writel(val, pwrdn_reg);
+>
+> -	val = SATA_PHY_MPY(DA850_SATA_CLK_MULTIPLIER + 1) | SATA_PHY_LOS(1) |
+> +	val = SATA_PHY_MPY(mpy->regval) | SATA_PHY_LOS(1) |
+>  	      SATA_PHY_RXCDR(4) | SATA_PHY_RXEQ(1) | SATA_PHY_TXSWING(3) |
+>  	      SATA_PHY_ENPLL(1);
+>
+> @@ -87,10 +140,12 @@ static struct scsi_host_template ahci_platform_sht = {
+>
+>  static int ahci_da850_probe(struct platform_device *pdev)
+>  {
+> +	const struct da850_sata_mpy_mapping *mpy;
+>  	struct device *dev = &pdev->dev;
+>  	struct ahci_host_priv *hpriv;
+> -	struct resource *res;
+> +	unsigned int multiplier;
+>  	void __iomem *pwrdn_reg;
+> +	struct resource *res;
+>  	int rc;
+>
+>  	hpriv = ahci_platform_get_resources(pdev);
+> @@ -109,7 +164,19 @@ static int ahci_da850_probe(struct platform_device *pdev)
+>  	if (!pwrdn_reg)
+>  		goto disable_resources;
+>
+> -	da850_sata_init(dev, pwrdn_reg, hpriv->mmio);
+> +	rc = of_property_read_u32(dev->of_node,
+> +				  "da850,clk_multiplier", &multiplier);
+> +	if (rc)
+> +		multiplier = DA850_SATA_CLK_MULTIPLIER_DEFAULT;
+> +
+> +	mpy = da850_sata_get_mpy(multiplier);
+> +	if (!mpy) {
+> +		dev_err(dev, "invalid multiplier value: %u\n", multiplier);
+> +		rc = -EINVAL;
+> +		goto disable_resources;
+> +	}
+> +
+> +	da850_sata_init(dev, pwrdn_reg, hpriv->mmio, mpy);
+>
+>  	rc = ahci_platform_init_host(pdev, hpriv, &ahci_da850_port_info,
+>  				     &ahci_platform_sht);
+>
