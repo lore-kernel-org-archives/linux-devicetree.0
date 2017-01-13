@@ -1,109 +1,90 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v5 3/3] dmaengine: xilinx_dma: Fix race condition in the
- driver for multiple descriptor scenario
-Date: Fri, 13 Jan 2017 06:00:44 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A6666CF@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
- <1483771530-8545-4-git-send-email-appanad@xilinx.com>
- <20170110084917.GA3573@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A6662F1@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20170113053627.GQ3573@localhost>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 3/5] Input: mpr121 - handle multiple bits change of
+ status register
+Date: Thu, 12 Jan 2017 22:09:35 -0800
+Message-ID: <20170113060935.GB22630@dtor-ws>
+References: <1484156549-26585-1-git-send-email-akinobu.mita@gmail.com>
+ <1484156549-26585-4-git-send-email-akinobu.mita@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113053627.GQ3573@localhost>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484156549-26585-4-git-send-email-akinobu.mita@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Thu, Jan 12, 2017 at 02:42:27AM +0900, Akinobu Mita wrote:
+> This driver reports input events on their interrupts which are triggered
+> by the sensor's status register changes.  But only single bit change is
+> reported in the interrupt handler.  So if there are multiple bits are
+> changed at almost the same time, other press or release events are ignored.
+> 
+> This fixes it by detecting all changed bits in the status register.
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>  drivers/input/keyboard/mpr121_touchkey.c | 26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/mpr121_touchkey.c b/drivers/input/keyboard/mpr121_touchkey.c
+> index a2c5305..c809f70 100644
+> --- a/drivers/input/keyboard/mpr121_touchkey.c
+> +++ b/drivers/input/keyboard/mpr121_touchkey.c
+> @@ -86,7 +86,8 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+>  	struct mpr121_touchkey *mpr121 = dev_id;
+>  	struct i2c_client *client = mpr121->client;
+>  	struct input_dev *input = mpr121->input_dev;
+> -	unsigned int key_num, key_val, pressed;
+> +	unsigned int bit_changed;
+> +	unsigned int key_num;
+>  	int reg;
+>  
+>  	reg = i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_1_ADDR);
+> @@ -104,18 +105,25 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+>  
+>  	reg &= TOUCH_STATUS_MASK;
+>  	/* use old press bit to figure out which bit changed */
+> -	key_num = ffs(reg ^ mpr121->statusbits) - 1;
+> -	pressed = reg & (1 << key_num);
+> +	bit_changed = reg ^ mpr121->statusbits;
+>  	mpr121->statusbits = reg;
+> +	for (key_num = 0; key_num < mpr121->keycount; key_num++) {
+> +		unsigned int key_val, pressed;
 
-	Thanks for the review...
+maybe change bit_changed to long and use for_each_set_bit()?
 
-[Snip]
-> >
-> > > On Sat, Jan 07, 2017 at 12:15:30PM +0530, Kedareswara rao Appana wrot=
-e:
-> > > > When driver is handling AXI DMA SoftIP When user submits multiple
-> > > > descriptors back to back on the S2MM(recv) side with the current
-> > > > driver flow the last buffer descriptor next bd points to a invalid
-> > > > location resulting the invalid data or errors in the DMA engine.
-> > >
-> > > Can you rephrase this, it a bit hard to understand.
-> >
-> > When DMA is receiving packets h/w expects the descriptors Should be in
-> > the form of a ring (I mean h/w buffer descriptor Next descriptor field
-> > should always point to valid address So that when DMA engine go and
-> > fetch that next descriptor it always Sees a valid address).
-> >
-> >
-> > But with the current driver implementation when user queues Multiple
-> > descriptors the last descriptor next descriptor field Pointing to an
-> > invalid location causing data corruption or Errors from the DMA h/w
-> > engine...
-> >
-> > To avoid this issue creating a Buffer descriptor Chain during Channel
-> > allocation and using those buffer descriptors for processing User
-> > requested data.
->=20
-> Is it not doable to to modify the next pointer to point to subsequent tra=
-nsaction.
-> IOW you are modifying tail descriptor to point to subsequent descriptor.
->=20
-> Btw how and when does DMA stop, assuming it is circular it never would, i=
-sn't
-> there a valid/stop flag associated with a descriptor which tells DMA engi=
-ne what
-> to do next
+>  
+> -	key_val = mpr121->keycodes[key_num];
+> +		if (!(bit_changed & (1 << key_num)))
+> +			continue;
+>  
+> -	input_event(input, EV_MSC, MSC_SCAN, key_num);
+> -	input_report_key(input, key_val, pressed);
+> -	input_sync(input);
+> +		pressed = reg & (1 << key_num);
+> +		key_val = mpr121->keycodes[key_num];
+> +
+> +		input_event(input, EV_MSC, MSC_SCAN, key_num);
+> +		input_report_key(input, key_val, pressed);
+> +
+> +		dev_dbg(&client->dev, "key %d %d %s\n", key_num, key_val,
+> +			pressed ? "pressed" : "released");
+>  
+> -	dev_dbg(&client->dev, "key %d %d %s\n", key_num, key_val,
+> -		pressed ? "pressed" : "released");
+> +	}
+> +	input_sync(input);
+>  
+>  out:
+>  	return IRQ_HANDLED;
+> -- 
+> 2.7.4
+> 
 
-There are two registers that controls the DMA transfers.
-Current descriptor and tail descriptor register.=20
-When current descriptor reaches tail descriptor dma engine will pause.
+Thanks.
 
-When reprogramming the tail descriptor the DMA engine will starts fetching =
-descriptors again.
-
-But with the existing driver flow if we reprogram the tail descriptor
-The tail descriptor next descriptor field is pointing to an invalid locatio=
-n
-Causing data corruption...
-
->=20
->=20
-> Btw there is something wrong with your MUA perhaps line are titlecased fo=
-r no
-> reason. This is typically behavious of non linux tool which may not be gr=
-eat tool
-> for this work.
-
-Thanks for pointing it out.
-I usually replies from outlook from a windows machine.
-Will check with others in my team how they configured their mail client.
-
->=20
-> >
-> > Please let me know if the above explanation is not clear will explain i=
-n detail....
-> >
-> > >
-> > > >
-> > > > This patch fixes this issue by creating a BD Chain during
-> > >
-> > > whats a BD?
-> >
-> > Buffer descriptor.
->=20
-> Thats nowhere mentioned..
-
-Yep sorry I should have been mentioned it...
-
-Regards,
-Kedar.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
