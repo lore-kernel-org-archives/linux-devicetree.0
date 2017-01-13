@@ -1,45 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] devicetree: power: bq27xxx: add monitored battery
- documentation
-Date: Fri, 13 Jan 2017 11:28:21 -0600
-Message-ID: <20170113172821.noogiax7bqwhkoev@rob-hp-laptop>
-References: <20170111062003.10110-1-matt@ranostay.consulting>
- <20170111062003.10110-7-matt@ranostay.consulting>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: Add support for samsung s6e3ha2
+ panel binding
+Date: Fri, 13 Jan 2017 11:29:14 -0600
+Message-ID: <20170113172914.6qtxy5l5rwie5lrg@rob-hp-laptop>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063407epcas1p46379fc5062afe1268b186514969e225e@epcas1p4.samsung.com>
+ <1484116439-7275-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170111062003.10110-7-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1484116439-7275-2-git-send-email-hoegeun.kwon@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: krzk@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, inki.dae@samsung.com, a.hajda@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 10:20:02PM -0800, Matt Ranostay wrote:
-> Depends-On: http://marc.info/?l=linux-pm&m=148392292830015&w=2
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/power/supply/bq27xxx.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+On Wed, Jan 11, 2017 at 03:33:57PM +0900, Hoegeun Kwon wrote:
+> The Samsung s6e3ha2 is a 5.7" 1440x2560 AMOLED panel connected
+> using MIPI-DSI interfaces.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> index b0c95ef63e68..0472a2db0f13 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> @@ -28,9 +28,17 @@ Required properties:
->   * "ti,bq27621" - BQ27621
->  - reg: integer, i2c address of the device.
->  
-> +Optional properties:
-> +- monitored-battery: phandle of battery information devicetree node
+> Signed-off-by: Donghwa Lee <dh09.lee@samsung.com>
+> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>  .../bindings/display/panel/samsung,s6e3ha2.txt     | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
 
-We need a common way to describe charger/monitor to battery connections, 
-not yet another way. The battery and power supply related bindings are a 
-bit of a mess from what I've looked at.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
