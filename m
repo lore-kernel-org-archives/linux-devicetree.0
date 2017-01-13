@@ -1,56 +1,113 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: arm64: dts: mt8173: add node for thermal calibration
-Date: Fri, 13 Jan 2017 16:51:21 +0800
-Message-ID: <CAGS+omA=aip76=8CcGY7gPUrHj9eLLem=8MBziz99fVDq86zPQ@mail.gmail.com>
-References: <1484286771-35913-1-git-send-email-dawei.chien@mediatek.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
+Subject: Re: [PATCH v2 1/2] of: base: add support to find the level of the
+ last cache
+Date: Fri, 13 Jan 2017 17:05:59 +0800
+Message-ID: <58789877.1010705@huawei.com>
+References: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484286771-35913-1-git-send-email-dawei.chien@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dawei Chien <dawei.chien@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 1:52 PM, Dawei Chien <dawei.chien@mediatek.com> wrote:
->
-> From: "dawei.chien@mediatek.com" <dawei.chien@mediatek.com>
->
-> Add this for supporting thermal calibration by e-fuse data.
->
-> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+On 2017/1/13 2:29, Sudeep Holla wrote:
+> It is useful to have helper function just to get the number of cache
+> levels for a given logical cpu. We can obtain the same by just checking
+> the level at which the last cache is present. This patch adds support
+> to find the level of the last cache for a given cpu.
+> 
+> It will be used on ARM64 platform where the device tree provides the
+> information for the additional non-architected/transparent/external
+> last level caches that are not integrated with the processors.
+> 
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+Tested-by: Tan Xiaojun <tanxiaojun@huawei.com>
 
 > ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 12e7027..adfac1e 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -401,6 +401,11 @@
->                 efuse: efuse@10206000 {
->                         compatible = "mediatek,mt8173-efuse";
->                         reg = <0 0x10206000 0 0x1000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       thermal_calibration: calib@528 {
-> +                               reg = <0x528 0xc>;
-> +                       };
->                 };
->
->                 apmixedsys: clock-controller@10209000 {
-> @@ -574,6 +579,8 @@
->                         resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
->                         mediatek,auxadc = <&auxadc>;
->                         mediatek,apmixedsys = <&apmixedsys>;
-> +                       nvmem-cells = <&thermal_calibration>;
-> +                       nvmem-cell-names = "calibration-data";
->                 };
->
->                 nor_flash: spi@1100d000 {
+>  drivers/of/base.c  | 27 +++++++++++++++++++++++++++
+>  include/linux/of.h |  1 +
+>  2 files changed, 28 insertions(+)
+> 
+> v1->v2:
+> 	- Moved to using "cache-level" in the last level cache instead
+> 	  of counting through all the nodes as suggested by Rob
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d4bea3c797d6..c1128a077aea 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/slab.h>
+> @@ -2268,6 +2269,32 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+>  }
+> 
+>  /**
+> + * of_find_last_cache_level - Find the level at which the last cache is
+> + * 		present for the given logical cpu
+> + *
+> + * @cpu: cpu number(logical index) for which the last cache level is needed
+> + *
+> + * Returns the the level at which the last cache is present. It is exactly
+> + * same as  the total number of cache levels for the given logical cpu.
+> + */
+> +int of_find_last_cache_level(unsigned int cpu)
+> +{
+> +	int cache_level = 0;
+> +	struct device_node *prev = NULL, *np = of_cpu_device_node_get(cpu);
+> +
+> +	while (np) {
+> +		prev = np;
+> +		of_node_put(np);
+> +		np = of_find_next_cache_node(np);
+> +	}
+> +
+> +	if (prev)
+> +		of_property_read_u32(prev, "cache-level", &cache_level);
+> +
+> +	return cache_level;
+> +}
+> +
+> +/**
+>   * of_graph_parse_endpoint() - parse common endpoint node properties
+>   * @node: pointer to endpoint device_node
+>   * @endpoint: pointer to the OF endpoint data structure
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index d72f01009297..21e6323de0f3 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -280,6 +280,7 @@ extern struct device_node *of_get_child_by_name(const struct device_node *node,
+> 
+>  /* cache lookup */
+>  extern struct device_node *of_find_next_cache_node(const struct device_node *);
+> +extern int of_find_last_cache_level(unsigned int cpu);
+>  extern struct device_node *of_find_node_with_property(
+>  	struct device_node *from, const char *prop_name);
+> 
 > --
-> 1.9.1
->
+> 2.7.4
+> 
+> 
+> .
+> 
