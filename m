@@ -1,67 +1,51 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] mmc: pwrseq: add support for Marvell SD8787 chip
-Date: Thu, 12 Jan 2017 21:24:16 -0800
-Message-ID: <CAJ_EiSR=1ZyRvc95ZTtFgMccpzXF0v=J2qYSFP5GWYSGePFs2g@mail.gmail.com>
-References: <20170113052218.10534-1-matt@ranostay.consulting> <20170113052218.10534-3-matt@ranostay.consulting>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v5 1/3] dmaengine: xilinx_dma: Check for channel idle
+ state before submitting dma descriptor
+Date: Fri, 13 Jan 2017 10:59:39 +0530
+Message-ID: <20170113052939.GP3573@localhost>
+References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
+ <1483771530-8545-2-git-send-email-appanad@xilinx.com>
+ <20170110062349.GY3573@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A666658@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113052218.10534-3-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A666658@XAP-PVEXMBX01.xlnx.xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Soren Brinkmann <sorenb@xilinx.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 9:22 PM, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
-> Allow power sequencing for the Marvell SD8787 Wifi/BT chip.
-> This can be abstracted to other chipsets if needed in the future.
+On Fri, Jan 13, 2017 at 04:28:11AM +0000, Appana Durga Kedareswara Rao wrote:
+> Hi Vinod,
+> 
+> 	Thanks for the review...
+> > 
+> > On Sat, Jan 07, 2017 at 12:15:28PM +0530, Kedareswara rao Appana wrote:
+> > > Add channel idle state to ensure that dma descriptor is not
+> > > submitted when VDMA engine is in progress.
+> > 
+> > any reason why you want to make your own varible and not use the HW to
+> > query
+> > as done earlier. It is not clear to me why that is removed from description
+> 
+> We need to poll for a bit in the status register to know the dma state.
+> We are currently doing that in the driver hot path
+> To avoid this using own variables.
+
+It would be worthwhile to document these, down the line people may not
+remeber the motivation
 
 
-Er crap seems how the main patch file got dropped out. Resubmitting in
-a minute... sorry!
-
->
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> ---
->  drivers/mmc/core/Kconfig  | 10 ++++++++++
->  drivers/mmc/core/Makefile |  1 +
->  2 files changed, 11 insertions(+)
->
-> diff --git a/drivers/mmc/core/Kconfig b/drivers/mmc/core/Kconfig
-> index cdfa8520a4b1..fc1ecdaaa9ca 100644
-> --- a/drivers/mmc/core/Kconfig
-> +++ b/drivers/mmc/core/Kconfig
-> @@ -12,6 +12,16 @@ config PWRSEQ_EMMC
->           This driver can also be built as a module. If so, the module
->           will be called pwrseq_emmc.
->
-> +config PWRSEQ_SD8787
-> +       tristate "HW reset support for SD8787 BT + Wifi module"
-> +       depends on OF && (MWIFIEX || BT_MRVL_SDIO)
-> +       help
-> +         This selects hardware reset support for the SD8787 BT + Wifi
-> +         module. By default this option is set to n.
-> +
-> +         This driver can also be built as a module. If so, the module
-> +         will be called pwrseq_sd8787.
-> +
->  config PWRSEQ_SIMPLE
->         tristate "Simple HW reset support for MMC"
->         default y
-> diff --git a/drivers/mmc/core/Makefile b/drivers/mmc/core/Makefile
-> index b2a257dc644f..0f81464fa824 100644
-> --- a/drivers/mmc/core/Makefile
-> +++ b/drivers/mmc/core/Makefile
-> @@ -10,6 +10,7 @@ mmc_core-y                    := core.o bus.o host.o \
->                                    quirks.o slot-gpio.o
->  mmc_core-$(CONFIG_OF)          += pwrseq.o
->  obj-$(CONFIG_PWRSEQ_SIMPLE)    += pwrseq_simple.o
-> +obj-$(CONFIG_PWRSEQ_SD8787)    += pwrseq_sd8787.o
->  obj-$(CONFIG_PWRSEQ_EMMC)      += pwrseq_emmc.o
->  mmc_core-$(CONFIG_DEBUG_FS)    += debugfs.o
->  obj-$(CONFIG_MMC_BLOCK)                += mmc_block.o
-> --
-> 2.10.2
->
+-- 
+~Vinod
