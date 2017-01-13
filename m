@@ -1,76 +1,62 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: fix GbE tx link breakage
-Date: Thu, 12 Jan 2017 16:52:06 -0800
-Message-ID: <m2r3476atl.fsf@baylibre.com>
-References: <1482319894-656-1-git-send-email-jbrunet@baylibre.com>
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [PATCH v20 0/4] Mediatek MT8173 CMDQ support
+Date: Fri, 13 Jan 2017 09:27:06 +0800
+Message-ID: <1484270826.14822.1.camel@mtksdaap41>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1482319894-656-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome
-        Brunet's message of "Wed, 21 Dec 2016 12:31:34 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@media>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+On Wed, 2017-01-04 at 11:06 +0800, HS Liao wrote:
+> Hi,
+> 
+> This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+> to help write registers with critical time limitation, such as
+> updating display configuration during the vblank. It controls Global
+> Command Engine (GCE) hardware to achieve this requirement.
+> 
+> These patches have a build dependency on top of v4.10-rc2.
+> 
+> Changes since v19:
+>  - rebase to v4.10-rc2
+> 
+> Best regards,
+> HS Liao
+> 
+> HS Liao (4):
+>   dt-bindings: soc: Add documentation for the MediaTek GCE unit
+>   mailbox: mediatek: Add Mediatek CMDQ driver
+>   arm64: dts: mt8173: Add GCE node
+>   soc: mediatek: Add Mediatek CMDQ helper
+> 
+>  .../devicetree/bindings/mailbox/mtk-gce.txt        |  43 ++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+>  drivers/mailbox/Kconfig                            |  10 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/mtk-cmdq-mailbox.c                 | 596 +++++++++++++++++++++
+>  drivers/soc/mediatek/Kconfig                       |  12 +
+>  drivers/soc/mediatek/Makefile                      |   1 +
+>  drivers/soc/mediatek/mtk-cmdq-helper.c             | 310 +++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h           |  75 +++
+>  include/linux/soc/mediatek/mtk-cmdq.h              | 174 ++++++
+>  10 files changed, 1233 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+>  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
+>  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+>  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
+>  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+> 
 
-> OdroidC2 GbE link breaks under heavy tx transfer. This happens even if the
-> MAC does not enable Energy Efficient Ethernet (No Low Power state Idle on
-> the Tx path). The problem seems to come from the phy Rx path, entering the
-> LPI state.
->
-> Disabling EEE advertisement on the phy prevent this feature to be
-> negociated with the link partner and solve the issue.
->
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->
-> This patch is based on Linus recent master branch [0]
-> This patch depends on the series [1] which has been merged in this branch.
->
-> 0: ba6d973f78eb ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net")
-> 1: http://lkml.kernel.org/r/1480326409-25419-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
->    Fix integration of eee-broken-modes
->    
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 238fbeacd330..d8933e9e9a5a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -147,6 +147,18 @@
->  	status = "okay";
->  	pinctrl-0 = <&eth_rgmii_pins>;
->  	pinctrl-names = "default";
-> +	phy-handle = <&eth_phy0>;
-> +
-> +	mdio {
-> +		compatible = "snps,dwmac-mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		eth_phy0: ethernet-phy@0 {
-> +			reg = <0>;
-> +			eee-broken-1000t;
-> +		};
-> +	};
+Hi Jassi, Matthias,
 
-There's already an MDIO node in the meson-gx.dtsi (using the same
-compatible), shouldn't you just override that and add the new
-properties?
+Sorry to disturb you.
+Do you have any further comments on CMDQ v20?
 
-What would make things easier is if the names were like Martin used in
-his reset patch, so that when I merge them together it's not a major
-conflict.
-
-Thanks,
-
-Kevin
-
-[1] https://patchwork.kernel.org/patch/9459409/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+HS
