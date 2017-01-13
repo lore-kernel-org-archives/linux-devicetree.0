@@ -1,62 +1,54 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [PATCH v20 0/4] Mediatek MT8173 CMDQ support
-Date: Fri, 13 Jan 2017 09:27:06 +0800
-Message-ID: <1484270826.14822.1.camel@mtksdaap41>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@media>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] arm64: dts: mt8173: Fix cpu_thermal cooling-maps contributions
+Date: Fri, 13 Jan 2017 10:30:05 +0800
+Message-ID: <20170113023006.150845-1-djkurtz@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-01-04 at 11:06 +0800, HS Liao wrote:
-> Hi,
-> 
-> This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
-> to help write registers with critical time limitation, such as
-> updating display configuration during the vblank. It controls Global
-> Command Engine (GCE) hardware to achieve this requirement.
-> 
-> These patches have a build dependency on top of v4.10-rc2.
-> 
-> Changes since v19:
->  - rebase to v4.10-rc2
-> 
-> Best regards,
-> HS Liao
-> 
-> HS Liao (4):
->   dt-bindings: soc: Add documentation for the MediaTek GCE unit
->   mailbox: mediatek: Add Mediatek CMDQ driver
->   arm64: dts: mt8173: Add GCE node
->   soc: mediatek: Add Mediatek CMDQ helper
-> 
->  .../devicetree/bindings/mailbox/mtk-gce.txt        |  43 ++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
->  drivers/mailbox/Kconfig                            |  10 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/mtk-cmdq-mailbox.c                 | 596 +++++++++++++++++++++
->  drivers/soc/mediatek/Kconfig                       |  12 +
->  drivers/soc/mediatek/Makefile                      |   1 +
->  drivers/soc/mediatek/mtk-cmdq-helper.c             | 310 +++++++++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h           |  75 +++
->  include/linux/soc/mediatek/mtk-cmdq.h              | 174 ++++++
->  10 files changed, 1233 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
->  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
->  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
->  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
->  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
-> 
+According to [0], the contribution field for each cooling-device express
+their relative power efficiency. Higher weights express higher power
+efficiency.  Weighting is relative such that if each cooling device has a
+weight of 1 they are considered equal. This is particularly useful in
+heterogeneous systems where two cooling devices may perform the same kind
+of compute, but with different efficiency.
 
-Hi Jassi, Matthias,
+[0] Documentation/thermal/power_allocator.txt
 
-Sorry to disturb you.
-Do you have any further comments on CMDQ v20?
+According to Mediatek IC designer, the power efficiency ratio between the
+LITTLE core cluster (cooling-device cpu0) and big core cluster
+(cooling-device cpu1) is around 3:1 (3072:1024).
 
-Thanks.
-HS
+Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 12e702771f5c..9a3b0d20f7a8 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -182,12 +182,12 @@
+ 				map@0 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu0 0 0>;
+-					contribution = <1024>;
++					contribution = <3072>;
+ 				};
+ 				map@1 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu2 0 0>;
+-					contribution = <2048>;
++					contribution = <1024>;
+ 				};
+ 			};
+ 		};
+-- 
+2.11.0.390.gc69c2f50cf-goog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
