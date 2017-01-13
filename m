@@ -1,72 +1,59 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH] net: phy: dp83867: allow RGMII_TXID/RGMII_RXID interface types
-Date: Fri, 13 Jan 2017 09:32:34 -0500
-Message-ID: <1484317954-27871-1-git-send-email-m-karicheri2@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 00/10] ARM: da850-lcdk: add SATA support
+Date: Fri, 13 Jan 2017 20:02:52 +0530
+Message-ID: <fa513599-1ac1-51e9-4da3-f4ed61ba0ce2@ti.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently dp83867 driver returns error if phy interface type
-PHY_INTERFACE_MODE_RGMII_RXID is used to set the rx only internal
-delay. Similarly issue happens for PHY_INTERFACE_MODE_RGMII_TXID.
-Fix this by checking also the interface type if a particular delay
-value is missing in the phy dt bindings. Also update the DT document
-accordingly.
+On Friday 13 January 2017 06:07 PM, Bartosz Golaszewski wrote:
+> This series contains all the changes necessary to make SATA work on
+> the da850-lcdk board.
+> 
+> The first patch adds a clock lookup entry required for the ahci core
+> to retrieve a functional clock.
+> 
+> The second enables relevant config options for all davinci boards.
+> 
+> The third adds device tree bindings for the ahci_da850 driver.
+> 
+> The fourth adds a workaround for a SATA controller instability we
+> detected after increasing the PLL0 frequency for proper LCD
+> controller support.
+> 
+> Patches 5 through 7 extend the ahci_da850 driver - add DT support,
+> un-hardcode the clock multiplier value and add a workaround for
+> a quirk present on the da850 SATA controller.
+> 
+> Patches 8-10 add the device tree changes required to probe the driver.
+> 
+> I'm posting the series as a whole to give all reviewers the full
+> picture and visibility of the changes required, if needed I can resend
+> the patches separately.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- - I had sent this earlier and some how it didn't get through and
-   I haven't seen any comment for this. So sending this again.
- - Applies to master.
+I just tested this series on my LCDK board using a Western Digital SATA
+HDD and it works great with some basic read / write tests. Thanks!
 
- Documentation/devicetree/bindings/net/ti,dp83867.txt | 6 ++++--
- drivers/net/phy/dp83867.c                            | 8 ++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+For the non-platform patches which I wont be queuing:
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-index 85bf945..afe9630 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-+++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-@@ -3,9 +3,11 @@
- Required properties:
- 	- reg - The ID number for the phy, usually a small integer
- 	- ti,rx-internal-delay - RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83867.h
--		for applicable values
-+		for applicable values. Required only if interface type is
-+		PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID
- 	- ti,tx-internal-delay - RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83867.h
--		for applicable values
-+		for applicable values. Required only if interface type is
-+		PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID
- 	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
- 		for applicable values
- 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index e84ae08..ca1b462 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -132,12 +132,16 @@ static int dp83867_of_init(struct phy_device *phydev)
- 
- 	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
- 				   &dp83867->rx_id_delay);
--	if (ret)
-+	if (ret &&
-+	    (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	     phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID))
- 		return ret;
- 
- 	ret = of_property_read_u32(of_node, "ti,tx-internal-delay",
- 				   &dp83867->tx_id_delay);
--	if (ret)
-+	if (ret &&
-+	    (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	     phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID))
- 		return ret;
- 
- 	return of_property_read_u32(of_node, "ti,fifo-depth",
--- 
-1.9.1
+Tested-by: Sekhar Nori <nsekhar@ti.com>
+
+I will take a look at the series closely next week.
+
+Thanks,
+Sekhar
