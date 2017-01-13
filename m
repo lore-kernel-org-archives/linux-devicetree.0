@@ -1,84 +1,87 @@
-From: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: dra7-evm: increase QSPI SPL partition size
-Date: Fri, 13 Jan 2017 18:10:33 +0530
-Message-ID: <1484311234-21978-2-git-send-email-ravibabu@ti.com>
-References: <1484311234-21978-1-git-send-email-ravibabu@ti.com>
+From: Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] ieee802154: Add device tree documentation for
+ CA8210
+Date: Fri, 13 Jan 2017 13:47:51 +0100
+Message-ID: <4124e6b8-1eca-aee5-0f41-f56226ec9dae@osg.samsung.com>
+References: <20170110154122.6724-1-h.morris@cascoda.com>
+ <20170110154122.6724-3-h.morris@cascoda.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484311234-21978-1-git-send-email-ravibabu-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170110154122.6724-3-h.morris-viW/wkEPc65BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-uAqBSO/uNfhBDgjK7y7TUQ@public.gmane.org, Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+To: Harry Morris <harrymorris12-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: aar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, Harry Morris <h.morris-viW/wkEPc65BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SPL size for DRA74x platform has increased and
-is now more than 64KB. Increase QSPI SPL partition
-size to 256KB for DRA74x EVM.
+Hi Harry.
 
-QSPI partition numbering changes because of this.
+Alex pointed out that we might want to run the addition to 
+vendor-prefixes.txt through the devicetree list and maintainers.
 
-Signed-off-by: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7-evm.dts | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+Should really not be a problem but that way they are at least aware. I 
+added them in CC for this patch.
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 132f2be..2784241 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -681,41 +681,29 @@
- 		 */
- 		partition@0 {
- 			label = "QSPI.SPL";
--			reg = <0x00000000 0x000010000>;
-+			reg = <0x00000000 0x000040000>;
- 		};
- 		partition@1 {
--			label = "QSPI.SPL.backup1";
--			reg = <0x00010000 0x00010000>;
--		};
--		partition@2 {
--			label = "QSPI.SPL.backup2";
--			reg = <0x00020000 0x00010000>;
--		};
--		partition@3 {
--			label = "QSPI.SPL.backup3";
--			reg = <0x00030000 0x00010000>;
--		};
--		partition@4 {
- 			label = "QSPI.u-boot";
- 			reg = <0x00040000 0x00100000>;
- 		};
--		partition@5 {
-+		partition@2 {
- 			label = "QSPI.u-boot-spl-os";
- 			reg = <0x00140000 0x00080000>;
- 		};
--		partition@6 {
-+		partition@3 {
- 			label = "QSPI.u-boot-env";
- 			reg = <0x001c0000 0x00010000>;
- 		};
--		partition@7 {
-+		partition@4 {
- 			label = "QSPI.u-boot-env.backup1";
- 			reg = <0x001d0000 0x0010000>;
- 		};
--		partition@8 {
-+		partition@5 {
- 			label = "QSPI.kernel";
- 			reg = <0x001e0000 0x0800000>;
- 		};
--		partition@9 {
-+		partition@6 {
- 			label = "QSPI.file-system";
- 			reg = <0x009e0000 0x01620000>;
- 		};
--- 
-1.9.1
+On 10/01/17 16:41, Harry Morris wrote:
+> Signed-off-by: Harry Morris <h.morris-viW/wkEPc65BDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/ieee802154/ca8210.txt  | 28 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt b/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
+> new file mode 100644
+> index 0000000..a1046e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
+> @@ -0,0 +1,28 @@
+> +* CA8210 IEEE 802.15.4 *
+> +
+> +Required properties:
+> +	- compatible:           Should be "cascoda,ca8210"
+> +	- reg:                  Controlling chip select
+> +	- spi-max-frequency:    Maximum clock speed, should be *less than*
+> +	                        4000000
+> +	- spi-cpol:             Requires inverted clock polarity
+> +	- reset-gpio:           GPIO attached to reset
+> +	- irq-gpio:             GPIO attached to IRQ
+> +Optional properties:
+> +	- extclock-enable:      Include for the ca8210 to route its 16MHz clock
+> +	                        to an output
+> +	- extclock-freq:        Frequency in Hz of the external clock
+> +	- extclock-gpio:        GPIO of the ca8210 to output the clock on
+> +
+> +Example:
+> +	ca8210@0 {
+> +		compatible = "cascoda,ca8210";
+> +		reg = <0>;
+> +		spi-max-frequency = <3000000>;
+> +		spi-cpol;
+> +		reset-gpio = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+> +		irq-gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> +		extclock-enable;
+> +		extclock-freq = 16000000;
+> +		extclock-gpio = 2;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 24c6f65..6c5609f 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -47,6 +47,7 @@ brcm	Broadcom Corporation
+>  buffalo	Buffalo, Inc.
+>  calxeda	Calxeda
+>  capella	Capella Microsystems, Inc
+> +cascoda	Cascoda, Ltd.
+>  cavium	Cavium, Inc.
+>  cdns	Cadence Design Systems Inc.
+>  ceva	Ceva, Inc.
+>
 
+regards
+Stefan Schmidt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
