@@ -1,38 +1,38 @@
-From: "Oliver O'Halloran" <oohall@gmail.com>
-Subject: Re: [PATCH v5 2/5] powernv:stop: Uniformly rename power9 to arch300
-Date: Fri, 13 Jan 2017 14:46:07 +1100
-Message-ID: <CAOSf1CET-A+E1FkS4hOJLQapnih=Sx51U6BdgjqXy--xJ9nytw@mail.gmail.com>
-References: <1484039224-5630-1-git-send-email-ego@linux.vnet.ibm.com>
- <1484039224-5630-3-git-send-email-ego@linux.vnet.ibm.com> <20170112094733.GC3006@localhost.localdomain>
- <20170113034418.GA10844@in.ibm.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v5 1/3] dmaengine: xilinx_dma: Check for channel idle
+ state before submitting dma descriptor
+Date: Fri, 13 Jan 2017 04:28:11 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A666658@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
+ <1483771530-8545-2-git-send-email-appanad@xilinx.com>
+ <20170110062349.GY3573@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170113034418.GA10844@in.ibm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc: Balbir Singh <bsingharora@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170110062349.GY3573@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 2:44 PM, Gautham R Shenoy
-<ego@linux.vnet.ibm.com> wrote:
-> On Thu, Jan 12, 2017 at 03:17:33PM +0530, Balbir Singh wrote:
->> On Tue, Jan 10, 2017 at 02:37:01PM +0530, Gautham R. Shenoy wrote:
->> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
->> >
->> > Balbir pointed out that in idle_book3s.S and powernv/idle.c some
->> > functions and variables had power9 in their names while some others
->> > had arch300.
->> >
->>
->> I would prefer power9 to arch300
->>
->
->
-> I don't have a strong preference for arch300 vs power9, will change it
-> to power9 if that looks better.
+Hi Vinod,
 
-Personally I think we should be as descriptive as possible and use
-power_9_arch_300_the_bikeshed_is_red_dammit.
+	Thanks for the review...
+>=20
+> On Sat, Jan 07, 2017 at 12:15:28PM +0530, Kedareswara rao Appana wrote:
+> > Add channel idle state to ensure that dma descriptor is not
+> > submitted when VDMA engine is in progress.
+>=20
+> any reason why you want to make your own varible and not use the HW to
+> query
+> as done earlier. It is not clear to me why that is removed from descripti=
+on
 
-Oliver
+We need to poll for a bit in the status register to know the dma state.
+We are currently doing that in the driver hot path
+To avoid this using own variables.
+
+Regards,
+Kedar.
