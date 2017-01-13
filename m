@@ -1,78 +1,63 @@
 From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5] arm64: dts: mt8173: add mmsel clocks for 4K support
-Date: Fri, 13 Jan 2017 16:32:39 +0100
-Message-ID: <0786f0e3-791a-4173-7506-cbb0bcb9f521@gmail.com>
-References: <1470279438-60372-1-git-send-email-bibby.hsieh@mediatek.com>
- <CAGS+omAZvHmSz6bJcvisC1LZgxwbd-HzvYMDrHXzfkY3mZZEsw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: mt8173: Fix cpu_thermal cooling-maps
+ contributions
+Date: Fri, 13 Jan 2017 16:36:17 +0100
+Message-ID: <ac6266a7-b540-8fdd-7ece-ef4871cceaae@gmail.com>
+References: <20170113023006.150845-1-djkurtz@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omAZvHmSz6bJcvisC1LZgxwbd-HzvYMDrHXzfkY3mZZEsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170113023006.150845-1-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>CK Hu <c>
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWPdpHbCvnp+Ag@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 12/01/17 05:50, Daniel Kurtz wrote:
-> Hi Matthias,
+On 13/01/17 03:30, Daniel Kurtz wrote:
+> According to [0], the contribution field for each cooling-device express
+> their relative power efficiency. Higher weights express higher power
+> efficiency.  Weighting is relative such that if each cooling device has a
+> weight of 1 they are considered equal. This is particularly useful in
+> heterogeneous systems where two cooling devices may perform the same kind
+> of compute, but with different efficiency.
 >
-> (Trying again to send plain text email)...
+> [0] Documentation/thermal/power_allocator.txt
 >
-> On Thu, Aug 4, 2016 at 10:57 AM, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> To support HDMI 4K resolution, mmsys need clcok
->> mm_sel to be 400MHz.
->>
->> The board .dts file should override the clock rate
->> property with the higher VENCPLL frequency the board
->> supports HDMI 4K resolution.
->>
->> Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> According to Mediatek IC designer, the power efficiency ratio between the
+> LITTLE core cluster (cooling-device cpu0) and big core cluster
+> (cooling-device cpu1) is around 3:1 (3072:1024).
 >
-> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
 
-Applied to v4.10-next/dts
-Thanks
+applied, thanks.
 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 12e702771f5c..9a3b0d20f7a8 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -182,12 +182,12 @@
+>  				map@0 {
+>  					trip = <&target>;
+>  					cooling-device = <&cpu0 0 0>;
+> -					contribution = <1024>;
+> +					contribution = <3072>;
+>  				};
+>  				map@1 {
+>  					trip = <&target>;
+>  					cooling-device = <&cpu2 0 0>;
+> -					contribution = <2048>;
+> +					contribution = <1024>;
+>  				};
+>  			};
+>  		};
 >
-> It looks like this patch was lost.  It is actually a prerequisite for
-> MTK 4k HDMI support, which already landed in v4.9.
->
-> See the email thread entitled:
-> [PATCH v5 0/3] MT8173 HDMI 4K support <https://lkml.org/lkml/2016/9/28/893>
->
-> Or these three:
->
-> 0d2200794f0a drm/mediatek: modify the factor to make the pll_rate set
-> in the 1G-2G range
-> 968253bd7caa drm/mediatek: enhance the HDMI driving current
-> d542b7c473f0 drm/mediatek: do mtk_hdmi_send_infoframe after HDMI clock enable
->
-> -Dan
->
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index 78529e4..c3f32f3 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -690,6 +690,8 @@
->>                         compatible = "mediatek,mt8173-mmsys", "syscon";
->>                         reg = <0 0x14000000 0 0x1000>;
->>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->> +                       assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
->> +                       assigned-clock-rates = <400000000>;
->>                         #clock-cells = <1>;
->>                 };
->>
->> --
->> 1.7.9.5
->>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
