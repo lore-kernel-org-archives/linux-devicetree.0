@@ -1,50 +1,53 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v3 3/5] i2c: mux: pca954x: Add interrupt controller
- support
-Date: Fri, 13 Jan 2017 08:17:35 +0800
-Message-ID: <3d57b586-eab7-11a5-10b4-aaf0ed5baa6e@electromag.com.au>
-References: <1483952576-5308-1-git-send-email-preid@electromag.com.au>
- <1483952576-5308-4-git-send-email-preid@electromag.com.au>
- <20170112191514.dpusqnbqahayx6j3@ninjato>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv5 3/8] rtc: add STM32 RTC driver
+Date: Fri, 13 Jan 2017 01:38:40 +0100
+Message-ID: <20170113003840.u6uxt7u4qsit3oqt@piout.net>
+References: <1484142403-11556-1-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170112191514.dpusqnbqahayx6j3@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBEOD4DBQKGQEPF4WCFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1484142403-11556-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/01/2017 03:15, Wolfram Sang wrote:
-> On Mon, Jan 09, 2017 at 05:02:54PM +0800, Phil Reid wrote:
->> Various muxes can aggregate multiple interrupts from each i2c bus.
->> All of the muxes with interrupt support combine the active low irq lines
->> using an internal 'and' function and generate a combined active low
->> output. The muxes do provide the ability to read a control register to
->> determine which irq is active. By making the mux an irq controller isr
->> latency can potentially be reduced by reading the status register and
->> then only calling the registered isr on that bus segment.
->>
->> As there is no irq masking on the mux irq are disabled until irq_unmask is
->> called at least once.
->>
->> Signed-off-by: Phil Reid <preid@electromag.com.au>
->
-> Is the ack from Peda here forgotten or still missing?
->
-> @peda: Once you are happy, do you want to take these patches via your
-> shiny new mux-tree or do you prefer if I pick them?
->
-G'day Wolfram,
+On 11/01/2017 at 14:46:43 +0100, Amelie Delaunay wrote :
+> This patch adds support for the STM32 RTC.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/rtc/Kconfig     |  11 +
+>  drivers/rtc/Makefile    |   1 +
+>  drivers/rtc/rtc-stm32.c | 727 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 739 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-stm32.c
+> 
 
-I think he was hoping someone else would have a look at it based on this
-feedback.
+This didn't apply cleanly, please check rtc-next. I don't think I made
+any mistake as the issue was only in Kconfig. You probably based your
+patches on 4.9 instead of 4.10-rc1.
 
-On 2017-01-04 15:13, Peter Rosin wrote:
-> Irqs are not my strong point, I would prefer if someone else also had
-> a look. And there are some comments below...
 
 -- 
-Regards
-Phil Reid
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
