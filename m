@@ -1,94 +1,34 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH RFC v2 4/4] ARM: dts: imx6*-hummingboard2: convert to more
- conventional vmmc-supply
-Date: Fri, 13 Jan 2017 14:45:40 +0000
-Message-ID: <E1cS36q-0002wW-C3@rmk-PC.armlinux.org.uk>
-References: <20170113144449.GQ14217@n2100.armlinux.org.uk>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 3/3] ARM: dts: rskrza1: add ostm DT support
+Date: Fri, 13 Jan 2017 14:50:38 +0000
+Message-ID: <PS1PR06MB1162BA1C7B9A38C5CBA329268A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+References: <20170112190108.2856-1-chris.brandt@renesas.com>
+ <20170112190108.2856-4-chris.brandt@renesas.com>
+ <CAMuHMdWNd=TqqWAv3NhEF5R8JRQ362EJ3LirHpqBLgQK3w30oA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113144449.GQ14217-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWNd=TqqWAv3NhEF5R8JRQ362EJ3LirHpqBLgQK3w30oA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-index 88aaed26dd77..f19d30b34ac4 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-@@ -56,11 +56,6 @@
- 		linux,rc-map-name = "rc-rc6-mce";
- 	};
- 
--	usdhc2_pwrseq: usdhc2-pwrseq {
--		compatible = "mmc-pwrseq-simple";
--		reset-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
--	};
--
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -123,6 +118,18 @@
- 		regulator-boot-on;
- 	};
- 
-+	reg_usdhc2_vmmc: reg-usdhc2-vmmc {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hummingboard2_vmmc>;
-+		regulator-boot-on;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "usdhc2_vmmc";
-+		startup-delay-us = <1000>;
-+	};
-+
- 	sound-sgtl5000 {
- 		audio-codec = <&sgtl5000>;
- 		audio-routing =
-@@ -393,7 +400,6 @@
- 
- 		pinctrl_hummingboard2_usdhc2_aux: hummingboard2-usdhc2-aux {
- 			fsl,pins = <
--				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
- 				MX6QDL_PAD_KEY_ROW1__SD2_VSELECT 0x1b071
- 				MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30 0x1b0b0
- 			>;
-@@ -432,6 +438,12 @@
- 			>;
- 		};
- 
-+		pinctrl_hummingboard2_vmmc: hummingboard2-vmmc {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
-+			>;
-+		};
-+
- 		pinctrl_hummingboard2_usdhc3: hummingboard2-usdhc3 {
- 			fsl,pins = <
- 				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
-@@ -519,7 +531,7 @@
- 		&pinctrl_hummingboard2_usdhc2_aux
- 		&pinctrl_hummingboard2_usdhc2_200mhz
- 	>;
--	mmc-pwrseq = <&usdhc2_pwrseq>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
- 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgR2VlcnQgYW5kIFNlcmdlaSwNCg0KT24gRnJpZGF5LCBKYW51YXJ5IDEzLCAyMDE3LCBHZWVy
+dCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+IE9uIFRodSwgSmFuIDEyLCAyMDE3IGF0IDg6MDEgUE0s
+IENocmlzIEJyYW5kdCA8Y2hyaXMuYnJhbmR0QHJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiAt
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEwMC5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvcjdzNzIxMDAuZHRzaQ0KPiA+IEBAIC01MTMsNyArNTEzLDggQEANCj4gPiAgICAg
+ICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwMiBJUlFfVFlQRV9FREdFX1JJU0lO
+Rw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdJQ19TUEkgMTAzIElSUV9UWVBF
+X0VER0VfUklTSU5HPjsNCj4gPg0KPiA+IC0gICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHA1
+X2Nsa3MgUjdTNzIxMDBfQ0xLX09TVE0wPiwgPCZtc3RwNV9jbGtzDQo+IFI3UzcyMTAwX0NMS19P
+U1RNMT47DQo+ID4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmbXN0cDVfY2xrcyBSN1M3MjEw
+MF9DTEtfT1NUTTA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICA8Jm1zdHA1X2Nsa3Mg
+UjdTNzIxMDBfQ0xLX09TVE0xPjsNCj4gDQo+IEkgdGhpbmsgdGhpcyBjaGFuZ2Ugc2hvdWxkIGJl
+IGZvbGRlZCBpbnRvICJbUEFUQ0ggMi8zXSBBUk06IGR0czogcjdzNzIxMDA6DQo+IGFkZCBvc3Rt
+IHRvIGRldmljZSB0cmVlIiA7LSkNCg0KT29wcywgSSB0aGluayBJIGdvdCB0aGluZ3MgYSBsaXR0
+bGUgc2NyZXdlZCB1cCB3aGVuIGdpdCByZWJhc2luZyBhbmQNCnJlb3JkZXJpbmcgYW5kIHN1Y2gu
+DQoNClRoYW5rcyBmb3IgdGhlIHJldmlldyENCg0KQ2hyaXMNCg==
