@@ -1,38 +1,33 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Fri, 13 Jan 2017 09:35:22 +0100
-Message-ID: <20170113083522.GD2269@verge.net.au>
-References: <20170112181149.29035-1-chris.brandt@renesas.com>
- <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
- <SG2PR06MB1165F25FA9498C3AAD03D7698A790@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: r7s72100: add ostm clock to device tree
+Date: Fri, 13 Jan 2017 09:38:37 +0100
+Message-ID: <CAMuHMdWWRAL4QnAhmKXHYYN=bJEvfz6tyytt04BDRgLVsH5FBA@mail.gmail.com>
+References: <20170112190108.2856-1-chris.brandt@renesas.com> <20170112190108.2856-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB1165F25FA9498C3AAD03D7698A790@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170112190108.2856-2-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 08:34:26PM +0000, Chris Brandt wrote:
-> Hi Geert,
-> 
-> On Thursday, January 12, 2017, Geert Uytterhoeven wrote:
-> > This is strange. There are two SDHI channels, but the STBCR12
-> > documentation (all versions up to rev. 3.00) says the register has MSTP
-> > bits for four SD host interfaces?
-> > 
-> > Can you please enlighten me? Thanks!
-> 
-> Ya, I saw that. There are 2 bits per SDHI channel. I did check and just
-> enabling the one works fine.
-> 
-> Honestly, I'm not sure why there are two clock enables.
-> 
-> I'll go back and ask the design team if they can tell me why there are 2.
-> 
-> As I said, I just re-tested and it works fine, but you can hold off on the
-> patch if you want until I come up with a real explanation.
+On Thu, Jan 12, 2017 at 8:01 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-I'd prefer to hold off on this for now.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
