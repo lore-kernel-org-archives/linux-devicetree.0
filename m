@@ -1,137 +1,82 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Fri, 13 Jan 2017 17:44:12 +0100
-Message-ID: <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
- <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
- <20170113151747.6bc85245@bbrezillon>
- <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
- <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
- <20170113172825.75d545a3@bbrezillon>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] ASoC: es8328-i2c: Add compatible for ES8388
+Date: Fri, 13 Jan 2017 17:43:45 +0100
+Message-ID: <3724319.rPxRAuBZBQ@phil>
+References: <20170113161452.14313-1-romain.perier@collabora.com> <20170113161452.14313-2-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170113172825.75d545a3@bbrezillon>
+In-Reply-To: <20170113161452.14313-2-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2017 05:28 PM, Boris Brezillon wrote:
-> On Fri, 13 Jan 2017 17:13:55 +0100
-> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
->> On 01/13/2017 04:12 PM, Matthias Brugger wrote:
->>>
->>>
->>> On 13/01/17 15:17, Boris Brezillon wrote:  
->>>> On Fri, 13 Jan 2017 15:13:29 +0800
->>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->>>>  
->>>>> Add Mediatek nor flash node.
->>>>>
->>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>>> ---
->>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
->>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
->>>>>  2 files changed, 37 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
->>>>> b/arch/arm/boot/dts/mt2701-evb.dts
->>>>> index 082ca88..85e5ae8 100644
->>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
->>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
->>>>> @@ -24,6 +24,31 @@
->>>>>      };
->>>>>  };
->>>>>
->>>>> +&nor_flash {
->>>>> +    pinctrl-names = "default";
->>>>> +    pinctrl-0 = <&nor_pins_default>;
->>>>> +    status = "okay";
->>>>> +    flash@0 {
->>>>> +        compatible = "jedec,spi-nor";
->>>>> +        reg = <0>;
->>>>> +    };
->>>>> +};
->>>>> +
->>>>> +&pio {
->>>>> +    nor_pins_default: nor {
->>>>> +        pins1 {
->>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
->>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
->>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
->>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
->>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
->>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
->>>>> +            drive-strength = <MTK_DRIVE_4mA>;
->>>>> +            bias-pull-up;
->>>>> +        };
->>>>> +    };
->>>>> +};
->>>>> +
->>>>>  &uart0 {
->>>>>      status = "okay";
->>>>>  };
->>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
->>>>> b/arch/arm/boot/dts/mt2701.dtsi
->>>>> index bdf8954..1eefce4 100644
->>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
->>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
->>>>> @@ -227,6 +227,18 @@
->>>>>          status = "disabled";
->>>>>      };
->>>>>
->>>>> +    nor_flash: spi@11014000 {
->>>>> +        compatible = "mediatek,mt2701-nor",
->>>>> +                 "mediatek,mt8173-nor";  
->>>>
->>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
->>>> subset of the features supported by "mediatek,mt2701-nor"?
->>>>  
->>>
->>> I think even if the ip block is the same, we should provide both
->>> bindings, just in case in the future we find out that mt2701 has some
->>> hidden bug, feature or bug-feature. This way even if we update the
->>> driver, we stay compatible with older device tree blobs in the wild.
->>>
->>> We can drop the mt2701-nor in the bindings definition if you want. 
-> 
-> Oh, sorry, I misunderstood. What I meant is that if you want to
-> list/support all possible compatibles, maybe you should just put one
-> compatible in your DT and patch your driver (+ binding doc) to define
-> all of them.
+Hi Romain,
 
-Uh, what ? I lost you here :-)
+Am Freitag, 13. Januar 2017, 17:14:49 CET schrieb Romain Perier:
+> This commit adds a compatible string for everest,es8388. This is
+> an audio codec that is compatible with es8328.
+> 
+> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
+>  sound/soc/codecs/es8328-i2c.c                      | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/es8328.txt
+> b/Documentation/devicetree/bindings/sound/es8328.txt index 30ea8a3..33fbf05
+> 100644
+> --- a/Documentation/devicetree/bindings/sound/es8328.txt
+> +++ b/Documentation/devicetree/bindings/sound/es8328.txt
+> @@ -4,7 +4,7 @@ This device supports both I2C and SPI.
+> 
+>  Required properties:
+> 
+> -  - compatible : "everest,es8328"
+> +  - compatible  : Should be "everest,es8328" or "everest,es8388"
+>    - DVDD-supply : Regulator providing digital core supply voltage 1.8 -
+> 3.6V - AVDD-supply : Regulator providing analog supply voltage 3.3V
+>    - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+> diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+> index 2d05b5d..09ae67f 100644
+> --- a/sound/soc/codecs/es8328-i2c.c
+> +++ b/sound/soc/codecs/es8328-i2c.c
+> @@ -19,13 +19,14 @@
+>  #include "es8328.h"
+> 
+>  static const struct i2c_device_id es8328_id[] = {
+> -	{ "es8328", 0 },
+> +	{ "es8328", "es8388", 0 },
 
->> This exactly. We should have a DT compat in the form:
->> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
->> Then if we find a problem in the future, we can match on the
->> "vendor,<soc>-block" and still support the old DTs.
-> 
-> Not sure it's only in term of whose IP appeared first. My understanding
-> is that it's a way to provide inheritance. For example:
-> 
-> 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
-> 
-> or
-> 
-> 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
-> 
-> BTW, which one is the oldest between mt8173 and mt2701? :-)
+that looks strange or I'm just blind.
 
-And that's another thing and I agree with you, but I don't think that's
-what we're discussing in this thread. But (!), OT, I think we should
-codify the rules in Documentation/ . This discussion came up multiple
-times recently.
+struct i2c_device_id {
+        char name[I2C_NAME_SIZE];
+        kernel_ulong_t driver_data;     /* Data private to the driver */
+};
 
-And my question still stands, what do we put into the DT here, IMO
-compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";
-and what goes into the binding document ? I guess both too ?
--- 
-Best regards,
-Marek Vasut
+so shouldn't this be
+
+ static const struct i2c_device_id es8328_id[] = {
+ 	{ "es8328", 0 },
++	{ "es8388", 0 },
+
+instead?
+
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, es8328_id);
+> 
+>  static const struct of_device_id es8328_of_match[] = {
+>  	{ .compatible = "everest,es8328", },
+> +	{ .compatible = "everest,es8388", },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, es8328_of_match);
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
