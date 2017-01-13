@@ -1,65 +1,90 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
-Date: Fri, 13 Jan 2017 09:29:03 +0100
-Message-ID: <20170113082903.GA1446@katana>
-References: <CAOAejn2eOy2sn1VkE979ne23Sj9L6+kaQDNpL1EUKb2m=6sGXw@mail.gmail.com>
- <20170111153940.dtxzvtdici3r7l54@pengutronix.de>
- <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
- <20170112120309.fmrt2lwz3vklqmti@pengutronix.de>
- <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
- <20170112174902.j52foglkdouyz36n@pengutronix.de>
- <CAOAejn3tPi0fjy+t-UhMTvAq7LfdKJJdbcLw2su1-YAGDZMxew@mail.gmail.com>
- <20170112211004.z3wylc7vrubulc3x@pengutronix.de>
- <CAOAejn1HAU5spQeXmYPH4XH0L5bGuoFgguozwMp=uLKcXDEPEw@mail.gmail.com>
- <20170113072650.orx6vl2orqfakcuk@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] dt-bindings: document renesas-ostm timer
+Date: Fri, 13 Jan 2017 09:34:29 +0100
+Message-ID: <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
+References: <20170112185952.2780-1-chris.brandt@renesas.com> <20170112185952.2780-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170113072650.orx6vl2orqfakcuk-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170112185952.2780-2-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Jan 12, 2017 at 7:59 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  .../devicetree/bindings/timer/renesas,ostm.txt     | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+> new file mode 100644
+> index 0000000..46e1f27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+> @@ -0,0 +1,36 @@
+> +* Renesas OS Timer (OSTM)
+> +
+> +The OSTM comes with 2 independent channels.
+> +We will use the first channel (OSTM0) as a free running clocksource and the
+> +second channel (OSTM1) as a interrupt driven clock event.
+> +
+> +Additionally we will use the clocksource channel (OTSM0) for the system
+> +schedule timer sched_clock().
 
+The above two sentences are software policy, not hardware description.
+Hence they do not belong in the DT bindings document.
+You can move them to the commit description, though.
 
-> (But note that this is irrelevant for the patch as the driver doesn't
-> claim to support this kind of transfer.)
+> +
+> +Required Properties:
+> +
+> +  - compatible: must be one or more of the following:
+> +    - "renesas,ostm-r7s72100" for the r7s72100 OSTM
 
-Yes, I wanted to mention that, too.
+Please use "renesas,r7s72100-ostm" instead, to match current practices.
 
-I'd think the series is good to go in?
+> +    - "renesas,ostm" for any OSTM
+> +      This is a fallback for the above renesas,ostm-* entries
+> +
+> +  - reg: base address and length of the registers block for each timer channel.
+> +    There should be 2 sets of addresses, one for each channel.
+> +
+> +  - interrupts: interrupt specifiers for the timers. There should be 2
+> +    interupts, one for each channel.
+> +
+> +  - clocks: a list of phandle + clock-specifier pairs, one for each entry
+> +    channel. There should be 2 sets, one for each channel.
 
+Are the channels truly independent? If yes, I think it's better to have two
+separate device nodes, one for each channel.
+Each channel has its own module clock, so using separate devices means
+Runtime PM can manage both channels through their module clocks as soon as
+you add a "power-domains" property pointing to the clock domain controller.
 
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature; name="signature.asc"
+> +Example: R7S72100 (RZ/A1H) OSTM node
+> +
+> +       ostm: ostm@fcfec000 {
+> +               compatible = "renesas,ostm-r7s72100", "renesas,ostm";
+> +               reg = <0xfcfec000 0x30>,
+> +                     <0xfcfec400 0x30>;
+> +               interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING
+> +                             GIC_SPI 103 IRQ_TYPE_EDGE_RISING>;
+> +
+> +               clocks = <&mstp5_clks R7S72100_CLK_OSTM0>, <&mstp5_clks R7S72100_CLK_OSTM1>;
+> +       };
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Gr{oetje,eeting}s,
 
-iQIcBAEBAgAGBQJYeI/PAAoJEBQN5MwUoCm2bVsQAIbzqUM2p/ozk3KTiSifrM0z
-/m0hxQjaXEN4FW71iFacZnmpdS8dQI+o56OyDpgc887LjQP0pjGUdSEsIKumsqZp
-zfpdBOMv05MR4kXFijtMEhpboOlmq8Nz4xjrtio4xXAGceqqhLfPIrANJvFPLFE+
-oSU//hcr4RPLBT5z19wtO0bTp72T8x/mWpxlIU7U+TRnjhtPE3K0bkvqoDmRJgIm
-dAcrubLdRzLxcAHQGSv4UJzXqf6npSwyjvfo9I7xvthceSmSJd9yVVuBELR4+IKO
-IZtoCKxk4rPFAkTrvw75LzAWmcZMmJOl3Sh/S/VrdpqsQ4bwTizxIkb6KQgU/wS0
-CQu+7Oq4nKnc6MeG8wt8nJ063RgM8JZQVEOs6Si8LJkvdTnz9BACXdRi5ijzVevj
-19yRNtm3jnhbmQpyYkO3OtGqwhrPK/bSFzayeTCJlLRUDGqYX4tVRsfBDFhygGLq
-lS9IP46q+jopMtJOUv5jHqEV1GmD6aJ25qmMNftV1I/ReSMDeiZ7kbaL0HjLTKHO
-FzlmGLAD5wesqCffjJK4hMsnz5asBz+54h3+p+x0Yg6ozO5h+e28Ox2Skfs+O6Lb
-I35B3p/6GmuW7Vsd0FZzJ4/eWaaA9cG+v1Q4uPxKxBO1mzniRp97jrhGYc7nCmVA
-95DjuLiqoqYshhU3yH+O
-=CPaC
------END PGP SIGNATURE-----
+                        Geert
 
---/9DWx/yDrRhgMJTb--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
