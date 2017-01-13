@@ -1,114 +1,36 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Fri, 13 Jan 2017 16:21:04 +0100
-Message-ID: <20170113162104.4d2a624c@bbrezillon>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
-        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
-        <20170113151747.6bc85245@bbrezillon>
-        <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
+ for imx6sll
+Date: Fri, 13 Jan 2017 16:22:19 +0100
+Message-ID: <CACRpkda1a4+yOrzBnKs6J84PS0StwQ68gHxDub_u7i5ofU9s7w@mail.gmail.com>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <1482832070-22668-6-git-send-email-ping.bai@nxp.com> <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
+ <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
+ <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com> <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Guochun Mao <guochun.mao@mediatek.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Jan 2017 16:12:20 +0100
-Matthias Brugger <matthias.bgg@gmail.com> wrote:
+On Thu, Jan 12, 2017 at 3:57 AM, Jacky Bai <ping.bai@nxp.com> wrote:
 
-> On 13/01/17 15:17, Boris Brezillon wrote:
-> > On Fri, 13 Jan 2017 15:13:29 +0800
-> > Guochun Mao <guochun.mao@mediatek.com> wrote:
-> >  
-> >> Add Mediatek nor flash node.
-> >>
-> >> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
-> >> ---
-> >>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
-> >>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
-> >>  2 files changed, 37 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> >> index 082ca88..85e5ae8 100644
-> >> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> >> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> >> @@ -24,6 +24,31 @@
-> >>  	};
-> >>  };
-> >>
-> >> +&nor_flash {
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&nor_pins_default>;
-> >> +	status = "okay";
-> >> +	flash@0 {
-> >> +		compatible = "jedec,spi-nor";
-> >> +		reg = <0>;
-> >> +	};
-> >> +};
-> >> +
-> >> +&pio {
-> >> +	nor_pins_default: nor {
-> >> +		pins1 {
-> >> +			pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
-> >> +				 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
-> >> +				 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
-> >> +				 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
-> >> +				 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
-> >> +				 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
-> >> +			drive-strength = <MTK_DRIVE_4mA>;
-> >> +			bias-pull-up;
-> >> +		};
-> >> +	};
-> >> +};
-> >> +
-> >>  &uart0 {
-> >>  	status = "okay";
-> >>  };
-> >> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> >> index bdf8954..1eefce4 100644
-> >> --- a/arch/arm/boot/dts/mt2701.dtsi
-> >> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> >> @@ -227,6 +227,18 @@
-> >>  		status = "disabled";
-> >>  	};
-> >>
-> >> +	nor_flash: spi@11014000 {
-> >> +		compatible = "mediatek,mt2701-nor",
-> >> +			     "mediatek,mt8173-nor";  
-> >
-> > Why define both here? Is "mediatek,mt8173-nor" really providing a
-> > subset of the features supported by "mediatek,mt2701-nor"?
-> >  
-> 
-> I think even if the ip block is the same, we should provide both 
-> bindings, just in case in the future we find out that mt2701 has some 
-> hidden bug, feature or bug-feature. This way even if we update the 
-> driver, we stay compatible with older device tree blobs in the wild.
+> Another thing is that we can use a pins-tool program developed by NXP to
+>  generate the pinctrl configuration code that can be used directly in dts. This
+> tiny program can avoid pin function conflict. As on i.MX, there are so may pins,
+> each pin can be used for up 8  function. Configuring the pins is a time-consuming
+> work.  This tools is very useful for customer to generate the dts code.
 
-I'm fine with this approach, but in this case, defining both is wrong.
+I understand, but every silicon vendor has such a tool, all are different,
+proprietary and unfriendly to programmers and open source developers, who
+need to understand how the hardware is working without magic tools
+and secret data sheets to fix bugs.
 
-> 
-> We can drop the mt2701-nor in the bindings definition if you want.
+For the people working with maintaining the code it is paramount that
+DTS files are self-descriptive.
 
-Yes, please.
-
-> 
-> Regards,
-> Matthias
-> 
-> >> +		reg = <0 0x11014000 0 0xe0>;
-> >> +		clocks = <&pericfg CLK_PERI_FLASH>,
-> >> +			 <&topckgen CLK_TOP_FLASH_SEL>;
-> >> +		clock-names = "spi", "sf";
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +		status = "disabled";
-> >> +	};
-> >> +
-> >>  	mmsys: syscon@14000000 {
-> >>  		compatible = "mediatek,mt2701-mmsys", "syscon";
-> >>  		reg = <0 0x14000000 0 0x1000>;  
-> >  
+Yours,
+Linus Walleij
