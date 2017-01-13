@@ -1,138 +1,158 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH 11/37] PCI: dwc: Split pcie-designware.c into host and
- core files
-Date: Fri, 13 Jan 2017 16:49:44 +0000
-Message-ID: <4a89fb45-af84-d660-5ef0-12227b141cda@synopsys.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-12-git-send-email-kishon@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Fri, 13 Jan 2017 17:56:28 +0100
+Message-ID: <20170113175628.1793f433@bbrezillon>
+References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
+        <20170113151747.6bc85245@bbrezillon>
+        <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+        <20170113172825.75d545a3@bbrezillon>
+        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484216786-17292-12-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <86c997be-f500-eaa1-3ba5-d21cff6223b7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=C0s 10:26 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
-> Split pcie-designware.c into pcie-designware-host.c that contains
-> the host specific parts of the driver and pcie-designware.c that
-> contains the parts used by both host driver and endpoint driver.
-> =
+On Fri, 13 Jan 2017 17:44:12 +0100
+Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/dwc/Makefile               |    2 +-
->  drivers/pci/dwc/pcie-designware-host.c |  619 ++++++++++++++++++++++++++=
-++++++
->  drivers/pci/dwc/pcie-designware.c      |  613 +-------------------------=
------
->  drivers/pci/dwc/pcie-designware.h      |    8 +
->  4 files changed, 634 insertions(+), 608 deletions(-)
->  create mode 100644 drivers/pci/dwc/pcie-designware-host.c
-> =
+> On 01/13/2017 05:28 PM, Boris Brezillon wrote:
+> > On Fri, 13 Jan 2017 17:13:55 +0100
+> > Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> >> On 01/13/2017 04:12 PM, Matthias Brugger wrote:  
+> >>>
+> >>>
+> >>> On 13/01/17 15:17, Boris Brezillon wrote:    
+> >>>> On Fri, 13 Jan 2017 15:13:29 +0800
+> >>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >>>>    
+> >>>>> Add Mediatek nor flash node.
+> >>>>>
+> >>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>>> ---
+> >>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
+> >>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
+> >>>>>  2 files changed, 37 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>> b/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>> index 082ca88..85e5ae8 100644
+> >>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>> @@ -24,6 +24,31 @@
+> >>>>>      };
+> >>>>>  };
+> >>>>>
+> >>>>> +&nor_flash {
+> >>>>> +    pinctrl-names = "default";
+> >>>>> +    pinctrl-0 = <&nor_pins_default>;
+> >>>>> +    status = "okay";
+> >>>>> +    flash@0 {
+> >>>>> +        compatible = "jedec,spi-nor";
+> >>>>> +        reg = <0>;
+> >>>>> +    };
+> >>>>> +};
+> >>>>> +
+> >>>>> +&pio {
+> >>>>> +    nor_pins_default: nor {
+> >>>>> +        pins1 {
+> >>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
+> >>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
+> >>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
+> >>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
+> >>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
+> >>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
+> >>>>> +            drive-strength = <MTK_DRIVE_4mA>;
+> >>>>> +            bias-pull-up;
+> >>>>> +        };
+> >>>>> +    };
+> >>>>> +};
+> >>>>> +
+> >>>>>  &uart0 {
+> >>>>>      status = "okay";
+> >>>>>  };
+> >>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
+> >>>>> b/arch/arm/boot/dts/mt2701.dtsi
+> >>>>> index bdf8954..1eefce4 100644
+> >>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
+> >>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> >>>>> @@ -227,6 +227,18 @@
+> >>>>>          status = "disabled";
+> >>>>>      };
+> >>>>>
+> >>>>> +    nor_flash: spi@11014000 {
+> >>>>> +        compatible = "mediatek,mt2701-nor",
+> >>>>> +                 "mediatek,mt8173-nor";    
+> >>>>
+> >>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
+> >>>> subset of the features supported by "mediatek,mt2701-nor"?
+> >>>>    
+> >>>
+> >>> I think even if the ip block is the same, we should provide both
+> >>> bindings, just in case in the future we find out that mt2701 has some
+> >>> hidden bug, feature or bug-feature. This way even if we update the
+> >>> driver, we stay compatible with older device tree blobs in the wild.
+> >>>
+> >>> We can drop the mt2701-nor in the bindings definition if you want.   
+> > 
+> > Oh, sorry, I misunderstood. What I meant is that if you want to
+> > list/support all possible compatibles, maybe you should just put one
+> > compatible in your DT and patch your driver (+ binding doc) to define
+> > all of them.  
+> 
+> Uh, what ? I lost you here :-)
+> 
+> >> This exactly. We should have a DT compat in the form:
+> >> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
+> >> Then if we find a problem in the future, we can match on the
+> >> "vendor,<soc>-block" and still support the old DTs.  
+> > 
+> > Not sure it's only in term of whose IP appeared first. My understanding
+> > is that it's a way to provide inheritance. For example:
+> > 
+> > 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
+> > 
+> > or
+> > 
+> > 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
+> > 
+> > BTW, which one is the oldest between mt8173 and mt2701? :-)  
+> 
+> And that's another thing and I agree with you, but I don't think that's
+> what we're discussing in this thread. But (!), OT, I think we should
+> codify the rules in Documentation/ . This discussion came up multiple
+> times recently.
+> 
+> And my question still stands, what do we put into the DT here, IMO
+> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";
 
-> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-> index 7d27c14..3b57e55 100644
-> --- a/drivers/pci/dwc/Makefile
-> +++ b/drivers/pci/dwc/Makefile
-> @@ -1,4 +1,4 @@
+I'd say
 
-(snip...)
+	compatible = "mediatek,mt8173-nor";
 
-> -static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
-> -				      int type, u64 cpu_addr, u64 pci_addr,
-> -				      u32 size)
-> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> +			       u64 cpu_addr, u64 pci_addr, u32 size)
->  {
->  	u32 retries, val;
->  =
+because both compatible are referring to very specific IP version. It's
+not the same as
 
-> @@ -186,220 +151,6 @@ static void dw_pcie_prog_outbound_atu(struct dw_pci=
-e *pci, int index,
->  	dev_err(pci->dev, "iATU is not being enabled\n");
->  }
+	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";
 
-Kishon, iATU only makes sense in The Root Complex (host), so it should be i=
-nside
-the pcie-designware-host.
+where you clearly have a generic compatible which is overloaded by a
+specific one.
 
->  =
+But anyway, I'm not the one taking the decision here, let's wait for DT
+maintainers reviews.
 
-> -static struct irq_chip dw_msi_irq_chip =3D {
-> -	.name =3D "PCI-MSI",
-> -	.irq_enable =3D pci_msi_unmask_irq,
-> -	.irq_disable =3D pci_msi_mask_irq,
-> -	.irq_mask =3D pci_msi_mask_irq,
-> -	.irq_unmask =3D pci_msi_unmask_irq,
-> -};
-> -
+> and what goes into the binding document ? I guess both too ?
 
-(snip...)
+If both exist, they should be both documented.
 
-> -
-> -static const struct irq_domain_ops msi_domain_ops =3D {
-> -	.map =3D dw_pcie_msi_map,
-> -};
-> -
->  static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
->  {
->  	u32 val;
-> @@ -454,303 +192,11 @@ static u8 dw_pcie_iatu_unroll_enabled(struct dw_pc=
-ie *pci)
->  	return 0;
->  }
-
-Kishon, iATU only makes sense in The Root Complex (host), so it should be i=
-nside
-the pcie-designware-host.
-
-(snip...)
-
-> diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-des=
-ignware.h
-> index 491fbe3..808d17b 100644
-> --- a/drivers/pci/dwc/pcie-designware.h
-> +++ b/drivers/pci/dwc/pcie-designware.h
-> @@ -14,6 +14,10 @@
->  #ifndef _PCIE_DESIGNWARE_H
->  #define _PCIE_DESIGNWARE_H
->  =
-
-> +#include <linux/irq.h>
-> +#include <linux/msi.h>
-> +#include <linux/pci.h>
-> +
->  /* Parameters for the waiting for link up routine */
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
-> @@ -167,4 +171,8 @@ struct dw_pcie {
->  void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val);
->  int dw_pcie_link_up(struct dw_pcie *pci);
->  int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
-> +			       int type, u64 cpu_addr, u64 pci_addr,
-> +			       u32 size);
-> +void dw_pcie_setup(struct dw_pcie *pci);
-
-
-Kishon, iATU only makes sense in The Root Complex (host), so it should be i=
-nside
-the pcie-designware-host as static.
-
->  #endif /* _PCIE_DESIGNWARE_H */
-> =
-
-
-Thanks,
-Joao
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
