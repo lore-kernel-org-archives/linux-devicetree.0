@@ -1,66 +1,74 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/2] iio: adc: Add Maxim MAX11100 driver
-Date: Fri, 13 Jan 2017 10:50:36 +0100
-Message-ID: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Fri, 13 Jan 2017 10:54:17 +0100
+Message-ID: <2fca7ac2-9a88-19b1-28c5-5192b9c4a2bc@gmail.com>
+References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+ <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   sending out v4 splitting device tree bindings documentation and actual ADC
-driver.
-No changes in driver code since v3.
+On 13.01.2017 10:12, Chris Packham wrote:
+> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+>
+> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
+> from Marvell.
+>
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+>
+> Notes:
+>     Changes in v2:
+>     - include sdio support for the 98DX4251
+>     Changes in v3:
+>     - None
+>     Changes in v4:
+>     - Correct some discrepencies between binding and driver.
 
-Same question for iio maintainers here:
-I would like to have clarified the measure unit returned by read_raw().
-Currently (value_raw * value_scale) return the ADC input value in mV.
-While testing the patch I've been questioned if that should not actually
-be in uV. This is easily achievable making _scale return a value in uV.
-I have found no mention of this in the ABI documentation as it speaks of
-generic voltage.
-Can we have a final word on this?
+Well, unfortunately I still see differences between the "gpio" in
+the binding and "gpo" in the driver.
 
-Thanks Marek for having tested this.
+Please go back to that list I sent you yesterday and fix them all.
 
-v1 -> v2:
-    - incorporated pmeerw's review comments
-    - retrieve vref from dts and use that to convert read_raw result
-      to mV
-    - add device tree bindings documentation
+[...]
+> diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+> new file mode 100644
+> index 000000000000..b5bd23992fdf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+> @@ -0,0 +1,46 @@
+[...]
+> +mpp6          6        gpio, sd0(clk), dev(a2)
 
-v2 -> v3:
-    - add _SCALE bit of read_raw function and change _RAW bit accordingly
-    - call regulator_get_voltage when accessing the _SCALE part of read_raw
-      and not during probe
-    - add back remove function as regulator has to be disabled when detaching
-      the module. Do not use devm_ version of iio_register/unregister functions
-      anymore but do unregister in the remove.
-    - remove mutex as access to SPI bus is protected by SPI core. Thanks marex
+e.g. this is "gpio" ...
 
-v3 -> v4:
-    - split device tree binding documentation and actual ADC driver
-    - add "reg" to the list of required properties and use a better
-      namimg for the adc device node in bindings documentation as suggested
-      by Geert.
+[...]
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+> index e4ea71a9d985..9601d662c7f5 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+> @@ -49,6 +49,10 @@ enum armada_xp_variant {
+[...]
+> +	MPP_MODE(6,
+> +		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
 
-Jacopo Mondi (2):
-  iio: adc: Add Maxim MAX11100 driver
-  dt-bindings: iio: document MAX11100 ADC
+... but here it is "gpo".
 
- .../devicetree/bindings/iio/adc/max11100.txt       |  19 +++
- drivers/iio/adc/Kconfig                            |   9 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/max11100.c                         | 187 +++++++++++++++++++++
- 4 files changed, 216 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/max11100.txt
- create mode 100644 drivers/iio/adc/max11100.c
-
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sebastian
