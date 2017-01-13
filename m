@@ -1,51 +1,48 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: cacheinfo: add support to override cache
- levels via device tree
-Date: Fri, 13 Jan 2017 09:30:28 +0000
-Message-ID: <609a80c7-9a85-2786-1e5a-a5c2340900b9@arm.com>
-References: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
- <1484245772-31511-2-git-send-email-sudeep.holla@arm.com>
- <58789899.3080909@huawei.com>
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Subject: Re: [PATCH v8 2/5] i2c: Add STM32F4 I2C driver
+Date: Fri, 13 Jan 2017 10:36:01 +0100
+Message-ID: <CAOAejn0c+G7LeZS-_Yq3yM=Y7LG=_vr+0-UYqmCZTyM1q4GmRA@mail.gmail.com>
+References: <20170111153940.dtxzvtdici3r7l54@pengutronix.de>
+ <CAOAejn2pW20VPP_yGtvJ_ufvj6Xj1poBiiA2WqkALiaLyyONug@mail.gmail.com>
+ <20170112120309.fmrt2lwz3vklqmti@pengutronix.de> <CAOAejn289GLOSP-nPJnO_VpXLpyhTsF1bWQ7Ns9OfgPQCa8YTw@mail.gmail.com>
+ <20170112174902.j52foglkdouyz36n@pengutronix.de> <CAOAejn3tPi0fjy+t-UhMTvAq7LfdKJJdbcLw2su1-YAGDZMxew@mail.gmail.com>
+ <20170112211004.z3wylc7vrubulc3x@pengutronix.de> <CAOAejn1HAU5spQeXmYPH4XH0L5bGuoFgguozwMp=uLKcXDEPEw@mail.gmail.com>
+ <20170113072650.orx6vl2orqfakcuk@pengutronix.de> <20170113082903.GA1446@katana>
+ <20170113084513.wvuxkanrlmgz3ang@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58789899.3080909-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170113084513.wvuxkanrlmgz3ang@pengutronix.de>
+Sender: linux-i2c-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Ok so I am going to send the v9 asap.
+Thanks
 
-
-On 13/01/17 09:06, Tan Xiaojun wrote:
-> On 2017/1/13 2:29, Sudeep Holla wrote:
->> The cache hierarchy can be identified through Cache Level ID(CLIDR)
->> architected system register. However in some cases it will provide
->> only the number of cache levels that are integrated into the processor
->> itself. In other words, it can't provide any information about the
->> caches that are external and/or transparent.
+2017-01-13 9:45 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutroni=
+x.de>:
+> On Fri, Jan 13, 2017 at 09:29:03AM +0100, Wolfram Sang wrote:
 >>
->> Some platforms require to export the information about all such external
->> caches to the userspace applications via the sysfs interface.
+>> > (But note that this is irrelevant for the patch as the driver doesn't
+>> > claim to support this kind of transfer.)
 >>
->> This patch adds support to override the cache levels using device tree
->> to take such external non-architected caches into account.
+>> Yes, I wanted to mention that, too.
 >>
->> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
->> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> 
-> Tested-by: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> 
-
-Thanks for testing.
-
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> I'd think the series is good to go in?
+>
+> AFAICT there are some unaddressed comments that Cedrics claimed to fix
+> before our discussion was dominated by block transfers.
+>
+> Best regards
+> Uwe
+>
+>
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
