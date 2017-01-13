@@ -1,11 +1,13 @@
 From: Guochun Mao <guochun.mao@mediatek.com>
-Subject: [PATCH v1 0/2] add nor flash node for mt2701
-Date: Fri, 13 Jan 2017 15:13:27 +0800
-Message-ID: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+Subject: [PATCH v1 1/2] Documentation: mtk-quadspi: update DT bindings
+Date: Fri, 13 Jan 2017 15:13:28 +0800
+Message-ID: <1484291609-20195-2-git-send-email-guochun.mao@mediatek.com>
+References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,23 +18,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Guochun Mao <guochun.mao@mediatek.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series based on v4.10-rc2, include MT2701 spinor node and bindings.
+Add "mediatek,mt2701-nor" for nor flash node's compatible.
 
-Dependent on "Add clock and power domain DT nodes for Mediatek MT2701"[1].
+Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+---
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-December/007637.html
-
-Guochun Mao (2):
-  Documentation: mtk-quadspi: update DT bindings
-  arm: dts: mt2701: add nor flash node
-
- .../devicetree/bindings/mtd/mtk-quadspi.txt        |  4 +++-
- arch/arm/boot/dts/mt2701-evb.dts                   | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi                      | 12 +++++++++++
- 3 files changed, 40 insertions(+), 1 deletion(-)
-
---
-1.8.1.1.dirty
+diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+index fb314f0..f83d31d 100644
+--- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+@@ -1,7 +1,9 @@
+ * Serial NOR flash controller for MTK MT81xx (and similar)
+ 
+ Required properties:
+-- compatible: 	  should be "mediatek,mt8173-nor";
++- compatible: 	  should contain:
++		  "mediatek,mt2701-nor" for MT2701,
++		  "mediatek,mt8173-nor" for MT8173.
+ - reg: 		  physical base address and length of the controller's register
+ - clocks: 	  the phandle of the clocks needed by the nor controller
+ - clock-names: 	  the names of the clocks
+-- 
+1.7.9.5
