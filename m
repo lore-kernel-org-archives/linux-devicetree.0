@@ -1,158 +1,191 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Fri, 13 Jan 2017 17:56:28 +0100
-Message-ID: <20170113175628.1793f433@bbrezillon>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
-        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
-        <20170113151747.6bc85245@bbrezillon>
-        <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
-        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
-        <20170113172825.75d545a3@bbrezillon>
-        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 5/5] Documentation:powerpc: Add device-tree bindings
+ for power-mgt
+Date: Fri, 13 Jan 2017 10:57:43 -0600
+Message-ID: <20170113165743.nma5wbsw64tsjqdm@rob-hp-laptop>
+References: <1484039224-5630-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1484039224-5630-6-git-send-email-ego@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <86c997be-f500-eaa1-3ba5-d21cff6223b7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <1484039224-5630-6-git-send-email-ego@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, devicetree@vger.kernel.org, Michael Neuling <mikey@neuling.org>, linux-pm@vger.kernel.org, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Jan 2017 17:44:12 +0100
-Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> On 01/13/2017 05:28 PM, Boris Brezillon wrote:
-> > On Fri, 13 Jan 2017 17:13:55 +0100
-> > Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >   
-> >> On 01/13/2017 04:12 PM, Matthias Brugger wrote:  
-> >>>
-> >>>
-> >>> On 13/01/17 15:17, Boris Brezillon wrote:    
-> >>>> On Fri, 13 Jan 2017 15:13:29 +0800
-> >>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>>>    
-> >>>>> Add Mediatek nor flash node.
-> >>>>>
-> >>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>> ---
-> >>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
-> >>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
-> >>>>>  2 files changed, 37 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>> b/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>> index 082ca88..85e5ae8 100644
-> >>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>> @@ -24,6 +24,31 @@
-> >>>>>      };
-> >>>>>  };
-> >>>>>
-> >>>>> +&nor_flash {
-> >>>>> +    pinctrl-names = "default";
-> >>>>> +    pinctrl-0 = <&nor_pins_default>;
-> >>>>> +    status = "okay";
-> >>>>> +    flash@0 {
-> >>>>> +        compatible = "jedec,spi-nor";
-> >>>>> +        reg = <0>;
-> >>>>> +    };
-> >>>>> +};
-> >>>>> +
-> >>>>> +&pio {
-> >>>>> +    nor_pins_default: nor {
-> >>>>> +        pins1 {
-> >>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
-> >>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
-> >>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
-> >>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
-> >>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
-> >>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
-> >>>>> +            drive-strength = <MTK_DRIVE_4mA>;
-> >>>>> +            bias-pull-up;
-> >>>>> +        };
-> >>>>> +    };
-> >>>>> +};
-> >>>>> +
-> >>>>>  &uart0 {
-> >>>>>      status = "okay";
-> >>>>>  };
-> >>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
-> >>>>> b/arch/arm/boot/dts/mt2701.dtsi
-> >>>>> index bdf8954..1eefce4 100644
-> >>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
-> >>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> >>>>> @@ -227,6 +227,18 @@
-> >>>>>          status = "disabled";
-> >>>>>      };
-> >>>>>
-> >>>>> +    nor_flash: spi@11014000 {
-> >>>>> +        compatible = "mediatek,mt2701-nor",
-> >>>>> +                 "mediatek,mt8173-nor";    
-> >>>>
-> >>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
-> >>>> subset of the features supported by "mediatek,mt2701-nor"?
-> >>>>    
-> >>>
-> >>> I think even if the ip block is the same, we should provide both
-> >>> bindings, just in case in the future we find out that mt2701 has some
-> >>> hidden bug, feature or bug-feature. This way even if we update the
-> >>> driver, we stay compatible with older device tree blobs in the wild.
-> >>>
-> >>> We can drop the mt2701-nor in the bindings definition if you want.   
-> > 
-> > Oh, sorry, I misunderstood. What I meant is that if you want to
-> > list/support all possible compatibles, maybe you should just put one
-> > compatible in your DT and patch your driver (+ binding doc) to define
-> > all of them.  
+On Tue, Jan 10, 2017 at 02:37:04PM +0530, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 > 
-> Uh, what ? I lost you here :-)
+> Document the device-tree bindings defining the the properties under
+> the @power-mgt node in the device tree that describe the idle states
+> for Linux running on baremetal POWER servers.
 > 
-> >> This exactly. We should have a DT compat in the form:
-> >> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
-> >> Then if we find a problem in the future, we can match on the
-> >> "vendor,<soc>-block" and still support the old DTs.  
-> > 
-> > Not sure it's only in term of whose IP appeared first. My understanding
-> > is that it's a way to provide inheritance. For example:
-> > 
-> > 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
-> > 
-> > or
-> > 
-> > 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
-> > 
-> > BTW, which one is the oldest between mt8173 and mt2701? :-)  
+
+We have "common" idle state bindings. Perhaps some explanation why those 
+can't be used.
+
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> ---
+> [v4]-> [v5]: Fixed a couple of typos.
 > 
-> And that's another thing and I agree with you, but I don't think that's
-> what we're discussing in this thread. But (!), OT, I think we should
-> codify the rules in Documentation/ . This discussion came up multiple
-> times recently.
+>  .../devicetree/bindings/powerpc/opal/power-mgt.txt | 125 +++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
 > 
-> And my question still stands, what do we put into the DT here, IMO
-> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";
+> diff --git a/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt b/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
+> new file mode 100644
+> index 0000000..4967831
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
+> @@ -0,0 +1,125 @@
+> +IBM Power-Management Bindings
+> +=============================
+> +
+> +Linux running on baremetal POWER machines has access to the processor
+> +idle states. The description of these idle states is exposed via the
+> +node @power-mgt in the device-tree by the firmware.
+> +
+> +Definitions:
+> +----------------
+> +Typically each idle state has the following associated properties:
+> +
+> +- name: The name of the idle state as defined by the firmware.
+> +
+> +- flags: indicating some aspects of this idle states such as the
+> +         extent of state-loss, whether timebase is stopped on this
+> +         idle states and so on. The flag bits are as follows:
+> +
+> +- exit-latency: The latency involved in transitioning the state of the
+> +		CPU from idle to running.
+> +
+> +- target-residency: The minimum time that the CPU needs to reside in
+> +		    this idle state in order to accrue power-savings
+> +		    benefit.
+> +
+> +Properties
+> +----------------
+> +The following properties provide details about the idle states. These
+> +properties are optional unless mentioned otherwise below.
 
-I'd say
+-names is optional but everything else seems to require it. It is not 
+clear what the binding looks like if -names is not present.
 
-	compatible = "mediatek,mt8173-nor";
+> +
+> +- ibm,cpu-idle-state-names:
+> +	Array of strings containing the names of the idle states.
+> +
+> +- ibm,cpu-idle-state-flags:
+> +	Array of unsigned 32-bit values containing the values of the
+> +	flags associated with the the aforementioned idle-states. This
+> +	property is required on POWER9 whenever
+> +	ibm,cpu-idle-state-names is defined and the length of this
+> +	property array should be the same as
+> +	ibm,-cpu-idle-state-names.The flag bits are as follows:
 
-because both compatible are referring to very specific IP version. It's
-not the same as
+s/ibm,-cpu/ibm,cpu/
 
-	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";
+Needs a space after the period.
 
-where you clearly have a generic compatible which is overloaded by a
-specific one.
+> +		0x00000001 /* Decrementer would stop */
+> +		0x00000002 /* Needs timebase restore */
+> +		0x00001000 /* Restore GPRs like nap */
+> +		0x00002000 /* Restore hypervisor resource from PACA pointer */
+> +		0x00004000 /* Program PORE to restore PACA pointer */
+> +		0x00010000 /* This is a nap state */
+> +		0x00020000 /* This is a fast-sleep state */
+> +		0x00040000 /* This is a winkle state */
+> +		0x00080000 /* This is a fast-sleep state which requires a */
+> +			   /* software workaround for restoring the timebase*/
+> +		0x00800000 /* This state uses SPR PMICR instruction */
+> +		0x00100000 /* This is a fast stop state */
+> +		0x00200000 /* This is a deep-stop state */
+> +
+> +- ibm,cpu-idle-state-latencies-ns:
+> +	Array of unsigned 32-bit values containing the values of the
+> +	exit-latencies (in ns) for the idle states in
+> +	ibm,cpu-idle-state-names. This property is required whenever
+> +	ibm,cpu-idle-state-names is defined and the length of this
+> +	property array should be the same as
+> +	ibm,-cpu-idle-state-names.
 
-But anyway, I'm not the one taking the decision here, let's wait for DT
-maintainers reviews.
+Same typo.
 
-> and what goes into the binding document ? I guess both too ?
-
-If both exist, they should be both documented.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +- ibm,cpu-idle-state-residency-ns:
+> +	Array of unsigned 32-bit values containing the values of the
+> +	target-residency (in ns) for the idle states in
+> +	ibm,cpu-idle-state-names. On POWER8 this is an optional
+> +	property. If the property is absent, the target residency for
+> +	the "Nap", "FastSleep" are defined to 10000 and 300000000
+> +	respectively. On POWER9 this property must be defined if
+> +	ibm,cpu-idle-state-names is defined and the length should be
+> +	same as that of ibm,cpu-idle-state-names.
+> +
+> +- ibm,cpu-idle-state-psscr:
+> +	Array of unsigned 64-bit values containing the values for the
+> +	PSSCR for each of the idle states in ibm,cpu-idle-state-names.
+> +	This property is required on POWER9 whenever
+> +	ibm,cpu-idle-state-names is defined and the length of this
+> +	property array should be the same as
+> +	ibm,cpu-idle-state-names.
+> +
+> +- ibm,cpu-idle-state-psscr-mask:
+> +	Array of unsigned 64-bit values containing the masks
+> +	indicating which psscr fields are set in the corresponding
+> +	entries of ibm,cpu-idle-state-psscr.  This property is
+> +	required on POWER9 whenever ibm,cpu-idle-state-names is
+> +	defined and the length of this property array should be the
+> +	same as ibm,cpu-idle-state-names.
+> +
+> +	Whenever the firmware sets an entry in
+> +	ibm,cpu-idle-state-psscr-mask value to 0xf, it implies that
+> +	only the Requested Level (RL) field of the corresponding entry
+> +	in ibm,cpu-idle-state-psscr should be considered by the
+> +	kernel. For such idle states, the kernel would set the
+> +	remaining fields of the psscr to the following sane-default
+> +	values.
+> +
+> +		- ESL and EC bits are to 1. So wakeup from any stop
+> +		  state will be at vector 0x100.
+> +
+> +		- MTL and PSLL are set to the maximum allowed value as
+> +		  per the ISA, i.e. 15.
+> +
+> +		- The Transition Rate, TR is set to the Maximum value
+> +                  3.
+> +
+> +	For all the other values of the entry in
+> +	ibm,cpu-idle-state-psscr-mask, the Kernel expects all the
+> +	psscr fields of the corresponding entry in
+> +	ibm,cpu-idle-state-psscr to be correctly set by the firmware.
+> +
+> +- ibm,cpu-idle-state-pmicr:
+> +	Array of unsigned 64-bit values containing the pmicr values
+> +	for the idle states in ibm,cpu-idle-state-names. This 64-bit
+> +	register value is to be set in pmicr for the corresponding
+> +	state if the flag indicates that pmicr SPR should be set. This
+> +	is an optional property on POWER8 and is absent on
+> +	POWER9. When present on POWER8, the length of this property
+> +	array should be the same as ibm,cpu-idle-state-names.
+> +
+> +- ibm,cpu-idle-state-pmicr:-mask
+> +	Array of unsigned 64-bit values containing the mask indicating
+> +	which of the fields of the PMICR are set in the corresponding
+> +	entries in ibm,cpu-idle-state-pmicr. This is an optional
+> +	property on POWER8 and is absent on POWER9. When present on
+> +	POWER8, the length of this property array should be the same
+> +	as ibm,cpu-idle-state-names.
+> -- 
+> 1.9.4
+> 
