@@ -1,61 +1,94 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: core: Fix regression caused by delayed work for hogs
-Date: Fri, 13 Jan 2017 16:26:23 +0100
-Message-ID: <CACRpkdaWo54ByCa=1Mr1v_O4ANR=OXehsR0Hg65pj9M9jzMDtg@mail.gmail.com>
-References: <20170111221334.26194-1-tony@atomide.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 6/6] arm: dts: mt2701: Add thermal device node.
+Date: Fri, 13 Jan 2017 16:27:57 +0100
+Message-ID: <c8bbd4a4-2207-44f0-4462-3761c1d6c8a9@gmail.com>
+References: <1484296978-18572-1-git-send-email-erin.lo@mediatek.com>
+ <1484296978-18572-7-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170111221334.26194-1-tony@atomide.com>
+In-Reply-To: <1484296978-18572-7-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>
+To: Erin Lo <erin.lo@mediatek.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Dawei Chien <dawei.chien@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 11:13 PM, Tony Lindgren <tony@atomide.com> wrote:
 
-> Commit df61b366af26 ("pinctrl: core: Use delayed work for hogs") caused a
-> regression at least with sh-pfc that is also a GPIO controller as
-> noted by Geert Uytterhoeven <geert@linux-m68k.org>.
->
-> As the original pinctrl_register() has issues calling pin controller
-> driver functions early before the controller has finished registering,
-> we can't just revert commit df61b366af26. That would break the drivers
-> using GENERIC_PINCTRL_GROUPS or GENERIC_PINMUX_FUNCTIONS.
->
-> So let's fix the issue with the following steps as a single patch:
->
-> 1. Revert the late_init parts of commit df61b366af26.
->
->    The late_init clearly won't work and we have to just give up
->    on fixing pinctrl_register() for GENERIC_PINCTRL_GROUPS and
->    GENERIC_PINMUX_FUNCTIONS.
->
-> 2. Split pinctrl_register() into two parts
->
->    By splitting pinctrl_register() into pinctrl_init_controller()
->    and pinctrl_create_and_start() we have better control over when
->    it's safe to call pinctrl_create().
->
-> 3. Introduce a new pinctrl_register_and_init() function
->
->    As suggested by Linus Walleij <linus.walleij@linaro.org>, we
->    can just introduce a new function for the controllers that need
->    pinctrl_create() called later.
->
-> 4. Convert the four known problem cases to use new function
->
->    Let's convert pinctrl-imx, pinctrl-single, sh-pfc and ti-iodelay
->    to use the new function to fix the issues. The rest of the drivers
->    can be converted later. Let's also update Documentation/pinctrl.txt
->    accordingly because of the known issues with pinctrl_register().
->
-> Fixes: df61b366af26 ("pinctrl: core: Use delayed work for hogs")
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-OK patch applied.
+On 13/01/17 09:42, Erin Lo wrote:
+> From: Dawei Chien <dawei.chien@mediatek.com>
+>
+> Add thermal controller device nodes for MT2701.
+>
+> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 3847f70..c43d5f8 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -89,6 +89,36 @@
+>  		clock-output-names = "rtc32k";
+>  	};
+>
+> +	thermal-zones {
+> +		cpu_thermal: cpu_thermal {
+> +			polling-delay-passive = <1000>; /* milliseconds */
+> +			polling-delay = <1000>; /* milliseconds */
+> +
+> +			thermal-sensors = <&thermal 0>;
+> +			sustainable-power = <1000>;
+> +
+> +			trips {
+> +				threshold: trip-point@0 {
+> +					temperature = <68000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				target: trip-point@1 {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu_crit: cpu_crit@0 {
+> +					temperature = <115000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	timer {
+>  		compatible = "arm,armv7-timer";
+>  		interrupt-parent = <&gic>;
+> @@ -270,6 +300,19 @@
+>  		status = "disabled";
+>  	};
+>
+> +	thermal: thermal@1100b000 {
+> +		#thermal-sensor-cells = <0>;
+> +		compatible = "mediatek,mt2701-thermal";
+> +		reg = <0 0x1100b000 0 0x1000>;
+> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
+> +		clock-names = "therm", "auxadc";
+> +		resets = <&pericfg 0x10>;
 
-Yours,
-Linus Walleij
+should be MT2701_PERI_AUXADC_SW_RST, right?
+
+> +		reset-names = "therm";
+> +		mediatek,auxadc = <&auxadc>;
+> +		mediatek,apmixedsys = <&apmixedsys>;
+> +	};
+> +
+>  	nandc: nfi@1100d000 {
+>  		compatible = "mediatek,mt2701-nfc";
+>  		reg = <0 0x1100d000 0 0x1000>;
+>
