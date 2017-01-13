@@ -1,96 +1,33 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: fix GbE tx link
- breakage
-Date: Fri, 13 Jan 2017 10:55:09 +0100
-Message-ID: <1484301309.8168.7.camel@baylibre.com>
-References: <1482319894-656-1-git-send-email-jbrunet@baylibre.com>
-         <m2r3476atl.fsf@baylibre.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: document MAX11100 ADC
+Date: Fri, 13 Jan 2017 11:04:29 +0100
+Message-ID: <CAMuHMdVj+RjwcQOPGz=mxQC--k_zGh5wbT7HqW+KZBOtUg5z5Q@mail.gmail.com>
+References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org> <1484301038-16386-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <m2r3476atl.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484301038-16386-3-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-01-12 at 16:52 -0800, Kevin Hilman wrote:
-> Jerome Brunet <jbrunet@baylibre.com> writes:
-> 
-> > 
-> > OdroidC2 GbE link breaks under heavy tx transfer. This happens even
-> > if the
-> > MAC does not enable Energy Efficient Ethernet (No Low Power state
-> > Idle on
-> > the Tx path). The problem seems to come from the phy Rx path,
-> > entering the
-> > LPI state.
-> > 
-> > Disabling EEE advertisement on the phy prevent this feature to be
-> > negociated with the link partner and solve the issue.
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> > 
-> > This patch is based on Linus recent master branch [0]
-> > This patch depends on the series [1] which has been merged in this
-> > branch.
-> > 
-> > 0: ba6d973f78eb ("Merge
-> > git://git.kernel.org/pub/scm/linux/kernel/git/davem/net")
-> > 1: http://lkml.kernel.org/r/1480326409-25419-1-git-send-email-jbrun
-> > et@baylibre.com
-> >    Fix integration of eee-broken-modes
-> >    
-> >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 12
-> > ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > index 238fbeacd330..d8933e9e9a5a 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > @@ -147,6 +147,18 @@
-> >  	status = "okay";
-> >  	pinctrl-0 = <&eth_rgmii_pins>;
-> >  	pinctrl-names = "default";
-> > +	phy-handle = <&eth_phy0>;
-> > +
-> > +	mdio {
-> > +		compatible = "snps,dwmac-mdio";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		eth_phy0: ethernet-phy@0 {
-> > +			reg = <0>;
-> > +			eee-broken-1000t;
-> > +		};
-> > +	};
-> 
-> There's already an MDIO node in the meson-gx.dtsi (using the same
-> compatible), shouldn't you just override that and add the new
-> properties?
+On Fri, Jan 13, 2017 at 10:50 AM, Jacopo Mondi
+<jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> Add device tree bindings documentation for Maxim MAX11100 single-channel
+> ADC
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 
-Hum, yeah in the changes queued from 4.11, right ?
-But not in the latest rc from Linus. Since this is a fix, it was
-actually target for this branch.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-I guess you'd prefer to avoid merge conflicts when the 4.10 is tagged.
-How do you want to handle this ?
+Gr{oetje,eeting}s,
 
-> 
-> What would make things easier is if the names were like Martin used
-> in
-> his reset patch, so that when I merge them together it's not a major
-> conflict.
+                        Geert
 
-Sure, no problem. I'll change it to match what has been done by Martin.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> 
-> Thanks,
-> 
-> Kevin
-> 
-> [1] https://patchwork.kernel.org/patch/9459409/
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
