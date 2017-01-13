@@ -1,19 +1,21 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Fri, 13 Jan 2017 14:28:05 -0600
-Message-ID: <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <20170104205536.15963-3-d-gerlach@ti.com>
- <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop>
- <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
- <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
- <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
- <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: sun8i: add OTG function to Lichee Pi Zero
+Date: Fri, 13 Jan 2017 15:00:13 -0600
+Message-ID: <20170113210013.GA28184@uda0271908>
+References: <20170103152534.20118-1-icenowy@aosc.xyz>
+ <20170103152534.20118-5-icenowy@aosc.xyz>
+ <20170110202443.GC2479@uda0271908>
+ <2733831484164533@web1g.yandex.ru>
+ <20170111200811.GA16865@uda0271908>
+ <20170111210638.ppdnpzdd2l6x4lyo@lukather>
+ <20170112145014.GC16865@uda0271908>
+ <20170112173938.5am5njwrbs6p62br@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170112173938.5am5njwrbs6p62br@lukather>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,199 +25,109 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, Kevin Hilman <khilman@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2017 01:25 PM, Rob Herring wrote:
-> On Thu, Jan 12, 2017 at 9:27 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
->> Rob,
->>
->> On 01/11/2017 03:34 PM, Rob Herring wrote:
->>>
->>> On Mon, Jan 9, 2017 at 11:57 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
->>>>
->>>> Rob,
->>>>
->>>> On 01/09/2017 11:50 AM, Rob Herring wrote:
->>>>>
->>>>>
->>>>> On Wed, Jan 04, 2017 at 02:55:34PM -0600, Dave Gerlach wrote:
->>>>>>
->>>>>>
->>>>>> Add a generic power domain implementation, TI SCI PM Domains, that
->>>>>> will hook into the genpd framework and allow the TI SCI protocol to
->>>>>> control device power states.
->>>>>>
->>>>>> Also, provide macros representing each device index as understood
->>>>>> by TI SCI to be used in the device node power-domain references.
->>>>>> These are identifiers for the K2G devices managed by the PMMC.
->>>>>>
->>>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>>>>> ---
->>>>>> v2->v3:
->>>>>>         Update k2g_pds node docs to show it should be a child of pmmc
->>>>>> node.
->>>>>>         In early versions a phandle was used to point to pmmc and docs
->>>>>> still
->>>>>>         incorrectly showed this.
->>>>>>
->>>>>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59 ++++++++++++++
->>>>>>  MAINTAINERS                                        |  2 +
->>>>>>  include/dt-bindings/genpd/k2g.h                    | 90
->>>>>> ++++++++++++++++++++++
->>>>>>  3 files changed, 151 insertions(+)
->>>>>>  create mode 100644
->>>>>> Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>>  create mode 100644 include/dt-bindings/genpd/k2g.h
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>> b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..4c9064e512cb
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>> @@ -0,0 +1,59 @@
->>>>>> +Texas Instruments TI-SCI Generic Power Domain
->>>>>> +---------------------------------------------
->>>>>> +
->>>>>> +Some TI SoCs contain a system controller (like the PMMC, etc...) that
->>>>>> is
->>>>>> +responsible for controlling the state of the IPs that are present.
->>>>>> +Communication between the host processor running an OS and the system
->>>>>> +controller happens through a protocol known as TI-SCI [1]. This pm
->>>>>> domain
->>>>>> +implementation plugs into the generic pm domain framework and makes
->>>>>> use
->>>>>> of
->>>>>> +the TI SCI protocol power on and off each device when needed.
->>>>>> +
->>>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->>>>>> +
->>>>>> +PM Domain Node
->>>>>> +==============
->>>>>> +The PM domain node represents the global PM domain managed by the
->>>>>> PMMC,
->>>>>> +which in this case is the single implementation as documented by the
->>>>>> generic
->>>>>> +PM domain bindings in
->>>>>> Documentation/devicetree/bindings/power/power_domain.txt.
->>>>>> +Because this relies on the TI SCI protocol to communicate with the
->>>>>> PMMC
->>>>>> it
->>>>>> +must be a child of the pmmc node.
->>>>>> +
->>>>>> +Required Properties:
->>>>>> +--------------------
->>>>>> +- compatible: should be "ti,sci-pm-domain"
->>>>>> +- #power-domain-cells: Must be 0.
->>>>>> +
->>>>>> +Example (K2G):
->>>>>> +-------------
->>>>>> +       pmmc: pmmc {
->>>>>> +               compatible = "ti,k2g-sci";
->>>>>> +               ...
->>>>>> +
->>>>>> +               k2g_pds: k2g_pds {
->>>>>> +                       compatible = "ti,sci-pm-domain";
->>>>>> +                       #power-domain-cells = <0>;
->>>>>> +               };
->>>>>> +       };
->>>>>> +
->>>>>> +PM Domain Consumers
->>>>>> +===================
->>>>>> +Hardware blocks that require SCI control over their state must provide
->>>>>> +a reference to the sci-pm-domain they are part of and a unique device
->>>>>> +specific ID that identifies the device.
->>>>>> +
->>>>>> +Required Properties:
->>>>>> +--------------------
->>>>>> +- power-domains: phandle pointing to the corresponding PM domain node.
->>>>>> +- ti,sci-id: index representing the device id to be passed oevr SCI to
->>>>>> +            be used for device control.
->>>>>
->>>>>
->>>>>
->>>>> As I've already stated before, this goes in power-domain cells. When you
->>>>> have a single thing (i.e. node) that controls multiple things, then you
->>>>> you need to specify the ID for each of them in phandle args. This is how
->>>>> irqs, gpio, clocks, *everything* in DT works.
->>>>
->>>>
->>>>
->>>> You think the reasoning for doing it this way provided by both Ulf and
->>>> myself on v2 [1] is not valid then?
->>>>
->>>> From Ulf:
->>>>
->>>> To me, the TI SCI ID, is similar to a "conid" for any another "device
->>>> resource" (like clock, pinctrl, regulator etc) which we can describe
->>>> in DT and assign to a device node. The only difference here, is that
->>>> we don't have common API to fetch the resource (like clk_get(),
->>>> regulator_get()), but instead we fetches the device's resource from
->>>> SoC specific code, via genpd's device ->attach() callback.
->>>
->>>
->>> Sorry, but that sounds like a kernel problem to me and has nothing to
->>> do with DT bindings.
->>>
->>>> From me:
->>>>
->>>> Yes, you've pretty much hit it on the head. It is not an index into a
->>>> list
->>>> of genpds but rather identifies the device *within* a single genpd. It is
->>>> a
->>>> property specific to each device that resides in a ti-sci-genpd, not a
->>>> mapping describing which genpd the device belongs to. The generic power
->>>> domain binding is concerned with mapping the device to a specific genpd,
->>>> which is does fine for us, but we have a sub mapping for devices that
->>>> exist
->>>> inside a genpd which, we must describe as well, hence the ti,sci-id.
->>>>
->>>>
->>>> So to summarize, the genpd framework does interpret the phandle arg as an
->>>> index into multiple genpds, just as you've said other frameworks do, but
->>>> this is not what I am trying to do, we have multiple devices within this
->>>> *single* genpd, hence the need for the ti,sci-id property.
->>>
->>>
->>> Fix the genpd framework rather than work around it in DT.
->>
->>
->> I still disagree that this has nothing to do with DT bindings, as the
->> current DT binding represents something different already. I am trying to
->> extend it to give me additional information needed for our platforms. Are
->> you saying that we should break what the current DT binding already
->> represents to mean something else?
->
-> No idea because what's the current binding? From the patch, looks like
-> a new binding to me.
+On Thu, Jan 12, 2017 at 06:39:38PM +0100, Maxime Ripard wrote:
+> Hi Bin,
+> =
 
-Yes, ti,sci-id is a new binding. I am referring to the current meaning 
-of the "power-domains" binding, which is where you are asking this 
-property to be added, in "power-domains" cells. This is documented here 
-[1] in the kernel, although looking at it I must admit it is not very clear.
+> On Thu, Jan 12, 2017 at 08:50:14AM -0600, Bin Liu wrote:
+> > On Wed, Jan 11, 2017 at 10:06:38PM +0100, Maxime Ripard wrote:
+> > > On Wed, Jan 11, 2017 at 02:08:11PM -0600, Bin Liu wrote:
+> > > > On Thu, Jan 12, 2017 at 03:55:33AM +0800, Icenowy Zheng wrote:
+> > > > > =
 
-The power-domains cell represents an offset into an array of power 
-domains, if you choose to use it. That's what the genpd framework is 
-hard coded to interpret it as. This is correct, as it is an index into a 
-static list of power domains, used to identify which power domain a 
-device belongs to, which is exactly what the genpd framework itself is 
-concerned with. This is already how it is used in the kernel today.
+> > > > > =
 
-My ti,sci-id is not an index into a list of power domains, so it should 
-not go in the power-domains cells and go against what the power-domains 
-binding says that the cell expects. We have one single power domain, and 
-the new ti,sci-id binding is not something the genpd framework itself is 
-concerned with as it's our property to identify a device inside a power 
-domain, not to identify which power domain it is associated with.
+> > > > > 11.01.2017, 04:24, "Bin Liu" <b-liu@ti.com>:
+> > > > > > On Tue, Jan 03, 2017 at 11:25:34PM +0800, Icenowy Zheng wrote:
+> > > > > >> =A0Lichee Pi Zero features a USB OTG port.
+> > > > > >>
+> > > > > >> =A0Add support for it.
+> > > > > >>
+> > > > > >> =A0Note: in order to use the Host mode, the board must be powe=
+red via the
+> > > > > >> =A0+5V and GND pins.
+> > > > > >>
+> > > > > >> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> > > > > >> =A0---
+> > > > > >> =A0=A0arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 10 +++++=
++++++
+> > > > > >> =A0=A01 file changed, 10 insertions(+)
+> > > > > >>
+> > > > > >> =A0diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts =
+b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+> > > > > >> =A0index 0099affc6ce3..3d9168cbaeca 100644
+> > > > > >> =A0--- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+> > > > > >> =A0+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+> > > > > >> =A0@@ -71,3 +71,13 @@
+> > > > > >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pinctrl-names =3D "default";
+> > > > > >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0status =3D "okay";
+> > > > > >> =A0=A0};
+> > > > > >> =A0+
+> > > > > >> =A0+&usb_otg {
+> > > > > >> =A0+ dr_mode =3D "otg";
+> > > > > >
+> > > > > > Why not set this default mode in dtsi instead?
+> > > > > >
+> > > > > > Regards,
+> > > > > > -Bin.
+> > > > > =
+
+> > > > > There's possibly boards which do not have OTG functions.
+> > > > =
+
+> > > > That is board specific.
+> > > =
+
+> > > Exactly, and this is why it should be done in the board DT.
+> > =
+
+> > I am just suggesting based on the common practice. If a .dtsi exists for
+> > a family, the .dtsi describes the device and common properties for all
+> > possible boards, and each board .dts adds or overrides its specific
+> > implementation. Kernel has many devices/boards done in this way - define
+> > the default dr_mode in .dtsi.
+> > =
+
+> > In this case, I suggest to set the common dr_mode in .dtsi, then each
+> > board .dts only overrides it if the implementation is different. =
+
+> > =
+
+> > > =
+
+> > > The controller in the Allwinner SoCs do not handle directly the ID pin
+> > > and VBUS, but rather rely on a GPIO to do so.
+> > > =
+
+> > > So boards with OTG will need setup anyway, at least to tell which
+> > > GPIOs are used. There's no point in enforcing a default if it doesn't
+> > > work by default.
+> > =
+
+> > Then define a default which supposes to work for most boards.
+> > =
+
+> > Why I suggest this, is because defining a default dr_mode which works
+> > for most cases in dtsi could prevent a little surprise in MUSB function.
+> > If someone designs a new board but forgets to define dr_mode in the new
+> > board DT, the MUSB driver will default to org mode, which might not be
+> > intended.
+> =
+
+> The point is that there is no sensible default. Some boards don't have
+> an ID pin and no VBUS (peripheral), some don't have an ID pin but VBUS
+> (host), and some have an ID pin but no controllable VBUS, some have an
+> ID pin and a controllable VBUS, but we have no idea which GPIOs are
+> used.
+> =
+
+> There's no way we can have something that works on most cases.
+
+Ok, understood.
 
 Regards,
-Dave
-
-[1] Documentation/devicetree/bindings/power/power_domain.txt
-
->
-> Rob
->
+-Bin.
