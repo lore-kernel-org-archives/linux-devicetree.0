@@ -1,58 +1,137 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] regulator: anatop: Add support for "anatop-enable-bit"
-Date: Fri, 13 Jan 2017 11:07:42 -0600
-Message-ID: <20170113170742.n4vacn373rmh6qqs@rob-hp-laptop>
-References: <20170110163015.22444-1-andrew.smirnov@gmail.com>
- <20170110163015.22444-2-andrew.smirnov@gmail.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH 09/37] PCI: dwc: designware: Parse *num-lanes* property in
+ dw_pcie_setup_rc
+Date: Fri, 13 Jan 2017 17:13:12 +0000
+Message-ID: <c3c55af3-29d1-dc59-3ae4-9a4132c99092@synopsys.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-10-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170110163015.22444-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, yurovsky@gmail.com, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484216786-17292-10-git-send-email-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 08:30:14AM -0800, Andrey Smirnov wrote:
-> Add code to support support for "anatop-enable-bit" device-tree
-> property. This property translates to LINREG_ENABLE bit in real hardware
-> and is present on 1p1, 2p5 and 3p0 regulators on i.MX6 and 1p0d regulator
-> on i.MX7.
-> 
-> Cc: yurovsky@gmail.com
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Hi,
+
+=C0s 10:25 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
+> *num-lanes* dt property is parsed in dw_pcie_host_init. However
+> *num-lanes* property is applicable to both root complex mode and
+> endpoint mode. As a first step, move the parsing of this property
+> outside dw_pcie_host_init. This is in preparation for splitting
+> pcie-designware.c to pcie-designware.c and pcie-designware-host.c
+> =
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
-> 
-> Note: "anatop-enable-bit" has already found its way into upstream tree
-> before this patch (probably not on purpose). See imx6ul.dtsi and
-> imx7s.dtsi for concrete examples
+>  drivers/pci/dwc/pcie-designware.c |   18 +++++++++++-------
+>  drivers/pci/dwc/pcie-designware.h |    1 -
+>  2 files changed, 11 insertions(+), 8 deletions(-)
+> =
 
-But since the kernel is not using it, it doesn't really mean we have to 
-keep it. Yes, other OSs could be, but that's unlikely.
+> diff --git a/drivers/pci/dwc/pcie-designware.c b/drivers/pci/dwc/pcie-des=
+ignware.c
+> index 00a0fdc..89cdb6b 100644
+> --- a/drivers/pci/dwc/pcie-designware.c
+> +++ b/drivers/pci/dwc/pcie-designware.c
+> @@ -551,10 +551,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+>  =
 
->  .../devicetree/bindings/regulator/anatop-regulator.txt       |  1 +
->  drivers/regulator/anatop-regulator.c                         | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-> index 37c4ea0..1d58c8c 100644
-> --- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-> @@ -14,6 +14,7 @@ Optional properties:
->  - anatop-delay-bit-shift: Bit shift for the step time register
->  - anatop-delay-bit-width: Number of bits used in the step time register
->  - vin-supply: The supply for this regulator
-> +- anatop-enable-bit: Regulator enable bit offset
+> -	ret =3D of_property_read_u32(np, "num-lanes", &pci->lanes);
+> -	if (ret)
+> -		pci->lanes =3D 0;
+> -
+>  	ret =3D of_property_read_u32(np, "num-viewport", &pci->num_viewport);
+>  	if (ret)
+>  		pci->num_viewport =3D 2;
+> @@ -751,18 +747,26 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32=
+ devfn,
+>  =
 
-Looks like we have several properties describing the register layout. 
-IMO, we should drop all of them and use the compatible strings to 
-determine those instead.
+>  void dw_pcie_setup_rc(struct pcie_port *pp)
+>  {
+> +	int ret;
+> +	u32 lanes;
+>  	u32 val;
+>  	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+> +	struct device *dev =3D pci->dev;
+> +	struct device_node *np =3D dev->of_node;
+>  =
 
-Rob
+>  	/* get iATU unroll support */
+>  	pci->iatu_unroll_enabled =3D dw_pcie_iatu_unroll_enabled(pci);
+>  	dev_dbg(pci->dev, "iATU unroll: %s\n",
+>  		pci->iatu_unroll_enabled ? "enabled" : "disabled");
+>  =
+
+> +	ret =3D of_property_read_u32(np, "num-lanes", &lanes);
+> +	if (ret)
+> +		lanes =3D 0;
+
+You moved from host_init to root complex setup function, which in my opinio=
+n did
+not improve (in this scope).
+
+I suggest that instead of making so much intermediary patches, which is nic=
+e to
+understand your development sequence, but hard to review. Wouldn't be bette=
+r to
+condense some of the patches? We would have a cloear vision of the final pr=
+oduct :)
+
+Joao
+
+> +
+>  	/* set the number of lanes */
+>  	val =3D dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+>  	val &=3D ~PORT_LINK_MODE_MASK;
+> -	switch (pci->lanes) {
+> +	switch (lanes) {
+>  	case 1:
+>  		val |=3D PORT_LINK_MODE_1_LANES;
+>  		break;
+> @@ -776,7 +780,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  		val |=3D PORT_LINK_MODE_8_LANES;
+>  		break;
+>  	default:
+> -		dev_err(pci->dev, "num-lanes %u: invalid value\n", pci->lanes);
+> +		dev_err(pci->dev, "num-lanes %u: invalid value\n", lanes);
+>  		return;
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> @@ -784,7 +788,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	/* set link width speed control register */
+>  	val =3D dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>  	val &=3D ~PORT_LOGIC_LINK_WIDTH_MASK;
+> -	switch (pci->lanes) {
+> +	switch (lanes) {
+>  	case 1:
+>  		val |=3D PORT_LOGIC_LINK_WIDTH_1_LANES;
+>  		break;
+> diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-des=
+ignware.h
+> index d4b3d43..491fbe3 100644
+> --- a/drivers/pci/dwc/pcie-designware.h
+> +++ b/drivers/pci/dwc/pcie-designware.h
+> @@ -148,7 +148,6 @@ struct dw_pcie_ops {
+>  struct dw_pcie {
+>  	struct device		*dev;
+>  	void __iomem		*dbi_base;
+> -	u32			lanes;
+>  	u32			num_viewport;
+>  	u8			iatu_unroll_enabled;
+>  	struct pcie_port	pp;
+> =
