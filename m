@@ -1,76 +1,83 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH v5 2/2] eeprom: Add IDT 89HPESx driver bindings file
-Date: Fri, 13 Jan 2017 15:16:53 +0300
-Message-ID: <1484309813-25008-3-git-send-email-fancer.lancer@gmail.com>
-References: <1481638971-6247-1-git-send-email-fancer.lancer@gmail.com>
- <1484309813-25008-1-git-send-email-fancer.lancer@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484309813-25008-1-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] ARM: davinci_all_defconfig: enable iio and ADS7950
+Date: Fri, 13 Jan 2017 17:54:35 +0530
+Message-ID: <3c4f8952-0a64-fc49-bd87-452dbbf7a946@ti.com>
+References: <1483677228-2325-1-git-send-email-david@lechnology.com>
+ <1483677228-2325-4-git-send-email-david@lechnology.com>
+ <cb9455bc-2658-9826-823b-2aa845237fed@ti.com>
+ <01ec2c94-46e0-3534-94e8-bd92f78b70ec@lechnology.com>
+ <b29c37b2-382c-dbab-966b-4463e3127676@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b29c37b2-382c-dbab-966b-4463e3127676-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-IDT 89HPESx PCIe-switches exposes SMBus interface to have an access to
-the device CSRs and EEPROM. So to properly utilize the interface
-functionality, developer should declare a valid dts-file node, which
-would refer to the corresponding 89HPESx device.
+On Wednesday 11 January 2017 01:53 PM, Sekhar Nori wrote:
+> On Tuesday 10 January 2017 09:13 PM, David Lechner wrote:
+>> On 01/09/2017 06:29 AM, Sekhar Nori wrote:
+>>> On Friday 06 January 2017 10:03 AM, David Lechner wrote:
+>>>> This enables the iio subsystem and the TI ADS7950 driver. This is
+>>>> used by
+>>>> LEGO MINDSTORMS EV3, which has an ADS7957 chip.
+>>>
+>>> Can you add your sign-off?
+>>>
+>>>> ---
+>>>>
+>>>> The CONFIG_TI_ADS7950 driver is currently in iio/testing, so some
+>>>> coordination
+>>>> may be needed before picking up this patch.
+>>>>
+>>>>  arch/arm/configs/davinci_all_defconfig | 7 +++++++
+>>>>  1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/configs/davinci_all_defconfig
+>>>> b/arch/arm/configs/davinci_all_defconfig
+>>>> index 2b1967a..a899876 100644
+>>>> --- a/arch/arm/configs/davinci_all_defconfig
+>>>> +++ b/arch/arm/configs/davinci_all_defconfig
+>>>> @@ -200,6 +200,13 @@ CONFIG_TI_EDMA=y
+>>>>  CONFIG_MEMORY=y
+>>>>  CONFIG_TI_AEMIF=m
+>>>>  CONFIG_DA8XX_DDRCTL=y
+>>>> +CONFIG_IIO=m
+>>>> +CONFIG_IIO_BUFFER_CB=m
+>>>> +CONFIG_IIO_SW_DEVICE=m
+>>>> +CONFIG_IIO_SW_TRIGGER=m
+>>>
+>>>> +CONFIG_TI_ADS7950=m
+>>>
+>>> Can you separate this from rest of the patch. I would like to enable
+>>> this option only after I can find the symbol in linux-next.
+>>
+>> Will resend without CONFIG_TI_ADS7950
+>>
+>>>
+>>>> +CONFIG_IIO_HRTIMER_TRIGGER=m
+>>>> +CONFIG_IIO_SYSFS_TRIGGER=m
+>>>
+>>> Need CONFIG_IIO_TRIGGER=y also for these two options to take effect.
+>>
+>> CONFIG_IIO_TRIGGER is selected by IIO_TRIGGERED_BUFFER [=m] && IIO [=m]
+>> && IIO_BUFFER [=y], so save_defconfig does not pick it up.
+> 
+> I do remember I did not see these two modules did not get enabled in
+> .config after 'make davinci_all_defconfig'. Will check what I may have
+> missed.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- .../devicetree/bindings/misc/idt_89hpesx.txt       | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/idt_89hpesx.txt
+So IIO_TRIGGERED_BUFFER is not selected in my tree because I dont have
+the ADS7950 driver enabled. Same thing with IIO_BUFFER.
 
-diff --git a/Documentation/devicetree/bindings/misc/idt_89hpesx.txt b/Documentation/devicetree/bindings/misc/idt_89hpesx.txt
-new file mode 100644
-index 0000000..b9093b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/idt_89hpesx.txt
-@@ -0,0 +1,44 @@
-+EEPROM / CSR SMBus-slave interface of IDT 89HPESx devices
-+
-+Required properties:
-+  - compatible : should be "<manufacturer>,<type>"
-+		 Basically there is only one manufacturer: idt, but some
-+		 compatible devices may be produced in future. Following devices
-+		 are supported: 89hpes8nt2, 89hpes12nt3, 89hpes24nt6ag2,
-+		 89hpes32nt8ag2, 89hpes32nt8bg2, 89hpes12nt12g2, 89hpes16nt16g2,
-+		 89hpes24nt24g2, 89hpes32nt24ag2, 89hpes32nt24bg2;
-+		 89hpes12n3, 89hpes12n3a, 89hpes24n3, 89hpes24n3a;
-+		 89hpes32h8, 89hpes32h8g2, 89hpes48h12, 89hpes48h12g2,
-+		 89hpes48h12ag2, 89hpes16h16, 89hpes22h16, 89hpes22h16g2,
-+		 89hpes34h16, 89hpes34h16g2, 89hpes64h16, 89hpes64h16g2,
-+		 89hpes64h16ag2;
-+		 89hpes12t3g2, 89hpes24t3g2, 89hpes16t4, 89hpes4t4g2,
-+		 89hpes10t4g2, 89hpes16t4g2, 89hpes16t4ag2, 89hpes5t5,
-+		 89hpes6t5, 89hpes8t5, 89hpes8t5a, 89hpes24t6, 89hpes6t6g2,
-+		 89hpes24t6g2, 89hpes16t7, 89hpes32t8, 89hpes32t8g2,
-+		 89hpes48t12, 89hpes48t12g2.
-+  - reg :	 I2C address of the IDT 89HPESx device.
-+
-+Optionally there can be EEPROM-compatible subnode:
-+  - compatible:  There are five EEPROM devices supported: 24c32, 24c64, 24c128,
-+		 24c256 and 24c512 differed by size.
-+  - reg:         Custom address of EEPROM device (If not specified IDT 89HPESx
-+    (optional)	 device will try to communicate with EEPROM sited by default
-+		 address - 0x50)
-+  - read-only :	 Parameterless property disables writes to the EEPROM
-+    (optional)
-+
-+Example:
-+	idt@60 {
-+		compatible = "idt,89hpes32nt8ag2";
-+		reg = <0x74>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eeprom@50 {
-+			compatible = "onsemi,24c64";
-+			reg = <0x50>;
-+			read-only;
-+		};
-+	};
-+
--- 
-2.6.6
+Can you try this patch over my tree?
+
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
