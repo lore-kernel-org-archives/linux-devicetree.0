@@ -1,351 +1,183 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCHv4 5/5] arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
-Date: Fri, 13 Jan 2017 22:12:20 +1300
-Message-ID: <20170113091222.7132-6-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCHv4 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
+Date: Fri, 13 Jan 2017 22:12:17 +1300
+Message-ID: <20170113091222.7132-3-chris.packham@alliedtelesis.co.nz>
 References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jayachandran C <jchandra@broadcom.com>, Jason Cooper <jason@lakedaemon.net>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Juri Lelli <juri.lelli@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Chris Brand <chris.brand@broadcom.com>, Sudeep Holla <sudeep.holla@arm.com>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-These boards are Marvell's evaluation boards for the 98DX4251 and
-98DX3336 SoCs.
+Compared to the armada-xp the 98DX3336 uses different registers to set
+the boot address for the secondary CPU so a new enable-method is needed.
+This will only work if the machine definition doesn't define an overall
+smp_ops because there is not currently a way of overriding this from the
+device tree if it is set in the machine definition.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/db-dxbc2.dts      | 159 ++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/db-xc3-24g4xg.dts | 155 +++++++++++++++++++++++++++++++++++
- 2 files changed, 314 insertions(+)
- create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
- create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
 
-diff --git a/arch/arm/boot/dts/db-dxbc2.dts b/arch/arm/boot/dts/db-dxbc2.dts
+Notes:
+    Changes in v2:
+    - Document new enable-method value
+    - Correct some references from 98DX4521 to 98DX3236
+    Changes in v3:
+    - Simplify mv98dx3236_resume_init by using of_io_request_and_map()
+    Changes in v4:
+    - integrate changes into platsmp.c instead of new init call
+    - avoid duplicated code.
+    - fix error return
+    - Collect ack from Rob
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+ .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  | 18 +++++
+ arch/arm/mach-mvebu/platsmp.c                      | 86 ++++++++++++++++++++++
+ 3 files changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a1bcfeed5f24..3c2fd72d0bf9 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -202,6 +202,7 @@ nodes to be present and contain the properties described below.
+ 			    "marvell,armada-380-smp"
+ 			    "marvell,armada-390-smp"
+ 			    "marvell,armada-xp-smp"
++			    "marvell,98dx3236-smp"
+ 			    "mediatek,mt6589-smp"
+ 			    "mediatek,mt81xx-tz-smp"
+ 			    "qcom,gcc-msm8660"
+diff --git a/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
 new file mode 100644
-index 000000000000..f56786cea5f8
+index 000000000000..8082ba872edd
 --- /dev/null
-+++ b/arch/arm/boot/dts/db-dxbc2.dts
-@@ -0,0 +1,159 @@
-+/*
-+ * Device Tree file for DB-DXBC2 board
-+ *
-+ * Copyright (C) 2016 Allied Telesis Labs
-+ *
-+ * Based on armada-xp-db.dts
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the default
-+ * 0xd0000000). The 0xf1000000 is the default used by the recent,
-+ * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-+ * boards were delivered with an older version of the bootloader that
-+ * left internal registers mapped at 0xd0000000. If you are in this
-+ * situation, you should either update your bootloader (preferred
-+ * solution) or the below Device Tree should be adjusted.
-+ */
++++ b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+@@ -0,0 +1,18 @@
++Resume Control
++--------------
++Available on Marvell SOCs: 98DX3336 and 98DX4251
 +
-+/dts-v1/;
-+#include "armada-xp-98dx4251.dtsi"
++Required properties:
 +
-+/ {
-+	model = "Marvell Bobcat2 Evaluation Board";
-+	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armadaxp", "marvell,armada-370-xp";
++- compatible: must be "marvell,98dx3336-resume-ctrl"
 +
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
++- reg: Should contain resume control registers location and length
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
-+	};
++Example:
 +
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
-+			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
-+			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
-+
-+		devbus-bootcs {
-+			status = "okay";
-+
-+			/* Device Bus parameters are required */
-+
-+			/* Read parameters */
-+			devbus,bus-width    = <16>;
-+			devbus,turn-off-ps  = <60000>;
-+			devbus,badr-skew-ps = <0>;
-+			devbus,acc-first-ps = <124000>;
-+			devbus,acc-next-ps  = <248000>;
-+			devbus,rd-setup-ps  = <0>;
-+			devbus,rd-hold-ps   = <0>;
-+
-+			/* Write parameters */
-+			devbus,sync-enable = <0>;
-+			devbus,wr-high-ps  = <60000>;
-+			devbus,wr-low-ps   = <60000>;
-+			devbus,ale-wr-ps   = <60000>;
-+		};
-+
-+		internal-regs {
-+			serial@12000 {
-+				status = "okay";
-+			};
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				clock-frequency = <100000>;
-+				status = "okay";
-+			};
-+
-+			mvsdio@d4000 {
-+				pinctrl-0 = <&sdio_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				/* No CD or WP GPIOs */
-+				broken-cd;
-+			};
-+
-+			nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+				nand-ecc-strength = <4>;
-+				nand-ecc-step-size = <512>;
-+			};
-+		};
-+	};
++resume@20980 {
++	compatible = "marvell,98dx3336-resume-ctrl";
++	reg = <0x20980 0x10>;
 +};
 +
-+&spi0 {
-+	status = "okay";
 +
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p64";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <20000000>;
-+		m25p,fast-read;
+diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+index 46c742d3bd41..59be3ca0464f 100644
+--- a/arch/arm/mach-mvebu/platsmp.c
++++ b/arch/arm/mach-mvebu/platsmp.c
+@@ -184,3 +184,89 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
+ 
+ CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
+ 		      &armada_xp_smp_ops);
 +
-+		partition@u-boot {
-+			reg = <0x00000000 0x00100000>;
-+			label = "u-boot";
-+		};
-+		partition@u-boot-env {
-+			reg = <0x00100000 0x00040000>;
-+			label = "u-boot-env";
-+		};
-+		partition@unused {
-+			reg = <0x00140000 0x00ec0000>;
-+			label = "unused";
-+		};
-+
-+	};
-+};
-diff --git a/arch/arm/boot/dts/db-xc3-24g4xg.dts b/arch/arm/boot/dts/db-xc3-24g4xg.dts
-new file mode 100644
-index 000000000000..5eb89ffb9a7d
---- /dev/null
-+++ b/arch/arm/boot/dts/db-xc3-24g4xg.dts
-@@ -0,0 +1,155 @@
-+/*
-+ * Device Tree file for DB-XC3-24G4XG board
-+ *
-+ * Copyright (C) 2016 Allied Telesis Labs
-+ *
-+ * Based on armada-xp-db.dts
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the default
-+ * 0xd0000000). The 0xf1000000 is the default used by the recent,
-+ * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-+ * boards were delivered with an older version of the bootloader that
-+ * left internal registers mapped at 0xd0000000. If you are in this
-+ * situation, you should either update your bootloader (preferred
-+ * solution) or the below Device Tree should be adjusted.
-+ */
-+
-+/dts-v1/;
-+#include "armada-xp-98dx3336.dtsi"
-+
-+/ {
-+	model = "DB-XC3-24G4XG";
-+	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x40000000>; /* 1 GB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
-+			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
-+			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
-+
-+		devbus-bootcs {
-+			status = "okay";
-+
-+			/* Device Bus parameters are required */
-+
-+			/* Read parameters */
-+			devbus,bus-width    = <16>;
-+			devbus,turn-off-ps  = <60000>;
-+			devbus,badr-skew-ps = <0>;
-+			devbus,acc-first-ps = <124000>;
-+			devbus,acc-next-ps  = <248000>;
-+			devbus,rd-setup-ps  = <0>;
-+			devbus,rd-hold-ps   = <0>;
-+
-+			/* Write parameters */
-+			devbus,sync-enable = <0>;
-+			devbus,wr-high-ps  = <60000>;
-+			devbus,wr-low-ps   = <60000>;
-+			devbus,ale-wr-ps   = <60000>;
-+		};
-+
-+		internal-regs {
-+			serial@12000 {
-+				status = "okay";
-+			};
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			i2c@11000 {
-+				clock-frequency = <100000>;
-+				status = "okay";
-+			};
-+
-+			mvsdio@d4000 {
-+				status = "disabled";
-+			};
-+
-+			nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+				nand-ecc-strength = <4>;
-+				nand-ecc-step-size = <512>;
-+			};
-+		};
-+	};
++struct resume_controller {
++	u32 resume_control;
++	u32 resume_boot_addr;
 +};
 +
-+&spi0 {
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p64";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <20000000>;
-+		m25p,fast-read;
-+
-+		partition@u-boot {
-+			reg = <0x00000000 0x00100000>;
-+			label = "u-boot";
-+		};
-+		partition@u-boot-env {
-+			reg = <0x00100000 0x00040000>;
-+			label = "u-boot-env";
-+		};
-+		partition@unused {
-+			reg = <0x00140000 0x00ec0000>;
-+			label = "unused";
-+		};
-+
-+	};
++static const struct resume_controller mv98dx3336_resume_controller = {
++	.resume_control = 0x08,
++	.resume_boot_addr = 0x04,
 +};
++
++static const struct of_device_id of_mv98dx3236_resume_table[] = {
++	{
++		.compatible = "marvell,98dx3336-resume-ctrl",
++		.data = (void *)&mv98dx3336_resume_controller,
++	},
++	{ /* end of list */ },
++};
++
++static int mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
++{
++	const struct of_device_id *match;
++	struct device_node *np;
++	void __iomem *base;
++	struct resume_controller *rc;
++
++	WARN_ON(hw_cpu != 1);
++
++	np = of_find_matching_node_and_match(NULL, of_mv98dx3236_resume_table,
++					     &match);
++	if (!np)
++		return -ENODEV;
++
++	base = of_io_request_and_map(np, 0, of_node_full_name(np));
++	rc = (struct resume_controller *)match->data;
++	of_node_put(np);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	writel(0, base + rc->resume_control);
++	writel(virt_to_phys(boot_addr), base + rc->resume_boot_addr);
++
++	return 0;
++}
++
++static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
++{
++	int ret, hw_cpu;
++
++	hw_cpu = cpu_logical_map(cpu);
++	set_secondary_cpu_clock(hw_cpu);
++	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
++					    armada_xp_secondary_startup);
++
++	/*
++	 * This is needed to wake up CPUs in the offline state after
++	 * using CPU hotplug.
++	 */
++	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
++
++	/*
++	 * This is needed to take secondary CPUs out of reset on the
++	 * initial boot.
++	 */
++	ret = mvebu_cpu_reset_deassert(hw_cpu);
++	if (ret) {
++		pr_warn("unable to boot CPU: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct smp_operations mv98dx3236_smp_ops __initconst = {
++	.smp_init_cpus		= armada_xp_smp_init_cpus,
++	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
++	.smp_boot_secondary	= mv98dx3236_boot_secondary,
++	.smp_secondary_init     = armada_xp_secondary_init,
++#ifdef CONFIG_HOTPLUG_CPU
++	.cpu_die		= armada_xp_cpu_die,
++	.cpu_kill               = armada_xp_cpu_kill,
++#endif
++};
++
++CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
++		      &mv98dx3236_smp_ops);
 -- 
 2.11.0.24.ge6920cf
