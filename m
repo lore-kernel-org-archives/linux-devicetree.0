@@ -1,94 +1,66 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 6/6] arm: dts: mt2701: Add thermal device node.
-Date: Fri, 13 Jan 2017 16:27:57 +0100
-Message-ID: <c8bbd4a4-2207-44f0-4462-3761c1d6c8a9@gmail.com>
+Subject: Re: [PATCH v2 3/6] arm: dts: mt2701: Add nand device node
+Date: Fri, 13 Jan 2017 16:29:17 +0100
+Message-ID: <eedd5138-049e-419e-edb4-51be7f75be97@gmail.com>
 References: <1484296978-18572-1-git-send-email-erin.lo@mediatek.com>
- <1484296978-18572-7-git-send-email-erin.lo@mediatek.com>
+ <1484296978-18572-4-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484296978-18572-7-git-send-email-erin.lo@mediatek.com>
+In-Reply-To: <1484296978-18572-4-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Erin Lo <erin.lo@mediatek.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Dawei Chien <dawei.chien@mediatek.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Xiaolei Li <xiaolei.li@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 13/01/17 09:42, Erin Lo wrote:
-> From: Dawei Chien <dawei.chien@mediatek.com>
+> From: Xiaolei Li <xiaolei.li@mediatek.com>
 >
-> Add thermal controller device nodes for MT2701.
+> Add mt2701 nand device node, include nfi and bch ecc.
 >
-> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> Signed-off-by: Xiaolei Li <xiaolei.li@mediatek.com>
 > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
->  arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+>  arch/arm/boot/dts/mt2701.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 >
+
+Applied to v4.10-next/dts32
+
 > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 3847f70..c43d5f8 100644
+> index 87be52c..1182c43 100644
 > --- a/arch/arm/boot/dts/mt2701.dtsi
 > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -89,6 +89,36 @@
->  		clock-output-names = "rtc32k";
->  	};
->
-> +	thermal-zones {
-> +		cpu_thermal: cpu_thermal {
-> +			polling-delay-passive = <1000>; /* milliseconds */
-> +			polling-delay = <1000>; /* milliseconds */
-> +
-> +			thermal-sensors = <&thermal 0>;
-> +			sustainable-power = <1000>;
-> +
-> +			trips {
-> +				threshold: trip-point@0 {
-> +					temperature = <68000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				target: trip-point@1 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit: cpu_crit@0 {
-> +					temperature = <115000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv7-timer";
->  		interrupt-parent = <&gic>;
-> @@ -270,6 +300,19 @@
+> @@ -261,6 +261,28 @@
 >  		status = "disabled";
 >  	};
 >
-> +	thermal: thermal@1100b000 {
-> +		#thermal-sensor-cells = <0>;
-> +		compatible = "mediatek,mt2701-thermal";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-> +		clock-names = "therm", "auxadc";
-> +		resets = <&pericfg 0x10>;
-
-should be MT2701_PERI_AUXADC_SW_RST, right?
-
-> +		reset-names = "therm";
-> +		mediatek,auxadc = <&auxadc>;
-> +		mediatek,apmixedsys = <&apmixedsys>;
+> +	nandc: nfi@1100d000 {
+> +		compatible = "mediatek,mt2701-nfc";
+> +		reg = <0 0x1100d000 0 0x1000>;
+> +		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_NFI>,
+> +			 <&pericfg CLK_PERI_NFI_PAD>;
+> +		clock-names = "nfi_clk", "pad_clk";
+> +		status = "disabled";
+> +		ecc-engine = <&bch>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +	};
 > +
->  	nandc: nfi@1100d000 {
->  		compatible = "mediatek,mt2701-nfc";
->  		reg = <0 0x1100d000 0 0x1000>;
+> +	bch: ecc@1100e000 {
+> +		compatible = "mediatek,mt2701-ecc";
+> +		reg = <0 0x1100e000 0 0x1000>;
+> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_NFI_ECC>;
+> +		clock-names = "nfiecc_clk";
+> +		status = "disabled";
+> +	};
+> +
+>  	spi1: spi@11016000 {
+>  		compatible = "mediatek,mt2701-spi";
+>  		#address-cells = <1>;
 >
