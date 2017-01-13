@@ -1,34 +1,187 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 3/3] ARM: dts: rskrza1: add ostm DT support
-Date: Fri, 13 Jan 2017 14:50:38 +0000
-Message-ID: <PS1PR06MB1162BA1C7B9A38C5CBA329268A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
-References: <20170112190108.2856-1-chris.brandt@renesas.com>
- <20170112190108.2856-4-chris.brandt@renesas.com>
- <CAMuHMdWNd=TqqWAv3NhEF5R8JRQ362EJ3LirHpqBLgQK3w30oA@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
+ mt2701
+Date: Fri, 13 Jan 2017 15:54:20 +0100
+Message-ID: <5a45da57-9262-b1ff-1c6a-c5c211c1bfd4@gmail.com>
+References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
+ <1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
+ <09eaf7a5-2b18-1ea6-5699-2e968c6b79a4@gmail.com>
+ <51441f39-e5b5-2cce-63ab-47bd3cf298b3@gmail.com>
+ <1467595950.8420.2.camel@mtksdaap41> <577A1794.5040509@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWNd=TqqWAv3NhEF5R8JRQ362EJ3LirHpqBLgQK3w30oA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577A1794.5040509-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQgYW5kIFNlcmdlaSwNCg0KT24gRnJpZGF5LCBKYW51YXJ5IDEzLCAyMDE3LCBHZWVy
-dCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+IE9uIFRodSwgSmFuIDEyLCAyMDE3IGF0IDg6MDEgUE0s
-IENocmlzIEJyYW5kdCA8Y2hyaXMuYnJhbmR0QHJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiAt
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEwMC5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvcjdzNzIxMDAuZHRzaQ0KPiA+IEBAIC01MTMsNyArNTEzLDggQEANCj4gPiAgICAg
-ICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEwMiBJUlFfVFlQRV9FREdFX1JJU0lO
-Rw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdJQ19TUEkgMTAzIElSUV9UWVBF
-X0VER0VfUklTSU5HPjsNCj4gPg0KPiA+IC0gICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHA1
-X2Nsa3MgUjdTNzIxMDBfQ0xLX09TVE0wPiwgPCZtc3RwNV9jbGtzDQo+IFI3UzcyMTAwX0NMS19P
-U1RNMT47DQo+ID4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmbXN0cDVfY2xrcyBSN1M3MjEw
-MF9DTEtfT1NUTTA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICA8Jm1zdHA1X2Nsa3Mg
-UjdTNzIxMDBfQ0xLX09TVE0xPjsNCj4gDQo+IEkgdGhpbmsgdGhpcyBjaGFuZ2Ugc2hvdWxkIGJl
-IGZvbGRlZCBpbnRvICJbUEFUQ0ggMi8zXSBBUk06IGR0czogcjdzNzIxMDA6DQo+IGFkZCBvc3Rt
-IHRvIGRldmljZSB0cmVlIiA7LSkNCg0KT29wcywgSSB0aGluayBJIGdvdCB0aGluZ3MgYSBsaXR0
-bGUgc2NyZXdlZCB1cCB3aGVuIGdpdCByZWJhc2luZyBhbmQNCnJlb3JkZXJpbmcgYW5kIHN1Y2gu
-DQoNClRoYW5rcyBmb3IgdGhlIHJldmlldyENCg0KQ2hyaXMNCg==
+
+
+On 04/07/16 10:00, Matthias Brugger wrote:
+>
+>
+> On 04/07/16 03:32, Honghui Zhang wrote:
+>> On Sun, 2016-07-03 at 21:12 +0200, Matthias Brugger wrote:
+>>>
+>>> On 07/03/2016 08:24 AM, Matthias Brugger wrote:
+>>>>
+>>>>
+>>>> On 06/08/2016 11:51 AM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+>>>>> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>>
+>>>>> Add the dtsi node of iommu and smi for mt2701.
+>>>>>
+>>>>> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>   arch/arm/boot/dts/mt2701.dtsi | 51
+>>>>> +++++++++++++++++++++++++++++++++++++++++++
+>>>>>   1 file changed, 51 insertions(+)
+>>>>>
+>>>>
+>>>> Applied,
+>>>
+>>> Please resend the patch including the infracfg and mmsys node.
+>>>
+>>
+>> Hi, Matthias,
+>>
+>> Please hold this one.
+>> This one is based on CCF "arm: dts: mt2701: Add clock controller device
+>> nodes"[1] and power domain patch "Mediatek MT2701 SCPSYS power domain
+>> support v7"[2],
+>> But these two patchset are still being reviewed now.
+>>
+>> Do you think it's better that I send this one later after ccf and power
+>> domain patch got merged? I will send this patch later if it's OK with
+>> you.
+>>
+>
+> Sounds good.
+
+Applied now to v4.10-next/dts32
+
+Thanks.
+
+>
+> Thanks a lot,
+> Matthias
+>
+>> Thanks.
+>> [1] https://patchwork.kernel.org/patch/9109081
+>> [2]
+>> http://lists.infradead.org/pipermail/linux-mediatek/2016-May/005429.html
+>>
+>>> Regards,
+>>> Matthias
+>>>
+>>>>
+>>>> Thanks.
+>>>>
+>>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
+>>>>> b/arch/arm/boot/dts/mt2701.dtsi
+>>>>> index 42d5a37..363de0d 100644
+>>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
+>>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
+>>>>> @@ -16,6 +16,7 @@
+>>>>>   #include <dt-bindings/power/mt2701-power.h>
+>>>>>   #include <dt-bindings/interrupt-controller/irq.h>
+>>>>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>> +#include <dt-bindings/memory/mt2701-larb-port.h>
+>>>>>   #include "skeleton64.dtsi"
+>>>>>   #include "mt2701-pinfunc.h"
+>>>>>
+>>>>> @@ -160,6 +161,16 @@
+>>>>>           clock-names = "system-clk", "rtc-clk";
+>>>>>       };
+>>>>>
+>>>>> +    smi_common: smi@1000c000 {
+>>>>> +        compatible = "mediatek,mt2701-smi-common";
+>>>>> +        reg = <0 0x1000c000 0 0x1000>;
+>>>>> +        clocks = <&infracfg CLK_INFRA_SMI>,
+>>>>> +             <&mmsys CLK_MM_SMI_COMMON>,
+>>>>> +             <&infracfg CLK_INFRA_SMI>;
+>>>>> +        clock-names = "apb", "smi", "async";
+>>>>> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
+>>>>> +    };
+>>>>> +
+>>>>>       sysirq: interrupt-controller@10200100 {
+>>>>>           compatible = "mediatek,mt2701-sysirq",
+>>>>>                    "mediatek,mt6577-sysirq";
+>>>>> @@ -169,6 +180,16 @@
+>>>>>           reg = <0 0x10200100 0 0x1c>;
+>>>>>       };
+>>>>>
+>>>>> +    iommu: mmsys_iommu@10205000 {
+>>>>> +        compatible = "mediatek,mt2701-m4u";
+>>>>> +        reg = <0 0x10205000 0 0x1000>;
+>>>>> +        interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
+>>>>> +        clocks = <&infracfg CLK_INFRA_M4U>;
+>>>>> +        clock-names = "bclk";
+>>>>> +        mediatek,larbs = <&larb0 &larb1 &larb2>;
+>>>>> +        #iommu-cells = <1>;
+>>>>> +    };
+>>>>> +
+>>>>>       apmixedsys: syscon@10209000 {
+>>>>>           compatible = "mediatek,mt2701-apmixedsys", "syscon";
+>>>>>           reg = <0 0x10209000 0 0x1000>;
+>>>>> @@ -234,6 +255,16 @@
+>>>>>           status = "disabled";
+>>>>>       };
+>>>>>
+>>>>> +    larb0: larb@14010000 {
+>>>>> +        compatible = "mediatek,mt2701-smi-larb";
+>>>>> +        reg = <0 0x14010000 0 0x1000>;
+>>>>> +        mediatek,smi = <&smi_common>;
+>>>>> +        clocks = <&mmsys CLK_MM_SMI_LARB0>,
+>>>>> +             <&mmsys CLK_MM_SMI_LARB0>;
+>>>>> +        clock-names = "apb", "smi";
+>>>>> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
+>>>>> +    };
+>>>>> +
+>>>>>       imgsys: syscon@15000000 {
+>>>>>           compatible = "mediatek,mt2701-imgsys", "syscon";
+>>>>>           reg = <0 0x15000000 0 0x1000>;
+>>>>> @@ -241,6 +272,16 @@
+>>>>>           status = "disabled";
+>>>>>       };
+>>>>>
+>>>>> +    larb2: larb@15001000 {
+>>>>> +        compatible = "mediatek,mt2701-smi-larb";
+>>>>> +        reg = <0 0x15001000 0 0x1000>;
+>>>>> +        mediatek,smi = <&smi_common>;
+>>>>> +        clocks = <&imgsys CLK_IMG_SMI_COMM>,
+>>>>> +             <&imgsys CLK_IMG_SMI_COMM>;
+>>>>> +        clock-names = "apb", "smi";
+>>>>> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+>>>>> +    };
+>>>>> +
+>>>>>       vdecsys: syscon@16000000 {
+>>>>>           compatible = "mediatek,mt2701-vdecsys", "syscon";
+>>>>>           reg = <0 0x16000000 0 0x1000>;
+>>>>> @@ -248,6 +289,16 @@
+>>>>>           status = "disabled";
+>>>>>       };
+>>>>>
+>>>>> +    larb1: larb@16010000 {
+>>>>> +        compatible = "mediatek,mt2701-smi-larb";
+>>>>> +        reg = <0 0x16010000 0 0x1000>;
+>>>>> +        mediatek,smi = <&smi_common>;
+>>>>> +        clocks = <&vdecsys CLK_VDEC_CKGEN>,
+>>>>> +             <&vdecsys CLK_VDEC_LARB>;
+>>>>> +        clock-names = "apb", "smi";
+>>>>> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
+>>>>> +    };
+>>>>> +
+>>>>>       hifsys: syscon@1a000000 {
+>>>>>           compatible = "mediatek,mt2701-hifsys", "syscon";
+>>>>>           reg = <0 0x1a000000 0 0x1000>;
+>>>>>
+>>
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
