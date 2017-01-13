@@ -1,47 +1,46 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH] ARM: dts: OMAP5 / DRA7: indicate that SATA port 0 is
- available.
-Date: Fri, 13 Jan 2017 08:59:24 +0100
-Message-ID: <423304d1-ffe3-ce7e-74d9-9707c391d501@ti.com>
-References: <1483964535-4298-1-git-send-email-jjhiblot@ti.com>
- <20170112223007.GP2630@atomide.com> <20170112223627.GQ2630@atomide.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: rskrza1: add ostm DT support
+Date: Fri, 13 Jan 2017 12:08:54 +0300
+Message-ID: <a8716dcf-8f1d-a3d5-57ac-7380b4a57949@cogentembedded.com>
+References: <20170112190108.2856-1-chris.brandt@renesas.com>
+ <20170112190108.2856-4-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20170112223627.GQ2630@atomide.com>
-Sender: stable-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rogerq@ti.com, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170112190108.2856-4-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello!
 
+On 1/12/2017 10:01 PM, Chris Brandt wrote:
 
-On 12/01/2017 23:36, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [170112 14:31]:
->> * Jean-Jacques Hiblot <jjhiblot@ti.com> [170109 04:23]:
->>> AHCI provides the register PORTS_IMPL to let the software know which port
->>> is supported. The register must be initialized by the bootloader. However
->>> in some cases u-boot doesn't properly initialize this value (if it is not
->>> compiled with SATA support for example or if the SATA initialization fails).
->>> The DTS entry "ports-implemented" can be used to override the value in
->>> PORTS_IMPL.
->>> Adding this entry in the dts allows us no to worry about what is done by
->>> the bootloader.
->> Adding into omap-for-v4.11/dt thanks.
-> Actually not applying just yet as I just noticed you tagged this for stable.
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+[...]
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index 247bbe0..974c084 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -513,7 +513,8 @@
+>  		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING
+>  			      GIC_SPI 103 IRQ_TYPE_EDGE_RISING>;
 >
-> Care to describe what breaks and on which devices without this patch?
-Hi tony,
+> -		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>, <&mstp5_clks R7S72100_CLK_OSTM1>;
+> +		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>,
+> +			 <&mstp5_clks R7S72100_CLK_OSTM1>;
 
-Without this patch the SATA will not work in the following two cases:
-* if there has been a failure to initialize SATA in u-boot.
-* if ahci_platform module has been removed and re-inserted. The reason 
-is that the content of PORTS_IMPL is lost after the module is removed. I 
-suspect that it's because the controller is reset by the hwmod.
+    Unintended change?
 
-Jean-Jacques
->
-> Regards,
->
-> Tony
+>  		status = "disabled";
+>  	};
+>  };
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
