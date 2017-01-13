@@ -1,268 +1,321 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v3 3/5] i2c: mux: pca954x: Add interrupt controller
- support
-Date: Fri, 13 Jan 2017 10:11:07 +0100
-Message-ID: <383ee3cb-b452-259f-486f-682ea9526708@axentia.se>
-References: <1483952576-5308-1-git-send-email-preid@electromag.com.au>
- <1483952576-5308-4-git-send-email-preid@electromag.com.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1483952576-5308-4-git-send-email-preid@electromag.com.au>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCHv4 0/5] Support for Marvell switches with integrated CPUs
+Date: Fri, 13 Jan 2017 22:12:15 +1300
+Message-ID: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brand <chris.brand@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, Sudeep Holla <sudeep.holla@arm.com>, Juri Lelli <juri.lelli@arm.com>, Thomas Petazzoni <thomas.>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-09 10:02, Phil Reid wrote:
-> Various muxes can aggregate multiple interrupts from each i2c bus.
-> All of the muxes with interrupt support combine the active low irq lines
-> using an internal 'and' function and generate a combined active low
-> output. The muxes do provide the ability to read a control register to
-> determine which irq is active. By making the mux an irq controller isr
-> latency can potentially be reduced by reading the status register and
-> then only calling the registered isr on that bus segment.
-> 
-> As there is no irq masking on the mux irq are disabled until irq_unmask is
-> called at least once.
-> 
+The 98DX3236, 98DX3336 and 98DX4251 are a set of switch ASICs with
+integrated CPUs. They CPU block is common within these product lines and
+(as far as I can tell/have been told) is based on the Armada XP. There
+are a few differences due to the fact they have to squeeze the CPU into
+the same package as the switch.
 
-I had a second reading of this patch. I'm still no master-of-irqs, though.
-Anyway, I have some questions below. I guess it mostly shows that I don't
-really know what I'm talking about here...
+This series is starting to settle down now. The only major change is in
+"arm: mvebu: support for SMP on 98DX3336 SoC" the other changes are
+generally cosmetic or collecting acks.
 
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->  drivers/i2c/muxes/i2c-mux-pca954x.c | 127 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 125 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> index bbf088e..84fc767 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> @@ -41,14 +41,19 @@
->  #include <linux/i2c.h>
->  #include <linux/i2c-mux.h>
->  #include <linux/i2c/pca954x.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->  #include <linux/pm.h>
->  #include <linux/slab.h>
->  
->  #define PCA954X_MAX_NCHANS 8
->  
-> +#define PCA954X_IRQ_OFFSET 4
-> +
->  enum pca_type {
->  	pca_9540,
->  	pca_9542,
-> @@ -63,6 +68,7 @@ enum pca_type {
->  struct chip_desc {
->  	u8 nchans;
->  	u8 enable;	/* used for muxes only */
-> +	u8 has_irq;
->  	enum muxtype {
->  		pca954x_ismux = 0,
->  		pca954x_isswi
-> @@ -75,6 +81,9 @@ struct pca954x {
->  	u8 last_chan;		/* last register value */
->  	u8 deselect;
->  	struct i2c_client *client;
-> +
-> +	struct irq_domain *irq;
-> +	unsigned int irq_mask;
->  };
->  
->  /* Provide specs for the PCA954x types we know about */
-> @@ -87,19 +96,23 @@ struct pca954x {
->  	[pca_9542] = {
->  		.nchans = 2,
->  		.enable = 0x4,
-> +		.has_irq = 1,
->  		.muxtype = pca954x_ismux,
->  	},
->  	[pca_9543] = {
->  		.nchans = 2,
-> +		.has_irq = 1,
->  		.muxtype = pca954x_isswi,
->  	},
->  	[pca_9544] = {
->  		.nchans = 4,
->  		.enable = 0x4,
-> +		.has_irq = 1,
->  		.muxtype = pca954x_ismux,
->  	},
->  	[pca_9545] = {
->  		.nchans = 4,
-> +		.has_irq = 1,
->  		.muxtype = pca954x_isswi,
->  	},
->  	[pca_9547] = {
-> @@ -222,6 +235,102 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
->  	return pca954x_reg_write(muxc->parent, client, data->last_chan);
->  }
->  
-> +static irqreturn_t pca954x_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct pca954x *data = dev_id;
-> +	unsigned int child_irq;
-> +	int ret, i, handled;
-> +
-> +	ret = i2c_smbus_read_byte(data->client);
-> +	if (ret < 0)
-> +		return IRQ_NONE;
-> +
-> +	for (i = 0; i < data->chip->nchans; i++) {
-> +		if (ret & BIT(PCA954X_IRQ_OFFSET + i)) {
-> +			child_irq = irq_linear_revmap(data->irq, i);
-> +			handle_nested_irq(child_irq);
-> +			handled++;
-> +		}
-> +	}
-> +	return handled ? IRQ_HANDLED : IRQ_NONE;
-> +}
-> +
-> +static void pca954x_irq_mask(struct irq_data *idata)
-> +{
-> +	struct pca954x *data = irq_data_get_irq_chip_data(idata);
-> +	unsigned int pos = idata->hwirq;
-> +
-> +	data->irq_mask &= ~BIT(pos);
-> +	if (!data->irq_mask)
-> +		disable_irq(data->client->irq);
-> +}
-> +
-> +static void pca954x_irq_unmask(struct irq_data *idata)
-> +{
-> +	struct pca954x *data = irq_data_get_irq_chip_data(idata);
-> +	unsigned int pos = idata->hwirq;
-> +
-> +	if (!data->irq_mask)
-> +		enable_irq(data->client->irq);
-> +	data->irq_mask |= BIT(pos);
-> +}
+Chris Packham (4):
+  clk: mvebu: support for 98DX3236 SoC
+    Changes in v2:
+    - Update devicetree binding documentation for new compatible string
+    Changes in v3:
+    - Add 98dx3236 support to mvebu/clk-corediv.c rather than creating a new
+      driver.
+    - Document mv98dx3236-corediv-clock binding
+    Changes in v4:
+    - None
+  arm: mvebu: support for SMP on 98DX3336 SoC
+    Changes in v2:
+    - Document new enable-method value
+    - Correct some references from 98DX4521 to 98DX3236
+    Changes in v3:
+    - Simplify mv98dx3236_resume_init by using of_io_request_and_map()
+    Changes in v4:
+    - integrate changes into platsmp.c instead of new init call
+    - avoid duplicated code.
+    - fix error return
+    - Collect ack from Rob
+  arm: mvebu: Add device tree for 98DX3236 SoCs
+    Changes in v2:
+    - Update devicetree binding documentation to reflect that 98DX3336 and
+      984251 are supersets of 98DX3236.
+    - disable crypto block
+    - disable sdio for 98DX3236, enable for 98DX4251
+    Changes in v3:
+    - fix typo 4521 -> 4251
+    - document prestera bindings
+    - rework corediv-clock binding
+    - add label to packet processor node
+    - add new compatible string for DFX server
+    Changes in v4:
+    - Collect ack from Rob
+  arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
 
-I assume the irq core makes sure that .irq_mask and .irq_unmask may not
-be called concurrently?
+Kalyan Kinthada (1):
+  pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+    Changes in v2:
+    - include sdio support for the 98DX4251
+    Changes in v3:
+    - None
+    Changes in v4:
+    - Correct some discrepencies between binding and driver.
+    - Collect acks from Rob and Sebastian
+    
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  |  18 ++
+ .../devicetree/bindings/arm/marvell/98dx3236.txt   |  23 ++
+ .../bindings/clock/mvebu-corediv-clock.txt         |   1 +
+ .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   1 +
+ .../devicetree/bindings/net/marvell,prestera.txt   |  50 ++++
+ .../pinctrl/marvell,armada-98dx3236-pinctrl.txt    |  46 ++++
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi          | 254 +++++++++++++++++++++
+ arch/arm/boot/dts/armada-xp-98dx3336.dtsi          |  76 ++++++
+ arch/arm/boot/dts/armada-xp-98dx4251.dtsi          |  90 ++++++++
+ arch/arm/boot/dts/db-dxbc2.dts                     | 159 +++++++++++++
+ arch/arm/boot/dts/db-xc3-24g4xg.dts                | 155 +++++++++++++
+ arch/arm/mach-mvebu/platsmp.c                      |  86 +++++++
+ drivers/clk/mvebu/armada-xp.c                      |  42 ++++
+ drivers/clk/mvebu/clk-corediv.c                    |  23 ++
+ drivers/clk/mvebu/clk-cpu.c                        |  31 ++-
+ drivers/pinctrl/mvebu/pinctrl-armada-xp.c          | 156 +++++++++++++
+ 17 files changed, 1210 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236.txt
+ create mode 100644 Documentation/devicetree/bindings/net/marvell,prestera.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+ create mode 100644 arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+ create mode 100644 arch/arm/boot/dts/armada-xp-98dx3336.dtsi
+ create mode 100644 arch/arm/boot/dts/armada-xp-98dx4251.dtsi
+ create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
+ create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
 
-> +
-> +static int pca954x_irq_set_type(struct irq_data *idata, unsigned int type)
-> +{
-> +	if ((type & IRQ_TYPE_SENSE_MASK) != IRQ_TYPE_LEVEL_LOW)
-> +		return -EINVAL;
-> +	return 0;
-> +}
-> +
-> +static struct irq_chip pca954x_irq_chip = {
-> +	.name = "i2c-mux-pca954x",
-> +	.irq_mask = pca954x_irq_mask,
-> +	.irq_unmask = pca954x_irq_unmask,
-> +	.irq_set_type = pca954x_irq_set_type,
-> +};
-> +
-> +static int pca954x_irq_setup(struct i2c_mux_core *muxc)
-> +{
-> +	struct pca954x *data = i2c_mux_priv(muxc);
-> +	struct i2c_client *client = data->client;
-> +	int c, err, irq;
-> +
-> +	if (!data->chip->has_irq || client->irq <= 0)
-> +		return 0;
+inter-diff to v3:
 
-I assume "client->irq <= 0" means that users not specifying any interrupts
-continue to behave as they use to, right?
+diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+index d4e6ecdfc853..b5bd23992fdf 100644
+--- a/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-98dx3236-pinctrl.txt
+@@ -28,10 +28,10 @@ mpp13         13       gpio, intr(out), dev(ad15)
+ mpp14         14       gpio, i2c0(sck)
+ mpp15         15       gpio, i2c0(sda)
+ mpp16         16       gpio, dev(oe)
+-mpp17         17       gpio, dev(clk)
++mpp17         17       gpio, dev(clkout)
+ mpp18         18       gpio, uart1(txd)
+ mpp19         19       gpio, uart1(rxd), dev(rb)
+-mpp20         20       gpio, dev(we)
++mpp20         20       gpio, dev(we0)
+ mpp21         21       gpio, dev(ad0)
+ mpp22         22       gpio, dev(ad1)
+ mpp23         23       gpio, dev(ad2)
+diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
+index 2a2dd8324fb8..6c6497e80a7b 100644
+--- a/arch/arm/mach-mvebu/Makefile
++++ b/arch/arm/mach-mvebu/Makefile
+@@ -7,7 +7,6 @@ obj-$(CONFIG_MACH_MVEBU_ANY)	 += system-controller.o mvebu-soc-id.o
+ 
+ ifeq ($(CONFIG_MACH_MVEBU_V7),y)
+ obj-y				 += cpu-reset.o board-v7.o coherency.o coherency_ll.o pmsu.o pmsu_ll.o
+-obj-y				 += pmsu-98dx3236.o
+ 
+ obj-$(CONFIG_PM)		 += pm.o pm-board.o
+ obj-$(CONFIG_SMP)		 += platsmp.o headsmp.o platsmp-a9.o headsmp-a9.o
+diff --git a/arch/arm/mach-mvebu/common.h b/arch/arm/mach-mvebu/common.h
+index 099dabf23461..6b775492cfad 100644
+--- a/arch/arm/mach-mvebu/common.h
++++ b/arch/arm/mach-mvebu/common.h
+@@ -27,5 +27,4 @@ void __iomem *mvebu_get_scu_base(void);
+ 
+ int mvebu_pm_suspend_init(void (*board_pm_enter)(void __iomem *sdram_reg,
+ 							u32 srcmd));
+-void mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr);
+ #endif
+diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+index 3c9ab9a008ad..59be3ca0464f 100644
+--- a/arch/arm/mach-mvebu/platsmp.c
++++ b/arch/arm/mach-mvebu/platsmp.c
+@@ -182,12 +182,57 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
+ #endif
+ };
+ 
++CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
++		      &armada_xp_smp_ops);
++
++struct resume_controller {
++	u32 resume_control;
++	u32 resume_boot_addr;
++};
++
++static const struct resume_controller mv98dx3336_resume_controller = {
++	.resume_control = 0x08,
++	.resume_boot_addr = 0x04,
++};
++
++static const struct of_device_id of_mv98dx3236_resume_table[] = {
++	{
++		.compatible = "marvell,98dx3336-resume-ctrl",
++		.data = (void *)&mv98dx3336_resume_controller,
++	},
++	{ /* end of list */ },
++};
++
++static int mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
++{
++	const struct of_device_id *match;
++	struct device_node *np;
++	void __iomem *base;
++	struct resume_controller *rc;
++
++	WARN_ON(hw_cpu != 1);
++
++	np = of_find_matching_node_and_match(NULL, of_mv98dx3236_resume_table,
++					     &match);
++	if (!np)
++		return -ENODEV;
++
++	base = of_io_request_and_map(np, 0, of_node_full_name(np));
++	rc = (struct resume_controller *)match->data;
++	of_node_put(np);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	writel(0, base + rc->resume_control);
++	writel(virt_to_phys(boot_addr), base + rc->resume_boot_addr);
++
++	return 0;
++}
++
+ static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ {
+ 	int ret, hw_cpu;
+ 
+-	pr_info("Booting CPU %d\n", cpu);
+-
+ 	hw_cpu = cpu_logical_map(cpu);
+ 	set_secondary_cpu_clock(hw_cpu);
+ 	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
+@@ -212,7 +257,7 @@ static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 	return 0;
+ }
+ 
+-struct smp_operations mv98dx3236_smp_ops __initdata = {
++static const struct smp_operations mv98dx3236_smp_ops __initconst = {
+ 	.smp_init_cpus		= armada_xp_smp_init_cpus,
+ 	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
+ 	.smp_boot_secondary	= mv98dx3236_boot_secondary,
+@@ -223,7 +268,5 @@ struct smp_operations mv98dx3236_smp_ops __initdata = {
+ #endif
+ };
+ 
+-CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
+-		      &armada_xp_smp_ops);
+ CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
+ 		      &mv98dx3236_smp_ops);
+diff --git a/arch/arm/mach-mvebu/pmsu-98dx3236.c b/arch/arm/mach-mvebu/pmsu-98dx3236.c
+deleted file mode 100644
+index 1052674dd439..000000000000
+--- a/arch/arm/mach-mvebu/pmsu-98dx3236.c
++++ /dev/null
+@@ -1,52 +0,0 @@
+-/**
+- * CPU resume support for 98DX3236 internal CPU (a.k.a. MSYS).
+- */
+-
+-#define pr_fmt(fmt) "mv98dx3236-resume: " fmt
+-
+-#include <linux/kernel.h>
+-#include <linux/init.h>
+-#include <linux/of_address.h>
+-#include <linux/io.h>
+-#include "common.h"
+-
+-static void __iomem *mv98dx3236_resume_base;
+-#define MV98DX3236_CPU_RESUME_CTRL_OFFSET	0x08
+-#define MV98DX3236_CPU_RESUME_ADDR_OFFSET	0x04
+-
+-static const struct of_device_id of_mv98dx3236_resume_table[] = {
+-	{.compatible = "marvell,98dx3336-resume-ctrl",},
+-	{ /* end of list */ },
+-};
+-
+-void mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
+-{
+-	WARN_ON(hw_cpu != 1);
+-
+-	writel(0, mv98dx3236_resume_base + MV98DX3236_CPU_RESUME_CTRL_OFFSET);
+-	writel(virt_to_phys(boot_addr), mv98dx3236_resume_base +
+-	       MV98DX3236_CPU_RESUME_ADDR_OFFSET);
+-}
+-
+-static int __init mv98dx3236_resume_init(void)
+-{
+-	struct device_node *np;
+-	void __iomem *base;
+-
+-	np = of_find_matching_node(NULL, of_mv98dx3236_resume_table);
+-	if (!np)
+-		return 0;
+-
+-	base = of_io_request_and_map(np, 0, of_node_full_name(np));
+-	if (IS_ERR(base)) {
+-		pr_err("unable to map registers\n");
+-		of_node_put(np);
+-		return PTR_ERR(mv98dx3236_resume_base);
+-	}
+-
+-	mv98dx3236_resume_base = base;
+-	of_node_put(np);
+-	return 0;
+-}
+-
+-early_initcall(mv98dx3236_resume_init);
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+index 554eeae8cd21..9601d662c7f5 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-xp.c
+@@ -374,8 +374,8 @@ static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
+ 		 MPP_VAR_FUNCTION(0x2, "spi0", "miso",       V_98DX3236_PLUS),
+ 		 MPP_VAR_FUNCTION(0x4, "dev", "ad9",         V_98DX3236_PLUS)),
+ 	MPP_MODE(2,
+-		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
+-		 MPP_VAR_FUNCTION(0x2, "spi0", "csk",        V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x2, "spi0", "sck",        V_98DX3236_PLUS),
+ 		 MPP_VAR_FUNCTION(0x4, "dev", "ad10",        V_98DX3236_PLUS)),
+ 	MPP_MODE(3,
+ 		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
+@@ -390,7 +390,7 @@ static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
+ 		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
+ 		 MPP_VAR_FUNCTION(0x1, "pex", "rsto",        V_98DX3236_PLUS),
+ 		 MPP_VAR_FUNCTION(0x2, "sd0", "cmd",         V_98DX4251),
+-		 MPP_VAR_FUNCTION(0x4, "dev", "bootcs0",     V_98DX3236_PLUS)),
++		 MPP_VAR_FUNCTION(0x4, "dev", "bootcs",      V_98DX3236_PLUS)),
+ 	MPP_MODE(6,
+ 		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
+ 		 MPP_VAR_FUNCTION(0x2, "sd0", "clk",         V_98DX4251),
+@@ -442,7 +442,8 @@ static struct mvebu_mpp_mode mv98dx3236_mpp_modes[] = {
+ 		 MPP_VAR_FUNCTION(0x3, "uart1", "txd",       V_98DX3236_PLUS)),
+ 	MPP_MODE(19,
+ 		 MPP_VAR_FUNCTION(0x0, "gpio", NULL,         V_98DX3236_PLUS),
+-		 MPP_VAR_FUNCTION(0x3, "uart1", "rxd",       V_98DX3236_PLUS)),
++		 MPP_VAR_FUNCTION(0x3, "uart1", "rxd",       V_98DX3236_PLUS),
++		 MPP_VAR_FUNCTION(0x4, "dev", "rb",          V_98DX3236_PLUS)),
+ 	MPP_MODE(20,
+ 		 MPP_VAR_FUNCTION(0x0, "gpo", NULL,          V_98DX3236_PLUS),
+ 		 MPP_VAR_FUNCTION(0x4, "dev", "we0",         V_98DX3236_PLUS)),
+@@ -548,7 +549,7 @@ static struct mvebu_mpp_ctrl mv98dx3236_mpp_controls[] = {
+ };
+ 
+ static struct pinctrl_gpio_range mv98dx3236_mpp_gpio_ranges[] = {
+-	MPP_GPIO_RANGE(0,   0,  0, 32),
++	MPP_GPIO_RANGE(0, 0, 0, 32),
+ };
+ 
+ static int armada_xp_pinctrl_suspend(struct platform_device *pdev,
+-- 
+2.11.0.24.ge6920cf
 
-BTW, what does client->irq == 0 represent?
-
-Cheers,
-peda
-
-
-> +
-> +	data->irq = irq_domain_add_linear(client->dev.of_node,
-> +					  data->chip->nchans,
-> +					  &irq_domain_simple_ops, data);
-> +	if (!data->irq)
-> +		return -ENODEV;
-> +
-> +	for (c = 0; c < data->chip->nchans; c++) {
-> +		irq = irq_create_mapping(data->irq, c);
-> +		irq_set_chip_data(irq, data);
-> +		irq_set_chip_and_handler(irq, &pca954x_irq_chip,
-> +			handle_simple_irq);
-> +	}
-> +
-> +	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
-> +					pca954x_irq_handler,
-> +					IRQF_ONESHOT | IRQF_SHARED,
-> +					"pca954x", data);
-> +	if (err)
-> +		goto err_req_irq;
-> +
-> +	disable_irq(data->client->irq);
-> +
-> +	return 0;
-> +err_req_irq:
-> +	for (c = 0; c < data->chip->nchans; c++) {
-> +		irq = irq_find_mapping(data->irq, c);
-> +		irq_dispose_mapping(irq);
-> +	}
-> +	irq_domain_remove(data->irq);
-> +
-> +	return err;
-> +}
-> +
->  /*
->   * I2C init/probing/exit functions
->   */
-> @@ -286,6 +395,10 @@ static int pca954x_probe(struct i2c_client *client,
->  	idle_disconnect_dt = of_node &&
->  		of_property_read_bool(of_node, "i2c-mux-idle-disconnect");
->  
-> +	ret = pca954x_irq_setup(muxc);
-> +	if (ret)
-> +		goto fail_del_adapters;
-> +
->  	/* Now create an adapter for each channel */
->  	for (num = 0; num < data->chip->nchans; num++) {
->  		bool idle_disconnect_pd = false;
-> @@ -311,7 +424,7 @@ static int pca954x_probe(struct i2c_client *client,
->  			dev_err(&client->dev,
->  				"failed to register multiplexed adapter"
->  				" %d as bus %d\n", num, force);
-> -			goto virt_reg_failed;
-> +			goto fail_del_adapters;
->  		}
->  	}
->  
-> @@ -322,7 +435,7 @@ static int pca954x_probe(struct i2c_client *client,
->  
->  	return 0;
->  
-> -virt_reg_failed:
-> +fail_del_adapters:
->  	i2c_mux_del_adapters(muxc);
->  	return ret;
->  }
-> @@ -330,6 +443,16 @@ static int pca954x_probe(struct i2c_client *client,
->  static int pca954x_remove(struct i2c_client *client)
->  {
->  	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
-> +	struct pca954x *data = i2c_mux_priv(muxc);
-> +	int c, irq;
-> +
-> +	if (data->irq) {
-> +		for (c = 0; c < data->chip->nchans; c++) {
-> +			irq = irq_find_mapping(data->irq, c);
-> +			irq_dispose_mapping(irq);
-> +		}
-> +		irq_domain_remove(data->irq);
-> +	}
->  
->  	i2c_mux_del_adapters(muxc);
->  	return 0;
-> 
