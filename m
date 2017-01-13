@@ -1,53 +1,113 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3] ARM: dts: Add LEGO MINDSTORMS EV3 dts
-Date: Fri, 13 Jan 2017 12:20:46 -0600
-Message-ID: <f73840dd-6373-e554-311f-d92c1bed060f@lechnology.com>
-References: <1484253167-27568-1-git-send-email-david@lechnology.com>
- <3066d614-0676-319a-6149-6d723e1cf35f@ti.com>
- <0d69ff4b-c3a6-5126-2590-2268d3b25f92@lechnology.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v3 1/7] devicetree: power: add battery state machine
+ documentation
+Date: Fri, 13 Jan 2017 19:33:53 +0100
+Message-ID: <20170113183353.u3ug46gi66kaivjd@earth>
+References: <20170111062003.10110-1-matt@ranostay.consulting>
+ <20170111062003.10110-2-matt@ranostay.consulting>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0d69ff4b-c3a6-5126-2590-2268d3b25f92@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hthd7sbsaxsxgu6i"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170111062003.10110-2-matt@ranostay.consulting>
+Sender: linux-pm-owner@vger.kernel.org
+To: Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2017 12:16 PM, David Lechner wrote:
-> On 01/13/2017 06:04 AM, Sekhar Nori wrote:
->> On Friday 13 January 2017 02:02 AM, David Lechner wrote:
->>> This adds a device tree definition file for LEGO MINDSTORMS EV3.
->>>
-> ...
->>
->> There are couple of checkpatch errors that show up. The compatible
->> "lego,ev3" needs to be documented in
->> Documentation/devicetree/bindings/arm/davinci.txt
->>
->> "at24,24c128" is undocumented. Is that an atmel chip on the EV3? If the
->> manufacturer name is not clear,
->> Documentation/devicetree/bindings/eeprom/eeprom.txt advises using just
->> "24c128"
->
-> The mfg is microchip, so I guess I will just go with "24c128"
 
-I think I have let the device tree bindings doc confuse me. On second 
-though, I think the correct thing is to included the manufacturer.
+--hthd7sbsaxsxgu6i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->>
->> Finally, lego needs to be added to
->> Documentation/devicetree/bindings/vendor-prefixes.txt
->>
->> Can you please submit the documentation portions as separate patches in
->> a series along with this patch.
->
-> Yes.
->
->>
->> Thanks,
->> Sekhar
->>
->
+Hi,
+
+On Tue, Jan 10, 2017 at 10:19:57PM -0800, Matt Ranostay wrote:
+> Documentation on battery properties that can be defined for
+> fine tuning fuel gauge state machines.
+>=20
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+> ---
+>  .../devicetree/bindings/power/supply/battery.txt     | 20 ++++++++++++++=
+++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/batter=
+y.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b=
+/Documentation/devicetree/bindings/power/supply/battery.txt
+> new file mode 100644
+> index 000000000000..a6ca761e0a29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -0,0 +1,20 @@
+> +Battery State Machine Support
+
+Let's also add a mandatory compatible string. This binding
+is only relevant for dumb batteries, since other ones can
+self-identify. I suggest
+
+compatible =3D "fixed-battery"
+
+> +Optional Properties
+> + - nominal-microvolt: dead battery voltage in microvolts
+> + - design-microwatt-hours: battery design mWh in microwatts
+> + - design-microamp-hours: battery design mAh in microamps
+
+I think we should mandate the property name of the phandle in the
+generic binding instead of each potential fuel-gauge/charger.
+Maybe something like the following paragraph:
+
+Batteries are supposed to be referenced by chargers and/or
+fuel-gauges using a phandle. The phandle's property should
+be named "monitored-battery".
+
+> +Example:
+> +
+> +	bat: battery@0 {
+> +		nominal-microvolt =3D <3700000>;
+> +		design-microwatt-hours =3D <5290000>;
+> +		design-microamp-hours =3D <1430000>;
+> +	};
+> +
+> +	charger: charger@0 {
+> +		...
+> +		monitored-battery =3D <&bat>;
+> +		...
+> +	};
+
+Let's also add a fuel-gauge to the example to avoid any confusion
+between fuel-gauge and battery.
+
+fuel_gauge: fuel-gauge {
+    ...
+    monitored-battery =3D <&bat>;
+    ...
+};
+
+-- Sebastian
+
+--hthd7sbsaxsxgu6i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlh5HY4ACgkQ2O7X88g7
++prnyRAAnMsO/j9bMr1CN0fkniT+G6/Qd+zu4b68K+D6rkO3jrZB55Dh8EHLSgqH
+MNs7yN2SWvZPgqtaou2e0FNK2aZ12tzJT1VJf2LIhzigCuKTVUHsosQmD6ijLAY0
+Es5wQzKG2dE/BgZBbKdxRW5g/Av7EBd0mjFpn5v4Bd311eWU1N5tbRstIAZXR9nq
+++bURfHuQzAlLDqU/XUg1MVdk8b8wZE97Zj9R2nglzuvUpVUbm+mwyEufDhJFQNj
+RMxzZkkEPvDJ9hYBtNGxKpiyVwPrOm6DMh9e4miR5d23brqoSxtcuIkVIYHGxYzC
+UXinDzZ3rJTvAIp163+TWFSCHNL0Su0nyO0tYAKK58hxVNc2Z3fCQeqAXqq4uA8b
+MNqEbAzxsK3qwPmnAREvgzq2UKugAKpQz6SOwOPXhfaYw5S6s3Bg1EPUreLYq8PQ
+YX1Tyxqj/OXhRsFgisfykSib4oW8UjSkZY3PCq4glwbhZhRCpnpG+SlFI31mJQc5
+4jhXxYQWH0Oj5GdSZm6VgGZCHbqX1YqGGo80LcAFYRfhxTnslNo22fBPO7+mw77Z
+xKrre40JUq6MGEuhemMgy3lZxi7wuVWnH7q5DaNAXj6KY68zuw9ifuI9YRvnpI9k
+BJwxwYQpzcRNW8ZMMeq67hMi7X5rZ2krecmrZ+6TLqVkDJATIEg=
+=+9Go
+-----END PGP SIGNATURE-----
+
+--hthd7sbsaxsxgu6i--
