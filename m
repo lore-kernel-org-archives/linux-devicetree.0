@@ -1,61 +1,29 @@
-From: Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH v3 10/24] ARM: dts: imx6-sabreauto: add pinctrl for gpt
- input capture
-Date: Thu, 12 Jan 2017 15:40:04 -0800
-Message-ID: <2f015318-7afe-9d57-872a-4a55c4171ee4@mentor.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-11-git-send-email-steve_longerbeam@mentor.com>
- <CAJ+vNU1ci=fbeemJcBGCAk40PETdcov7Fm112F5FePL9SR4cFQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: NSP: Fix DT ranges error
+Date: Thu, 12 Jan 2017 16:07:46 -0800
+Message-ID: <88ba8fb2-071c-73cb-d26a-b5b2dbdd0f4f@gmail.com>
+References: <1484236210-16067-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ+vNU1ci=fbeemJcBGCAk40PETdcov7Fm112F5FePL9SR4cFQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>, Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, mchehab@kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Nick Dyer <nick@shmanahar.org>, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, minghsiu.tsai@mediatek.com, Tiffany Lin <tiffany.lin@mediatek.com>, Jean-Christophe TROTIN <jean-christophe.trotin@st.com>, Simon Horman <horms+renesas@verge.net.au>=?UTF-8?Q?Niklas_S=c3=b6derlund?= <ni>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484236210-16067-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/12/2017 07:50 AM, Jon Mason wrote:
+> The range size for axi is 0x2 bytes too small, as the QSPI needs
+> 0x11c408 + 0x004 (which is 0x0011c40c, not 0x0011c40a).  No errors have
+> been observed with this shortcoming, but fixing it for correctness.
+> 
+> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-
-On 01/12/2017 11:37 AM, Tim Harvey wrote:
-> On Fri, Jan 6, 2017 at 6:11 PM, Steve Longerbeam <slongerbeam@gmail.com> wrote:
->> Add pinctrl groups for both GPT input capture channels.
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> ---
->>   arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
->> index 967c3b8..495709f 100644
->> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
->> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
->> @@ -457,6 +457,18 @@
->>                          >;
->>                  };
->>
->> +               pinctrl_gpt_input_capture0: gptinputcapture0grp {
->> +                       fsl,pins = <
->> +                               MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1       0x1b0b0
->> +                       >;
->> +               };
->> +
->> +               pinctrl_gpt_input_capture1: gptinputcapture1grp {
->> +                       fsl,pins = <
->> +                               MX6QDL_PAD_SD1_DAT1__GPT_CAPTURE2       0x1b0b0
->> +                       >;
->> +               };
->> +
->>                  pinctrl_spdif: spdifgrp {
->>                          fsl,pins = <
->>                                  MX6QDL_PAD_KEY_COL3__SPDIF_IN 0x1b0b0
->> --
-> Steve,
->
-> These are not used anywhere.
-
-Yes, maybe I should just remove this patch for now. I'm only keeping it
-because eventually it will be needed to support i.MX6 input capture.
-
-Steve
+Applied to devicetree/fixes thanks Jon.
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
