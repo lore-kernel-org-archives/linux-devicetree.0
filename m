@@ -1,21 +1,11 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v5 3/3] dmaengine: xilinx_dma: Fix race condition in the
- driver for multiple descriptor scenario
-Date: Fri, 13 Jan 2017 06:33:33 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A6666F3@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1483771530-8545-1-git-send-email-appanad@xilinx.com>
- <1483771530-8545-4-git-send-email-appanad@xilinx.com>
- <20170110084917.GA3573@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A6662F1@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20170113053627.GQ3573@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A6666CF@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20170113062225.GR3573@localhost>
+From: Guochun Mao <guochun.mao@mediatek.com>
+Subject: [PATCH v1 0/2] add nor flash node for mt2701
+Date: Fri, 13 Jan 2017 15:13:27 +0800
+Message-ID: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170113062225.GR3573@localhost>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,59 +15,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Soren Brinkmann <sorenb@xilinx.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-	
-	Thanks for the review...
+This patch series based on v4.10-rc2, include MT2701 spinor node and bindings.
 
-[Snip]
-> > > Btw how and when does DMA stop, assuming it is circular it never
-> > > would, isn't there a valid/stop flag associated with a descriptor
-> > > which tells DMA engine what to do next
-> >
-> > There are two registers that controls the DMA transfers.
-> > Current descriptor and tail descriptor register.
-> > When current descriptor reaches tail descriptor dma engine will pause.
-> >
-> > When reprogramming the tail descriptor the DMA engine will starts fetching
-> descriptors again.
-> >
-> > But with the existing driver flow if we reprogram the tail descriptor
-> > The tail descriptor next descriptor field is pointing to an invalid
-> > location Causing data corruption...
-> 
-> So the solution is..?
+Dependent on "Add clock and power domain DT nodes for Mediatek MT2701"[1].
 
-This patch.
-I mean if we have a set of descriptors in chain (in circular manner last descriptor points to first descriptor)
-It always points to valid descriptors. 
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-December/007637.html
 
-Will update the patch commit description in the next version...
+Guochun Mao (2):
+  Documentation: mtk-quadspi: update DT bindings
+  arm: dts: mt2701: add nor flash node
 
-> 
-> > > Btw there is something wrong with your MUA perhaps line are
-> > > titlecased for no reason. This is typically behavious of non linux
-> > > tool which may not be great tool for this work.
-> >
-> > Thanks for pointing it out.
-> > I usually replies from outlook from a windows machine.
-> > Will check with others in my team how they configured their mail client.
-> 
-> Yeah that isnt right tool for the job. See Documentation/process/email-
-> clients.rst
-> 
-> FWIW, I use mutt, vim as editor with exchange servers, seems to work well for
-> me now.
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |  4 +++-
+ arch/arm/boot/dts/mt2701-evb.dts                   | 25 ++++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi                      | 12 +++++++++++
+ 3 files changed, 40 insertions(+), 1 deletion(-)
 
-Thanks for pointing it out will go through it.
-Will install mutt in my Linux machine will start replying from that
-
-Regards,
-Kedar.
-
-> 
-> --
-> ~Vinod
+--
+1.8.1.1.dirty
