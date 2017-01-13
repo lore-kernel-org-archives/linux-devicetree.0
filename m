@@ -1,92 +1,46 @@
-From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Fri, 13 Jan 2017 15:13:29 +0800
-Message-ID: <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 18/18] insert build break
+Date: Fri, 13 Jan 2017 08:15:45 +0100
+Message-ID: <20170113071545.GB12441@kroah.com>
+References: <1484260655-80477-1-git-send-email-christopher.lee.bostic@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1484291609-20195-1-git-send-email-guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484260655-80477-1-git-send-email-christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Mediatek nor flash node.
+On Thu, Jan 12, 2017 at 04:37:35PM -0600, christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
- 2 files changed, 37 insertions(+)
+I can not accept patches that have no changelog text, and this one is
+very odd:
 
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index 082ca88..85e5ae8 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -24,6 +24,31 @@
- 	};
- };
- 
-+&nor_flash {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nor_pins_default>;
-+	status = "okay";
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+	};
-+};
-+
-+&pio {
-+	nor_pins_default: nor {
-+		pins1 {
-+			pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
-+				 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
-+				 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
-+				 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
-+				 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
-+				 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
-+			drive-strength = <MTK_DRIVE_4mA>;
-+			bias-pull-up;
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index bdf8954..1eefce4 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -227,6 +227,18 @@
- 		status = "disabled";
- 	};
- 
-+	nor_flash: spi@11014000 {
-+		compatible = "mediatek,mt2701-nor",
-+			     "mediatek,mt8173-nor";
-+		reg = <0 0x11014000 0 0xe0>;
-+		clocks = <&pericfg CLK_PERI_FLASH>,
-+			 <&topckgen CLK_TOP_FLASH_SEL>;
-+		clock-names = "spi", "sf";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	mmsys: syscon@14000000 {
- 		compatible = "mediatek,mt2701-mmsys", "syscon";
- 		reg = <0 0x14000000 0 0x1000>;
--- 
-1.7.9.5
+> ---
+>  drivers/fsi/fsi-core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+> index 28b82d1..db09836 100644
+> --- a/drivers/fsi/fsi-core.c
+> +++ b/drivers/fsi/fsi-core.c
+> @@ -42,6 +42,7 @@
+>  
+>  static DEFINE_IDA(master_ida);
+>  
+> +
+
+Huh?
+
+Did something go wrong with your scripts?
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
