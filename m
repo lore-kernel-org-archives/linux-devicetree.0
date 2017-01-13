@@ -1,191 +1,50 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Sat, 14 Jan 2017 09:29:58 +0100
-Message-ID: <20170114092958.022f2fc8@bbrezillon>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
-        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
-        <20170113151747.6bc85245@bbrezillon>
-        <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
-        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
-        <20170113172825.75d545a3@bbrezillon>
-        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
-        <20170113175628.1793f433@bbrezillon>
-        <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH 0/4] Add support for es8388 on the rock2
+Date: Fri, 13 Jan 2017 17:14:48 +0100
+Message-ID: <20170113161452.14313-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0fafcd8d-cf99-de6b-728f-5e3637810b68-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Jan 2017 18:33:40 +0100
-Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+This set of patches adds a machine driver for rockchip boards that use
+ES8388 codecs. It also adds slave mode to the es8328 driver that
+currently only supported the master mode. Then, it adds the required DT
+definitions to link rockchip-i2s to the es8388 analog output.
 
-> On 01/13/2017 05:56 PM, Boris Brezillon wrote:
-> > On Fri, 13 Jan 2017 17:44:12 +0100
-> > Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >   
-> >> On 01/13/2017 05:28 PM, Boris Brezillon wrote:  
-> >>> On Fri, 13 Jan 2017 17:13:55 +0100
-> >>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>     
-> >>>> On 01/13/2017 04:12 PM, Matthias Brugger wrote:    
-> >>>>>
-> >>>>>
-> >>>>> On 13/01/17 15:17, Boris Brezillon wrote:      
-> >>>>>> On Fri, 13 Jan 2017 15:13:29 +0800
-> >>>>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>>>>>      
-> >>>>>>> Add Mediatek nor flash node.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>>>> ---
-> >>>>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
-> >>>>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
-> >>>>>>>  2 files changed, 37 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>> b/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>> index 082ca88..85e5ae8 100644
-> >>>>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>> @@ -24,6 +24,31 @@
-> >>>>>>>      };
-> >>>>>>>  };
-> >>>>>>>
-> >>>>>>> +&nor_flash {
-> >>>>>>> +    pinctrl-names = "default";
-> >>>>>>> +    pinctrl-0 = <&nor_pins_default>;
-> >>>>>>> +    status = "okay";
-> >>>>>>> +    flash@0 {
-> >>>>>>> +        compatible = "jedec,spi-nor";
-> >>>>>>> +        reg = <0>;
-> >>>>>>> +    };
-> >>>>>>> +};
-> >>>>>>> +
-> >>>>>>> +&pio {
-> >>>>>>> +    nor_pins_default: nor {
-> >>>>>>> +        pins1 {
-> >>>>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
-> >>>>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
-> >>>>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
-> >>>>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
-> >>>>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
-> >>>>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
-> >>>>>>> +            drive-strength = <MTK_DRIVE_4mA>;
-> >>>>>>> +            bias-pull-up;
-> >>>>>>> +        };
-> >>>>>>> +    };
-> >>>>>>> +};
-> >>>>>>> +
-> >>>>>>>  &uart0 {
-> >>>>>>>      status = "okay";
-> >>>>>>>  };
-> >>>>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>> b/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>> index bdf8954..1eefce4 100644
-> >>>>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>> @@ -227,6 +227,18 @@
-> >>>>>>>          status = "disabled";
-> >>>>>>>      };
-> >>>>>>>
-> >>>>>>> +    nor_flash: spi@11014000 {
-> >>>>>>> +        compatible = "mediatek,mt2701-nor",
-> >>>>>>> +                 "mediatek,mt8173-nor";      
-> >>>>>>
-> >>>>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
-> >>>>>> subset of the features supported by "mediatek,mt2701-nor"?
-> >>>>>>      
-> >>>>>
-> >>>>> I think even if the ip block is the same, we should provide both
-> >>>>> bindings, just in case in the future we find out that mt2701 has some
-> >>>>> hidden bug, feature or bug-feature. This way even if we update the
-> >>>>> driver, we stay compatible with older device tree blobs in the wild.
-> >>>>>
-> >>>>> We can drop the mt2701-nor in the bindings definition if you want.     
-> >>>
-> >>> Oh, sorry, I misunderstood. What I meant is that if you want to
-> >>> list/support all possible compatibles, maybe you should just put one
-> >>> compatible in your DT and patch your driver (+ binding doc) to define
-> >>> all of them.    
-> >>
-> >> Uh, what ? I lost you here :-)
+This work is based on the initial work that was done by Sjoerd Simons
+<sjoerd.simons@collabora.co.uk> with some improvements, changes and more
+commits.
 
-I mean adding a new entry in the mtk_nor_of_ids table (in
-mtk-quadspi.c) so that the mediatek,mt2701-nor compatible string can be
-matched directly, and you won't need to define 2 compatible strings in
-your device tree.
+Romain Perier (4):
+  ASoC: es8328-i2c: Add compatible for ES8388
+  ASoC: es8328: Add support for slave mode
+  ASoC: rockchip: Add machine driver for ES8388 codecs
+  arm: dts: Add support for ES8388 to the Radxa Rock 2
 
-> >>  
-> >>>> This exactly. We should have a DT compat in the form:
-> >>>> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
-> >>>> Then if we find a problem in the future, we can match on the
-> >>>> "vendor,<soc>-block" and still support the old DTs.    
-> >>>
-> >>> Not sure it's only in term of whose IP appeared first. My understanding
-> >>> is that it's a way to provide inheritance. For example:
-> >>>
-> >>> 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
-> >>>
-> >>> or
-> >>>
-> >>> 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
-> >>>
-> >>> BTW, which one is the oldest between mt8173 and mt2701? :-)    
-> >>
-> >> And that's another thing and I agree with you, but I don't think that's
-> >> what we're discussing in this thread. But (!), OT, I think we should
-> >> codify the rules in Documentation/ . This discussion came up multiple
-> >> times recently.
-> >>
-> >> And my question still stands, what do we put into the DT here, IMO
-> >> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";  
-> > 
-> > I'd say
-> > 
-> > 	compatible = "mediatek,mt8173-nor";
-> > 
-> > because both compatible are referring to very specific IP version. It's
-> > not the same as  
-> 
-> But then you don't have the ability to handle a block in this particular
-> SoC in case there's a bug found in it in the future,
-> so IMO it should be:
-> 
-> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";
+ Documentation/devicetree/bindings/sound/es8328.txt |   2 +-
+ .../devicetree/bindings/sound/rockchip-es8388.txt  |  28 +++
+ arch/arm/boot/dts/rk3288-rock2-square.dts          |  37 +++
+ sound/soc/codecs/es8328-i2c.c                      |   3 +-
+ sound/soc/codecs/es8328.c                          |  28 ++-
+ sound/soc/rockchip/Kconfig                         |   9 +
+ sound/soc/rockchip/Makefile                        |   2 +
+ sound/soc/rockchip/rockchip_es8388.c               | 270 +++++++++++++++++++++
+ 8 files changed, 371 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-es8388.txt
+ create mode 100644 sound/soc/rockchip/rockchip_es8388.c
 
-Sorry again, I meant
-
-	compatible = "mediatek,mt2701-nor";
-
-> 
-> > 	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";  
-> 
-> This doesn't look right, since here we add two new compatibles ...
-
-That was just an example to describe how compatible inheritance works
-(at least that's my understanding of it), it does not apply to this
-particular use case.
-
-> 
-> > where you clearly have a generic compatible which is overloaded by a
-> > specific one.
-> > 
-> > But anyway, I'm not the one taking the decision here, let's wait for DT
-> > maintainers reviews.
-> >   
-> >> and what goes into the binding document ? I guess both too ?  
-> > 
-> > If both exist, they should be both documented.
-> >   
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.9.3
