@@ -1,59 +1,94 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 00/10] ARM: da850-lcdk: add SATA support
-Date: Fri, 13 Jan 2017 20:02:52 +0530
-Message-ID: <fa513599-1ac1-51e9-4da3-f4ed61ba0ce2@ti.com>
-References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: dts: mt2701: Sort DT nodes by register address
+Date: Fri, 13 Jan 2017 15:38:44 +0100
+Message-ID: <bcc5c785-be25-d63b-3041-ae0009a9dc72@gmail.com>
+References: <1482904006-44232-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1482904006-44232-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482904006-44232-2-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 January 2017 06:07 PM, Bartosz Golaszewski wrote:
-> This series contains all the changes necessary to make SATA work on
-> the da850-lcdk board.
-> 
-> The first patch adds a clock lookup entry required for the ahci core
-> to retrieve a functional clock.
-> 
-> The second enables relevant config options for all davinci boards.
-> 
-> The third adds device tree bindings for the ahci_da850 driver.
-> 
-> The fourth adds a workaround for a SATA controller instability we
-> detected after increasing the PLL0 frequency for proper LCD
-> controller support.
-> 
-> Patches 5 through 7 extend the ahci_da850 driver - add DT support,
-> un-hardcode the clock multiplier value and add a workaround for
-> a quirk present on the da850 SATA controller.
-> 
-> Patches 8-10 add the device tree changes required to probe the driver.
-> 
-> I'm posting the series as a whole to give all reviewers the full
-> picture and visibility of the changes required, if needed I can resend
-> the patches separately.
 
-I just tested this series on my LCDK board using a Western Digital SATA
-HDD and it works great with some basic read / write tests. Thanks!
 
-For the non-platform patches which I wont be queuing:
+On 28/12/16 06:46, James Liao wrote:
+> This patch rearrange MT2701 DT nodes to keep them in ascending order.
+>
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 36 ++++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 7eab6f4..73f4b7c 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -96,24 +96,6 @@
+>  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>  	};
+>
+> -	pio: pinctrl@10005000 {
+> -		compatible = "mediatek,mt2701-pinctrl";
+> -		reg = <0 0x1000b000 0 0x1000>;
+> -		mediatek,pctl-regmap = <&syscfg_pctl_a>;
+> -		pins-are-numbered;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <2>;
+> -		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> -	};
 
-Tested-by: Sekhar Nori <nsekhar@ti.com>
+Applied the whole series. I fixed the unit address of pio to 1000b000 
+and it's order in the file.
 
-I will take a look at the series closely next week.
+Please check v4.10-next/dts32
 
 Thanks,
-Sekhar
+Mathias
+
+> -
+> -	syscfg_pctl_a: syscfg@10005000 {
+> -		compatible = "mediatek,mt2701-pctl-a-syscfg", "syscon";
+> -		reg = <0 0x10005000 0 0x1000>;
+> -	};
+> -
+>  	topckgen: syscon@10000000 {
+>  		compatible = "mediatek,mt2701-topckgen", "syscon";
+>  		reg = <0 0x10000000 0 0x1000>;
+> @@ -134,6 +116,24 @@
+>  		#reset-cells = <1>;
+>  	};
+>
+> +	pio: pinctrl@10005000 {
+> +		compatible = "mediatek,mt2701-pinctrl";
+> +		reg = <0 0x1000b000 0 0x1000>;
+> +		mediatek,pctl-regmap = <&syscfg_pctl_a>;
+> +		pins-are-numbered;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	syscfg_pctl_a: syscfg@10005000 {
+> +		compatible = "mediatek,mt2701-pctl-a-syscfg", "syscon";
+> +		reg = <0 0x10005000 0 0x1000>;
+> +	};
+> +
+>  	watchdog: watchdog@10007000 {
+>  		compatible = "mediatek,mt2701-wdt",
+>  			     "mediatek,mt6589-wdt";
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
