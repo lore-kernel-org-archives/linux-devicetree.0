@@ -1,86 +1,47 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: Re: [PATCH v2 2/2] arm64: cacheinfo: add support to override cache
- levels via device tree
-Date: Fri, 13 Jan 2017 17:06:33 +0800
-Message-ID: <58789899.3080909@huawei.com>
-References: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
- <1484245772-31511-2-git-send-email-sudeep.holla@arm.com>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: Re: [PATCH] ARM: dts: OMAP5 / DRA7: indicate that SATA port 0 is
+ available.
+Date: Fri, 13 Jan 2017 08:59:24 +0100
+Message-ID: <423304d1-ffe3-ce7e-74d9-9707c391d501@ti.com>
+References: <1483964535-4298-1-git-send-email-jjhiblot@ti.com>
+ <20170112223007.GP2630@atomide.com> <20170112223627.GQ2630@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484245772-31511-2-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20170112223627.GQ2630@atomide.com>
+Sender: stable-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rogerq@ti.com, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017/1/13 2:29, Sudeep Holla wrote:
-> The cache hierarchy can be identified through Cache Level ID(CLIDR)
-> architected system register. However in some cases it will provide
-> only the number of cache levels that are integrated into the processor
-> itself. In other words, it can't provide any information about the
-> caches that are external and/or transparent.
-> 
-> Some platforms require to export the information about all such external
-> caches to the userspace applications via the sysfs interface.
-> 
-> This patch adds support to override the cache levels using device tree
-> to take such external non-architected caches into account.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Tested-by: Tan Xiaojun <tanxiaojun@huawei.com>
 
-> ---
->  arch/arm64/kernel/cacheinfo.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/cacheinfo.c b/arch/arm64/kernel/cacheinfo.c
-> index 9617301f76b5..3f2250fc391b 100644
-> --- a/arch/arm64/kernel/cacheinfo.c
-> +++ b/arch/arm64/kernel/cacheinfo.c
-> @@ -84,7 +84,7 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
-> 
->  static int __init_cache_level(unsigned int cpu)
->  {
-> -	unsigned int ctype, level, leaves;
-> +	unsigned int ctype, level, leaves, of_level;
->  	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-> 
->  	for (level = 1, leaves = 0; level <= MAX_CACHE_LEVEL; level++) {
-> @@ -97,6 +97,17 @@ static int __init_cache_level(unsigned int cpu)
->  		leaves += (ctype == CACHE_TYPE_SEPARATE) ? 2 : 1;
->  	}
-> 
-> +	of_level = of_find_last_cache_level(cpu);
-> +	if (level < of_level) {
-> +		/*
-> +		 * some external caches not specified in CLIDR_EL1
-> +		 * the information may be available in the device tree
-> +		 * only unified external caches are considered here
-> +		 */
-> +		leaves += (of_level - level);
-> +		level = of_level;
-> +	}
-> +
->  	this_cpu_ci->num_levels = level;
->  	this_cpu_ci->num_leaves = leaves;
->  	return 0;
-> --
-> 2.7.4
-> 
-> 
-> .
-> 
+On 12/01/2017 23:36, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [170112 14:31]:
+>> * Jean-Jacques Hiblot <jjhiblot@ti.com> [170109 04:23]:
+>>> AHCI provides the register PORTS_IMPL to let the software know which port
+>>> is supported. The register must be initialized by the bootloader. However
+>>> in some cases u-boot doesn't properly initialize this value (if it is not
+>>> compiled with SATA support for example or if the SATA initialization fails).
+>>> The DTS entry "ports-implemented" can be used to override the value in
+>>> PORTS_IMPL.
+>>> Adding this entry in the dts allows us no to worry about what is done by
+>>> the bootloader.
+>> Adding into omap-for-v4.11/dt thanks.
+> Actually not applying just yet as I just noticed you tagged this for stable.
+>
+> Care to describe what breaks and on which devices without this patch?
+Hi tony,
+
+Without this patch the SATA will not work in the following two cases:
+* if there has been a failure to initialize SATA in u-boot.
+* if ahci_platform module has been removed and re-inserted. The reason 
+is that the content of PORTS_IMPL is lost after the module is removed. I 
+suspect that it's because the controller is reset by the hwmod.
+
+Jean-Jacques
+>
+> Regards,
+>
+> Tony
