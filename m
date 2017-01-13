@@ -1,44 +1,45 @@
 From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/5] fbdev/ssd1307fb: Some changes and improvement
-Date: Fri, 13 Jan 2017 12:35:44 +0200
-Message-ID: <cover.1484303628.git.jsarha@ti.com>
+Subject: [PATCH v2 5/5] fbdev/ssd1307fb: clear screen in probe
+Date: Fri, 13 Jan 2017 12:35:49 +0200
+Message-ID: <ac6aa17b8cff892f15a726cdd17487e42dc7ad66.1484303628.git.jsarha@ti.com>
+References: <cover.1484303628.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes since first version:
-- Cherry-picked "fbdev/ssd1307fb: add support to enable VBAT" again
-  beacuse of weird mixup in the first version
-- Also tested the code on top of v4.10-rc3 with am335x-icev2 evm
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 
-We needed these changes for couple of our evm. Some of these patches
-have been on mainline list before, but after that forgotten. Now we
-are forward porting these on for out internal release, so this is a
-good time to get them to mainline too.
+SSD1306 does not clear the panel's framebuffer automatically, even if a
+HW reset happens, so we need to do that at probe time before enabling
+the panel.
 
-Everything else is quite straight forward, but removing the
-reset-active-low dts property is a questionable at least in
-theory. However, in practice if anyone was using the property in their
-device-tree blobs, they have never been able to get desired effect
-with mainline kernel.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+---
+ drivers/video/fbdev/ssd1307fb.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Jyri Sarha (3):
-  fbdev: ssd1307fb: Start to use gpiod API for reset gpio
-  fbdev: ssd1307fb: Remove reset-active-low from the DT binding document
-  fbdev: ssd1307fb: Make reset gpio devicetree property optional
-
-Tomi Valkeinen (2):
-  fbdev/ssd1307fb: add support to enable VBAT
-  fbdev/ssd1307fb: clear screen in probe
-
- .../devicetree/bindings/display/ssd1307fb.txt      |  5 +-
- drivers/video/fbdev/ssd1307fb.c                    | 55 ++++++++++++++--------
- 2 files changed, 38 insertions(+), 22 deletions(-)
-
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 616a6a3..5c87ae4 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -441,9 +441,8 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	/* Clear the screen if we could not give reset at probe time */
+-	if (!par->reset)
+-		ssd1307fb_update_display(par);
++	/* Clear the screen */
++	ssd1307fb_update_display(par);
+ 
+ 	/* Turn on the display */
+ 	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_DISPLAY_ON);
 -- 
 1.9.1
 
