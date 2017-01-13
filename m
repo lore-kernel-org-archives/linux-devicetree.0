@@ -1,37 +1,137 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: clk: add rockchip,grf property for
- RK3399
-Date: Fri, 13 Jan 2017 10:41:04 -0600
-Message-ID: <20170113164104.2nneuzklorcrdekl@rob-hp-laptop>
-References: <1484028930-20305-1-git-send-email-zhengxing@rock-chips.com>
- <1484028930-20305-3-git-send-email-zhengxing@rock-chips.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Fri, 13 Jan 2017 17:44:12 +0100
+Message-ID: <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+ <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
+ <20170113151747.6bc85245@bbrezillon>
+ <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+ <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+ <20170113172825.75d545a3@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484028930-20305-3-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170113172825.75d545a3@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 02:15:30PM +0800, Xing Zheng wrote:
-> Add support for rockchip,grf property which is used for GRF muxes
-> on RK3399.
+On 01/13/2017 05:28 PM, Boris Brezillon wrote:
+> On Fri, 13 Jan 2017 17:13:55 +0100
+> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+>> On 01/13/2017 04:12 PM, Matthias Brugger wrote:
+>>>
+>>>
+>>> On 13/01/17 15:17, Boris Brezillon wrote:  
+>>>> On Fri, 13 Jan 2017 15:13:29 +0800
+>>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>>>  
+>>>>> Add Mediatek nor flash node.
+>>>>>
+>>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
+>>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
+>>>>>  2 files changed, 37 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
+>>>>> b/arch/arm/boot/dts/mt2701-evb.dts
+>>>>> index 082ca88..85e5ae8 100644
+>>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
+>>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+>>>>> @@ -24,6 +24,31 @@
+>>>>>      };
+>>>>>  };
+>>>>>
+>>>>> +&nor_flash {
+>>>>> +    pinctrl-names = "default";
+>>>>> +    pinctrl-0 = <&nor_pins_default>;
+>>>>> +    status = "okay";
+>>>>> +    flash@0 {
+>>>>> +        compatible = "jedec,spi-nor";
+>>>>> +        reg = <0>;
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>> +&pio {
+>>>>> +    nor_pins_default: nor {
+>>>>> +        pins1 {
+>>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
+>>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
+>>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
+>>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
+>>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
+>>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
+>>>>> +            drive-strength = <MTK_DRIVE_4mA>;
+>>>>> +            bias-pull-up;
+>>>>> +        };
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>>  &uart0 {
+>>>>>      status = "okay";
+>>>>>  };
+>>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
+>>>>> b/arch/arm/boot/dts/mt2701.dtsi
+>>>>> index bdf8954..1eefce4 100644
+>>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
+>>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
+>>>>> @@ -227,6 +227,18 @@
+>>>>>          status = "disabled";
+>>>>>      };
+>>>>>
+>>>>> +    nor_flash: spi@11014000 {
+>>>>> +        compatible = "mediatek,mt2701-nor",
+>>>>> +                 "mediatek,mt8173-nor";  
+>>>>
+>>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
+>>>> subset of the features supported by "mediatek,mt2701-nor"?
+>>>>  
+>>>
+>>> I think even if the ip block is the same, we should provide both
+>>> bindings, just in case in the future we find out that mt2701 has some
+>>> hidden bug, feature or bug-feature. This way even if we update the
+>>> driver, we stay compatible with older device tree blobs in the wild.
+>>>
+>>> We can drop the mt2701-nor in the bindings definition if you want. 
 > 
-> Changes in v4:
-> - update the decription for rockchip,grf property
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Oh, sorry, I misunderstood. What I meant is that if you want to
+> list/support all possible compatibles, maybe you should just put one
+> compatible in your DT and patch your driver (+ binding doc) to define
+> all of them.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Uh, what ? I lost you here :-)
+
+>> This exactly. We should have a DT compat in the form:
+>> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
+>> Then if we find a problem in the future, we can match on the
+>> "vendor,<soc>-block" and still support the old DTs.
+> 
+> Not sure it's only in term of whose IP appeared first. My understanding
+> is that it's a way to provide inheritance. For example:
+> 
+> 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
+> 
+> or
+> 
+> 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
+> 
+> BTW, which one is the oldest between mt8173 and mt2701? :-)
+
+And that's another thing and I agree with you, but I don't think that's
+what we're discussing in this thread. But (!), OT, I think we should
+codify the rules in Documentation/ . This discussion came up multiple
+times recently.
+
+And my question still stands, what do we put into the DT here, IMO
+compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";
+and what goes into the binding document ? I guess both too ?
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
