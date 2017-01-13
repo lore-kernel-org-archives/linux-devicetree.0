@@ -1,183 +1,173 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCHv4 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
-Date: Fri, 13 Jan 2017 22:12:17 +1300
-Message-ID: <20170113091222.7132-3-chris.packham@alliedtelesis.co.nz>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Fri, 13 Jan 2017 18:13:49 +0900
+Message-ID: <20170113091339.GK20972@linaro.org>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043734.27535-1-takahiro.akashi@linaro.org>
+ <20170112153944.GB12249@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jayachandran C <jchandra@broadcom.com>, Jason Cooper <jason@lakedaemon.net>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Juri Lelli <juri.lelli@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Chris Brand <chris.brand@broadcom.com>, Sudeep Holla <sudeep.holla@arm.com>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170112153944.GB12249@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Compared to the armada-xp the 98DX3336 uses different registers to set
-the boot address for the secondary CPU so a new enable-method is needed.
-This will only work if the machine definition doesn't define an overall
-smp_ops because there is not currently a way of overriding this from the
-device tree if it is set in the machine definition.
+On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
+> Hi,
+> 
+> On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
+> > From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> > 
+> > Add documentation for
+> > 	linux,crashkernel-base and crashkernel-size,
+> > 	linux,usable-memory-range
+> > 	linux,elfcorehdr
+> > used by arm64 kdump to decribe the kdump reserved area, and
+> > the elfcorehdr's location within it.
+> > 
+> > Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> > [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: added "linux,crashkernel-base" and "-size" ]
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > index 6ae9d82d4c37..7b115165e9ec 100644
+> > --- a/Documentation/devicetree/bindings/chosen.txt
+> > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+> >  book3e) by some versions of kexec-tools to tell the new kernel that it
+> >  is being booted by kexec, as the booting environment may differ (e.g.
+> >  a different secondary CPU release mechanism)
+> > +
+> > +linux,crashkernel-base
+> > +linux,crashkernel-size
+> > +----------------------
+> > +
+> > +These properties (currently used on PowerPC and arm64) indicates
+> > +the base address and the size, respectively, of the reserved memory
+> > +range for crash dump kernel.
+> 
+> From this description, it's not clear to me what the (expected)
+> consumers of this property are, nor what is expected to provide it.
+> 
+> In previous rounds of review, I had assumed that this was used to
+> describe a preference to the first kernel as to what region of memory
+> should be used for a subsequent kdump kernel. Looking around, I'm not
+> sure if I was correct in that assessment.
+> 
+> I see that arch/powerpc seems to consume this property to configure
+> crashk_res, but it also rewrites it based on crashk_res, presumably for
+> the benefit of userspace. It's not clear to me how on powerpc the kdump
+> kernel knows its memory range -- is more DT modification done in the
+> kernel and/or userspace?
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Acked-by: Rob Herring <robh@kernel.org>
----
+I don't believe that powerpc will rewrite the property any way.
+As far as I know from *the source code*, powerpc kernel retrieves
+the memory range for crash dump kernel from a kernel command line, i.e.
+crashkernel=, and then exposes it through DT to userspace (assuming
+kexec-tools).
 
-Notes:
-    Changes in v2:
-    - Document new enable-method value
-    - Correct some references from 98DX4521 to 98DX3236
-    Changes in v3:
-    - Simplify mv98dx3236_resume_init by using of_io_request_and_map()
-    Changes in v4:
-    - integrate changes into platsmp.c instead of new init call
-    - avoid duplicated code.
-    - fix error return
-    - Collect ack from Rob
+> I disagree with modifying this property to expose it to userspace. For
 
- Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
- .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  | 18 +++++
- arch/arm/mach-mvebu/platsmp.c                      | 86 ++++++++++++++++++++++
- 3 files changed, 105 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+Apart from the context of discussions, is this a shared consensus?
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index a1bcfeed5f24..3c2fd72d0bf9 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -202,6 +202,7 @@ nodes to be present and contain the properties described below.
- 			    "marvell,armada-380-smp"
- 			    "marvell,armada-390-smp"
- 			    "marvell,armada-xp-smp"
-+			    "marvell,98dx3236-smp"
- 			    "mediatek,mt6589-smp"
- 			    "mediatek,mt81xx-tz-smp"
- 			    "qcom,gcc-msm8660"
-diff --git a/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
-new file mode 100644
-index 000000000000..8082ba872edd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
-@@ -0,0 +1,18 @@
-+Resume Control
-+--------------
-+Available on Marvell SOCs: 98DX3336 and 98DX4251
-+
-+Required properties:
-+
-+- compatible: must be "marvell,98dx3336-resume-ctrl"
-+
-+- reg: Should contain resume control registers location and length
-+
-+Example:
-+
-+resume@20980 {
-+	compatible = "marvell,98dx3336-resume-ctrl";
-+	reg = <0x20980 0x10>;
-+};
-+
-+
-diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
-index 46c742d3bd41..59be3ca0464f 100644
---- a/arch/arm/mach-mvebu/platsmp.c
-+++ b/arch/arm/mach-mvebu/platsmp.c
-@@ -184,3 +184,89 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
- 
- CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
- 		      &armada_xp_smp_ops);
-+
-+struct resume_controller {
-+	u32 resume_control;
-+	u32 resume_boot_addr;
-+};
-+
-+static const struct resume_controller mv98dx3336_resume_controller = {
-+	.resume_control = 0x08,
-+	.resume_boot_addr = 0x04,
-+};
-+
-+static const struct of_device_id of_mv98dx3236_resume_table[] = {
-+	{
-+		.compatible = "marvell,98dx3336-resume-ctrl",
-+		.data = (void *)&mv98dx3336_resume_controller,
-+	},
-+	{ /* end of list */ },
-+};
-+
-+static int mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
-+{
-+	const struct of_device_id *match;
-+	struct device_node *np;
-+	void __iomem *base;
-+	struct resume_controller *rc;
-+
-+	WARN_ON(hw_cpu != 1);
-+
-+	np = of_find_matching_node_and_match(NULL, of_mv98dx3236_resume_table,
-+					     &match);
-+	if (!np)
-+		return -ENODEV;
-+
-+	base = of_io_request_and_map(np, 0, of_node_full_name(np));
-+	rc = (struct resume_controller *)match->data;
-+	of_node_put(np);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	writel(0, base + rc->resume_control);
-+	writel(virt_to_phys(boot_addr), base + rc->resume_boot_addr);
-+
-+	return 0;
-+}
-+
-+static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	int ret, hw_cpu;
-+
-+	hw_cpu = cpu_logical_map(cpu);
-+	set_secondary_cpu_clock(hw_cpu);
-+	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
-+					    armada_xp_secondary_startup);
-+
-+	/*
-+	 * This is needed to wake up CPUs in the offline state after
-+	 * using CPU hotplug.
-+	 */
-+	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-+
-+	/*
-+	 * This is needed to take secondary CPUs out of reset on the
-+	 * initial boot.
-+	 */
-+	ret = mvebu_cpu_reset_deassert(hw_cpu);
-+	if (ret) {
-+		pr_warn("unable to boot CPU: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct smp_operations mv98dx3236_smp_ops __initconst = {
-+	.smp_init_cpus		= armada_xp_smp_init_cpus,
-+	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
-+	.smp_boot_secondary	= mv98dx3236_boot_secondary,
-+	.smp_secondary_init     = armada_xp_secondary_init,
-+#ifdef CONFIG_HOTPLUG_CPU
-+	.cpu_die		= armada_xp_cpu_die,
-+	.cpu_kill               = armada_xp_cpu_kill,
-+#endif
-+};
-+
-+CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
-+		      &mv98dx3236_smp_ops);
--- 
-2.11.0.24.ge6920cf
+> arm64 we should either ensure that /proc/iomem is consistently usable
+> (and have userspace consistently use it), or we should expose a new file
+> specifically to expose this information.
+
+The thing that I had in my mind when adding this property is that
+/proc/iomem would be obsolete in the future, then we should have
+an alternative in hand.
+
+> Further, I do not think we need this property. It makes more sense to me
+> for the preference of a a region to be described to the *first* kernel
+> using the command line consistently.
+> 
+> So I think we should drop this property, and not use it on arm64. Please
+> document this as powerpc only.
+
+OK, but if we drop the property from arm64 code, we have no reason
+to leave its description in this patch.
+(In fact, there are a few more (undocumented) properties that only ppc
+uses for kdump.)
+
+> > +e.g.
+> > +
+> > +/ {
+> > +	chosen {
+> > +		linux,crashkernel-base = <0x9 0xf0000000>;
+> > +		linux,crashkernel-size = <0x0 0x10000000>;
+> > +	};
+> > +};
+> 
+> > +
+> > +linux,usable-memory-range
+> > +-------------------------
+> > +
+> > +This property (currently used only on arm64) holds the memory range,
+> > +the base address and the size, which can be used as system ram on
+> > +the *current* kernel. Note that, if this property is present, any memory
+> > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > +memory" in EFI memory map should be ignored.
+> 
+> Could you please replace this with:
+> 
+>   This property (arm64 only) holds a base address and size, describing a
+>   limited region in which memory may be considered available for use by
+>   the kernel. Memory outside of this range is not available for use.
+>   
+>   This property describes a limitation: memory within this range is only
+>   valid when also described through another mechanism that the kernel
+>   would otherwise use to determine available memory (e.g. memory nodes
+>   or the EFI memory map). Valid memory may be sparse within the range.
+
+Sure.
+
+Thanks,
+-Takahiro AKASHI
+
+> To clarify why we need this, given by above comments w.r.r. the
+> linux,crashkernel-* properties:
+> 
+> * It preserves all the original memory map information (e.g. memory
+>   nodes and/or EFI memory map)
+> 
+> * It works consistently, regardless of how the kdump kernel would
+>   otherwise determine which memory to use (memory nodes, EFI, etc).
+> 
+> * It will be simply and reliable for an in-kernel purgatory to insert,
+>   if we need a kexec_file_load()-based kdump (e.g. without requiring
+>   memory map rewrites, and avoiding clashes with command line
+>   parameters). For a first kernel, this is not as big a concern.
+> 
+> > +linux,elfcorehdr
+> > +----------------
+> > +
+> > +This property (currently used only on arm64) holds the memory range,
+> > +the address and the size, of the elf core header which mainly describes
+> > +the panicked kernel's memory layout as PT_LOAD segments of elf format.
+> > +e.g.
+> > +
+> > +/ {
+> > +	chosen {
+> > +		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
+> > +	};
+> > +};
+> 
+> This property looks fine to me.
+> 
+> Thanks,
+> Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
