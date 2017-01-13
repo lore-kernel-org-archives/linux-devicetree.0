@@ -1,33 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/3] dt-bindings: Add support for samsung s6e3ha2
- panel binding
-Date: Fri, 13 Jan 2017 11:29:14 -0600
-Message-ID: <20170113172914.6qtxy5l5rwie5lrg@rob-hp-laptop>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063407epcas1p46379fc5062afe1268b186514969e225e@epcas1p4.samsung.com>
- <1484116439-7275-2-git-send-email-hoegeun.kwon@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Fri, 13 Jan 2017 18:31:43 +0100
+Message-ID: <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
+ <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
+ <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com> <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1484116439-7275-2-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: krzk@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, inki.dae@samsung.com, a.hajda@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 03:33:57PM +0900, Hoegeun Kwon wrote:
-> The Samsung s6e3ha2 is a 5.7" 1440x2560 AMOLED panel connected
-> using MIPI-DSI interfaces.
-> 
-> Signed-off-by: Donghwa Lee <dh09.lee@samsung.com>
-> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  .../bindings/display/panel/samsung,s6e3ha2.txt     | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
+Hi Chris,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Fri, Jan 13, 2017 at 6:16 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+>> > But...that would make me think on boot it would be set to '01' (setting prohibited).
+>>
+>> Yeah, running with enabled SDHI core and disabled card detect sounds silly.
+>
+> I just did some testing and with only 1 clock enabled ('01'), the core works but
+> card detect doesn't work. If you boot with the card in, you can read it fine, but
+> if you pull it...no removal is detected.
+> As soon as I turn the other clock on ('00'), card detect magically starts working.
+>
+> So from my experiments:
+>
+>   00: SD Host Interface 1 Module runs.
+>       >> everything works
+>
+>   01: Setting prohibited.
+>       >> core runs, but no card detect
+>
+>   10: Only card detect block in SD Host Interface 1 Module runs.
+>       >> SDHI address space all 00s (core not running)
+>
+>   11: Clock supply to SD Host Interface 1 Module is halted
+>       >> nothing works (of course)
+>
+>
+>> So typically you want to use 10 when idle, and 00 when active.
+>
+> I wonder if that would mean the system would get a CD interrupt. Of course
+> if no ISR registered (SDHI not enabled), the kernel would throw it away.
+>
+>
+>> No there isn't. That's another reason why a full-fledged clock driver with
+>> tables in C is a better idea than trying to describe all clocks in DT.
+>> The new CPG/MSSR based driver (renesas-cpg-mssr.c) supports "critical
+>> module clocks" through CLK_ENABLE_HAND_OFF. Unfortunately that flag hasn't
+>> made it upstream, so I really should convert the driver to use the new
+>> CLK_IS_CRITICAL instead...
+>
+> So basically at the moment you're tell me it's going to stay broke (unless it's
+> enabled in u-boot).
+>
+> In sh_mobile_sdhi.c, can we change sh_mobile_sdhi_probe() so that if there
+> are 2 clocks specified (in DT or platform data), it automatically enables
+> the 2nd clock (forever) and just uses the 1st clock as the on/off clock?
+
+Of course the driver can handle the second interrupt, if you update the
+binding, and add support code for that...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
