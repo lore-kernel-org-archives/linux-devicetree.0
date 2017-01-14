@@ -1,107 +1,76 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: base: add support to find the level of the
- last cache
-Date: Fri, 13 Jan 2017 20:45:55 -0600
-Message-ID: <CAL_JsqLi3fxpSPH1q+edNeDXEVfcypQK085FrZytBQrfJPh_3g@mail.gmail.com>
-References: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 1/2] dt-bindings: document renesas-ostm timer
+Date: Sat, 14 Jan 2017 03:30:36 +0000
+Message-ID: <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170112185952.2780-1-chris.brandt@renesas.com>
+ <20170112185952.2780-2-chris.brandt@renesas.com>
+ <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484245772-31511-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 12:29 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> It is useful to have helper function just to get the number of cache
-> levels for a given logical cpu. We can obtain the same by just checking
-> the level at which the last cache is present. This patch adds support
-> to find the level of the last cache for a given cpu.
->
-> It will be used on ARM64 platform where the device tree provides the
-> information for the additional non-architected/transparent/external
-> last level caches that are not integrated with the processors.
->
-> Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/of/base.c  | 27 +++++++++++++++++++++++++++
->  include/linux/of.h |  1 +
->  2 files changed, 28 insertions(+)
->
-> v1->v2:
->         - Moved to using "cache-level" in the last level cache instead
->           of counting through all the nodes as suggested by Rob
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d4bea3c797d6..c1128a077aea 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -25,6 +25,7 @@
->  #include <linux/cpu.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_graph.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
-> @@ -2268,6 +2269,32 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
->  }
->
->  /**
-> + * of_find_last_cache_level - Find the level at which the last cache is
-> + *             present for the given logical cpu
-> + *
-> + * @cpu: cpu number(logical index) for which the last cache level is needed
-> + *
-> + * Returns the the level at which the last cache is present. It is exactly
-> + * same as  the total number of cache levels for the given logical cpu.
-> + */
-> +int of_find_last_cache_level(unsigned int cpu)
-> +{
-> +       int cache_level = 0;
-> +       struct device_node *prev = NULL, *np = of_cpu_device_node_get(cpu);
-> +
-> +       while (np) {
-> +               prev = np;
-> +               of_node_put(np);
-> +               np = of_find_next_cache_node(np);
-> +       }
-> +
-> +       if (prev)
-
-Probably don't need this check. Otherwise,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +               of_property_read_u32(prev, "cache-level", &cache_level);
-> +
-> +       return cache_level;
-> +}
-> +
-> +/**
->   * of_graph_parse_endpoint() - parse common endpoint node properties
->   * @node: pointer to endpoint device_node
->   * @endpoint: pointer to the OF endpoint data structure
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index d72f01009297..21e6323de0f3 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -280,6 +280,7 @@ extern struct device_node *of_get_child_by_name(const struct device_node *node,
->
->  /* cache lookup */
->  extern struct device_node *of_find_next_cache_node(const struct device_node *);
-> +extern int of_find_last_cache_level(unsigned int cpu);
->  extern struct device_node *of_find_node_with_property(
->         struct device_node *from, const char *prop_name);
->
-> --
-> 2.7.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXZpZXcuDQoNCg0KT24gRnJpZGF5LCBK
+YW51YXJ5IDEzLCAyMDE3LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4gK1RoZSBPU1RN
+IGNvbWVzIHdpdGggMiBpbmRlcGVuZGVudCBjaGFubmVscy4NCj4gPiArV2Ugd2lsbCB1c2UgdGhl
+IGZpcnN0IGNoYW5uZWwgKE9TVE0wKSBhcyBhIGZyZWUgcnVubmluZyBjbG9ja3NvdXJjZQ0KPiA+
+ICthbmQgdGhlIHNlY29uZCBjaGFubmVsIChPU1RNMSkgYXMgYSBpbnRlcnJ1cHQgZHJpdmVuIGNs
+b2NrIGV2ZW50Lg0KPiA+ICsNCj4gPiArQWRkaXRpb25hbGx5IHdlIHdpbGwgdXNlIHRoZSBjbG9j
+a3NvdXJjZSBjaGFubmVsIChPVFNNMCkgZm9yIHRoZQ0KPiA+ICtzeXN0ZW0gc2NoZWR1bGUgdGlt
+ZXIgc2NoZWRfY2xvY2soKS4NCj4gDQo+IFRoZSBhYm92ZSB0d28gc2VudGVuY2VzIGFyZSBzb2Z0
+d2FyZSBwb2xpY3ksIG5vdCBoYXJkd2FyZSBkZXNjcmlwdGlvbi4NCj4gSGVuY2UgdGhleSBkbyBu
+b3QgYmVsb25nIGluIHRoZSBEVCBiaW5kaW5ncyBkb2N1bWVudC4NCj4gWW91IGNhbiBtb3ZlIHRo
+ZW0gdG8gdGhlIGNvbW1pdCBkZXNjcmlwdGlvbiwgdGhvdWdoLg0KDQpPSy4NCg0KDQo+ID4gK1Jl
+cXVpcmVkIFByb3BlcnRpZXM6DQo+ID4gKw0KPiA+ICsgIC0gY29tcGF0aWJsZTogbXVzdCBiZSBv
+bmUgb3IgbW9yZSBvZiB0aGUgZm9sbG93aW5nOg0KPiA+ICsgICAgLSAicmVuZXNhcyxvc3RtLXI3
+czcyMTAwIiBmb3IgdGhlIHI3czcyMTAwIE9TVE0NCj4gDQo+IFBsZWFzZSB1c2UgInJlbmVzYXMs
+cjdzNzIxMDAtb3N0bSIgaW5zdGVhZCwgdG8gbWF0Y2ggY3VycmVudCBwcmFjdGljZXMuDQoNCklm
+IEkgbG9vayBhdCB0aGUgY3VycmVudCByN3M3MjEwMC5kdHNpOg0KDQpjb21wYXRpYmxlID0gInJl
+bmVzYXMscjdzNzIxMDAtY3BnLWNsb2NrcyIsICJyZW5lc2FzLHJ6LWNwZy1jbG9ja3MiOw0KY29t
+cGF0aWJsZSA9ICJyZW5lc2FzLHI3czcyMTAwLW1zdHAtY2xvY2tzIiwgInJlbmVzYXMsY3BnLW1z
+dHAtY2xvY2tzIjsNCmNvbXBhdGlibGUgPSAicmVuZXNhcyxzY2lmLXI3czcyMTAwIiwgInJlbmVz
+YXMsc2NpZiI7DQpjb21wYXRpYmxlID0gInJlbmVzYXMscnNwaS1yN3M3MjEwMCIsICJyZW5lc2Fz
+LHJzcGktcnoiOw0KY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJpaWMtcjdzNzIxMDAiLCAicmVuZXNh
+cyxyaWljLXJ6IjsNCmNvbXBhdGlibGUgPSAicmVuZXNhcyxtdHUyLXI3czcyMTAwIiwgInJlbmVz
+YXMsbXR1MiI7DQpjb21wYXRpYmxlID0gInJlbmVzYXMsbW1jaWYtcjdzNzIxMDAiLCAicmVuZXNh
+cyxzaC1tbWNpZiI7DQpjb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yN3M3MjEwMCI7DQoNCklz
+ICJyZW5lc2FzLHh4eC1yN3M3MjEwIiB0aGUgb2xkIHdheSwgYW5kICJyZW5lc2FzLHI3czcyMTAw
+LXh4eCIgaXMgdGhlIG5ldyB3YXk/Pw0KDQoNCg0KPiA+ICsgIC0gcmVnOiBiYXNlIGFkZHJlc3Mg
+YW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXJzIGJsb2NrIGZvciBlYWNoIHRpbWVyDQo+IGNoYW5u
+ZWwuDQo+ID4gKyAgICBUaGVyZSBzaG91bGQgYmUgMiBzZXRzIG9mIGFkZHJlc3Nlcywgb25lIGZv
+ciBlYWNoIGNoYW5uZWwuDQo+ID4gKw0KPiA+ICsgIC0gaW50ZXJydXB0czogaW50ZXJydXB0IHNw
+ZWNpZmllcnMgZm9yIHRoZSB0aW1lcnMuIFRoZXJlIHNob3VsZCBiZSAyDQo+ID4gKyAgICBpbnRl
+cnVwdHMsIG9uZSBmb3IgZWFjaCBjaGFubmVsLg0KPiA+ICsNCj4gPiArICAtIGNsb2NrczogYSBs
+aXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaA0KPiBl
+bnRyeQ0KPiA+ICsgICAgY2hhbm5lbC4gVGhlcmUgc2hvdWxkIGJlIDIgc2V0cywgb25lIGZvciBl
+YWNoIGNoYW5uZWwuDQo+IA0KPiBBcmUgdGhlIGNoYW5uZWxzIHRydWx5IGluZGVwZW5kZW50PyBJ
+ZiB5ZXMsIEkgdGhpbmsgaXQncyBiZXR0ZXIgdG8gaGF2ZQ0KPiB0d28gc2VwYXJhdGUgZGV2aWNl
+IG5vZGVzLCBvbmUgZm9yIGVhY2ggY2hhbm5lbC4NCj4gRWFjaCBjaGFubmVsIGhhcyBpdHMgb3du
+IG1vZHVsZSBjbG9jaywgc28gdXNpbmcgc2VwYXJhdGUgZGV2aWNlcyBtZWFucw0KPiBSdW50aW1l
+IFBNIGNhbiBtYW5hZ2UgYm90aCBjaGFubmVscyB0aHJvdWdoIHRoZWlyIG1vZHVsZSBjbG9ja3Mg
+YXMgc29vbiBhcw0KPiB5b3UgYWRkIGEgInBvd2VyLWRvbWFpbnMiIHByb3BlcnR5IHBvaW50aW5n
+IHRvIHRoZSBjbG9jayBkb21haW4gY29udHJvbGxlci4NCg0KDQpZZXMsIHRlY2huaWNhbGx5IHRo
+ZXkgYXJlIGluZGVwZW5kZW50IGNoYW5uZWxzLg0KVGhlIHdheSB0aGUgZHJpdmVyIGlzIGN1cnJl
+bnRseSB3cml0dGVuLCAxIGluc3RhbmNlIG9mIHRoZSBkcml2ZXIgdXNlcyAyIGNoYW5uZWxzDQpm
+b3IgZGlmZmVyZW50IHRoaW5ncy4gQ2gwIHdpbGwgYmUgc2V0IHVwIGFzIGEgJ2Nsb2Nrc291cmNl
+JywgYW5kIGNoMSB3aWxsIGJlIHNldCB1cA0KYXMgYSAnY2xvY2sgZXZlbnQnLg0KDQpBcyBpbjoN
+Cg0Kc3RhdGljIGludCBfX2luaXQgb3N0bV90aW1lcl9pbml0KHN0cnVjdCBvc3RtX2RldmljZSAq
+b3N0bSkNCnsNCglpbnQgcmV0ID0gMDsNCg0KCS8qIG9zdG0wIHdpbGwgYmUgY2xvY2sgc291cmNl
+ICovDQoJcmV0ID0gb3N0bV9pbml0X2Nsa3NyYyhvc3RtKTsNCglpZiAocmV0KQ0KCQlnb3RvIGVy
+cjsNCg0KCS8qIHVzZSBvc3RtMCBhcyBzeXN0ZW0gc2NoZWR1bGluZyBjbG9jayAqLw0KCXJldCA9
+IG9zdG1faW5pdF9zY2hlZF9jbG9jaygmb3N0bS0+Y2xrc3JjKTsNCglpZiAocmV0KQ0KCQlnb3Rv
+IGVycjsNCg0KCS8qIG9zdG0xIHdpbGwgYmUgY2xvY2sgZXZlbnQgKi8NCglyZXQgPSBvc3RtX2lu
+aXRfY2xrZXZ0KG9zdG0pOw0KZXJyOg0KCXJldHVybiByZXQ7DQp9DQoNCg0KDQpEbyB5b3UgdGhp
+bmsgaXQgd291bGQgYmUgYmV0dGVyIGlmIGEgZHJpdmVyIGluc3RhbmNlIG9ubHkgZG9lcyAxIHRo
+aW5nOiBFaXRoZXINCidjbG9ja3NvdXJjZScgb3IgJ2Nsb2NrIGV2ZW50Jz8/DQpUaGVuLCBJIHdv
+dWxkIG1ha2UgMiBvc3RtIG5vZGVzIGFuZCBwYXNzIGluIHRoZSBtb2RlIEkgd291bGQgbGlrZSBp
+dCBvcGVyYXRlIGluPw0KDQpGb3IgZXhhbXBsZToNCg0KJm9zdG0wIHsNCgltb2RlID0gImNsb2Nr
+c291cmNlIjsNCglzdGF0dXMgPSAib2theSI7DQp9Ow0KDQomb3N0bTEgew0KCW1vZGUgPSAiY2xv
+Y2stZXZlbnQiOw0KCXN0YXR1cyA9ICJva2F5IjsNCn07DQoNCg0KDQpUaGFuayB5b3UsDQpDaHJp
+cw0K
