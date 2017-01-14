@@ -1,61 +1,91 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] Documentation: dt: iio: add st_lsm6dsx sensor
- device binding
-Date: Sat, 14 Jan 2017 12:42:12 +0000
-Message-ID: <071c951f-120c-7192-3aab-64f51d425f63@kernel.org>
-References: <20170110215519.960-1-lorenzo.bianconi@st.com>
- <20170110215519.960-3-lorenzo.bianconi@st.com>
+Subject: Re: [PATCH 2/3] iio: adc: ti-ads7950: Drop "ti-" prefix from module
+ name
+Date: Sat, 14 Jan 2017 12:49:51 +0000
+Message-ID: <4dd9883a-5e50-36a9-135c-802dac4f93b8@kernel.org>
+References: <1484157171-15571-1-git-send-email-david@lechnology.com>
+ <1484157171-15571-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170110215519.960-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484157171-15571-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/17 21:55, Lorenzo Bianconi wrote:
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Applied.
-
-Thanks,
-
-Jonathan
+On 11/01/17 17:52, David Lechner wrote:
+> This drops the "ti-" prefix from the module name. It makes the module name
+> consistent with other iio ti-ads* drivers and it makes the driver work
+> with device tree (the spi subsystem drops the "ti," prefix when matching
+> compatible strings from device tree).
+> 
+> Tested working on LEGO MINDSTORMS EV3 with the following device tree node:
+> 
+> 	adc@3 {
+> 		compatible = "ti,ads7957";
+> 		reg = <3>;
+> 		#io-channel-cells = <1>;
+> 		spi-max-frequency = <10000000>;
+> 		vref-supply = <&adc_ref>;
+> 	};
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+What worries me here is that we might break existing setups.  I agree
+we should have gotten this 'right' in the first place, but can we fix
+it now.  Not so sure. We'd be better off perhaps adding an of_device_id
+table with the write entries for device tree.
 > ---
->  .../devicetree/bindings/iio/imu/st_lsm6dsx.txt     | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+>  drivers/iio/adc/ti-ads7950.c | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> new file mode 100644
-> index 0000000..ed3cdac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> @@ -0,0 +1,24 @@
-> +* ST_LSM6DSx driver for STM 6-axis (acc + gyro) imu Mems sensors
-> +
-> +Required properties:
-> +- compatible: must be one of:
-> +  "st,lsm6ds3"
-> +  "st,lsm6dsm"
-> +- reg: i2c address of the sensor / spi cs line
-> +
-> +Optional properties:
-> +- interrupt-parent: should be the phandle for the interrupt controller
-> +- interrupts: interrupt mapping for IRQ. It should be configured with
-> +  flags IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING.
-> +
-> +  Refer to interrupt-controller/interrupts.txt for generic interrupt
-> +  client node bindings.
-> +
-> +Example:
-> +
-> +lsm6dsm@6b {
-> +	compatible = "st,lsm6dsm";
-> +	reg = <0x6b>;
-> +	interrupt-parent = <&gpio0>;
-> +	interrupts = <0 IRQ_TYPE_EDGE_RISING>;
-> +};
+> diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
+> index 0330361..b587fa6 100644
+> --- a/drivers/iio/adc/ti-ads7950.c
+> +++ b/drivers/iio/adc/ti-ads7950.c
+> @@ -459,25 +459,25 @@ static int ti_ads7950_remove(struct spi_device *spi)
+>  }
+>  
+>  static const struct spi_device_id ti_ads7950_id[] = {
+> -	{"ti-ads7950", TI_ADS7950},
+> -	{"ti-ads7951", TI_ADS7951},
+> -	{"ti-ads7952", TI_ADS7952},
+> -	{"ti-ads7953", TI_ADS7953},
+> -	{"ti-ads7954", TI_ADS7954},
+> -	{"ti-ads7955", TI_ADS7955},
+> -	{"ti-ads7956", TI_ADS7956},
+> -	{"ti-ads7957", TI_ADS7957},
+> -	{"ti-ads7958", TI_ADS7958},
+> -	{"ti-ads7959", TI_ADS7959},
+> -	{"ti-ads7960", TI_ADS7960},
+> -	{"ti-ads7961", TI_ADS7961},
+> +	{ "ads7950", TI_ADS7950 },
+> +	{ "ads7951", TI_ADS7951 },
+> +	{ "ads7952", TI_ADS7952 },
+> +	{ "ads7953", TI_ADS7953 },
+> +	{ "ads7954", TI_ADS7954 },
+> +	{ "ads7955", TI_ADS7955 },
+> +	{ "ads7956", TI_ADS7956 },
+> +	{ "ads7957", TI_ADS7957 },
+> +	{ "ads7958", TI_ADS7958 },
+> +	{ "ads7959", TI_ADS7959 },
+> +	{ "ads7960", TI_ADS7960 },
+> +	{ "ads7961", TI_ADS7961 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(spi, ti_ads7950_id);
+>  
+>  static struct spi_driver ti_ads7950_driver = {
+>  	.driver = {
+> -		.name	= "ti-ads7950",
+> +		.name	= "ads7950",
+>  	},
+>  	.probe		= ti_ads7950_probe,
+>  	.remove		= ti_ads7950_remove,
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
