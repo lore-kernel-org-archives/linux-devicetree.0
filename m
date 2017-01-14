@@ -1,93 +1,66 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 2/3] iio: adc: ti-ads7950: Drop "ti-" prefix from module
- name
-Date: Sat, 14 Jan 2017 12:07:51 -0600
-Message-ID: <83b36ce2-6b54-b5ee-6ad3-1f90d26f5e52@lechnology.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 3/3] iio: adc: ti-ads7950: Change regulator matching
+ string to "vref"
+Date: Sat, 14 Jan 2017 12:09:33 -0600
+Message-ID: <e17acc8c-01b9-284c-a321-5135de80c2b7@lechnology.com>
 References: <1484157171-15571-1-git-send-email-david@lechnology.com>
- <1484157171-15571-3-git-send-email-david@lechnology.com>
- <4dd9883a-5e50-36a9-135c-802dac4f93b8@kernel.org>
+ <1484157171-15571-4-git-send-email-david@lechnology.com>
+ <47d15fe8-85c5-6e1c-cd89-71398ad79def@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4dd9883a-5e50-36a9-135c-802dac4f93b8@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <47d15fe8-85c5-6e1c-cd89-71398ad79def-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/2017 06:49 AM, Jonathan Cameron wrote:
+On 01/14/2017 06:52 AM, Jonathan Cameron wrote:
 > On 11/01/17 17:52, David Lechner wrote:
->> This drops the "ti-" prefix from the module name. It makes the module name
->> consistent with other iio ti-ads* drivers and it makes the driver work
->> with device tree (the spi subsystem drops the "ti," prefix when matching
->> compatible strings from device tree).
+>> This changes the reference voltage regulator matching string from "refin"
+>> to "vref". This is to be consistent with other A/DC chips that also use
+>> "vref-supply" in their device tree bindings.
 >>
->> Tested working on LEGO MINDSTORMS EV3 with the following device tree node:
->>
->> 	adc@3 {
->> 		compatible = "ti,ads7957";
->> 		reg = <3>;
->> 		#io-channel-cells = <1>;
->> 		spi-max-frequency = <10000000>;
->> 		vref-supply = <&adc_ref>;
->> 	};
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
-> What worries me here is that we might break existing setups.  I agree
-> we should have gotten this 'right' in the first place, but can we fix
-> it now.  Not so sure. We'd be better off perhaps adding an of_device_id
-> table with the write entries for device tree.
-
-As far as I can tell, this driver only exists in your testing branch. 
-Does that really mean that it is too late to get it right?
-
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 >> ---
->>  drivers/iio/adc/ti-ads7950.c | 26 +++++++++++++-------------
->>  1 file changed, 13 insertions(+), 13 deletions(-)
+>>  drivers/iio/adc/ti-ads7950.c | 6 +++---
+> Again, we missed this before and it would have been nice to have
+> had it as vref (which is matches the datasheet).  The question
+> becomes how do we handle this going forward with no risk of breaking
+> existing device trees.  We may have to do an optional get on one
+> name and then a non optional on the second. It's ugly, but
+> would fix this up in a 'safe' way.
+>
+
+Again, I don't think it is too late since this driver only exists in the 
+iio/testing branch.
+
+> Jonathan
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
 >>
 >> diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
->> index 0330361..b587fa6 100644
+>> index b587fa6..16a0663 100644
 >> --- a/drivers/iio/adc/ti-ads7950.c
 >> +++ b/drivers/iio/adc/ti-ads7950.c
->> @@ -459,25 +459,25 @@ static int ti_ads7950_remove(struct spi_device *spi)
->>  }
+>> @@ -411,15 +411,15 @@ static int ti_ads7950_probe(struct spi_device *spi)
+>>  	spi_message_init_with_transfers(&st->scan_single_msg,
+>>  					st->scan_single_xfer, 3);
 >>
->>  static const struct spi_device_id ti_ads7950_id[] = {
->> -	{"ti-ads7950", TI_ADS7950},
->> -	{"ti-ads7951", TI_ADS7951},
->> -	{"ti-ads7952", TI_ADS7952},
->> -	{"ti-ads7953", TI_ADS7953},
->> -	{"ti-ads7954", TI_ADS7954},
->> -	{"ti-ads7955", TI_ADS7955},
->> -	{"ti-ads7956", TI_ADS7956},
->> -	{"ti-ads7957", TI_ADS7957},
->> -	{"ti-ads7958", TI_ADS7958},
->> -	{"ti-ads7959", TI_ADS7959},
->> -	{"ti-ads7960", TI_ADS7960},
->> -	{"ti-ads7961", TI_ADS7961},
->> +	{ "ads7950", TI_ADS7950 },
->> +	{ "ads7951", TI_ADS7951 },
->> +	{ "ads7952", TI_ADS7952 },
->> +	{ "ads7953", TI_ADS7953 },
->> +	{ "ads7954", TI_ADS7954 },
->> +	{ "ads7955", TI_ADS7955 },
->> +	{ "ads7956", TI_ADS7956 },
->> +	{ "ads7957", TI_ADS7957 },
->> +	{ "ads7958", TI_ADS7958 },
->> +	{ "ads7959", TI_ADS7959 },
->> +	{ "ads7960", TI_ADS7960 },
->> +	{ "ads7961", TI_ADS7961 },
->>  	{ }
->>  };
->>  MODULE_DEVICE_TABLE(spi, ti_ads7950_id);
+>> -	st->reg = devm_regulator_get(&spi->dev, "refin");
+>> +	st->reg = devm_regulator_get(&spi->dev, "vref");
+>>  	if (IS_ERR(st->reg)) {
+>> -		dev_err(&spi->dev, "Failed get get regulator \"refin\"\n");
+>> +		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
+>>  		return PTR_ERR(st->reg);
+>>  	}
 >>
->>  static struct spi_driver ti_ads7950_driver = {
->>  	.driver = {
->> -		.name	= "ti-ads7950",
->> +		.name	= "ads7950",
->>  	},
->>  	.probe		= ti_ads7950_probe,
->>  	.remove		= ti_ads7950_remove,
+>>  	ret = regulator_enable(st->reg);
+>>  	if (ret) {
+>> -		dev_err(&spi->dev, "Failed to enable regulator \"refin\"\n");
+>> +		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
+>>  		return ret;
+>>  	}
+>>
 >>
 >
