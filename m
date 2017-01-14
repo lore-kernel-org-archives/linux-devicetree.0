@@ -1,118 +1,342 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] Input: pwm-beeper: add optional amplifier
- regulator
-Date: Sat, 14 Jan 2017 11:19:43 -0800
-Message-ID: <20170114191943.GC31309@dtor-ws>
-References: <1484164921-30587-1-git-send-email-david@lechnology.com>
- <1484164921-30587-4-git-send-email-david@lechnology.com>
+From: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] iio: max5481: Add support for Maxim digital potentiometers
+Date: Sat, 14 Jan 2017 22:21:39 +0100
+Message-ID: <20170114212139.GA3418@x220.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484164921-30587-4-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2017 at 02:02:01PM -0600, David Lechner wrote:
-> This adds an optional regulator to the pwm-beeper device. This regulator
-> acts as an amplifier. The amplifier is only enabled while beeping in order
-> to reduce power consumption.
-> 
-> Tested on LEGO MINDSTORMS EV3, which has a speaker connected to PWM through
-> an amplifier.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
->  drivers/input/misc/pwm-beeper.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
-> index 30ac227..708e88e 100644
-> --- a/drivers/input/misc/pwm-beeper.c
-> +++ b/drivers/input/misc/pwm-beeper.c
-> @@ -14,6 +14,7 @@
->   */
->  
->  #include <linux/input.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/module.h>
->  #include <linux/kernel.h>
->  #include <linux/of.h>
-> @@ -25,8 +26,10 @@
->  struct pwm_beeper {
->  	struct input_dev *input;
->  	struct pwm_device *pwm;
-> +	struct regulator *reg;
->  	struct work_struct work;
->  	unsigned long period;
-> +	bool reg_enabled;
->  };
->  
->  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
-> @@ -38,8 +41,20 @@ static void __pwm_beeper_set(struct pwm_beeper *beeper)
->  	if (period) {
->  		pwm_config(beeper->pwm, period / 2, period);
->  		pwm_enable(beeper->pwm);
-> -	} else
-> +		if (beeper->reg) {
-> +			int error;
-> +
-> +			error = regulator_enable(beeper->reg);
-> +			if (!error)
-> +				beeper->reg_enabled = true;
-> +		}
-> +	} else {
-> +		if (beeper->reg_enabled) {
-> +			regulator_disable(beeper->reg);
-> +			beeper->reg_enabled = false;
-> +		}
->  		pwm_disable(beeper->pwm);
-> +	}
->  }
->  
->  static void pwm_beeper_work(struct work_struct *work)
-> @@ -82,6 +97,10 @@ static void pwm_beeper_stop(struct pwm_beeper *beeper)
->  {
->  	cancel_work_sync(&beeper->work);
->  
-> +	if (beeper->reg_enabled) {
-> +		regulator_disable(beeper->reg);
-> +		beeper->reg_enabled = false;
-> +	}
->  	if (beeper->period)
->  		pwm_disable(beeper->pwm);
->  }
-> @@ -111,6 +130,14 @@ static int pwm_beeper_probe(struct platform_device *pdev)
->  		return error;
->  	}
->  
-> +	beeper->reg = devm_regulator_get_optional(&pdev->dev, "amp");
+From: Matt Weber <matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
 
-If you do not use optional regulator then you will not have to check if
-you have it or not everywhere: regulator core will give you a dummy that
-you can toggle to your heart's content.
+Add implementation for Maxim Integrated 5481, 5482, 5483,
+and 5484 digital potentiometer devices.
 
-> +	error = PTR_ERR_OR_ZERO(beeper->reg);
-> +	if (error) {
-> +		if (error != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get amp regulator\n");
-> +		return error;
-> +	}
-> +
->  	/*
->  	 * FIXME: pwm_apply_args() should be removed when switching to
->  	 * the atomic PWM API.
-> -- 
-> 2.7.4
-> 
+Datasheet:
+http://datasheets.maximintegrated.com/en/ds/MAX5481-MAX5484.pdf
 
-Thanks.
+Signed-off-by: Maury Anderson <maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
+Signed-off-by: Matthew Weber <matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
+Signed-off-by: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
+---
 
+This is my resubmission of this patch after original authors decided not to
+pursuit it inclusion into kernel.
+
+Tested using signal analyzer.
+
+Changes since v2:
+* spi write buffer moved to struct max5481_data and ____cacheline_aligned.
+* max5481_write_cmd now uses pointer to struct max5481_data as a first argument.
+
+Changes since v1:
+* removed not needed '``' and 'c' chars
+* includes are now sorted
+* added coma to last item in enum max5481_variant
+* removed maxpos from struct max5481_cfg
+* max5481_CHANNEL is no MAX5481_CHANNEL and it does not have 'ch' argument
+* max5481_write_cmd is now based around switch
+* removed not needed cast in max5481_write_cmd
+* wpier state is saved after iio_device_unregister
+* changed names in spi_device_id and acpi_device_id to be equal to names in of_device_id
+
+---
+ .../bindings/iio/potentiometer/max5481.txt         |  23 +++
+ drivers/iio/potentiometer/Kconfig                  |  11 ++
+ drivers/iio/potentiometer/Makefile                 |   1 +
+ drivers/iio/potentiometer/max5481.c                | 216 +++++++++++++++++++++
+ 4 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
+ create mode 100644 drivers/iio/potentiometer/max5481.c
+
+diff --git a/Documentation/devicetree/bindings/iio/potentiometer/max5481.txt b/Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
+new file mode 100644
+index 000000000000..6a91b106e076
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
+@@ -0,0 +1,23 @@
++* Maxim Linear-Taper Digital Potentiometer MAX5481-MAX5484
++
++The node for this driver must be a child node of a SPI controller, hence
++all mandatory properties described in
++
++        Documentation/devicetree/bindings/spi/spi-bus.txt
++
++must be specified.
++
++Required properties:
++	- compatible:  	Must be one of the following, depending on the
++			model:
++			"maxim,max5481"
++			"maxim,max5482"
++			"maxim,max5483"
++			"maxim,max5484"
++
++Example:
++max548x: max548x@0 {
++	compatible = "maxim,max5482";
++	spi-max-frequency = <7000000>;
++	reg = <0>; /* chip-select */
++};
+diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
+index 2e9da1cf3297..8bf282510be6 100644
+--- a/drivers/iio/potentiometer/Kconfig
++++ b/drivers/iio/potentiometer/Kconfig
+@@ -15,6 +15,17 @@ config DS1803
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ds1803.
+ 
++config MAX5481
++        tristate "Maxim MAX5481-MAX5484 Digital Potentiometer driver"
++        depends on SPI
++        help
++          Say yes here to build support for the Maxim
++          MAX5481, MAX5482, MAX5483, MAX5484 digital potentiometer
++          chips.
++
++          To compile this driver as a module, choose M here: the
++          module will be called max5481.
++
+ config MAX5487
+         tristate "Maxim MAX5487/MAX5488/MAX5489 Digital Potentiometer driver"
+         depends on SPI
+diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
+index 8adb58f38c0b..2260d40e0936 100644
+--- a/drivers/iio/potentiometer/Makefile
++++ b/drivers/iio/potentiometer/Makefile
+@@ -4,6 +4,7 @@
+ 
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_DS1803) += ds1803.o
++obj-$(CONFIG_MAX5481) += max5481.o
+ obj-$(CONFIG_MAX5487) += max5487.o
+ obj-$(CONFIG_MCP4131) += mcp4131.o
+ obj-$(CONFIG_MCP4531) += mcp4531.o
+diff --git a/drivers/iio/potentiometer/max5481.c b/drivers/iio/potentiometer/max5481.c
+new file mode 100644
+index 000000000000..559f1635be0a
+--- /dev/null
++++ b/drivers/iio/potentiometer/max5481.c
+@@ -0,0 +1,216 @@
++/*
++ * Maxim Integrated MAX5481-MAX5484 digital potentiometer driver
++ * Copyright 2016 Rockwell Collins
++ *
++ * Datasheet:
++ * http://datasheets.maximintegrated.com/en/ds/MAX5481-MAX5484.pdf
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the gnu general public license version 2 as
++ * published by the free software foundation.
++ *
++ */
++
++#include <linux/acpi.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/spi/spi.h>
++
++/* write wiper reg */
++#define MAX5481_WRITE_WIPER (0 << 4)
++/* copy wiper reg to NV reg */
++#define MAX5481_COPY_AB_TO_NV (2 << 4)
++/* copy NV reg to wiper reg */
++#define MAX5481_COPY_NV_TO_AB (3 << 4)
++
++#define MAX5481_MAX_POS    1023
++
++enum max5481_variant {
++	max5481,
++	max5482,
++	max5483,
++	max5484,
++};
++
++struct max5481_cfg {
++	int kohms;
++};
++
++static const struct max5481_cfg max5481_cfg[] = {
++	[max5481] = { .kohms =  10, },
++	[max5482] = { .kohms =  50, },
++	[max5483] = { .kohms =  10, },
++	[max5484] = { .kohms =  50, },
++};
++
++struct max5481_data {
++	struct spi_device *spi;
++	const struct max5481_cfg *cfg;
++	u8 msg[3] ____cacheline_aligned;
++};
++
++#define MAX5481_CHANNEL {					\
++	.type = IIO_RESISTANCE,					\
++	.indexed = 1,						\
++	.output = 1,						\
++	.channel = 0,						\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
++	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++}
++
++static const struct iio_chan_spec max5481_channels[] = {
++	MAX5481_CHANNEL,
++};
++
++static int max5481_write_cmd(struct max5481_data *data, u8 cmd, u16 val)
++{
++	struct spi_device *spi = data->spi;
++
++	data->msg[0] = cmd;
++
++	switch (cmd) {
++	case MAX5481_WRITE_WIPER:
++		data->msg[1] = val >> 2;
++		data->msg[2] = (val & 0x3) << 6;
++		return spi_write(spi, data->msg, ARRAY_SIZE(data->msg));
++
++	case MAX5481_COPY_AB_TO_NV:
++	case MAX5481_COPY_NV_TO_AB:
++		return spi_write(spi, data->msg, sizeof(data->msg[0]));
++
++	default:
++		return -EIO;
++	}
++}
++
++static int max5481_read_raw(struct iio_dev *indio_dev,
++		struct iio_chan_spec const *chan,
++		int *val, int *val2, long mask)
++{
++	struct max5481_data *data = iio_priv(indio_dev);
++
++	if (mask != IIO_CHAN_INFO_SCALE)
++		return -EINVAL;
++
++	*val = 1000 * data->cfg->kohms;
++	*val2 = MAX5481_MAX_POS;
++
++	return IIO_VAL_FRACTIONAL;
++}
++
++static int max5481_write_raw(struct iio_dev *indio_dev,
++		struct iio_chan_spec const *chan,
++		int val, int val2, long mask)
++{
++	struct max5481_data *data = iio_priv(indio_dev);
++
++	if (mask != IIO_CHAN_INFO_RAW)
++		return -EINVAL;
++
++	if (val < 0 || val > MAX5481_MAX_POS)
++		return -EINVAL;
++
++	return max5481_write_cmd(data, MAX5481_WRITE_WIPER, val);
++}
++
++static const struct iio_info max5481_info = {
++	.read_raw = max5481_read_raw,
++	.write_raw = max5481_write_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int max5481_probe(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev;
++	struct max5481_data *data;
++	const struct spi_device_id *id = spi_get_device_id(spi);
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*data));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	dev_set_drvdata(&spi->dev, indio_dev);
++	data = iio_priv(indio_dev);
++
++	data->spi = spi;
++	data->cfg = &max5481_cfg[id->driver_data];
++
++	indio_dev->name = id->name;
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	/* variant specific configuration */
++	indio_dev->info = &max5481_info;
++	indio_dev->channels = max5481_channels;
++	indio_dev->num_channels = ARRAY_SIZE(max5481_channels);
++
++	/* restore wiper from NV */
++	ret = max5481_write_cmd(data, MAX5481_COPY_NV_TO_AB, 0);
++	if (ret < 0)
++		return ret;
++
++	return iio_device_register(indio_dev);
++}
++
++static int max5481_remove(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev = dev_get_drvdata(&spi->dev);
++	struct max5481_data *data = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++
++	/* save wiper reg to NV reg */
++	return max5481_write_cmd(data, MAX5481_COPY_AB_TO_NV, 0);
++}
++
++static const struct spi_device_id max5481_id_table[] = {
++	{ "max5481", max5481 },
++	{ "max5482", max5482 },
++	{ "max5483", max5483 },
++	{ "max5484", max5484 },
++	{ }
++};
++MODULE_DEVICE_TABLE(spi, max5481_id_table);
++
++#if defined(CONFIG_OF)
++static const struct of_device_id max5481_match[] = {
++	{ .compatible = "maxim,max5481", .data = &max5481_cfg[max5481] },
++	{ .compatible = "maxim,max5482", .data = &max5481_cfg[max5482] },
++	{ .compatible = "maxim,max5483", .data = &max5481_cfg[max5483] },
++	{ .compatible = "maxim,max5484", .data = &max5481_cfg[max5484] },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max5481_match);
++#endif
++
++#if defined(CONFIG_ACPI)
++static const struct acpi_device_id max5481_acpi_match[] = {
++	{ "max5481", max5481 },
++	{ "max5482", max5482 },
++	{ "max5483", max5483 },
++	{ "max5484", max5484 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, max5481_acpi_match);
++#endif
++
++static struct spi_driver max5481_driver = {
++	.driver = {
++		.name  = "max5481",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(max5481_match),
++		.acpi_match_table = ACPI_PTR(max5481_acpi_match),
++	},
++	.probe = max5481_probe,
++	.remove = max5481_remove,
++	.id_table = max5481_id_table,
++};
++
++module_spi_driver(max5481_driver);
++
++MODULE_AUTHOR("Maury Anderson <maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>");
++MODULE_DESCRIPTION("max5481 SPI driver");
++MODULE_LICENSE("GPL v2");
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
