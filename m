@@ -1,30 +1,1448 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/3 v2] clk: ux500: Add device tree bindings for ABx500
- clocks
-Date: Thu, 26 Jan 2017 16:11:39 -0800
-Message-ID: <20170127001139.GP8801@codeaurora.org>
-References: <20170120132539.3013-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170120132539.3013-1-linus.walleij@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=2zCc=Y4=gmail.com=slongerbeam@kernel.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
+ <1484320822.31475.96.camel@pengutronix.de>
+Message-ID: <2b1d2418-1ad4-6373-cb07-c3aeab48187f@gmail.com>
+Date: Sat, 14 Jan 2017 14:42:08 -0800
+MIME-Version: 1.0
+In-Reply-To: <1484320822.31475.96.camel@pengutronix.de>
+Content-Type: multipart/alternative;
+ boundary="------------71EDDE909EB2426C3885C669"
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On 01/20, Linus Walleij wrote:
-> This adds device tree bindings for the ABx500 clocks on the
-> ST-Ericsson platforms.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+This is a multi-part message in MIME format.
+--------------71EDDE909EB2426C3885C669
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Applied to clk-ux500 and merged into clk-next
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+On 01/13/2017 07:20 AM, Philipp Zabel wrote:
+> Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
+>> +For image capture, the IPU contains the following internal subunits:
+>> +
+>> +- Image DMA Controller (IDMAC)
+>> +- Camera Serial Interface (CSI)
+>> +- Image Converter (IC)
+>> +- Sensor Multi-FIFO Controller (SMFC)
+>> +- Image Rotator (IRT)
+>> +- Video De-Interlace Controller (VDIC)
+> Nitpick: Video De-Interlacing or Combining Block (VDIC)
+
+done.
+
+>> +
+>> +The IDMAC is the DMA controller for transfer of image frames to and from
+>> +memory. Various dedicated DMA channels exist for both video capture and
+>> +display paths.
+>> +
+>> +The CSI is the frontend capture unit that interfaces directly with
+>> +capture sensors over Parallel, BT.656/1120, and MIPI CSI-2 busses.
+>> +
+>> +The IC handles color-space conversion, resizing, and rotation
+>> +operations.
+> And horizontal flipping.
+
+done.
+
+
+>> There are three independent "tasks" within the IC that can
+>> +carry out conversions concurrently: pre-processing encoding,
+>> +pre-processing preview, and post-processing.
+> s/preview/viewfinder/ seems to be the commonly used name.
+
+replaced everywhere in the doc.
+
+> This paragraph could mention that a single hardware unit is used
+> transparently time multiplexed by the three tasks at different
+> granularity for the downsizing, main processing, and rotation sections.
+> The downscale unit switches between tasks at 8-pixel burst granularity,
+> the main processing unit at line granularity. The rotation units switch
+> only at frame granularity.
+
+I've added that info.
+
+>> +The SMFC is composed of four independent channels that each can transfer
+>> +captured frames from sensors directly to memory concurrently.
+>> +
+>> +The IRT carries out 90 and 270 degree image rotation operations.
+> ... on 8x8 pixel blocks, supported by the IDMAC which handles block
+> transfers, block reordering, and vertical flipping.
+
+done.
+
+>> +The VDIC handles the conversion of interlaced video to progressive, with
+>> +support for different motion compensation modes (low, medium, and high
+>> +motion). The deinterlaced output frames from the VDIC can be sent to the
+>> +IC pre-process preview task for further conversions.
+>> +
+>> +In addition to the IPU internal subunits, there are also two units
+>> +outside the IPU that are also involved in video capture on i.MX:
+>> +
+>> +- MIPI CSI-2 Receiver for camera sensors with the MIPI CSI-2 bus
+>> +  interface. This is a Synopsys DesignWare core.
+>> +- A video multiplexer for selecting among multiple sensor inputs to
+>> +  send to a CSI.
+> Two of them, actually.
+
+done.
+
+>> +
+>> +- Includes a Frame Interval Monitor (FIM) that can correct vertical sync
+>> +  problems with the ADV718x video decoders. See below for a description
+>> +  of the FIM.
+> Could this also be used to calculate more precise capture timestamps?
+
+An input capture function could do that, triggered off a VSYNC or FIELD
+signal such as on the ADV718x. The FIM is only used to calculate
+frame intervals at this point, but its input capture method could be
+used to also record more accurate timestamps.
+
+
+>> +Capture Pipelines
+>> +-----------------
+>> +
+>> +The following describe the various use-cases supported by the pipelines.
+>> +
+>> +The links shown do not include the frontend sensor, video mux, or mipi
+>> +csi-2 receiver links. This depends on the type of sensor interface
+>> +(parallel or mipi csi-2). So in all cases, these pipelines begin with:
+>> +
+>> +sensor -> ipu_csi_mux -> ipu_csi -> ...
+>> +
+>> +for parallel sensors, or:
+>> +
+>> +sensor -> imx-mipi-csi2 -> (ipu_csi_mux) -> ipu_csi -> ...
+>> +
+>> +for mipi csi-2 sensors. The imx-mipi-csi2 receiver may need to route
+>> +to the video mux (ipu_csi_mux) before sending to the CSI, depending
+>> +on the mipi csi-2 virtual channel, hence ipu_csi_mux is shown in
+>> +parenthesis.
+>> +
+>> +Unprocessed Video Capture:
+>> +--------------------------
+>> +
+>> +Send frames directly from sensor to camera interface, with no
+>> +conversions:
+>> +
+>> +-> ipu_smfc -> camif
+> I'd call this capture interface, this is not just for cameras. Or maybe
+> idmac if you want to mirror hardware names?
+
+Camif is so named because it is the V4L2 user interface for video
+capture. I suppose it could be named "capif", but that doesn't role
+off the tongue quite as well.
+
+>> +Note the ipu_smfc can do pixel reordering within the same colorspace.
+> That isn't a feature of the SMFC, but of the IDMAC (FCW & FCR).
+
+yes, the doc is re-worded to make that more clear.
+
+>> +For example, its sink pad can take UYVY2X8, but its source pad can
+>> +output YUYV2X8.
+> I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
+> in the CSI chapter, for 8-bit per component data, the internal format
+> between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
+> (or "bayer/generic data"). In either case, the internal format does not
+> change along the way.
+
+these are pixels in memory buffers, not the IPU internal formats.
+
+
+>> +IC Direct Conversions:
+>> +----------------------
+>> +
+>> +This pipeline uses the preprocess encode entity to route frames directly
+>> +from the CSI to the IC (bypassing the SMFC), to carry out scaling up to
+>> +1024x1024 resolution, CSC, and image rotation:
+>> +
+>> +-> ipu_ic_prpenc -> camif
+>> +
+>> +This can be a useful capture pipeline for heavily loaded memory bus
+>> +traffic environments, since it has minimal IDMAC channel usage.
+> Note that if rotation is enabled, transfers between IC processing and
+> rotation still have to go through memory once.
+
+yep.
+
+>> +Post-Processing Conversions:
+>> +----------------------------
+>> +
+>> +This pipeline routes frames from the SMFC to the post-processing
+>> +entity.
+> No, frames written by the CSI -> SMFC -> IDMAC path are read back into
+> the post-processing entity.
+
+that's true. The post-processing entity kicks off its read channels
+to transfer those frames into the post-processor. Anyway this wording
+will change after doing away with the SMFC entity.
+
+
+>> +   media-ctl -V "\"ipu1_csi0\":1 [fmt:YUYV2X8/640x480]"
+>> +   media-ctl -V "\"ipu1_smfc0\":0 [fmt:YUYV2X8/640x480]"
+>> +   media-ctl -V "\"ipu1_smfc0\":1 [fmt:UYVY2X8/640x480]"
+> I think the smfc entities should be dropped.
+
+yes working on that.
+
+>> +   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
+>> +   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
+>> +   # Configure pads for OV5640 pipeline
+>> +   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
+>> +   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
+>> +   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
+>> +   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
+>> +   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
+> [...]
+>> +   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
+> I agree this looks very intuitive, but technically correct for the
+> csi1:1 and camif1:0 pads would be a 32-bit YUV format.
+> (MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
+>
+> I think it would be better to use the correct format
+
+I'm not sure I follow you here.
+
+>   as that will allow
+> to chose the regular vs. companded packings in the future for formats
+> with more than 8 bits per component.
+>
+>> +   media-ctl -V "\"camif1\":1 [fmt:UYVY2X8/640x480]"
+>> +
+>> +Streaming can then begin independently on device nodes /dev/video0
+>> +and /dev/video1.
+>> +
+>> +SabreAuto with ADV7180 decoder
+>> +------------------------------
+>> +
+>> +On the SabreAuto, an on-board ADV7180 SD decoder is connected to the
+>> +parallel bus input on the internal video mux to IPU1 CSI0.
+>> +
+>> +The following example configures a pipeline to capture from the ADV7180
+>> +video decoder, assuming NTSC 720x480 input signals, with Motion
+>> +Compensated de-interlacing (not shown: all pad field types should be set
+>> +as indicated). $outputfmt can be any format supported by the
+>> +ipu1_ic_prpvf entity at its output pad:
+>> +
+>> +.. code-block:: none
+>> +
+>> +   # Setup links
+>> +   media-ctl -l '"adv7180 3-0021":0 -> "ipu1_csi0_mux":1[1]'
+>> +   media-ctl -l '"ipu1_csi0_mux":2 -> "ipu1_csi0":0[1]'
+>> +   media-ctl -l '"ipu1_csi0":1 -> "ipu1_smfc0":0[1]'
+>> +   media-ctl -l '"ipu1_smfc0":1 -> "ipu1_ic_prpvf":0[1]'
+>> +   media-ctl -l '"ipu1_ic_prpvf":1 -> "camif0":0[1]'
+>> +   media-ctl -l '"camif0":1 -> "camif0 devnode":0[1]'
+>> +   # Configure pads
+>> +   # pad field types for below pads must be an interlaced type
+>> +   # such as "ALTERNATE"
+> I think alternate should only extend as far as the CSI, since the CSI
+> can only capture NTSC/PAL fields in a fixed order.
+
+Agreed, I'm doing the translation from alternate to seq_bt/seq_tb depending
+on sensor std in imx-vdic.c, but it should move upstream. Will fix.
+
+>> +   media-ctl -V "\"adv7180 3-0021\":0 [fmt:UYVY2X8/720x480]"
+>> +   media-ctl -V "\"ipu1_csi0_mux\":1 [fmt:UYVY2X8/720x480]"
+>  From here the interlaced field type should be sequential in the correct
+> order depending on NTSC/PAL.
+
+right.
+
+>> +
+>> +Frame Interval Monitor
+>> +----------------------
+>> +
+>> +The adv718x decoders can occasionally send corrupt fields during
+>> +NTSC/PAL signal re-sync (too little or too many video lines). When
+>> +this happens, the IPU triggers a mechanism to re-establish vertical
+>> +sync by adding 1 dummy line every frame, which causes a rolling effect
+>> +from image to image, and can last a long time before a stable image is
+>> +recovered. Or sometimes the mechanism doesn't work at all, causing a
+>> +permanent split image (one frame contains lines from two consecutive
+>> +captured images).
+> Is it only SabreAuto on which the FIM mechanism can be used due to the
+> pad routing?
+
+No, FIM can be used on any target, the fim child node of ipu_csi just
+needs to be enabled via status property.
+
+> [...]
+>> +/*
+>> + * DMA buffer ring handling
+>> + */
+>> +struct imx_media_dma_buf_ring {
+>> +	struct imx_media_dev *imxmd;
+>> +
+>> +	/* the ring */
+>> +	struct imx_media_dma_buf buf[IMX_MEDIA_MAX_RING_BUFS];
+>> +	/* the scratch buffer for underruns */
+>> +	struct imx_media_dma_buf scratch;
+>> +
+>> +	/* buffer generator */
+>> +	struct media_entity *src;
+>> +	/* buffer receiver */
+>> +	struct media_entity *sink;
+>> +
+>> +	spinlock_t lock;
+>> +
+>> +	int num_bufs;
+>> +	unsigned long last_seq;
+>> +};
+> I don't think this belongs in the capture driver at all.
+> Memory-to-memory transfers should be handled at the videobuf2 level.
+
+see below.
+
+> [...]
+>> +static struct imx_media_dma_buf *
+>> +__dma_buf_queue(struct imx_media_dma_buf_ring *ring, int index)
+>> +{
+>> +	struct imx_media_dma_buf *buf;
+>> +
+>> +	if (index >= ring->num_bufs)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	buf = &ring->buf[index];
+>> +	if (WARN_ON(buf->state != IMX_MEDIA_BUF_STATUS_PREPARED))
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	buf->state = IMX_MEDIA_BUF_STATUS_QUEUED;
+>> +	buf->seq = ring->last_seq++;
+>> +
+>> +	return buf;
+>> +}
+> Is this a whole software buffer queue implementation? I thought the
+> whole point of putting the custom mem2mem framework into the capture
+> driver was to use the hardware FSU channel linking?
+
+  see below.
+
+> What is the purpose of this if the sink should be triggered by the FSU?
+
+Ok, here is where I need to make an admission.
+
+The only FSU links I have attempted (and which currently have entries
+in the fsu_link_info[] table), are the enc/vf/pp --> IRT links for rotation.
+
+There does not appear to be support in the FSU for linking a write channel
+to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
+is support for the direct link from CSI (which I am using), but that's 
+not an
+IDMAC channel link.
+
+There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
+0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
+But I think this links to channel 12, and not to channels 8,9,10 to the 
+VDIC.
+Or will it? It's worth experimenting. It would have helped if FSL listed 
+which
+IDMAC channels these FSU links correspond to, instead of making us guess
+at it.
+
+In any event, the docs are not clear enough to implement a real FSU
+link to the VDIC read channels, if it's even possible. And trying to get
+programming help from FSL can be difficult, and no coding examples
+for this link AFAIK.
+
+So I ended resorted to linking to VDIC channels 8,9,10 with a software
+approach, instead of attempting a hardware FSU link.
+
+The EOF interrupt handler for the SMFC channels informs the VDIC
+entity via a v4l2_subdev_ioctl() call that a buffer is available. The
+VDIC then manually kicks off its read channels to bring that buffer
+(and a previous buffer for F(n-1) field) into the VDIC.
+
+There is a small amount of extra overhead going this route compared
+to a FSU hardware link: there is the EOF irq latency (a few usec), and
+the CPU overhead for the VDIC to manually start the read channels,
+which is also a few usec at most (see prepare_vdi_in_buffers() in
+imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU
+use plus irq latency) under normal system load.
+
+Of course, in order to implement this software link, I had to implement
+a straightforward FIFO dma buffer ring. The sink (VDIC) allocates the ring
+at stream on, and the source requests a pointer to this ring in its own
+stream on. Passing buffers from source to sink then follows a 
+straightforward
+FIFO queue/done/dequeue/queue model: sink queues buffers to src, src
+grabs queued buffers and makes them active, src signals completed
+buffers to sink, sink dequeues buffers in response, and sink queues
+buffers back when it is finished with them.
+
+
+> [...]
+>> +/*
+>> + * The subdevs have to be powered on/off, and streaming
+>> + * enabled/disabled, in a specific sequence.
+>> + */
+>> +static const u32 stream_on_seq[] = {
+>> +	IMX_MEDIA_GRP_ID_IC_PP,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
+>> +	IMX_MEDIA_GRP_ID_SMFC,
+>> +	IMX_MEDIA_GRP_ID_SENSOR,
+>> +	IMX_MEDIA_GRP_ID_CSI2,
+>> +	IMX_MEDIA_GRP_ID_VIDMUX,
+>> +	IMX_MEDIA_GRP_ID_CSI,
+>> +};
+>> +
+>> +static const u32 stream_off_seq[] = {
+>> +	IMX_MEDIA_GRP_ID_IC_PP,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
+>> +	IMX_MEDIA_GRP_ID_SMFC,
+>> +	IMX_MEDIA_GRP_ID_CSI,
+>> +	IMX_MEDIA_GRP_ID_VIDMUX,
+>> +	IMX_MEDIA_GRP_ID_CSI2,
+>> +	IMX_MEDIA_GRP_ID_SENSOR,
+>> +};
+>> +
+>> +#define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
+>> +
+>> +static const u32 power_on_seq[] = {
+>> +	IMX_MEDIA_GRP_ID_CSI2,
+>> +	IMX_MEDIA_GRP_ID_SENSOR,
+>> +	IMX_MEDIA_GRP_ID_VIDMUX,
+>> +	IMX_MEDIA_GRP_ID_CSI,
+>> +	IMX_MEDIA_GRP_ID_SMFC,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
+>> +	IMX_MEDIA_GRP_ID_IC_PP,
+>> +};
+>> +
+>> +static const u32 power_off_seq[] = {
+>> +	IMX_MEDIA_GRP_ID_IC_PP,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
+>> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
+>> +	IMX_MEDIA_GRP_ID_SMFC,
+>> +	IMX_MEDIA_GRP_ID_CSI,
+>> +	IMX_MEDIA_GRP_ID_VIDMUX,
+>> +	IMX_MEDIA_GRP_ID_SENSOR,
+>> +	IMX_MEDIA_GRP_ID_CSI2,
+>> +};
+> This seems somewhat arbitrary. Why is a power sequence needed?
+
+The CSI-2 receiver must be powered up before the sensor, that's the
+only requirement IIRC. The others have no s_power requirement. So I
+can probably change this to power up in the frontend -> backend order
+(IC_PP to sensor). And vice-versa for power off.
+
+
+> [...]
+>> +/*
+>> + * Turn current pipeline power on/off starting from start_entity.
+>> + * Must be called with mdev->graph_mutex held.
+>> + */
+>> +int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
+>> +				 struct media_entity_graph *graph,
+>> +				 struct media_entity *start_entity, bool on)
+>> +{
+>> +	struct media_entity *entity;
+>> +	struct v4l2_subdev *sd;
+>> +	int i, ret = 0;
+>> +	u32 id;
+>> +
+>> +	for (i = 0; i < NUM_POWER_ENTITIES; i++) {
+>> +		id = on ? power_on_seq[i] : power_off_seq[i];
+>> +		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
+>> +		if (!entity)
+>> +			continue;
+>> +
+>> +		sd = media_entity_to_v4l2_subdev(entity);
+>> +
+>> +		ret = v4l2_subdev_call(sd, core, s_power, on);
+>> +		if (ret && ret != -ENOIOCTLCMD)
+>> +			break;
+>> +	}
+>> +
+>> +	return (ret && ret != -ENOIOCTLCMD) ? ret : 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
+> This should really be handled by v4l2_pipeline_pm_use.
+
+I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
+doing some other stuff that bothered me, at least that's what I remember.
+I will revisit this.
+
+>> +/*
+>> + * Inherit the v4l2 controls from all entities in a pipeline
+>> + * to the given video device.
+>> + * Must be called with mdev->graph_mutex held.
+>> + */
+>> +int imx_media_inherit_controls(struct imx_media_dev *imxmd,
+>> +			       struct video_device *vfd,
+>> +			       struct media_entity *start_entity)
+>> +{
+>> +	struct media_entity_graph graph;
+>> +	struct media_entity *entity;
+>> +	struct v4l2_subdev *sd;
+>> +	int ret;
+>> +
+>> +	ret = media_entity_graph_walk_init(&graph, &imxmd->md);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	media_entity_graph_walk_start(&graph, start_entity);
+>> +
+>> +	while ((entity = media_entity_graph_walk_next(&graph))) {
+>> +		if (is_media_entity_v4l2_video_device(entity))
+>> +			continue;
+>> +
+>> +		sd = media_entity_to_v4l2_subdev(entity);
+>> +
+>> +		dev_dbg(imxmd->dev, "%s: adding controls from %s\n",
+>> +			__func__, sd->name);
+>> +
+>> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
+>> +					    sd->ctrl_handler,
+>> +					    NULL);
+>> +		if (ret)
+>> +			break;
+>> +	}
+>> +
+>> +	media_entity_graph_walk_cleanup(&graph);
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(imx_media_inherit_controls);
+>> +
+>> +MODULE_DESCRIPTION("i.MX5/6 v4l2 media controller driver");
+>> +MODULE_AUTHOR("Steve Longerbeam<steve_longerbeam@mentor.com>");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+>> new file mode 100644
+>> index 0000000..357654d
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx-media-dev.c
+> This file is full of code that should live in the v4l2 core.
+
+Agreed. Stuff like imx_media_inherit_controls() really should be widely
+available.
+
+>> +int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
+>> +				   struct imx_media_subdev *csi[4])
+>> +{
+>> +	int ret;
+>> +
+>> +	/* there must be at least one CSI in first IPU */
+> Why?
+
+Well yeah, imx-media doesn't necessarily need a CSI if things
+like the VDIC or post-processor are being used by an output
+overlay pipeline, for example. I'll fix this.
+
+>> +
+>> +/* parse inputs property from a sensor node */
+>> +static void of_parse_sensor_inputs(struct imx_media_dev *imxmd,
+>> +				   struct imx_media_subdev *sensor,
+>> +				   struct device_node *sensor_np)
+>> +{
+>> +	struct imx_media_sensor_input *sinput = &sensor->input;
+>> +	int ret, i;
+>> +
+>> +	for (i = 0; i < IMX_MEDIA_MAX_SENSOR_INPUTS; i++) {
+>> +		const char *input_name;
+>> +		u32 val;
+>> +
+>> +		ret = of_property_read_u32_index(sensor_np, "inputs", i, &val);
+>> +		if (ret)
+>> +			break;
+>> +
+>> +		sinput->value[i] = val;
+>> +
+>> +		ret = of_property_read_string_index(sensor_np, "input-names",
+>> +						    i, &input_name);
+>> +		/*
+>> +		 * if input-names not provided, they will be set using
+>> +		 * the subdev name once the sensor is known during
+>> +		 * async bind
+>> +		 */
+>> +		if (!ret)
+>> +			strncpy(sinput->name[i], input_name,
+>> +				sizeof(sinput->name[i]));
+>> +	}
+>> +
+>> +	sinput->num = i;
+>> +
+>> +	/* if no inputs provided just assume a single input */
+>> +	if (sinput->num == 0)
+>> +		sinput->num = 1;
+>> +}
+> This should be parsed by the sensor driver, not imx-media.
+
+you're probably right. I'll submit a patch for adv7180.c.
+
+
+>> +static void of_parse_sensor(struct imx_media_dev *imxmd,
+>> +			    struct imx_media_subdev *sensor,
+>> +			    struct device_node *sensor_np)
+>> +{
+>> +	struct device_node *endpoint;
+>> +
+>> +	of_parse_sensor_inputs(imxmd, sensor, sensor_np);
+>> +
+>> +	endpoint = of_graph_get_next_endpoint(sensor_np, NULL);
+>> +	if (endpoint) {
+>> +		v4l2_of_parse_endpoint(endpoint, &sensor->sensor_ep);
+>> +		of_node_put(endpoint);
+>> +	}
+>> +}
+>> +
+>> +static int of_get_port_count(const struct device_node *np)
+>> +{
+>> +	struct device_node *child;
+>> +	int num = 0;
+>> +
+>> +	/* if this node is itself a port, return 1 */
+>> +	if (of_node_cmp(np->name, "port") == 0)
+>> +		return 1;
+>> +
+>> +	for_each_child_of_node(np, child)
+>> +		if (of_node_cmp(child->name, "port") == 0)
+>> +			num++;
+>> +
+>> +	return num;
+>> +}
+> If this is extended to handle the ports subnode properly, it could be
+> moved into drivers/of/base.c.
+
+More that eventually needs exporting, agreed.
+
+
+Steve
+
+
+--------------71EDDE909EB2426C3885C669
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <p><br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 01/13/2017 07:20 AM, Philipp Zabel
+      wrote:<br>
+    </div>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+For image capture, the IPU contains the following internal subunits:
++
++- Image DMA Controller (IDMAC)
++- Camera Serial Interface (CSI)
++- Image Converter (IC)
++- Sensor Multi-FIFO Controller (SMFC)
++- Image Rotator (IRT)
++- Video De-Interlace Controller (VDIC)
+</pre>
+      </blockquote>
+      <pre wrap="">Nitpick: Video De-Interlacing or Combining Block (VDIC)
+</pre>
+    </blockquote>
+    <br>
+    done.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++The IDMAC is the DMA controller for transfer of image frames to and from
++memory. Various dedicated DMA channels exist for both video capture and
++display paths.
++
++The CSI is the frontend capture unit that interfaces directly with
++capture sensors over Parallel, BT.656/1120, and MIPI CSI-2 busses.
++
++The IC handles color-space conversion, resizing, and rotation
++operations. 
+</pre>
+      </blockquote>
+      <pre wrap="">And horizontal flipping.</pre>
+    </blockquote>
+    <br>
+    done.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">There are three independent "tasks" within the IC that can
++carry out conversions concurrently: pre-processing encoding,
++pre-processing preview, and post-processing.
+</pre>
+      </blockquote>
+      <pre wrap="">s/preview/viewfinder/ seems to be the commonly used name.</pre>
+    </blockquote>
+    <br>
+    replaced everywhere in the doc.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+This paragraph could mention that a single hardware unit is used
+transparently time multiplexed by the three tasks at different
+granularity for the downsizing, main processing, and rotation sections.
+The downscale unit switches between tasks at 8-pixel burst granularity,
+the main processing unit at line granularity. The rotation units switch
+only at frame granularity.</pre>
+    </blockquote>
+    <br>
+    I've added that info.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+The SMFC is composed of four independent channels that each can transfer
++captured frames from sensors directly to memory concurrently.
++
++The IRT carries out 90 and 270 degree image rotation operations.
+</pre>
+      </blockquote>
+      <pre wrap="">... on 8x8 pixel blocks, supported by the IDMAC which handles block
+transfers, block reordering, and vertical flipping.
+</pre>
+    </blockquote>
+    <br>
+    done.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+The VDIC handles the conversion of interlaced video to progressive, with
++support for different motion compensation modes (low, medium, and high
++motion). The deinterlaced output frames from the VDIC can be sent to the
++IC pre-process preview task for further conversions.
++
++In addition to the IPU internal subunits, there are also two units
++outside the IPU that are also involved in video capture on i.MX:
++
++- MIPI CSI-2 Receiver for camera sensors with the MIPI CSI-2 bus
++  interface. This is a Synopsys DesignWare core.
++- A video multiplexer for selecting among multiple sensor inputs to
++  send to a CSI.
+</pre>
+      </blockquote>
+      <pre wrap="">Two of them, actually.
+</pre>
+    </blockquote>
+    <br>
+    done.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++- Includes a Frame Interval Monitor (FIM) that can correct vertical sync
++  problems with the ADV718x video decoders. See below for a description
++  of the FIM.
+</pre>
+      </blockquote>
+      <pre wrap="">Could this also be used to calculate more precise capture timestamps?</pre>
+    </blockquote>
+    <br>
+    An input capture function could do that, triggered off a VSYNC or
+    FIELD<br>
+    signal such as on the ADV718x. The FIM is only used to calculate<br>
+    frame intervals at this point, but its input capture method could be<br>
+    used to also record more accurate timestamps.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+Capture Pipelines
++-----------------
++
++The following describe the various use-cases supported by the pipelines.
++
++The links shown do not include the frontend sensor, video mux, or mipi
++csi-2 receiver links. This depends on the type of sensor interface
++(parallel or mipi csi-2). So in all cases, these pipelines begin with:
++
++sensor -&gt; ipu_csi_mux -&gt; ipu_csi -&gt; ...
++
++for parallel sensors, or:
++
++sensor -&gt; imx-mipi-csi2 -&gt; (ipu_csi_mux) -&gt; ipu_csi -&gt; ...
++
++for mipi csi-2 sensors. The imx-mipi-csi2 receiver may need to route
++to the video mux (ipu_csi_mux) before sending to the CSI, depending
++on the mipi csi-2 virtual channel, hence ipu_csi_mux is shown in
++parenthesis.
++
++Unprocessed Video Capture:
++--------------------------
++
++Send frames directly from sensor to camera interface, with no
++conversions:
++
++-&gt; ipu_smfc -&gt; camif
+</pre>
+      </blockquote>
+      <pre wrap="">I'd call this capture interface, this is not just for cameras. Or maybe
+idmac if you want to mirror hardware names?</pre>
+    </blockquote>
+    <br>
+    Camif is so named because it is the V4L2 user interface for video<br>
+    capture. I suppose it could be named "capif", but that doesn't role<br>
+    off the tongue quite as well.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+Note the ipu_smfc can do pixel reordering within the same colorspace.
+</pre>
+      </blockquote>
+      <pre wrap="">That isn't a feature of the SMFC, but of the IDMAC (FCW &amp; FCR).</pre>
+    </blockquote>
+    <br>
+    yes, the doc is re-worded to make that more clear.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+For example, its sink pad can take UYVY2X8, but its source pad can
++output YUYV2X8.
+</pre>
+      </blockquote>
+      <pre wrap="">I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
+in the CSI chapter, for 8-bit per component data, the internal format
+between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
+(or "bayer/generic data"). In either case, the internal format does not
+change along the way.</pre>
+    </blockquote>
+    <br>
+    these are pixels in memory buffers, not the IPU internal formats.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+IC Direct Conversions:
++----------------------
++
++This pipeline uses the preprocess encode entity to route frames directly
++from the CSI to the IC (bypassing the SMFC), to carry out scaling up to
++1024x1024 resolution, CSC, and image rotation:
++
++-&gt; ipu_ic_prpenc -&gt; camif
++
++This can be a useful capture pipeline for heavily loaded memory bus
++traffic environments, since it has minimal IDMAC channel usage.
+</pre>
+      </blockquote>
+      <pre wrap="">Note that if rotation is enabled, transfers between IC processing and
+rotation still have to go through memory once.</pre>
+    </blockquote>
+    <br>
+    yep.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+Post-Processing Conversions:
++----------------------------
++
++This pipeline routes frames from the SMFC to the post-processing
++entity.
+</pre>
+      </blockquote>
+      <pre wrap="">No, frames written by the CSI -&gt; SMFC -&gt; IDMAC path are read back into
+the post-processing entity.</pre>
+    </blockquote>
+    <br>
+    that's true. The post-processing entity kicks off its read channels<br>
+    to transfer those frames into the post-processor. Anyway this
+    wording<br>
+    will change after doing away with the SMFC entity.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+   media-ctl -V "\"ipu1_csi0\":1 [fmt:YUYV2X8/640x480]"
++   media-ctl -V "\"ipu1_smfc0\":0 [fmt:YUYV2X8/640x480]"
++   media-ctl -V "\"ipu1_smfc0\":1 [fmt:UYVY2X8/640x480]"
+</pre>
+      </blockquote>
+      <pre wrap="">I think the smfc entities should be dropped.</pre>
+    </blockquote>
+    <br>
+    yes working on that.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
++   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
++   # Configure pads for OV5640 pipeline
++   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
++   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
++   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
++   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
++   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
+</pre>
+      </blockquote>
+      <pre wrap="">[...]
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
+</pre>
+      </blockquote>
+      <pre wrap="">I agree this looks very intuitive, but technically correct for the
+csi1:1 and camif1:0 pads would be a 32-bit YUV format.
+(MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
+
+I think it would be better to use the correct format</pre>
+    </blockquote>
+    <br>
+    I'm not sure I follow you here.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap=""> as that will allow
+to chose the regular vs. companded packings in the future for formats
+with more than 8 bits per component.
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+   media-ctl -V "\"camif1\":1 [fmt:UYVY2X8/640x480]"
++
++Streaming can then begin independently on device nodes /dev/video0
++and /dev/video1.
++
++SabreAuto with ADV7180 decoder
++------------------------------
++
++On the SabreAuto, an on-board ADV7180 SD decoder is connected to the
++parallel bus input on the internal video mux to IPU1 CSI0.
++
++The following example configures a pipeline to capture from the ADV7180
++video decoder, assuming NTSC 720x480 input signals, with Motion
++Compensated de-interlacing (not shown: all pad field types should be set
++as indicated). $outputfmt can be any format supported by the
++ipu1_ic_prpvf entity at its output pad:
++
++.. code-block:: none
++
++   # Setup links
++   media-ctl -l '"adv7180 3-0021":0 -&gt; "ipu1_csi0_mux":1[1]'
++   media-ctl -l '"ipu1_csi0_mux":2 -&gt; "ipu1_csi0":0[1]'
++   media-ctl -l '"ipu1_csi0":1 -&gt; "ipu1_smfc0":0[1]'
++   media-ctl -l '"ipu1_smfc0":1 -&gt; "ipu1_ic_prpvf":0[1]'
++   media-ctl -l '"ipu1_ic_prpvf":1 -&gt; "camif0":0[1]'
++   media-ctl -l '"camif0":1 -&gt; "camif0 devnode":0[1]'
++   # Configure pads
++   # pad field types for below pads must be an interlaced type
++   # such as "ALTERNATE"
+</pre>
+      </blockquote>
+      <pre wrap="">I think alternate should only extend as far as the CSI, since the CSI
+can only capture NTSC/PAL fields in a fixed order.</pre>
+    </blockquote>
+    <br>
+    Agreed, I'm doing the translation from alternate to seq_bt/seq_tb
+    depending<br>
+    on sensor std in imx-vdic.c, but it should move upstream. Will fix.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+   media-ctl -V "\"adv7180 3-0021\":0 [fmt:UYVY2X8/720x480]"
++   media-ctl -V "\"ipu1_csi0_mux\":1 [fmt:UYVY2X8/720x480]"
+</pre>
+      </blockquote>
+      <pre wrap="">From here the interlaced field type should be sequential in the correct
+order depending on NTSC/PAL.
+</pre>
+    </blockquote>
+    <br>
+    right.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++Frame Interval Monitor
++----------------------
++
++The adv718x decoders can occasionally send corrupt fields during
++NTSC/PAL signal re-sync (too little or too many video lines). When
++this happens, the IPU triggers a mechanism to re-establish vertical
++sync by adding 1 dummy line every frame, which causes a rolling effect
++from image to image, and can last a long time before a stable image is
++recovered. Or sometimes the mechanism doesn't work at all, causing a
++permanent split image (one frame contains lines from two consecutive
++captured images).
+</pre>
+      </blockquote>
+      <pre wrap="">Is it only SabreAuto on which the FIM mechanism can be used due to the
+pad routing?</pre>
+    </blockquote>
+    <br>
+    No, FIM can be used on any target, the fim child node of ipu_csi
+    just<br>
+    needs to be enabled via status property.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+[...]
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+/*
++ * DMA buffer ring handling
++ */
++struct imx_media_dma_buf_ring {
++	struct imx_media_dev *imxmd;
++
++	/* the ring */
++	struct imx_media_dma_buf buf[IMX_MEDIA_MAX_RING_BUFS];
++	/* the scratch buffer for underruns */
++	struct imx_media_dma_buf scratch;
++
++	/* buffer generator */
++	struct media_entity *src;
++	/* buffer receiver */
++	struct media_entity *sink;
++
++	spinlock_t lock;
++
++	int num_bufs;
++	unsigned long last_seq;
++};
+</pre>
+      </blockquote>
+      <pre wrap="">I don't think this belongs in the capture driver at all.
+Memory-to-memory transfers should be handled at the videobuf2 level.</pre>
+    </blockquote>
+    <br>
+    see below.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+[...]
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+static struct imx_media_dma_buf *
++__dma_buf_queue(struct imx_media_dma_buf_ring *ring, int index)
++{
++	struct imx_media_dma_buf *buf;
++
++	if (index &gt;= ring-&gt;num_bufs)
++		return ERR_PTR(-EINVAL);
++
++	buf = &amp;ring-&gt;buf[index];
++	if (WARN_ON(buf-&gt;state != IMX_MEDIA_BUF_STATUS_PREPARED))
++		return ERR_PTR(-EINVAL);
++
++	buf-&gt;state = IMX_MEDIA_BUF_STATUS_QUEUED;
++	buf-&gt;seq = ring-&gt;last_seq++;
++
++	return buf;
++}
+</pre>
+      </blockquote>
+      <pre wrap="">Is this a whole software buffer queue implementation? I thought the
+whole point of putting the custom mem2mem framework into the capture
+driver was to use the hardware FSU channel linking?</pre>
+    </blockquote>
+    <br>
+     see below.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">What is the purpose of this if the sink should be triggered by the FSU?</pre>
+    </blockquote>
+    <br>
+    Ok, here is where I need to make an admission.<br>
+    <br>
+    The only FSU links I have attempted (and which currently have
+    entries<br>
+    in the fsu_link_info[] table), are the enc/vf/pp --&gt; IRT links
+    for rotation.<br>
+    <br>
+    There does not appear to be support in the FSU for linking a write
+    channel<br>
+    to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field.
+    There<br>
+    is support for the direct link from CSI (which I am using), but
+    that's not an<br>
+    IDMAC channel link.<br>
+    <br>
+    There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC)
+    channels<br>
+    0..2 (and 3? it's not clear, and not clear whether this includes
+    channel 1).<br>
+    But I think this links to channel 12, and not to channels 8,9,10 to
+    the VDIC.<br>
+    Or will it? It's worth experimenting. It would have helped if FSL
+    listed which<br>
+    IDMAC channels these FSU links correspond to, instead of making us
+    guess<br>
+    at it.<br>
+    <br>
+    In any event, the docs are not clear enough to implement a real FSU<br>
+    link to the VDIC read channels, if it's even possible. And trying to
+    get<br>
+    programming help from FSL can be difficult, and no coding examples<br>
+    for this link AFAIK.<br>
+    <br>
+    So I ended resorted to linking to VDIC channels 8,9,10 with a
+    software<br>
+    approach, instead of attempting a hardware FSU link.<br>
+    <br>
+    The EOF interrupt handler for the SMFC channels informs the VDIC<br>
+    entity via a v4l2_subdev_ioctl() call that a buffer is available.
+    The<br>
+    VDIC then manually kicks off its read channels to bring that buffer<br>
+    (and a previous buffer for F(n-1) field) into the VDIC.<br>
+    <br>
+    There is a small amount of extra overhead going this route compared<br>
+    to a FSU hardware link: there is the EOF irq latency (a few usec),
+    and<br>
+    the CPU overhead for the VDIC to manually start the read channels,<br>
+    which is also a few usec at most (see prepare_vdi_in_buffers() in<br>
+    imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU<br>
+    use plus irq latency) under normal system load.<br>
+    <br>
+    Of course, in order to implement this software link, I had to
+    implement<br>
+    a straightforward FIFO dma buffer ring. The sink (VDIC) allocates
+    the ring<br>
+    at stream on, and the source requests a pointer to this ring in its
+    own<br>
+    stream on. Passing buffers from source to sink then follows a
+    straightforward<br>
+    FIFO queue/done/dequeue/queue model: sink queues buffers to src, src<br>
+    grabs queued buffers and makes them active, src signals completed<br>
+    buffers to sink, sink dequeues buffers in response, and sink queues<br>
+    buffers back when it is finished with them.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+[...]
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+/*
++ * The subdevs have to be powered on/off, and streaming
++ * enabled/disabled, in a specific sequence.
++ */
++static const u32 stream_on_seq[] = {
++	IMX_MEDIA_GRP_ID_IC_PP,
++	IMX_MEDIA_GRP_ID_IC_PRPVF,
++	IMX_MEDIA_GRP_ID_IC_PRPENC,
++	IMX_MEDIA_GRP_ID_SMFC,
++	IMX_MEDIA_GRP_ID_SENSOR,
++	IMX_MEDIA_GRP_ID_CSI2,
++	IMX_MEDIA_GRP_ID_VIDMUX,
++	IMX_MEDIA_GRP_ID_CSI,
++};
++
++static const u32 stream_off_seq[] = {
++	IMX_MEDIA_GRP_ID_IC_PP,
++	IMX_MEDIA_GRP_ID_IC_PRPVF,
++	IMX_MEDIA_GRP_ID_IC_PRPENC,
++	IMX_MEDIA_GRP_ID_SMFC,
++	IMX_MEDIA_GRP_ID_CSI,
++	IMX_MEDIA_GRP_ID_VIDMUX,
++	IMX_MEDIA_GRP_ID_CSI2,
++	IMX_MEDIA_GRP_ID_SENSOR,
++};
++
++#define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
++
++static const u32 power_on_seq[] = {
++	IMX_MEDIA_GRP_ID_CSI2,
++	IMX_MEDIA_GRP_ID_SENSOR,
++	IMX_MEDIA_GRP_ID_VIDMUX,
++	IMX_MEDIA_GRP_ID_CSI,
++	IMX_MEDIA_GRP_ID_SMFC,
++	IMX_MEDIA_GRP_ID_IC_PRPENC,
++	IMX_MEDIA_GRP_ID_IC_PRPVF,
++	IMX_MEDIA_GRP_ID_IC_PP,
++};
++
++static const u32 power_off_seq[] = {
++	IMX_MEDIA_GRP_ID_IC_PP,
++	IMX_MEDIA_GRP_ID_IC_PRPVF,
++	IMX_MEDIA_GRP_ID_IC_PRPENC,
++	IMX_MEDIA_GRP_ID_SMFC,
++	IMX_MEDIA_GRP_ID_CSI,
++	IMX_MEDIA_GRP_ID_VIDMUX,
++	IMX_MEDIA_GRP_ID_SENSOR,
++	IMX_MEDIA_GRP_ID_CSI2,
++};
+</pre>
+      </blockquote>
+      <pre wrap="">This seems somewhat arbitrary. Why is a power sequence needed?</pre>
+    </blockquote>
+    <br>
+    The CSI-2 receiver must be powered up before the sensor, that's the<br>
+    only requirement IIRC. The others have no s_power requirement. So I<br>
+    can probably change this to power up in the frontend -&gt; backend
+    order<br>
+    (IC_PP to sensor). And vice-versa for power off.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+[...]
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+/*
++ * Turn current pipeline power on/off starting from start_entity.
++ * Must be called with mdev-&gt;graph_mutex held.
++ */
++int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
++				 struct media_entity_graph *graph,
++				 struct media_entity *start_entity, bool on)
++{
++	struct media_entity *entity;
++	struct v4l2_subdev *sd;
++	int i, ret = 0;
++	u32 id;
++
++	for (i = 0; i &lt; NUM_POWER_ENTITIES; i++) {
++		id = on ? power_on_seq[i] : power_off_seq[i];
++		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
++		if (!entity)
++			continue;
++
++		sd = media_entity_to_v4l2_subdev(entity);
++
++		ret = v4l2_subdev_call(sd, core, s_power, on);
++		if (ret &amp;&amp; ret != -ENOIOCTLCMD)
++			break;
++	}
++
++	return (ret &amp;&amp; ret != -ENOIOCTLCMD) ? ret : 0;
++}
++EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
+</pre>
+      </blockquote>
+      <pre wrap="">This should really be handled by v4l2_pipeline_pm_use.</pre>
+    </blockquote>
+    <br>
+    I thought about this earlier, but v4l2_pipeline_pm_use() seems to be<br>
+    doing some other stuff that bothered me, at least that's what I
+    remember.<br>
+    I will revisit this.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+/*
++ * Inherit the v4l2 controls from all entities in a pipeline
++ * to the given video device.
++ * Must be called with mdev-&gt;graph_mutex held.
++ */
++int imx_media_inherit_controls(struct imx_media_dev *imxmd,
++			       struct video_device *vfd,
++			       struct media_entity *start_entity)
++{
++	struct media_entity_graph graph;
++	struct media_entity *entity;
++	struct v4l2_subdev *sd;
++	int ret;
++
++	ret = media_entity_graph_walk_init(&amp;graph, &amp;imxmd-&gt;md);
++	if (ret)
++		return ret;
++
++	media_entity_graph_walk_start(&amp;graph, start_entity);
++
++	while ((entity = media_entity_graph_walk_next(&amp;graph))) {
++		if (is_media_entity_v4l2_video_device(entity))
++			continue;
++
++		sd = media_entity_to_v4l2_subdev(entity);
++
++		dev_dbg(imxmd-&gt;dev, "%s: adding controls from %s\n",
++			__func__, sd-&gt;name);
++
++		ret = v4l2_ctrl_add_handler(vfd-&gt;ctrl_handler,
++					    sd-&gt;ctrl_handler,
++					    NULL);
++		if (ret)
++			break;
++	}
++
++	media_entity_graph_walk_cleanup(&amp;graph);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(imx_media_inherit_controls);
++
++MODULE_DESCRIPTION("i.MX5/6 v4l2 media controller driver");
++MODULE_AUTHOR("Steve Longerbeam <a class="moz-txt-link-rfc2396E" href="mailto:steve_longerbeam@mentor.com">&lt;steve_longerbeam@mentor.com&gt;</a>");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+new file mode 100644
+index 0000000..357654d
+--- /dev/null
++++ b/drivers/staging/media/imx/imx-media-dev.c
+</pre>
+      </blockquote>
+      <pre wrap="">This file is full of code that should live in the v4l2 core.</pre>
+    </blockquote>
+    <br>
+    Agreed. Stuff like imx_media_inherit_controls() really should be
+    widely<br>
+    available.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
++				   struct imx_media_subdev *csi[4])
++{
++	int ret;
++
++	/* there must be at least one CSI in first IPU */
+</pre>
+      </blockquote>
+      <pre wrap="">Why?
+</pre>
+    </blockquote>
+    <br>
+    Well yeah, imx-media doesn't necessarily need a CSI if things<br>
+    like the VDIC or post-processor are being used by an output<br>
+    overlay pipeline, for example. I'll fix this.<br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++/* parse inputs property from a sensor node */
++static void of_parse_sensor_inputs(struct imx_media_dev *imxmd,
++				   struct imx_media_subdev *sensor,
++				   struct device_node *sensor_np)
++{
++	struct imx_media_sensor_input *sinput = &amp;sensor-&gt;input;
++	int ret, i;
++
++	for (i = 0; i &lt; IMX_MEDIA_MAX_SENSOR_INPUTS; i++) {
++		const char *input_name;
++		u32 val;
++
++		ret = of_property_read_u32_index(sensor_np, "inputs", i, &amp;val);
++		if (ret)
++			break;
++
++		sinput-&gt;value[i] = val;
++
++		ret = of_property_read_string_index(sensor_np, "input-names",
++						    i, &amp;input_name);
++		/*
++		 * if input-names not provided, they will be set using
++		 * the subdev name once the sensor is known during
++		 * async bind
++		 */
++		if (!ret)
++			strncpy(sinput-&gt;name[i], input_name,
++				sizeof(sinput-&gt;name[i]));
++	}
++
++	sinput-&gt;num = i;
++
++	/* if no inputs provided just assume a single input */
++	if (sinput-&gt;num == 0)
++		sinput-&gt;num = 1;
++}
+</pre>
+      </blockquote>
+      <pre wrap="">This should be parsed by the sensor driver, not imx-media.</pre>
+    </blockquote>
+    <br>
+    you're probably right. I'll submit a patch for adv7180.c.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+static void of_parse_sensor(struct imx_media_dev *imxmd,
++			    struct imx_media_subdev *sensor,
++			    struct device_node *sensor_np)
++{
++	struct device_node *endpoint;
++
++	of_parse_sensor_inputs(imxmd, sensor, sensor_np);
++
++	endpoint = of_graph_get_next_endpoint(sensor_np, NULL);
++	if (endpoint) {
++		v4l2_of_parse_endpoint(endpoint, &amp;sensor-&gt;sensor_ep);
++		of_node_put(endpoint);
++	}
++}
++
++static int of_get_port_count(const struct device_node *np)
++{
++	struct device_node *child;
++	int num = 0;
++
++	/* if this node is itself a port, return 1 */
++	if (of_node_cmp(np-&gt;name, "port") == 0)
++		return 1;
++
++	for_each_child_of_node(np, child)
++		if (of_node_cmp(child-&gt;name, "port") == 0)
++			num++;
++
++	return num;
++}
+</pre>
+      </blockquote>
+      <pre wrap="">If this is extended to handle the ports subnode properly, it could be
+moved into drivers/of/base.c.
+</pre>
+    </blockquote>
+    <br>
+    More that eventually needs exporting, agreed.<br>
+    <br>
+    <br>
+    Steve<br>
+    <br>
+  </body>
+</html>
+
+--------------71EDDE909EB2426C3885C669--
