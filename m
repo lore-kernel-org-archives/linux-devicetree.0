@@ -1,104 +1,277 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH 4/4] arm: dts: Add support for ES8388 to the
-	Radxa Rock 2
-Date: Fri, 13 Jan 2017 17:14:52 +0100
-Message-ID: <20170113161452.14313-5-romain.perier@collabora.com>
-References: <20170113161452.14313-1-romain.perier@collabora.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] iio: adc: Add Maxim MAX11100 driver
+Date: Sat, 14 Jan 2017 10:22:54 +0000
+Message-ID: <138a6eee-a845-89d3-003a-8045c57c56c3@kernel.org>
+References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1484301038-16386-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170113161452.14313-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484301038-16386-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT definition of the es8388 i2c device
-found at address 0x10. It also adds the definition for connecting
-the Rockchip I2S to the es8388 analog output.
+On 13/01/17 09:50, Jacopo Mondi wrote:
+> From: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> 
+> Add iio driver for Maxim MAX11100 single-channel ADC.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> Tested-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+Small issue with DMA using SPI controllers and the location of buffer
+in your read.
 
-This commit is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.com> with some improvements.
+Otherwise looks good to me.
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
- arch/arm/boot/dts/rk3288-rock2-square.dts | 37 +++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Jonathan
+> ---
+>  drivers/iio/adc/Kconfig    |   9 +++
+>  drivers/iio/adc/Makefile   |   1 +
+>  drivers/iio/adc/max11100.c | 187 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 197 insertions(+)
+>  create mode 100644 drivers/iio/adc/max11100.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 38bc319..c32bc7a 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -307,6 +307,15 @@ config MAX1027
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called max1027.
+>  
+> +config MAX11100
+> +	tristate "Maxim max11100 ADC driver"
+> +	depends on SPI_MASTER
+> +	help
+> +	  Say yes here to build support for Maxim max11100 SPI ADC
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called max11100.
+> +
+>  config MAX1363
+>  	tristate "Maxim max1363 ADC driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index d36c4be..5684369 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -31,6 +31,7 @@ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+>  obj-$(CONFIG_LTC2485) += ltc2485.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+> +obj-$(CONFIG_MAX11100) += max11100.o
+>  obj-$(CONFIG_MAX1363) += max1363.o
+>  obj-$(CONFIG_MCP320X) += mcp320x.o
+>  obj-$(CONFIG_MCP3422) += mcp3422.o
+> diff --git a/drivers/iio/adc/max11100.c b/drivers/iio/adc/max11100.c
+> new file mode 100644
+> index 0000000..78e2a45
+> --- /dev/null
+> +++ b/drivers/iio/adc/max11100.c
+> @@ -0,0 +1,187 @@
+> +/*
+> + * iio/adc/max11100.c
+> + * Maxim max11100 ADC Driver with IIO interface
+> + *
+> + * Copyright (C) 2016 Renesas Electronics Corporation
+> + * Copyright (C) 2016 Jacopo Mondi
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/driver.h>
+> +
+> +/*
+> + * LSB is the ADC single digital step
+> + * 1 LSB = (vref_mv / 2 ^ 16)
+> + *
+> + * LSB is used to calculate analog voltage value
+> + * from the number of ADC steps count
+> + *
+> + * Ain = (count * LSB)
+> + */
+> +#define MAX11100_LSB_DIV		(1 << 16)
+> +
+> +struct max11100_state {
+> +	const struct max11100_chip_desc *desc;
+> +	struct regulator *vref_reg;
+> +	struct spi_device *spi;
+> +};
+> +
+> +static struct iio_chan_spec max11100_channels[] = {
+> +	{ /* [0] */
+> +		.type = IIO_VOLTAGE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static struct max11100_chip_desc {
+> +	unsigned int num_chan;
+> +	const struct iio_chan_spec *channels;
+> +} max11100_desc = {
+> +	.num_chan = ARRAY_SIZE(max11100_channels),
+> +	.channels = max11100_channels,
+> +};
+> +
+> +static int max11100_read_single(struct iio_dev *indio_dev, int *val)
+> +{
+> +	int ret;
+> +	struct max11100_state *state = iio_priv(indio_dev);
+> +	uint8_t buffer[3];
+> +
+> +	ret = spi_read(state->spi, buffer, sizeof(buffer));
+Buffer needs to be __cacheline_aligned to safely use spi_read on spi
+controllers that use DMA.
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index 96a2e74..4f9b7d2 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -86,6 +86,17 @@
- 		#sound-dai-cells = <0>;
- 	};
- 
-+	sound_es8388 {
-+		compatible = "rockchip,rockchip-audio-es8388";
-+		rockchip,model = "Analog audio output";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,audio-codec = <&es8388>;
-+		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
-+		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&headphone>;
-+	};
-+
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&hym8563>;
-@@ -173,10 +184,29 @@
- 	};
- };
- 
-+&i2c2 {
-+	status = "okay";
-+
-+	es8388: es8388@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		AVDD-supply = <&vcca_codec>;
-+		DVDD-supply = <&vcca_codec>;
-+		HPVDD-supply = <&vcca_codec>;
-+		PVDD-supply = <&vcca_codec>;
-+		clocks = <&cru SCLK_I2S0_OUT>;
-+		clock-names = "i2s_clk_out";
-+	};
-+};
-+
- &i2c5 {
- 	status = "okay";
- };
- 
-+&i2s {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	ir {
- 		ir_int: ir-int {
-@@ -190,6 +220,13 @@
- 		};
- 	};
- 
-+	sound {
-+		headphone: headphone {
-+			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
-+					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
--- 
-2.9.3
+Two easy ways of doing this, either allocate buffer using kmalloc or
+take advantage of the fact that spi_priv() is cache line aligned and
+stick you buffer at the end of your private structure and mark it
+__cacheline_aligned to ensure it also appropriately aligned in it's own
+cacheline.
+
+> +	if (ret) {
+> +		dev_err(&indio_dev->dev, "SPI transfer failed\n");
+> +		return ret;
+> +	}
+> +
+> +	/* the first 8 bits sent out from ADC must be 0s */
+> +	if (buffer[0]) {
+> +		dev_err(&indio_dev->dev, "Invalid value: buffer[0] != 0\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	*val = (buffer[1] << 8) | buffer[2];
+> +
+> +	return 0;
+> +}
+> +
+> +static int max11100_read_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int *val, int *val2, long info)
+> +{
+> +	int ret, vref_uv;
+> +	struct max11100_state *state = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = max11100_read_single(indio_dev, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		vref_uv = regulator_get_voltage(state->vref_reg);
+> +		if (vref_uv < 0)
+> +			/* dummy regulator "get_voltage" returns -EINVAL */
+> +			return -EINVAL;
+> +
+> +		*val =  vref_uv / 1000;
+> +		*val2 = MAX11100_LSB_DIV;
+> +		return IIO_VAL_FRACTIONAL;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info max11100_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = max11100_read_raw,
+> +};
+> +
+> +static int max11100_probe(struct spi_device *spi)
+> +{
+> +	int ret;
+> +	struct iio_dev *indio_dev;
+> +	struct max11100_state *state;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*state));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	state = iio_priv(indio_dev);
+> +	state->spi = spi;
+> +	state->desc = &max11100_desc;
+> +
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->dev.of_node = spi->dev.of_node;
+> +	indio_dev->info = &max11100_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = state->desc->channels;
+> +	indio_dev->num_channels = state->desc->num_chan;
+> +
+> +	state->vref_reg = devm_regulator_get(&spi->dev, "vref");
+> +	if (IS_ERR(state->vref_reg))
+> +		return PTR_ERR(state->vref_reg);
+> +
+> +	ret = regulator_enable(state->vref_reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret)
+> +		goto disable_regulator;
+> +
+> +	return 0;
+> +
+> +disable_regulator:
+> +	regulator_disable(state->vref_reg);
+> +
+> +	return ret;
+> +}
+> +
+> +static int max11100_remove(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +	struct max11100_state *state = iio_priv(indio_dev);
+> +
+> +	regulator_disable(state->vref_reg);
+> +
+> +	iio_device_unregister(indio_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id max11100_ids[] = {
+> +	{.compatible = "maxim,max11100"},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, max11100_ids);
+> +
+> +static struct spi_driver max11100_driver = {
+> +	.driver = {
+> +		.name	= "max11100",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(max11100_ids),
+> +	},
+> +	.probe		= max11100_probe,
+> +	.remove		= max11100_remove,
+> +};
+> +
+> +module_spi_driver(max11100_driver);
+> +
+> +MODULE_AUTHOR("Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("Maxim max11100 ADC Driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
