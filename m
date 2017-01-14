@@ -1,276 +1,127 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] iio: adc: Add Maxim MAX11100 driver
-Date: Sat, 14 Jan 2017 10:22:54 +0000
-Message-ID: <138a6eee-a845-89d3-003a-8045c57c56c3@kernel.org>
-References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
- <1484301038-16386-2-git-send-email-jacopo+renesas@jmondi.org>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] arm: dts: mt2701: Add ethernet device node.
+Date: Sat, 14 Jan 2017 11:32:30 +0100
+Message-ID: <f9f5616f-a327-be4d-3d1d-4555e67d123a@phrozen.org>
+References: <1484296978-18572-1-git-send-email-erin.lo@mediatek.com>
+ <1484296978-18572-6-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484301038-16386-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1484296978-18572-6-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/01/17 09:50, Jacopo Mondi wrote:
-> From: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> 
-> Add iio driver for Maxim MAX11100 single-channel ADC.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> Tested-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-Small issue with DMA using SPI controllers and the location of buffer
-in your read.
+Hi Erin,
 
-Otherwise looks good to me.
+small comment inline
 
-Jonathan
+On 13/01/2017 09:42, Erin Lo wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add ethernet device node for MT2701.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/iio/adc/Kconfig    |   9 +++
->  drivers/iio/adc/Makefile   |   1 +
->  drivers/iio/adc/max11100.c | 187 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 197 insertions(+)
->  create mode 100644 drivers/iio/adc/max11100.c
+>  arch/arm/boot/dts/mt2701-evb.dts | 40 ++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/mt2701.dtsi    | 22 ++++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
 > 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 38bc319..c32bc7a 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -307,6 +307,15 @@ config MAX1027
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called max1027.
+> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+> index a483798..40abd3b 100644
+> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> @@ -28,7 +28,47 @@
+>  	status = "okay";
+>  };
 >  
-> +config MAX11100
-> +	tristate "Maxim max11100 ADC driver"
-> +	depends on SPI_MASTER
-> +	help
-> +	  Say yes here to build support for Maxim max11100 SPI ADC
+> +&eth {
+> +	mac-address = [00 00 00 00 00 00];
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&gmac1_pins>;
+> +	gmac1: mac@1 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <1>;
+> +		phy-handle = <&phy5>;
+> +	};
 > +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called max11100.
-> +
->  config MAX1363
->  	tristate "Maxim max1363 ADC driver"
->  	depends on I2C
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index d36c4be..5684369 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -31,6 +31,7 @@ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
->  obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
->  obj-$(CONFIG_LTC2485) += ltc2485.o
->  obj-$(CONFIG_MAX1027) += max1027.o
-> +obj-$(CONFIG_MAX11100) += max11100.o
->  obj-$(CONFIG_MAX1363) += max1363.o
->  obj-$(CONFIG_MCP320X) += mcp320x.o
->  obj-$(CONFIG_MCP3422) += mcp3422.o
-> diff --git a/drivers/iio/adc/max11100.c b/drivers/iio/adc/max11100.c
-> new file mode 100644
-> index 0000000..78e2a45
-> --- /dev/null
-> +++ b/drivers/iio/adc/max11100.c
-> @@ -0,0 +1,187 @@
-> +/*
-> + * iio/adc/max11100.c
-> + * Maxim max11100 ADC Driver with IIO interface
-> + *
-> + * Copyright (C) 2016 Renesas Electronics Corporation
-> + * Copyright (C) 2016 Jacopo Mondi
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spi/spi.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/driver.h>
-> +
-> +/*
-> + * LSB is the ADC single digital step
-> + * 1 LSB = (vref_mv / 2 ^ 16)
-> + *
-> + * LSB is used to calculate analog voltage value
-> + * from the number of ADC steps count
-> + *
-> + * Ain = (count * LSB)
-> + */
-> +#define MAX11100_LSB_DIV		(1 << 16)
-> +
-> +struct max11100_state {
-> +	const struct max11100_chip_desc *desc;
-> +	struct regulator *vref_reg;
-> +	struct spi_device *spi;
+> +	mdio-bus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		phy5: ethernet-phy@5 {
+> +			reg = <5>;
+> +			phy-mode = "rgmii-rxid";
+> +		};
+> +	};
 > +};
 > +
-> +static struct iio_chan_spec max11100_channels[] = {
-> +	{ /* [0] */
-> +		.type = IIO_VOLTAGE,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE),
-> +	},
-> +};
+>  &pio {
+> +	gmac1_pins: eth@0 {
+> +		pins_eth {
+> +			pinmux = <MT2701_PIN_275_MDC__FUNC_MDC>,
+> +				 <MT2701_PIN_276_MDIO__FUNC_MDIO>,
+> +				 <MT2701_PIN_262_G2_TXEN__FUNC_G2_TXEN>,
+> +				 <MT2701_PIN_263_G2_TXD3__FUNC_G2_TXD3>,
+> +				 <MT2701_PIN_264_G2_TXD2__FUNC_G2_TXD2>,
+> +				 <MT2701_PIN_265_G2_TXD1__FUNC_G2_TXD1>,
+> +				 <MT2701_PIN_266_G2_TXD0__FUNC_G2_TXD0>,
+> +				 <MT2701_PIN_267_G2_TXC__FUNC_G2_TXC>,
+> +				 <MT2701_PIN_268_G2_RXC__FUNC_G2_RXC>,
+> +				 <MT2701_PIN_269_G2_RXD0__FUNC_G2_RXD0>,
+> +				 <MT2701_PIN_270_G2_RXD1__FUNC_G2_RXD1>,
+> +				 <MT2701_PIN_271_G2_RXD2__FUNC_G2_RXD2>,
+> +				 <MT2701_PIN_272_G2_RXD3__FUNC_G2_RXD3>,
+> +				 <MT2701_PIN_274_G2_RXDV__FUNC_G2_RXDV>;
+> +		};
+> +	};
 > +
-> +static struct max11100_chip_desc {
-> +	unsigned int num_chan;
-> +	const struct iio_chan_spec *channels;
-> +} max11100_desc = {
-> +	.num_chan = ARRAY_SIZE(max11100_channels),
-> +	.channels = max11100_channels,
-> +};
-> +
-> +static int max11100_read_single(struct iio_dev *indio_dev, int *val)
-> +{
-> +	int ret;
-> +	struct max11100_state *state = iio_priv(indio_dev);
-> +	uint8_t buffer[3];
-> +
-> +	ret = spi_read(state->spi, buffer, sizeof(buffer));
-Buffer needs to be __cacheline_aligned to safely use spi_read on spi
-controllers that use DMA.
+>  	spi_pins_a: spi0@0 {
+>  		pins_spi {
+>  			pinmux = <MT2701_PIN_53_SPI0_CSN__FUNC_SPI0_CS>,
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 4f52019..3847f70 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -381,6 +381,28 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	eth: ethernet@1b100000 {
+> +		compatible = "mediatek,mt7623-eth";
+> +		reg = <0 0x1b100000 0 0x20000>;
+> +		interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 199 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> +			 <&apmixedsys CLK_APMIXED_TRGPLL>,
+> +			 <&ethsys CLK_ETHSYS_ESW>,
+> +			 <&ethsys CLK_ETHSYS_GP2>,
+> +			 <&ethsys CLK_ETHSYS_GP1>;
+> +		clock-names = "ethif", "trgpll", "esw", "gp2", "gp1";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+> +		resets = <&watchdog MT2701_TOPRGU_ETHDMA_RST>;
 
-Two easy ways of doing this, either allocate buffer using kmalloc or
-take advantage of the fact that spi_priv() is cache line aligned and
-stick you buffer at the end of your private structure and mark it
-__cacheline_aligned to ensure it also appropriately aligned in it's own
-cacheline.
+are you sure this is correct ? on mt7623 we point the reset at ethsys
+and not the watchdog.
 
-> +	if (ret) {
-> +		dev_err(&indio_dev->dev, "SPI transfer failed\n");
-> +		return ret;
-> +	}
+	John
+
+> +		reset-names = "eth";
+> +		mediatek,ethsys = <&ethsys>;
+> +		mediatek,pctl = <&syscfg_pctl_a>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
 > +
-> +	/* the first 8 bits sent out from ADC must be 0s */
-> +	if (buffer[0]) {
-> +		dev_err(&indio_dev->dev, "Invalid value: buffer[0] != 0\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	*val = (buffer[1] << 8) | buffer[2];
-> +
-> +	return 0;
-> +}
-> +
-> +static int max11100_read_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     int *val, int *val2, long info)
-> +{
-> +	int ret, vref_uv;
-> +	struct max11100_state *state = iio_priv(indio_dev);
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = max11100_read_single(indio_dev, val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		vref_uv = regulator_get_voltage(state->vref_reg);
-> +		if (vref_uv < 0)
-> +			/* dummy regulator "get_voltage" returns -EINVAL */
-> +			return -EINVAL;
-> +
-> +		*val =  vref_uv / 1000;
-> +		*val2 = MAX11100_LSB_DIV;
-> +		return IIO_VAL_FRACTIONAL;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct iio_info max11100_info = {
-> +	.driver_module = THIS_MODULE,
-> +	.read_raw = max11100_read_raw,
-> +};
-> +
-> +static int max11100_probe(struct spi_device *spi)
-> +{
-> +	int ret;
-> +	struct iio_dev *indio_dev;
-> +	struct max11100_state *state;
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*state));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	spi_set_drvdata(spi, indio_dev);
-> +
-> +	state = iio_priv(indio_dev);
-> +	state->spi = spi;
-> +	state->desc = &max11100_desc;
-> +
-> +	indio_dev->dev.parent = &spi->dev;
-> +	indio_dev->dev.of_node = spi->dev.of_node;
-> +	indio_dev->info = &max11100_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = state->desc->channels;
-> +	indio_dev->num_channels = state->desc->num_chan;
-> +
-> +	state->vref_reg = devm_regulator_get(&spi->dev, "vref");
-> +	if (IS_ERR(state->vref_reg))
-> +		return PTR_ERR(state->vref_reg);
-> +
-> +	ret = regulator_enable(state->vref_reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret)
-> +		goto disable_regulator;
-> +
-> +	return 0;
-> +
-> +disable_regulator:
-> +	regulator_disable(state->vref_reg);
-> +
-> +	return ret;
-> +}
-> +
-> +static int max11100_remove(struct spi_device *spi)
-> +{
-> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-> +	struct max11100_state *state = iio_priv(indio_dev);
-> +
-> +	regulator_disable(state->vref_reg);
-> +
-> +	iio_device_unregister(indio_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id max11100_ids[] = {
-> +	{.compatible = "maxim,max11100"},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, max11100_ids);
-> +
-> +static struct spi_driver max11100_driver = {
-> +	.driver = {
-> +		.name	= "max11100",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(max11100_ids),
-> +	},
-> +	.probe		= max11100_probe,
-> +	.remove		= max11100_remove,
-> +};
-> +
-> +module_spi_driver(max11100_driver);
-> +
-> +MODULE_AUTHOR("Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>");
-> +MODULE_DESCRIPTION("Maxim max11100 ADC Driver");
-> +MODULE_LICENSE("GPL v2");
+>  	bdpsys: syscon@1c000000 {
+>  		compatible = "mediatek,mt2701-bdpsys", "syscon";
+>  		reg = <0 0x1c000000 0 0x1000>;
 > 
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
