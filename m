@@ -1,204 +1,51 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v1 3/3] reset: zx2967: add reset controller driver for ZTE's
- zx2967 family
-Date: Sat, 14 Jan 2017 15:05:30 +0800
-Message-ID: <1484377530-30635-3-git-send-email-baoyou.xie@linaro.org>
-References: <1484377530-30635-1-git-send-email-baoyou.xie@linaro.org>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Sat, 14 Jan 2017 07:50:13 +0000
+Message-ID: <9996b6a215f944e1a47fa6239d8de21f@svr-chch-ex1.atlnz.lc>
+References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+ <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
+ <2fca7ac2-9a88-19b1-28c5-5192b9c4a2bc@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484377530-30635-1-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jun.nie@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, baoyou.xie@linaro.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds reset controller driver for ZTE's zx2967 family.
-
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- drivers/reset/Kconfig        |   6 ++
- drivers/reset/Makefile       |   1 +
- drivers/reset/reset-zx2967.c | 136 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 143 insertions(+)
- create mode 100644 drivers/reset/reset-zx2967.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 172dc96..972d077 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -92,6 +92,12 @@ config RESET_ZYNQ
- 	help
- 	  This enables the reset controller driver for Xilinx Zynq SoCs.
- 
-+config RESET_ZX2967
-+	bool "ZX2967 Reset Driver"
-+	depends on ARCH_ZX || COMPILE_TEST
-+	help
-+	  This enables the reset controller driver for ZTE zx2967 family.
-+
- source "drivers/reset/sti/Kconfig"
- source "drivers/reset/hisilicon/Kconfig"
- source "drivers/reset/tegra/Kconfig"
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 13b346e..807b77b 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -14,3 +14,4 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-+obj-$(CONFIG_RESET_ZX2967) += reset-zx2967.o
-diff --git a/drivers/reset/reset-zx2967.c b/drivers/reset/reset-zx2967.c
-new file mode 100644
-index 0000000..63f9c41
---- /dev/null
-+++ b/drivers/reset/reset-zx2967.c
-@@ -0,0 +1,136 @@
-+/*
-+ * ZTE's zx2967 family thermal sensor driver
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie@linaro.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+struct zx2967_reset {
-+	void __iomem			*reg_base;
-+	spinlock_t			lock;
-+	struct reset_controller_dev	rcdev;
-+};
-+
-+static int zx2967_reset_assert(struct reset_controller_dev *rcdev,
-+			   unsigned long id)
-+{
-+	struct zx2967_reset *reset = NULL;
-+	int bank = id / 32;
-+	int offset = id % 32;
-+	unsigned int reg;
-+	unsigned long flags;
-+
-+	reset = container_of(rcdev, struct zx2967_reset, rcdev);
-+
-+	spin_lock_irqsave(&reset->lock, flags);
-+
-+	reg = readl(reset->reg_base + (bank * 4));
-+	writel(reg & ~BIT(offset), reset->reg_base + (bank * 4));
-+	reg = readl(reset->reg_base + (bank * 4));
-+
-+	spin_unlock_irqrestore(&reset->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int zx2967_reset_deassert(struct reset_controller_dev *rcdev,
-+			     unsigned long id)
-+{
-+	struct zx2967_reset *reset = NULL;
-+	int bank = id / 32;
-+	int offset = id % 32;
-+	unsigned int reg;
-+	unsigned long flags;
-+
-+	reset = container_of(rcdev, struct zx2967_reset, rcdev);
-+
-+	spin_lock_irqsave(&reset->lock, flags);
-+
-+	reg = readl(reset->reg_base + (bank * 4));
-+	writel(reg | BIT(offset), reset->reg_base + (bank * 4));
-+	reg = readl(reset->reg_base + (bank * 4));
-+
-+	spin_unlock_irqrestore(&reset->lock, flags);
-+
-+	return 0;
-+}
-+
-+static struct reset_control_ops zx2967_reset_ops = {
-+	.assert		= zx2967_reset_assert,
-+	.deassert	= zx2967_reset_deassert,
-+};
-+
-+static int zx2967_reset_probe(struct platform_device *pdev)
-+{
-+	struct zx2967_reset *reset;
-+	struct resource *res;
-+
-+	reset = devm_kzalloc(&pdev->dev, sizeof(*reset), GFP_KERNEL);
-+	if (!reset)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reset->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(reset->reg_base))
-+		return PTR_ERR(reset->reg_base);
-+
-+	spin_lock_init(&reset->lock);
-+
-+	reset->rcdev.owner = THIS_MODULE;
-+	reset->rcdev.nr_resets = resource_size(res) * 8;
-+	reset->rcdev.ops = &zx2967_reset_ops;
-+	reset->rcdev.of_node = pdev->dev.of_node;
-+
-+	dev_info(&pdev->dev, "reset controller cnt:%d",
-+		  reset->rcdev.nr_resets);
-+
-+	return reset_controller_register(&reset->rcdev);
-+}
-+
-+static int zx2967_reset_remove(struct platform_device *pdev)
-+{
-+	struct zx2967_reset *reset = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&reset->rcdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zx2967_reset_dt_ids[] = {
-+	 { .compatible = "zte,zx296718-reset", },
-+	 {},
-+};
-+MODULE_DEVICE_TABLE(of, zx2967_reset_dt_ids);
-+
-+static struct platform_driver zx2967_reset_driver = {
-+	.probe	= zx2967_reset_probe,
-+	.remove	= zx2967_reset_remove,
-+	.driver = {
-+		.name		= "zx2967-reset",
-+		.of_match_table	= zx2967_reset_dt_ids,
-+	},
-+};
-+
-+static int __init zx2967_reset_init(void)
-+{
-+	return platform_driver_register(&zx2967_reset_driver);
-+}
-+arch_initcall(zx2967_reset_init);
-+
-+static void __exit zx2967_reset_exit(void)
-+{
-+	platform_driver_unregister(&zx2967_reset_driver);
-+}
-+module_exit(zx2967_reset_exit);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 Reset Controller Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
+On 13/01/17 22:54, Sebastian Hesselbarth wrote:=0A=
+> On 13.01.2017 10:12, Chris Packham wrote:=0A=
+>> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>=0A=
+>>=0A=
+>> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs=0A=
+>> from Marvell.=0A=
+>>=0A=
+>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>=0A=
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+>> Acked-by: Rob Herring <robh@kernel.org>=0A=
+>> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>=0A=
+>> ---=0A=
+>>=0A=
+>> Notes:=0A=
+>>     Changes in v2:=0A=
+>>     - include sdio support for the 98DX4251=0A=
+>>     Changes in v3:=0A=
+>>     - None=0A=
+>>     Changes in v4:=0A=
+>>     - Correct some discrepencies between binding and driver.=0A=
+>=0A=
+> Well, unfortunately I still see differences between the "gpio" in=0A=
+> the binding and "gpo" in the driver.=0A=
+>=0A=
+> Please go back to that list I sent you yesterday and fix them all.=0A=
+>=0A=
+=0A=
+I think you may have missed my initial reply [1]. Or I have missed your =0A=
+response to it. Long story short "gpo" is intentional because some of =0A=
+those pins can't be used as inputs. But if you still want me to change =0A=
+it I will.=0A=
+=0A=
+[1] - https://lkml.org/lkml/2017/1/12/117=0A=
+=0A=
