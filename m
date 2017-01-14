@@ -1,80 +1,520 @@
-From: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] iio: max5481: Add support for Maxim digital
- potentiometers
-Date: Sat, 14 Jan 2017 12:42:18 +0100
-Message-ID: <20170114114218.GA17907@x220.localdomain>
-References: <20170108185733.GA8511@x220.localdomain>
- <ee973aa1-c881-6bc8-c61a-9f36b8598f5f@kernel.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] iio: distance: srf08: add IIO driver for us ranger
+Date: Sat, 14 Jan 2017 12:17:45 +0000
+Message-ID: <4099feac-959c-2b5b-a21a-3b111098af39@kernel.org>
+References: <20170110184815.GA15532@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ee973aa1-c881-6bc8-c61a-9f36b8598f5f-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170110184815.GA15532@andreas>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Jan 14, 2017 10:38, Jonathan Cameron wrote:
-> As this has device tree bindings it should have gone to linux-devicetree,
-> Rob and Mark (maintainers of bindings).
-
-I will add them to CC on the new version.
-
-> Spi buffers for spi_write need to be cacheline aligned.  See below
-> for roughly why.
-
-I can recall that from my previous submissions... I made the same mistake.
-Thank you once again for explaining that. I hope this will imprint in my mind
-from now on.
-
-Thank you!
-
-> Jonathan
-> > ---
-> > +static int max5481_write_cmd(struct spi_device *spi, u8 cmd, u16 val)
-> > +{
-> > +	/* SPI Format from MAX5481-MAX5484 (19-3708; Rev 5; 4/10) pg 15 */
-> > +	u8 msg[3];
-> It's clearly one of those days - same issue in two drivers in a row. :(
-> Still I can refine me response ;)
+On 10/01/17 18:48, Andreas Klinger wrote:
+> This is the IIO driver for devantech srf08 ultrasonic ranger which can be
+> used to measure the distances to an object.
 > 
-> There are requirements for buffers passed directly to spi_read / spi_write.
-> They get passed to spi_sync which calls into the spi master drivers.
-> SPI master drivers are explicitly allowed to directly use this buffer
-> in dma. On most modern platforms it is fine to do DMA from any location...
+> The sensor supports I2C with some registers.
 > 
-> However, cacheline corruption comes in here. There is no guarantee that
-> the SPI controller won't write back to this address, as it it will be
-> bypassing the processor whilst doing this, that can result in a difference
-> in other parts of the cacheline between what is in the cache and what is
-> in main memory.  At the end of the dma transfer any changes elsewhere in
-> the cacheline can be wiped out as result. (or something like that ;)
+> Supported Features include:
+> - read the distance in ranging mode in centimeters
+> - output of the driver is directly the read value
+> - together with the scale the driver delivers the distance in meters
+> - only the first echo of the nearest object is delivered
+> - set max gain register; userspace enters analogue value
+> - set range registers; userspace enters range in millimeters in 43 mm steps
 > 
-> Anyhow, two solutions.  Either allocate the memory in it's own cacheline
-> which will naturally happen if you allocate on the heap using kmalloc
-> or use the fact we carefully align the iio_priv memory to be cacheline
-> aligned. This means that if you stick a __cacheline_aligned buffer at the
-> end of your iio_priv structure it was also be in it's own cacheline.
+> Features not supported by this driver:
+> - ranging mode in inches or in microseconds
+> - ANN mode
+> - change I2C address through this driver
+> - light sensor
 > 
-> Not doing this is the source of really hard to track down bugs!
-> > +
-> > +	msg[0] = cmd;
-> > +
-> > +	switch (cmd) {
-> > +	case MAX5481_WRITE_WIPER:
-> > +		msg[1] = val >> 2;
-> > +		msg[2] = (val & 0x3) << 6;
-> > +		return spi_write(spi, msg, ARRAY_SIZE(msg));
-> > +
-> > +	case MAX5481_COPY_AB_TO_NV:
-> > +	case MAX5481_COPY_NV_TO_AB:
-> > +		return spi_write(spi, msg, sizeof(u8));
-> > +
-> > +	default:
-> > +		return -EIO;
-> > +	}
-> > +}
+> The driver was added in the directory "proximity" of the iio subsystem
+> in absence of another directory named "distance".
+> There is also a new submenu "distance"
+Hi Andreas,
 
--- 
-Slawomir Stepien
+Sorry it took me a while to get to this!
+
+I'd not bother with the new submenu.  Perhaps we should rename the
+proximity menu to proximity/distance.
+
+We already the lightening detector in there which is definitely not
+measuring proximity in the convetional sense!
+
+Anyhow, the actual code is fine, but we need to think about how the
+userspace ABI fits within the wider IIO ABI.  Naming and approaches
+that make sense in a single class of drivers can end up meaining
+very different things for other drivers.  Various suggestions inline.
+
+Jonathan
+> 
+> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> ---
+>  drivers/iio/proximity/Kconfig  |  15 ++
+>  drivers/iio/proximity/Makefile |   1 +
+>  drivers/iio/proximity/srf08.c  | 362 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 378 insertions(+)
+>  create mode 100644 drivers/iio/proximity/srf08.c
+> 
+> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
+> index ef4c73db5b53..7b10a137702b 100644
+> --- a/drivers/iio/proximity/Kconfig
+> +++ b/drivers/iio/proximity/Kconfig
+> @@ -46,3 +46,18 @@ config SX9500
+>  	  module will be called sx9500.
+>  
+>  endmenu
+> +
+> +menu "Distance sensors"
+> +
+> +config SRF08
+> +	tristate "Devantech SRF08 ultrasonic ranger sensor"
+> +	depends on I2C
+> +	help
+> +	  Say Y here to build a driver for Devantech SRF08 ultrasonic
+> +	  ranger sensor. This driver can be used to measure the distance
+> +	  of objects.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called srf08.
+> +
+> +endmenu
+> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
+> index 9aadd9a8ee99..e914c2a5dd49 100644
+> --- a/drivers/iio/proximity/Makefile
+> +++ b/drivers/iio/proximity/Makefile
+> @@ -5,4 +5,5 @@
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_AS3935)		+= as3935.o
+>  obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
+> +obj-$(CONFIG_SRF08)		+= srf08.o
+>  obj-$(CONFIG_SX9500)		+= sx9500.o
+> diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
+> new file mode 100644
+> index 000000000000..f38c74ed0933
+> --- /dev/null
+> +++ b/drivers/iio/proximity/srf08.c
+> @@ -0,0 +1,362 @@
+> +/*
+> + * srf08.c - Support for Devantech SRF08 ultrasonic ranger
+> + *
+> + * Copyright (c) 2016 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> + *
+> + * This file is subject to the terms and conditions of version 2 of
+> + * the GNU General Public License.  See the file COPYING in the main
+> + * directory of this archive for more details.
+> + *
+> + * For details about the device see:
+> + * http://www.robot-electronics.co.uk/htm/srf08tech.html
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/bitops.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +/* registers of SRF08 device */
+> +#define SRF08_WRITE_COMMAND	0x00	/* Command Register */
+> +#define SRF08_WRITE_MAX_GAIN	0x01	/* Max Gain Register: 0 .. 31 */
+> +#define SRF08_WRITE_RANGE	0x02	/* Range Register: 0 .. 255 */
+> +#define SRF08_READ_SW_REVISION	0x00	/* Software Revision */
+> +#define SRF08_READ_LIGHT	0x01	/* Light Sensor during last echo */
+> +#define SRF08_READ_ECHO_1_HIGH	0x02	/* Range of first echo received */
+> +#define SRF08_READ_ECHO_1_LOW	0x03	/* Range of first echo received */
+> +
+> +#define SRF08_CMD_RANGING_CM	0x51	/* Ranging Mode - Result in cm */
+> +
+> +#define SRF08_DEFAULT_GAIN	1025	/* max. analogue value of Gain */
+> +#define SRF08_DEFAULT_RANGE	11008	/* max. value of Range in mm */
+> +
+> +struct srf08_data {
+> +	struct i2c_client	*client;
+> +	int			gain;			/* Max Gain */
+> +	int			range_mm;		/* Range in mm */
+> +	struct mutex		lock;
+> +};
+> +
+> +static const int srf08_gain[] = {
+> +	 94,  97, 100, 103, 107, 110, 114, 118,
+> +	123, 128, 133, 139, 145, 152, 159, 168,
+> +	177, 187, 199, 212, 227, 245, 265, 288,
+> +	317, 352, 395, 450, 524, 626, 777, 1025 };
+> +
+> +static int srf08_read_ranging(struct srf08_data *data)
+> +{
+> +	struct i2c_client *client = data->client;
+> +	int ret, i;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	ret = i2c_smbus_write_byte_data(data->client,
+> +			SRF08_WRITE_COMMAND, SRF08_CMD_RANGING_CM);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "write command - err: %d\n", ret);
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * normally after 65 ms the device should have the read value
+> +	 * we round it up to 100 ms
+I'd suggest this should be adapted so that it takes advantage of knowing
+roughly how long it is going to take as the 'range' maximum is changed.
+So perhaps in the basic case, sleep for 65 msecs, then poll at 5msec
+intervals.  If we know it's going to be a lot faster, then poll it from
+an earlier time.
+> +	 *
+> +	 * we read here until a correct version number shows up as
+> +	 * suggested by the documentation
+> +	 */
+> +	for (i = 0; i < 5; i++) {
+> +		ret = i2c_smbus_read_byte_data(data->client,
+> +						SRF08_READ_SW_REVISION);
+> +
+> +		/* check if a valid version number is read */
+> +		if (ret < 255 && ret > 0)
+> +			break;
+> +		msleep(20);
+> +	}
+> +
+> +	if (ret >= 255 || ret <= 0) {
+> +		dev_err(&client->dev, "device not ready\n");
+> +		mutex_unlock(&data->lock);
+> +		return -EIO;
+> +	}
+> +
+> +	ret = i2c_smbus_read_word_swapped(data->client,
+> +						SRF08_READ_ECHO_1_HIGH);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "cannot read distance: ret=%d\n", ret);
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int srf08_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *channel, int *val,
+> +			    int *val2, long mask)
+> +{
+> +	struct srf08_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (channel->type != IIO_DISTANCE)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = srf08_read_ranging(data);
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = ret;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/* 1 LSB is 1 cm */
+> +		*val = 0;
+> +		*val2 = 10000;
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static ssize_t srf08_show_range_mm_available(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	int i, len = 0;
+> +
+> +	for (i = 0; i < 256; i++)
+> +		len += scnprintf(buf + len, PAGE_SIZE - len,
+> +							"%d ", (i + 1) * 43);
+> +
+> +	buf[len - 1] = '\n';
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(range_mm_available, S_IRUGO,
+> +				srf08_show_range_mm_available, NULL, 0);
+> +
+> +static ssize_t srf08_show_range_mm(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct srf08_data *data = iio_priv(indio_dev);
+> +
+> +	return sprintf(buf, "%d\n", data->range_mm);
+> +}
+> +
+> +/*
+> + * set the range of the sensor to an even multiple of 43 mm
+> + * which corresponds to 1 LSB in the register
+> + *
+> + * register value    corresponding range
+> + *         0x00             43 mm
+> + *         0x01             86 mm
+> + *         0x02            129 mm
+> + *         ...
+> + *         0xFF          11008 mm
+> + */
+> +static ssize_t srf08_write_range_mm(struct device *dev,
+> +					struct device_attribute *attr,
+> +					const char *buf, size_t len)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct srf08_data *data = iio_priv(indio_dev);
+> +	struct i2c_client *client = data->client;
+> +	int ret;
+> +	unsigned int val, mod;
+> +	u8 regval;
+> +
+> +	ret = kstrtouint(buf, 10, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = val / 43 - 1;
+> +	mod = val % 43;
+> +
+> +	if (mod || (ret < 0) || (ret > 255))
+> +		return -EINVAL;
+> +
+> +	regval = ret;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	ret = i2c_smbus_write_byte_data(data->client,
+> +						SRF08_WRITE_RANGE, regval);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "write_range - err: %d\n", ret);
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	data->range_mm = val;
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(range_mm, S_IRUGO | S_IWUSR,
+> +			srf08_show_range_mm, srf08_write_range_mm, 0);
+> +
+> +static ssize_t srf08_show_gain_available(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	int i, len = 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(srf08_gain); i++)
+> +		len += sprintf(buf + len, "%d ", srf08_gain[i]);
+> +
+> +	len += sprintf(buf + len, "\n");
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(gain_available, S_IRUGO,
+> +				srf08_show_gain_available, NULL, 0);
+> +
+> +static ssize_t srf08_show_gain(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct srf08_data *data = iio_priv(indio_dev);
+> +	int len;
+> +
+> +	len = sprintf(buf, "%d\n", data->gain);
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t srf08_write_gain(struct device *dev,
+> +						struct device_attribute *attr,
+> +						const char *buf, size_t len)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct srf08_data *data = iio_priv(indio_dev);
+> +	struct i2c_client *client = data->client;
+> +	int ret, i;
+> +	unsigned int val;
+> +	u8 regval;
+> +
+> +	ret = kstrtouint(buf, 10, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(srf08_gain); i++)
+> +		if (val == srf08_gain[i]) {
+> +			regval = i;
+> +			break;
+> +		}
+> +
+> +	if (i >= ARRAY_SIZE(srf08_gain))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	ret = i2c_smbus_write_byte_data(data->client,
+> +						SRF08_WRITE_MAX_GAIN, regval);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "write_gain - err: %d\n", ret);
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	data->gain = val;
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(gain, S_IRUGO | S_IWUSR,
+> +					srf08_show_gain, srf08_write_gain, 0);
+> +
+> +static struct attribute *srf08_attributes[] = {
+> +	&iio_dev_attr_range_mm.dev_attr.attr,
+> +	&iio_dev_attr_range_mm_available.dev_attr.attr,
+> +	&iio_dev_attr_gain.dev_attr.attr,
+> +	&iio_dev_attr_gain_available.dev_attr.attr,
+Hmm. Custom attributes always give us issues. The primary point of IIO
+is to enforce (more or less) standard interfaces.
+
+If you do need to add something new then that is fine (and I do think
+you need to here!).
+
+They need to be formally proposed as an addition to the ABI with
+docs in /Documentation/ABI/testing/sysfs-bus-iio*
+
+Once we take one driver using it it becomes part of our ABI that
+userspace will need to handle, hence we consider these very
+carefully.
+
+My gut feeling would be that gain needs to be more specific as it's
+a term that can mean very different things.. Here we are talking
+about an amplifier on a signal that we are then looking at the timing
+of.   It might otherwise be interpretted as another term for what
+we term 'scale' in IIO.
+
+So what to call it... Perhaps afegain for Analog front end gain?
+We might want to add this to the core supported attrs, but lets
+not do so until we see if we have this on a number of devices.
+
+The description would need to make it explicit that this gain is
+for cases where we aren't measuring the magnitude of what is
+being amplified.
+
+For the range, it's an interesting one.  Again the term range could
+mean too many things within the wider ABI. We need to make it more
+specific.
+
+Actually reading the datasheet, I think this is fundamentally about the
+maximum sampling frequency rather than directly about the range.
+The only reason you'd reduce the range is to speed that up. It doesn't
+improve the resolution, the device simply answers quicker.
+
+So I'd support this as sampling_frequency.  You could then use
+the the iio_info_mask_*_available and relevant callback to provide
+info on what it then restricts the possible output values to
+(rather than controlling it directly).
+
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group srf08_attribute_group = {
+> +	.attrs = srf08_attributes,
+> +};
+> +
+> +static const struct iio_chan_spec srf08_channels[] = {
+> +	{
+> +		.type = IIO_DISTANCE,
+> +		.info_mask_separate =
+> +				BIT(IIO_CHAN_INFO_RAW) |
+> +				BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static const struct iio_info srf08_info = {
+> +	.read_raw = srf08_read_raw,
+> +	.attrs = &srf08_attribute_group,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static int srf08_probe(struct i2c_client *client,
+> +					 const struct i2c_device_id *id)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct srf08_data *data;
+> +
+> +	if (!i2c_check_functionality(client->adapter,
+> +					I2C_FUNC_SMBUS_READ_BYTE_DATA |
+> +					I2C_FUNC_SMBUS_WRITE_BYTE_DATA |
+> +					I2C_FUNC_SMBUS_READ_WORD_DATA))
+> +		return -ENODEV;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	data = iio_priv(indio_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	data->client = client;
+> +
+> +	/*
+> +	 * set default values of device here
+> +	 * these values are already set on the hardware after power on
+> +	 */
+> +	data->gain = SRF08_DEFAULT_GAIN;
+> +	data->range_mm = SRF08_DEFAULT_RANGE;
+We should be a little careful with assumptions about the device having
+just been powered on.  The driver might simply have been removed and
+reprobed.  So I'd sugest rewriting them whatever to be sure we have
+what we expect.  Either that or if they can be read back, then just
+always retrieve them from the device.
+> +
+> +	indio_dev->name = dev_name(&client->dev);
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &srf08_info;
+> +	indio_dev->channels = srf08_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(srf08_channels);
+> +
+> +	mutex_init(&data->lock);
+> +
+> +	return devm_iio_device_register(&client->dev, indio_dev);
+> +}
+> +
+> +static const struct i2c_device_id srf08_id[] = {
+> +	{ "srf08", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, srf08_id);
+> +
+> +static struct i2c_driver srf08_driver = {
+> +	.driver = {
+> +		.name	= "srf08",
+> +	},
+> +	.probe = srf08_probe,
+> +	.id_table = srf08_id,
+> +};
+> +module_i2c_driver(srf08_driver);
+> +
+> +MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Devantech SRF08 ultrasonic ranger driver");
+> +MODULE_LICENSE("GPL");
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
