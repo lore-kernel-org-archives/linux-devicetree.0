@@ -1,76 +1,208 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 1/2] dt-bindings: document renesas-ostm timer
-Date: Sat, 14 Jan 2017 03:30:36 +0000
-Message-ID: <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170112185952.2780-1-chris.brandt@renesas.com>
- <20170112185952.2780-2-chris.brandt@renesas.com>
- <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v6 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame stores scenario in vdma
+Date: Sat, 14 Jan 2017 11:05:54 +0530
+Message-ID: <1484372155-19423-3-git-send-email-appanad@xilinx.com>
+References: <1484372155-19423-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484372155-19423-1-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, Jose.Abreu@synopsys.com
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXZpZXcuDQoNCg0KT24gRnJpZGF5LCBK
-YW51YXJ5IDEzLCAyMDE3LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4gK1RoZSBPU1RN
-IGNvbWVzIHdpdGggMiBpbmRlcGVuZGVudCBjaGFubmVscy4NCj4gPiArV2Ugd2lsbCB1c2UgdGhl
-IGZpcnN0IGNoYW5uZWwgKE9TVE0wKSBhcyBhIGZyZWUgcnVubmluZyBjbG9ja3NvdXJjZQ0KPiA+
-ICthbmQgdGhlIHNlY29uZCBjaGFubmVsIChPU1RNMSkgYXMgYSBpbnRlcnJ1cHQgZHJpdmVuIGNs
-b2NrIGV2ZW50Lg0KPiA+ICsNCj4gPiArQWRkaXRpb25hbGx5IHdlIHdpbGwgdXNlIHRoZSBjbG9j
-a3NvdXJjZSBjaGFubmVsIChPVFNNMCkgZm9yIHRoZQ0KPiA+ICtzeXN0ZW0gc2NoZWR1bGUgdGlt
-ZXIgc2NoZWRfY2xvY2soKS4NCj4gDQo+IFRoZSBhYm92ZSB0d28gc2VudGVuY2VzIGFyZSBzb2Z0
-d2FyZSBwb2xpY3ksIG5vdCBoYXJkd2FyZSBkZXNjcmlwdGlvbi4NCj4gSGVuY2UgdGhleSBkbyBu
-b3QgYmVsb25nIGluIHRoZSBEVCBiaW5kaW5ncyBkb2N1bWVudC4NCj4gWW91IGNhbiBtb3ZlIHRo
-ZW0gdG8gdGhlIGNvbW1pdCBkZXNjcmlwdGlvbiwgdGhvdWdoLg0KDQpPSy4NCg0KDQo+ID4gK1Jl
-cXVpcmVkIFByb3BlcnRpZXM6DQo+ID4gKw0KPiA+ICsgIC0gY29tcGF0aWJsZTogbXVzdCBiZSBv
-bmUgb3IgbW9yZSBvZiB0aGUgZm9sbG93aW5nOg0KPiA+ICsgICAgLSAicmVuZXNhcyxvc3RtLXI3
-czcyMTAwIiBmb3IgdGhlIHI3czcyMTAwIE9TVE0NCj4gDQo+IFBsZWFzZSB1c2UgInJlbmVzYXMs
-cjdzNzIxMDAtb3N0bSIgaW5zdGVhZCwgdG8gbWF0Y2ggY3VycmVudCBwcmFjdGljZXMuDQoNCklm
-IEkgbG9vayBhdCB0aGUgY3VycmVudCByN3M3MjEwMC5kdHNpOg0KDQpjb21wYXRpYmxlID0gInJl
-bmVzYXMscjdzNzIxMDAtY3BnLWNsb2NrcyIsICJyZW5lc2FzLHJ6LWNwZy1jbG9ja3MiOw0KY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLHI3czcyMTAwLW1zdHAtY2xvY2tzIiwgInJlbmVzYXMsY3BnLW1z
-dHAtY2xvY2tzIjsNCmNvbXBhdGlibGUgPSAicmVuZXNhcyxzY2lmLXI3czcyMTAwIiwgInJlbmVz
-YXMsc2NpZiI7DQpjb21wYXRpYmxlID0gInJlbmVzYXMscnNwaS1yN3M3MjEwMCIsICJyZW5lc2Fz
-LHJzcGktcnoiOw0KY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJpaWMtcjdzNzIxMDAiLCAicmVuZXNh
-cyxyaWljLXJ6IjsNCmNvbXBhdGlibGUgPSAicmVuZXNhcyxtdHUyLXI3czcyMTAwIiwgInJlbmVz
-YXMsbXR1MiI7DQpjb21wYXRpYmxlID0gInJlbmVzYXMsbW1jaWYtcjdzNzIxMDAiLCAicmVuZXNh
-cyxzaC1tbWNpZiI7DQpjb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yN3M3MjEwMCI7DQoNCklz
-ICJyZW5lc2FzLHh4eC1yN3M3MjEwIiB0aGUgb2xkIHdheSwgYW5kICJyZW5lc2FzLHI3czcyMTAw
-LXh4eCIgaXMgdGhlIG5ldyB3YXk/Pw0KDQoNCg0KPiA+ICsgIC0gcmVnOiBiYXNlIGFkZHJlc3Mg
-YW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXJzIGJsb2NrIGZvciBlYWNoIHRpbWVyDQo+IGNoYW5u
-ZWwuDQo+ID4gKyAgICBUaGVyZSBzaG91bGQgYmUgMiBzZXRzIG9mIGFkZHJlc3Nlcywgb25lIGZv
-ciBlYWNoIGNoYW5uZWwuDQo+ID4gKw0KPiA+ICsgIC0gaW50ZXJydXB0czogaW50ZXJydXB0IHNw
-ZWNpZmllcnMgZm9yIHRoZSB0aW1lcnMuIFRoZXJlIHNob3VsZCBiZSAyDQo+ID4gKyAgICBpbnRl
-cnVwdHMsIG9uZSBmb3IgZWFjaCBjaGFubmVsLg0KPiA+ICsNCj4gPiArICAtIGNsb2NrczogYSBs
-aXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaA0KPiBl
-bnRyeQ0KPiA+ICsgICAgY2hhbm5lbC4gVGhlcmUgc2hvdWxkIGJlIDIgc2V0cywgb25lIGZvciBl
-YWNoIGNoYW5uZWwuDQo+IA0KPiBBcmUgdGhlIGNoYW5uZWxzIHRydWx5IGluZGVwZW5kZW50PyBJ
-ZiB5ZXMsIEkgdGhpbmsgaXQncyBiZXR0ZXIgdG8gaGF2ZQ0KPiB0d28gc2VwYXJhdGUgZGV2aWNl
-IG5vZGVzLCBvbmUgZm9yIGVhY2ggY2hhbm5lbC4NCj4gRWFjaCBjaGFubmVsIGhhcyBpdHMgb3du
-IG1vZHVsZSBjbG9jaywgc28gdXNpbmcgc2VwYXJhdGUgZGV2aWNlcyBtZWFucw0KPiBSdW50aW1l
-IFBNIGNhbiBtYW5hZ2UgYm90aCBjaGFubmVscyB0aHJvdWdoIHRoZWlyIG1vZHVsZSBjbG9ja3Mg
-YXMgc29vbiBhcw0KPiB5b3UgYWRkIGEgInBvd2VyLWRvbWFpbnMiIHByb3BlcnR5IHBvaW50aW5n
-IHRvIHRoZSBjbG9jayBkb21haW4gY29udHJvbGxlci4NCg0KDQpZZXMsIHRlY2huaWNhbGx5IHRo
-ZXkgYXJlIGluZGVwZW5kZW50IGNoYW5uZWxzLg0KVGhlIHdheSB0aGUgZHJpdmVyIGlzIGN1cnJl
-bnRseSB3cml0dGVuLCAxIGluc3RhbmNlIG9mIHRoZSBkcml2ZXIgdXNlcyAyIGNoYW5uZWxzDQpm
-b3IgZGlmZmVyZW50IHRoaW5ncy4gQ2gwIHdpbGwgYmUgc2V0IHVwIGFzIGEgJ2Nsb2Nrc291cmNl
-JywgYW5kIGNoMSB3aWxsIGJlIHNldCB1cA0KYXMgYSAnY2xvY2sgZXZlbnQnLg0KDQpBcyBpbjoN
-Cg0Kc3RhdGljIGludCBfX2luaXQgb3N0bV90aW1lcl9pbml0KHN0cnVjdCBvc3RtX2RldmljZSAq
-b3N0bSkNCnsNCglpbnQgcmV0ID0gMDsNCg0KCS8qIG9zdG0wIHdpbGwgYmUgY2xvY2sgc291cmNl
-ICovDQoJcmV0ID0gb3N0bV9pbml0X2Nsa3NyYyhvc3RtKTsNCglpZiAocmV0KQ0KCQlnb3RvIGVy
-cjsNCg0KCS8qIHVzZSBvc3RtMCBhcyBzeXN0ZW0gc2NoZWR1bGluZyBjbG9jayAqLw0KCXJldCA9
-IG9zdG1faW5pdF9zY2hlZF9jbG9jaygmb3N0bS0+Y2xrc3JjKTsNCglpZiAocmV0KQ0KCQlnb3Rv
-IGVycjsNCg0KCS8qIG9zdG0xIHdpbGwgYmUgY2xvY2sgZXZlbnQgKi8NCglyZXQgPSBvc3RtX2lu
-aXRfY2xrZXZ0KG9zdG0pOw0KZXJyOg0KCXJldHVybiByZXQ7DQp9DQoNCg0KDQpEbyB5b3UgdGhp
-bmsgaXQgd291bGQgYmUgYmV0dGVyIGlmIGEgZHJpdmVyIGluc3RhbmNlIG9ubHkgZG9lcyAxIHRo
-aW5nOiBFaXRoZXINCidjbG9ja3NvdXJjZScgb3IgJ2Nsb2NrIGV2ZW50Jz8/DQpUaGVuLCBJIHdv
-dWxkIG1ha2UgMiBvc3RtIG5vZGVzIGFuZCBwYXNzIGluIHRoZSBtb2RlIEkgd291bGQgbGlrZSBp
-dCBvcGVyYXRlIGluPw0KDQpGb3IgZXhhbXBsZToNCg0KJm9zdG0wIHsNCgltb2RlID0gImNsb2Nr
-c291cmNlIjsNCglzdGF0dXMgPSAib2theSI7DQp9Ow0KDQomb3N0bTEgew0KCW1vZGUgPSAiY2xv
-Y2stZXZlbnQiOw0KCXN0YXR1cyA9ICJva2F5IjsNCn07DQoNCg0KDQpUaGFuayB5b3UsDQpDaHJp
-cw0K
+When VDMA is configured for more than one frame in the h/w.
+For example h/w is configured for n number of frames, user
+Submits n number of frames and triggered the DMA using issue_pending API.
+
+In the current driver flow we are submitting one frame at a time,
+But we should submit all the n number of frames at one time
+As the h/w is configured for n number of frames.
+
+This patch fixes this issue.
+
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes for v6:
+---> Added Rob Acked-by
+---> Updated commit message as suggested by Vinod.
+Changes for v5:
+---> Updated xlnx,fstore-config property to xlnx,fstore-enable
+     and updated description as suggested by Rob.
+Changes for v4:
+---> Add Check for framestore configuration on Transmit case as well
+     as suggested by Jose Abreu.
+---> Modified the dev_dbg checks to dev_warn checks as suggested
+     by Jose Abreu.
+Changes for v3:
+---> Added Checks for frame store configuration. If frame store
+     Configuration is not present at the h/w level and user
+     Submits less frames added debug prints in the driver as relevant.
+Changes for v2:
+---> Fixed race conditions in the driver as suggested by Jose Abreu
+---> Fixed unnecessray if else checks in the vdma_start_transfer
+     as suggested by Laurent Pinchart.
+
+ .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
+ drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
+ 2 files changed, 57 insertions(+), 23 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+index a2b8bfa..e951c09 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+@@ -66,6 +66,8 @@ Optional child node properties:
+ Optional child node properties for VDMA:
+ - xlnx,genlock-mode: Tells Genlock synchronization is
+ 	enabled/disabled in hardware.
++- xlnx,fstore-enable: boolean; if defined, it indicates that controller
++	supports frame store configuration.
+ Optional child node properties for AXI DMA:
+ -dma-channels: Number of dma channels in child node.
+ 
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 5eeea57..edb5b71 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -322,6 +322,7 @@ struct xilinx_dma_tx_descriptor {
+  * @genlock: Support genlock mode
+  * @err: Channel has errors
+  * @idle: Check for channel idle
++ * @has_fstoreen: Check for frame store configuration
+  * @tasklet: Cleanup work after irq
+  * @config: Device configuration info
+  * @flush_on_fsync: Flush on Frame sync
+@@ -353,6 +354,7 @@ struct xilinx_dma_chan {
+ 	bool genlock;
+ 	bool err;
+ 	bool idle;
++	bool has_fstoreen;
+ 	struct tasklet_struct tasklet;
+ 	struct xilinx_vdma_config config;
+ 	bool flush_on_fsync;
+@@ -990,6 +992,27 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+ 	if (list_empty(&chan->pending_list))
+ 		return;
+ 
++	/*
++	 * Note: When VDMA is built with default h/w configuration
++	 * User should submit frames upto H/W configured.
++	 * If users submits less than h/w configured
++	 * VDMA engine tries to write to a invalid location
++	 * Results undefined behaviour/memory corruption.
++	 *
++	 * If user would like to submit frames less than h/w capable
++	 * On S2MM side please enable debug info 13 at the h/w level
++	 * On MM2S side please enable debug info 6 at the h/w level
++	 * It will allows the frame buffers numbers to be modified at runtime.
++	 */
++	if (!chan->has_fstoreen &&
++	     chan->desc_pendingcount < chan->num_frms) {
++		dev_warn(chan->dev, "Frame Store Configuration is not enabled at the\n");
++		dev_warn(chan->dev, "H/w level enable Debug info 13 or 6 at the h/w level\n");
++		dev_warn(chan->dev, "OR Submit the frames upto h/w Capable\n\r");
++
++		return;
++	}
++
+ 	desc = list_first_entry(&chan->pending_list,
+ 				struct xilinx_dma_tx_descriptor, node);
+ 	tail_desc = list_last_entry(&chan->pending_list,
+@@ -1052,25 +1075,38 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+ 	if (chan->has_sg) {
+ 		dma_ctrl_write(chan, XILINX_DMA_REG_TAILDESC,
+ 				tail_segment->phys);
++		list_splice_tail_init(&chan->pending_list, &chan->active_list);
++		chan->desc_pendingcount = 0;
+ 	} else {
+ 		struct xilinx_vdma_tx_segment *segment, *last = NULL;
+-		int i = 0;
++		int i = 0, j = 0;
+ 
+ 		if (chan->desc_submitcount < chan->num_frms)
+ 			i = chan->desc_submitcount;
+ 
+-		list_for_each_entry(segment, &desc->segments, node) {
+-			if (chan->ext_addr)
+-				vdma_desc_write_64(chan,
+-					XILINX_VDMA_REG_START_ADDRESS_64(i++),
+-					segment->hw.buf_addr,
+-					segment->hw.buf_addr_msb);
+-			else
+-				vdma_desc_write(chan,
+-					XILINX_VDMA_REG_START_ADDRESS(i++),
+-					segment->hw.buf_addr);
+-
+-			last = segment;
++		for (j = 0; j < chan->num_frms; ) {
++			list_for_each_entry(segment, &desc->segments, node) {
++				if (chan->ext_addr)
++					vdma_desc_write_64(chan,
++					  XILINX_VDMA_REG_START_ADDRESS_64(i++),
++					  segment->hw.buf_addr,
++					  segment->hw.buf_addr_msb);
++				else
++					vdma_desc_write(chan,
++					    XILINX_VDMA_REG_START_ADDRESS(i++),
++					    segment->hw.buf_addr);
++
++				last = segment;
++			}
++			list_del(&desc->node);
++			list_add_tail(&desc->node, &chan->active_list);
++			j++;
++			if (list_empty(&chan->pending_list) ||
++			    (i == chan->num_frms))
++				break;
++			desc = list_first_entry(&chan->pending_list,
++						struct xilinx_dma_tx_descriptor,
++						node);
+ 		}
+ 
+ 		if (!last)
+@@ -1081,20 +1117,14 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+ 		vdma_desc_write(chan, XILINX_DMA_REG_FRMDLY_STRIDE,
+ 				last->hw.stride);
+ 		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
+-	}
+ 
+-	chan->idle = false;
+-	if (!chan->has_sg) {
+-		list_del(&desc->node);
+-		list_add_tail(&desc->node, &chan->active_list);
+-		chan->desc_submitcount++;
+-		chan->desc_pendingcount--;
++		chan->desc_submitcount += j;
++		chan->desc_pendingcount -= j;
+ 		if (chan->desc_submitcount == chan->num_frms)
+ 			chan->desc_submitcount = 0;
+-	} else {
+-		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+-		chan->desc_pendingcount = 0;
+ 	}
++
++	chan->idle = false;
+ }
+ 
+ /**
+@@ -1342,6 +1372,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+ 
+ 	chan->err = false;
+ 	chan->idle = true;
++	chan->desc_submitcount = 0;
+ 
+ 	return err;
+ }
+@@ -2320,6 +2351,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+ 	has_dre = of_property_read_bool(node, "xlnx,include-dre");
+ 
+ 	chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
++	chan->has_fstoreen = of_property_read_bool(node, "xlnx,fstore-enable");
+ 
+ 	err = of_property_read_u32(node, "xlnx,datawidth", &value);
+ 	if (err) {
+-- 
+2.1.2
