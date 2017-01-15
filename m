@@ -1,73 +1,94 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM64: dts: meson-gxbb-vega-s95: enable the Bluetooth
- module
-Date: Sun, 15 Jan 2017 23:55:08 +0100
-Message-ID: <a4009327-5063-49d0-e60f-f052c7d4e0a1@suse.de>
-References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
- <20170115223255.10350-5-martin.blumenstingl@googlemail.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] Input: mpr121 - handle multiple bits change of
+ status register
+Date: Sun, 15 Jan 2017 15:05:30 -0800
+Message-ID: <20170115230530.GA23285@dtor-ws>
+References: <1484486144-27947-1-git-send-email-akinobu.mita@gmail.com>
+ <1484486144-27947-5-git-send-email-akinobu.mita@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170115223255.10350-5-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484486144-27947-5-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 15.01.2017 um 23:32 schrieb Martin Blumenstingl:
-> This takes the Bluetooth module out of reset (the reset line is
-> connected to GPIOX_20) and enables uart_A which is used to configure the
-> module. This is common for all Vega S95 boards.
-> The device can then be initialized by running the hciattach tool:
-> hciattach -s115200 /dev/ttyAML1 bcm43xx 2000000 flow -
+On Sun, Jan 15, 2017 at 10:15:43PM +0900, Akinobu Mita wrote:
+> This driver reports input events on their interrupts which are triggered
+> by the sensor's status register changes.  But only single bit change is
+> reported in the interrupt handler.  So if there are multiple bits are
+> changed at almost the same time, other press or release events are ignored.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> This fixes it by detecting all changed bits in the status register.
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> * Use for_each_set_bit() to search changed bit
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-> index ab497126c9a3..9e0a13b1ac93 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-> @@ -47,6 +47,7 @@
+>  drivers/input/keyboard/mpr121_touchkey.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/mpr121_touchkey.c b/drivers/input/keyboard/mpr121_touchkey.c
+> index 2558c60..a0210ae 100644
+> --- a/drivers/input/keyboard/mpr121_touchkey.c
+> +++ b/drivers/input/keyboard/mpr121_touchkey.c
+> @@ -86,7 +86,8 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+>  	struct mpr121_touchkey *mpr121 = dev_id;
+>  	struct i2c_client *client = mpr121->client;
+>  	struct input_dev *input = mpr121->input_dev;
+> -	unsigned int key_num, key_val, pressed;
+> +	unsigned long bit_changed;
+> +	unsigned int key_num;
+>  	int reg;
 >  
->  	aliases {
->  		serial0 = &uart_AO;
-> +		serial1 = &uart_A;
->  	};
+>  	reg = i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_1_ADDR);
+> @@ -104,18 +105,22 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
 >  
->  	chosen {
-> @@ -100,6 +101,14 @@
->  	};
->  };
+>  	reg &= TOUCH_STATUS_MASK;
+>  	/* use old press bit to figure out which bit changed */
+> -	key_num = ffs(reg ^ mpr121->statusbits) - 1;
+> -	pressed = reg & (1 << key_num);
+> +	bit_changed = reg ^ mpr121->statusbits;
+>  	mpr121->statusbits = reg;
+> +	for_each_set_bit(key_num, &bit_changed, mpr121->keycount) {
+> +		unsigned int key_val, pressed;
 >  
-> +/* This is connected to the Bluetooth module of the wifi/BT combo chip: */
+> -	key_val = mpr121->keycodes[key_num];
+> +		pressed = reg & (1 << key_num);
 
-Personally I would just say "Connected to the .... chip" or even just
-"Bluetooth .... chip", without trailing colon, for consistency.
+Changed to 
 
-> +&uart_A {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_a_pins &uart_a_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-> +};
+		pressed = reg & BIT(key_num);
+
+and applied, thank you.
+
+> +		key_val = mpr121->keycodes[key_num];
+>  
+> -	input_event(input, EV_MSC, MSC_SCAN, key_num);
+> -	input_report_key(input, key_val, pressed);
+> -	input_sync(input);
+> +		input_event(input, EV_MSC, MSC_SCAN, key_num);
+> +		input_report_key(input, key_val, pressed);
 > +
->  &uart_AO {
->  	status = "okay";
->  	pinctrl-0 = <&uart_ao_a_pins>;
-
-Tested-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-
-Thanks,
-Andreas
+> +		dev_dbg(&client->dev, "key %d %d %s\n", key_num, key_val,
+> +			pressed ? "pressed" : "released");
+>  
+> -	dev_dbg(&client->dev, "key %d %d %s\n", key_num, key_val,
+> -		pressed ? "pressed" : "released");
+> +	}
+> +	input_sync(input);
+>  
+>  out:
+>  	return IRQ_HANDLED;
+> -- 
+> 2.7.4
+> 
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
