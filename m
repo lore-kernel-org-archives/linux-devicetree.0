@@ -1,613 +1,282 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
-Date: Sat, 14 Jan 2017 14:46:45 -0800
-Message-ID: <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
- <1484320822.31475.96.camel@pengutronix.de>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3] ARM: dts: Add LEGO MINDSTORMS EV3 dts
+Date: Sun, 15 Jan 2017 08:13:06 +0800
+Message-ID: <201701150836.H4TibehD%fengguang.wu@intel.com>
+References: <1484253167-27568-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="Dxnq1zWXvFF0Q93v"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484320822.31475.96.camel@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <1484253167-27568-1-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@me>
+Cc: kbuild-all@01.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(sorry sending again w/o html)
 
-
-On 01/13/2017 07:20 AM, Philipp Zabel wrote:
-> Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
->> +For image capture, the IPU contains the following internal subunits:
->> +
->> +- Image DMA Controller (IDMAC)
->> +- Camera Serial Interface (CSI)
->> +- Image Converter (IC)
->> +- Sensor Multi-FIFO Controller (SMFC)
->> +- Image Rotator (IRT)
->> +- Video De-Interlace Controller (VDIC)
-> Nitpick: Video De-Interlacing or Combining Block (VDIC)
-
-done.
-
->> +
->> +The IDMAC is the DMA controller for transfer of image frames to and from
->> +memory. Various dedicated DMA channels exist for both video capture and
->> +display paths.
->> +
->> +The CSI is the frontend capture unit that interfaces directly with
->> +capture sensors over Parallel, BT.656/1120, and MIPI CSI-2 busses.
->> +
->> +The IC handles color-space conversion, resizing, and rotation
->> +operations.
-> And horizontal flipping.
-
-done.
-
-
->> There are three independent "tasks" within the IC that can
->> +carry out conversions concurrently: pre-processing encoding,
->> +pre-processing preview, and post-processing.
-> s/preview/viewfinder/ seems to be the commonly used name.
-
-replaced everywhere in the doc.
-
-> This paragraph could mention that a single hardware unit is used
-> transparently time multiplexed by the three tasks at different
-> granularity for the downsizing, main processing, and rotation sections.
-> The downscale unit switches between tasks at 8-pixel burst granularity,
-> the main processing unit at line granularity. The rotation units switch
-> only at frame granularity.
-
-I've added that info.
-
->> +The SMFC is composed of four independent channels that each can transfer
->> +captured frames from sensors directly to memory concurrently.
->> +
->> +The IRT carries out 90 and 270 degree image rotation operations.
-> ... on 8x8 pixel blocks, supported by the IDMAC which handles block
-> transfers, block reordering, and vertical flipping.
-
-done.
-
->> +The VDIC handles the conversion of interlaced video to progressive, with
->> +support for different motion compensation modes (low, medium, and high
->> +motion). The deinterlaced output frames from the VDIC can be sent to the
->> +IC pre-process preview task for further conversions.
->> +
->> +In addition to the IPU internal subunits, there are also two units
->> +outside the IPU that are also involved in video capture on i.MX:
->> +
->> +- MIPI CSI-2 Receiver for camera sensors with the MIPI CSI-2 bus
->> +  interface. This is a Synopsys DesignWare core.
->> +- A video multiplexer for selecting among multiple sensor inputs to
->> +  send to a CSI.
-> Two of them, actually.
-
-done.
-
->> +
->> +- Includes a Frame Interval Monitor (FIM) that can correct vertical sync
->> +  problems with the ADV718x video decoders. See below for a description
->> +  of the FIM.
-> Could this also be used to calculate more precise capture timestamps?
-
-An input capture function could do that, triggered off a VSYNC or FIELD
-signal such as on the ADV718x. The FIM is only used to calculate
-frame intervals at this point, but its input capture method could be
-used to also record more accurate timestamps.
-
-
->> +Capture Pipelines
->> +-----------------
->> +
->> +The following describe the various use-cases supported by the pipelines.
->> +
->> +The links shown do not include the frontend sensor, video mux, or mipi
->> +csi-2 receiver links. This depends on the type of sensor interface
->> +(parallel or mipi csi-2). So in all cases, these pipelines begin with:
->> +
->> +sensor -> ipu_csi_mux -> ipu_csi -> ...
->> +
->> +for parallel sensors, or:
->> +
->> +sensor -> imx-mipi-csi2 -> (ipu_csi_mux) -> ipu_csi -> ...
->> +
->> +for mipi csi-2 sensors. The imx-mipi-csi2 receiver may need to route
->> +to the video mux (ipu_csi_mux) before sending to the CSI, depending
->> +on the mipi csi-2 virtual channel, hence ipu_csi_mux is shown in
->> +parenthesis.
->> +
->> +Unprocessed Video Capture:
->> +--------------------------
->> +
->> +Send frames directly from sensor to camera interface, with no
->> +conversions:
->> +
->> +-> ipu_smfc -> camif
-> I'd call this capture interface, this is not just for cameras. Or maybe
-> idmac if you want to mirror hardware names?
-
-Camif is so named because it is the V4L2 user interface for video
-capture. I suppose it could be named "capif", but that doesn't role
-off the tongue quite as well.
-
->> +Note the ipu_smfc can do pixel reordering within the same colorspace.
-> That isn't a feature of the SMFC, but of the IDMAC (FCW & FCR).
-
-yes, the doc is re-worded to make that more clear.
-
->> +For example, its sink pad can take UYVY2X8, but its source pad can
->> +output YUYV2X8.
-> I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
-> in the CSI chapter, for 8-bit per component data, the internal format
-> between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
-> (or "bayer/generic data"). In either case, the internal format does not
-> change along the way.
-
-these are pixels in memory buffers, not the IPU internal formats.
-
-
->> +IC Direct Conversions:
->> +----------------------
->> +
->> +This pipeline uses the preprocess encode entity to route frames directly
->> +from the CSI to the IC (bypassing the SMFC), to carry out scaling up to
->> +1024x1024 resolution, CSC, and image rotation:
->> +
->> +-> ipu_ic_prpenc -> camif
->> +
->> +This can be a useful capture pipeline for heavily loaded memory bus
->> +traffic environments, since it has minimal IDMAC channel usage.
-> Note that if rotation is enabled, transfers between IC processing and
-> rotation still have to go through memory once.
-
-yep.
-
->> +Post-Processing Conversions:
->> +----------------------------
->> +
->> +This pipeline routes frames from the SMFC to the post-processing
->> +entity.
-> No, frames written by the CSI -> SMFC -> IDMAC path are read back into
-> the post-processing entity.
-
-that's true. The post-processing entity kicks off its read channels
-to transfer those frames into the post-processor. Anyway this wording
-will change after doing away with the SMFC entity.
-
-
->> +   media-ctl -V "\"ipu1_csi0\":1 [fmt:YUYV2X8/640x480]"
->> +   media-ctl -V "\"ipu1_smfc0\":0 [fmt:YUYV2X8/640x480]"
->> +   media-ctl -V "\"ipu1_smfc0\":1 [fmt:UYVY2X8/640x480]"
-> I think the smfc entities should be dropped.
-
-yes working on that.
-
->> +   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
->> +   # Configure pads for OV5640 pipeline
->> +   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
-> [...]
->> +   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
-> I agree this looks very intuitive, but technically correct for the
-> csi1:1 and camif1:0 pads would be a 32-bit YUV format.
-> (MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
->
-> I think it would be better to use the correct format
-
-I'm not sure I follow you here.
-
->   as that will allow
-> to chose the regular vs. companded packings in the future for formats
-> with more than 8 bits per component.
->
->> +   media-ctl -V "\"camif1\":1 [fmt:UYVY2X8/640x480]"
->> +
->> +Streaming can then begin independently on device nodes /dev/video0
->> +and /dev/video1.
->> +
->> +SabreAuto with ADV7180 decoder
->> +------------------------------
->> +
->> +On the SabreAuto, an on-board ADV7180 SD decoder is connected to the
->> +parallel bus input on the internal video mux to IPU1 CSI0.
->> +
->> +The following example configures a pipeline to capture from the ADV7180
->> +video decoder, assuming NTSC 720x480 input signals, with Motion
->> +Compensated de-interlacing (not shown: all pad field types should be set
->> +as indicated). $outputfmt can be any format supported by the
->> +ipu1_ic_prpvf entity at its output pad:
->> +
->> +.. code-block:: none
->> +
->> +   # Setup links
->> +   media-ctl -l '"adv7180 3-0021":0 -> "ipu1_csi0_mux":1[1]'
->> +   media-ctl -l '"ipu1_csi0_mux":2 -> "ipu1_csi0":0[1]'
->> +   media-ctl -l '"ipu1_csi0":1 -> "ipu1_smfc0":0[1]'
->> +   media-ctl -l '"ipu1_smfc0":1 -> "ipu1_ic_prpvf":0[1]'
->> +   media-ctl -l '"ipu1_ic_prpvf":1 -> "camif0":0[1]'
->> +   media-ctl -l '"camif0":1 -> "camif0 devnode":0[1]'
->> +   # Configure pads
->> +   # pad field types for below pads must be an interlaced type
->> +   # such as "ALTERNATE"
-> I think alternate should only extend as far as the CSI, since the CSI
-> can only capture NTSC/PAL fields in a fixed order.
-
-Agreed, I'm doing the translation from alternate to seq_bt/seq_tb depending
-on sensor std in imx-vdic.c, but it should move upstream. Will fix.
-
->> +   media-ctl -V "\"adv7180 3-0021\":0 [fmt:UYVY2X8/720x480]"
->> +   media-ctl -V "\"ipu1_csi0_mux\":1 [fmt:UYVY2X8/720x480]"
->  From here the interlaced field type should be sequential in the correct
-> order depending on NTSC/PAL.
-
-right.
-
->> +
->> +Frame Interval Monitor
->> +----------------------
->> +
->> +The adv718x decoders can occasionally send corrupt fields during
->> +NTSC/PAL signal re-sync (too little or too many video lines). When
->> +this happens, the IPU triggers a mechanism to re-establish vertical
->> +sync by adding 1 dummy line every frame, which causes a rolling effect
->> +from image to image, and can last a long time before a stable image is
->> +recovered. Or sometimes the mechanism doesn't work at all, causing a
->> +permanent split image (one frame contains lines from two consecutive
->> +captured images).
-> Is it only SabreAuto on which the FIM mechanism can be used due to the
-> pad routing?
-
-No, FIM can be used on any target, the fim child node of ipu_csi just
-needs to be enabled via status property.
-
-> [...]
->> +/*
->> + * DMA buffer ring handling
->> + */
->> +struct imx_media_dma_buf_ring {
->> +	struct imx_media_dev *imxmd;
->> +
->> +	/* the ring */
->> +	struct imx_media_dma_buf buf[IMX_MEDIA_MAX_RING_BUFS];
->> +	/* the scratch buffer for underruns */
->> +	struct imx_media_dma_buf scratch;
->> +
->> +	/* buffer generator */
->> +	struct media_entity *src;
->> +	/* buffer receiver */
->> +	struct media_entity *sink;
->> +
->> +	spinlock_t lock;
->> +
->> +	int num_bufs;
->> +	unsigned long last_seq;
->> +};
-> I don't think this belongs in the capture driver at all.
-> Memory-to-memory transfers should be handled at the videobuf2 level.
-
-see below.
-
-> [...]
->> +static struct imx_media_dma_buf *
->> +__dma_buf_queue(struct imx_media_dma_buf_ring *ring, int index)
->> +{
->> +	struct imx_media_dma_buf *buf;
->> +
->> +	if (index >= ring->num_bufs)
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	buf = &ring->buf[index];
->> +	if (WARN_ON(buf->state != IMX_MEDIA_BUF_STATUS_PREPARED))
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	buf->state = IMX_MEDIA_BUF_STATUS_QUEUED;
->> +	buf->seq = ring->last_seq++;
->> +
->> +	return buf;
->> +}
-> Is this a whole software buffer queue implementation? I thought the
-> whole point of putting the custom mem2mem framework into the capture
-> driver was to use the hardware FSU channel linking?
-
-  see below.
-
-> What is the purpose of this if the sink should be triggered by the FSU?
-
-Ok, here is where I need to make an admission.
-
-The only FSU links I have attempted (and which currently have entries
-in the fsu_link_info[] table), are the enc/vf/pp --> IRT links for rotation.
-
-There does not appear to be support in the FSU for linking a write channel
-to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
-is support for the direct link from CSI (which I am using), but that's 
-not an
-IDMAC channel link.
-
-There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
-0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
-But I think this links to channel 12, and not to channels 8,9,10 to the 
-VDIC.
-Or will it? It's worth experimenting. It would have helped if FSL listed 
-which
-IDMAC channels these FSU links correspond to, instead of making us guess
-at it.
-
-In any event, the docs are not clear enough to implement a real FSU
-link to the VDIC read channels, if it's even possible. And trying to get
-programming help from FSL can be difficult, and no coding examples
-for this link AFAIK.
-
-So I ended resorted to linking to VDIC channels 8,9,10 with a software
-approach, instead of attempting a hardware FSU link.
-
-The EOF interrupt handler for the SMFC channels informs the VDIC
-entity via a v4l2_subdev_ioctl() call that a buffer is available. The
-VDIC then manually kicks off its read channels to bring that buffer
-(and a previous buffer for F(n-1) field) into the VDIC.
-
-There is a small amount of extra overhead going this route compared
-to a FSU hardware link: there is the EOF irq latency (a few usec), and
-the CPU overhead for the VDIC to manually start the read channels,
-which is also a few usec at most (see prepare_vdi_in_buffers() in
-imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU
-use plus irq latency) under normal system load.
-
-Of course, in order to implement this software link, I had to implement
-a straightforward FIFO dma buffer ring. The sink (VDIC) allocates the ring
-at stream on, and the source requests a pointer to this ring in its own
-stream on. Passing buffers from source to sink then follows a 
-straightforward
-FIFO queue/done/dequeue/queue model: sink queues buffers to src, src
-grabs queued buffers and makes them active, src signals completed
-buffers to sink, sink dequeues buffers in response, and sink queues
-buffers back when it is finished with them.
-
-
-> [...]
->> +/*
->> + * The subdevs have to be powered on/off, and streaming
->> + * enabled/disabled, in a specific sequence.
->> + */
->> +static const u32 stream_on_seq[] = {
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +};
->> +
->> +static const u32 stream_off_seq[] = {
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +};
->> +
->> +#define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
->> +
->> +static const u32 power_on_seq[] = {
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +};
->> +
->> +static const u32 power_off_seq[] = {
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +};
-> This seems somewhat arbitrary. Why is a power sequence needed?
-
-The CSI-2 receiver must be powered up before the sensor, that's the
-only requirement IIRC. The others have no s_power requirement. So I
-can probably change this to power up in the frontend -> backend order
-(IC_PP to sensor). And vice-versa for power off.
-
-
-> [...]
->> +/*
->> + * Turn current pipeline power on/off starting from start_entity.
->> + * Must be called with mdev->graph_mutex held.
->> + */
->> +int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
->> +				 struct media_entity_graph *graph,
->> +				 struct media_entity *start_entity, bool on)
->> +{
->> +	struct media_entity *entity;
->> +	struct v4l2_subdev *sd;
->> +	int i, ret = 0;
->> +	u32 id;
->> +
->> +	for (i = 0; i < NUM_POWER_ENTITIES; i++) {
->> +		id = on ? power_on_seq[i] : power_off_seq[i];
->> +		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
->> +		if (!entity)
->> +			continue;
->> +
->> +		sd = media_entity_to_v4l2_subdev(entity);
->> +
->> +		ret = v4l2_subdev_call(sd, core, s_power, on);
->> +		if (ret && ret != -ENOIOCTLCMD)
->> +			break;
->> +	}
->> +
->> +	return (ret && ret != -ENOIOCTLCMD) ? ret : 0;
->> +}
->> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
-> This should really be handled by v4l2_pipeline_pm_use.
-
-I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
-doing some other stuff that bothered me, at least that's what I remember.
-I will revisit this.
-
->> +/*
->> + * Inherit the v4l2 controls from all entities in a pipeline
->> + * to the given video device.
->> + * Must be called with mdev->graph_mutex held.
->> + */
->> +int imx_media_inherit_controls(struct imx_media_dev *imxmd,
->> +			       struct video_device *vfd,
->> +			       struct media_entity *start_entity)
->> +{
->> +	struct media_entity_graph graph;
->> +	struct media_entity *entity;
->> +	struct v4l2_subdev *sd;
->> +	int ret;
->> +
->> +	ret = media_entity_graph_walk_init(&graph, &imxmd->md);
->> +	if (ret)
->> +		return ret;
->> +
->> +	media_entity_graph_walk_start(&graph, start_entity);
->> +
->> +	while ((entity = media_entity_graph_walk_next(&graph))) {
->> +		if (is_media_entity_v4l2_video_device(entity))
->> +			continue;
->> +
->> +		sd = media_entity_to_v4l2_subdev(entity);
->> +
->> +		dev_dbg(imxmd->dev, "%s: adding controls from %s\n",
->> +			__func__, sd->name);
->> +
->> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
->> +					    sd->ctrl_handler,
->> +					    NULL);
->> +		if (ret)
->> +			break;
->> +	}
->> +
->> +	media_entity_graph_walk_cleanup(&graph);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(imx_media_inherit_controls);
->> +
->> +MODULE_DESCRIPTION("i.MX5/6 v4l2 media controller driver");
->> +MODULE_AUTHOR("Steve Longerbeam<steve_longerbeam@mentor.com>");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
->> new file mode 100644
->> index 0000000..357654d
->> --- /dev/null
->> +++ b/drivers/staging/media/imx/imx-media-dev.c
-> This file is full of code that should live in the v4l2 core.
-
-Agreed. Stuff like imx_media_inherit_controls() really should be widely
-available.
-
->> +int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
->> +				   struct imx_media_subdev *csi[4])
->> +{
->> +	int ret;
->> +
->> +	/* there must be at least one CSI in first IPU */
-> Why?
-
-Well yeah, imx-media doesn't necessarily need a CSI if things
-like the VDIC or post-processor are being used by an output
-overlay pipeline, for example. I'll fix this.
-
->> +
->> +/* parse inputs property from a sensor node */
->> +static void of_parse_sensor_inputs(struct imx_media_dev *imxmd,
->> +				   struct imx_media_subdev *sensor,
->> +				   struct device_node *sensor_np)
->> +{
->> +	struct imx_media_sensor_input *sinput = &sensor->input;
->> +	int ret, i;
->> +
->> +	for (i = 0; i < IMX_MEDIA_MAX_SENSOR_INPUTS; i++) {
->> +		const char *input_name;
->> +		u32 val;
->> +
->> +		ret = of_property_read_u32_index(sensor_np, "inputs", i, &val);
->> +		if (ret)
->> +			break;
->> +
->> +		sinput->value[i] = val;
->> +
->> +		ret = of_property_read_string_index(sensor_np, "input-names",
->> +						    i, &input_name);
->> +		/*
->> +		 * if input-names not provided, they will be set using
->> +		 * the subdev name once the sensor is known during
->> +		 * async bind
->> +		 */
->> +		if (!ret)
->> +			strncpy(sinput->name[i], input_name,
->> +				sizeof(sinput->name[i]));
->> +	}
->> +
->> +	sinput->num = i;
->> +
->> +	/* if no inputs provided just assume a single input */
->> +	if (sinput->num == 0)
->> +		sinput->num = 1;
->> +}
-> This should be parsed by the sensor driver, not imx-media.
-
-you're probably right. I'll submit a patch for adv7180.c.
-
-
->> +static void of_parse_sensor(struct imx_media_dev *imxmd,
->> +			    struct imx_media_subdev *sensor,
->> +			    struct device_node *sensor_np)
->> +{
->> +	struct device_node *endpoint;
->> +
->> +	of_parse_sensor_inputs(imxmd, sensor, sensor_np);
->> +
->> +	endpoint = of_graph_get_next_endpoint(sensor_np, NULL);
->> +	if (endpoint) {
->> +		v4l2_of_parse_endpoint(endpoint, &sensor->sensor_ep);
->> +		of_node_put(endpoint);
->> +	}
->> +}
->> +
->> +static int of_get_port_count(const struct device_node *np)
->> +{
->> +	struct device_node *child;
->> +	int num = 0;
->> +
->> +	/* if this node is itself a port, return 1 */
->> +	if (of_node_cmp(np->name, "port") == 0)
->> +		return 1;
->> +
->> +	for_each_child_of_node(np, child)
->> +		if (of_node_cmp(child->name, "port") == 0)
->> +			num++;
->> +
->> +	return num;
->> +}
-> If this is extended to handle the ports subnode properly, it could be
-> moved into drivers/of/base.c.
-
-More that eventually needs exporting, agreed.
-
-
-Steve
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi David,
+
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on v4.10-rc3 next-20170113]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/David-Lechner/ARM-dts-Add-LEGO-MINDSTORMS-EV3-dts/20170114-145113
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+config: arm-u300_defconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+reproduce:
+        wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=arm 
+
+All errors (new ones prefixed by >>):
+
+>> Error: arch/arm/boot/dts/da850-lego-ev3.dts:310.1-6 Label or path usb1 not found
+   FATAL ERROR: Syntax error parsing input tree
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+H4sICAu1elgAAy5jb25maWcAlDzbcuO2ku/nK1iTra09VZtYki2PXVt6gEBQQsRbCFCS/cLS
+2JxEe2TJK8lJ5u+3GyBFkALo3alKZoxuAA2g7930T//4ySMf58Pb5rx92ex2P7zfy3153JzL
+V+/7dlf+l+cnXpxIj/lc/gLI4Xb/8ffN5vjm3f0yHPwy+Pn4MvIW5XFf7jx62H/f/v4Bs7eH
+/T9++gdN4oDPCpJFkx/GD8WciELMCjonPG4gEZ/NJcCWrEgpb8bFE2DnaZpkUhQkjQoW5SGR
+PDHmqlmSRp2RNEtoQdPcWEwSupAZoaxes4GFCV34LL0GaHye/RaEZCau4dlKsKhY0/mM+H5B
+wlmScTk3iAn4umAkC5/g5yJiBmTGYpZxWsxXDI9/DaAk5NOMSFb4LCRPDULMmF/4ESkikuKx
+JDMvmc6bO8vhGqZMNOAlozLJRDElgk0Gf3+HPwP4Yz5RSiQskc7h7pc8s9A1zWfNYDqTZBqy
+ImRLForJqB73WVDfLRdy8uVmt/1283Z4/diVp5t/y2MSsSJjIQM6bn55UdzzpZ4L112skmzR
+7DLNeehLDnPYWu8n9DMAq/3kzRTf7rxTef54b5hvmiULFhdw7yJKm7V4zGXB4iUcFomLuJzc
+XsimWSJEQZMo5SGbfPkCq9cQPVZIJqS3PXn7wxk3NDiIhEuWCWROc54JKEguE8tkxbELlsUs
+LGbPPO3wcgUJnyNih6yfXTMSF+CuAbQ3vhBu7GqS3IWvn/ugQEE/+M5yHcA7JA9BISRCIqNM
+vvzH/rAv/2ncqliR1DITFMaSp7SlQXAA/6YybMb1O4M8JtlTQSSohrkhs3MS+yEzLyMXDITR
+9XRK6EgOehL3IWFYcyZwsnf6+Hb6cTqXbw1n1pKEjK4k9FrIECTmycoN0SJnvm/mAwyU1Aok
+S7DYN3ge5vhJ1FK6+pDVMGKY520mwGuAwFtOjihBklHQRXKeMeLz2NALIiWZYNWypm6iqGtF
+ksPEwieSWPQeYsDZYinqe5Tbt/J4sl2l5HQBIs7gRgxVFSfF/BlFNlKm4nIsGExhj8Tn1HIi
+PYvrpzfHjEsDVY23W6Ayyi70gaG5kZvTv7wzEOpt9q/e6bw5n7zNy8vhY3/e7n/vUAwTCkJp
+ksdSX9uFRNS5HTDejFWK8AmUVmxwrXhT4SuDyIDnAbWlvxT9Gc09cX25acZYlMoCwCaJ8CPo
+YbhImyIUHWRJxELgFAsuLgT2KwwtTyVhb4WgTLD1WDUdIHesmCaJtB8ebUcx5fGI2i9xof9h
+Veo4PQBx44GcDO8uTBHxLuy2y8WCzkEyFC+bx6KzLMlTYaUEZtBFmvBYIouBnbYfG1UiiBe8
+phWsN0ZLo7ay4zyJQIBkwwNTcB98+/Wi12G/0nABk5fKlGa+5eIoLZIUOJM/M9QRKHTwV0Ri
+2tKqXTQB/7Br9ZbyJjGYUh4nvunZKEWcc39434xpJm1+7oDBmZQcNHtm0iRmTEbAs0Wlyu30
+wO01qt68ViC0Z2aaCPAHL7qjNoaALJ4i0bK+1VjRWciCMBVJmIMEwFlBb1h2vaCi16eeVfKl
+oePSDFhu0f0Zudz0wAzlzsIAJDYzllArB3lovFIANK2NOWliQgWfxSQMDBulbsUcUCZADTSM
+lwZ97zLXDvYFnXCbt0X8JQdqq3Vat47MoHyPwMbVsPqUZBlvMwwMMt9ntgk6EoEli4s5q68Y
+B2G3YhkBDQmtDUkVTqXl8fvh+LbZv5Qe+7PcgykhYFQoGhMwhNrmGCvp5a18sow0tFAWAvjO
+dnFhPtV23vCQwN8lEpzolvoSIbF5QbhAGy2Z2hUPzC8CUO0YFRQZuCBJ5NJQEiIr9BAgaMl4
+wKkK/KzIYNsCHnasn/kGicZoKZ+Fjo2sC/6aR2kBpDK77OU9U9V+93dTCDIgfpvFqIspWl4b
+J6JDhFyANgqsNxhq8Gu7Lns3htOjGZNWAChU63hLmhuvVVnXeZIsOkAML+FnyWd5khtrXcwb
+XBB6SpXvZ3FTEYgyXwgm8+6hMgbRNLy+jsqrG4IQv0sjDW2EAV6XXRtRw6Vt4yjb1XZ+HnUJ
+UpfRPHvHaV0RECCMI7RXW8d5liUEoyg5EPeHUukJE2MGBi8N8xmPW1rHGHYxMGAo0uFppQrh
+O2a0DbRb5DYOeLZx1xh3MOAm85Bkdl/lClvILHFLIPISxO6K3xatSEGBHV5vB8vi73YwosSv
+3iFlFJWGYe0TPw/Bc0d5QwOWXb0yJqcURKkl8EVsDxxh0iWL0aOUXT5ja5D6rkBczyoiiMMe
++uBkPRneuxFgclvf1OTP7R6uIKBhlHjZOCMERgADThcriCCNIyXgNoOZFjncZezfXgEIrTJx
+DVPAA0LAxAK4eI42Jwh6lKQielnlsOjiKiiZ0WT587fNqXz1/qXN4vvx8H2709GUIT3Jsson
+uFQsPqxCq8xAQcKwK5qV2tJ6b84yIN/wVkAp8DgwsinArhE6OKaeVU6QQIM+GXS4zrwlPaRj
+ZwgjiNXV0Dh5jHDnZA223jDgVVrK/gLVOhCtXXJTDkezxuT22LICo9LLOlbOiOV4BMSC5PnF
+Aj1Ry4mn3UgpnPok6A0/psIR7jbwTtLGEsFINsu47I9znkFC7NeMGDTywfdg2jbYtSWirabX
+cXe6OZ63mDL35I/38mRE3iSTXKpn8ZcYNrWYgIDzHTc41i0JBBr9GIkIPlsjAin/DEeSjH+C
+ExFqx6jhwk9Eg9Hy+IVf+Fws3M4YKFM4qsin/TRAkASEimL9cP8JtTmsB6qQfbJv6EefLCRm
+n10MRBrZp+8k8s/eekEgtu69YRZw+/1igvT+4ZP1DQ6/xtKJzsQTL3+UmN4/GmzME52NiJPE
+zMBXoz7YSVy3lXisYDT4rSczbJtZw3CvnqnVBpMvr+XmFWxJeSk7wLvH6pgiBVccdStddMx4
+U4yS4CDQIotWJgkY2Dy3VYC6HaHyakrGm7uJorzrJGA+IoXoHHMlLXlH6Iwhp9tlEOFsKshw
+OOhBSB9v12s3PEgSOc24P7OnnRROzGTPCjxJh71bAMLt6BP4bR98nd71re8nyx7iF+Lh/nHs
+hq8eB+vHQc8NhikF8nv2T9f2WokCZqk9Aak5C9+uZ2txS0f9RydLHtMe/kjA0xpesWb0sTtv
+33el977bnDHnAKBd+VKVcevktkcPx9L7vnnb7n60ENpbKAYulnduImoMW+bYRBjbRAPmaYh1
+zftPd/3av6kKP3KZXG+whFjTZdjmBRHR4+i+5+2IfBz28LRyQUgnbOusAC64wwOpKPz6sF73
+kBCte3gvWtvdNi3xwDc+X/QggLp0ZKo132VgMMY9nBtF9iS1nr2OSQ91EGqFS85W9rQQqFIM
+BIktINa5l9vBwIgQiXsIjYKfR9HTFXeg/0wkRBU9iiV6GA/GV7KXHg8v5el0OHYsg2LEDJnK
+CEFw8Hb057g9QqYQiLDlWP7aHk8VIGQQpD21IRROhPH2srM2TdInELDVtD0sw6ka5R3sdDi+
+HmnbNBzFYFvXES+1subUQbk5fxzL05UeUc0HxPezQupUmvX9Igi186iVd8QtuT4hOG/YKGD3
+ZwDN/3+hrSBGYBDZJ/nMHmM3Vws4EKZnCQSMthoj9m4sVC5qzsK0XQfoDDeLq4XDUVvCjYsI
+hxWOrkaNTa9omkO0mmAi1eZ5K82HeRVdDs7qV5p+YLn1/f1wPLeyzQ4LA+P1O9ehtBPPksA3
+4JS0K0pmWtxgmAp/GYk05LK4bddQL6OYDnWkxTXKyB5C1uChLaGVkhkrkiAQTE4Gf9OB/tNS
+LHFWzFKeTAZmkloXUzHv5shia4RlEuYxRFVPtq01jlmr0ZNUPszIaTxj5xG4uQNjZKg0W5OE
+eS5GDpcDQWMn6NY9a+wGwe429p0/T4bN5Wnnf55hkdxwARhRCqgJXeHnqkLR4zKpgDzCKoL2
+/XtQWciorPtBosS35pKarFUaxMWShLwVlWNvAKxgS7GBchCruqEiJXHHu1HpZSU2JCzm+YyB
+1m3bmajOs6ShtGVPAjB1re4yHCiwRIqHwkaxbqKURdN2gBMnqobeKaEp5Gq8wBSYWtRWAlLy
+kkpcFA8sJo/qT6ueRNu9exFHx6cTkfYq/ybkFbaLroM8lS2FcEmtM7kbPN639C/oV/Umi9ZR
+achIrNSoIwi2+/bPaZLYldnzNLf7bM9CV/0sJ6jzkKpnEOKhjOm3awJkVVdBDVSn0m3soNKD
+EVmr1FWS+aDYh8MLz2FdKsL8LCzRWjyvCjErLufIIjS1J8aqKoeNDVY80dxb05uAU1AZtdYz
+k4xg1t+uCitgX3eLNlMH+OnwjtGIYRXQ60gCQ8gkmbUMatP5oLaKsHiRU5ub8Yy8D/YTnA22
+RnU/uIZMhVCAlrySFLPmmOWQtopplVKZfDnCCSY3r+WfN8fN28A7/uXhyPfTGVzCif6n9wKn
+O+zKyfn8g0Rk8J/D4Rg09/7B273/92Q8HA++jr50Fi4CRRmQiCni9tXXKHAgILE346MYyS6A
+bM3sNp5mRMxVjc3mrUCAVTxjDwJKpllGD/jV62LkmR7+Ko9etNlvfi/fyv3ZjEqDY/k/H+X+
+BWLSl023LoACHmTsN+uq/HXXcbh5p+OvHitmybJAapm1rGZigUjltf8ELHDZyPOP2z87ZXtk
+EYDj3L5sC/NFswdIQRqya+8o2B022GPmvR+2+7NXvn3sNmYAT87ertycQFD2ZQP13j5g6FtZ
+xfPlq0neMkivtslPcIb3zUvpfdvuN8cfnmpROBtyhzWSSGINrdUr0m4VwZ8Ud1y0Ndbc5gy5
+1Cym6LUEzbjyd5qMsAaggeupLSW5oxtMz464sGlfpK0qDutYRTHf24X5DFVjpGdVfcyux+zN
+Da1WdgdXpdGkm3tU+2APkeDTNrNW3GSjxVxizqcsi9Wu1mViZlOBun6LrTe/8kvPtV/+uX0x
+OdtUfdGUTMze7O1LheglV6paN6dc7INtGFvS55MvNyfgu5s/Duf33cfvX0xlvpRRGlgbWyRE
+NSTsVLpB96vVA55FKtGvWgRtZnRVXLRnPVTPAedCFx0NVl+DPb1gtLrALysVRoxXBOAFTDul
+z4uNDpOVKj4ZPNmJ6vyMLx0FpwqBLTNHm4pGwGb2apkCPA1X9lShEfEU0xpZtZjYXQPw3uZP
+cLolF46U1qXRF+NrtuSdTsYKK2Ozltuqfy74iF6NCbNvpBqLIt7K5GFhV8zhXXxs2wwsWXoM
+eV8VW7fke5rRSMhpMeNiCuxtrycu2VqVPwv9sy3Slu06rvTVtTqqswAFSpWHgUUX2/0gjlmY
+Ed3lSSB6JyeBY1729XrexQJ4kf6IQzWkyeNmf6rMSbj50bFxuJgKMpxnVFDwoawIgbS71bEL
+wJ2QLPCdywkR+HZHRkTOSer+EkcfLwIvpTLgt4gIaeE38DtvwEm7CXab0x/eyx/bd+/12lFQ
+zxzYsy4I+5X5jF6Jo4GAwjAl8QKceh+8+qERfl1DR73Quy6rdOAPTiq7RNiT9RbM25GL9QNe
+8M5h1NioS6QatdckLmA35fBKbpijeVFJ0VSAjbmut2ze39FVq14afSj99JsXzIpevTxEWSFb
+462kEP/08Bs4Ex1Sdemx3H3/GeKH82a7L189QK10nIvXMFEIvpWjlQgxhJCjsVssRNh3Zem8
+Dwr/9YGVuhjhGbrH9Lenf/2c7H+meJVXvkn7gAmd3TqYKsaWRIhtuyxUj4NKsLmNNYpz2pT2
+XGdUff3gxFDL+CyGuB2iyX40zDr2YyRKwsAbdHk9F0zuX9kGTQoXiySmc26v2zR4cNNuuVMo
++D/B3S+ukNAC4z/6serC+Sen79aTuggBPLH11HMu+HjwyXki6TZ2YAu6p1C8GaYQCnv/rv8e
+eSmNvLfy7QABlkNE9QTXNnqZIl66bwL8pSJ2OGcIz6e2RkFfGp6XSq80+dgAuyek49tIgGK0
+hl/0mAtUOS4rCLMD4E61xlrfkiWB+sgtW6J9bacsAQSObNb5eMWMg1rfG6Oprj7qNfNPOGSZ
+X7WEtQLSqksszsMQf7DHnRUSBa++R9xrtLDTxKKVXDYF7b09bb7tQJV/K182H6fSU186Q/QD
+hoRjAKenXIf09dIuBUt9zBilC0n9pUPUZkr07U7ZMmJFQK9ojranF5tXDcZR4IfIIRe34XIw
+chS3/fFovC781PFtl6rIImPY/UEqHm9H4m5gr76zmIaJyCGWQz7qRiFGsO6Lx4fBiIR2OBfh
+6HEwuO0BjuxFkfoOJCCNHeWWGmc6H3792o+iCH0c2Cvt84je345H9lsUw/sHO0iCxSH063ho
+B+cQEokVxw/GA0Ee7x7sFKKEw/2CKUxvLRFScxInb4664qh4ibEUXTBLnVJDCiJHdoXdwO39
+QBVcF9D7MCKyvn/42rvI4y1d2/3dC8J6fXd/dTpZ/r05eXx/Oh8/3tQ3QKc/NkeQ/DNGXXhi
+D/vXUCO8bN/xny4BQ4XfyzoKiY+uxZfszuVx4wXpjHjft8e3v4AA7/Xw13532Lx6+nv+VloT
+v3ogmHdJw6vF+P5c7ryIUxVqa/eszlEKygPL8BLU4PVos9D8cDo7gXRzfLVt48Q/vF96E8R5
+cy6NtLP3HzQR0T8Np/JC32W55l3p3O6E0XWousSdQBLkdYqlE11W5Ate++8N19ePCUAsE5q2
+KSPcx+/bM9e3osLBGLiW76h4dVoJGvtgV+IdT6S69PePs/MkPE7zlj1WA0UQoKkPXV3mGgk/
+OQIz14Oh68KLiNjdV40UEezM7SJdsiA7/MZ7ix/jfd90LFs1P8Fu9146fk2eOggtMFt2/Ix6
+uPM5vnGfrqSsnrlgT9OEZC3+qMfA0qbj8YM9DO4gPX6CJBdTOyNcUH6Tw4HDmBk4o6Gjqe6C
+Ey4+3coZD7UwFNc4GuwuiJKS+ztH5sJEergbfnKPmrk+OVv0cHtrdyqMddZfb8efvEdE7eLS
+IKTZcGR3kS44MVtJV/N5jZOk4FElroTzBU2QSOSOX1TQIMlkRVaOz88brDz+lAEw3LX7ABeU
+9eccS0k6HDraby9IU2r3XgyN0K8OBLa99KCoX31j94QrhCSnc0EhmnL8wghNSaf41ViLiN+p
+esOVfpmDKVW2n98kHirrjjOfOaRsRiJmdd0ouDIbCFGORnBQ+5zSaFlstSkm4K2EqvEhFrp4
+Zv5qI1kjGK0uK2PsQhRgNgCsCPr2Lgr8EOTxoUjlk7GNdgmdg1Uj1vC+fTskxL4vXY7K7LxW
+/WoqHtvKQWAKOlEujCw63UZVwu+43eyM1EGbivp3UbW+AdGgh07Ll1ouPux/VoCTXle5nRaH
+u1oDS39FGg6GtlavLo6Rvb0C2d6tcwRVaxQs4vh7ghzurZoAavLW1VzfQrHLd4WSk0yGXFp7
+nzRGu85tDPYcRlAarx2/pKPGGN5z8dWhfCokUD33ri8v6rvVrvmvkszwKP8H1M/QeLC+Xzts
+dIWyxs/y10UqPl2MZI4ijAYHIvxfxq5kuXFc2e7vVzh61TfiVZXmYdELDqDEFicToCTXhuG2
+1VWOsi2Hh7jdf/8yAZIiSCTohcM28xDEmEggpzLKhgqB/9gRjen8cBN6aUTccdU9i0pN81eB
+B1VhMMyn6b1X+h4RTyaLw9qa1vzywRb4IJ+uF+b9KncONpWv8OCHMDiAYYhu3KJ/oMAzX1/8
+bqtY4Z9Sbm+6/ys+VgaYmoiKTzEQFSX4Aj0ujoYlhJRKK175YDT1a/Ye3Sb5Un/lXfUXqm8r
+rcrvT3AufPz36vT01+n+Ho7M3yrUF2BnqG75ryaxY63RQZoUFhHhM4xZInX/1qtmxLKY7c03
+Jki1fsbmb4H0lBaxkJx5znD1sqNDWnIjPd8RTlhI5GEsmEkLIomi8p/QXlFcoH998w/s/8+w
+qQDmG49xeG/vb1+kUNC/+ZYVV/eyZYQXuGQNhZNyOCf198b0/SeUfflaa8p0vwQNMWv6JTFy
+CEsJNVHQtKIrRhkgGC5yANJZszX/yjRraF6HwzBDK/1zvaTwLii+fcNe9s7P76/nx0f406As
+w1fVTmBmokg+hvI3SzYhYdWOZDcUrkOI/Ej3HB+ODvT7l6VHQsg1hUTcPMgrMKCnMGfCxKQu
+QCrII5NJt79hCU2OR3IVISRPvR2pJEMA7OyrkC9GZk6BiCOqCmhqb1lp5O83yXWclZvrTtOb
+WZC9nt/Pd+fHajr0Bh9dnghGjmTUUaD1Ui8kpoYSEVtMCNc0DluleYvk/RpnGTd6pBiuyfBZ
+Fcz2/NrbMzKRXd09nu9+dQnsGTUrV9n2BsMG4A1PwgQGIkWbdGmKDAJ8jHr4q/czfO10BfwE
+WNa9dOEHPiZLffvacuMPE0/kTTjI7OEZbXmrNfem4WBbbHl1wHvw1+VBbTJ1IbQOAsgoqi8Z
+e7OigXRNWClWdDh7bAhz1AZyHM9Hpv27Bujuc/VTL92uRy1xv4rKgXaFBRz1Y3UJ0wrBif/D
+IGj6PulQ00Wg8gcXWb9HSI4gvyVjuPUmTqz0rk+3Ly8gNMgSDPuDLGA5g+WPRmb0NyzMU9L9
+g5OZNxlJbsbctp0rZG5vbAyciIgEqOiZtzoSpwd1PRaNFuYborozPeJ2SNItjErSv7O9Xv1G
+tpPtOv3zAovRNAi2W8sKkNjajfdnxMHwAiAc1lXHeM56TghLFSBYzZcWQH9F6XSRhd5kNe6f
+zOPAt3TPVoAU2p0VDecf6FaY22PiENLqN8uEiL3pdEUoA1W3hDzlhkAJULfz62dGPvayyZSP
+zEN/MFctSw94vNibpWdFRaMCwidF0jECRGS+ltweKK2+2LI8dkwuZQcMtu2nrTBW9ZP6NuHS
+qJqQpAfnhrJvb1BmBne4fb/7eX/+YbGR4mkgmmLoEbQiqmO/FfM9DHPcAawgecWTrUZzO6wS
+IO0g/2Ck10XILWo6WbbHpHkX1bzT40CLYpaUzmRcHvz+fWfT8dnrCYMEnz/erzZn6Pvns979
+zQBmOUORAwYanUtMsil321b8agGdnx/u3q74w+MDCBpX7u3dr5fH245mmJscklwPQ8h0inNf
+z7f3d+enq7eX093D3w93V3hDp1mVdNzi/tMElfj741lGiejbG9bdFfi9SY7PHE+s1rM5oWNE
+AJ8ux+YlXpMnZpk6w6AtctMgTDLk+46YrJYj+gQnQSJmURlEDEX0AdQ28ggLY8RAD87XI2L3
+lYUcs8no2FXPaxAMZ14S7liqS0LPrEuSPeI76xGxieHbSJ5PyBNUC2Kro4SYDSVq8sI8ag3Z
+3ISKPCYsaJAcexiX5mhtQo2xtWEbLmawwLHTzFuAwDsKsrORDMVnkVkOx0ggIGLDaZT8AFZi
+x2KqBCSvVlm8IoSaC50eCElfECKJ7CjnOJ7Nl0sbYLlcWFaYAqwII/AGsKbHWwJWMytgtR5Z
+67haE8Y/DX098P6aMBtHulhMba+zJJiM3dg8yuw73iwQ9gn4OmwNREAaIILIOYe1QvcNjC8l
+7cvCxXxkeTv35mK+stB3K0Isk9RkLhaEfhzpnHl2xsvD2XJxHMDEc0I6ldTdzQomMM1reGx0
+DnTc43w06mh5HBdVS+aHqci6exsXcWZ01ECaPEV13xAhnNun0/mxFBzEHJotRNl0bVkQUbZa
+EiclOSecKCYC7YiML8YjIoIPEucjIuyYIhKnH9k4CbAwAgVY06xEAiZjeqVB/2HTLdtbVQTd
+NxKwWgyUsCY6oQWwb5ANyLZLAQiY+9Q8u8Uhmo2mFskFAIvRbEC0OUTjyXJqx0TxdG7hEcKb
+zldrS4dR9yaSuIwWi6P5YkQVvpiulgOA9dQCcPLwe5o41tGoMbbBOMSrmWWnBfJ0bBcoKsjA
+R6bz0VAp67Upk46K4NwJF908JJUGF4QMIoMRaYSzYeZCME5DoXSvvIgJ5eQFjv6vMnvFZ1/A
+48BqYd6pWyh/PiW24xYogV+mqAQtiGTdRHc56wmxyDsg8/JsdauTzKdzQhq+wMhbvQsk5NF6
+SkhzGmoxWY7NR6oLDLeQ5VDdJci8ebZBqyVxb6aDBvsgUrzkE6jF0ryPXFAouc6J3UZDrRaz
+oS9KFGH8oKPWhKjRQoGwODhnsqD4zigzlhZsv1qNBuslUcQFXQdFbL4XFGxJ8/FiOtRI3N4m
+08GaqR1/Yt5bujBCtOjAJjNiJ2J+6NQxXXuXGJvX25efeJliUDqFMbD1rNhbdkk/7+ufHS+7
++t35uH84X3nnJg7ef3vZE1VUj9fbp9PVXx9//43q2a6RXKAFiGqiEkCLjIEM3CbgzL+tZ0kq
+wkCLaAgPfULGBJL0R98zbuy0NtCDnyCMopx5VgwGHYRqm/lShQlj2HrciIgDVYFyti8z2Ksi
+joEZ3BthHhRAYnyCoaohZqhqiBmsWgCzI9wkJUtgppnvhusqUc7kSN9vHCqQOZBjx8OIZeTr
+qKOlDSawAAwTVoUdpDAY4BJbaozCpE3Vn7W5jkFzFmAEhdiLPPP1BZDtRsTYGWNf3tNQ9NCN
+y81RzKhIdACpJBayOxhmskhjcgq5eer4fMsIRQE2skjL3ZjyxcJWhOjXTVI5tHFkClfbjGUJ
+fdhKR9q8jY+9yOG8iqxhLaMNbEXeaeiVBlJzdmyIGQidszGcFqjQ+A3S8TOQ4MzD0UERXgGt
+ZsdTEO4HQKTc1CpnP5+MlpH5iuUCc304+poPl7AoZe7V3mrwVLQu9Mt6ebytvXj7ZnbKedHr
+m4YGuRMzFaSkJhtrEKWE/RDHEKS9em1ha+hVYtuNYehD64Vg+Q3GRGPJRpg91wGYO+awu8XW
+uAdh0ZcJpbQVqFW4fZQ1M3ALfMOZCUY4z0uylxfmRSapGbXIJLXA6MEk2WXRLjTzbCR7W5bn
+hCJQkkP4z0KXwgdNvqGzaSAdOn+TJnlIeBQghMWwq5gTaEhyxCjNhSR/3zG69hsWuyFhxy7p
+AWGugEQoWPop0IAbulUHJ+oc4fQP3+R0mjAEhKgqJKniECZbYqNWVU/QSIZyhUFI5ElFMU1n
+Sbo3L1tJTjehdcaDyBF6tC+JgtzQETwkIESFURoQAdQQkWKuOMsMkIGD7cMIOxMjzKdDvHBM
+UC0epZZplDHhRDeE5YgEoJE3IUxIegRfgc08JHygJCYHMY7+BHdCWzNs3kySjoHbo45Th44Q
+DMRWYItUQrlQOjplUUHTc8qODpcEegM53MJseOzk4s/0xvoJEVpmLSxJTgWol/RtXnDRj4Ok
+gQrcUcqME7ozufhtLOsYJjFdxe8sT60N/H7jw25iWdnKWbrcEobBckuJDNaI0oZd23sv50i0
+ejfuluhZn269sESZO2LVCaIVIA8977vZ6AsZoaxKeLX1tJ290LX+ypMVnkmHnnvdqxmfZz//
+fXu4g81ZxvUybc/4tWxrZhFJmkn60WOh2YIUqdKQZO8Sg4KIIiJuRuXrjr8hZPD63a4B9QVw
+MBlBxJ3YL7FH3pFmh5yza9hl45azRPVQSfet2FRQTifacvMIwxSnuZbS7UJzQZCj7KJ96DvS
+HwaL6JrlKtOM2PvG/W/4tnKeN9qAt0qB8xr8Crvdwv0tYfosqdR9NnaoWWpEUgGlhos8jYg7
+dYCQAXZA3CG9JxOG2dJ9Ir6HDHkcumHUSQNW0RmwhTrfDwdxs2WUKkmGQxg+N5SUC6/UjFrx
+gTyDaffN8HDriZTfGKMiCpnMXgBv0MupHtanud9e3+9Gv+ml9qayCkMnPN2TvfVGmIhAWZLp
+H5PPMfCM4XHHa739vCxCJgOfmm/tsIr53jxvkYliTQ18qH7Pcd35d0ZsHxfQcUUcy2uIz7uH
+byNkSXhpXSAL6pq8gmxv4tWcMGqpMWh4RuUkqjE5n3vTgW+FPBpPCL28jiFMp2rQESDEnX2F
+kCav1AVuG0MZ9Gigz2AIa4SmD2djQd11VxD3ejox844awafz6XpEaFAqTBBPYerYxwqmH6VD
+ukDmK0Ib0CqFMF6pISyejib2WZzj9f60t9SQeQ8sNexRwjpHgwwukSnh/KJB7A1FCGH3oEGG
+VzSl6WgvRSL+Q9Ol6yVheXIZutnw6C6oRG7akp/Zl7NiHfb+heUzGQ+s1djLlnratDZrBwlW
+5nGWLmnN/EHnmU+wbJ9PJ5TiSKvh0ESGebT2Jr2pnNVJzQbqAQdqs3DQmh4TSnF4gcwpJV4L
+Mh+cqovVvAycOCTMzFvI5Wxo9UxmRMTChq2J3XgpnIGZNFuJgdYjZGpfqAghgpU0EB4vJgON
+cq9nq4FZnWdzb2AZ4owxxSi4yAk9O4CKotzqelPt/PwF4/0PTLQsGg1sEIgYWypW2alPx6a6
+8YRwbmh6puu30dwM89Mzxr3S61+97cdOFae7E1G7ekpIlhg/qqe4xDjcyl30IjviMz2gZB0I
+YmXyNau6YLzSLs15BHI3EbFKWdaGQCbcWhI3C9CZlSogi6bTEUm99tIYz/HQjHgTm09kF4yR
+7B+w9H4ANsR7jw8Y/k2LsyaDsYsjWSV4bpSj4blbBMY8BlhiQOaxK45+yLOICMlTEAoXmcRF
+BS3oX4zsH16hFqblgq+hk09s8F+KH+5ez2/nv9+vtv++nF6/7K9+fJzgIGsKSiKcTUhczm3S
+yA9C4pLU2+ZpfPHzNx3EvGhXBercFd3kSkBD943M0fNeYNRPpNUbpXd+ejo/w/CiL6rUof7v
+/Pqr3YDLOyUP59O5mafpqLF5husgQs/WAnm+x5YjM9PvwCg76jaMT0ZoJmu+uUfEdZqH5jCe
+rWKoUCktCJWCtQ0JPULoaIFiMaFEuR4KJmrntG7BhvHm8+C9z7zPo7dh8HkwE9vPg10/64D1
+sFD85eFZTuPOTaKa2/z88WryAIIP8NzTUjVVj2RA+97TKqdDzXMwLSe6SGnWjTIvJD6UfmNE
+KlrplpMRdht8WxXgEay8AcSiIHz3a4SIzXb6rKmkIG7KnDByU2OkFJlQ63Lr9J92mhVJvMpu
+f5zepS87N9w5y/fRB3Mj44mVUeYQkSq6SOjb/ZLKxhqXPNZbq66XTk/n9xMG1jTKRSxOBUZB
+7e98+cvT24/ufOIA/L1Kp50C68RQLhfntE5wzsZ7jZ+NQhl62lTZPcyjWCQY34IKSstl2Aiz
+uIA5B/fd7FOX0T8Kj4r3LlMQmoeD2GOzgykV3sUvvjVCm9CTWeGS/I9x+/k+9HQgPEDQpPX1
+DEM9UNfp0m0WjRVEjpEUzUqeIO6PMioQ+MdfKjqP5uVbe78TGgYMyYBxbCarJMZ4EUS+0Taq
+4K55ubpeXO7Q2BsR9BdRr0t65Xh99Up2epUpsp6B98FG//B+fjVJKbnTZ6zO8/3r+UGL3w2n
+7DwNyRCrjJikgopJiBKxbtyhbLkw1K9mkGhiIhLVe7UOEGzwKm4sFKGiVOTV4FB6AeW5LE4/
+Xm9bMYi1GL7BA/A6NYe0r8JCm5SBecoCbWqhzShazkLO8oBT9D9pkiss7yVhFHCytsGk92Zz
+8EG33fBYOp6Wiwq3h0A7sNXPKuVSx+KwGSjcElKZWbKlrsLAhQKTo3borfMXBlTPbzIip1nA
++9amvnpk4l6KIr0FtK84/VcuR6wiJSITS4pH5PLBeGMB7453/UHMJal3o0fZXlRZB0rD7PVu
+737qYYID3ks1qsj+F0wKhDH4cVYbJnXI0/ViMaJmSuEHphr4Kf8WOOJbIjrlNj0rOu2MObxj
+7pV9g269Xafz81KfYYLSP2bTpYkephgiDpMn//bwdl6t5usv43aqtBa0EIH5ZioRveWgWO7b
+6eP+DGzC0MIqUUJLW4sP0OtORJ2HMr8qiMBhx3VGEmFbjfycmSY5ZoRrf6GjOpNp6trlyQeX
+5WtsqsIcMYi3kV7lC5Z1JqR5/EWxDwwGKxc1KhBZrFUvzZ1kw2iW5fgWWkDTtlYSWmmQHNRS
+G5cmWd76M7BwXQ9kP4LErwuHbwni/kh/MA4TGG2CmMaWrslo2nVynFmpC5qa2z6acUF5OMCE
+2ZNMiJpuSdRaD/BPvdQ1XtAi18ykBGbSnpoabTk16wd0EJGlQQOtiCACHZBZjOyAPvW5T1Sc
+Mp3ugMx3FR3QZypOaFw7IOIeVQd9pgsW5jumDsisN9BA6+knSlp/ZoDXxPWQDiJcxPSKE1YC
+CIJ9HCc8kTVPK2Y8+Uy1AUVPAod7oSmrU7sm4+4Kqwl0d9QIes7UiOGOoGdLjaAHuEbQ66lG
+0KPWdMNwY4hLVg1CN2eXhqvSvJs3ZPO9EZJjx0OeTZgp1wiPRYI4FF8gcAgsiOybDShPHUE5
+LzWgmzyMooHPbRw2CMkZYWtbI0JoF5UKrsEkBXG1p3XfUKNEke8oBQFiusKpFEB3p9fn0+PV
+z9u7XyofuXz68vrw/P5LasXvn05vP/op61WwaXkp2A94H6WbiO3hvF5vlo1cHTPOcen3ELOW
+XCSzyKryfUZpcPybxJGxgIyqPO/89AIy9RcMXXUFR5m7X2+yNXfq+Wu/QSoIYxU0+vKV5inm
+ty08wma4BQNxkBjMFsg/OHlABKzz3SqJuEkcYYm82ITXEygvy5nnCOa3jtGKHhdcoMdH24JT
+eunIN/8Yjyat/uYCvgb8NgYJKSZELub46kaVm69nigTTx2ABbkrkHZMsPz0kxrz0qm/aZ48q
+wXrTik43cubJtOBwHIgxApmhzC5E9VqaRDf94oI0x3BszNmVGNIbNeNGWRidGVCQ1DO4aUU1
+WbbbETr9018fP36oFab3CDsKdNIgrlerYKkAxATbxJ0hFpOlwMcTSnmoikndP6FLiONBVLg1
+zFwViUAPMtO8lGrEqv0y55FjGLOaYqkilO/tyoJTZ0OFIlJFKqK6kYZ1Zl2GfNvJwqcuHXCY
+rqLz3a+PF8UwtrfPP7TbjEjGJoVSBPQlEa9fEeGkm8Bx2CEyEB6u7dH5MuD4HgxGL2+ziV7u
+nahgf4x0YhWPDx5fRhHWk99nmh06Mima3JsEnbfVILLEV4vXMgpYwR1jmTmfSa1xcvSc39Wa
+gK03zvoGAzh4l+V29ftbpel7+7+rp4/30z8n+OP0fvf161ctpr4qNBfAOgU7WpPQc6gumSW8
+moODhRwOCgTLKj1kDuG1qLDy9tOy/vN031xxGhGyAOxHy0dqi/EIhmOgLvCZ0sF42ywK6Jzw
+8qOwQgRmrKRDbuNckalkLB/dKc5Fslz42bPcTTnrz5MoJL5cx6EeQnAbS5W3uyHlh15F1gfJ
+ASTXsJOQUykNvYLYG+SgItnYazIlHJKR8SeUl9Jg78sCWB7YEVQxLQhsmDiUUdTwnMm4Uwg5
+xkhl1wajrO6Sua626ZzeoKv5IOce7Kyo1SQk62rgSpbnGHAm+VNJC0ZwdQ9sxUQgiCXejTle
+j9wegyJRAonsirxjg9NQN7mTbc2YWuYNJLVbgErIFMuETiCxeWnudyB4dyzHCJFy4vAOwqte
+VKW0boLhDVz2PReupiqXztKbaews2Ht5GgQ2SMXfbRC121gA2wOMig1Qicv19b1CEgqtKt+V
+6kIi8px8v+SJk/Ftalorbu4kIInC6pZ6qSRNWOe+Xj53EpifKNlXLxBbSQPHRM42oNqRLR1R
+J1vGAN7kQpVGLiUc2xKC5V/mVenCYtjGTm5KDlZPJlVSHSdf8cOPZ3lkE6e39w5HjHY+oRtG
+viS5eMmpGC9uvcvITcvC7lxM7U3TJa8FWau0w4CnIkck6WqzXcyaLZRu15Yd/SI2b8kSgMe3
+ZGONhyJxOwCKlIiKiAB55DY74Eu6GwpKEy7pRUFo+yU13zp8K81yLG2lnMDRUtUxZY3pzIGd
+ZYKgalZGyaEhtdLfUgh9IQHnDvtIogAGzHvHCCs2dfYqfUc4GKYpL3qq6ct6dtBhkzyISZ/a
+3cbXYi7h/+bJmMuzMS7FwuVOAlxJ5oY3H/QRYfhu48arMv+VIZcS64FpTr04Vz1RYYjKxGUm
+ujO+RSySQ5j4fTkPh9cmt5qi2dckWNZeBEP7x29Pt3c/v92jQPYF/nw9f+W/9T7kwCmhm3uw
+uQbBHGMYCeP/+7qS3YZBIPorVT+gS3LppQcMpKXyEoGjxrlEbRWpubSSUx/y950Z4hjswVce
+i2HGDMtjZqiSarvvfvDoqT2cTnffkyqRi1RUagNTua0S7gPIydDYK5LnmB2+uvb4d+ZI0kll
+c1purKkb+LW0Iz4UiWY27yzI3p6RNlJ8tRJsGYoIf0C/l7m4eZzo7SR75O9lDLJS9dZ86KII
+2GJj9Pk2EAfxQRKueEwpbMNMkn7XefxsP9rzTfvbgd0K3w/ArGk10sl13I++uwPOLa3JOYgI
+rvt7mhmIq5QwlCsMyH5hnTBZcl0m0LU0SJgU6ykUklbpG5FTIov1Vr76bZ3V0eMHaeVeSlPz
+2gNo4hEalqsfH5ThjQ7CpgYrygwMYMvF6BuWC9acxhlyI3XWPDFFPZIgo/sswr6LhKc2nyNL
+nDkByl/05CajkvzOHiD+sk1slKm9bHxQw152/KKGojfOD0++q/b93DVIH1OVDtKvdW53CLDN
+eWifyTemnV7H2CnAoUZS2NgoiULoRZpKhqYQU9XtF1aRfGE/kxgZpZL7EwqxzQ2UyVYqej3v
+XmYO/R3yMCuuoqvFdPh+Q5jAWYbzS62wkYsPOLObuAv6B9LFlP0YwwAA
+
+--Dxnq1zWXvFF0Q93v--
