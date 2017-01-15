@@ -1,83 +1,47 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 2/2] ARM64: dts: meson-gx: add the missing uart_AO_B
-Date: Sun, 15 Jan 2017 23:20:29 +0100
-Message-ID: <20170115222029.8271-3-martin.blumenstingl@googlemail.com>
-References: <20170115222029.8271-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/4] tty: serial: meson: allow baud-rates higher than 115200
+Date: Sun, 15 Jan 2017 23:32:52 +0100
+Message-ID: <20170115223255.10350-2-martin.blumenstingl@googlemail.com>
+References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170115222029.8271-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170115223255.10350-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the missing node for the uart_AO_B port to the meson-gx.dtsi
-(as this is supported by GXBB, GXL and GXM) along with the required
-pinctrl pins. This is required as some boards are using it (the boards
-from the Khadas VIM series for example have it exposed on the pin
-headers).
+The vendor driver allows setting baud-rates higher than 115200 baud.
+There is a check in the vendor driver which prevents using more than
+115200 baud during startup, however it does not have such a check in
+.set_termios.
+Higher baud-rates are often used by the bluetooth modules embedded into
+the SDIO wifi chips (Amlogic devices use brcmfmac based wifi chips quite
+often, 2000000 baud seems to be a common value for the UART baud-rate in
+Amlogic's "libbt").
+
+I have tested this on a Meson GXL device with uart_A (to which the
+bluetooth module is connected, where initialization times out with
+115200 baud) and uart_AO (which I manually set to 2000000 baud  and then
+connected with my USB UART adapter to that).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 8 ++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 7 +++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 7 +++++++
- 3 files changed, 22 insertions(+)
+ drivers/tty/serial/meson_uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index cddad8c795ec..5ece505dca71 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -324,6 +324,14 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/tty/serial/meson_uart.c b/drivers/tty/serial/meson_uart.c
+index 6aea0f4a9165..60f16795d16b 100644
+--- a/drivers/tty/serial/meson_uart.c
++++ b/drivers/tty/serial/meson_uart.c
+@@ -364,7 +364,7 @@ static void meson_uart_set_termios(struct uart_port *port,
  
-+			uart_AO_B: serial@4e0 {
-+				compatible = "amlogic,meson-uart";
-+				reg = <0x0 0x004e0 0x0 0x14>;
-+				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>;
-+				status = "disabled";
-+			};
-+
- 			ir: ir@580 {
- 				compatible = "amlogic,meson-gxbb-ir";
- 				reg = <0x0 0x00580 0x0 0x40>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 5d686334f692..474435e21759 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -138,6 +138,13 @@
- 			};
- 		};
+ 	writel(val, port->membase + AML_UART_CONTROL);
  
-+		uart_ao_b_pins: uart_ao_b {
-+			mux {
-+				groups = "uart_tx_ao_b", "uart_rx_ao_b";
-+				function = "uart_ao_b";
-+			};
-+		};
-+
- 		remote_input_ao_pins: remote_input_ao {
- 			mux {
- 				groups = "remote_input_ao";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index bb2842f8a08f..53ed7a5f50ab 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -82,6 +82,13 @@
- 			};
- 		};
+-	baud = uart_get_baud_rate(port, termios, old, 9600, 115200);
++	baud = uart_get_baud_rate(port, termios, old, 9600, 4000000);
+ 	meson_uart_change_speed(port, baud);
  
-+		uart_ao_b_pins: uart_ao_b {
-+			mux {
-+				groups = "uart_tx_ao_b", "uart_rx_ao_b";
-+				function = "uart_ao_b";
-+			};
-+		};
-+
- 		remote_input_ao_pins: remote_input_ao {
- 			mux {
- 				groups = "remote_input_ao";
+ 	port->read_status_mask = AML_UART_TX_FIFO_WERR;
 -- 
 2.11.0
 
