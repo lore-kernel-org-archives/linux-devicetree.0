@@ -1,110 +1,205 @@
-From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2] Documentation: usb: fix wrong documentation paths
-Date: Sun, 15 Jan 2017 13:14:28 +0100
-Message-ID: <20170115121428.3255-1-yegorslists@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] iio: adc: Add Maxim MAX11100 driver
+Date: Sun, 15 Jan 2017 13:18:03 +0100
+Message-ID: <75132564-be27-809c-2d23-6c49ef10fab3@metafoo.de>
+References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1484301038-16386-2-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484301038-16386-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fixes wrong spelled "pinctrl-bindings.txt" and "qcom-dwc3-usb-phy.txt"
-file names as also wrong specified "mt8173-mtu3.txt" file name.
+On 01/13/2017 10:50 AM, Jacopo Mondi wrote:
+> From: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> 
+> Add iio driver for Maxim MAX11100 single-channel ADC.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> Tested-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> ---
+>  drivers/iio/adc/Kconfig    |   9 +++
+>  drivers/iio/adc/Makefile   |   1 +
+>  drivers/iio/adc/max11100.c | 187 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 197 insertions(+)
+>  create mode 100644 drivers/iio/adc/max11100.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 38bc319..c32bc7a 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -307,6 +307,15 @@ config MAX1027
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called max1027.
+>  
+> +config MAX11100
+> +	tristate "Maxim max11100 ADC driver"
+> +	depends on SPI_MASTER
+> +	help
+> +	  Say yes here to build support for Maxim max11100 SPI ADC
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called max11100.
+> +
+>  config MAX1363
+>  	tristate "Maxim max1363 ADC driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index d36c4be..5684369 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -31,6 +31,7 @@ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+>  obj-$(CONFIG_LTC2485) += ltc2485.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+> +obj-$(CONFIG_MAX11100) += max11100.o
+>  obj-$(CONFIG_MAX1363) += max1363.o
+>  obj-$(CONFIG_MCP320X) += mcp320x.o
+>  obj-$(CONFIG_MCP3422) += mcp3422.o
+> diff --git a/drivers/iio/adc/max11100.c b/drivers/iio/adc/max11100.c
+> new file mode 100644
+> index 0000000..78e2a45
+> --- /dev/null
+> +++ b/drivers/iio/adc/max11100.c
+> @@ -0,0 +1,187 @@
+> +/*
+> + * iio/adc/max11100.c
+> + * Maxim max11100 ADC Driver with IIO interface
+> + *
+> + * Copyright (C) 2016 Renesas Electronics Corporation
+> + * Copyright (C) 2016 Jacopo Mondi
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/driver.h>
+> +
+> +/*
+> + * LSB is the ADC single digital step
+> + * 1 LSB = (vref_mv / 2 ^ 16)
+> + *
+> + * LSB is used to calculate analog voltage value
+> + * from the number of ADC steps count
+> + *
+> + * Ain = (count * LSB)
+> + */
+> +#define MAX11100_LSB_DIV		(1 << 16)
+> +
+> +struct max11100_state {
+> +	const struct max11100_chip_desc *desc;
+> +	struct regulator *vref_reg;
+> +	struct spi_device *spi;
+> +};
+> +
+> +static struct iio_chan_spec max11100_channels[] = {
+> +	{ /* [0] */
+> +		.type = IIO_VOLTAGE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static struct max11100_chip_desc {
+> +	unsigned int num_chan;
+> +	const struct iio_chan_spec *channels;
+> +} max11100_desc = {
+> +	.num_chan = ARRAY_SIZE(max11100_channels),
+> +	.channels = max11100_channels,
+> +};
+> +
+> +static int max11100_read_single(struct iio_dev *indio_dev, int *val)
+> +{
+> +	int ret;
+> +	struct max11100_state *state = iio_priv(indio_dev);
+> +	uint8_t buffer[3];
+> +
+> +	ret = spi_read(state->spi, buffer, sizeof(buffer));
+> +	if (ret) {
+> +		dev_err(&indio_dev->dev, "SPI transfer failed\n");
+> +		return ret;
+> +	}
+> +
+> +	/* the first 8 bits sent out from ADC must be 0s */
+> +	if (buffer[0]) {
+> +		dev_err(&indio_dev->dev, "Invalid value: buffer[0] != 0\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	*val = (buffer[1] << 8) | buffer[2];
+> +
+> +	return 0;
+> +}
+> +
+> +static int max11100_read_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int *val, int *val2, long info)
+> +{
+> +	int ret, vref_uv;
+> +	struct max11100_state *state = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = max11100_read_single(indio_dev, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		vref_uv = regulator_get_voltage(state->vref_reg);
+> +		if (vref_uv < 0)
+> +			/* dummy regulator "get_voltage" returns -EINVAL */
+> +			return -EINVAL;
+> +
+> +		*val =  vref_uv / 1000;
+> +		*val2 = MAX11100_LSB_DIV;
+> +		return IIO_VAL_FRACTIONAL;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info max11100_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = max11100_read_raw,
+> +};
+> +
+> +static int max11100_probe(struct spi_device *spi)
+> +{
+> +	int ret;
+> +	struct iio_dev *indio_dev;
+> +	struct max11100_state *state;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*state));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	state = iio_priv(indio_dev);
+> +	state->spi = spi;
+> +	state->desc = &max11100_desc;
+> +
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->dev.of_node = spi->dev.of_node;
+> +	indio_dev->info = &max11100_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = state->desc->channels;
+> +	indio_dev->num_channels = state->desc->num_chan;
 
-Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
-Changes:
-	v1 -> v2: add changelog text (Greg Kroah-Hartman)
-
- Documentation/devicetree/bindings/usb/dwc3-st.txt     | 4 ++--
- Documentation/devicetree/bindings/usb/ehci-st.txt     | 2 +-
- Documentation/devicetree/bindings/usb/mt8173-mtu3.txt | 2 +-
- Documentation/devicetree/bindings/usb/mt8173-xhci.txt | 4 ++--
- Documentation/devicetree/bindings/usb/qcom,dwc3.txt   | 2 +-
- 5 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-index 01c71b1..50dee3b 100644
---- a/Documentation/devicetree/bindings/usb/dwc3-st.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-@@ -20,10 +20,10 @@ See: Documentation/devicetree/bindings/reset/reset.txt
-    with 'reg' property
- 
-  - pinctl-names	: A pinctrl state named "default" must be defined
--See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
- 
-  - pinctrl-0	: Pin control group
--See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
- 
-  - ranges	: allows valid 1:1 translation between child's address space and
- 		  parent's address space
-diff --git a/Documentation/devicetree/bindings/usb/ehci-st.txt b/Documentation/devicetree/bindings/usb/ehci-st.txt
-index fb45fa5..410d922 100644
---- a/Documentation/devicetree/bindings/usb/ehci-st.txt
-+++ b/Documentation/devicetree/bindings/usb/ehci-st.txt
-@@ -7,7 +7,7 @@ Required properties:
-  - interrupts		: one EHCI interrupt should be described here
-  - pinctrl-names	: a pinctrl state named "default" must be defined
-  - pinctrl-0		: phandle referencing pin configuration of the USB controller
--See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-  - clocks		: phandle list of usb clocks
-  - clock-names		: should be "ic" for interconnect clock and "clk48"
- See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-index e049d19..718386a 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-@@ -30,7 +30,7 @@ Optional properties:
- 	"id_float" and "id_ground" are optinal which depends on
- 	"mediatek,enable-manual-drd"
-  - pinctrl-0 : pin control group
--	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
- 
-  - maximum-speed : valid arguments are "super-speed", "high-speed" and
- 	"full-speed"; refer to usb/generic.txt
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-index 2a930bd..7ea3971 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-@@ -37,7 +37,7 @@ Optional properties:
-  - usb3-lpm-capable : supports USB3.0 LPM
-  - pinctrl-names : a pinctrl state named "default" must be defined
-  - pinctrl-0 : pin control group
--	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
- 
- Example:
- usb30: usb@11270000 {
-@@ -67,7 +67,7 @@ usb30: usb@11270000 {
- 
- In the case, xhci is added as subnode to mtu3. An example and the DT binding
- details of mtu3 can be found in:
--Documentation/devicetree/bindings/usb/mtu3.txt
-+Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
- 
- Required properties:
-  - compatible : should contain "mediatek,mt8173-xhci"
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-index 39acb08..73cc096 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-@@ -18,7 +18,7 @@ A child node must exist to represent the core DWC3 IP block. The name of
- the node is not important. The content of the node is defined in dwc3.txt.
- 
- Phy documentation is provided in the following places:
--Documentation/devicetree/bindings/phy/qcom,dwc3-usb-phy.txt
-+Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
- 
- Example device nodes:
- 
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Consider setting indio_dev->name= "max11100"; so userspace can identify the
+type of the device.
