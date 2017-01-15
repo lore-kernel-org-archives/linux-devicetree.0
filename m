@@ -1,66 +1,71 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] iio: adc: Add Maxim MAX11100 driver
-Date: Sun, 15 Jan 2017 16:41:50 +0100
-Message-ID: <89b6a029-cbeb-e993-db9b-8ed6dbf3029e@gmail.com>
-References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
- <502b12a0-6011-c0eb-06b4-a40245d1d8db@jmondi.org>
- <a4fe9cd7-4854-d916-ae30-50a7668cec4e@kernel.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [RFT PATCH] ARM64: dts: meson-gxbb: Add reserved memory zone and
+ usable memory range
+Date: Sun, 15 Jan 2017 16:44:20 +0100
+Message-ID: <612bc7bc-4ee4-51c0-d7ac-06151854ac03@suse.de>
+References: <20161212101801.28491-1-narmstrong@baylibre.com>
+ <09bb78ed-c8ec-d21f-d464-16e55c481d4e@gmx.de>
+ <56869b90-6bee-f6ae-a7b1-884b4c0d72c0@baylibre.com>
+ <2ac01237-a7f8-5b3b-0f97-dd49ce6623fb@gmx.de>
+ <90d5b5a3-6dd8-aab2-8701-112a10e3364c@gmx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a4fe9cd7-4854-d916-ae30-50a7668cec4e-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <90d5b5a3-6dd8-aab2-8701-112a10e3364c@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2017 03:31 PM, Jonathan Cameron wrote:
-> On 15/01/17 14:13, jacopo mondi wrote:
->> Hi Jonathan,
->>    thanks for review,
->>
->> On 13/01/2017 10:50, Jacopo Mondi wrote:
->>> Hello,
->>>    sending out v4 splitting device tree bindings documentation and actual ADC
->>> driver.
->>> No changes in driver code since v3.
->>>
->>> Same question for iio maintainers here:
->>> I would like to have clarified the measure unit returned by read_raw().
->>> Currently (value_raw * value_scale) return the ADC input value in mV.
-> Good.
->>> While testing the patch I've been questioned if that should not actually
->>> be in uV. This is easily achievable making _scale return a value in uV.
->>> I have found no mention of this in the ABI documentation as it speaks of
->>> generic voltage. Can we have a final word on this?
->>
->> I see you have reviewed the driver without complaining for the
->> read_raw() measure unit, so I assume this replies to the above
->> question as well...
->>
-> The units are specified in Documentation/ABI/testing/sysfs-bus-iio.
+Am 23.12.2016 um 10:42 schrieb Heinrich Schuchardt:
+> it really makes a difference if we write
 > 
->> What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
->> What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
->> What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
->> What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_q_raw
->> KernelVersion:	2.6.35
->> Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Description:
->> 		Raw (unscaled no bias removal etc.) voltage measurement from
->> 		channel Y. In special cases where the channel does not
->> 		correspond to externally available input one of the named
->> 		versions may be used. The number must always be specified and
->> 		unique to allow association with event codes. Units after
->> 		application of scale and offset are millivolts.
+>  	memory@0 {
+>  		device_type = "memory";
+>  		linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+>  	};
 > 
-> So millivolts.  This comes from a, perhaps ill judged, decision to match
-> hwmon units were we could.
+> or
+> 
+>  	memory@0 {
+>  		device_type = "memory";
+>  		reg = <0x0 0x1000000 0x0 0x7f000000>;
+>  	};
+> 
+> The second version leads to failure of the Odroid C2.
+> 
+> When I looked at /sys/firmware/fdt I saw this difference:
+> 
+> --- fails
+> +++ works
+> 
+>         memory@0 {
+> -               device_type = "memory";
+>                 reg = <0x0 0x0 0x0 0x78000000>;
+> +               device_type = "memory";
+> +               linux,usable-memory = <0x0 0x1000000 0x0 0x7f000000>;
+>         };
+> 
+> I found the following sentence in the NXP forum:
+> In case you want to overwrite the memory usage passed from u-boot, you
+> can use "linux,usable-memory".
+> https://community.nxp.com/thread/382284
 
-Fun, regulator framework returns values in uV to add to the chaos :)
+The Odroid-C2 is in mainline U-Boot. Please submit a patch to U-Boot
+instead of forcing the creation of unnecessary new .dts files onto
+everyone due to hardcoded linux,usable-memory properties. In fact, it
+already reserves 0x1000000, so it seems you are merely using an older
+U-Boot.
 
+http://git.denx.de/?p=u-boot.git;a=blob;f=arch/arm/mach-meson/board.c;h=f159cbf849f75ab046e6f3a025bbc97c0bcfd59d;hb=HEAD#l39
+
+I would bet that the upper limit is unrelated here.
+
+Regards,
+Andreas
 
 -- 
-Best regards,
-Marek Vasut
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
