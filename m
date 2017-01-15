@@ -1,92 +1,195 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 4/4] ARM64: dts: meson: meson-gx: add the SAR ADC
-Date: Sun, 15 Jan 2017 23:42:21 +0100
-Message-ID: <20170115224221.15510-5-martin.blumenstingl@googlemail.com>
-References: <20170111174334.24343-1-martin.blumenstingl@googlemail.com>
- <20170115224221.15510-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170115224221.15510-1-martin.blumenstingl@googlemail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: carlo@caione.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/4] ARM64: dts: meson-gx: add the serial CTS and RTS pin
+ groups
+Date: Sun, 15 Jan 2017 23:32:53 +0100
+Message-ID: <20170115223255.10350-3-martin.blumenstingl@googlemail.com>
+References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, jslaby@suse.com, gregkh@linuxfoundation.org, khilman@baylibre.com, carlo@caione.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the SAR ADC to meson-gxbb.dtsi and meson-gxl.dtsi. GXBB provides a
-10-bit ADC while GXL (and GXM, which uses the same ADC as GXL) provides
-a 12-bit ADC.
-Some boards use resistor ladder buttons connected through one of the ADC
-channels. On newer devices (GXL and GXM) some boards use pull-ups/downs
-to change the resistance (and thus the ADC value) on of the ADC channels
-to indicate the board revision.
+This adds pinctrl group nodes for the CTS and RTS pins of each serial
+controller. This makes it possible to enable the CTS and RTS pins which
+are controlled by the serial controller hardware (through the meson_uart
+driver).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   |  8 ++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 10 ++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 10 ++++++++++
- 3 files changed, 28 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 40 +++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 40 +++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index cddad8c795ec..041e4f0ed7d7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -237,6 +237,14 @@
- 				status = "disabled";
- 			};
- 
-+			saradc: adc@8680 {
-+				compatible = "amlogic,meson-saradc";
-+				#io-channel-cells = <1>;
-+				status = "disabled";
-+				reg = <0x0 0x8680 0x0 0x34>;
-+				interrupts = <GIC_SPI 79 IRQ_TYPE_EDGE_RISING>;
-+			};
-+
- 			pwm_ef: pwm@86c0 {
- 				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
- 				reg = <0x0 0x086c0 0x0 0x10>;
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 5d686334f692..114d7e1c9fc0 100644
+index 474435e21759..f001c4d007bc 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -429,6 +429,16 @@
- 	clocks = <&clkc CLKID_I2C>;
- };
+@@ -138,6 +138,14 @@
+ 			};
+ 		};
  
-+&saradc {
-+	compatible = "amlogic,meson-gxbb-saradc", "amlogic,meson-saradc";
-+	clocks = <&xtal>,
-+		 <&clkc CLKID_SAR_ADC>,
-+		 <&clkc CLKID_SANA>,
-+		 <&clkc CLKID_SAR_ADC_CLK>,
-+		 <&clkc CLKID_SAR_ADC_SEL>;
-+	clock-names = "clkin", "core", "sana", "adc_clk", "adc_sel";
-+};
++		uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
++			mux {
++				groups = "uart_cts_ao_a",
++				       "uart_rts_ao_a";
++				function = "uart_ao";
++			};
++		};
 +
- &sd_emmc_a {
- 	clocks = <&clkc CLKID_SD_EMMC_A>,
- 		 <&xtal>,
+ 		uart_ao_b_pins: uart_ao_b {
+ 			mux {
+ 				groups = "uart_tx_ao_b", "uart_rx_ao_b";
+@@ -145,6 +153,14 @@
+ 			};
+ 		};
+ 
++		uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
++			mux {
++				groups = "uart_cts_ao_b",
++				       "uart_rts_ao_b";
++				function = "uart_ao_b";
++			};
++		};
++
+ 		remote_input_ao_pins: remote_input_ao {
+ 			mux {
+ 				groups = "remote_input_ao";
+@@ -290,6 +306,14 @@
+ 			};
+ 		};
+ 
++		uart_a_cts_rts_pins: uart_a_cts_rts {
++			mux {
++				groups = "uart_cts_a",
++				       "uart_rts_a";
++				function = "uart_a";
++			};
++		};
++
+ 		uart_b_pins: uart_b {
+ 			mux {
+ 				groups = "uart_tx_b",
+@@ -298,6 +322,14 @@
+ 			};
+ 		};
+ 
++		uart_b_cts_rts_pins: uart_b_cts_rts {
++			mux {
++				groups = "uart_cts_b",
++				       "uart_rts_b";
++				function = "uart_b";
++			};
++		};
++
+ 		uart_c_pins: uart_c {
+ 			mux {
+ 				groups = "uart_tx_c",
+@@ -306,6 +338,14 @@
+ 			};
+ 		};
+ 
++		uart_c_cts_rts_pins: uart_c_cts_rts {
++			mux {
++				groups = "uart_cts_c",
++				       "uart_rts_c";
++				function = "uart_c";
++			};
++		};
++
+ 		i2c_a_pins: i2c_a {
+ 			mux {
+ 				groups = "i2c_sck_a",
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index bb2842f8a08f..6b63296b6c60 100644
+index 53ed7a5f50ab..7d7fd87f094b 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -273,6 +273,16 @@
- 	clocks = <&clkc CLKID_I2C>;
- };
+@@ -82,6 +82,14 @@
+ 			};
+ 		};
  
-+&saradc {
-+	compatible = "amlogic,meson-gxl-saradc", "amlogic,meson-saradc";
-+	clocks = <&xtal>,
-+		 <&clkc CLKID_SAR_ADC>,
-+		 <&clkc CLKID_SANA>,
-+		 <&clkc CLKID_SAR_ADC_CLK>,
-+		 <&clkc CLKID_SAR_ADC_SEL>;
-+	clock-names = "clkin", "core", "sana", "adc_clk", "adc_sel";
-+};
++		uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
++			mux {
++				groups = "uart_cts_ao_a",
++				       "uart_rts_ao_a";
++				function = "uart_ao";
++			};
++		};
 +
- &sd_emmc_a {
- 	clocks = <&clkc CLKID_SD_EMMC_A>,
- 		 <&xtal>,
+ 		uart_ao_b_pins: uart_ao_b {
+ 			mux {
+ 				groups = "uart_tx_ao_b", "uart_rx_ao_b";
+@@ -89,6 +97,14 @@
+ 			};
+ 		};
+ 
++		uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
++			mux {
++				groups = "uart_cts_ao_b",
++				       "uart_rts_ao_b";
++				function = "uart_ao_b";
++			};
++		};
++
+ 		remote_input_ao_pins: remote_input_ao {
+ 			mux {
+ 				groups = "remote_input_ao";
+@@ -164,6 +180,14 @@
+ 			};
+ 		};
+ 
++		uart_a_cts_rts_pins: uart_a_cts_rts {
++			mux {
++				groups = "uart_cts_a",
++				       "uart_rts_a";
++				function = "uart_a";
++			};
++		};
++
+ 		uart_b_pins: uart_b {
+ 			mux {
+ 				groups = "uart_tx_b",
+@@ -172,6 +196,14 @@
+ 			};
+ 		};
+ 
++		uart_b_cts_rts_pins: uart_b_cts_rts {
++			mux {
++				groups = "uart_cts_b",
++				       "uart_rts_b";
++				function = "uart_b";
++			};
++		};
++
+ 		uart_c_pins: uart_c {
+ 			mux {
+ 				groups = "uart_tx_c",
+@@ -180,6 +212,14 @@
+ 			};
+ 		};
+ 
++		uart_c_cts_rts_pins: uart_c_cts_rts {
++			mux {
++				groups = "uart_cts_c",
++				       "uart_rts_c";
++				function = "uart_c";
++			};
++		};
++
+ 		i2c_a_pins: i2c_a {
+ 			mux {
+ 				groups = "i2c_sck_a",
 -- 
 2.11.0
-
