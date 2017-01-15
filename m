@@ -1,116 +1,87 @@
-From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Sun, 15 Jan 2017 14:19:14 +0100
-Message-ID: <1484486354-4585-1-git-send-email-lukma@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] DT/bindings: Add bindings for TI ADS7950 A/DC chips
+Date: Sun, 15 Jan 2017 13:52:06 +0000
+Message-ID: <6afef95f-caed-ed68-ba1f-9f5e80e68d26@kernel.org>
+References: <1484157171-15571-1-git-send-email-david@lechnology.com>
+ <1484157171-15571-2-git-send-email-david@lechnology.com>
+ <f1e845c4-7db0-c6fe-fbd2-420902110be9@kernel.org>
+ <662a48e1-39fc-4fb7-a3b9-b671d2e40029@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <662a48e1-39fc-4fb7-a3b9-b671d2e40029@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some devices (due to e.g. bad PCIe signal integrity) require to run
-with forced GEN1 speed on PCIe bus.
+On 14/01/17 18:00, David Lechner wrote:
+> On 01/14/2017 06:53 AM, Jonathan Cameron wrote:
+>> On 11/01/17 17:52, David Lechner wrote:
+>>> This adds device tree bindings for the TI ADS7950 family of A/DC chips.
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>> This is in of itself good, but we may need to have some deprecated
+>> elements to continue supporting what was implicitly happening with
+>> the missnaming so as to avoid accidentally breaking someone's device
+>> tree.
+>>
+> 
+> As I mentioned in my cover letter, this driver, as far as I can tell,
+> only exists in your testing branch, so I find it highly unlikely that
+> we would be breaking anyone. It is not in mainline and it is not even
+> in linux-next.
 
-This patch changes the speed explicitly on dra7 based devices when
-proper device tree attribute is defined for the PCIe controller.
+Oops, I not only have a memory like a goldfish, I clearly didn't read your
+cover letter either.
 
-Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
----
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-Patch applies on newest origin/master
-SHA1: f4d3935e4f4884ba80561db5549394afb8eef8f7
+The driver will hit next before this does but will get into mainline
+in the same ultimate pull request unless something weird happens so that's
+all fine.
 
-Tested at AM5728
-
----
- Documentation/devicetree/bindings/pci/ti-pci.txt |  1 +
- drivers/pci/host/pci-dra7xx.c                    | 23 +++++++++++++++++++++++
- drivers/pci/host/pcie-designware.h               |  1 +
- 3 files changed, 25 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-index 60e2516..9f97409 100644
---- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-@@ -25,6 +25,7 @@ PCIe Designware Controller
- 
- Optional Property:
-  - gpios : Should be added if a gpio line is required to drive PERST# line
-+ - to,pcie-is-gen1: Indicates that forced gen1 port operation is needed.
- 
- Example:
- axi {
-diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-index 9595fad..eec5fae 100644
---- a/drivers/pci/host/pci-dra7xx.c
-+++ b/drivers/pci/host/pci-dra7xx.c
-@@ -63,6 +63,13 @@
- #define	LINK_UP						BIT(16)
- #define	DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
- 
-+#define         PCIECTRL_EP_DBICS_LNK_CAP                       0x007C
-+#define         MAX_LINK_SPEEDS_MASK				GENMASK(3, 0)
-+#define         MAX_LINK_SPEEDS_GEN1                            BIT(0)
-+
-+#define         PCIECTRL_PL_WIDTH_SPEED_CTL                     0x080C
-+#define         CFG_DIRECTED_SPEED_CHANGE                       BIT(17)
-+
- struct dra7xx_pcie {
- 	struct pcie_port	pp;
- 	void __iomem		*base;		/* DT ti_conf */
-@@ -270,6 +277,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
- 	struct pcie_port *pp = &dra7xx->pp;
- 	struct device *dev = pp->dev;
- 	struct resource *res;
-+	u32 val;
- 
- 	pp->irq = platform_get_irq(pdev, 1);
- 	if (pp->irq < 0) {
-@@ -296,6 +304,18 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
- 	if (!pp->dbi_base)
- 		return -ENOMEM;
- 
-+	if (pp->is_gen1) {
-+		dev_info(dev, "GEN1 forced\n");
-+
-+		val = readl(pp->dbi_base + PCIECTRL_EP_DBICS_LNK_CAP);
-+		set_mask_bits(&val, MAX_LINK_SPEEDS_MASK, MAX_LINK_SPEEDS_GEN1);
-+		writel(val, pp->dbi_base + PCIECTRL_EP_DBICS_LNK_CAP);
-+
-+		val = readl(pp->dbi_base + PCIECTRL_PL_WIDTH_SPEED_CTL);
-+		val &= ~CFG_DIRECTED_SPEED_CHANGE;
-+		writel(val, pp->dbi_base + PCIECTRL_PL_WIDTH_SPEED_CTL);
-+	}
-+
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
- 		dev_err(dev, "failed to initialize host\n");
-@@ -404,6 +424,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		goto err_gpio;
- 	}
- 
-+	if (of_property_read_bool(np, "ti,pcie-is-gen1"))
-+		pp->is_gen1 = true;
-+
- 	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
- 	reg &= ~LTSSM_EN;
- 	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
-diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-index a567ea2..2fb0b18 100644
---- a/drivers/pci/host/pcie-designware.h
-+++ b/drivers/pci/host/pcie-designware.h
-@@ -50,6 +50,7 @@ struct pcie_port {
- 	struct irq_domain	*irq_domain;
- 	unsigned long		msi_data;
- 	u8			iatu_unroll_enabled;
-+	u8                      is_gen1;
- 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
- };
- 
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+>> Jonathan
+>>> ---
+>>>  .../devicetree/bindings/iio/adc/ti-ads7950.txt     | 23 ++++++++++++++++++++++
+>>>  1 file changed, 23 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt b/Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
+>>> new file mode 100644
+>>> index 0000000..e77a6f7
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
+>>> @@ -0,0 +1,23 @@
+>>> +* Texas Instruments ADS7950 family of A/DC chips
+>>> +
+>>> +Required properties:
+>>> + - compatible: Must be one of "ti,ads7950", "ti,ads7951", "ti,ads7952",
+>>> +   "ti,ads7953", "ti,ads7954", "ti,ads7955", "ti,ads7956", "ti,ads7957",
+>>> +   "ti,ads7958", "ti,ads7959", "ti,ads7960", or "ti,ads7961"
+>>> + - reg: SPI chip select number for the device
+>>> + - #io-channel-cells: Must be 1 as per ../iio-bindings.txt
+>>> + - vref-supply: phandle to a regulator node that supplies the 2.5V or 5V
+>>> +   reference voltage
+>>> +
+>>> +Recommended properties:
+>>> + - spi-max-frequency: Definition as per
+>>> +        Documentation/devicetree/bindings/spi/spi-bus.txt
+>>> +
+>>> +Example:
+>>> +adc@0 {
+>>> +    compatible = "ti,ads7957";
+>>> +    reg = <0>;
+>>> +    #io-channel-cells = <1>;
+>>> +    vref-supply = <&refin_supply>;
+>>> +    spi-max-frequency = <10000000>;
+>>> +};
+>>>
+>>
+> 
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
