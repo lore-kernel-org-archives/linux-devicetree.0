@@ -1,40 +1,40 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 0/5] nput: mpr121 - switch to use device tree probe
-Date: Sun, 15 Jan 2017 15:07:01 -0800
-Message-ID: <20170115230701.GC23285@dtor-ws>
-References: <1484486144-27947-1-git-send-email-akinobu.mita@gmail.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 04/10] sata: hardreset: retry if phys link is down
+Date: Sun, 15 Jan 2017 18:10:49 -0500
+Message-ID: <20170115231049.GC14446@mtj.duckdns.org>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-5-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484486144-27947-1-git-send-email-akinobu.mita@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+In-Reply-To: <1484311084-31547-5-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 15, 2017 at 10:15:39PM +0900, Akinobu Mita wrote:
-> This driver currently only supports legacy platform data probe.  This
-> change adds device tree support and gets rid of platform data probe code
-> since no one is actually using mpr121 platform data in the mainline.
-> 
-> This series also contains miscellaneous cleanup and bug fixes that
-> mostly I found while playing with this driver.
-> 
-> * Changes since v1 (All changes are suggested by Dmitry Torokhov)
-> - Add patch 'annotate PM methods as __maybe_unused'
-> - Use for_each_set_bit() to search changed bit
-> - Use linux,keycodes property instead of using matrix keymap API
-> - Get rid of platform data
-> 
-> Akinobu Mita (5):
->   Input: mpr121 - annotate PM methods as __maybe_unused
->   Input: mpr121 - remove unused field in struct mpr121_touchkey
->   Input: mpr121 - set missing event capability
->   Input: mpr121 - handle multiple bits change of status register
->   Input: mpr121 - switch to device tree probe
+Hello,
 
-Applied the lot (the last 2 with minor edits), thank you.
+On Fri, Jan 13, 2017 at 01:37:58PM +0100, Bartosz Golaszewski wrote:
+> The sata core driver already retries to resume the link because some
+> controllers ignore writes to the SControl register.
+> 
+> We have a use case with the da850 SATA controller where at PLL0
+> frequency of 456MHz (needed to properly service the LCD controller)
+> the chip becomes unstable and the hardreset operation is ignored the
+> first time 50% of times.
+> 
+> Retrying just the resume operation doesn't work - we need to issue
+> the phy/wake reset again to make it work.
+> 
+> If ata_phys_link_offline() returns true in sata_link_hardreset(),
+> retry a couple times before really giving up.
+
+I think it'd be better to implement the driver specific implementation
+rather than changing the behavior for everybody.
+
+Thanks.
 
 -- 
-Dmitry
+tejun
