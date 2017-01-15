@@ -1,71 +1,70 @@
-From: Kukjin Kim <kgene.kim@gmail.com>
-Subject: Re: [PATCH 0/4] Drop drivers for Exynos4415
-Date: Sun, 15 Jan 2017 10:00:45 +0800
-Message-ID: <16B68D3F-5D33-41D5-A2FE-218422E16AB3@gmail.com>
-References: <20170114123642.15581-1-krzk@kernel.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170114123642.15581-1-krzk@kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-gpio@vge
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v2 4/4] ARM: dts: imx6*-hummingboard2: convert to more
+ conventional vmmc-supply
+Date: Sun, 15 Jan 2017 00:11:21 -0200
+Message-ID: <CAOMZO5CUcEWiMpwbgYwcVgZkh41ET3J9E-LQBfc7bmFEGUCvpw@mail.gmail.com>
+References: <20170113144449.GQ14217@n2100.armlinux.org.uk> <E1cS36q-0002wW-C3@rmk-PC.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1cS36q-0002wW-C3-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzk,
+On Fri, Jan 13, 2017 at 12:45 PM, Russell King
+<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
 
-2017. 1. 14. PM 8:36 Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> +       reg_usdhc2_vmmc: reg-usdhc2-vmmc {
+> +               compatible = "regulator-fixed";
+> +               gpio = <&gpio4 30 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_hummingboard2_vmmc>;
+> +               regulator-boot-on;
+> +               regulator-max-microvolt = <3300000>;
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-name = "usdhc2_vmmc";
+> +               startup-delay-us = <1000>;
+> +       };
+> +
+>         sound-sgtl5000 {
+>                 audio-codec = <&sgtl5000>;
+>                 audio-routing =
+> @@ -393,7 +400,6 @@
+>
+>                 pinctrl_hummingboard2_usdhc2_aux: hummingboard2-usdhc2-aux {
+>                         fsl,pins = <
+> -                               MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
+>                                 MX6QDL_PAD_KEY_ROW1__SD2_VSELECT 0x1b071
+>                                 MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30 0x1b0b0
+>                         >;
+> @@ -432,6 +438,12 @@
+>                         >;
+>                 };
+>
+> +               pinctrl_hummingboard2_vmmc: hummingboard2-vmmc {
+> +                       fsl,pins = <
+> +                               MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
 
-> Hi,
->=20
-> Support for Exynos4415 is being removed because:
-> 1. There are no upstream users,
-> 2. There are no known downstream users,
-> 3. Except compile testing, you cannot build working kernel
->   for Exynos4415 anymore.
->=20
-> Patches are rebased on current next and are independent.
-> Please pick up as you wish.
->=20
-> Best regards,
-> Krzysztof
+Shouldn't this be gpio4 30 instead?
 
-Agreed,
+> +                       >;
+> +               };
+> +
+>                 pinctrl_hummingboard2_usdhc3: hummingboard2-usdhc3 {
+>                         fsl,pins = <
+>                                 MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
+> @@ -519,7 +531,7 @@
+>                 &pinctrl_hummingboard2_usdhc2_aux
+>                 &pinctrl_hummingboard2_usdhc2_200mhz
+>         >;
+> -       mmc-pwrseq = <&usdhc2_pwrseq>;
+> +       vmmc-supply = <&reg_usdhc2_vmmc>;
+>         cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
 
-Acked-by: Kukjin Kim <kgene@kernel.org>
-
-k-gene
->=20
-> Krzysztof Kozlowski (4):
->  ARM: EXYNOS: Remove Exynos4415 driver (SoC not supported anymore)
->  clk: samsung: Remove Exynos4415 driver (SoC not supported anymore)
->  pinctrl: samsung: Remove support for Exynos4415 (SoC not supported
->    anymore)
->  drm: exynos: Remove support for Exynos4415 (SoC not supported anymore)
->=20
-> .../devicetree/bindings/clock/exynos4415-clock.txt |   38 -
-> .../bindings/display/exynos/exynos_dsim.txt        |    1 -
-> .../bindings/display/exynos/samsung-fimd.txt       |    1 -
-> arch/arm/mach-exynos/Kconfig                       |    5 -
-> arch/arm/mach-exynos/exynos.c                      |    1 -
-> arch/arm/mach-exynos/suspend.c                     |    1 -
-> drivers/clk/samsung/Makefile                       |    1 -
-> drivers/clk/samsung/clk-exynos4415.c               | 1022 ----------------=
-----
-> drivers/gpu/drm/exynos/exynos_drm_dsi.c            |   15 +-
-> drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   18 +-
-> drivers/pinctrl/samsung/pinctrl-exynos.c           |   75 --
-> drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 -
-> drivers/pinctrl/samsung/pinctrl-samsung.h          |    1 -
-> include/dt-bindings/clock/exynos4415.h             |  360 -------
-> 14 files changed, 3 insertions(+), 1538 deletions(-)
-> delete mode 100644 Documentation/devicetree/bindings/clock/exynos4415-cloc=
-k.txt
-> delete mode 100644 drivers/clk/samsung/clk-exynos4415.c
-> delete mode 100644 include/dt-bindings/clock/exynos4415.h
->=20
-> --=20
-> 2.9.3
->=20
+as gpio1 4 seems to be used as card detect.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
