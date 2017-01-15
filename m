@@ -1,70 +1,111 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC v2 4/4] ARM: dts: imx6*-hummingboard2: convert to more
- conventional vmmc-supply
-Date: Sun, 15 Jan 2017 00:11:21 -0200
-Message-ID: <CAOMZO5CUcEWiMpwbgYwcVgZkh41ET3J9E-LQBfc7bmFEGUCvpw@mail.gmail.com>
-References: <20170113144449.GQ14217@n2100.armlinux.org.uk> <E1cS36q-0002wW-C3@rmk-PC.armlinux.org.uk>
+From: Dan Haab <dhaab@luxul.com>
+Subject: [PATCH 1/2] ARM: BCM5301X: Add DT for Luxul XAP-1410
+Date: Sat, 14 Jan 2017 19:29:27 -0700
+Message-ID: <1484447368-7622-1-git-send-email-dhaab@luxul.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1cS36q-0002wW-C3-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dan Haab <dhaab@luxul.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 12:45 PM, Russell King
-<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+Luxul XAP-1410 in a dual-band access point device based on BCM47081 with
+serial flash. It has 3 LEDs and just one (reset) button.
 
-> +       reg_usdhc2_vmmc: reg-usdhc2-vmmc {
-> +               compatible = "regulator-fixed";
-> +               gpio = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_hummingboard2_vmmc>;
-> +               regulator-boot-on;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-name = "usdhc2_vmmc";
-> +               startup-delay-us = <1000>;
-> +       };
-> +
->         sound-sgtl5000 {
->                 audio-codec = <&sgtl5000>;
->                 audio-routing =
-> @@ -393,7 +400,6 @@
->
->                 pinctrl_hummingboard2_usdhc2_aux: hummingboard2-usdhc2-aux {
->                         fsl,pins = <
-> -                               MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
->                                 MX6QDL_PAD_KEY_ROW1__SD2_VSELECT 0x1b071
->                                 MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30 0x1b0b0
->                         >;
-> @@ -432,6 +438,12 @@
->                         >;
->                 };
->
-> +               pinctrl_hummingboard2_vmmc: hummingboard2-vmmc {
-> +                       fsl,pins = <
-> +                               MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
+Signed-off-by: Dan Haab <dhaab@luxul.com>
+---
+ arch/arm/boot/dts/Makefile                    |    1 +
+ arch/arm/boot/dts/bcm47081-luxul-xap-1410.dts |   60 +++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm47081-luxul-xap-1410.dts
 
-Shouldn't this be gpio4 30 instead?
-
-> +                       >;
-> +               };
-> +
->                 pinctrl_hummingboard2_usdhc3: hummingboard2-usdhc3 {
->                         fsl,pins = <
->                                 MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
-> @@ -519,7 +531,7 @@
->                 &pinctrl_hummingboard2_usdhc2_aux
->                 &pinctrl_hummingboard2_usdhc2_200mhz
->         >;
-> -       mmc-pwrseq = <&usdhc2_pwrseq>;
-> +       vmmc-supply = <&reg_usdhc2_vmmc>;
->         cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-
-as gpio1 4 seems to be used as card detect.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cccdbcb..04fd8f0 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -83,6 +83,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm47081-asus-rt-n18u.dtb \
+ 	bcm47081-buffalo-wzr-600dhp2.dtb \
+ 	bcm47081-buffalo-wzr-900dhp.dtb \
++	bcm47081-luxul-xap-1410.dtb \
+ 	bcm4709-asus-rt-ac87u.dtb \
+ 	bcm4709-buffalo-wxr-1900dhp.dtb \
+ 	bcm4709-netgear-r7000.dtb \
+diff --git a/arch/arm/boot/dts/bcm47081-luxul-xap-1410.dts b/arch/arm/boot/dts/bcm47081-luxul-xap-1410.dts
+new file mode 100644
+index 0000000..9b57598
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm47081-luxul-xap-1410.dts
+@@ -0,0 +1,60 @@
++/*
++ * Copyright 2017 Luxul Inc.
++ *
++ * Licensed under the ISC license.
++ */
++
++/dts-v1/;
++
++#include "bcm47081.dtsi"
++
++/ {
++	compatible = "luxul,xap-1410v1", "brcm,bcm47081", "brcm,bcm4708";
++	model = "Luxul XAP-1410 V1";
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++	};
++
++	memory {
++		reg = <0x00000000 0x08000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		5ghz {
++			label = "bcm53xx:blue:5ghz";
++			gpios = <&chipcommon 13 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "none";
++		};
++
++		2ghz {
++			label = "bcm53xx:blue:2ghz";
++			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "none";
++		};
++
++		status {
++			label = "bcm53xx:green:status";
++			gpios = <&chipcommon 15 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "timer";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		restart {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 11 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&spi_nor {
++	status = "okay";
++};
+-- 
+1.7.9.5
