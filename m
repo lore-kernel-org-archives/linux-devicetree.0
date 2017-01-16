@@ -1,120 +1,67 @@
-From: Jun Nie <jun.nie@linaro.org>
-Subject: Re: [PATCH v2 3/3] reset: zx2967: add reset controller driver for
- ZTE's zx2967 family
-Date: Mon, 16 Jan 2017 22:28:41 +0800
-Message-ID: <95ebb6fd-540b-f6d5-e039-2cd718ff35d8@linaro.org>
-References: <1484564194-18530-1-git-send-email-baoyou.xie@linaro.org>
- <1484564194-18530-3-git-send-email-baoyou.xie@linaro.org>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 03/10] devicetree: bindings: add bindings for ahci-da850
+Date: Mon, 16 Jan 2017 15:30:35 +0100
+Message-ID: <CAMpxmJW9ns-aG=4zYHcV5-2b_TdmJ7q+Ap1jdyoxstZjWYRL2A@mail.gmail.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-4-git-send-email-bgolaszewski@baylibre.com>
+ <35ff358d-9b17-b2be-38d8-6a51cdddc1a1@lechnology.com> <CAMpxmJUau9BgAOhacPvcA=NwyE6-yEfDgPdcCZ_JCuNH-amJSA@mail.gmail.com>
+ <d8406f53-b97d-ca9a-f7d1-94ce5b7064f7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484564194-18530-3-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baoyou Xie <baoyou.xie@linaro.org>, p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d8406f53-b97d-ca9a-f7d1-94ce5b7064f7-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxN+W5tDAx5pyIMTbml6UgMTg6NTYsIEJhb3lvdSBYaWUgd3JvdGU6Cj4gVGhpcyBwYXRj
-aCBhZGRzIHJlc2V0IGNvbnRyb2xsZXIgZHJpdmVyIGZvciBaVEUncyB6eDI5NjcgZmFtaWx5Lgo+
-Cj4gU2lnbmVkLW9mZi1ieTogQmFveW91IFhpZSA8YmFveW91LnhpZUBsaW5hcm8ub3JnPgo+IC0t
-LQo+ICBkcml2ZXJzL3Jlc2V0L0tjb25maWcgICAgICAgIHwgICA2ICsrKwo+ICBkcml2ZXJzL3Jl
-c2V0L01ha2VmaWxlICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9yZXNldC9yZXNldC16eDI5Njcu
-YyB8IDEyNSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDMg
-ZmlsZXMgY2hhbmdlZCwgMTMyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvcmVzZXQvcmVzZXQtengyOTY3LmMKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Jlc2V0
-L0tjb25maWcgYi9kcml2ZXJzL3Jlc2V0L0tjb25maWcKPiBpbmRleCAxNzJkYzk2Li5mNGNkZmU5
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcmVzZXQvS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvcmVz
-ZXQvS2NvbmZpZwo+IEBAIC04Niw2ICs4NiwxMiBAQCBjb25maWcgUkVTRVRfVU5JUEhJRVIKPiAg
-CSAgU2F5IFkgaWYgeW91IHdhbnQgdG8gY29udHJvbCByZXNldCBzaWduYWxzIHByb3ZpZGVkIGJ5
-IFN5c3RlbSBDb250cm9sCj4gIAkgIGJsb2NrLCBNZWRpYSBJL08gYmxvY2ssIFBlcmlwaGVyYWwg
-QmxvY2suCj4KPiArY29uZmlnIFJFU0VUX1pYMjk2Nwo+ICsJYm9vbCAiWlRFIFpYMjk2NyBSZXNl
-dCBEcml2ZXIiCj4gKwlkZXBlbmRzIG9uIEFSQ0hfWlggfHwgQ09NUElMRV9URVNUCj4gKwloZWxw
-Cj4gKwkgIFRoaXMgZW5hYmxlcyB0aGUgcmVzZXQgY29udHJvbGxlciBkcml2ZXIgZm9yIFpURSdz
-IHp4Mjk2NyBmYW1pbHkuCj4gKwo+ICBjb25maWcgUkVTRVRfWllOUQo+ICAJYm9vbCAiWllOUSBS
-ZXNldCBEcml2ZXIiIGlmIENPTVBJTEVfVEVTVAo+ICAJZGVmYXVsdCBBUkNIX1pZTlEKPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9yZXNldC9NYWtlZmlsZSBiL2RyaXZlcnMvcmVzZXQvTWFrZWZpbGUK
-PiBpbmRleCAxM2IzNDZlLi4yY2QzZjZjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcmVzZXQvTWFr
-ZWZpbGUKPiArKysgYi9kcml2ZXJzL3Jlc2V0L01ha2VmaWxlCj4gQEAgLTEzLDQgKzEzLDUgQEAg
-b2JqLSQoQ09ORklHX1JFU0VUX1NUTTMyKSArPSByZXNldC1zdG0zMi5vCj4gIG9iai0kKENPTkZJ
-R19SRVNFVF9TVU5YSSkgKz0gcmVzZXQtc3VueGkubwo+ICBvYmotJChDT05GSUdfVElfU1lTQ09O
-X1JFU0VUKSArPSByZXNldC10aS1zeXNjb24ubwo+ICBvYmotJChDT05GSUdfUkVTRVRfVU5JUEhJ
-RVIpICs9IHJlc2V0LXVuaXBoaWVyLm8KPiArb2JqLSQoQ09ORklHX1JFU0VUX1pYMjk2NykgKz0g
-cmVzZXQtengyOTY3Lm8KPiAgb2JqLSQoQ09ORklHX1JFU0VUX1pZTlEpICs9IHJlc2V0LXp5bnEu
-bwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Jlc2V0L3Jlc2V0LXp4Mjk2Ny5jIGIvZHJpdmVycy9y
-ZXNldC9yZXNldC16eDI5NjcuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAw
-MC4uYmM5NTI2MQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL3Jlc2V0L3Jlc2V0LXp4
-Mjk2Ny5jCj4gQEAgLTAsMCArMSwxMjUgQEAKPiArLyoKPiArICogWlRFJ3MgengyOTY3IGZhbWls
-eSByZXNldCBjb250cm9sbGVyIGRyaXZlcgo+ICsgKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTcg
-WlRFIEx0ZC4KPiArICoKPiArICogQXV0aG9yOiBCYW95b3UgWGllIDxiYW95b3UueGllQGxpbmFy
-by5vcmc+Cj4gKyAqCj4gKyAqIExpY2Vuc2UgdGVybXM6IEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNl
-bnNlIChHUEwpIHZlcnNpb24gMgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
-aD4KPiArI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3Bs
-YXRmb3JtX2RldmljZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvcmVzZXQtY29udHJvbGxlci5oPgo+
-ICsKPiArc3RydWN0IHp4Mjk2N19yZXNldCB7Cj4gKwl2b2lkIF9faW9tZW0JCQkqcmVnX2Jhc2U7
-Cj4gKwlzcGlubG9ja190CQkJbG9jazsKPiArCXN0cnVjdCByZXNldF9jb250cm9sbGVyX2Rldgly
-Y2RldjsKPiArfTsKPiArCj4gK3N0YXRpYyBpbnQgengyOTY3X3Jlc2V0X2FjdChzdHJ1Y3QgcmVz
-ZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LAo+ICsJCQkgICAgdW5zaWduZWQgbG9uZyBpZCwgYm9v
-bCBhc3NlcnQpCj4gK3sKPiArCXN0cnVjdCB6eDI5NjdfcmVzZXQgKnJlc2V0ID0gTlVMTDsKPiAr
-CXUzMiBiYW5rID0gaWQgLyAzMjsKPiArCXUzMiBvZmZzZXQgPSBpZCAlIDMyOwo+ICsJdTMyIHJl
-ZzsKPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7Cj4gKwo+ICsJcmVzZXQgPSBjb250YWluZXJfb2Yo
-cmNkZXYsIHN0cnVjdCB6eDI5NjdfcmVzZXQsIHJjZGV2KTsKPiArCj4gKwlzcGluX2xvY2tfaXJx
-c2F2ZSgmcmVzZXQtPmxvY2ssIGZsYWdzKTsKPiArCj4gKwlyZWcgPSByZWFkbChyZXNldC0+cmVn
-X2Jhc2UgKyAoYmFuayAqIDQpKTsKCnJlYWRsX3JlbGF4ZWQgaXMgcmVjb21tZW5kZWQuCgo+ICsJ
-aWYgKGFzc2VydCkKPiArCQlyZWcgJj0gfkJJVChvZmZzZXQpOwo+ICsJZWxzZQo+ICsJCXJlZyB8
-PSBCSVQob2Zmc2V0KTsKPiArCXdyaXRlbChyZWcsIHJlc2V0LT5yZWdfYmFzZSArIChiYW5rICog
-NCkpOwoKd3JpdGVsX3JlbGF4ZWQgaXMgcmVjb21tZW5kZWQuCgo+ICsKPiArCXNwaW5fdW5sb2Nr
-X2lycXJlc3RvcmUoJnJlc2V0LT5sb2NrLCBmbGFncyk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30K
-PiArCj4gK3N0YXRpYyBpbnQgengyOTY3X3Jlc2V0X2Fzc2VydChzdHJ1Y3QgcmVzZXRfY29udHJv
-bGxlcl9kZXYgKnJjZGV2LAo+ICsJCQkgICAgICAgdW5zaWduZWQgbG9uZyBpZCkKPiArewo+ICsJ
-cmV0dXJuIHp4Mjk2N19yZXNldF9hY3QocmNkZXYsIGlkLCB0cnVlKTsKPiArfQo+ICsKPiArc3Rh
-dGljIGludCB6eDI5NjdfcmVzZXRfZGVhc3NlcnQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2
-ICpyY2RldiwKPiArCQkJCSB1bnNpZ25lZCBsb25nIGlkKQo+ICt7Cj4gKwlyZXR1cm4gengyOTY3
-X3Jlc2V0X2FjdChyY2RldiwgaWQsIGZhbHNlKTsKPiArfQo+ICsKPiArc3RhdGljIHN0cnVjdCBy
-ZXNldF9jb250cm9sX29wcyB6eDI5NjdfcmVzZXRfb3BzID0gewo+ICsJLmFzc2VydAkJPSB6eDI5
-NjdfcmVzZXRfYXNzZXJ0LAo+ICsJLmRlYXNzZXJ0CT0gengyOTY3X3Jlc2V0X2RlYXNzZXJ0LAo+
-ICt9Owo+ICsKPiArc3RhdGljIGludCB6eDI5NjdfcmVzZXRfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikKPiArewo+ICsJc3RydWN0IHp4Mjk2N19yZXNldCAqcmVzZXQ7Cj4gKwlz
-dHJ1Y3QgcmVzb3VyY2UgKnJlczsKPiArCj4gKwlyZXNldCA9IGRldm1fa3phbGxvYygmcGRldi0+
-ZGV2LCBzaXplb2YoKnJlc2V0KSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIXJlc2V0KQo+ICsJCXJl
-dHVybiAtRU5PTUVNOwo+ICsKPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJ
-T1JFU09VUkNFX01FTSwgMCk7Cj4gKwlyZXNldC0+cmVnX2Jhc2UgPSBkZXZtX2lvcmVtYXBfcmVz
-b3VyY2UoJnBkZXYtPmRldiwgcmVzKTsKPiArCWlmIChJU19FUlIocmVzZXQtPnJlZ19iYXNlKSkK
-PiArCQlyZXR1cm4gUFRSX0VSUihyZXNldC0+cmVnX2Jhc2UpOwo+ICsKPiArCXNwaW5fbG9ja19p
-bml0KCZyZXNldC0+bG9jayk7Cj4gKwo+ICsJcmVzZXQtPnJjZGV2Lm93bmVyID0gVEhJU19NT0RV
-TEU7Cj4gKwlyZXNldC0+cmNkZXYubnJfcmVzZXRzID0gcmVzb3VyY2Vfc2l6ZShyZXMpICogODsK
-PiArCXJlc2V0LT5yY2Rldi5vcHMgPSAmengyOTY3X3Jlc2V0X29wczsKPiArCXJlc2V0LT5yY2Rl
-di5vZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gKwo+ICsJZGV2X2luZm8oJnBkZXYtPmRl
-diwgInJlc2V0IGNvbnRyb2xsZXIgY250OiVkIiwKPiArCQkgIHJlc2V0LT5yY2Rldi5ucl9yZXNl
-dHMpOwo+ICsKPiArCXJldHVybiBkZXZtX3Jlc2V0X2NvbnRyb2xsZXJfcmVnaXN0ZXIoJnBkZXYt
-PmRldiwgJnJlc2V0LT5yY2Rldik7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgengyOTY3X3Jlc2V0
-X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4gKwlyZXR1cm4gMDsK
-PiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgengyOTY3X3Jlc2V0
-X2R0X2lkc1tdID0gewo+ICsJIHsgLmNvbXBhdGlibGUgPSAienRlLHp4Mjk2NzE4LXJlc2V0Iiwg
-fSwKPiArCSB7fSwKPiArfTsKPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgengyOTY3X3Jlc2V0
-X2R0X2lkcyk7Cj4gKwo+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciB6eDI5NjdfcmVz
-ZXRfZHJpdmVyID0gewo+ICsJLnByb2JlCT0gengyOTY3X3Jlc2V0X3Byb2JlLAo+ICsJLnJlbW92
-ZQk9IHp4Mjk2N19yZXNldF9yZW1vdmUsCj4gKwkuZHJpdmVyID0gewo+ICsJCS5uYW1lCQk9ICJ6
-eDI5NjctcmVzZXQiLAo+ICsJCS5vZl9tYXRjaF90YWJsZQk9IHp4Mjk2N19yZXNldF9kdF9pZHMs
-Cj4gKwl9LAo+ICt9OwoKVGhpcyBsaW5lIGNhbiByZXBsYWNlIGFsbCBiZWxvdyBjb2RlIGlmIHlv
-dSBkbyBub3QgaGF2ZSBhbnkgb3RoZXIgCmRlcGVuZGVuY3kgaW4gZWFybGllciBzdGFnZS4KCmJ1
-aWx0aW5fcGxhdGZvcm1fZHJpdmVyKHp4Mjk2N19yZXNldF9kcml2ZXIpOwoKPiArCj4gK3N0YXRp
-YyBpbnQgX19pbml0IHp4Mjk2N19yZXNldF9pbml0KHZvaWQpCj4gK3sKPiArCXJldHVybiBwbGF0
-Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJnp4Mjk2N19yZXNldF9kcml2ZXIpOwo+ICt9Cj4gK2FyY2hf
-aW5pdGNhbGwoengyOTY3X3Jlc2V0X2luaXQpOwo+ICsKPiArc3RhdGljIHZvaWQgX19leGl0IHp4
-Mjk2N19yZXNldF9leGl0KHZvaWQpCj4gK3sKPiArCXBsYXRmb3JtX2RyaXZlcl91bnJlZ2lzdGVy
-KCZ6eDI5NjdfcmVzZXRfZHJpdmVyKTsKPiArfQo+ICttb2R1bGVfZXhpdCh6eDI5NjdfcmVzZXRf
-ZXhpdCk7Cj4gKwo+ICtNT0RVTEVfQVVUSE9SKCJCYW95b3UgWGllIDxiYW95b3UueGllQGxpbmFy
-by5vcmc+Iik7Cj4gK01PRFVMRV9ERVNDUklQVElPTigiWlRFIHp4Mjk2NyBSZXNldCBDb250cm9s
-bGVyIERyaXZlciIpOwo+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7Cj4KCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+2017-01-16 13:45 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+> On Monday 16 January 2017 03:43 PM, Bartosz Golaszewski wrote:
+>> 2017-01-13 20:25 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
+>>>
+>>> A clock multiplier property seems redundant if you are specifying a clock.
+>>> It should be possible to get the rate from the clock to determine which
+>>> multiplier is needed.
+>>>
+>>
+>> I probably should have named it differently. This is not a multiplier
+>> of a clock derived from PLL0 or PLL1. Instead it's a value set by
+>> writing to the Port PHY Control Register (MPY bits) of the SATA
+>> controller that configures the multiplier for the external low-jitter
+>> clock. On the lcdk the signals (REFCLKP, REFCLKN) are provided by
+>> CDCM61001 (SATA OSCILLATOR component on the schematics).
+>>
+>> I'll find a better name and comment the property accordingly.
+>>
+>> FYI: the da850 platform does not use the common clock framework, so I
+>> don't specify the clock property on the sata node in the device tree.
+>> Instead I add the clock lookup entry in patch [01/10]. This is
+>> transparent for AHCI which can get the clock as usual by calling
+>> clk_get() in ahci_platform_get_resources().
+>
+> I think David's point is that the SATA_REFCLK needs to be modeled as a
+> actual clock input to the IP. You should be able to get the rate using
+> clk_get_rate() and make the MPY bits calculation depending on the
+> incoming rate.
+>
+> You should be able to model the clock even when not using common clock
+> framework.
+>
+> DA850 AHCI does not use a con_id at the moment (it assumes a single
+> clock), and that needs to change.
+>
+
+It's true that once davinci gets ported (is this planned?) to using
+the common clock framework, we could just create a fixed-clock node in
+da850-lcdk for the SATA oscillator, so the new property is redundant.
+
+What I don't get is how should I model a clock that is not
+configurable and is board-specific? Is hard-coding the relevant rate
+in da850.c with a huge FIXME the right way?
+
+Thanks,
+Bartosz Golaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
