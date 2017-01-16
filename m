@@ -1,49 +1,59 @@
-From: christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 02/18] drivers/fsi: Add device & driver definitions
-Date: Mon, 16 Jan 2017 15:23:36 -0600
-Message-ID: <1484601816-98188-1-git-send-email-christopher.lee.bostic@gmail.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Mon, 16 Jan 2017 22:24:33 +0100
+Message-ID: <596c8ae0-06c5-5951-cf98-fa9eaffce374@denx.de>
+References: <CACna6ryLDwr0S=e-uUt+ZGcY8mNDnUtBPg_RmqtSVBziJkZd5w@mail.gmail.com>
+ <20170116210039.25267-1-u.kleine-koenig@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170116210039.25267-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+On 01/16/2017 10:00 PM, Uwe Kleine-König wrote:
+> The MR25 family doesn't support JEDEC, so they need explicit mentioning
+> in the list of supported spi IDs. This makes it possible to add these
+> using for example:
+> 
+> 	compatible = "everspin,mr25h40";
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Add structs for fsi devices & drivers, and struct device conversion
-functions.
+Acked-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
----
- include/linux/fsi.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> ---
+> Changes since (implicit) v1:
+>  - use Kib instead of kib
+> 
+>  drivers/mtd/devices/m25p80.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+> index 9cf7fcd28034..aa50bd96de3a 100644
+> --- a/drivers/mtd/devices/m25p80.c
+> +++ b/drivers/mtd/devices/m25p80.c
+> @@ -305,6 +305,11 @@ static const struct spi_device_id m25p_ids[] = {
+>  	{"m25p40-nonjedec"},	{"m25p80-nonjedec"},	{"m25p16-nonjedec"},
+>  	{"m25p32-nonjedec"},	{"m25p64-nonjedec"},	{"m25p128-nonjedec"},
+>  
+> +	/* Everspin MRAMs */
+> +	{ "mr25h256" }, /* 256 Kib, 40 MHz */
+> +	{ "mr25h10" },  /*   1 Mib, 40 MHz */
+> +	{ "mr25h40" },  /*   4 Mib, 40 MHz */
+> +
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(spi, m25p_ids);
+> 
 
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index 47aa181..f73886a 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -17,6 +17,17 @@
- 
- #include <linux/device.h>
- 
-+struct fsi_device {
-+	struct device dev;
-+};
-+
-+struct fsi_driver {
-+	struct device_driver drv;
-+};
-+
-+#define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
-+#define to_fsi_drv(drvp) container_of(drvp, struct fsi_driver, drv)
-+
- extern struct bus_type fsi_bus_type;
- 
- #endif /* LINUX_FSI_H */
+
 -- 
-1.8.2.2
-
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
