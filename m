@@ -1,132 +1,488 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt-bindings: Add binding documentation for
- TI clkctrl clocks
-Date: Mon, 16 Jan 2017 17:19:33 +0200
-Message-ID: <7acb6824-0e64-960b-1490-9b7a8b867b3b@ti.com>
-References: <20170109234226.9449-1-tony@atomide.com>
+From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Mon, 16 Jan 2017 23:25:52 +0800
+Message-ID: <464a75ef-d3c5-9b17-3e73-12ca3cbdb69f@linaro.org>
+References: <1484540395-3335-1-git-send-email-baoyou.xie@linaro.org>
+ <1484540395-3335-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170109234226.9449-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1484540395-3335-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/17 01:42, Tony Lindgren wrote:
-> Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
-> clock controller instance for each interconnect target module. The clkctrl
-> controls functional and interface clocks for the module.
+On 2017年01月16日 12:19, Baoyou Xie wrote:
+> This patch adds watchdog controller driver for ZTE's zx2967 family.
 >
-> The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
-> With this binding and a related clock device driver we can start moving the
-> clkctrl clock handling to live in drivers/clk/ti.
->
-> For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
-> Mapping Summary" for example. It show one instance of a clkctrl clock
-> controller with multiple clkctrl registers.
->
-> Note that this binding allows keeping the clockdomain related parts out of
-> drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
-> using a separate driver in drivers/soc/ti and genpd. If the clockdomain
-> driver needs to know it's clocks, we can just set the the clkctrl device
-> instances to be children of the related clockdomain device.
->
-> On omap4 CM_L3INIT_USB_HOST_HS_CLKCTRL on omap5 has eight OPTFCLKEN bits.
-> So we need to shift the clock index to avoid index conflict for the clock
-> consumer binding with the next clkctrl offset on omap4.
->
-> Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
+>  drivers/watchdog/Kconfig      |  10 ++
+>  drivers/watchdog/Makefile     |   1 +
+>  drivers/watchdog/zx2967_wdt.c | 405 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 416 insertions(+)
+>  create mode 100644 drivers/watchdog/zx2967_wdt.c
 >
-> So here's what I was able to come up for the clkctr binding based on
-> all we've discussed so far. Can you guys please take a look and see
-> if it looks OK to you before we do the device driver?
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 3eb58cb..79027da 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called aspeed_wdt.
 >
-> Also, does anybody have better suggestions for addressing the optional
-> clocks in each clkctrl register?
+> +config ZX2967_WATCHDOG
+> +	tristate "ZTE zx2967 SoCs watchdog support"
+> +	depends on ARCH_ZX
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  in ZTE zx2967 SoCs.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called zx2967_wdt.
+> +
+>  # AVR32 Architecture
 >
-> ---
->  .../devicetree/bindings/clock/ti-clkctrl.txt       | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+>  config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index caa9f4a..ea08925 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+>  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+>  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+> +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
 >
-> diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+>  # AVR32 Architecture
+>  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+> diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
 > new file mode 100644
+> index 0000000..8791dd2
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-> @@ -0,0 +1,56 @@
-> +Texas Instruments clkctrl clock binding
+> +++ b/drivers/watchdog/zx2967_wdt.c
+> @@ -0,0 +1,405 @@
+> +/*
+> + * watchdog driver for ZTE's zx2967 family
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
 > +
-> +Texas Instruments SoCs can have a clkctrl clock controller for each
-> +interconnect target module. The clkctrl clock controller manages functional
-> +and interface clocks for each module. Each clkctrl controller can also
-> +gate one or more optional functional clocks for a module. The clkctrl
-> +clock controller is typical for omap3 and later variants.
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/reset.h>
+> +#include <linux/watchdog.h>
 > +
-> +The clock consumers can specify the index of the clkctrl clock using
-> +the hardware offset from the clkctrl instance register space. The optional
-> +functional clocks can be specified by clkctrl hardware offset plus the
-> +index of the optional clock. Please see the Linux clock framework binding
-> +at Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> +#define ZX2967_WDT_CFG_REG			0x4
+> +#define ZX2967_WDT_LOAD_REG			0x8
+> +#define ZX2967_WDT_REFRESH_REG			0x18
+> +#define ZX2967_WDT_START_REG			0x1c
 > +
-> +Required properties :
-> +- compatible : shall be "ti,clkctrl"
-> +- #clock-cells : shall contain 1
+> +#define ZX2967_WDT_REFRESH_MASK			0x3f
 > +
-> +Optional properties :
-> +- "ti,modulemode-auto" : list of clkctrl offsets using automatic gating
+> +#define ZX2967_WDT_CFG_DIV(n)			((((n)&0xff) - 1) << 8)
+> +#define ZX2967_WDT_START_EN			0x1
 > +
-> +Example: Clock controller node:
+> +#define ZX2967_WDT_WRITEKEY			0x12340000
 > +
-> +&cm_l4per {
-> +	cm_l4per_clkctrl: clk@20 {
-> +		compatible = "ti,clkctrl";
-> +		reg = <0x20 0x1b0>;
-> +		#clock-cells = 1;
-> +		ti,modulemode-auto = <OMAP4_GPIO2_CLKCTRL>;
-> +	};
+> +#define ZX2967_WDT_DIV_DEFAULT			16
+> +#define ZX2967_WDT_DEFAULT_TIMEOUT		32
+> +#define ZX2967_WDT_MIN_TIMEOUT			1
+> +#define ZX2967_WDT_MAX_TIMEOUT			500
+> +#define ZX2967_WDT_MAX_COUNT			0xffff
+> +
+> +#define ZX2967_WDT_FLAG_REBOOT_MON		(1 << 0)
+> +
+> +#define ZX2967_RESET_MASK_REG			0xb0
+> +
+> +#define zx2967_wdt_write_reg(v, r) \
+> +			writel((v) | ZX2967_WDT_WRITEKEY, r)
+> +#define zx2967_wdt_read_reg(r)			readl(r)
+
+For writel and readl, *_relaxed is recommended.
+
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +static unsigned int timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
+> +
+> +struct zx2967_wdt {
+> +	struct device		*dev;
+> +	struct clk		*clock;
+> +	void __iomem		*reg_base;
+> +	unsigned int		conf;
+> +	unsigned int		load;
+> +	unsigned int		flags;
+> +	spinlock_t		lock;
+> +	struct watchdog_device	wdt_device;
+> +	struct notifier_block	restart_handler;
+> +	struct notifier_block	reboot_handler;
 > +};
+> +
+> +static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
+> +{
+> +	unsigned int val;
+> +
+> +	spin_lock(&wdt->lock);
+> +
+> +	val = zx2967_wdt_read_reg(wdt->reg_base + ZX2967_WDT_REFRESH_REG);
+> +	val ^= ZX2967_WDT_REFRESH_MASK;
+> +	zx2967_wdt_write_reg(val, wdt->reg_base + ZX2967_WDT_REFRESH_REG);
+> +
+> +	spin_unlock(&wdt->lock);
+> +}
+> +
+> +static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
+> +{
+> +	unsigned int val;
+> +
+> +	spin_lock(&wdt->lock);
+> +
+> +	val = zx2967_wdt_read_reg(wdt->reg_base + ZX2967_WDT_START_REG);
+> +	val &= ~(ZX2967_WDT_START_EN);
+> +	zx2967_wdt_write_reg(val, wdt->reg_base + ZX2967_WDT_START_REG);
+> +
+> +	spin_unlock(&wdt->lock);
+> +}
+> +
+> +static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
+> +{
+> +	unsigned int val;
+> +
+> +	spin_lock(&wdt->lock);
+> +
+> +	val = zx2967_wdt_read_reg(wdt->reg_base + ZX2967_WDT_START_REG);
+> +	val |= ZX2967_WDT_START_EN;
+> +	zx2967_wdt_write_reg(val, wdt->reg_base + ZX2967_WDT_START_REG);
+> +
+> +	spin_unlock(&wdt->lock);
+> +}
+> +
+> +static unsigned int
+> +__zx2967_wdt_set_timeout(struct zx2967_wdt *wdt, unsigned int timeout)
+> +{
+> +	unsigned int freq = clk_get_rate(wdt->clock);
+> +	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT, count;
+> +
+> +	count = timeout * freq;
+> +	if (count > divisor * ZX2967_WDT_MAX_COUNT)
+> +		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
+> +	count = DIV_ROUND_UP(count, divisor);
+> +	zx2967_wdt_write_reg(ZX2967_WDT_CFG_DIV(divisor),
+> +			     wdt->reg_base + ZX2967_WDT_CFG_REG);
+> +	zx2967_wdt_write_reg(count, wdt->reg_base + ZX2967_WDT_LOAD_REG);
 
-So, in this example, what would cm_l4per be? Is it a clockdomain? Or is 
-it just an arbitrary interconnect instance, and the clockdomain would 
-also be a separate node under cm_l4per?
+No spin lock here. Do we really need the spin lock?
 
-Shall we add power-domains = <&cm_l4per_clkdm>; entry under the 
-cm_l4per_clkctrl in this example? (My thinking is that we will represent 
-both OMAP clock and power domains as generic power domains within kernel 
-/ DT.)
-
--Tero
-
+> +	zx2967_wdt_refresh(wdt);
 > +
-> +Example: Preprocessor helper macros in dt-bindings/ti-clkctrl.h
+> +	wdt->load = count;
+> +	dev_info(wdt->dev, "count=%d, timeout=%d, divisor=%d\n",
+> +		 count, timeout, divisor);
 > +
-> +#define OMAP4_CLKCTRL_OFFSET		0x20
+> +	return (count * divisor) / freq;
+> +}
 > +
-> +#define OMAP_CLKCTRL_INDEX(offset)		\
-> +	(((offset) - OMAP4_CLKCTRL_OFFSET) << 8)
+> +static int zx2967_wdt_set_timeout(struct watchdog_device *wdd,
+> +				  unsigned int timeout)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
 > +
-> +#define OMAP_CLKCTRL_OPT_INDEX(offset, optclk)	\
-> +	(OMAP_CLKCTRL_INDEX(offset) + (optclk))
+> +	if (watchdog_timeout_invalid(&wdt->wdt_device, timeout)) {
+> +		dev_err(wdt->dev, "timeout %d is invalid\n", timeout);
 > +
-> +#define OMAP4_GPTIMER10_CLKTRL		OMAP_CLKCTRL_INDEX(0x28)
-> +#define OMAP4_GPTIMER11_CLKTRL		OMAP_CLKCTRL_INDEX(0x30)
-> +#define OMAP4_GPTIMER2_CLKTRL		OMAP_CLKCTRL_INDEX(0x38)
-> +...
-> +#define OMAP4_GPIO2_CLKCTRL		OMAP_CLKCTRL_INDEX(0x60)
-> +#define OMAP4_GPIO2_CLKCTRL_DBCLK	OMAP_CLKCTRL_OPT_INDEX(0x60, 1)
-> +...
+> +		return -EINVAL;
+> +	}
 > +
-> +Example: Clock consumer node for GPIO2:
+> +	wdd->timeout = __zx2967_wdt_set_timeout(wdt, timeout);
 > +
-> +&gpio2 {
-> +       clocks = <&cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL
-> +		 &cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL_DBCLK>;
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	__zx2967_wdt_stop(wdt);
+> +	zx2967_wdt_set_timeout(wdd, wdd->timeout);
+> +	__zx2967_wdt_start(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	__zx2967_wdt_stop(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_refresh(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +#define ZX2967_WDT_OPTIONS \
+> +	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
+> +static const struct watchdog_info zx2967_wdt_ident = {
+> +	.options          =     ZX2967_WDT_OPTIONS,
+> +	.firmware_version =	0,
+> +	.identity         =	"zx2967 watchdog",
 > +};
+> +
+> +static struct watchdog_ops zx2967_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = zx2967_wdt_start,
+> +	.stop = zx2967_wdt_stop,
+> +	.ping = zx2967_wdt_keepalive,
+> +	.set_timeout = zx2967_wdt_set_timeout,
+> +};
+> +
+> +static void zx2967_wdt_fix_sysdown(struct zx2967_wdt *wdt)
+> +{
+> +	__zx2967_wdt_stop(wdt);
+> +	__zx2967_wdt_set_timeout(wdt, 15);
+> +	__zx2967_wdt_start(wdt);
+> +}
+> +
+> +static int zx2967_wdt_notify_sys(struct notifier_block *this,
+> +			     unsigned long code, void *unused)
+> +{
+> +	struct zx2967_wdt *wdt = container_of(this, struct zx2967_wdt,
+> +					      reboot_handler);
+> +
+> +	wdt->flags |= ZX2967_WDT_FLAG_REBOOT_MON;
+> +	switch (code) {
+> +	case SYS_HALT:
+> +	case SYS_POWER_OFF:
+> +	case SYS_RESTART:
+> +		zx2967_wdt_fix_sysdown(wdt);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_restart(struct notifier_block *this,
+> +			      unsigned long mode, void *cmd)
+> +{
+> +	struct zx2967_wdt *wdt;
+> +
+> +	wdt = container_of(this, struct zx2967_wdt, restart_handler);
+> +
+> +	zx2967_wdt_stop(&wdt->wdt_device);
+> +
+> +	zx2967_wdt_write_reg(0x80, wdt->reg_base + ZX2967_WDT_LOAD_REG);
+> +	zx2967_wdt_refresh(wdt);
+> +	zx2967_wdt_write_reg(ZX2967_WDT_START_EN,
+> +			     wdt->reg_base + ZX2967_WDT_START_REG);
+> +
+> +	zx2967_wdt_start(&wdt->wdt_device);
+> +	/* wait for reset*/
+> +	mdelay(500);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static void zx2967_reset_mask_config(struct device *dev)
+> +{
+> +	struct device_node *np = NULL;
+> +	void __iomem *reg;
+> +	unsigned int  val, mask, config, size;
+> +	const unsigned int *prop;
+> +
+> +	prop = of_get_property(dev->of_node, "reset-mask-config", &size);
+> +	if (size < (sizeof(*prop) * 2)) {
+> +		dev_err(dev, "bad data for reset-mask-config");
+> +		return;
+> +	}
+> +	config = be32_to_cpup(prop++);
+> +	mask = be32_to_cpup(prop);
+> +	np = of_find_compatible_node(NULL, NULL, "zte,aon-sysctrl");
+> +	if (!np) {
+> +		dev_err(dev, "Cannot found pcu device node\n");
+> +		return;
+> +	}
+> +	reg = of_iomap(np, 0) + ZX2967_RESET_MASK_REG;
+> +	of_node_put(np);
+> +
+> +	val = readl(reg);
+> +	val &= ~mask;
+> +	val |= config;
+> +	writel(val, reg);
+> +}
+> +
+> +static int zx2967_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev;
+> +	struct zx2967_wdt *wdt;
+> +	struct resource *base;
+> +	int err, ret = 0;
+> +	unsigned int rate, val;
+> +
+> +	struct reset_control *rstc;
+> +
+> +	dev = &pdev->dev;
+> +
+> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +
+> +	wdt->dev = dev;
+> +	spin_lock_init(&wdt->lock);
+> +
+> +	wdt->wdt_device.info = &zx2967_wdt_ident;
+> +	wdt->wdt_device.ops = &zx2967_wdt_ops;
+> +	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
+> +	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
+> +	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
+> +	wdt->wdt_device.parent = &pdev->dev;
+> +
+> +	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->reg_base = devm_ioremap_resource(dev, base);
+> +
+> +	if (of_find_property(dev->of_node, "reset-mask-config", NULL))
+> +		zx2967_reset_mask_config(dev);
+> +
+> +	wdt->reboot_handler.notifier_call = zx2967_wdt_notify_sys;
+> +	ret = register_reboot_notifier(&wdt->reboot_handler);
+> +	wdt->clock = devm_clk_get(dev, "wdtclk");
+> +	if (IS_ERR(wdt->clock)) {
+> +		dev_err(dev, "failed to find watchdog clock source\n");
+> +		ret = PTR_ERR(wdt->clock);
+> +		goto out;
+> +	}
+> +	ret = clk_prepare_enable(wdt->clock);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		goto out;
+> +	}
+> +
+> +	rate = clk_get_rate(wdt->clock);
+> +	if (rate == 24000000)
+> +		ret = clk_set_rate(wdt->clock, 32768);
+> +	rate = clk_get_rate(wdt->clock);
+
+Do you want to check rate again? Or you want to just check set_rate 
+return value?
+
+> +
+> +	rstc = devm_reset_control_get(dev, "wdtrst");
+> +	if (!rstc) {
+> +		dev_info(dev, "rstc get failed");
+
+dev_err() may be more feasible.
+
+> +	} else {
+> +		reset_control_assert(rstc);
+> +		mdelay(10);
+> +		reset_control_deassert(rstc);
+> +	}
+> +
+> +	watchdog_set_drvdata(&wdt->wdt_device, wdt);
+> +
+> +	watchdog_init_timeout(&wdt->wdt_device, timeout, &pdev->dev);
+> +	watchdog_set_nowayout(&wdt->wdt_device, nowayout);
+> +
+> +	zx2967_wdt_stop(&wdt->wdt_device);
+> +
+> +	err = watchdog_register_device(&wdt->wdt_device);
+> +	if (unlikely(err)) {
+> +		ret = err;
+> +		goto fail_register;
+> +	}
+> +
+> +	wdt->restart_handler.notifier_call = zx2967_wdt_restart;
+> +	wdt->restart_handler.priority = 128;
+> +	ret = register_restart_handler(&wdt->restart_handler);
+> +	if (ret) {
+> +		pr_err("cannot register restart handler, %d\n", ret);
+> +		goto fail_restart;
+> +	}
+> +
+> +	val = zx2967_wdt_read_reg(wdt->reg_base + ZX2967_WDT_START_REG);
+> +	dev_info(&pdev->dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
+> +		 wdt->wdt_device.timeout, nowayout);
+> +
+> +	return 0;
+> +
+> +fail_restart:
+> +	watchdog_unregister_device(&wdt->wdt_device);
+> +fail_register:
+> +	clk_disable_unprepare(wdt->clock);
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int zx2967_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	unregister_restart_handler(&wdt->restart_handler);
+> +	watchdog_unregister_device(&wdt->wdt_device);
+> +	clk_disable_unprepare(wdt->clock);
+> +
+> +	return 0;
+> +}
+> +
+> +static void zx2967_wdt_shutdown(struct platform_device *pdev)
+> +{
+> +	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	if (!(wdt->flags & ZX2967_WDT_FLAG_REBOOT_MON))
+> +		zx2967_wdt_stop(&wdt->wdt_device);
+> +}
+> +
+> +static const struct of_device_id zx2967_wdt_match[] = {
+> +	{ .compatible = "zte,zx296718-wdt", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
+> +
+> +static const struct platform_device_id zx2967_wdt_ids[] = {
+> +	{ .name = "zx2967-wdt", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(platform, zx2967_wdt_ids);
+> +
+> +static struct platform_driver zx2967_wdt_driver = {
+> +	.probe		= zx2967_wdt_probe,
+> +	.remove		= zx2967_wdt_remove,
+> +	.shutdown	= zx2967_wdt_shutdown,
+> +	.id_table	= zx2967_wdt_ids,
+> +	.driver		= {
+> +		.name	= "zx2967-wdt",
+> +		.of_match_table	= of_match_ptr(zx2967_wdt_match),
+> +	},
+> +};
+> +module_platform_driver(zx2967_wdt_driver);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
+> +MODULE_LICENSE("GPL");
 >
 
 --
