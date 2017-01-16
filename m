@@ -1,236 +1,86 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v3 2/2] mmc: pwrseq: add support for Marvell SD8787 chip
-Date: Mon, 16 Jan 2017 10:35:21 +0800
-Message-ID: <0a49ba8d-e749-8462-fa48-7d8a17cecc75@rock-chips.com>
-References: <20170113052937.12538-1-matt@ranostay.consulting>
- <20170113052937.12538-3-matt@ranostay.consulting>
- <cd669d08-0db4-57e4-478b-2b200ccef6f1@rock-chips.com>
- <CAJ_EiSQtPUwv9K7CbM5e_wnre6=qR=+hgtq-oVFub2phijvXgA@mail.gmail.com>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
+ mt2701
+Date: Mon, 16 Jan 2017 10:48:50 +0800
+Message-ID: <1484534930.27576.1.camel@mtksdaap41>
+References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
+         <1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
+         <09eaf7a5-2b18-1ea6-5699-2e968c6b79a4@gmail.com>
+         <51441f39-e5b5-2cce-63ab-47bd3cf298b3@gmail.com>
+         <1467595950.8420.2.camel@mtksdaap41> <577A1794.5040509@gmail.com>
+         <5a45da57-9262-b1ff-1c6a-c5c211c1bfd4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAJ_EiSQtPUwv9K7CbM5e_wnre6=qR=+hgtq-oVFub2phijvXgA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>
-Cc: shawn.lin@rock-chips.com, linux-wireless@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5a45da57-9262-b1ff-1c6a-c5c211c1bfd4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017/1/16 5:41, Matt Ranostay wrote:
-> On Thu, Jan 12, 2017 at 11:16 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
->> On 2017/1/13 13:29, Matt Ranostay wrote:
->>>
->>> Allow power sequencing for the Marvell SD8787 Wifi/BT chip.
->>> This can be abstracted to other chipsets if needed in the future.
->>>
->>> Cc: Tony Lindgren <tony@atomide.com>
->>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
->>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->>> ---
->>>  drivers/mmc/core/Kconfig         |  10 ++++
->>>  drivers/mmc/core/Makefile        |   1 +
->>>  drivers/mmc/core/pwrseq_sd8787.c | 117
->>> +++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 128 insertions(+)
->>>  create mode 100644 drivers/mmc/core/pwrseq_sd8787.c
->>>
->>> diff --git a/drivers/mmc/core/Kconfig b/drivers/mmc/core/Kconfig
->>> index cdfa8520a4b1..fc1ecdaaa9ca 100644
->>> --- a/drivers/mmc/core/Kconfig
->>> +++ b/drivers/mmc/core/Kconfig
->>> @@ -12,6 +12,16 @@ config PWRSEQ_EMMC
->>>           This driver can also be built as a module. If so, the module
->>>           will be called pwrseq_emmc.
->>>
->>> +config PWRSEQ_SD8787
->>> +       tristate "HW reset support for SD8787 BT + Wifi module"
->>> +       depends on OF && (MWIFIEX || BT_MRVL_SDIO)
->>> +       help
->>> +         This selects hardware reset support for the SD8787 BT + Wifi
->>> +         module. By default this option is set to n.
->>> +
->>> +         This driver can also be built as a module. If so, the module
->>> +         will be called pwrseq_sd8787.
->>> +
->>
->>
->> I don't like this way, as we have a chance to list lots
->> configure options here. wifi A,B,C,D...Z, all of them need a
->> new section here if needed?
->>
->> Instead, could you just extent pwrseq_simple.c and add you
->> .compatible = "mmc-pwrseq-sd8787", "mmc-pwrseq-simple"?
->
-> You mean all the chipset pwrseqs linked into the pwrseq-simple module?
+On Fri, 2017-01-13 at 15:54 +0100, Matthias Brugger wrote:
+> 
+> On 04/07/16 10:00, Matthias Brugger wrote:
+> >
+> >
+> > On 04/07/16 03:32, Honghui Zhang wrote:
+> >> On Sun, 2016-07-03 at 21:12 +0200, Matthias Brugger wrote:
+> >>>
+> >>> On 07/03/2016 08:24 AM, Matthias Brugger wrote:
+> >>>>
+> >>>>
+> >>>> On 06/08/2016 11:51 AM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> >>>>> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>>>
+> >>>>> Add the dtsi node of iommu and smi for mt2701.
+> >>>>>
+> >>>>> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>>> ---
+> >>>>>   arch/arm/boot/dts/mt2701.dtsi | 51
+> >>>>> +++++++++++++++++++++++++++++++++++++++++++
+> >>>>>   1 file changed, 51 insertions(+)
+> >>>>>
+> >>>>
+> >>>> Applied,
+> >>>
+> >>> Please resend the patch including the infracfg and mmsys node.
+> >>>
+> >>
+> >> Hi, Matthias,
+> >>
+> >> Please hold this one.
+> >> This one is based on CCF "arm: dts: mt2701: Add clock controller device
+> >> nodes"[1] and power domain patch "Mediatek MT2701 SCPSYS power domain
+> >> support v7"[2],
+> >> But these two patchset are still being reviewed now.
+> >>
+> >> Do you think it's better that I send this one later after ccf and power
+> >> domain patch got merged? I will send this patch later if it's OK with
+> >> you.
+> >>
+> >
+> > Sounds good.
+> 
+> Applied now to v4.10-next/dts32
+> 
+> Thanks.
+> 
 
-What I mean was if you just extent the pwrseq-simple a bit, you could
-just add your chipset pwrseqs linked into the pwrseq-simple. But if you
-need a different *pattern* of pwrseqs, you should need a new name, for
-instance, pwrseq-sdio.c etc... But please don't use the name of
-sd8787? So if I use a wifi named ABC but using the same pwrseq pattenr,
-should I include your "mmc-pwrseq- sd8787" for that or I need a new
-mmc-pwrseq-ABC.c?
+Thanks.
 
->
-> Ulf your thoughts on this?
->
->>
->>
->>
->>>  config PWRSEQ_SIMPLE
->>>         tristate "Simple HW reset support for MMC"
->>>         default y
->>> diff --git a/drivers/mmc/core/Makefile b/drivers/mmc/core/Makefile
->>> index b2a257dc644f..0f81464fa824 100644
->>> --- a/drivers/mmc/core/Makefile
->>> +++ b/drivers/mmc/core/Makefile
->>> @@ -10,6 +10,7 @@ mmc_core-y                    := core.o bus.o host.o \
->>>                                    quirks.o slot-gpio.o
->>>  mmc_core-$(CONFIG_OF)          += pwrseq.o
->>>  obj-$(CONFIG_PWRSEQ_SIMPLE)    += pwrseq_simple.o
->>> +obj-$(CONFIG_PWRSEQ_SD8787)    += pwrseq_sd8787.o
->>>  obj-$(CONFIG_PWRSEQ_EMMC)      += pwrseq_emmc.o
->>>  mmc_core-$(CONFIG_DEBUG_FS)    += debugfs.o
->>>  obj-$(CONFIG_MMC_BLOCK)                += mmc_block.o
->>> diff --git a/drivers/mmc/core/pwrseq_sd8787.c
->>> b/drivers/mmc/core/pwrseq_sd8787.c
->>> new file mode 100644
->>> index 000000000000..f4080fe6439e
->>> --- /dev/null
->>> +++ b/drivers/mmc/core/pwrseq_sd8787.c
->>> @@ -0,0 +1,117 @@
->>> +/*
->>> + * pwrseq_sd8787.c - power sequence support for Marvell SD8787 BT + Wifi
->>> chip
->>> + *
->>> + * Copyright (C) 2016 Matt Ranostay <matt@ranostay.consulting>
->>> + *
->>> + * Based on the original work pwrseq_simple.c
->>> + *  Copyright (C) 2014 Linaro Ltd
->>> + *  Author: Ulf Hansson <ulf.hansson@linaro.org>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License as published by
->>> + * the Free Software Foundation; either version 2 of the License, or
->>> + * (at your option) any later version.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->>> + * GNU General Public License for more details.
->>> + *
->>> + */
->>> +
->>> +#include <linux/delay.h>
->>> +#include <linux/init.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/module.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/device.h>
->>> +#include <linux/err.h>
->>> +#include <linux/gpio/consumer.h>
->>> +
->>> +#include <linux/mmc/host.h>
->>> +
->>> +#include "pwrseq.h"
->>> +
->>> +struct mmc_pwrseq_sd8787 {
->>> +       struct mmc_pwrseq pwrseq;
->>> +       struct gpio_desc *reset_gpio;
->>> +       struct gpio_desc *pwrdn_gpio;
->>> +};
->>> +
->>> +#define to_pwrseq_sd8787(p) container_of(p, struct mmc_pwrseq_sd8787,
->>> pwrseq)
->>> +
->>> +static void mmc_pwrseq_sd8787_pre_power_on(struct mmc_host *host)
->>> +{
->>> +       struct mmc_pwrseq_sd8787 *pwrseq = to_pwrseq_sd8787(host->pwrseq);
->>> +
->>> +       gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
->>> +
->>> +       msleep(300);
->>> +       gpiod_set_value_cansleep(pwrseq->pwrdn_gpio, 1);
->>> +}
->>> +
->>> +static void mmc_pwrseq_sd8787_power_off(struct mmc_host *host)
->>> +{
->>> +       struct mmc_pwrseq_sd8787 *pwrseq = to_pwrseq_sd8787(host->pwrseq);
->>> +
->>> +       gpiod_set_value_cansleep(pwrseq->pwrdn_gpio, 0);
->>> +       gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
->>> +}
->>> +
->>> +static const struct mmc_pwrseq_ops mmc_pwrseq_sd8787_ops = {
->>> +       .pre_power_on = mmc_pwrseq_sd8787_pre_power_on,
->>> +       .power_off = mmc_pwrseq_sd8787_power_off,
->>> +};
->>> +
->>> +static const struct of_device_id mmc_pwrseq_sd8787_of_match[] = {
->>> +       { .compatible = "mmc-pwrseq-sd8787",},
->>> +       {/* sentinel */},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, mmc_pwrseq_sd8787_of_match);
->>> +
->>> +static int mmc_pwrseq_sd8787_probe(struct platform_device *pdev)
->>> +{
->>> +       struct mmc_pwrseq_sd8787 *pwrseq;
->>> +       struct device *dev = &pdev->dev;
->>> +
->>> +       pwrseq = devm_kzalloc(dev, sizeof(*pwrseq), GFP_KERNEL);
->>> +       if (!pwrseq)
->>> +               return -ENOMEM;
->>> +
->>> +       pwrseq->pwrdn_gpio = devm_gpiod_get(dev, "pwrdn", GPIOD_OUT_LOW);
->>> +       if (IS_ERR(pwrseq->pwrdn_gpio))
->>> +               return PTR_ERR(pwrseq->pwrdn_gpio);
->>> +
->>> +       pwrseq->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
->>> +       if (IS_ERR(pwrseq->reset_gpio))
->>> +               return PTR_ERR(pwrseq->reset_gpio);
->>> +
->>> +       pwrseq->pwrseq.dev = dev;
->>> +       pwrseq->pwrseq.ops = &mmc_pwrseq_sd8787_ops;
->>> +       pwrseq->pwrseq.owner = THIS_MODULE;
->>> +       platform_set_drvdata(pdev, pwrseq);
->>> +
->>> +       return mmc_pwrseq_register(&pwrseq->pwrseq);
->>> +}
->>> +
->>> +static int mmc_pwrseq_sd8787_remove(struct platform_device *pdev)
->>> +{
->>> +       struct mmc_pwrseq_sd8787 *pwrseq = platform_get_drvdata(pdev);
->>> +
->>> +       mmc_pwrseq_unregister(&pwrseq->pwrseq);
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static struct platform_driver mmc_pwrseq_sd8787_driver = {
->>> +       .probe = mmc_pwrseq_sd8787_probe,
->>> +       .remove = mmc_pwrseq_sd8787_remove,
->>> +       .driver = {
->>> +               .name = "pwrseq_sd8787",
->>> +               .of_match_table = mmc_pwrseq_sd8787_of_match,
->>> +       },
->>> +};
->>> +
->>> +module_platform_driver(mmc_pwrseq_sd8787_driver);
->>> +MODULE_LICENSE("GPL v2");
->>>
->>
->>
->> --
->> Best Regards
->> Shawn Lin
->>
->
->
->
+> >
+> > Thanks a lot,
+> > Matthias
+> >
+> >> Thanks.
+> >> [1] https://patchwork.kernel.org/patch/9109081
+> >> [2]
+> >> http://lists.infradead.org/pipermail/linux-mediatek/2016-May/005429.html
+> >>
 
 
--- 
-Best Regards
-Shawn Lin
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
