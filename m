@@ -1,71 +1,387 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 1/4] ASoC: es8328-i2c: Add compatible for
-	ES8388
-Date: Mon, 16 Jan 2017 09:17:50 +0100
-Message-ID: <20170116081753.13666-2-romain.perier@collabora.com>
-References: <20170116081753.13666-1-romain.perier@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170116081753.13666-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: [PATCH v3 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
+Date: Mon, 16 Jan 2017 16:38:24 +0800
+Message-ID: <1484555904-117718-1-git-send-email-preid@electromag.com.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a compatible string for everest,es8388. This is
-an audio codec that is compatible with es8328.
+This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
+ADC. Supports raw and trigger buffer access.
+Also supports the tlc3541 14-bit device, which has not been tested.
+Implementation of the tlc3541 is fairly straight forward thou.
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 ---
 
-Changes in v2:
-- Fixed wrong use of the i2c_device_id data structure
+Notes:
+    Changes from v2:
+    - Fix paste error in binding document.
+    - Remove index from channel description. Note this break libiio.
+      libiio will no longer recognise that the cahnnel is buffer enabled.
+    - Add brackets to macro parameter bitshift
+    - Make tcl3541 / tcl4541 order in code consistent.
+    - Use spi_message_init_with_transfers
+    - Cleanup whitespace lines
+    - Add TLC3541 to kconfig description
+    - Add Robs Ack.
+    
+    Changes from v1:
+    - Add tlc3541 support and chan spec.
+    - remove fields that where already 0 from TLC4541_V_CHAN macro
+    - Increase rx_buf size in tlc4541_state to avoid copy in tlc4541_trigger_handle
+    - Remove erroneous be16_to_cpu in tlc4541_trigger_handle
+    - Docs/binding: spi -> SPI & add ti,tlc3541
 
- Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
- sound/soc/codecs/es8328-i2c.c                      | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/iio/adc/ti-tlc4541.txt     |  17 ++
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/ti-tlc4541.c                       | 271 +++++++++++++++++++++
+ 4 files changed, 301 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+ create mode 100644 drivers/iio/adc/ti-tlc4541.c
 
-diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
-index 30ea8a3..33fbf05 100644
---- a/Documentation/devicetree/bindings/sound/es8328.txt
-+++ b/Documentation/devicetree/bindings/sound/es8328.txt
-@@ -4,7 +4,7 @@ This device supports both I2C and SPI.
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+new file mode 100644
+index 0000000..6b26927
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
+@@ -0,0 +1,17 @@
++* Texas Instruments' TLC4541
++
++Required properties:
++ - compatible: Should be one of
++	* "ti,tlc4541"
++	* "ti,tlc3541"
++	- reg: SPI chip select number for the device
++ - vref-supply: The regulator supply for ADC reference voltage
++ - spi-max-frequency: Max SPI frequency to use (<= 200000)
++
++Example:
++adc@0 {
++	compatible = "ti,tlc4541";
++	reg = <0>;
++	vref-supply = <&vdd_supply>;
++	spi-max-frequency = <200000>;
++};
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 99c0514..fb9ede7 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -525,6 +525,18 @@ config TI_AM335X_ADC
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called ti_am335x_adc.
  
- Required properties:
- 
--  - compatible : "everest,es8328"
-+  - compatible  : Should be "everest,es8328" or "everest,es8388"
-   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
-   - AVDD-supply : Regulator providing analog supply voltage 3.3V
-   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
-diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
-index 2d05b5d..318ab28 100644
---- a/sound/soc/codecs/es8328-i2c.c
-+++ b/sound/soc/codecs/es8328-i2c.c
-@@ -20,12 +20,14 @@
- 
- static const struct i2c_device_id es8328_id[] = {
- 	{ "es8328", 0 },
-+	{ "es8388", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, es8328_id);
- 
- static const struct of_device_id es8328_of_match[] = {
- 	{ .compatible = "everest,es8328", },
-+	{ .compatible = "everest,es8388", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, es8328_of_match);
++config TI_TLC4541
++	tristate "Texas Instruments TLC4541 ADC driver"
++	depends on SPI
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
++	help
++	  Say yes here to build support for Texas Instruments TLC4541 / TLC3541
++	  ADC chips.
++
++	  This driver can also be built as a module. If so, the module will be
++	  called ti-tlc4541.
++
+ config TWL4030_MADC
+ 	tristate "TWL4030 MADC (Monitoring A/D Converter)"
+ 	depends on TWL4030_CORE
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index 7a40c04..9bf2377 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -49,6 +49,7 @@ obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+ obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+ obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+ obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
++obj-$(CONFIG_TI_TLC4541) += ti-tlc4541.o
+ obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
+ obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
+ obj-$(CONFIG_VF610_ADC) += vf610_adc.o
+diff --git a/drivers/iio/adc/ti-tlc4541.c b/drivers/iio/adc/ti-tlc4541.c
+new file mode 100644
+index 0000000..78d91a0
+--- /dev/null
++++ b/drivers/iio/adc/ti-tlc4541.c
+@@ -0,0 +1,271 @@
++/*
++ * TI tlc4541 ADC Driver
++ *
++ * Copyright (C) 2017 Phil Reid
++ *
++ * Datasheets can be found here:
++ * http://www.ti.com/lit/gpn/tlc3541
++ * http://www.ti.com/lit/gpn/tlc4541
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * The tlc4541 requires 24 clock cycles to start a transfer.
++ * Conversion then takes 2.94us to complete before data is ready
++ * Data is returned MSB first.
++ */
++
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/trigger_consumer.h>
++#include <linux/iio/triggered_buffer.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++#include <linux/spi/spi.h>
++#include <linux/sysfs.h>
++
++struct tlc4541_state {
++	struct spi_device               *spi;
++	struct regulator                *reg;
++	struct spi_transfer             scan_single_xfer[3];
++	struct spi_message              scan_single_msg;
++
++	/*
++	 * DMA (thus cache coherency maintenance) requires the
++	 * transfer buffers to live in their own cache lines.
++	 * 2 bytes data + 6 bytes padding + 8 bytes timestamp when
++	 * call iio_push_to_buffers_with_timestamp.
++	 */
++	__be16                          rx_buf[8] ____cacheline_aligned;
++};
++
++struct tlc4541_chip_info {
++	const struct iio_chan_spec *channels;
++	unsigned int num_channels;
++};
++
++enum tlc4541_id {
++	TLC3541,
++	TLC4541,
++};
++
++#define TLC4541_V_CHAN(bits, bitshift) {                              \
++		.type = IIO_VOLTAGE,                                  \
++		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
++		.scan_type = {                                        \
++			.sign = 'u',                                  \
++			.realbits = (bits),                           \
++			.storagebits = 16,                            \
++			.shift = (bitshift),                          \
++			.endianness = IIO_BE,                         \
++		},                                                    \
++	}
++
++#define DECLARE_TLC4541_CHANNELS(name, bits, bitshift) \
++const struct iio_chan_spec name ## _channels[] = { \
++	TLC4541_V_CHAN(bits, bitshift), \
++	IIO_CHAN_SOFT_TIMESTAMP(1), \
++}
++
++static DECLARE_TLC4541_CHANNELS(tlc3541, 14, 2);
++static DECLARE_TLC4541_CHANNELS(tlc4541, 16, 0);
++
++static const struct tlc4541_chip_info tlc4541_chip_info[] = {
++	[TLC3541] = {
++		.channels = tlc3541_channels,
++		.num_channels = ARRAY_SIZE(tlc3541_channels),
++	},
++	[TLC4541] = {
++		.channels = tlc4541_channels,
++		.num_channels = ARRAY_SIZE(tlc4541_channels),
++	},
++};
++
++static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct tlc4541_state *st = iio_priv(indio_dev);
++	int ret;
++
++	ret = spi_sync(st->spi, &st->scan_single_msg);
++	if (ret < 0)
++		goto done;
++
++	iio_push_to_buffers_with_timestamp(indio_dev, st->rx_buf,
++					   iio_get_time_ns(indio_dev));
++
++done:
++	iio_trigger_notify_done(indio_dev->trig);
++	return IRQ_HANDLED;
++}
++
++static int tlc4541_get_range(struct tlc4541_state *st)
++{
++	int vref;
++
++	vref = regulator_get_voltage(st->reg);
++	if (vref < 0)
++		return vref;
++
++	vref /= 1000;
++
++	return vref;
++}
++
++static int tlc4541_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int *val,
++			    int *val2,
++			    long m)
++{
++	int ret = 0;
++	struct tlc4541_state *st = iio_priv(indio_dev);
++
++	switch (m) {
++	case IIO_CHAN_INFO_RAW:
++		ret = iio_device_claim_direct_mode(indio_dev);
++		if (ret)
++			return ret;
++		ret = spi_sync(st->spi, &st->scan_single_msg);
++		iio_device_release_direct_mode(indio_dev);
++		if (ret < 0)
++			return ret;
++		*val = be16_to_cpu(st->rx_buf[0]);
++		*val = *val >> chan->scan_type.shift;
++		*val &= GENMASK(chan->scan_type.realbits - 1, 0);
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_SCALE:
++		ret = tlc4541_get_range(st);
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		*val2 = chan->scan_type.realbits;
++		return IIO_VAL_FRACTIONAL_LOG2;
++	}
++	return -EINVAL;
++}
++
++static const struct iio_info tlc4541_info = {
++	.read_raw = &tlc4541_read_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int tlc4541_probe(struct spi_device *spi)
++{
++	struct tlc4541_state *st;
++	struct iio_dev *indio_dev;
++	const struct tlc4541_chip_info *info;
++	int ret;
++	int8_t device_init = 0;
++
++	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
++	if (indio_dev == NULL)
++		return -ENOMEM;
++
++	st = iio_priv(indio_dev);
++
++	spi_set_drvdata(spi, indio_dev);
++
++	st->spi = spi;
++
++	info = &tlc4541_chip_info[spi_get_device_id(spi)->driver_data];
++
++	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = info->channels;
++	indio_dev->num_channels = info->num_channels;
++	indio_dev->info = &tlc4541_info;
++
++	/* perform reset */
++	spi_write(spi, &device_init, 1);
++
++	/* Setup default message */
++	st->scan_single_xfer[0].rx_buf = &st->rx_buf[0];
++	st->scan_single_xfer[0].len = 3;
++	st->scan_single_xfer[1].delay_usecs = 3;
++	st->scan_single_xfer[2].rx_buf = &st->rx_buf[0];
++	st->scan_single_xfer[2].len = 2;
++
++	spi_message_init_with_transfers(&st->scan_single_msg,
++					st->scan_single_xfer, 3);
++
++	st->reg = devm_regulator_get(&spi->dev, "vref");
++	if (IS_ERR(st->reg))
++		return PTR_ERR(st->reg);
++
++	ret = regulator_enable(st->reg);
++	if (ret)
++		return ret;
++
++	ret = iio_triggered_buffer_setup(indio_dev, NULL,
++			&tlc4541_trigger_handler, NULL);
++	if (ret)
++		goto error_disable_reg;
++
++	ret = iio_device_register(indio_dev);
++	if (ret)
++		goto error_cleanup_buffer;
++
++	return 0;
++
++error_cleanup_buffer:
++	iio_triggered_buffer_cleanup(indio_dev);
++error_disable_reg:
++	regulator_disable(st->reg);
++
++	return ret;
++}
++
++static int tlc4541_remove(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev = spi_get_drvdata(spi);
++	struct tlc4541_state *st = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++	iio_triggered_buffer_cleanup(indio_dev);
++	regulator_disable(st->reg);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id tlc4541_dt_ids[] = {
++	{ .compatible = "ti,tlc3541", },
++	{ .compatible = "ti,tlc4541", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, tlc4541_dt_ids);
++#endif
++
++static const struct spi_device_id tlc4541_id[] = {
++	{"tlc3541", TLC3541},
++	{"tlc4541", TLC4541},
++	{}
++};
++MODULE_DEVICE_TABLE(spi, tlc4541_id);
++
++static struct spi_driver tlc4541_driver = {
++	.driver = {
++		.name   = "tlc4541",
++		.of_match_table = of_match_ptr(tlc4541_dt_ids),
++	},
++	.probe          = tlc4541_probe,
++	.remove         = tlc4541_remove,
++	.id_table       = tlc4541_id,
++};
++module_spi_driver(tlc4541_driver);
++
++MODULE_AUTHOR("Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>");
++MODULE_DESCRIPTION("Texas Instruments TLC4541 ADC");
++MODULE_LICENSE("GPL v2");
 -- 
-2.9.3
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
