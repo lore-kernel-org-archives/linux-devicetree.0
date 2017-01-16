@@ -1,114 +1,243 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Mon, 16 Jan 2017 13:40:10 +0000
-Message-ID: <2adac46e-b7b3-d41a-b3c4-1edec48dcf83@synopsys.com>
-References: <1484486354-4585-1-git-send-email-lukma@denx.de>
- <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
- <587C8088.80905@ti.com> <20170116103136.21c899ac@jawa>
- <587C9CE6.8040001@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
+Date: Mon, 16 Jan 2017 14:47:48 +0100
+Message-ID: <1484574468.8415.136.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
+         <1484320822.31475.96.camel@pengutronix.de>
+         <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <587C9CE6.8040001@ti.com>
+In-Reply-To: <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Lukasz Majewski <lukma@denx.de>, Joao Pinto <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 2017-01-14 at 14:46 -0800, Steve Longerbeam wrote:
+[...]
+> >> +Unprocessed Video Capture:
+> >> +--------------------------
+> >> +
+> >> +Send frames directly from sensor to camera interface, with no
+> >> +conversions:
+> >> +
+> >> +-> ipu_smfc -> camif
+> > I'd call this capture interface, this is not just for cameras. Or maybe
+> > idmac if you want to mirror hardware names?
+> 
+> Camif is so named because it is the V4L2 user interface for video
+> capture. I suppose it could be named "capif", but that doesn't role
+> off the tongue quite as well.
 
-Hi,
+Agreed, capif sounds weird. I find camif a bit confusing though, because
+Samsung S3C has a camera interface that is actually called "CAMIF".
 
-Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
-> + Joao, Jingoo
+> >> +Note the ipu_smfc can do pixel reordering within the same colorspace.
+> > That isn't a feature of the SMFC, but of the IDMAC (FCW & FCR).
 > 
-> Hi,
+> yes, the doc is re-worded to make that more clear.
 > 
-> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
->> Hi Kishon,
->>
->>> Hi Łukasz,
->>>
->>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
->>>> Hi Kishon,
->>>>
->>>>> Hi,
->>>>>
->>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
->>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
->>>>>> run with forced GEN1 speed on PCIe bus.
->>>>>>
->>>>>> This patch changes the speed explicitly on dra7 based devices when
->>>>>> proper device tree attribute is defined for the PCIe controller.
->>>>>>
->>>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->>>>>
->>>>> Bjorn has already queued a patch to do the same thing
->>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
->>>>
->>>> It seems like Bjorn only modifies CAP registers.
->>>
->>> The patch also modifies the LNKCTL2 register.
->>>>
->>>> He also needs to change register with 0x080C offset to actually
->>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
->>>
->>> This bit is used to initiate speed change (after the link is
->>> initialized in GEN1). Resetting the bit (like what you have done
->>> here) prevents speed change.
->>
->> This is strange, but e2e advised me to do things as I did in the patch
->> to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
->>
->> Link:
->> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
->>
->> Both patches modify 0x5180 007C register to set GEN1 capability
->> (PCI_EXP_LNKCAP_SLS_2_5GB)
->>
->> The problem is with second register (in your patch):
->>
->> From SPRUHZ6G TRM:
->>
->> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
->> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
->>   description in TRM
->>
->> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
->> default /reset value.
+> >> +For example, its sink pad can take UYVY2X8, but its source pad can
+> >> +output YUYV2X8.
+> > I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
+> > in the CSI chapter, for 8-bit per component data, the internal format
+> > between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
+> > (or "bayer/generic data"). In either case, the internal format does not
+> > change along the way.
 > 
-> The default value is 0x2 (or else none of the cards would have enumerated in GEN2)
->>
->>
->> Could you clarify which way to _force_ PCIe GEN1 operation is correct?
->> Mine shows differences in lspci output (as posted in [1]).
-> 
-> You'll see the difference even with the patch in Bjorn's tree ;-)
-> 
-> I think these are 2 different approaches to keep the link at GEN1. Joao or
-> Jingoo, do you have any suggestion here?
+> these are pixels in memory buffers, not the IPU internal formats.
 
-I am going to check this and come back soon with a fundamented opinion.
+As long as we are talking about the CSI -> SMFC -> IDMAC path, these
+should be IPU internal formats. How else would one choose between 8-bit
+companded RGB, and 16-bit expanded RGB for a 10-bit per component input
+signal? This is the same issue as in the next comment.
 
-Thanks.
+> >> +   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
+> >> +   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
+> >> +   # Configure pads for OV5640 pipeline
+> >> +   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
+> >> +   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
+> >> +   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
+> >> +   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
+> >> +   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
+> > [...]
+> >> +   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
+> > I agree this looks very intuitive, but technically correct for the
+> > csi1:1 and camif1:0 pads would be a 32-bit YUV format.
+> > (MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
+> >
+> > I think it would be better to use the correct format
+> 
+> I'm not sure I follow you here.
 
+The ov5640 sends UYVY2X8 on the wire, so pads "ov5640_mipi 1-0040":0
+up to "ipu1_csi1":0 are correct. But the CSI writes 32-bit YUV values
+into the SMFC, so the CSI output pad and the IDMAC input pad should have
+a YUV8_1X32 format.
+
+Chapter 37.4.2.3 "FCW & FCR - Format converter write and read" in the
+IDMAC chapter states that all internal submodules only work on 8-bit per
+component formats with four components: YUVA or RGBA.
+
+> > [...]
+> > Is this a whole software buffer queue implementation? I thought the
+> > whole point of putting the custom mem2mem framework into the capture
+> > driver was to use the hardware FSU channel linking?
 > 
->>
->>>
->>> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
->>> the IP register.
->>
->> From the original patch description:
->>
->> "Add support to force Root Complex to work in GEN1 mode if so desired,
->> but don't force GEN1 mode on any board just yet."
->>
->> Are there any (floating around) patches allowing forcing GEN1 operation
->> on any board (I would like to reuse/port them to my current solution)?
+>   see below.
 > 
-> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt with the
-> patch in Bjorn's tree.
+> > What is the purpose of this if the sink should be triggered by the FSU?
 > 
-> Thanks
-> Kishon
+> Ok, here is where I need to make an admission.
 > 
+> The only FSU links I have attempted (and which currently have entries
+> in the fsu_link_info[] table), are the enc/vf/pp --> IRT links for rotation.
+
+Which are not described as media entity links because the rotation units
+do not have separate media entities. So me arguing against handling
+mem2mem chaining via media entity links doesn't concern these implicit
+links.
+
+> There does not appear to be support in the FSU for linking a write channel
+> to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
+> is support for the direct link from CSI (which I am using), but that's 
+> not an
+> IDMAC channel link.
+> 
+> There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
+> 0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
+
+As I read it, that is 0 and 2 only, no idea why. But since there are
+only 2 CSIs, that shouldn't be a problem.
+
+> But I think this links to channel 12, and not to channels 8,9,10 to the 
+> VDIC.
+> Or will it? It's worth experimenting. It would have helped if FSL listed 
+> which
+> IDMAC channels these FSU links correspond to, instead of making us guess
+> at it.
+
+I would have assumed that the FSU triggering only works on 1:1 channels
+and the VDIC with its three input channels is different. But then
+there's the alleged VDOA link to ch8/9/10 ro ch9, depending on
+VDI_MOT_SEL.
+
+This makes me more convinced that the CSI -> VDIC link should only
+describe the direct path (real-time mode, single field).
+
+> In any event, the docs are not clear enough to implement a real FSU
+> link to the VDIC read channels, if it's even possible. And trying to get
+> programming help from FSL can be difficult, and no coding examples
+> for this link AFAIK.
+> 
+> So I ended resorted to linking to VDIC channels 8,9,10 with a software
+> approach, instead of attempting a hardware FSU link.
+> 
+> The EOF interrupt handler for the SMFC channels informs the VDIC
+> entity via a v4l2_subdev_ioctl() call that a buffer is available. The
+> VDIC then manually kicks off its read channels to bring that buffer
+> (and a previous buffer for F(n-1) field) into the VDIC.
+> 
+> There is a small amount of extra overhead going this route compared
+> to a FSU hardware link: there is the EOF irq latency (a few usec), and
+> the CPU overhead for the VDIC to manually start the read channels,
+> which is also a few usec at most (see prepare_vdi_in_buffers() in
+> imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU
+> use plus irq latency) under normal system load.
+
+That the same low overhead could be reached by linking videobuf2 queues
+of different video devices, that would be a lot more flexible.
+
+> Of course, in order to implement this software link, I had to implement
+> a straightforward FIFO dma buffer ring. The sink (VDIC) allocates the ring
+> at stream on, and the source requests a pointer to this ring in its own
+> stream on. Passing buffers from source to sink then follows a 
+> straightforward
+> FIFO queue/done/dequeue/queue model: sink queues buffers to src, src
+> grabs queued buffers and makes them active, src signals completed
+> buffers to sink, sink dequeues buffers in response, and sink queues
+> buffers back when it is finished with them.
+
+Thank you for the explanation.
+
+[...]
+> >> +static const u32 power_off_seq[] = {
+> >> +	IMX_MEDIA_GRP_ID_IC_PP,
+> >> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
+> >> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
+> >> +	IMX_MEDIA_GRP_ID_SMFC,
+> >> +	IMX_MEDIA_GRP_ID_CSI,
+> >> +	IMX_MEDIA_GRP_ID_VIDMUX,
+> >> +	IMX_MEDIA_GRP_ID_SENSOR,
+> >> +	IMX_MEDIA_GRP_ID_CSI2,
+> >> +};
+> > This seems somewhat arbitrary. Why is a power sequence needed?
+> 
+> The CSI-2 receiver must be powered up before the sensor, that's the
+> only requirement IIRC. The others have no s_power requirement. So I
+> can probably change this to power up in the frontend -> backend order
+> (IC_PP to sensor). And vice-versa for power off.
+
+Yes, I think that should work (see below).
+
+> > [...]
+> >> +/*
+> >> + * Turn current pipeline power on/off starting from start_entity.
+> >> + * Must be called with mdev->graph_mutex held.
+> >> + */
+> >> +int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
+> >> +				 struct media_entity_graph *graph,
+> >> +				 struct media_entity *start_entity, bool on)
+> >> +{
+> >> +	struct media_entity *entity;
+> >> +	struct v4l2_subdev *sd;
+> >> +	int i, ret = 0;
+> >> +	u32 id;
+> >> +
+> >> +	for (i = 0; i < NUM_POWER_ENTITIES; i++) {
+> >> +		id = on ? power_on_seq[i] : power_off_seq[i];
+> >> +		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
+> >> +		if (!entity)
+> >> +			continue;
+> >> +
+> >> +		sd = media_entity_to_v4l2_subdev(entity);
+> >> +
+> >> +		ret = v4l2_subdev_call(sd, core, s_power, on);
+> >> +		if (ret && ret != -ENOIOCTLCMD)
+> >> +			break;
+> >> +	}
+> >> +
+> >> +	return (ret && ret != -ENOIOCTLCMD) ? ret : 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
+> > This should really be handled by v4l2_pipeline_pm_use.
+> 
+> I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
+> doing some other stuff that bothered me, at least that's what I remember.
+> I will revisit this.
+
+I have used it with a tc358743 -> mipi-csi2 pipeline, it didn't cause
+any problems. It would be better to reuse and, if necessary, fix the
+existing infrastructure where available.
+
+> >> +int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
+> >> +				   struct imx_media_subdev *csi[4])
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	/* there must be at least one CSI in first IPU */
+> > Why?
+> 
+> Well yeah, imx-media doesn't necessarily need a CSI if things
+> like the VDIC or post-processor are being used by an output
+> overlay pipeline, for example. I'll fix this.
+
+I haven't even thought that far, but there could be boards with only a
+parallel sensor connected to IPU2 CSI1 and IPU1 disabled for power
+saving reasons.
+
+regards
+Philipp
