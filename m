@@ -1,491 +1,228 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] Broadcom USB DRD Phy driver for Northstar2
-Date: Mon, 16 Jan 2017 14:52:42 +0530
-Message-ID: <587C90E2.5020105@ti.com>
-References: <1480485338-23451-1-git-send-email-raviteja.garimella@broadcom.com>
- <1480485338-23451-3-git-send-email-raviteja.garimella@broadcom.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
+Date: Mon, 16 Jan 2017 10:31:36 +0100
+Message-ID: <20170116103136.21c899ac@jawa>
+References: <1484486354-4585-1-git-send-email-lukma@denx.de>
+        <587C6A40.8070608@ti.com>
+        <20170116074927.086418f4@jawa>
+        <587C8088.80905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1480485338-23451-3-git-send-email-raviteja.garimella@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <587C8088.80905@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Kishon,
 
-On Wednesday 30 November 2016 11:25 AM, Raviteja Garimella wrote:
-> This is driver for USB DRD Phy used in Broadcom's Northstar2
-> SoC. The phy can be configured to be in Device mode or Host
-> mode based on the type of cable connected to the port. The
-> driver registers to  extcon framework to get appropriate
-> connect events for Host/Device cables connect/disconnect
-> states based on VBUS and ID interrupts.
+> Hi Łukasz,
 > 
-> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
-> ---
->  drivers/phy/Kconfig              |  13 +
->  drivers/phy/Makefile             |   1 +
->  drivers/phy/phy-bcm-ns2-usbdrd.c | 587 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 601 insertions(+)
->  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
+> > Hi Kishon,
+> > 
+> >> Hi,
+> >>
+> >> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
+> >>> Some devices (due to e.g. bad PCIe signal integrity) require to
+> >>> run with forced GEN1 speed on PCIe bus.
+> >>>
+> >>> This patch changes the speed explicitly on dra7 based devices when
+> >>> proper device tree attribute is defined for the PCIe controller.
+> >>>
+> >>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >>
+> >> Bjorn has already queued a patch to do the same thing
+> >> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-dra7xx
+> > 
+> > It seems like Bjorn only modifies CAP registers.
 > 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index fe00f91..b3b6a73 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -479,6 +479,19 @@ config PHY_CYGNUS_PCIE
->  	  Enable this to support the Broadcom Cygnus PCIe PHY.
->  	  If unsure, say N.
->  
-> +config PHY_NS2_USB_DRD
-> +	tristate "Broadcom Northstar2 USB DRD PHY support"
-> +	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select EXTCON
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  Enable this to support the Broadcom Northstar2 USB DRD PHY.
-> +	  This driver initializes the PHY in either HOST or DEVICE mode.
-> +	  The host or device configuration is read from device tree.
-> +
-> +	  If unsure, say N.
-> +
->  source "drivers/phy/tegra/Kconfig"
->  
->  config PHY_NS2_PCIE
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index a534cf5..b733ba2 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -58,5 +58,6 @@ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
->  obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
->  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
->  obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
-> +obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
->  obj-$(CONFIG_ARCH_TEGRA) += tegra/
->  obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
-> diff --git a/drivers/phy/phy-bcm-ns2-usbdrd.c b/drivers/phy/phy-bcm-ns2-usbdrd.c
-> new file mode 100644
-> index 0000000..460040d
-> --- /dev/null
-> +++ b/drivers/phy/phy-bcm-ns2-usbdrd.c
-> @@ -0,0 +1,587 @@
-> +/*
-> + * Copyright (C) 2016 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/extcon.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define ICFG_DRD_AFE		0x0
-> +#define ICFG_MISC_STAT		0x18
-> +#define ICFG_DRD_P0CTL		0x1C
-> +#define ICFG_STRAP_CTRL		0x20
-> +#define ICFG_FSM_CTRL		0x24
-> +
-> +#define IDM_RST_BIT		BIT(0)
-> +#define AFE_CORERDY_VDDC	BIT(18)
-> +#define PHY_PLL_RESETB		BIT(15)
-> +#define PHY_RESETB		BIT(14)
-> +#define PHY_PLL_LOCK		BIT(0)
-> +
-> +#define DRD_DEV_MODE		BIT(20)
-> +#define OHCI_OVRCUR_POL		BIT(11)
-> +#define ICFG_OFF_MODE		BIT(6)
-> +#define PLL_LOCK_RETRY		1000
-> +
-> +#define EVT_DEVICE		0
-> +#define EVT_HOST		1
-> +#define EVT_IDLE		2
-> +
-> +#define DRD_HOST_MODE		(BIT(2) | BIT(3))
-> +#define DRD_DEVICE_MODE		(BIT(4) | BIT(5))
-> +#define DRD_HOST_VAL		0x803
-> +#define DRD_DEV_VAL		0x807
-> +#define GPIO_DELAY		20
-> +#define PHY_WQ_DELAY		msecs_to_jiffies(600)
-> +
-> +struct ns2_phy_data;
-> +struct ns2_phy_driver {
-> +	void __iomem *icfgdrd_regs;
-> +	void __iomem *idmdrd_rst_ctrl;
-> +	void __iomem *crmu_usb2_ctrl;
-> +	void __iomem *usb2h_strap_reg;
-> +	spinlock_t lock; /* spin lock for phy driver */
-> +	bool host_mode;
-> +	struct ns2_phy_data *data;
-> +	struct extcon_specific_cable_nb extcon_dev;
-> +	struct extcon_specific_cable_nb extcon_host;
-> +	struct notifier_block host_nb;
-> +	struct notifier_block dev_nb;
-> +	struct delayed_work conn_work;
-> +	struct extcon_dev *edev;
-> +	struct gpio_desc *vbus_gpiod;
-> +	struct gpio_desc *id_gpiod;
-> +	int id_irq;
-> +	int vbus_irq;
-> +	unsigned long debounce_jiffies;
-> +	struct delayed_work wq_extcon;
-> +};
-> +
-> +struct ns2_phy_data {
-> +	struct ns2_phy_driver *driver;
-> +	struct phy *phy;
-> +	int new_state;
-> +	bool poweron;
-> +};
-> +
-> +static const unsigned int usb_extcon_cable[] = {
-> +	EXTCON_USB,
-> +	EXTCON_USB_HOST,
-> +	EXTCON_NONE,
-> +};
-> +
-> +static inline int pll_lock_stat(u32 usb_reg, int reg_mask,
-> +				struct ns2_phy_driver *driver)
-> +{
-> +	int retry = PLL_LOCK_RETRY;
-> +	u32 val;
-> +
-> +	do {
-> +		udelay(1);
-> +		val = readl(driver->icfgdrd_regs + usb_reg);
-> +		if (val & reg_mask)
-> +			return 0;
-> +	} while (--retry > 0);
-> +
-> +	return -EBUSY;
-> +}
-> +
-> +static int ns2_drd_phy_init(struct phy *phy)
-> +{
-> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
-> +	struct ns2_phy_driver *driver = data->driver;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	spin_lock_irqsave(&driver->lock, flags);
-> +
-> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	if (data->new_state == EVT_HOST) {
-> +		val &= ~DRD_DEVICE_MODE;
-> +		val |= DRD_HOST_MODE;
-> +	} else {
-> +		val &= ~DRD_HOST_MODE;
-> +		val |= DRD_DEVICE_MODE;
-> +	}
-> +	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int ns2_drd_phy_shutdown(struct phy *phy)
-> +{
-> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
-> +	struct ns2_phy_driver *driver = data->driver;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	spin_lock_irqsave(&driver->lock, flags);
-> +	if (!data->poweron)
-> +		goto exit;
-> +
-> +	val = readl(driver->crmu_usb2_ctrl);
-> +	val &= ~AFE_CORERDY_VDDC;
-> +	writel(val, driver->crmu_usb2_ctrl);
-> +
-> +	driver->host_mode = 0;
-> +	val = readl(driver->crmu_usb2_ctrl);
-> +	val &= ~DRD_DEV_MODE;
-> +	writel(val, driver->crmu_usb2_ctrl);
-> +
-> +	/* Disable Host and Device Mode */
-> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +	val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE | ICFG_OFF_MODE);
-> +	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	data->poweron = 0;
-> +exit:
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int ns2_drd_phy_poweron(struct phy *phy)
-> +{
-> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
-> +	struct ns2_phy_driver *driver = data->driver;
-> +	u32 extcon_event = data->new_state;
-> +	unsigned long flags;
-> +	int ret;
-> +	u32 val;
-> +
-> +	spin_lock_irqsave(&driver->lock, flags);
-> +	if (extcon_event == EVT_DEVICE) {
-> +		if (data->poweron)
-> +			goto exit;
-> +
-> +		writel(DRD_DEV_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +
-> +		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +		val &= ~(DRD_HOST_MODE | ICFG_OFF_MODE);
-> +		val |= DRD_DEVICE_MODE;
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +		val = readl(driver->idmdrd_rst_ctrl);
-> +		val &= ~IDM_RST_BIT;
-> +		writel(val, driver->idmdrd_rst_ctrl);
-> +
-> +		val = readl(driver->crmu_usb2_ctrl);
-> +		val |= (AFE_CORERDY_VDDC | DRD_DEV_MODE);
-> +		writel(val, driver->crmu_usb2_ctrl);
-> +
-> +		/* Bring PHY and PHY_PLL out of Reset */
-> +		val = readl(driver->crmu_usb2_ctrl);
-> +		val |= (PHY_PLL_RESETB | PHY_RESETB);
-> +		writel(val, driver->crmu_usb2_ctrl);
-> +
-> +		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
-> +		if (ret < 0) {
-> +			dev_err(&phy->dev, "Phy PLL lock failed\n");
-> +			goto err_shutdown;
-> +		}
-> +	} else {
-> +		if (data->poweron && driver->host_mode)
-> +			goto exit;
-> +
-> +		writel(DRD_HOST_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +
-> +		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +		val &= ~(DRD_DEVICE_MODE | ICFG_OFF_MODE);
-> +		val |= DRD_HOST_MODE;
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +		val = readl(driver->crmu_usb2_ctrl);
-> +		val |= AFE_CORERDY_VDDC;
-> +		writel(val, driver->crmu_usb2_ctrl);
-> +
-> +		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
-> +		if (ret < 0) {
-> +			dev_err(&phy->dev, "Phy PLL lock failed\n");
-> +			goto err_shutdown;
-> +		}
-> +
-> +		val = readl(driver->idmdrd_rst_ctrl);
-> +		val &= ~IDM_RST_BIT;
-> +		writel(val, driver->idmdrd_rst_ctrl);
-> +
-> +		/* port over current Polarity */
-> +		val = readl(driver->usb2h_strap_reg);
-> +		val |= OHCI_OVRCUR_POL;
-> +		writel(val, driver->usb2h_strap_reg);
-> +
-> +		driver->host_mode = 1;
-> +	}
-> +
-> +	data->poweron = 1;
-> +exit:
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	return 0;
-> +
-> +err_shutdown:
-> +	data->poweron = 1;
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	ns2_drd_phy_shutdown(phy);
-> +	return ret;
-> +}
-> +
-> +static void connect_work(struct work_struct *work)
-> +{
-> +	struct ns2_phy_driver *driver;
-> +	struct ns2_phy_data *data;
-> +	u32 extcon_event;
-> +
-> +	driver  = container_of(to_delayed_work(work),
-> +			       struct ns2_phy_driver, conn_work);
-> +	data = driver->data;
-> +	extcon_event = data->new_state;
-> +
-> +	if (extcon_event == EVT_DEVICE || extcon_event == EVT_HOST) {
-> +		ns2_drd_phy_init(data->phy);
-> +		ns2_drd_phy_poweron(data->phy);
-> +	} else if (extcon_event == EVT_IDLE) {
-> +		ns2_drd_phy_shutdown(data->phy);
-> +	}
-> +}
-> +
-> +static int drd_device_notify(struct notifier_block *self,
-> +			     unsigned long event, void *ptr)
-> +{
-> +	struct ns2_phy_driver *driver = container_of(self,
-> +					struct ns2_phy_driver, dev_nb);
-> +
-> +	if (event) {
-> +		pr_debug("Device connected\n");
-> +		driver->data->new_state = EVT_DEVICE;
-> +		schedule_delayed_work(&driver->conn_work, 0);
-> +	} else {
-> +		pr_debug("Device disconnected\n");
-> +		driver->data->new_state = EVT_IDLE;
-> +		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int drd_host_notify(struct notifier_block *self,
-> +			   unsigned long event, void *ptr)
-> +{
-> +	struct ns2_phy_driver *driver = container_of(self,
-> +					struct ns2_phy_driver, host_nb);
-> +
-> +	if (event) {
-> +		pr_debug("Host connected\n");
-> +		driver->data->new_state = EVT_HOST;
-> +		schedule_delayed_work(&driver->conn_work, 0);
-> +	} else {
-> +		pr_debug("Host disconnected\n");
-> +		driver->data->new_state = EVT_IDLE;
-> +		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static void extcon_work(struct work_struct *work)
-> +{
-> +	struct ns2_phy_driver *driver;
-> +	int vbus;
-> +	int id;
-> +
-> +	driver  = container_of(to_delayed_work(work),
-> +			       struct ns2_phy_driver, wq_extcon);
-> +
-> +	id = gpiod_get_value_cansleep(driver->id_gpiod);
-> +	vbus = gpiod_get_value_cansleep(driver->vbus_gpiod);
-> +
-> +	if (!id && vbus) {
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, true);
-> +	} else if (id && !vbus) {
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, false);
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB, false);
-> +	} else if (id && vbus) {
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB, true);
-> +	}
-> +}
-> +
-> +static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct ns2_phy_driver *driver = dev_id;
-> +
-> +	queue_delayed_work(system_power_efficient_wq, &driver->wq_extcon,
-> +			   driver->debounce_jiffies);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int register_extcon_notifier(struct ns2_phy_driver *phy_driver,
-> +				    struct device *dev)
-> +{
-> +	struct extcon_dev *edev;
-> +	int ret;
-> +
-> +	phy_driver->host_nb.notifier_call = drd_host_notify;
-> +	phy_driver->dev_nb.notifier_call = drd_device_notify;
-> +
-> +	edev = phy_driver->edev;
-> +
-> +	/* Register for device change notification */
-> +	ret = extcon_register_notifier(edev, EXTCON_USB,
-> +				       &phy_driver->dev_nb);
-> +	if (ret < 0) {
-> +		dev_err(dev, "can't register extcon_dev for %s\n", edev->name);
-> +		return ret;
-> +	}
-> +
-> +	/* Register for host change notification */
-> +	ret = extcon_register_notifier(edev, EXTCON_USB_HOST,
-> +				       &phy_driver->host_nb);
-> +	if (ret < 0) {
-> +		dev_err(dev, "can't register extcon_dev for %s\n", edev->name);
-> +		goto err_dev;
-> +	}
-> +
-> +	/* Check the device cable connect state */
-> +	ret = extcon_get_cable_state_(edev, EXTCON_USB);
-> +	if (ret < 0) {
-> +		dev_err(dev, "can't get extcon_dev state for %s\n", edev->name);
-> +		goto err_host;
-> +	} else if (ret) {
-> +		phy_driver->data->new_state = EVT_DEVICE;
-> +	}
-> +
-> +	/* Check the host cable connect state */
-> +	ret = extcon_get_cable_state_(edev, EXTCON_USB_HOST);
-> +	if (ret < 0) {
-> +		dev_err(dev, "can't get extcon_dev state for %s\n", edev->name);
-> +		goto err_host;
-> +	} else if (ret) {
-> +		phy_driver->data->new_state = EVT_HOST;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_host:
-> +	ret = extcon_unregister_notifier(edev, EXTCON_USB_HOST,
-> +					&phy_driver->host_nb);
-> +err_dev:
-> +	ret = extcon_unregister_notifier(edev, EXTCON_USB,
-> +					&phy_driver->dev_nb);
-> +	return ret;
-> +}
-> +
-> +static struct phy_ops ops = {
-> +	.init		= ns2_drd_phy_init,
+> The patch also modifies the LNKCTL2 register.
+> > 
+> > He also needs to change register with 0x080C offset to actually
+> > ( PCIECTRL_PL_WIDTH_SPEED_CTL )
+> 
+> This bit is used to initiate speed change (after the link is
+> initialized in GEN1). Resetting the bit (like what you have done
+> here) prevents speed change.
 
-Is this really being used by any controller driver? Can you point me to the
-controller driver that is using this driver?
+This is strange, but e2e advised me to do things as I did in the patch
+to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
 
-> +	.power_on	= ns2_drd_phy_poweron,
-> +	.power_off	= ns2_drd_phy_shutdown,
+Link:
+[1] https://e2e.ti.com/support/arm/sitara_arm/f/791/t/566421
 
-missing .owner.
+Both patches modify 0x5180 007C register to set GEN1 capability
+(PCI_EXP_LNKCAP_SLS_2_5GB)
 
-Thanks
-Kishon
+The problem is with second register (in your patch):
+
+>From SPRUHZ6G TRM:
+
+PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
+- TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
+  description in TRM
+
+It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
+default /reset value.
+
+
+Could you clarify which way to _force_ PCIe GEN1 operation is correct?
+Mine shows differences in lspci output (as posted in [1]).
+
+> 
+> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
+> the IP register.
+
+>From the original patch description:
+
+"Add support to force Root Complex to work in GEN1 mode if so desired,
+but don't force GEN1 mode on any board just yet."
+
+Are there any (floating around) patches allowing forcing GEN1 operation
+on any board (I would like to reuse/port them to my current solution)?
+
+Thanks in advance,
+Łukasz Majewski
+
+> 
+> Thanks
+> Kishon
+> 
+> > 
+> > Best regards,
+> > Łukasz
+> > 
+> >>
+> >> Thanks
+> >> Kishon
+> >>
+> >>> ---
+> >>>
+> >>> Patch applies on newest origin/master
+> >>> SHA1: f4d3935e4f4884ba80561db5549394afb8eef8f7
+> >>>
+> >>> Tested at AM5728
+> >>>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/pci/ti-pci.txt |  1 +
+> >>>  drivers/pci/host/pci-dra7xx.c                    | 23
+> >>> +++++++++++++++++++++++
+> >>> drivers/pci/host/pcie-designware.h               |  1 + 3 files
+> >>> changed, 25 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> >>> b/Documentation/devicetree/bindings/pci/ti-pci.txt index
+> >>> 60e2516..9f97409 100644 ---
+> >>> a/Documentation/devicetree/bindings/pci/ti-pci.txt +++
+> >>> b/Documentation/devicetree/bindings/pci/ti-pci.txt @@ -25,6 +25,7
+> >>> @@ PCIe Designware Controller 
+> >>>  Optional Property:
+> >>>   - gpios : Should be added if a gpio line is required to drive
+> >>> PERST# line
+> >>> + - to,pcie-is-gen1: Indicates that forced gen1 port operation is
+> >>> needed. 
+> >>>  Example:
+> >>>  axi {
+> >>> diff --git a/drivers/pci/host/pci-dra7xx.c
+> >>> b/drivers/pci/host/pci-dra7xx.c index 9595fad..eec5fae 100644
+> >>> --- a/drivers/pci/host/pci-dra7xx.c
+> >>> +++
+> >>> b/drivers/pci/host/pci-https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-dra7xxdra7xx.c
+> >>> @@ -63,6 +63,13 @@ #define
+> >>> LINK_UP						BIT(16)
+> >>> #define
+> >>> DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
+> >>> +#define         PCIECTRL_EP_DBICS_LNK_CAP
+> >>> 0x007C +#define
+> >>> MAX_LINK_SPEEDS_MASK				GENMASK(3, 0)
+> >>> +#define         MAX_LINK_SPEEDS_GEN1
+> >>> BIT(0) + +#define
+> >>> PCIECTRL_PL_WIDTH_SPEED_CTL                     0x080C
+> >>> +#define         CFG_DIRECTED_SPEED_CHANGE
+> >>> BIT(17) + struct dra7xx_pcie { struct pcie_port	pp;
+> >>>  	void __iomem		*base;		/* DT
+> >>> ti_conf */ @@ -270,6 +277,7 @@ static int __init
+> >>> dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx, struct pcie_port
+> >>> *pp = &dra7xx->pp; struct device *dev = pp->dev;
+> >>>  	struct resource *res;
+> >>> +	u32 val;
+> >>>  
+> >>>  	pp->irq = platform_get_irq(pdev, 1);
+> >>>  	if (pp->irq < 0) {
+> >>> @@ -296,6 +304,18 @@ static int __init dra7xx_add_pcie_port(struct
+> >>> dra7xx_pcie *dra7xx, if (!pp->dbi_base)
+> >>>  		return -ENOMEM;
+> >>>  
+> >>> +	if (pp->is_gen1) {
+> >>> +		dev_info(dev, "GEN1 forced\n");
+> >>> +
+> >>> +		val = readl(pp->dbi_base +
+> >>> PCIECTRL_EP_DBICS_LNK_CAP);
+> >>> +		set_mask_bits(&val, MAX_LINK_SPEEDS_MASK,
+> >>> MAX_LINK_SPEEDS_GEN1);
+> >>> +		writel(val, pp->dbi_base +
+> >>> PCIECTRL_EP_DBICS_LNK_CAP); +
+> >>> +		val = readl(pp->dbi_base +
+> >>> PCIECTRL_PL_WIDTH_SPEED_CTL);
+> >>> +		val &= ~CFG_DIRECTED_SPEED_CHANGE;
+> >>> +		writel(val, pp->dbi_base +
+> >>> PCIECTRL_PL_WIDTH_SPEED_CTL);
+> >>> +	}
+> >>> +
+> >>>  	ret = dw_pcie_host_init(pp);
+> >>>  	if (ret) {
+> >>>  		dev_err(dev, "failed to initialize host\n");
+> >>> @@ -404,6 +424,9 @@ static int __init dra7xx_pcie_probe(struct
+> >>> platform_device *pdev) goto err_gpio;
+> >>>  	}
+> >>>  
+> >>> +	if (of_property_read_bool(np, "ti,pcie-is-gen1"))
+> >>> +		pp->is_gen1 = true;
+> >>> +
+> >>>  	reg = dra7xx_pcie_readl(dra7xx,
+> >>> PCIECTRL_DRA7XX_CONF_DEVICE_CMD); reg &= ~LTSSM_EN;
+> >>>  	dra7xx_pcie_writel(dra7xx,
+> >>> PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg); diff --git
+> >>> a/drivers/pci/host/pcie-designware.h
+> >>> b/drivers/pci/host/pcie-designware.h index a567ea2..2fb0b18 100644
+> >>> --- a/drivers/pci/host/pcie-designware.h +++
+> >>> b/drivers/pci/host/pcie-designware.h @@ -50,6 +50,7 @@ struct
+> >>> pcie_port { struct irq_domain	*irq_domain;
+> >>>  	unsigned long		msi_data;
+> >>>  	u8			iatu_unroll_enabled;
+> >>> +	u8                      is_gen1;
+> >>>  	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+> >>>  };
+> >>>  
+> >>>
+> > 
+> > 
+> > 
+> > 
+> > Best regards,
+> > 
+> > Lukasz Majewski
+> > 
+> > --
+> > 
+> > DENX Software Engineering GmbH,      Managing Director: Wolfgang
+> > Denk HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
+> > Germany Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email:
+> > wd@denx.de
+> > 
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
