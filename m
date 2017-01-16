@@ -1,204 +1,203 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Mon, 16 Jan 2017 09:40:32 +0100
-Message-ID: <20170116094032.6f471f11@bbrezillon>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
-        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
-        <20170113151747.6bc85245@bbrezillon>
-        <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
-        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
-        <20170113172825.75d545a3@bbrezillon>
-        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
-        <20170113175628.1793f433@bbrezillon>
-        <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
-        <20170114092958.022f2fc8@bbrezillon>
-        <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Mon, 16 Jan 2017 14:15:02 +0530
+Message-ID: <587C880E.90803@ti.com>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e7fa1542-f0e2-0e45-23b3-25d6491ae40d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1484045519-19030-3-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 15 Jan 2017 01:23:48 +0100
-Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi,
 
-> On 01/14/2017 09:29 AM, Boris Brezillon wrote:
-> > On Fri, 13 Jan 2017 18:33:40 +0100
-> > Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >   
-> >> On 01/13/2017 05:56 PM, Boris Brezillon wrote:  
-> >>> On Fri, 13 Jan 2017 17:44:12 +0100
-> >>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>     
-> >>>> On 01/13/2017 05:28 PM, Boris Brezillon wrote:    
-> >>>>> On Fri, 13 Jan 2017 17:13:55 +0100
-> >>>>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>>>       
-> >>>>>> On 01/13/2017 04:12 PM, Matthias Brugger wrote:      
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> On 13/01/17 15:17, Boris Brezillon wrote:        
-> >>>>>>>> On Fri, 13 Jan 2017 15:13:29 +0800
-> >>>>>>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>>>>>>>        
-> >>>>>>>>> Add Mediatek nor flash node.
-> >>>>>>>>>
-> >>>>>>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>>>>>> ---
-> >>>>>>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
-> >>>>>>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
-> >>>>>>>>>  2 files changed, 37 insertions(+)
-> >>>>>>>>>
-> >>>>>>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>>>> b/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>>>> index 082ca88..85e5ae8 100644
-> >>>>>>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> >>>>>>>>> @@ -24,6 +24,31 @@
-> >>>>>>>>>      };
-> >>>>>>>>>  };
-> >>>>>>>>>
-> >>>>>>>>> +&nor_flash {
-> >>>>>>>>> +    pinctrl-names = "default";
-> >>>>>>>>> +    pinctrl-0 = <&nor_pins_default>;
-> >>>>>>>>> +    status = "okay";
-> >>>>>>>>> +    flash@0 {
-> >>>>>>>>> +        compatible = "jedec,spi-nor";
-> >>>>>>>>> +        reg = <0>;
-> >>>>>>>>> +    };
-> >>>>>>>>> +};
-> >>>>>>>>> +
-> >>>>>>>>> +&pio {
-> >>>>>>>>> +    nor_pins_default: nor {
-> >>>>>>>>> +        pins1 {
-> >>>>>>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
-> >>>>>>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
-> >>>>>>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
-> >>>>>>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
-> >>>>>>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
-> >>>>>>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
-> >>>>>>>>> +            drive-strength = <MTK_DRIVE_4mA>;
-> >>>>>>>>> +            bias-pull-up;
-> >>>>>>>>> +        };
-> >>>>>>>>> +    };
-> >>>>>>>>> +};
-> >>>>>>>>> +
-> >>>>>>>>>  &uart0 {
-> >>>>>>>>>      status = "okay";
-> >>>>>>>>>  };
-> >>>>>>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>>>> b/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>>>> index bdf8954..1eefce4 100644
-> >>>>>>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> >>>>>>>>> @@ -227,6 +227,18 @@
-> >>>>>>>>>          status = "disabled";
-> >>>>>>>>>      };
-> >>>>>>>>>
-> >>>>>>>>> +    nor_flash: spi@11014000 {
-> >>>>>>>>> +        compatible = "mediatek,mt2701-nor",
-> >>>>>>>>> +                 "mediatek,mt8173-nor";        
-> >>>>>>>>
-> >>>>>>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
-> >>>>>>>> subset of the features supported by "mediatek,mt2701-nor"?
-> >>>>>>>>        
-> >>>>>>>
-> >>>>>>> I think even if the ip block is the same, we should provide both
-> >>>>>>> bindings, just in case in the future we find out that mt2701 has some
-> >>>>>>> hidden bug, feature or bug-feature. This way even if we update the
-> >>>>>>> driver, we stay compatible with older device tree blobs in the wild.
-> >>>>>>>
-> >>>>>>> We can drop the mt2701-nor in the bindings definition if you want.       
-> >>>>>
-> >>>>> Oh, sorry, I misunderstood. What I meant is that if you want to
-> >>>>> list/support all possible compatibles, maybe you should just put one
-> >>>>> compatible in your DT and patch your driver (+ binding doc) to define
-> >>>>> all of them.      
-> >>>>
-> >>>> Uh, what ? I lost you here :-)  
-> > 
-> > I mean adding a new entry in the mtk_nor_of_ids table (in
-> > mtk-quadspi.c) so that the mediatek,mt2701-nor compatible string can be
-> > matched directly, and you won't need to define 2 compatible strings in
-> > your device tree.  
+On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
+> PHY transceiver driver for QUSB2 phy controller that provides
+> HighSpeed functionality for DWC3 controller present on
+> Qualcomm chipsets.
 > 
-> But then you grow the table in the driver, is that what we want if we
-> can avoid that ?
-
-The space you save by not growing the mtk_nor_of_ids table is lost in
-your dtbs, so I'm not sure the size argument is relevant here. Also,
-note that distros are shipping a lot of dtbs, and you're likely to have
-several boards based on the mt2701 SoC, so, for this specific use case,
-it's better to make the in-driver of-id table grow than specifying 2
-compatibles in the DT. But as I said, I'm not sure we should rely on
-this argument to decide which approach to choose (we're talking about a
-few bytes here).
-
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
 > 
-> >>>>    
-> >>>>>> This exactly. We should have a DT compat in the form:
-> >>>>>> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
-> >>>>>> Then if we find a problem in the future, we can match on the
-> >>>>>> "vendor,<soc>-block" and still support the old DTs.      
-> >>>>>
-> >>>>> Not sure it's only in term of whose IP appeared first. My understanding
-> >>>>> is that it's a way to provide inheritance. For example:
-> >>>>>
-> >>>>> 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
-> >>>>>
-> >>>>> or
-> >>>>>
-> >>>>> 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
-> >>>>>
-> >>>>> BTW, which one is the oldest between mt8173 and mt2701? :-)      
-> >>>>
-> >>>> And that's another thing and I agree with you, but I don't think that's
-> >>>> what we're discussing in this thread. But (!), OT, I think we should
-> >>>> codify the rules in Documentation/ . This discussion came up multiple
-> >>>> times recently.
-> >>>>
-> >>>> And my question still stands, what do we put into the DT here, IMO
-> >>>> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";    
-> >>>
-> >>> I'd say
-> >>>
-> >>> 	compatible = "mediatek,mt8173-nor";
-> >>>
-> >>> because both compatible are referring to very specific IP version. It's
-> >>> not the same as    
-> >>
-> >> But then you don't have the ability to handle a block in this particular
-> >> SoC in case there's a bug found in it in the future,
-> >> so IMO it should be:
-> >>
-> >> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";  
-> > 
-> > Sorry again, I meant
-> > 
-> > 	compatible = "mediatek,mt2701-nor";
-> >   
-> >>  
-> >>> 	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";    
-> >>
-> >> This doesn't look right, since here we add two new compatibles ...  
-> > 
-> > That was just an example to describe how compatible inheritance works
-> > (at least that's my understanding of it), it does not apply to this
-> > particular use case.  
+> Changes since v3:
+>  - Added 'Reviewed-by' from Stephen.
+>  - Fixed debug message for qusb2_phy_set_tune2_param().
+>  - Replaced devm_reset_control_get() with devm_reset_control_get_by_index()
+>    since we are requesting only one reset.
+>  - Updated devm_nvmem_cell_get() with a NULL cell id.
+>  - Made error labels more idiomatic.
+>  - Refactored qusb2_setbits() and qusb2_clrbits() a little bit to accept
+>    base address and register offset as two separate arguments.
 > 
-> Well this is OK I guess, but then you can also use "mediatek,mt8173-nor"
-> as the oldest supported compatible and be done with it, no ? It looks a
-> bit crappy though, I admit that ...
+> Changes since v2:
+>  - Removed selecting 'RESET_CONTROLLER' config.
+>  - Added error handling for clk_prepare_enable paths.
+>  - Removed explicitly setting ref_clk rate to 19.2 MHz. Don't need to
+>    do that since 'xo' is modeled as parent to this clock.
+>  - Removed 'ref_clk_src' handling. Driver doesn't need to request and
+>    handle this clock.
+>  - Moved nvmem_cell_get() to probe function.
+>  - Simplified phy pll status handling.
+>  - Using of_device_get_match_data() to get match data.
+>  - Uniformly using lowercase for hex numbers.
+>  - Fixed sparse warnings.
+>  - Using shorter variable names in structure and in functions.
+>  - Handling various comment style shortcomings.
 > 
+> Changes since v1:
+>  - removed reference to clk_enabled/pwr_enabled.
+>  - moved clock and regulator enable code to phy_power_on/off() callbacks.
+>  - fixed return on EPROBE_DEFER in qusb2_phy_probe().
+>  - fixed phy create and phy register ordering.
+>  - removed references to non-lkml links from commit message.
+>  - took care of other minor nits.
+>  - Fixed coccinelle warnings -
+>    'PTR_ERR applied after initialization to constant'
+>  - Addressed review comment, regarding qfprom access for tune2 param value.
+>    This driver is now based on qfprom patch[1] that allows byte access now.
+> 
+>  drivers/phy/Kconfig          |  10 +
+>  drivers/phy/Makefile         |   1 +
+>  drivers/phy/phy-qcom-qusb2.c | 539 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 550 insertions(+)
+>  create mode 100644 drivers/phy/phy-qcom-qusb2.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index e8eb7f225a88..0ed53d018b23 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -430,6 +430,16 @@ config PHY_STIH407_USB
+>  	  Enable this support to enable the picoPHY device used by USB2
+>  	  and USB3 controllers on STMicroelectronics STiH407 SoC families.
+>  
+> +config PHY_QCOM_QUSB2
+> +	tristate "Qualcomm QUSB2 PHY Driver"
+> +	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the HighSpeed QUSB2 PHY transceiver for USB
+> +	  controllers on Qualcomm chips. This driver supports the high-speed
+> +	  PHY which is usually paired with either the ChipIdea or Synopsys DWC3
+> +	  USB IPs on MSM SOCs.
+> +
+>  config PHY_QCOM_UFS
+>  	tristate "Qualcomm UFS PHY driver"
+>  	depends on OF && ARCH_QCOM
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 65eb2f436a41..dad1682b80e3 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -49,6 +49,7 @@ obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
+>  obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
+>  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+>  obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
+> +obj-$(CONFIG_PHY_QCOM_QUSB2) 	+= phy-qcom-qusb2.o
+>  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
+>  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
+>  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
+> diff --git a/drivers/phy/phy-qcom-qusb2.c b/drivers/phy/phy-qcom-qusb2.c
+> new file mode 100644
+> index 000000000000..c69118610164
+> --- /dev/null
+> +++ b/drivers/phy/phy-qcom-qusb2.c
+> @@ -0,0 +1,539 @@
+> +/*
+> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +
+> +#define QUSB2PHY_PLL_TEST		0x04
+> +#define CLK_REF_SEL			BIT(7)
+> +
+> +#define QUSB2PHY_PLL_TUNE		0x08
+> +#define QUSB2PHY_PLL_USER_CTL1		0x0c
+> +#define QUSB2PHY_PLL_USER_CTL2		0x10
+> +#define QUSB2PHY_PLL_AUTOPGM_CTL1	0x1c
+> +#define QUSB2PHY_PLL_PWR_CTRL		0x18
+> +
+> +#define QUSB2PHY_PLL_STATUS		0x38
+> +#define PLL_LOCKED			BIT(5)
+> +
+> +#define QUSB2PHY_PORT_TUNE1		0x80
+> +#define QUSB2PHY_PORT_TUNE2		0x84
+> +#define QUSB2PHY_PORT_TUNE3		0x88
+> +#define QUSB2PHY_PORT_TUNE4		0x8c
+> +#define QUSB2PHY_PORT_TUNE5		0x90
+> +#define QUSB2PHY_PORT_TEST2		0x9c
+> +
+> +#define QUSB2PHY_PORT_POWERDOWN		0xb4
+> +#define CLAMP_N_EN			BIT(5)
+> +#define FREEZIO_N			BIT(1)
+> +#define POWER_DOWN			BIT(0)
+> +
+> +#define QUSB2PHY_REFCLK_ENABLE		BIT(0)
+> +
+> +#define PHY_CLK_SCHEME_SEL		BIT(0)
+> +
+> +struct qusb2_phy_init_tbl {
+> +	unsigned int offset;
+> +	unsigned int val;
+> +};
+> +#define QUSB2_PHY_INIT_CFG(o, v) \
+> +	{			\
+> +		.offset = o,	\
+> +		.val = v,	\
+> +	}
+> +
+> +static const struct qusb2_phy_init_tbl msm8996_init_tbl[] = {
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xf8),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xb3),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xc0),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9f),
+> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
+> +};
 
-Let's stop bikeshedding and wait for DT maintainers feedback
-before taking a decision ;-).
+I wish all this data comes from device tree and one API in phy-core can do all
+these settings. Your other driver qcom-qmp also seems to have a bunch of
+similar settings.
 
-Rob, Mark, any opinion?
+The problem is every vnedor driver adds a bunch of code to perform the same
+thing again and again when all of these settings can be done by a single phy API.
+
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
