@@ -1,46 +1,107 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Fri, 13 Jan 2017 17:56:59 +0000
-Message-ID: <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170112181149.29035-1-chris.brandt@renesas.com>
- <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
- <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
- <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v2 4/4] arm: dts: Add support for ES8388 to the
+	Radxa Rock 2
+Date: Mon, 16 Jan 2017 09:17:53 +0100
+Message-ID: <20170116081753.13666-5-romain.perier@collabora.com>
+References: <20170116081753.13666-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170116081753.13666-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIEZyaWRheSwgSmFudWFyeSAxMywgMjAxNywgR2VlcnQgVXl0dGVyaG9l
-dmVuIHdyb3RlOg0KPiA+IEluIHNoX21vYmlsZV9zZGhpLmMsIGNhbiB3ZSBjaGFuZ2Ugc2hfbW9i
-aWxlX3NkaGlfcHJvYmUoKSBzbyB0aGF0IGlmDQo+ID4gdGhlcmUgYXJlIDIgY2xvY2tzIHNwZWNp
-ZmllZCAoaW4gRFQgb3IgcGxhdGZvcm0gZGF0YSksIGl0DQo+ID4gYXV0b21hdGljYWxseSBlbmFi
-bGVzIHRoZSAybmQgY2xvY2sgKGZvcmV2ZXIpIGFuZCBqdXN0IHVzZXMgdGhlIDFzdA0KPiBjbG9j
-ayBhcyB0aGUgb24vb2ZmIGNsb2NrPw0KPiANCj4gT2YgY291cnNlIHRoZSBkcml2ZXIgY2FuIGhh
-bmRsZSB0aGUgc2Vjb25kIGludGVycnVwdCwgaWYgeW91IHVwZGF0ZSB0aGUNCj4gYmluZGluZywg
-YW5kIGFkZCBzdXBwb3J0IGNvZGUgZm9yIHRoYXQuLi4NCg0KT2YgY291cnNlIG15IGlkZWEgaXMg
-dGhhdCBJIHdvdWxkIG9ubHkgaGF2ZSB0byB1cGRhdGUgdGhlIGJpbmRpbmdzIGZvcg0KUlovQTEu
-Li5ub3QgYW55IG90aGVyIGRldmljZS4NCg0KTXkgb25seSBxdWVzdGlvbiBpcywgdG9kYXkgc2hf
-bW9iaWxlX3NkaGkuYyB1c2VzIHRoaXM6DQoNCiAgIHByaXYtPmNsayA9IGRldm1fY2xrX2dldCgm
-cGRldi0+ZGV2LCBOVUxMKTsNCg0KdG8gZ2V0IHRoZSBjbG9jay4gQnV0IGlmIHRoZXJlIGlzIGEg
-Mm5kIGNsb2NrLi4uaG93IGRvIEkga25vdyB0aGUNCnN0cmluZyBpZCBuYW1lIHRvIGxvb2sgdG8g
-cmVwbGFjZSBOVUxMIHdpdGg/Pw0KDQoNCk9yLi4uZm9yIHRoZSBSWi9BMSBkdHNpLCBzaG91bGQg
-SSBqdXN0IGdpdmUgdGhlIDIgY2xvY2tzIG5hbWVzOg0KDQoJCWNsb2NrcyA9IDwmbXN0cDEyX2Ns
-a3MgUjdTNzIxMDBfQ0xLX1NESEkwMCwNCgkJCQkmbXN0cDEyX2Nsa3MgUjdTNzIxMDBfQ0xLX1NE
-SEkwMT47DQoJCWNsb2NrLW5hbWVzID0gImNvcmUiLCAiY2QiOw0KDQoNCmFuZCB0aGVuIGluIHRo
-ZSBjb2RlIGRvOg0KDQoJc3RydWN0ICpjZF9jbGs7DQoJY2RfY2xrID0gZGV2bV9jbGtfZ2V0KCZw
-ZGV2LT5kZXYsICJjZCIpOw0KCWlmIChjZF9jbGspIHsNCgkJY2xrX3ByZXBhcmVfZW5hYmxlKGNk
-X2Nsayk7DQoJfQ0KDQoNCg0KICAodGhpcyBzaW1wbGUgMS1saW5lIGZpeCBwYXRjaCBpcyBnZXR0
-aW5nIGEgbG90IG1vcmUgY29tcGxpY2F0ZWQpDQoNCg0KVGhhbmtzLA0KQ2hyaXMNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This commit adds the DT definition of the es8388 i2c device
+found at address 0x10. It also adds the definition for connecting
+the Rockchip I2S to the es8388 analog output.
+
+This commit is based on the initial work that was done by Sjoerd Simons
+<sjoerd.simons@collabora.com> with some improvements.
+
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
+
+Changes in v2: None
+
+ arch/arm/boot/dts/rk3288-rock2-square.dts | 37 +++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+index 96a2e74..4f9b7d2 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-square.dts
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -86,6 +86,17 @@
+ 		#sound-dai-cells = <0>;
+ 	};
+ 
++	sound_es8388 {
++		compatible = "rockchip,rockchip-audio-es8388";
++		rockchip,model = "Analog audio output";
++		rockchip,i2s-controller = <&i2s>;
++		rockchip,audio-codec = <&es8388>;
++		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
++		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&headphone>;
++	};
++
+ 	sdio_pwrseq: sdio-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		clocks = <&hym8563>;
+@@ -173,10 +184,29 @@
+ 	};
+ };
+ 
++&i2c2 {
++	status = "okay";
++
++	es8388: es8388@10 {
++		compatible = "everest,es8388", "everest,es8328";
++		reg = <0x10>;
++		AVDD-supply = <&vcca_codec>;
++		DVDD-supply = <&vcca_codec>;
++		HPVDD-supply = <&vcca_codec>;
++		PVDD-supply = <&vcca_codec>;
++		clocks = <&cru SCLK_I2S0_OUT>;
++		clock-names = "i2s_clk_out";
++	};
++};
++
+ &i2c5 {
+ 	status = "okay";
+ };
+ 
++&i2s {
++	status = "okay";
++};
++
+ &pinctrl {
+ 	ir {
+ 		ir_int: ir-int {
+@@ -190,6 +220,13 @@
+ 		};
+ 	};
+ 
++	sound {
++		headphone: headphone {
++			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
++					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+2.9.3
