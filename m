@@ -1,386 +1,204 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v3 1/1] iio: adc: tlc4541: add support for TI tlc4541 adc
-Date: Mon, 16 Jan 2017 16:38:24 +0800
-Message-ID: <1484555904-117718-1-git-send-email-preid@electromag.com.au>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Mon, 16 Jan 2017 09:40:32 +0100
+Message-ID: <20170116094032.6f471f11@bbrezillon>
+References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+        <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
+        <20170113151747.6bc85245@bbrezillon>
+        <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+        <20170113172825.75d545a3@bbrezillon>
+        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+        <20170113175628.1793f433@bbrezillon>
+        <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
+        <20170114092958.022f2fc8@bbrezillon>
+        <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e7fa1542-f0e2-0e45-23b3-25d6491ae40d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds TI's tlc4541 16-bit ADC driver. Which is a single channel
-ADC. Supports raw and trigger buffer access.
-Also supports the tlc3541 14-bit device, which has not been tested.
-Implementation of the tlc3541 is fairly straight forward thou.
+On Sun, 15 Jan 2017 01:23:48 +0100
+Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
----
+> On 01/14/2017 09:29 AM, Boris Brezillon wrote:
+> > On Fri, 13 Jan 2017 18:33:40 +0100
+> > Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> >> On 01/13/2017 05:56 PM, Boris Brezillon wrote:  
+> >>> On Fri, 13 Jan 2017 17:44:12 +0100
+> >>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>     
+> >>>> On 01/13/2017 05:28 PM, Boris Brezillon wrote:    
+> >>>>> On Fri, 13 Jan 2017 17:13:55 +0100
+> >>>>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>>>       
+> >>>>>> On 01/13/2017 04:12 PM, Matthias Brugger wrote:      
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> On 13/01/17 15:17, Boris Brezillon wrote:        
+> >>>>>>>> On Fri, 13 Jan 2017 15:13:29 +0800
+> >>>>>>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >>>>>>>>        
+> >>>>>>>>> Add Mediatek nor flash node.
+> >>>>>>>>>
+> >>>>>>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>>>>>>> ---
+> >>>>>>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
+> >>>>>>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
+> >>>>>>>>>  2 files changed, 37 insertions(+)
+> >>>>>>>>>
+> >>>>>>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>>>>>> b/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>>>>>> index 082ca88..85e5ae8 100644
+> >>>>>>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>>>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> >>>>>>>>> @@ -24,6 +24,31 @@
+> >>>>>>>>>      };
+> >>>>>>>>>  };
+> >>>>>>>>>
+> >>>>>>>>> +&nor_flash {
+> >>>>>>>>> +    pinctrl-names = "default";
+> >>>>>>>>> +    pinctrl-0 = <&nor_pins_default>;
+> >>>>>>>>> +    status = "okay";
+> >>>>>>>>> +    flash@0 {
+> >>>>>>>>> +        compatible = "jedec,spi-nor";
+> >>>>>>>>> +        reg = <0>;
+> >>>>>>>>> +    };
+> >>>>>>>>> +};
+> >>>>>>>>> +
+> >>>>>>>>> +&pio {
+> >>>>>>>>> +    nor_pins_default: nor {
+> >>>>>>>>> +        pins1 {
+> >>>>>>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
+> >>>>>>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
+> >>>>>>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
+> >>>>>>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
+> >>>>>>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
+> >>>>>>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
+> >>>>>>>>> +            drive-strength = <MTK_DRIVE_4mA>;
+> >>>>>>>>> +            bias-pull-up;
+> >>>>>>>>> +        };
+> >>>>>>>>> +    };
+> >>>>>>>>> +};
+> >>>>>>>>> +
+> >>>>>>>>>  &uart0 {
+> >>>>>>>>>      status = "okay";
+> >>>>>>>>>  };
+> >>>>>>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
+> >>>>>>>>> b/arch/arm/boot/dts/mt2701.dtsi
+> >>>>>>>>> index bdf8954..1eefce4 100644
+> >>>>>>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
+> >>>>>>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> >>>>>>>>> @@ -227,6 +227,18 @@
+> >>>>>>>>>          status = "disabled";
+> >>>>>>>>>      };
+> >>>>>>>>>
+> >>>>>>>>> +    nor_flash: spi@11014000 {
+> >>>>>>>>> +        compatible = "mediatek,mt2701-nor",
+> >>>>>>>>> +                 "mediatek,mt8173-nor";        
+> >>>>>>>>
+> >>>>>>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
+> >>>>>>>> subset of the features supported by "mediatek,mt2701-nor"?
+> >>>>>>>>        
+> >>>>>>>
+> >>>>>>> I think even if the ip block is the same, we should provide both
+> >>>>>>> bindings, just in case in the future we find out that mt2701 has some
+> >>>>>>> hidden bug, feature or bug-feature. This way even if we update the
+> >>>>>>> driver, we stay compatible with older device tree blobs in the wild.
+> >>>>>>>
+> >>>>>>> We can drop the mt2701-nor in the bindings definition if you want.       
+> >>>>>
+> >>>>> Oh, sorry, I misunderstood. What I meant is that if you want to
+> >>>>> list/support all possible compatibles, maybe you should just put one
+> >>>>> compatible in your DT and patch your driver (+ binding doc) to define
+> >>>>> all of them.      
+> >>>>
+> >>>> Uh, what ? I lost you here :-)  
+> > 
+> > I mean adding a new entry in the mtk_nor_of_ids table (in
+> > mtk-quadspi.c) so that the mediatek,mt2701-nor compatible string can be
+> > matched directly, and you won't need to define 2 compatible strings in
+> > your device tree.  
+> 
+> But then you grow the table in the driver, is that what we want if we
+> can avoid that ?
 
-Notes:
-    Changes from v2:
-    - Fix paste error in binding document.
-    - Remove index from channel description. Note this break libiio.
-      libiio will no longer recognise that the cahnnel is buffer enabled.
-    - Add brackets to macro parameter bitshift
-    - Make tcl3541 / tcl4541 order in code consistent.
-    - Use spi_message_init_with_transfers
-    - Cleanup whitespace lines
-    - Add TLC3541 to kconfig description
-    - Add Robs Ack.
-    
-    Changes from v1:
-    - Add tlc3541 support and chan spec.
-    - remove fields that where already 0 from TLC4541_V_CHAN macro
-    - Increase rx_buf size in tlc4541_state to avoid copy in tlc4541_trigger_handle
-    - Remove erroneous be16_to_cpu in tlc4541_trigger_handle
-    - Docs/binding: spi -> SPI & add ti,tlc3541
+The space you save by not growing the mtk_nor_of_ids table is lost in
+your dtbs, so I'm not sure the size argument is relevant here. Also,
+note that distros are shipping a lot of dtbs, and you're likely to have
+several boards based on the mt2701 SoC, so, for this specific use case,
+it's better to make the in-driver of-id table grow than specifying 2
+compatibles in the DT. But as I said, I'm not sure we should rely on
+this argument to decide which approach to choose (we're talking about a
+few bytes here).
 
- .../devicetree/bindings/iio/adc/ti-tlc4541.txt     |  17 ++
- drivers/iio/adc/Kconfig                            |  12 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/ti-tlc4541.c                       | 271 +++++++++++++++++++++
- 4 files changed, 301 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
- create mode 100644 drivers/iio/adc/ti-tlc4541.c
+> 
+> >>>>    
+> >>>>>> This exactly. We should have a DT compat in the form:
+> >>>>>> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
+> >>>>>> Then if we find a problem in the future, we can match on the
+> >>>>>> "vendor,<soc>-block" and still support the old DTs.      
+> >>>>>
+> >>>>> Not sure it's only in term of whose IP appeared first. My understanding
+> >>>>> is that it's a way to provide inheritance. For example:
+> >>>>>
+> >>>>> 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
+> >>>>>
+> >>>>> or
+> >>>>>
+> >>>>> 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
+> >>>>>
+> >>>>> BTW, which one is the oldest between mt8173 and mt2701? :-)      
+> >>>>
+> >>>> And that's another thing and I agree with you, but I don't think that's
+> >>>> what we're discussing in this thread. But (!), OT, I think we should
+> >>>> codify the rules in Documentation/ . This discussion came up multiple
+> >>>> times recently.
+> >>>>
+> >>>> And my question still stands, what do we put into the DT here, IMO
+> >>>> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";    
+> >>>
+> >>> I'd say
+> >>>
+> >>> 	compatible = "mediatek,mt8173-nor";
+> >>>
+> >>> because both compatible are referring to very specific IP version. It's
+> >>> not the same as    
+> >>
+> >> But then you don't have the ability to handle a block in this particular
+> >> SoC in case there's a bug found in it in the future,
+> >> so IMO it should be:
+> >>
+> >> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";  
+> > 
+> > Sorry again, I meant
+> > 
+> > 	compatible = "mediatek,mt2701-nor";
+> >   
+> >>  
+> >>> 	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";    
+> >>
+> >> This doesn't look right, since here we add two new compatibles ...  
+> > 
+> > That was just an example to describe how compatible inheritance works
+> > (at least that's my understanding of it), it does not apply to this
+> > particular use case.  
+> 
+> Well this is OK I guess, but then you can also use "mediatek,mt8173-nor"
+> as the oldest supported compatible and be done with it, no ? It looks a
+> bit crappy though, I admit that ...
+> 
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
-new file mode 100644
-index 0000000..6b26927
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
-@@ -0,0 +1,17 @@
-+* Texas Instruments' TLC4541
-+
-+Required properties:
-+ - compatible: Should be one of
-+	* "ti,tlc4541"
-+	* "ti,tlc3541"
-+	- reg: SPI chip select number for the device
-+ - vref-supply: The regulator supply for ADC reference voltage
-+ - spi-max-frequency: Max SPI frequency to use (<= 200000)
-+
-+Example:
-+adc@0 {
-+	compatible = "ti,tlc4541";
-+	reg = <0>;
-+	vref-supply = <&vdd_supply>;
-+	spi-max-frequency = <200000>;
-+};
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 99c0514..fb9ede7 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -525,6 +525,18 @@ config TI_AM335X_ADC
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ti_am335x_adc.
- 
-+config TI_TLC4541
-+	tristate "Texas Instruments TLC4541 ADC driver"
-+	depends on SPI
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	help
-+	  Say yes here to build support for Texas Instruments TLC4541 / TLC3541
-+	  ADC chips.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called ti-tlc4541.
-+
- config TWL4030_MADC
- 	tristate "TWL4030 MADC (Monitoring A/D Converter)"
- 	depends on TWL4030_CORE
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 7a40c04..9bf2377 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
- obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
- obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
- obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
-+obj-$(CONFIG_TI_TLC4541) += ti-tlc4541.o
- obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
- obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
- obj-$(CONFIG_VF610_ADC) += vf610_adc.o
-diff --git a/drivers/iio/adc/ti-tlc4541.c b/drivers/iio/adc/ti-tlc4541.c
-new file mode 100644
-index 0000000..78d91a0
---- /dev/null
-+++ b/drivers/iio/adc/ti-tlc4541.c
-@@ -0,0 +1,271 @@
-+/*
-+ * TI tlc4541 ADC Driver
-+ *
-+ * Copyright (C) 2017 Phil Reid
-+ *
-+ * Datasheets can be found here:
-+ * http://www.ti.com/lit/gpn/tlc3541
-+ * http://www.ti.com/lit/gpn/tlc4541
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * The tlc4541 requires 24 clock cycles to start a transfer.
-+ * Conversion then takes 2.94us to complete before data is ready
-+ * Data is returned MSB first.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/spi/spi.h>
-+#include <linux/sysfs.h>
-+
-+struct tlc4541_state {
-+	struct spi_device               *spi;
-+	struct regulator                *reg;
-+	struct spi_transfer             scan_single_xfer[3];
-+	struct spi_message              scan_single_msg;
-+
-+	/*
-+	 * DMA (thus cache coherency maintenance) requires the
-+	 * transfer buffers to live in their own cache lines.
-+	 * 2 bytes data + 6 bytes padding + 8 bytes timestamp when
-+	 * call iio_push_to_buffers_with_timestamp.
-+	 */
-+	__be16                          rx_buf[8] ____cacheline_aligned;
-+};
-+
-+struct tlc4541_chip_info {
-+	const struct iio_chan_spec *channels;
-+	unsigned int num_channels;
-+};
-+
-+enum tlc4541_id {
-+	TLC3541,
-+	TLC4541,
-+};
-+
-+#define TLC4541_V_CHAN(bits, bitshift) {                              \
-+		.type = IIO_VOLTAGE,                                  \
-+		.info_mask_separate       = BIT(IIO_CHAN_INFO_RAW),   \
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+		.scan_type = {                                        \
-+			.sign = 'u',                                  \
-+			.realbits = (bits),                           \
-+			.storagebits = 16,                            \
-+			.shift = (bitshift),                          \
-+			.endianness = IIO_BE,                         \
-+		},                                                    \
-+	}
-+
-+#define DECLARE_TLC4541_CHANNELS(name, bits, bitshift) \
-+const struct iio_chan_spec name ## _channels[] = { \
-+	TLC4541_V_CHAN(bits, bitshift), \
-+	IIO_CHAN_SOFT_TIMESTAMP(1), \
-+}
-+
-+static DECLARE_TLC4541_CHANNELS(tlc3541, 14, 2);
-+static DECLARE_TLC4541_CHANNELS(tlc4541, 16, 0);
-+
-+static const struct tlc4541_chip_info tlc4541_chip_info[] = {
-+	[TLC3541] = {
-+		.channels = tlc3541_channels,
-+		.num_channels = ARRAY_SIZE(tlc3541_channels),
-+	},
-+	[TLC4541] = {
-+		.channels = tlc4541_channels,
-+		.num_channels = ARRAY_SIZE(tlc4541_channels),
-+	},
-+};
-+
-+static irqreturn_t tlc4541_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct tlc4541_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = spi_sync(st->spi, &st->scan_single_msg);
-+	if (ret < 0)
-+		goto done;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, st->rx_buf,
-+					   iio_get_time_ns(indio_dev));
-+
-+done:
-+	iio_trigger_notify_done(indio_dev->trig);
-+	return IRQ_HANDLED;
-+}
-+
-+static int tlc4541_get_range(struct tlc4541_state *st)
-+{
-+	int vref;
-+
-+	vref = regulator_get_voltage(st->reg);
-+	if (vref < 0)
-+		return vref;
-+
-+	vref /= 1000;
-+
-+	return vref;
-+}
-+
-+static int tlc4541_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val,
-+			    int *val2,
-+			    long m)
-+{
-+	int ret = 0;
-+	struct tlc4541_state *st = iio_priv(indio_dev);
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+		ret = spi_sync(st->spi, &st->scan_single_msg);
-+		iio_device_release_direct_mode(indio_dev);
-+		if (ret < 0)
-+			return ret;
-+		*val = be16_to_cpu(st->rx_buf[0]);
-+		*val = *val >> chan->scan_type.shift;
-+		*val &= GENMASK(chan->scan_type.realbits - 1, 0);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = tlc4541_get_range(st);
-+		if (ret < 0)
-+			return ret;
-+		*val = ret;
-+		*val2 = chan->scan_type.realbits;
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	}
-+	return -EINVAL;
-+}
-+
-+static const struct iio_info tlc4541_info = {
-+	.read_raw = &tlc4541_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int tlc4541_probe(struct spi_device *spi)
-+{
-+	struct tlc4541_state *st;
-+	struct iio_dev *indio_dev;
-+	const struct tlc4541_chip_info *info;
-+	int ret;
-+	int8_t device_init = 0;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	if (indio_dev == NULL)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	st->spi = spi;
-+
-+	info = &tlc4541_chip_info[spi_get_device_id(spi)->driver_data];
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = info->channels;
-+	indio_dev->num_channels = info->num_channels;
-+	indio_dev->info = &tlc4541_info;
-+
-+	/* perform reset */
-+	spi_write(spi, &device_init, 1);
-+
-+	/* Setup default message */
-+	st->scan_single_xfer[0].rx_buf = &st->rx_buf[0];
-+	st->scan_single_xfer[0].len = 3;
-+	st->scan_single_xfer[1].delay_usecs = 3;
-+	st->scan_single_xfer[2].rx_buf = &st->rx_buf[0];
-+	st->scan_single_xfer[2].len = 2;
-+
-+	spi_message_init_with_transfers(&st->scan_single_msg,
-+					st->scan_single_xfer, 3);
-+
-+	st->reg = devm_regulator_get(&spi->dev, "vref");
-+	if (IS_ERR(st->reg))
-+		return PTR_ERR(st->reg);
-+
-+	ret = regulator_enable(st->reg);
-+	if (ret)
-+		return ret;
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+			&tlc4541_trigger_handler, NULL);
-+	if (ret)
-+		goto error_disable_reg;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto error_cleanup_buffer;
-+
-+	return 0;
-+
-+error_cleanup_buffer:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+error_disable_reg:
-+	regulator_disable(st->reg);
-+
-+	return ret;
-+}
-+
-+static int tlc4541_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct tlc4541_state *st = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	regulator_disable(st->reg);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id tlc4541_dt_ids[] = {
-+	{ .compatible = "ti,tlc3541", },
-+	{ .compatible = "ti,tlc4541", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, tlc4541_dt_ids);
-+#endif
-+
-+static const struct spi_device_id tlc4541_id[] = {
-+	{"tlc3541", TLC3541},
-+	{"tlc4541", TLC4541},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, tlc4541_id);
-+
-+static struct spi_driver tlc4541_driver = {
-+	.driver = {
-+		.name   = "tlc4541",
-+		.of_match_table = of_match_ptr(tlc4541_dt_ids),
-+	},
-+	.probe          = tlc4541_probe,
-+	.remove         = tlc4541_remove,
-+	.id_table       = tlc4541_id,
-+};
-+module_spi_driver(tlc4541_driver);
-+
-+MODULE_AUTHOR("Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>");
-+MODULE_DESCRIPTION("Texas Instruments TLC4541 ADC");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.3.1
+Let's stop bikeshedding and wait for DT maintainers feedback
+before taking a decision ;-).
 
+Rob, Mark, any opinion?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
