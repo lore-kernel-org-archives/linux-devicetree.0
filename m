@@ -1,76 +1,66 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v1 3/3] reset: zx2967: add reset controller driver for
- ZTE's zx2967 family
-Date: Mon, 16 Jan 2017 15:58:36 +0800
-Message-ID: <20170116075835.GB11600@x250>
-References: <1484377530-30635-1-git-send-email-baoyou.xie@linaro.org>
- <1484377530-30635-3-git-send-email-baoyou.xie@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] fbdev: ssd1307fb: allow reset-gpios is missing
+Date: Mon, 16 Jan 2017 09:02:59 +0100
+Message-ID: <20170116080259.k47otz6zr6c2i2qc@lukather>
+References: <20170115112146.1787-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w5zm2ufcjf5nhzgf"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484377530-30635-3-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+In-Reply-To: <20170115112146.1787-1-icenowy-ymACFijhrKM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 14, 2017 at 03:05:30PM +0800, Baoyou Xie wrote:
-> +static int zx2967_reset_assert(struct reset_controller_dev *rcdev,
-> +			   unsigned long id)
-> +{
-> +	struct zx2967_reset *reset = NULL;
-> +	int bank = id / 32;
-> +	int offset = id % 32;
-> +	unsigned int reg;
 
-u32 is probably better for register value.
+--w5zm2ufcjf5nhzgf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	unsigned long flags;
-> +
-> +	reset = container_of(rcdev, struct zx2967_reset, rcdev);
-> +
-> +	spin_lock_irqsave(&reset->lock, flags);
-> +
-> +	reg = readl(reset->reg_base + (bank * 4));
-> +	writel(reg & ~BIT(offset), reset->reg_base + (bank * 4));
-> +	reg = readl(reset->reg_base + (bank * 4));
+On Sun, Jan 15, 2017 at 07:21:46PM +0800, Icenowy Zheng wrote:
+> Currently some SSD1306 OLED modules are sold without a reset pin (only
+> VCC, GND, SCK, SDA four pins).
+>=20
+> Add support for missing reset-gpios property.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-Is this read on the register is necessary?  If so, we should probably
-have a comment for that.
+Unfortunately, a similar patch has been sent a couple of times
+already:
+https://www.spinics.net/lists/devicetree/msg158330.html
 
-> +
-> +	spin_unlock_irqrestore(&reset->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int zx2967_reset_deassert(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
+Maxime
 
-Please indent the line right after parentheses.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> +{
-> +	struct zx2967_reset *reset = NULL;
-> +	int bank = id / 32;
-> +	int offset = id % 32;
-> +	unsigned int reg;
-> +	unsigned long flags;
-> +
-> +	reset = container_of(rcdev, struct zx2967_reset, rcdev);
-> +
-> +	spin_lock_irqsave(&reset->lock, flags);
-> +
-> +	reg = readl(reset->reg_base + (bank * 4));
-> +	writel(reg | BIT(offset), reset->reg_base + (bank * 4));
-> +	reg = readl(reset->reg_base + (bank * 4));
-> +
-> +	spin_unlock_irqrestore(&reset->lock, flags);
-> +
-> +	return 0;
-> +}
+--w5zm2ufcjf5nhzgf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Only difference between these two functions is only one line.  Should we
-consolidate them a bit?
+-----BEGIN PGP SIGNATURE-----
 
-Shawn
+iQIcBAEBCAAGBQJYfH4zAAoJEBx+YmzsjxAgwa4P/A+y2gOtVCFlT73Oyd2uuQy6
+33loZT7daIdZgL+YFlhM7Ik+NU7AzkxaoY3Tu90hqmWoU6ApOWsvOu4QLx1WGkvR
+4//Cjb8akgTpZCgOVzH4yA/Zvh+H1WiurxVpPCSR/nW22wvFRYYlwA7VKJfm72QL
+ZTkKdFHIjuz6MPd5988xbjIPCUsoV6bzPJYS5Ja8Chz1IcXlgmwyN82K7StLWtaW
+ETICON52Ai2QZClUrsQh/m+WKjqDKq6aXxC5K4flI9jioxRg+jRQG5NZhGhIoy/V
+/91iHU4UOklQW3nhSjS8EDSt6/0cV0Z/ZSP71KpdvuO3ljjSLS+jboSah73VjS1A
+DdJwMg4G5IGgO36paXw1Zs+yw+z9khMuF9Ci5TmFGQH6dRUYuG1HpFRsFPjuPd9U
+teKbBQ/TSp5nRDM3KF7c9q2q6LQ+S8p26aQbWGFUB4cD1FEY5HIl7gmrakymgm20
+s4pT7QwM4YY2ew+8HRLYQ+lET3cJaCI32C+dzhAz0UyW2CDdsZI24EpmwDU8SG0j
+Vcwf1S+orbvcdGCHp9GzBwCGLQvU1vahKWAEl/a0ohlUSs94mlX7AoptqLNwjxkQ
+gsq9cDcww92M22m3eQXeRMyqxcFacVWLd8ahb7QS3gSXrIQdf7bap5iBi/d/Ym85
+bU1tC1QPsPlQ6kG0RvJT
+=dA1C
+-----END PGP SIGNATURE-----
+
+--w5zm2ufcjf5nhzgf--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
