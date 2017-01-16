@@ -1,52 +1,77 @@
-From: Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/4] ASoC: rockchip: Add machine driver
- for ES8388 codecs
-Date: Mon, 16 Jan 2017 12:27:31 +0200
-Message-ID: <CAEnQRZDiwJpUJ+9UkGz0M9MjaTjCH6u5K-B2a_CzPr-zW8ET0g@mail.gmail.com>
-References: <20170116081753.13666-1-romain.perier@collabora.com> <20170116081753.13666-4-romain.perier@collabora.com>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 11/37] PCI: dwc: Split pcie-designware.c into host and
+ core files
+Date: Mon, 16 Jan 2017 10:27:58 +0000
+Message-ID: <0a16c862-312f-655e-3d66-bdb0c1f78584@synopsys.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-12-git-send-email-kishon@ti.com>
+ <4a89fb45-af84-d660-5ef0-12227b141cda@synopsys.com> <587C586C.6070003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170116081753.13666-4-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <587C586C.6070003-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Two nits, see below.
 
-<snip>
+Hi,
 
-> +static int snd_rk_mc_probe(struct platform_device *pdev)
-> +{
-> +       int ret = 0;
-> +       struct snd_soc_card *card = &snd_soc_card_rk;
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct rk_es8388_drvdata *machine;
-> +
-> +       machine = devm_kzalloc(&pdev->dev, sizeof(struct rk_es8388_drvdata),
-> +                              GFP_KERNEL);
-> +
+Às 5:21 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
+> Hi Joao,
+> 
+> On Friday 13 January 2017 10:19 PM, Joao Pinto wrote:
+>> Às 10:26 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
+>>> Split pcie-designware.c into pcie-designware-host.c that contains
+>>> the host specific parts of the driver and pcie-designware.c that
+>>> contains the parts used by both host driver and endpoint driver.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>  drivers/pci/dwc/Makefile               |    2 +-
+>>>  drivers/pci/dwc/pcie-designware-host.c |  619 ++++++++++++++++++++++++++++++++
+>>>  drivers/pci/dwc/pcie-designware.c      |  613 +------------------------------
+>>>  drivers/pci/dwc/pcie-designware.h      |    8 +
+>>>  4 files changed, 634 insertions(+), 608 deletions(-)
+>>>  create mode 100644 drivers/pci/dwc/pcie-designware-host.c
+>>>
+>>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+>>> index 7d27c14..3b57e55 100644
+>>> --- a/drivers/pci/dwc/Makefile
+>>> +++ b/drivers/pci/dwc/Makefile
+>>> @@ -1,4 +1,4 @@
+>>
+>> (snip...)
+>>
+>>> -static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+>>> -				      int type, u64 cpu_addr, u64 pci_addr,
+>>> -				      u32 size)
+>>> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+>>> +			       u64 cpu_addr, u64 pci_addr, u32 size)
+>>>  {
+>>>  	u32 retries, val;
+>>>  
+>>> @@ -186,220 +151,6 @@ static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+>>>  	dev_err(pci->dev, "iATU is not being enabled\n");
+>>>  }
+>>
+>> Kishon, iATU only makes sense in The Root Complex (host), so it should be inside
+>> the pcie-designware-host.
+> 
+> That is not true. Outbound ATU should be programmed to access host side buffers
+> and inbound ATU should be programmed for the host to access EP mem space.
 
-You don't need this new line here.
-> +       if (!machine)
-> +               return -ENOMEM;
-> +
+Sorry, I was not clear enough. What I was trying to suggest is, since the ATU
+programming is done by the host, wouldn't be better to include it in the
+pcie-designware-host? It is just an architectural detail.
 
-<snip>
+> 
+> Thanks
+> Kishon
+> 
 
-> +module_platform_driver(snd_rk_es8388_driver);
-> +
-> +MODULE_AUTHOR("Sjoerd Simons");
-
-You should also add your email address near name.
-
-> +MODULE_DESCRIPTION("Rockchip es8388 machine ASoC driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-
-thanks,
-Daniel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
