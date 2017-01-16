@@ -1,127 +1,49 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Mon, 16 Jan 2017 20:49:06 +0200
-Message-ID: <20170116184906.r62di7xiil5lae33@kozik-lap>
-References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 0/4] Enable USB OTG on Allwinner H3 and two boards
+Date: Tue, 17 Jan 2017 03:14:45 +0800
+Message-ID: <20170116191449.50397-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170116132424.7038-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBWFX6TBQKGQEZ4RN7OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 02:24:23PM +0100, Maxime Ripard wrote:
-> The ARM Mali Utgard GPU family is embedded into a number of SoCs from
-> Allwinner, Amlogic, Mediatek or Rockchip.
-> 
-> Add a binding for the GPU of that family.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> 
+This patchset depends on the following patch (only the patch, as it adds the
+MUSB controller used in H3, the patchset itself is for V3s):
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-January/476387.html
 
-Hi,
+This patchset enables USB OTG ports on Orange Pi Zero and One board, using the
+SoC's MUSB controller.
 
-Do you have a driver in kernel which will implement these bindings?
+The mode of PHY0 is currently set to MUSB mode, as supporting EHCI/OHCI will
+cost more time and code; but MUSB can supply both host and peripheral mode.
 
-Defining them for out-of-tree driver does not bring any benefits (3rd
-party driver will not respect them anyway).
+OTG function is only enabled for these two boards, as they're the only H3/H2+
+boards that I have.
 
-Best regards,
-Krzysztof
+I think other boards' owners can easily enable their boards' OTG function with
+these patches.
 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> new file mode 100644
-> index 000000000000..df05ba0ec357
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> @@ -0,0 +1,76 @@
-> +ARM Mali Utgard GPU
-> +===================
-> +
-> +Required properties:
-> +  - compatible:
-> +    * "arm,mali-utgard" and one of the following:
-> +      + "arm,mali-300"
-> +      + "arm,mali-400"
-> +      + "arm,mali-450"
-> +
-> +  - reg: Physical base address and length of the GPU registers
-> +
-> +  - interrupts: an entry for each entry in interrupt-names.
-> +    See ../interrupt-controller/interrupts.txt for details.
-> +
-> +  - interrupt-names:
-> +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
-> +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
-> +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
-> +    * gp: Geometry Processor interrupt
-> +    * gpmmu: Geometry Processor MMU interrupt
-> +
-> +
-> +Optional properties:
-> +  - interrupt-names:
-> +    * pmu: Power Management Unit interrupt, if implemented in hardware
-> +
-> +Vendor-specific bindings
-> +------------------------
-> +
-> +The Mali GPU is integrated very differently from one SoC to
-> +another. In order to accommodate those differences, you have the option
-> +to specify one more vendor-specific compatible, among:
-> +
-> +  - allwinner,sun4i-a10-mali
-> +    Required properties:
-> +      * clocks: an entry for each entry in clock-names
-> +      * clock-names:
-> +        + bus: bus clock for the GPU
-> +        + core: clock driving the GPU itself
-> +      * resets: phandle to the reset line for the GPU
-> +
-> +  - allwinner,sun7i-a20-mali
-> +    Required properties:
-> +      * clocks: an entry for each entry in clock-names
-> +      * clock-names:
-> +        + bus: bus clock for the GPU
-> +        + core: clock driving the GPU itself
-> +      * resets: phandle to the reset line for the GPU
-> +
-> +Example:
-> +
-> +mali: gpu@01c40000 {
-> +	compatible = "allwinner,sun7i-a20-mali", "arm,mali-400",
-> +		     "arm,mali-utgard";
-> +	reg = <0x01c40000 0x10000>;
-> +	interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "gp",
-> +			  "gpmmu",
-> +			  "pp0",
-> +			  "ppmmu0",
-> +			  "pp1",
-> +			  "ppmmu1",
-> +			  "pmu";
-> +	clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-> +	clock-names = "bus", "core";
-> +	resets = <&ccu RST_BUS_GPU>;
-> +};
-> +
-> +
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Icenowy Zheng (4):
+  phy: sun4i-usb: support PHY0 on H3 in MUSB mode
+  ARM: dts: sun8i: add MUSB node to H3 SoC
+  ARM: dts: sun8i: enable USB OTG for Orange Pi Zero board
+  ARM: dts: sun8i: enable USB OTG on Orange Pi One board
+
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts |  6 ++++++
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts       | 12 +++++++++++
+ arch/arm/boot/dts/sun8i-h3.dtsi                   | 13 ++++++++++++
+ drivers/phy/phy-sun4i-usb.c                       | 25 ++++++++---------------
+ 4 files changed, 40 insertions(+), 16 deletions(-)
+
+-- 
+2.11.0
