@@ -1,49 +1,46 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 09/10] ARM: dts: da850: add the SATA node
-Date: Mon, 16 Jan 2017 11:03:23 +0100
-Message-ID: <CAMpxmJX3PD=YFMSWHHLzGoubLB0S7s1s4XyjD6RVtm9YYjuyTw@mail.gmail.com>
-References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
- <1484311084-31547-10-git-send-email-bgolaszewski@baylibre.com> <4eb4ada8-1d2d-2fa1-7961-21da56ea0082@lechnology.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v2 0/11] Rockchip dw-mipi-dsi driver
+Date: Mon, 16 Jan 2017 18:08:20 +0800
+Message-ID: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4eb4ada8-1d2d-2fa1-7961-21da56ea0082-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2017-01-13 20:36 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
-> On 01/13/2017 06:38 AM, Bartosz Golaszewski wrote:
->>
->> Add the SATA node to the da850 device tree.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/da850.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index 1f6a47d..f5086b1 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -427,6 +427,12 @@
->>                         phy-names = "usb-phy";
->>                         status = "disabled";
->>                 };
->> +               sata: ahci@0x218000 {
->
->
-> 0x needs to be omitted.
->
->         sata: ahci@218000 {
->
-
-Will fix in v2.
-
-Thanks,
-Bartosz Golaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgYWxsCgpUaGlzIHBhdGNoIHNlcmlhbCBpcyBmb3IgUkszMzk5IE1JUEkgRFNJLiBUaGUgTUlQ
+SSBEU0kgY29udHJvbGxlciBvZgpSSzMzOTkgaXMgYWxtb3N0IHRoZSBzYW1lIGFzIFJLMzI4OCwg
+ZXhjZXB0IGEgbGl0dGxlIGJpdCBvZiBkaWZmZXJlbmNlCmluIHBoeSBjbG9jayBjb250cm9sbGlu
+ZyBhbmQgcG9ydCBpZCBzZWxlY3Rpb24gcmVnaXN0ZXIuCgpBbmQgdGhlc2UgcGF0Y2hlcyBhbHNv
+IGZpeGVzIHNvbWUgZHJpdmVyIGJ1Z3M7IGFkZCB0aGUgcG93ZXIgZG9tYWluCnN1cHBvcnQuCgp0
+aGV5IGhhdmUgYmVlbiB0ZXN0ZWQgb24gcmszMzk5IGFuZCByazMyODggZXZiIGJvYXJkLgoKCkNo
+cmlzIFpob25nICg3KToKICBkdC1iaW5kaW5nczogYWRkIHJrMzM5OSBzdXBwb3J0IGZvciBkdy1t
+aXBpLXJvY2tjaGlwCiAgZHJtL3JvY2tjaGlwL2RzaTogZHctbWlwaTogc3VwcG9ydCBSSzMzOTkg
+bWlwaSBkc2kKICBkcm0vcm9ja2NoaXAvZHNpOiByZW1vdmUgbW9kZV92YWxpZCBmdW5jdGlvbgog
+IGR0LWJpbmRpbmdzOiBhZGQgcG93ZXIgZG9tYWluIG5vZGUgZm9yIGR3LW1pcGktcm9ja2NoaXAK
+ICBkcm0vcm9ja2NoaXAvZHNpOiBhZGQgZHctbWlwaSBwb3dlciBkb21haW4gc3VwcG9ydAogIGRy
+bS9yb2NrY2hpcC9kc2k6IGZpeCBwaHkgY2xrIGxhbmUgc3RvcCBzdGF0ZSB0aW1lb3V0CiAgZHJt
+L3JvY2tjaGlwL2RzaTogZml4IGluc3VmZmljaWVudCBiYW5kd2lkdGggb2Ygc29tZSBwYW5lbAoK
+TWFyayBZYW8gKDIpOgogIGRybS9yb2NrY2hpcC9kc2k6IHJldHVybiBwcm9iZSBkZWZlciBpZiBh
+dHRhY2ggcGFuZWwgZmFpbGVkCiAgZHJtL3JvY2tjaGlwL2RzaTogZml4IG1pcGkgZGlzcGxheSBj
+YW4ndCBmb3VuZCBhdCBpbml0IHRpbWUKCnh1YmlsdiAoMik6CiAgZHJtL3JvY2tjaGlwL2RzaTog
+Zml4IHRoZSBpc3N1ZSBjYW4gbm90IHNlbmQgY29tbWFuZHMKICBkcm0vcm9ja2NoaXAvZHNpOiBk
+ZWNyZWFzZSB0aGUgdmFsdWUgb2YgVGhzLXByZXBhcmUKCiAuLi4vZGlzcGxheS9yb2NrY2hpcC9k
+d19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8ICAgNyArLQogZHJpdmVycy9ncHUvZHJtL3Jv
+Y2tjaGlwL2R3LW1pcGktZHNpLmMgICAgICAgICAgICAgfCAyNTQgKysrKysrKysrKysrKy0tLS0t
+LS0tCiAyIGZpbGVzIGNoYW5nZWQsIDE2MyBpbnNlcnRpb25zKCspLCA5OCBkZWxldGlvbnMoLSkK
+Ci0tIAoyLjYuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
