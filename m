@@ -1,38 +1,93 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 6/6] ARM: dts: am335x-sl50: Enable the Ambient Light Sensor.
-Date: Mon, 16 Jan 2017 17:57:36 +0100
-Message-ID: <20170116165736.17197-7-enric.balletbo@collabora.com>
-References: <20170116165736.17197-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170116165736.17197-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 8/13] arm64: allwinner: a64: Add MMC nodes
+Date: Mon, 16 Jan 2017 17:56:58 +0100
+Message-ID: <ac77b9e25e7633886822cd1f1ebafd5985751ae4.1484585798.git-series.maxime.ripard@free-electrons.com>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the ISL29023 ALS connected via the I2C bus.
+From: Andre Przywara <andre.przywara@arm.com>
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+The A64 has 3 MMC controllers, one of them being especially targeted to
+eMMC. Among other things, it has a data strobe signal and a 8 bits data
+width.
+
+The two other are more usual controllers that will have a 4 bits width at
+most and no data strobe signal, which limits it to more usual SD or MMC
+peripherals.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/am335x-sl50.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 ++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-sl50.dts b/arch/arm/boot/dts/am335x-sl50.dts
-index 010c99e..c5d2589 100644
---- a/arch/arm/boot/dts/am335x-sl50.dts
-+++ b/arch/arm/boot/dts/am335x-sl50.dts
-@@ -337,6 +337,12 @@
- 		DRVDD-supply = <&ldo4_reg>;
- 		DVDD-supply = <&ldo3_reg>;
- 	};
-+
-+	/* Ambient Light Sensor */
-+	als: isl29023@44 {
-+		compatible = "isil,isl29023";
-+		reg = <0x44>;
-+	};
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 99b6bb1e141c..143e9706438f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -299,6 +299,45 @@
+ 			#size-cells = <0>;
+ 		};
  
- &rtc {
++		mmc0: mmc@1c0f000 {
++			compatible = "allwinner,sun50i-a64-mmc";
++			reg = <0x01c0f000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC0>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc1: mmc@1c10000 {
++			compatible = "allwinner,sun50i-a64-mmc";
++			reg = <0x01c10000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC1>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc2: mmc@1c11000 {
++			compatible = "allwinner,sun50i-a64-emmc";
++			reg = <0x01c11000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC2>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		gic: interrupt-controller@1c81000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x01c81000 0x1000>,
 -- 
-2.9.3
+git-series 0.8.11
