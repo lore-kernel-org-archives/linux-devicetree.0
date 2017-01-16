@@ -1,107 +1,64 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 4/4] arm: dts: Add support for ES8388 to the
-	Radxa Rock 2
-Date: Mon, 16 Jan 2017 09:17:53 +0100
-Message-ID: <20170116081753.13666-5-romain.perier@collabora.com>
-References: <20170116081753.13666-1-romain.perier@collabora.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] dt-bindings: document renesas-ostm timer
+Date: Mon, 16 Jan 2017 11:20:40 +0100
+Message-ID: <20170116102039.GA2104@verge.net.au>
+References: <20170112185952.2780-1-chris.brandt@renesas.com>
+ <20170112185952.2780-2-chris.brandt@renesas.com>
+ <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
+ <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170116081753.13666-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT definition of the es8388 i2c device
-found at address 0x10. It also adds the definition for connecting
-the Rockchip I2S to the es8388 analog output.
+On Sat, Jan 14, 2017 at 03:30:36AM +0000, Chris Brandt wrote:
+> Hi Geert,
+> 
+> Thank you for your review.
+> 
+> 
+> On Friday, January 13, 2017, Geert Uytterhoeven wrote:
+> > > +The OSTM comes with 2 independent channels.
+> > > +We will use the first channel (OSTM0) as a free running clocksource
+> > > +and the second channel (OSTM1) as a interrupt driven clock event.
+> > > +
+> > > +Additionally we will use the clocksource channel (OTSM0) for the
+> > > +system schedule timer sched_clock().
+> > 
+> > The above two sentences are software policy, not hardware description.
+> > Hence they do not belong in the DT bindings document.
+> > You can move them to the commit description, though.
+> 
+> OK.
+> 
+> 
+> > > +Required Properties:
+> > > +
+> > > +  - compatible: must be one or more of the following:
+> > > +    - "renesas,ostm-r7s72100" for the r7s72100 OSTM
+> > 
+> > Please use "renesas,r7s72100-ostm" instead, to match current practices.
+> 
+> If I look at the current r7s72100.dtsi:
+> 
+> compatible = "renesas,r7s72100-cpg-clocks", "renesas,rz-cpg-clocks";
+> compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+> compatible = "renesas,scif-r7s72100", "renesas,scif";
+> compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
+> compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
+> compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
+> compatible = "renesas,mmcif-r7s72100", "renesas,sh-mmcif";
+> compatible = "renesas,sdhi-r7s72100";
+> 
+> Is "renesas,xxx-r7s7210" the old way, and "renesas,r7s72100-xxx" is the new way??
 
-This commit is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.com> with some improvements.
+Yes. Early on things were done in a somewhat ad-hoc manner.
+We have now settled on renesas,r7s72100-xxx as requested by the DT
+maintainers.
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
-
-Changes in v2: None
-
- arch/arm/boot/dts/rk3288-rock2-square.dts | 37 +++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index 96a2e74..4f9b7d2 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -86,6 +86,17 @@
- 		#sound-dai-cells = <0>;
- 	};
- 
-+	sound_es8388 {
-+		compatible = "rockchip,rockchip-audio-es8388";
-+		rockchip,model = "Analog audio output";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,audio-codec = <&es8388>;
-+		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
-+		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&headphone>;
-+	};
-+
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&hym8563>;
-@@ -173,10 +184,29 @@
- 	};
- };
- 
-+&i2c2 {
-+	status = "okay";
-+
-+	es8388: es8388@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		AVDD-supply = <&vcca_codec>;
-+		DVDD-supply = <&vcca_codec>;
-+		HPVDD-supply = <&vcca_codec>;
-+		PVDD-supply = <&vcca_codec>;
-+		clocks = <&cru SCLK_I2S0_OUT>;
-+		clock-names = "i2s_clk_out";
-+	};
-+};
-+
- &i2c5 {
- 	status = "okay";
- };
- 
-+&i2s {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	ir {
- 		ir_int: ir-int {
-@@ -190,6 +220,13 @@
- 		};
- 	};
- 
-+	sound {
-+		headphone: headphone {
-+			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
-+					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
--- 
-2.9.3
+...
