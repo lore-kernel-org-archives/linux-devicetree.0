@@ -1,79 +1,55 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: mtd: add a common label property to all
- mtd devices
-Date: Mon, 16 Jan 2017 15:39:23 +0100
-Message-ID: <ab3d2687-c356-7e79-3a26-706181bdc9f5@kaod.org>
-References: <1484573225-19095-1-git-send-email-clg@kaod.org>
- <1484573225-19095-3-git-send-email-clg@kaod.org>
- <20170116145258.17707912@bbrezillon>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCHv3 RESEND 1/8] ARM: dts: stm32: set HSE_RTC clock frequency
+ to 1 MHz on stm32f429
+Date: Mon, 16 Jan 2017 15:39:22 +0100
+Message-ID: <52199299-524a-631a-d076-080c03433674@st.com>
+References: <1484573388-590-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170116145258.17707912@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484573388-590-1-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2017 02:52 PM, Boris Brezillon wrote:
-> On Mon, 16 Jan 2017 14:27:04 +0100
-> Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
-> 
->> This can be used to easily identify a specific chip on a system with
->> multiple chips.
->>
->> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mtd/common.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/common.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
->> new file mode 100644
->> index 000000000000..a781641a3b00
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/common.txt
->> @@ -0,0 +1,12 @@
->> +* Common properties of all MTD devices
->> +
->> +Optional properties:
->> +- label : name to assign to mtd. If omitted, the label is the MTD device name.
-> 
-> Hm, the description is not really clear. How about:
-> 
-> "
-> - label: user-defined MTD device name. Can be used to assign user
->   friendly names to MTD devices (instead of the flash model or flash
->   controller based name) in order to ease flash device identification
->   and/or describe what they are used for.
-> "
+Hi Am=E9lie,
 
-yes. I will use that in a v2.
- 
-Thanks,
+On 01/16/2017 02:29 PM, Amelie Delaunay wrote:
+> This patch set HSE_RTC clock frequency to 1 MHz, as the clock supplied to
+> the RTC must be 1 MHz.
+>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  arch/arm/boot/dts/stm32f429.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f4=
+29.dtsi
+> index e9324a3..557c1f4 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -433,6 +433,8 @@
+>  			reg =3D <0x40023800 0x400>;
+>  			clocks =3D <&clk_hse>, <&clk_i2s_ckin>;
+>  			st,syscfg =3D <&pwrcfg>;
+> +			assigned-clocks =3D <&rcc 1 CLK_HSE_RTC>;
+> +			assigned-clock-rates =3D <1000000>;
+>  		};
+>
+>  		dma1: dma-controller@40026000 {
+>
 
-C. 
+Applied on stm32-dt-for-v4.11
 
-> Otherwise,
-> 
-> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> Thanks,
-> 
-> Boris
-> 
->> +
->> +Example:
->> +
->> +	flash@0 {
->> +		label = "System-firmware";
->> +
->> +		/* flash type specific properties */
->> +	};
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Alex
