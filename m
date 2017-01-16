@@ -1,12 +1,13 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 2/4] ARM: dts: sun8i: add MUSB node to H3 SoC
-Date: Tue, 17 Jan 2017 03:14:47 +0800
-Message-ID: <20170116191449.50397-3-icenowy@aosc.xyz>
+Subject: [PATCH 3/4] ARM: dts: sun8i: enable USB OTG for Orange
+ Pi Zero board
+Date: Tue, 17 Jan 2017 03:14:48 +0800
+Message-ID: <20170116191449.50397-4-icenowy@aosc.xyz>
 References: <20170116191449.50397-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCVY6TBQKGQEDJVVLVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBJVY6TBQKGQEKQVXVEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170116191449.50397-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,38 +20,40 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As we have already H3 PHY support code to MUSB mode fixed, and the H3
-MUSB controller supported, we can now add the MUSB node to the DTSI file
-of H3.
+Orange Pi Zero board features a USB OTG port, which has a ID pin, and
+can be used to power up the borad. However, even if the board is powered
+via +5V pin in GPIO/expansion headers, the VBUS in the OTG port cannot
+be powered up, thus it's impossible to use it in host mode with simple
+OTG cables.
+
+Add support for it in peripheral mode.
+
+If someone really want to use it in host mode, the dr_mode property of
+&usb_otg can be changed into "otg", then a powered USB OTG cable or USB
+HUB is needed for powering out the external USB devices.
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 08fd0860bb6b..60dd88c7fb9a 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -206,6 +206,19 @@
- 			#size-cells = <0>;
- 		};
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+index b7ca916d871d..437536e2b594 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+@@ -154,7 +154,13 @@
+ 	status = "disabled";
+ };
  
-+		usb_otg: usb@01c19000 {
-+			compatible = "allwinner,sun8i-h3-musb";
-+			reg = <0x01c19000 0x0400>;
-+			clocks = <&ccu CLK_BUS_OTG>;
-+			resets = <&ccu RST_BUS_OTG>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "mc";
-+			phys = <&usbphy 0>;
-+			phy-names = "usb";
-+			extcon = <&usbphy 0>;
-+			status = "disabled";
-+		};
++&usb_otg {
++	dr_mode = "peripheral";
++	status = "okay";
++};
 +
- 		usbphy: phy@01c19400 {
- 			compatible = "allwinner,sun8i-h3-usb-phy";
- 			reg = <0x01c19400 0x2c>,
+ &usbphy {
+ 	/* USB VBUS is always on */
+ 	status = "okay";
++	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+ };
 -- 
 2.11.0
