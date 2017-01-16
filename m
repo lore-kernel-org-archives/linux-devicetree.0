@@ -1,72 +1,43 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v1 1/7] dt-bindings: display: add STM32 LTDC driver
-Date: Mon, 16 Jan 2017 22:30:49 +0200
-Message-ID: <2080174.sm3cyM9MmB@avalon>
-References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
- <1484573344-11609-2-git-send-email-yannick.fertre@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484573344-11609-2-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Philippe Cornu <philippe.cornu@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] of: fix of_device_get_modalias returned length when truncating buffers
+Date: Mon, 16 Jan 2017 14:41:21 -0600
+Message-ID: <20170116204122.5858-1-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFubmljaywKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5IDE2IEphbiAy
-MDE3IDE0OjI4OjU4IFlhbm5pY2sgRmVydHJlIHdyb3RlOgo+IFNpZ25lZC1vZmYtYnk6IFlhbm5p
-Y2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQgICAgICAgIHwgNTcgKysrKysrKysrKysrKysr
-KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxsdGRjLnR4
-dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9zdCxsdGRjLnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvc3QsbHRkYy50eHQgbmV3IGZpbGUgbW9kZQo+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAu
-LjIwZTg5ZGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQKPiBAQCAtMCwwICsxLDU3IEBACj4gKyogU1RN
-aWNyb2VsZWN0cm9uaWNzIFNUTTMyIGxjZC10ZnQgZGlzcGxheSBjb250cm9sbGVyCj4gKwo+ICst
-IHN0LWRpc3BsYXktc3Vic3lzdGVtOiBNYXN0ZXIgZGV2aWNlIGZvciBEUk0gc3ViLWNvbXBvbmVu
-dHMKPiArICBUaGlzIGRldmljZSBtdXN0IGJlIHRoZSBwYXJlbnQgb2YgYWxsIHRoZSBzdWItY29t
-cG9uZW50cyBhbmQgaXMKPiByZXNwb25zaWJsZQo+ICsgIG9mIGJpbmQgdGhlbS4KCldoeSBkbyB5
-b3UgbmVlZCB0aGlzID8gQXQgYSBxdWljayBnbGFuY2UgdGhlIGx0ZGMgbm9kZSBzaG91bGQgYmUg
-ZW5vdWdoLgoKPiArICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsgIC0gY29tcGF0aWJsZTogInN0
-LGRpc3BsYXktc3Vic3lzdGVtIgo+ICsgIC0gcmFuZ2VzOiB0byBhbGxvdyBwcm9iaW5nIG9mIHN1
-YmRldmljZXMKPiArCj4gKy0gbHRkY19ob3N0OiBsY2QtdGZ0IGRpc3BsYXkgY29udHJvbGxlciBo
-b3N0Cj4gKyAgbXVzdCBiZSBhIHN1Yi1ub2RlIG9mIHN0LWRpc3BsYXktc3Vic3lzdGVtCj4gKyAg
-UmVxdWlyZWQgcHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6ICJzdCxsdGRjIgo+ICsgIC0g
-cmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIElQIHJlZ2lzdGVycyBhbmQgbGVuZ3Ro
-IG9mIG1lbW9yeQo+IG1hcHBlZCByZWdpb24uCj4gKyAgLSBjbG9ja3M6IGZyb20gY29tbW9uIGNs
-b2NrIGJpbmRpbmc6IGhhbmRsZSBoYXJkd2FyZSBJUCBuZWVkZWQgY2xvY2tzLAo+IHRoZQo+ICsg
-ICAgbnVtYmVyIG9mIGNsb2NrcyBtYXkgZGVwZW5kIG9mIHRoZSBTb0MgdHlwZS4KPiArICAgIFNl
-ZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgo+ICsgIC0gY2xvY2st
-bmFtZXM6IG5hbWVzIG9mIHRoZSBjbG9ja3MgbGlzdGVkIGluIGNsb2NrcyBwcm9wZXJ0eSBpbiB0
-aGUgc2FtZQo+ICsgICAgb3JkZXIuCgpZb3UgbmVlZCB0byBkZWZpbmUgdGhlIHJlcXVpcmVkL29w
-dGlvbmFsIGNsb2NrcyB3aXRoIHRoZWlyIG5hbWVzIGhlcmUuIElmIHRoZXkgCnZhcnkgZGVwZW5k
-aW5nIG9uIHRoZSBTb0MsIHRoZSBEVCBiaW5kaW5ncyBkb2N1bWVudCBuZWVkIHRvIGxpc3QgdGhl
-bSBmb3IgZWFjaCAKU29DLgoKPiArICAtIHJlc2V0czogcmVzZXRzIHRvIGJlIHVzZWQgYnkgdGhl
-IGRldmljZQo+ICsgICAgU2VlIC4uL3Jlc2V0L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4KPiArICAt
-IHJlc2V0LW5hbWVzOiBuYW1lcyBvZiB0aGUgcmVzZXRzIGxpc3RlZCBpbiByZXNldHMgcHJvcGVy
-dHkgaW4gdGhlIHNhbWUKPiArICAgIG9yZGVyLgo+ICsgIFJlcXVpcmVkIG5vZGVzOgo+ICsgICAg
-LSBWaWRlbyBwb3J0IGZvciBSR0Igb3V0cHV0Lgo+ICsKPiArRXhhbXBsZToKPiArCj4gKy8gewo+
-ICsJLi4uCj4gKwlzb2Mgewo+ICsJLi4uCj4gKwkJc3QtZGlzcGxheS1zdWJzeXN0ZW0gewo+ICsJ
-CQljb21wYXRpYmxlID0gInN0LGRpc3BsYXktc3Vic3lzdGVtIjsKPiArCQkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDE+Owo+ICsJCQlyYW5nZXM7Cj4gKwkJCWRt
-YS1yYW5nZXM7Cj4gKwo+ICsJCQlsdGRjX2hvc3Q6IHN0bTMyLWx0ZGNANDAwMTY4MDAgewo+ICsJ
-CQkJY29tcGF0aWJsZSA9ICJzdCxsdGRjIjsKPiArCQkJCXJlZyA9IDwweDQwMDE2ODAwIDB4MjAw
-PjsKPiArCQkJCWludGVycnVwdHMgPSA8ODg+LCA8ODk+Owo+ICsJCQkJcmVzZXRzID0gPCZyY2Mg
-MzE0PjsKPiArCQkJCWNsb2NrcyA9IDwmcmNjIDEgOD47Cj4gKwkJCQljbG9jay1uYW1lcyA9ICJj
-bGstbGNkIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwo+ICsJCQkJcG9ydCB7Cj4g
-KwkJCQkJbHRkY19vdXRfcmdiOiBlbmRwb2ludCB7Cj4gKwkJCQkJfTsKPiArCQkJCX07Cj4gKwkJ
-CX07Cj4gKwkJfTsKPiArCS4uLgo+ICsJfTsKPiArfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
-aW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+If the length of the modalias is greater than the buffer size, then the
+modalias is truncated. However the untruncated length is returned which
+will cause an error. Fix this to return the truncated length. If an error
+in the case was desired, then then we should just return -ENOMEM.
+
+The reality is no device will ever have 4KB of compatible strings to hit
+this case.
+
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index fd5cfad7c403..bd620452f255 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -223,7 +223,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+ 			str[i] = '_';
+ 	}
+ 
+-	return tsize;
++	return repend;
+ }
+ 
+ /**
+-- 
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
