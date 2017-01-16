@@ -1,172 +1,142 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Mon, 16 Jan 2017 13:42:56 +0530
-Message-ID: <587C8088.80905@ti.com>
-References: <1484486354-4585-1-git-send-email-lukma@denx.de>
- <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
+From: Jerry Huang <jerry.huang@nxp.com>
+Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Mon, 16 Jan 2017 08:15:00 +0000
+Message-ID: <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+ <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
+ <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
+ <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170116074927.086418f4@jawa>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Łukasz,
-
-On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
-> Hi Kishon,
+> -----Original Message-----
+> From: Jerry Huang
+> Sent: Wednesday, January 04, 2017 10:25 AM
+> To: 'Rob Herring' <robh@kernel.org>
+> Cc: balbi@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+> will.deacon@arm.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
+> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-
+> type-adjustment" for INCR burst type
 > 
->> Hi,
->>
->> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
->>> Some devices (due to e.g. bad PCIe signal integrity) require to run
->>> with forced GEN1 speed on PCIe bus.
->>>
->>> This patch changes the speed explicitly on dra7 based devices when
->>> proper device tree attribute is defined for the PCIe controller.
->>>
->>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->>
->> Bjorn has already queued a patch to do the same thing
->> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-dra7xx
+> Hi, Rob,
 > 
-> It seems like Bjorn only modifies CAP registers.
-
-The patch also modifies the LNKCTL2 register.
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Wednesday, January 04, 2017 5:24 AM
+> > To: Jerry Huang <jerry.huang@nxp.com>
+> > Cc: balbi@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+> > will.deacon@arm.com; linux@armlinux.org.uk;
+> > devicetree@vger.kernel.org; linux-usb@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linux-arm- kernel@lists.infradead.org
+> > Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-
+> > type-adjustment" for INCR burst type
+> >
+> > On Thu, Dec 22, 2016 at 8:52 PM, Jerry Huang <jerry.huang@nxp.com>
+> wrote:
+> > > Hi, Rob,
+> > >> -----Original Message-----
+> > >> From: Rob Herring [mailto:robh@kernel.org]
+> > >> Sent: Friday, December 23, 2016 2:45 AM
+> > >> To: Jerry Huang <jerry.huang@nxp.com>
+> > >> Cc: balbi@kernel.org; mark.rutland@arm.com;
+> > >> catalin.marinas@arm.com; will.deacon@arm.com;
+> > >> linux@armlinux.org.uk; devicetree@vger.kernel.org;
+> > >> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> > >> kernel@lists.infradead.org
+> > >> Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+> > >> incr-burst- type-adjustment" for INCR burst type
+> > >>
+> > >> On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
+> > >> > New property "snps,incr-burst-type-adjustment = <x>, <y>" for
+> > >> > USB3.0
+> > >> DWC3.
+> > >> > Field "x": 1/0 - undefined length INCR burst type enable or not;
+> > >> > Field
+> > >> > "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst
+> type.
+> > >> >
+> > >> > While enabling undefined length INCR burst type and INCR16 burst
+> > >> > type, get better write performance on NXP Layerscape platform:
+> > >> > around 3% improvement (from 364MB/s to 375MB/s).
+> > >> >
+> > >> > Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+> > >> > ---
+> > >> > Changes in v3:
+> > >> >   - add new property for INCR burst in usb node.
+> > >> >
+> > >> >  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
+> > >> >  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
+> > >> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+> > >> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
+> > >> >  4 files changed, 11 insertions(+)
+> > >> >
+> > >> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> > b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> > index e3e6983..8c405a3 100644
+> > >> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> > @@ -55,6 +55,10 @@ Optional properties:
+> > >> >     fladj_30mhz_sdbnd signal is invalid or incorrect.
+> > >> >
+> > >> >   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to
+> > >> > be
+> > >> reallocated.
+> > >> > + - snps,incr-burst-type-adjustment: Value for INCR burst type of
+> > >> GSBUSCFG0
+> > >> > +   register, undefined length INCR burst type enable and INCRx type.
+> > >> > +   First field is for undefined length INCR burst type enable or not.
+> > >> > +   Second field is for largest INCRx type enabled.
+> > >>
+> > >> Why do you need the first field? Is the 2nd field used if the 1st is 0?
+> > >> If not, then just use the presence of the property to enable or not.
+> > > The first field is one switch.
+> > > When it is 1, means undefined length INCR burst type enabled, we can
+> > > use
+> > any length less than or equal to the largest-enabled burst length of
+> > INCR4/8/16/32/64/128/256.
+> > > When it is zero, means INCRx burst mode enabled, we can use one
+> > > fixed
+> > burst length of 1/4/8/16/32/64/128/256 byte.
+> > > So, the 2nd field is used if the 1st is 0, we need to select one
+> > > largest burst
+> > length the USB controller can support.
+> > > If we don't want to change the value of this register (use the
+> > > default value),
+> > we don't need to add this property to usb node.
+> >
+> > Just make this a single value with 0 meaning INCR and 4/8/16/etc being
+> INCRx.
+> Maybe, I didn't describe it clearly.
+> According to DWC3 spec, the value "0" of field INCRBrstEna means INCRx
+> burst mode, 1 means INCR burst mode.
+> Regardless of the value of INCRBrstEna [bit0], we need to modify the other
+> field bit[1,2,3,4,5,6,7] to one INCR burst type  for the platform supported.
+> Ad you mentioned, if we just use a single value with 0 meaning INCR and
+> 4/8/16/etc being INCRx.
+> I understand totally that when it is none-zero, we can use it for INCR burst
+> mode.
+> Then, when it is 0, how to select the INCRx value?
 > 
-> He also needs to change register with 0x080C offset to actually
-> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
-
-This bit is used to initiate speed change (after the link is initialized in
-GEN1). Resetting the bit (like what you have done here) prevents speed change.
-
-IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking the IP
-register.
-
-Thanks
-Kishon
-
-> 
-> Best regards,
-> Łukasz
-> 
->>
->> Thanks
->> Kishon
->>
->>> ---
->>>
->>> Patch applies on newest origin/master
->>> SHA1: f4d3935e4f4884ba80561db5549394afb8eef8f7
->>>
->>> Tested at AM5728
->>>
->>> ---
->>>  Documentation/devicetree/bindings/pci/ti-pci.txt |  1 +
->>>  drivers/pci/host/pci-dra7xx.c                    | 23
->>> +++++++++++++++++++++++
->>> drivers/pci/host/pcie-designware.h               |  1 + 3 files
->>> changed, 25 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt
->>> b/Documentation/devicetree/bindings/pci/ti-pci.txt index
->>> 60e2516..9f97409 100644 ---
->>> a/Documentation/devicetree/bindings/pci/ti-pci.txt +++
->>> b/Documentation/devicetree/bindings/pci/ti-pci.txt @@ -25,6 +25,7
->>> @@ PCIe Designware Controller 
->>>  Optional Property:
->>>   - gpios : Should be added if a gpio line is required to drive
->>> PERST# line
->>> + - to,pcie-is-gen1: Indicates that forced gen1 port operation is
->>> needed. 
->>>  Example:
->>>  axi {
->>> diff --git a/drivers/pci/host/pci-dra7xx.c
->>> b/drivers/pci/host/pci-dra7xx.c index 9595fad..eec5fae 100644
->>> --- a/drivers/pci/host/pci-dra7xx.c
->>> +++
->>> b/drivers/pci/host/pci-https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-dra7xxdra7xx.c
->>> @@ -63,6 +63,13 @@ #define
->>> LINK_UP						BIT(16)
->>> #define
->>> DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
->>> +#define         PCIECTRL_EP_DBICS_LNK_CAP
->>> 0x007C +#define
->>> MAX_LINK_SPEEDS_MASK				GENMASK(3, 0)
->>> +#define         MAX_LINK_SPEEDS_GEN1
->>> BIT(0) + +#define
->>> PCIECTRL_PL_WIDTH_SPEED_CTL                     0x080C
->>> +#define         CFG_DIRECTED_SPEED_CHANGE
->>> BIT(17) + struct dra7xx_pcie { struct pcie_port	pp;
->>>  	void __iomem		*base;		/* DT
->>> ti_conf */ @@ -270,6 +277,7 @@ static int __init
->>> dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx, struct pcie_port
->>> *pp = &dra7xx->pp; struct device *dev = pp->dev;
->>>  	struct resource *res;
->>> +	u32 val;
->>>  
->>>  	pp->irq = platform_get_irq(pdev, 1);
->>>  	if (pp->irq < 0) {
->>> @@ -296,6 +304,18 @@ static int __init dra7xx_add_pcie_port(struct
->>> dra7xx_pcie *dra7xx, if (!pp->dbi_base)
->>>  		return -ENOMEM;
->>>  
->>> +	if (pp->is_gen1) {
->>> +		dev_info(dev, "GEN1 forced\n");
->>> +
->>> +		val = readl(pp->dbi_base +
->>> PCIECTRL_EP_DBICS_LNK_CAP);
->>> +		set_mask_bits(&val, MAX_LINK_SPEEDS_MASK,
->>> MAX_LINK_SPEEDS_GEN1);
->>> +		writel(val, pp->dbi_base +
->>> PCIECTRL_EP_DBICS_LNK_CAP); +
->>> +		val = readl(pp->dbi_base +
->>> PCIECTRL_PL_WIDTH_SPEED_CTL);
->>> +		val &= ~CFG_DIRECTED_SPEED_CHANGE;
->>> +		writel(val, pp->dbi_base +
->>> PCIECTRL_PL_WIDTH_SPEED_CTL);
->>> +	}
->>> +
->>>  	ret = dw_pcie_host_init(pp);
->>>  	if (ret) {
->>>  		dev_err(dev, "failed to initialize host\n");
->>> @@ -404,6 +424,9 @@ static int __init dra7xx_pcie_probe(struct
->>> platform_device *pdev) goto err_gpio;
->>>  	}
->>>  
->>> +	if (of_property_read_bool(np, "ti,pcie-is-gen1"))
->>> +		pp->is_gen1 = true;
->>> +
->>>  	reg = dra7xx_pcie_readl(dra7xx,
->>> PCIECTRL_DRA7XX_CONF_DEVICE_CMD); reg &= ~LTSSM_EN;
->>>  	dra7xx_pcie_writel(dra7xx,
->>> PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg); diff --git
->>> a/drivers/pci/host/pcie-designware.h
->>> b/drivers/pci/host/pcie-designware.h index a567ea2..2fb0b18 100644
->>> --- a/drivers/pci/host/pcie-designware.h +++
->>> b/drivers/pci/host/pcie-designware.h @@ -50,6 +50,7 @@ struct
->>> pcie_port { struct irq_domain	*irq_domain;
->>>  	unsigned long		msi_data;
->>>  	u8			iatu_unroll_enabled;
->>> +	u8                      is_gen1;
->>>  	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
->>>  };
->>>  
->>>
-> 
-> 
-> 
-> 
-> Best regards,
-> 
-> Lukasz Majewski
-> 
-> --
-> 
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-> 
+> So, I think we still need two vaue to specify INCRBrstEna and INCRx burst
+> type.
+Hi, Balbi, 
+It seems there is no feedback for my comment, so these patches can be accepted?
