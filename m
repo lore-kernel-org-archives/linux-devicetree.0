@@ -1,141 +1,118 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 3/3] Input: pwm-beeper: add optional amplifier
- regulator
-Date: Sun, 15 Jan 2017 19:04:09 -0600
-Message-ID: <b3c4003d-6cbb-e7c5-1f90-3dda7aa1a7f9@lechnology.com>
-References: <1484164921-30587-1-git-send-email-david@lechnology.com>
- <1484164921-30587-4-git-send-email-david@lechnology.com>
- <20170114191943.GC31309@dtor-ws>
- <a907970d-3ab9-69df-9636-54c2b660cff9@lechnology.com>
- <20170116003456.GH23285@dtor-ws>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v11 02/12] drm/mediatek: add helpers for coverting from
+ the generic components
+Date: Mon, 16 Jan 2017 09:09:36 +0800
+Message-ID: <1484528976.11503.1.camel@mtksdaap41>
+References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
+         <1484117473-46644-3-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170116003456.GH23285@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484117473-46644-3-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2017 06:34 PM, Dmitry Torokhov wrote:
-> On Sun, Jan 15, 2017 at 06:12:29PM -0600, David Lechner wrote:
->> On 01/14/2017 01:19 PM, Dmitry Torokhov wrote:
->>> On Wed, Jan 11, 2017 at 02:02:01PM -0600, David Lechner wrote:
->>>> This adds an optional regulator to the pwm-beeper device. This regulator
->>>> acts as an amplifier. The amplifier is only enabled while beeping in order
->>>> to reduce power consumption.
->>>>
->>>> Tested on LEGO MINDSTORMS EV3, which has a speaker connected to PWM through
->>>> an amplifier.
->>>>
->>>> Signed-off-by: David Lechner <david@lechnology.com>
->>>> ---
->>>> drivers/input/misc/pwm-beeper.c | 29 ++++++++++++++++++++++++++++-
->>>> 1 file changed, 28 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
->>>> index 30ac227..708e88e 100644
->>>> --- a/drivers/input/misc/pwm-beeper.c
->>>> +++ b/drivers/input/misc/pwm-beeper.c
->>>> @@ -14,6 +14,7 @@
->>>>  */
->>>>
->>>> #include <linux/input.h>
->>>> +#include <linux/regulator/consumer.h>
->>>> #include <linux/module.h>
->>>> #include <linux/kernel.h>
->>>> #include <linux/of.h>
->>>> @@ -25,8 +26,10 @@
->>>> struct pwm_beeper {
->>>> 	struct input_dev *input;
->>>> 	struct pwm_device *pwm;
->>>> +	struct regulator *reg;
->>>> 	struct work_struct work;
->>>> 	unsigned long period;
->>>> +	bool reg_enabled;
->>>> };
->>>>
->>>> #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
->>>> @@ -38,8 +41,20 @@ static void __pwm_beeper_set(struct pwm_beeper *beeper)
->>>> 	if (period) {
->>>> 		pwm_config(beeper->pwm, period / 2, period);
->>>> 		pwm_enable(beeper->pwm);
->>>> -	} else
->>>> +		if (beeper->reg) {
->>>> +			int error;
->>>> +
->>>> +			error = regulator_enable(beeper->reg);
->>>> +			if (!error)
->>>> +				beeper->reg_enabled = true;
->>>> +		}
->>>> +	} else {
->>>> +		if (beeper->reg_enabled) {
->>>> +			regulator_disable(beeper->reg);
->>>> +			beeper->reg_enabled = false;
->>>> +		}
->>>> 		pwm_disable(beeper->pwm);
->>>> +	}
->>>> }
->>>>
->>>> static void pwm_beeper_work(struct work_struct *work)
->>>> @@ -82,6 +97,10 @@ static void pwm_beeper_stop(struct pwm_beeper *beeper)
->>>> {
->>>> 	cancel_work_sync(&beeper->work);
->>>>
->>>> +	if (beeper->reg_enabled) {
->>>> +		regulator_disable(beeper->reg);
->>>> +		beeper->reg_enabled = false;
->>>> +	}
->>>> 	if (beeper->period)
->>>> 		pwm_disable(beeper->pwm);
->>>> }
->>>> @@ -111,6 +130,14 @@ static int pwm_beeper_probe(struct platform_device *pdev)
->>>> 		return error;
->>>> 	}
->>>>
->>>> +	beeper->reg = devm_regulator_get_optional(&pdev->dev, "amp");
->>>
->>> If you do not use optional regulator then you will not have to check if
->>> you have it or not everywhere: regulator core will give you a dummy that
->>> you can toggle to your heart's content.
->>
->> Some months ago, I learned that if you are not using device tree and
->> you do not call regulator_has_full_constraints(), then you do not
->> get a dummy regulator. And here, we are only checking if the
->> regulator exists in one place. We will still need the checks for
->> beeper->reg_enabled to keep calls to regulator_enable() and
->> regulator_disable() balanced.
->
-> Why? You do not have checks for calls to pwm_enable() and pwm_disable(),
-> (or rather beeper->period is used as such flag) why regulator would be
-> any different?
+On Wed, 2017-01-11 at 14:51 +0800, YT Shen wrote:
+> define helpers for converting from 'mtk_ddp_comp' to 'mtk_disp_ovl'
+> define helpers for converting from 'mtk_ddp_comp' to 'mtk_disp_rdma'
+> 
+> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-regulator_enable() has a __must_check attribute on it, so we get 
-compiler warnings if we do not check the return value. Also, if enabling 
-the regulator fails and returns an error, then calling 
-regulator_disable() later would cause an imbalance.
+Acked-by CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-pwm_enable() and pwm_disable() work differently because they don't count 
-how many times they have been called. regulator_enable() and 
-regulator_disable(), on the other hand, work like reference counting.
-
->
->>
->> On the other hand, it is recommended that you always call
->> regulator_has_full_constraints(), so I don't mind changing it if
->> that is what you think we should do. But, I don't really see much of
->> an advantage to changing it compared to the current implementation.
->
-> It greatly simplifies control flow in the driver (since I believe you
-> can get rid of the flags you introduced).
->
-> As far as arch not having full constraints - I am not sure if this makes
-> sense anymore. I am not quite sure what the original intent here was, we
-> should probably ask Mark Brown. But a lot of drivers do expect the dummy
-> substitution to imply work.
-
-I am OK with using the dummy regulator, but I don't see how I can get 
-rid of the beeper->reg_enabled flag.
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c  | 15 +++++++++------
+>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 15 +++++++++------
+>  2 files changed, 18 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> index c703102..ce2759f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -57,6 +57,11 @@ struct mtk_disp_ovl {
+>  	struct drm_crtc			*crtc;
+>  };
+>  
+> +static inline struct mtk_disp_ovl *comp_to_ovl(struct mtk_ddp_comp *comp)
+> +{
+> +	return container_of(comp, struct mtk_disp_ovl, ddp_comp);
+> +}
+> +
+>  static irqreturn_t mtk_disp_ovl_irq_handler(int irq, void *dev_id)
+>  {
+>  	struct mtk_disp_ovl *priv = dev_id;
+> @@ -76,20 +81,18 @@ static irqreturn_t mtk_disp_ovl_irq_handler(int irq, void *dev_id)
+>  static void mtk_ovl_enable_vblank(struct mtk_ddp_comp *comp,
+>  				  struct drm_crtc *crtc)
+>  {
+> -	struct mtk_disp_ovl *priv = container_of(comp, struct mtk_disp_ovl,
+> -						 ddp_comp);
+> +	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
+>  
+> -	priv->crtc = crtc;
+> +	ovl->crtc = crtc;
+>  	writel(0x0, comp->regs + DISP_REG_OVL_INTSTA);
+>  	writel_relaxed(OVL_FME_CPL_INT, comp->regs + DISP_REG_OVL_INTEN);
+>  }
+>  
+>  static void mtk_ovl_disable_vblank(struct mtk_ddp_comp *comp)
+>  {
+> -	struct mtk_disp_ovl *priv = container_of(comp, struct mtk_disp_ovl,
+> -						 ddp_comp);
+> +	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
+>  
+> -	priv->crtc = NULL;
+> +	ovl->crtc = NULL;
+>  	writel_relaxed(0x0, comp->regs + DISP_REG_OVL_INTEN);
+>  }
+>  
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> index 0df05f9..21eff6f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> @@ -49,6 +49,11 @@ struct mtk_disp_rdma {
+>  	struct drm_crtc			*crtc;
+>  };
+>  
+> +static inline struct mtk_disp_rdma *comp_to_rdma(struct mtk_ddp_comp *comp)
+> +{
+> +	return container_of(comp, struct mtk_disp_rdma, ddp_comp);
+> +}
+> +
+>  static irqreturn_t mtk_disp_rdma_irq_handler(int irq, void *dev_id)
+>  {
+>  	struct mtk_disp_rdma *priv = dev_id;
+> @@ -77,20 +82,18 @@ static void rdma_update_bits(struct mtk_ddp_comp *comp, unsigned int reg,
+>  static void mtk_rdma_enable_vblank(struct mtk_ddp_comp *comp,
+>  				   struct drm_crtc *crtc)
+>  {
+> -	struct mtk_disp_rdma *priv = container_of(comp, struct mtk_disp_rdma,
+> -						  ddp_comp);
+> +	struct mtk_disp_rdma *rdma = comp_to_rdma(comp);
+>  
+> -	priv->crtc = crtc;
+> +	rdma->crtc = crtc;
+>  	rdma_update_bits(comp, DISP_REG_RDMA_INT_ENABLE, RDMA_FRAME_END_INT,
+>  			 RDMA_FRAME_END_INT);
+>  }
+>  
+>  static void mtk_rdma_disable_vblank(struct mtk_ddp_comp *comp)
+>  {
+> -	struct mtk_disp_rdma *priv = container_of(comp, struct mtk_disp_rdma,
+> -						  ddp_comp);
+> +	struct mtk_disp_rdma *rdma = comp_to_rdma(comp);
+>  
+> -	priv->crtc = NULL;
+> +	rdma->crtc = NULL;
+>  	rdma_update_bits(comp, DISP_REG_RDMA_INT_ENABLE, RDMA_FRAME_END_INT, 0);
+>  }
+>  
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
