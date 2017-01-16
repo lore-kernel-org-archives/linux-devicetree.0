@@ -1,15 +1,16 @@
-From: John Keeping <john@metanate.com>
-Subject: Re: [PATCH v2 11/11] drm/rockchip/dsi: fix insufficient bandwidth
- of some panel
-Date: Mon, 16 Jan 2017 12:44:53 +0000
-Message-ID: <20170116124453.2154def9.john@metanate.com>
-References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
- <1484561311-494-12-git-send-email-zyw@rock-chips.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 03/10] devicetree: bindings: add bindings for ahci-da850
+Date: Mon, 16 Jan 2017 18:15:13 +0530
+Message-ID: <d8406f53-b97d-ca9a-f7d1-94ce5b7064f7@ti.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-4-git-send-email-bgolaszewski@baylibre.com>
+ <35ff358d-9b17-b2be-38d8-6a51cdddc1a1@lechnology.com>
+ <CAMpxmJUau9BgAOhacPvcA=NwyE6-yEfDgPdcCZ_JCuNH-amJSA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484561311-494-12-git-send-email-zyw@rock-chips.com>
+In-Reply-To: <CAMpxmJUau9BgAOhacPvcA=NwyE6-yEfDgPdcCZ_JCuNH-amJSA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,50 +20,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, pawel.moll@arm.com, linux-rockchip@lists.infradead.org, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, David Airlie <airlied@linux.ie>, robh+dt@kernel.org, seanpaul@chromium.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Tejun Heo <tj@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Jan 2017 18:08:31 +0800, Chris Zhong wrote:
-
-> Set the lanes bps to 1 / 0.9 times of pclk, the margin is not enough
-> for some panel, it will cause the screen display is not normal, so
-> increases the badnwidth to 1 / 0.8.
+On Monday 16 January 2017 03:43 PM, Bartosz Golaszewski wrote:
+> 2017-01-13 20:25 GMT+01:00 David Lechner <david@lechnology.com>:
+>> On 01/13/2017 06:37 AM, Bartosz Golaszewski wrote:
+>>>
+>>> Add DT bindings for the TI DA850 AHCI SATA controller.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>> ---
+>>>  .../devicetree/bindings/ata/ahci-da850.txt          | 21
+>>> +++++++++++++++++++++
+>>>  1 file changed, 21 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt
+>>> b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+>>> new file mode 100644
+>>> index 0000000..d07c241
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+>>> @@ -0,0 +1,21 @@
+>>> +Device tree binding for the TI DA850 AHCI SATA Controller
+>>> +---------------------------------------------------------
+>>> +
+>>> +Required properties:
+>>> +  - compatible: must be "ti,da850-ahci"
+>>> +  - reg: physical base addresses and sizes of the controller's register
+>>> areas
+>>> +  - interrupts: interrupt specifier (refer to the interrupt binding)
+>>> +
+>>> +Optional properties:
+>>> +  - clocks: clock specifier (refer to the common clock binding)
+>>> +  - da850,clk_multiplier: the multiplier for the reference clock needed
+>>> +                          for 1.5GHz PLL output
+>>
+>>
+>> A clock multiplier property seems redundant if you are specifying a clock.
+>> It should be possible to get the rate from the clock to determine which
+>> multiplier is needed.
+>>
 > 
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> I probably should have named it differently. This is not a multiplier
+> of a clock derived from PLL0 or PLL1. Instead it's a value set by
+> writing to the Port PHY Control Register (MPY bits) of the SATA
+> controller that configures the multiplier for the external low-jitter
+> clock. On the lcdk the signals (REFCLKP, REFCLKN) are provided by
+> CDCM61001 (SATA OSCILLATOR component on the schematics).
 > 
-> ---
+> I'll find a better name and comment the property accordingly.
 > 
->  drivers/gpu/drm/rockchip/dw-mipi-dsi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-> index 9dfa73d..5a973fe 100644
-> --- a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-> +++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-> @@ -501,8 +501,8 @@ static int dw_mipi_dsi_get_lane_bps(struct dw_mipi_dsi *dsi)
->  
->  	mpclk = DIV_ROUND_UP(dsi->mode->clock, MSEC_PER_SEC);
->  	if (mpclk) {
-> -		/* take 1 / 0.9, since mbps must big than bandwidth of RGB */
-> -		tmp = mpclk * (bpp / dsi->lanes) * 10 / 9;
-> +		/* take 1 / 0.8, since mbps must big than bandwidth of RGB */
-> +		tmp = mpclk * (bpp / dsi->lanes) * 10 / 8;
+> FYI: the da850 platform does not use the common clock framework, so I
+> don't specify the clock property on the sata node in the device tree.
+> Instead I add the clock lookup entry in patch [01/10]. This is
+> transparent for AHCI which can get the clock as usual by calling
+> clk_get() in ahci_platform_get_resources().
 
-This and patch 9 are just hacking around the underlying problem in order
-to make particular panels work.  I'm pretty sure the actual issue is the
-use of hardcoded values when configuring the PHY, since the PHY
-parameters are specified in clock cycles but the MIPI spec requires
-absolute time durations.
+I think David's point is that the SATA_REFCLK needs to be modeled as a
+actual clock input to the IP. You should be able to get the rate using
+clk_get_rate() and make the MPY bits calculation depending on the
+incoming rate.
 
-I posted a series addressing this a while ago, although I screwed up
-sending it so some patches were included twice and since no one
-expressed any interest I didn't post a cleaned up version.
+You should be able to model the clock even when not using common clock
+framework.
 
-The relevant patch is here:
+DA850 AHCI does not use a con_id at the moment (it assumes a single
+clock), and that needs to change.
 
-https://patchwork.kernel.org/patch/9340193/
-
->  		if (tmp < max_mbps)
->  			target_mbps = tmp;
->  		else
+Thanks,
+Sekhar
