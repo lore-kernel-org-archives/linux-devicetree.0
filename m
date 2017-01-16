@@ -1,204 +1,136 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
- chips
-Date: Mon, 16 Jan 2017 14:15:02 +0530
-Message-ID: <587C880E.90803@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Mon, 16 Jan 2017 14:19:02 +0530
+Message-ID: <587C88FE.2040900@ti.com>
 References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484045519-19030-3-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
 On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
-> PHY transceiver driver for QUSB2 phy controller that provides
-> HighSpeed functionality for DWC3 controller present on
-> Qualcomm chipsets.
+> Qualcomm chipsets have QMP phy controller that provides
+> support to a number of controller, viz. PCIe, UFS, and USB.
+> Adding dt binding information for the same.
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
 > 
 > Changes since v3:
->  - Added 'Reviewed-by' from Stephen.
->  - Fixed debug message for qusb2_phy_set_tune2_param().
->  - Replaced devm_reset_control_get() with devm_reset_control_get_by_index()
->    since we are requesting only one reset.
->  - Updated devm_nvmem_cell_get() with a NULL cell id.
->  - Made error labels more idiomatic.
->  - Refactored qusb2_setbits() and qusb2_clrbits() a little bit to accept
->    base address and register offset as two separate arguments.
+>  - Added #clock-cells = <1>, indicating that phy is a clock provider.
 > 
 > Changes since v2:
->  - Removed selecting 'RESET_CONTROLLER' config.
->  - Added error handling for clk_prepare_enable paths.
->  - Removed explicitly setting ref_clk rate to 19.2 MHz. Don't need to
->    do that since 'xo' is modeled as parent to this clock.
->  - Removed 'ref_clk_src' handling. Driver doesn't need to request and
->    handle this clock.
->  - Moved nvmem_cell_get() to probe function.
->  - Simplified phy pll status handling.
->  - Using of_device_get_match_data() to get match data.
->  - Uniformly using lowercase for hex numbers.
->  - Fixed sparse warnings.
->  - Using shorter variable names in structure and in functions.
->  - Handling various comment style shortcomings.
+>  - Removed binding for "ref_clk_src" since we don't request this
+>    clock in the driver.
+>  - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
+>  - Using 'phy' for the node name.
 > 
 > Changes since v1:
->  - removed reference to clk_enabled/pwr_enabled.
->  - moved clock and regulator enable code to phy_power_on/off() callbacks.
->  - fixed return on EPROBE_DEFER in qusb2_phy_probe().
->  - fixed phy create and phy register ordering.
->  - removed references to non-lkml links from commit message.
->  - took care of other minor nits.
->  - Fixed coccinelle warnings -
->    'PTR_ERR applied after initialization to constant'
->  - Addressed review comment, regarding qfprom access for tune2 param value.
->    This driver is now based on qfprom patch[1] that allows byte access now.
+>  - New patch, forked out of the original driver patch:
+>    "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
+>  - Added 'Acked-by' from Rob.
+>  - Updated bindings to include mem resource as a list of
+>    offset - length pair for serdes block and for each lane.
+>  - Added a new binding for 'lane-offsets' that contains offsets
+>    to tx, rx and pcs blocks from each lane base address.
 > 
->  drivers/phy/Kconfig          |  10 +
->  drivers/phy/Makefile         |   1 +
->  drivers/phy/phy-qcom-qusb2.c | 539 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 550 insertions(+)
->  create mode 100644 drivers/phy/phy-qcom-qusb2.c
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 76 ++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 > 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index e8eb7f225a88..0ed53d018b23 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -430,6 +430,16 @@ config PHY_STIH407_USB
->  	  Enable this support to enable the picoPHY device used by USB2
->  	  and USB3 controllers on STMicroelectronics STiH407 SoC families.
->  
-> +config PHY_QCOM_QUSB2
-> +	tristate "Qualcomm QUSB2 PHY Driver"
-> +	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the HighSpeed QUSB2 PHY transceiver for USB
-> +	  controllers on Qualcomm chips. This driver supports the high-speed
-> +	  PHY which is usually paired with either the ChipIdea or Synopsys DWC3
-> +	  USB IPs on MSM SOCs.
-> +
->  config PHY_QCOM_UFS
->  	tristate "Qualcomm UFS PHY driver"
->  	depends on OF && ARCH_QCOM
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 65eb2f436a41..dad1682b80e3 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -49,6 +49,7 @@ obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
->  obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
->  obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
-> +obj-$(CONFIG_PHY_QCOM_QUSB2) 	+= phy-qcom-qusb2.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-> diff --git a/drivers/phy/phy-qcom-qusb2.c b/drivers/phy/phy-qcom-qusb2.c
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 > new file mode 100644
-> index 000000000000..c69118610164
+> index 000000000000..6f510fe48f46
 > --- /dev/null
-> +++ b/drivers/phy/phy-qcom-qusb2.c
-> @@ -0,0 +1,539 @@
-> +/*
-> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> @@ -0,0 +1,76 @@
+> +Qualcomm QMP PHY controller
+> +===========================
 > +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
+> +QMP phy controller supports physical layer functionality for a number of
+> +controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
 > +
-> +#define QUSB2PHY_PLL_TEST		0x04
-> +#define CLK_REF_SEL			BIT(7)
+> +Required properties:
+> + - compatible: compatible list, contains:
+> +	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+> +	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
+> + - reg: list of offset and length pair of the PHY register sets.
+> +	at index 0: offset and length of register set for PHY common
+> +		    serdes block.
+> +	from index 1 - N: offset and length of register set for each lane,
+> +			  for N number of phy lanes (ports).
+> + - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
+> + - #phy-cells: must be 1
+> +    - Cell after phy phandle should be the port (lane) number.
+> + - #clock-cells: must be 1
+> +    - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
+> +      interface (for pipe based PHYs). These clock are then gate-controlled
+> +      by gcc.
+> + - clocks: a list of phandles and clock-specifier pairs,
+> +	   one for each entry in clock-names.
+> + - clock-names: must be "cfg_ahb" for phy config clock,
+> +			"aux" for phy aux clock,
+> +			"ref" for 19.2 MHz ref clk,
+> +			"pipe<port-number>" for pipe clock specific to
+> +			each port/lane (Optional).
+> + - resets: a list of phandles and reset controller specifier pairs,
+> +	   one for each entry in reset-names.
+> + - reset-names: must be "phy" for reset of phy block,
+> +			"common" for phy common block reset,
+> +			"cfg" for phy's ahb cfg block reset (Optional).
+> +			"port<port-number>" for reset specific to
+> +			each port/lane (Optional).
+> + - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
 > +
-> +#define QUSB2PHY_PLL_TUNE		0x08
-> +#define QUSB2PHY_PLL_USER_CTL1		0x0c
-> +#define QUSB2PHY_PLL_USER_CTL2		0x10
-> +#define QUSB2PHY_PLL_AUTOPGM_CTL1	0x1c
-> +#define QUSB2PHY_PLL_PWR_CTRL		0x18
+> +Optional properties:
+> + - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
+> +			pll block.
 > +
-> +#define QUSB2PHY_PLL_STATUS		0x38
-> +#define PLL_LOCKED			BIT(5)
+> +Example:
+> +	pcie_phy: phy@34000 {
+> +		compatible = "qcom,msm8996-qmp-pcie-phy";
+> +		reg = <0x034000 0x48f>,
+> +			<0x035000 0x5bf>,
+> +			<0x036000 0x5bf>,
+> +			<0x037000 0x5bf>;
+> +				/* tx, rx, pcs */
+> +		lane-offsets = <0x0 0x200 0x400>;
+> +		#phy-cells = <1>;
+> +		#clock-cells = <1>;
 > +
-> +#define QUSB2PHY_PORT_TUNE1		0x80
-> +#define QUSB2PHY_PORT_TUNE2		0x84
-> +#define QUSB2PHY_PORT_TUNE3		0x88
-> +#define QUSB2PHY_PORT_TUNE4		0x8c
-> +#define QUSB2PHY_PORT_TUNE5		0x90
-> +#define QUSB2PHY_PORT_TEST2		0x9c
+> +		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
+> +			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+> +			<&gcc GCC_PCIE_CLKREF_CLK>,
+> +			<&gcc GCC_PCIE_0_PIPE_CLK>,
+> +			<&gcc GCC_PCIE_1_PIPE_CLK>,
+> +			<&gcc GCC_PCIE_2_PIPE_CLK>;
+> +		clock-names = "aux", "cfg_ahb", "ref",
+> +				"pipe0", "pipe1", "pipe2";
 > +
-> +#define QUSB2PHY_PORT_POWERDOWN		0xb4
-> +#define CLAMP_N_EN			BIT(5)
-> +#define FREEZIO_N			BIT(1)
-> +#define POWER_DOWN			BIT(0)
+> +		vdda-phy-supply = <&pm8994_l28>;
+> +		vdda-pll-supply = <&pm8994_l12>;
 > +
-> +#define QUSB2PHY_REFCLK_ENABLE		BIT(0)
-> +
-> +#define PHY_CLK_SCHEME_SEL		BIT(0)
-> +
-> +struct qusb2_phy_init_tbl {
-> +	unsigned int offset;
-> +	unsigned int val;
-> +};
-> +#define QUSB2_PHY_INIT_CFG(o, v) \
-> +	{			\
-> +		.offset = o,	\
-> +		.val = v,	\
-> +	}
-> +
-> +static const struct qusb2_phy_init_tbl msm8996_init_tbl[] = {
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xf8),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xb3),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xc0),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9f),
-> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
-> +};
+> +		resets = <&gcc GCC_PCIE_PHY_BCR>,
+> +			<&gcc GCC_PCIE_PHY_COM_BCR>,
+> +			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>,
+> +			<&gcc GCC_PCIE_0_PHY_BCR>,
+> +			<&gcc GCC_PCIE_1_PHY_BCR>,
+> +			<&gcc GCC_PCIE_2_PHY_BCR>;
+> +		reset-names = "phy", "common", "cfg",
+> +				"lane0", "lane1", "lane2";
 
-I wish all this data comes from device tree and one API in phy-core can do all
-these settings. Your other driver qcom-qmp also seems to have a bunch of
-similar settings.
-
-The problem is every vnedor driver adds a bunch of code to perform the same
-thing again and again when all of these settings can be done by a single phy API.
+Each lane has a separate clock, separate reset.. why not create sub-nodes for
+each lane?
 
 Thanks
 Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
