@@ -1,67 +1,65 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 03/10] devicetree: bindings: add bindings for ahci-da850
-Date: Mon, 16 Jan 2017 15:30:35 +0100
-Message-ID: <CAMpxmJW9ns-aG=4zYHcV5-2b_TdmJ7q+Ap1jdyoxstZjWYRL2A@mail.gmail.com>
-References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
- <1484311084-31547-4-git-send-email-bgolaszewski@baylibre.com>
- <35ff358d-9b17-b2be-38d8-6a51cdddc1a1@lechnology.com> <CAMpxmJUau9BgAOhacPvcA=NwyE6-yEfDgPdcCZ_JCuNH-amJSA@mail.gmail.com>
- <d8406f53-b97d-ca9a-f7d1-94ce5b7064f7@ti.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCHv3 8/8] ARM: configs: stm32: Add RTC support in
+ STM32 defconfig
+Date: Mon, 16 Jan 2017 15:37:09 +0100
+Message-ID: <0e58dc4b-e7d7-e327-6f8d-35253216a496@st.com>
+References: <1483623809-29937-1-git-send-email-amelie.delaunay@st.com>
+ <1483623809-29937-9-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d8406f53-b97d-ca9a-f7d1-94ce5b7064f7-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBDZK35H6VQBRBMFV6PBQKGQE2OCTKVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1483623809-29937-9-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-01-16 13:45 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
-> On Monday 16 January 2017 03:43 PM, Bartosz Golaszewski wrote:
->> 2017-01-13 20:25 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
->>>
->>> A clock multiplier property seems redundant if you are specifying a clock.
->>> It should be possible to get the rate from the clock to determine which
->>> multiplier is needed.
->>>
->>
->> I probably should have named it differently. This is not a multiplier
->> of a clock derived from PLL0 or PLL1. Instead it's a value set by
->> writing to the Port PHY Control Register (MPY bits) of the SATA
->> controller that configures the multiplier for the external low-jitter
->> clock. On the lcdk the signals (REFCLKP, REFCLKN) are provided by
->> CDCM61001 (SATA OSCILLATOR component on the schematics).
->>
->> I'll find a better name and comment the property accordingly.
->>
->> FYI: the da850 platform does not use the common clock framework, so I
->> don't specify the clock property on the sata node in the device tree.
->> Instead I add the clock lookup entry in patch [01/10]. This is
->> transparent for AHCI which can get the clock as usual by calling
->> clk_get() in ahci_platform_get_resources().
->
-> I think David's point is that the SATA_REFCLK needs to be modeled as a
-> actual clock input to the IP. You should be able to get the rate using
-> clk_get_rate() and make the MPY bits calculation depending on the
-> incoming rate.
->
-> You should be able to model the clock even when not using common clock
-> framework.
->
-> DA850 AHCI does not use a con_id at the moment (it assumes a single
-> clock), and that needs to change.
->
+Hi Am=C3=A9lie,
 
-It's true that once davinci gets ported (is this planned?) to using
-the common clock framework, we could just create a fixed-clock node in
-da850-lcdk for the SATA oscillator, so the new property is redundant.
+On 01/05/2017 02:43 PM, Amelie Delaunay wrote:
+> This patch adds STM32 RTC support in stm32_defconfig file.
+>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+> ---
+>  arch/arm/configs/stm32_defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_de=
+fconfig
+> index be19e09..0acff9e 100644
+> --- a/arch/arm/configs/stm32_defconfig
+> +++ b/arch/arm/configs/stm32_defconfig
+> @@ -57,6 +57,8 @@ CONFIG_LEDS_CLASS=3Dy
+>  CONFIG_LEDS_GPIO=3Dy
+>  CONFIG_LEDS_TRIGGERS=3Dy
+>  CONFIG_LEDS_TRIGGER_HEARTBEAT=3Dy
+> +CONFIG_RTC_CLASS=3Dy
+> +CONFIG_RTC_DRV_STM32=3Dy
+>  CONFIG_DMADEVICES=3Dy
+>  CONFIG_STM32_DMA=3Dy
+>  # CONFIG_FILE_LOCKING is not set
+>
+Applied on stm32-defconfig-for-v4.11
 
-What I don't get is how should I model a clock that is not
-configurable and is board-specific? Is hard-coding the relevant rate
-in da850.c with a huge FIXME the right way?
+thanks
+Alex
 
-Thanks,
-Bartosz Golaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
