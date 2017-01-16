@@ -1,87 +1,44 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] rtc: stm32: fix comparison warnings
-Date: Mon, 16 Jan 2017 11:08:53 +0100
-Message-ID: <1484561333-12087-1-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v2 04/11] dt-bindings: add power domain node for
+ dw-mipi-rockchip
+Date: Mon, 16 Jan 2017 18:08:24 +0800
+Message-ID: <1484561311-494-5-git-send-email-zyw@rock-chips.com>
+References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC2IT2GSZUDRBSFX6LBQKGQEXNEWBEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patches fixes comparison between signed and unsigned values as it
-could produce an incorrect result when the signed value is converted to
-unsigned:
-
-drivers/rtc/rtc-stm32.c: In function 'stm32_rtc_valid_alrm':
-drivers/rtc/rtc-stm32.c:404:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-  if ((((tm->tm_year > cur_year) &&
-...
-
-It also fixes comparison always true or false due to the fact that unsigned
-value is compared against zero with >= or <:
-
-drivers/rtc/rtc-stm32.c: In function 'stm32_rtc_init':
-drivers/rtc/rtc-stm32.c:514:35: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
-  for (pred_a = pred_a_max; pred_a >= 0; pred_a-- ) {
-
-drivers/rtc/rtc-stm32.c:530:44: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-     (rate - ((pred_a + 1) * (pred_s + 1)) < 0) ?
-
-Fixes: 4e64350f42e2 ("rtc: add STM32 RTC driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
----
- drivers/rtc/rtc-stm32.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index 03c97c1..bd57eb1 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -383,7 +383,7 @@ static int stm32_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 
- static int stm32_rtc_valid_alrm(struct stm32_rtc *rtc, struct rtc_time *tm)
- {
--	unsigned int cur_day, cur_mon, cur_year, cur_hour, cur_min, cur_sec;
-+	int cur_day, cur_mon, cur_year, cur_hour, cur_min, cur_sec;
- 	unsigned int dr = readl_relaxed(rtc->base + STM32_RTC_DR);
- 	unsigned int tr = readl_relaxed(rtc->base + STM32_RTC_TR);
- 
-@@ -509,7 +509,7 @@ static int stm32_rtc_init(struct platform_device *pdev,
- 	pred_a_max = STM32_RTC_PRER_PRED_A >> STM32_RTC_PRER_PRED_A_SHIFT;
- 	pred_s_max = STM32_RTC_PRER_PRED_S >> STM32_RTC_PRER_PRED_S_SHIFT;
- 
--	for (pred_a = pred_a_max; pred_a >= 0; pred_a--) {
-+	for (pred_a = pred_a_max; pred_a + 1 > 0; pred_a--) {
- 		pred_s = (rate / (pred_a + 1)) - 1;
- 
- 		if (((pred_s + 1) * (pred_a + 1)) == rate)
-@@ -525,7 +525,7 @@ static int stm32_rtc_init(struct platform_device *pdev,
- 		pred_s = (rate / (pred_a + 1)) - 1;
- 
- 		dev_warn(&pdev->dev, "ck_rtc is %s\n",
--			 (rate - ((pred_a + 1) * (pred_s + 1)) < 0) ?
-+			 (rate < ((pred_a + 1) * (pred_s + 1))) ?
- 			 "fast" : "slow");
- 	}
- 
--- 
-1.9.1
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+U2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KQWNrZWQtYnk6
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0ICAgICAgfCAzICsr
+KwogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
+Y2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jv
+Y2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dAppbmRleCAwZjgyNTY4Li4xODhmNmY3IDEw
+MDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
+Y2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CkBA
+IC0xNSw2ICsxNSw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIHBvcnRzOiBjb250YWluIGEg
+cG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbiBbMl0uCiAg
+IEZvciB2b3BiLHNldCB0aGUgcmVnID0gPDA+IGFuZCBzZXQgdGhlIHJlZyA9IDwxPiBmb3Igdm9w
+bC4KIAorT3B0aW9uYWwgcHJvcGVydGllczoKKy0gcG93ZXItZG9tYWluczogYSBwaGFuZGxlIHRv
+IG1pcGkgZHNpIHBvd2VyIGRvbWFpbiBub2RlLgorCiBbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dAogWzJdIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAogCi0tIAoyLjYu
+MwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
