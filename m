@@ -1,54 +1,131 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 0/4] Add support for es8388 on the rock2
-Date: Mon, 16 Jan 2017 09:17:49 +0100
-Message-ID: <20170116081753.13666-1-romain.perier@collabora.com>
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Mon, 16 Jan 2017 17:25:07 +0900
+Message-ID: <20170116082505.GL20972@linaro.org>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043734.27535-1-takahiro.akashi@linaro.org>
+ <20170112153944.GB12249@leverpostej>
+ <20170113091339.GK20972@linaro.org>
+ <20170113111756.GC26120@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170113111756.GC26120@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This set of patches adds a machine driver for rockchip boards that use
-ES8388 codecs. It also adds slave mode to the es8328 driver that
-currently only supported the master mode. Then, it adds the required DT
-definitions to link rockchip-i2s to the es8388 analog output.
+On Fri, Jan 13, 2017 at 11:17:56AM +0000, Mark Rutland wrote:
+> On Fri, Jan 13, 2017 at 06:13:49PM +0900, AKASHI Takahiro wrote:
+> > On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
+> > > On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
+> > > > +linux,crashkernel-base
+> > > > +linux,crashkernel-size
+> > > > +----------------------
+> > > > +
+> > > > +These properties (currently used on PowerPC and arm64) indicates
+> > > > +the base address and the size, respectively, of the reserved memory
+> > > > +range for crash dump kernel.
+> > > 
+> > > From this description, it's not clear to me what the (expected)
+> > > consumers of this property are, nor what is expected to provide it.
+> > > 
+> > > In previous rounds of review, I had assumed that this was used to
+> > > describe a preference to the first kernel as to what region of memory
+> > > should be used for a subsequent kdump kernel. Looking around, I'm not
+> > > sure if I was correct in that assessment.
+> > > 
+> > > I see that arch/powerpc seems to consume this property to configure
+> > > crashk_res, but it also rewrites it based on crashk_res, presumably for
+> > > the benefit of userspace. It's not clear to me how on powerpc the kdump
+> > > kernel knows its memory range -- is more DT modification done in the
+> > > kernel and/or userspace?
+> > 
+> > I don't believe that powerpc will rewrite the property any way.
+> > As far as I know from *the source code*, powerpc kernel retrieves
+> > the memory range for crash dump kernel from a kernel command line, i.e.
+> > crashkernel=, and then exposes it through DT to userspace (assuming
+> > kexec-tools).
+> 
+> The rewriting I describe is in export_crashk_values() in
+> arch/powerpc/kernel/machine_kexec.c, where the code deletes existing the
+> properties, and adds new ones, to the DT exposed to userspace.
+> 
+> So I think we're just quibbling over the definition of "rewrite".
 
-This work is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.co.uk> with some improvements, changes and more
-commits.
+Gotcha
 
-Changes in v2:
- - Fixed wrong use of the data structure i2c_device_id
- - Fixed wrong dependencies for SND_SOC_ROCKCHIP_ES8388
+> > > arm64 we should either ensure that /proc/iomem is consistently usable
+> > > (and have userspace consistently use it), or we should expose a new file
+> > > specifically to expose this information.
+> > 
+> > The thing that I had in my mind when adding this property is that
+> > /proc/iomem would be obsolete in the future, then we should have
+> > an alternative in hand.
+> 
+> Ok.
+> 
+> My disagreement is with using the DT as a channel to convey information
+> from the kernel to userspace.
+> 
+> I'm more than happy for a new file or other mechanism to express this
+> information. For example, we could add
+> /sys/kernel/kexec_crash_{base,size} or similar.
 
-Romain Perier (4):
-  ASoC: es8328-i2c: Add compatible for ES8388
-  ASoC: es8328: Add support for slave mode
-  ASoC: rockchip: Add machine driver for ES8388 codecs
-  arm: dts: Add support for ES8388 to the Radxa Rock 2
+It may make sense because /sys/kernel/kexec_crash_size already exists,
+so why not kexec_crash_base?
+My concern, however, is that this kind of interface might prevent us from
+allowing multiple regions to be reserved for crash dump kernel in the future.
+(There is an assumption that we have only one region at least on arm64 though.)
 
- Documentation/devicetree/bindings/sound/es8328.txt |   2 +-
- .../devicetree/bindings/sound/rockchip-es8388.txt  |  28 +++
- arch/arm/boot/dts/rk3288-rock2-square.dts          |  37 +++
- sound/soc/codecs/es8328-i2c.c                      |   2 +
- sound/soc/codecs/es8328.c                          |  28 ++-
- sound/soc/rockchip/Kconfig                         |   9 +
- sound/soc/rockchip/Makefile                        |   2 +
- sound/soc/rockchip/rockchip_es8388.c               | 270 +++++++++++++++++++++
- 8 files changed, 371 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-es8388.txt
- create mode 100644 sound/soc/rockchip/rockchip_es8388.c
+Thanks,
+-Takahiro AKASHI
 
--- 
-2.9.3
+> 
+> > > Further, I do not think we need this property. It makes more sense to me
+> > > for the preference of a a region to be described to the *first* kernel
+> > > using the command line consistently.
+> > > 
+> > > So I think we should drop this property, and not use it on arm64. Please
+> > > document this as powerpc only.
+> > 
+> > OK, but if we drop the property from arm64 code, we have no reason
+> > to leave its description in this patch.
+> > (In fact, there are a few more (undocumented) properties that only ppc
+> > uses for kdump.)
+> 
+> I'm happy to drop it, then.
+> 
+> > > > +linux,usable-memory-range
+> > > > +-------------------------
+> > > > +
+> > > > +This property (currently used only on arm64) holds the memory range,
+> > > > +the base address and the size, which can be used as system ram on
+> > > > +the *current* kernel. Note that, if this property is present, any memory
+> > > > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > > > +memory" in EFI memory map should be ignored.
+> > > 
+> > > Could you please replace this with:
+> > > 
+> > >   This property (arm64 only) holds a base address and size, describing a
+> > >   limited region in which memory may be considered available for use by
+> > >   the kernel. Memory outside of this range is not available for use.
+> > >   
+> > >   This property describes a limitation: memory within this range is only
+> > >   valid when also described through another mechanism that the kernel
+> > >   would otherwise use to determine available memory (e.g. memory nodes
+> > >   or the EFI memory map). Valid memory may be sparse within the range.
+> > 
+> > Sure.
+> 
+> Cheers!
+> 
+> Thanks,
+> Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
