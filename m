@@ -1,141 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/2] of: Add function for generating a DT modalias with a newline
-Date: Mon, 16 Jan 2017 14:41:22 -0600
-Message-ID: <20170116204122.5858-2-robh@kernel.org>
-References: <20170116204122.5858-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170116204122.5858-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Mon, 16 Jan 2017 21:45:10 +0100
+Message-ID: <CACna6rwLaS_i+yEyUsaH8hZZ7y=EA-UK-BHz7m258vfeYuxbNg@mail.gmail.com>
+References: <20170116133503.13887-1-u.kleine-koenig@pengutronix.de>
+ <CACna6ryLDwr0S=e-uUt+ZGcY8mNDnUtBPg_RmqtSVBziJkZd5w@mail.gmail.com> <20170116194154.v2p2gbyvvfb5bwe6@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170116194154.v2p2gbyvvfb5bwe6-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The modalias sysfs attr is lacking a newline for DT aliases on platform
-devices. The macio and ibmebus correctly add the newline, but open code it.
-Introduce a new function, of_device_modalias(), that fills the buffer with
-the modalias including the newline and update users of the old
-of_device_get_modalias function.
+On 16 January 2017 at 20:41, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Mon, Jan 16, 2017 at 02:55:01PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> On 16 January 2017 at 14:35, Uwe Kleine-K=C3=B6nig
+>> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> > The MR25 family doesn't support JEDEC, so they need explicit mentionin=
+g
+>> > in the list of supported spi IDs. This makes it possible to add these
+>> > using for example:
+>> >
+>> >         compatible =3D "everspin,mr25h40";
+>> >
+>> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > ---
+>> > Hello,
+>> >
+>> > independent of the decision if -nonjedec is ok for m25p, this is neede=
+d
+>> > to make Everspin's MRAMs work.
+>> >
+>> > Best regards
+>> > Uwe
+>> >
+>> >  drivers/mtd/devices/m25p80.c | 5 +++++
+>> >  1 file changed, 5 insertions(+)
+>> >
+>> > diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80=
+.c
+>> > --- a/drivers/mtd/devices/m25p80.c
+>> > +++ b/drivers/mtd/devices/m25p80.c
+>> > @@ -305,6 +305,11 @@ static const struct spi_device_id m25p_ids[] =3D =
+{
+>> >         {"m25p40-nonjedec"},    {"m25p80-nonjedec"},    {"m25p16-nonje=
+dec"},
+>> >         {"m25p32-nonjedec"},    {"m25p64-nonjedec"},    {"m25p128-nonj=
+edec"},
+>> >
+>> > +       /* Everspin MRAMs without JEDEC support */
+>> > +       { "mr25h256" }, /* 256 kib, 40 MHz */
+>>
+>> A trivial thing: I think it should be Kib
+>> https://en.wikipedia.org/wiki/Binary_prefix
+>
+> Oh, really? 10^3 =3D k and 2^10 =3D Ki, stange. Should I resend for that?
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: linuxppc-dev@lists.ozlabs.org
----
- arch/powerpc/platforms/pseries/ibmebus.c |  5 +----
- drivers/base/platform.c                  |  2 +-
- drivers/macintosh/macio_sysfs.c          |  7 +------
- drivers/of/device.c                      | 16 +++++++++++++++-
- include/linux/of_device.h                |  7 +++----
- 5 files changed, 21 insertions(+), 16 deletions(-)
+I don't think I understand you now. This is 262'144b device. You most
+likely want to divide it by 1024 and use Kib then, right?
 
-diff --git a/arch/powerpc/platforms/pseries/ibmebus.c b/arch/powerpc/platforms/pseries/ibmebus.c
-index 614c28537141..18f5a7a2896f 100644
---- a/arch/powerpc/platforms/pseries/ibmebus.c
-+++ b/arch/powerpc/platforms/pseries/ibmebus.c
-@@ -410,10 +410,7 @@ static ssize_t name_show(struct device *dev,
- static ssize_t modalias_show(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
--	ssize_t len = of_device_get_modalias(dev, buf, PAGE_SIZE - 2);
--	buf[len] = '\n';
--	buf[len+1] = 0;
--	return len+1;
-+	return of_device_modalias(dev, buf, PAGE_SIZE);
- }
- 
- static struct device_attribute ibmebus_bus_device_attrs[] = {
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index c4af00385502..d92f60d7f15d 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -837,7 +837,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 	struct platform_device	*pdev = to_platform_device(dev);
- 	int len;
- 
--	len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
-+	len = of_device_modalias(dev, buf, PAGE_SIZE);
- 	if (len != -ENODEV)
- 		return len;
- 
-diff --git a/drivers/macintosh/macio_sysfs.c b/drivers/macintosh/macio_sysfs.c
-index 8eb40afbd0f5..0b1f9c76c68d 100644
---- a/drivers/macintosh/macio_sysfs.c
-+++ b/drivers/macintosh/macio_sysfs.c
-@@ -41,12 +41,7 @@ compatible_show (struct device *dev, struct device_attribute *attr, char *buf)
- static ssize_t modalias_show (struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
--	int len = of_device_get_modalias(dev, buf, PAGE_SIZE - 2);
--
--	buf[len] = '\n';
--	buf[len+1] = 0;
--
--	return len+1;
-+	return of_device_modalias(dev, buf, PAGE_SIZE);
- }
- 
- static ssize_t devspec_show(struct device *dev,
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index bd620452f255..f3c3108d5a3a 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -176,7 +176,7 @@ const void *of_device_get_match_data(const struct device *dev)
- }
- EXPORT_SYMBOL(of_device_get_match_data);
- 
--ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
-+static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- {
- 	const char *compat;
- 	int cplen, i;
-@@ -227,6 +227,20 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- }
- 
- /**
-+ * of_device_modalias - Fill buffer with newline terminated modalias string
-+ */
-+ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len)
-+{
-+	ssize_t sl = of_device_get_modalias(dev, str, len - 2);
-+	if (sl < 0)
-+		return sl;
-+
-+	str[sl++] = '\n';
-+	str[sl] = 0;
-+	return sl;
-+}
-+
-+/**
-  * of_device_uevent - Display OF related uevent information
-  */
- void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index cc7dd687a89d..971d7250a8a4 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -35,8 +35,7 @@ extern void of_device_unregister(struct platform_device *ofdev);
- 
- extern const void *of_device_get_match_data(const struct device *dev);
- 
--extern ssize_t of_device_get_modalias(struct device *dev,
--					char *str, ssize_t len);
-+extern ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len);
- 
- extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
- extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
-@@ -72,8 +71,8 @@ static inline const void *of_device_get_match_data(const struct device *dev)
- 	return NULL;
- }
- 
--static inline int of_device_get_modalias(struct device *dev,
--				   char *str, ssize_t len)
-+static inline int of_device_modalias(struct device *dev,
-+				     char *str, ssize_t len)
- {
- 	return -ENODEV;
- }
--- 
-2.10.1
+So it should be just 256 Kib instead of 256 kib.
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
