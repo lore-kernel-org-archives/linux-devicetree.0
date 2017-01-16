@@ -1,129 +1,47 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 01/24] [media] dt-bindings: Add bindings for i.MX
- media driver
-Date: Mon, 16 Jan 2017 13:09:39 +0100
-Message-ID: <1484568579.8415.91.camel@pengutronix.de>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-         <1483755102-24785-2-git-send-email-steve_longerbeam@mentor.com>
-         <1484308551.31475.23.camel@pengutronix.de>
-         <e609fd03-a546-330c-ec89-de1844d1b46f@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 04/10] sata: hardreset: retry if phys link is down
+Date: Mon, 16 Jan 2017 13:28:07 +0100
+Message-ID: <CAMpxmJUxSmNwGn+gEDZN0njnbMhmG4=1Oc1p56O7KiToBjp_FQ@mail.gmail.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-5-git-send-email-bgolaszewski@baylibre.com> <20170115231049.GC14446@mtj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e609fd03-a546-330c-ec89-de1844d1b46f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20170115231049.GC14446@mtj.duckdns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, linux-ide@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-01-13 at 11:03 -0800, Steve Longerbeam wrote:
-> 
-> On 01/13/2017 03:55 AM, Philipp Zabel wrote:
-> > Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
-> >> Add bindings documentation for the i.MX media driver.
-> >>
-> >> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>   Documentation/devicetree/bindings/media/imx.txt | 57 +++++++++++++++++++++++++
-> >>   1 file changed, 57 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/media/imx.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
-> >> new file mode 100644
-> >> index 0000000..254b64a
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/imx.txt
-> >> @@ -0,0 +1,57 @@
-> >> +Freescale i.MX Media Video Devices
-> >> +
-> >> +Video Media Controller node
-> >> +---------------------------
-> >> +
-> >> +This is the parent media controller node for video capture support.
-> >> +
-> >> +Required properties:
-> >> +- compatible : "fsl,imx-media";
-> > Would you be opposed to calling this "capture-subsystem" instead of
-> > "imx-media"? We already use "fsl,imx-display-subsystem" and
-> > "fsl,imx-gpu-subsystem" for the display and GPU compound devices.
-> 
-> sure. Some pie-in-the-sky day when DRM and media are unified,
-> there could be a single device that handles them all,
-
-Indeed :)
-
->  but for now
-> I'm fine with "fsl,capture-subsystem".
-
-Actually, I meant fsl,imx-capture-subsystem. fsl,imx-media-subsystem
-would be fine, too. Either way, I'll be happy if it looks similar to the
-other two.
-
-[...]
-> > This is a clever method to get better frame timestamps. Too bad about
-> > the routing requirements. Can this be used on Nitrogen6X?
-> 
-> Absolutely, this support just needs use of the input-capture channels in the
-> imx GPT. I still need to submit the patch to the imx-gpt driver that adds an
-> input capture API, so at this point fsl,input-capture-channel has no effect,
-> but it does work (tested on SabreAuto).
-
-Nice.
-
-[...]
-> >> +Required properties:
-> >> +- compatible	: "fsl,imx6-mipi-csi2";
-> > I think this should get an additional "snps,dw-mipi-csi2" compatible,
-> > since the only i.MX6 specific part is the bolted-on IPU2CSI gasket.
-> 
-> right, minus the gasket it's a Synopsys core. I'll add that compatible flag.
-> Or should wait until the day this subdev is exported for general use, after
-> pulling out the gasket specifics?
-
-It can be added right away.
-
-> >> +- reg           : physical base address and length of the register set;
-> >> +- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
-> >> +                  (the DPHY clock), video_27m, and eim_sel;
-> > Note that hsi_tx is incorrectly named. CCGR3[CG8] just happens to be the
-> > shared gate bit that gates the HSI clocks as well as the MIPI
-> > "ac_clk_125m", "cfg_clk", "ips_clk", and "pll_refclk" inputs to the mipi
-> > csi-2 core, but we are missing shared gate clocks in the clock tree for
-> > these.
-> 
-> Yes, so many clocks for the MIPI core. Why so many? I would think
-> there would need to be at most three: a clock for the MIPI CSI-2 core
-> and HSI core, and a clock for the D-PHY (oh and maybe a clock for an
-> M-PHY if there is one). I have no clue what all these other clocks are.
-> But anyway, a single gating bit, CCGR3[CG8], seems to enable them all.
-
-I would imagine the CSI-2 core has a high-speed clock input from the
-D-PHY for serial input, an APB clock for register access (ips_clk), and
-a pixel clock input for the parallel output (pixel_clk), at least.
-The D-PHY will have a PLL reference input (pll_refclk?) and probably its
-own register clock (cfg_clk?).
-
-I've looked at the MIPI DSI chapter, and it looks like ac_clk_125m is
-used for DSI only.
-
-> > Both cfg_clk and pll_refclk are sourced from video_27m, so "cfg" ->
-> > video_27m seems fine.
-> > But I don't get "dphy".
-> 
-> I presume it's the clock for the D-PHY.
+2017-01-16 0:10 GMT+01:00 Tejun Heo <tj@kernel.org>:
+> Hello,
 >
-> >   Which input clock would that correspond to?
-> > "pll_refclk?"
-> 
-> the mux at CDCDR says it comes from PLL3_120M, or PLL2_PFD2.
+> On Fri, Jan 13, 2017 at 01:37:58PM +0100, Bartosz Golaszewski wrote:
+>> The sata core driver already retries to resume the link because some
+>> controllers ignore writes to the SControl register.
+>>
+>> We have a use case with the da850 SATA controller where at PLL0
+>> frequency of 456MHz (needed to properly service the LCD controller)
+>> the chip becomes unstable and the hardreset operation is ignored the
+>> first time 50% of times.
+>>
+>> Retrying just the resume operation doesn't work - we need to issue
+>> the phy/wake reset again to make it work.
+>>
+>> If ata_phys_link_offline() returns true in sata_link_hardreset(),
+>> retry a couple times before really giving up.
+>
+> I think it'd be better to implement the driver specific implementation
+> rather than changing the behavior for everybody.
+>
+> Thanks.
+>
 
-I think that makes sense.
+For v2 I created a new ahci-locally exported function:
+ahci_do_hardreset() that allows to retrieve the online state of the
+link and used it in the da850-specific hardreset implementation.
 
-regards
-Philipp
+Hope that'll be good.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Bartosz Golaszewski
