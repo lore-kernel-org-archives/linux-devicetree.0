@@ -1,31 +1,305 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Add EXPORT_SYMBOL for of_device_compatible_match
-Date: Mon, 16 Jan 2017 09:37:48 -0600
-Message-ID: <CAL_Jsq+H0h7YJGZTXBHhb7CZhv=OO10qO5aHYGpA49wGyOUcDQ@mail.gmail.com>
-References: <1484572311-6005-1-git-send-email-narmstrong@baylibre.com>
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v2 2/3] ARM: dts: STM32 Add USB FS host mode support
+Date: Mon, 16 Jan 2017 13:41:28 -0200
+Message-ID: <CAF3+TqfSWAbfDf3F3y5+dCe_12cpA5f-jFoDCUXdM3NQjD-jfA@mail.gmail.com>
+References: <20170116020958.62767-1-bruherrera@gmail.com> <20170116020958.62767-2-bruherrera@gmail.com>
+ <f1fac058-6c03-595a-0d67-a89fcf70d7cc@st.com> <CAF3+TqcD9v=Z4BAprMoWNnDddmTkzKBAb8Yz1XnHLo0_2-995g@mail.gmail.com>
+ <21fbf365-7d15-04be-f6a5-451aedac05b5@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484572311-6005-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <21fbf365-7d15-04be-f6a5-451aedac05b5-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 7:11 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Add missing EXPORT_SYMBOL for of_device_compatible_match function.
+On Mon, Jan 16, 2017 at 9:47 AM, Alexandre Torgue
+<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+>
+>
+> On 01/16/2017 11:26 AM, Bruno Herrera wrote:
+>>
+>> Hi Alex,
+>>
+>> On Mon, Jan 16, 2017 at 6:57 AM, Alexandre Torgue
+>> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+>>>
+>>> Hi Bruno,
+>>>
+>>> On 01/16/2017 03:09 AM, Bruno Herrera wrote:
+>>>>
+>>>>
+>>>> This patch adds the USB pins and nodes for USB HS/FS cores working at FS
+>>>> speed,
+>>>> using embedded PHY.
+>>>>
+>>>> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>>
+>>>
+>>> Sorry, but what is patch 1 & pacth 3 status ?
+>>
+>>
+>> My bad, I'll add the status of the patch series version 3.
+>>>
+>>>
+>>> For this one, can split it in 3 patches (one patch for SOC and one for
+>>> each
+>>> board) please.
+>>>
+>>
+>> No problem.
+>>>
+>>>
+>>>
+>>>> ---
+>>>>  arch/arm/boot/dts/stm32f429-disco.dts | 30
+>>>> ++++++++++++++++++++++++++++++
+>>>>  arch/arm/boot/dts/stm32f429.dtsi      | 35
+>>>> ++++++++++++++++++++++++++++++++++-
+>>>>  arch/arm/boot/dts/stm32f469-disco.dts | 30
+>>>> ++++++++++++++++++++++++++++++
+>>>>  3 files changed, 94 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts
+>>>> b/arch/arm/boot/dts/stm32f429-disco.dts
+>>>> index 7d0415e..374c5ed 100644
+>>>> --- a/arch/arm/boot/dts/stm32f429-disco.dts
+>>>> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+>>>> @@ -88,6 +88,16 @@
+>>>>                         gpios = <&gpioa 0 0>;
+>>>>                 };
+>>>>         };
+>>>> +
+>>>> +       /* This turns on vbus for otg for host mode (dwc2) */
+>>>> +       vcc5v_otg: vcc5v-otg-regulator {
+>>>> +               compatible = "regulator-fixed";
+>>>> +               gpio = <&gpioc 4 0>;
+>>>> +               pinctrl-names = "default";
+>>>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>>>> +               regulator-name = "vcc5_host1";
+>>>> +               regulator-always-on;
+>>>> +       };
+>>>>  };
+>>>>
+>>>>  &clk_hse {
+>>>> @@ -99,3 +109,23 @@
+>>>>         pinctrl-names = "default";
+>>>>         status = "okay";
+>>>>  };
+>>>> +
+>>>> +&usbotg_hs {
+>>>> +       compatible = "st,stm32-fsotg", "snps,dwc2";
+>>>> +       dr_mode = "host";
+>>>> +       pinctrl-0 = <&usbotg_fs_pins_b>;
+>>>> +       pinctrl-names = "default";
+>>>> +       status = "okay";
+>>>> +};
+>>>> +
+>>>> +&pinctrl {
+>>>> +       usb-host {
+>>>> +               usbotg_pwren_h: usbotg-pwren-h {
+>>>> +                       pins {
+>>>> +                               pinmux = <STM32F429_PC4_FUNC_GPIO>;
+>>>> +                               bias-disable;
+>>>> +                               drive-push-pull;
+>>>> +                       };
+>>>> +               };
+>>>> +       };
+>>>> +};
+>>>
+>>>
+>>>
+>>> Pinctrl muxing has to be defined/declared in stm32f429.dtsi
+>>>
+>> This is board specific logic and it vary from board to board, should
+>> it be defined here?
+>
+>
+> Pinmuxing definition is a SOC part (as it is a possibility offered by SOC).
+> Pinmuxing choice is board specific.
+>
+> Regarding your code, it should not boot. Ex for disco:
+>
+>  +               gpio = <&gpiob 2 0>;
+>>>> +               pinctrl-names = "default";
+>>>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>
+> +
+>
+>   usb-host {
+>>>> +               usbotg_pwren_h: usbotg-pwren-h {
+>>>> +                       pins {
+>>>> +                               pinmux = <STM32F429_PB2_FUNC_GPIO>;
+>
+> Indeed, you are declaring two time the pin PB2 (one time through pinctrl and
+> one other time through gpiolib). in strict mode you can't request 2 times
+> the same Pin.
+> I assume that your driver want controls this GPIO (request/set direction /
+> set, get value ...). in this case you only need to declare this part:
+>
+> gpio = <&gpiob 2 0>;
+>
+> The GPIO lib will deal with pinctrl framework for you.
+> And in this case, yes gpio declaration is board specific so this part will
+> be in board file.
+>
+> Let me know, if I'm not enough clear.
 
-It's not missing because no modules use it. It's generally preferred
-to use a match table and of_match_node.
+Thats very clear! Thanks for bringing.
+I'll retest without the pinctrl.
 
-Rob
+br,
+Bruno
 
 >
-> Fixes: b9c13fe32faa ("dt: Add of_device_compatible_match()")
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/of/base.c | 1 +
->  1 file changed, 1 insertion(+)
+> Regards
+> Alex
+>
+>
+>
+>
+>
+>>>
+>>>
+>>>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi
+>>>> b/arch/arm/boot/dts/stm32f429.dtsi
+>>>> index e4dae0e..bc07aa8 100644
+>>>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>>>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>>>> @@ -206,7 +206,7 @@
+>>>>                         reg = <0x40007000 0x400>;
+>>>>                 };
+>>>>
+>>>> -               pin-controller {
+>>>> +               pinctrl: pin-controller {
+>>>>                         #address-cells = <1>;
+>>>>                         #size-cells = <1>;
+>>>>                         compatible = "st,stm32f429-pinctrl";
+>>>> @@ -316,6 +316,30 @@
+>>>>                                 };
+>>>>                         };
+>>>>
+>>>> +                       usbotg_fs_pins_a: usbotg_fs@0 {
+>>>> +                               pins {
+>>>> +                                       pinmux =
+>>>> <STM32F429_PA10_FUNC_OTG_FS_ID>,
+>>>> +
+>>>> <STM32F429_PA11_FUNC_OTG_FS_DM>,
+>>>> +
+>>>> <STM32F429_PA12_FUNC_OTG_FS_DP>;
+>>>> +                                       bias-disable;
+>>>> +                                       drive-push-pull;
+>>>> +                                       slew-rate = <2>;
+>>>> +                               };
+>>>> +                       };
+>>>> +
+>>>> +                       usbotg_fs_pins_b: usbotg_fs@1 {
+>>>> +                               pins {
+>>>> +                                       pinmux =
+>>>> <STM32F429_PB12_FUNC_OTG_HS_ID>,
+>>>> +
+>>>> <STM32F429_PB14_FUNC_OTG_HS_DM>,
+>>>> +
+>>>> <STM32F429_PB15_FUNC_OTG_HS_DP>;
+>>>> +                                       bias-disable;
+>>>> +                                       drive-push-pull;
+>>>> +                                       slew-rate = <2>;
+>>>> +                               };
+>>>> +                       };
+>>>> +
+>>>> +
+>>>> +
+>>>>                         usbotg_hs_pins_a: usbotg_hs@0 {
+>>>>                                 pins {
+>>>>                                         pinmux =
+>>>> <STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
+>>>> @@ -420,6 +444,15 @@
+>>>>                         status = "disabled";
+>>>>                 };
+>>>>
+>>>> +               usbotg_fs: usb@50000000 {
+>>>> +                       compatible = "st,stm32f4xx-fsotg", "snps,dwc2";
+>>>> +                       reg = <0x50000000 0x40000>;
+>>>> +                       interrupts = <67>;
+>>>> +                       clocks = <&rcc 0 39>;
+>>>> +                       clock-names = "otg";
+>>>> +                       status = "disabled";
+>>>> +               };
+>>>> +
+>>>>                 rng: rng@50060800 {
+>>>>                         compatible = "st,stm32-rng";
+>>>>                         reg = <0x50060800 0x400>;
+>>>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> b/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> index 8877c00..8ae6763 100644
+>>>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+>>>> @@ -68,6 +68,17 @@
+>>>>         soc {
+>>>>                 dma-ranges = <0xc0000000 0x0 0x10000000>;
+>>>>         };
+>>>> +
+>>>> +       /* This turns on vbus for otg for host mode (dwc2) */
+>>>> +       vcc5v_otg: vcc5v-otg-regulator {
+>>>> +               compatible = "regulator-fixed";
+>>>> +               enable-active-high;
+>>>> +               gpio = <&gpiob 2 0>;
+>>>> +               pinctrl-names = "default";
+>>>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>>>> +               regulator-name = "vcc5_host1";
+>>>> +               regulator-always-on;
+>>>> +       };
+>>>>  };
+>>>>
+>>>>  &rcc {
+>>>> @@ -81,3 +92,22 @@
+>>>>  &usart3 {
+>>>>         status = "okay";
+>>>>  };
+>>>> +
+>>>> +&usbotg_fs {
+>>>> +       dr_mode = "host";
+>>>> +       pinctrl-0 = <&usbotg_fs_pins_a>;
+>>>> +       pinctrl-names = "default";
+>>>> +       status = "okay";
+>>>> +};
+>>>> +
+>>>> +&pinctrl {
+>>>> +       usb-host {
+>>>> +               usbotg_pwren_h: usbotg-pwren-h {
+>>>> +                       pins {
+>>>> +                               pinmux = <STM32F429_PB2_FUNC_GPIO>;
+>>>> +                               bias-disable;
+>>>> +                               drive-push-pull;
+>>>> +                       };
+>>>> +               };
+>>>> +       };
+>>>> +};
+>>>
+>>>
+>>> Same. Note that if you have 2 configuration for one feature (like it is
+>>> here
+>>> for "usbotg_pwren_h"), you could index it. Not that I'm adding a
+>>> dedidacted
+>>> pinctroller for stm32f469.
+>>>
+>> Sorry, but I dont know what you mean by index here.
+>> The usbotg_pwren_h (VBUS ENABLE) is attached in different port/pins
+>> for each board.
+>>
+>> Br.,
+>>
+>>
+>>> Br
+>>> Alex
+>>>>
+>>>>
+>>>>
+>>>
+>>>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
