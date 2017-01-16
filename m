@@ -1,152 +1,85 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-type-adjustment" for INCR burst type
-Date: Mon, 16 Jan 2017 10:50:23 +0200
-Message-ID: <87tw8zo0c0.fsf@linux.intel.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com> <1482139554-13618-2-git-send-email-jerry.huang@nxp.com> <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop> <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com> <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com> <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v2 2/4] ASoC: es8328: Add support for slave mode
+Date: Mon, 16 Jan 2017 09:17:51 +0100
+Message-ID: <20170116081753.13666-3-romain.perier@collabora.com>
+References: <20170116081753.13666-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerry Huang <jerry.huang@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170116081753.13666-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Currently, the function that changes the DAI format only supports master
+mode. Trying to use a slave mode exits the function with -EINVAL and
+leave the codec misconfigured. This commits adds support for enabling
+the slave mode.
 
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-Hi,
+Changes in v2: None
 
-Jerry Huang <jerry.huang@nxp.com> writes:
->> > On Thu, Dec 22, 2016 at 8:52 PM, Jerry Huang <jerry.huang@nxp.com>
->> wrote:
->> > > Hi, Rob,
->> > >> -----Original Message-----
->> > >> From: Rob Herring [mailto:robh@kernel.org]
->> > >> Sent: Friday, December 23, 2016 2:45 AM
->> > >> To: Jerry Huang <jerry.huang@nxp.com>
->> > >> Cc: balbi@kernel.org; mark.rutland@arm.com;
->> > >> catalin.marinas@arm.com; will.deacon@arm.com;
->> > >> linux@armlinux.org.uk; devicetree@vger.kernel.org;
->> > >> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
->> > >> kernel@lists.infradead.org
->> > >> Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
->> > >> incr-burst- type-adjustment" for INCR burst type
->> > >>
->> > >> On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
->> > >> > New property "snps,incr-burst-type-adjustment =3D <x>, <y>" for
->> > >> > USB3.0
->> > >> DWC3.
->> > >> > Field "x": 1/0 - undefined length INCR burst type enable or not;
->> > >> > Field
->> > >> > "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst
->> type.
->> > >> >
->> > >> > While enabling undefined length INCR burst type and INCR16 burst
->> > >> > type, get better write performance on NXP Layerscape platform:
->> > >> > around 3% improvement (from 364MB/s to 375MB/s).
->> > >> >
->> > >> > Signed-off-by: Changming Huang <jerry.huang@nxp.com>
->> > >> > ---
->> > >> > Changes in v3:
->> > >> >   - add new property for INCR burst in usb node.
->> > >> >
->> > >> >  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
->> > >> >  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
->> > >> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
->> > >> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
->> > >> >  4 files changed, 11 insertions(+)
->> > >> >
->> > >> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
->> > >> > b/Documentation/devicetree/bindings/usb/dwc3.txt
->> > >> > index e3e6983..8c405a3 100644
->> > >> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> > >> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> > >> > @@ -55,6 +55,10 @@ Optional properties:
->> > >> >     fladj_30mhz_sdbnd signal is invalid or incorrect.
->> > >> >
->> > >> >   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to
->> > >> > be
->> > >> reallocated.
->> > >> > + - snps,incr-burst-type-adjustment: Value for INCR burst type of
->> > >> GSBUSCFG0
->> > >> > +   register, undefined length INCR burst type enable and INCRx t=
-ype.
->> > >> > +   First field is for undefined length INCR burst type enable or=
- not.
->> > >> > +   Second field is for largest INCRx type enabled.
->> > >>
->> > >> Why do you need the first field? Is the 2nd field used if the 1st i=
-s 0?
->> > >> If not, then just use the presence of the property to enable or not.
->> > > The first field is one switch.
->> > > When it is 1, means undefined length INCR burst type enabled, we can
->> > > use
->> > any length less than or equal to the largest-enabled burst length of
->> > INCR4/8/16/32/64/128/256.
->> > > When it is zero, means INCRx burst mode enabled, we can use one
->> > > fixed
->> > burst length of 1/4/8/16/32/64/128/256 byte.
->> > > So, the 2nd field is used if the 1st is 0, we need to select one
->> > > largest burst
->> > length the USB controller can support.
->> > > If we don't want to change the value of this register (use the
->> > > default value),
->> > we don't need to add this property to usb node.
->> >
->> > Just make this a single value with 0 meaning INCR and 4/8/16/etc being
->> INCRx.
->> Maybe, I didn't describe it clearly.
->> According to DWC3 spec, the value "0" of field INCRBrstEna means INCRx
->> burst mode, 1 means INCR burst mode.
->> Regardless of the value of INCRBrstEna [bit0], we need to modify the oth=
-er
->> field bit[1,2,3,4,5,6,7] to one INCR burst type  for the platform suppor=
-ted.
->> Ad you mentioned, if we just use a single value with 0 meaning INCR and
->> 4/8/16/etc being INCRx.
->> I understand totally that when it is none-zero, we can use it for INCR b=
-urst
->> mode.
->> Then, when it is 0, how to select the INCRx value?
->>=20
->> So, I think we still need two vaue to specify INCRBrstEna and INCRx burst
->> type.
-> Hi, Balbi,=20
-> It seems there is no feedback for my comment, so these patches can be acc=
-epted?
+ sound/soc/codecs/es8328.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-probably not, we need to really understand what information we need so
-it can be described properly. The last thing we want is unnecessary DT
-properties.
-
-It seems to me that we can extrapolate INCRBrstEna based on which burst
-modes are enabled. If only 0 is passed, then that bit should be 1, if 0
-and any other size is passed, then that bit should be 0, no?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlh8iU8ACgkQzL64meEa
-mQYd0Q//TCxyiafM2b2SBRr30DhoqSB7Oh/yckjnL6YaWQzzmIXyv/ylWpRmjCYC
-0nkd4SETooSZIHxLLHhiDwx1MycZcXzV+vHgaBqfbfUTgdXyuRVuOfUeK3YZ8JjJ
-58lz4Tj83GC8JZdyq54qHqsyUjzIqdrjqxoDtDctWM0rq8diPNl8EFQlJNZ9Dpxo
-AsDEbE+C1iggQGhMJuecvHpeBPS9pB/bF5kN0p5iy6XzgAG6K9prn1YHWhMkUrM+
-l0sCpcBr5jWqECulTW71rhv+FkGrzpsBzrPK3XaBK3EHYEQsD8bRcBPY3p+5IHfV
-Xc8MscQws8yWsi2VoEB3s7GallcbGbI+02mgb/u8kCwWHgmq/GfdYP+chOZSASIA
-oDq8My54jYOTuPgSGlfzD84h27R0zUK/z7itSKlLcpvmyI12DA43in9H3oJrgIMg
-GEVit2sIAxg4fys9vUrTS3lH05tbt2gzdzilSQAJE24jkTBhmsk0HohQ/Zgn2Y+v
-9xmAqtqml7iNdIhB8qFivBCB/echR/FnA1upYlYKxK+LlxQeVBjPvYnfuZ6YlUY4
-PSAEooquNLSCC+msvdstYW87CvQ+fkPYLBePF6UBr7FKqEXbp1lOOW+4tAGadACG
-XLwBWQ/mOzqXmcyc9w4HiZ4CMXuGL4VQmve/XqbiAALzFs/BE5s=
-=dMNt
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
+index 37722194..054e123 100644
+--- a/sound/soc/codecs/es8328.c
++++ b/sound/soc/codecs/es8328.c
+@@ -588,10 +588,18 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	struct snd_soc_codec *codec = codec_dai->codec;
+ 	u8 dac_mode = 0;
+ 	u8 adc_mode = 0;
++	bool master;
+ 
+-	/* set master/slave audio interface */
+-	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)
+-		return -EINVAL;
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++		case SND_SOC_DAIFMT_CBM_CFM:
++			master = true;
++			break;
++		case SND_SOC_DAIFMT_CBS_CFS:
++			master = false;
++			break;
++		default:
++			return -EINVAL;
++	}
+ 
+ 	/* interface format */
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+@@ -620,9 +628,17 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	snd_soc_update_bits(codec, ES8328_ADCCONTROL4,
+ 			ES8328_ADCCONTROL4_ADCFORMAT_MASK, adc_mode);
+ 
+-	/* Master serial port mode, with BCLK generated automatically */
+-	snd_soc_update_bits(codec, ES8328_MASTERMODE,
+-			ES8328_MASTERMODE_MSC, ES8328_MASTERMODE_MSC);
++	if (master) {
++		/* Master serial port mode, with BCLK generated automatically */
++		snd_soc_update_bits(codec, ES8328_MASTERMODE,
++				    ES8328_MASTERMODE_MSC,
++				    ES8328_MASTERMODE_MSC);
++	} else {
++		/* Slave serial port mode */
++		snd_soc_update_bits(codec, ES8328_MASTERMODE,
++				    ES8328_MASTERMODE_MSC,
++				    0);
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.9.3
