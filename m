@@ -1,66 +1,185 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: sun8i: enable USB OTG on Orange
- Pi One board
-Date: Tue, 17 Jan 2017 03:14:49 +0800
-Message-ID: <20170116191449.50397-5-icenowy@aosc.xyz>
-References: <20170116191449.50397-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: dts: mt7623: Add initial Geek Force support
+Date: Mon, 16 Jan 2017 20:31:48 +0100
+Message-ID: <71841212-be03-5285-6ca6-b1fd9ce1d8db@suse.de>
+References: <20170108133100.10428-1-afaerber@suse.de>
+ <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
+ <d6bd3783-d124-9871-d3b4-93e366517895@suse.de>
+ <3fecb422-8185-7ee0-c203-2bfdc4fd1393@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBQ5Y6TBQKGQE743FC4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170116191449.50397-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3fecb422-8185-7ee0-c203-2bfdc4fd1393-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Orange Pi One board features a USB OTG port, which cannot be used to
-power up the board, but have a gateable VBUS and an ID pin, which makes
-it possible to be used in both host and peripheral mode.
+Am 10.01.2017 um 11:18 schrieb John Crispin:
+> On 10/01/2017 10:48, Andreas Färber wrote:
+>> Am 10.01.2017 um 08:00 schrieb John Crispin:
+>>> On 08/01/2017 14:30, Andreas Färber wrote:
+>>>>
+>>>> Andreas Färber (4):
+>>>>   Documentation: devicetree: Add vendor prefix for AsiaRF
+>>>>   Documentation: devicetree: arm: mediatek: Add Geek Force board
+>>>>   ARM: dts: mt7623: Add Geek Force config
+>>>>   MAINTAINERS: Extend ARM/Mediatek SoC support section
+>>>>
+>>>
+>>> Hi,
+>>>
+>>> i need to NAK this series. the asiarf board is nothing more than the
+>>> official MTK EVB with AsiaRF written on it. this board is already
+>>> supported by linux (arch/arm/boot/dts/mt7623-evb.dts) please extend the
+>>> EVB dts file nstead of adding a duplicate and letting the original
+> bitrot.
+>>
+>> Well, I disagree.
+> 
+> reading the rest of the email you seem to be quite agro about this.
 
-Enable its OTG port in dual-role mode.
+Please re-read your reply above and my comments and reconsider your
+attitude when replying in the future. It's not about whether these
+patches go in or not, it's about your wording. And that continues with
+aggressively throwing around the term "agro" in two mails already. I
+don't see anything aggressive or angry in my original cover letter that
+would've prompted your reply and can only interpret that as your own
+frustration with your mt7623 progress. Instead you should've taken the
+time to explain a bit better what you really meant, then we could've
+spared or shortened this lengthy discussion and have a v2 already.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>> First of all I'm not letting "the original" bitrot, because I have
+>> nothing to do with that .dts! If anyone is to blame for letting it
+>> bitrot since February 2016, pick your own nose:
+>>
+>>
+> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/log/arch/arm/boot/dts/mt7623-evb.dts
+> 
+> what should i pick my nose about ?
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-index 34da853ee037..8f69c8c9995c 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-@@ -115,6 +115,11 @@
- 	};
- };
- 
-+&reg_usb0_vbus {
-+	gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
-+	status = "okay";
-+};
-+
- &r_pio {
- 	leds_r_opc: led_pins@0 {
- 		pins = "PL10";
-@@ -151,7 +156,14 @@
- 	status = "disabled";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
- 	/* USB VBUS is always on */
- 	status = "okay";
-+	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- };
+Don't blame _me_ for "bitrot" of a file _you_ added almost a year ago
+that did not see any updates since.
+
+Nothing wrong with you not working on something, just don't blame me for
+it then, especially when I don't (knowingly) have that hardware and have
+never come in touch with it before. I am new to linux-mediatek and had
+checked LAKML in vein for any mt7623 patches before sending mine.
+
+[snip]
+>> Third, by your argumentation we shouldn't be adding, e.g., Odroid .dts
+>> files either because they were based on a Samsung SMDK, or .dts files
+>> for Amlogic TV boxes because they're almost identical to reference
+>> designs, etc.
+>> Users need to know which .dts file to choose, so having a sane .dts
+>> filename is warranted. Depending on how similar they are, one could
+>> either #include the -evb.dts or factor out a shared .dtsi, but that
+>> takes us back to the previous point of hardly anyone having access to
+>> EVB information to identify such a subset. Therefore duplicating trivial
+>> nodes is the method of choice for all practical purposes - mt7623.dtsi
+>> is getting reused just fine.
+>>
+> 
+> in that case add a dtsi file for the EVB and include it in your geek
+> board.dts and only update the compat string.
+
+The question that I am not in a position to answer is: Are those two
+boards identical or just very similar? Paul in CC can hopefully clarify
+this when he is back. Matthias as maintainer has also remained silent.
+
+>> Comparing our two .dts files, mine has two more UART nodes enabled, the
+>> U-Boot bootloader's baudrate set to actually get serial output, a
+>> different board compatible string for identification, and I chose the
+>> new dual-licensing header that is being requested for new DT files.
+> 
+> 1) at the time we adde this the uart support was not ready
+
+> 2) the bootloader i am using is a custom built one hence the random baudrate
+
+Well, did the _original_ bootloader use 115200? In that case we could
+update -evb.dts with it, and you could still override it via console=
+for your custom build.
+
+Or maybe having source access you could even contribute to mainline
+U-Boot, so we can all work on the same codebase? I read a BPi-R2 is
+coming up with mt7623, so booting without appended .dtb and uImage will
+come in handy for more people than just EVB owners and Geek Force
+backers. I'd happily contribute to making bootefi command work.
+
+> 3) you can just updae the license if you want to, no problem
+
+OK, will gladly look into the feasibility.
+
+>> For lack of schematics I figured out UART1 by testing - continuity tests
+>> for GND, console=ttySx,115200n8 and trial-and-error for RX/TX. Obviously
+>> I can't do that for a board I don't have access to.
+>> UART2 and UART0 pins were clear, but only UART2 was obvious from ttyMT2.
+> 
+> you do have the EVB directly in front of you
+> 
+>> Do you actually have access to a Geek Force board yourself, or what are
+>> you basing your claims on? Mine looks different from the Indiegogo
+>> picture and thus has different identification from that on
+>> https://wikidevi.com/wiki/AsiaRF_WS2977 (WS3301, MT7623N RFB_V10).
+> 
+> i dont need the geek board as i have the EVB and they are identical
+> according to MTK
+> 
+>> If you confirm the EVB's baudrate I can happily send that part your way.
+>> I've seen 921600 on the Helio X20 96board for instance.
+> 
+> see above
+
+So... 4) add my UART nodes to your -evb.dts? Any nitpicks on the actual
+patch 3/4?
+
+>> Also, none of what you've said justifies NAK'ing patch 4/4, which
+>> applies to any mt7* and arm64 .dts, including yours.
+> 
+> agreed, i never even mentioned 4/4
+
+You replied to the cover letter 0/4 "i need to NAK this series" - and
+series includes all four patches. Therefore my frustration with your
+hip-shot reply. If you haven't read the patch, don't NAK it!
+
+In fact still no one replied to it at all, even now that you're aware of
+its existence.
+
+>> While we're at it, I noticed that mainline has a "mediatek,mt7623-eth"
+>> network driver but no corresponding .dtsi node. Talk about bitrot...
+> 
+> the idea is that we work together to make thins optimal. this is not a
+> you or is right. this is about the FOSS peer review process. please dont
+> be so agro.
+
+See above, please reconsider your tone. Peer review is no excuse for
+rude and destructive behavior towards contributors you don't know.
+
+Had you looked at the lists and codebase you would know that I am not
+new to FOSS.
+
+And please stop writing "agro", it sounds like some pothead making a
+peace sign; not helpful among professional software developers.
+
+Taking the time to start your sentences with a capital letter would also
+be a respectful gesture.
+
+> to me it seems suboptimal to support 2 dts files for the same board.
+
+If it is the identical board, then we are in violent agreement. I just
+find all your replies to me offensive so far, I don't know you and thus
+have no reason to trust your unsubstantiated claims about my board.
+
+Regards,
+
+Andreas
+
 -- 
-2.11.0
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
