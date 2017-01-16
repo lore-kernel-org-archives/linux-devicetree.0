@@ -1,183 +1,134 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4] ARM64: dts: meson-gx: Add reserved memory zone and
- usable memory range
-Date: Mon, 16 Jan 2017 16:06:48 +0100
-Message-ID: <14a56ed0-8b84-d617-d9cf-925f258c1d75@suse.de>
-References: <1484129414-23325-1-git-send-email-narmstrong@baylibre.com>
- <m21sw66828.fsf@baylibre.com> <d3a00788-c3c1-4b10-90bf-2a8bc6a138f8@suse.de>
- <7fcb8d94-840a-de2c-f43b-9123ccc65514@baylibre.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt-bindings: Add binding documentation for
+ TI clkctrl clocks
+Date: Mon, 16 Jan 2017 17:19:33 +0200
+Message-ID: <7acb6824-0e64-960b-1490-9b7a8b867b3b@ti.com>
+References: <20170109234226.9449-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7fcb8d94-840a-de2c-f43b-9123ccc65514-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170109234226.9449-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xypron.glpk-Mmb7MZpHnFY@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+On 10/01/17 01:42, Tony Lindgren wrote:
+> Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
+> clock controller instance for each interconnect target module. The clkctrl
+> controls functional and interface clocks for the module.
+>
+> The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
+> With this binding and a related clock device driver we can start moving the
+> clkctrl clock handling to live in drivers/clk/ti.
+>
+> For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
+> Mapping Summary" for example. It show one instance of a clkctrl clock
+> controller with multiple clkctrl registers.
+>
+> Note that this binding allows keeping the clockdomain related parts out of
+> drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
+> using a separate driver in drivers/soc/ti and genpd. If the clockdomain
+> driver needs to know it's clocks, we can just set the the clkctrl device
+> instances to be children of the related clockdomain device.
+>
+> On omap4 CM_L3INIT_USB_HOST_HS_CLKCTRL on omap5 has eight OPTFCLKEN bits.
+> So we need to shift the clock index to avoid index conflict for the clock
+> consumer binding with the next clkctrl offset on omap4.
+>
+> Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>
+> So here's what I was able to come up for the clkctr binding based on
+> all we've discussed so far. Can you guys please take a look and see
+> if it looks OK to you before we do the device driver?
+>
+> Also, does anybody have better suggestions for addressing the optional
+> clocks in each clkctrl register?
+>
+> ---
+>  .../devicetree/bindings/clock/ti-clkctrl.txt       | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+> @@ -0,0 +1,56 @@
+> +Texas Instruments clkctrl clock binding
+> +
+> +Texas Instruments SoCs can have a clkctrl clock controller for each
+> +interconnect target module. The clkctrl clock controller manages functional
+> +and interface clocks for each module. Each clkctrl controller can also
+> +gate one or more optional functional clocks for a module. The clkctrl
+> +clock controller is typical for omap3 and later variants.
+> +
+> +The clock consumers can specify the index of the clkctrl clock using
+> +the hardware offset from the clkctrl instance register space. The optional
+> +functional clocks can be specified by clkctrl hardware offset plus the
+> +index of the optional clock. Please see the Linux clock framework binding
+> +at Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> +
+> +Required properties :
+> +- compatible : shall be "ti,clkctrl"
+> +- #clock-cells : shall contain 1
+> +
+> +Optional properties :
+> +- "ti,modulemode-auto" : list of clkctrl offsets using automatic gating
+> +
+> +Example: Clock controller node:
+> +
+> +&cm_l4per {
+> +	cm_l4per_clkctrl: clk@20 {
+> +		compatible = "ti,clkctrl";
+> +		reg = <0x20 0x1b0>;
+> +		#clock-cells = 1;
+> +		ti,modulemode-auto = <OMAP4_GPIO2_CLKCTRL>;
+> +	};
+> +};
 
-Am 16.01.2017 um 11:39 schrieb Neil Armstrong:
-> On 01/15/2017 03:43 PM, Andreas Färber wrote:
->> Am 13.01.2017 um 21:03 schrieb Kevin Hilman:
->>> Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>>
->>>> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
->>>> this patch adds this reserved zone and redefines the usable memory range.
->>>>
->>>> The memory node is also moved from the dtsi files into the proper dts files
->>>> to handle variants memory sizes.
->>>>
->>>> This patch also fixes the memory sizes for the following platforms :
->>>> - gxl-s905x-p212 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>>> - gxm-s912-q201 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>>> - gxl-s905d-p231 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>>> - gxl-nexbox-a95x : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>>>
->>>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>
->>> Queued for v4.10-rc.
->>
->> What is the motivation for this change? I have a local U-Boot patch to
->> detect the amount of memory available as done downstream, but U-Boot
->> only updates the reg property that you seem to be abandoning here...
->>
->> So for devices that come in multiple RAM configurations - like R-Box Pro
->> - this would require separate .dts files now! This looks very wrong to
->> me, especially since I am not aware of other platforms doing the same.
->> Instead, there's memory reservations for top and bottom done in U-Boot
->> for reg, plus reserved-memory nodes for anything in the middle.
->>
->> Another thing to consider is that uEFI boot (bootefi) handles memory
->> reservation differently yet again, on the bootloader level. I have had
->> that working fine on Odroid-C2 and Vega S95.
->>
->> So if there's no bug this is fixing (none mentioned in commit message) I
->> strongly object to this patch.
->>
->> Regards,
->> Andreas
->>
-> 
-> Hi Andreas,
-[snip]
+So, in this example, what would cm_l4per be? Is it a clockdomain? Or is 
+it just an arbitrary interconnect instance, and the clockdomain would 
+also be a separate node under cm_l4per?
 
-Let's not copy&paste replies, see my response there.
+Shall we add power-domains = <&cm_l4per_clkdm>; entry under the 
+cm_l4per_clkctrl in this example? (My thinking is that we will represent 
+both OMAP clock and power domains as generic power domains within kernel 
+/ DT.)
 
-> Handling multiple RAM configuration is another story, and the Arm-Soc and DT maintainers should give us
-> their advices.
+-Tero
 
-My point is, this should be thought through _before_ merging the patch,
-not after.
+> +
+> +Example: Preprocessor helper macros in dt-bindings/ti-clkctrl.h
+> +
+> +#define OMAP4_CLKCTRL_OFFSET		0x20
+> +
+> +#define OMAP_CLKCTRL_INDEX(offset)		\
+> +	(((offset) - OMAP4_CLKCTRL_OFFSET) << 8)
+> +
+> +#define OMAP_CLKCTRL_OPT_INDEX(offset, optclk)	\
+> +	(OMAP_CLKCTRL_INDEX(offset) + (optclk))
+> +
+> +#define OMAP4_GPTIMER10_CLKTRL		OMAP_CLKCTRL_INDEX(0x28)
+> +#define OMAP4_GPTIMER11_CLKTRL		OMAP_CLKCTRL_INDEX(0x30)
+> +#define OMAP4_GPTIMER2_CLKTRL		OMAP_CLKCTRL_INDEX(0x38)
+> +...
+> +#define OMAP4_GPIO2_CLKCTRL		OMAP_CLKCTRL_INDEX(0x60)
+> +#define OMAP4_GPIO2_CLKCTRL_DBCLK	OMAP_CLKCTRL_OPT_INDEX(0x60, 1)
+> +...
+> +
+> +Example: Clock consumer node for GPIO2:
+> +
+> +&gpio2 {
+> +       clocks = <&cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL
+> +		 &cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL_DBCLK>;
+> +};
+>
 
-It is the bootloader's task to deliver the correct memory _size_, with
-kernel .dts having the minimum. If there's 1G and 2G models then the
-linux.git .dts will have 1G, so that it can run on both, should the
-bootloader fail to update it.
-The consequence of your change would be that U-Boot needs to set
-different $fdtfile values based on memory size, which is a plain stupid
-idea for the reasons I already gave. And it has been fought by DT
-maintainers in previous cases, such as FPGA configurations or
-daughter-boards. Amlogic's vendor U-Boot does have the "fdt" command
-available, for any user to adequately tweak a loaded .dtb for use with
-mainline Linux (e.g., add linux,usable-memory there) - it can be
-automated via environment variables or for lack of "source" command
-maybe via "autoscr".
-
-The reason that there are three vega-s95 .dts files never was the
-differing memory reg size (which gets overridden), but rather connector
-and Wifi chipset features as well as them simply having different names
-and therefore different compatible strings.
-
-Ideally I expect to be able to use one .dts for both R-Box Pro models as
-well as for both Khadas Vim models - they are not marketed with
-differing names, so the differences should hopefully be minor,
-especially when we're using brcm,bcm4329-fmac for any chipset anyway.
-
-> Actually there is a severe bug fixed here that cause a huge crash if such memory is not reserved while
-> running stock u-boot version on various shipped products and Amlogic's own development boards.
-> 
-> The bug is easily triggered by running :
-> # stress --vm 4 --vm-bytes 128M --timeout 10s &
-
-First, that should've gone into the commit message please.
-
-But this is what I get for that command line:
-
-flag provided but not defined: -vm
-Usage of stress:
-  -failure regexp
-    	fail only if output matches regexp
-  -ignore regexp
-    	ignore failure if output matches regexp
-  -kill
-    	kill timed out processes if true, otherwise just print pid (to
-attach with gdb) (default true)
-  -p N
-    	run N processes in parallel (default 8)
-  -timeout duration
-    	timeout each process after duration (default 10m0s)
-
-The only "stress" I found is in golang-org-x-tools package.
-
-> [   46.937975] Bad mode in Error handler detected on CPU1, code 0xbf000000 -- SError
-> ...
-> [   47.058536] Internal error: Attempting to execute userspace memory: 8600000f [#3] PREEMPT SMP
-> ...
-> 
-> Note this is a fix targeted for 4.10 to make the system stable and various users reported some severe
-> crash now the system has more drivers and read-world use-cases are running on Amlogic SoCs.
-
-I have been running "large" KVM guests on a Vega S95 Telos, with vendor
-U-Boot as well as mainline U-Boot, and did not run into such a problem.
-
-What I did run into yesterday during a large system update was multiple:
-
-INFO: task grub2-probe:22018 blocked for more than 120 seconds.
-      Not tainted 4.10.0-rc3-next-20170113+ #58
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-grub2-probe     D    0 22018  22017 0x00000000
-Call trace:
-[<ffffff8008085628>] __switch_to+0x90/0xa8
-[<ffffff8008746238>] __schedule+0x188/0x570
-[<ffffff8008746658>] schedule+0x38/0xa0
-[<ffffff80081fb234>] wb_wait_for_completion+0x4c/0x80
-[<ffffff80081fb2f0>] __writeback_inodes_sb_nr+0x88/0xa0
-[<ffffff80081fb34c>] writeback_inodes_sb+0x2c/0x38
-[<ffffff80081ff494>] sync_filesystem+0x3c/0xa8
-[<ffffff8008208688>] fsync_bdev+0x20/0x70
-[<ffffff80083508e8>] blkdev_ioctl+0x8b0/0x9d8
-[<ffffff800820801c>] block_ioctl+0x34/0x40
-[<ffffff80081e2d04>] do_vfs_ioctl+0xa4/0x748
-[<ffffff80081e3434>] SyS_ioctl+0x8c/0xa0
-[<ffffff8008082f30>] el0_svc_naked+0x24/0x28
-
-I'm assuming that's an unrelated linux-next regression.
-
-I have also been running vendor U-Boot on the R-Box Pro, without problems.
-
-On the Odroid-C2 however the bootloader is provided on SD by the user,
-so there is no excuse really for the user to use a broken bootloader.
-Even if not using the mainline version for lack of MMC drivers, the
-Hardkernel branch can easily be patched if necessary.
-
-> Please feel free to push whatever changes that makes this memory reservation more coherent for 4.11,
-> and respect the behavior of already shipped u-boot version and mainline U-Boot, UEFI, whatever...
-
-Whatever the issue is, this patch is clearly wrong by design. Please
-revert it ASAP!
-
-For starters, have you tried simply adding a reserved-memory node for
-0..0x01000000? v1 did not have that and instead messed with reg.
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
