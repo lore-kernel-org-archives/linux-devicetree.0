@@ -1,96 +1,79 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] phy: sun4i-usb: support PHY0 on H3 in
- MUSB mode
-Date: Mon, 16 Jan 2017 23:57:46 +0100
-Message-ID: <bcef274f-8342-bb6d-c086-4472596d8b73@megous.com>
-References: <20170116191449.50397-1-icenowy@aosc.xyz>
- <20170116191449.50397-2-icenowy@aosc.xyz>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
+Date: Tue, 17 Jan 2017 01:14:17 +0200
+Message-ID: <f751ffbe-f9f8-c5bd-3b1a-2edd91152a78@mleia.com>
+References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+ <73246c4a-504c-52d7-dde4-970a45dca0bd@mleia.com>
+ <CAHp75Ve87TE3y6hg1bMxSFAPVcY3wPifGuvtpXNhBw5-eOnPrg@mail.gmail.com>
+ <b5788d1d-c951-0fc3-eed8-88457df1f27e@mleia.com>
+ <CAHp75Ve7zNN3m1ngLGi-81mFehKzZG07mh5H2T5+_k-=jJqqNA@mail.gmail.com>
+ <3748130b-5321-12eb-ec75-e2637dd9fc54@mleia.com>
+ <1484240482.2133.92.camel@linux.intel.com>
+ <7fdf5d3c-d0ea-ec45-6b18-4573fff6dd11@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB2476XBQKGQEYQHZCFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170116191449.50397-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7fdf5d3c-d0ea-ec45-6b18-4573fff6dd11-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dne 16.1.2017 v 20:14 Icenowy Zheng napsal(a):
-> The PHY0 on H3 can be wired either to MUSB controller or OHCI/EHCI
-> controller.
-> 
-> The original driver wired it to OHCI/EHCI controller; however, as the
-> code to use PHY0 as OHCI/EHCI is missing, it makes the PHY fully
-> unusable.
-> 
-> Rename the register (according to its function and the name in BSP
-> driver), and remove the code which wires the PHY0 to OHCI/EHCI, as MUSB
-> can support both peripheral and host mode (although the host mode of
-> MUSB is buggy).
-> 
-> The register that is renamed is now unused, as its initial value is just
-> MUSB mode. However, when OHCI/EHCI mode support is added, the register
-> can be used again.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  drivers/phy/phy-sun4i-usb.c | 25 +++++++++----------------
->  1 file changed, 9 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> index bf28a0fdd569..6b193a635c6b 100644
-> --- a/drivers/phy/phy-sun4i-usb.c
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -49,7 +49,7 @@
->  #define REG_PHYBIST			0x08
->  #define REG_PHYTUNE			0x0c
->  #define REG_PHYCTL_A33			0x10
-> -#define REG_PHY_UNK_H3			0x20
-> +#define REG_PHY_OTGCTL			0x20
+Hello Luis,
 
-You have added REG_PHY_OTGCTL, but it is not used below.
-
-regards,
-  o.
-
->  #define REG_PMU_UNK1			0x10
->  
-> @@ -269,23 +269,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)
->  		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
->  	}
->  
-> -	if (data->cfg->type == sun8i_h3_phy) {
-> -		if (phy->index == 0) {
-> -			val = readl(data->base + REG_PHY_UNK_H3);
-> -			writel(val & ~1, data->base + REG_PHY_UNK_H3);
-> -		}
-> -	} else {
-> -		/* Enable USB 45 Ohm resistor calibration */
-> -		if (phy->index == 0)
-> -			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-> +	/* Enable USB 45 Ohm resistor calibration */
-> +	if (phy->index == 0)
-> +		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
->  
-> -		/* Adjust PHY's magnitude and rate */
-> -		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-> +	/* Adjust PHY's magnitude and rate */
-> +	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
->  
-> -		/* Disconnect threshold adjustment */
-> -		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-> -				    data->cfg->disc_thresh, 2);
-> -	}
-> +	/* Disconnect threshold adjustment */
-> +	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-> +			    data->cfg->disc_thresh, 2);
->  
->  	sun4i_usb_phy_passby(phy, 1);
->  
+On 01/16/2017 12:32 PM, Luis Oliveira wrote:
+> On 12-Jan-17 17:01, Andy Shevchenko wrote:
+>> On Sat, 2017-01-07 at 03:24 +0200, Vladimir Zapolskiy wrote:
+>>> On 01/07/2017 02:19 AM, Andy Shevchenko wrote:
+>>>> On Sat, Jan 7, 2017 at 1:43 AM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+>>>> wrote:
+>>>>> On 01/07/2017 12:45 AM, Andy Shevchenko wrote:
+>>
+>>>>>> +             }
+>>>>>>>> +     } else if (IS_BUILTIN(CONFIG_ACPI) &&
+>>>>>>>> ACPI_HANDLE(dev)) {
+>>>>>>>> +             dev_dbg(dev, "ACPI slave is not supported
+>>>>>>>> yet\n");
+>>>>>>>> +     }
+>>>>>>>
+>>>>>>> If so, then it might be better to drop else-if stub for now.
+>>>>>>
+>>>>>> Please, don't.
+>>>>>>
+>>>>>
+>>>>> Why do you ask for this stub to be added?
+>>>>
+>>>> 1. Exactly the reason you asked above. Here is the code which has
+>>>> built differently on different platforms. x86 usually is not using
+>>>> CONFIG_OF, ARM doesn't ACPI (versus ARM64). Check GPIO library for
+>>>> existing examples.
+>>>
+>>> From the context by the stub I mean dev_dbg() in
+>>> i2c_slave_mode_detect()
+>>> function, I don't see a connection to GPIO library, please clarify.
+>>
+>> I agree that is not good proof for using IS_ENABLED/IS_BUILTIN macro.
 > 
+> I can prepare a V3 and remove it if that's the decision.
+> 
+
+from my review comments you may find that your v2 change contains a bug
+plus it misses a minor but desirable code optimization. You may get more
+review comments then, for example it is not obvious that on a platform
+with both CONFIG_ACPI and CONFIG_OF enabled there should be an exclusive
+selection of only one of two possible branches as in your code etc.
+
+The discussed IS_BUILTIN() and dev_dbg() code chunks are other ones, for
+both of them you may find my review comments and Andy's responses, it's
+up to you as the author to make any updates or keep the code as is,
+taking into account any expressed concerns and concerns about concerns
+the maintainer will make a decision.
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
