@@ -1,85 +1,71 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 2/4] ASoC: es8328: Add support for slave mode
-Date: Mon, 16 Jan 2017 09:17:51 +0100
-Message-ID: <20170116081753.13666-3-romain.perier@collabora.com>
-References: <20170116081753.13666-1-romain.perier@collabora.com>
+From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH] rtc: stm32: use 0 instead of ~PWR_CR_DBP in regmap_update_bits
+Date: Mon, 16 Jan 2017 09:57:38 +0100
+Message-ID: <1484557058-21601-1-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170116081753.13666-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBC2IT2GSZUDRBC4W6LBQKGQE2N75N5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the function that changes the DAI format only supports master
-mode. Trying to use a slave mode exits the function with -EINVAL and
-leave the codec misconfigured. This commits adds support for enabling
-the slave mode.
+Using the ~ operator on a BIT() constant results in a large 'unsigned long'
+constant that won't fit into an 'unsigned int' function argument on 64-bit
+architectures, resulting in a harmless build warning in x86 allmodconfig:
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
+drivers/rtc/rtc-stm32.c: In function 'stm32_rtc_probe':
+drivers/rtc/rtc-stm32.c:651:51: error: large integer implicitly truncated to unsigned type [-Werror=overflow]
+  regmap_update_bits(rtc->dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
+
+As PWR_CR_DBP mask prevents other bits to be cleared, replace all
+~PWR_CR_DBP by 0.
+
+Fixes: 4e64350f42e2 ("rtc: add STM32 RTC driver")
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 ---
+ drivers/rtc/rtc-stm32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v2: None
-
- sound/soc/codecs/es8328.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index 37722194..054e123 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -588,10 +588,18 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	struct snd_soc_codec *codec = codec_dai->codec;
- 	u8 dac_mode = 0;
- 	u8 adc_mode = 0;
-+	bool master;
+diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+index 8c599f5..03c97c1 100644
+--- a/drivers/rtc/rtc-stm32.c
++++ b/drivers/rtc/rtc-stm32.c
+@@ -648,7 +648,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+ err:
+ 	clk_disable_unprepare(rtc->ck_rtc);
  
--	/* set master/slave audio interface */
--	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)
--		return -EINVAL;
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+		case SND_SOC_DAIFMT_CBM_CFM:
-+			master = true;
-+			break;
-+		case SND_SOC_DAIFMT_CBS_CFS:
-+			master = false;
-+			break;
-+		default:
-+			return -EINVAL;
-+	}
+-	regmap_update_bits(rtc->dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
++	regmap_update_bits(rtc->dbp, PWR_CR, PWR_CR_DBP, 0);
  
- 	/* interface format */
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-@@ -620,9 +628,17 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	snd_soc_update_bits(codec, ES8328_ADCCONTROL4,
- 			ES8328_ADCCONTROL4_ADCFORMAT_MASK, adc_mode);
+ 	device_init_wakeup(&pdev->dev, false);
  
--	/* Master serial port mode, with BCLK generated automatically */
--	snd_soc_update_bits(codec, ES8328_MASTERMODE,
--			ES8328_MASTERMODE_MSC, ES8328_MASTERMODE_MSC);
-+	if (master) {
-+		/* Master serial port mode, with BCLK generated automatically */
-+		snd_soc_update_bits(codec, ES8328_MASTERMODE,
-+				    ES8328_MASTERMODE_MSC,
-+				    ES8328_MASTERMODE_MSC);
-+	} else {
-+		/* Slave serial port mode */
-+		snd_soc_update_bits(codec, ES8328_MASTERMODE,
-+				    ES8328_MASTERMODE_MSC,
-+				    0);
-+	}
+@@ -670,7 +670,7 @@ static int stm32_rtc_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(rtc->ck_rtc);
  
- 	return 0;
- }
+ 	/* Enable backup domain write protection */
+-	regmap_update_bits(rtc->dbp, PWR_CR, PWR_CR_DBP, ~PWR_CR_DBP);
++	regmap_update_bits(rtc->dbp, PWR_CR, PWR_CR_DBP, 0);
+ 
+ 	device_init_wakeup(&pdev->dev, false);
+ 
 -- 
-2.9.3
+1.9.1
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
