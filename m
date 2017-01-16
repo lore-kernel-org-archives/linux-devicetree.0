@@ -1,50 +1,220 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCHv3 RESEND 7/8] ARM: dts: stm32: enable RTC on
- stm32429i-eval
-Date: Mon, 16 Jan 2017 15:40:00 +0100
-Message-ID: <289c63f8-08d0-20b7-b884-28d4fd0abed6@st.com>
-References: <1484573388-590-1-git-send-email-amelie.delaunay@st.com>
- <1484573388-590-5-git-send-email-amelie.delaunay@st.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] reset: zx2967: add reset controller driver for
+ ZTE's zx2967 family
+Date: Mon, 16 Jan 2017 15:43:28 +0100
+Message-ID: <1484577808.8415.151.camel@pengutronix.de>
+References: <1484564194-18530-1-git-send-email-baoyou.xie@linaro.org>
+         <1484564194-18530-3-git-send-email-baoyou.xie@linaro.org>
+         <95ebb6fd-540b-f6d5-e039-2cd718ff35d8@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484573388-590-5-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <95ebb6fd-540b-f6d5-e039-2cd718ff35d8-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2017-01-16 at 22:28 +0800, Jun Nie wrote:
+> On 2017年01月16日 18:56, Baoyou Xie wrote:
+> > This patch adds reset controller driver for ZTE's zx2967 family.
+> >
+> > Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/reset/Kconfig        |   6 +++
+> >  drivers/reset/Makefile       |   1 +
+> >  drivers/reset/reset-zx2967.c | 125 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 132 insertions(+)
+> >  create mode 100644 drivers/reset/reset-zx2967.c
+> >
+> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> > index 172dc96..f4cdfe9 100644
+> > --- a/drivers/reset/Kconfig
+> > +++ b/drivers/reset/Kconfig
+> > @@ -86,6 +86,12 @@ config RESET_UNIPHIER
+> >  	  Say Y if you want to control reset signals provided by System Control
+> >  	  block, Media I/O block, Peripheral Block.
+> >
+> > +config RESET_ZX2967
+> > +	bool "ZTE ZX2967 Reset Driver"
+> > +	depends on ARCH_ZX || COMPILE_TEST
+> > +	help
+> > +	  This enables the reset controller driver for ZTE's zx2967 family.
+> > +
+> >  config RESET_ZYNQ
+> >  	bool "ZYNQ Reset Driver" if COMPILE_TEST
+> >  	default ARCH_ZYNQ
+> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> > index 13b346e..2cd3f6c 100644
+> > --- a/drivers/reset/Makefile
+> > +++ b/drivers/reset/Makefile
+> > @@ -13,4 +13,5 @@ obj-$(CONFIG_RESET_STM32) += reset-stm32.o
+> >  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+> >  obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
+> >  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+> > +obj-$(CONFIG_RESET_ZX2967) += reset-zx2967.o
+> >  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
+> > diff --git a/drivers/reset/reset-zx2967.c b/drivers/reset/reset-zx2967.c
+> > new file mode 100644
+> > index 0000000..bc95261
+> > --- /dev/null
+> > +++ b/drivers/reset/reset-zx2967.c
+> > @@ -0,0 +1,125 @@
+> > +/*
+> > + * ZTE's zx2967 family reset controller driver
+> > + *
+> > + * Copyright (C) 2017 ZTE Ltd.
+> > + *
+> > + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > + *
+> > + * License terms: GNU General Public License (GPL) version 2
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/reset-controller.h>
+> > +
+> > +struct zx2967_reset {
+> > +	void __iomem			*reg_base;
+> > +	spinlock_t			lock;
+> > +	struct reset_controller_dev	rcdev;
+> > +};
+> > +
+> > +static int zx2967_reset_act(struct reset_controller_dev *rcdev,
+> > +			    unsigned long id, bool assert)
+> > +{
+> > +	struct zx2967_reset *reset = NULL;
+> > +	u32 bank = id / 32;
+> > +	u32 offset = id % 32;
 
+Not terribly important, but int for bank and offset was just fine.
 
-On 01/16/2017 02:29 PM, Amelie Delaunay wrote:
-> This patch enables RTC on stm32429i-eval with default LSE clock source.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-> ---
->  arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-> index 2181220..eedb27d 100644
-> --- a/arch/arm/boot/dts/stm32429i-eval.dts
-> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
-> @@ -157,6 +157,10 @@
->  	};
->  };
->
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
->  &usart1 {
->  	pinctrl-0 = <&usart1_pins_a>;
->  	pinctrl-names = "default";
->
-Applied on stm32-dt-for-v4.11
+> > +	u32 reg;
+> > +	unsigned long flags;
+> > +
+> > +	reset = container_of(rcdev, struct zx2967_reset, rcdev);
+> > +
+> > +	spin_lock_irqsave(&reset->lock, flags);
+> > +
+> > +	reg = readl(reset->reg_base + (bank * 4));
+> 
+> readl_relaxed is recommended.
+> 
+> > +	if (assert)
+> > +		reg &= ~BIT(offset);
+> > +	else
+> > +		reg |= BIT(offset);
+> > +	writel(reg, reset->reg_base + (bank * 4));
+> 
+> writel_relaxed is recommended.
 
-Thanks
-Alex
+Why? Resets are usually not performance critical.
+
+> > +
+> > +	spin_unlock_irqrestore(&reset->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int zx2967_reset_assert(struct reset_controller_dev *rcdev,
+> > +			       unsigned long id)
+> > +{
+> > +	return zx2967_reset_act(rcdev, id, true);
+> > +}
+> > +
+> > +static int zx2967_reset_deassert(struct reset_controller_dev *rcdev,
+> > +				 unsigned long id)
+> > +{
+> > +	return zx2967_reset_act(rcdev, id, false);
+> > +}
+> > +
+> > +static struct reset_control_ops zx2967_reset_ops = {
+> > +	.assert		= zx2967_reset_assert,
+> > +	.deassert	= zx2967_reset_deassert,
+> > +};
+> > +
+> > +static int zx2967_reset_probe(struct platform_device *pdev)
+> > +{
+> > +	struct zx2967_reset *reset;
+> > +	struct resource *res;
+> > +
+> > +	reset = devm_kzalloc(&pdev->dev, sizeof(*reset), GFP_KERNEL);
+> > +	if (!reset)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	reset->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(reset->reg_base))
+> > +		return PTR_ERR(reset->reg_base);
+> > +
+> > +	spin_lock_init(&reset->lock);
+> > +
+> > +	reset->rcdev.owner = THIS_MODULE;
+> > +	reset->rcdev.nr_resets = resource_size(res) * 8;
+> > +	reset->rcdev.ops = &zx2967_reset_ops;
+> > +	reset->rcdev.of_node = pdev->dev.of_node;
+> > +
+> > +	dev_info(&pdev->dev, "reset controller cnt:%d",
+> > +		  reset->rcdev.nr_resets);
+
+This is a bit noisy. Can we just drop it?
+
+> > +	return devm_reset_controller_register(&pdev->dev, &reset->rcdev);
+> > +}
+> > +
+> > +static int zx2967_reset_remove(struct platform_device *pdev)
+> > +{
+> > +	return 0;
+> > +}
+
+Remove this function.
+
+> > +static const struct of_device_id zx2967_reset_dt_ids[] = {
+> > +	 { .compatible = "zte,zx296718-reset", },
+> > +	 {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, zx2967_reset_dt_ids);
+> > +
+> > +static struct platform_driver zx2967_reset_driver = {
+> > +	.probe	= zx2967_reset_probe,
+> > +	.remove	= zx2967_reset_remove,
+
+Remove the above line.
+
+> > +	.driver = {
+> > +		.name		= "zx2967-reset",
+> > +		.of_match_table	= zx2967_reset_dt_ids,
+> > +	},
+> > +};
+> 
+> This line can replace all below code if you do not have any other 
+> dependency in earlier stage.
+> 
+> builtin_platform_driver(zx2967_reset_driver);
+> 
+> > +
+> > +static int __init zx2967_reset_init(void)
+> > +{
+> > +	return platform_driver_register(&zx2967_reset_driver);
+> > +}
+> > +arch_initcall(zx2967_reset_init);
+> > +
+> > +static void __exit zx2967_reset_exit(void)
+> > +{
+> > +	platform_driver_unregister(&zx2967_reset_driver);
+> > +}
+> > +module_exit(zx2967_reset_exit);
+> > +
+> > +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> > +MODULE_DESCRIPTION("ZTE zx2967 Reset Controller Driver");
+> > +MODULE_LICENSE("GPL");
+> >
+
+regards
+Philipp
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
