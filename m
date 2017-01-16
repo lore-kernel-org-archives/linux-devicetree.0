@@ -1,208 +1,44 @@
 From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Mon, 16 Jan 2017 17:09:13 +0100
-Message-ID: <e01fba49-2478-5abe-0b47-6b5c322ada9c@gmail.com>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
- <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
- <20170113151747.6bc85245@bbrezillon>
- <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
- <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
- <20170113172825.75d545a3@bbrezillon>
- <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
- <20170113175628.1793f433@bbrezillon>
- <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
- <20170114092958.022f2fc8@bbrezillon>
- <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
- <20170116094032.6f471f11@bbrezillon>
+Subject: Re: [PATCH 3/3] mtd: spi-nor: add SPI_NOR_DUAL_READ to mx66l51235l
+Date: Mon, 16 Jan 2017 17:15:56 +0100
+Message-ID: <57b7480d-4b5a-c420-d790-b22445eec723@gmail.com>
+References: <1484573225-19095-1-git-send-email-clg@kaod.org>
+ <1484573225-19095-4-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170116094032.6f471f11@bbrezillon>
+In-Reply-To: <1484573225-19095-4-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Lippert <roblip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Lippert <rlippert-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2017 09:40 AM, Boris Brezillon wrote:
-> On Sun, 15 Jan 2017 01:23:48 +0100
-> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
->> On 01/14/2017 09:29 AM, Boris Brezillon wrote:
->>> On Fri, 13 Jan 2017 18:33:40 +0100
->>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>   
->>>> On 01/13/2017 05:56 PM, Boris Brezillon wrote:  
->>>>> On Fri, 13 Jan 2017 17:44:12 +0100
->>>>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>     
->>>>>> On 01/13/2017 05:28 PM, Boris Brezillon wrote:    
->>>>>>> On Fri, 13 Jan 2017 17:13:55 +0100
->>>>>>> Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>>>       
->>>>>>>> On 01/13/2017 04:12 PM, Matthias Brugger wrote:      
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 13/01/17 15:17, Boris Brezillon wrote:        
->>>>>>>>>> On Fri, 13 Jan 2017 15:13:29 +0800
->>>>>>>>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->>>>>>>>>>        
->>>>>>>>>>> Add Mediatek nor flash node.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>>>>>>>>> ---
->>>>>>>>>>>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
->>>>>>>>>>>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
->>>>>>>>>>>  2 files changed, 37 insertions(+)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/arch/arm/boot/dts/mt2701-evb.dts
->>>>>>>>>>> b/arch/arm/boot/dts/mt2701-evb.dts
->>>>>>>>>>> index 082ca88..85e5ae8 100644
->>>>>>>>>>> --- a/arch/arm/boot/dts/mt2701-evb.dts
->>>>>>>>>>> +++ b/arch/arm/boot/dts/mt2701-evb.dts
->>>>>>>>>>> @@ -24,6 +24,31 @@
->>>>>>>>>>>      };
->>>>>>>>>>>  };
->>>>>>>>>>>
->>>>>>>>>>> +&nor_flash {
->>>>>>>>>>> +    pinctrl-names = "default";
->>>>>>>>>>> +    pinctrl-0 = <&nor_pins_default>;
->>>>>>>>>>> +    status = "okay";
->>>>>>>>>>> +    flash@0 {
->>>>>>>>>>> +        compatible = "jedec,spi-nor";
->>>>>>>>>>> +        reg = <0>;
->>>>>>>>>>> +    };
->>>>>>>>>>> +};
->>>>>>>>>>> +
->>>>>>>>>>> +&pio {
->>>>>>>>>>> +    nor_pins_default: nor {
->>>>>>>>>>> +        pins1 {
->>>>>>>>>>> +            pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
->>>>>>>>>>> +                 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
->>>>>>>>>>> +                 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
->>>>>>>>>>> +                 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
->>>>>>>>>>> +                 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
->>>>>>>>>>> +                 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
->>>>>>>>>>> +            drive-strength = <MTK_DRIVE_4mA>;
->>>>>>>>>>> +            bias-pull-up;
->>>>>>>>>>> +        };
->>>>>>>>>>> +    };
->>>>>>>>>>> +};
->>>>>>>>>>> +
->>>>>>>>>>>  &uart0 {
->>>>>>>>>>>      status = "okay";
->>>>>>>>>>>  };
->>>>>>>>>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi
->>>>>>>>>>> b/arch/arm/boot/dts/mt2701.dtsi
->>>>>>>>>>> index bdf8954..1eefce4 100644
->>>>>>>>>>> --- a/arch/arm/boot/dts/mt2701.dtsi
->>>>>>>>>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
->>>>>>>>>>> @@ -227,6 +227,18 @@
->>>>>>>>>>>          status = "disabled";
->>>>>>>>>>>      };
->>>>>>>>>>>
->>>>>>>>>>> +    nor_flash: spi@11014000 {
->>>>>>>>>>> +        compatible = "mediatek,mt2701-nor",
->>>>>>>>>>> +                 "mediatek,mt8173-nor";        
->>>>>>>>>>
->>>>>>>>>> Why define both here? Is "mediatek,mt8173-nor" really providing a
->>>>>>>>>> subset of the features supported by "mediatek,mt2701-nor"?
->>>>>>>>>>        
->>>>>>>>>
->>>>>>>>> I think even if the ip block is the same, we should provide both
->>>>>>>>> bindings, just in case in the future we find out that mt2701 has some
->>>>>>>>> hidden bug, feature or bug-feature. This way even if we update the
->>>>>>>>> driver, we stay compatible with older device tree blobs in the wild.
->>>>>>>>>
->>>>>>>>> We can drop the mt2701-nor in the bindings definition if you want.       
->>>>>>>
->>>>>>> Oh, sorry, I misunderstood. What I meant is that if you want to
->>>>>>> list/support all possible compatibles, maybe you should just put one
->>>>>>> compatible in your DT and patch your driver (+ binding doc) to define
->>>>>>> all of them.      
->>>>>>
->>>>>> Uh, what ? I lost you here :-)  
->>>
->>> I mean adding a new entry in the mtk_nor_of_ids table (in
->>> mtk-quadspi.c) so that the mediatek,mt2701-nor compatible string can be
->>> matched directly, and you won't need to define 2 compatible strings in
->>> your device tree.  
->>
->> But then you grow the table in the driver, is that what we want if we
->> can avoid that ?
-> 
-> The space you save by not growing the mtk_nor_of_ids table is lost in
-> your dtbs, so I'm not sure the size argument is relevant here. Also,
-> note that distros are shipping a lot of dtbs, and you're likely to have
-> several boards based on the mt2701 SoC, so, for this specific use case,
-> it's better to make the in-driver of-id table grow than specifying 2
-> compatibles in the DT. But as I said, I'm not sure we should rely on
-> this argument to decide which approach to choose (we're talking about a
-> few bytes here).
-> 
->>
->>>>>>    
->>>>>>>> This exactly. We should have a DT compat in the form:
->>>>>>>> compatible = "vendor,<soc>-block", "vendor,<oldest-compat-soc>-block";
->>>>>>>> Then if we find a problem in the future, we can match on the
->>>>>>>> "vendor,<soc>-block" and still support the old DTs.      
->>>>>>>
->>>>>>> Not sure it's only in term of whose IP appeared first. My understanding
->>>>>>> is that it's a way to provide inheritance. For example:
->>>>>>>
->>>>>>> 	"<soc-vendor>,<ip-version>", "<ip-vendor>,<ip-version>";
->>>>>>>
->>>>>>> or
->>>>>>>
->>>>>>> 	"<soc-vendor>,<full-featured-ip-version>","<soc-vendor>,<basic-feature-ip-version>";
->>>>>>>
->>>>>>> BTW, which one is the oldest between mt8173 and mt2701? :-)      
->>>>>>
->>>>>> And that's another thing and I agree with you, but I don't think that's
->>>>>> what we're discussing in this thread. But (!), OT, I think we should
->>>>>> codify the rules in Documentation/ . This discussion came up multiple
->>>>>> times recently.
->>>>>>
->>>>>> And my question still stands, what do we put into the DT here, IMO
->>>>>> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";    
->>>>>
->>>>> I'd say
->>>>>
->>>>> 	compatible = "mediatek,mt8173-nor";
->>>>>
->>>>> because both compatible are referring to very specific IP version. It's
->>>>> not the same as    
->>>>
->>>> But then you don't have the ability to handle a block in this particular
->>>> SoC in case there's a bug found in it in the future,
->>>> so IMO it should be:
->>>>
->>>> compatible = "mediatek,mt2701-nor", "mediatek,mt8173-nor";  
->>>
->>> Sorry again, I meant
->>>
->>> 	compatible = "mediatek,mt2701-nor";
->>>   
->>>>  
->>>>> 	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";    
->>>>
->>>> This doesn't look right, since here we add two new compatibles ...  
->>>
->>> That was just an example to describe how compatible inheritance works
->>> (at least that's my understanding of it), it does not apply to this
->>> particular use case.  
->>
->> Well this is OK I guess, but then you can also use "mediatek,mt8173-nor"
->> as the oldest supported compatible and be done with it, no ? It looks a
->> bit crappy though, I admit that ...
->>
-> 
-> Let's stop bikeshedding and wait for DT maintainers feedback
-> before taking a decision ;-).
+On 01/16/2017 02:27 PM, Cédric Le Goater wrote:
+> From: Robert Lippert <roblip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-+1 :)
+1) Commit message missing
+2) This is unrelated to the rest of the series, send separately please
 
-> Rob, Mark, any opinion?
+> Signed-off-by: Robert Lippert <rlippert-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index da7cd69d4857..775788f9828a 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -876,7 +876,7 @@ static const struct flash_info spi_nor_ids[] = {
+>  	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512, 0) },
+>  	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K) },
+>  	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
+> -	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_QUAD_READ) },
+> +	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048, SPI_NOR_QUAD_READ) },
+>  
+>  	/* Micron */
 > 
 
 
