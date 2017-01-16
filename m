@@ -1,96 +1,140 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: base: add support to find the level of the
- last cache
-Date: Mon, 16 Jan 2017 10:32:36 +0000
-Message-ID: <36db95aa-4d96-bc45-9d38-28af7b17b42e@arm.com>
-References: <1484245772-31511-1-git-send-email-sudeep.holla@arm.com>
- <CAL_JsqLi3fxpSPH1q+edNeDXEVfcypQK085FrZytBQrfJPh_3g@mail.gmail.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
+Date: Mon, 16 Jan 2017 11:34:01 +0100
+Message-ID: <20170116113401.1364b079@jawa>
+References: <1484486354-4585-1-git-send-email-lukma@denx.de>
+        <587C6A40.8070608@ti.com>
+        <20170116074927.086418f4@jawa>
+        <587C8088.80905@ti.com>
+        <20170116103136.21c899ac@jawa>
+        <587C9CE6.8040001@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLi3fxpSPH1q+edNeDXEVfcypQK085FrZytBQrfJPh_3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <587C9CE6.8040001@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Joao Pinto <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Dear All,
 
-
-On 14/01/17 02:45, Rob Herring wrote:
-> On Thu, Jan 12, 2017 at 12:29 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> It is useful to have helper function just to get the number of cache
->> levels for a given logical cpu. We can obtain the same by just checking
->> the level at which the last cache is present. This patch adds support
->> to find the level of the last cache for a given cpu.
->>
->> It will be used on ARM64 platform where the device tree provides the
->> information for the additional non-architected/transparent/external
->> last level caches that are not integrated with the processors.
->>
->> Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/of/base.c  | 27 +++++++++++++++++++++++++++
->>  include/linux/of.h |  1 +
->>  2 files changed, 28 insertions(+)
->>
->> v1->v2:
->>         - Moved to using "cache-level" in the last level cache instead
->>           of counting through all the nodes as suggested by Rob
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index d4bea3c797d6..c1128a077aea 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -25,6 +25,7 @@
->>  #include <linux/cpu.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->> +#include <linux/of_device.h>
->>  #include <linux/of_graph.h>
->>  #include <linux/spinlock.h>
->>  #include <linux/slab.h>
->> @@ -2268,6 +2269,32 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
->>  }
->>
->>  /**
->> + * of_find_last_cache_level - Find the level at which the last cache is
->> + *             present for the given logical cpu
->> + *
->> + * @cpu: cpu number(logical index) for which the last cache level is needed
->> + *
->> + * Returns the the level at which the last cache is present. It is exactly
->> + * same as  the total number of cache levels for the given logical cpu.
->> + */
->> +int of_find_last_cache_level(unsigned int cpu)
->> +{
->> +       int cache_level = 0;
->> +       struct device_node *prev = NULL, *np = of_cpu_device_node_get(cpu);
->> +
->> +       while (np) {
->> +               prev = np;
->> +               of_node_put(np);
->> +               np = of_find_next_cache_node(np);
->> +       }
->> +
->> +       if (prev)
+> + Joao, Jingoo
 > 
-> Probably don't need this check. Otherwise,
+> Hi,
 > 
-Sure I will drop the check.
-
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
+> > Hi Kishon,
+> > 
+> >> Hi Łukasz,
+> >>
+> >> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
+> >>> Hi Kishon,
+> >>>
+> >>>> Hi,
+> >>>>
+> >>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
+> >>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
+> >>>>> run with forced GEN1 speed on PCIe bus.
+> >>>>>
+> >>>>> This patch changes the speed explicitly on dra7 based devices
+> >>>>> when proper device tree attribute is defined for the PCIe
+> >>>>> controller.
+> >>>>>
+> >>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >>>>
+> >>>> Bjorn has already queued a patch to do the same thing
+> >>>> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-dra7xx
+> >>>
+> >>> It seems like Bjorn only modifies CAP registers.
+> >>
+> >> The patch also modifies the LNKCTL2 register.
+> >>>
+> >>> He also needs to change register with 0x080C offset to actually
+> >>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
+> >>
+> >> This bit is used to initiate speed change (after the link is
+> >> initialized in GEN1). Resetting the bit (like what you have done
+> >> here) prevents speed change.
+> > 
+> > This is strange, but e2e advised me to do things as I did in the
+> > patch to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
+> > 
+> > Link:
+> > [1] https://e2e.ti.com/support/arm/sitara_arm/f/791/t/566421
+> > 
+> > Both patches modify 0x5180 007C register to set GEN1 capability
+> > (PCI_EXP_LNKCAP_SLS_2_5GB)
+> > 
+> > The problem is with second register (in your patch):
+> > 
+> > From SPRUHZ6G TRM:
+> > 
+> > PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
+> > - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
+> >   description in TRM
+> > 
+> > It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
+> > default /reset value.
 > 
+> The default value is 0x2 (or else none of the cards would have
+> enumerated in GEN2)
 
-I assume you are fine taking this via arm64 tree. If not, let us know.
+SPRUHZ6G – October 2014 – Revised June 2016 - page 6313. Maybe TRM is
+not up to date?
 
--- 
-Regards,
-Sudeep
+> > 
+> > 
+> > Could you clarify which way to _force_ PCIe GEN1 operation is
+> > correct? Mine shows differences in lspci output (as posted in [1]).
+> 
+> You'll see the difference even with the patch in Bjorn's tree ;-)
+
+:-) 
+
+The details of my test cases and output are in the post [1].
+
+> 
+> I think these are 2 different approaches to keep the link at GEN1.
+> Joao or Jingoo, do you have any suggestion here?
+
+Please read through thread [1]
+
+[1] https://e2e.ti.com/support/arm/sitara_arm/f/791/t/566421
+
+> 
+> > 
+> >>
+> >> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
+> >> the IP register.
+> > 
+> > From the original patch description:
+> > 
+> > "Add support to force Root Complex to work in GEN1 mode if so
+> > desired, but don't force GEN1 mode on any board just yet."
+> > 
+> > Are there any (floating around) patches allowing forcing GEN1
+> > operation on any board (I would like to reuse/port them to my
+> > current solution)?
+> 
+> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt
+> with the patch in Bjorn's tree.
+
+Ah.... ok.
+> 
+> Thanks
+> Kishon
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
