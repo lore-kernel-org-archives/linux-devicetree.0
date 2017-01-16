@@ -1,34 +1,49 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH 3/3] mtd: spi-nor: add SPI_NOR_DUAL_READ to mx66l51235l
-Date: Mon, 16 Jan 2017 17:39:22 +0100
-Message-ID: <77542f12-781d-73a4-4b72-01a00c5abdd0@kaod.org>
-References: <1484573225-19095-1-git-send-email-clg@kaod.org>
- <1484573225-19095-4-git-send-email-clg@kaod.org>
- <57b7480d-4b5a-c420-d790-b22445eec723@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <57b7480d-4b5a-c420-d790-b22445eec723@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Robert Lippert <roblip@gmail.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Robert Lippert <rlippert@google.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 2/13] mmc: sunxi: Gate the clock when rate is 0
+Date: Mon, 16 Jan 2017 17:56:52 +0100
+Message-ID: <1f006fd86d1d9ad5eab0c0c9e435003055466a54.1484585798.git-series.maxime.ripard@free-electrons.com>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWFyZWssCgpPbiAwMS8xNi8yMDE3IDA1OjE1IFBNLCBNYXJlayBWYXN1dCB3cm90ZToK
-PiBPbiAwMS8xNi8yMDE3IDAyOjI3IFBNLCBDw6lkcmljIExlIEdvYXRlciB3cm90ZToKPj4gRnJv
-bTogUm9iZXJ0IExpcHBlcnQgPHJvYmxpcEBnbWFpbC5jb20+Cj4gCj4gMSkgQ29tbWl0IG1lc3Nh
-Z2UgbWlzc2luZwo+IDIpIFRoaXMgaXMgdW5yZWxhdGVkIHRvIHRoZSByZXN0IG9mIHRoZSBzZXJp
-ZXMsIHNlbmQgc2VwYXJhdGVseSBwbGVhc2UKCm9rLiBJIHdpbGwgZG8gdGhhdC4gUm9iLCBJIHdp
-bGwgdGFrZSBvd25lcnNoaXAgaWYgeW91IGRvbid0IG1pbmQuCgpUaGFua3MsCgpDLgoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBN
-VEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+The MMC core assumes that the code will gate the clock when the bus
+frequency is set to 0, which we've been ignoring so far.
+
+Handle that.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/mmc/host/sunxi-mmc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+index ab4324e6eb74..019f95e8e7c5 100644
+--- a/drivers/mmc/host/sunxi-mmc.c
++++ b/drivers/mmc/host/sunxi-mmc.c
+@@ -765,6 +765,9 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+ 	if (ret)
+ 		return ret;
+ 
++	if (!ios->clock)
++		return 0;
++
+ 	/* 8 bit DDR requires a higher module clock */
+ 	if (ios->timing == MMC_TIMING_MMC_DDR52 &&
+ 	    ios->bus_width == MMC_BUS_WIDTH_8)
+@@ -882,7 +885,7 @@ static void sunxi_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 	mmc_writel(host, REG_GCTRL, rval);
+ 
+ 	/* set up clock */
+-	if (ios->clock && ios->power_mode) {
++	if (ios->power_mode) {
+ 		host->ferror = sunxi_mmc_clk_set_rate(host, ios);
+ 		/* Android code had a usleep_range(50000, 55000); here */
+ 	}
+-- 
+git-series 0.8.11
