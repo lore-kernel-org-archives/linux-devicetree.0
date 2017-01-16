@@ -1,63 +1,42 @@
-From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v1 0/7] DRM: add LTDC support for STM32F4
-Date: Mon, 16 Jan 2017 14:27:00 +0100
-Message-ID: <1484573220-11383-1-git-send-email-yannick.fertre@st.com>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Subject: [PATCH 0/3] Add a "label" property to the mtd device
+Date: Mon, 16 Jan 2017 14:27:02 +0100
+Message-ID: <1484573225-19095-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHB1cnBvc2Ugb2YgdGhpcyBzZXQgb2YgcGF0Y2hlcyBpcyB0byBhZGQgYSBuZXcgZHJpdmVy
-IGZvciBzdG0zMmY0MjkuClRoaXMgZHJpdmVyIHdhcyBkZXZlbG9wZWQgYW5kIHRlc3RlZCBvbiBl
-dmFsdWF0aW9uIGJvYXJkIHN0bTMyNDI5aS4KClN0bTMyZjQgaXMgYSBNQ1UgcGxhdGZvcm0gd2hp
-Y2ggZG9uJ3QgaGF2ZSBNTVUgc28gdGhlIGxhc3QgcGF0Y2hlcyBkZXZlbG9wZWQKYnkgQmVuamFt
-aW4gR2FpZ25hcmQgcmVnYXJkaW5nICJEUk06IGFsbG93IHRvIHVzZSBtbXVsZXNzIGRldmljZXMi
-CmFyZSBuZWNlc3NhcnkuCgpUaGUgYm9hcmQgc3RtNDI5aSBlbWJlZHMgYSBBbXBpcmUgQU0tNDgw
-MjcySDNUTVFXLVQwMUggc2NyZWVuLgpBIG5ldyBzaW1wbGUgcGFuZWwgYW0tNDgwMjcyaDN0bXF3
-LXQwMWggaGF2ZSBiZWVuIGFkZGVkIHRvIHN1cHBvcnQgaXQuCgpZYW5uaWNrIEZlcnRyZSAoNyk6
-CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGFkZCBTVE0zMiBMVERDIGRyaXZlcgogIGRybS9zdDog
-QWRkIFNUTTMyIExUREMgZHJpdmVyCiAgZHQtYmluZGluZ3M6IEFkZCBBbXBpcmUgQU0tNDgwMjcy
-SDNUTVFXLVQwMUggcGFuZWwKICBkcm0vcGFuZWw6IHNpbXBsZTogQWRkIHN1cHBvcnQgZm9yIEFt
-cGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSAogIEFSTTogZHRzOiBzdG0zMmY0Mjk6IEFkZCBsdGRj
-IHN1cHBvcnQKICBBUk06IGR0czogc3RtMzI0MjlpLWV2YWw6IEVuYWJsZSBsdGRjICYgc2ltcGxl
-IHBhbmVsIG9uIEV2YWwgYm9hcmQKICBBUk06IGNvbmZpZ3M6IEFkZCBTVE0zMiBMVERDIHN1cHBv
-cnQgaW4gU1RNMzIgZGVmY29uZmlnCgogLi4uL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3
-MmgzdG1xdy10MDFoLnR4dCAgfCAgICA3ICsKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvc3QsbHRkYy50eHQgICAgICAgIHwgICA1NyArCiBhcmNoL2FybS9ib290L2R0cy9zdG0zMjQy
-OWktZXZhbC5kdHMgICAgICAgICAgICAgICB8ICAgNTggKwogYXJjaC9hcm0vYm9vdC9kdHMvc3Rt
-MzJmNDI5LmR0c2kgICAgICAgICAgICAgICAgICAgfCAgIDI1ICstCiBhcmNoL2FybS9jb25maWdz
-L3N0bTMyX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgIDUgKwogZHJpdmVycy9ncHUv
-ZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsKIGRyaXZlcnMv
-Z3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArCiBkcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8ICAgMjkgKwog
-ZHJpdmVycy9ncHUvZHJtL3N0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDE0
-ICsKIGRyaXZlcnMvZ3B1L2RybS9zdC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgIHwg
-ICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vc3QvZHJ2LmMgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB8ICAyNzkgKysrKwogZHJpdmVycy9ncHUvZHJtL3N0L2Rydi5oICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDI1ICsKIGRyaXZlcnMvZ3B1L2RybS9zdC9sdGRjLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgMTQzOCArKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJt
-L3N0L2x0ZGMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIwICsKIDE0IGZpbGVzIGNo
-YW5nZWQsIDE5NjYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGly
-ZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxsdGRjLnR4dAogY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdC9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL3N0L01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL3N0L2Rydi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0L2Rydi5o
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0L2x0ZGMuYwogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdC9sdGRjLmgKCi0tIAoxLjkuMQoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+SGVsbG8sCgpIZXJlciBhcmUgYSBjb3VwbGUgb2YgcGF0Y2hlcyBhZGRpbmcgYSAibGFiZWwiIHBy
+b3BlcnR5IHRvIHRoZSBtdGQKZGV2aWNlLCB3aGljaCBjYW4gYmUgdXNlZCB0byBpZGVudGlmeSBh
+IHNwZWNpZmljIGNoaXAgb24gYSBzeXN0ZW0gd2l0aAptdWx0aXBsZSBjaGlwcy4gVGhpcyBpcyBj
+b21tb24gb24gdGhlIE9wZW5Qb3dlciBib2FyZHMsIHRoZXJlIGNhbiBiZQpmb3VyIGNoaXBzIGhv
+bGRpbmcgdGhlIGZpcm13YXJlIGZvciB0aGUgQk1DIGFuZCB0aGUgZmlybXdhcmUgZm9yIHRoZQpo
+b3N0LCBwbHVzIGNoaXBzIHdpdGggZ29sZGVuIGltYWdlcyBmb3IgcmVjb3ZlcnkuCgpBbHNvIGlu
+Y2x1ZGVkIGEgcGF0Y2ggZnJvbSBSb2JlcnQgYWRkaW5nIGR1YWwgZGF0YSByZWFkIHRvIHRoZQpt
+eDY2bDUxMjM1bCBjaGlwLiBJdCB3YXMgdGVzdGVkIG9uIGEgWmFpdXMgYm9hcmQgd2hpY2ggaGFz
+IGEgQVNUMjUwMApTb0MgZm9yIEJNQy4KClRoYW5rcywKCkMuCgoKQ8OpZHJpYyBMZSBHb2F0ZXIg
+KDIpOgogIG10ZDogbmFtZSB0aGUgbXRkIGRldmljZSB3aXRoIGFuIG9wdGlvbmFsIGxhYmVsIHBy
+b3BlcnR5CiAgZHQtYmluZGluZ3M6IG10ZDogYWRkIGEgY29tbW9uIGxhYmVsIHByb3BlcnR5IHRv
+IGFsbCBtdGQgZGV2aWNlcwoKUm9iZXJ0IExpcHBlcnQgKDEpOgogIG10ZDogc3BpLW5vcjogYWRk
+IFNQSV9OT1JfRFVBTF9SRUFEIHRvIG14NjZsNTEyMzVsCgogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL210ZC9jb21tb24udHh0IHwgMTIgKysrKysrKysrKysrCiBkcml2ZXJzL210
+ZC9tdGRjb3JlLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNyArKysrKysrCiBkcml2
+ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogMyBm
+aWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9jb21tb24udHh0
+CgotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
