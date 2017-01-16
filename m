@@ -1,257 +1,72 @@
-From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
-Date: Mon, 16 Jan 2017 21:12:19 +0100
-Message-ID: <6c25c25f-7811-10fe-2824-e813e88ec8f7@rwth-aachen.de>
-References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
- <27256207f2d84b1ca4b7dfc41a413fcc@rwthex-s2-a.rwth-ad.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1 1/7] dt-bindings: display: add STM32 LTDC driver
+Date: Mon, 16 Jan 2017 22:30:49 +0200
+Message-ID: <2080174.sm3cyM9MmB@avalon>
+References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
+ <1484573344-11609-2-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <27256207f2d84b1ca4b7dfc41a413fcc@rwthex-s2-a.rwth-ad.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, p.zabel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1484573344-11609-2-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Philippe Cornu <philippe.cornu@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-ping? It would be very nice if you comment on this patch before it's too 
-late for v4.11 (which is soon, I think).
-
-Cheers,
-Christopher
-
-On 12/30/2016 03:27 PM, Shawn Guo wrote:
-> On Fri, Dec 02, 2016 at 03:37:22PM +0100, christopher.spinrath@rwth-aachen.de wrote:
->> From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
->>
->> Apart from the already enabled Designware HDMI port, the Utilite Pro
->> has a second display pipeline which has the following shape:
->>
->>   IPU1 DI0 --> Parallel display --> tfp410 rgb24 to DVI encoder
->>                                 --> HDMI connector.
->> Enable support for it.
->>
->> In addition, since this pipeline is hardwired to IPU1, sever the link
->> between IPU1 and the SoC-internal Designware HDMI encoder forcing the
->> latter to be connected to IPU2 instead of IPU1. Otherwise, it is not
->> possible to drive both displays at high resolution due to the bandwidth
->> limitations of a single IPU.
->>
->> Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
->
-> @Philipp, can you help review the changes?
->
->> ---
->>
->> Hi all,
->>
->> the removal of the link between IPU1 and the Designware HDMI encoder is the
->> result of a discussion I had with Philipp Zabel:
->>
->>   https://lists.freedesktop.org/archives/dri-devel/2016-November/125399.html .
->>
->> Altough it is not possible to connect anything else to IPU1 on the Utilite, this
->> approach has at least one disadvantage: if the resolution is low enough such
->> that a single IPU can handle both displays then muxing both displays to IPU1
->> would reduce the power consumption.
->>
->> However, IMHO omitting the link IPU1 <--> DW HDMI is still the preferrable
->> solution since I'm not aware of any OS/driver that is capable of switching IPUs
->> or can handle the bandwidth limitation in a sane way. In particular, Linux is
->> unusable when both displays are supposed to be driven at high resolution and
->> both muxing options for the DW HDMI are available (this is not a userspace
->> issue; the system becomes almost unresponsive as soon as the kernel sets the
->> initial resolution).
->>
->> Cheers,
->> Christopher
->>
->> P.S.: this patch depends on the tfp410 bridge driver which has recently been
->> merged into drm-next.
->
-> v4.10-rc1 has the driver, so the dependency is gone now, I guess.
->
->>
->>  arch/arm/boot/dts/imx6q-utilite-pro.dts | 115 ++++++++++++++++++++++++++++++++
->>  1 file changed, 115 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->> index 2200994..69bdd82 100644
->> --- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
->> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
->> @@ -59,6 +59,33 @@
->>  		rtc1 = &snvs_rtc;
->>  	};
->>
->> +	encoder {
->> +		compatible = "ti,tfp410";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			port@0 {
->> +				reg = <0>;
->> +
->> +				tfp410_in: endpoint {
->> +					remote-endpoint = <&parallel_display_out>;
->> +				};
->> +			};
->> +
->> +			port@1 {
->> +				reg = <1>;
->> +
->> +				tfp410_out: endpoint {
->> +					remote-endpoint = <&hdmi_connector_in>;
->> +				};
->> +			};
->> +		};
->> +	};
->> +
->>  	gpio-keys {
->>  		compatible = "gpio-keys";
->>  		pinctrl-names = "default";
->> @@ -72,6 +99,19 @@
->>  		};
->>  	};
->>
->> +	hdmi-connector {
->> +		compatible = "hdmi-connector";
->> +
->
-> The newline is unnecessary.
->
->> +		type = "a";
->> +		ddc-i2c-bus = <&i2c_dvi_ddc>;
->> +
->> +		port {
->> +			hdmi_connector_in: endpoint {
->> +				remote-endpoint = <&tfp410_out>;
->> +			};
->> +		};
->> +	};
->> +
->>  	i2cmux {
->>  		compatible = "i2c-mux-gpio";
->>  		pinctrl-names = "default";
->> @@ -105,8 +145,46 @@
->>  			#size-cells = <0>;
->>  		};
->>  	};
->> +
->> +	parallel-display {
->> +		compatible = "fsl,imx-parallel-display";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_ipu1>;
->> +
->
-> Ditto
->
-> I can fix them up if I get a Reviewed-by tag from Philipp on this
-> version.
->
-> Shawn
->
->> +		interface-pix-fmt = "rgb24";
->> +
->> +		port@0 {
->> +			reg = <0>;
->> +
->> +			parallel_display_in: endpoint {
->> +				remote-endpoint = <&ipu1_di0_disp0>;
->> +			};
->> +		};
->> +
->> +		port@1 {
->> +			reg = <1>;
->> +
->> +			parallel_display_out: endpoint {
->> +				remote-endpoint = <&tfp410_in>;
->> +			};
->> +		};
->> +	};
->>  };
->>
->> +/*
->> + * A single IPU is not able to drive both display interfaces available on the
->> + * Utilite Pro at high resolution due to its bandwidth limitation. Since the
->> + * tfp410 encoder is wired up to IPU1, sever the link between IPU1 and the
->> + * SoC-internal Designware HDMI encoder forcing the latter to be connected to
->> + * IPU2 instead of IPU1.
->> + */
->> +/delete-node/&ipu1_di0_hdmi;
->> +/delete-node/&hdmi_mux_0;
->> +/delete-node/&ipu1_di1_hdmi;
->> +/delete-node/&hdmi_mux_1;
->> +
->>  &hdmi {
->>  	ddc-i2c-bus = <&i2c2>;
->>  	status = "okay";
->> @@ -151,6 +229,39 @@
->>  		>;
->>  	};
->>
->> +	pinctrl_ipu1: ipu1grp {
->> +		fsl,pins = <
->> +			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x38
->> +			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x38
->> +			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x38
->> +			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x38
->> +			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x38
->> +			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x38
->> +			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x38
->> +			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x38
->> +			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x38
->> +			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x38
->> +			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x38
->> +			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x38
->> +			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x38
->> +			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x38
->> +			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x38
->> +			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x38
->> +			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x38
->> +			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x38
->> +			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x38
->> +			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x38
->> +			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x38
->> +			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x38
->> +			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x38
->> +			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x38
->> +			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x38
->> +			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x38
->> +			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x38
->> +			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x38
->> +		>;
->> +	};
->> +
->>  	pinctrl_uart2: uart2grp {
->>  		fsl,pins = <
->>  			MX6QDL_PAD_GPIO_7__UART2_TX_DATA 0x1b0b1
->> @@ -194,6 +305,10 @@
->>  	};
->>  };
->>
->> +&ipu1_di0_disp0 {
->> +	remote-endpoint = <&parallel_display_in>;
->> +};
->> +
->>  &pcie {
->>  	pcie@0,0 {
->>  		reg = <0x000000 0 0 0 0>;
->> --
->> 2.10.2
->>
+SGkgWWFubmljaywKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5IDE2IEphbiAy
+MDE3IDE0OjI4OjU4IFlhbm5pY2sgRmVydHJlIHdyb3RlOgo+IFNpZ25lZC1vZmYtYnk6IFlhbm5p
+Y2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQgICAgICAgIHwgNTcgKysrKysrKysrKysrKysr
+KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxsdGRjLnR4
+dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9zdCxsdGRjLnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvc3QsbHRkYy50eHQgbmV3IGZpbGUgbW9kZQo+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAu
+LjIwZTg5ZGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQKPiBAQCAtMCwwICsxLDU3IEBACj4gKyogU1RN
+aWNyb2VsZWN0cm9uaWNzIFNUTTMyIGxjZC10ZnQgZGlzcGxheSBjb250cm9sbGVyCj4gKwo+ICst
+IHN0LWRpc3BsYXktc3Vic3lzdGVtOiBNYXN0ZXIgZGV2aWNlIGZvciBEUk0gc3ViLWNvbXBvbmVu
+dHMKPiArICBUaGlzIGRldmljZSBtdXN0IGJlIHRoZSBwYXJlbnQgb2YgYWxsIHRoZSBzdWItY29t
+cG9uZW50cyBhbmQgaXMKPiByZXNwb25zaWJsZQo+ICsgIG9mIGJpbmQgdGhlbS4KCldoeSBkbyB5
+b3UgbmVlZCB0aGlzID8gQXQgYSBxdWljayBnbGFuY2UgdGhlIGx0ZGMgbm9kZSBzaG91bGQgYmUg
+ZW5vdWdoLgoKPiArICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsgIC0gY29tcGF0aWJsZTogInN0
+LGRpc3BsYXktc3Vic3lzdGVtIgo+ICsgIC0gcmFuZ2VzOiB0byBhbGxvdyBwcm9iaW5nIG9mIHN1
+YmRldmljZXMKPiArCj4gKy0gbHRkY19ob3N0OiBsY2QtdGZ0IGRpc3BsYXkgY29udHJvbGxlciBo
+b3N0Cj4gKyAgbXVzdCBiZSBhIHN1Yi1ub2RlIG9mIHN0LWRpc3BsYXktc3Vic3lzdGVtCj4gKyAg
+UmVxdWlyZWQgcHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6ICJzdCxsdGRjIgo+ICsgIC0g
+cmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIElQIHJlZ2lzdGVycyBhbmQgbGVuZ3Ro
+IG9mIG1lbW9yeQo+IG1hcHBlZCByZWdpb24uCj4gKyAgLSBjbG9ja3M6IGZyb20gY29tbW9uIGNs
+b2NrIGJpbmRpbmc6IGhhbmRsZSBoYXJkd2FyZSBJUCBuZWVkZWQgY2xvY2tzLAo+IHRoZQo+ICsg
+ICAgbnVtYmVyIG9mIGNsb2NrcyBtYXkgZGVwZW5kIG9mIHRoZSBTb0MgdHlwZS4KPiArICAgIFNl
+ZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgo+ICsgIC0gY2xvY2st
+bmFtZXM6IG5hbWVzIG9mIHRoZSBjbG9ja3MgbGlzdGVkIGluIGNsb2NrcyBwcm9wZXJ0eSBpbiB0
+aGUgc2FtZQo+ICsgICAgb3JkZXIuCgpZb3UgbmVlZCB0byBkZWZpbmUgdGhlIHJlcXVpcmVkL29w
+dGlvbmFsIGNsb2NrcyB3aXRoIHRoZWlyIG5hbWVzIGhlcmUuIElmIHRoZXkgCnZhcnkgZGVwZW5k
+aW5nIG9uIHRoZSBTb0MsIHRoZSBEVCBiaW5kaW5ncyBkb2N1bWVudCBuZWVkIHRvIGxpc3QgdGhl
+bSBmb3IgZWFjaCAKU29DLgoKPiArICAtIHJlc2V0czogcmVzZXRzIHRvIGJlIHVzZWQgYnkgdGhl
+IGRldmljZQo+ICsgICAgU2VlIC4uL3Jlc2V0L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4KPiArICAt
+IHJlc2V0LW5hbWVzOiBuYW1lcyBvZiB0aGUgcmVzZXRzIGxpc3RlZCBpbiByZXNldHMgcHJvcGVy
+dHkgaW4gdGhlIHNhbWUKPiArICAgIG9yZGVyLgo+ICsgIFJlcXVpcmVkIG5vZGVzOgo+ICsgICAg
+LSBWaWRlbyBwb3J0IGZvciBSR0Igb3V0cHV0Lgo+ICsKPiArRXhhbXBsZToKPiArCj4gKy8gewo+
+ICsJLi4uCj4gKwlzb2Mgewo+ICsJLi4uCj4gKwkJc3QtZGlzcGxheS1zdWJzeXN0ZW0gewo+ICsJ
+CQljb21wYXRpYmxlID0gInN0LGRpc3BsYXktc3Vic3lzdGVtIjsKPiArCQkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDE+Owo+ICsJCQlyYW5nZXM7Cj4gKwkJCWRt
+YS1yYW5nZXM7Cj4gKwo+ICsJCQlsdGRjX2hvc3Q6IHN0bTMyLWx0ZGNANDAwMTY4MDAgewo+ICsJ
+CQkJY29tcGF0aWJsZSA9ICJzdCxsdGRjIjsKPiArCQkJCXJlZyA9IDwweDQwMDE2ODAwIDB4MjAw
+PjsKPiArCQkJCWludGVycnVwdHMgPSA8ODg+LCA8ODk+Owo+ICsJCQkJcmVzZXRzID0gPCZyY2Mg
+MzE0PjsKPiArCQkJCWNsb2NrcyA9IDwmcmNjIDEgOD47Cj4gKwkJCQljbG9jay1uYW1lcyA9ICJj
+bGstbGNkIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwo+ICsJCQkJcG9ydCB7Cj4g
+KwkJCQkJbHRkY19vdXRfcmdiOiBlbmRwb2ludCB7Cj4gKwkJCQkJfTsKPiArCQkJCX07Cj4gKwkJ
+CX07Cj4gKwkJfTsKPiArCS4uLgo+ICsJfTsKPiArfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
+aW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
