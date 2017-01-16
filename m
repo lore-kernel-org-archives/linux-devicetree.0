@@ -1,256 +1,156 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
-Date: Mon, 16 Jan 2017 13:15:27 -0800
-Message-ID: <fa368f78-42f6-6f2f-0761-1f775eb5d707@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
- <1484578988.8415.160.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484578988.8415.160.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+From: christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v3 00/18] FSI device driver introduction
+Date: Mon, 16 Jan 2017 15:22:48 -0600
+Message-ID: <1484601768-98079-1-git-send-email-christopher.lee.bostic@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+
+Introduction of the IBM 'Flexible Support Interface' (FSI) bus device
+driver. FSI is a high fan out serial bus consisting of a clock and a serial
+data line capable of running at speeds up to 166 MHz.
+
+This set provides the basic framework to add FSI extensions to the
+Linux bus and device models. Master specific implementations are
+defined to utilize the core FSI function.
+
+In Linux, we have a core FSI "bus type", along with drivers for FSI
+masters and engines.
+
+The FSI master drivers expose a read/write interface to the bus address
+space. The master drivers are under drivers/fsi/fsi-master-*.c.
+
+The core handles probing and discovery of slaves and slave
+engines, using those read/write interfaces. It is responsible for
+creating the endpoint Linux devices corresponding to the discovered
+engines on each slave.
+
+Slave engines are identified by an 'engine' type, and an optional
+version. Engine, a.k.a. client, drivers are matched and bound to these
+engines during discovery.
+
+This patch set does not include extended FSI function such as:
+    *  Hub master support
+    *  Cascaded master support
+    *  Application layer hot plug notification
+    *  Application layer FSI bus status interface
+
+Common FSI terminology:
+
+* Master
+    Controller of the FSI bus.  Only the master is allowed to control the
+    clock line and is the initiator of all transactions on a bus.
+
+* Slave
+    The receiver or target of a master initiated transaction.  The slave
+    cannot initiate communications on a bus and must respond to any
+    master requests for data.
+
+* CFAM
+    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
+    ASIC residing in any device requiring FSI communications. CFAMs
+    consist of an array of hardware 'engines' used for various purposes.
+    I2C masters, UARTs, General Purpose IO hardware are common types of
+    these engines.
+
+* Configuration Space / Table
+    A table contained at the beginning of each CFAM address space.
+    This table lists information such as the CFAM's ID, which engine types
+    and versions it has available, as well as its addressing range.
+
+* FSI Engine driver
+    A device driver that registers with the FSI core so that it can access
+    devices it owns on an FSI bus.
+
+Chris Bostic (8):
+  drivers/fsi: Kick off master scan via sysfs
+  drivers/fsi: Set up links for slave communication
+  drivers/fsi: Set slave SMODE to init communication
+  drivers/fsi: Remove all scanned devices during master unregister
+  drivers/fsi: Add FSI bus documentation
+  drivers/fsi: Add documentation for GPIO based FSI master
+  drivers/fsi: Document FSI master sysfs files in ABI
+  drivers/fsi: Add GPIO based FSI master
+
+Jeremy Kerr (10):
+  drivers/fsi: Add empty fsi bus definitions
+  drivers/fsi: Add device & driver definitions
+  drivers/fsi: add driver to device matches
+  drivers/fsi: Add fsi master definition
+  drivers/fsi: Add slave definition
+  drivers/fsi: Add empty master scan
+  drivers/fsi: Add FSI crc calculators to library
+  drivers/fsi: Implement slave initialisation
+  drivers/fsi: scan slaves & register devices
+  drivers/fsi: Add device read/write/peek functions
+
+Changes for v3:
+    - Patch set contained an invalid 18/18 test patch not
+      meant for community review, corrected.
+
+Changes for v2:
+    - Change from atomic global for master number to ida simple
+      interface.
+    - Add valid pointer checks on register and unregister utils.
+    - Move CRC calculation utilities out of driver to lib path.
+    - Clean up white space issues.
+    - Remove added list management of master devices and use
+      instead the device_for_each_child method available in the
+      bus.
+    - Add new patch to document FSI bus functionality.
+    - Add new patch documenting FSI gpio master.
+    - Rearrage patch set to have documentation earlier than code
+      implementing it.
+    - Document all comptible strings used in device tree bindings.
+    - Elaborate documentation definition of FSI GPIO master.
+    - Describe in more detail what each GPIO FSI master pin is for.
+    - Re-order compatible strings in example binding so that most
+      specific device comes first.
+    - Indicate proper activation order of all FSI GPIO master pins.
+    - Fix an unmatched '>' bracket in the example for binding.
+    - Bracket each element of the example bindings individually.
+    - Add new patch documenting sysfs-bus-fsi attributes.
+    - Merge FSI GPIO master init into probe function.
+    - Set pin initial values at time of pin request.
+    - Assign value of master->master.dev at probe time.
+    - Use get_optional interfac for all optional GPIO pins.
 
 
-On 01/16/2017 07:03 AM, Philipp Zabel wrote:
-> On Fri, 2017-01-06 at 18:11 -0800, Steve Longerbeam wrote:
->> This is a media entity subdevice for the i.MX Camera
->> Serial Interface module.
-> s/Serial/Sensor/
+ Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
+ .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  71 +++
+ Documentation/devicetree/bindings/fsi/fsi.txt      |  54 +++
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/fsi/Kconfig                                |  23 +
+ drivers/fsi/Makefile                               |   3 +
+ drivers/fsi/fsi-core.c                             | 494 +++++++++++++++++++
+ drivers/fsi/fsi-master-gpio.c                      | 530 +++++++++++++++++++++
+ drivers/fsi/fsi-master.h                           |  39 ++
+ include/linux/crc-fsi.h                            |  29 ++
+ include/linux/fsi.h                                |  60 +++
+ lib/Makefile                                       |   1 +
+ lib/crc-fsi.c                                      |  39 ++
+ 14 files changed, 1352 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
+ create mode 100644 drivers/fsi/Kconfig
+ create mode 100644 drivers/fsi/Makefile
+ create mode 100644 drivers/fsi/fsi-core.c
+ create mode 100644 drivers/fsi/fsi-master-gpio.c
+ create mode 100644 drivers/fsi/fsi-master.h
+ create mode 100644 include/linux/crc-fsi.h
+ create mode 100644 include/linux/fsi.h
+ create mode 100644 lib/crc-fsi.c
 
-done.
+-- 
+1.8.2.2
 
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> ---
->>   drivers/staging/media/imx/Kconfig   |  13 +
->>   drivers/staging/media/imx/Makefile  |   2 +
->>   drivers/staging/media/imx/imx-csi.c | 644 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 659 insertions(+)
->>   create mode 100644 drivers/staging/media/imx/imx-csi.c
->>
->> diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/imx/Kconfig
->> index bfde58d..ce2d2c8 100644
->> --- a/drivers/staging/media/imx/Kconfig
->> +++ b/drivers/staging/media/imx/Kconfig
->> @@ -6,3 +6,16 @@ config VIDEO_IMX_MEDIA
->>   	  Say yes here to enable support for video4linux media controller
->>   	  driver for the i.MX5/6 SOC.
->>   
->> +if VIDEO_IMX_MEDIA
->> +menu "i.MX5/6 Media Sub devices"
->> +
->> +config VIDEO_IMX_CAMERA
-> s/CAMERA/CSI/ ?
-
-done.
-
->> +	tristate "i.MX5/6 Camera driver"
-> i.MX5/6 Camera Sensor Interface driver
-
-done.
-
->
->> +
->> +struct csi_priv {
->> +	struct device *dev;
->> +	struct ipu_soc *ipu;
->> +	struct imx_media_dev *md;
->> +	struct v4l2_subdev sd;
->> +	struct media_pad pad[CSI_NUM_PADS];
->> +	struct v4l2_mbus_framefmt format_mbus[CSI_NUM_PADS];
->> +	struct v4l2_mbus_config sensor_mbus_cfg;
->> +	struct v4l2_rect crop;
->> +	struct ipu_csi *csi;
->> +	int csi_id;
->> +	int input_pad;
->> +	int output_pad;
->> +	bool power_on;  /* power is on */
->> +	bool stream_on; /* streaming is on */
->> +
->> +	/* the sink for the captured frames */
->> +	struct v4l2_subdev *sink_sd;
->> +	enum ipu_csi_dest dest;
->> +	struct v4l2_subdev *src_sd;
-> src_sd is not used except that its presence marks an enabled input link.
-> -> could be changed to bool.
-
-For now I prefer to keep it a pointer to the src/sink subdevs.
-At some point the CSI may have some reason to know the
-identity of the source.
-
->
->> +	struct v4l2_ctrl_handler ctrl_hdlr;
->> +	struct imx_media_fim *fim;
->> +
->> +	/* the attached sensor at stream on */
->> +	struct imx_media_subdev *sensor;
->> +};
->> +
->> +static inline struct csi_priv *sd_to_dev(struct v4l2_subdev *sdev)
->> +{
->> +	return container_of(sdev, struct csi_priv, sd);
->> +}
->> +
->> +/* Update the CSI whole sensor and active windows */
->> +static int csi_setup(struct csi_priv *priv)
->> +{
->> +	struct v4l2_mbus_framefmt infmt;
->> +
->> +	ipu_csi_set_window(priv->csi, &priv->crop);
->> +
->> +	/*
->> +	 * the ipu-csi doesn't understand ALTERNATE, but it only
->> +	 * needs to know whether the stream is interlaced, so set
->> +	 * to INTERLACED if infmt field is ALTERNATE.
->> +	 */
->> +	infmt = priv->format_mbus[priv->input_pad];
->> +	if (infmt.field == V4L2_FIELD_ALTERNATE)
->> +		infmt.field = V4L2_FIELD_INTERLACED;
-> That should be SEQ_TB/BT depending on video standard.
-
-fixed.
-
->> +
->> +static int csi_s_stream(struct v4l2_subdev *sd, int enable)
->> +{
->> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
->> +	int ret = 0;
->> +
->> +	if (!priv->src_sd || !priv->sink_sd)
->> +		return -EPIPE;
->> +
->> +	v4l2_info(sd, "stream %s\n", enable ? "ON" : "OFF");
-> These could be silenced a bit.
-
-yeah, I think it is time for that. I've silenced all the
-v4l2_info()'s for stream on/off, power on/off, as well
-as some others.
-
->
->> +static int csi_s_power(struct v4l2_subdev *sd, int on)
->> +{
->> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
->> +	int ret = 0;
->> +
->> +	v4l2_info(sd, "power %s\n", on ? "ON" : "OFF");
->> +
->> +	if (priv->fim && on != priv->power_on)
->> +		ret = imx_media_fim_set_power(priv->fim, on);
->> +
->> +	if (!ret)
->> +		priv->power_on = on;
->> +	return ret;
->> +}
-> Is this called multiple times? I'd expect a poweron during open and a
-> poweroff during close, so no need for priv->power_on.
-
-It is actually called multiple times. The s_power subdev callbacks are
-made every time there is a new link established, in the imx-media core's
-link_notify(), in order to re-establish power to the active subdevs in the
-new pipeline.
-
-This might change after I look into using v4l2_pipeline_pm_use().
-
->
->> +static int csi_link_setup(struct media_entity *entity,
->> +			  const struct media_pad *local,
->> +			  const struct media_pad *remote, u32 flags)
->> +{
->> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
->> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
->> +	struct v4l2_subdev *remote_sd;
->> +
->> +	dev_dbg(priv->dev, "link setup %s -> %s", remote->entity->name,
->> +		local->entity->name);
->> +
->> +	remote_sd = media_entity_to_v4l2_subdev(remote->entity);
->> +
->> +	if (local->flags & MEDIA_PAD_FL_SINK) {
->> +		if (flags & MEDIA_LNK_FL_ENABLED) {
->> +			if (priv->src_sd)
->> +				return -EBUSY;
->> +			priv->src_sd = remote_sd;
->> +		} else {
->> +			priv->src_sd = NULL;
->> +		}
->> +
->> +		return 0;
->> +	}
->> +
->> +	if (flags & MEDIA_LNK_FL_ENABLED) {
->> +		if (priv->sink_sd)
->> +			return -EBUSY;
->> +		priv->sink_sd = remote_sd;
->> +	} else {
->> +		priv->sink_sd = NULL;
->> +		return 0;
->> +	}
->> +
->> +	/* set CSI destination */
->> +	switch (remote_sd->grp_id) {
->> +	case IMX_MEDIA_GRP_ID_SMFC0:
->> +	case IMX_MEDIA_GRP_ID_SMFC1:
->> +	case IMX_MEDIA_GRP_ID_SMFC2:
->> +	case IMX_MEDIA_GRP_ID_SMFC3:
-> With removal of the SMFC entities, CSI0 could be fixed to SMFC0 and CSI1
-> to the SMFC2 channel.
-
-right, I'll do that.
-
->
-> [...]
->> +static int csi_set_fmt(struct v4l2_subdev *sd,
->> +		       struct v4l2_subdev_pad_config *cfg,
->> +		       struct v4l2_subdev_format *sdformat)
->> +{
->> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
->> +	struct v4l2_mbus_framefmt *infmt, *outfmt;
->> +	struct v4l2_rect crop;
->> +	int ret;
->> +
->> +	if (sdformat->pad >= CSI_NUM_PADS)
->> +		return -EINVAL;
->> +
->> +	if (priv->stream_on)
->> +		return -EBUSY;
->> +
->> +	infmt = &priv->format_mbus[priv->input_pad];
->> +	outfmt = &priv->format_mbus[priv->output_pad];
->> +
->> +	if (sdformat->pad == priv->output_pad) {
->> +		sdformat->format.code = infmt->code;
->> +		sdformat->format.field = infmt->field;
->> +		crop.left = priv->crop.left;
->> +		crop.top = priv->crop.top;
->> +		crop.width = sdformat->format.width;
->> +		crop.height = sdformat->format.height;
->> +		ret = csi_try_crop(priv, &crop);
->> +		if (ret)
->> +			return ret;
->> +		sdformat->format.width = crop.width;
->> +		sdformat->format.height = crop.height;
->> +	}
->> +
->> +	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
-> Should there be some limitations on the format here?
-
-done, I've added call to v4l_bound_align_image(), passing
-it the min/max frame sizes. CSI's sensor/active frame size
-register fields are 12 bits, so max is 4096 for both width and
-height.
-
-
-Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
