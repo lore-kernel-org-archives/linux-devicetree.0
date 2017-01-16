@@ -1,140 +1,82 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Mon, 16 Jan 2017 11:34:01 +0100
-Message-ID: <20170116113401.1364b079@jawa>
-References: <1484486354-4585-1-git-send-email-lukma@denx.de>
-        <587C6A40.8070608@ti.com>
-        <20170116074927.086418f4@jawa>
-        <587C8088.80905@ti.com>
-        <20170116103136.21c899ac@jawa>
-        <587C9CE6.8040001@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Mon, 16 Jan 2017 11:36:41 +0100
+Message-ID: <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
+ <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
+ <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+ <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com> <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <587C9CE6.8040001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Joao Pinto <Joao.Pinto@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SG2PR06MB11659339E4A08373D3626BB28A780-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear All,
+Hi Chris,
 
-> + Joao, Jingoo
-> 
-> Hi,
-> 
-> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
-> > Hi Kishon,
-> > 
-> >> Hi Łukasz,
-> >>
-> >> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
-> >>> Hi Kishon,
-> >>>
-> >>>> Hi,
-> >>>>
-> >>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
-> >>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
-> >>>>> run with forced GEN1 speed on PCIe bus.
-> >>>>>
-> >>>>> This patch changes the speed explicitly on dra7 based devices
-> >>>>> when proper device tree attribute is defined for the PCIe
-> >>>>> controller.
-> >>>>>
-> >>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >>>>
-> >>>> Bjorn has already queued a patch to do the same thing
-> >>>> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-dra7xx
-> >>>
-> >>> It seems like Bjorn only modifies CAP registers.
-> >>
-> >> The patch also modifies the LNKCTL2 register.
-> >>>
-> >>> He also needs to change register with 0x080C offset to actually
-> >>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
-> >>
-> >> This bit is used to initiate speed change (after the link is
-> >> initialized in GEN1). Resetting the bit (like what you have done
-> >> here) prevents speed change.
-> > 
-> > This is strange, but e2e advised me to do things as I did in the
-> > patch to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
-> > 
-> > Link:
-> > [1] https://e2e.ti.com/support/arm/sitara_arm/f/791/t/566421
-> > 
-> > Both patches modify 0x5180 007C register to set GEN1 capability
-> > (PCI_EXP_LNKCAP_SLS_2_5GB)
-> > 
-> > The problem is with second register (in your patch):
-> > 
-> > From SPRUHZ6G TRM:
-> > 
-> > PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
-> > - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
-> >   description in TRM
-> > 
-> > It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
-> > default /reset value.
-> 
-> The default value is 0x2 (or else none of the cards would have
-> enumerated in GEN2)
+CC Woflram
 
-SPRUHZ6G – October 2014 – Revised June 2016 - page 6313. Maybe TRM is
-not up to date?
+On Fri, Jan 13, 2017 at 6:56 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Friday, January 13, 2017, Geert Uytterhoeven wrote:
+>> > In sh_mobile_sdhi.c, can we change sh_mobile_sdhi_probe() so that if
+>> > there are 2 clocks specified (in DT or platform data), it
+>> > automatically enables the 2nd clock (forever) and just uses the 1st
+>> clock as the on/off clock?
+>>
+>> Of course the driver can handle the second interrupt, if you update the
+>> binding, and add support code for that...
+>
+> Of course my idea is that I would only have to update the bindings for
+> RZ/A1...not any other device.
+>
+> My only question is, today sh_mobile_sdhi.c uses this:
+>
+>    priv->clk = devm_clk_get(&pdev->dev, NULL);
+>
+> to get the clock. But if there is a 2nd clock...how do I know the
+> string id name to look to replace NULL with??
 
-> > 
-> > 
-> > Could you clarify which way to _force_ PCIe GEN1 operation is
-> > correct? Mine shows differences in lspci output (as posted in [1]).
-> 
-> You'll see the difference even with the patch in Bjorn's tree ;-)
+That should be specified in the bindings. "NULL" will get you the first clock.
 
-:-) 
+> Or...for the RZ/A1 dtsi, should I just give the 2 clocks names:
+>
+>                 clocks = <&mstp12_clks R7S72100_CLK_SDHI00,
+>                                 &mstp12_clks R7S72100_CLK_SDHI01>;
+>                 clock-names = "core", "cd";
 
-The details of my test cases and output are in the post [1].
+Something like that.
+If devm_clk_get(&pdev->dev, "core") fails, you can assume a single clock
+and retry with NULL.
 
-> 
-> I think these are 2 different approaches to keep the link at GEN1.
-> Joao or Jingoo, do you have any suggestion here?
+> and then in the code do:
+>
+>         struct *cd_clk;
+>         cd_clk = devm_clk_get(&pdev->dev, "cd");
+>         if (cd_clk) {
+>                 clk_prepare_enable(cd_clk);
+>         }
+>
+>   (this simple 1-line fix patch is getting a lot more complicated)
 
-Please read through thread [1]
+Disclaimer: I don't know how/if the SDHI core manages clocks, and may
+interfere. Adding Wolfram.
 
-[1] https://e2e.ti.com/support/arm/sitara_arm/f/791/t/566421
+Gr{oetje,eeting}s,
 
-> 
-> > 
-> >>
-> >> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
-> >> the IP register.
-> > 
-> > From the original patch description:
-> > 
-> > "Add support to force Root Complex to work in GEN1 mode if so
-> > desired, but don't force GEN1 mode on any board just yet."
-> > 
-> > Are there any (floating around) patches allowing forcing GEN1
-> > operation on any board (I would like to reuse/port them to my
-> > current solution)?
-> 
-> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt
-> with the patch in Bjorn's tree.
-
-Ah.... ok.
-> 
-> Thanks
-> Kishon
-
-
-
-
-Best regards,
-
-Lukasz Majewski
+                        Geert
 
 --
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
