@@ -1,82 +1,285 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] dt: bindings: i2c-mux-pca954x: Add documentation
- for i2c-mux-irq-mask-en
-Date: Mon, 16 Jan 2017 12:40:27 +0100
-Message-ID: <e61b6df8-e5a1-fb2f-f8c0-725bd784badb@axentia.se>
-References: <1484536275-75995-1-git-send-email-preid@electromag.com.au>
- <1484536275-75995-5-git-send-email-preid@electromag.com.au>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [v2 2/3] ARM: dts: STM32 Add USB FS host mode support
+Date: Mon, 16 Jan 2017 12:47:35 +0100
+Message-ID: <21fbf365-7d15-04be-f6a5-451aedac05b5@st.com>
+References: <20170116020958.62767-1-bruherrera@gmail.com>
+ <20170116020958.62767-2-bruherrera@gmail.com>
+ <f1fac058-6c03-595a-0d67-a89fcf70d7cc@st.com>
+ <CAF3+TqcD9v=Z4BAprMoWNnDddmTkzKBAb8Yz1XnHLo0_2-995g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484536275-75995-5-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAF3+TqcD9v=Z4BAprMoWNnDddmTkzKBAb8Yz1XnHLo0_2-995g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bruno Herrera <bruherrera@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-16 04:11, Phil Reid wrote:
-> Unfortunately some hardware device will assert their irq line immediately
-> on power on and provide no mechanism to mask the irq. As the i2c muxes
-> provide no method to mask irq line this provides a work around by keeping
-> the parent irq masked until enough device drivers have loaded to service
-> all pending interrupts.
-> 
-> For example the the ltc1760 assert its SMBALERT irq immediately on power
-> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
-> device is registered irq are enabled and fire continuously as the second
-> device driver has not yet loaded. Setting this parameter to 0x3 while
-> delay the irq being enabled until both devices are ready.
-> 
-> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Hmm, I see that this is already acked by some people :-) ...
 
-... but. I just thought a bit more about it and going forward it might
-make sense to make this not a bitmask that only support 0 or 1 irq clients
-for each mux segment, and instead make it one u32 for each segment. Then
-the binding would extend to also cover cases where several i2c clients
-register for interrupts and the shared interrupt needs to be masked until
-the last client is registered.
+On 01/16/2017 11:26 AM, Bruno Herrera wrote:
+> Hi Alex,
+>
+> On Mon, Jan 16, 2017 at 6:57 AM, Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+>> Hi Bruno,
+>>
+>> On 01/16/2017 03:09 AM, Bruno Herrera wrote:
+>>>
+>>> This patch adds the USB pins and nodes for USB HS/FS cores working at FS
+>>> speed,
+>>> using embedded PHY.
+>>>
+>>> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+>>
+>>
+>> Sorry, but what is patch 1 & pacth 3 status ?
+>
+> My bad, I'll add the status of the patch series version 3.
+>>
+>> For this one, can split it in 3 patches (one patch for SOC and one for each
+>> board) please.
+>>
+>
+> No problem.
+>>
+>>
+>>> ---
+>>>  arch/arm/boot/dts/stm32f429-disco.dts | 30 ++++++++++++++++++++++++++++++
+>>>  arch/arm/boot/dts/stm32f429.dtsi      | 35
+>>> ++++++++++++++++++++++++++++++++++-
+>>>  arch/arm/boot/dts/stm32f469-disco.dts | 30 ++++++++++++++++++++++++++++++
+>>>  3 files changed, 94 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts
+>>> b/arch/arm/boot/dts/stm32f429-disco.dts
+>>> index 7d0415e..374c5ed 100644
+>>> --- a/arch/arm/boot/dts/stm32f429-disco.dts
+>>> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+>>> @@ -88,6 +88,16 @@
+>>>                         gpios = <&gpioa 0 0>;
+>>>                 };
+>>>         };
+>>> +
+>>> +       /* This turns on vbus for otg for host mode (dwc2) */
+>>> +       vcc5v_otg: vcc5v-otg-regulator {
+>>> +               compatible = "regulator-fixed";
+>>> +               gpio = <&gpioc 4 0>;
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>>> +               regulator-name = "vcc5_host1";
+>>> +               regulator-always-on;
+>>> +       };
+>>>  };
+>>>
+>>>  &clk_hse {
+>>> @@ -99,3 +109,23 @@
+>>>         pinctrl-names = "default";
+>>>         status = "okay";
+>>>  };
+>>> +
+>>> +&usbotg_hs {
+>>> +       compatible = "st,stm32-fsotg", "snps,dwc2";
+>>> +       dr_mode = "host";
+>>> +       pinctrl-0 = <&usbotg_fs_pins_b>;
+>>> +       pinctrl-names = "default";
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pinctrl {
+>>> +       usb-host {
+>>> +               usbotg_pwren_h: usbotg-pwren-h {
+>>> +                       pins {
+>>> +                               pinmux = <STM32F429_PC4_FUNC_GPIO>;
+>>> +                               bias-disable;
+>>> +                               drive-push-pull;
+>>> +                       };
+>>> +               };
+>>> +       };
+>>> +};
+>>
+>>
+>> Pinctrl muxing has to be defined/declared in stm32f429.dtsi
+>>
+> This is board specific logic and it vary from board to board, should
+> it be defined here?
 
-Or is that idea over-engineered?
+Pinmuxing definition is a SOC part (as it is a possibility offered by 
+SOC). Pinmuxing choice is board specific.
 
-I'd be satisfied if the implementation simply mapped the u32 array to
-a bitmask, as long as it failed noisily when finding anything bigger
-than 1 in the array.
+Regarding your code, it should not boot. Ex for disco:
 
-Cheers,
-peda
+  +               gpio = <&gpiob 2 0>;
+ >>> +               pinctrl-names = "default";
+ >>> +               pinctrl-0 = <&usbotg_pwren_h>;
 
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index aa09704..6de1e8e 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -19,6 +19,8 @@ Optional Properties:
->    - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
->      children in idle state. This is necessary for example, if there are several
->      multiplexers on the bus and the devices behind them use same I2C addresses.
-> +  - nxp,irq-mask-enable: BitMask; Defines a mask for which irq lines need to be
-> +    unmasked before the parent irq line in enabled.
->    - interrupt-parent: Phandle for the interrupt controller that services
->      interrupts for this device.
->    - interrupts: Interrupt mapping for IRQ.
-> @@ -36,6 +38,7 @@ Example:
->  		#size-cells = <0>;
->  		reg = <0x74>;
->  
-> +		nxp,irq-mask-enable = <0x3>;
->  		interrupt-parent = <&ipic>;
->  		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
->  		interrupt-controller;
-> 
++
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   usb-host {
+ >>> +               usbotg_pwren_h: usbotg-pwren-h {
+ >>> +                       pins {
+ >>> +                               pinmux = <STM32F429_PB2_FUNC_GPIO>;
+
+Indeed, you are declaring two time the pin PB2 (one time through pinctrl 
+and one other time through gpiolib). in strict mode you can't request 2 
+times the same Pin.
+I assume that your driver want controls this GPIO (request/set direction 
+/ set, get value ...). in this case you only need to declare this part:
+
+gpio = <&gpiob 2 0>;
+
+The GPIO lib will deal with pinctrl framework for you.
+And in this case, yes gpio declaration is board specific so this part 
+will be in board file.
+
+Let me know, if I'm not enough clear.
+
+Regards
+Alex
+
+
+
+
+>>
+>>
+>>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi
+>>> b/arch/arm/boot/dts/stm32f429.dtsi
+>>> index e4dae0e..bc07aa8 100644
+>>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>>> @@ -206,7 +206,7 @@
+>>>                         reg = <0x40007000 0x400>;
+>>>                 };
+>>>
+>>> -               pin-controller {
+>>> +               pinctrl: pin-controller {
+>>>                         #address-cells = <1>;
+>>>                         #size-cells = <1>;
+>>>                         compatible = "st,stm32f429-pinctrl";
+>>> @@ -316,6 +316,30 @@
+>>>                                 };
+>>>                         };
+>>>
+>>> +                       usbotg_fs_pins_a: usbotg_fs@0 {
+>>> +                               pins {
+>>> +                                       pinmux =
+>>> <STM32F429_PA10_FUNC_OTG_FS_ID>,
+>>> +
+>>> <STM32F429_PA11_FUNC_OTG_FS_DM>,
+>>> +
+>>> <STM32F429_PA12_FUNC_OTG_FS_DP>;
+>>> +                                       bias-disable;
+>>> +                                       drive-push-pull;
+>>> +                                       slew-rate = <2>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       usbotg_fs_pins_b: usbotg_fs@1 {
+>>> +                               pins {
+>>> +                                       pinmux =
+>>> <STM32F429_PB12_FUNC_OTG_HS_ID>,
+>>> +
+>>> <STM32F429_PB14_FUNC_OTG_HS_DM>,
+>>> +
+>>> <STM32F429_PB15_FUNC_OTG_HS_DP>;
+>>> +                                       bias-disable;
+>>> +                                       drive-push-pull;
+>>> +                                       slew-rate = <2>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +
+>>> +
+>>>                         usbotg_hs_pins_a: usbotg_hs@0 {
+>>>                                 pins {
+>>>                                         pinmux =
+>>> <STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
+>>> @@ -420,6 +444,15 @@
+>>>                         status = "disabled";
+>>>                 };
+>>>
+>>> +               usbotg_fs: usb@50000000 {
+>>> +                       compatible = "st,stm32f4xx-fsotg", "snps,dwc2";
+>>> +                       reg = <0x50000000 0x40000>;
+>>> +                       interrupts = <67>;
+>>> +                       clocks = <&rcc 0 39>;
+>>> +                       clock-names = "otg";
+>>> +                       status = "disabled";
+>>> +               };
+>>> +
+>>>                 rng: rng@50060800 {
+>>>                         compatible = "st,stm32-rng";
+>>>                         reg = <0x50060800 0x400>;
+>>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts
+>>> b/arch/arm/boot/dts/stm32f469-disco.dts
+>>> index 8877c00..8ae6763 100644
+>>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+>>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+>>> @@ -68,6 +68,17 @@
+>>>         soc {
+>>>                 dma-ranges = <0xc0000000 0x0 0x10000000>;
+>>>         };
+>>> +
+>>> +       /* This turns on vbus for otg for host mode (dwc2) */
+>>> +       vcc5v_otg: vcc5v-otg-regulator {
+>>> +               compatible = "regulator-fixed";
+>>> +               enable-active-high;
+>>> +               gpio = <&gpiob 2 0>;
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>>> +               regulator-name = "vcc5_host1";
+>>> +               regulator-always-on;
+>>> +       };
+>>>  };
+>>>
+>>>  &rcc {
+>>> @@ -81,3 +92,22 @@
+>>>  &usart3 {
+>>>         status = "okay";
+>>>  };
+>>> +
+>>> +&usbotg_fs {
+>>> +       dr_mode = "host";
+>>> +       pinctrl-0 = <&usbotg_fs_pins_a>;
+>>> +       pinctrl-names = "default";
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pinctrl {
+>>> +       usb-host {
+>>> +               usbotg_pwren_h: usbotg-pwren-h {
+>>> +                       pins {
+>>> +                               pinmux = <STM32F429_PB2_FUNC_GPIO>;
+>>> +                               bias-disable;
+>>> +                               drive-push-pull;
+>>> +                       };
+>>> +               };
+>>> +       };
+>>> +};
+>>
+>> Same. Note that if you have 2 configuration for one feature (like it is here
+>> for "usbotg_pwren_h"), you could index it. Not that I'm adding a dedidacted
+>> pinctroller for stm32f469.
+>>
+> Sorry, but I dont know what you mean by index here.
+> The usbotg_pwren_h (VBUS ENABLE) is attached in different port/pins
+> for each board.
+>
+> Br.,
+>
+>
+>> Br
+>> Alex
+>>>
+>>>
+>>
+>>
