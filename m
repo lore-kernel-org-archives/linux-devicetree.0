@@ -1,120 +1,71 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v1 6/7] ARM: dts: stm32429i-eval: Enable ltdc & simple
- panel on Eval board
-Date: Mon, 16 Jan 2017 17:02:05 +0100
-Message-ID: <0c00fe15-d926-3359-0e2e-f1c5a8d68cad@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v1 0/7] DRM: add LTDC support for STM32F4
+Date: Mon, 16 Jan 2017 17:02:56 +0100
+Message-ID: <cf29809f-f951-eeed-5886-02d0a7a1e56f@baylibre.com>
 References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
- <1484573344-11609-7-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484573344-11609-7-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick Fertre <yannick.fertre@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
 Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 01/16/2017 02:29 PM, Yannick Fertre wrote:
-> Enable ltdc & enable am-480272h3tmqw-t01h panel.
->
-> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
-> ---
-
-Can you please change commit header with:
-
-"ARM: dts: stm32: Enable ltdc & simple panel on stm32f429-Eval board"
-
->  arch/arm/boot/dts/stm32429i-eval.dts | 58 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-> index 2de6487..f987ca5 100644
-> --- a/arch/arm/boot/dts/stm32429i-eval.dts
-> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
-> @@ -88,6 +88,52 @@
->  		clocks = <&rcc 0 30>;
->  		clock-names = "main_clk";
->  	};
-> +
-> +	panel_rgb: panel-rgb {
-> +		compatible = "ampire,am-480272h3tmqw-t01h";
-> +		status = "okay";
-> +		port {
-> +			panel_in_rgb: endpoint {
-> +				remote-endpoint = <&ltdc_out_rgb>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	pinctrl_ltdc: ltdc@0 {
-> +		pins {
-
-Pinmuxing definition is SOC specific. Please move it in stm32f429.dtsi 
-file. Note that a development is ongoing to define pinmuxing in a 
-dedicated pinctrl-stm32f4.dtsi file.
-
-
-> +			pinmux = <STM32F429_PI12_FUNC_LCD_HSYNC>,
-> +				 <STM32F429_PI13_FUNC_LCD_VSYNC>,
-> +				 <STM32F429_PI14_FUNC_LCD_CLK>,
-> +				 <STM32F429_PI15_FUNC_LCD_R0>,
-> +				 <STM32F429_PJ0_FUNC_LCD_R1>,
-> +				 <STM32F429_PJ1_FUNC_LCD_R2>,
-> +				 <STM32F429_PJ2_FUNC_LCD_R3>,
-> +				 <STM32F429_PJ3_FUNC_LCD_R4>,
-> +				 <STM32F429_PJ4_FUNC_LCD_R5>,
-> +				 <STM32F429_PJ5_FUNC_LCD_R6>,
-> +				 <STM32F429_PJ6_FUNC_LCD_R7>,
-> +				 <STM32F429_PJ7_FUNC_LCD_G0>,
-> +				 <STM32F429_PJ8_FUNC_LCD_G1>,
-> +				 <STM32F429_PJ9_FUNC_LCD_G2>,
-> +				 <STM32F429_PJ10_FUNC_LCD_G3>,
-> +				 <STM32F429_PJ11_FUNC_LCD_G4>,
-> +				 <STM32F429_PJ12_FUNC_LCD_B0>,
-> +				 <STM32F429_PJ13_FUNC_LCD_B1>,
-> +				 <STM32F429_PJ14_FUNC_LCD_B2>,
-> +				 <STM32F429_PJ15_FUNC_LCD_B3>,
-> +				 <STM32F429_PK0_FUNC_LCD_G5>,
-> +				 <STM32F429_PK1_FUNC_LCD_G6>,
-> +				 <STM32F429_PK2_FUNC_LCD_G7>,
-> +				 <STM32F429_PK3_FUNC_LCD_B4>,
-> +				 <STM32F429_PK4_FUNC_LCD_B5>,
-> +				 <STM32F429_PK5_FUNC_LCD_B6>,
-> +				 <STM32F429_PK6_FUNC_LCD_B7>,
-> +				 <STM32F429_PK7_FUNC_LCD_DE>;
-> +			slew-rate = <2>;
-> +		};
-> +	};
->  };
->
->  &clk_hse {
-> @@ -123,3 +169,15 @@
->  	pinctrl-names = "default";
->  	status = "okay";
->  };
-> +
-> +&ltdc_host{
-> +	status = "okay";
-> +	pinctrl-0 = <&pinctrl_ltdc>;
-> +	pinctrl-names = "default";
-> +
-> +	port {
-> +		ltdc_out_rgb: endpoint {
-> +			remote-endpoint = <&panel_in_rgb>;
-> +		};
-> +	};
-> +};
->
+T24gMDEvMTYvMjAxNyAwMjoyOCBQTSwgWWFubmljayBGZXJ0cmUgd3JvdGU6Cj4gVGhlIHB1cnBv
+c2Ugb2YgdGhpcyBzZXQgb2YgcGF0Y2hlcyBpcyB0byBhZGQgYSBuZXcgZHJpdmVyIGZvciBzdG0z
+MmY0MjkuCj4gVGhpcyBkcml2ZXIgd2FzIGRldmVsb3BlZCBhbmQgdGVzdGVkIG9uIGV2YWx1YXRp
+b24gYm9hcmQgc3RtMzI0MjlpLgo+IAo+IFN0bTMyZjQgaXMgYSBNQ1UgcGxhdGZvcm0gd2hpY2gg
+ZG9uJ3QgaGF2ZSBNTVUgc28gdGhlIGxhc3QgcGF0Y2hlcyBkZXZlbG9wZWQKPiBieSBCZW5qYW1p
+biBHYWlnbmFyZCByZWdhcmRpbmcgIkRSTTogYWxsb3cgdG8gdXNlIG1tdWxlc3MgZGV2aWNlcyIK
+PiBhcmUgbmVjZXNzYXJ5Lgo+IAo+IFRoZSBib2FyZCBzdG00MjlpIGVtYmVkcyBhIEFtcGlyZSBB
+TS00ODAyNzJIM1RNUVctVDAxSCBzY3JlZW4uCj4gQSBuZXcgc2ltcGxlIHBhbmVsIGFtLTQ4MDI3
+MmgzdG1xdy10MDFoIGhhdmUgYmVlbiBhZGRlZCB0byBzdXBwb3J0IGl0Lgo+IAo+IFlhbm5pY2sg
+RmVydHJlICg3KToKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBhZGQgU1RNMzIgTFREQyBkcml2
+ZXIKPiAgIGRybS9zdDogQWRkIFNUTTMyIExUREMgZHJpdmVyCj4gICBkdC1iaW5kaW5nczogQWRk
+IEFtcGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCBwYW5lbAo+ICAgZHJtL3BhbmVsOiBzaW1wbGU6
+IEFkZCBzdXBwb3J0IGZvciBBbXBpcmUgQU0tNDgwMjcySDNUTVFXLVQwMUgKPiAgIEFSTTogZHRz
+OiBzdG0zMmY0Mjk6IEFkZCBsdGRjIHN1cHBvcnQKPiAgIEFSTTogZHRzOiBzdG0zMjQyOWktZXZh
+bDogRW5hYmxlIGx0ZGMgJiBzaW1wbGUgcGFuZWwgb24gRXZhbCBib2FyZAo+ICAgQVJNOiBjb25m
+aWdzOiBBZGQgU1RNMzIgTFREQyBzdXBwb3J0IGluIFNUTTMyIGRlZmNvbmZpZwo+IAo+ICAuLi4v
+ZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0ICB8ICAgIDcgKwo+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LGx0ZGMudHh0ICAgICAgICB8ICAg
+NTcgKwo+ICBhcmNoL2FybS9ib290L2R0cy9zdG0zMjQyOWktZXZhbC5kdHMgICAgICAgICAgICAg
+ICB8ICAgNTggKwo+ICBhcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRzaSAgICAgICAgICAg
+ICAgICAgICB8ICAgMjUgKy0KPiAgYXJjaC9hcm0vY29uZmlncy9zdG0zMl9kZWZjb25maWcgICAg
+ICAgICAgICAgICAgICAgfCAgICA1ICsKPiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsKPiAgZHJpdmVycy9ncHUvZHJtL01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAgIDI5ICsKPiAgZHJpdmVycy9ncHUv
+ZHJtL3N0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDE0ICsKPiAgZHJpdmVy
+cy9ncHUvZHJtL3N0L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA3ICsKPiAg
+ZHJpdmVycy9ncHUvZHJtL3N0L2Rydi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjc5
+ICsrKysKPiAgZHJpdmVycy9ncHUvZHJtL3N0L2Rydi5oICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDI1ICsKPiAgZHJpdmVycy9ncHUvZHJtL3N0L2x0ZGMuYyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAxNDM4ICsrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9z
+dC9sdGRjLmggICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyMCArCj4gIDE0IGZpbGVzIGNo
+YW5nZWQsIDE5NjYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1w
+aXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQKPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdC9LY29uZmlnCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL2dwdS9kcm0vc3QvTWFrZWZpbGUKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvZ3B1L2RybS9zdC9kcnYuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL3N0L2Rydi5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3QvbHRk
+Yy5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3QvbHRkYy5oCj4gCgpI
+aSBZYW5uaWNrLAoKU2hvdWxkbid0IGJlIG1vcmUgbG9naWNhbCB0byB1c2Ugc3RtMzIgZm9yIHRo
+ZSBkcml2ZXIgaW5zdGVhZCBvZiBzdCA/Ckl0IHdvdWxkIGV2ZW50dWFsbHkgY29sbHVkZSB3aXRo
+IHRoZSBvdGhlciBTVE1pY3JvZWxlY3Ryb25pY3MgU29DcyBhbmQKd2lsbCBiZSBhbGlnbmVkIHdp
+dGggb3RoZXIgZHJpdmVycyBsaWtlIHN0bTMyLXJ0Yywgc3RtMzItaTJjLCAuLi4KCk5laWwKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
