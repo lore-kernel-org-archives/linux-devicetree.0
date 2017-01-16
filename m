@@ -1,33 +1,54 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: dts: am335x-sl50: Update to new hardware
-Date: Mon, 16 Jan 2017 09:41:49 -0800
-Message-ID: <20170116174149.GE7403@atomide.com>
-References: <20170116165736.17197-1-enric.balletbo@collabora.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v2 0/4] Add support for Allwinner V3s SoC
+Date: Tue, 17 Jan 2017 01:43:50 +0800
+Message-ID: <20170116174354.34593-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170116165736.17197-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB34N6TBQKGQE4XV2ZKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zepan <715805855-9uewiaClKEY@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> [170116 08:58]:
-> Hi Tony,
-> 
-> The following patches updates the device tree file for the SL50 device, there
-> are few v1 boards and IMHO doesn't make sense to maintain the device tree
-> for these old devices, so mostly of the updates are related to changes done in
-> the next hardware revision v2 (the one that will go out).
+Allwinner produced a single-core Cortex-A7 SoC, V3s, with integrated 64MiB DDR2
+DRAM, and in LQFP package. With such a package, it has been easier for hackers
+to DIY a board (no BGA needed, and no DRAM wiring needed).
 
-This is only if the v1 boards are company internal and can be easily
-replaced. As long as that's the case I'm fine with that.
+Add support for this SoC, as well as one board with it (Lichee Pi Zero).
 
-Regards,
+Pinctrl driver have already been merged when v1. It's now removed in the patchset.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Icenowy Zheng (4):
+  arm: sunxi: add support for V3s SoC
+  clk: sunxi-ng: add support for V3s CCU
+  ARM: dts: sunxi: add dtsi file for V3s SoC
+  ARM: dts: sunxi: add support for Lichee Pi Zero board
+
+ Documentation/arm/sunxi/README                |   4 +
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts |  73 ++++
+ arch/arm/boot/dts/sun8i-v3s.dtsi              | 285 +++++++++++++
+ arch/arm/mach-sunxi/sunxi.c                   |   1 +
+ drivers/clk/sunxi-ng/Kconfig                  |  11 +
+ drivers/clk/sunxi-ng/Makefile                 |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c          | 590 ++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h          |  63 +++
+ include/dt-bindings/clock/sun8i-v3s-ccu.h     | 107 +++++
+ include/dt-bindings/reset/sun8i-v3s-ccu.h     |  78 ++++
+ 11 files changed, 1215 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-v3s.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v3s.h
+ create mode 100644 include/dt-bindings/clock/sun8i-v3s-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-v3s-ccu.h
+
+-- 
+2.11.0
